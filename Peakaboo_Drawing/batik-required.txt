@@ -1,0 +1,19 @@
+batik-	anim
+		awt
+		bridge
+		codec
+		css
+		dom
+		ext
+		gvt
+		parser
+		script
+		svg-dom
+		svggen
+		transcoder
+		util
+		xml
+pdf-transcoder
+xerxes
+xml-apis-ext
+xml-apis
