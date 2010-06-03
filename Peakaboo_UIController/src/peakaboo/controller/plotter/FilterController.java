@@ -4,7 +4,6 @@ import java.util.List;
 
 import peakaboo.datatypes.eventful.IEventful;
 import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.AbstractFilter.FilterType;
 
 
 public interface FilterController extends IEventful

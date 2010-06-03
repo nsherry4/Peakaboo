@@ -1,7 +1,6 @@
 package peakaboo.drawing.map;
 
 
-import peakaboo.calculations.ListCalculations;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Pair;
@@ -26,13 +25,11 @@ import java.util.List;
  * 
  */
 
-public class Map extends peakaboo.drawing.Drawing
+public class MapDrawing extends peakaboo.drawing.Drawing
 {
 
 	private Buffer				mapBuffer;
 		
-	private List<Double>		mapdata;
-
 	private List<MapPainter>	painters;
 	private List<AxisPainter>	axisPainters;
 
@@ -52,7 +49,7 @@ public class Map extends peakaboo.drawing.Drawing
 	 * @see Color
 	 * @see AbstractPalette
 	 */
-	public Map(Surface context, DrawingRequest dr, List<AxisPainter> axisPainters)
+	public MapDrawing(Surface context, DrawingRequest dr, List<AxisPainter> axisPainters)
 	{
 		super(dr);
 		this.context = context;
@@ -74,7 +71,7 @@ public class Map extends peakaboo.drawing.Drawing
 	 *            the {@link AxisPainter} to paint the axes of this map with
 	 * @see DrawingRequest
 	 */
-	public Map(Surface context, DrawingRequest dr, AxisPainter axisPainter)
+	public MapDrawing(Surface context, DrawingRequest dr, AxisPainter axisPainter)
 	{
 		super(dr);
 		
@@ -96,7 +93,7 @@ public class Map extends peakaboo.drawing.Drawing
 	 *            the {@link DrawingRequest} defining how to draw maps
 	 * @see DrawingRequest
 	 */
-	public Map(Surface context, DrawingRequest dr)
+	public MapDrawing(Surface context, DrawingRequest dr)
 	{
 		super(dr);
 		this.context = context;
@@ -115,10 +112,6 @@ public class Map extends peakaboo.drawing.Drawing
 		painters.add(painter);
 	}
 	
-	public void setData(List<Double> data) {
-		this.mapdata = data;
-	}
-	
 
 	/**
 	 * Draws a map using the given data and the given set of {@link MapPainter}s
@@ -131,7 +124,6 @@ public class Map extends peakaboo.drawing.Drawing
 	public void draw()
 	{
 		
-		if (dr.maxYIntensity < 0) dr.maxYIntensity = ListCalculations.max(mapdata);
 		double oldMaxIntensity = dr.maxYIntensity;
 
 		Coord<Range<Double>> borderSizes = calcAxisBorders();

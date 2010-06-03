@@ -58,6 +58,19 @@ public class Spectrums
 	{
 		return getSmallerSpectrum(steps, MonochromeScale());
 	}
+	
+	/**
+	 * Creates a monochrome scale spectrum
+	 * 
+	 * @param steps
+	 *            the number of steps in the spectrum
+	 * @param c
+	 *            the colour of the monochrome scale
+	 */
+	public static List<Color> MonochromeScale(int steps, Color c)
+	{
+		return getSmallerSpectrum(steps, MonochromeScale(c));
+	}
 
 
 	/**
@@ -126,6 +139,25 @@ public class Spectrums
 
 		int[] intervals = { Math.round(1.0f * steps) };
 		double[][] values = { { 0.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 } };
+
+		return generateSpectrum(intervals, values);
+
+	}
+	
+	/**
+	 * Creates a monochrome scale spectrum ranging from black to the given colour 
+	 * 
+	 * @param c
+	 *            the colour of the monochrome scale
+	 * @return a monochrome scale spectrum
+	 */
+	public static List<Color> MonochromeScale(Color c)
+	{
+
+		float steps = DEFAULT_STEPS;
+
+		int[] intervals = { Math.round(1.0f * steps) };
+		double[][] values = { { 0.0, 0.0, 0.0 }, { c.getRed() / 255.0, c.getGreen() / 255.0, c.getBlue() / 255.0 } };
 
 		return generateSpectrum(intervals, values);
 

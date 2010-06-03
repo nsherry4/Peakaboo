@@ -59,7 +59,7 @@ public class Common {
 			out.write(
 					Functional.foldr(list, stringbuilder, new Function2<T1, StringBuilder, StringBuilder>() {
 						@Override
-						public StringBuilder run(T1 varT1, StringBuilder builder) { return builder.append(varT1.toString() + "\n"); }
+						public StringBuilder f(T1 varT1, StringBuilder builder) { return builder.append(varT1.toString() + "\n"); }
 					}).toString()
 			);
 			

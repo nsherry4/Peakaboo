@@ -5,7 +5,6 @@ import java.util.List;
 
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
-import peakaboo.common.Version;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;

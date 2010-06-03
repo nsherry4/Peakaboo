@@ -11,7 +11,6 @@ import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
 
 public class FittingSet implements Serializable{
 

@@ -5,17 +5,16 @@ import java.awt.Color;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.drawing.map.Map;
+import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.Painter;
-import peakaboo.drawing.painters.PainterData;
 
 /**
  * 
- * A MapPainter is a specific way of drawing the {@link Map}
+ * A MapPainter is a specific way of drawing the {@link MapDrawing}
  * 
  * @author Nathaniel Sherry, 2009
- * @see Map
+ * @see MapDrawing
  *
  */
 

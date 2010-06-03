@@ -6,12 +6,12 @@ import java.awt.Color;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.Plot;
+import peakaboo.drawing.plot.PlotDrawing;
 import peakaboo.drawing.plot.painters.PlotPainter;
 
 /**
  * 
- * A {@link PlotPainter} for {@link Plot}s which draws the data for each {@link FittingResult} in a {@link FittingResultSet}
+ * A {@link PlotPainter} for {@link PlotDrawing}s which draws the data for each {@link FittingResult} in a {@link FittingResultSet}
  * 
  * @author Nathaniel Sherry, 2009
  * 

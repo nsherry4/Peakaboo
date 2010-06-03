@@ -98,7 +98,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		//Filter for *JUST* the scans which have been marked as bad
 		List<List<Double>> badScans = Functional.filter_index(dsc_dataset, new Function1<Integer, Boolean>() {
 
-			public Boolean run(Integer element)
+			public Boolean f(Integer element)
 			{
 				return (excludedIndcies.indexOf(element) != -1);
 			}
@@ -129,7 +129,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		{
 			return new ScanContainer(Functional.map(dsc_average, new Function1<Double, Double>() {
 
-				public Double run(Double element)
+				public Double f(Double element)
 				{
 					return 0.0;
 				}

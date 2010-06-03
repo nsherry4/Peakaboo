@@ -22,7 +22,6 @@ public class MapResult implements Cloneable
 
 	public List<Double>		data;
 	public TransitionSeries	transitionSeries;
-	public boolean			visible;
 
 
 	public MapResult(TransitionSeries ts, int mapSize)
@@ -32,14 +31,12 @@ public class MapResult implements Cloneable
 			data.add(0.0);
 		}
 		transitionSeries = ts;
-		visible = true;
 	}
 	
 	protected MapResult(TransitionSeries ts, List<Double> data)
 	{
 		this.transitionSeries = ts;
 		this.data = data;
-		visible = true;
 	}
 
 	public MapResult clone()

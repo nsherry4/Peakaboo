@@ -1,5 +1,7 @@
 package peakaboo.drawing.painters;
 
+import peakaboo.drawing.backends.Surface.CompositeModes;
+
 
 
 /**
@@ -10,6 +12,14 @@ package peakaboo.drawing.painters;
 
 public abstract class Painter
 {
+	
+	protected CompositeModes compositeMode;
+	
+
+	public Painter()
+	{
+		compositeMode = CompositeModes.OVER;
+	}
 
 	protected abstract double getBaseUnitSize(peakaboo.drawing.DrawingRequest dr);
 
@@ -20,12 +30,28 @@ public abstract class Painter
 		// this still doesn't prevent restoring more than saving, though, although that should cause a null pointer
 		// exception somewhere, so that would be more noticable
 		
+		CompositeModes oldMode = p.context.getCompositeMode();
+		p.context.setCompositeMode(compositeMode);
+		
 		int stackPointer = p.context.saveWithMarker();
 		drawElement(p);
 		p.context.restoreFromMarker(stackPointer);
+		
+		p.context.setCompositeMode(oldMode);
 
 	}
 
+	
+	public CompositeModes getCompositeMode()
+	{
+		return compositeMode;
+	}
+
+	
+	public void setCompositeMode(CompositeModes compositeMode)
+	{
+		this.compositeMode = compositeMode;
+	}
 
 	public abstract void drawElement(PainterData p);
 

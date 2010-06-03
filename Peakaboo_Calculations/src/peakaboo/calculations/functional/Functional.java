@@ -1,26 +1,37 @@
 package peakaboo.calculations.functional;
 
+import java.util.Collection;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
 
 public class Functional {
 
-	public static <T1, T2> List<T2> map(List<T1> list, Function1<T1,T2> f) {
+	public static <T1, T2> List<T2> map(Collection<T1> list, Function1<T1,T2> f) {
 		
 		List<T2> newlist = DataTypeFactory.<T2>list();
 		
 		for (T1 element : list){
-			newlist.add( f.run(element) );
+			newlist.add( f.f(element) );
 		}
 		return newlist;
+		
+	}
+	
+
+	public static <T1> void each(Collection<T1> list, Function1<T1, Object> f) {
+		
+		for (T1 element : list){
+			f.f(element);
+		}
+
 		
 	}
 
 	public static <T1> List<T1> map_inplace(List<T1> list, Function1<T1,T1> f) {
 				
 		for (int i = 0; i < list.size(); i++){
-			list.set( i, f.run(list.get(i)) );
+			list.set( i, f.f(list.get(i)) );
 		}
 		return list;
 		
@@ -31,7 +42,7 @@ public class Functional {
 		List<T2> newlist = DataTypeFactory.<T2>list();
 		
 		for (int i = 0; i < list.size(); i++){
-			newlist.add( f.run(i) );
+			newlist.add( f.f(i) );
 		}
 		return newlist;
 		
@@ -42,18 +53,18 @@ public class Functional {
 		target.clear();
 		
 		for (int i = 0; i < list.size(); i++){
-			target.add( f.run(i) );
+			target.add( f.f(i) );
 		}
 		return list;
 		
 	}
 	
-	public static <T1> List<T1> filter(List<T1> list, Function1<T1, Boolean> f) {
+	public static <T1> List<T1> filter(Collection<T1> list, Function1<T1, Boolean> f) {
 		
 		List<T1> newlist = DataTypeFactory.<T1>list();
 		
 		for (T1 element : list){
-			if (f.run(element)) newlist.add( element );
+			if (f.f(element)) newlist.add( element );
 		}
 		return newlist;
 		
@@ -64,7 +75,7 @@ public class Functional {
 		List<T1> newlist = DataTypeFactory.<T1>list();
 		 
 		for (int i = 0; i<= list.size(); i++) {
-			if (f.run(i)) newlist.add( list.get(i) );
+			if (f.f(i)) newlist.add( list.get(i) );
 		}
 		return newlist;
 		
@@ -76,7 +87,7 @@ public class Functional {
 				
 		//order matters for foldr/foldl so we use a counter variable instead of an iterator
 		for (int i = 0; i < list.size(); i++){
-			result = f.run(list.get(i), result);
+			result = f.f(list.get(i), result);
 		}
 		
 		return result;
@@ -90,7 +101,7 @@ public class Functional {
 		
 		//order matters for foldr/foldl so we use a counter variable instead of an iterator
 		for (int i = 1; i < list.size(); i++){
-			result = f.run(list.get(i), result);
+			result = f.f(list.get(i), result);
 		}
 		
 		return result;
@@ -102,7 +113,7 @@ public class Functional {
 		
 		//order matters for foldr/foldl so we use a counter variable instead of an iterator
 		for (int i = list.size() - 1; i >= 0; i--){
-			result = f.run(list.get(i), result);
+			result = f.f(list.get(i), result);
 		}
 		
 		return result;
@@ -116,7 +127,7 @@ public class Functional {
 		
 		//order matters for foldr/foldl so we use a counter variable instead of an iterator
 		for (int i = list.size() - 2; i >= 0; i--){
-			result = f.run(list.get(i), result);
+			result = f.f(list.get(i), result);
 		}
 		
 		return result;
@@ -131,7 +142,7 @@ public class Functional {
 	{
 		return foldr(map(list, f), new Function2<Boolean, Boolean, Boolean>() {
 			@Override
-			public Boolean run(Boolean b1, Boolean b2) { return b1 || b2; }
+			public Boolean f(Boolean b1, Boolean b2) { return b1 || b2; }
 		});
 	}
 	
@@ -144,7 +155,7 @@ public class Functional {
 		List<T3> l3 = DataTypeFactory.<T3>list();
 		
 		for (int i = 0; i < maxSize; i++){
-			l3.add( f.run(l1.get(i), l2.get(i)) );
+			l3.add( f.f(l1.get(i), l2.get(i)) );
 		}
 		
 		return l3;
@@ -158,7 +169,7 @@ public class Functional {
 		int maxSize = Math.min(l1.size(), l2.size());
 		
 		for (int i = 0; i < maxSize; i++){
-			l1.set( i, f.run(l1.get(i), l2.get(i)) );
+			l1.set( i, f.f(l1.get(i), l2.get(i)) );
 		}
 		
 		return l1;
@@ -166,7 +177,7 @@ public class Functional {
 	}
 	
 	
-	public static <T1> List<T1> unique(List<T1> list, Function2<T1, T1, Boolean> f)
+	public static <T1> List<T1> unique(Collection<T1> list)
 	{
 		
 		List<T1> newlist = DataTypeFactory.<T1>list();
@@ -177,7 +188,29 @@ public class Functional {
 			inlist = false;
 			for (T1 newelem : newlist)
 			{
-				inlist |= f.run(elem, newelem);
+				inlist |= elem.equals(newelem);
+			}
+			
+			if (!inlist) newlist.add(elem);
+			
+		}
+		
+		return newlist;
+		
+	}
+	
+	public static <T1> List<T1> unique(Collection<T1> list, Function2<T1, T1, Boolean> f)
+	{
+		
+		List<T1> newlist = DataTypeFactory.<T1>list();
+		
+		boolean inlist;
+		for (T1 elem : list)
+		{
+			inlist = false;
+			for (T1 newelem : newlist)
+			{
+				inlist |= f.f(elem, newelem);
 			}
 			
 			if (!inlist) newlist.add(elem);

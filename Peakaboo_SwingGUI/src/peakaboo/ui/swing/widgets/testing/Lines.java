@@ -67,7 +67,6 @@ public class Lines extends JPanel{
 	
 	public void paint(Graphics g)
 	{
-		System.out.println("paint");
 		
 		super.paint(g);
 		

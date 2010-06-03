@@ -156,9 +156,7 @@ public class AvailableFilters
 			}
 			URI resourceURI = resource.toURI();
 			String location = resourceURI.getPath();
-			System.err.println(location);
 			directory = new File(location);
-			System.err.println(directory.getAbsoluteFile());
 		} catch (Exception x) {
 			throw new ClassNotFoundException(pckgname + " (" + directory + ") does not appear to be a valid package");
 		}

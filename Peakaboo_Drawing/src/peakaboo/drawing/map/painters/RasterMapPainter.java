@@ -5,7 +5,7 @@ import java.util.List;
 
 import peakaboo.calculations.ListCalculations;
 import peakaboo.drawing.backends.Buffer;
-import peakaboo.drawing.map.Map;
+import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.PainterData;
 
@@ -43,7 +43,7 @@ public class RasterMapPainter extends MapPainter
 		
 
 		// get the size of the cells
-		double cellSize = Map.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
+		double cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
 		
 		// clip the region
 		p.context.rectangle(0, 0, p.dr.dataWidth * cellSize, p.dr.dataHeight * cellSize);

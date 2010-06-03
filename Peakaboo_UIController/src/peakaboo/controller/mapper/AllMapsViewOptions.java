@@ -3,7 +3,7 @@ package peakaboo.controller.mapper;
 import peakaboo.datatypes.Coord;
 
 
-public class MapViewOptions
+public class AllMapsViewOptions
 {
 
 	public boolean drawCoordinates = true;
@@ -20,7 +20,5 @@ public class MapViewOptions
 	public int spectrumHeight = 15;
 	
 	public boolean yflip = true;
-	
-	public MapScaleMode mapScaleMode = MapScaleMode.VISIBLE_ELEMENTS;
 	
 }

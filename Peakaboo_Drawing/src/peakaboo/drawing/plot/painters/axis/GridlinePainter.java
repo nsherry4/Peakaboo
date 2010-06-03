@@ -5,7 +5,7 @@ import java.util.List;
 import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.Plot;
+import peakaboo.drawing.plot.PlotDrawing;
 import peakaboo.drawing.plot.painters.PlotPainter;
 
 
@@ -24,7 +24,7 @@ public class GridlinePainter extends PlotPainter
 	{
 		
 		double valueRangeStart = valueBounds.start;
-		double valueRangeEnd = Plot.getDataScale(valueBounds.end, false);
+		double valueRangeEnd = PlotDrawing.getDataScale(valueBounds.end, false);
 		
 		int maxTicks = AxisMarkGenerator.getMaxTicksY(p.context, p.plotSize.y);
 	

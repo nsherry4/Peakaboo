@@ -10,7 +10,7 @@ import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.painters.Painter;
 import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.Plot;
+import peakaboo.drawing.plot.PlotDrawing;
 import peakaboo.drawing.plot.ViewTransform;
 
 /**
@@ -19,7 +19,7 @@ import peakaboo.drawing.plot.ViewTransform;
  * 
  * @author Nathaniel Sherry, 2009
  * @see PainterData
- * @see Plot
+ * @see PlotDrawing
  *
  */
 
@@ -185,7 +185,7 @@ public abstract class PlotPainter extends Painter{
 
 		List<Double> transformedData = DataTypeFactory.<Double> listInit(data);
 		if (dr.viewTransform == ViewTransform.LOG) transformedData = ListCalculations.logList(transformedData);
-		double dataMax = Plot.getDataScale(dr, data);
+		double dataMax = PlotDrawing.getDataScale(dr, data);
 		transformedData = ListCalculations.divideBy(transformedData, dataMax);
 
 		return transformedData;
@@ -194,7 +194,7 @@ public abstract class PlotPainter extends Painter{
 	protected double transformValueForPlot(DrawingRequest dr, double value)
 	{
 		if (dr.viewTransform == ViewTransform.LOG) value = Math.log1p(value);
-		double dataMax = Plot.getDataScale(dr);
+		double dataMax = PlotDrawing.getDataScale(dr);
 		value = value / dataMax;
 
 		return value;

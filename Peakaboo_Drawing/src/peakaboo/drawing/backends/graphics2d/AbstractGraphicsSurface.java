@@ -1,8 +1,10 @@
 package peakaboo.drawing.backends.graphics2d;
 
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
@@ -17,6 +19,7 @@ import java.util.Stack;
 
 import peakaboo.drawing.backends.Buffer;
 import peakaboo.drawing.backends.Surface;
+import peakaboo.drawing.backends.graphics2d.composite.BlendComposite;
 
 /**
  * @author Nathaniel Sherry, 2009
@@ -37,6 +40,8 @@ abstract class AbstractGraphicsSurface implements Surface
 	private GeneralPath			path;
 	private BasicStroke			stroke;
 	private Stack<Graphics2D>	saveStack;
+	
+	private CompositeModes		compositeMode;
 
 
 	public AbstractGraphicsSurface(Graphics2D g)
@@ -56,6 +61,8 @@ abstract class AbstractGraphicsSurface implements Surface
 		saveStack = new Stack<Graphics2D>();
 
 		path = newPath();
+		
+		compositeMode = CompositeModes.OVER;
 	}
 
 
@@ -122,14 +129,12 @@ abstract class AbstractGraphicsSurface implements Surface
 		saveStack.push((Graphics2D) graphics.create());
 	}
 	
-	@Override
 	public void restoreFromMarker(int marker)
 	{
 		saveStack.setSize(marker);
 		graphics = saveStack.pop();
 	}
 
-	@Override
 	public int saveWithMarker()
 	{
 		saveStack.push((Graphics2D) graphics.create());
@@ -311,6 +316,36 @@ abstract class AbstractGraphicsSurface implements Surface
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+	}
+	
+	public void setCompositeMode(CompositeModes mode)
+	{
+		
+		Composite c = null;
+		
+		compositeMode = mode;
+		
+		switch (mode)
+		{
+			case OVER: c = AlphaComposite.SrcOver; 	break;
+			case OUT: c = AlphaComposite.SrcOut;	break;
+			case IN: c = AlphaComposite.SrcIn;		break;
+			case ATOP: c = AlphaComposite.SrcAtop;	break;
+			case SOURCE: c = AlphaComposite.Src;	break;
+			case XOR: c = AlphaComposite.Xor;		break;
+			case ADD: c = BlendComposite.Add;		break;
+				
+				
+				
+		}
+		
+		graphics.setComposite(c);
+		
+	}
+	
+	public CompositeModes getCompositeMode()
+	{
+		return compositeMode;
 	}
 
 

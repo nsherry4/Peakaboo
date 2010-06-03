@@ -11,12 +11,10 @@ import peakaboo.datatypes.Range;
 import peakaboo.drawing.Drawing;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.backends.Surface;
-import peakaboo.drawing.painters.Painter;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.painters.axis.AxisPainter;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.drawing.plot.painters.plot.LinePainter;
-import peakaboo.drawing.plot.painters.plot.OriginalDataPainter;
 
 /**
  * 
@@ -27,7 +25,7 @@ import peakaboo.drawing.plot.painters.plot.OriginalDataPainter;
  */
 
 
-public class Plot extends Drawing
+public class PlotDrawing extends Drawing
 {
 
 	private Coord<Double>	plotSize;
@@ -42,7 +40,7 @@ public class Plot extends Drawing
 	 * @param context the {@link Surface} to draw to
 	 * @param dr the {@link DrawingRequest} that defines how this plot should be drawn
 	 */
-	public Plot(Surface context, DrawingRequest dr, List<PlotPainter> painters, List<AxisPainter> axisPainters)
+	public PlotDrawing(Surface context, DrawingRequest dr, List<PlotPainter> painters, List<AxisPainter> axisPainters)
 	{
 		super(dr);
 		this.context = context;
@@ -55,7 +53,7 @@ public class Plot extends Drawing
 	 * @param context the {@link Surface} to draw to
 	 * @param dr the {@link DrawingRequest} that defines how this plot should be drawn
 	 */
-	public Plot(Surface context, DrawingRequest dr)
+	public PlotDrawing(Surface context, DrawingRequest dr)
 	{
 		super(dr);
 		this.context = context;
@@ -67,7 +65,7 @@ public class Plot extends Drawing
 	 * Create a plot object with no {@link AxisPainter}s
 	 * @param context the {@link Surface} to draw to
 	 */
-	public Plot(Surface context)
+	public PlotDrawing(Surface context)
 	{
 		super(PlotDrawingRequestFactory.getDrawingRequest());
 		this.context = context;
@@ -79,7 +77,7 @@ public class Plot extends Drawing
 	 * Create a plot object with no {@link AxisPainter}s
 	 * @param context the {@link Surface} to draw to
 	 */
-	public Plot(List<Double> numbers)
+	public PlotDrawing(List<Double> numbers)
 	{
 		super(PlotDrawingRequestFactory.getDrawingRequest());
 		this.context = null;
@@ -93,7 +91,7 @@ public class Plot extends Drawing
 	 * Create a plot object with no {@link AxisPainter}s
 	 * @param context the {@link Surface} to draw to
 	 */
-	public Plot()
+	public PlotDrawing()
 	{
 		super(PlotDrawingRequestFactory.getDrawingRequest());
 		this.context = null;

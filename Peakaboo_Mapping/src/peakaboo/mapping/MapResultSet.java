@@ -1,11 +1,11 @@
 package peakaboo.mapping;
 
 
+import java.util.Collection;
 import java.util.List;
 
 import peakaboo.calculations.ListCalculations;
 import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Function2;
 import peakaboo.calculations.functional.Functional;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
@@ -114,6 +114,20 @@ public class MapResultSet implements Cloneable
 	
 
 	/**
+	 * Generates a list of all of the TransitionSeries included in this MapResultSet
+	 */
+	public List<TransitionSeries> getAllTransitionSeries()
+	{
+		return Functional.map(maps, new Function1<MapResult, TransitionSeries>() {
+			
+			@Override
+			public TransitionSeries f(MapResult mr) {
+				return mr.transitionSeries;
+			}
+		});
+	}
+	
+	/**
 	 * 
 	 * Places a value at a given index for the {@link MapResult} data associated with the given {@link TransitionSeries}
 	 * 
@@ -130,55 +144,6 @@ public class MapResultSet implements Cloneable
 		m.data.set(index, intensity);
 
 	}
-
-	/**
-	 * 
-	 * Toggles the visiblity of the {@link MapResult} associated with the given {@link TransitionSeries}
-	 * 
-	 * @param ts the {@link TransitionSeries} associated with the desired {@link MapResult}
-	 * @param visible the desired visibility of the {@link MapResult} in question
-	 */
-	public void setMapVisible(TransitionSeries ts, boolean visible)
-	{
-		MapResult m = getMap(ts);
-		m.visible = visible;
-	}
-
-
-	/**
-	 * 
-	 * Returns the visibility of the {@link MapResult} associated with the given {@link TransitionSeries}
-	 * 
-	 * @param ts the {@link TransitionSeries} associated with the desired {@link MapResult}
-	 * @return the visibiltiy of the desired {@link MapResult}
-	 */
-	public boolean getMapVisible(TransitionSeries ts)
-	{
-		return getMap(ts).visible;
-	}
-
-
-	/**
-	 * 
-	 * Composites the data in all visible {@link MapResult} into a single map. 
-	 * 
-	 * @return a list of double values representing the composited map
-	 */
-	public List<Double> sumVisibleTransitionSeriesMaps()
-	{
-		List<Double> sums = DataTypeFactory.<Double> list();
-		for (int i = 0; i < mapSize; i++) {
-			sums.add(0.0);
-		}
-
-		for (MapResult map : maps) {
-			if (map.visible) ListCalculations.addLists_inplace(sums, map.data);
-		}
-
-		return sums;
-
-	}
-
 
 	/**
 	 * 
@@ -201,78 +166,27 @@ public class MapResultSet implements Cloneable
 
 	}
 
-
 	
-	public String getDatasetTitle(String separator)
+	/**
+	 * 
+	 * Composites the data in all {@link MapResult} into a single map. 
+	 * 
+	 * @return a list of double values representing the composited map
+	 */
+	public List<Double> sumGivenTransitionSeriesMaps(Collection<TransitionSeries> list)
 	{
-		if (separator == null) separator = ", ";
 		
+		List<Double> sums = DataTypeFactory.<Double> list();
+		for (int i = 0; i < mapSize; i++) {
+			sums.add(0.0);
+		}
 
-		List<MapResult> visibleMaps = Functional.filter(maps, new Function1<MapResult, Boolean>() {
-			
-			public Boolean run(MapResult map) {
-				return map.visible;
-			}
-		});
-		
-		List<String> elementNames = Functional.map(visibleMaps, new Function1<MapResult, String>() {
-			
-			public String run(MapResult map) {
-				return map.transitionSeries.toElementString();
-			}
-		});
+		for (MapResult map : maps) {
+			if (list.contains(map.transitionSeries)) ListCalculations.addLists_inplace(sums, map.data);
+		}
 
-		String title = Functional.foldr(elementNames, new Function2<String, String, String>() {
-			
-			public String run(String elementName, String title) {
-				return title + ", " + elementName;
-			}
-		});
-		
-		if (title == null) return "-";
-		return title;
-		
+		return sums;
+
 	}
-	
-
-	public String getShortDatasetTitle(String separator)
-	{
-		if (separator == null) separator = ", ";
-		
-		
-		List<MapResult> visibleMaps = Functional.filter(maps, new Function1<MapResult, Boolean>() {
-			
-			public Boolean run(MapResult map) {
-				return map.visible;
-			}
-		});
-		
-		List<String> elementNames = Functional.map(visibleMaps, new Function1<MapResult, String>() {
-			
-			public String run(MapResult map) {
-				return map.transitionSeries.element.toString();
-			}
-		});
-		
-		//trim out the duplicated
-		elementNames = Functional.unique(elementNames, new Function2<String, String, Boolean>() {
-			
-			public Boolean run(String elem1, String elem2) {
-				return elem1.equals(elem2);
-			}
-		});
-
-		String title = Functional.foldr(elementNames, new Function2<String, String, String>() {
-			
-			public String run(String elementName, String title) {
-				return title + ", " + elementName;
-			}
-		});
-		
-		if (title == null) return "-";
-		return title;
-		
-	}
-	
 	
 }

@@ -1,6 +1,7 @@
 package peakaboo.calculations;
 
 
+
 import java.util.Collections;
 import java.util.List;
 
@@ -12,28 +13,24 @@ import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.executor.TaskExecutor;
 import peakaboo.datatypes.tasks.executor.implementations.SplittingTicketedTaskExecutor;
 
+
+
 /**
- * 
- * This class contains methods used to transform lists (eg log), or to find a specific piece of information
- * about the list (eg max)
- * 
- * Not everything that operates on or reads a list needs to go here.
+ * This class contains methods used to transform lists (eg log), or to find a specific piece of information about the
+ * list (eg max) Not everything that operates on or reads a list needs to go here.
  * 
  * @author Nathaniel Sherry, 2009
- * 
  */
 
 public class ListCalculations
 {
 
-
 	public static final int	MIN_SIZE_FOR_THREADING	= 1024;
 
 
-	
-	
 	/**
 	 * returns the maximum value in the list
+	 * 
 	 * @param list
 	 * @return max(list)
 	 */
@@ -42,9 +39,29 @@ public class ListCalculations
 		return Collections.max(list);
 	}
 
-	
+
+	/**
+	 * returns the absolute version of the list
+	 * 
+	 * @param list
+	 * @return max(list)
+	 */
+	public static List<Double> abs(List<Double> list)
+	{
+		return Functional.map(list, new Function1<Double, Double>() {
+
+			@Override
+			public Double f(Double element)
+			{
+				return Math.abs(element);
+			}
+		});
+	}
+
+
 	/**
 	 * returns the maximum value in the list
+	 * 
 	 * @param list
 	 * @return min(list)
 	 */
@@ -53,28 +70,34 @@ public class ListCalculations
 		return Collections.min(list);
 	}
 
+
 	/**
 	 * returns the maximum value in the list
+	 * 
 	 * @param list
-	 * @param allowzero should values of exactly 0 be considered in the search for a minimum value?
+	 * @param allowzero
+	 *            should values of exactly 0 be considered in the search for a minimum value?
 	 * @return min(list)
 	 */
-	/*public static double min(List<Double> list, final boolean allowzero)
+
+	public static double min(List<Double> list, final boolean allowzero)
 	{
 
-		return Functional.foldr(list, list.get(0), new Function2<Double, Double, Double>() {
+		return Functional.foldr(list, Double.MAX_VALUE, new Function2<Double, Double, Double>() {
 
 			@Override
-			public Double run(Double newval, Double currentMin) {
+			public Double f(Double newval, Double currentMin)
+			{
 				return (newval == 0.0 && !allowzero) ? currentMin : Math.min(currentMin, newval);
 			}
 		});
 
-	}*/
+	}
 
 
 	/**
 	 * Calculates the maximum value of a list of lists of values
+	 * 
 	 * @param dataset
 	 * @return max(dataset)
 	 */
@@ -82,8 +105,10 @@ public class ListCalculations
 	{
 
 		return Functional.foldr(dataset, max(dataset.get(0)), new Function2<List<Double>, Double, Double>() {
+
 			@Override
-			public Double run(List<Double> list, Double currentMax) {
+			public Double f(List<Double> list, Double currentMax)
+			{
 				return Math.max(currentMax, max(list));
 			}
 		});
@@ -91,18 +116,21 @@ public class ListCalculations
 	}
 
 
-
 	/**
 	 * returns a copy of the given list with all values in the list expressed as a fraction of the maximum value
+	 * 
 	 * @param data
 	 * @return normalized data
 	 */
 	public static List<Double> normalize(List<Double> data)
 	{
 		double max = max(data);
-		if (max != 0.0) {
+		if (max != 0.0)
+		{
 			return divideBy(data, max);
-		} else {
+		}
+		else
+		{
 			return data;
 		}
 
@@ -111,12 +139,14 @@ public class ListCalculations
 
 	/**
 	 * replaces the values in the given list with their equivalences as expressed as a fraction of the maximum value
+	 * 
 	 * @param data
 	 */
 	public static void normalize_inplace(List<Double> data)
 	{
 		double max = max(data);
-		if (max != 0.0) {
+		if (max != 0.0)
+		{
 			divideBy_inplace(data, max);
 		}
 	}
@@ -124,6 +154,7 @@ public class ListCalculations
 
 	/**
 	 * returns a copy of the given list with all values in the list multiplied by the given value
+	 * 
 	 * @param data
 	 * @param value
 	 * @return a copy of data multiplied value
@@ -134,14 +165,17 @@ public class ListCalculations
 		return Functional.map(data, new Function1<Double, Double>() {
 
 			@Override
-			public Double run(Double element) {
+			public Double f(Double element)
+			{
 				return element * value;
 			}
 		});
 	}
 
+
 	/**
 	 * A threaded version of {@link ListCalculations#multiplyBy(List, double)}
+	 * 
 	 * @param data
 	 * @param value
 	 * @return a copy of data multiplied value
@@ -172,6 +206,7 @@ public class ListCalculations
 
 	/**
 	 * Returns a copy of the given list with all values in the list expressed as a fraction of the given value
+	 * 
 	 * @param data
 	 * @param value
 	 * @return a copy of data divided by value
@@ -182,7 +217,8 @@ public class ListCalculations
 		return Functional.map(data, new Function1<Double, Double>() {
 
 			@Override
-			public Double run(Double element) {
+			public Double f(Double element)
+			{
 				return element / value;
 			}
 		});
@@ -192,23 +228,27 @@ public class ListCalculations
 
 	/**
 	 * Replaces the values in the given list with their equivalences as expressed as divided by value
+	 * 
 	 * @param data
 	 * @param value
 	 */
 	public static void divideBy_inplace(List<Double> data, final double value)
 	{
-	
+
 		Functional.map_inplace(data, new Function1<Double, Double>() {
 
 			@Override
-			public Double run(Double element) {
+			public Double f(Double element)
+			{
 				return element / value;
 			}
 		});
 	}
 
+
 	/**
 	 * A threaded version of {@link #divideBy(List, double)}
+	 * 
 	 * @param data
 	 * @param value
 	 * @return a copy of data divided by value
@@ -236,8 +276,10 @@ public class ListCalculations
 		return result;
 	}
 
+
 	/**
 	 * Subtracts value from each element in data
+	 * 
 	 * @param data
 	 * @param value
 	 * @return a copy of data, with value subtracted from each element
@@ -247,8 +289,10 @@ public class ListCalculations
 		return subtractFromList(data, value, Double.NaN);
 	}
 
+
 	/**
 	 * Subtracts value from each element in data, while keeping all values no lower than minimum
+	 * 
 	 * @param data
 	 * @param value
 	 * @param minimum
@@ -259,23 +303,25 @@ public class ListCalculations
 
 		return Functional.map(data, new Function1<Double, Double>() {
 
-			private double newval;
-			
+			private double	newval;
+
+
 			@Override
-			public Double run(Double element) {
-				
+			public Double f(Double element)
+			{
+
 				newval = element - value;
-				
-				if (newval < minimum && minimum != Double.NaN)
-					return minimum;
-				else
-					return newval;
+
+				if (newval < minimum && minimum != Double.NaN) return minimum;
+				else return newval;
 			}
 		});
 	}
 
+
 	/**
 	 * A threaded version of {@link #subtractFromList(List, double, double)}
+	 * 
 	 * @param data
 	 * @param value
 	 * @param minimum
@@ -311,6 +357,7 @@ public class ListCalculations
 
 	/**
 	 * adds the elements of the two lists together
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @return a list which is the sum of the two lists given
@@ -321,14 +368,17 @@ public class ListCalculations
 		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
 
 			@Override
-			public Double run(Double val1, Double val2) {
+			public Double f(Double val1, Double val2)
+			{
 				return val1 + val2;
 			}
 		});
 	}
 
+
 	/**
 	 * adds the elements of the two lists together, placing the results in l1
+	 * 
 	 * @param l1
 	 * @param l2
 	 */
@@ -338,7 +388,8 @@ public class ListCalculations
 		Functional.zipWith_inplace(l1, l2, new Function2<Double, Double, Double>() {
 
 			@Override
-			public Double run(Double val1, Double val2) {
+			public Double f(Double val1, Double val2)
+			{
 				return val1 + val2;
 			}
 		});
@@ -347,6 +398,7 @@ public class ListCalculations
 
 	/**
 	 * A threaded version of {@link #addLists(List, List)}
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @return a list which is the sum of the two lists given
@@ -383,24 +435,28 @@ public class ListCalculations
 
 	/**
 	 * Subtracts l2 from l1
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @return a list which is the result of l1 - l2
 	 */
 	public static List<Double> subtractLists(List<Double> l1, List<Double> l2)
 	{
-		
+
 		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
 
 			@Override
-			public Double run(Double val1, Double val2) {
+			public Double f(Double val1, Double val2)
+			{
 				return val1 - val2;
 			}
 		});
 	}
 
+
 	/**
 	 * Subtracts l2 from l1, while keeping all values no lower than minimum
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @param minimum
@@ -408,25 +464,27 @@ public class ListCalculations
 	 */
 	public static List<Double> subtractLists(List<Double> l1, List<Double> l2, final double minimum)
 	{
-		
+
 		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
 
-			double newval;
-			
+			double	newval;
+
+
 			@Override
-			public Double run(Double val1, Double val2) {
+			public Double f(Double val1, Double val2)
+			{
 				newval = val1 - val2;
-				if (newval < minimum)
-					return minimum;
-				else
-					return newval;
+				if (newval < minimum) return minimum;
+				else return newval;
 			}
 		});
-		
+
 	}
+
 
 	/**
 	 * Subtracts l2 from l1, placing the results in l1
+	 * 
 	 * @param l1
 	 * @param l2
 	 */
@@ -435,8 +493,10 @@ public class ListCalculations
 		subtractLists_inplace(l1, l2, Double.NaN);
 	}
 
+
 	/**
 	 * Subtracts l2 from l1, placing the results in l1, while keeping all values no lower than minimum
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @param minimum
@@ -446,22 +506,24 @@ public class ListCalculations
 
 		Functional.zipWith_inplace(l1, l2, new Function2<Double, Double, Double>() {
 
-			double newval;
-			
+			double	newval;
+
+
 			@Override
-			public Double run(Double val1, Double val2) {
+			public Double f(Double val1, Double val2)
+			{
 				newval = val1 - val2;
-				if (newval < minimum && minimum != Double.NaN)
-					return minimum;
-				else
-					return newval;
+				if (newval < minimum && minimum != Double.NaN) return minimum;
+				else return newval;
 			}
 		});
-		
+
 	}
+
 
 	/**
 	 * A threaded version of {@link #subtractLists(List, List, double)}
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @param minimum
@@ -501,6 +563,7 @@ public class ListCalculations
 
 	/**
 	 * Multiplies two lists together
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @return a list which is the result of l1*l2
@@ -508,19 +571,21 @@ public class ListCalculations
 	public static List<Double> multiplyLists(List<Double> l1, List<Double> l2)
 	{
 
-		
 		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
 
 			@Override
-			public Double run(Double val1, Double val2) {
+			public Double f(Double val1, Double val2)
+			{
 				return val1 * val2;
 			}
 		});
-				
+
 	}
+
 
 	/**
 	 * A threaded version of {@link #multiplyBy(List, double)}
+	 * 
 	 * @param l1
 	 * @param l2
 	 * @return a list which is the result of l1*l2
@@ -557,32 +622,37 @@ public class ListCalculations
 
 	/**
 	 * takes a dataset and returns a single scan/list containing the average value for each channel
+	 * 
 	 * @param dataset
 	 * @return the per-channel-averaged scan
 	 */
 	public static List<Double> getDatasetAverage(List<List<Double>> dataset)
 	{
-		
+
 		List<Double> average = DataTypeFactory.<Double> list();
 
 		double channelSum;
-		for (int channel = 0; channel < dataset.get(0).size(); channel++) {
+		for (int channel = 0; channel < dataset.get(0).size(); channel++)
+		{
 			channelSum = 0;
-			for (int point = 0; point < dataset.size(); point++) {
+			for (int point = 0; point < dataset.size(); point++)
+			{
 				channelSum += dataset.get(point).get(channel);
 			}
 			average.add(channel, channelSum / dataset.size());
 		}
 
 		return average;
-		
+
 	}
 
 
 	/**
-	 * Takes a dataset and returns a single scan/list containing the average of the top 10% most intense values for each channel
+	 * Takes a dataset and returns a single scan/list containing the average of the top 10% most intense values for each
+	 * channel
+	 * 
 	 * @param dataset
-	 * @return the top-10% per-channel scan 
+	 * @return the top-10% per-channel scan
 	 */
 	public static List<Double> getDatasetMaximums(List<List<Double>> dataset)
 	{
@@ -596,10 +666,12 @@ public class ListCalculations
 		if (section < 0) section = 0;
 
 		double channelMax;
-		for (int channel = 0; channel < dataset.get(0).size(); channel++) {
+		for (int channel = 0; channel < dataset.get(0).size(); channel++)
+		{
 
 			valuesAtChannel.clear();
-			for (int point = 0; point < dataset.size(); point++) {
+			for (int point = 0; point < dataset.size(); point++)
+			{
 				// if (dataset.get(point).get(channel) > channelMax) channelMax =
 				// dataset.get(point).get(channel);
 				valuesAtChannel.add(dataset.get(point).get(channel));
@@ -611,14 +683,15 @@ public class ListCalculations
 			// grab the top 10th of the list
 			List<Double> top = valuesAtChannel.subList(section, dataset.size());
 			// if there isn't a tenth to grab, just get the top one
-			if (top.size() == 0) {
+			if (top.size() == 0)
+			{
 				top = valuesAtChannel.subList(dataset.size() - 1, dataset.size());
 			}
 
-
 			// do an averaging
 			channelMax = 0.0;
-			for (int i = 0; i < top.size(); i++) {
+			for (int i = 0; i < top.size(); i++)
+			{
 				channelMax += top.get(i);
 			}
 			channelMax /= top.size();
@@ -629,23 +702,26 @@ public class ListCalculations
 		return maximums;
 	}
 
+
 	/**
 	 * Logs the given list of values
+	 * 
 	 * @param list
 	 * @return a copy of list, with the values logged
 	 */
 	public static List<Double> logList(List<Double> list)
 	{
-		
+
 		List<Double> result = DataTypeFactory.<Double> listInit(list);
 		logList_inplace(result);
 		return result;
-		
+
 	}
 
 
 	/**
 	 * Logs the given list of values, with the results stored in list
+	 * 
 	 * @param list
 	 */
 	public static void logList_inplace(List<Double> list)
@@ -653,22 +729,25 @@ public class ListCalculations
 
 		Functional.map_inplace(list, new Function1<Double, Double>() {
 
-			private double logValue;
-			
+			private double	logValue;
+
+
 			@Override
-			public Double run(Double value) {
-				logValue = Math.log(value+1.0);
+			public Double f(Double value)
+			{
+				logValue = Math.log(value + 1.0);
 				logValue = logValue < 0 ? 0 : logValue;
 				logValue = Double.isNaN(logValue) ? 0 : logValue;
 				return logValue;
 			}
 		});
-		
+
 	}
 
 
 	/**
 	 * A threaded version of {@link #logList(List)}
+	 * 
 	 * @param data
 	 * @return a copy of list, with the values logged
 	 */
@@ -704,20 +783,22 @@ public class ListCalculations
 
 	/**
 	 * Sums the values in the given list
+	 * 
 	 * @param list
 	 * @return the sum of the values in the list
 	 */
 	public static double sumValuesInList(List<Double> list)
 	{
-			
+
 		return Functional.foldr(list, 0d, new Function2<Double, Double, Double>() {
 
 			@Override
-			public Double run(Double val, Double sum) {
-				return sum+val;
+			public Double f(Double val, Double sum)
+			{
+				return sum + val;
 			}
 		});
-		
+
 	}
 
 }

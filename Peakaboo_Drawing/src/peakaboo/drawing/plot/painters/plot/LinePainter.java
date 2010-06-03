@@ -6,7 +6,6 @@ import java.util.List;
 
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.plot.painters.SpectrumPainter;
-import peakaboo.drawing.plot.painters.PlotPainter.TraceType;
 
 public class LinePainter extends SpectrumPainter
 {

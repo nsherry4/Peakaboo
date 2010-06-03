@@ -16,6 +16,16 @@ import java.awt.Color;
 public interface Surface
 {
 
+	public enum CompositeModes{
+		OVER,
+		OUT,
+		IN,
+		ATOP,
+		SOURCE,
+		XOR,
+		ADD
+	}
+	
 	/**
 	 * Appends a line -- from the current pen position to the specified x,y coordinate -- to the buffer
 	 * 
@@ -355,6 +365,10 @@ public interface Surface
 	public void setAntialias(boolean antialias);
 
 
+	public void setCompositeMode(CompositeModes mode);
+	public CompositeModes getCompositeMode();
+	
+	
 	public Surface getNewContextForSurface();
 
 }

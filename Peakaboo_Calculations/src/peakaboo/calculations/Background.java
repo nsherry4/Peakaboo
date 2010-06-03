@@ -128,7 +128,7 @@ public class Background
 		
 		List<Double> result = Functional.map(data, new Function1<Double, Double>() {
 			@Override
-			public Double run(Double element) { return (element <= cutoff) ? element : cutoff; }
+			public Double f(Double element) { return (element <= cutoff) ? element : cutoff; }
 		});
 		
 		List<Double> result2 = DataTypeFactory.<Double>list(result.size());
@@ -159,7 +159,7 @@ public class Background
 		Functional.map_index_target(data, target, new Function1<Integer, Double>() {
 
 			@Override
-			public Double run(Integer element) {
+			public Double f(Integer element) {
 				int start, stop;
 				start = Math.max(element-windowSize, 0);
 				stop = Math.min(element+windowSize, data.size()-1);

@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import peakaboo.calculations.ListCalculations;
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Functional;
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
@@ -32,7 +30,7 @@ import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.painters.axis.AxisPainter;
 import peakaboo.drawing.painters.axis.LineAxisPainter;
 import peakaboo.drawing.painters.axis.TitleAxisPainter;
-import peakaboo.drawing.plot.Plot;
+import peakaboo.drawing.plot.PlotDrawing;
 import peakaboo.drawing.plot.PlotDrawingRequestFactory;
 import peakaboo.drawing.plot.ViewTransform;
 import peakaboo.drawing.plot.painters.PlotPainter;
@@ -41,7 +39,6 @@ import peakaboo.drawing.plot.painters.axis.TickMarkAxisPainter;
 import peakaboo.drawing.plot.painters.plot.OriginalDataPainter;
 import peakaboo.drawing.plot.painters.plot.PrimaryPlotPainter;
 import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.AbstractFilter.FilterType;
 import peakaboo.mapping.MapResultSet;
 
 /**
@@ -56,7 +53,7 @@ public class PlotController extends CanvasController implements FilterController
 
 	private PlotModel			model;
 	private MapController		mapController;
-	private Plot				plot;
+	private PlotDrawing				plot;
 
 	private List<AxisPainter>	axisPainters;
 
@@ -488,7 +485,7 @@ public class PlotController extends CanvasController implements FilterController
 		}
 
 
-		plot = new Plot(backend, model.dr, plotPainters, axisPainters);
+		plot = new PlotDrawing(backend, model.dr, plotPainters, axisPainters);
 		plot.draw();
 
 

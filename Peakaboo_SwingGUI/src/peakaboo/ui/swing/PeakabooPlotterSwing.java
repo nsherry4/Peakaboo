@@ -61,7 +61,7 @@ import org.flexdock.docking.defaults.DefaultDockingPort;
 
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.MapModel;
+import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.plotter.ChannelCompositeMode;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datatypes.Coord;
@@ -244,7 +244,8 @@ public class PeakabooPlotterSwing {
 
 				Coord<Integer> dataDimensions = controller.getDataDimensions();
 				
-				MapModel datamodel = new MapModel();
+				MapResultSet results = tasks.getResult();
+				AllMapsModel datamodel = new AllMapsModel(results);
 				
 				datamodel.dataDimensions = dataDimensions;
 				datamodel.dimensionsProvided = controller.hasDimensions();
@@ -254,11 +255,10 @@ public class PeakabooPlotterSwing {
 				
 				if (mapController == null) {
 					
-					
 					mapperWindow = new PeakabooMapperSwing
 					(
 							frame, datamodel, controller.getDatasetName(), true, 
-							controller.getDataSourceFolder(), dataDimensions, tasks.getResult()
+							controller.getDataSourceFolder(), dataDimensions, results
 					);
 					
 				} else {
@@ -279,7 +279,7 @@ public class PeakabooPlotterSwing {
 					mapperWindow = new PeakabooMapperSwing
 					(
 							frame, datamodel, controller.getDatasetName(), true, 
-							controller.getDataSourceFolder(), dataDimensions, tasks.getResult()
+							controller.getDataSourceFolder(), dataDimensions, results
 					);
 				}
 

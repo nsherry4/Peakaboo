@@ -7,7 +7,7 @@ import java.awt.Color;
  * A Palette is used to control the colour scheme used to fill in a Map.
  * 
  * @author Nathaniel Sherry, 2009
- * @see peakaboo.drawing.map.Map Map
+ * @see peakaboo.drawing.map.MapDrawing Map
  * @see Color
  * 
  */

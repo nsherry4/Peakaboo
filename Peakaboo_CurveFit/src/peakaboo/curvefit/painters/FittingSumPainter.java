@@ -6,12 +6,12 @@ import java.util.List;
 
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.Plot;
+import peakaboo.drawing.plot.PlotDrawing;
 import peakaboo.drawing.plot.painters.PlotPainter;
 
 /**
  * 
- * A {@link PlotPainter} for {@link Plot}s which draws the data for the sum of a set of {@link FittingResult}s
+ * A {@link PlotPainter} for {@link PlotDrawing}s which draws the data for the sum of a set of {@link FittingResult}s
  * 
  * @author Nathaniel Sherry, 2009
  * 

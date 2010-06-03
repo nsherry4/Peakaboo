@@ -11,12 +11,12 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.Transition;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.Plot;
+import peakaboo.drawing.plot.PlotDrawing;
 import peakaboo.drawing.plot.painters.PlotPainter;
 
 /**
  * 
- * A {@link PlotPainter} for {@link Plot}s which draws lines at the centrepoints of {@link Transition}s
+ * A {@link PlotPainter} for {@link PlotDrawing}s which draws lines at the centrepoints of {@link Transition}s
  * 
  * @author Nathaniel Sherry, 2009
  * 

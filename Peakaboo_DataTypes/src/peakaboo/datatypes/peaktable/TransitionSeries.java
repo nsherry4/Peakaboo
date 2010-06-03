@@ -14,7 +14,7 @@ import peakaboo.datatypes.DataTypeFactory;
  *
  */
 
-public class TransitionSeries implements Iterable<Transition>
+public class TransitionSeries implements Iterable<Transition>, Comparable<TransitionSeries>
 {
 
 	
@@ -167,6 +167,20 @@ public class TransitionSeries implements Iterable<Transition>
 			if (t.energyValue < lowest) lowest = t.energyValue;
 		}
 		return lowest;
+	}
+
+
+	public int compareTo(TransitionSeries otherTS) {
+		
+		if (otherTS.element == element)
+		{
+			return type.compareTo(otherTS.type);
+		}
+		else
+		{
+			return element.compareTo(otherTS.element);
+		}
+		
 	}
 
 }

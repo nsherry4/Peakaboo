@@ -7,7 +7,7 @@ import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.painters.axis.AxisPainter;
-import peakaboo.drawing.plot.Plot;
+import peakaboo.drawing.plot.PlotDrawing;
 
 
 public class TickMarkAxisPainter extends AxisPainter
@@ -197,7 +197,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		int maxTicks = AxisMarkGenerator.getMaxTicksY(p.context, axisHeight); //axisHeight / (textHeight*2.0);
 		
 		double valueRangeStart = this.yLeftValueBounds.start;
-		double valueRangeEnd = Plot.getDataScale(this.yLeftValueBounds.end, false);
+		double valueRangeEnd = PlotDrawing.getDataScale(this.yLeftValueBounds.end, false);
 		double valueRange = valueRangeEnd - valueRangeStart;
 		
 		
@@ -259,7 +259,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			int maxTicks = AxisMarkGenerator.getMaxTicksY(p.context, axisHeight); //axisHeight / (textHeight*2.0);
 			
 			double valueRangeStart = this.yRightValueBounds.start;
-			double valueRangeEnd = Plot.getDataScale(this.yRightValueBounds.end, false);
+			double valueRangeEnd = PlotDrawing.getDataScale(this.yRightValueBounds.end, false);
 			double valueRange = valueRangeEnd - valueRangeStart;
 			
 			List<Pair<Double, Integer>> tickLocations = AxisMarkGenerator.getAxisMarkList(maxTicks, axisHeight, 1, valueRangeStart, valueRangeEnd);
@@ -317,7 +317,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				textWidth = p.context.getTextWidth(String.valueOf(  SigDigits.toIntSigDigit(this.yLeftValueBounds.start, 2)  ));
 				if (textWidth > leftTextWidth) leftTextWidth = textWidth;
 				
-				textWidth = p.context.getTextWidth(String.valueOf(  SigDigits.toIntSigDigit(Plot.getDataScale(this.yLeftValueBounds.end, false), 2)  ));
+				textWidth = p.context.getTextWidth(String.valueOf(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.yLeftValueBounds.end, false), 2)  ));
 				if (textWidth > leftTextWidth) leftTextWidth = textWidth;
 				
 				leftTextWidth += tickSize * 2.5;
@@ -329,7 +329,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				textWidth = p.context.getTextWidth(String.valueOf(  SigDigits.toIntSigDigit(this.yRightValueBounds.start, 2)  ));
 				if (textWidth > rightTextWidth) rightTextWidth = textWidth;
 				
-				textWidth = p.context.getTextWidth(String.valueOf(  SigDigits.toIntSigDigit(Plot.getDataScale(this.yRightValueBounds.end, false), 2)  ));
+				textWidth = p.context.getTextWidth(String.valueOf(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.yRightValueBounds.end, false), 2)  ));
 				if (textWidth > rightTextWidth) rightTextWidth = textWidth;
 				
 				rightTextWidth += tickSize * 2.5;

@@ -8,7 +8,7 @@ import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.GridPerspective;
 import peakaboo.datatypes.Pair;
-import peakaboo.drawing.map.Map;
+import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.PainterData;
 
@@ -230,7 +230,7 @@ public class ContourMapPainter extends MapPainter
 		x = startX;
 		y = startY;
 		grid.set(remainingBorderCells, x, y, false);
-		double cellSize = Map.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
+		double cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
 
 		double posX, posY;
 		posX = (x) * cellSize;

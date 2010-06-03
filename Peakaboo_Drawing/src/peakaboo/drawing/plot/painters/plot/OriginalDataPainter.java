@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.util.List;
 
 import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.painters.PlotPainter.TraceType;
 
 public class OriginalDataPainter extends LinePainter
 {
