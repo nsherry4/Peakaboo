@@ -33,9 +33,9 @@ import peakaboo.ui.swing.widgets.toggle.ComplexToggleGroup;
 public class SavePicture extends JDialog
 {
 
-	CanvasController	controller;
-	String				startingFolder;
-	ComplexToggleGroup	group;
+	private CanvasController	controller;
+	private String				startingFolder;
+	ComplexToggleGroup			group;
 
 
 	JPanel				controlsPanel;
@@ -63,7 +63,7 @@ public class SavePicture extends JDialog
 		init(owner);
 
 	}
-
+	
 	private void init(Component owner)
 	{
 

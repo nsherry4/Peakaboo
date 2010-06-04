@@ -115,8 +115,8 @@ public class Spectrums
 
 		float steps = DEFAULT_STEPS;
 
-		int[] intervals = { Math.round(0.35f * steps), Math.round(0.15f * steps), Math.round(0.15f * steps),
-				Math.round(0.35f * steps) };
+		int[] intervals = { Math.round(0.30f * steps), Math.round(0.20f * steps), Math.round(0.20f * steps),
+				Math.round(0.30f * steps) };
 		double[][] values = { { 0.125, 0.29, 0.53 }, { 0.063, 0.145, 0.265 }, { 0.0, 0.0, 0.0 }, { 0.32, 0.0, 0.0 },
 				{ 0.64, 0.0, 0.0 } };
 

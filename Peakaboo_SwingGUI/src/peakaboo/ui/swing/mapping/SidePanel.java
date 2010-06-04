@@ -93,7 +93,7 @@ public class SidePanel extends JPanel
 		 * elementsListPanel = createElementsList(); add(elementsListPanel, maingbc);
 		 */
 
-		ImageButton savePictures = new ImageButton("picture", "Save as Images", "Save all open maps as images", true);
+		ImageButton savePictures = new ImageButton("picture", "Save as Image", "Save current map as image", true);
 		savePictures.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)

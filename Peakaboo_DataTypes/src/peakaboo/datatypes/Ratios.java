@@ -4,6 +4,8 @@ package peakaboo.datatypes;
 public class Ratios
 {
 
+	public static final int logValue = 2;
+	
 	public static String fromDouble(double value)
 	{
 		return fromDouble(value, false);
@@ -11,9 +13,9 @@ public class Ratios
 	
 	public static String fromDouble(double value, boolean integersOnly)
 	{
-		double ratioValue = Math.pow(10, Math.abs(value));
+		double ratioValue = Math.pow(logValue, Math.abs(value));
 		int decimals = 0;;
-		if (ratioValue < 10 && !integersOnly) decimals = 1;
+		if (ratioValue < logValue && !integersOnly) decimals = 1;
 		
 		String ratioString; 
 		ratioString = SigDigits.roundDoubleTo(ratioValue, decimals);

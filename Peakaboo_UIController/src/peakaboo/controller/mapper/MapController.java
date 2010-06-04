@@ -510,12 +510,12 @@ public class MapController extends CanvasController
 						if (value < 1.0)
 						{
 							value = (1.0 / value);
-							value = Math.log10(value);
+							value = Math.log(value) / Math.log(Ratios.logValue);
 							value = -value;
 						}
 						else
 						{
-							value = Math.log10(value);
+							value = Math.log(value) / Math.log(Ratios.logValue);
 						}
 
 						return value;
@@ -777,7 +777,10 @@ public class MapController extends CanvasController
 
 				List<Pair<Double, String>> spectrumMarkers = DataTypeFactory.<Pair<Double, String>> list();
 
-				for (int i = -(int) steps; i <= (int) steps; i++)
+				int increment = 1;
+				if (steps > 100) increment = (int)Math.ceil(steps / 100);
+				
+				for (int i = -(int) steps; i <= (int) steps; i+=increment)
 				{
 					double percent = 0.5 + 0.5 * (((double) i) / steps);
 

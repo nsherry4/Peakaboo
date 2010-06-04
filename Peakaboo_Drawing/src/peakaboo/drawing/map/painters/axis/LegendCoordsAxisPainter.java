@@ -53,12 +53,12 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		double offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
 		if (drawCoords) offsetY += keyHeight;
 
-		String intens;
+		String descriptor;
 		final double textLineHeight = p.context.getFontHeight();
 		final double textBaseline = offsetY + keyHeight + (drawCoords ? 0.0 : textLineHeight/2.0);
 		double fontSize = p.context.getFontSize();
 
-		intens = "Colour";
+		descriptor = "Colour";
 
 		String markingsText;
 		// concatenate the list of strings to display so we can check the width of the total string
@@ -86,7 +86,6 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		}
 
 		double startX = offsetX + ((width - expectedTextWidth) / 2.0);
-		final double startY = offsetY;
 		Functional.foldr(entries, startX, new Function2<Pair<Color, String>, Double, Double>() {
 
 			public Double f(Pair<Color, String> entry, Double position)
@@ -104,8 +103,8 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			}
 		});
 
-		double centerWidth = p.context.getTextWidth(intens);
-		p.context.writeText(intens, offsetX + (width - centerWidth) / 2.0, textBaseline + textLineHeight*(drawCoords ? 2.0 : 1.25));
+		double centerWidth = p.context.getTextWidth(descriptor);
+		p.context.writeText(descriptor, offsetX + (width - centerWidth) / 2.0, textBaseline + textLineHeight*(drawCoords ? 2.0 : 1.25));
 
 		p.context.restore();
 
