@@ -131,8 +131,6 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			double rightEndWidth = p.context.getTextWidth(maxIntensity);
 			p.context.writeText(maxIntensity, position + width - rightEndWidth, textBaseline);
 
-			double centerWidth = p.context.getTextWidth(intens);
-			p.context.writeText(intens, position + (width - centerWidth) / 2.0, textBaseline);
 		}
 		else
 		{
@@ -171,10 +169,11 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 				}
 			});
 
-			double centerWidth = p.context.getTextWidth(intens);
-			p.context.writeText(intens, position + (width - centerWidth) / 2.0, textBaseline + textLineHeight);
 
 		}
+		
+		double centerWidth = p.context.getTextWidth(intens);
+		p.context.writeText(intens, position + (width - centerWidth) / 2.0, textBaseline + textLineHeight);
 
 		p.context.restore();
 

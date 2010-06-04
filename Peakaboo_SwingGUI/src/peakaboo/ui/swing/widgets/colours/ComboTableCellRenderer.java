@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import peakaboo.common.Stderr;
+import peakaboo.mapping.colours.OverlayColor;
 import peakaboo.ui.swing.widgets.Spacing;
 
 
@@ -31,11 +32,11 @@ public class ComboTableCellRenderer implements ListCellRenderer, TableCellRender
 	{
 		renderer.setBorder(new MatteBorder(Spacing.iSmall(), Color.white));
 		
-		if ((value != null) && (value instanceof Color))
+		if ((value != null) && (value instanceof OverlayColor))
 		{
-			renderer.setIcon(new SquareIcon((Color) value));
+			renderer.setIcon(new SquareIcon( ((OverlayColor) value).toColor() ));
 			renderer.setText("");
-			renderer.setBackground((Color)value);
+			renderer.setBackground( ((OverlayColor)value).toColor() );
 		}
 		else
 		{

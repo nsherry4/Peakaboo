@@ -35,6 +35,7 @@ import peakaboo.drawing.map.palettes.ThermalScalePalette;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.painters.axis.AxisPainter;
 import peakaboo.drawing.painters.axis.TitleAxisPainter;
+import peakaboo.mapping.colours.OverlayColor;
 
 
 
@@ -110,8 +111,8 @@ public class MapController extends CanvasController
 
 			case RATIO:
 
-				int side1Count = Functional.filter(activeTabData.ratioSide.values(), Functions.equiv(1)).size();
-				int side2Count = Functional.filter(activeTabData.ratioSide.values(), Functions.equiv(2)).size();
+				int side1Count = activeTabData.getTransitionSeriesForRatioSide(1).size();
+				int side2Count = activeTabData.getTransitionSeriesForRatioSide(2).size();
 
 				if (side1Count == 0 || side2Count == 0) return "-";
 
@@ -483,29 +484,11 @@ public class MapController extends CanvasController
 			case RATIO:
 
 				// get transition series on ratio side 1
-				List<TransitionSeries> side1 = Functional.filter(
-						activeTabData.getVisibleTransitionSeries(),
-						new Function1<TransitionSeries, Boolean>() {
-
-							@Override
-							public Boolean f(TransitionSeries element)
-							{
-								return (activeTabData.ratioSide.get(element) == 1);
-							}
-						});
-
-				// get transition series on ratio side 1
-				List<TransitionSeries> side2 = Functional.filter(
-						activeTabData.getVisibleTransitionSeries(),
-						new Function1<TransitionSeries, Boolean>() {
-
-							@Override
-							public Boolean f(TransitionSeries element)
-							{
-								return (activeTabData.ratioSide.get(element) == 2);
-							}
-						});
-
+				List<TransitionSeries> side1 = activeTabData.getTransitionSeriesForRatioSide(1);
+				// get transition series on ratio side 2
+				List<TransitionSeries> side2 = activeTabData.getTransitionSeriesForRatioSide(2);
+				
+				
 				// sum all of the maps for the given transition series for each side
 				List<Double> side1Data = activeTabData.sumGivenTransitionSeriesMaps(side1);
 				List<Double> side2Data = activeTabData.sumGivenTransitionSeriesMaps(side2);
@@ -571,7 +554,7 @@ public class MapController extends CanvasController
 						int count = 0;
 						while (count < mapModel.viewOptions.interpolation)
 						{
-							interpolationResult = Interpolation.interpolateGridLinear(grid, mapdata);
+							interpolationResult = Interpolation.interpolateGridLinear(interpGrid, mapdata);
 							interpGrid = interpolationResult.first;
 							mapdata = interpolationResult.second;
 							count++;
@@ -682,7 +665,7 @@ public class MapController extends CanvasController
 
 				double redMax = Functional.foldr(
 
-						activeTabData.getTransitionSeriesForColour(Color.red),
+						activeTabData.getTransitionSeriesForColour(OverlayColor.RED),
 						0d,
 						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
 
@@ -695,7 +678,7 @@ public class MapController extends CanvasController
 
 				double greenMax = Functional.foldr(
 
-						activeTabData.getTransitionSeriesForColour(Color.green),
+						activeTabData.getTransitionSeriesForColour(OverlayColor.GREEN),
 						0d,
 						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
 
@@ -708,7 +691,7 @@ public class MapController extends CanvasController
 
 				double blueMax = Functional.foldr(
 
-						activeTabData.getTransitionSeriesForColour(Color.blue),
+						activeTabData.getTransitionSeriesForColour(OverlayColor.BLUE),
 						0d,
 						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
 
@@ -741,29 +724,21 @@ public class MapController extends CanvasController
 					// colour
 					Functional.map(
 
-							//input list - get a unique list of non-black colours in use
-							Functional.filter(
-									Functional.unique(activeTabData.overlayColour.values()),
-									new Function1<Color, Boolean>() {
+					// input list - get a unique list of colours in use
 
-										@Override
-										public Boolean f(Color c)
-										{
-											return !c.equals(Color.black);
-										}
-									})
-
-							,
-							//mapping function - convert the color objects into color,string pairs (ie color/element list)
-							new Function1<Color, Pair<Color, String>>() {
+							Functional.unique(activeTabData.overlayColour.values()),
+							
+							// mapping function - convert the color objects into color,string pairs (ie color/element
+							// list)
+							new Function1<OverlayColor, Pair<Color, String>>() {
 
 								@Override
-								public Pair<Color, String> f(Color element)
+								public Pair<Color, String> f(OverlayColor element)
 								{
 									// create a color,string pair
 									return new Pair<Color, String>(
 
-									element,
+									element.toColor(),
 
 									// fold the list of transition series using the concat operator
 										Functional.foldr(
@@ -848,8 +823,36 @@ public class MapController extends CanvasController
 
 		if (mapModel.viewOptions.drawTitle)
 		{
+			String mapTitle = "";
+			switch (activeTabData.displayMode)
+			{
+				case RATIO:
 
-			String mapTitle = "Map of " + activeTabData.mapLongTitle();
+					String side1Title = activeTabData.mapLongTitle(activeTabData.getTransitionSeriesForRatioSide(1));
+
+					String side2Title = activeTabData.mapLongTitle(activeTabData.getTransitionSeriesForRatioSide(2));
+					
+					mapTitle = "← " + side1Title + " ∶ " + side2Title + " →";
+					break;
+
+				case OVERLAY:
+					
+					mapTitle = "Overlay of " + activeTabData.mapLongTitle();
+					
+					break;
+					
+				case COMPOSITE:
+
+					if (activeTabData.getVisibleTransitionSeries().size() > 1)
+					{
+						mapTitle = "Composite of " + activeTabData.mapLongTitle();
+					}else {
+						mapTitle = "Map of " + activeTabData.mapLongTitle();
+					}
+					
+
+					break;
+			}
 
 			axisPainters.add(new TitleAxisPainter(1.0, null, null, null, mapTitle));
 		}
@@ -889,10 +892,10 @@ public class MapController extends CanvasController
 							@Override
 							public MapPainter f(Pair<TransitionSeries, List<Double>> mapdata)
 							{
-								Color c = activeTabData.overlayColour.get(mapdata.first);
+								OverlayColor c = activeTabData.overlayColour.get(mapdata.first);
 
 								MapPainter p = MapTechniqueFactory.getTechnique(
-										new OverlayPalette(spectrumSteps, c),
+										new OverlayPalette(spectrumSteps, c.toColor()),
 										mapdata.second,
 										mapModel.viewOptions.contour,
 										spectrumSteps);

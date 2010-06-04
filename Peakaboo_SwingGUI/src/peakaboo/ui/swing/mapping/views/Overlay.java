@@ -1,7 +1,6 @@
 package peakaboo.ui.swing.mapping.views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,6 +17,7 @@ import javax.swing.table.TableModel;
 
 import peakaboo.controller.mapper.MapController;
 import peakaboo.datatypes.peaktable.TransitionSeries;
+import peakaboo.mapping.colours.OverlayColor;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.colours.ComboTableCellRenderer;
 
@@ -73,7 +73,7 @@ public class Overlay extends JPanel {
 				else if (columnIndex == 2)
 				{
 					TransitionSeries ts = controller.getActiveTabModel().getAllTransitionSeries().get(rowIndex);
-					controller.getActiveTabModel().overlayColour.put(ts, (Color)value);
+					controller.getActiveTabModel().overlayColour.put(ts, (OverlayColor)value);
 					controller.invalidateInterpolation();
 				}
 			}
@@ -136,7 +136,7 @@ public class Overlay extends JPanel {
 				{
 					case 0:	return Boolean.class;
 					case 1: return String.class;
-					case 2: return Color.class;
+					case 2: return OverlayColor.class;
 				}
 				return Object.class;
 			}
@@ -163,15 +163,9 @@ public class Overlay extends JPanel {
 				new Color(0.125f, 0.290f, 0.530f),
 				Color.black 
 			};*/
-		
-		Color choices[] = { 
-				new Color(1.0f, 0f, 0f),
-				new Color(0.0f, 1.0f, 0.0f),
-				new Color(0.0f, 0.0f, 1.0f),
-			};
-		
+				
 		ComboTableCellRenderer renderer = new ComboTableCellRenderer();
-		JComboBox comboBox = new JComboBox(choices);
+		JComboBox comboBox = new JComboBox(OverlayColor.values());
 		comboBox.setRenderer(renderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
 		

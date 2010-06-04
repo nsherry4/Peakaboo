@@ -12,6 +12,7 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.colours.OverlayColor;
 
 public class SingleMapModel {
 
@@ -21,7 +22,7 @@ public class SingleMapModel {
 	private MapResultSet mapResults;
 	
 	public Map<TransitionSeries, Integer> ratioSide;
-	public Map<TransitionSeries, Color> overlayColour;
+	public Map<TransitionSeries, OverlayColor> overlayColour;
 	public Map<TransitionSeries, Boolean> visible;
 	
 	public MapScaleMode mapScaleMode = MapScaleMode.VISIBLE_ELEMENTS;
@@ -37,13 +38,13 @@ public class SingleMapModel {
 		displayMode = MapDisplayMode.COMPOSITE;
 		
 		ratioSide = DataTypeFactory.<TransitionSeries, Integer>map();
-		overlayColour = DataTypeFactory.<TransitionSeries, Color>map();
+		overlayColour = DataTypeFactory.<TransitionSeries, OverlayColor>map();
 		visible = DataTypeFactory.<TransitionSeries, Boolean>map();
 		
 		for (TransitionSeries ts : originalData.getAllTransitionSeries())
 		{
 			ratioSide.put(ts, 1);
-			overlayColour.put(ts, Color.black);
+			overlayColour.put(ts, OverlayColor.RED);
 			visible.put(ts, true);
 		}
 		
@@ -93,17 +94,21 @@ public class SingleMapModel {
 		return mapResults.sumGivenTransitionSeriesMaps(visible.keySet());
 	}
 	
-	public String mapShortTitle(){ return getShortDatasetTitle(null); }
+	public String mapShortTitle(){ return getShortDatasetTitle(getVisibleTransitionSeries()); }
 	
-	public String mapLongTitle(){ return getDatasetTitle(null); }
-	
+	public String mapLongTitle(){ return getDatasetTitle(getVisibleTransitionSeries()); }
 	
 
-	private String getDatasetTitle(String separator)
+	public String mapShortTitle(List<TransitionSeries> list){ return getShortDatasetTitle(list); }
+	
+	public String mapLongTitle(List<TransitionSeries> list){ return getDatasetTitle(list); }
+	
+
+	private String getDatasetTitle(List<TransitionSeries> list)
 	{
-		if (separator == null) separator = ", ";
+		String separator = ", ";
 		
-		List<String> elementNames = Functional.map(getVisibleTransitionSeries(), new Function1<TransitionSeries, String>() {
+		List<String> elementNames = Functional.map(list, new Function1<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.toElementString();
@@ -118,12 +123,12 @@ public class SingleMapModel {
 	}
 	
 
-	private String getShortDatasetTitle(String separator)
+	private String getShortDatasetTitle(List<TransitionSeries> list)
 	{
-		if (separator == null) separator = ", ";
+		String separator = ", ";
 		
 		
-		List<String> elementNames = Functional.map(getVisibleTransitionSeries(), new Function1<TransitionSeries, String>() {
+		List<String> elementNames = Functional.map(list, new Function1<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.element.toString();
@@ -141,7 +146,7 @@ public class SingleMapModel {
 	}
 	
 	
-	public List<Pair<TransitionSeries, List<Double>>> getTransitionSeriesForColour(final Color c)
+	public List<Pair<TransitionSeries, List<Double>>> getTransitionSeriesForColour(final OverlayColor c)
 	{
 		return Functional.filter(
 				resultantData,
@@ -150,7 +155,22 @@ public class SingleMapModel {
 					@Override
 					public Boolean f(Pair<TransitionSeries, List<Double>> element)
 					{
-						return c.equals(overlayColour.get(element.first));
+						return c.equals(overlayColour.get(element.first)) && visible.get(element.first);
+					}
+				});
+	}
+	
+	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
+	{
+		return Functional.filter(
+				getVisibleTransitionSeries(),
+				new Function1<TransitionSeries, Boolean>() {
+
+					@Override
+					public Boolean f(TransitionSeries element)
+					{
+						Integer thisSide = ratioSide.get(element);
+						return thisSide == side;
 					}
 				});
 	}
