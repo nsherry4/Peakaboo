@@ -26,6 +26,7 @@ import peakaboo.drawing.common.Spectrums;
 import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.painters.MapPainter;
 import peakaboo.drawing.map.painters.MapTechniqueFactory;
+import peakaboo.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import peakaboo.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.map.palettes.OverlayPalette;
@@ -76,7 +77,7 @@ public class MapController extends CanvasController
 			generateFinalData();
 		}
 
-		return Functional.map(activeTabData.resultantData, Functions.<TransitionSeries, List<Double>>second());
+		return Functional.map(activeTabData.resultantData, Functions.<TransitionSeries, List<Double>> second());
 	}
 
 
@@ -681,69 +682,48 @@ public class MapController extends CanvasController
 
 				double redMax = Functional.foldr(
 
-				Functional.filter(
-						activeTabData.resultantData,
-						new Function1<Pair<TransitionSeries, List<Double>>, Boolean>() {
+						activeTabData.getTransitionSeriesForColour(Color.red),
+						0d,
+						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
 
 							@Override
-							public Boolean f(Pair<TransitionSeries, List<Double>> element)
+							public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
 							{
-								return Color.red.equals(activeTabData.overlayColour.get(element.first));
+								return sum + ListCalculations.max(mapdata.second);
 							}
-						}), 0d, new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
-
-					@Override
-					public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
-					{
-						return sum + ListCalculations.max(mapdata.second);
-					}
-				});
+						});
 
 				double greenMax = Functional.foldr(
 
-				Functional.filter(
-						activeTabData.resultantData,
-						new Function1<Pair<TransitionSeries, List<Double>>, Boolean>() {
+						activeTabData.getTransitionSeriesForColour(Color.green),
+						0d,
+						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
 
 							@Override
-							public Boolean f(Pair<TransitionSeries, List<Double>> element)
+							public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
 							{
-								return Color.red.equals(activeTabData.overlayColour.get(element.first));
+								return sum + ListCalculations.max(mapdata.second);
 							}
-						}), 0d, new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
-
-					@Override
-					public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
-					{
-						return sum + ListCalculations.max(mapdata.second);
-					}
-				});
+						});
 
 				double blueMax = Functional.foldr(
 
-				Functional.filter(
-						activeTabData.resultantData,
-						new Function1<Pair<TransitionSeries, List<Double>>, Boolean>() {
+						activeTabData.getTransitionSeriesForColour(Color.blue),
+						0d,
+						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
 
 							@Override
-							public Boolean f(Pair<TransitionSeries, List<Double>> element)
+							public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
 							{
-								return Color.red.equals(activeTabData.overlayColour.get(element.first));
+								return sum + ListCalculations.max(mapdata.second);
 							}
-						}), 0d, new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
-
-					@Override
-					public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
-					{
-						return sum + ListCalculations.max(mapdata.second);
-					}
-				});
+						});
 
 				mapModel.dr.maxYIntensity = Math.max(redMax, Math.max(greenMax, blueMax));
 
 				palette = new ThermalScalePalette(spectrumSteps, mapModel.viewOptions.monochrome);
 
-				spectrumCoordPainter = new SpectrumCoordsAxisPainter(
+				spectrumCoordPainter = new LegendCoordsAxisPainter(
 
 					mapModel.viewOptions.drawCoordinates,
 					mapModel.viewOptions.topLeftCoord,
@@ -754,10 +734,58 @@ public class MapController extends CanvasController
 
 					mapModel.viewOptions.drawSpectrum,
 					mapModel.viewOptions.spectrumHeight,
-					spectrumSteps,
-					paletteList,
 
-					mapModel.dimensionsProvided
+					mapModel.dimensionsProvided,
+
+					// create a list of color,string pairs for the legend by mapping the list of transitionseries per
+					// colour
+					Functional.map(
+
+							//input list - get a unique list of non-black colours in use
+							Functional.filter(
+									Functional.unique(activeTabData.overlayColour.values()),
+									new Function1<Color, Boolean>() {
+
+										@Override
+										public Boolean f(Color c)
+										{
+											return !c.equals(Color.black);
+										}
+									})
+
+							,
+							//mapping function - convert the color objects into color,string pairs (ie color/element list)
+							new Function1<Color, Pair<Color, String>>() {
+
+								@Override
+								public Pair<Color, String> f(Color element)
+								{
+									// create a color,string pair
+									return new Pair<Color, String>(
+
+									element,
+
+									// fold the list of transition series using the concat operator
+										Functional.foldr(
+
+										// map the list of transitionSeries, list double pairs to just transitionseries
+												Functional.map(
+														activeTabData.getTransitionSeriesForColour(element),
+														Functions.<TransitionSeries, List<Double>> first()),
+												"",
+												new Function2<TransitionSeries, String, String>() {
+
+													@Override
+													public String f(TransitionSeries ts, String title)
+													{
+														return title + (title.equals("") ? "" : ", ")
+																+ ts.toElementString();
+													}
+												})
+
+									);
+								}
+							})
 
 				);
 

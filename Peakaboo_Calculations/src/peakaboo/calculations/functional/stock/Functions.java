@@ -18,7 +18,19 @@ public class Functions
 			@Override
 			public String f(String s1, String s2)
 			{
-				return s1 + s2;
+				return s1.toString() + s2;
+			}
+		};
+	}
+	
+	public static <T1 extends Object> Function2<T1, String, String> concatObj()
+	{
+		return new Function2<T1, String, String>() {
+
+			@Override
+			public String f(T1 s1, String s2)
+			{
+				return s1.toString() + s2;
 			}
 		};
 	}
@@ -111,5 +123,5 @@ public class Functions
 			
 		};
 	}
-
+	
 }

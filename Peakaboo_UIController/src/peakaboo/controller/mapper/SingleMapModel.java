@@ -94,6 +94,7 @@ public class SingleMapModel {
 	}
 	
 	public String mapShortTitle(){ return getShortDatasetTitle(null); }
+	
 	public String mapLongTitle(){ return getDatasetTitle(null); }
 	
 	
@@ -139,4 +140,18 @@ public class SingleMapModel {
 		
 	}
 	
+	
+	public List<Pair<TransitionSeries, List<Double>>> getTransitionSeriesForColour(final Color c)
+	{
+		return Functional.filter(
+				resultantData,
+				new Function1<Pair<TransitionSeries, List<Double>>, Boolean>() {
+
+					@Override
+					public Boolean f(Pair<TransitionSeries, List<Double>> element)
+					{
+						return c.equals(overlayColour.get(element.first));
+					}
+				});
+	}
 }
