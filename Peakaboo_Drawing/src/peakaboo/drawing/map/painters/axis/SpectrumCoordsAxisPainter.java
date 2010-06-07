@@ -31,7 +31,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided)
+			boolean realDimensionsProvided, String descriptor)
 	{
 		super(
 			drawCoords,
@@ -42,7 +42,8 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided);
+			realDimensionsProvided,
+			descriptor);
 
 		this.markings = null;
 		this.negativeValues = false;
@@ -55,7 +56,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided, boolean negativeValues, List<Pair<Double, String>> markings)
+			boolean realDimensionsProvided, String descriptor, boolean negativeValues, List<Pair<Double, String>> markings)
 	{
 		super(
 			drawCoords,
@@ -66,7 +67,8 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided);
+			realDimensionsProvided,
+			descriptor);
 
 		this.markings = markings;
 		this.negativeValues = negativeValues;
@@ -106,7 +108,6 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		}
 		p.context.setSource(0, 0, 0);
 
-		String intens;
 		final double textBaseline = offsetY + keyHeight + p.context.getFontLeading() + p.context.getFontAscent();
 		double textLineHeight = p.context.getFontHeight();
 		double fontSize = p.context.getFontSize();
@@ -115,12 +116,11 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		{
 			String maxIntensity = String.valueOf((int) p.dr.maxYIntensity);
 			String minIntensity = negativeValues ? maxIntensity : "0";
-			intens = "Intensity (counts)";
 
 			while (width > 0.0 && fontSize > 1.0)
 			{
 
-				double expectedTextWidth = p.context.getTextWidth(maxIntensity + " " + intens + " " + maxIntensity);
+				double expectedTextWidth = p.context.getTextWidth(maxIntensity + " " + descriptor + " " + maxIntensity);
 				if (expectedTextWidth < width) break;
 				fontSize *= (width/expectedTextWidth) * 0.95;
 				p.context.setFontSize(fontSize);
@@ -134,8 +134,6 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		}
 		else
 		{
-			intens = "Intensity (ratio)";
-
 			
 			String markingsText;
 			//concatenate the list of strings to display so we can check the width of the total string
@@ -172,8 +170,8 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 		}
 		
-		double centerWidth = p.context.getTextWidth(intens);
-		p.context.writeText(intens, position + (width - centerWidth) / 2.0, textBaseline + textLineHeight);
+		double centerWidth = p.context.getTextWidth(descriptor);
+		p.context.writeText(descriptor, position + (width - centerWidth) / 2.0, textBaseline + textLineHeight);
 
 		p.context.restore();
 

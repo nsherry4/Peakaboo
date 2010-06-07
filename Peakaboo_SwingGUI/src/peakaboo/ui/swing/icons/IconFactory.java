@@ -26,6 +26,23 @@ public class IconFactory {
 	
 	public static ImageIcon getImageIcon(String imageName, IconSize size){
 		
+	
+		URL url = getImageIconURL(imageName, size);
+
+		
+		ImageIcon image;
+		if (url == null){
+			image = new ImageIcon();
+		} else {
+			image = new ImageIcon(url);
+		}
+		
+		return image;
+		
+	}
+	
+	public static URL getImageIconURL(String imageName, IconSize size)
+	{
 		String iconDir = "";
 		if (size == IconSize.BUTTON_SMALL){
 			iconDir = "8/";
@@ -39,16 +56,7 @@ public class IconFactory {
 			iconDir = "48/";
 		}
 		
-		URL url = ImageButton.class.getResource("/peakaboo/ui/swing/icons/" + iconDir + imageName + ".png");
-		
-		ImageIcon image;
-		if (url == null){
-			image = new ImageIcon();
-		} else {
-			image = new ImageIcon(url);
-		}
-		
-		return image;
+		return ImageButton.class.getResource("/peakaboo/ui/swing/icons/" + iconDir + imageName + ".png");
 		
 	}
 	

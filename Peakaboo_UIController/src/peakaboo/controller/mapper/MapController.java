@@ -655,7 +655,8 @@ public class MapController extends CanvasController
 					spectrumSteps,
 					paletteList,
 
-					mapModel.dimensionsProvided
+					mapModel.dimensionsProvided,
+					"Intensity (counts)"
 
 				);
 
@@ -719,6 +720,7 @@ public class MapController extends CanvasController
 					mapModel.viewOptions.spectrumHeight,
 
 					mapModel.dimensionsProvided,
+					"Colour",
 
 					// create a list of color,string pairs for the legend by mapping the list of transitionseries per
 					// colour
@@ -807,6 +809,7 @@ public class MapController extends CanvasController
 					paletteList,
 
 					mapModel.dimensionsProvided,
+					"Intensity (ratio)",
 					activeTabData.displayMode == MapDisplayMode.RATIO,
 					spectrumMarkers);
 
@@ -872,13 +875,25 @@ public class MapController extends CanvasController
 		switch (activeTabData.displayMode)
 		{
 			case COMPOSITE:
+				
+				paletteList.add(palette);
+				mapPainter = MapTechniqueFactory.getTechnique(
+						paletteList,
+						activeTabData.resultantData.get(0).second,
+						mapModel.viewOptions.contour,
+						spectrumSteps);
+				map.setPainters(mapPainter);
+				map.draw();
+
+				break;
+				
 			case RATIO:
 
 				paletteList.add(palette);
 				mapPainter = MapTechniqueFactory.getTechnique(
 						paletteList,
 						activeTabData.resultantData.get(0).second,
-						mapModel.viewOptions.contour,
+						false,
 						spectrumSteps);
 				map.setPainters(mapPainter);
 				map.draw();
@@ -900,7 +915,7 @@ public class MapController extends CanvasController
 								MapPainter p = MapTechniqueFactory.getTechnique(
 										new OverlayPalette(spectrumSteps, c.toColor()),
 										mapdata.second,
-										mapModel.viewOptions.contour,
+										false,
 										spectrumSteps);
 
 								p.setCompositeMode(CompositeModes.ADD);

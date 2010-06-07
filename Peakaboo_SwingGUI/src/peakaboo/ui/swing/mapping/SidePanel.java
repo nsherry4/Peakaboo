@@ -16,6 +16,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import peakaboo.controller.mapper.MapController;
+import peakaboo.controller.mapper.MapDisplayMode;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
@@ -118,6 +119,7 @@ public class SidePanel extends JPanel
 				shadesSpinner.setValue(controller.getSpectrumSteps());
 				shadesSpinner.setEnabled(controller.getContours());
 				contours.setSelected(controller.getContours());
+				contours.setEnabled(controller.getActiveTabModel().displayMode == MapDisplayMode.COMPOSITE);
 				width.setValue(controller.getDataWidth());
 				height.setValue(controller.getDataHeight());
 				interpolation.setValue(controller.getInterpolation());

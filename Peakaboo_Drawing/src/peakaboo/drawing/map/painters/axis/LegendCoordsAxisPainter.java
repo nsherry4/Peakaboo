@@ -19,10 +19,9 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	private List<Pair<Color, String>>	entries;
 
-
 	public LegendCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, List<Pair<Color, String>> entries)
+			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, String descriptor, List<Pair<Color, String>> entries)
 	{
 		super(
 			drawCoords,
@@ -33,7 +32,8 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided);
+			realDimensionsProvided,
+			descriptor);
 
 		this.entries = entries;
 
@@ -53,12 +53,9 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		double offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
 		if (drawCoords) offsetY += keyHeight;
 
-		String descriptor;
 		final double textLineHeight = p.context.getFontHeight();
 		final double textBaseline = offsetY + keyHeight + (drawCoords ? 0.0 : textLineHeight/2.0);
 		double fontSize = p.context.getFontSize();
-
-		descriptor = "Colour";
 
 		String markingsText;
 		// concatenate the list of strings to display so we can check the width of the total string

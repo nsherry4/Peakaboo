@@ -2,22 +2,35 @@ package peakaboo.ui.swing.mapping.views;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import peakaboo.controller.mapper.MapController;
+import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColor;
+import peakaboo.ui.swing.icons.IconFactory;
+import peakaboo.ui.swing.icons.IconSize;
+import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.colours.ComboTableCellRenderer;
 
@@ -25,6 +38,9 @@ public class Overlay extends JPanel {
 
 	private MapController controller;
 
+	private JRadioButton 		visibleElements;
+	private JRadioButton 		allElements;
+	
 	public Overlay(MapController _controller) {
 
 		this.controller = _controller;
@@ -45,6 +61,60 @@ public class Overlay extends JPanel {
 
 	}
 
+	
+
+	private JPanel createScaleOptions()
+	{
+		
+		JPanel modeFrame = new JPanel();
+		
+		TitledBorder titleBorder = new TitledBorder("Scale Colour Groups:");
+		titleBorder.setBorder(Spacing.bNone());
+		
+		modeFrame.setBorder(titleBorder);
+		modeFrame.setLayout(new BorderLayout());
+		
+		JPanel visibleElementsPanel = new ClearPanel();
+		visibleElementsPanel.setLayout(new BorderLayout());
+		
+		visibleElements = new JRadioButton("Independantly");
+		JLabel warning = new JLabel(IconFactory.getImageIcon("warn", IconSize.BUTTON));
+		visibleElementsPanel.add(visibleElements, BorderLayout.WEST);
+		visibleElementsPanel.add(warning, BorderLayout.EAST);
+		
+		visibleElements.setToolTipText("Warning: This option gives qualitative results only. Scaling each colour group independantly may lead to better looking graphs, but they will not be accurate.");
+		warning.setToolTipText("Warning: This option gives qualitative results only. Scaling each colour group independantly may lead to better looking graphs, but they will not be accurate.");
+		
+		allElements = new JRadioButton("Against Strongest Group");
+		
+		
+		
+		ButtonGroup scaleGroup = new ButtonGroup();
+		scaleGroup.add(visibleElements);
+		scaleGroup.add(allElements);
+		allElements.setSelected(true);
+		
+		visibleElements.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				controller.setMapScaleMode(MapScaleMode.VISIBLE_ELEMENTS);
+			}
+		});
+		allElements.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				controller.setMapScaleMode(MapScaleMode.ALL_ELEMENTS);
+			}
+		});
+		
+		
+		modeFrame.add(visibleElementsPanel, BorderLayout.NORTH);
+		modeFrame.add(allElements, BorderLayout.SOUTH);
+		
+		return modeFrame;
+		
+	}
+	
 	private JPanel createElementsList() {
 
 		JPanel elementsPanel = new JPanel();
@@ -52,7 +122,8 @@ public class Overlay extends JPanel {
 
 		// elements list
 		elementsPanel.add(createTransitionSeriesList(), BorderLayout.CENTER);
-
+		//elementsPanel.add(createScaleOptions(), BorderLayout.SOUTH);
+		
 		return elementsPanel;
 	}
 
