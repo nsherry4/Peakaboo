@@ -28,10 +28,10 @@ public class Functional {
 		
 	}
 
-	public static <T1> List<T1> map_inplace(List<T1> list, Function1<T1,T1> f) {
+	public static <T1> List<T1> map_target(List<T1> list, List<T1> target, Function1<T1,T1> f) {
 				
 		for (int i = 0; i < list.size(); i++){
-			list.set( i, f.f(list.get(i)) );
+			target.set( i, f.f(list.get(i)) );
 		}
 		return list;
 		

@@ -235,7 +235,7 @@ public class ListCalculations
 	public static void divideBy_inplace(List<Double> data, final double value)
 	{
 
-		Functional.map_inplace(data, new Function1<Double, Double>() {
+		Functional.map_target(data, data, new Function1<Double, Double>() {
 
 			@Override
 			public Double f(Double element)
@@ -286,10 +286,23 @@ public class ListCalculations
 	 */
 	public static List<Double> subtractFromList(List<Double> data, double value)
 	{
-		return subtractFromList(data, value, Double.NaN);
+		return subtractFromList(data, null, value, Double.NaN);
 	}
 
+	/**
+	 * Subtracts value from each element in data
+	 * 
+	 * @param data
+	 * @param value
+	 * @return a copy of data, with value subtracted from each element
+	 */
+	public static List<Double> subtractFromList_target(List<Double> source, List<Double> target, double value)
+	{
+		return subtractFromList(source, target, value, Double.NaN);
+	}
+	
 
+	
 	/**
 	 * Subtracts value from each element in data, while keeping all values no lower than minimum
 	 * 
@@ -298,10 +311,25 @@ public class ListCalculations
 	 * @param minimum
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static List<Double> subtractFromList(List<Double> data, final double value, final double minimum)
+	public static List<Double> subtractFromList(List<Double> source, final double value, final double minimum)
 	{
 
-		return Functional.map(data, new Function1<Double, Double>() {
+		return subtractFromList(source, null, value, minimum);
+	}
+
+	
+	/**
+	 * Subtracts value from each element in data, while keeping all values no lower than minimum
+	 * 
+	 * @param data
+	 * @param value
+	 * @param minimum
+	 * @return a copy of data, with value subtracted from each element
+	 */
+	public static List<Double> subtractFromList(List<Double> source, List<Double> target, final double value, final double minimum)
+	{
+
+		return Functional.map_target(source, (target == null ? source : target), new Function1<Double, Double>() {
 
 			private double	newval;
 
@@ -727,7 +755,7 @@ public class ListCalculations
 	public static void logList_inplace(List<Double> list)
 	{
 
-		Functional.map_inplace(list, new Function1<Double, Double>() {
+		Functional.map_target(list, list, new Function1<Double, Double>() {
 
 			private double	logValue;
 
