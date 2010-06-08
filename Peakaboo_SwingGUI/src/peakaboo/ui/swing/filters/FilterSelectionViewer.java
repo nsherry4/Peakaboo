@@ -4,6 +4,7 @@ package peakaboo.ui.swing.filters;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
@@ -37,7 +38,9 @@ public class FilterSelectionViewer extends ClearPanel
 
 		this.setLayout(new BorderLayout());
 
-		this.add(createFilterTree(), BorderLayout.CENTER);
+		JScrollPane scroller = new JScrollPane(createFilterTree(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		this.add(scroller, BorderLayout.CENTER);
 		add(new TitleGradientPanel("Add Filter", true, createControls()), BorderLayout.NORTH);
 
 	}

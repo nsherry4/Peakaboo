@@ -39,7 +39,11 @@ public class Common {
 		try {
 	        BufferedReader in = new BufferedReader(new FileReader(filename));
 	        
-	        return readerToString(in);
+	        String readString = readerToString(in);
+	        
+	        in.close();
+	        
+	        return readString;
 	        
 	    } catch (IOException e) {
 	    	e.printStackTrace();
@@ -89,8 +93,6 @@ public class Common {
 				file.append(line + System.getProperty("line.separator"));
 				
 			}
-		
-			reader.close();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

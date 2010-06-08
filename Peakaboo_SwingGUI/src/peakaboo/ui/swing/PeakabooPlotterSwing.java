@@ -216,10 +216,12 @@ public class PeakabooPlotterSwing {
 
 		if (files != null) {
 
-			TaskList<Boolean> reading = controller
-					.TASK_readFileListAsDataset(files);
+			TaskList<Boolean> reading = controller.TASK_readFileListAsDataset(files);
 			new TaskListView(frame, reading);
-
+			//TaskListView was blocking.. it is now closed
+			System.gc();
+			
+			
 			// set some controls based on the fact that we have just loaded a
 			// new data set
 			savedSessionFileName = null;
@@ -284,6 +286,7 @@ public class PeakabooPlotterSwing {
 				}
 
 				controller.setMapController(mapperWindow.showDialog());
+				System.gc();
 			}
 		}
 	}

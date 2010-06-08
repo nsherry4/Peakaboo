@@ -37,7 +37,7 @@ public class FilterEditViewer extends ClearPanel{
 		
 		setLayout(new BorderLayout());
 		
-		JScrollPane scroller = new JScrollPane(createFilterTable(windowOwner));
+		JScrollPane scroller = new JScrollPane(createFilterTable(windowOwner), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		
 		add(scroller, BorderLayout.CENTER);

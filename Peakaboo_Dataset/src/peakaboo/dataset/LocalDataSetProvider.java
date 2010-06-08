@@ -49,6 +49,7 @@ public class LocalDataSetProvider extends DataSetProvider
 	protected List<List<Double>>	dsc_dataset;
 	protected List<String>			dsc_scannames;
 	protected List<List<Double>>	filteredDataSet;
+	protected Boolean				filteredDataInvalid;
 
 	protected String				datasetName;
 
@@ -212,7 +213,7 @@ public class LocalDataSetProvider extends DataSetProvider
 	@Override
 	public void invalidateFilteredData()
 	{
-		filteredDataSet = null;
+		filteredDataInvalid = true;
 	}
 
 
@@ -221,22 +222,14 @@ public class LocalDataSetProvider extends DataSetProvider
 	{
 
 		final TaskList<MapResultSet> tasklist;
-		boolean generateFilteredData = filteredDataSet == null;
 
 		// ======================================================================
 		// LOGIC FOR FILTERS: List<List<Double>> => List<List<Double>>
 		// ======================================================================
-		final List<List<Double>> filteredData;
+		//final List<List<Double>> filteredData;
 
-		if (generateFilteredData)
-		{
-			filteredData = DataTypeFactory.<Double> datasetInit(scanCount());
-		}
-		else
-		{
-			filteredData = filteredDataSet;
-		}
 
+		
 		final Task t_filter = new Task("Apply Filters") {
 
 			@Override
@@ -244,7 +237,7 @@ public class LocalDataSetProvider extends DataSetProvider
 			{
 
 				List<Double> data = filters.filterDataUnsynchronized(dsc_dataset.get(ordinal), false);
-				filteredData.set(ordinal, data);
+				filteredDataSet.set(ordinal, data);
 				return true;
 
 			}
@@ -265,7 +258,7 @@ public class LocalDataSetProvider extends DataSetProvider
 			public boolean work(int ordinal)
 			{
 
-				FittingResultSet frs = fittings.calculateFittings(filteredData.get(ordinal));
+				FittingResultSet frs = fittings.calculateFittings(filteredDataSet.get(ordinal));
 				// fittingResults.set(ordinal, frs);
 
 				for (FittingResult result : frs.fits)
@@ -292,17 +285,22 @@ public class LocalDataSetProvider extends DataSetProvider
 				// ================================
 				// PROCESS FILTERS
 				// ================================
-				if (filteredDataSet == null)
+				if (filteredDataInvalid)
 				{
 
+					//we'll be making changes to the filtered data, so mark it as invalid now
+					filteredDataInvalid = true;
+					
 					// process these scans in parallel
 					executor = new TicketingUITaskExecutor(scanCount(), t_filter, this);
 
 					executor.executeBlocking();
 
+					//we have completed filtering the data, we can now mark the
+					//filtered data as not needing a refresh
+					filteredDataInvalid = false;
+					
 					if (isAborted()) return null;
-
-					filteredDataSet = filteredData;
 
 				}
 				else
@@ -751,7 +749,8 @@ public class LocalDataSetProvider extends DataSetProvider
 		}
 
 		this.dsc_dataset = dataset;
-
+		this.filteredDataSet = DataTypeFactory.<Double> datasetInit(scanCount());
+		
 		dsc_scannames = DataTypeFactory.<String> list();
 		for (int i = 0; i < dataset.size(); i++)
 		{
