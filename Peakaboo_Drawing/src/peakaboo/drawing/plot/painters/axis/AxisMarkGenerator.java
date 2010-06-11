@@ -11,12 +11,12 @@ import peakaboo.drawing.backends.Surface;
 public class AxisMarkGenerator
 {
 
-	public static List<Pair<Double, Integer>> getAxisMarkList(double maxTicks, double axisHeight, int incrementSigDigits, double valueRangeStart, double valueRangeEnd)
+	public static List<Pair<Float, Integer>> getAxisMarkList(float maxTicks, float axisHeight, int incrementSigDigits, float valueRangeStart, float valueRangeEnd)
 	{
 		
 	
-		double valueRange = valueRangeEnd - valueRangeStart;
-		List<Pair<Double, Integer>> ticks = DataTypeFactory.<Pair<Double, Integer>>list();
+		float valueRange = valueRangeEnd - valueRangeStart;
+		List<Pair<Float, Integer>> ticks = DataTypeFactory.<Pair<Float, Integer>>list();
 		
 		// Calculate the increment size;
 		if (maxTicks == 0) return ticks;
@@ -26,11 +26,11 @@ public class AxisMarkGenerator
 		int startingValue = (int)(valueRangeStart + (Math.abs(valueRangeStart) % increment)); 
 		int currentValue = startingValue;
 	
-		double percentAlongAxis;
+		float percentAlongAxis;
 		while (currentValue < valueRangeEnd){
 			
 			percentAlongAxis = 1-0 - (currentValue - valueRangeStart)  / valueRange;
-			ticks.add(new Pair<Double, Integer>(percentAlongAxis, currentValue));
+			ticks.add(new Pair<Float, Integer>(percentAlongAxis, currentValue));
 			currentValue += increment;
 			
 		}
@@ -39,7 +39,7 @@ public class AxisMarkGenerator
 	}
 	
 
-	public static int getIncrement(double valueRange, double maxTickCount, int significantDigits)
+	public static int getIncrement(float valueRange, float maxTickCount, int significantDigits)
 	{
 		
 		if (maxTickCount == 0) return Integer.MAX_VALUE;
@@ -47,15 +47,15 @@ public class AxisMarkGenerator
 		
 	}
 	
-	public static int getMaxTicksY(Surface context, double axisSize)
+	public static int getMaxTicksY(Surface context, float axisSize)
 	{		
-		double textHeight = context.getFontHeight();
+		float textHeight = context.getFontHeight();
 		int maxTicks = (int)Math.floor(axisSize / (textHeight*3.0));
 		
 		return maxTicks;
 	}
 	
-	public static void drawTick(Surface context, double startx, double starty, double endx, double endy)
+	public static void drawTick(Surface context, float startx, float starty, float endx, float endy)
 	{
 		context.setAntialias(false);
 		context.moveTo(startx,  starty);

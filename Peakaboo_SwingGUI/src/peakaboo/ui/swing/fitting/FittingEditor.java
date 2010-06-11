@@ -80,7 +80,7 @@ public class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 			t = (TransitionSeries)value;
 			double intensity = controller.getTransitionSeriesIntensityForElement(t.element, t.type);
 			
-			tsCheck.setText(t.toString() + " (" + SigDigits.roundDoubleTo(intensity, 1) + ")");
+			tsCheck.setText(t.toString() + " (" + SigDigits.roundFloatTo(intensity, 1) + ")");
 			tsCheck.setSelected(t.visible);
 			
 			
@@ -107,7 +107,7 @@ public class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 			Element e = (Element)value;
 			double intensity = controller.getIntensityForElement(e);
 			element.setName(e.toString());
-			element.setDescription("Atomic #: " + (e.ordinal() + 1) + ", Intensity: " + SigDigits.roundDoubleTo(intensity, 1));
+			element.setDescription("Atomic #: " + (e.ordinal() + 1) + ", Intensity: " + SigDigits.roundFloatTo(intensity, 1));
 
 			element.setBackground(renderer.getBackgroundSelectionColor());
 			element.setForeground(renderer.getTextSelectionColor());

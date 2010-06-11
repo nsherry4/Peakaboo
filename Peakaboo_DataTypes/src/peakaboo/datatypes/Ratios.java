@@ -6,19 +6,19 @@ public class Ratios
 
 	public static final int logValue = 2;
 	
-	public static String fromDouble(double value)
+	public static String fromFloat(float value)
 	{
-		return fromDouble(value, false);
+		return fromFloat(value, false);
 	}
 	
-	public static String fromDouble(double value, boolean integersOnly)
+	public static String fromFloat(float value, boolean integersOnly)
 	{
 		double ratioValue = Math.pow(logValue, Math.abs(value));
 		int decimals = 0;;
 		if (ratioValue < logValue && !integersOnly) decimals = 1;
 		
 		String ratioString; 
-		ratioString = SigDigits.roundDoubleTo(ratioValue, decimals);
+		ratioString = SigDigits.roundFloatTo(ratioValue, decimals);
 		
 		String ratio = "";
 		if (value < 0) ratio = "1:" + ratioString;

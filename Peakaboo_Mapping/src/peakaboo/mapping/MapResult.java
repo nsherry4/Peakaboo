@@ -4,6 +4,7 @@ package peakaboo.mapping;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 
 /**
@@ -20,20 +21,17 @@ import peakaboo.datatypes.peaktable.TransitionSeries;
 public class MapResult implements Cloneable
 {
 
-	public List<Double>		data;
+	public Spectrum		data;
 	public TransitionSeries	transitionSeries;
 
 
 	public MapResult(TransitionSeries ts, int mapSize)
 	{
-		this.data = DataTypeFactory.<Double> list(mapSize);
-		for (int i = 0; i < mapSize; i++) {
-			data.add(0.0);
-		}
+		this.data = new Spectrum(mapSize, 0.0f);
 		transitionSeries = ts;
 	}
 	
-	protected MapResult(TransitionSeries ts, List<Double> data)
+	protected MapResult(TransitionSeries ts, Spectrum data)
 	{
 		this.transitionSeries = ts;
 		this.data = data;

@@ -26,7 +26,7 @@ public class DrawingRequest implements Serializable, Cloneable
 	/**
 	 * The dimensions of the image to be drawn
 	 */
-	public double	imageWidth, imageHeight;
+	public float	imageWidth, imageHeight;
 
 	/**
 	 * Indicates if this plot is to be drawn to a scalar surface or a raster surface. Some drawing methods may
@@ -40,7 +40,7 @@ public class DrawingRequest implements Serializable, Cloneable
 	 * Often if this is not provided, the maximum point in a given data set will be used as a maximum
 	 * intensity.
 	 */
-	public double	maxYIntensity;
+	public float	maxYIntensity;
 
 	
 	/**
@@ -52,7 +52,7 @@ public class DrawingRequest implements Serializable, Cloneable
 	/**
 	 * The base unit size or scale for a single data point
 	 */
-	public double	unitSize;
+	public float	unitSize;
 	
 	@Override
 	public DrawingRequest clone()

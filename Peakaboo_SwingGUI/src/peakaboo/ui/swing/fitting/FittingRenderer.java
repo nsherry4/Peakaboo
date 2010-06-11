@@ -76,7 +76,7 @@ public class FittingRenderer extends DefaultTreeCellRenderer
 			e = (Element)value;
 			intensity = controller.getIntensityForElement(e);
 			element.setName(e.toString());
-			element.setDescription("Atomic #: " + (e.ordinal() + 1) + ", Intensity: " + SigDigits.roundDoubleTo(intensity, 1));
+			element.setDescription("Atomic #: " + (e.ordinal() + 1) + ", Intensity: " + SigDigits.roundFloatTo(intensity, 1));
 			element.setSelected(controller.getElementVisibility(e));
 			//element.setPreferredSize(new Dimension(0, element.getPreferredSize().height));
 						
@@ -88,7 +88,7 @@ public class FittingRenderer extends DefaultTreeCellRenderer
 			e = t.element;
 			intensity = controller.getTransitionSeriesIntensityForElement(e, t.type);
 			
-			tsName.setText(t.toString() + " (" + SigDigits.roundDoubleTo(intensity, 1) + ")");
+			tsName.setText(t.toString() + " (" + SigDigits.roundFloatTo(intensity, 1) + ")");
 			tsName.setSelected(t.visible);
 			
 			tsName.setPreferredSize(new Dimension(1000, tsName.getPreferredSize().height));

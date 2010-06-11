@@ -1,5 +1,7 @@
 package peakaboo.filters;
 
+
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -7,85 +9,90 @@ import java.util.List;
 
 import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
+import peakaboo.filters.filters.Addition;
 import peakaboo.filters.filters.AgressiveWaveletNoiseFilter;
 import peakaboo.filters.filters.BruknerRemoval;
+import peakaboo.filters.filters.Derivitive;
 import peakaboo.filters.filters.FourierLowPass;
+import peakaboo.filters.filters.Integrate;
 import peakaboo.filters.filters.MovingAverage;
+import peakaboo.filters.filters.Multiply;
 import peakaboo.filters.filters.PolynomialRemoval;
 import peakaboo.filters.filters.SavitskyGolaySmoothing;
+import peakaboo.filters.filters.Subtraction;
 import peakaboo.filters.filters.WaveletNoiseFilter;
+
 
 
 public class AvailableFilters
 {
-	
+
 	public static List<AbstractFilter> generateFilterList()
 	{
 		if (Version.inJar)
 		{
-			try {
+			try
+			{
 				return generateFilterListStatic();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-				return DataTypeFactory.<AbstractFilter>list();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				return DataTypeFactory.<AbstractFilter>list();
 			}
-		} 
-		else 
+			catch (InstantiationException e)
+			{
+				e.printStackTrace();
+				return DataTypeFactory.<AbstractFilter> list();
+			}
+			catch (IllegalAccessException e)
+			{
+				e.printStackTrace();
+				return DataTypeFactory.<AbstractFilter> list();
+			}
+		}
+		else
 		{
 			return generateFilterListDynamic();
 		}
 	}
-	
+
+
 	// for jar files -- how do we load these dynamically when inside a jar file?
 	public static List<AbstractFilter> generateFilterListStatic() throws InstantiationException, IllegalAccessException
 	{
 
-		List<AbstractFilter> list = DataTypeFactory.<AbstractFilter> list();
+		Class<?>[] classes = {
+				FourierLowPass.class,
+				MovingAverage.class,
+				PolynomialRemoval.class,
+				BruknerRemoval.class,
+				SavitskyGolaySmoothing.class,
+				AgressiveWaveletNoiseFilter.class,
+				WaveletNoiseFilter.class,
+				Integrate.class,
+				Derivitive.class,
+				Addition.class,
+				Subtraction.class,
+				Multiply.class };
 
-		Class<?> c;
-		Class<AbstractFilter> afc;
-		AbstractFilter f;
+		return Functional.filter(
 
-		c = FourierLowPass.class;
-		afc = (Class<AbstractFilter>) c;
-		f = afc.newInstance();
-		list.add(f);
+		Functional.map(classes, new Function1<Class<?>, AbstractFilter>() {
 
-		c = MovingAverage.class;
-		afc = (Class<AbstractFilter>) c;
-		f = afc.newInstance();
-		list.add(f);
+			@SuppressWarnings("unchecked")
+			@Override
+			public AbstractFilter f(Class<?> element)
+			{
+				try
+				{
+					return ((Class<AbstractFilter>) element).newInstance();
+				}
+				catch (Exception e)
+				{
+					return null;
+				}
 
-		c = PolynomialRemoval.class;
-		afc = (Class<AbstractFilter>) c;
-		f = afc.newInstance();
-		list.add(f);
-		
-		c = BruknerRemoval.class;
-		afc = (Class<AbstractFilter>) c;
-		f = afc.newInstance();
-		list.add(f);
-
-		c = SavitskyGolaySmoothing.class;
-		afc = (Class<AbstractFilter>) c;
-		f = afc.newInstance();
-		list.add(f);
-
-		c = AgressiveWaveletNoiseFilter.class;
-		afc = (Class<AbstractFilter>) c;
-		f = afc.newInstance();
-		list.add(f);
-
-		c = WaveletNoiseFilter.class;
-		afc = (Class<AbstractFilter>) c;
-		f = afc.newInstance();
-		list.add(f);
-		
-		return list;
-
+			}
+		}), Functions.<AbstractFilter> notNull());
 
 	}
 
@@ -98,29 +105,40 @@ public class AvailableFilters
 
 		Package p = AbstractFilter.class.getPackage();
 		List<Class<?>> classes = null;
-		
-		try {
+
+		try
+		{
 			classes = getClasses(p.getName() + ".filters");
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		AbstractFilter f;
-		
-		if (classes != null) {
-			for (int i = 0; i < classes.size(); i++) {
-				if (classes.get(i).getSuperclass() == AbstractFilter.class) {
+
+		if (classes != null)
+		{
+			for (int i = 0; i < classes.size(); i++)
+			{
+				if (classes.get(i).getSuperclass() == AbstractFilter.class)
+				{
 
 					// this will warn of an unchecked cast, but since we're checking
 					// for ourselves on the line above, this can be ignored.
-					try {
-						f = (AbstractFilter)classes.get(i).newInstance();
+					try
+					{
+						f = (AbstractFilter) classes.get(i).newInstance();
 						if (f.showFilter()) list.add(f);
-					} catch (InstantiationException e) {
+					}
+					catch (InstantiationException e)
+					{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (IllegalAccessException e) {
+					}
+					catch (IllegalAccessException e)
+					{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -128,8 +146,6 @@ public class AvailableFilters
 				}
 			}
 		}
-
-
 
 		return list;
 
@@ -140,41 +156,48 @@ public class AvailableFilters
 	private static List<Class<?>> getClasses(String pckgname) throws ClassNotFoundException
 	{
 
-	
 		List<Class<?>> classes = DataTypeFactory.<Class<?>> list();
 		// Get a File object for the package
 		File directory = null;
-		try {
+		try
+		{
 			ClassLoader cld = Thread.currentThread().getContextClassLoader();
-			if (cld == null) {
+			if (cld == null)
+			{
 				throw new ClassNotFoundException("Can't get class loader.");
 			}
 			String path = pckgname.replace('.', '/');
 			URL resource = cld.getResource(path);
-			if (resource == null) {
+			if (resource == null)
+			{
 				throw new ClassNotFoundException("No resource for " + path);
 			}
 			URI resourceURI = resource.toURI();
 			String location = resourceURI.getPath();
 			directory = new File(location);
-		} catch (Exception x) {
+		}
+		catch (Exception x)
+		{
 			throw new ClassNotFoundException(pckgname + " (" + directory + ") does not appear to be a valid package");
 		}
-		
-		
-		
-		if (directory.exists()) {
+
+		if (directory.exists())
+		{
 			// Get the list of the files contained in the package
 			String[] files = directory.list();
-			for (int i = 0; i < files.length; i++) {
+			for (int i = 0; i < files.length; i++)
+			{
 				// we are only interested in .class files
-				if (files[i].endsWith(".class")) {
+				if (files[i].endsWith(".class"))
+				{
 					// removes the .class extension
 					String classname = files[i].substring(0, files[i].length() - 6);
 					classes.add(Class.forName(pckgname + '.' + classname));
 				}
 			}
-		} else {
+		}
+		else
+		{
 			throw new ClassNotFoundException(pckgname + " does not appear to be a valid package");
 		}
 

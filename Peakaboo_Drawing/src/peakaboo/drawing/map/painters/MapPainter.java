@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.Painter;
@@ -21,18 +22,18 @@ import peakaboo.drawing.painters.Painter;
 public abstract class MapPainter extends Painter
 {
 
-	protected List<Double>			data;
+	protected Spectrum			data;
 	protected List<AbstractPalette>	colourRules;
 
 
-	public MapPainter(List<AbstractPalette> colourRules, List<Double> data)
+	public MapPainter(List<AbstractPalette> colourRules, Spectrum data)
 	{
 		this.colourRules = colourRules;
 		this.data = data;
 
 	}
 	
-	public MapPainter(AbstractPalette colourRule, List<Double> data)
+	public MapPainter(AbstractPalette colourRule, Spectrum data)
 	{
 		List<AbstractPalette> rules = DataTypeFactory.<AbstractPalette>list();
 		rules.add(colourRule);
@@ -42,7 +43,7 @@ public abstract class MapPainter extends Painter
 
 
 	@Override
-	protected double getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
+	protected float getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
 	{
 		// TODO Auto-generated method stub
 		return 1;

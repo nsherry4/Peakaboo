@@ -3,7 +3,8 @@ package peakaboo.drawing.map.painters;
 
 import java.util.List;
 
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.backends.Buffer;
 import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.palettes.AbstractPalette;
@@ -21,7 +22,7 @@ public class RasterMapPainter extends MapPainter
 
 	private boolean yFlip;
 	
-	public RasterMapPainter(List<AbstractPalette> colourRules, List<Double> data, boolean yFlip)
+	public RasterMapPainter(List<AbstractPalette> colourRules, Spectrum data, boolean yFlip)
 	{
 		super(colourRules, data);
 		this.yFlip = yFlip;
@@ -34,23 +35,23 @@ public class RasterMapPainter extends MapPainter
 
 		p.context.save();
 
-		List<Double> modData;
+		Spectrum modData;
 		if (p.dr.maxYIntensity <= 0){
-			modData = ListCalculations.normalize(data);	
+			modData = SpectrumCalculations.normalize(data);	
 		} else {
-			modData = ListCalculations.divideBy(data, p.dr.maxYIntensity);
+			modData = SpectrumCalculations.divideBy(data, p.dr.maxYIntensity);
 		}
 		
 
 		// get the size of the cells
-		double cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
+		float cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
 		
 		// clip the region
 		p.context.rectangle(0, 0, p.dr.dataWidth * cellSize, p.dr.dataHeight * cellSize);
 		p.context.clip();
 
 
-		double intensity;
+		float intensity;
 		
 
 		if (p.dr.drawToVectorSurface){

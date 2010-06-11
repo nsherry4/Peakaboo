@@ -10,6 +10,7 @@ import peakaboo.dataset.DataSetProvider;
 import peakaboo.dataset.EmptyDataSetProvider;
 import peakaboo.dataset.ScanContainer;
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.plot.PlotDrawingRequestFactory;
@@ -26,7 +27,7 @@ public class PlotModel extends Model
 
 	// Data related to applying filters. Filters manipulate the dataset
 	public FilterSet			filters;
-	public List<Double>			filteredPlot;
+	public Spectrum				filteredPlot;
 	//public List<List<Double>>	filteredDataSet;
 
 

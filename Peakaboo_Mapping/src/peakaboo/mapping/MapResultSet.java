@@ -4,10 +4,11 @@ package peakaboo.mapping;
 import java.util.Collection;
 import java.util.List;
 
-import peakaboo.calculations.ListCalculations;
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Functional;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 
 /**
@@ -135,7 +136,7 @@ public class MapResultSet implements Cloneable
 	 * @param ts the {@link TransitionSeries} associated with the desired {@link MapResult}
 	 * @param index the index in the map data at which to place the new value
 	 */
-	public void putIntensityInMapAtPoint(double intensity, TransitionSeries ts, int index)
+	public void putIntensityInMapAtPoint(float intensity, TransitionSeries ts, int index)
 	{
 
 		MapResult m = getMap(ts);
@@ -151,18 +152,9 @@ public class MapResultSet implements Cloneable
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
-	public List<Double> sumAllTransitionSeriesMaps()
+	public Spectrum sumAllTransitionSeriesMaps()
 	{
-		List<Double> sums = DataTypeFactory.<Double> list();
-		for (int i = 0; i < mapSize; i++) {
-			sums.add(0.0);
-		}
-
-		for (MapResult map : maps) {
-			ListCalculations.addLists_inplace(sums, map.data);
-		}
-
-		return sums;
+		return sumGivenTransitionSeriesMaps(getAllTransitionSeries());
 
 	}
 
@@ -173,16 +165,13 @@ public class MapResultSet implements Cloneable
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
-	public List<Double> sumGivenTransitionSeriesMaps(Collection<TransitionSeries> list)
+	public Spectrum sumGivenTransitionSeriesMaps(Collection<TransitionSeries> list)
 	{
 		
-		List<Double> sums = DataTypeFactory.<Double> list();
-		for (int i = 0; i < mapSize; i++) {
-			sums.add(0.0);
-		}
+		Spectrum sums = new Spectrum(maps.get(0).data.size(), 0.0f);
 
 		for (MapResult map : maps) {
-			if (list.contains(map.transitionSeries)) ListCalculations.addLists_inplace(sums, map.data);
+			if (list.contains(map.transitionSeries)) SpectrumCalculations.addLists_inplace(sums, map.data);
 		}
 
 		return sums;

@@ -24,7 +24,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import peakaboo.common.Version;
-import peakaboo.fileio.Common;
+import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.icons.IconFactory;
@@ -181,7 +181,7 @@ public class AboutDialogue extends JDialog
 		is = getClass().getResourceAsStream(s);
 		br = new BufferedReader(new InputStreamReader(is));
 
-		text = Common.readerToString(br);
+		text = IOCommon.readerToString(br);
 
 
 		return text;

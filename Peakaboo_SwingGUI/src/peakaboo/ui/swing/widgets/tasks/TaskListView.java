@@ -101,9 +101,11 @@ public class TaskListView extends JDialog {
 								
 				// TODO Auto-generated method stub
 				if (tasks.isAborted()){
+					tasks.finished();
 					setVisible(false);
 				}
-				else if (tasks.getResult() != null){
+				else if (tasks.getCompleted()){
+					tasks.finished();
 					setVisible(false);
 				} else {
 					updateProgressBar();
@@ -134,6 +136,5 @@ public class TaskListView extends JDialog {
 		}
 		
 	}
-	
-	
+		
 }

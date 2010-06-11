@@ -57,6 +57,8 @@ public class PeakabooMapperSwing extends JDialog
 	
 	public String				savePictureFolder;
 	public String				dataSourceFolder;
+	
+	PeakabooSimpleListener 		controllerListener;
 
 	public PeakabooMapperSwing(
 			JFrame owner, 
@@ -100,6 +102,10 @@ public class PeakabooMapperSwing extends JDialog
 	public MapController showDialog()
 	{
 		setVisible(true);
+		
+		controller.removeListener(controllerListener);
+		originalData = null;
+		
 		return controller;
 	}
 
@@ -160,7 +166,7 @@ public class PeakabooMapperSwing extends JDialog
 
 		this.pack();
 		
-		controller.addListener(new PeakabooSimpleListener() {
+		controllerListener = new PeakabooSimpleListener() {
 
 			public void change()
 			{				
@@ -169,7 +175,9 @@ public class PeakabooMapperSwing extends JDialog
 				coords.setSelected(controller.getShowCoords());
 				
 			}
-		});
+		};
+		
+		controller.addListener(controllerListener);
 			
 		controller.updateListeners();
 
@@ -309,7 +317,10 @@ public class PeakabooMapperSwing extends JDialog
 	
 	
 	
-	
+	protected void finalize()
+	{
+		System.out.println("finalized mapper window");
+	}
 	
 
 

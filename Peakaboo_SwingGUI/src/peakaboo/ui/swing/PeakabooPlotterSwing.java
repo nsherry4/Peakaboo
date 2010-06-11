@@ -1,5 +1,7 @@
 package peakaboo.ui.swing;
 
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -17,15 +19,28 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+import javax.jnlp.FileContents;
+import javax.jnlp.FileOpenService;
+import javax.jnlp.ServiceManager;
+import javax.jnlp.UnavailableServiceException;
 import javax.swing.BoundedRangeModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -39,6 +54,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
@@ -55,10 +71,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.flexdock.docking.DockingConstants;
-import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.defaults.DefaultDockingPort;
-
+import peakaboo.common.OS;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.AllMapsModel;
@@ -69,9 +82,14 @@ import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.eventful.PeakabooMessageListener;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.tasks.TaskList;
+import peakaboo.fileio.AbstractFile;
+import peakaboo.fileio.IOCommon;
 import peakaboo.mapping.MapResultSet;
 import peakaboo.ui.swing.filters.FiltersetViewer;
 import peakaboo.ui.swing.fitting.CurveFittingView;
@@ -89,42 +107,46 @@ import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import peakaboo.ui.swing.widgets.tasks.TaskListView;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
 
+
+
 /**
- * 
  * This class is the main window for Peakaboo, the plotting window
  * 
  * @author Nathaniel Sherry, 2009
  */
 
-public class PeakabooPlotterSwing {
+public class PeakabooPlotterSwing
+{
 
-	String savedSessionFileName;
+	String			savedSessionFileName;
 
-	PlotController controller;
+	PlotController	controller;
 
-	PlotCanvas canvas;
-	JComboBox titleCombo;
-	JFrame frame;
-	JSpinner scanNo;
-	JLabel scanLabel;
-	JToggleButton scanBlock;
-	JLabel channelLabel;
-	JMenuItem mapMenuItem;
-	JMenuItem snapshotMenuItem;
-	JSpinner energy;
-	JSlider zoomSlider;
-	JMenuItem saveSession;
-	JButton toolbarSnapshot;
-	JButton toolbarMap;
-	JButton toolbarInfo;
-	JPanel zoomPanel;
-	JPanel bottomPanel;
-	JPanel scanSelector;
-	JScrollPane scrolledCanvas;
+	PlotCanvas		canvas;
+	JComboBox		titleCombo;
+	JFrame			frame;
+	JSpinner		scanNo;
+	JLabel			scanLabel;
+	JToggleButton	scanBlock;
+	JLabel			channelLabel;
+	JMenuItem		mapMenuItem;
+	JMenuItem		snapshotMenuItem;
+	JSpinner		energy;
+	JSlider			zoomSlider;
+	JMenuItem		saveSession;
+	JButton			toolbarSnapshot;
+	JButton			toolbarMap;
+	JButton			toolbarInfo;
+	JPanel			zoomPanel;
+	JPanel			bottomPanel;
+	JPanel			scanSelector;
+	JScrollPane		scrolledCanvas;
 
-	String savePictureFolder;
+	String			savePictureFolder;
 
-	public PeakabooPlotterSwing() {
+
+	public PeakabooPlotterSwing()
+	{
 
 		savedSessionFileName = null;
 
@@ -140,15 +162,17 @@ public class PeakabooPlotterSwing {
 		initGUI();
 
 		controller.addListener(new PeakabooMessageListener() {
-			
 
-			public void change(Object message) {
+			public void change(Object message)
+			{
 
-				//special notifications go here...
+				// special notifications go here...
 
 			}
 
-			public void change() {
+
+			public void change()
+			{
 				setWidgetsState();
 			}
 		});
@@ -157,47 +181,59 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	public void setWidgetsState() {
 
-		
+	public void setWidgetsState()
+	{
+
 		snapshotMenuItem.setEnabled(false);
 		toolbarSnapshot.setEnabled(false);
 
 		// anything to do with the dataset
-		if (controller.hasDataSet()) {
+		if (controller.hasDataSet())
+		{
 
 			bottomPanel.setEnabled(true);
 			snapshotMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
-			
-			if (controller.getFittedElements().size() == 0
-					|| controller.datasetScanCount() == 0) {
+
+			if (controller.getFittedElements().size() == 0 || controller.datasetScanCount() == 0)
+			{
 				mapMenuItem.setEnabled(false);
 				toolbarMap.setEnabled(false);
-			} else {
+			}
+			else
+			{
 				mapMenuItem.setEnabled(true);
 				toolbarMap.setEnabled(true);
 			}
 
-			if (controller.getScanHasExtendedInformation()) {
+			if (controller.getScanHasExtendedInformation())
+			{
 				toolbarInfo.setEnabled(true);
-			} else {
+			}
+			else
+			{
 				toolbarInfo.setEnabled(false);
 			}
 
-			energy.setValue(controller.getMaxEnergy());
-			
-			if (controller.getChannelCompositeType() == ChannelCompositeMode.NONE) {
+			energy.setValue((double) controller.getMaxEnergy());
+
+			if (controller.getChannelCompositeType() == ChannelCompositeMode.NONE)
+			{
 
 				scanNo.setValue(controller.getScanNumber() + 1);
 				scanBlock.setSelected(controller.getScanDiscarded());
 				scanSelector.setEnabled(true);
-				
-			} else {
+
+			}
+			else
+			{
 				scanSelector.setEnabled(false);
 			}
 
-		} else {
+		}
+		else
+		{
 			bottomPanel.setEnabled(false);
 		}
 
@@ -208,20 +244,45 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	private void actionOpenData() {
 
-		List<String> files;
+	private void actionOpenData()
+	{
 
-		files = openNewDataset();
 
-		if (files != null) {
+		List<AbstractFile> files = null;
+
+		if (OS.isWebStart())
+		{
+			// we're running client-side
+
+			
+			List<String> exts = new LinkedList<String>();
+			exts.add("xml");
+
+			files = IOCommon.openFiles("~/", exts);
+			
+		}
+		else
+		{
+			files = Functional.map(openNewDataset(), new Function1<String, AbstractFile>() {
+
+				public AbstractFile f(String element)
+				{
+					return new AbstractFile(element);
+				}
+			});
+
+
+		}
+		
+		if (files != null)
+		{
 
 			TaskList<Boolean> reading = controller.TASK_readFileListAsDataset(files);
 			new TaskListView(frame, reading);
-			//TaskListView was blocking.. it is now closed
+			// TaskListView was blocking.. it is now closed
 			System.gc();
-			
-			
+
 			// set some controls based on the fact that we have just loaded a
 			// new data set
 			savedSessionFileName = null;
@@ -231,168 +292,247 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	private void actionMap() {
-		if (controller.hasDataSet()) {
+
+	private void actionMap()
+	{
+		if (controller.hasDataSet())
+		{
 
 			TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
-			if (tasks == null)
-				return;
+			if (tasks == null) return;
 			new TaskListView(frame, tasks);
 
-			if (!tasks.isAborted()) {
+			if (!tasks.isAborted())
+			{
 
 				MapController mapController = controller.getMapController();
 				PeakabooMapperSwing mapperWindow;
 
 				Coord<Integer> dataDimensions = controller.getDataDimensions();
-				
+
 				MapResultSet results = tasks.getResult();
 				AllMapsModel datamodel = new AllMapsModel(results);
-				
+
 				datamodel.dataDimensions = dataDimensions;
 				datamodel.dimensionsProvided = controller.hasDimensions();
 				datamodel.badPoints = controller.getDiscardedScanList();
 				datamodel.realDimensions = controller.getRealDimensions();
 				datamodel.realDimensionsUnits = controller.getRealDimensionsUnits();
-				
-				if (mapController == null) {
-					
-					mapperWindow = new PeakabooMapperSwing
-					(
-							frame, datamodel, controller.getDatasetName(), true, 
-							controller.getDataSourceFolder(), dataDimensions, results
-					);
-					
-				} else {
-					
+
+				if (mapController == null)
+				{
+
+					mapperWindow = new PeakabooMapperSwing(
+						frame,
+						datamodel,
+						controller.getDatasetName(),
+						true,
+						controller.getDataSourceFolder(),
+						dataDimensions,
+						results);
+
+				}
+				else
+				{
+
 					int dy = mapController.getDataHeight();
 					int dx = mapController.getDataWidth();
-					
-					//if the data does not match size, discard it. either it was from
-					//a funny data set that isn't square or (more likely) they reloaded the
-					//data set
-					//TODO: invistigate -- is it easier to null the mapController pointer when
-					//loading new data and assume the data is the same size otherwise?
-					if (dataDimensions.x * dataDimensions.y == dx*dy) {
+
+					// if the data does not match size, discard it. either it was from
+					// a funny data set that isn't square or (more likely) they reloaded the
+					// data set
+					// TODO: invistigate -- is it easier to null the mapController pointer when
+					// loading new data and assume the data is the same size otherwise?
+					if (dataDimensions.x * dataDimensions.y == dx * dy)
+					{
 						dataDimensions.x = dx;
 						dataDimensions.y = dy;
 					}
-										
-					mapperWindow = new PeakabooMapperSwing
-					(
-							frame, datamodel, controller.getDatasetName(), true, 
-							controller.getDataSourceFolder(), dataDimensions, results
-					);
+
+					mapperWindow = new PeakabooMapperSwing(
+						frame,
+						datamodel,
+						controller.getDatasetName(),
+						true,
+						controller.getDataSourceFolder(),
+						dataDimensions,
+						results);
 				}
 
-				controller.setMapController(mapperWindow.showDialog());
+				mapperWindow.showDialog();
+				// controller.setMapController(mapperWindow.showDialog());
 				System.gc();
 			}
 		}
 	}
 
-	private void actionSaveSession(boolean forceSaveAs) {
 
-		if (savedSessionFileName == null || forceSaveAs) {
+	private void actionSaveSession(boolean forceSaveAs)
+	{
+
+		if (savedSessionFileName == null || forceSaveAs)
+		{
 
 			String filename = getSavePreferencesFile();
-			if (filename != null) {
-				if (!filename.endsWith(".peakaboo"))
-					filename += ".peakaboo";
+			if (filename != null)
+			{
+				if (!filename.endsWith(".peakaboo")) filename += ".peakaboo";
 				controller.savePreferences(filename);
 				savedSessionFileName = filename;
 				saveSession.setEnabled(true);
 			}
-		} else {
+		}
+		else
+		{
 			controller.savePreferences(savedSessionFileName);
 		}
 
 	}
 
-	private void actionSavePicture() {
-		if (savePictureFolder == null)
-			savePictureFolder = controller.getDataSourceFolder();
-		savePictureFolder = new SavePicture(frame, controller,
-				savePictureFolder).getStartingFolder();
+
+	private void actionSavePicture()
+	{
+		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
+		savePictureFolder = new SavePicture(frame, controller, savePictureFolder).getStartingFolder();
 	}
 
-	private void actionSaveFittingInformation() {
 
-		if (savePictureFolder == null)
-			savePictureFolder = controller.getDataSourceFolder();
-		String saveFile = SimpleIODialogues.chooseFileSave(frame,
-				"Save Fitting Data to Text File", savePictureFolder, "txt",
-				"Text Files");
-		if (saveFile != null) {
+	private void actionSaveFittingInformation()
+	{
 
-			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(
-						new File(saveFile)));
-				savePictureFolder = new File(saveFile).getParent();
+		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
+		
+		List<Element> elements = controller.getFittedElements();
+		float intensity;
+		
+		try
+		{
+			
+			if (OS.isWebStart())
+			{
+				
+				
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();				
+				OutputStreamWriter osw = new OutputStreamWriter(baos);
+				
+				
+				for (Element e : elements)
+				{
 
-				List<Element> elements = controller.getFittedElements();
-				double intensity;
+					for (TransitionSeriesType tst : controller.getTransitionSeriesTypesForElement(e, true))
+					{
 
-				for (Element e : elements) {
-
-					for (TransitionSeriesType tst : controller
-							.getTransitionSeriesTypesForElement(e, true)) {
-
-						if (controller.getTransitionSeriesForElement(e, tst).visible == false)
-							continue;
-						intensity = controller
-								.getTransitionSeriesIntensityForElement(e, tst);
-						writer.write(e.toString() + " " + tst.toString() + ", "
-								+ SigDigits.roundDoubleTo(intensity, 2) + "\n");
+						if (controller.getTransitionSeriesForElement(e, tst).visible == false) continue;
+						intensity = controller.getTransitionSeriesIntensityForElement(e, tst);
+						osw.write(e.toString() + " " + tst.toString() + ", " + SigDigits.roundFloatTo(intensity, 2)
+								+ "\n");
 					}
 
 				}
-
-				writer.flush();
-				writer.close();
-
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				osw.close();
+				
+				ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+				
+				List<String> list = new LinkedList<String>();
+				list.add("txt");
+				
+				IOCommon.saveFile("~/", "", list, bais);
+				
 			}
+			else
+			{
+				
+				String saveFile = SimpleIODialogues.chooseFileSave(
+						frame,
+						"Save Fitting Data to Text File",
+						savePictureFolder,
+						"txt",
+						"Text Files");
+				
+				if (saveFile != null)
+				{
 
+				
+					BufferedWriter writer = new BufferedWriter(new FileWriter(new File(saveFile)));
+					savePictureFolder = new File(saveFile).getParent();
+
+					
+					
+
+					for (Element e : elements)
+					{
+
+						for (TransitionSeriesType tst : controller.getTransitionSeriesTypesForElement(e, true))
+						{
+
+							if (controller.getTransitionSeriesForElement(e, tst).visible == false) continue;
+							intensity = controller.getTransitionSeriesIntensityForElement(e, tst);
+							writer.write(e.toString() + " " + tst.toString() + ", " + SigDigits.roundFloatTo(intensity, 2)
+									+ "\n");
+						}
+
+					}
+
+					writer.flush();
+					writer.close();
+				}
+			
+			}
+			
+		}
+		catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
 
-	public void actionLoadSession() {
+
+	public void actionLoadSession()
+	{
 		String filename = getLoadPreferencesFile();
-		if (filename != null)
-			controller.loadPreferences(filename);
+		if (filename != null) controller.loadPreferences(filename);
 		savedSessionFileName = filename;
 		saveSession.setEnabled(true);
 	}
 
-	public void actionShowInfo() {
+
+	public void actionShowInfo()
+	{
 
 		new ScanInfoDialogue(frame, controller);
 
 	}
 
-	private void initGUI() {
+
+	private void initGUI()
+	{
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		canvas = new PlotCanvas(controller);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-		
+
 		channelLabel = new JLabel("");
 		channelLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		channelLabel.setFont(channelLabel.getFont().deriveFont(Font.PLAIN));
-		
+
 		canvas.addMouseMotionListener(new MouseMotionListener() {
 
-			public void mouseDragged(MouseEvent e) {}
+			public void mouseDragged(MouseEvent e)
+			{
+			}
 
-			public void mouseMoved(MouseEvent e) {
+
+			public void mouseMoved(MouseEvent e)
+			{
 				mouseMoveCanvasEvent(e.getX());
 			}
 
@@ -425,27 +565,31 @@ public class PeakabooPlotterSwing {
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
 		canvas.addMouseMotionListener(new MouseMotionListener() {
-			
-			private int x0;
-			private Point p0;
-			
-			private BoundedRangeModel horizontalModel = scrolledCanvas.getHorizontalScrollBar().getModel();
-			
-			public void mouseMoved(MouseEvent e) {
+
+			private int					x0;
+			private Point				p0;
+
+			private BoundedRangeModel	horizontalModel	= scrolledCanvas.getHorizontalScrollBar().getModel();
+
+
+			public void mouseMoved(MouseEvent e)
+			{
 				x0 = horizontalModel.getValue();
 				p0 = e.getLocationOnScreen();
 			}
-			
-			public void mouseDragged(MouseEvent e) {
+
+
+			public void mouseDragged(MouseEvent e)
+			{
 				// TODO Auto-generated method stub
 				Point p1 = e.getLocationOnScreen();
 				int x1 = p0.x - p1.x + x0;
-				
+
 				horizontalModel.setValue(x1);
-				
+
 			}
 		});
-		
+
 		// pane.add(scrolledCanvas, c);
 
 		JPanel canvasPanel = new JPanel(new BorderLayout());
@@ -456,32 +600,31 @@ public class PeakabooPlotterSwing {
 		// DockingManager.setFloatingEnabled(true);
 		// DockingManager.setDefaultSiblingSize(0.2f);
 
-		DefaultDockingPort optionsPort = new DefaultDockingPort();
-		DefaultDockingPort spectrumPort = new DefaultDockingPort();
-		optionsPort.getDockingProperties().setTabPlacement(JTabbedPane.TOP);
-		optionsPort.setPreferredSize(new Dimension(800, 100));
-		spectrumPort.getDockingProperties().setTabPlacement(JTabbedPane.TOP);
-		spectrumPort.setPreferredSize(new Dimension(800, 100));
-		// port.setTabsAsDragSource(true);
-
-		CurveFittingView cfv = new CurveFittingView(controller);
-		FiltersetViewer fsv = new FiltersetViewer(controller, frame);
-
-		// dock the main panel
-		DockingManager.registerDockable(canvasPanel, "Spectrum");
-
-		// dock the side panels
-		DockingManager.registerDockable(fsv, "Filters");
-		DockingManager.registerDockable(cfv, "Peak Fitting");
-
-		optionsPort.dock(fsv, DockingConstants.CENTER_REGION);
-		optionsPort.dock(cfv, DockingConstants.CENTER_REGION);
-		spectrumPort.dock(canvasPanel, DockingConstants.CENTER_REGION);
-
-		// DockingManager.dock(cfv, fsv, DockingConstants.CENTER_REGION);
-
-		// set the ratio of side panel vs main panel
-		// DockingManager.setSplitProportion((DockingPort) port, 0.2f);
+		/*
+		 * DefaultDockingPort optionsPort = new DefaultDockingPort(); DefaultDockingPort spectrumPort = new
+		 * DefaultDockingPort(); optionsPort.getDockingProperties().setTabPlacement(JTabbedPane.TOP);
+		 * optionsPort.setPreferredSize(new Dimension(800, 100));
+		 * spectrumPort.getDockingProperties().setTabPlacement(JTabbedPane.TOP); spectrumPort.setPreferredSize(new
+		 * Dimension(800, 100)); // port.setTabsAsDragSource(true);
+		 * 
+		 * CurveFittingView cfv = new CurveFittingView(controller); FiltersetViewer fsv = new
+		 * FiltersetViewer(controller, frame);
+		 * 
+		 * // dock the main panel DockingManager.registerDockable(canvasPanel, "Spectrum");
+		 * 
+		 * // dock the side panels DockingManager.registerDockable(fsv, "Filters"); DockingManager.registerDockable(cfv,
+		 * "Peak Fitting");
+		 * 
+		 * optionsPort.dock(fsv, DockingConstants.CENTER_REGION); optionsPort.dock(cfv, DockingConstants.CENTER_REGION);
+		 * spectrumPort.dock(canvasPanel, DockingConstants.CENTER_REGION);
+		 * 
+		 * // DockingManager.dock(cfv, fsv, DockingConstants.CENTER_REGION);
+		 * 
+		 * // set the ratio of side panel vs main panel // DockingManager.setSplitProportion((DockingPort) port, 0.2f);
+		 */
+		JTabbedPane tabs = new JTabbedPane();
+		tabs.add(new CurveFittingView(controller), 0);
+		tabs.add(new FiltersetViewer(controller, frame), 1);
 
 		c.gridx = 0;
 		c.gridy = 1;
@@ -489,8 +632,7 @@ public class PeakabooPlotterSwing {
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.BOTH;
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				optionsPort, spectrumPort);
+		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabs, canvasPanel);
 		split.setResizeWeight(0);
 		split.setOneTouchExpandable(true);
 		split.setBorder(Spacing.bNone());
@@ -504,23 +646,30 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	private void setTitleBar() {
+
+	private void setTitleBar()
+	{
 		frame.setTitle(getTitleBarString());
 	}
 
-	private String getTitleBarString() {
+
+	private String getTitleBarString()
+	{
 		StringBuffer titleString;
 		titleString = new StringBuffer(Version.title);
-		if (controller.hasDataSet()) {
+		if (controller.hasDataSet())
+		{
 
 			String dataSetName = controller.getDatasetName();
 			titleString.append(" (" + dataSetName + ")");
 
-			if (controller.getChannelCompositeType() == ChannelCompositeMode.NONE) {
+			if (controller.getChannelCompositeType() == ChannelCompositeMode.NONE)
+			{
 				titleString.append(" - " + controller.getCurrentScanName());
-			} else {
-				titleString
-						.append(" - " + controller.getChannelCompositeType());
+			}
+			else
+			{
+				titleString.append(" - " + controller.getChannelCompositeType());
 			}
 
 		}
@@ -528,7 +677,9 @@ public class PeakabooPlotterSwing {
 		return titleString.toString();
 	}
 
-	private void populateToolbar(JToolBar toolbar) {
+
+	private void populateToolbar(JToolBar toolbar)
+	{
 
 		toolbar.setLayout(new GridBagLayout());
 
@@ -540,11 +691,11 @@ public class PeakabooPlotterSwing {
 		c.weighty = 0;
 		c.fill = GridBagConstraints.NONE;
 
-		JButton button = new ToolbarImageButton("document-open", "Open",
-				"Open a new data set");
+		JButton button = new ToolbarImageButton("document-open", "Open", "Open a new data set");
 		button.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				actionOpenData();
 			}
 		});
@@ -553,22 +704,22 @@ public class PeakabooPlotterSwing {
 		button = new JButton("Export Data");
 		// controls.add(button);
 
-		toolbarSnapshot = new ToolbarImageButton("picture", "Save Image",
-				"Save a picture of the current plot");
+		toolbarSnapshot = new ToolbarImageButton("picture", "Save Image", "Save a picture of the current plot");
 		toolbarSnapshot.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				actionSavePicture();
 			}
 		});
 		c.gridx += 1;
 		toolbar.add(toolbarSnapshot, c);
 
-		toolbarInfo = new ToolbarImageButton("info", "Scan Info",
-				"Displays extended information about this data set");
+		toolbarInfo = new ToolbarImageButton("info", "Scan Info", "Displays extended information about this data set");
 		toolbarInfo.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				actionShowInfo();
 			}
 		});
@@ -577,13 +728,14 @@ public class PeakabooPlotterSwing {
 		toolbar.add(toolbarInfo, c);
 
 		toolbarMap = new ToolbarImageButton(
-				"map",
-				"Map Fittings",
-				"Display a 2D map of the relative intensities of the fitted elements",
-				true);
+			"map",
+			"Map Fittings",
+			"Display a 2D map of the relative intensities of the fitted elements",
+			true);
 		toolbarMap.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				actionMap();
 			}
 		});
@@ -623,9 +775,10 @@ public class PeakabooPlotterSwing {
 		energyControls.add(energy, c2);
 		energy.addChangeListener(new ChangeListener() {
 
-			public void stateChanged(ChangeEvent e) {
+			public void stateChanged(ChangeEvent e)
+			{
 
-				double value = ((Double) energy.getValue());
+				float value = ((Double) energy.getValue()).floatValue();
 				controller.setMaxEnergy(value);
 
 			}
@@ -636,7 +789,8 @@ public class PeakabooPlotterSwing {
 		button = new ToolbarImageButton("about", "About");
 		button.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				new AboutDialogue(frame);
 			}
 		});
@@ -645,7 +799,9 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	public void createMenu() {
+
+	public void createMenu()
+	{
 
 		// Where the GUI is created:
 		JMenuBar menuBar;
@@ -657,37 +813,53 @@ public class PeakabooPlotterSwing {
 
 		ActionListener fileMenuListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 
 				String command = e.getActionCommand();
 
-				if (command == "Open Data...") {
+				if (command == "Open Data...")
+				{
 
 					actionOpenData();
 
-				} else if (command == "Export Data as Compressed File") {
+				}
+				else if (command == "Export Data as Compressed File")
+				{
 
-				} else if (command == "Export Plot as Image") {
+				}
+				else if (command == "Export Plot as Image")
+				{
 
 					actionSavePicture();
 
-				} else if (command == "Export Fittings as Text") {
+				}
+				else if (command == "Export Fittings as Text")
+				{
 
 					actionSaveFittingInformation();
 
-				} else if (command == "Save Session") {
+				}
+				else if (command == "Save Session")
+				{
 
 					actionSaveSession(false);
 
-				} else if (command == "Save Session As...") {
+				}
+				else if (command == "Save Session As...")
+				{
 
 					actionSaveSession(true);
 
-				} else if (command == "Load Session...") {
+				}
+				else if (command == "Load Session...")
+				{
 
 					actionLoadSession();
 
-				} else if (command == "Exit") {
+				}
+				else if (command == "Exit")
+				{
 
 					System.exit(0);
 
@@ -700,29 +872,23 @@ public class PeakabooPlotterSwing {
 		// FILE Menu
 		menu = new JMenu("File");
 		menu.setMnemonic(KeyEvent.VK_F);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Read and Write Data Sets");
+		menu.getAccessibleContext().setAccessibleDescription("Read and Write Data Sets");
 
-		menuItem = new JMenuItem("Open Data...", IconFactory
-				.getMenuIcon("document-open"));
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				java.awt.event.ActionEvent.CTRL_MASK));
+		menuItem = new JMenuItem("Open Data...", IconFactory.getMenuIcon("document-open"));
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.event.ActionEvent.CTRL_MASK));
 		menuItem.setMnemonic(KeyEvent.VK_O);
-		menuItem.getAccessibleContext().setAccessibleDescription(
-				"Opens new data sets.");
+		menuItem.getAccessibleContext().setAccessibleDescription("Opens new data sets.");
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
 
 		menu.addSeparator();
 
-		saveSession = new JMenuItem("Save Session", IconFactory
-				.getMenuIcon("document-save"));
+		saveSession = new JMenuItem("Save Session", IconFactory.getMenuIcon("document-save"));
 		saveSession.addActionListener(fileMenuListener);
 		menu.add(saveSession);
 		saveSession.setEnabled(false);
 
-		menuItem = new JMenuItem("Save Session As...", IconFactory
-				.getMenuIcon("document-save-as"));
+		menuItem = new JMenuItem("Save Session As...", IconFactory.getMenuIcon("document-save-as"));
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
 
@@ -735,42 +901,32 @@ public class PeakabooPlotterSwing {
 		 * menu.addSeparator();
 		 * 
 		 * menuItem = new JMenuItem("Export Data as Compressed File");
-		 * menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
-		 * java.awt.event.ActionEvent.CTRL_MASK));
-		 * menuItem.setMnemonic(KeyEvent.VK_E);
-		 * menuItem.getAccessibleContext().setAccessibleDescription(
-		 * "Opens new data sets.");
-		 * menuItem.addActionListener(fileMenuListener); menu.add(menuItem);
+		 * menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, java.awt.event.ActionEvent.CTRL_MASK));
+		 * menuItem.setMnemonic(KeyEvent.VK_E); menuItem.getAccessibleContext().setAccessibleDescription(
+		 * "Opens new data sets."); menuItem.addActionListener(fileMenuListener); menu.add(menuItem);
 		 */
 
 		// SEPARATOR
 		menu.addSeparator();
 
-		snapshotMenuItem = new JMenuItem("Export Plot as Image", IconFactory
-				.getMenuIcon("picture"));
-		snapshotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
-				java.awt.event.ActionEvent.CTRL_MASK));
+		snapshotMenuItem = new JMenuItem("Export Plot as Image", IconFactory.getMenuIcon("picture"));
+		snapshotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, java.awt.event.ActionEvent.CTRL_MASK));
 		snapshotMenuItem.setMnemonic(KeyEvent.VK_P);
-		snapshotMenuItem.getAccessibleContext().setAccessibleDescription(
-				"Saves the current plot as an image");
+		snapshotMenuItem.getAccessibleContext().setAccessibleDescription("Saves the current plot as an image");
 		snapshotMenuItem.addActionListener(fileMenuListener);
 		menu.add(snapshotMenuItem);
 
-		menuItem = new JMenuItem("Export Fittings as Text", IconFactory
-				.getMenuIcon("textfile"));
-		menuItem.getAccessibleContext().setAccessibleDescription(
-				"Saves the current fitting data to a text file");
+		menuItem = new JMenuItem("Export Fittings as Text", IconFactory.getMenuIcon("textfile"));
+		menuItem.getAccessibleContext().setAccessibleDescription("Saves the current fitting data to a text file");
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
 
 		// SEPARATOR
 		menu.addSeparator();
 
-		menuItem = new JMenuItem("Exit", IconFactory
-				.getMenuIcon("window-close"));
+		menuItem = new JMenuItem("Exit", IconFactory.getMenuIcon("window-close"));
 		menuItem.setMnemonic(KeyEvent.VK_X);
-		menuItem.getAccessibleContext().setAccessibleDescription(
-				"Opens new data sets.");
+		menuItem.getAccessibleContext().setAccessibleDescription("Opens new data sets.");
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
 
@@ -779,24 +935,31 @@ public class PeakabooPlotterSwing {
 		// VIEW Menu
 		menu = new JMenu("View");
 		menu.setMnemonic(KeyEvent.VK_V);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Change the way the plot is viewed");
+		menu.getAccessibleContext().setAccessibleDescription("Change the way the plot is viewed");
 		menuBar.add(menu);
 
 		ActionListener toggleOptionListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 
 				String command = e.getActionCommand();
 				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
 
-				if (command == "Logarithmic Plot") {
+				if (command == "Logarithmic Plot")
+				{
 					controller.setViewLog(menuitem.isSelected());
-				} else if (command == "Axes") {
+				}
+				else if (command == "Axes")
+				{
 					controller.setShowAxes(menuitem.isSelected());
-				} else if (command == "Title") {
+				}
+				else if (command == "Title")
+				{
 					controller.setShowTitle(menuitem.isSelected());
-				} else if (command == "Monochrome") {
+				}
+				else if (command == "Monochrome")
+				{
 					controller.setMonochrome(menuitem.isSelected());
 				}
 
@@ -806,19 +969,25 @@ public class PeakabooPlotterSwing {
 
 		ActionListener viewStyleListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 
 				String command = e.getActionCommand();
 
-				if (command == "Individual Spectrum") {
+				if (command == "Individual Spectrum")
+				{
 
 					controller.setShowChannelSingle();
 
-				} else if (command == "Mean Spectrum") {
+				}
+				else if (command == "Mean Spectrum")
+				{
 
 					controller.setShowChannelAverage();
 
-				} else if (command == "Top Tenth per Channel") {
+				}
+				else if (command == "Top Tenth per Channel")
+				{
 
 					controller.setShowChannelMaximum();
 
@@ -832,11 +1001,9 @@ public class PeakabooPlotterSwing {
 
 		// a group of JMenuItems
 		logPlot = new JCheckBoxMenuItem("Logarithmic Plot");
-		logPlot.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L,
-				java.awt.event.ActionEvent.CTRL_MASK));
+		logPlot.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, java.awt.event.ActionEvent.CTRL_MASK));
 		logPlot.setMnemonic(KeyEvent.VK_L);
-		logPlot.getAccessibleContext().setAccessibleDescription(
-				"Toggles the plot to be shown in logarithmic scale");
+		logPlot.getAccessibleContext().setAccessibleDescription("Toggles the plot to be shown in logarithmic scale");
 		logPlot.addActionListener(toggleOptionListener);
 		menu.add(logPlot);
 
@@ -861,7 +1028,8 @@ public class PeakabooPlotterSwing {
 		etitles = new JCheckBoxMenuItem("Names");
 		etitles.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				controller.setShowElementTitles(etitles.isSelected());
 			}
 		});
@@ -871,7 +1039,8 @@ public class PeakabooPlotterSwing {
 		emarkings = new JCheckBoxMenuItem("Markings");
 		emarkings.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				controller.setShowElementMarkers(emarkings.isSelected());
 			}
 		});
@@ -881,7 +1050,8 @@ public class PeakabooPlotterSwing {
 		eintensities = new JCheckBoxMenuItem("Heights");
 		eintensities.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				controller.setShowElementIntensities(eintensities.isSelected());
 			}
 		});
@@ -900,24 +1070,21 @@ public class PeakabooPlotterSwing {
 		individual = new JRadioButtonMenuItem("Individual Spectrum");
 		individual.setSelected(true);
 		individual.setMnemonic(KeyEvent.VK_I);
-		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
-				java.awt.event.ActionEvent.CTRL_MASK));
+		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, java.awt.event.ActionEvent.CTRL_MASK));
 		individual.addActionListener(viewStyleListener);
 		viewGroup.add(individual);
 		menu.add(individual);
 
 		average = new JRadioButtonMenuItem("Mean Spectrum");
 		average.setMnemonic(KeyEvent.VK_M);
-		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M,
-				java.awt.event.ActionEvent.CTRL_MASK));
+		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, java.awt.event.ActionEvent.CTRL_MASK));
 		average.addActionListener(viewStyleListener);
 		viewGroup.add(average);
 		menu.add(average);
 
 		maximum = new JRadioButtonMenuItem("Top Tenth per Channel");
 		maximum.setMnemonic(KeyEvent.VK_T);
-		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,
-				java.awt.event.ActionEvent.CTRL_MASK));
+		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, java.awt.event.ActionEvent.CTRL_MASK));
 		maximum.addActionListener(viewStyleListener);
 		viewGroup.add(maximum);
 		menu.add(maximum);
@@ -931,7 +1098,8 @@ public class PeakabooPlotterSwing {
 		raw.setMnemonic(KeyEvent.VK_O);
 		raw.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 
 				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
 				controller.setShowRawData(menuitem.isSelected());
@@ -944,7 +1112,8 @@ public class PeakabooPlotterSwing {
 		fittings.setSelected(controller.getShowIndividualSelections());
 		fittings.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 
 				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
 				controller.setShowIndividualSelections(menuitem.isSelected());
@@ -956,11 +1125,13 @@ public class PeakabooPlotterSwing {
 		// SELECT Menu
 		ActionListener selectMenuListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 
 				String command = e.getActionCommand();
 
-				if (command == "Map Visible Fittings") {
+				if (command == "Map Visible Fittings")
+				{
 					actionMap();
 				}
 
@@ -983,7 +1154,8 @@ public class PeakabooPlotterSwing {
 
 		controller.addListener(new PeakabooSimpleListener() {
 
-			public void change() {
+			public void change()
+			{
 
 				raw.setSelected(controller.getShowRawData());
 				fittings.setSelected(controller.getShowIndividualSelections());
@@ -992,17 +1164,18 @@ public class PeakabooPlotterSwing {
 				axes.setSelected(controller.getShowAxes());
 				monochrome.setSelected(controller.getMonochrome());
 
-				switch (controller.getChannelCompositeType()) {
+				switch (controller.getChannelCompositeType())
+				{
 
-				case NONE:
-					individual.setSelected(true);
-					break;
-				case AVERAGE:
-					average.setSelected(true);
-					break;
-				case MAXIMUM:
-					maximum.setSelected(true);
-					break;
+					case NONE:
+						individual.setSelected(true);
+						break;
+					case AVERAGE:
+						average.setSelected(true);
+						break;
+					case MAXIMUM:
+						maximum.setSelected(true);
+						break;
 
 				}
 
@@ -1011,7 +1184,9 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	private JPanel createBottomBar() {
+
+	private JPanel createBottomBar()
+	{
 		bottomPanel = new ClearPanel();
 		bottomPanel.setBorder(Spacing.bTiny());
 
@@ -1041,7 +1216,8 @@ public class PeakabooPlotterSwing {
 
 		scanNo.addChangeListener(new ChangeListener() {
 
-			public void stateChanged(ChangeEvent e) {
+			public void stateChanged(ChangeEvent e)
+			{
 				JSpinner scan = (JSpinner) e.getSource();
 				int value = (Integer) ((scan).getValue());
 				controller.setScanNumber(value - 1);
@@ -1051,19 +1227,21 @@ public class PeakabooPlotterSwing {
 
 		scanBlock.setFocusable(false);
 		scanBlock.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
+
+			public void actionPerformed(ActionEvent e)
+			{
 				// TODO Auto-generated method stub
 				controller.setScanDiscarded(scanBlock.isSelected());
 			}
 		});
-		
 
 		return bottomPanel;
 
 	}
 
-	private JPanel createZoomPanel() {
+
+	private JPanel createZoomPanel()
+	{
 
 		JPanel panel = new ClearPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -1084,20 +1262,23 @@ public class PeakabooPlotterSwing {
 
 		zoomSlider.addChangeListener(new ChangeListener() {
 
-			public void stateChanged(ChangeEvent e) {
-				controller.setZoom(zoomSlider.getValue() / 100.0);
+			public void stateChanged(ChangeEvent e)
+			{
+				controller.setZoom(zoomSlider.getValue() / 100.0f);
 			}
 		});
 		out.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				int current = zoomSlider.getValue();
 				zoomSlider.setValue(current - 10);
 			}
 		});
 		in.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				int current = zoomSlider.getValue();
 				zoomSlider.setValue(current + 10);
 			}
@@ -1111,18 +1292,21 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	private void fullRedraw() {
+
+	private void fullRedraw()
+	{
 		frame.getContentPane().validate();
 		frame.repaint();
 	}
 
+
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
 	// data set, and returns it to the caller
-	public List<String> openNewDataset() {
+	public List<String> openNewDataset()
+	{
 
-		JFileChooser chooser = new JFileChooser(controller
-				.getDataSourceFolder());
+		JFileChooser chooser = new JFileChooser(controller.getDataSourceFolder());
 		chooser.setMultiSelectionEnabled(true);
 
 		chooser.setDialogTitle("Select Data Files to Open");
@@ -1137,18 +1321,22 @@ public class PeakabooPlotterSwing {
 		chooser.setFileFilter(filter);
 
 		int returnVal = chooser.showOpenDialog(frame);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
 
 			File[] filenameArray = chooser.getSelectedFiles();
 
 			List<String> filenames = new ArrayList<String>(filenameArray.length);
-			for (int i = 0; i < filenameArray.length; i++) {
+			for (int i = 0; i < filenameArray.length; i++)
+			{
 				filenames.add(filenameArray[i].toString());
 			}
 
 			return filenames;
 
-		} else {
+		}
+		else
+		{
 
 			return null;
 
@@ -1156,47 +1344,60 @@ public class PeakabooPlotterSwing {
 
 	}
 
-	public String getSavePreferencesFile() {
 
-		return SimpleIODialogues.chooseFileSave(frame,
-				"Save This Peakaboo Session", controller.getDataSourceFolder(),
-				"peakaboo", "Saved Peakaboo Sessions");
+	public String getSavePreferencesFile()
+	{
+
+		return SimpleIODialogues.chooseFileSave(
+				frame,
+				"Save This Peakaboo Session",
+				controller.getDataSourceFolder(),
+				"peakaboo",
+				"Saved Peakaboo Sessions");
 
 	}
 
-	public String getLoadPreferencesFile() {
-		return SimpleIODialogues.chooseFileOpen(frame,
-				"Select Peakaboo Session File", controller
-						.getDataSourceFolder(), "peakaboo",
+
+	public String getLoadPreferencesFile()
+	{
+		return SimpleIODialogues.chooseFileOpen(
+				frame,
+				"Select Peakaboo Session File",
+				controller.getDataSourceFolder(),
+				"peakaboo",
 				"Saved Peakaboo Sessions");
 	}
 
+
 	/*
-	 * ======================================== METHODS FOR HANDLING CANVAS
-	 * EVENTS ========================================
+	 * ======================================== METHODS FOR HANDLING CANVAS EVENTS
+	 * ========================================
 	 */
-	public void paintCanvasEvent(Graphics g) {
+	public void paintCanvasEvent(Graphics g)
+	{
 
 		controller.setImageWidth(canvas.getWidth());
 		controller.setImageHeight(canvas.getHeight());
 
 		g.setColor(new Color(1.0f, 1.0f, 1.0f));
-		g.fillRect(0, 0, (int) controller.getImageWidth(), (int) controller
-				.getImageHeight());
+		g.fillRect(0, 0, (int) controller.getImageWidth(), (int) controller.getImageHeight());
 
 		controller.draw(g);
 
 	}
 
-	public void mouseMoveCanvasEvent(int x) {
+
+	public void mouseMoveCanvasEvent(int x)
+	{
 
 		int channel = controller.channelFromCoordinate(x, canvas.getWidth());
-		double energy = controller.getEnergyForChannel(channel);
-		Pair<Double, Double> values = controller.getValueForChannel(channel);
+		float energy = controller.getEnergyForChannel(channel);
+		Pair<Float, Float> values = controller.getValueForChannel(channel);
 
 		String sep = ",  ";
 
-		if (values != null) {
+		if (values != null)
+		{
 
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 
@@ -1211,15 +1412,15 @@ public class PeakabooPlotterSwing {
 					+ sep
 					+ "Value: "
 					+ fmtObj.format(values.first)
-					+ ((values.first.equals(values.second)) ? "" : sep
-							+ "Unfiltered Value: "
+					+ ((values.first.equals(values.second)) ? "" : sep + "Unfiltered Value: "
 							+ fmtObj.format(values.second)));
 
-		} else {
+		}
+		else
+		{
 
-			channelLabel.setText("View Type: "
-					+ controller.getChannelCompositeType().toString() + sep
-					+ "Channel: " + "-");
+			channelLabel.setText("View Type: " + controller.getChannelCompositeType().toString() + sep + "Channel: "
+					+ "-");
 		}
 	}
 

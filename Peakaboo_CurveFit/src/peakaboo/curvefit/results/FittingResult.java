@@ -4,6 +4,7 @@ package peakaboo.curvefit.results;
 import java.util.List;
 
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 
 /**
@@ -18,13 +19,13 @@ import peakaboo.datatypes.peaktable.TransitionSeries;
 public class FittingResult
 {
 
-	public List<Double>		fit;
+	public Spectrum		fit;
 	public TransitionSeries	transitionSeries;
-	public double			scaleFactor;
-	public double			normalizationScale;
+	public float			scaleFactor;
+	public float			normalizationScale;
 
 
-	public FittingResult(List<Double> fit, TransitionSeries transitionSeries, double scaleFactor, double normalizationScale)
+	public FittingResult(Spectrum fit, TransitionSeries transitionSeries, float scaleFactor, float normalizationScale)
 	{
 	
 		this.fit = fit;

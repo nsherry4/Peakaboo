@@ -33,7 +33,7 @@ public class PlotDrawingRequestFactory
 		dr.maxYIntensity = -1;
 
 		dr.viewTransform = ViewTransform.LINEAR;
-		dr.unitSize = 10.0;
+		dr.unitSize = 10.0f;
 		
 		return dr;
 

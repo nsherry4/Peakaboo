@@ -4,16 +4,18 @@ package peakaboo.drawing.plot.painters.plot;
 import java.awt.Color;
 import java.util.List;
 
+import peakaboo.datatypes.Spectrum;
+
 
 
 public class PrimaryPlotPainter extends AreaPainter
 {
 
-	public PrimaryPlotPainter(List<Double> data, boolean isMonochrome)
+	public PrimaryPlotPainter(Spectrum data, boolean isMonochrome)
 	{
 		super(data, getTopColor(isMonochrome), getBottomColor(isMonochrome), getStrokeColor(isMonochrome));
 	}
-	public PrimaryPlotPainter(List<Double> data)
+	public PrimaryPlotPainter(Spectrum data)
 	{
 		super(data, getTopColor(false), getBottomColor(false), getStrokeColor(false));
 	}

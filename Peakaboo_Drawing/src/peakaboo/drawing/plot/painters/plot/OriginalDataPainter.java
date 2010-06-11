@@ -4,16 +4,17 @@ package peakaboo.drawing.plot.painters.plot;
 import java.awt.Color;
 import java.util.List;
 
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.painters.PainterData;
 
 public class OriginalDataPainter extends LinePainter
 {
 	
-	public OriginalDataPainter(List<Double> data, boolean isMonochrome)
+	public OriginalDataPainter(Spectrum data, boolean isMonochrome)
 	{
 		super(data, getColour(isMonochrome));
 	}
-	public OriginalDataPainter(List<Double> data)
+	public OriginalDataPainter(Spectrum data)
 	{
 		super(data, getColour(false));
 	}

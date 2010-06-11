@@ -6,7 +6,7 @@ import peakaboo.datatypes.Range;
 public class AxesData
 {
 	
-	public Range<Double> xPositionBounds, yPositionBounds;
+	public Range<Float> xPositionBounds, yPositionBounds;
 	public boolean yLeftLog, yRightLog;
 	
 	public AxesData()
@@ -15,16 +15,16 @@ public class AxesData
 	}
 	
 	public AxesData(
-			double yLeftPosition,
-			double yRightPosition,
-			double xTopPosition,
-			double xBottomPosition
+			float yLeftPosition,
+			float yRightPosition,
+			float xTopPosition,
+			float xBottomPosition
 	)
 	{
 		
 
-		xPositionBounds = new Range<Double>(yLeftPosition, yRightPosition);
-		yPositionBounds = new Range<Double>(xTopPosition, xBottomPosition);
+		xPositionBounds = new Range<Float>(yLeftPosition, yRightPosition);
+		yPositionBounds = new Range<Float>(xTopPosition, xBottomPosition);
 		
 		yLeftLog = false;
 		yRightLog = false;
@@ -33,8 +33,8 @@ public class AxesData
 
 	public AxesData(
 			
-			Range<Double> xPositionBounds, 
-			Range<Double> yPositionBounds
+			Range<Float> xPositionBounds, 
+			Range<Float> yPositionBounds
 	)
 	{
 		

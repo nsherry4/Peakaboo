@@ -6,10 +6,7 @@ import java.util.List;
 
 // import com.sun.org.apache.xerces.internal.impl.dv.DatatypeException;
 
-import peakaboo.calculations.ListCalculations;
-import peakaboo.calculations.ROICalculations;
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Functional;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
@@ -17,21 +14,24 @@ import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.ranges.ROI;
 import peakaboo.datatypes.tasks.EmptyTask;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.datatypes.tasks.executor.implementations.SimpleUITaskExecutor;
 import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
-import peakaboo.fileio.Common.FileType;
+import peakaboo.fileio.AbstractFile;
+import peakaboo.fileio.IOCommon.FileType;
 import peakaboo.fileio.xrf.CDFMLDataSource;
 import peakaboo.fileio.xrf.DataSource;
 import peakaboo.fileio.xrf.DataSourceDimensions;
 import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
-import peakaboo.filters.FilterSet; // import sun.reflect.generics.tree.BottomSignature;
+import peakaboo.filters.FilterSet;
 import peakaboo.mapping.MapResultSet;
 
 
@@ -46,9 +46,9 @@ import peakaboo.mapping.MapResultSet;
 public class LocalDataSetProvider extends DataSetProvider
 {
 
-	protected List<List<Double>>	dsc_dataset;
+	protected List<Spectrum>		dsc_dataset;
 	protected List<String>			dsc_scannames;
-	protected List<List<Double>>	filteredDataSet;
+	protected List<Spectrum>		filteredDataSet;
 	protected Boolean				filteredDataInvalid;
 
 	protected String				datasetName;
@@ -69,14 +69,14 @@ public class LocalDataSetProvider extends DataSetProvider
 	}
 
 
-	public LocalDataSetProvider(List<List<Double>> dataset)
+	public LocalDataSetProvider(List<Spectrum> dataset)
 	{
 		super();
 		setDataset(dataset, null);
 	}
 
 
-	public LocalDataSetProvider(List<List<Double>> dataset, List<Double> normalizer)
+	public LocalDataSetProvider(List<Spectrum> dataset, Spectrum normalizer)
 	{
 		super();
 		setDataset(dataset, normalizer);
@@ -97,7 +97,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		if (excludedIndcies.size() == 0) return averagePlot();
 
 		//Filter for *JUST* the scans which have been marked as bad
-		List<List<Double>> badScans = Functional.filter_index(dsc_dataset, new Function1<Integer, Boolean>() {
+		List<Spectrum> badScans = Functional.filter_index(dsc_dataset, new Function1<Integer, Boolean>() {
 
 			public Boolean f(Integer element)
 			{
@@ -105,8 +105,8 @@ public class LocalDataSetProvider extends DataSetProvider
 			}
 		});
 
-		List<Double> Ae;
-		List<Double> At;
+		Spectrum Ae;
+		Spectrum At;
 		int Nt, Ne;
 
 		// At - Total average for whole dataset
@@ -120,7 +120,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		// so calculating the average of the bad scans should be relatively fast.
 		// (At - Ae*(Ne/Nt)) * (Nt/(Nt-Ne))
 
-		Ae = ListCalculations.getDatasetAverage(badScans);
+		Ae = SpectrumCalculations.getDatasetAverage(badScans);
 		At = dsc_average;
 		Nt = dsc_dataset.size();
 		Ne = badScans.size();
@@ -128,22 +128,16 @@ public class LocalDataSetProvider extends DataSetProvider
 		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
 		if (Nt == Ne)
 		{
-			return new ScanContainer(Functional.map(dsc_average, new Function1<Double, Double>() {
-
-				public Double f(Double element)
-				{
-					return 0.0;
-				}
-			}));
+			return new ScanContainer(new Spectrum(dsc_average.size(), 0.0f));
 		}
 
-		double Net = (double) Ne / (double) Nt;
-		double Ntte = (double) Nt / ((double) Nt - (double) Ne);
+		float Net = (float) Ne / (float) Nt;
+		float Ntte = (float) Nt / ((float) Nt - (float) Ne);
 
-		List<Double> goodAverage = DataTypeFactory.<Double> list(dsc_average.size());
+		Spectrum goodAverage = new Spectrum(dsc_average.size());
 		for (int i = 0; i < dsc_average.size(); i++)
 		{
-			goodAverage.add((At.get(i) - Ae.get(i) * Net) * Ntte);
+			goodAverage.set(i, (At.get(i) - Ae.get(i) * Net) * Ntte);
 		}
 
 		return new ScanContainer(goodAverage);
@@ -159,20 +153,14 @@ public class LocalDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public double maximumIntensity()
+	public float maximumIntensity()
 	{
 		if (dsc_dataset.size() == 0) return 0;
-		return ListCalculations.maxDataset(dsc_dataset);
+		return SpectrumCalculations.maxDataset(dsc_dataset);
 	}
 
 
-	public List<List<Double>> dataset()
-	{
-		return dsc_dataset;
-	}
-
-
-	@Override
+	/*@Override
 	public List<Double> calculateSumInRegion(ROI region)
 	{
 		List<Double> sums = DataTypeFactory.<Double> list();
@@ -183,7 +171,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		}
 
 		return sums;
-	}
+	}*/
 
 
 	@Override
@@ -236,7 +224,7 @@ public class LocalDataSetProvider extends DataSetProvider
 			public boolean work(int ordinal)
 			{
 
-				List<Double> data = filters.filterDataUnsynchronized(dsc_dataset.get(ordinal), false);
+				Spectrum data = filters.filterDataUnsynchronized(dsc_dataset.get(ordinal), false);
 				filteredDataSet.set(ordinal, data);
 				return true;
 
@@ -264,7 +252,7 @@ public class LocalDataSetProvider extends DataSetProvider
 				for (FittingResult result : frs.fits)
 				{
 					maps.putIntensityInMapAtPoint(
-						ListCalculations.sumValuesInList(result.fit),
+						SpectrumCalculations.sumValuesInList(result.fit),
 						result.transitionSeries,
 						ordinal);
 				}
@@ -336,19 +324,19 @@ public class LocalDataSetProvider extends DataSetProvider
 	}
 
 
-	public TaskList<Boolean> TASK_readFileListAsDataset(final List<String> files)
+	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		final FileType type;
 
 		// sort the filenames property
-		peakaboo.fileio.Common.sortFilenames(files);
+		peakaboo.fileio.IOCommon.sortFiles(files);
 
 		// Create the tasklist for reading the files
 		final TaskList<Boolean> tasklist;
 
 		// logic for opening a file
-		final List<List<Double>> dataset;
+		final List<Spectrum> dataset;
 		// final List<String> usedFileNames;
 		final int fileCount;
 
@@ -357,18 +345,18 @@ public class LocalDataSetProvider extends DataSetProvider
 		final Task reading;
 
 		// a single zip file
-		if (files.size() == 1 && files.get(0).toLowerCase().endsWith(".zip"))
+		if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".zip"))
 		{
 
 			type = FileType.ZIP;
 
-			dataSource = ZipDataSource.getArchiveFromFileName(files.get(0));
+			dataSource = ZipDataSource.getArchiveFromFileName(files.get(0).getFileName());
 			fileCount = dataSource.getScanCount();
-			dataset = DataTypeFactory.<Double> datasetInit(fileCount);
+			dataset = DataTypeFactory.spectrumSetInit(fileCount);
 			reading = getReadingTaskForDataSource(dataSource, dataset, "Reading Zip File");
 
 		}
-		else if (files.size() == 1 && files.get(0).toLowerCase().endsWith(".xml")
+		else if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".xml")
 				&& CDFMLDataSource.isCDFML(files.get(0)))
 		{
 
@@ -376,7 +364,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 			dataSource = CDFMLDataSource.getCDFMLFromFile(files.get(0));
 			fileCount = dataSource.getScanCount();
-			dataset = DataTypeFactory.<Double> datasetInit(fileCount);
+			dataset = DataTypeFactory.spectrumSetInit(fileCount);
 			reading = getReadingTaskForDataSource(dataSource, dataset, "Reading CDFML File");
 
 		}
@@ -387,7 +375,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 			dataSource = XMLDataSource.getXMLFileSet(files);
 			fileCount = dataSource.getScanCount();
-			dataset = DataTypeFactory.<Double> datasetInit(fileCount);
+			dataset = DataTypeFactory.spectrumSetInit(fileCount);
 			reading = getReadingTaskForDataSource(dataSource, dataset, "Reading XML Files");
 
 		}
@@ -468,7 +456,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 				if (isAborted()) return false;
 
-				dataSourcePath = peakaboo.fileio.Common.getFilePath(files.get(0));
+				dataSourcePath = peakaboo.fileio.IOCommon.getFilePath(files.get(0).getFileName());
 
 				int index;
 				while (true)
@@ -515,7 +503,7 @@ public class LocalDataSetProvider extends DataSetProvider
 	}
 
 
-	private Task getReadingTaskForDataSource(final DataSource dataSource, final List<List<Double>> targetDataset,
+	private Task getReadingTaskForDataSource(final DataSource dataSource, final List<Spectrum> targetDataset,
 			String title)
 	{
 
@@ -524,7 +512,7 @@ public class LocalDataSetProvider extends DataSetProvider
 			@Override
 			public boolean work(int index)
 			{
-				List<Double> dataFromFile = dataSource.getScanAtIndex(index);
+				Spectrum dataFromFile = dataSource.getScanAtIndex(index);
 				if (dataFromFile != null)
 				{
 					targetDataset.set(index, dataFromFile);
@@ -536,13 +524,13 @@ public class LocalDataSetProvider extends DataSetProvider
 				return true;
 
 			}
-
+			
 		};
 
 	}
 
 
-	public void readFileListAsDataset(final List<String> files)
+	public void readFileListAsDataset(final List<AbstractFile> files)
 	{
 		TaskList<Boolean> tl = TASK_readFileListAsDataset(files);
 		if (tl == null) return;
@@ -741,15 +729,11 @@ public class LocalDataSetProvider extends DataSetProvider
 	
 
 	//Sets the scan data and all of the precalculated values 
-	private void setDataset(List<List<Double>> dataset, List<Double> normalizer)
+	private void setDataset(List<Spectrum> dataset, Spectrum normalizer)
 	{
-		if (normalizer != null)
-		{
-
-		}
 
 		this.dsc_dataset = dataset;
-		this.filteredDataSet = DataTypeFactory.<Double> datasetInit(scanCount());
+		this.filteredDataSet = DataTypeFactory.spectrumSetInit(scanCount());
 		
 		dsc_scannames = DataTypeFactory.<String> list();
 		for (int i = 0; i < dataset.size(); i++)
@@ -757,11 +741,21 @@ public class LocalDataSetProvider extends DataSetProvider
 			dsc_scannames.add("Scan #" + i);
 		}
 
-		dsc_average = ListCalculations.getDatasetAverage(dataset);
-		dsc_maximum = ListCalculations.getDatasetMaximums(dataset);
+		dsc_average = SpectrumCalculations.getDatasetAverage(dataset);
+		dsc_maximum = SpectrumCalculations.getDatasetMaximums(dataset);
 
 		dsc_scanSize = dsc_average.size();
 
+	}
+
+
+	@Override
+	public void discard()
+	{
+		//discard references to large chunks of data
+		dsc_dataset.clear();
+		filteredDataSet.clear();
+		dsc_scannames.clear();
 	}
 
 	

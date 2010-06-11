@@ -4,6 +4,7 @@ package peakaboo.filters.filters;
 import java.util.List;
 
 import peakaboo.calculations.Noise;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
@@ -97,14 +98,14 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 
 
 	@Override
-	public List<Double> filterApplyTo(List<Double> data, boolean cache)
+	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		return Noise.SavitskyGolayFilter(
 			data, 
 			this.<Integer>getParameterValue(ORDER), 
 			this.<Integer>getParameterValue(REACH),
-			0.0,
-			(this.<Boolean>getParameterValue(IGNORE)) ? this.<Double>getParameterValue(MAX) : Double.MAX_VALUE
+			0.0f,
+			(this.<Boolean>getParameterValue(IGNORE)) ? this.<Double>getParameterValue(MAX).floatValue() : Float.MAX_VALUE
 			
 		);
 	}

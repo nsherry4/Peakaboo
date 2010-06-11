@@ -10,6 +10,7 @@ public enum TransitionSeriesType {
 
 	K,
 	L,
-	M
+	M,
+	COMPOSITE
 	
 }

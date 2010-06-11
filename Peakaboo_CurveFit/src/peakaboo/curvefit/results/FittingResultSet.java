@@ -3,6 +3,9 @@ package peakaboo.curvefit.results;
 
 import java.util.List;
 
+import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
+
 /**
  * 
  * This class stores a set of {@link FittingResult}s, as well as the residual data after all fits have been
@@ -15,8 +18,16 @@ import java.util.List;
 public class FittingResultSet
 {
 
-	public List<Double>			totalFit;
-	public List<Double>			residual;
+	public Spectrum			totalFit;
+	public Spectrum			residual;
 	public List<FittingResult>	fits;
 
+	
+	public FittingResultSet(int size)
+	{
+		fits = DataTypeFactory.<FittingResult>list();
+		totalFit = new Spectrum(size);
+		residual = new Spectrum(size);
+	}
+	
 }

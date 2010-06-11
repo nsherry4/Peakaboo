@@ -7,18 +7,20 @@ import java.util.List;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
-import peakaboo.fileio.Common;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.fileio.AbstractFile;
+import peakaboo.fileio.IOCommon;
 import peakaboo.fileio.xrf.support.CLSXML;
 
 
 public class XMLDataSource implements DataSource
 {
 
-	private List<String>	filenames;
-	private List<Boolean>	badScans;
+	private List<AbstractFile>	filenames;
+	private List<Boolean>		badScans;
 
 
-	public static XMLDataSource getXMLFileSet(List<String> filenames)
+	public static XMLDataSource getXMLFileSet(List<AbstractFile> filenames)
 	{
 
 		XMLDataSource xml = new XMLDataSource();
@@ -40,14 +42,14 @@ public class XMLDataSource implements DataSource
 	}
 
 
-	public double getMaxEnergy()
+	public float getMaxEnergy()
 	{
-		String fileContents = Common.fileToString(filenames.get(getFirstGoodScan()));
+		String fileContents = IOCommon.readerToString(filenames.get(getFirstGoodScan()).getReader());
 		return CLSXML.readMaxEnergy(fileContents);
 	}
 
 
-	public List<Double> getScanAtIndex(int index)
+	public Spectrum getScanAtIndex(int index)
 	{
 		return CLSXML.readScanFromFile(filenames.get(index));
 	}
@@ -65,7 +67,7 @@ public class XMLDataSource implements DataSource
 		
 		//collect the names of the good scans only
 		for (int i = 0; i < filenames.size(); i++){
-			if (badScans.get(i) == false) scanNames.add(filenames.get(i));
+			if (badScans.get(i) == false) scanNames.add(filenames.get(i).getFileName());
 		}
 		
 		return scanNames;
@@ -93,10 +95,10 @@ public class XMLDataSource implements DataSource
 	
 	public String getDatasetName()
 	{
-		String commonFileName = Common.getCommonFileName(getScanNames());
-		String parentFolder = new File(filenames.get(getFirstGoodScan())).getParentFile().getName();
+		String commonFileName = IOCommon.getCommonFileName(getScanNames());
+		String parentFolder = IOCommon.getParentFolder(getScanNames().get(0));
 		
-		
+		if (parentFolder == null) return commonFileName;
 		return parentFolder + ": " + commonFileName;
 	}
 

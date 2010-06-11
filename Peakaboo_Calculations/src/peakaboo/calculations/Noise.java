@@ -9,6 +9,7 @@ import JSci.maths.polynomials.RealPolynomial;
 import JSci.maths.wavelet.daubechies2.FastDaubechies2;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
 
 /**
  * 
@@ -71,32 +72,25 @@ public class Noise
 	 *            the distance from the centrepoint to an edge of the set of numbers being averaged
 	 * @return a moving-average smoothed data set
 	 */
-	public static List<Double> MovingAverage(List<Double> data, int windowSpan)
+	public static Spectrum MovingAverage(Spectrum data, int windowSpan)
 	{
 
-		List<Double> smoothed = DataTypeFactory.<Double> list(data.size());
-		List<Double> area;
+		Spectrum smoothed = new Spectrum(data.size());
 
-
-		int subStart, subStop;
-		double sum;
+		int start, stop;
+		float sum;
 		for (int i = 0; i < data.size(); i++) {
 
 			// exact same as in last loop
-			subStart = i - windowSpan;
-			subStop = i + windowSpan + 1;
+			start = i - windowSpan;
+			stop = i + windowSpan + 1;
 
-			if (subStart < 0) subStart = 0;
-			if (subStop >= data.size()) subStop = data.size() - 1;
+			if (start < 0) start = 0;
+			if (stop >= data.size()) stop = data.size() - 1;
 
-			area = data.subList(subStart, subStop);
+			sum = SpectrumCalculations.sumValuesInList(data, start, stop);
 
-			sum = 0;
-			for (double d : area) {
-				sum += d;
-			}
-
-			smoothed.add(i, sum / area.size());
+			smoothed.set(i, sum / (stop - start));
 
 		}
 
@@ -121,7 +115,7 @@ public class Noise
 	 *            high-frequency noise
 	 * @return a Fast Fourier Transformation Low-Pass filtered data set
 	 */
-	public static List<Double> FFTLowPassFilter(List<Double> data, FFTStyle style, int beginFilterAtWavelength,
+	public static Spectrum FFTLowPassFilter(Spectrum data, FFTStyle style, int beginFilterAtWavelength,
 			int endGradualFilterAtWavelength)
 	{
 
@@ -144,21 +138,21 @@ public class Noise
 	}
 
 
-	private static List<Double> doFFTFilter(List<Double> data, FFTStyle style, int start, int stop)
+	private static Spectrum doFFTFilter(Spectrum data, FFTStyle style, int start, int stop)
 	{
 
 		// Fast Fourier Transform
 
-		double[] dataAsArray = new double[data.size()];
+		double[] dataAsDoubles = new double[data.size()];
 		Complex[] transformedData;
 
 		for (int i = 0; i < data.size(); i++) {
-			dataAsArray[i] = data.get(i);
+			dataAsDoubles[i] = data.get(i);
 		}
 
 
 		// FFT Transform
-		transformedData = FourierMath.transform(dataAsArray);
+		transformedData = FourierMath.transform(dataAsDoubles);
 
 
 		// Do something with the transformed data
@@ -176,9 +170,9 @@ public class Noise
 
 
 		// get the data into a list of doubles for returning
-		List<Double> result = DataTypeFactory.<Double> list(data.size());
+		Spectrum result = new Spectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
-			result.add(i, transformedData[i].real());
+			result.set(i, (float)transformedData[i].real());
 		}
 
 		return result;
@@ -273,15 +267,12 @@ public class Noise
 	 * @param passesToRemove the number of sections to be removed, starting with the largest, highest-frequency section
 	 * @return a Wavelet Low-Pass filtered dataset
 	 */
-	public static List<Double> FWTAgressiveLowPassFilter(List<Double> data, int passesToRemove)
+	public static Spectrum FWTAgressiveLowPassFilter(Spectrum data, int passesToRemove)
 	{
 
-		List<Double> result = DataTypeFactory.<Double> list(data.size());
+		Spectrum result = new Spectrum(data.size());
 
-		float[] resultAsArray = new float[data.size()];
-		for (int i = 0; i < data.size(); i++) {
-			resultAsArray[i] = (float) data.get(i).doubleValue();
-		}
+		float[] resultAsArray = data.toArray();
 
 		FastDaubechies2 fwt = new FastDaubechies2();
 
@@ -304,9 +295,8 @@ public class Noise
 		// and back to energy space
 		fwt.invTransform(resultAsArray);
 
-		result.clear();
 		for (int i = 0; i < data.size(); i++) {
-			result.add((double) resultAsArray[i]);
+			result.set(i, resultAsArray[i]);
 		}
 
 		return result;
@@ -319,22 +309,14 @@ public class Noise
 	 * @param stop the number of sections to be attenuated before the algoritm stops, starting with the largest, highest-frequency section
 	 * @return a Wavelet Low-Pass filtered dataset
 	 */
-	public static List<Double> FWTLowPassFilter(List<Double> data, int stop)
+	public static Spectrum FWTLowPassFilter(Spectrum data, int stop)
 	{
 
-		List<Double> filter;
-		List<Double> result = DataTypeFactory.<Double> list(data.size());
+		Spectrum filter;
+		Spectrum result = new Spectrum(data.size());
 
 
-		float[] dataAsArray = new float[data.size()];
-
-
-
-		for (int i = 0; i < data.size(); i++) {
-			dataAsArray[i] = (float) data.get(i).doubleValue();
-		}
-
-
+		float[] dataAsArray = data.toArray();
 		int lastSize = data.size();
 
 		// transform
@@ -343,21 +325,19 @@ public class Noise
 			lastSize /= 2;
 
 			// into list for processing
-			result.clear();
+			
 			for (int j = 0; j < data.size(); j++) {
-				result.add((double) dataAsArray[j]);
+				result.set(i, dataAsArray[j]);
 			}
 
 			// FILTERING
-			filter = result.subList(lastSize, lastSize * 2);
-			filter = SavitskyGolayFilter(filter, 1, 3, 0.0, Double.MAX_VALUE);
+			filter = result.subSpectrum(lastSize-1, lastSize * 2-1);
+			filter = SavitskyGolayFilter(filter, 1, 3, 0.0f, Float.MAX_VALUE);
 
 			// out of list for processing
 			for (int j = lastSize; j < lastSize * 2; j++) {
-				dataAsArray[j] = (float) filter.get(j - lastSize).doubleValue();
+				dataAsArray[j] = filter.get(j - lastSize);
 			}
-
-			result.clear();
 
 		}
 
@@ -371,9 +351,8 @@ public class Noise
 
 
 		// back to list
-		result.clear();
 		for (int i = 0; i < data.size(); i++) {
-			result.add((double) dataAsArray[i]);
+			result.set(i, dataAsArray[i]);
 		}
 
 		return result;
@@ -401,11 +380,11 @@ public class Noise
 	 * @param reach the distance from the centrepoint to the edge of the data being considered in a fitting
 	 * @return a Savitsky-Golay smoothed data set.
 	 */
-	public static List<Double> SavitskyGolayFilter(List<Double> data, int order, int reach, double min, double max)
+	public static Spectrum SavitskyGolayFilter(Spectrum data, int order, int reach, float min, float max)
 	{
 
 		
-		List<Double> result = DataTypeFactory.<Double> list(data.size());
+		Spectrum result = new Spectrum(data.size());
 
 		RealPolynomial soln;
 
@@ -448,7 +427,7 @@ public class Noise
 
 				soln = JSci.maths.LinearMath.leastSquaresFit(order, dataAsArray);
 
-				result.add(Math.max(soln.map(reach), 0.0));
+				result.set(i, (float)Math.max(soln.map(reach), 0.0));
 			}
 			
 		}
@@ -458,32 +437,32 @@ public class Noise
 	}
 
 	
-	public static List<Double> deriv(List<Double> list)
+	public static Spectrum deriv(Spectrum list)
 	{
 	
-		List<Double> result = DataTypeFactory.<Double>list();
+		Spectrum result = new Spectrum(list.size());
 		
 		result.add(list.get(0));
 		for (int i = 0; i < list.size()-1; i++)
 		{
-			result.add(list.get(i+1) - list.get(i));
+			result.set(i, list.get(i+1) - list.get(i));
 		}
 			
 		return result;
 		
 	}
 	
-	public static List<Double> integ(List<Double> list)
+	public static Spectrum integ(Spectrum list)
 	{
 		
-		List<Double> result = DataTypeFactory.<Double>list();
-		double val = 0;
+		Spectrum result = new Spectrum(list.size());
+		float val = 0;
 		
 		
 		for (int i = 0; i < list.size(); i++)
 		{
 			val += list.get(i);
-			result.add( val );
+			result.set(i,  val );
 		}
 		
 		return result;

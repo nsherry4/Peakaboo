@@ -2,10 +2,11 @@ package peakaboo.drawing.plot.painters;
 
 import java.util.List;
 
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.painters.Painter;
@@ -39,7 +40,7 @@ public abstract class PlotPainter extends Painter{
 	 * @param p the {@link PainterData} structure containing objects and information needed to draw to the plot
 	 * @param data the data series to trace
 	 */
-	protected void traceData(PainterData p, List<Double> data)
+	protected void traceData(PainterData p, Spectrum data)
 	{
 		traceData(p, data, TraceType.CONNECTED);
 	}
@@ -50,7 +51,7 @@ public abstract class PlotPainter extends Painter{
 	 * @param data the data series to trace
 	 * @param connected should the data points be drawn as part of a connected series, or should each point be shown as an individual line
 	 */
-	protected void traceData(PainterData p, List<Double> data, TraceType traceType)
+	protected void traceData(PainterData p, Spectrum data, TraceType traceType)
 	{
 		traceData(p.context, p.dr, p.plotSize, p.dataHeights, traceType, data);
 	}
@@ -64,7 +65,7 @@ public abstract class PlotPainter extends Painter{
 	 * @param connected should the data points be drawn as part of a connected series, or should each point be shown as an individual line
 	 * @param data the data series to trace
 	 */
-	protected void traceData(Surface context, peakaboo.drawing.DrawingRequest _dr, Coord<Double> plotSize, List<Double> dataHeights, TraceType traceType, List<Double> data)
+	protected void traceData(Surface context, peakaboo.drawing.DrawingRequest _dr, Coord<Float> plotSize, Spectrum dataHeights, TraceType traceType, Spectrum data)
 	{
 		
 		DrawingRequest dr = (DrawingRequest)_dr;
@@ -72,22 +73,22 @@ public abstract class PlotPainter extends Painter{
 		if (context == null) return;
 
 		// copy the data
-		List<Double> transformedData = transformDataForPlot(dr, data);
+		Spectrum transformedData = transformDataForPlot(dr, data);
 
 		// get the image bounds
-		double plotWidth = plotSize.x;
-		double plotHeight = plotSize.y;
-		double pointWidth = plotWidth / dr.dataWidth;
+		float plotWidth = plotSize.x;
+		float plotHeight = plotSize.y;
+		float pointWidth = plotWidth / dr.dataWidth;
 
 		// draw the path
-		context.moveTo(0.0, plotHeight);
-		double height = plotHeight;
-		double pointStart, pointEnd, pointMiddle;
+		context.moveTo(0.0f, plotHeight);
+		float height = plotHeight;
+		float pointStart, pointEnd, pointMiddle;
 		for (int i = 0; i < transformedData.size(); i++) {
 			
 			pointStart = pointWidth*i;
 			pointEnd = pointStart + pointWidth;
-			pointMiddle = (pointStart + pointEnd) / 2.0;
+			pointMiddle = (pointStart + pointEnd) / 2.0f;
 			height = (transformedData.get(i)) * plotHeight;
 			if (dataHeights != null && dataHeights.get(i) < height) dataHeights.set(i, height);
 			height = plotHeight - height;
@@ -132,31 +133,31 @@ public abstract class PlotPainter extends Painter{
 	
 
 	
-	protected Coord<Range<Double>> getTextLabelDimensions(PainterData p, String title, double energy)
+	protected Coord<Range<Float>> getTextLabelDimensions(PainterData p, String title, float energy)
 	{
 		DrawingRequest dr = (DrawingRequest)p.dr;
 
-		double textWidth = p.context.getTextWidth(title);
+		float textWidth = p.context.getTextWidth(title);
 
-		double channelSize = p.plotSize.x / dr.dataWidth;
-		double centreChannel = (energy / dr.unitSize);
+		float channelSize = p.plotSize.x / dr.dataWidth;
+		float centreChannel = (energy / dr.unitSize);
 
-		double titleStart = centreChannel * channelSize;
+		float titleStart = centreChannel * channelSize;
 		titleStart -= (textWidth / 2.0);
 
 
-		double titleHeight = p.context.getFontHeight();
-		double penWidth = getPenWidth(getBaseUnitSize(dr), dr);
-		double totalHeight = (titleHeight + penWidth * 2);
+		float titleHeight = p.context.getFontHeight();
+		float penWidth = getPenWidth(getBaseUnitSize(dr), dr);
+		float totalHeight = (titleHeight + penWidth * 2);
 
-		double farLeft = titleStart - penWidth * 2;
-		double width = textWidth + penWidth * 4;
-		double farRight = farLeft + width;
+		float farLeft = titleStart - penWidth * 2;
+		float width = textWidth + penWidth * 4;
+		float farRight = farLeft + width;
 
-		double leftChannel = Math.floor(farLeft / channelSize);
-		double rightChannel = Math.ceil(farRight / channelSize);
+		float leftChannel = (float)Math.floor(farLeft / channelSize);
+		float rightChannel = (float)Math.ceil(farRight / channelSize);
 		
-		return new Coord<Range<Double>>(new Range<Double>(leftChannel, rightChannel), new Range<Double>(penWidth, totalHeight));
+		return new Coord<Range<Float>>(new Range<Float>(leftChannel, rightChannel), new Range<Float>(penWidth, totalHeight));
 		
 	}
 	
@@ -166,62 +167,62 @@ public abstract class PlotPainter extends Painter{
 	 * @param title the title of the label
 	 * @param energy the energy value at which to centre the label
 	 */
-	protected void drawTextLabel(PainterData p, String title, double energy, double xStart, double yStart)
+	protected void drawTextLabel(PainterData p, String title, float energy, float xStart, float yStart)
 	{
 		
 		if (xStart > p.plotSize.x) return;
 
 		if (title != null) {
 
-			p.context.setSource(0.0, 0.0, 0.0);
+			p.context.setSource(0.0f, 0.0f, 0.0f);
 			p.context.writeText(title, xStart, p.plotSize.y - yStart);
 		}
 
 	}
 	
 	
-	protected List<Double> transformDataForPlot(DrawingRequest dr, List<Double> data)
+	protected Spectrum transformDataForPlot(DrawingRequest dr, Spectrum data)
 	{
 
-		List<Double> transformedData = DataTypeFactory.<Double> listInit(data);
-		if (dr.viewTransform == ViewTransform.LOG) transformedData = ListCalculations.logList(transformedData);
-		double dataMax = PlotDrawing.getDataScale(dr, data);
-		transformedData = ListCalculations.divideBy(transformedData, dataMax);
+		Spectrum transformedData = new Spectrum(data);
+		if (dr.viewTransform == ViewTransform.LOG) transformedData = SpectrumCalculations.logList(transformedData);
+		float dataMax = PlotDrawing.getDataScale(dr, data);
+		transformedData = SpectrumCalculations.divideBy(transformedData, dataMax);
 
 		return transformedData;
 	}
 	
-	protected double transformValueForPlot(DrawingRequest dr, double value)
+	protected float transformValueForPlot(DrawingRequest dr, float value)
 	{
-		if (dr.viewTransform == ViewTransform.LOG) value = Math.log1p(value);
-		double dataMax = PlotDrawing.getDataScale(dr);
+		if (dr.viewTransform == ViewTransform.LOG) value = (float)Math.log1p(value);
+		float dataMax = PlotDrawing.getDataScale(dr);
 		value = value / dataMax;
 
 		return value;
 	}
 	
 	
-	public double getChannelAtEnergy(peakaboo.drawing.DrawingRequest _dr, double energy)
+	public float getChannelAtEnergy(peakaboo.drawing.DrawingRequest _dr, float energy)
 	{
 		DrawingRequest dr = (DrawingRequest)_dr;
 		return energy / dr.unitSize;
 	}
 
-	public double getXForChannel(PainterData p, double channel)
+	public float getXForChannel(PainterData p, float channel)
 	{
-		double widthPerChannel = p.plotSize.x / p.dr.dataWidth;
+		float widthPerChannel = p.plotSize.x / p.dr.dataWidth;
 		return channel * widthPerChannel;
 	}
 	
 	@Override
-	protected double getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
+	protected float getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
 	{
-		return dr.imageHeight / 350.0;
+		return dr.imageHeight / 350.0f;
 	}
 	
-	protected double getPenWidth(double baseSize, peakaboo.drawing.DrawingRequest dr)
+	protected float getPenWidth(float baseSize, peakaboo.drawing.DrawingRequest dr)
 	{
-		double width;
+		float width;
 		width = baseSize;
 		return width;
 	}

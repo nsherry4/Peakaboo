@@ -5,6 +5,7 @@ import java.util.List;
 
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
@@ -28,7 +29,7 @@ public final class FourierLowPass extends AbstractFilter
 	public FourierLowPass()
 	{
 		super();
-		parameters.add(ROLLOFF, new Parameter<FFTStyle>(ValueType.BOOLEAN, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
+		parameters.add(ROLLOFF, new Parameter<FFTStyle>(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
 		parameters.add(START, new Parameter<Integer>(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
 		parameters.add(END, new Parameter<Integer>(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
 
@@ -40,6 +41,8 @@ public final class FourierLowPass extends AbstractFilter
 	{
 
 		int start, end;
+		boolean isCutoff = this.<FFTStyle>getParameterValue(ROLLOFF) == FFTStyle.CUTOFF;
+		parameters.get(END).enabled = (!isCutoff);
 
 		start = this.<Integer>getParameterValue(START);
 		if (start > 15 || start < 1) return false;
@@ -47,7 +50,7 @@ public final class FourierLowPass extends AbstractFilter
 		end = this.<Integer>getParameterValue(END);
 		if (end > 15 || end < 0) return false;
 
-		if (start < end) return false;
+		if (!isCutoff && start < end) return false;
 
 		return true;
 
@@ -87,7 +90,7 @@ public final class FourierLowPass extends AbstractFilter
 
 
 	@Override
-	public List<Double> filterApplyTo(List<Double> data, boolean cache)
+	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		
 		data = Noise.FFTLowPassFilter(

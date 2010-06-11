@@ -32,44 +32,44 @@ public abstract class AxisPainter extends Painter
 
 	public AxisPainter()
 	{
-		axesData = new AxesData(new Range<Double>(0.0, 0.0), new Range<Double>(0.0, 0.0));
+		axesData = new AxesData(new Range<Float>(0.0f, 0.0f), new Range<Float>(0.0f, 0.0f));
 	}
 
 
-	public void setDimensions(Range<Double> xPositionBounds, Range<Double> yPositionBounds)
+	public void setDimensions(Range<Float> xPositionBounds, Range<Float> yPositionBounds)
 	{
 		this.axesData.xPositionBounds = xPositionBounds;
 		this.axesData.yPositionBounds = yPositionBounds;
 	}
 
 
-	public abstract Pair<Double, Double> getAxisSizeY(PainterData p);
+	public abstract Pair<Float, Float> getAxisSizeY(PainterData p);
 
 
-	public abstract Pair<Double, Double> getAxisSizeX(PainterData p);
+	public abstract Pair<Float, Float> getAxisSizeX(PainterData p);
 
 
-	protected static double getTickSize(double baseSize, DrawingRequest dr)
+	protected static float getTickSize(float baseSize, DrawingRequest dr)
 	{
 		return baseSize * 5;
 	}
 
 
-	protected static double getTickFontHeight(Surface context, DrawingRequest dr)
+	protected static float getTickFontHeight(Surface context, DrawingRequest dr)
 	{
 		return context.getFontHeight();
 	}
 
 
-	protected static double getTitleFontHeight(Surface context, DrawingRequest dr)
+	protected static float getTitleFontHeight(Surface context, DrawingRequest dr)
 	{
-		return getTitleFontHeight(context, dr, 1.0);
+		return getTitleFontHeight(context, dr, 1.0f);
 	}
 
 
-	protected static double getTitleFontHeight(Surface context, DrawingRequest dr, double titleScale)
+	protected static float getTitleFontHeight(Surface context, DrawingRequest dr, float titleScale)
 	{
-		double height;
+		float height;
 		context.save();
 		context.setFontSize(FONTSIZE_TITLE * titleScale);
 		height = context.getFontHeight() + context.getFontLeading();
@@ -79,37 +79,37 @@ public abstract class AxisPainter extends Painter
 
 
 	@Override
-	protected double getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
+	protected float getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
 	{
-		return Math.min(dr.imageHeight, dr.imageWidth) / 350.0;
+		return (float)Math.min(dr.imageHeight, dr.imageWidth) / 350.0f;
 	}
 
 
-	protected double getPenWidth(double baseSize, peakaboo.drawing.DrawingRequest dr)
+	protected float getPenWidth(float baseSize, peakaboo.drawing.DrawingRequest dr)
 	{
-		double width;
+		float width;
 		width = baseSize;
 		return width;
 	}
 	
 
-	public static Coord<Range<Double>> calcAxisBorders(PainterData p, List<AxisPainter> axisPainters)
+	public static Coord<Range<Float>> calcAxisBorders(PainterData p, List<AxisPainter> axisPainters)
 	{
-		Range<Double> availableX, availableY;
-		availableX = new Range<Double>(0.0, p.dr.imageWidth);
-		availableY = new Range<Double>(0.0, p.dr.imageHeight);
+		Range<Float> availableX, availableY;
+		availableX = new Range<Float>(0.0f, p.dr.imageWidth);
+		availableY = new Range<Float>(0.0f, p.dr.imageHeight);
 
 		if (axisPainters != null) {
 
-			Pair<Double, Double> axisSizeX, axisSizeY;
+			Pair<Float, Float> axisSizeX, axisSizeY;
 
 			for (AxisPainter axisPainter : axisPainters) {
 
 
 				axisPainter.setDimensions(
 
-				new Range<Double>(availableX.start, availableX.end),
-						new Range<Double>(availableY.start, availableY.end)
+				new Range<Float>(availableX.start, availableX.end),
+						new Range<Float>(availableY.start, availableY.end)
 
 				);
 
@@ -125,7 +125,7 @@ public abstract class AxisPainter extends Painter
 
 		}
 
-		return new Coord<Range<Double>>(availableX, availableY);
+		return new Coord<Range<Float>>(availableX, availableY);
 	}
 
 }

@@ -3,6 +3,7 @@ package peakaboo.filters;
 import java.util.List;
 
 import peakaboo.common.Version;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.drawing.plot.painters.SpectrumPainter;
@@ -19,7 +20,7 @@ public class ExampleFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public List<Double> filterApplyTo(List<Double> data, boolean cache) {
+	public Spectrum filterApplyTo(Spectrum data, boolean cache) {
 		return data;
 	}
 
@@ -54,7 +55,7 @@ public class ExampleFilter extends AbstractFilter {
 			public void drawElement(PainterData p)
 			{
 				traceData(p);
-				p.context.setSource(1.0, 0.0, 0.0);
+				p.context.setSource(255,0,0);
 				p.context.stroke();
 
 			}

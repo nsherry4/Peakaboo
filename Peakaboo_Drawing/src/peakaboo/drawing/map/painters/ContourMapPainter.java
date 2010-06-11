@@ -8,6 +8,7 @@ import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.GridPerspective;
 import peakaboo.datatypes.Pair;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.PainterData;
@@ -30,7 +31,7 @@ public class ContourMapPainter extends MapPainter
 	}
 
 
-	public ContourMapPainter(List<AbstractPalette> colourRules, List<Double> data, int steps)
+	public ContourMapPainter(List<AbstractPalette> colourRules, Spectrum data, int steps)
 	{
 		super(colourRules, data);
 		this.contourSteps = steps;
@@ -45,7 +46,7 @@ public class ContourMapPainter extends MapPainter
 	}
 
 
-	private void trace(PainterData p, GridPerspective<Double> grid, List<Double> list)
+	private void trace(PainterData p, GridPerspective<Double> grid, Spectrum list)
 	{
 
 		// generate a list of threshold maps, once for each step in the spectrum.
@@ -81,7 +82,7 @@ public class ContourMapPainter extends MapPainter
 	 * -------------------------------------------------------------------
 	 */
 
-	private List<List<Threshold>> getThresholdCellsSet(PainterData p, final List<Double> list)
+	private List<List<Threshold>> getThresholdCellsSet(PainterData p, final Spectrum list)
 	{
 		final List<List<Threshold>> thresholds = DataTypeFactory.<Threshold> datasetInit(contourSteps);
 
@@ -230,9 +231,9 @@ public class ContourMapPainter extends MapPainter
 		x = startX;
 		y = startY;
 		grid.set(remainingBorderCells, x, y, false);
-		double cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
+		float cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
 
-		double posX, posY;
+		float posX, posY;
 		posX = (x) * cellSize;
 		posY = ((grid.height - 1 - y)) * cellSize;
 		p.context.moveTo(posX, posY);
@@ -268,7 +269,7 @@ public class ContourMapPainter extends MapPainter
 	// generates a threshold map for a given intensity. result is boolean
 	// list/map with true for all value
 	// above intensity, false otherwise
-	private static List<Threshold> getThresholdMap(List<Double> list, double threshold)
+	private static List<Threshold> getThresholdMap(Spectrum list, double threshold)
 	{
 
 		List<Threshold> result = DataTypeFactory.<Threshold> list();

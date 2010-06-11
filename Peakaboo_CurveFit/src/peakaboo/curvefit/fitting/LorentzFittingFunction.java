@@ -10,11 +10,11 @@ package peakaboo.curvefit.fitting;
 
 public class LorentzFittingFunction implements FittingFunction{
 
-	private double mean;
-	private double gamma;
-	private double height;
+	private float mean;
+	private float gamma;
+	private float height;
 	
-	public LorentzFittingFunction(double mean, double gamma, double height){
+	public LorentzFittingFunction(float mean, float gamma, float height){
 		
 		this.mean = mean;
 		this.gamma = gamma;
@@ -22,7 +22,7 @@ public class LorentzFittingFunction implements FittingFunction{
 		
 	}
 	
-	public double getHeightAtPoint(double point) {
+	public float getHeightAtPoint(float point) {
 		
 		double value = 0.0;
 		
@@ -40,7 +40,7 @@ public class LorentzFittingFunction implements FittingFunction{
 		
 		
 		
-		return value * height;
+		return (float)(value * height);
 	}
 
 }

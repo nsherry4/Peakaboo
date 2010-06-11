@@ -4,6 +4,7 @@ import java.util.List;
 
 import peakaboo.calculations.Noise;
 import peakaboo.common.Version;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.filters.AbstractFilter;
 
@@ -12,7 +13,7 @@ public class Integrate extends AbstractFilter
 {
 
 	@Override
-	public List<Double> filterApplyTo(List<Double> data, boolean cache)
+	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		return Noise.integ(data);
 	}
@@ -60,7 +61,7 @@ public class Integrate extends AbstractFilter
 	@Override
 	public boolean showFilter()
 	{
-		return !Version.release;
+		return true;
 	}
 
 }

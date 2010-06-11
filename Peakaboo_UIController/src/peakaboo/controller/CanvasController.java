@@ -74,9 +74,9 @@ public abstract class CanvasController extends Eventful
 	protected abstract void drawBackend(Surface backend, boolean vector);
 
 
-	public abstract double getUsedWidth();
+	public abstract float getUsedWidth();
 
 
-	public abstract double getUsedHeight();
+	public abstract float getUsedHeight();
 
 }

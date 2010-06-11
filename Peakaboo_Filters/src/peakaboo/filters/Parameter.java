@@ -38,9 +38,7 @@ public class Parameter<T1> implements Serializable
 
 	public Parameter(ValueType type, String name, T1 value, T1[] possibleValues)
 	{
-		this.type = type;
-		this.name = name;
-		this.value = value;
+		this(type, name, value);
 		this.possibleValues = possibleValues;
 	}
 	

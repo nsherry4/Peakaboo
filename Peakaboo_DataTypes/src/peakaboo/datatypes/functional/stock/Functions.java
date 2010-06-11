@@ -1,10 +1,12 @@
-package peakaboo.calculations.functional.stock;
+package peakaboo.datatypes.functional.stock;
 
 
 
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Function2;
+import java.util.List;
+
 import peakaboo.datatypes.Pair;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Function2;
 
 
 
@@ -15,7 +17,6 @@ public class Functions
 	{
 		return new Function2<String, String, String>() {
 
-			@Override
 			public String f(String s1, String s2)
 			{
 				return s1.toString() + s2;
@@ -27,7 +28,6 @@ public class Functions
 	{
 		return new Function2<T1, String, String>() {
 
-			@Override
 			public String f(T1 s1, String s2)
 			{
 				return s1.toString() + s2;
@@ -39,7 +39,6 @@ public class Functions
 	{
 		return new Function2<String, String, String>() {
 
-			@Override
 			public String f(String s1, String s2)
 			{
 				return s1 + separator + s2;
@@ -52,7 +51,6 @@ public class Functions
 	{
 		return new Function1<T1, Boolean>() {
 
-			@Override
 			public Boolean f(T1 s1)
 			{
 				return item.equals(s1);
@@ -65,7 +63,6 @@ public class Functions
 	{
 		return new Function1<Pair<T1, T2>, T1>() {
 
-			@Override
 			public T1 f(Pair<T1, T2> element)
 			{
 				return element.first;
@@ -77,7 +74,6 @@ public class Functions
 	{
 		return new Function1<Pair<T1, T2>, T2>() {
 
-			@Override
 			public T2 f(Pair<T1, T2> element)
 			{
 				return element.second;
@@ -89,7 +85,6 @@ public class Functions
 	{
 		return new Function1<T1, Boolean>(){
 
-			@Override
 			public Boolean f(T1 element)
 			{
 				return true;
@@ -102,7 +97,6 @@ public class Functions
 	{
 		return new Function1<T1, Boolean>(){
 
-			@Override
 			public Boolean f(T1 element)
 			{
 				return false;
@@ -115,13 +109,39 @@ public class Functions
 	{
 		return new Function1<T1, T1>(){
 
-			@Override
 			public T1 f(T1 element)
 			{
 				return element;
 			}
 			
 		};
+	}
+	
+	public static <T1> Function1<T1, Boolean> notNull()
+	{
+		return new Function1<T1, Boolean>(){
+
+			public Boolean f(T1 element)
+			{
+				return element != null;
+			}
+			
+		};
+	}
+	
+	public static <T1> Function2<List<T1>, List<T1>, List<T1>> listConcat()
+	{
+		
+		return new Function2<List<T1>, List<T1>, List<T1>>(){
+
+			public List<T1> f(List<T1> l1, List<T1> l2)
+			{
+				l1.addAll(l2);
+				return l1;
+			}
+			
+		};
+		
 	}
 	
 }

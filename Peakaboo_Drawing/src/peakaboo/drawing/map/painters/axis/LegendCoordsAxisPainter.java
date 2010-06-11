@@ -5,11 +5,11 @@ package peakaboo.drawing.map.painters.axis;
 import java.awt.Color;
 import java.util.List;
 
-import peakaboo.calculations.functional.Function2;
-import peakaboo.calculations.functional.Functional;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SISize;
+import peakaboo.datatypes.functional.Function2;
+import peakaboo.datatypes.functional.Functional;
 import peakaboo.drawing.painters.PainterData;
 
 
@@ -45,17 +45,17 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 		p.context.save();
 
-		Pair<Double, Double> spectrumBoundsX = getAxisSizeX(p);
-		final double offsetX = axesData.xPositionBounds.start + spectrumBoundsX.first;
-		final double width = axesData.xPositionBounds.end - axesData.xPositionBounds.start - spectrumBoundsX.second
+		Pair<Float, Float> spectrumBoundsX = getAxisSizeX(p);
+		final float offsetX = axesData.xPositionBounds.start + spectrumBoundsX.first;
+		final float width = axesData.xPositionBounds.end - axesData.xPositionBounds.start - spectrumBoundsX.second
 				- spectrumBoundsX.first;
 
-		double offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
+		float offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
 		if (drawCoords) offsetY += keyHeight;
 
-		final double textLineHeight = p.context.getFontHeight();
-		final double textBaseline = offsetY + keyHeight + (drawCoords ? 0.0 : textLineHeight/2.0);
-		double fontSize = p.context.getFontSize();
+		final float textLineHeight = p.context.getFontHeight();
+		final float textBaseline = offsetY + keyHeight + (drawCoords ? 0.0f : textLineHeight/2.0f);
+		float fontSize = p.context.getFontSize();
 
 		String markingsText;
 		// concatenate the list of strings to display so we can check the width of the total string
@@ -66,11 +66,11 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 				return str + marking.second;
 			}
 		}) + "";
-		double legendSquareWidth = entries.size() * keyHeight * 2.5 - keyHeight; // -keyHeight because we don't need
+		float legendSquareWidth = entries.size() * keyHeight * 2.5f - keyHeight; // -keyHeight because we don't need
 																					// padding on the end
 
 		// keep shrinking the font size until all of the text until the font size is small enough that it fits
-		double expectedTextWidth = width;
+		float expectedTextWidth = width;
 		while (width > 0.0 && fontSize > 1.0)
 		{
 			// get the width of the text for all of the markings
@@ -82,10 +82,10 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 		}
 
-		double startX = offsetX + ((width - expectedTextWidth) / 2.0);
-		Functional.foldr(entries, startX, new Function2<Pair<Color, String>, Double, Double>() {
+		float startX = offsetX + ((width - expectedTextWidth) / 2.0f);
+		Functional.foldr(entries, startX, new Function2<Pair<Color, String>, Float, Float>() {
 
-			public Double f(Pair<Color, String> entry, Double position)
+			public Float f(Pair<Color, String> entry, Float position)
 			{
 
 				p.context.rectangle(position, textBaseline, keyHeight, -keyHeight);
@@ -94,14 +94,14 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 				p.context.setSource(Color.black);
 				p.context.stroke();
 
-				p.context.writeText(entry.second, position + keyHeight * 1.5, textBaseline);
+				p.context.writeText(entry.second, position + keyHeight * 1.5f, textBaseline);
 
-				return position + p.context.getTextWidth(entry.second) + keyHeight * 2.5;
+				return position + p.context.getTextWidth(entry.second) + keyHeight * 2.5f;
 			}
 		});
 
-		double centerWidth = p.context.getTextWidth(descriptor);
-		p.context.writeText(descriptor, offsetX + (width - centerWidth) / 2.0, textBaseline + textLineHeight*(drawCoords ? 2.0 : 1.25));
+		float centerWidth = p.context.getTextWidth(descriptor);
+		p.context.writeText(descriptor, offsetX + (width - centerWidth) / 2.0f, textBaseline + textLineHeight*(drawCoords ? 2.0f : 1.25f));
 
 		p.context.restore();
 

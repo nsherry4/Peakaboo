@@ -3,6 +3,7 @@ package peakaboo.drawing.plot.painters;
 import java.util.List;
 
 import peakaboo.datatypes.Coord;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.painters.PainterData;
@@ -11,9 +12,9 @@ import peakaboo.drawing.painters.PainterData;
 public abstract class SpectrumPainter extends PlotPainter
 {
 
-	protected List<Double> data;
+	protected Spectrum data;
 	
-	public SpectrumPainter(List<Double> data)
+	public SpectrumPainter(Spectrum data)
 	{
 		this.data = data;
 	}
@@ -28,7 +29,7 @@ public abstract class SpectrumPainter extends PlotPainter
 		traceData(p, data, traceType);
 	}
 	
-	protected void traceData(Surface context, DrawingRequest dr, Coord<Double> plotSize, List<Double> dataHeights, TraceType traceType)
+	protected void traceData(Surface context, DrawingRequest dr, Coord<Float> plotSize, Spectrum dataHeights, TraceType traceType)
 	{
 		traceData(context, dr, plotSize, dataHeights, traceType, data);
 	}

@@ -13,22 +13,25 @@ public class Transition implements Comparable<Transition>{
 	/**
 	 * The energy value of this transition -- where the peak will be centred
 	 */
-	public double energyValue;
+	public float energyValue;
+	
+	public TransitionType type;
 	
 	/**
 	 * The relative intensity of this peak compared to the a1 peak of the same {@link TransitionSeriesType}
 	 */
-	public double relativeIntensity;
+	public float relativeIntensity;
 
 	/**
 	 * Create a new Transition
 	 * @param value energy value of this Transition
 	 * @param relativeIntensity relative intensity of this Transition
 	 */
-	public Transition(double value, double relativeIntensity){
+	public Transition(float value, float relativeIntensity, TransitionType type){
 
 		this.energyValue = value;
 		this.relativeIntensity = relativeIntensity;
+		this.type = type;
 	}
 
 
@@ -39,13 +42,18 @@ public class Transition implements Comparable<Transition>{
 	 */
 	public int compareTo(Transition other) {
 
-		double myValue = Math.abs(energyValue);
-		double itsValue = Math.abs(other.energyValue);
+		float myValue = Math.abs(energyValue);
+		float itsValue = Math.abs(other.energyValue);
 
 		if (myValue < itsValue) return -1;
 		if (myValue > itsValue) return 1;
 		
 		return 0;
+	}
+	
+	public Transition summation(Transition other)
+	{
+		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity, TransitionType.pileup);
 	}
 	
 }

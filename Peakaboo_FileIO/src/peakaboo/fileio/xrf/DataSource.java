@@ -3,6 +3,8 @@ package peakaboo.fileio.xrf;
 
 import java.util.List;
 
+import peakaboo.datatypes.Spectrum;
+
 
 public interface DataSource
 {
@@ -14,7 +16,7 @@ public interface DataSource
 	 *            the scan number to retrieve
 	 * @return the values from the requested scan
 	 */
-	public List<Double> getScanAtIndex(int index);
+	public Spectrum getScanAtIndex(int index);
 
 
 	/**
@@ -38,7 +40,7 @@ public interface DataSource
 	 * 
 	 * @return the maximum energy
 	 */
-	public double getMaxEnergy();
+	public float getMaxEnergy();
 
 
 	/**

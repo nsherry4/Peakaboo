@@ -49,12 +49,12 @@ public class NetworkDataSetProvider extends DataSetProvider
 	}
 
 
-	@Override
+	/*@Override
 	public List<Double> calculateSumInRegion(ROI region)
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 
 	@Override
@@ -250,7 +250,7 @@ public class NetworkDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public double maximumIntensity()
+	public float maximumIntensity()
 	{
 		// TODO Auto-generated method stub
 		return 0;
@@ -270,6 +270,15 @@ public class NetworkDataSetProvider extends DataSetProvider
 	{
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+	@Override
+	public void discard()
+	{
+		// TODO Auto-generated method stub
+		//close any network connections, delete any cached data, etc
+		
 	}
 
 }

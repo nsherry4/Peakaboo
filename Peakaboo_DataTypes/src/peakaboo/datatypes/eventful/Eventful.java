@@ -32,14 +32,25 @@ public abstract class Eventful implements IEventful
 	}
 
 
-	public void removeListener(PeakabooSimpleListener l)
+	public void removeListener(final PeakabooSimpleListener l)
 	{
-		listeners.remove(l);
+		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run()	{
+				listeners.remove(l);
+			}
+		});
+		
+		
 	}
 	
 	public void removeAllListeners()
 	{
-		listeners.clear();
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run()	{
+				listeners.clear();
+			}
+		});
 	}
 
 

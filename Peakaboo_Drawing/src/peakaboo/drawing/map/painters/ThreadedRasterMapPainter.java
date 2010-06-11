@@ -4,8 +4,9 @@ package peakaboo.drawing.map.painters;
 import java.util.List;
 
 import peakaboo.calculations.Calculations;
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.GridPerspective;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.executor.implementations.SplittingTicketedTaskExecutor;
 import peakaboo.drawing.backends.Buffer;
@@ -26,13 +27,13 @@ public class ThreadedRasterMapPainter extends MapPainter
 	private Buffer buffer;
 	public boolean useBuffer = false;
 
-	public ThreadedRasterMapPainter(List<AbstractPalette> colourRules, List<Double> data)
+	public ThreadedRasterMapPainter(List<AbstractPalette> colourRules, Spectrum data)
 	{
 		super(colourRules, data);
 	}
 
 
-	public ThreadedRasterMapPainter(AbstractPalette colourRule, List<Double> data)
+	public ThreadedRasterMapPainter(AbstractPalette colourRule, Spectrum data)
 	{
 		super(colourRule, data);
 	}
@@ -44,23 +45,23 @@ public class ThreadedRasterMapPainter extends MapPainter
 
 		p.context.save();
 
-		List<Double> modData = data;
-		double maxIntensity;
+		Spectrum modData = data;
+		float maxIntensity;
 		if (p.dr.maxYIntensity <= 0) {
-			maxIntensity = ListCalculations.max(data);
+			maxIntensity = SpectrumCalculations.max(data);
 		} else {
 			maxIntensity = p.dr.maxYIntensity;
 		}
 
 
 		// get the size of the cells
-		double cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
+		float cellSize = MapDrawing.calcCellSize(p.plotSize.x, p.plotSize.y, p.dr);
 
 		// clip the region
 		p.context.rectangle(0, 0, p.dr.dataWidth * cellSize, p.dr.dataHeight * cellSize);
 		p.context.clip();
 
-		GridPerspective<Double> grid = new GridPerspective<Double>(p.dr.dataWidth, p.dr.dataHeight, 0.0);
+		GridPerspective<Float> grid = new GridPerspective<Float>(p.dr.dataWidth, p.dr.dataHeight, 0.0f);
 		modData = Calculations.gridYReverse(modData, grid);
 
 		if (p.dr.drawToVectorSurface) {
@@ -79,7 +80,7 @@ public class ThreadedRasterMapPainter extends MapPainter
 	}
 
 
-	private Buffer drawAsRaster(PainterData p, final List<Double> data, double cellSize, final double maxIntensity,
+	private Buffer drawAsRaster(PainterData p, final Spectrum data, float cellSize, final float maxIntensity,
 			final int maximumIndex)
 	{
 
@@ -105,14 +106,14 @@ public class ThreadedRasterMapPainter extends MapPainter
 		return b;
 	}
 
-	private void drawBuffer(PainterData p, Buffer b, double cellSize)
+	private void drawBuffer(PainterData p, Buffer b, float cellSize)
 	{
 		p.context.compose(b, 0, 0, cellSize);
 	}
 
-	private void drawAsScalar(PainterData p, List<Double> data, double cellSize, final double maxIntensity)
+	private void drawAsScalar(PainterData p, Spectrum data, float cellSize, final float maxIntensity)
 	{
-		double intensity;
+		float intensity;
 
 		// draw the map
 		for (int y = 0; y < p.dr.dataHeight; y++) {

@@ -17,6 +17,11 @@ public class FiltersetViewer extends ClearPanel {
 	private String EDIT = "EDIT";
 	private String SELECT = "SELECT";
 	
+	public String getName()
+	{
+		return "Filters";
+	}
+	
 	public FiltersetViewer(FilterController _controller, JFrame owner){
 		
 		super();

@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
@@ -128,13 +129,11 @@ public class ImageButton extends JButton
 
 	private void initialize(String filename, String text, String tooltip, Layout mode, boolean _showBorder, IconSize size, Insets insets, Border border)
 	{
-		
-
-		
-		
+				
 		originalBackground = this.getBackground();
 		this.showBorder = _showBorder;		
 
+		
 		if (!showBorder) {
 			this.setOpaque(false);
 			this.setBackground(new Color(0, 0, 0, 0));
@@ -148,7 +147,6 @@ public class ImageButton extends JButton
 			mode = Layout.IMAGE;
 		}
 
-
 		// don't remove the borders if this button is text only
 		if (mode != Layout.TEXT) {
 
@@ -159,31 +157,31 @@ public class ImageButton extends JButton
 
 				public void mouseReleased(MouseEvent e)
 				{
-					setBorder();
+					setButtonBorder();
 				}
 
 
 				public void mousePressed(MouseEvent e)
 				{
-					setBorder();
+					setButtonBorder();
 				}
 
 
 				public void mouseExited(MouseEvent e)
 				{
-					setBorder();
+					setButtonBorder();
 				}
 
 
 				public void mouseEntered(MouseEvent e)
 				{
-					setBorder();
+					setButtonBorder();
 				}
 
 
 				public void mouseClicked(MouseEvent e)
 				{
-					setBorder();
+					setButtonBorder();
 				}
 			});
 			
@@ -191,13 +189,13 @@ public class ImageButton extends JButton
 			
 				public void focusLost(FocusEvent arg0)
 				{
-					setBorder();
+					setButtonBorder();
 				}
 			
 			
 				public void focusGained(FocusEvent arg0)
 				{
-					setBorder();
+					setButtonBorder();
 				}
 			});
 
@@ -207,19 +205,19 @@ public class ImageButton extends JButton
 		
 			public void keyTyped(KeyEvent arg0)
 			{
-				setBorder();
+				setButtonBorder();
 			}
 		
 		
 			public void keyReleased(KeyEvent arg0)
 			{
-				setBorder();
+				setButtonBorder();
 			}
 		
 		
 			public void keyPressed(KeyEvent arg0)
 			{
-				setBorder();
+				setButtonBorder();
 			}
 		});
 
@@ -227,16 +225,17 @@ public class ImageButton extends JButton
 		
 			public void focusLost(FocusEvent e)
 			{
-				setBorder();
+				setButtonBorder();
 			}
 		
 		
 			public void focusGained(FocusEvent e)
 			{
-				setBorder();
+				setButtonBorder();
 			}
 		});
 
+		
 		
 		switch (mode) {
 
@@ -244,6 +243,9 @@ public class ImageButton extends JButton
 
 				this.setMargin(Spacing.iNone());
 				super.setBorder(Spacing.bMedium());
+				
+				
+				
 				this.setIcon(image);
 				if (tooltip == null || "".equals(tooltip)) {
 					tooltip = text;
@@ -293,12 +295,12 @@ public class ImageButton extends JButton
 	
 	
 	
-	protected void setBorder()
+	protected void setButtonBorder()
 	{
-		setBorder(false);
+		setButtonBorder(false);
 	}
 	
-	protected void setBorder(boolean forceBorder)
+	protected void setButtonBorder(boolean forceBorder)
 	{
 		ButtonModel m = this.getModel();
 		boolean showBackground = isEnabled() && (m.isSelected() || m.isRollover() || m.isPressed() || m.isArmed() || forceBorder || showBorder);

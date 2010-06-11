@@ -135,7 +135,7 @@ public class SidePanel extends JPanel
 
 		JPanel mapProperties = new JPanel();
 		if (SHOW_UI_FRAME_BORDERS) mapProperties.setBorder(new TitledBorder("Map Settings"));
-
+		
 		mapProperties.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;

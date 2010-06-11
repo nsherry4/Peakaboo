@@ -5,9 +5,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_UIController"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_DataTypes"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Filters"/>
-	<classpathentry kind="lib" path="flexdock-0.5.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_FileIO"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Mapping"/>
+	<classpathentry kind="lib" path="/Peakaboo_Common/jnlp.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.datatypes.Coord;
@@ -13,6 +13,7 @@ import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.peaktable.Transition;
 import peakaboo.datatypes.peaktable.TransitionSeries;
+import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.peaktable.TransitionType;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.plot.painters.PlotPainter;
@@ -33,7 +34,7 @@ public class FittingTitlePainter extends PlotPainter {
 	private boolean drawMaxIntensities;
 	private boolean drawElementNames;
 	
-	private List<Coord<Range<Double>>> previousLabels;
+	private List<Coord<Range<Float>>> previousLabels;
 	
 	public FittingTitlePainter(FittingResultSet fittings, boolean drawElementNames, boolean drawMaxIntensities){
 		
@@ -43,7 +44,7 @@ public class FittingTitlePainter extends PlotPainter {
 		this.drawMaxIntensities = drawMaxIntensities;
 		this.drawElementNames = drawElementNames;
 		
-		this.previousLabels = DataTypeFactory.<Coord<Range<Double>>>list();
+		this.previousLabels = DataTypeFactory.<Coord<Range<Float>>>list();
 		
 		
 	}
@@ -58,10 +59,10 @@ public class FittingTitlePainter extends PlotPainter {
 		for (FittingResult fit : fittings.fits){
 			
 			//if (fit.transitionSeries.visible && visibleElements.contains(fit.transitionSeries.element)){
-				titleName = fit.transitionSeries.element.name() + ": " + fit.transitionSeries.type.toString();
+				titleName = fit.transitionSeries.getDescription();
 
 				
-				titleHeight = SigDigits.roundDoubleTo(fit.scaleFactor, 1);
+				titleHeight = SigDigits.roundFloatTo(fit.scaleFactor, 1);
 
 				title = "";
 				if (drawElementNames) title += titleName;
@@ -70,22 +71,26 @@ public class FittingTitlePainter extends PlotPainter {
 				if (drawElementNames && drawMaxIntensities) title += ")";
 				
 				
-				TransitionType type = TransitionType.a1;
-				t = fit.transitionSeries.getTransition(type);
+				//if (fit.transitionSeries.type != TransitionSeriesType.Kx2)
+				//{
 				
-				if (t != null) {
+					//TransitionType type = TransitionType.a1;
+					t = fit.transitionSeries.getStrongestTransition();
 					
-					Coord<Range<Double>> currentLabel = getTextLabelDimensions(p, title, t.energyValue);
-					if (currentLabel.x.start.intValue() > p.dr.dataWidth) continue;
-					double baseHeightForTitle = baseHeightForTitle(p, title, t.energyValue);
-					currentLabel.y.start += baseHeightForTitle;
-					currentLabel.y.end += baseHeightForTitle;
-					double channelSize = p.plotSize.x / p.dr.dataWidth;
-					
-					drawTextLabel(p, title, t.energyValue, currentLabel.x.start * channelSize, currentLabel.y.start);
-					
-					previousLabels.add(currentLabel);
-				}
+					if (t != null) {
+						
+						Coord<Range<Float>> currentLabel = getTextLabelDimensions(p, title, t.energyValue);
+						if (currentLabel.x.start.intValue() > p.dr.dataWidth) continue;
+						float baseHeightForTitle = baseHeightForTitle(p, title, t.energyValue);
+						currentLabel.y.start += baseHeightForTitle;
+						currentLabel.y.end += baseHeightForTitle;
+						float channelSize = p.plotSize.x / p.dr.dataWidth;
+						
+						drawTextLabel(p, title, t.energyValue, currentLabel.x.start * channelSize, currentLabel.y.start);
+						
+						previousLabels.add(currentLabel);
+					}
+				//}
 				
 			//} //visible?
 			
@@ -93,7 +98,7 @@ public class FittingTitlePainter extends PlotPainter {
 		}// for all transitionseries
 		
 		//update the channel height data to reflect the addition of text labels
-		for (Coord<Range<Double>> label : previousLabels)
+		for (Coord<Range<Float>> label : previousLabels)
 		{
 			for (int i = label.x.start.intValue(); i <= label.x.end; i++){
 				
@@ -104,14 +109,14 @@ public class FittingTitlePainter extends PlotPainter {
 		}
 	}
 	
-	public double baseHeightForTitle(PainterData p, String title, double energy)
+	public float baseHeightForTitle(PainterData p, String title, float energy)
 	{
 		
-		Coord<Range<Double>> currentLabel = getTextLabelDimensions(p, title, energy);
-		List<Coord<Range<Double>>> labelsInRange = DataTypeFactory.<Coord<Range<Double>>>list();
+		Coord<Range<Float>> currentLabel = getTextLabelDimensions(p, title, energy);
+		List<Coord<Range<Float>>> labelsInRange = DataTypeFactory.<Coord<Range<Float>>>list();
 		
 		//get a list of all labels which might get in the way of this one
-		for (Coord<Range<Double>> label : previousLabels)
+		for (Coord<Range<Float>> label : previousLabels)
 		{
 			if (
 					(label.x.start <= currentLabel.x.end && label.x.start >= currentLabel.x.start)
@@ -123,9 +128,9 @@ public class FittingTitlePainter extends PlotPainter {
 		}
 		
 		//sort the elements by order of bottom y position
-		Collections.sort(labelsInRange, new Comparator<Coord<Range<Double>>>() {
+		Collections.sort(labelsInRange, new Comparator<Coord<Range<Float>>>() {
 
-			public int compare(Coord<Range<Double>> o1, Coord<Range<Double>> o2)
+			public int compare(Coord<Range<Float>> o1, Coord<Range<Float>> o2)
 			{
 				if (o1.y.start < o2.y.start) return -1;
 				if (o1.y.start > o2.y.start) return 1;
@@ -136,11 +141,11 @@ public class FittingTitlePainter extends PlotPainter {
 		
 		
 		//get the starting baseline from the pre-existing dataHeights
-		double baseline = ListCalculations.max(p.dataHeights.subList(currentLabel.x.start.intValue(), currentLabel.x.end.intValue()));
-		double currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
+		float baseline = SpectrumCalculations.max(p.dataHeights.subSpectrum(currentLabel.x.start.intValue(), currentLabel.x.end.intValue()));
+		float currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
 		
 		//go over all previous labels in order of bottom y coordinate
-		for (Coord<Range<Double>> label : labelsInRange)
+		for (Coord<Range<Float>> label : labelsInRange)
 		{
 			
 			//if there is enough room for the label, we've found the right baseline

@@ -4,6 +4,7 @@ package peakaboo.filters.filters;
 
 import java.util.List;
 import peakaboo.calculations.Noise;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
@@ -77,9 +78,9 @@ public final class WaveletNoiseFilter extends AbstractFilter
 
 
 	@Override
-	public List<Double> filterApplyTo(List<Double> data, boolean cache)
+	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		List<Double> result;
+		Spectrum result;
 		int passes = this.<Integer> getParameterValue(PASSES);
 
 		result = Noise.FWTLowPassFilter(data, passes);

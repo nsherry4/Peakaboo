@@ -27,14 +27,14 @@ public class ROICalculations
 	 *            a region of the data in which to sum the values
 	 * @return the sum of all data points inside the given region
 	 */
-	public static double getSumInRegion(List<Double> list, ROI region)
+	/*public static double getSumInRegion(List<Double> list, ROI region)
 	{
 		double result = 0.0;
 		for (int i = region.getStart(); i < region.getStop(); i++) {
 			result += list.get(i);
 		}
 		return result;
-	}
+	}*/
 
 
 	/**
@@ -46,7 +46,7 @@ public class ROICalculations
 	 *            a region of the data from which to generate the map
 	 * @return a map based on the given region
 	 */
-	public static List<Double> getMapOverRegion(List<List<Double>> dataset, ROI region)
+	/*public static List<Double> getMapOverRegion(List<List<Double>> dataset, ROI region)
 	{
 		List<Double> map = DataTypeFactory.<Double> list();
 
@@ -55,7 +55,7 @@ public class ROICalculations
 		}
 
 		return map;
-	}
+	}*/
 
 
 	/**
@@ -67,7 +67,7 @@ public class ROICalculations
 	 *            a list of regions of the data from which to generate the map
 	 * @return a map based on the given regions
 	 */
-	public static List<Double> getMapOverRegionSet(List<List<Double>> dataset, List<ROI> regions)
+	/*public static List<Double> getMapOverRegionSet(List<List<Double>> dataset, List<ROI> regions)
 	{
 		List<Double> map = DataTypeFactory.<Double> list();
 
@@ -85,6 +85,6 @@ public class ROICalculations
 		}
 
 		return map;
-	}
+	}*/
 
 }

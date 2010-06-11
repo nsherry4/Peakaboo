@@ -6,16 +6,16 @@ import peakaboo.datatypes.eventful.IEventful;
 public interface SettingsController extends IEventful
 {
 
-	public void setZoom(double zoom);
-	public double getZoom();
+	public void setZoom(float zoom);
+	public float getZoom();
 	
 	public void setShowIndividualSelections(boolean showIndividualSelections);
 	public boolean getShowIndividualSelections();
 
-	public void setEnergyPerChannel(double energy);
-	public double getEnergyPerChannel();
-	public void setMaxEnergy(double energy);
-	public double getMaxEnergy();
+	public void setEnergyPerChannel(float energy);
+	public float getEnergyPerChannel();
+	public void setMaxEnergy(float energy);
+	public float getMaxEnergy();
 
 	public void setViewLog(boolean log);
 	public boolean getViewLog();

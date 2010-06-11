@@ -5,6 +5,7 @@ import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.GridPerspective;
+import peakaboo.datatypes.Spectrum;
 
 /**
  * 
@@ -46,10 +47,10 @@ public class Calculations
 	 * @param grid the {@link GridPerspective} defining the dimensions of the data
 	 * @return a list of values reversed on the Y axis
 	 */
-	public static List<Double> gridYReverse(List<Double> data, GridPerspective<Double> grid)
+	public static Spectrum gridYReverse(Spectrum data, GridPerspective<Float> grid)
 	{
 
-		List<Double> result = DataTypeFactory.<Double> listInit(grid.height * grid.width);
+		Spectrum result = new Spectrum(grid.height * grid.width, 0.0f);
 		int y_reverse;
 
 		for (int x = 0; x < grid.width; x++) {
@@ -57,7 +58,10 @@ public class Calculations
 
 				y_reverse = grid.height - y - 1;
 
-				grid.set(result, x, y_reverse, grid.get(data, x, y));
+				int index = grid.getIndexFromXY(x, y);
+				int index_reverse = grid.getIndexFromXY(x, y_reverse);
+				result.set(index_reverse, data.get(index));
+				//grid.set(result, x, y_reverse, data.get(grid.getIndexFromXY(x, y)));
 
 			}
 		}

@@ -74,6 +74,19 @@ public class GridPerspective<T> implements Cloneable
 		return value;
 	}
 
+	public float get(Spectrum spec, int x, int y)
+	{
+		int index = y * width + x;
+
+		if (index >= spec.size()) return 0.0f;
+		if (x < 0 || y < 0) return 0.0f;
+		if (x >= this.width || y >= this.height) return 0.0f;
+
+		float value = spec.get(index);
+
+		return value;
+	}
+
 
 	/**
 	 * Sets the value in the given list at the given coordinates, using the previously provided width and
@@ -85,6 +98,17 @@ public class GridPerspective<T> implements Cloneable
 	 * @param value
 	 */
 	public void set(List<T> list, int x, int y, T value)
+	{
+		int index = getIndexFromXY(x, y);
+
+		if (index >= list.size()) return;
+		if (x < 0 || y < 0) return;
+		if (x >= this.width || y >= this.height) return;
+
+		list.set(index, value);
+	}
+	
+	public void set(Spectrum list, int x, int y, float value)
 	{
 		int index = getIndexFromXY(x, y);
 

@@ -3,11 +3,12 @@ package peakaboo.drawing.plot;
 
 import java.util.List;
 
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.Drawing;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.backends.Surface;
@@ -28,11 +29,11 @@ import peakaboo.drawing.plot.painters.plot.LinePainter;
 public class PlotDrawing extends Drawing
 {
 
-	private Coord<Double>	plotSize;
-	private List<Double>	dataHeights;
+	private Coord<Float>		plotSize;
+	private Spectrum			dataHeights;
 	
-	private List<AxisPainter> axisPainters;
-	private List<PlotPainter> painters;
+	private List<AxisPainter> 	axisPainters;
+	private List<PlotPainter> 	painters;
 
 
 	/**
@@ -77,7 +78,7 @@ public class PlotDrawing extends Drawing
 	 * Create a plot object with no {@link AxisPainter}s
 	 * @param context the {@link Surface} to draw to
 	 */
-	public PlotDrawing(List<Double> numbers)
+	public PlotDrawing(Spectrum numbers)
 	{
 		super(PlotDrawingRequestFactory.getDrawingRequest());
 		this.context = null;
@@ -114,7 +115,7 @@ public class PlotDrawing extends Drawing
 	 * Gets the size of the plot to be drawn
 	 * @return the current plot size
 	 */
-	public Coord<Double> getPlotSize()
+	public Coord<Float> getPlotSize()
 	{
 		return plotSize;
 	}
@@ -150,17 +151,15 @@ public class PlotDrawing extends Drawing
 		
 		if (context == null) return;
 		
-		dataHeights = DataTypeFactory.<Double> list();
-		for (int i = 0; i < dr.dataWidth; i++)
-			dataHeights.add(0.0);
+		dataHeights = new Spectrum(dr.dataWidth, 0.0f);
 
 		context.setLineWidth(getPenWidth(getBaseUnitSize(dr), dr));
 		
 		context.save();
 	
-			Coord<Range<Double>> axisBounds = getPlotOffsetFromBottomLeft();
-			Range<Double> availableX = axisBounds.x, availableY = axisBounds.y;
-			plotSize = new Coord<Double>(availableX.end - availableX.start, availableY.end - availableY.start); 
+			Coord<Range<Float>> axisBounds = getPlotOffsetFromBottomLeft();
+			Range<Float> availableX = axisBounds.x, availableY = axisBounds.y;
+			plotSize = new Coord<Float>(availableX.end - availableX.start, availableY.end - availableY.start); 
 		
 			// transform to get out past the x axis
 			// we can't scale to make the region fit in the imageHeight/Width values
@@ -187,18 +186,18 @@ public class PlotDrawing extends Drawing
 
 		context.save();
 			
-			availableX = new Range<Double>(0.0, dr.imageWidth);
-			availableY = new Range<Double>(0.0, dr.imageHeight);
+			availableX = new Range<Float>(0.0f, dr.imageWidth);
+			availableY = new Range<Float>(0.0f, dr.imageHeight);
 			if (axisPainters != null) {
 				
-				Pair<Double, Double> axisSizeX, axisSizeY;
+				Pair<Float, Float> axisSizeX, axisSizeY;
 				
 				for (AxisPainter axisPainter : axisPainters){
 				
 					axisPainter.setDimensions( 
 							
-							new Range<Double>(availableX.start, availableX.end),
-							new Range<Double>(availableY.start, availableY.end)
+							new Range<Float>(availableX.start, availableX.end),
+							new Range<Float>(availableY.start, availableY.end)
 							
 					);
 					axisPainter.draw(new PainterData(context, dr, plotSize, dataHeights));
@@ -335,25 +334,25 @@ public class PlotDrawing extends Drawing
 	 * Calculates the space required for drawing the axes
 	 * @return A coordinate pair defining the x and y space consumed by the axes
 	 */
-	public Coord<Range<Double>> getPlotOffsetFromBottomLeft()
+	public Coord<Range<Float>> getPlotOffsetFromBottomLeft()
 	{
 		
-		Range<Double> availableX, availableY;
-		availableX = new Range<Double>(0.0, dr.imageWidth);
-		availableY = new Range<Double>(0.0, dr.imageHeight);
+		Range<Float> availableX, availableY;
+		availableX = new Range<Float>(0.0f, dr.imageWidth);
+		availableY = new Range<Float>(0.0f, dr.imageHeight);
 		PainterData p = new PainterData(context, dr, plotSize, dataHeights);
 		
 		if (axisPainters != null) {
 			
-			Pair<Double, Double> axisSizeX, axisSizeY;
+			Pair<Float, Float> axisSizeX, axisSizeY;
 			
 			for (AxisPainter axisPainter : axisPainters){
 
 				
 				axisPainter.setDimensions( 
 						
-						new Range<Double>(availableX.start, availableX.end),
-						new Range<Double>(availableY.start, availableY.end)
+						new Range<Float>(availableX.start, availableX.end),
+						new Range<Float>(availableY.start, availableY.end)
 						
 				);
 				
@@ -370,55 +369,55 @@ public class PlotDrawing extends Drawing
 		}
 				
 		
-		return new Coord<Range<Double>>(availableX, availableY);
+		return new Coord<Range<Float>>(availableX, availableY);
 
 	}
 
 
-	public static double getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
+	public static float getBaseUnitSize(peakaboo.drawing.DrawingRequest dr)
 	{
-		return dr.imageHeight / 350.0;
+		return dr.imageHeight / 350.0f;
 	}
 
 
-	public static double getDataScale(DrawingRequest dr)
+	public static float getDataScale(DrawingRequest dr)
 	{
 		
-		double datascale;
+		float datascale;
 		if (dr.maxYIntensity == -1){
 			return 0;
 		} else {
 			datascale = dr.maxYIntensity;
 		}
 		if (dr.viewTransform == ViewTransform.LOG) {
-			datascale = Math.log(datascale);
+			datascale = (float)Math.log(datascale);
 		}
 		datascale *= 1.15;
 
 		return datascale;
 	}	
 	
-	public static double getDataScale(double maxValue, boolean log)
+	public static float getDataScale(float maxValue, boolean log)
 	{
 		
-		double datascale = maxValue;
-		if (log) datascale = Math.log(datascale);
+		float datascale = maxValue;
+		if (log) datascale = (float)Math.log(datascale);
 		datascale *= 1.15;
 		return datascale;
 		
 	}	
 	
-	public static double getDataScale(DrawingRequest dr, List<Double> data)
+	public static float getDataScale(DrawingRequest dr, Spectrum data)
 	{
 		
-		double datascale;
+		float datascale;
 		if (dr.maxYIntensity == -1){
-			datascale = ListCalculations.max(data);
+			datascale = SpectrumCalculations.max(data);
 		} else {
 			datascale = dr.maxYIntensity;
 		}
 		if (dr.viewTransform == ViewTransform.LOG) {
-			datascale = Math.log(datascale);
+			datascale = (float)Math.log(datascale);
 		}
 		datascale *= 1.15;
 

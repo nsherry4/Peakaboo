@@ -10,14 +10,14 @@ public class ContainerAxisPainter extends AxisPainter {
 	private Drawing drawing;
 	
 	private int size;
-	private double percent;
+	private float percent;
 	private boolean usePercent;
 	
 	private Side side;
 	
 	public enum Side {TOP, BOTTOM, LEFT, RIGHT};
 	
-	public ContainerAxisPainter(Drawing drawing, double percent, Side side)
+	public ContainerAxisPainter(Drawing drawing, float percent, Side side)
 	{
 		this.drawing = drawing;
 		this.percent = percent;
@@ -35,7 +35,7 @@ public class ContainerAxisPainter extends AxisPainter {
 		
 	}
 	
-	private double getWidth(PainterData p)
+	private float getWidth(PainterData p)
 	{
 		if (side == Side.TOP || side == Side.BOTTOM)
 		{
@@ -43,13 +43,13 @@ public class ContainerAxisPainter extends AxisPainter {
 		}
 		else
 		{
-			double totalSize = size;
+			float totalSize = size;
 			if (usePercent) totalSize = percent * p.dr.imageWidth;
 			return totalSize;			
 		}
 
 	}
-	private double getHeight(PainterData p)
+	private float getHeight(PainterData p)
 	{
 		if (side == Side.LEFT || side == Side.RIGHT)
 		{
@@ -57,14 +57,14 @@ public class ContainerAxisPainter extends AxisPainter {
 		}
 		else
 		{
-			double totalSize = size;
+			float totalSize = size;
 			if (usePercent) totalSize = percent * p.dr.imageHeight;
 			return totalSize;			
 		}
 	}
 	
 	@Override
-	public Pair<Double, Double> getAxisSizeX(final PainterData p) {
+	public Pair<Float, Float> getAxisSizeX(final PainterData p) {
 		
 		
 		
@@ -81,19 +81,19 @@ public class ContainerAxisPainter extends AxisPainter {
 		});
 		*/
 		
-		double totalSize = getWidth(p);
+		float totalSize = getWidth(p);
 		
 		if (side == Side.TOP || side == Side.BOTTOM) 
-			return new Pair<Double, Double>(0d, 0d);
+			return new Pair<Float, Float>(0f, 0f);
 		else if (side == Side.LEFT) 
-			return new Pair<Double, Double>(totalSize, 0d);
+			return new Pair<Float, Float>(totalSize, 0f);
 		else 
-			return new Pair<Double, Double>(0d, totalSize);
+			return new Pair<Float, Float>(0f, totalSize);
 
 	}
 
 	@Override
-	public Pair<Double, Double> getAxisSizeY(final PainterData p) {
+	public Pair<Float, Float> getAxisSizeY(final PainterData p) {
 		
 		/*
 		Pair<Double, Double> axisSize = Functional.foldr(axisPainters, new Pair<Double, Double>(0d,0d), new Function2<AxisPainter, Pair<Double, Double>, Pair<Double, Double>>() {
@@ -108,14 +108,14 @@ public class ContainerAxisPainter extends AxisPainter {
 		});
 		*/
 		
-		double totalSize = getHeight(p);
+		float totalSize = getHeight(p);
 		
 		if (side == Side.LEFT || side == Side.RIGHT) 
-			return new Pair<Double, Double>(0d, 0d);
+			return new Pair<Float, Float>(0f, 0f);
 		else if (side == Side.TOP) 
-			return new Pair<Double, Double>(totalSize, 0d);
+			return new Pair<Float, Float>(totalSize, 0f);
 		else 
-			return new Pair<Double, Double>(0d, totalSize);
+			return new Pair<Float, Float>(0f, totalSize);
 	}
 	
 	@Override

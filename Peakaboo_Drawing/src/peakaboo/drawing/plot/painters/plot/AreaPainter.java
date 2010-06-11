@@ -4,6 +4,7 @@ package peakaboo.drawing.plot.painters.plot;
 import java.awt.Color;
 import java.util.List;
 
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.plot.painters.SpectrumPainter;
 
@@ -13,7 +14,7 @@ public class AreaPainter extends SpectrumPainter
 
 	private Color topColour, bottomColour, strokeColour;
 
-	public AreaPainter(List<Double> data, Color top, Color bottom, Color stroke)
+	public AreaPainter(Spectrum data, Color top, Color bottom, Color stroke)
 	{
 		super(data);
 		topColour = top;
@@ -22,7 +23,7 @@ public class AreaPainter extends SpectrumPainter
 	}
 
 	
-	public AreaPainter(List<Double> data)
+	public AreaPainter(Spectrum data)
 	{
 		super(data);
 		topColour = new Color(0.5f, 0.5f, 0.5f);

@@ -200,7 +200,20 @@ public abstract class TaskList<T> extends Eventful implements Iterable<Task>
 		return aborted;
 	}
 
-
+	/**
+	 * removes all references to tasks, and removes references to all listeners
+	 */
+	public synchronized void finished()
+	{
+		for (Task t : tasks)
+		{
+			t.removeAllListeners();
+		}
+		tasks.clear();
+		removeAllListeners();
+		worker = null;
+	}
+	
 	/**
 	 * When creating a TaskList, this abstract method will be implemented, and the logic for executing a
 	 * number of {@link Task}s will be added.

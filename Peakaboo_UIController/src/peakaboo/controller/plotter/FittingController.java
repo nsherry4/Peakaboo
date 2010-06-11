@@ -25,8 +25,8 @@ public interface FittingController extends IEventful
 	
 	public List<TransitionSeriesType> getTransitionSeriesTypesForElement(Element e, boolean onlyInEnergyRange);
 	public TransitionSeries getTransitionSeriesForElement(Element e, TransitionSeriesType tst);
-	public double getTransitionSeriesIntensityForElement(Element e, TransitionSeriesType tst);
-	public double getIntensityForElement(Element e);
+	public float getTransitionSeriesIntensityForElement(Element e, TransitionSeriesType tst);
+	public float getIntensityForElement(Element e);
 	public void moveElementUp(Element e);
 	public void moveElementDown(Element e);
 	

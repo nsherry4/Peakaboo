@@ -75,22 +75,33 @@ public class DataTypeFactory {
     }
     
     /**
-     * Creates a list of list of values of type T
-	 * @param <T> type of data the lists in this list should hold
-     * @return a list which can contain lists of type T
+     * Creates a list of {@link Spectrum}s
+     * @return a list which can contain Spectrums
      */
     public static <T> List<List<T>> dataset(){
     	return new ArrayList<List<T>>();
     }
     
     /**
-     * Creates a list of list of values of type T, and initialises it to a certain size with null lists 
-	 * @param <T> type of data this list should hold
-     * @param size the initial size of the list.
-     * @return a new list of lists of T; of size 'size' filled with null values
+     * Creates a list of {@link Spectrum}s
+     * @return a list which can contain Spectrums, initialized with nulls
      */
     public static <T> List<List<T>> datasetInit(int size){
     	List<List<T>> dataset = dataset();
+    	for (int i = 0; i < size; i++){
+    		dataset.add(null);
+    	}
+    	return dataset;
+    }
+    
+    public static List<Spectrum> spectrumSet()
+    {
+    	return DataTypeFactory.<Spectrum>list();
+    }
+    
+    public static List<Spectrum> spectrumSetInit(int size)
+    {
+    	List<Spectrum> dataset = DataTypeFactory.<Spectrum>list();
     	for (int i = 0; i < size; i++){
     		dataset.add(null);
     	}

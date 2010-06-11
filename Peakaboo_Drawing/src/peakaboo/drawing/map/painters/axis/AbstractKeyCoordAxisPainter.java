@@ -5,14 +5,14 @@ package peakaboo.drawing.map.painters.axis;
 import java.awt.Color;
 import java.util.List;
 
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Function2;
-import peakaboo.calculations.functional.Functional;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.SigDigits;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Function2;
+import peakaboo.datatypes.functional.Functional;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.PainterData;
@@ -25,7 +25,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 	protected Coord<Number>			topLeftCoord, topRightCoord, bottomLeftCoord, bottomRightCoord;
 	protected SISize				coordinateUnits;
-	protected static Coord<Double>	coordPadding	= new Coord<Double>(3.0, 3.0);
+	protected static Coord<Float>	coordPadding	= new Coord<Float>(3.0f, 3.0f);
 
 	protected boolean				drawCoords, drawKey, realDimensionsProvided;
 	protected int					keyHeight;
@@ -56,19 +56,19 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 
 	@Override
-	public Pair<Double, Double> getAxisSizeX(PainterData p)
+	public Pair<Float, Float> getAxisSizeX(PainterData p)
 	{
 
-		Coord<Range<Double>> borderSize = getBorderSize(p.context);
-		return new Pair<Double, Double>(borderSize.x.start, borderSize.x.end);
+		Coord<Range<Float>> borderSize = getBorderSize(p.context);
+		return new Pair<Float, Float>(borderSize.x.start, borderSize.x.end);
 	}
 
 
 	@Override
-	public Pair<Double, Double> getAxisSizeY(PainterData p)
+	public Pair<Float, Float> getAxisSizeY(PainterData p)
 	{
-		Coord<Range<Double>> borderSize = getBorderSize(p.context);
-		return new Pair<Double, Double>(borderSize.y.start, borderSize.y.end);
+		Coord<Range<Float>> borderSize = getBorderSize(p.context);
+		return new Pair<Float, Float>(borderSize.y.start, borderSize.y.end);
 	}
 
 
@@ -89,9 +89,9 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	private void drawScaleBar(PainterData p)
 	{
 
-		double width = bottomRightCoord.x.doubleValue() - bottomLeftCoord.x.doubleValue();
+		float width = bottomRightCoord.x.floatValue() - bottomLeftCoord.x.floatValue();
 		if (width == 0d) return;
-		double totalWidth = width;
+		float totalWidth = width;
 		width /= 3.0;
 
 		SISize units = coordinateUnits;
@@ -112,56 +112,56 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		width = SigDigits.toIntSigDigit(width, 1);
 
-		double widthAsPercentOfTotal = width / totalWidth;
+		float widthAsPercentOfTotal = width / totalWidth;
 
-		Pair<Double, Double> otherAxis = getAxisSizeX(p);
-		double drawableWidth = axesData.xPositionBounds.end - axesData.xPositionBounds.start - otherAxis.first
+		Pair<Float, Float> otherAxis = getAxisSizeX(p);
+		float drawableWidth = axesData.xPositionBounds.end - axesData.xPositionBounds.start - otherAxis.first
 				- otherAxis.second;
-		double drawingWidth = drawableWidth * widthAsPercentOfTotal;
-		double widthPosition = axesData.xPositionBounds.start + otherAxis.first;
+		float drawingWidth = drawableWidth * widthAsPercentOfTotal;
+		float widthPosition = axesData.xPositionBounds.start + otherAxis.first;
 
-		Pair<Double, Double> heightAxis = getAxisSizeY(p);
-		double heightPosition = axesData.yPositionBounds.end - heightAxis.second;
+		Pair<Float, Float> heightAxis = getAxisSizeY(p);
+		float heightPosition = axesData.yPositionBounds.end - heightAxis.second;
 
 		p.context.save();
 
-		double lineWidth = getBaseUnitSize(p.dr) * 2.0;
+		float lineWidth = getBaseUnitSize(p.dr) * 2.0f;
 		p.context.setLineWidth(lineWidth);
-		p.context.setSource(0.0, 0.0, 0.0);
+		p.context.setSource(0.0f, 0.0f, 0.0f);
 
 		p.context.setFontSize(getCoordFontSize(p));
 
 		heightPosition += coordPadding.y;
 		heightPosition += (p.context.getFontAscent() / 2.0);
 
-		p.context.moveTo(widthPosition + (drawableWidth - drawingWidth) / 2.0, heightPosition);
-		p.context.lineTo(widthPosition + (drawableWidth + drawingWidth) / 2.0, heightPosition);
+		p.context.moveTo(widthPosition + (drawableWidth - drawingWidth) / 2.0f, heightPosition);
+		p.context.lineTo(widthPosition + (drawableWidth + drawingWidth) / 2.0f, heightPosition);
 		p.context.stroke();
 
 		heightPosition += (p.context.getFontAscent() / 2.0);
 		heightPosition += p.context.getFontHeight();
 
 		String unitText = (int) width + " " + units;
-		double unitTextWidth = p.context.getTextWidth(unitText);
-		p.context.writeText(unitText, widthPosition + ((drawableWidth - unitTextWidth) / 2.0), heightPosition);
+		float unitTextWidth = p.context.getTextWidth(unitText);
+		p.context.writeText(unitText, widthPosition + ((drawableWidth - unitTextWidth) / 2.0f), heightPosition);
 
 		p.context.restore();
 
 	}
 
 
-	private void drawCoordinates(PainterData p, Coord<Double> borders)
+	private void drawCoordinates(PainterData p, Coord<Float> borders)
 	{
 
 		if (!drawCoords) return;
 
 		p.context.setSource(0, 0, 0);
 
-		Pair<Double, Double> borderX, borderY;
+		Pair<Float, Float> borderX, borderY;
 		borderX = getAxisSizeX(p);
 		borderY = getAxisSizeY(p);
 
-		double mapXStart, mapYStart, mapXEnd, mapYEnd;
+		float mapXStart, mapYStart, mapXEnd, mapYEnd;
 		mapXStart = axesData.xPositionBounds.start;
 		mapYStart = axesData.yPositionBounds.start;
 		mapXEnd = axesData.xPositionBounds.end - borderX.second;
@@ -175,12 +175,12 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	}
 
 
-	private void drawCoordinatePair(PainterData p, Coord<Number> pair, Coord<Double> border, double x, double y)
+	private void drawCoordinatePair(PainterData p, Coord<Number> pair, Coord<Float> border, float x, float y)
 	{
 		p.context.save();
 
-		double textX;
-		double textY;
+		float textX;
+		float textY;
 		String text;
 
 		String units = (!realDimensionsProvided | coordinateUnits == null) ? "" : " " + coordinateUnits;
@@ -201,30 +201,30 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	}
 
 
-	private double getCoordFontSize(PainterData p)
+	private float getCoordFontSize(PainterData p)
 	{
 		return p.context.getFontSize() - 2;
 	}
 
 
-	private double getScaleBarHeight(Surface context)
+	private float getScaleBarHeight(Surface context)
 	{
 
-		double y = context.getFontHeight() * 2 - context.getFontLeading() - context.getFontDescent();
+		float y = context.getFontHeight() * 2 - context.getFontLeading() - context.getFontDescent();
 		return y;
 
 	}
 
 
-	private Coord<Double> getCoordinateBorderSize(Surface context)
+	private Coord<Float> getCoordinateBorderSize(Surface context)
 	{
 
-		if (!drawCoords) return new Coord<Double>(0.0, 0.0);
+		if (!drawCoords) return new Coord<Float>(0.0f, 0.0f);
 
-		double x = 0.0;
-		double y = 0.0;
+		float x = 0.0f;
+		float y = 0.0f;
 
-		double cx;
+		float cx;
 
 		context.save();
 
@@ -263,25 +263,25 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		context.restore();
 
-		return new Coord<Double>(x + (coordPadding.x * 2.0), y + (coordPadding.y * 2.0));
+		return new Coord<Float>(x + (coordPadding.x * 2.0f), y + (coordPadding.y * 2.0f));
 
 	}
 
 
-	protected Coord<Double> getKeyBorderSize(Surface context)
+	protected Coord<Float> getKeyBorderSize(Surface context)
 	{
 
-		if (!drawKey) return new Coord<Double>(0.0, 0.0);
+		if (!drawKey) return new Coord<Float>(0.0f, 0.0f);
 
-		double textHeight = context.getFontHeight();
+		float textHeight = context.getFontHeight();
 
 		if (drawCoords)
 		{
-			return new Coord<Double>(0.0, keyHeight * 3.0 + textHeight + textHeight);
+			return new Coord<Float>(0.0f, keyHeight * 3.0f + textHeight + textHeight);
 		}
 		else
 		{
-			return new Coord<Double>(0.0, keyHeight + textHeight + textHeight);
+			return new Coord<Float>(0.0f, keyHeight + textHeight + textHeight);
 		}
 
 	}
@@ -296,13 +296,13 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	 *            a Surface for use in calculating things like Font sizes.
 	 * @return a Coordinate object containing the total width and height not available to the map proper.
 	 */
-	private Coord<Range<Double>> getBorderSize(Surface context)
+	private Coord<Range<Float>> getBorderSize(Surface context)
 	{
 
-		Coord<Double> coordBorder = getCoordinateBorderSize(context);
-		Coord<Double> spectBorder = getKeyBorderSize(context);
+		Coord<Float> coordBorder = getCoordinateBorderSize(context);
+		Coord<Float> spectBorder = getKeyBorderSize(context);
 
-		double bottomCoordHeight;
+		float bottomCoordHeight;
 		if (drawCoords)
 		{
 			bottomCoordHeight = coordBorder.y;
@@ -313,10 +313,10 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		}
 		else
 		{
-			bottomCoordHeight = 0.0;
+			bottomCoordHeight = 0.0f;
 		}
 
-		return new Coord<Range<Double>>(new Range<Double>(coordBorder.x, coordBorder.x), new Range<Double>(
+		return new Coord<Range<Float>>(new Range<Float>(coordBorder.x, coordBorder.x), new Range<Float>(
 			coordBorder.y,
 			bottomCoordHeight + spectBorder.y));
 

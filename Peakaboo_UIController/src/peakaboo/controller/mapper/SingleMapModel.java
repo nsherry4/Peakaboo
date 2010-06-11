@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Functional;
-import peakaboo.calculations.functional.stock.Functions;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Pair;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.MapResultSet;
 import peakaboo.mapping.colours.OverlayColor;
@@ -17,7 +18,7 @@ import peakaboo.mapping.colours.OverlayColor;
 public class SingleMapModel {
 
 	//public List<List<Double>> summedVisibleMaps;
-	public List<Pair<TransitionSeries, List<Double>>> resultantData;
+	public List<Pair<TransitionSeries, Spectrum>> resultantData;
 	
 	private MapResultSet mapResults;
 	
@@ -72,24 +73,24 @@ public class SingleMapModel {
 		});
 	}
 	
-	public List<Double> sumGivenTransitionSeriesMaps(List<TransitionSeries> list)
+	public Spectrum sumGivenTransitionSeriesMaps(List<TransitionSeries> list)
 	{
 		return mapResults.sumGivenTransitionSeriesMaps(list);
 	}
 	
-	public List<Double> getMapForTransitionSeries(TransitionSeries ts)
+	public Spectrum getMapForTransitionSeries(TransitionSeries ts)
 	{
 		List<TransitionSeries> tss = DataTypeFactory.<TransitionSeries>list();
 		tss.add(ts);
 		return mapResults.sumGivenTransitionSeriesMaps(tss);
 	}
 	
-	public List<Double> sumVisibleTransitionSeriesMaps()
+	public Spectrum sumVisibleTransitionSeriesMaps()
 	{	
 		return mapResults.sumGivenTransitionSeriesMaps(getVisibleTransitionSeries());
 	}
 	
-	public List<Double> sumAllTransitionSeriesMaps()
+	public Spectrum sumAllTransitionSeriesMaps()
 	{		
 		return mapResults.sumGivenTransitionSeriesMaps(visible.keySet());
 	}
@@ -146,14 +147,14 @@ public class SingleMapModel {
 	}
 	
 	
-	public List<Pair<TransitionSeries, List<Double>>> getTransitionSeriesForColour(final OverlayColor c)
+	public List<Pair<TransitionSeries, Spectrum>> getTransitionSeriesForColour(final OverlayColor c)
 	{
 		return Functional.filter(
 				resultantData,
-				new Function1<Pair<TransitionSeries, List<Double>>, Boolean>() {
+				new Function1<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
 					@Override
-					public Boolean f(Pair<TransitionSeries, List<Double>> element)
+					public Boolean f(Pair<TransitionSeries, Spectrum> element)
 					{
 						return c.equals(overlayColour.get(element.first)) && visible.get(element.first);
 					}
@@ -174,4 +175,15 @@ public class SingleMapModel {
 					}
 				});
 	}
+	
+	public void discard()
+	{
+		resultantData.clear();
+		ratioSide.clear();
+		overlayColour.clear();
+		visible.clear();
+		
+		mapResults = null;
+	}
+	
 }

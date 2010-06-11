@@ -50,6 +50,10 @@ public class CurveFittingView extends ClearPanel
 	protected ListControls			controls;
 	private SelectionListControls 	selControls;
 
+	public String getName()
+	{
+		return "Peak Fitting";
+	}
 
 	public CurveFittingView(FittingController _controller)
 	{

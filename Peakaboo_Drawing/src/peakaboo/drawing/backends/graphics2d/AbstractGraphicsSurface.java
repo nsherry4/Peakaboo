@@ -96,25 +96,25 @@ abstract class AbstractGraphicsSurface implements Surface
 	}
 
 
-	public void lineTo(double x, double y)
+	public void lineTo(float x, float y)
 	{
-		path.lineTo((float) x, (float) y);
+		path.lineTo(x, y);
 	}
 	
 
-	public void moveTo(double x, double y)
+	public void moveTo(float x, float y)
 	{
-		path.moveTo((float) x, (float) y);
+		path.moveTo(x, y);
 	}
 
 
-	public void rectangle(double x, double y, double width, double height)
+	public void rectangle(float x, float y, float width, float height)
 	{
-		path.moveTo((float) x, (float) y);
-		path.lineTo((float) x, (float) (y + height));
-		path.lineTo((float) (x + width), (float) (y + height));
-		path.lineTo((float) (x + width), (float) y);
-		path.lineTo((float) x, (float) y);
+		path.moveTo(x, y);
+		path.lineTo(x, (y + height));
+		path.lineTo((x + width), (y + height));
+		path.lineTo((x + width), y);
+		path.lineTo(x, y);
 	}
 
 
@@ -154,15 +154,15 @@ abstract class AbstractGraphicsSurface implements Surface
 	}
 
 	
-	public void setSource(double red, double green, double blue)
+	public void setSource(float red, float green, float blue)
 	{
-		graphics.setColor(new Color((float) red, (float) green, (float) blue));
+		graphics.setColor(new Color(red, green, blue));
 	}
 
 
-	public void setSource(double red, double green, double blue, double alpha)
+	public void setSource(float red, float green, float blue, float alpha)
 	{
-		graphics.setColor(new Color((float) red, (float) green, (float) blue, (float) alpha));
+		graphics.setColor(new Color(red, green, blue, alpha));
 	}
 
 
@@ -186,77 +186,76 @@ abstract class AbstractGraphicsSurface implements Surface
 	}
 
 
-	public void setSourceGradient(double x1, double y1, Color colour1, double x2, double y2, Color colour2)
+	public void setSourceGradient(float x1, float y1, Color colour1, float x2, float y2, Color colour2)
 	{
-		GradientPaint gradient = new GradientPaint((float) x1, (float) y1, colour1, (float) x2,
-				(float) y2, colour2);
+		GradientPaint gradient = new GradientPaint(x1, y1, colour1, x2,	y2, colour2);
 
 		graphics.setPaint(gradient);
 	}
 
 
-	public void setLineWidth(double width)
+	public void setLineWidth(float width)
 	{
-		stroke = new BasicStroke((float) width);
+		stroke = new BasicStroke(width);
 		graphics.setStroke(stroke);
 	}
 
 
-	public void writeText(String text, double x, double y)
+	public void writeText(String text, float x, float y)
 	{
 		graphics.drawString(text, (int) x, (int) y);
 	}
 
 
 
-	public double getFontHeight()
+	public float getFontHeight()
 	{
 		return graphics.getFontMetrics().getHeight();
 	}
 
 
-	public double getFontLeading()
+	public float getFontLeading()
 	{
 		return graphics.getFontMetrics().getLeading();
 	}
 
 
-	public double getTextWidth(String text)
+	public float getTextWidth(String text)
 	{
-		if (text == null || "".equals(text)) return 0.0;
+		if (text == null || "".equals(text)) return 0.0f;
 		
 		TextLayout layout = new TextLayout(text, graphics.getFont(), graphics.getFontRenderContext());
 
-		return layout.getBounds().getWidth() + layout.getBounds().getX();
+		return (float) (layout.getBounds().getWidth() + layout.getBounds().getX());
 	}
 
 
-	public void scale(double x, double y)
+	public void scale(float x, float y)
 	{
 		graphics.scale(1.0 / x, 1.0 / y);
 	}
 
 
-	public void translate(double x, double y)
+	public void translate(float x, float y)
 	{
 		graphics.translate(x, y);
 	}
 
 
-	public void rotate(double radians)
+	public void rotate(float radians)
 	{
 		graphics.rotate(radians);
 	}
 
 
-	public double getFontSize()
+	public float getFontSize()
 	{
 		Font f = graphics.getFont();
 		return f.getSize2D();
 	}
 
 
-	public void setFontSize(double size)
+	public void setFontSize(float size)
 	{
 		Font f = graphics.getFont();
 		f = new Font(f.getName(), f.getStyle(), (int) (size));
@@ -278,20 +277,20 @@ abstract class AbstractGraphicsSurface implements Surface
 	}
 
 
-	public double getFontAscent()
+	public float getFontAscent()
 	{
 		return graphics.getFontMetrics().getAscent();
 	}
 
 
-	public double getFontDescent()
+	public float getFontDescent()
 	{
 		return graphics.getFontMetrics().getDescent();
 	}
 
 
 
-	public void compose(Buffer buffer, int x, int y, double scale)
+	public void compose(Buffer buffer, int x, int y, float scale)
 	{
 		BufferedImage image = (BufferedImage) buffer.getImageSource();
 

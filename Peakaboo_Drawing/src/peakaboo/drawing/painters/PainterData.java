@@ -3,6 +3,7 @@ package peakaboo.drawing.painters;
 import java.util.List;
 
 import peakaboo.datatypes.Coord;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.Drawing;
 import peakaboo.drawing.DrawingRequest;
@@ -21,11 +22,11 @@ public class PainterData
 {
 	public Surface context;
 	public DrawingRequest dr;
-	public Coord<Double> plotSize;
-	public List<Double> dataHeights;
+	public Coord<Float> plotSize;
+	public Spectrum dataHeights;
 	
 	
-	public PainterData(Surface context, DrawingRequest dr, Coord<Double> plotSize, List<Double> dataHeights)
+	public PainterData(Surface context, DrawingRequest dr, Coord<Float> plotSize, Spectrum dataHeights)
 	{
 		this.context = context;
 		this.dr = dr;

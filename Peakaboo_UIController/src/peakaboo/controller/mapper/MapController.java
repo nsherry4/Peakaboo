@@ -6,11 +6,7 @@ import java.awt.Color;
 import java.util.List;
 
 import peakaboo.calculations.Interpolation;
-import peakaboo.calculations.ListCalculations;
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Function2;
-import peakaboo.calculations.functional.Functional;
-import peakaboo.calculations.functional.stock.Functions;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.controller.CanvasController;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
@@ -19,6 +15,11 @@ import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Ratios;
 import peakaboo.datatypes.SigDigits;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Function2;
+import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.backends.Surface.CompositeModes;
@@ -71,39 +72,39 @@ public class MapController extends CanvasController
 	}
 
 
-	private List<List<Double>> getVisibleMapData()
+	private List<Spectrum> getVisibleMapData()
 	{
 		if (activeTabData.resultantData == null)
 		{
 			generateFinalData();
 		}
 
-		return Functional.map(activeTabData.resultantData, Functions.<TransitionSeries, List<Double>> second());
+		return Functional.map(activeTabData.resultantData, Functions.<TransitionSeries, Spectrum> second());
 	}
 
 
 	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
 	{
-		final GridPerspective<Double> mapGrid = new GridPerspective<Double>(getDataWidth(), getDataHeight(), null);
-		Double value;
+		final GridPerspective<Float> mapGrid = new GridPerspective<Float>(getDataWidth(), getDataHeight(), null);
+		Float value;
 
 		switch (activeTabData.displayMode)
 		{
 			case COMPOSITE:
 
 				value = mapGrid.get(getVisibleMapData().get(0), mapCoord.x, mapCoord.y);
-				return SigDigits.roundDoubleTo(value, 2);
+				return SigDigits.roundFloatTo(value, 2);
 
 			case OVERLAY:
 
 				return Functional.foldr(
 
-				Functional.map(getVisibleMapData(), new Function1<List<Double>, String>() {
+				Functional.map(getVisibleMapData(), new Function1<Spectrum, String>() {
 
 					@Override
-					public String f(List<Double> element)
+					public String f(Spectrum element)
 					{
-						return SigDigits.roundDoubleTo(mapGrid.get(element, mapCoord.x, mapCoord.y), 2);
+						return SigDigits.roundFloatTo(mapGrid.get(element, mapCoord.x, mapCoord.y), 2);
 					}
 				})
 
@@ -117,7 +118,7 @@ public class MapController extends CanvasController
 				if (side1Count == 0 || side2Count == 0) return "-";
 
 				value = mapGrid.get(getVisibleMapData().get(0), mapCoord.x, mapCoord.y);
-				return Ratios.fromDouble(value);
+				return Ratios.fromFloat(value);
 
 		}
 		return "";
@@ -173,26 +174,26 @@ public class MapController extends CanvasController
 	}
 
 
-	public Coord<Integer> getMapCoordinateAtPoint(double x, double y)
+	public Coord<Integer> getMapCoordinateAtPoint(float x, float y)
 	{
 
 		if (map == null) return null;
 
-		Coord<Range<Double>> borders = map.calcAxisBorders();
-		double topOffset, leftOffset;
+		Coord<Range<Float>> borders = map.calcAxisBorders();
+		float topOffset, leftOffset;
 		topOffset = borders.y.start;
 		leftOffset = borders.x.start;
 
-		double mapX, mapY;
+		float mapX, mapY;
 		mapX = x - leftOffset;
 		mapY = y - topOffset;
 
-		Coord<Double> mapSize = map.calcMapSize();
-		double percentX, percentY;
+		Coord<Float> mapSize = map.calcMapSize();
+		float percentX, percentY;
 		percentX = mapX / mapSize.x;
 		percentY = mapY / mapSize.y;
 
-		if (mapModel.viewOptions.yflip) percentY = 1.0 - percentY;
+		if (mapModel.viewOptions.yflip) percentY = 1.0f - percentY;
 
 		int indexX = (int) Math.floor(mapModel.dataDimensions.x * percentX);
 		int indexY = (int) Math.floor(mapModel.dataDimensions.y * percentY);
@@ -206,12 +207,12 @@ public class MapController extends CanvasController
 	{
 		if (map == null) return null;
 
-		Coord<Range<Double>> borders = map.calcAxisBorders();
-		double topOffset, leftOffset;
+		Coord<Range<Float>> borders = map.calcAxisBorders();
+		float topOffset, leftOffset;
 		topOffset = borders.y.start;
 		leftOffset = borders.x.start;
 
-		Coord<Double> mapSize = map.calcMapSize();
+		Coord<Float> mapSize = map.calcMapSize();
 		int locX, locY;
 		locX = (int) (leftOffset + (((float) coord.x / (float) mapModel.dataDimensions.x) * mapSize.x) - (MapDrawing
 			.calcCellSize(mapSize.x, mapSize.y, mapModel.dr) * 0.5));
@@ -285,25 +286,25 @@ public class MapController extends CanvasController
 
 
 	// image height and width
-	public void setImageHeight(double height)
+	public void setImageHeight(float height)
 	{
 		mapModel.dr.imageHeight = height;
 	}
 
 
-	public double getImageHeight()
+	public float getImageHeight()
 	{
 		return mapModel.dr.imageHeight;
 	}
 
 
-	public void setImageWidth(double width)
+	public void setImageWidth(float width)
 	{
 		mapModel.dr.imageWidth = width;
 	}
 
 
-	public double getImageWidth()
+	public float getImageWidth()
 	{
 		return mapModel.dr.imageWidth;
 	}
@@ -450,9 +451,8 @@ public class MapController extends CanvasController
 	private void generateFinalData()
 	{
 
-		List<Pair<TransitionSeries, List<Double>>> dataset = DataTypeFactory
-			.<Pair<TransitionSeries, List<Double>>> list();
-		List<Double> data = null;
+		List<Pair<TransitionSeries, Spectrum>> dataset = DataTypeFactory.<Pair<TransitionSeries, Spectrum>> list();
+		Spectrum data = null;
 
 		// Calculate the data to be shown based on the kind of display requested
 		switch (activeTabData.displayMode)
@@ -460,19 +460,19 @@ public class MapController extends CanvasController
 			case COMPOSITE:
 
 				data = activeTabData.sumVisibleTransitionSeriesMaps();
-				dataset.add(new Pair<TransitionSeries, List<Double>>(null, data));
+				dataset.add(new Pair<TransitionSeries, Spectrum>(null, data));
 				break;
 
 			case OVERLAY:
 
 				dataset = Functional.map(
 						activeTabData.getVisibleTransitionSeries(),
-						new Function1<TransitionSeries, Pair<TransitionSeries, List<Double>>>() {
+						new Function1<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
 
 							@Override
-							public Pair<TransitionSeries, List<Double>> f(TransitionSeries ts)
+							public Pair<TransitionSeries, Spectrum> f(TransitionSeries ts)
 							{
-								return new Pair<TransitionSeries, List<Double>>(ts, activeTabData
+								return new Pair<TransitionSeries, Spectrum>(ts, activeTabData
 									.getMapForTransitionSeries(ts));
 
 							}
@@ -487,42 +487,41 @@ public class MapController extends CanvasController
 				List<TransitionSeries> side1 = activeTabData.getTransitionSeriesForRatioSide(1);
 				// get transition series on ratio side 2
 				List<TransitionSeries> side2 = activeTabData.getTransitionSeriesForRatioSide(2);
-				
-				
+
 				// sum all of the maps for the given transition series for each side
-				List<Double> side1Data = activeTabData.sumGivenTransitionSeriesMaps(side1);
-				List<Double> side2Data = activeTabData.sumGivenTransitionSeriesMaps(side2);
-				final double side1Min = ListCalculations.min(side1Data, false);
-				final double side2Min = ListCalculations.min(side2Data, false);
+				Spectrum side1Data = activeTabData.sumGivenTransitionSeriesMaps(side1);
+				Spectrum side2Data = activeTabData.sumGivenTransitionSeriesMaps(side2);
+				final float side1Min = SpectrumCalculations.min(side1Data, false);
+				final float side2Min = SpectrumCalculations.min(side2Data, false);
 
 				// compute the ratio of the two sides
-				data = Functional.zipWith(side1Data, side2Data, new Function2<Double, Double, Double>() {
+				data = side1Data.zipWith(side2Data, new Function2<Float, Float, Float>() {
 
 					@Override
-					public Double f(Double side1Value, Double side2Value)
+					public Float f(Float side1Value, Float side2Value)
 					{
 
 						if (side1Value == 0.0) side1Value = side1Min;
 						if (side2Value == 0.0) side2Value = side2Min;
 
-						double value = side1Value / side2Value;
+						float value = side1Value / side2Value;
 
 						if (value < 1.0)
 						{
-							value = (1.0 / value);
-							value = Math.log(value) / Math.log(Ratios.logValue);
+							value = (1.0f / value);
+							value = (float) (Math.log(value) / Math.log(Ratios.logValue));
 							value = -value;
 						}
 						else
 						{
-							value = Math.log(value) / Math.log(Ratios.logValue);
+							value = (float) (Math.log(value) / Math.log(Ratios.logValue));
 						}
 
 						return value;
 					}
 				});
 
-				dataset.add(new Pair<TransitionSeries, List<Double>>(null, data));
+				dataset.add(new Pair<TransitionSeries, Spectrum>(null, data));
 
 				break;
 		}
@@ -530,27 +529,27 @@ public class MapController extends CanvasController
 		// fix bad points, do interpolation, etc
 		dataset = Functional.map(
 				dataset,
-				new Function1<Pair<TransitionSeries, List<Double>>, Pair<TransitionSeries, List<Double>>>() {
+				new Function1<Pair<TransitionSeries, Spectrum>, Pair<TransitionSeries, Spectrum>>() {
 
-					GridPerspective<Double>	grid	= new GridPerspective<Double>(
+					GridPerspective<Float>	grid	= new GridPerspective<Float>(
 														mapModel.dataDimensions.x,
 														mapModel.dataDimensions.y,
-														0.0);
+														0.0f);
 
 
 					@Override
-					public Pair<TransitionSeries, List<Double>> f(Pair<TransitionSeries, List<Double>> map)
+					public Pair<TransitionSeries, Spectrum> f(Pair<TransitionSeries, Spectrum> map)
 					{
 
 						// fix bad points on the map
 						Interpolation.interpolateBadPoints(grid, map.second, mapModel.badPoints);
 
-						GridPerspective<Double> interpGrid = grid;
+						GridPerspective<Float> interpGrid = grid;
 
-						List<Double> mapdata = map.second;
+						Spectrum mapdata = map.second;
 
 						// interpolation of data
-						Pair<GridPerspective<Double>, List<Double>> interpolationResult;
+						Pair<GridPerspective<Float>, Spectrum> interpolationResult;
 						int count = 0;
 						while (count < mapModel.viewOptions.interpolation)
 						{
@@ -632,11 +631,11 @@ public class MapController extends CanvasController
 
 				if (activeTabData.mapScaleMode == MapScaleMode.VISIBLE_ELEMENTS)
 				{
-					mapModel.dr.maxYIntensity = ListCalculations.max(activeTabData.resultantData.get(0).second);
+					mapModel.dr.maxYIntensity = SpectrumCalculations.max(activeTabData.resultantData.get(0).second);
 				}
 				else
 				{
-					mapModel.dr.maxYIntensity = ListCalculations.max(activeTabData.sumAllTransitionSeriesMaps());
+					mapModel.dr.maxYIntensity = SpectrumCalculations.max(activeTabData.sumAllTransitionSeriesMaps());
 				}
 
 				palette = new ThermalScalePalette(spectrumSteps, mapModel.viewOptions.monochrome);
@@ -664,42 +663,42 @@ public class MapController extends CanvasController
 
 			case OVERLAY:
 
-				double redMax = Functional.foldr(
+				float redMax = Functional.fold(
 
 						activeTabData.getTransitionSeriesForColour(OverlayColor.RED),
-						0d,
-						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
+						0f,
+						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
 							@Override
-							public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
+							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
 							{
-								return sum + ListCalculations.max(mapdata.second);
+								return sum + SpectrumCalculations.max(mapdata.second);
 							}
 						});
 
-				double greenMax = Functional.foldr(
+				float greenMax = Functional.fold(
 
 						activeTabData.getTransitionSeriesForColour(OverlayColor.GREEN),
-						0d,
-						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
+						0f,
+						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
 							@Override
-							public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
+							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
 							{
-								return sum + ListCalculations.max(mapdata.second);
+								return sum + SpectrumCalculations.max(mapdata.second);
 							}
 						});
 
-				double blueMax = Functional.foldr(
+				float blueMax = Functional.fold(
 
 						activeTabData.getTransitionSeriesForColour(OverlayColor.BLUE),
-						0d,
-						new Function2<Pair<TransitionSeries, List<Double>>, Double, Double>() {
+						0f,
+						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
 							@Override
-							public Double f(Pair<TransitionSeries, List<Double>> mapdata, Double sum)
+							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
 							{
-								return sum + ListCalculations.max(mapdata.second);
+								return sum + SpectrumCalculations.max(mapdata.second);
 							}
 						});
 
@@ -729,7 +728,7 @@ public class MapController extends CanvasController
 					// input list - get a unique list of colours in use
 
 							Functional.unique(activeTabData.overlayColour.values()),
-							
+
 							// mapping function - convert the color objects into color,string pairs (ie color/element
 							// list)
 							new Function1<OverlayColor, Pair<Color, String>>() {
@@ -748,7 +747,7 @@ public class MapController extends CanvasController
 										// map the list of transitionSeries, list double pairs to just transitionseries
 												Functional.map(
 														activeTabData.getTransitionSeriesForColour(element),
-														Functions.<TransitionSeries, List<Double>> first()),
+														Functions.<TransitionSeries, Spectrum> first()),
 												"",
 												new Function2<TransitionSeries, String, String>() {
 
@@ -770,28 +769,28 @@ public class MapController extends CanvasController
 
 			case RATIO:
 
-				double steps = Math.ceil(ListCalculations.max(ListCalculations
+				float steps = (float) Math.ceil(SpectrumCalculations.max(SpectrumCalculations
 					.abs(activeTabData.resultantData.get(0).second)));
 
 				mapModel.dr.maxYIntensity = steps;
 
 				palette = new RatioPalette(spectrumSteps, mapModel.viewOptions.monochrome);
 
-				List<Pair<Double, String>> spectrumMarkers = DataTypeFactory.<Pair<Double, String>> list();
+				List<Pair<Float, String>> spectrumMarkers = DataTypeFactory.<Pair<Float, String>> list();
 
 				int increment = 1;
-				if (steps > 100) increment = (int)Math.ceil(steps / 100);
-				
-				for (int i = -(int) steps; i <= (int) steps; i+=increment)
+				if (steps > 100) increment = (int) Math.ceil(steps / 100);
+
+				for (int i = -(int) steps; i <= (int) steps; i += increment)
 				{
-					double percent = 0.5 + 0.5 * (((double) i) / steps);
+					float percent = 0.5f + 0.5f * (((float) i) / steps);
 
 					/*
 					 * int ratioValue = (int)Math.pow(10, Math.abs(i)); String ratio = ""; if (i < 0) ratio = "1:" +
 					 * ratioValue; if (i > 0) ratio = ratioValue + ":1"; if (i == 0) ratio = "1:1";
 					 */
 
-					spectrumMarkers.add(new Pair<Double, String>(percent, Ratios.fromDouble(i, true)));
+					spectrumMarkers.add(new Pair<Float, String>(percent, Ratios.fromFloat(i, true)));
 				}
 
 				spectrumCoordPainter = new SpectrumCoordsAxisPainter(
@@ -824,7 +823,7 @@ public class MapController extends CanvasController
 
 		if (mapModel.viewOptions.showDataSetTitle)
 		{
-			axisPainters.add(new TitleAxisPainter(1.0, null, null, datasetTitle, null));
+			axisPainters.add(new TitleAxisPainter(1.0f, null, null, datasetTitle, null));
 		}
 
 		if (mapModel.viewOptions.drawTitle)
@@ -837,30 +836,31 @@ public class MapController extends CanvasController
 					String side1Title = activeTabData.mapLongTitle(activeTabData.getTransitionSeriesForRatioSide(1));
 
 					String side2Title = activeTabData.mapLongTitle(activeTabData.getTransitionSeriesForRatioSide(2));
-					
+
 					mapTitle = "← " + side1Title + " ∶ " + side2Title + " →";
 					break;
 
 				case OVERLAY:
-					
+
 					mapTitle = "Overlay of " + activeTabData.mapLongTitle();
-					
+
 					break;
-					
+
 				case COMPOSITE:
 
 					if (activeTabData.getVisibleTransitionSeries().size() > 1)
 					{
 						mapTitle = "Composite of " + activeTabData.mapLongTitle();
-					}else {
+					}
+					else
+					{
 						mapTitle = "Map of " + activeTabData.mapLongTitle();
 					}
-					
 
 					break;
 			}
 
-			axisPainters.add(new TitleAxisPainter(1.0, null, null, null, mapTitle));
+			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
 		}
 
 		axisPainters.add(spectrumCoordPainter);
@@ -875,7 +875,7 @@ public class MapController extends CanvasController
 		switch (activeTabData.displayMode)
 		{
 			case COMPOSITE:
-				
+
 				paletteList.add(palette);
 				mapPainter = MapTechniqueFactory.getTechnique(
 						paletteList,
@@ -886,7 +886,7 @@ public class MapController extends CanvasController
 				map.draw();
 
 				break;
-				
+
 			case RATIO:
 
 				paletteList.add(palette);
@@ -905,18 +905,15 @@ public class MapController extends CanvasController
 				// create a list of map painters, one for each of the maps we want to show
 				List<MapPainter> painters = Functional.map(
 						activeTabData.resultantData,
-						new Function1<Pair<TransitionSeries, List<Double>>, MapPainter>() {
+						new Function1<Pair<TransitionSeries, Spectrum>, MapPainter>() {
 
 							@Override
-							public MapPainter f(Pair<TransitionSeries, List<Double>> mapdata)
+							public MapPainter f(Pair<TransitionSeries, Spectrum> mapdata)
 							{
 								OverlayColor c = activeTabData.overlayColour.get(mapdata.first);
 
-								MapPainter p = MapTechniqueFactory.getTechnique(
-										new OverlayPalette(spectrumSteps, c.toColor()),
-										mapdata.second,
-										false,
-										spectrumSteps);
+								MapPainter p = MapTechniqueFactory.getTechnique(new OverlayPalette(spectrumSteps, c
+									.toColor()), mapdata.second, false, spectrumSteps);
 
 								p.setCompositeMode(CompositeModes.ADD);
 
@@ -956,14 +953,14 @@ public class MapController extends CanvasController
 
 
 	@Override
-	public double getUsedHeight()
+	public float getUsedHeight()
 	{
 		return map.calculateMapDimensions().y;
 	}
 
 
 	@Override
-	public double getUsedWidth()
+	public float getUsedWidth()
 	{
 		return map.calculateMapDimensions().x;
 	}
@@ -978,6 +975,11 @@ public class MapController extends CanvasController
 	public void setNeedsRedraw()
 	{
 		map.needsMapRepaint();
+	}
+	
+	protected void finalize()
+	{
+		System.out.println("map controller finalized");
 	}
 
 }

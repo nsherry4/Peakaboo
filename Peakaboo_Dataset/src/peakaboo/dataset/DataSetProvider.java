@@ -8,8 +8,8 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.PeakTable;
-import peakaboo.datatypes.ranges.ROI;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.xrf.DataSource;
@@ -36,10 +36,10 @@ import peakaboo.mapping.MapResultSet;
 public abstract class DataSetProvider
 {
 
-	protected List<Double>	dsc_average;
-	protected List<Double>	dsc_maximum;
+	protected Spectrum		dsc_average;
+	protected Spectrum		dsc_maximum;
 
-	protected double		dsc_maxEnergy;
+	protected float			dsc_maxEnergy;
 	protected int			dsc_scanSize;
 
 	protected String		dataSourcePath;
@@ -101,7 +101,7 @@ public abstract class DataSetProvider
 	 * 
 	 * @return the maximum intensity
 	 */
-	public abstract double maximumIntensity();
+	public abstract float maximumIntensity();
 
 
 	/**
@@ -117,7 +117,7 @@ public abstract class DataSetProvider
 	 * 
 	 * @return the energy per channel
 	 */
-	public double energyPerChannel()
+	public float energyPerChannel()
 	{
 		return dsc_maxEnergy / scanSize();
 	}
@@ -139,7 +139,7 @@ public abstract class DataSetProvider
 	 * 
 	 * @param maxEnergy
 	 */
-	protected void setMaxEnergy(double maxEnergy)
+	protected void setMaxEnergy(float maxEnergy)
 	{
 		this.dsc_maxEnergy = maxEnergy;
 	}
@@ -196,7 +196,7 @@ public abstract class DataSetProvider
 	 * @param region
 	 * @return a map based on the given region of interest
 	 */
-	public abstract List<Double> calculateSumInRegion(ROI region);
+	//public abstract List<Double> calculateSumInRegion(ROI region);
 
 
 	/**
@@ -312,4 +312,12 @@ public abstract class DataSetProvider
 	 */
 	public abstract String getEndTime();
 
+	
+	protected void finalize()
+	{
+		System.out.println("Discarding scan from: " + dataSourcePath);
+	}
+	
+	public abstract void discard();
+	
 }

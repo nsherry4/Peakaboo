@@ -69,7 +69,7 @@ public class PeakTableReader
 		String name;
 		int number;
 
-		double intensity;
+		float intensity;
 		int atomicNumber = 0;
 
 		for (String element : elements) {
@@ -94,78 +94,79 @@ public class PeakTableReader
 			// K
 			TransitionSeries ts = new TransitionSeries(Element.values()[atomicNumber], TransitionSeriesType.K);
 
-			esc = createTransition(sections, column);
+			esc = createTransition(sections, column, TransitionType.esc);
 			column += elementDataWidth;
 
 			// ts.setTransition(TransitionType.esc, esc);
 
 			// ka
-			k = createTransition(sections, column);
+			k = createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
-			k1 = createTransition(sections, column);
+			k1 = createTransition(sections, column, TransitionType.a1);
 			column += elementDataWidth;
-			k2 = createTransition(sections, column);
+			k2 = createTransition(sections, column, TransitionType.a2);
 			column += elementDataWidth;
 
-			ts.setTransition(TransitionType.a1, k1);
-			ts.setTransition(TransitionType.a2, k2);
+			ts.setTransition(k1);
+			ts.setTransition(k2);
 
 
 			// kB
-			k = createTransition(sections, column);
+			k = createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
-			k1 = createTransition(sections, column);
+			k1 = createTransition(sections, column, TransitionType.b1);
 			column += elementDataWidth;
-			k3 = createTransition(sections, column);
+			k3 = createTransition(sections, column, TransitionType.b2);
 			column += elementDataWidth;
-			k2 = createTransition(sections, column);
+			k2 = createTransition(sections, column, TransitionType.b3);
 			column += elementDataWidth;
 
-			ts.setTransition(TransitionType.b1, k1);
-			ts.setTransition(TransitionType.b2, k2);
-			ts.setTransition(TransitionType.b3, k3);
+			ts.setTransition(k1);
+			ts.setTransition(k2);
+			ts.setTransition(k3);
 
 			table.addSeries(ts);
+			table.addSeries(ts.pileup());
 
 
 			ts = new TransitionSeries(Element.values()[atomicNumber], TransitionSeriesType.L);
 			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
 
-			esc = createTransition(sections, column);
+			esc = createTransition(sections, column, TransitionType.esc);
 			column += elementDataWidth;
 
-			la = createTransition(sections, column);
+			la = createTransition(sections, column, TransitionType.a1);
 			column += elementDataWidth;
 
-			lb1 = createTransition(sections, column);
+			lb1 = createTransition(sections, column, TransitionType.b1);
 			column += elementDataWidth;
-			lb2 = createTransition(sections, column);
-			column += elementDataWidth;
-
-			lg1 = createTransition(sections, column);
-			column += elementDataWidth;
-			lg2 = createTransition(sections, column);
-			column += elementDataWidth;
-			lg3 = createTransition(sections, column);
-			column += elementDataWidth;
-			lg4 = createTransition(sections, column);
+			lb2 = createTransition(sections, column, TransitionType.b2);
 			column += elementDataWidth;
 
-			ll = createTransition(sections, column);
+			lg1 = createTransition(sections, column, TransitionType.g1);
+			column += elementDataWidth;
+			lg2 = createTransition(sections, column, TransitionType.g2);
+			column += elementDataWidth;
+			lg3 = createTransition(sections, column, TransitionType.g3);
+			column += elementDataWidth;
+			lg4 = createTransition(sections, column, TransitionType.g4);
+			column += elementDataWidth;
+
+			ll = createTransition(sections, column, TransitionType._l);
 			column += elementDataWidth;
 
 
-			ts.setTransition(TransitionType.a1, la);
+			ts.setTransition(la);
 
-			ts.setTransition(TransitionType.b1, lb1);
-			ts.setTransition(TransitionType.b2, lb2);
+			ts.setTransition(lb1);
+			ts.setTransition(lb2);
 
-			ts.setTransition(TransitionType.g1, lg1);
-			ts.setTransition(TransitionType.g2, lg2);
-			ts.setTransition(TransitionType.g3, lg3);
-			ts.setTransition(TransitionType.g4, lg4);
+			ts.setTransition(lg1);
+			ts.setTransition(lg2);
+			ts.setTransition(lg3);
+			ts.setTransition(lg4);
 
-			ts.setTransition(TransitionType._l, ll);
+			ts.setTransition(ll);
 
 			table.addSeries(ts);
 
@@ -174,28 +175,28 @@ public class PeakTableReader
 			ts = new TransitionSeries(Element.values()[atomicNumber], TransitionSeriesType.M);
 			Transition mz, ma1, mb1, mg, mn, unknown;
 
-			esc = createTransition(sections, column);
+			esc = createTransition(sections, column, TransitionType.esc);
 			column += elementDataWidth;
 
-			mz = createTransition(sections, column);
+			mz = createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
-			unknown = createTransition(sections, column);
+			unknown = createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
-			ma1 = createTransition(sections, column);
+			ma1 = createTransition(sections, column, TransitionType.a1);
 			column += elementDataWidth;
-			mb1 = createTransition(sections, column);
+			mb1 = createTransition(sections, column, TransitionType.b1);
 			column += elementDataWidth;
-			mg = createTransition(sections, column);
+			mg = createTransition(sections, column, TransitionType.g1);
 			column += elementDataWidth;
-			mn = createTransition(sections, column);
+			mn = createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
-			unknown = createTransition(sections, column);
+			unknown = createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
 
 			
-			ts.setTransition(TransitionType.a1, ma1);
-			ts.setTransition(TransitionType.b1, mb1);
-			ts.setTransition(TransitionType.g1, mg);
+			ts.setTransition(ma1);
+			ts.setTransition(mb1);
+			ts.setTransition(mg);
 
 			table.addSeries(ts);
 
@@ -206,21 +207,21 @@ public class PeakTableReader
 		return table;
 	}
 
-	private static Transition createTransition(List<String> sections, int column)
+	private static Transition createTransition(List<String> sections, int column, TransitionType type)
 	{
 
-		double energy = 0.0;
-		double relIntensity = 0.0;
+		float energy = 0.0f;
+		float relIntensity = 0.0f;
 
 		try {
-			energy = Double.parseDouble(sections.get(column));
-			relIntensity = Double.parseDouble(sections.get(column + 1));
+			energy = Float.parseFloat(sections.get(column));
+			relIntensity = Float.parseFloat(sections.get(column + 1));
 		} catch (NumberFormatException e) {
 			return null;
 		}
 
 		if (energy == 0.0 || relIntensity == 0.0) return null;
-		return new Transition(energy, relIntensity / 100.0);
+		return new Transition(energy, relIntensity / 100.0f, type);
 
 	}
 

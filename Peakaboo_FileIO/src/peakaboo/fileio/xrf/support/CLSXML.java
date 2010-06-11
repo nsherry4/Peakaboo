@@ -3,7 +3,9 @@ package peakaboo.fileio.xrf.support;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.Common;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.fileio.AbstractFile;
+import peakaboo.fileio.IOCommon;
 
 /**
  * 
@@ -20,13 +22,13 @@ public class CLSXML {
 	 * @param filename
 	 * @return a single scan
 	 */
-	public static List<Double> readScanFromFile(String filename)
+	public static Spectrum readScanFromFile(AbstractFile file)
 	{
 		
-		if (Common.checkFileExtension(filename, ".xml"))
+		if (IOCommon.checkFileExtension(file.getFileName(), ".xml"))
 		{	
 			//get the whole file
-			String contents = Common.fileToString(filename);
+			String contents = IOCommon.readerToString(file.getReader());
 			return readScanFromString(contents);
 			
 		}
@@ -39,15 +41,15 @@ public class CLSXML {
 	 * @param scan
 	 * @return a single scan
 	 */
-	public static List<Double> readScanFromString(String scan){
+	public static Spectrum readScanFromString(String scan){
 		
 		try {
 		
 			String[] numbers = scan.split("<IOC1607-004.mca1>")[1].split("</IOC1607-004.mca1>")[0].split(" ");
 			
-			List<Double> data = DataTypeFactory.<Double>list();
+			Spectrum data = new Spectrum(numbers.length);
 			for (int i = 0; i < numbers.length; i++){
-				data.add(Double.parseDouble(numbers[i]));
+				data.set(i, Float.parseFloat(numbers[i]));
 			}
 			return data;
 		} catch (ArrayIndexOutOfBoundsException e){
@@ -59,17 +61,17 @@ public class CLSXML {
 	
 	
 	
-	public static void filterNonXMLFilesFromFileList(List<String> filenames){
+	public static void filterNonXMLFilesFromFileList(List<AbstractFile> files){
 		
-		List<String> badFiles = DataTypeFactory.<String>list();
+		List<AbstractFile> badFiles = DataTypeFactory.<AbstractFile>list();
 		
-		for (String filename : filenames){
+		for (AbstractFile file : files){
 			
-			if (!  Common.checkFileExtension(filename, ".xml")  ) badFiles.add(filename);
+			if (!  IOCommon.checkFileExtension(file.getFileName(), ".xml")  ) badFiles.add(file);
 			
 		}
 		
-		filenames.removeAll(badFiles);
+		files.removeAll(badFiles);
 		
 	}
 
@@ -79,18 +81,18 @@ public class CLSXML {
 	 * @param contents the String representation of a file
 	 * @return the maximum energy as specified in the given file
 	 */
-	public static Double readMaxEnergy(String contents){ 
+	public static float readMaxEnergy(String contents){ 
 	
 		String energyHeader = "<IOC1607-004_dxp1.EMAX_RBV>";
 		String energyFooter = "</IOC1607-004_dxp1.EMAX_RBV>";
-		double energy = 20.48;
+		float energy = 20.48f;
 		
 		try {
 			int start = contents.indexOf(energyHeader) + energyHeader.length();
 			int stop = contents.indexOf(energyFooter);
 			if (start < 0 || stop < 0) return energy;
 				
-			return Double.parseDouble(contents.substring(start, stop));
+			return Float.parseFloat(contents.substring(start, stop));
 		} catch (Exception e) {
 			return energy;
 		}

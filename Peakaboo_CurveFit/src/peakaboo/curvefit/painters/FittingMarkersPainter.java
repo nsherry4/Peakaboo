@@ -3,11 +3,12 @@ package peakaboo.curvefit.painters;
 
 import java.util.List;
 
+import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.Transition;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.painters.PainterData;
@@ -37,17 +38,17 @@ public class FittingMarkersPainter extends PlotPainter
 	public void drawElement(PainterData p)
 	{
 		DrawingRequest dr = (DrawingRequest)p.dr;
-		double channel, markerHeight;
-		List<Double> markerHeights = DataTypeFactory.<Double> list();
+		float channel, markerHeight;
+		Spectrum markerHeights = new Spectrum(dr.dataWidth);
 
 		p.context.save();
-		p.context.setLineWidth(1.0);
+		p.context.setLineWidth(1.0f);
 
 		for (FittingResult fit : fitResults.fits) {
 
-			markerHeights.clear();
+			
 			for (int i = 0; i < p.dr.dataWidth; i++) {
-				markerHeights.add(0.0);
+				markerHeights.set(i, 0.0f);
 			}
 
 			for (Transition t : fit.transitionSeries) {
@@ -68,17 +69,17 @@ public class FittingMarkersPainter extends PlotPainter
 							
 				//markerHeights.set((int) channel, markerHeight);
 				
-				double positionX = getXForChannel(p, channel);
+				float positionX = getXForChannel(p, channel);
 				
 				markerHeight = transformValueForPlot((DrawingRequest)p.dr, markerHeight);
 				
-				p.context.setSource(0.0, 0.0, 0.0);
+				p.context.setSource(0.0f, 0.0f, 0.0f);
 				p.context.moveTo(positionX, p.plotSize.y);
-				p.context.lineTo(positionX, p.plotSize.y * (1.0 - markerHeight) );
+				p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
 				
 				
 				
-				channel = getChannelAtEnergy(p.dr, t.energyValue - TransitionSeriesFitting.escape);
+				channel = getChannelAtEnergy(p.dr, t.energyValue - FittingSet.escape);
 				if (channel < 0) continue;
 				
 				positionX = getXForChannel(p, channel);
@@ -89,9 +90,9 @@ public class FittingMarkersPainter extends PlotPainter
 				markerHeight = transformValueForPlot((DrawingRequest)p.dr, markerHeight);
 				
 			
-				p.context.setSource(0.0, 0.0, 0.0);
+				p.context.setSource(0.0f, 0.0f, 0.0f);
 				p.context.moveTo(positionX, p.plotSize.y);
-				p.context.lineTo(positionX, p.plotSize.y * (1.0 - markerHeight) );
+				p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
 				
 
 				//markerHeights.set((int)channel, markerHeight * TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element));

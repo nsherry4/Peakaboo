@@ -2,8 +2,9 @@ package peakaboo.filters.filters;
 
 import java.util.List;
 
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.common.Version;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
@@ -24,9 +25,9 @@ public class Multiply extends AbstractFilter
 	}
 	
 	@Override
-	public List<Double> filterApplyTo(List<Double> data, boolean cache)
+	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return ListCalculations.multiplyBy(data, this.<Double>getParameterValue(AMOUNT));
+		return SpectrumCalculations.multiplyBy(data, this.<Double>getParameterValue(AMOUNT).floatValue());
 	}
 
 
@@ -71,7 +72,7 @@ public class Multiply extends AbstractFilter
 	@Override
 	public boolean showFilter()
 	{
-		return !Version.release;
+		return true;
 	}
 	
 }

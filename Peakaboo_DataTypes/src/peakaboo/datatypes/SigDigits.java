@@ -48,7 +48,7 @@ public class SigDigits
 		return (int)value;
 	}
 	
-	public static String roundDoubleTo(double value, int decimals)
+	public static String roundFloatTo(double value, int decimals)
 	{
 		
 		BigDecimal bd = new BigDecimal(Double.toString(value));

@@ -21,7 +21,7 @@ public abstract class Painter
 		compositeMode = CompositeModes.OVER;
 	}
 
-	protected abstract double getBaseUnitSize(peakaboo.drawing.DrawingRequest dr);
+	protected abstract float getBaseUnitSize(peakaboo.drawing.DrawingRequest dr);
 
 
 	public final void draw(PainterData p)

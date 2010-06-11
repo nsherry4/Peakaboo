@@ -2,13 +2,16 @@ package peakaboo.calculations;
 
 
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-import peakaboo.calculations.functional.Function1;
-import peakaboo.calculations.functional.Function2;
-import peakaboo.calculations.functional.Functional;
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Function2;
+import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.executor.TaskExecutor;
 import peakaboo.datatypes.tasks.executor.implementations.SplittingTicketedTaskExecutor;
@@ -22,7 +25,7 @@ import peakaboo.datatypes.tasks.executor.implementations.SplittingTicketedTaskEx
  * @author Nathaniel Sherry, 2009
  */
 
-public class ListCalculations
+public class SpectrumCalculations
 {
 
 	public static final int	MIN_SIZE_FOR_THREADING	= 1024;
@@ -34,9 +37,11 @@ public class ListCalculations
 	 * @param list
 	 * @return max(list)
 	 */
-	public static double max(List<Double> list)
+	public static float max(Spectrum list)
 	{
-		return Collections.max(list);
+		float max = Float.MIN_VALUE;
+		for (int i = 0; i < list.size(); i++) max = Math.max(max, list.get(i));
+		return max;
 	}
 
 
@@ -46,16 +51,17 @@ public class ListCalculations
 	 * @param list
 	 * @return max(list)
 	 */
-	public static List<Double> abs(List<Double> list)
+	public static Spectrum abs(Spectrum source)
 	{
-		return Functional.map(list, new Function1<Double, Double>() {
+		Spectrum result = new Spectrum(source.size());
+		float newvalue;
+		for (int i = 0; i < source.size(); i++)
+		{
+			newvalue = Math.abs(source.get(i));
+			result.set(i, newvalue);
+		}
 
-			@Override
-			public Double f(Double element)
-			{
-				return Math.abs(element);
-			}
-		});
+		return result;
 	}
 
 
@@ -65,9 +71,11 @@ public class ListCalculations
 	 * @param list
 	 * @return min(list)
 	 */
-	public static double min(List<Double> list)
+	public static float min(Spectrum list)
 	{
-		return Collections.min(list);
+		float min = Float.MAX_VALUE;
+		for (int i = 0; i < list.size(); i++) min = Math.min(min, list.get(i));
+		return min;
 	}
 
 
@@ -80,17 +88,16 @@ public class ListCalculations
 	 * @return min(list)
 	 */
 
-	public static double min(List<Double> list, final boolean allowzero)
+	public static float min(Spectrum list, final boolean allowzero)
 	{
 
-		return Functional.foldr(list, Double.MAX_VALUE, new Function2<Double, Double, Double>() {
-
-			@Override
-			public Double f(Double newval, Double currentMin)
-			{
-				return (newval == 0.0 && !allowzero) ? currentMin : Math.min(currentMin, newval);
-			}
-		});
+		float min = Float.MAX_VALUE;
+		for (int i = 0; i < list.size(); i++) 
+		{
+			min = (list.get(i) == 0.0 && !allowzero) ? min : Math.min(min, list.get(i));
+			min = Math.min(min, list.get(i));
+		}
+		return min;
 
 	}
 
@@ -101,13 +108,13 @@ public class ListCalculations
 	 * @param dataset
 	 * @return max(dataset)
 	 */
-	public static double maxDataset(List<List<Double>> dataset)
+	public static float maxDataset(List<Spectrum> dataset)
 	{
 
-		return Functional.foldr(dataset, max(dataset.get(0)), new Function2<List<Double>, Double, Double>() {
+		return Functional.foldr(dataset, max(dataset.get(0)), new Function2<Spectrum, Float, Float>() {
 
 			@Override
-			public Double f(List<Double> list, Double currentMax)
+			public Float f(Spectrum list, Float currentMax)
 			{
 				return Math.max(currentMax, max(list));
 			}
@@ -122,9 +129,9 @@ public class ListCalculations
 	 * @param data
 	 * @return normalized data
 	 */
-	public static List<Double> normalize(List<Double> data)
+	public static Spectrum normalize(Spectrum data)
 	{
-		double max = max(data);
+		float max = max(data);
 		if (max != 0.0)
 		{
 			return divideBy(data, max);
@@ -142,9 +149,9 @@ public class ListCalculations
 	 * 
 	 * @param data
 	 */
-	public static void normalize_inplace(List<Double> data)
+	public static void normalize_inplace(Spectrum data)
 	{
-		double max = max(data);
+		float max = max(data);
 		if (max != 0.0)
 		{
 			divideBy_inplace(data, max);
@@ -159,33 +166,34 @@ public class ListCalculations
 	 * @param value
 	 * @return a copy of data multiplied value
 	 */
-	public static List<Double> multiplyBy(List<Double> data, final double value)
+	public static Spectrum multiplyBy(Spectrum source, final float value)
 	{
 
-		return Functional.map(data, new Function1<Double, Double>() {
+		Spectrum result = new Spectrum(source.size());
+		float newvalue;
+		for (int i = 0; i < source.size(); i++)
+		{
+			newvalue = source.get(i) * value;
+			result.set(i, newvalue);
+		}
 
-			@Override
-			public Double f(Double element)
-			{
-				return element * value;
-			}
-		});
+		return result;
 	}
 
 
 	/**
-	 * A threaded version of {@link ListCalculations#multiplyBy(List, double)}
+	 * A threaded version of {@link SpectrumCalculations#multiplyBy(List, float)}
 	 * 
 	 * @param data
 	 * @param value
 	 * @return a copy of data multiplied value
 	 */
-	public static List<Double> multiplyBy_threaded(final List<Double> data, final double value)
+	public static Spectrum multiplyBy_threaded(final Spectrum data, final float value)
 	{
 
 		if (data.size() < MIN_SIZE_FOR_THREADING) return multiplyBy(data, value);
 
-		final List<Double> result = DataTypeFactory.<Double> listInit(data.size());
+		final Spectrum result = new Spectrum(data.size());
 
 		Task task = new Task() {
 
@@ -211,17 +219,18 @@ public class ListCalculations
 	 * @param value
 	 * @return a copy of data divided by value
 	 */
-	public static List<Double> divideBy(List<Double> data, final double value)
+	public static Spectrum divideBy(Spectrum source, final float value)
 	{
 
-		return Functional.map(data, new Function1<Double, Double>() {
+		Spectrum result = new Spectrum(source.size());
+		float newvalue;
+		for (int i = 0; i < source.size(); i++)
+		{
+			newvalue = source.get(i) / value;
+			result.set(i, newvalue);
+		}
 
-			@Override
-			public Double f(Double element)
-			{
-				return element / value;
-			}
-		});
+		return result;
 
 	}
 
@@ -232,33 +241,32 @@ public class ListCalculations
 	 * @param data
 	 * @param value
 	 */
-	public static void divideBy_inplace(List<Double> data, final double value)
+	public static void divideBy_inplace(Spectrum data, final float value)
 	{
 
-		Functional.map_target(data, data, new Function1<Double, Double>() {
+		float newvalue;
+		for (int i = 0; i < data.size(); i++)
+		{
+			newvalue = data.get(i) / value;
+			data.set(i, newvalue);
+		}
 
-			@Override
-			public Double f(Double element)
-			{
-				return element / value;
-			}
-		});
 	}
 
 
 	/**
-	 * A threaded version of {@link #divideBy(List, double)}
+	 * A threaded version of {@link #divideBy(List, float)}
 	 * 
 	 * @param data
 	 * @param value
 	 * @return a copy of data divided by value
 	 */
-	public static List<Double> divideBy_threaded(final List<Double> data, final double value)
+	public static Spectrum divideBy_threaded(final Spectrum data, final float value)
 	{
 
 		if (data.size() < MIN_SIZE_FOR_THREADING) return divideBy(data, value);
 
-		final List<Double> result = DataTypeFactory.<Double> listInit(data.size());
+		final Spectrum result = new Spectrum(data.size());
 
 		Task task = new Task() {
 
@@ -284,9 +292,9 @@ public class ListCalculations
 	 * @param value
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static List<Double> subtractFromList(List<Double> data, double value)
+	public static Spectrum subtractFromList(Spectrum data, float value)
 	{
-		return subtractFromList(data, null, value, Double.NaN);
+		return subtractFromList(data, null, value, Float.NaN);
 	}
 
 	/**
@@ -296,9 +304,9 @@ public class ListCalculations
 	 * @param value
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static List<Double> subtractFromList_target(List<Double> source, List<Double> target, double value)
+	public static Spectrum subtractFromList_target(Spectrum source, Spectrum target, float value)
 	{
-		return subtractFromList(source, target, value, Double.NaN);
+		return subtractFromList(source, target, value, Float.NaN);
 	}
 	
 
@@ -311,10 +319,19 @@ public class ListCalculations
 	 * @param minimum
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static List<Double> subtractFromList(List<Double> source, final double value, final double minimum)
+	public static Spectrum subtractFromList(Spectrum source, final float value, final float minimum)
 	{
 
-		return subtractFromList(source, null, value, minimum);
+		Spectrum result = new Spectrum(source.size());
+		float newvalue;
+		for (int i = 0; i < source.size(); i++)
+		{
+			newvalue = source.get(i) - value;
+			if (value < minimum && minimum != Float.NaN) newvalue = minimum;
+			result.set(i, newvalue);
+		}
+
+		return result;
 	}
 
 	
@@ -326,50 +343,44 @@ public class ListCalculations
 	 * @param minimum
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static List<Double> subtractFromList(List<Double> source, List<Double> target, final double value, final double minimum)
+	public static Spectrum subtractFromList(Spectrum source, Spectrum target, final float value, final float minimum)
 	{
 
-		return Functional.map_target(source, (target == null ? source : target), new Function1<Double, Double>() {
+		float newvalue;
+		for (int i = 0; i < source.size(); i++)
+		{
+			newvalue = source.get(i) - value;
+			if (value < minimum && minimum != Float.NaN) newvalue = minimum;
+			target.set(i, newvalue);
+		}
 
-			private double	newval;
-
-
-			@Override
-			public Double f(Double element)
-			{
-
-				newval = element - value;
-
-				if (newval < minimum && minimum != Double.NaN) return minimum;
-				else return newval;
-			}
-		});
+		return target;
 	}
 
 
 	/**
-	 * A threaded version of {@link #subtractFromList(List, double, double)}
+	 * A threaded version of {@link #subtractFromList(List, float, float)}
 	 * 
 	 * @param data
 	 * @param value
 	 * @param minimum
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static List<Double> subtractFromList_threaded(final List<Double> data, final double value,
-			final double minimum)
+	public static Spectrum subtractFromList_threaded(final Spectrum data, final float value,
+			final float minimum)
 	{
 
 		if (data.size() < MIN_SIZE_FOR_THREADING) return subtractFromList(data, value, minimum);
 
-		final List<Double> result = DataTypeFactory.<Double> listInit(data.size());
+		final Spectrum result = new Spectrum(data.size());
 
 		Task task = new Task() {
 
 			@Override
 			public boolean work(int ordinal)
 			{
-				double newvalue = data.get(ordinal) - value;
-				if (newvalue < minimum && minimum != Double.NaN) newvalue = minimum;
+				float newvalue = data.get(ordinal) - value;
+				if (newvalue < minimum && minimum != Float.NaN) newvalue = minimum;
 				result.set(ordinal, newvalue);
 				return true;
 			}
@@ -390,17 +401,19 @@ public class ListCalculations
 	 * @param l2
 	 * @return a list which is the sum of the two lists given
 	 */
-	public static List<Double> addLists(List<Double> l1, List<Double> l2)
+	public static Spectrum addLists(Spectrum l1, Spectrum l2)
 	{
 
-		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
+		Spectrum result = new Spectrum(l1.size());
+		int maxInd = Math.min(l1.size(), l2.size());
+		float value;
+		for (int i = 0; i < maxInd; i++)
+		{
+			value = l1.get(i) + l2.get(i);
+			result.set(i, value);
+		}
 
-			@Override
-			public Double f(Double val1, Double val2)
-			{
-				return val1 + val2;
-			}
-		});
+		return result;
 	}
 
 
@@ -410,17 +423,16 @@ public class ListCalculations
 	 * @param l1
 	 * @param l2
 	 */
-	public static void addLists_inplace(List<Double> l1, List<Double> l2)
+	public static void addLists_inplace(Spectrum l1, Spectrum l2)
 	{
 
-		Functional.zipWith_inplace(l1, l2, new Function2<Double, Double, Double>() {
-
-			@Override
-			public Double f(Double val1, Double val2)
-			{
-				return val1 + val2;
-			}
-		});
+		int maxInd = Math.min(l1.size(), l2.size());
+		float value;
+		for (int i = 0; i < maxInd; i++)
+		{
+			value = l1.get(i) + l2.get(i);
+			l1.set(i, value);
+		}
 	}
 
 
@@ -431,7 +443,7 @@ public class ListCalculations
 	 * @param l2
 	 * @return a list which is the sum of the two lists given
 	 */
-	public static List<Double> addLists_threaded(final List<Double> l1, final List<Double> l2)
+	public static Spectrum addLists_threaded(final Spectrum l1, final Spectrum l2)
 	{
 
 		if (l1 == null && l2 == null) return null;
@@ -441,7 +453,7 @@ public class ListCalculations
 
 		if (l1.size() < MIN_SIZE_FOR_THREADING) return addLists(l1, l2);
 
-		final List<Double> result = DataTypeFactory.<Double> listInit(l1.size());
+		final Spectrum result = new Spectrum(l1.size());
 
 		Task task = new Task() {
 
@@ -468,17 +480,10 @@ public class ListCalculations
 	 * @param l2
 	 * @return a list which is the result of l1 - l2
 	 */
-	public static List<Double> subtractLists(List<Double> l1, List<Double> l2)
+	public static Spectrum subtractLists(Spectrum l1, Spectrum l2)
 	{
 
-		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
-
-			@Override
-			public Double f(Double val1, Double val2)
-			{
-				return val1 - val2;
-			}
-		});
+		return subtractLists(l1, l2, Float.NaN);
 	}
 
 
@@ -490,23 +495,20 @@ public class ListCalculations
 	 * @param minimum
 	 * @return a list which is the result of l1 - l2
 	 */
-	public static List<Double> subtractLists(List<Double> l1, List<Double> l2, final double minimum)
+	public static Spectrum subtractLists(Spectrum l1, Spectrum l2, final float minimum)
 	{
 
-		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
+		Spectrum result = new Spectrum(l1.size());
+		int maxInd = Math.min(l1.size(), l2.size());
+		float value;
+		for (int i = 0; i < maxInd; i++)
+		{
+			value = l1.get(i) - l2.get(i);
+			if (value < minimum && minimum != Float.NaN) value = minimum;
+			result.set(i, value);
+		}
 
-			double	newval;
-
-
-			@Override
-			public Double f(Double val1, Double val2)
-			{
-				newval = val1 - val2;
-				if (newval < minimum) return minimum;
-				else return newval;
-			}
-		});
-
+		return result;
 	}
 
 
@@ -516,9 +518,9 @@ public class ListCalculations
 	 * @param l1
 	 * @param l2
 	 */
-	public static void subtractLists_inplace(List<Double> l1, List<Double> l2)
+	public static void subtractLists_inplace(Spectrum l1, Spectrum l2)
 	{
-		subtractLists_inplace(l1, l2, Double.NaN);
+		subtractLists_inplace(l1, l2, Float.NaN);
 	}
 
 
@@ -529,35 +531,30 @@ public class ListCalculations
 	 * @param l2
 	 * @param minimum
 	 */
-	public static void subtractLists_inplace(List<Double> l1, List<Double> l2, final double minimum)
+	public static void subtractLists_inplace(Spectrum l1, Spectrum l2, final float minimum)
 	{
 
-		Functional.zipWith_inplace(l1, l2, new Function2<Double, Double, Double>() {
-
-			double	newval;
-
-
-			@Override
-			public Double f(Double val1, Double val2)
-			{
-				newval = val1 - val2;
-				if (newval < minimum && minimum != Double.NaN) return minimum;
-				else return newval;
-			}
-		});
-
+		int maxInd = Math.min(l1.size(), l2.size());
+		float value;
+		for (int i = 0; i < maxInd; i++)
+		{
+			value = l1.get(i) - l2.get(i);
+			if (value < minimum && minimum != Float.NaN) value = minimum;
+			l1.set(i, value);
+		}
+		
 	}
 
 
 	/**
-	 * A threaded version of {@link #subtractLists(List, List, double)}
+	 * A threaded version of {@link #subtractLists(List, List, float)}
 	 * 
 	 * @param l1
 	 * @param l2
 	 * @param minimum
 	 * @return a list which is the result of l1 - l2
 	 */
-	public static List<Double> subtractLists_threaded(final List<Double> l1, final List<Double> l2, final double minimum)
+	public static Spectrum subtractLists_threaded(final Spectrum l1, final Spectrum l2, final float minimum)
 	{
 
 		if (l1 == null && l2 == null) return null;
@@ -567,15 +564,15 @@ public class ListCalculations
 
 		if (l1.size() < MIN_SIZE_FOR_THREADING) return subtractLists(l1, l2, minimum);
 
-		final List<Double> result = DataTypeFactory.<Double> listInit(l1.size());
+		final Spectrum result = new Spectrum(l1.size());
 
 		Task task = new Task() {
 
 			@Override
 			public boolean work(int ordinal)
 			{
-				double newValue = l1.get(ordinal) - l2.get(ordinal);
-				if (newValue < minimum && minimum != Double.NaN) newValue = minimum;
+				float newValue = l1.get(ordinal) - l2.get(ordinal);
+				if (newValue < minimum && minimum != Float.NaN) newValue = minimum;
 				result.set(ordinal, newValue);
 				return true;
 			}
@@ -596,29 +593,28 @@ public class ListCalculations
 	 * @param l2
 	 * @return a list which is the result of l1*l2
 	 */
-	public static List<Double> multiplyLists(List<Double> l1, List<Double> l2)
+	public static Spectrum multiplyLists(Spectrum l1, Spectrum l2)
 	{
 
-		return Functional.zipWith(l1, l2, new Function2<Double, Double, Double>() {
-
-			@Override
-			public Double f(Double val1, Double val2)
-			{
-				return val1 * val2;
-			}
-		});
-
+		int maxInd = Math.min(l1.size(), l2.size());
+		Spectrum result = new Spectrum(maxInd);
+		for (int i = 0; i < maxInd; i++)
+		{
+			result.set(i, l1.get(i) * l2.get(i));
+		}
+		
+		return result;
 	}
 
 
 	/**
-	 * A threaded version of {@link #multiplyBy(List, double)}
+	 * A threaded version of {@link #multiplyBy(List, float)}
 	 * 
 	 * @param l1
 	 * @param l2
 	 * @return a list which is the result of l1*l2
 	 */
-	public static List<Double> multiplyLists_threaded(final List<Double> l1, final List<Double> l2)
+	public static Spectrum multiplyLists_threaded(final Spectrum l1, final Spectrum l2)
 	{
 
 		if (l1 == null && l2 == null) return null;
@@ -628,7 +624,7 @@ public class ListCalculations
 
 		if (l1.size() < MIN_SIZE_FOR_THREADING) return multiplyLists(l1, l2);
 
-		final List<Double> result = DataTypeFactory.<Double> listInit(l1.size());
+		final Spectrum result = new Spectrum(l1.size());
 
 		Task task = new Task() {
 
@@ -654,12 +650,12 @@ public class ListCalculations
 	 * @param dataset
 	 * @return the per-channel-averaged scan
 	 */
-	public static List<Double> getDatasetAverage(List<List<Double>> dataset)
+	public static Spectrum getDatasetAverage(List<Spectrum> dataset)
 	{
 
-		List<Double> average = DataTypeFactory.<Double> list();
+		Spectrum average = new Spectrum(dataset.get(0).size());
 
-		double channelSum;
+		float channelSum;
 		for (int channel = 0; channel < dataset.get(0).size(); channel++)
 		{
 			channelSum = 0;
@@ -667,7 +663,7 @@ public class ListCalculations
 			{
 				channelSum += dataset.get(point).get(channel);
 			}
-			average.add(channel, channelSum / dataset.size());
+			average.set(channel, channelSum / dataset.size());
 		}
 
 		return average;
@@ -682,18 +678,18 @@ public class ListCalculations
 	 * @param dataset
 	 * @return the top-10% per-channel scan
 	 */
-	public static List<Double> getDatasetMaximums(List<List<Double>> dataset)
+	public static Spectrum getDatasetMaximums(List<Spectrum> dataset)
 	{
 
 		// a list for eventual maximums, and a list for all values for a particular channel
-		List<Double> maximums = DataTypeFactory.<Double> list();
-		List<Double> valuesAtChannel = DataTypeFactory.<Double> list();
+		Spectrum maximums = new Spectrum(dataset.get(0).size());
+		List<Float> valuesAtChannel = new ArrayList<Float>();
 
 		// determine a range for the top 10th of a list
 		int section = (int) Math.round((dataset.size() - 1.0) * 0.9);
 		if (section < 0) section = 0;
 
-		double channelMax;
+		float channelMax;
 		for (int channel = 0; channel < dataset.get(0).size(); channel++)
 		{
 
@@ -709,7 +705,7 @@ public class ListCalculations
 			Collections.sort(valuesAtChannel);
 
 			// grab the top 10th of the list
-			List<Double> top = valuesAtChannel.subList(section, dataset.size());
+			List<Float> top = valuesAtChannel.subList(section, dataset.size());
 			// if there isn't a tenth to grab, just get the top one
 			if (top.size() == 0)
 			{
@@ -717,14 +713,14 @@ public class ListCalculations
 			}
 
 			// do an averaging
-			channelMax = 0.0;
+			channelMax = 0.0f;
 			for (int i = 0; i < top.size(); i++)
 			{
 				channelMax += top.get(i);
 			}
 			channelMax /= top.size();
 
-			maximums.add(channel, channelMax);
+			maximums.set(channel, channelMax);
 		}
 
 		return maximums;
@@ -737,11 +733,11 @@ public class ListCalculations
 	 * @param list
 	 * @return a copy of list, with the values logged
 	 */
-	public static List<Double> logList(List<Double> list)
+	public static Spectrum logList(Spectrum list)
 	{
 
-		List<Double> result = DataTypeFactory.<Double> listInit(list);
-		logList_inplace(result);
+		Spectrum result = new Spectrum(list.size());
+		logList_target(list, result);
 		return result;
 
 	}
@@ -752,23 +748,17 @@ public class ListCalculations
 	 * 
 	 * @param list
 	 */
-	public static void logList_inplace(List<Double> list)
+	public static void logList_target(Spectrum source, Spectrum target)
 	{
 
-		Functional.map_target(list, list, new Function1<Double, Double>() {
-
-			private double	logValue;
-
-
-			@Override
-			public Double f(Double value)
-			{
-				logValue = Math.log(value + 1.0);
-				logValue = logValue < 0 ? 0 : logValue;
-				logValue = Double.isNaN(logValue) ? 0 : logValue;
-				return logValue;
-			}
-		});
+		float logValue;
+		for (int i = 0; i < source.size(); i++)
+		{
+			logValue = (float)Math.log1p(source.get(i));
+			logValue = logValue < 0 ? 0 : logValue;
+			logValue = Float.isNaN(logValue) ? 0 : logValue;
+			target.set(i, (float)logValue);
+		}
 
 	}
 
@@ -779,24 +769,24 @@ public class ListCalculations
 	 * @param data
 	 * @return a copy of list, with the values logged
 	 */
-	public static List<Double> logList_threaded(final List<Double> data)
+	public static Spectrum logList_threaded(final Spectrum data)
 	{
 
 		if (data.size() < MIN_SIZE_FOR_THREADING) return logList(data);
 
-		final List<Double> result = DataTypeFactory.<Double> listInit(data.size());
+		final Spectrum result = new Spectrum(data.size(), 0.0f);
 
 		Task task = new Task() {
 
 			@Override
 			public boolean work(int ordinal)
 			{
-				double logValue = Math.log(data.get(ordinal) + 1.0);
+				float logValue = (float)Math.log(data.get(ordinal) + 1.0);
 
 				logValue = logValue < 0 ? 0 : logValue;
-				logValue = Double.isNaN(logValue) ? 0 : logValue;
+				logValue = Float.isNaN(logValue) ? 0 : logValue;
 
-				result.set(ordinal, logValue);
+				result.set(ordinal, (float)logValue);
 				return true;
 			}
 		};
@@ -815,18 +805,34 @@ public class ListCalculations
 	 * @param list
 	 * @return the sum of the values in the list
 	 */
-	public static double sumValuesInList(List<Double> list)
+	public static float sumValuesInList(Spectrum list)
 	{
 
-		return Functional.foldr(list, 0d, new Function2<Double, Double, Double>() {
+		return Functional.fold(list, 0f, new Function2<Float, Float, Float>() {
 
 			@Override
-			public Double f(Double val, Double sum)
+			public Float f(Float val, Float sum)
 			{
 				return sum + val;
 			}
 		});
 
+	}
+	
+	/**
+	 * Sums the values in the given list
+	 * 
+	 * @param list
+	 * @return the sum of the values in the list
+	 */
+	public static float sumValuesInList(Spectrum list, int start, int stop)
+	{
+		float sum = 0;
+		for (int i = start; i < stop; i++)
+		{
+			sum += list.get(i);
+		}
+		return sum;
 	}
 
 }

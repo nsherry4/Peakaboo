@@ -53,30 +53,30 @@ public abstract class Drawing
 	
 	
 	
-	public static double getPenWidth(double baseSize, DrawingRequest dr)
+	public static float getPenWidth(float baseSize, DrawingRequest dr)
 	{
-		double width;
+		float width;
 		width = baseSize;
 		return width;
 	}
 
 
-	public static double getTickSize(double baseSize, DrawingRequest dr)
+	public static float getTickSize(float baseSize, DrawingRequest dr)
 	{
 		return baseSize * 5;
 	}
 
 
-	public static double getTickFontHeight(Surface context, DrawingRequest dr)
+	public static float getTickFontHeight(Surface context, DrawingRequest dr)
 	{
 		return context.getFontHeight();
 	}
 
 
 	//TODO: Remove this in favour of painters
-	public static double getTitleFontHeight(Surface context, DrawingRequest dr)
+	public static float getTitleFontHeight(Surface context, DrawingRequest dr)
 	{
-		double height;
+		float height;
 		context.save();
 		context.setFontSize(FONTSIZE_TITLE);
 		height = context.getFontHeight();

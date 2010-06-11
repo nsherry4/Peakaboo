@@ -13,14 +13,14 @@ import peakaboo.drawing.painters.axis.TitleAxisPainter;
 public class AxisFactory
 {
 
-	public static List<AxisPainter> getAxisPainterSet(String titleX, String titleY, Range<Double> rightValueBounds,
-			Range<Double> bottomValueBounds, Range<Double> topValueBounds, Range<Double> leftValueBounds,
+	public static List<AxisPainter> getAxisPainterSet(String titleX, String titleY, Range<Float> rightValueBounds,
+			Range<Float> bottomValueBounds, Range<Float> topValueBounds, Range<Float> leftValueBounds,
 			boolean yLeftLog, boolean yRightLog, boolean borderRight, boolean borderBottom, boolean borderTop, boolean borderleft)
 	{
 
 		List<AxisPainter> painters = DataTypeFactory.<AxisPainter> list();
 
-		painters.add(new TitleAxisPainter(1.0, titleX, null, null, titleY));
+		painters.add(new TitleAxisPainter(1.0f, titleX, null, null, titleY));
 		
 		painters.add(new TickMarkAxisPainter(rightValueBounds, bottomValueBounds, topValueBounds, leftValueBounds,
 				yLeftLog, yRightLog));

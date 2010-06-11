@@ -9,19 +9,30 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.jnlp.FileContents;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import peakaboo.common.OS;
 import peakaboo.controller.CanvasController;
+import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
@@ -170,38 +181,72 @@ public class SavePicture extends JDialog
 	private void savePNG()
 	{
 
-		final String filename = SimpleIODialogues.chooseFileSave(this, "Save Picture As...", startingFolder, "png",
-				"Portable Network Graphic");
-
-		if (filename == null) return;
-		startingFolder = new File(filename).getPath();
-		
-		controlsPanel.setEnabled(false);
-		controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-
-		new Thread(	new Runnable() {
+		if (OS.isWebStart())
+		{
 			
-			public void run() {
+			
+			try
+			{
 				
-				try {
-
-					OutputStream out = new FileOutputStream(new File(filename));
-					controller.writePNG(out);
-
-					setVisible(false);
-
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				controlsPanel.setEnabled(false);
+				controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();				
+				controller.writePNG(baos);
+				ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 				
+				List<String> list = new LinkedList<String>();
+				list.add("png");
+				
+				FileContents fc = IOCommon.saveFile("~/", "", list, bais);
+				
+				if (fc != null) setVisible(false);
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				setEnabled(true);
+				
 			}
-		}).start();
-		
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		} else {
+			
+			final String filename = SimpleIODialogues.chooseFileSave(this, "Save Picture As...", startingFolder, "png",
+					"Portable Network Graphic");
+	
+			if (filename == null) return;
+			startingFolder = new File(filename).getPath();
+			
+			controlsPanel.setEnabled(false);
+			controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+	
+			new Thread(	new Runnable() {
+				
+				public void run() {
+					
+					try {
+	
+						OutputStream out = new FileOutputStream(new File(filename));
+						controller.writePNG(out);
+	
+						setVisible(false);
+	
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					setEnabled(true);
+				}
+			}).start();
+			
+		}
 
 
 
@@ -212,36 +257,71 @@ public class SavePicture extends JDialog
 	{
 
 
-		final String filename = SimpleIODialogues.chooseFileSave(this, "Save Picture As...", startingFolder, "svg",
-				"Scalable Vector Graphic");
-
-		if (filename == null) return;
-		startingFolder = new File(filename).getPath();
-		
-		controlsPanel.setEnabled(false);
-		controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		
-		new Thread(new Runnable() {
+		if (OS.isWebStart())
+		{
 			
-			public void run() {
-				try {
-
-					OutputStream os = new FileOutputStream(new File(filename));
-					controller.writeSVG(os);
-
-					setVisible(false);
-
-
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			
+			try
+			{
+						
+				controlsPanel.setEnabled(false);
+				controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();				
+				controller.writeSVG(baos);
+				ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+				
+				List<String> list = new LinkedList<String>();
+				list.add("svg");
+				
+				FileContents fc = IOCommon.saveFile("~/", "", list, bais);
+				
+				
+				if (fc != null) setVisible(false);
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				setEnabled(true);
+				
 			}
-		}).start();
-		
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		} else {
+			
+			final String filename = SimpleIODialogues.chooseFileSave(this, "Save Picture As...", startingFolder, "svg",
+					"Scalable Vector Graphic");
+	
+			if (filename == null) return;
+			startingFolder = new File(filename).getPath();
+			
+			controlsPanel.setEnabled(false);
+			controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			
+			new Thread(new Runnable() {
+				
+				public void run() {
+					try {
+	
+						OutputStream os = new FileOutputStream(new File(filename));
+						controller.writeSVG(os);
+	
+						setVisible(false);
+	
+	
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					setEnabled(true);
+				}
+			}).start();
+			
+		}
 
 
 
@@ -251,37 +331,72 @@ public class SavePicture extends JDialog
 	private void savePDF()
 	{
 
-
-		final String filename = SimpleIODialogues.chooseFileSave(this, "Save Picture As...", startingFolder, "pdf",
-				"Portable Document Format");
-
-		if (filename == null) return;
-		startingFolder = new File(filename).getPath();
-		
-		controlsPanel.setEnabled(false);
-		controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		
-		new Thread(new Runnable() {
+		if (OS.isWebStart())
+		{
 			
-			public void run() {
-
-				try {
-
-					OutputStream os = new FileOutputStream(new File(filename));
-					controller.writePDF(os);
-
-					setVisible(false);
-
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			
+			try
+			{
+				
+				controlsPanel.setEnabled(false);
+				controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();				
+				controller.writePDF(baos);
+				ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+				
+				List<String> list = new LinkedList<String>();
+				list.add("pdf");
+				
+				FileContents fc = IOCommon.saveFile("~/", "", list, bais);
+				
+				
+				if (fc != null) setVisible(false);
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				setEnabled(true);
-
+				
 			}
-		}).start();
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		} else {
+		
+	
+			final String filename = SimpleIODialogues.chooseFileSave(this, "Save Picture As...", startingFolder, "pdf",
+					"Portable Document Format");
+	
+			if (filename == null) return;
+			startingFolder = new File(filename).getPath();
+			
+			controlsPanel.setEnabled(false);
+			controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			
+			new Thread(new Runnable() {
+				
+				public void run() {
+	
+					try {
+	
+						OutputStream os = new FileOutputStream(new File(filename));
+						controller.writePDF(os);
+	
+						setVisible(false);
+	
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					setEnabled(true);
+	
+				}
+			}).start();
+		}
 		
 
 	}

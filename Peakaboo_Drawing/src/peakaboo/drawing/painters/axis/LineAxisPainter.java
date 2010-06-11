@@ -31,7 +31,7 @@ public class LineAxisPainter extends AxisPainter
 	{
 
 		p.context.save();
-			p.context.setSource(0.0, 0.0, 0.0);
+			p.context.setSource(0.0f, 0.0f, 0.0f);
 	
 			p.context.setAntialias(false);
 			
@@ -62,18 +62,18 @@ public class LineAxisPainter extends AxisPainter
 	}
 
 	@Override
-	public Pair<Double, Double> getAxisSizeX(PainterData p)
+	public Pair<Float, Float> getAxisSizeX(PainterData p)
 	{
 		
-		double penWidth = Math.floor(getPenWidth(getBaseUnitSize(p.dr), p.dr)/2.0);
-		return new Pair<Double, Double>(left ? penWidth : 0.0, right ? penWidth : 0.0);
+		float penWidth = (float)Math.floor(getPenWidth(getBaseUnitSize(p.dr), p.dr)/2.0);
+		return new Pair<Float, Float>(left ? penWidth : 0.0f, right ? penWidth : 0.0f);
 	}
 
 	@Override
-	public Pair<Double, Double> getAxisSizeY(PainterData p)
+	public Pair<Float, Float> getAxisSizeY(PainterData p)
 	{
-		double penWidth = Math.floor(getPenWidth(getBaseUnitSize(p.dr), p.dr)/2.0);		
-		return new Pair<Double, Double>(top ? penWidth : 0.0, bottom ? penWidth : 0.0);
+		float penWidth = (float)Math.floor(getPenWidth(getBaseUnitSize(p.dr), p.dr)/2.0);		
+		return new Pair<Float, Float>(top ? penWidth : 0.0f, bottom ? penWidth : 0.0f);
 	}
 
 }

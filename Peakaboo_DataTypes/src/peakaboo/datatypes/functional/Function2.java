@@ -1,4 +1,4 @@
-package peakaboo.calculations.functional;
+package peakaboo.datatypes.functional;
 
 public interface Function2<T1, T2, T3> {
 

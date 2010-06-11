@@ -13,7 +13,8 @@ import java.util.zip.ZipFile;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
-import peakaboo.fileio.Common;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.fileio.IOCommon;
 import peakaboo.fileio.xrf.support.CLSXML;
 
 
@@ -79,13 +80,13 @@ public class ZipDataSource implements DataSource
 			
 			entry = entries.nextElement();
 			filename = entry.getName();
-			if (Common.checkFileExtension(filename, ".xml")) entryNames.add(  filename  );
+			if (IOCommon.checkFileExtension(filename, ".xml")) entryNames.add(  filename  );
 			
 			i++;
 			
 		}
 		
-		Common.sortFilenames(entryNames);
+		IOCommon.sortFilenames(entryNames);
 		
 		return entryNames;
 	}
@@ -168,7 +169,7 @@ public class ZipDataSource implements DataSource
 	 * @param filename name of the file in this ZipArchive to read from
 	 * @return list of values for a single scan
 	 */
-	public List<Double> getScanAtIndex(int index)
+	public Spectrum getScanAtIndex(int index)
 	{
 		if (zip == null) return null;
 		
@@ -177,7 +178,7 @@ public class ZipDataSource implements DataSource
 		try {
 			
 			InputStream in = zip.getInputStream(zip.getEntry(filename));
-			String contents = Common.readerToString(new BufferedReader(new InputStreamReader(in)));
+			String contents = IOCommon.readerToString(new BufferedReader(new InputStreamReader(in)));
 			return CLSXML.readScanFromString(contents);
 			
 			
@@ -195,23 +196,23 @@ public class ZipDataSource implements DataSource
 	 * @param filename name of the file in this ZipArchive to read from
 	 * @return maximum energy as specified in the given filename
 	 */
-	public double getMaxEnergy(){
+	public float getMaxEnergy(){
 		
-		if (zip == null) return 20.48;
+		if (zip == null) return 20.48f;
 		
 		String filename = filenames.get(getFirstGoodScan());
 		
 		try {
 			
 			InputStream in = zip.getInputStream(zip.getEntry(filename));
-			String contents = Common.readerToString(new BufferedReader(new InputStreamReader(in)));
+			String contents = IOCommon.readerToString(new BufferedReader(new InputStreamReader(in)));
 			return CLSXML.readMaxEnergy(contents);
 			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return 20.48;
+			return 20.48f;
 		}
 		
 	}

@@ -34,7 +34,7 @@ public interface Surface
 	 * @param y
 	 *            the y position to draw to
 	 */
-	public void lineTo(double x, double y);
+	public void lineTo(float x, float y);
 
 
 	/**
@@ -45,7 +45,7 @@ public interface Surface
 	 * @param y
 	 *            the y position to move to
 	 */
-	public void moveTo(double x, double y);
+	public void moveTo(float x, float y);
 
 
 	/**
@@ -83,7 +83,7 @@ public interface Surface
 	 * @param y
 	 *            the y position for the baseline
 	 */
-	public void writeText(String text, double x, double y);
+	public void writeText(String text, float x, float y);
 
 
 	/**
@@ -124,7 +124,7 @@ public interface Surface
 	 * @param blue
 	 *            the blue channel of the colour -- 0.0 to 1.0
 	 */
-	public void setSource(double red, double green, double blue);
+	public void setSource(float red, float green, float blue);
 
 
 	/**
@@ -139,7 +139,7 @@ public interface Surface
 	 * @param alpha
 	 *            the alpha channel of the colour -- 0.0 to 1.0
 	 */
-	public void setSource(double red, double green, double blue, double alpha);
+	public void setSource(float red, float green, float blue, float alpha);
 
 
 	/**
@@ -167,7 +167,7 @@ public interface Surface
 	 * @param colour2
 	 *            the second colour
 	 */
-	public void setSourceGradient(double x1, double y1, Color colour1, double x2, double y2, Color colour2);
+	public void setSourceGradient(float x1, float y1, Color colour1, float x2, float y2, Color colour2);
 
 
 	/**
@@ -176,7 +176,7 @@ public interface Surface
 	 * @param width
 	 *            the width to set the stroke to
 	 */
-	public void setLineWidth(double width);
+	public void setLineWidth(float width);
 
 
 	/**
@@ -186,7 +186,7 @@ public interface Surface
 	 *            the text to calculate the width for
 	 * @return the width of the text
 	 */
-	public double getTextWidth(String text);
+	public float getTextWidth(String text);
 
 
 	/**
@@ -195,7 +195,7 @@ public interface Surface
 	 * 
 	 * @return the height of a line of text for the current font settings.
 	 */
-	public double getFontHeight();
+	public float getFontHeight();
 
 
 	/**
@@ -203,7 +203,7 @@ public interface Surface
 	 * 
 	 * @return the font leading
 	 */
-	public double getFontLeading();
+	public float getFontLeading();
 
 
 	/**
@@ -211,7 +211,7 @@ public interface Surface
 	 * 
 	 * @return the font ascent
 	 */
-	public double getFontAscent();
+	public float getFontAscent();
 
 
 	/**
@@ -219,7 +219,7 @@ public interface Surface
 	 * 
 	 * @return the fond descent
 	 */
-	public double getFontDescent();
+	public float getFontDescent();
 
 
 	/**
@@ -268,7 +268,7 @@ public interface Surface
 	 * @param height
 	 *            height of the rectangle
 	 */
-	public void rectangle(double x, double y, double width, double height);
+	public void rectangle(float x, float y, float width, float height);
 
 
 	/**
@@ -279,7 +279,7 @@ public interface Surface
 	 * @param y
 	 *            the distance in y to shift the origin point
 	 */
-	public void translate(double x, double y);
+	public void translate(float x, float y);
 
 
 	/**
@@ -290,7 +290,7 @@ public interface Surface
 	 * @param y
 	 *            the proportion in y to scale the coordinate system
 	 */
-	public void scale(double x, double y);
+	public void scale(float x, float y);
 
 
 	/**
@@ -299,7 +299,7 @@ public interface Surface
 	 * @param radians
 	 *            amount in radians to rotate the coordinate system
 	 */
-	public void rotate(double radians);
+	public void rotate(float radians);
 
 
 	/**
@@ -307,7 +307,7 @@ public interface Surface
 	 * 
 	 * @param size
 	 */
-	public void setFontSize(double size);
+	public void setFontSize(float size);
 
 
 	/**
@@ -315,7 +315,7 @@ public interface Surface
 	 * 
 	 * @return the current font size
 	 */
-	public double getFontSize();
+	public float getFontSize();
 
 
 	/**
@@ -340,7 +340,7 @@ public interface Surface
 	 *            the height of the buffer in pixels
 	 * @return a new image buffer
 	 * @see Buffer
-	 * @see #compose(Buffer, int, int, double)
+	 * @see #compose(Buffer, int, int, float)
 	 */
 	public Buffer getImageBuffer(int width, int height);
 
@@ -359,7 +359,7 @@ public interface Surface
 	 * @see Buffer
 	 * @see #getImageBuffer(int, int)
 	 */
-	public void compose(Buffer buffer, int x, int y, double scale);
+	public void compose(Buffer buffer, int x, int y, float scale);
 
 
 	public void setAntialias(boolean antialias);

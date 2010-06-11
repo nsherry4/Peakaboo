@@ -124,10 +124,10 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 	public void draw()
 	{
 		
-		double oldMaxIntensity = dr.maxYIntensity;
+		float oldMaxIntensity = dr.maxYIntensity;
 
-		Coord<Range<Double>> borderSizes = calcAxisBorders();
-		Coord<Double> mapDimensions = calcMapSize();
+		Coord<Range<Float>> borderSizes = calcAxisBorders();
+		Coord<Float> mapDimensions = calcMapSize();
 
 		// Draw Map
 		context.save();
@@ -151,7 +151,7 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 					needsMapRepaint = false;
 				}
 			
-				context.compose(mapBuffer, 0, 0, 1.0);
+				context.compose(mapBuffer, 0, 0, 1.0f);
 			}
 
 			
@@ -162,23 +162,23 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 		context.save();
 
 	
-			Range<Double> availableX, availableY;
-			Coord<Double> totalSize = calcTotalSize();
+			Range<Float> availableX, availableY;
+			Coord<Float> totalSize = calcTotalSize();
 	
-			availableX = new Range<Double>(0.0, totalSize.x);
-			availableY = new Range<Double>(0.0, totalSize.y);
-			PainterData p = new PainterData(context, dr, new Coord<Double>(dr.imageWidth, dr.imageHeight), null);
+			availableX = new Range<Float>(0.0f, totalSize.x);
+			availableY = new Range<Float>(0.0f, totalSize.y);
+			PainterData p = new PainterData(context, dr, new Coord<Float>(dr.imageWidth, dr.imageHeight), null);
 	
 			if (axisPainters != null) {
 	
-				Pair<Double, Double> axisSizeX, axisSizeY;
+				Pair<Float, Float> axisSizeX, axisSizeY;
 	
 				for (AxisPainter axisPainter : axisPainters) {
 	
 					axisPainter.setDimensions(
 	
-					new Range<Double>(availableX.start, availableX.end),
-							new Range<Double>(availableY.start, availableY.end)
+					new Range<Float>(availableX.start, availableX.end),
+							new Range<Float>(availableY.start, availableY.end)
 	
 					);
 	
@@ -218,15 +218,15 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 	 *            a Surface for use in calculating things like Font sizes.
 	 * @return a Coordinate defining the area available to the map proper
 	 */
-	public Coord<Double> calculateMapDimensions()
+	public Coord<Float> calculateMapDimensions()
 	{
 
-		Coord<Double> borders = calcBorderSize();
+		Coord<Float> borders = calcBorderSize();
 
-		double cellSize = calcCellSize(dr.imageWidth - borders.x, dr.imageHeight - borders.y, dr);
-		if (cellSize < 0.01) cellSize = 0.01;
+		float cellSize = calcCellSize(dr.imageWidth - borders.x, dr.imageHeight - borders.y, dr);
+		if (cellSize < 0.01) cellSize = 0.01f;
 
-		return new Coord<Double>(dr.dataWidth * cellSize + borders.x, dr.dataHeight * cellSize + borders.y);
+		return new Coord<Float>(dr.dataWidth * cellSize + borders.x, dr.dataHeight * cellSize + borders.y);
 
 	}
 
@@ -242,15 +242,15 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 	 *            the DrawingRequest to define how maps should be drawn
 	 * @return a cell size (square) for a single data point
 	 */
-	public static double calcCellSize(double availableWidth, double availableHeight, peakaboo.drawing.DrawingRequest dr)
+	public static float calcCellSize(float availableWidth, float availableHeight, peakaboo.drawing.DrawingRequest dr)
 	{
 
-		double cellWidth, cellHeight;
+		float cellWidth, cellHeight;
 
 		cellWidth = availableWidth / dr.dataWidth;
 		cellHeight = availableHeight / dr.dataHeight;
 
-		double cellSize;
+		float cellSize;
 		cellSize = cellWidth > cellHeight ? cellHeight : cellWidth;
 
 		return cellSize;
@@ -264,10 +264,10 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 	 * 
 	 * @return A coordinate pair defining the x and y space consumed by the axes
 	 */
-	public Coord<Range<Double>> calcAxisBorders()
+	public Coord<Range<Float>> calcAxisBorders()
 	{
 		
-		return AxisPainter.calcAxisBorders(new PainterData(context, dr, new Coord<Double>(dr.imageWidth, dr.imageHeight), null), axisPainters);
+		return AxisPainter.calcAxisBorders(new PainterData(context, dr, new Coord<Float>(dr.imageWidth, dr.imageHeight), null), axisPainters);
 /*
 		Range<Double> availableX, availableY;
 		availableX = new Range<Double>(0.0, dr.imageWidth);
@@ -305,42 +305,42 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 	}
 
 
-	public Coord<Double> calcBorderSize()
+	public Coord<Float> calcBorderSize()
 	{
 
-		Coord<Range<Double>> axisBorders = calcAxisBorders();
-		double x = 0.0, y = 0.0;
+		Coord<Range<Float>> axisBorders = calcAxisBorders();
+		float x = 0.0f, y = 0.0f;
 
 		x = axisBorders.x.start + (dr.imageWidth - axisBorders.x.end);
 		y = axisBorders.y.start + (dr.imageHeight - axisBorders.y.end);
 
-		return new Coord<Double>(x, y);
+		return new Coord<Float>(x, y);
 
 	}
 
 
-	public Coord<Double> calcMapSize()
+	public Coord<Float> calcMapSize()
 	{
 
-		Coord<Double> borderSize = calcBorderSize();
-		double x = 0.0, y = 0.0;
+		Coord<Float> borderSize = calcBorderSize();
+		float x = 0.0f, y = 0.0f;
 
-		double cellSize = calcCellSize(dr.imageWidth - borderSize.x, dr.imageHeight - borderSize.y, dr);
+		float cellSize = calcCellSize(dr.imageWidth - borderSize.x, dr.imageHeight - borderSize.y, dr);
 		x = dr.dataWidth * cellSize;
 		y = dr.dataHeight * cellSize;
 
-		return new Coord<Double>(x, y);
+		return new Coord<Float>(x, y);
 
 	}
 
 
-	public Coord<Double> calcTotalSize()
+	public Coord<Float> calcTotalSize()
 	{
 
-		Coord<Double> borderSize = calcBorderSize();
-		Coord<Double> mapSize = calcMapSize();
+		Coord<Float> borderSize = calcBorderSize();
+		Coord<Float> mapSize = calcMapSize();
 
-		return new Coord<Double>(borderSize.x + mapSize.x, borderSize.y + mapSize.y);
+		return new Coord<Float>(borderSize.x + mapSize.x, borderSize.y + mapSize.y);
 
 	}
 

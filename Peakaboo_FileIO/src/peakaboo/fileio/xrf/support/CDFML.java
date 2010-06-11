@@ -13,6 +13,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.fileio.AbstractFile;
 
 
 public class CDFML
@@ -233,7 +234,7 @@ public class CDFML
 	}
 
 
-	public static boolean isCDFML(String filename, String technique)
+	public static boolean isCDFML(AbstractFile filename, String technique)
 	{
 
 		Document dom;
@@ -281,7 +282,7 @@ public class CDFML
 	}
 
 
-	public static Document createCDFMLDocument(String filename) throws Exception
+	public static Document createCDFMLDocument(AbstractFile file) throws Exception
 	{
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -289,11 +290,12 @@ public class CDFML
 		DocumentBuilder db;
 
 		db = dbf.newDocumentBuilder();
-		File f = new File(filename);
-		Document dom = db.parse(f);
+		//File f = new File(filename);
+		Document dom = db.parse(file.getInputStream());
 
 		return dom;
 
 	}
+	
 
 }

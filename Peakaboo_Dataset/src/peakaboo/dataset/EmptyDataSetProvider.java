@@ -29,12 +29,12 @@ public class EmptyDataSetProvider extends DataSetProvider
 		return null;
 	}
 
-	@Override
-	public List<Double> calculateSumInRegion(ROI region)
+	/*@Override
+	public Spectrum calculateSumInRegion(ROI region)
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 	@Override
 	public ScanContainer getScan(int index)
@@ -51,7 +51,7 @@ public class EmptyDataSetProvider extends DataSetProvider
 	}
 
 	@Override
-	public double maximumIntensity()
+	public float maximumIntensity()
 	{
 		// TODO Auto-generated method stub
 		return 0;
@@ -223,6 +223,12 @@ public class EmptyDataSetProvider extends DataSetProvider
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void discard()
+	{
+		
 	}
 
 

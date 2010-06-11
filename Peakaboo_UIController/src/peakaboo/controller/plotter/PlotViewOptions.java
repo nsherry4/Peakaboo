@@ -14,7 +14,7 @@ public class PlotViewOptions implements Serializable{
 	public boolean showPlotTitle;
 	public ChannelCompositeMode channelComposite;
 	public boolean backgroundShowOriginal;
-	public double zoom;
+	public float zoom;
 	public boolean monochrome;
 	public boolean showAxes;
 	
@@ -23,7 +23,7 @@ public class PlotViewOptions implements Serializable{
 		showIndividualFittings = false;
 		channelComposite = ChannelCompositeMode.NONE;		
 		backgroundShowOriginal = false;
-		zoom = 1.0;
+		zoom = 1.0f;
 		monochrome = false;
 		showAxes = false;
 	}

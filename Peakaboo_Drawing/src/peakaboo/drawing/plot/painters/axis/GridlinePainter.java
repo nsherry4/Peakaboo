@@ -12,9 +12,9 @@ import peakaboo.drawing.plot.painters.PlotPainter;
 public class GridlinePainter extends PlotPainter
 {
 
-	Range<Double> valueBounds;
+	Range<Float> valueBounds;
 	
-	public GridlinePainter(Range<Double> valueBounds)
+	public GridlinePainter(Range<Float> valueBounds)
 	{
 		this.valueBounds = valueBounds;
 	}
@@ -23,19 +23,19 @@ public class GridlinePainter extends PlotPainter
 	public void drawElement(PainterData p)
 	{
 		
-		double valueRangeStart = valueBounds.start;
-		double valueRangeEnd = PlotDrawing.getDataScale(valueBounds.end, false);
+		float valueRangeStart = valueBounds.start;
+		float valueRangeEnd = PlotDrawing.getDataScale(valueBounds.end, false);
 		
 		int maxTicks = AxisMarkGenerator.getMaxTicksY(p.context, p.plotSize.y);
 	
-		List<Pair<Double, Integer>> tickData = AxisMarkGenerator.getAxisMarkList(maxTicks, p.plotSize.y, 1, valueRangeStart, valueRangeEnd);
+		List<Pair<Float, Integer>> tickData = AxisMarkGenerator.getAxisMarkList(maxTicks, p.plotSize.y, 1, valueRangeStart, valueRangeEnd);
 		
 		p.context.save();
-		p.context.setSource(0.0, 0.0, 0.0, 0.1);
+		p.context.setSource(0.0f, 0.0f, 0.0f, 0.1f);
 		
-		double tickPercent;
-		double yPos;
-		for (Pair<Double, Integer> tick : tickData)
+		float tickPercent;
+		float yPos;
+		for (Pair<Float, Integer> tick : tickData)
 		{
 			tickPercent = tick.first;
 			yPos = tickPercent * p.plotSize.y;

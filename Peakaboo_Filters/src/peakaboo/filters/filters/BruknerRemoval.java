@@ -4,7 +4,8 @@ package peakaboo.filters.filters;
 import java.util.List;
 
 import peakaboo.calculations.Background;
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.drawing.plot.painters.SpectrumPainter;
@@ -46,14 +47,14 @@ public final class BruknerRemoval extends AbstractFilter
 
 
 
-	private List<Double> getBackground(List<Double> data)
+	private Spectrum getBackground(Spectrum data)
 	{
 	
 		int percent = this.<Integer>getParameterValue(PERCENT);
 		int windowSize = this.<Integer>getParameterValue(WIDTH);
 		int iterations = this.<Integer>getParameterValue(ITERATIONS);
 		
-		return ListCalculations.multiplyBy(  Background.removeBackgroundBrukner(data, windowSize, iterations), (percent/100.0));
+		return SpectrumCalculations.multiplyBy(  Background.removeBackgroundBrukner(data, windowSize, iterations), (percent/100.0f));
 
 	}
 
@@ -108,7 +109,7 @@ public final class BruknerRemoval extends AbstractFilter
 			public void drawElement(PainterData p)
 			{
 				traceData(p);
-				p.context.setSource(0.36, 0.21, 0.4);
+				p.context.setSource(0.36f, 0.21f, 0.4f);
 				p.context.stroke();
 
 			}
@@ -119,12 +120,12 @@ public final class BruknerRemoval extends AbstractFilter
 
 
 	@Override
-	public List<Double> filterApplyTo(List<Double> data, boolean cache)
+	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		if (!this.<Boolean>getParameterValue(PREVIEW) == true) {
 
-			List<Double> background = getBackground(data);
-			return ListCalculations.subtractLists(data, background);
+			Spectrum background = getBackground(data);
+			return SpectrumCalculations.subtractLists(data, background);
 		}
 
 		if (cache) setPreviewCache(data);

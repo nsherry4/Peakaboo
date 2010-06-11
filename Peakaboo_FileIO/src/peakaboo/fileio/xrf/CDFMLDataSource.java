@@ -8,10 +8,12 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import peakaboo.calculations.ListCalculations;
+import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
+import peakaboo.datatypes.Spectrum;
+import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.xrf.support.CDFML;
 
 
@@ -27,13 +29,13 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	
 	private boolean				isNormalised;
 	private Element				normaliseData;
-	private List<Double>		iNaught;
+	private Spectrum			iNaught;
 
 
 	//private String				cdfFileName;
 
 
-	public static boolean isCDFML(String filename)
+	public static boolean isCDFML(AbstractFile filename)
 	{
 
 		return CDFML.isCDFML(filename, CDFML.CDF_TECHNIQUE_XRF);
@@ -41,12 +43,12 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	}
 
 
-	public static CDFMLDataSource getCDFMLFromFile(String filename)
+	public static CDFMLDataSource getCDFMLFromFile(AbstractFile file)
 	{
 		
 		Document dom;
 		try {
-			dom = CDFML.createCDFMLDocument(filename);
+			dom = CDFML.createCDFMLDocument(file);
 		} catch (Exception e) {
 			return null;
 		}
@@ -98,7 +100,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	 *            the index of the scan to retrieve
 	 * @return the values for the given scan
 	 */
-	public List<Double> getScanAtIndex(int index)
+	public Spectrum getScanAtIndex(int index)
 	{
 
 		if (iNaught == null && isNormalised) {
@@ -106,22 +108,21 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 			//Common.listToFile("/home/nathaniel/Desktop/iNaught", iNaught);
 		}
 		
-		List<Double> results = DataTypeFactory.<Double> list();
-
 		String scanString = CDFML.getStringRecordFromVariableData(scanValuesData, index);
 		if (scanString == null) return null;
 
 		String[] scanPoints = scanString.split(" ");
-		for (int i = 0; i < 2048; i++) {
-			results.add(Double.parseDouble(scanPoints[i]));
+		Spectrum results = new Spectrum(scanPoints.length);
+		for (int i = 0; i < scanPoints.length; i++) {
+			results.set(i, Float.parseFloat(scanPoints[i]));
 		}
 		
 		if (iNaught != null && isNormalised) {
 			
 			if (iNaught.get(index) != 0)
-				results = ListCalculations.divideBy(results, iNaught.get(index));
+				results = SpectrumCalculations.divideBy(results, iNaught.get(index));
 			else
-				results = ListCalculations.multiplyBy(results, 0);
+				results = SpectrumCalculations.multiplyBy(results, 0);
 		}
 
 		return results;
@@ -138,8 +139,8 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	public Coord<Number> getRealCoordinatesAtIndex(int index)
 	{
 
-		double x = Double.parseDouble(CDFML.getStringRecordFromVariableData(positionX, index));
-		double y = Double.parseDouble(CDFML.getStringRecordFromVariableData(positionY, index));
+		float x = Float.parseFloat(CDFML.getStringRecordFromVariableData(positionX, index));
+		float y = Float.parseFloat(CDFML.getStringRecordFromVariableData(positionY, index));
 
 		return new Coord<Number>(x, y);
 
@@ -148,12 +149,12 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public Coord<Range<Number>> getRealDimensions()
 	{
-		double x1, x2, y1, y2;
+		float x1, x2, y1, y2;
 
-		x1 = Double.parseDouble(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_X_START, 0));
-		x2 = Double.parseDouble(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_X_END, 0));
-		y1 = Double.parseDouble(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_Y_START, 0));
-		y2 = Double.parseDouble(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_Y_END, 0));
+		x1 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_X_START, 0));
+		x2 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_X_END, 0));
+		y1 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_Y_START, 0));
+		y2 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_Y_END, 0));
 		
 
 		Range<Number> xDim = new Range<Number>(x1, x2);
@@ -200,11 +201,11 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	}
 
 
-	public double getMaxEnergy()
+	public float getMaxEnergy()
 	{
 		String maxEnergyValue = CDFML.getAttributeValue(root, CDFML.ATTR_MAX_ENERGY, 0);
-		if (maxEnergyValue == null) return 20.48;
-		return Double.parseDouble(maxEnergyValue) / 1000.0;
+		if (maxEnergyValue == null) return 20.48f;
+		return Float.parseFloat(maxEnergyValue) / 1000.0f;
 	}
 
 
@@ -331,15 +332,15 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	 * Returns normalisation data for this data set. If beam intensity fluxuated, this should correct for that.
 	 * @return a list of beam intensites -- one for each scan
 	 */
-	public List<Double> getNormalisationData()
+	public Spectrum getNormalisationData()
 	{
-		List<Double> normaliser = DataTypeFactory.<Double>list();
+		Spectrum normaliser = new Spectrum(getScanCount());
 		
 		for (int i = 0; i < getScanCount(); i++){
-			normaliser.add( Double.parseDouble(CDFML.getStringRecordFromVariableData(normaliseData, i)) );
+			normaliser.set(i, Float.parseFloat(CDFML.getStringRecordFromVariableData(normaliseData, i)) );
 		}
 		
-		ListCalculations.normalize_inplace(normaliser);
+		SpectrumCalculations.normalize_inplace(normaliser);
 		
 		return normaliser;
 	}

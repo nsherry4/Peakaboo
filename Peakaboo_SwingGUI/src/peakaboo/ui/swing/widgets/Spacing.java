@@ -2,6 +2,7 @@ package peakaboo.ui.swing.widgets;
 
 import java.awt.Insets;
 
+import javax.swing.JComponent;
 import javax.swing.border.EmptyBorder;
 
 
@@ -73,6 +74,21 @@ public class Spacing
 	
 	public static EmptyBorder menuPadding(){
 		return new EmptyBorder(none, small, none, small);	
+	}
+
+	public static void setNormal(JComponent c)
+	{
+		c.putClientProperty("JComponent.sizeVariant", "normal");
+	}
+	
+	public static void setSmall(JComponent c)
+	{
+		c.putClientProperty("JComponent.sizeVariant", "small");
+	}
+	
+	public static void setMini(JComponent c)
+	{
+		c.putClientProperty("JComponent.sizeVariant", "mini");
 	}
 	
 }

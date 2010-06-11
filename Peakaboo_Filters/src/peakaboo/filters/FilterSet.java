@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Spectrum;
 
 /**
  * 
@@ -122,14 +123,14 @@ public class FilterSet implements Iterable<AbstractFilter>
 	}
 
 
-	public synchronized List<Double> filterData(List<Double> data, boolean filtersShouldCache)
+	public synchronized Spectrum filterData(Spectrum data, boolean filtersShouldCache)
 	{
 
 		return filterDataUnsynchronized(data, filtersShouldCache);
 	}
 
 
-	public List<Double> filterDataUnsynchronized(List<Double> data, boolean filtersShouldCache)
+	public Spectrum filterDataUnsynchronized(Spectrum data, boolean filtersShouldCache)
 	{
 
 		for (AbstractFilter f : filters) {

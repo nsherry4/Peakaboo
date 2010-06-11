@@ -1,18 +1,18 @@
 package peakaboo.dataset;
 
-import java.util.List;
+import peakaboo.datatypes.Spectrum;
 
 public class ScanContainer {
 
 	public boolean hasData;
-	public List<Double> data;
+	public Spectrum data;
 	
 	public ScanContainer() {
 		hasData = false;
 		data = null;
 	}
 	
-	public ScanContainer(List<Double> list) {
+	public ScanContainer(Spectrum list) {
 		hasData = true;
 		data = list;
 	}
