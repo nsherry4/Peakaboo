@@ -1,4 +1,6 @@
-package peakaboo.datatypes.tasks.copy;
+package peakaboo.datatypes.tasks;
+
+import peakaboo.datatypes.tasks.Task.State;
 
 /**
  * Dummy Task used as a place-filler when a job will not fit neatly into a task object, or for when there is no
@@ -8,10 +10,10 @@ package peakaboo.datatypes.tasks.copy;
  * 
  */
 
-public class EmptyTask extends Task
+public class EmptyProgressingTask extends Task
 {
 
-	public EmptyTask(String name)
+	public EmptyProgressingTask(String name)
 	{
 		super(name);
 	}
@@ -30,9 +32,9 @@ public class EmptyTask extends Task
 
 		switch (state) {
 			case UNSTARTED:
-				state = State.STALLED;
+				state = State.WORKING;
 				break;
-			case STALLED:
+			case WORKING:
 				state = State.COMPLETED;
 				break;
 			default:

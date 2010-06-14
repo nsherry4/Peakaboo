@@ -35,7 +35,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	//private String				cdfFileName;
 
 
-	public static boolean isCDFML(AbstractFile filename)
+	public static int isCDFML(AbstractFile filename)
 	{
 
 		return CDFML.isCDFML(filename, CDFML.CDF_TECHNIQUE_XRF);
@@ -54,8 +54,9 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 		}
 
 		
+		
 		CDFMLDataSource cdfmlDS = new CDFMLDataSource();
-
+		
 
 		//get the root element for the document
 		cdfmlDS.root = dom.getDocumentElement();
@@ -335,13 +336,13 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	public Spectrum getNormalisationData()
 	{
 		Spectrum normaliser = new Spectrum(getScanCount());
-		
+			
 		for (int i = 0; i < getScanCount(); i++){
 			normaliser.set(i, Float.parseFloat(CDFML.getStringRecordFromVariableData(normaliseData, i)) );
 		}
-		
+				
 		SpectrumCalculations.normalize_inplace(normaliser);
-		
+				
 		return normaliser;
 	}
 

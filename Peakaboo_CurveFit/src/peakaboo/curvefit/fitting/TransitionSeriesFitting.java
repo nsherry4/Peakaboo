@@ -56,7 +56,7 @@ public class TransitionSeriesFitting
 
 		this.dataWidth = dataWidth;
 		this.escape = escape;
-
+		
 		constraintMask = DataTypeFactory.<Boolean> list();
 		for (int i = 0; i < dataWidth; i++)
 		{

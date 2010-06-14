@@ -281,4 +281,12 @@ public class NetworkDataSetProvider extends DataSetProvider
 		
 	}
 
+
+	@Override
+	public int scanSize()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

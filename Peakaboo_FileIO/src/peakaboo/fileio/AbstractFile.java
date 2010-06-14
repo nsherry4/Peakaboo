@@ -69,29 +69,23 @@ public class AbstractFile
 	}
 
 
-	public InputStream getInputStream()
+	public InputStream getInputStream() throws IOException
 	{
+				
 		if (type == ReadType.STRING)
 		{
 			try
 			{
-				new FileInputStream((String) contents);
+				return new FileInputStream((String) contents);
 			}
 			catch (FileNotFoundException e)
 			{
-				return null;
+				throw new IOException();
 			}
 		}
 		else if (type == ReadType.FILE_CONTENTS)
 		{
-			try
-			{
-				return ((FileContents) contents).getInputStream();
-			}
-			catch (IOException e)
-			{
-				return null;
-			}
+			return ((FileContents) contents).getInputStream();
 		}
 		
 		return null;

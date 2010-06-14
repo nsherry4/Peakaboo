@@ -128,10 +128,8 @@ public abstract class DataSetProvider
 	 * 
 	 * @return size of a scan
 	 */
-	public int scanSize()
-	{
-		return dsc_scanSize;
-	}
+	public abstract int scanSize();
+	
 
 
 	/**

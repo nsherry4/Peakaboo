@@ -231,6 +231,13 @@ public class EmptyDataSetProvider extends DataSetProvider
 		
 	}
 
+	@Override
+	public int scanSize()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 
 }

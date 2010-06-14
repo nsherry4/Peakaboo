@@ -234,50 +234,50 @@ public class CDFML
 	}
 
 
-	public static boolean isCDFML(AbstractFile filename, String technique)
+	public static int isCDFML(AbstractFile filename, String technique)
 	{
 
 		Document dom;
 		try {
 			dom = createCDFMLDocument(filename);
 		} catch (Exception e) {
-			return false;
+			return -1;
 		}
 
-		if (dom == null) return false;
+		if (dom == null) return -2;
 
 		Element root = dom.getDocumentElement();
-		if (root == null) return false;
+		if (root == null) return -3;
 
 		//make sure root name matches
-		if (!CDF_ROOT_NAME.equals(root.getNodeName())) return false;
+		if (!CDF_ROOT_NAME.equals(root.getNodeName())) return -4;
 		
 		//check the TOC
-		if (getAttributeElement(root, ATTR_TOC) == null) return false;
+		if (getAttributeElement(root, ATTR_TOC) == null) return -5;
 		List<String> components = getAttributeValues(root, ATTR_TOC);
-		if (! components.contains(TOC_MAP)) return false;
-		if (! components.contains(TOC_XRF)) return false;
+		if (! components.contains(TOC_MAP)) return -6;
+		if (! components.contains(TOC_XRF)) return -7;
 		
 		//check that variables we need exist
-		if (getVariableByName(root, SPECTRUMS) == null) return false;
-		if (getVariableByName(root, X_POSITONS) == null) return false;
-		if (getVariableByName(root, Y_POSITONS) == null) return false;
+		if (getVariableByName(root, SPECTRUMS) == null) return -8;
+		if (getVariableByName(root, X_POSITONS) == null) return -9;
+		if (getVariableByName(root, Y_POSITONS) == null) return -10;
 		
 		//check that attributes we need exist
-		if (getAttributeElement(root, ATTR_DATAX) == null) return false;
-		if (getAttributeElement(root, ATTR_DATAY) == null) return false;
+		if (getAttributeElement(root, ATTR_DATAX) == null) return -11;
+		if (getAttributeElement(root, ATTR_DATAY) == null) return -12;
 		
-		if (getAttributeElement(root, ATTR_DIM_X_START) == null) return false;
-		if (getAttributeElement(root, ATTR_DIM_X_END) == null) return false;
+		if (getAttributeElement(root, ATTR_DIM_X_START) == null) return -13;
+		if (getAttributeElement(root, ATTR_DIM_X_END) == null) return -14;
 		
-		if (getAttributeElement(root, ATTR_DIM_Y_START) == null) return false;
-		if (getAttributeElement(root, ATTR_DIM_Y_END) == null) return false;
+		if (getAttributeElement(root, ATTR_DIM_Y_START) == null) return -15;
+		if (getAttributeElement(root, ATTR_DIM_Y_END) == null) return -16;
 		
 		
 		//String givenTechnique = getAttributeValue(root, ATTR_TECHNIQUE, 0);
 		//if (!technique.equals(givenTechnique)) return false;
 
-		return true;
+		return 0;
 
 	}
 
@@ -289,10 +289,12 @@ public class CDFML
 
 		DocumentBuilder db;
 
+		
 		db = dbf.newDocumentBuilder();
+				
 		//File f = new File(filename);
 		Document dom = db.parse(file.getInputStream());
-
+		
 		return dom;
 
 	}

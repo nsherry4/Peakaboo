@@ -53,7 +53,7 @@ public class Background
 		{
 			x = i - centre;
 			value = (float) -Math.abs(Math.pow((x * reach), power)) + raise;
-			function.add(value);
+			function.set(i, value);
 		}
 
 		SpectrumCalculations.normalize_inplace(function);
@@ -141,6 +141,7 @@ public class Background
 		while (repetitions > 0)
 		{
 			removeBackgroundBruknerIteration(result, result2, windowSize);
+			
 			i++;
 			if (i > repetitions)
 			{
@@ -149,6 +150,7 @@ public class Background
 			}
 
 			removeBackgroundBruknerIteration(result2, result, windowSize);
+			
 			i++;
 			if (i > repetitions) break;
 
@@ -159,16 +161,16 @@ public class Background
 	}
 
 
-	public static void removeBackgroundBruknerIteration(final Spectrum data, final Spectrum target, final int windowSize)
+	public static void removeBackgroundBruknerIteration(final Spectrum source, final Spectrum target, final int windowSize)
 	{
 
-		for (int i = 0; i < data.size(); i++)
+		for (int i = 0; i < source.size(); i++)
 		{
 			int start, stop;
 			start = Math.max(i - windowSize, 0);
-			stop = Math.min(i + windowSize, data.size() - 1);
-			float average = SpectrumCalculations.sumValuesInList(data, start, stop);
-			target.set(i, average);
+			stop = Math.min(i + windowSize+1, source.size() - 1);
+			float average = SpectrumCalculations.sumValuesInList(source, start, stop) / (windowSize * 2 + 1);
+			target.set(i, Math.min(average, source.get(i)));
 			
 		}
 		
