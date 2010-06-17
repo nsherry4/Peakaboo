@@ -112,7 +112,7 @@ public class PeakabooMapperSwing extends JDialog
 
 	private void init()
 	{
-		setPreferredSize(new Dimension(700, 500));
+		setPreferredSize(new Dimension(900, 700));
 
 
 		
@@ -312,16 +312,6 @@ public class PeakabooMapperSwing extends JDialog
 		setJMenuBar(menuBar);
 
 	}
-
-	
-	
-	
-	
-	protected void finalize()
-	{
-		System.out.println("finalized mapper window");
-	}
-	
 
 
 	

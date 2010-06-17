@@ -48,10 +48,10 @@ public class SigDigits
 		return (int)value;
 	}
 	
-	public static String roundFloatTo(double value, int decimals)
+	public static String roundFloatTo(float value, int decimals)
 	{
 		
-		BigDecimal bd = new BigDecimal(Double.toString(value));
+		BigDecimal bd = new BigDecimal(Float.toString(value));
 		bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_EVEN);
 		
 		return bd.toPlainString();

@@ -10,6 +10,7 @@ import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.functional.Function2;
 import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.drawing.painters.PainterData;
 
 
@@ -45,30 +46,25 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 		p.context.save();
 
+		//calculate some coordinates
 		Pair<Float, Float> spectrumBoundsX = getAxisSizeX(p);
 		final float offsetX = axesData.xPositionBounds.start + spectrumBoundsX.first;
 		final float width = axesData.xPositionBounds.end - axesData.xPositionBounds.start - spectrumBoundsX.second
 				- spectrumBoundsX.first;
-
 		float offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
 		if (drawCoords) offsetY += keyHeight;
-
 		final float textLineHeight = p.context.getFontHeight();
 		final float textBaseline = offsetY + keyHeight + (drawCoords ? 0.0f : textLineHeight/2.0f);
 		float fontSize = p.context.getFontSize();
 
-		String markingsText;
+		
+		
 		// concatenate the list of strings to display so we can check the width of the total string
-		markingsText = Functional.foldr(entries, "", new Function2<Pair<Color, String>, String, String>() {
-
-			public String f(Pair<Color, String> marking, String str)
-			{
-				return str + marking.second;
-			}
-		}) + "";
+		String markingsText = Functional.foldr(Functional.map(entries, Functions.<Color, String>second()), Functions.concat(" "));
 		float legendSquareWidth = entries.size() * keyHeight * 2.5f - keyHeight; // -keyHeight because we don't need
 																					// padding on the end
 
+		
 		// keep shrinking the font size until all of the text until the font size is small enough that it fits
 		float expectedTextWidth = width;
 		while (width > 0.0 && fontSize > 1.0)

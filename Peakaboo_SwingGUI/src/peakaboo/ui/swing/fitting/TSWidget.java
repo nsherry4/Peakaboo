@@ -8,17 +8,18 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 
 
-public class ElementWidget extends JPanel
+public class TSWidget extends ClearPanel
 {
 	private JPanel elementContents;
 	private JLabel elementName;
 	private JLabel elementDetail;
 	private JCheckBox elementCheck;
 	
-	public ElementWidget()
+	public TSWidget(boolean large)
 	{
 		super();
 		
@@ -30,18 +31,22 @@ public class ElementWidget extends JPanel
 		elementDetail = new JLabel("");
 		
 		elementContents.add(elementName, BorderLayout.CENTER);
-		elementContents.add(elementDetail, BorderLayout.SOUTH);
-		elementContents.setBorder(Spacing.bSmall());
+		if (large) elementContents.add(elementDetail, BorderLayout.SOUTH);
+		if (large) {
+			elementContents.setBorder(Spacing.bSmall());
+		} else {
+			elementContents.setBorder(Spacing.bTiny());
+		}
 		add(elementContents, BorderLayout.CENTER);
 		//elementContents.setBorder(Spacing.bSmall());
 		elementCheck = new JCheckBox(); elementCheck.setOpaque(false);
-		elementCheck.setBorder(Spacing.bLarge());
+		if (large) elementCheck.setBorder(Spacing.bLarge());
 		add(elementCheck, BorderLayout.WEST);
 		
 		elementName.setOpaque(false);
 		elementDetail.setOpaque(false);
-		elementName.setFont(elementName.getFont().deriveFont(elementName.getFont().getSize() * 1.4f));
-		elementDetail.setFont(elementDetail.getFont().deriveFont(Font.PLAIN));
+		if (large) elementName.setFont(elementName.getFont().deriveFont(elementName.getFont().getSize() * 1.4f));
+		if (large) elementDetail.setFont(elementDetail.getFont().deriveFont(Font.PLAIN));
 	}
 	
 	public boolean isSelected()

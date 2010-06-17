@@ -9,10 +9,8 @@ import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.peaktable.Element;
-import peakaboo.datatypes.peaktable.PeakTable;
+import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 
 
@@ -21,8 +19,7 @@ public class FittingSet implements Serializable
 {
 
 	private List<TransitionSeriesFitting>	fittings;
-	private List<Pair<Element, Boolean>>	elements;
-	private PeakTable						peakTable;
+	private List<TransitionSeries>			fitTransitionSeries;
 
 	private float							energyPerChannel;
 	private int								dataWidth;
@@ -30,23 +27,21 @@ public class FittingSet implements Serializable
 	public static float						escape	= 1.74f;
 
 
-	public FittingSet(PeakTable peakTable, int dataWidth, float energyPerChannel)
+	public FittingSet(int dataWidth, float energyPerChannel)
 	{
 		fittings = DataTypeFactory.<TransitionSeriesFitting> list();
-		elements = DataTypeFactory.<Pair<Element, Boolean>> list();
+		fitTransitionSeries = DataTypeFactory.<TransitionSeries> list();
 
-		this.peakTable = peakTable;
 		this.energyPerChannel = energyPerChannel;
 		this.dataWidth = dataWidth;
 	}
 
 
-	public FittingSet(PeakTable peakTable)
+	public FittingSet()
 	{
 		fittings = DataTypeFactory.<TransitionSeriesFitting> list();
-		elements = DataTypeFactory.<Pair<Element, Boolean>> list();
+		fitTransitionSeries = DataTypeFactory.<TransitionSeries> list();
 
-		this.peakTable = peakTable;
 		this.energyPerChannel = 0.0f;
 		this.dataWidth = 0;
 	}
@@ -77,78 +72,65 @@ public class FittingSet implements Serializable
 	private synchronized void regenerateFittings()
 	{
 		fittings.clear();
-		for (Pair<Element, Boolean> e : elements)
+		for (TransitionSeries ts : fitTransitionSeries)
 		{
-			createTransitionsForElement(e.first);
+			addTransitionSeriesToFittings(ts);
 		}
 	}
 
 
-	public synchronized void addElement(Element e)
+	public synchronized void addTransitionSeries(TransitionSeries ts)
 	{
 
-		if (elements.indexOf(e) != -1) return;
-
-		createTransitionsForElement(e);
-		elements.add(new Pair<Element, Boolean>(e, true));
+		if (Functional.include(fitTransitionSeries, ts)) return;
+		
+		addTransitionSeriesToFittings(ts);
+		fitTransitionSeries.add(ts);
 
 	}
 
 
-	private synchronized void createTransitionsForElement(Element e)
+	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-
-		List<TransitionSeries> ts = peakTable.getTransitionSeriesForElement(e);
-
-		TransitionSeriesFitting f;
-
-		for (TransitionSeries t : ts)
-		{
-			f = new TransitionSeriesFitting(t, dataWidth, energyPerChannel, escape);
-			fittings.add(f);
-		}
+		fittings.add(new TransitionSeriesFitting(ts, dataWidth, energyPerChannel, escape));
 	}
 
 
-	public synchronized void remove(Element e)
+	public synchronized void remove(TransitionSeries ts)
 	{
-		deleteElementFromList(e);
-		List<TransitionSeries> ts = peakTable.getTransitionSeriesForElement(e);
+		fitTransitionSeries.remove(ts);
 
 		List<TransitionSeriesFitting> fittingsToRemove = DataTypeFactory.<TransitionSeriesFitting> list();
 		for (TransitionSeriesFitting f : fittings)
 		{
-			for (TransitionSeries t : ts)
+
+			if (f.transitionSeries.equals(ts))
 			{
-
-				if (f.transitionSeries == t)
-				{
-					fittingsToRemove.add(f);
-					break;
-				}
-
+				fittingsToRemove.add(f);
+				break;
 			}
+
 		}
 
 		fittings.removeAll(fittingsToRemove);
-
+		
 	}
 
 
-	public synchronized void moveElementUp(Element e)
+	public synchronized void moveTransitionSeriesUp(TransitionSeries e)
 	{
 		int insertionPoint;
-		Pair<Element, Boolean> data;
+		TransitionSeries ts;
 
-		for (int i = 0; i < elements.size(); i++)
+		for (int i = 0; i < fitTransitionSeries.size(); i++)
 		{
-			if (elements.get(i).first == e)
+			if (fitTransitionSeries.get(i).equals(e))
 			{
-				data = elements.get(i);
-				elements.remove(data);
+				ts = fitTransitionSeries.get(i);
+				fitTransitionSeries.remove(ts);
 				insertionPoint = i - 1;
 				if (insertionPoint == -1) insertionPoint = 0;
-				elements.add(insertionPoint, data);
+				fitTransitionSeries.add(insertionPoint, ts);
 				break;
 			}
 		}
@@ -156,20 +138,22 @@ public class FittingSet implements Serializable
 	}
 
 
-	public synchronized void moveElementDown(Element e)
+	public synchronized void moveTransitionSeriesDown(TransitionSeries e)
 	{
 		int insertionPoint;
-		Pair<Element, Boolean> data;
+		TransitionSeries ts;
 
-		for (int i = 0; i < elements.size(); i++)
+		for (int i = 0; i < fitTransitionSeries.size(); i++)
 		{
-			if (elements.get(i).first == e)
+			
+			if (fitTransitionSeries.get(i).equals(e))
 			{
-				data = elements.get(i);
-				elements.remove(data);
+								
+				ts = fitTransitionSeries.get(i);
+				fitTransitionSeries.remove(ts);
 				insertionPoint = i + 1;
-				if (insertionPoint == elements.size() + 1) insertionPoint = elements.size();
-				elements.add(insertionPoint, data);
+				if (insertionPoint == fitTransitionSeries.size() + 1) insertionPoint = fitTransitionSeries.size();
+				fitTransitionSeries.add(insertionPoint, ts);
 				break;
 			}
 		}
@@ -177,110 +161,65 @@ public class FittingSet implements Serializable
 	}
 
 
-	public synchronized boolean hasElement(Element e)
+	public synchronized boolean hasTransitionSeries(TransitionSeries ts)
 	{
-		if (getElementData(e) != null) return true;
+		if (fitTransitionSeries.contains(ts)) return true;
 		return false;
 	}
 
 
-	private synchronized Pair<Element, Boolean> getElementData(Element e)
+	public synchronized void setTransitionSeriesVisibility(TransitionSeries ts, boolean show)
 	{
-		for (Pair<Element, Boolean> pair : elements)
+		for (TransitionSeries e : fitTransitionSeries)
 		{
-			if (pair.first == e) return pair;
-		}
-		return null;
-	}
-
-
-	private synchronized void deleteElementFromList(Element e)
-	{
-		elements.remove(getElementData(e));
-	}
-
-
-	public synchronized void setElementVisibility(Element element, boolean show)
-	{
-		for (Pair<Element, Boolean> e : elements)
-		{
-			if (e.first == element)
+			if (ts.equals(e))
 			{
-				e.second = show;
-				break;
+				e.visible = show;
 			}
 		}
+
+		regenerateFittings();
 	}
 
 
-	public synchronized boolean getElementVisibilty(Element element)
+	public synchronized List<TransitionSeries> getFittedTransitionSeries()
 	{
+		List<TransitionSeries> fittedElements = DataTypeFactory.<TransitionSeries> list();
 
-		for (Pair<Element, Boolean> e : elements)
+		for (TransitionSeries e : fitTransitionSeries)
 		{
-			if (e.first == element)
-			{
-				return e.second.booleanValue();
-			}
-		}
-		return false;
-	}
-
-
-	public synchronized List<Element> getFittedElements()
-	{
-		List<Element> fittedElements = DataTypeFactory.<Element> list();
-
-		for (Pair<Element, Boolean> e : elements)
-		{
-			fittedElements.add(e.first);
+			fittedElements.add(e);
 		}
 
 		return fittedElements;
 	}
 
 
-	public synchronized List<TransitionSeries> getTransitionSeries()
-	{
-
-		List<TransitionSeries> result = DataTypeFactory.<TransitionSeries> list();
-
-		for (TransitionSeriesFitting f : fittings)
-		{
-			result.add(f.transitionSeries);
-		}
-
-		return result;
-
-	}
-
-
 	public synchronized List<TransitionSeries> getVisibleTransitionSeries()
 	{
 
-		List<TransitionSeries> result = DataTypeFactory.<TransitionSeries> list();
+		List<TransitionSeries> fittedElements = DataTypeFactory.<TransitionSeries> list();
 
-		for (TransitionSeriesFitting f : fittings)
+		for (TransitionSeries e : fitTransitionSeries)
 		{
-			if (f.transitionSeries.visible && getElementVisibilty(f.transitionSeries.element)) result
-				.add(f.transitionSeries);
+			if (e.visible) fittedElements.add(e);
 		}
 
-		return result;
+		return fittedElements;
 
 	}
 
 
 	public synchronized void clear()
 	{
-		elements.clear();
+		fitTransitionSeries.clear();
 		fittings.clear();
 	}
 
 
 	public synchronized boolean isEmpty()
 	{
-		return elements.isEmpty();
+		return fitTransitionSeries.isEmpty();
 	}
 
 
@@ -297,7 +236,7 @@ public class FittingSet implements Serializable
 		for (TransitionSeriesFitting f : fittings)
 		{
 
-			if (getElementVisibilty(f.transitionSeries.element) && f.transitionSeries.visible)
+			if (f.transitionSeries.visible)
 			{
 
 				scale = f.getRatioForCurveUnderData(data);

@@ -2,6 +2,8 @@ package peakaboo.datatypes.peaktable;
 
 
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,56 +23,38 @@ import peakaboo.datatypes.functional.stock.Functions;
  * @author Nathaniel Sherry
  */
 
-public class TransitionSeries implements Iterable<Transition>, Comparable<TransitionSeries>
+public class TransitionSeries implements Serializable, Iterable<Transition>, Comparable<TransitionSeries>
 {
-
-	/**
-	 * The {@link Element} that this TransitionSeries represents
-	 */
-	public Element				element;
 
 	/**
 	 * The {@link TransitionSeriesType} that this TransitionSeries represents
 	 */
-	public TransitionSeriesType	type;
-	public TransitionSeriesMode mode;
-	
-	private List<Transition>	transitions;
-	
-	
+	public TransitionSeriesType		type;
+	public TransitionSeriesMode		mode;
+
+	/**
+	 * If this is a compound TransitionSeries, this list contains the component TransitionSeries
+	 */
+	private List<TransitionSeries>	componentSeries;
+
+	/**
+	 * The {@link Element} that this TransitionSeries represents
+	 */
+	public Element					element;
+
+	private List<Transition>		transitions;
 
 	/**
 	 * The general intensity of this TransitionSeries
 	 */
-	public double				intensity;
+	public double					intensity;
 
 	/**
 	 * Toggle for the visibility of this TransitionSeries
 	 */
-	public boolean				visible;
+	public boolean					visible;
 
 
-	
-	public String getDescription()
-	{
-		switch (mode){
-			
-			case PILEUP:
-				
-				return element.toString() + " Pile Up";
-				
-			case SUMMATION:
-				
-				return "";
-				
-			default:
-				
-				return element.toString() + ": " + type.toString();
-				
-		}
-		
-	}
-	
 	/**
 	 * Is this TransitionSeries visible?
 	 * 
@@ -108,7 +92,9 @@ public class TransitionSeries implements Iterable<Transition>, Comparable<Transi
 		visible = true;
 
 		transitions = DataTypeFactory.<Transition> list();
+		componentSeries = DataTypeFactory.<TransitionSeries> list();
 	}
+
 
 	public TransitionSeries(Element element, TransitionSeriesType seriesType)
 	{
@@ -223,24 +209,67 @@ public class TransitionSeries implements Iterable<Transition>, Comparable<Transi
 	}
 
 
+
+	public String getDescription()
+	{
+		return getDescription(true);
+	}
+
+
+	private String getDescription(boolean isShort)
+	{
+		switch (mode)
+		{
+
+			case PILEUP:
+
+				
+				int count = getPileupCount();
+				String suffix = "";
+				if (count > 2) suffix += " x" + + count; 
+					
+				return componentSeries.get(0).element.name() + " " + componentSeries.get(0).getBaseType().name() + " Pile-Up" + suffix;
+				
+			case SUMMATION:
+
+				Collections.sort(componentSeries);
+				
+				return Functional.foldr(Functional.map(componentSeries, new Function1<TransitionSeries, String>() {
+
+					public String f(TransitionSeries ts)
+					{
+						return ts.getDescription();
+					}
+				}), Functions.concat(" ⊕ "));
+
+			default:
+
+				if (isShort) return element.name() + " " + type.name();
+				else return element.toString() + " " + type.name();
+
+		}
+
+	}
+
+	
 	/**
-	 * Returns a String representation in the form of "K Transition Series"
+	 * Alias for getDescription
 	 */
 	@Override
 	public String toString()
 	{
-		return type.toString() + " Transition Series";
+		return getDescription();
 	}
 
 
 	/**
-	 * Returns a String representation in the form of "Fe (K)"
+	 * Alias for getDescription(true)
 	 * 
 	 * @return the element-name string
 	 */
 	public String toElementString()
 	{
-		return element.name() + " (" + type.toString() + ")";
+		return getDescription(true);
 	}
 
 
@@ -255,23 +284,9 @@ public class TransitionSeries implements Iterable<Transition>, Comparable<Transi
 	}
 
 
-	public int compareTo(TransitionSeries otherTS)
-	{
-
-		if (otherTS.element == element)
-		{
-			return type.compareTo(otherTS.type);
-		}
-		else
-		{
-			return element.compareTo(otherTS.element);
-		}
-
-	}
-
-
-	public TransitionSeries pileup()
-	{
+	/*public TransitionSeries pileup()
+	{	
+		
 		// make a copy of the transitions list
 		final List<Transition> transitionList = Functional.map(transitions, Functions.<Transition> id());
 
@@ -316,19 +331,33 @@ public class TransitionSeries implements Iterable<Transition>, Comparable<Transi
 			}
 		}
 
-		)
+		);
 
-		;
+		newTransitionSeries.componentSeries.add(this);
+		newTransitionSeries.componentSeries.add(this);
 
 		return newTransitionSeries;
 
-	}
-	
+	}*/
+
+
 	public TransitionSeries summation(final TransitionSeries other)
 	{
 
+		//one of these should be a primary TS
+		if (mode != TransitionSeriesMode.PRIMARY && other.mode != TransitionSeriesMode.PRIMARY) return null;
+		
+		TransitionSeriesMode newmode = TransitionSeriesMode.SUMMATION;
+		
+		if (this.equals(other)) newmode = TransitionSeriesMode.PILEUP;
+		if (this.mode == TransitionSeriesMode.PILEUP && this.element.equals(other.element)) newmode = TransitionSeriesMode.PILEUP;
+		if (other.mode == TransitionSeriesMode.PILEUP && other.element.equals(other.element)) newmode = TransitionSeriesMode.PILEUP;
+
 		// create the new TransitionSeries object
-		final TransitionSeries newTransitionSeries = new TransitionSeries(element, TransitionSeriesType.COMPOSITE, TransitionSeriesMode.SUMMATION);
+		final TransitionSeries newTransitionSeries = new TransitionSeries(
+			element,
+			TransitionSeriesType.COMPOSITE,
+			newmode);
 
 		if (transitions.size() == 0) return newTransitionSeries;
 
@@ -367,12 +396,124 @@ public class TransitionSeries implements Iterable<Transition>, Comparable<Transi
 			}
 		}
 
-		)
+		);
 
-		;
+		newTransitionSeries.componentSeries.add(this);
+		newTransitionSeries.componentSeries.add(other);
 
 		return newTransitionSeries;
 
+	}
+
+	public int compareTo(TransitionSeries otherTS)
+	{
+
+		switch (mode)
+		{
+
+			case PRIMARY:
+			case PILEUP:
+
+				if (otherTS.element == element)
+				{
+					return - type.compareTo(otherTS.type);
+				}
+				else
+				{
+					return - element.compareTo(otherTS.element);
+				}
+
+			case SUMMATION:
+
+				Collections.sort(componentSeries);
+				Collections.sort(otherTS.componentSeries);
+
+				List<Integer> differences =
+					Functional.filter(Functional.zipWith(
+						componentSeries,
+						otherTS.componentSeries,
+						new Function2<TransitionSeries, TransitionSeries, Integer>() {
+	
+							public Integer f(TransitionSeries ts1, TransitionSeries ts2)
+							{
+								return ts1.compareTo(ts2);
+							}
+						}),
+						new Function1<Integer, Boolean>() {
+	
+							public Boolean f(Integer element)
+							{
+								return element != 0;
+							}
+						});
+				
+				if (differences.size() == 0) return 0;
+				return differences.get(0);
+
+		}
+		
+		return 0;
+
+	}
+
+
+	public boolean equals(Object oother)
+	{
+		
+		if (!(oother instanceof TransitionSeries)) return false;
+		TransitionSeries other = (TransitionSeries) oother;
+		
+		if (type != TransitionSeriesType.COMPOSITE){
+			if (other.element != this.element) return false;
+		}
+		
+		if (other.type != this.type) return false;
+		if (other.mode != this.mode) return false;
+
+		if (type == TransitionSeriesType.COMPOSITE)
+		{
+			Collections.sort(componentSeries);
+			Collections.sort(other.componentSeries);
+
+			if (!Functional.foldr(
+					Functional.zipWith(componentSeries, other.componentSeries, Functions.<TransitionSeries> equiv()),
+					Functions.and()
+				)) return false;
+		}
+
+		return true;
+
+	}
+	
+	
+	public int getPileupCount()
+	{
+		int count = 0;
+		if (mode == TransitionSeriesMode.PILEUP)
+		{
+			for (TransitionSeries ts : componentSeries)
+			{
+				count += ts.getPileupCount();
+			}
+			
+		} else if (mode == TransitionSeriesMode.PRIMARY)
+		{
+			count = 1;
+		}
+		
+		return count;
+	}
+	
+	public TransitionSeriesType getBaseType()
+	{
+				
+		if (mode == TransitionSeriesMode.PILEUP)
+		{
+			return componentSeries.get(0).getBaseType();
+			
+		} else {
+			return type;
+		}
 	}
 	
 }

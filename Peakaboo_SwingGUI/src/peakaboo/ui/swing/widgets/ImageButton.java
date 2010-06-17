@@ -21,12 +21,12 @@ import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
 
 
-public class ImageButton extends JButton
+public class ImageButton extends  JButton //JButton
 {
 
-	protected static Layout defaultLayout = Layout.IMAGE_ON_SIDE;
-	protected static IconSize defaultSize = IconSize.BUTTON;
-	protected static boolean defaultBorder = false;
+	public final static Layout defaultLayout = Layout.IMAGE_ON_SIDE;
+	public final static IconSize defaultSize = IconSize.BUTTON;
+	public final static boolean defaultBorder = false;
 	
 	public enum Layout
 	{
@@ -34,7 +34,6 @@ public class ImageButton extends JButton
 	}
 	
 	
-
 	private Color	originalBackground;
 	private boolean	showBorder;
 
@@ -123,13 +122,14 @@ public class ImageButton extends JButton
 		initialize(filename, text, tooltip, mode, showBorder, size, insets, border);
 	}
 
+	
 
 
 
 
-	private void initialize(String filename, String text, String tooltip, Layout mode, boolean _showBorder, IconSize size, Insets insets, Border border)
+	public void initialize(String filename, String text, String tooltip, Layout mode, boolean _showBorder, IconSize size, Insets insets, Border border)
 	{
-				
+		
 		originalBackground = this.getBackground();
 		this.showBorder = _showBorder;		
 
@@ -290,6 +290,8 @@ public class ImageButton extends JButton
 		if (border != null) super.setBorder(border);
 		
 		if (tooltip != null) this.setToolTipText(tooltip);
+		
+		
 
 	}
 	

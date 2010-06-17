@@ -50,6 +50,7 @@ public class AbstractFile
 			}
 			catch (FileNotFoundException e)
 			{
+				e.printStackTrace();
 				return null;
 			}
 		}

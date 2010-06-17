@@ -81,8 +81,8 @@ public class PlotModel extends Model
 		//filteredDataSet = DataTypeFactory.<Double> dataset();
 
 		// fittings
-		fittingSelections = new FittingSet(peakTable);
-		fittingProposals = new FittingSet(peakTable);
+		fittingSelections = new FittingSet();
+		fittingProposals = new FittingSet();
 		fittingSelectionResults = null;
 		fittingProposalResults = null;
 

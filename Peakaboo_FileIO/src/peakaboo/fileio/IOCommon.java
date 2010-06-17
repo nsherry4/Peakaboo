@@ -105,7 +105,7 @@ public class IOCommon
 
 
 	/**
-	 * Given a BufferedReader, it will return a String representation of the contents of the Reader
+	 * Given a BufferedReader, it will return a String representation of the contents of the Reader, and will close the BufferedReader
 	 * 
 	 * @param reader
 	 * @return the contents of the BufferedReader
@@ -113,6 +113,7 @@ public class IOCommon
 	public static String readerToString(BufferedReader reader)
 	{
 
+		if (reader == null) return "";
 		StringBuffer file = new StringBuffer();
 		String line;
 
@@ -136,6 +137,15 @@ public class IOCommon
 			return null;
 		}
 
+		try
+		{
+			reader.close();
+		}
+		catch (IOException e)
+		{
+
+		}
+		
 		return file.toString();
 
 	}

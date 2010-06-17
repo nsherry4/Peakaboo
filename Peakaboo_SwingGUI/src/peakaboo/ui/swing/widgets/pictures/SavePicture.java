@@ -105,8 +105,8 @@ public class SavePicture extends JDialog
 		buttonBox.setLayout(new BoxLayout(buttonBox, BoxLayout.LINE_AXIS));
 
 
-		JButton ok = new ImageButton("document-save", "Save", true);
-		JButton cancel = new ImageButton("cancel", "Cancel", true);
+		ImageButton ok = new ImageButton("document-save", "Save", true);
+		ImageButton cancel = new ImageButton("cancel", "Cancel", true);
 
 		ok.addActionListener(new ActionListener() {
 

@@ -98,7 +98,7 @@ public class AboutDialogue extends JDialog
 		JPanel buttonPanel = new JPanel();
 		
 		
-		JButton button = new ImageButton("about", "Credits", true);
+		ImageButton button = new ImageButton("about", "Credits", true);
 		button.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent arg0)

@@ -11,35 +11,36 @@ import peakaboo.datatypes.peaktable.TransitionSeriesType;
 public interface FittingController extends IEventful
 {
 
-	public void addElement(Element e);
-	public void addAllElements(List<Element> e);
-	public void removeElement(Element e);
-	public void clearElements();
+	public void addTransitionSeries(TransitionSeries e);
+	public void addAllTransitionSeries(List<TransitionSeries> e);
+	public void removeTransitionSeries(TransitionSeries e);
+	public void clearTransitionSeries();
 	
-	public List<Element> getFittedElements();
-	public List<Element> getUnfittedElements();
+	public List<TransitionSeries> getFittedTransitionSeries();
+	public List<TransitionSeries> getUnfittedTransitionSeries(TransitionSeriesType tst);
 	
-	public void setElementVisibility(Element e, boolean show);
-	public boolean getElementVisibility(Element e);
-	public List<Element> getVisibleElements();
+	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show);
+	public boolean getTransitionSeriesVisibility(TransitionSeries e);
+	public List<TransitionSeries> getVisibleTransitionSeries();
 	
+	public float getTransitionSeriesIntensity(TransitionSeries ts);
 	public List<TransitionSeriesType> getTransitionSeriesTypesForElement(Element e, boolean onlyInEnergyRange);
 	public TransitionSeries getTransitionSeriesForElement(Element e, TransitionSeriesType tst);
 	public float getTransitionSeriesIntensityForElement(Element e, TransitionSeriesType tst);
 	public float getIntensityForElement(Element e);
-	public void moveElementUp(Element e);
-	public void moveElementDown(Element e);
+	public void moveTransitionSeriesUp(TransitionSeries e);
+	public void moveTransitionSeriesDown(TransitionSeries e);
 	
 	public void fittingDataInvalidated();
 	
 	
 	
-	public void addProposedElement(Element e);
-	public void removeProposedElement(Element e);
-	public void clearProposedElements();
+	public void addProposedTransitionSeries(TransitionSeries e);
+	public void removeProposedTransitionSeries(TransitionSeries e);
+	public void clearProposedTransitionSeries();
 	
-	public List<Element> getProposedElements();
-	public void commitProposedElements();
+	public List<TransitionSeries> getProposedTransitionSeries();
+	public void commitProposedTransitionSeries();
 	
 	public void fittingProposalsInvalidated();	
 	

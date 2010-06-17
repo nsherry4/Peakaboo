@@ -310,12 +310,7 @@ public abstract class DataSetProvider
 	 */
 	public abstract String getEndTime();
 
-	
-	protected void finalize()
-	{
-		System.out.println("Discarding scan from: " + dataSourcePath);
-	}
-	
+		
 	public abstract void discard();
 	
 }

@@ -16,7 +16,7 @@ import peakaboo.ui.swing.widgets.ImageButton.Layout;
 public class FilterEditButtonRenderer extends JPanel implements TableCellRenderer
 {
 
-	private JButton	edit;
+	private ImageButton	edit;
 
 
 	public FilterEditButtonRenderer()

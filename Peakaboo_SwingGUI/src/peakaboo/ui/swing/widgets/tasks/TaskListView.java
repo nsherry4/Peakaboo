@@ -81,7 +81,7 @@ public class TaskListView extends JDialog {
 		c.weighty = 0.0;
 		c.gridy += 1;
 		c.anchor = GridBagConstraints.LAST_LINE_END;
-		JButton cancel = new ImageButton("cancel", "Cancel", true);
+		ImageButton cancel = new ImageButton("cancel", "Cancel", true);
 		cancel.setMargin(Spacing.iSmall());
 		cancel.addActionListener(new ActionListener() {
 		

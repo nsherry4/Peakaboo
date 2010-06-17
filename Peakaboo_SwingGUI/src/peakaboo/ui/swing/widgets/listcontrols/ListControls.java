@@ -3,12 +3,13 @@ package peakaboo.ui.swing.widgets.listcontrols;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
@@ -17,25 +18,33 @@ import peakaboo.ui.swing.widgets.ImageButton.Layout;
 public abstract class ListControls extends JPanel
 {
 
-	private JButton add, remove, clear, up, down;
+	private ImageButton add, remove, clear, up, down;
+	
+	private List<ListControlButton> customButtons;
 	
 	public enum ElementCount{NONE, ONE, MANY}
 	
-	public ListControls(){
-				
+	
+	public ListControls(String[] tooltips){
+		
+		customButtons = DataTypeFactory.<ListControlButton>list();
+		
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
-		add = new ImageButton("add", "Add", Layout.IMAGE);
-		add.setMargin(Spacing.iTiny());
+		String tooltip;
+		int tooltipCount = 0;
+		tooltip = (tooltips != null && tooltips.length > tooltipCount) ? tooltips[tooltipCount] : "";
+		add = new ImageButton("add", "Add", tooltip, Layout.IMAGE);
 		add.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
 				add();
 			}
 		});
-		
-		remove = new ImageButton("remove", "Remove", Layout.IMAGE);
-		remove.setMargin(Spacing.iTiny());
+
+		tooltipCount++;
+		tooltip = (tooltips != null && tooltips.length > tooltipCount) ? tooltips[tooltipCount] : "";
+		remove = new ImageButton("remove", "Remove", tooltip, Layout.IMAGE);
 		remove.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
@@ -43,8 +52,9 @@ public abstract class ListControls extends JPanel
 			}
 		});
 		
-		clear = new ImageButton("clear", "Clear", Layout.IMAGE);
-		clear.setMargin(Spacing.iTiny());
+		tooltipCount++;
+		tooltip = (tooltips != null && tooltips.length > tooltipCount) ? tooltips[tooltipCount] : "";
+		clear = new ImageButton("clear", "Clear", tooltip, Layout.IMAGE);
 		clear.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
@@ -52,12 +62,13 @@ public abstract class ListControls extends JPanel
 			}
 		});
 		
+		tooltipCount++;
+		tooltip = (tooltips != null && tooltips.length > tooltipCount) ? tooltips[tooltipCount] : "";
+		up = new ImageButton("go-up", "Up", tooltip, Layout.IMAGE);
 		
-		
-		up = new ImageButton("go-up", "Up", Layout.IMAGE);
-		up.setMargin(Spacing.iTiny());
-		down = new ImageButton("go-down", "Down", Layout.IMAGE);
-		down.setMargin(Spacing.iTiny());
+		tooltipCount++;
+		tooltip = (tooltips != null && tooltips.length > tooltipCount) ? tooltips[tooltipCount] : "";
+		down = new ImageButton("go-down", "Down", tooltip, Layout.IMAGE);
 		
 		
 		up.addActionListener(new ActionListener() {
@@ -76,19 +87,21 @@ public abstract class ListControls extends JPanel
 		});
 		
 		
-		
 		add(  add  );
 		add(  Box.createRigidArea(new Dimension(5,0))  );
 		add(  remove  );
 		add(  Box.createRigidArea(new Dimension(5,0))  );
 		add(  clear  );
-		add(  Box.createRigidArea(new Dimension(10,0))  );
+		add(  Box.createRigidArea(new Dimension(5,0))  );
 		add(  Box.createHorizontalGlue()  );
 		add(  up  );
 		add(  Box.createRigidArea(new Dimension(5,0))  );
 		add(  down  );
 		
+		
 		setBorder(Spacing.bSmall());
+		
+		setElementCount(ElementCount.NONE);
 
 	}
 	
@@ -120,6 +133,11 @@ public abstract class ListControls extends JPanel
 			
 		}
 		
+		for (ListControlButton button : customButtons)
+		{
+			button.setEnableState(ec);
+		}
+		
 	}
 	
 	protected abstract void add();
@@ -128,5 +146,16 @@ public abstract class ListControls extends JPanel
 	protected abstract void up();
 	protected abstract void down();
 	
+	
+	public void addButton(ListControlButton button, int index)
+	{
+				
+		add(button, index);
+		add(  Box.createRigidArea(new Dimension(5,0)), index+1 );		
+		
+		button.setEnableState(ElementCount.NONE);
+		
+		customButtons.add(button);
+	}
 	
 }

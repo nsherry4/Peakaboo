@@ -91,8 +91,10 @@ public class PeakTableReader
 			// TransitionType.esc, column++) );
 
 
+			Element e = Element.values()[atomicNumber];
+			
 			// K
-			TransitionSeries ts = new TransitionSeries(Element.values()[atomicNumber], TransitionSeriesType.K);
+			TransitionSeries ts = new TransitionSeries(e, TransitionSeriesType.K);
 
 			esc = createTransition(sections, column, TransitionType.esc);
 			column += elementDataWidth;
@@ -126,10 +128,10 @@ public class PeakTableReader
 			ts.setTransition(k3);
 
 			table.addSeries(ts);
-			table.addSeries(ts.pileup());
+			//table.addSeries(ts.pileup());
 
 
-			ts = new TransitionSeries(Element.values()[atomicNumber], TransitionSeriesType.L);
+			ts = new TransitionSeries(e, TransitionSeriesType.L);
 			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
 
 			esc = createTransition(sections, column, TransitionType.esc);
@@ -168,11 +170,11 @@ public class PeakTableReader
 
 			ts.setTransition(ll);
 
-			table.addSeries(ts);
+			if (e.atomicNumber() > 44) table.addSeries(ts);
 
 
 			
-			ts = new TransitionSeries(Element.values()[atomicNumber], TransitionSeriesType.M);
+			ts = new TransitionSeries(e, TransitionSeriesType.M);
 			Transition mz, ma1, mb1, mg, mn, unknown;
 
 			esc = createTransition(sections, column, TransitionType.esc);
@@ -198,7 +200,7 @@ public class PeakTableReader
 			ts.setTransition(mb1);
 			ts.setTransition(mg);
 
-			table.addSeries(ts);
+			if (e.atomicNumber() > 72) table.addSeries(ts);
 
 			atomicNumber++;
 

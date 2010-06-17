@@ -1,5 +1,7 @@
 package peakaboo.datatypes.peaktable;
 
+import java.io.Serializable;
+
 /**
  * 
  *  This class stores the information about a single transition as defined in the peak table
@@ -8,7 +10,7 @@ package peakaboo.datatypes.peaktable;
  */
 
 
-public class Transition implements Comparable<Transition>{
+public class Transition implements Serializable, Comparable<Transition>{
 
 	/**
 	 * The energy value of this transition -- where the peak will be centred

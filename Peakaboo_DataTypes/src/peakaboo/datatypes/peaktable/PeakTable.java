@@ -10,6 +10,7 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
 
 
 
@@ -93,6 +94,11 @@ public class PeakTable
 			}
 		});
 
+	}
+	
+	public List<TransitionSeries> getAllTransitionSeries()
+	{
+		return Functional.map(elementTransitions, Functions.<TransitionSeries>id());
 	}
 	
 }

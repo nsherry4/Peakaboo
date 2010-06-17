@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.functional.stock.Functions;
 
 
 
@@ -271,19 +272,19 @@ public class Functional
 
 	public static <T1> boolean include(List<T1> list, T1 item)
 	{
-		return (list.indexOf(item) != -1);
+		if (item == null) return false;
+		if (list == null) return false;
+		
+		return Functional.foldr(
+					Functional.map(list, Functions.equiv(item)), false,
+					Functions.or()
+				);
 	}
 
 
 	public static <T1> boolean include(List<T1> list, Function1<T1, Boolean> f)
 	{
-		return foldr(map(list, f), new Function2<Boolean, Boolean, Boolean>() {
-
-			public Boolean f(Boolean b1, Boolean b2)
-			{
-				return b1 || b2;
-			}
-		});
+		return foldr(map(list, f), Functions.or());
 	}
 
 

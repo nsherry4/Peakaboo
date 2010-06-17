@@ -27,6 +27,8 @@ import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
+import peakaboo.datatypes.functional.Function1;
+import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
@@ -57,7 +59,8 @@ import javax.jnlp.FileContents;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PlotController extends CanvasController implements FilterController, FittingController, SettingsController
+public class PlotController extends CanvasController implements FilterController, FittingController,
+		SettingsController
 {
 
 	private PlotModel			model;
@@ -139,10 +142,9 @@ public class PlotController extends CanvasController implements FilterController
 
 	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
-		
 
 		LocalDataSetProvider dataset = new LocalDataSetProvider();
-		//OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
+		// OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
 		final TaskList<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
@@ -179,8 +181,6 @@ public class PlotController extends CanvasController implements FilterController
 
 		return readTasks;
 
-
-		
 	}
 
 
@@ -448,7 +448,7 @@ public class PlotController extends CanvasController implements FilterController
 		{
 			plotPainters.add(new FittingSumPainter(model.fittingSelectionResults.totalFit, fittingSum, fitting));
 		}
-		if (getProposedElements().size() > 0)
+		if (getProposedTransitionSeries().size() > 0)
 		{
 			if (model.viewOptions.showIndividualFittings)
 			{
@@ -862,95 +862,98 @@ public class PlotController extends CanvasController implements FilterController
 
 	}
 
-	
+
 	// =============================================
 	// FITTING FUNCTIONS TO IMPLEMENT FittingController
 	// =============================================
-	public void addElement(Element e)
+	public void addTransitionSeries(TransitionSeries e)
 	{
-		model.fittingSelections.addElement(e);
+		if (e == null) return;
+		model.fittingSelections.addTransitionSeries(e);
 		fittingDataInvalidated();
 	}
 
 
-	public void addAllElements(List<Element> e)
+	public void addAllTransitionSeries(List<TransitionSeries> tss)
 	{
-		for (Element element : e)
+		for (TransitionSeries ts : tss)
 		{
-			model.fittingSelections.addElement(element);
+			model.fittingSelections.addTransitionSeries(ts);
 		}
 		fittingDataInvalidated();
 	}
 
 
-	public void clearElements()
+	public void clearTransitionSeries()
 	{
 		model.fittingSelections.clear();
 		fittingDataInvalidated();
 	}
 
 
-	public void removeElement(Element e)
+	public void removeTransitionSeries(TransitionSeries e)
 	{
 		model.fittingSelections.remove(e);
 		fittingDataInvalidated();
 	}
 
 
-	public List<Element> getFittedElements()
+	public List<TransitionSeries> getFittedTransitionSeries()
 	{
-		return model.fittingSelections.getFittedElements();
+		return model.fittingSelections.getFittedTransitionSeries();
 	}
 
 
-	public List<Element> getUnfittedElements()
+	public List<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
 	{
-		List<Element> fitted = getFittedElements();
 
-		List<Element> elements = DataTypeFactory.<Element> list();
+		final List<TransitionSeries> fitted = getFittedTransitionSeries();
+				
+		
+		return Functional.filter(model.peakTable.getAllTransitionSeries(), new Function1<TransitionSeries, Boolean>() {
 
-		for (Element e : Element.values())
-		{
-			elements.add(e);
-		}
+			@Override
+			public Boolean f(TransitionSeries ts)
+			{
+				return (! fitted.contains(ts)) && tst.equals(ts.type);
+			}
+		});
 
-		elements.removeAll(fitted);
-
-		return elements;
 	}
 
 
-	public void setElementVisibility(Element e, boolean show)
+	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show)
 	{
-		model.fittingSelections.setElementVisibility(e, show);
+		model.fittingSelections.setTransitionSeriesVisibility(e, show);
 		fittingDataInvalidated();
 	}
 
 
-	public boolean getElementVisibility(Element e)
+	public boolean getTransitionSeriesVisibility(TransitionSeries e)
 	{
-		return model.fittingSelections.getElementVisibilty(e);
+		return e.visible;
 	}
 
 
-	public List<Element> getVisibleElements()
+	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		List<Element> elements = model.fittingSelections.getFittedElements();
-		List<Element> visibleElements = DataTypeFactory.<Element> list();
 
-		for (Element e : elements)
-		{
-			if (getElementVisibility(e)) visibleElements.add(e);
-		}
+		return Functional.filter(getFittedTransitionSeries(), new Function1<TransitionSeries, Boolean>() {
 
-		return visibleElements;
+			@Override
+			public Boolean f(TransitionSeries ts)
+			{
+				return ts.visible;
+			}
+		});
 
 	}
 
 
 	public List<TransitionSeriesType> getTransitionSeriesTypesForElement(Element e, boolean onlyInEnergyRange)
 	{
-		List<TransitionSeries> tsl = model.fittingSelections.getTransitionSeries();
+
+		List<TransitionSeries> tsl = model.fittingSelections.getFittedTransitionSeries();
 		List<TransitionSeriesType> tst = DataTypeFactory.<TransitionSeriesType> list();
 
 		for (TransitionSeries ts : tsl)
@@ -973,7 +976,7 @@ public class PlotController extends CanvasController implements FilterController
 
 	public TransitionSeries getTransitionSeriesForElement(Element e, TransitionSeriesType tst)
 	{
-		List<TransitionSeries> tsl = model.fittingSelections.getTransitionSeries();
+		List<TransitionSeries> tsl = model.fittingSelections.getFittedTransitionSeries();
 
 		for (TransitionSeries ts : tsl)
 		{
@@ -985,6 +988,20 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
+	public float getTransitionSeriesIntensity(TransitionSeries ts)
+	{
+		regenerateCahcedData();
+
+		if (model.fittingSelectionResults == null) return 0.0f;
+
+		for (FittingResult result : model.fittingSelectionResults.fits)
+		{
+			if (result.transitionSeries == ts) return result.scaleFactor;
+		}
+		return 0.0f;
+
+	}
+	
 	public float getTransitionSeriesIntensityForElement(Element e, TransitionSeriesType tst)
 	{
 		regenerateCahcedData();
@@ -1016,16 +1033,16 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	public void moveElementUp(Element e)
+	public void moveTransitionSeriesUp(TransitionSeries e)
 	{
-		model.fittingSelections.moveElementUp(e);
+		model.fittingSelections.moveTransitionSeriesUp(e);
 		fittingDataInvalidated();
 	}
 
 
-	public void moveElementDown(Element e)
+	public void moveTransitionSeriesDown(TransitionSeries e)
 	{
-		model.fittingSelections.moveElementDown(e);
+		model.fittingSelections.moveTransitionSeriesDown(e);
 		fittingDataInvalidated();
 	}
 
@@ -1042,38 +1059,38 @@ public class PlotController extends CanvasController implements FilterController
 
 
 	// for showing potential elements - helps the user decide
-	public void addProposedElement(Element e)
+	public void addProposedTransitionSeries(TransitionSeries e)
 	{
-		model.fittingProposals.addElement(e);
+		model.fittingProposals.addTransitionSeries(e);
 		fittingProposalsInvalidated();
 	}
 
 
-	public void removeProposedElement(Element e)
+	public void removeProposedTransitionSeries(TransitionSeries e)
 	{
 		model.fittingProposals.remove(e);
 		fittingProposalsInvalidated();
 	}
 
 
-	public void clearProposedElements()
+	public void clearProposedTransitionSeries()
 	{
 		model.fittingProposals.clear();
 		fittingProposalsInvalidated();
 	}
 
 
-	public List<Element> getProposedElements()
+	public List<TransitionSeries> getProposedTransitionSeries()
 	{
-		return model.fittingProposals.getFittedElements();
+		return model.fittingProposals.getFittedTransitionSeries();
 	}
 
 
-	public void commitProposedElements()
+	public void commitProposedTransitionSeries()
 	{
-		for (Element e : model.fittingProposals.getFittedElements())
+		for (TransitionSeries e : model.fittingProposals.getFittedTransitionSeries())
 		{
-			model.fittingSelections.addElement(e);
+			model.fittingSelections.addTransitionSeries(e);
 		}
 		model.fittingProposals.clear();
 		fittingDataInvalidated();

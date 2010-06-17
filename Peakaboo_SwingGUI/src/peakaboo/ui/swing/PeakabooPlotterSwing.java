@@ -86,6 +86,7 @@ import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.Element;
+import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.AbstractFile;
@@ -134,9 +135,9 @@ public class PeakabooPlotterSwing
 	JSpinner		energy;
 	JSlider			zoomSlider;
 	JMenuItem		saveSession;
-	JButton			toolbarSnapshot;
-	JButton			toolbarMap;
-	JButton			toolbarInfo;
+	ImageButton		toolbarSnapshot;
+	ImageButton			toolbarMap;
+	ImageButton			toolbarInfo;
 	JPanel			zoomPanel;
 	JPanel			bottomPanel;
 	JPanel			scanSelector;
@@ -196,7 +197,7 @@ public class PeakabooPlotterSwing
 			snapshotMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
 
-			if (controller.getFittedElements().size() == 0 || controller.datasetScanCount() == 0)
+			if (controller.getFittedTransitionSeries().size() == 0 || controller.datasetScanCount() == 0)
 			{
 				mapMenuItem.setEnabled(false);
 				toolbarMap.setEnabled(false);
@@ -248,19 +249,17 @@ public class PeakabooPlotterSwing
 	private void actionOpenData()
 	{
 
-
 		List<AbstractFile> files = null;
 
 		if (OS.isWebStart())
 		{
 			// we're running client-side
 
-			
 			List<String> exts = new LinkedList<String>();
 			exts.add("xml");
 
 			files = IOCommon.openFiles("~/", exts);
-			
+
 		}
 		else
 		{
@@ -272,9 +271,8 @@ public class PeakabooPlotterSwing
 				}
 			});
 
-
 		}
-		
+
 		if (files != null)
 		{
 
@@ -401,85 +399,71 @@ public class PeakabooPlotterSwing
 	{
 
 		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
-		
-		List<Element> elements = controller.getFittedElements();
+
+		List<TransitionSeries> tss = controller.getFittedTransitionSeries();
 		float intensity;
-		
+
 		try
 		{
-			
+
 			if (OS.isWebStart())
 			{
-				
-				
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();				
+
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				OutputStreamWriter osw = new OutputStreamWriter(baos);
-				
-				
-				for (Element e : elements)
+
+				for (TransitionSeries ts : tss)
 				{
 
-					for (TransitionSeriesType tst : controller.getTransitionSeriesTypesForElement(e, true))
+					if (ts.visible)
 					{
-
-						if (controller.getTransitionSeriesForElement(e, tst).visible == false) continue;
-						intensity = controller.getTransitionSeriesIntensityForElement(e, tst);
-						osw.write(e.toString() + " " + tst.toString() + ", " + SigDigits.roundFloatTo(intensity, 2)
-								+ "\n");
+						intensity = controller.getTransitionSeriesIntensity(ts);
+						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
 					}
-
 				}
-				
+
 				osw.close();
-				
+
 				ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-				
+
 				List<String> list = new LinkedList<String>();
 				list.add("txt");
-				
+
 				IOCommon.saveFile("~/", "", list, bais);
-				
+
 			}
 			else
 			{
-				
+
 				String saveFile = SimpleIODialogues.chooseFileSave(
 						frame,
 						"Save Fitting Data to Text File",
 						savePictureFolder,
 						"txt",
 						"Text Files");
-				
+
 				if (saveFile != null)
 				{
 
-				
 					BufferedWriter writer = new BufferedWriter(new FileWriter(new File(saveFile)));
 					savePictureFolder = new File(saveFile).getParent();
 
-					
-					
-
-					for (Element e : elements)
+					for (TransitionSeries ts : tss)
 					{
 
-						for (TransitionSeriesType tst : controller.getTransitionSeriesTypesForElement(e, true))
+						if (ts.visible)
 						{
-
-							if (controller.getTransitionSeriesForElement(e, tst).visible == false) continue;
-							intensity = controller.getTransitionSeriesIntensityForElement(e, tst);
-							writer.write(e.toString() + " " + tst.toString() + ", " + SigDigits.roundFloatTo(intensity, 2)
-									+ "\n");
+							intensity = controller.getTransitionSeriesIntensity(ts);
+							writer.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
 						}
-
 					}
 
 					writer.flush();
 					writer.close();
 				}
-			
+
 			}
-			
+
 		}
 		catch (FileNotFoundException e)
 		{
@@ -691,15 +675,16 @@ public class PeakabooPlotterSwing
 		c.weighty = 0;
 		c.fill = GridBagConstraints.NONE;
 
-		JButton button = new ToolbarImageButton("document-open", "Open", "Open a new data set");
-		button.addActionListener(new ActionListener() {
+		JButton button;
+		ImageButton ibutton = new ToolbarImageButton("document-open", "Open", "Open a new data set");
+		ibutton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
 				actionOpenData();
 			}
 		});
-		toolbar.add(button, c);
+		toolbar.add(ibutton, c);
 
 		button = new JButton("Export Data");
 		// controls.add(button);
@@ -786,8 +771,8 @@ public class PeakabooPlotterSwing
 		c.gridx += 1;
 		toolbar.add(energyControls, c);
 
-		button = new ToolbarImageButton("about", "About");
-		button.addActionListener(new ActionListener() {
+		ibutton = new ToolbarImageButton("about", "About");
+		ibutton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
@@ -795,7 +780,7 @@ public class PeakabooPlotterSwing
 			}
 		});
 		c.gridx += 1;
-		toolbar.add(button, c);
+		toolbar.add(ibutton, c);
 
 	}
 
@@ -1246,8 +1231,8 @@ public class PeakabooPlotterSwing
 		JPanel panel = new ClearPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-		JButton out = new ImageButton("zoom-out", "Zoom Out", Layout.IMAGE);
-		JButton in = new ImageButton("zoom-in", "Zoom In", Layout.IMAGE);
+		ImageButton out = new ImageButton("zoom-out", "Zoom Out", Layout.IMAGE);
+		ImageButton in = new ImageButton("zoom-in", "Zoom In", Layout.IMAGE);
 
 		in.setMargin(Spacing.iNone());
 		out.setMargin(Spacing.iNone());

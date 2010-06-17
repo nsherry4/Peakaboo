@@ -24,6 +24,8 @@ public class IconFactory {
 		return getImageIcon(imageName, IconSize.BUTTON);
 	}
 	
+	
+	
 	public static ImageIcon getImageIcon(String imageName, IconSize size){
 		
 	
@@ -36,6 +38,8 @@ public class IconFactory {
 		} else {
 			image = new ImageIcon(url);
 		}
+		
+		
 		
 		return image;
 		

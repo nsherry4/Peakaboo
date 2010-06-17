@@ -15,6 +15,8 @@ import java.io.Serializable;
 public enum Element implements Serializable
 {
 
+	
+	
 	H {
 
 		@Override
@@ -814,5 +816,10 @@ public enum Element implements Serializable
 		{
 			return "Fermium";
 		}
+	};
+	
+	public int atomicNumber()
+	{
+		return this.ordinal()+1;
 	}
 }

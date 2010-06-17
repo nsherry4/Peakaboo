@@ -13,6 +13,7 @@ import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Function2;
 import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.PainterData;
@@ -135,15 +136,9 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		else
 		{
 			
-			String markingsText;
-			//concatenate the list of strings to display so we can check the width of the total string
-			markingsText = Functional.foldr(markings, "", new Function2<Pair<Float, String>, String, String>() {
 
-				public String f(Pair<Float, String> marking, String str)
-				{
-					return str + marking.second;
-				}
-			}) + "";
+			//concatenate the list of strings to display so we can check the width of the total string
+			String markingsText = Functional.foldr(Functional.map(markings, Functions.<Float, String>second()), Functions.concat(" "));
 			//keep shrinking the font size until all of the text until the font size is small enough that it fits
 			while (width > 0.0 && fontSize > 1.0)
 			{

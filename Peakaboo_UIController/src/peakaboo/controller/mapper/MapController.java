@@ -642,7 +642,7 @@ public class MapController extends CanvasController
 
 				spectrumCoordPainter = new SpectrumCoordsAxisPainter(
 
-					mapModel.viewOptions.drawCoordinates,
+				mapModel.viewOptions.drawCoordinates,
 					mapModel.viewOptions.topLeftCoord,
 					mapModel.viewOptions.topRightCoord,
 					mapModel.viewOptions.bottomLeftCoord,
@@ -665,7 +665,7 @@ public class MapController extends CanvasController
 
 				float redMax = Functional.fold(
 
-						activeTabData.getTransitionSeriesForColour(OverlayColor.RED),
+				activeTabData.getTransitionSeriesForColour(OverlayColor.RED),
 						0f,
 						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
@@ -678,7 +678,7 @@ public class MapController extends CanvasController
 
 				float greenMax = Functional.fold(
 
-						activeTabData.getTransitionSeriesForColour(OverlayColor.GREEN),
+				activeTabData.getTransitionSeriesForColour(OverlayColor.GREEN),
 						0f,
 						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
@@ -691,7 +691,7 @@ public class MapController extends CanvasController
 
 				float blueMax = Functional.fold(
 
-						activeTabData.getTransitionSeriesForColour(OverlayColor.BLUE),
+				activeTabData.getTransitionSeriesForColour(OverlayColor.BLUE),
 						0f,
 						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
@@ -708,7 +708,7 @@ public class MapController extends CanvasController
 
 				spectrumCoordPainter = new LegendCoordsAxisPainter(
 
-					mapModel.viewOptions.drawCoordinates,
+				mapModel.viewOptions.drawCoordinates,
 					mapModel.viewOptions.topLeftCoord,
 					mapModel.viewOptions.topRightCoord,
 					mapModel.viewOptions.bottomLeftCoord,
@@ -722,45 +722,58 @@ public class MapController extends CanvasController
 					"Colour",
 
 					// create a list of color,string pairs for the legend by mapping the list of transitionseries per
-					// colour
-					Functional.map(
+					// colour and filter for empty strings
+					Functional.filter(
+							Functional.map(
 
-					// input list - get a unique list of colours in use
+							// input list - get a unique list of colours in use
 
-							Functional.unique(activeTabData.overlayColour.values()),
+									Functional.unique(activeTabData.overlayColour.values()),
 
-							// mapping function - convert the color objects into color,string pairs (ie color/element
-							// list)
-							new Function1<OverlayColor, Pair<Color, String>>() {
+									// mapping function - convert the color objects into color,string pairs (ie
+									// color/element
+									// list)
+									new Function1<OverlayColor, Pair<Color, String>>() {
+
+										@Override
+										public Pair<Color, String> f(OverlayColor element)
+									{
+										// create a color,string pair
+										return new Pair<Color, String>(
+
+										element.toColor(),
+
+										// fold the list of transition series using the concat operator
+											Functional.foldr(
+
+											// map the list of transitionSeries, list double pairs to just
+											// transitionseries
+													Functional.map(
+															activeTabData.getTransitionSeriesForColour(element),
+															Functions.<TransitionSeries, Spectrum> first()),
+													"",
+													new Function2<TransitionSeries, String, String>() {
+
+														@Override
+														public String f(TransitionSeries ts, String title)
+														{
+															return title + (title.equals("") ? "" : ", ")
+																	+ ts.toElementString();
+														}
+													})
+
+										);
+									}
+									}),
+
+							// filter for empty strings
+							new Function1<Pair<Color, String>, Boolean>() {
 
 								@Override
-								public Pair<Color, String> f(OverlayColor element)
-								{
-									// create a color,string pair
-									return new Pair<Color, String>(
-
-									element.toColor(),
-
-									// fold the list of transition series using the concat operator
-										Functional.foldr(
-
-										// map the list of transitionSeries, list double pairs to just transitionseries
-												Functional.map(
-														activeTabData.getTransitionSeriesForColour(element),
-														Functions.<TransitionSeries, Spectrum> first()),
-												"",
-												new Function2<TransitionSeries, String, String>() {
-
-													@Override
-													public String f(TransitionSeries ts, String title)
-													{
-														return title + (title.equals("") ? "" : ", ")
-																+ ts.toElementString();
-													}
-												})
-
-									);
-								}
+								public Boolean f(Pair<Color, String> element)
+									{
+										return !element.second.isEmpty();
+									}
 							})
 
 				);
@@ -768,6 +781,9 @@ public class MapController extends CanvasController
 				break;
 
 			case RATIO:
+
+				List<Integer> ratioSideValues = Functional.unique(activeTabData.ratioSide.values());
+				boolean validRatio = (ratioSideValues.contains(1) && ratioSideValues.contains(2));
 
 				float steps = (float) Math.ceil(SpectrumCalculations.max(SpectrumCalculations
 					.abs(activeTabData.resultantData.get(0).second)));
@@ -781,21 +797,25 @@ public class MapController extends CanvasController
 				int increment = 1;
 				if (steps > 100) increment = (int) Math.ceil(steps / 100);
 
-				for (int i = -(int) steps; i <= (int) steps; i += increment)
+				
+				if (validRatio)
 				{
-					float percent = 0.5f + 0.5f * (((float) i) / steps);
+					for (int i = -(int) steps; i <= (int) steps; i += increment)
+					{
+						float percent = 0.5f + 0.5f * (((float) i) / steps);
 
-					/*
-					 * int ratioValue = (int)Math.pow(10, Math.abs(i)); String ratio = ""; if (i < 0) ratio = "1:" +
-					 * ratioValue; if (i > 0) ratio = ratioValue + ":1"; if (i == 0) ratio = "1:1";
-					 */
+						/*
+						 * int ratioValue = (int)Math.pow(10, Math.abs(i)); String ratio = ""; if (i < 0) ratio = "1:" +
+						 * ratioValue; if (i > 0) ratio = ratioValue + ":1"; if (i == 0) ratio = "1:1";
+						 */
 
-					spectrumMarkers.add(new Pair<Float, String>(percent, Ratios.fromFloat(i, true)));
+						spectrumMarkers.add(new Pair<Float, String>(percent, Ratios.fromFloat(i, true)));
+					}
 				}
 
 				spectrumCoordPainter = new SpectrumCoordsAxisPainter(
 
-					mapModel.viewOptions.drawCoordinates,
+				mapModel.viewOptions.drawCoordinates,
 					mapModel.viewOptions.topLeftCoord,
 					mapModel.viewOptions.topRightCoord,
 					mapModel.viewOptions.bottomLeftCoord,
@@ -976,10 +996,6 @@ public class MapController extends CanvasController
 	{
 		map.needsMapRepaint();
 	}
-	
-	protected void finalize()
-	{
-		System.out.println("map controller finalized");
-	}
+
 
 }

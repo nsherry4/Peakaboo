@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import peakaboo.controller.plotter.PlotModel;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.Element;
+import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.filters.AbstractFilter;
 
 /**
@@ -50,10 +51,10 @@ public class Settings
 			if (read == null) return;
 			data = (SerializedData) read;
 
-			// load elements
+			// load transition series
 			model.fittingSelections.clear();
-			for (Element e : data.elements) {
-				model.fittingSelections.addElement(e);
+			for (TransitionSeries ts : data.fittings) {
+				model.fittingSelections.addTransitionSeries(ts);
 			}
 
 			// load filters
@@ -97,11 +98,12 @@ public class Settings
 		ObjectOutputStream out = null;
 
 		SerializedData data = new SerializedData();
-		data.elements = model.fittingSelections.getFittedElements();
+		data.fittings = model.fittingSelections.getFittedTransitionSeries();
 		data.filters = DataTypeFactory.<AbstractFilter> list();
 		for (AbstractFilter f : model.filters) {
 			data.filters.add(f);
 		}
+		
 		data.dr = model.dr;
 		data.viewOptions = model.viewOptions;
 

@@ -20,7 +20,7 @@ import peakaboo.ui.swing.widgets.ImageButton.Layout;
 class FilterEditButtonEditor extends DefaultCellEditor
 {
 
-	protected JButton		button;
+	protected ImageButton		button;
 	private JFrame			owner;
 
 	private AbstractFilter	filter;

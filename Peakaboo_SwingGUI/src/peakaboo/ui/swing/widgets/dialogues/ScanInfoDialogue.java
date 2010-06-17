@@ -84,7 +84,7 @@ public class ScanInfoDialogue extends JDialog
 		c.ipady = 0;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.LINE_END;
-		JButton close = new ImageButton("close", "Close", true);
+		ImageButton close = new ImageButton("close", "Close", true);
 		close.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e)
