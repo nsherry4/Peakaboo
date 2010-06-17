@@ -31,11 +31,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.security.KeyStore.LoadStoreParameter;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Stack;
 
 import javax.jnlp.FileContents;
 import javax.jnlp.FileOpenService;
@@ -92,6 +94,7 @@ import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon;
 import peakaboo.mapping.MapResultSet;
+import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.filters.FiltersetViewer;
 import peakaboo.ui.swing.fitting.CurveFittingView;
 import peakaboo.ui.swing.icons.IconFactory;
@@ -119,31 +122,34 @@ import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
 public class PeakabooPlotterSwing
 {
 
-	String			savedSessionFileName;
+	String									savedSessionFileName;
 
-	PlotController	controller;
+	PlotController							controller;
 
-	PlotCanvas		canvas;
-	JComboBox		titleCombo;
-	JFrame			frame;
-	JSpinner		scanNo;
-	JLabel			scanLabel;
-	JToggleButton	scanBlock;
-	JLabel			channelLabel;
-	JMenuItem		mapMenuItem;
-	JMenuItem		snapshotMenuItem;
-	JSpinner		energy;
-	JSlider			zoomSlider;
-	JMenuItem		saveSession;
-	ImageButton		toolbarSnapshot;
-	ImageButton			toolbarMap;
-	ImageButton			toolbarInfo;
-	JPanel			zoomPanel;
-	JPanel			bottomPanel;
-	JPanel			scanSelector;
-	JScrollPane		scrolledCanvas;
+	PlotCanvas								canvas;
+	JComboBox								titleCombo;
+	JFrame									frame;
+	JSpinner								scanNo;
+	JLabel									scanLabel;
+	JToggleButton							scanBlock;
+	JLabel									channelLabel;
+	JMenuItem								mapMenuItem;
+	JMenuItem								snapshotMenuItem;
 
-	String			savePictureFolder;
+	JMenuItem								undo, redo;
+
+	JSpinner								energy;
+	JSlider									zoomSlider;
+	JMenuItem								saveSession;
+	ImageButton								toolbarSnapshot;
+	ImageButton								toolbarMap;
+	ImageButton								toolbarInfo;
+	JPanel									zoomPanel;
+	JPanel									bottomPanel;
+	JPanel									scanSelector;
+	JScrollPane								scrolledCanvas;
+
+	String									savePictureFolder;
 
 
 	public PeakabooPlotterSwing()
@@ -161,6 +167,7 @@ public class PeakabooPlotterSwing
 
 		frame.setPreferredSize(new Dimension(1000, 470));
 		initGUI();
+
 
 		controller.addListener(new PeakabooMessageListener() {
 
@@ -217,7 +224,8 @@ public class PeakabooPlotterSwing
 				toolbarInfo.setEnabled(false);
 			}
 
-			energy.setValue((double) controller.getMaxEnergy());
+			setEnergySpinner((double)controller.getMaxEnergy());
+			
 
 			if (controller.getChannelCompositeType() == ChannelCompositeMode.NONE)
 			{
@@ -238,6 +246,9 @@ public class PeakabooPlotterSwing
 			bottomPanel.setEnabled(false);
 		}
 
+		undo.setEnabled(controller.canUndo());
+		redo.setEnabled(controller.canRedo());
+
 		zoomSlider.setValue((int) (controller.getZoom() * 100.0));
 		setTitleBar();
 
@@ -246,255 +257,19 @@ public class PeakabooPlotterSwing
 	}
 
 
-	private void actionOpenData()
+	private void setEnergySpinner(double value)
 	{
-
-		List<AbstractFile> files = null;
-
-		if (OS.isWebStart())
-		{
-			// we're running client-side
-
-			List<String> exts = new LinkedList<String>();
-			exts.add("xml");
-
-			files = IOCommon.openFiles("~/", exts);
-
+		//dont let the listeners get wind of this change
+		ChangeListener[] listeners = energy.getChangeListeners();
+		for (ChangeListener listener : listeners){
+			energy.removeChangeListener(listener);
 		}
-		else
-		{
-			files = Functional.map(openNewDataset(), new Function1<String, AbstractFile>() {
-
-				public AbstractFile f(String element)
-				{
-					return new AbstractFile(element);
-				}
-			});
-
-		}
-
-		if (files != null)
-		{
-
-			TaskList<Boolean> reading = controller.TASK_readFileListAsDataset(files);
-			new TaskListView(frame, reading);
-			// TaskListView was blocking.. it is now closed
-			System.gc();
-
-			// set some controls based on the fact that we have just loaded a
-			// new data set
-			savedSessionFileName = null;
-			saveSession.setEnabled(false);
-
-		}
-
-	}
-
-
-	private void actionMap()
-	{
-		if (controller.hasDataSet())
-		{
-
-			TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
-			if (tasks == null) return;
-			new TaskListView(frame, tasks);
-
-			if (!tasks.isAborted())
-			{
-
-				MapController mapController = controller.getMapController();
-				PeakabooMapperSwing mapperWindow;
-
-				Coord<Integer> dataDimensions = controller.getDataDimensions();
-
-				MapResultSet results = tasks.getResult();
-				AllMapsModel datamodel = new AllMapsModel(results);
-
-				datamodel.dataDimensions = dataDimensions;
-				datamodel.dimensionsProvided = controller.hasDimensions();
-				datamodel.badPoints = controller.getDiscardedScanList();
-				datamodel.realDimensions = controller.getRealDimensions();
-				datamodel.realDimensionsUnits = controller.getRealDimensionsUnits();
-
-				if (mapController == null)
-				{
-
-					mapperWindow = new PeakabooMapperSwing(
-						frame,
-						datamodel,
-						controller.getDatasetName(),
-						true,
-						controller.getDataSourceFolder(),
-						dataDimensions,
-						results);
-
-				}
-				else
-				{
-
-					int dy = mapController.getDataHeight();
-					int dx = mapController.getDataWidth();
-
-					// if the data does not match size, discard it. either it was from
-					// a funny data set that isn't square or (more likely) they reloaded the
-					// data set
-					// TODO: invistigate -- is it easier to null the mapController pointer when
-					// loading new data and assume the data is the same size otherwise?
-					if (dataDimensions.x * dataDimensions.y == dx * dy)
-					{
-						dataDimensions.x = dx;
-						dataDimensions.y = dy;
-					}
-
-					mapperWindow = new PeakabooMapperSwing(
-						frame,
-						datamodel,
-						controller.getDatasetName(),
-						true,
-						controller.getDataSourceFolder(),
-						dataDimensions,
-						results);
-				}
-
-				mapperWindow.showDialog();
-				// controller.setMapController(mapperWindow.showDialog());
-				System.gc();
-			}
+		energy.setValue((double) controller.getMaxEnergy());
+		for (ChangeListener listener : listeners){
+			energy.addChangeListener(listener);
 		}
 	}
-
-
-	private void actionSaveSession(boolean forceSaveAs)
-	{
-
-		if (savedSessionFileName == null || forceSaveAs)
-		{
-
-			String filename = getSavePreferencesFile();
-			if (filename != null)
-			{
-				if (!filename.endsWith(".peakaboo")) filename += ".peakaboo";
-				controller.savePreferences(filename);
-				savedSessionFileName = filename;
-				saveSession.setEnabled(true);
-			}
-		}
-		else
-		{
-			controller.savePreferences(savedSessionFileName);
-		}
-
-	}
-
-
-	private void actionSavePicture()
-	{
-		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
-		savePictureFolder = new SavePicture(frame, controller, savePictureFolder).getStartingFolder();
-	}
-
-
-	private void actionSaveFittingInformation()
-	{
-
-		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
-
-		List<TransitionSeries> tss = controller.getFittedTransitionSeries();
-		float intensity;
-
-		try
-		{
-
-			if (OS.isWebStart())
-			{
-
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				OutputStreamWriter osw = new OutputStreamWriter(baos);
-
-				for (TransitionSeries ts : tss)
-				{
-
-					if (ts.visible)
-					{
-						intensity = controller.getTransitionSeriesIntensity(ts);
-						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
-					}
-				}
-
-				osw.close();
-
-				ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-
-				List<String> list = new LinkedList<String>();
-				list.add("txt");
-
-				IOCommon.saveFile("~/", "", list, bais);
-
-			}
-			else
-			{
-
-				String saveFile = SimpleIODialogues.chooseFileSave(
-						frame,
-						"Save Fitting Data to Text File",
-						savePictureFolder,
-						"txt",
-						"Text Files");
-
-				if (saveFile != null)
-				{
-
-					BufferedWriter writer = new BufferedWriter(new FileWriter(new File(saveFile)));
-					savePictureFolder = new File(saveFile).getParent();
-
-					for (TransitionSeries ts : tss)
-					{
-
-						if (ts.visible)
-						{
-							intensity = controller.getTransitionSeriesIntensity(ts);
-							writer.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
-						}
-					}
-
-					writer.flush();
-					writer.close();
-				}
-
-			}
-
-		}
-		catch (FileNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-
-	public void actionLoadSession()
-	{
-		String filename = getLoadPreferencesFile();
-		if (filename != null) controller.loadPreferences(filename);
-		savedSessionFileName = filename;
-		saveSession.setEnabled(true);
-	}
-
-
-	public void actionShowInfo()
-	{
-
-		new ScanInfoDialogue(frame, controller);
-
-	}
-
+	
 
 	private void initGUI()
 	{
@@ -763,6 +538,8 @@ public class PeakabooPlotterSwing
 			public void stateChanged(ChangeEvent e)
 			{
 
+				System.out.println("***************************");
+				
 				float value = ((Double) energy.getValue()).floatValue();
 				controller.setMaxEnergy(value);
 
@@ -825,16 +602,10 @@ public class PeakabooPlotterSwing
 					actionSaveFittingInformation();
 
 				}
-				else if (command == "Save Session")
+				else if (command == "Save Session...")
 				{
 
-					actionSaveSession(false);
-
-				}
-				else if (command == "Save Session As...")
-				{
-
-					actionSaveSession(true);
+					actionSaveSession();
 
 				}
 				else if (command == "Load Session...")
@@ -868,12 +639,7 @@ public class PeakabooPlotterSwing
 
 		menu.addSeparator();
 
-		saveSession = new JMenuItem("Save Session", IconFactory.getMenuIcon("document-save"));
-		saveSession.addActionListener(fileMenuListener);
-		menu.add(saveSession);
-		saveSession.setEnabled(false);
-
-		menuItem = new JMenuItem("Save Session As...", IconFactory.getMenuIcon("document-save-as"));
+		menuItem = new JMenuItem("Save Session...", IconFactory.getMenuIcon("document-save-as"));
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
 
@@ -881,15 +647,6 @@ public class PeakabooPlotterSwing
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
 
-		// SEPARATOR
-		/*
-		 * menu.addSeparator();
-		 * 
-		 * menuItem = new JMenuItem("Export Data as Compressed File");
-		 * menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, java.awt.event.ActionEvent.CTRL_MASK));
-		 * menuItem.setMnemonic(KeyEvent.VK_E); menuItem.getAccessibleContext().setAccessibleDescription(
-		 * "Opens new data sets."); menuItem.addActionListener(fileMenuListener); menu.add(menuItem);
-		 */
 
 		// SEPARATOR
 		menu.addSeparator();
@@ -916,6 +673,56 @@ public class PeakabooPlotterSwing
 		menu.add(menuItem);
 
 		menuBar.add(menu);
+
+
+
+
+
+
+
+
+
+		// EDIT Menu
+		menu = new JMenu("Edit");
+		menu.setMnemonic(KeyEvent.VK_E);
+		menu.getAccessibleContext().setAccessibleDescription("Edit this data set");
+
+
+		undo = new JMenuItem("Undo", IconFactory.getMenuIcon("undo"));
+		undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, java.awt.event.ActionEvent.CTRL_MASK));
+		undo.setMnemonic(KeyEvent.VK_U);
+		undo.getAccessibleContext().setAccessibleDescription("Undoes a previous action");
+		undo.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.undo();
+			}
+		});
+		menu.add(undo);
+
+
+		redo = new JMenuItem("Redo", IconFactory.getMenuIcon("redo"));
+		redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, java.awt.event.ActionEvent.CTRL_MASK));
+		redo.setMnemonic(KeyEvent.VK_R);
+		redo.getAccessibleContext().setAccessibleDescription("Redoes a previously undone action");
+		redo.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.redo();
+			}
+		});
+		menu.add(redo);
+
+
+
+		menuBar.add(menu);
+
+
+
+
+
 
 		// VIEW Menu
 		menu = new JMenu("View");
@@ -1288,75 +1095,16 @@ public class PeakabooPlotterSwing
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
 	// data set, and returns it to the caller
-	public List<String> openNewDataset()
+	public List<AbstractFile> openNewDataset(String[] exts, String desc)
 	{
-
-		JFileChooser chooser = new JFileChooser(controller.getDataSourceFolder());
-		chooser.setMultiSelectionEnabled(true);
-
-		chooser.setDialogTitle("Select Data Files to Open");
-
-		// Note: source for ExampleFileFilter can be found in FileChooserDemo,
-		// under the demo/jfc directory in the JDK.
-		SimpleFileFilter filter = new SimpleFileFilter();
-		filter.addExtension("xml");
-		// filter.addExtension("_spectra.dat");
-		filter.addExtension("zip");
-		filter.setDescription("All Readable Formats");
-		chooser.setFileFilter(filter);
-
-		int returnVal = chooser.showOpenDialog(frame);
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-		{
-
-			File[] filenameArray = chooser.getSelectedFiles();
-
-			List<String> filenames = new ArrayList<String>(filenameArray.length);
-			for (int i = 0; i < filenameArray.length; i++)
-			{
-				filenames.add(filenameArray[i].toString());
-			}
-
-			return filenames;
-
-		}
-		else
-		{
-
-			return null;
-
-		}
-
-	}
-
-
-	public String getSavePreferencesFile()
-	{
-
-		return SimpleIODialogues.chooseFileSave(
-				frame,
-				"Save This Peakaboo Session",
-				controller.getDataSourceFolder(),
-				"peakaboo",
-				"Saved Peakaboo Sessions");
-
-	}
-
-
-	public String getLoadPreferencesFile()
-	{
-		return SimpleIODialogues.chooseFileOpen(
-				frame,
-				"Select Peakaboo Session File",
-				controller.getDataSourceFolder(),
-				"peakaboo",
-				"Saved Peakaboo Sessions");
+		return SwingIO.openFiles(frame, "Select Data Files to Open", exts, desc, controller.getDataSourceFolder());
 	}
 
 
 	/*
-	 * ======================================== METHODS FOR HANDLING CANVAS EVENTS
-	 * ========================================
+	 * ===================================================================
+	 * METHODS FOR HANDLING CANVAS EVENTS
+	 * ===================================================================
 	 */
 	public void paintCanvasEvent(Graphics g)
 	{
@@ -1407,6 +1155,236 @@ public class PeakabooPlotterSwing
 			channelLabel.setText("View Type: " + controller.getChannelCompositeType().toString() + sep + "Channel: "
 					+ "-");
 		}
+	}
+
+
+
+
+
+
+
+
+
+
+	// ////////////////////////////////////////////////////////
+	// UI ACTIONS
+	// ////////////////////////////////////////////////////////
+
+	private void actionOpenData()
+	{
+
+		List<AbstractFile> files;
+
+		String[] exts;
+		if (OS.isWebStart())
+		{
+			exts = new String[] { "xml" };
+		}
+		else
+		{
+			exts = new String[] { "xml", "zip" };
+		}
+
+		files = openNewDataset(exts, "XRF Data Sets");
+
+		if (files != null)
+		{
+
+			TaskList<Boolean> reading = controller.TASK_readFileListAsDataset(files);
+			new TaskListView(frame, reading);
+			// TaskListView was blocking.. it is now closed
+			System.gc();
+
+			// set some controls based on the fact that we have just loaded a
+			// new data set
+			savedSessionFileName = null;
+
+		}
+
+	}
+
+
+	private void actionMap()
+	{
+		if (controller.hasDataSet())
+		{
+
+			TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
+			if (tasks == null) return;
+			new TaskListView(frame, tasks);
+
+			if (!tasks.isAborted())
+			{
+
+				MapController mapController = controller.getMapController();
+				PeakabooMapperSwing mapperWindow;
+
+				Coord<Integer> dataDimensions = controller.getDataDimensions();
+
+				MapResultSet results = tasks.getResult();
+				AllMapsModel datamodel = new AllMapsModel(results);
+
+				datamodel.dataDimensions = dataDimensions;
+				datamodel.dimensionsProvided = controller.hasDimensions();
+				datamodel.badPoints = controller.getDiscardedScanList();
+				datamodel.realDimensions = controller.getRealDimensions();
+				datamodel.realDimensionsUnits = controller.getRealDimensionsUnits();
+
+				if (mapController == null)
+				{
+
+					mapperWindow = new PeakabooMapperSwing(
+						frame,
+						datamodel,
+						controller.getDatasetName(),
+						true,
+						controller.getDataSourceFolder(),
+						dataDimensions,
+						results);
+
+				}
+				else
+				{
+
+					int dy = mapController.getDataHeight();
+					int dx = mapController.getDataWidth();
+
+					// if the data does not match size, discard it. either it was from
+					// a funny data set that isn't square or (more likely) they reloaded the
+					// data set
+					// TODO: invistigate -- is it easier to null the mapController pointer when
+					// loading new data and assume the data is the same size otherwise?
+					if (dataDimensions.x * dataDimensions.y == dx * dy)
+					{
+						dataDimensions.x = dx;
+						dataDimensions.y = dy;
+					}
+
+					mapperWindow = new PeakabooMapperSwing(
+						frame,
+						datamodel,
+						controller.getDatasetName(),
+						true,
+						controller.getDataSourceFolder(),
+						dataDimensions,
+						results);
+				}
+
+				mapperWindow.showDialog();
+				// controller.setMapController(mapperWindow.showDialog());
+				System.gc();
+			}
+		}
+	}
+
+
+	private void actionSaveSession()
+	{
+
+		try
+		{
+			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();
+			controller.savePreferences(baos);
+			savedSessionFileName = SwingIO.saveFile(
+					frame,
+					"Save Session Data",
+					"peakaboo",
+					"Peakaboo Session File",
+					savedSessionFileName,
+					baos);
+			baos.close();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+
+	private void actionSavePicture()
+	{
+		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
+		savePictureFolder = new SavePicture(frame, controller, savePictureFolder).getStartingFolder();
+	}
+
+
+	private void actionSaveFittingInformation()
+	{
+
+		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
+
+		List<TransitionSeries> tss = controller.getFittedTransitionSeries();
+		float intensity;
+
+		try
+		{
+
+			// get an output stream to write the data to
+			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();
+			OutputStreamWriter osw = new OutputStreamWriter(baos);
+
+			// write out the data
+			for (TransitionSeries ts : tss)
+			{
+
+				if (ts.visible)
+				{
+					intensity = controller.getTransitionSeriesIntensity(ts);
+					osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+				}
+			}
+			osw.close();
+
+			// save the contents of the output stream to a file.
+			savePictureFolder = SwingIO.saveFile(
+					frame,
+					"Save Fitting Data to Text File",
+					"txt",
+					"Text File",
+					savePictureFolder,
+					baos);
+
+
+
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+
+	public void actionLoadSession()
+	{
+
+		try
+		{
+			AbstractFile af = SwingIO.openFile(
+					frame,
+					"Load Session Data",
+					new String[] { "peakaboo" },
+					"Peakaboo Session Data",
+					savedSessionFileName);
+			if (af != null) controller.loadPreferences(af.getInputStream(), false);
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+
+	public void actionShowInfo()
+	{
+
+		new ScanInfoDialogue(frame, controller);
+
 	}
 
 }

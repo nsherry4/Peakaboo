@@ -9,10 +9,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.Collections;
 import java.util.List;
 
 import javax.jnlp.FileContents;
@@ -314,14 +310,14 @@ public class IOCommon
 
 	}
 	
-	public static List<AbstractFile> openFiles(String path, List<String> extensions)
+	public static List<AbstractFile> openFiles(String path, String[] extensions)
 	{
 		FileOpenService fos;
 		try
 		{
 			fos = (FileOpenService) ServiceManager.lookup("javax.jnlp.FileOpenService");
 			
-			return Functional.map(fos.openMultiFileDialog(path, extensions.toArray(new String[0])), new Function1<FileContents, AbstractFile>(){
+			return Functional.map(fos.openMultiFileDialog(path, extensions), new Function1<FileContents, AbstractFile>(){
 
 				@Override
 				public AbstractFile f(FileContents element)
@@ -341,14 +337,14 @@ public class IOCommon
 	
 	}
 	
-	public static AbstractFile openFile(String path, List<String> extensions)
+	public static AbstractFile openFile(String path, String[] extensions)
 	{
 		FileOpenService fos;
 		try
 		{
 			fos = (FileOpenService) ServiceManager.lookup("javax.jnlp.FileOpenService");
 			
-			return new AbstractFile(  fos.openFileDialog(path, extensions.toArray(new String[0]))  );			
+			return new AbstractFile(  fos.openFileDialog(path, extensions)  );			
 		}
 		catch (UnavailableServiceException e)
 		{
@@ -361,7 +357,7 @@ public class IOCommon
 	
 	}
 	
-	public static FileContents saveFile(String path, String name, List<String> extensions, InputStream inputStream)
+	public static FileContents saveFile(String path, String name, String[] extensions, InputStream inputStream)
 	{
 		FileSaveService fos;
 
@@ -370,7 +366,7 @@ public class IOCommon
 			
 			fos = (FileSaveService) ServiceManager.lookup("javax.jnlp.FileSaveService");
 			
-			return fos.saveFileDialog(  path, extensions.toArray(new String[0]), inputStream, name  );
+			return fos.saveFileDialog(  path, extensions, inputStream, name  );
 			
 		}
 		catch (UnavailableServiceException e)

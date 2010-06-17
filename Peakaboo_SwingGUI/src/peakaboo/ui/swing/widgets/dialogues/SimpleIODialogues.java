@@ -10,10 +10,8 @@ import javax.swing.JOptionPane;
 
 public class SimpleIODialogues
 {
-
-
-	public static String chooseFileSave(Window parent, String title, String startingFolder, String fileExtention,
-			String fileDescription)
+	
+	public static String chooseFileSave(Window parent, String title, String startingFolder, String fileExtention, String extDescription)
 	{
 
 		JFileChooser chooser = new JFileChooser(startingFolder);
@@ -21,7 +19,7 @@ public class SimpleIODialogues
 
 
 		chooser.setDialogTitle(title);
-		chooser.setFileFilter(new SimpleFileFilter(fileExtention, fileDescription));
+		chooser.setFileFilter(new SimpleFileFilter(fileExtention, extDescription));
 
 		int returnVal = chooser.showSaveDialog(parent);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {

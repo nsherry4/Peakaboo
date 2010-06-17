@@ -46,6 +46,16 @@ public class Functional
 
 	}
 
+	public static <T1> void each(T1[] list, Function1<T1, Object> f)
+	{
+
+		for (T1 element : list)
+		{
+			f.f(element);
+		}
+
+	}
+	
 
 	public static <T1> void each(Iterable<T1> list, Function1<T1, Object> f)
 	{
@@ -299,6 +309,23 @@ public class Functional
 		for (int i = 0; i < maxSize; i++)
 		{
 			l3.add(f.f(l1.get(i), l2.get(i)));
+		}
+
+		return l3;
+
+	}
+	
+	public static <T1, T2, T3> List<T3> zipWith(T1[] l1, T2[] l2, Function2<T1, T2, T3> f)
+	{
+
+		if (l1 == null || l2 == null) return null;
+		int maxSize = Math.min(l1.length, l2.length);
+
+		List<T3> l3 = DataTypeFactory.<T3> list();
+
+		for (int i = 0; i < maxSize; i++)
+		{
+			l3.add(f.f(l1[i], l2[i]));
 		}
 
 		return l3;

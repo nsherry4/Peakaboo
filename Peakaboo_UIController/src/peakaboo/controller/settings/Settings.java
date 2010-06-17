@@ -5,8 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 
 import peakaboo.controller.plotter.PlotModel;
 import peakaboo.datatypes.DataTypeFactory;
@@ -33,7 +35,7 @@ public class Settings
 	 * @param model model to apply the loaded preferences to
 	 * @param filename name of the preferences file
 	 */
-	public static void loadPreferences(PlotModel model, String filename)
+	public static void loadPreferences(PlotModel model, InputStream inStream)
 	{
 
 		FileInputStream fin = null;
@@ -44,8 +46,7 @@ public class Settings
 		SerializedData data = new SerializedData();
 
 		try {
-			fin = new FileInputStream(filename);
-			in = new ObjectInputStream(fin);
+			in = new ObjectInputStream(inStream);
 
 			read = in.readObject();
 			if (read == null) return;
@@ -91,7 +92,7 @@ public class Settings
 	 * @param model model to read the saved preferences from
 	 * @param filename name of the preferences file
 	 */
-	public static void savePreferences(PlotModel model, String filename)
+	public static void savePreferences(PlotModel model, OutputStream outStream)
 	{
 
 		FileOutputStream fos = null;
@@ -107,15 +108,9 @@ public class Settings
 		data.dr = model.dr;
 		data.viewOptions = model.viewOptions;
 
-		try {
-			fos = new FileOutputStream(filename);
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-			return;
-		}
 
 		try {
-			out = new ObjectOutputStream(fos);
+			out = new ObjectOutputStream(outStream);
 
 			// Write out the SerializedData object
 			out.writeObject(data);

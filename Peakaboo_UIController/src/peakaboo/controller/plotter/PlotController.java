@@ -3,8 +3,13 @@ package peakaboo.controller.plotter;
 
 
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.controller.CanvasController;
@@ -29,6 +34,7 @@ import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Functional;
+import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
@@ -60,14 +66,18 @@ import javax.jnlp.FileContents;
  */
 
 public class PlotController extends CanvasController implements FilterController, FittingController,
-		SettingsController
+		SettingsController, UndoController
 {
 
-	private PlotModel			model;
-	private MapController		mapController;
-	private PlotDrawing			plot;
+	private PlotModel						model;
+	private MapController					mapController;
+	private PlotDrawing						plot;
 
-	private List<AxisPainter>	axisPainters;
+	private List<AxisPainter>				axisPainters;
+
+	private Stack<ByteArrayOutputStream>	undoStack;
+	private Stack<ByteArrayOutputStream>	redoStack;
+	private boolean							updateFromUndo;
 
 
 	public PlotController(Object toyContext)
@@ -83,6 +93,10 @@ public class PlotController extends CanvasController implements FilterController
 
 		model.dr = PlotDrawingRequestFactory.getDrawingRequest();
 		model.viewOptions.channelComposite = ChannelCompositeMode.NONE;
+
+		undoStack = new Stack<ByteArrayOutputStream>();
+		redoStack = new Stack<ByteArrayOutputStream>();
+		setUndoPoint();
 	}
 
 
@@ -123,15 +137,16 @@ public class PlotController extends CanvasController implements FilterController
 	// =============================================
 	// PREFERENCES SERIALIZATION
 	// =============================================
-	public void savePreferences(String filename)
+	public void savePreferences(OutputStream outStream)
 	{
-		Settings.savePreferences(model, filename);
+		Settings.savePreferences(model, outStream);
 	}
 
 
-	public void loadPreferences(String filename)
+	public void loadPreferences(InputStream inStream, boolean isUndoAction)
 	{
-		Settings.loadPreferences(model, filename);
+		Settings.loadPreferences(model, inStream);
+		if (!isUndoAction) setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -143,25 +158,27 @@ public class PlotController extends CanvasController implements FilterController
 	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
-		LocalDataSetProvider dataset = new LocalDataSetProvider();
+		final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		// OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
 		final TaskList<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected
-		DataSetProvider oldDataSet = model.dataset;
-		model.dataset = dataset;
-		oldDataSet.discard();
-
+		final DataSetProvider oldDataSet = model.dataset;
+		
+		
 		readTasks.addListener(new PeakabooSimpleListener() {
 
 			public void change()
 			{
 				if (readTasks.getCompleted())
 				{
-					if (model.dataset.scanSize() > 0)
+					if (dataset.scanSize() > 0)
 					{
 
+						model.dataset = dataset;
+						oldDataSet.discard();
+						
 						model.dr.maxYIntensity = model.dataset.maximumIntensity();
 
 						model.viewOptions.scanNumber = 0;
@@ -172,6 +189,8 @@ public class PlotController extends CanvasController implements FilterController
 						setFittingParameters(model.dataset.scanSize(), model.dataset.energyPerChannel());
 						// clear any interpolation from previous use
 						if (mapController != null) mapController.setInterpolation(0);
+
+						clearUndos();
 
 					}
 				}
@@ -303,6 +322,7 @@ public class PlotController extends CanvasController implements FilterController
 		model.fittingSelections.setDataParameters(scanSize, energyPerChannel);
 		model.fittingProposals.setDataParameters(scanSize, energyPerChannel);
 
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -361,6 +381,8 @@ public class PlotController extends CanvasController implements FilterController
 			if (getScanDiscarded(scanNo)) model.badScans.remove(model.badScans.indexOf(scanNo));
 			filteredDataInvalidated();
 		}
+
+		setUndoPoint();
 
 	}
 
@@ -727,6 +749,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void clearFilters()
 	{
 		model.filters.clearFilters();
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -765,6 +788,7 @@ public class PlotController extends CanvasController implements FilterController
 					// this will call filterschanged, so we don't need to
 					// manually update the listeners
 					addFilter(f.getClass().newInstance());
+					setUndoPoint();
 					break;
 				}
 				catch (InstantiationException e)
@@ -785,6 +809,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void addFilter(AbstractFilter f)
 	{
 		model.filters.addFilter(f);
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -792,6 +817,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void removeFilter(int index)
 	{
 		model.filters.removeFilter(index);
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -811,6 +837,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setFilterEnabled(int index, boolean enabled)
 	{
 		model.filters.setFilterEnabled(index, enabled);
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -824,6 +851,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveFilterUp(int index)
 	{
 		model.filters.moveFilterUp(index);
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -831,6 +859,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveFilterDown(int index)
 	{
 		model.filters.moveFilterDown(index);
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -870,6 +899,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		if (e == null) return;
 		model.fittingSelections.addTransitionSeries(e);
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -880,6 +910,7 @@ public class PlotController extends CanvasController implements FilterController
 		{
 			model.fittingSelections.addTransitionSeries(ts);
 		}
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -887,6 +918,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void clearTransitionSeries()
 	{
 		model.fittingSelections.clear();
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -894,6 +926,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void removeTransitionSeries(TransitionSeries e)
 	{
 		model.fittingSelections.remove(e);
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -908,14 +941,14 @@ public class PlotController extends CanvasController implements FilterController
 	{
 
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
-				
-		
+
+
 		return Functional.filter(model.peakTable.getAllTransitionSeries(), new Function1<TransitionSeries, Boolean>() {
 
 			@Override
 			public Boolean f(TransitionSeries ts)
 			{
-				return (! fitted.contains(ts)) && tst.equals(ts.type);
+				return (!fitted.contains(ts)) && tst.equals(ts.type);
 			}
 		});
 
@@ -925,6 +958,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show)
 	{
 		model.fittingSelections.setTransitionSeriesVisibility(e, show);
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -1001,7 +1035,8 @@ public class PlotController extends CanvasController implements FilterController
 		return 0.0f;
 
 	}
-	
+
+
 	public float getTransitionSeriesIntensityForElement(Element e, TransitionSeriesType tst)
 	{
 		regenerateCahcedData();
@@ -1036,6 +1071,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveTransitionSeriesUp(TransitionSeries e)
 	{
 		model.fittingSelections.moveTransitionSeriesUp(e);
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -1043,6 +1079,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveTransitionSeriesDown(TransitionSeries e)
 	{
 		model.fittingSelections.moveTransitionSeriesDown(e);
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -1093,6 +1130,7 @@ public class PlotController extends CanvasController implements FilterController
 			model.fittingSelections.addTransitionSeries(e);
 		}
 		model.fittingProposals.clear();
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -1117,6 +1155,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setZoom(float zoom)
 	{
 		model.viewOptions.zoom = zoom;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1124,6 +1163,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowIndividualSelections(boolean showIndividualSelections)
 	{
 		model.viewOptions.showIndividualFittings = showIndividualSelections;
+		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -1138,6 +1178,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		int scanSize = 0;
 		if (model.dataset != null) scanSize = model.dataset.scanSize();
+		//dont call setUndoPoint, as setFittingParameters will do that for us
 		setFittingParameters(scanSize, energy);
 		axisSetInvalidated();
 	}
@@ -1155,7 +1196,9 @@ public class PlotController extends CanvasController implements FilterController
 		{
 			return;
 		}
+		//dont set an undo point here -- setEnergyPerChannel does that already
 		setEnergyPerChannel(energy / (model.dataset.scanSize()));
+
 	}
 
 
@@ -1181,6 +1224,7 @@ public class PlotController extends CanvasController implements FilterController
 			model.dr.viewTransform = peakaboo.drawing.plot.ViewTransform.LINEAR;
 		}
 		axisSetInvalidated();
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1196,6 +1240,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowChannelAverage()
 	{
 		model.viewOptions.channelComposite = ChannelCompositeMode.AVERAGE;
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -1203,6 +1248,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowChannelMaximum()
 	{
 		model.viewOptions.channelComposite = ChannelCompositeMode.MAXIMUM;
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -1210,6 +1256,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowChannelSingle()
 	{
 		model.viewOptions.channelComposite = ChannelCompositeMode.NONE;
+		setUndoPoint();
 		filteredDataInvalidated();
 	}
 
@@ -1240,6 +1287,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		model.viewOptions.showAxes = axes;
 		axisPainters = null;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1260,6 +1308,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		model.viewOptions.showPlotTitle = show;
 		axisPainters = null;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1269,6 +1318,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setMonochrome(boolean mono)
 	{
 		model.viewOptions.monochrome = mono;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1282,6 +1332,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowElementTitles(boolean show)
 	{
 		model.viewOptions.showElementFitTitles = show;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1289,6 +1340,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowElementMarkers(boolean show)
 	{
 		model.viewOptions.showElementFitMarkers = show;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1296,6 +1348,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowElementIntensities(boolean show)
 	{
 		model.viewOptions.showElementFitIntensities = show;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1321,6 +1374,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowRawData(boolean show)
 	{
 		model.viewOptions.backgroundShowOriginal = show;
+		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1329,5 +1383,113 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		return model.viewOptions.backgroundShowOriginal;
 	}
+
+
+
+
+
+
+	//////////////////////////////////////////////////////////////
+	// UNDO CONTROLLER METHODS
+	//////////////////////////////////////////////////////////////
+	public void setUndoPoint()
+	{
+
+		System.out.println(
+				Functional.foldr(
+						Functional.map(
+								Thread.currentThread().getStackTrace(),
+								new Function1<StackTraceElement, String>() {
+
+									@Override
+									public String f(StackTraceElement element)
+							{
+								return element.toString();
+							}
+								}),
+						"",
+						Functions.concat("\n"))
+			);
+
+		//save the current state
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		savePreferences(baos);
+		
+		if (undoStack.size() > 0)
+		{
+			byte[] lastState = undoStack.peek().toByteArray();
+			byte[] thisState = baos.toByteArray();
+			
+			
+			//if these two are the same size, lets compare them -- if they are identical, we don't bother saving the state
+			if (thisState.length == lastState.length)
+			{
+				boolean same = true;
+				for (int i = 0; i < thisState.length; i++)
+				{
+					if (lastState[i] != thisState[i])
+					{
+						same = false;
+						break;
+					}
+				}
+				
+				if (same) return;
+				
+			}
+		}
+		
+		undoStack.push(baos);
+
+		redoStack.clear();
+
+	}
+
+
+	public void undo()
+	{
+		if (undoStack.size() < 2) return;
+
+		redoStack.push(undoStack.pop());
+
+		loadPreferences(new ByteArrayInputStream(undoStack.peek().toByteArray()), true);
+
+	}
+
+
+	public void redo()
+	{
+
+		if (redoStack.isEmpty()) return;
+
+		undoStack.push(redoStack.pop());
+
+		loadPreferences(new ByteArrayInputStream(undoStack.peek().toByteArray()), true);
+
+	}
+
+
+	public boolean canUndo()
+	{
+		System.out.println(undoStack.size());
+		System.out.println(redoStack.size());
+		System.out.println("-----");
+		return undoStack.size() >= 2;
+	}
+
+
+	public boolean canRedo()
+	{
+		return !redoStack.isEmpty();
+	}
+
+
+	@Override
+	public void clearUndos()
+	{
+		undoStack.clear();
+		setUndoPoint();
+	}
+
 
 }
