@@ -92,7 +92,14 @@ public class AvailableFilters
 				}
 
 			}
-		}), Functions.<AbstractFilter> notNull());
+		}), new Function1<AbstractFilter, Boolean>(){
+
+			@Override
+			public Boolean f(AbstractFilter filter)
+			{
+				if (filter != null && filter.showFilter()) return true;
+				return false;
+			}});
 
 	}
 

@@ -72,7 +72,7 @@ public class Multiply extends AbstractFilter
 	@Override
 	public boolean showFilter()
 	{
-		return true;
+		return false;
 	}
 	
 }

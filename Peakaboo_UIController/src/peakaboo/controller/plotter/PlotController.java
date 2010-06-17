@@ -412,6 +412,9 @@ public class PlotController extends CanvasController implements FilterController
 		List<PlotPainter> plotPainters = DataTypeFactory.<PlotPainter> list();
 
 		if (dataForPlot == null) return;
+		
+		
+		
 
 		Color fitting, fittingStroke, fittingSum;
 		Color proposed, proposedStroke, proposedSum;
@@ -757,7 +760,7 @@ public class PlotController extends CanvasController implements FilterController
 	public List<String> getAvailableFiltersByName()
 	{
 		List<String> filterNames = DataTypeFactory.<String> list();
-
+		
 		for (AbstractFilter filter : model.filters.getAvailableFilters())
 		{
 			filterNames.add(filter.getFilterName());
@@ -1395,22 +1398,6 @@ public class PlotController extends CanvasController implements FilterController
 	public void setUndoPoint()
 	{
 
-		System.out.println(
-				Functional.foldr(
-						Functional.map(
-								Thread.currentThread().getStackTrace(),
-								new Function1<StackTraceElement, String>() {
-
-									@Override
-									public String f(StackTraceElement element)
-							{
-								return element.toString();
-							}
-								}),
-						"",
-						Functions.concat("\n"))
-			);
-
 		//save the current state
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		savePreferences(baos);
@@ -1471,9 +1458,6 @@ public class PlotController extends CanvasController implements FilterController
 
 	public boolean canUndo()
 	{
-		System.out.println(undoStack.size());
-		System.out.println(redoStack.size());
-		System.out.println("-----");
 		return undoStack.size() >= 2;
 	}
 

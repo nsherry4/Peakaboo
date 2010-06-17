@@ -310,7 +310,7 @@ public class IOCommon
 
 	}
 	
-	public static List<AbstractFile> openFiles(String path, String[] extensions)
+	public static List<AbstractFile> wsOpenFiles(String path, String[] extensions) throws UnavailableServiceException
 	{
 		FileOpenService fos;
 		try
@@ -326,10 +326,6 @@ public class IOCommon
 				}});
 			
 		}
-		catch (UnavailableServiceException e)
-		{
-			return null;
-		}
 		catch (IOException e)
 		{
 			return null;
@@ -337,7 +333,7 @@ public class IOCommon
 	
 	}
 	
-	public static AbstractFile openFile(String path, String[] extensions)
+	public static AbstractFile wsOpenFile(String path, String[] extensions) throws UnavailableServiceException
 	{
 		FileOpenService fos;
 		try
@@ -346,10 +342,6 @@ public class IOCommon
 			
 			return new AbstractFile(  fos.openFileDialog(path, extensions)  );			
 		}
-		catch (UnavailableServiceException e)
-		{
-			return null;
-		}
 		catch (IOException e)
 		{
 			return null;
@@ -357,7 +349,7 @@ public class IOCommon
 	
 	}
 	
-	public static FileContents saveFile(String path, String name, String[] extensions, InputStream inputStream)
+	public static FileContents wsSaveFile(String path, String name, String[] extensions, InputStream inputStream) throws UnavailableServiceException
 	{
 		FileSaveService fos;
 
@@ -368,11 +360,6 @@ public class IOCommon
 			
 			return fos.saveFileDialog(  path, extensions, inputStream, name  );
 			
-		}
-		catch (UnavailableServiceException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		catch (IOException e)
 		{

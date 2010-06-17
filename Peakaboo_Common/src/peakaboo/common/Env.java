@@ -1,11 +1,22 @@
 package peakaboo.common;
 
+
+
 import javax.jnlp.ServiceManager;
 
 
 
-public class OS
+public class Env
 {
+
+	public static boolean inJar()
+	{
+		Env env = new Env();
+		String className = env.getClass().getName().replace('.', '/');
+		String classJar = env.getClass().getResource("/" + className + ".class").toString();
+		return classJar.startsWith("jar:");
+	}
+
 
 	public static boolean isWindows()
 	{
@@ -35,10 +46,11 @@ public class OS
 		return (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0);
 
 	}
-	
+
+
 	public static boolean isWebStart()
 	{
-		return ServiceManager.getServiceNames() != null;
+		return (ServiceManager.getServiceNames() != null && ServiceManager.getServiceNames().length != 0);
 	}
 
 }

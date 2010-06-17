@@ -163,7 +163,8 @@ public class Functions
 			}
 		};
 	}
-	
+
+
 	public static Function2<Boolean, Boolean, Boolean> and()
 	{
 		return new Function2<Boolean, Boolean, Boolean>() {
@@ -171,9 +172,11 @@ public class Functions
 			public Boolean f(Boolean b1, Boolean b2)
 			{
 				return b1 && b2;
-			}};
+			}
+		};
 	}
-	
+
+
 	public static Function2<Boolean, Boolean, Boolean> or()
 	{
 		return new Function2<Boolean, Boolean, Boolean>() {
@@ -181,7 +184,21 @@ public class Functions
 			public Boolean f(Boolean b1, Boolean b2)
 			{
 				return b1 || b2;
-			}};
+			}
+		};
+	}
+
+
+	public static <T1> Function1<T1, T1> print()
+	{
+		return new Function1<T1, T1>() {
+
+			public T1 f(T1 element)
+			{
+				System.out.println(element.toString());
+				return element;
+			}
+		};
 	}
 
 }

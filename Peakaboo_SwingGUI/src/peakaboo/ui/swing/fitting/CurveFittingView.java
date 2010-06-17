@@ -364,6 +364,8 @@ public class CurveFittingView extends ClearPanel
 	private JScrollPane createTable()
 	{
 
+		fitTree = new JTree();
+		
 		tm = new MutableTreeModel() {
 
 			private List<TreeModelListener>	listeners;
@@ -436,15 +438,26 @@ public class CurveFittingView extends ClearPanel
 
 			public void fireChangeEvent()
 			{
+				Object c = null;
+				if (fitTree.getSelectionPath() != null){
+					c = fitTree.getSelectionPath().getLastPathComponent();
+				}
+				
 				for (TreeModelListener tml : listeners)
 				{
 					tml.treeStructureChanged(new TreeModelEvent(this, new TreePath(getRoot())));
+				}
+				
+				if (c != null && c instanceof TransitionSeries)
+				{
+					TransitionSeries ts = (TransitionSeries) c;
+					fitTree.setSelectionRow(controller.getFittedTransitionSeries().indexOf(ts));
 				}
 			}
 
 		};
 
-		fitTree = new JTree(tm);
+		fitTree.setModel(tm);
 		fitTree.setShowsRootHandles(false);
 		fitTree.setRootVisible(false);
 

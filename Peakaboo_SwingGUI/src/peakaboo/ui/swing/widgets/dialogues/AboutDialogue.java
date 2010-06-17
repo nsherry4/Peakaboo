@@ -75,12 +75,13 @@ public class AboutDialogue extends JDialog
 				"XRF Visualisation Program" +
 				"<br>" +
 				"<font size=\"-2\">" +
-					"<font color=\"#777777\">Version " + Version.longVersionNo + "</font>" +
+					"<font color=\"#777777\">Version " + Version.longVersionNo +
+					"<br/>" + 
+					"Build Date: " + Version.buildDate + 
+					"</font>" +
 					"<br>" +
 					"<br>" +
-					"Copyright &copy; 2009-2010 by<br>The University of Western Ontario" +
-					"<br>" +
-					"and" +
+					"Copyright &copy; 2009-2010 by<br>The University of Western Ontario and" +
 					"<br>" +
 					"The Canadian Light Source Inc." +
 				"</font>" +
@@ -110,7 +111,7 @@ public class AboutDialogue extends JDialog
 		buttonPanel.add(button);
 		
 		
-		button = new ImageButton("licence", "Licence", true);
+		button = new ImageButton("textfile", "Licence", true);
 		button.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent arg0)
@@ -137,7 +138,7 @@ public class AboutDialogue extends JDialog
 		gc.gridy += 1;
 		panel.add(buttonPanel, gc);
 		
-		panel.setBorder(Spacing.bHuge());
+		panel.setBorder(new EmptyBorder(25, 50, Spacing.large, 50));
 		//setPreferredSize(new Dimension(300, 300));
 		
 		

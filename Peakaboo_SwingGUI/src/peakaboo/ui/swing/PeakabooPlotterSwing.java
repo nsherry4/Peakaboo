@@ -73,7 +73,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import peakaboo.common.OS;
+import peakaboo.common.Env;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.AllMapsModel;
@@ -139,6 +139,8 @@ public class PeakabooPlotterSwing
 	JMenuItem								undo, redo;
 
 	JSpinner								energy;
+	ChangeListener							energyListener;
+	
 	JSlider									zoomSlider;
 	JMenuItem								saveSession;
 	ImageButton								toolbarSnapshot;
@@ -260,14 +262,9 @@ public class PeakabooPlotterSwing
 	private void setEnergySpinner(double value)
 	{
 		//dont let the listeners get wind of this change
-		ChangeListener[] listeners = energy.getChangeListeners();
-		for (ChangeListener listener : listeners){
-			energy.removeChangeListener(listener);
-		}
+		energy.removeChangeListener(energyListener);
 		energy.setValue((double) controller.getMaxEnergy());
-		for (ChangeListener listener : listeners){
-			energy.addChangeListener(listener);
-		}
+		energy.addChangeListener(energyListener);
 	}
 	
 
@@ -533,7 +530,7 @@ public class PeakabooPlotterSwing
 
 		c2.gridx += 1;
 		energyControls.add(energy, c2);
-		energy.addChangeListener(new ChangeListener() {
+		energyListener = new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e)
 			{
@@ -544,7 +541,8 @@ public class PeakabooPlotterSwing
 				controller.setMaxEnergy(value);
 
 			}
-		});
+		};
+		energy.addChangeListener(energyListener);
 		c.gridx += 1;
 		toolbar.add(energyControls, c);
 
@@ -1176,7 +1174,7 @@ public class PeakabooPlotterSwing
 		List<AbstractFile> files;
 
 		String[] exts;
-		if (OS.isWebStart())
+		if (Env.isWebStart())
 		{
 			exts = new String[] { "xml" };
 		}

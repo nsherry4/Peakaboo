@@ -19,16 +19,20 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.jnlp.UnavailableServiceException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
-import peakaboo.common.OS;
+import peakaboo.common.Env;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon;
+import peakaboo.ui.swing.icons.IconFactory;
+import peakaboo.ui.swing.icons.IconSize;
 import peakaboo.ui.swing.widgets.dialogues.SimpleFileFilter;
 import peakaboo.ui.swing.widgets.dialogues.SimpleIODialogues;
 
@@ -37,13 +41,27 @@ import peakaboo.ui.swing.widgets.dialogues.SimpleIODialogues;
 public class SwingIO
 {
 
-	public static List<AbstractFile> openFiles(Window parent, String title, String[] exts, String extDesc, String startDir)
+	public static List<AbstractFile> openFiles(Window parent, String title, String[] exts, String extDesc,
+			String startDir)
 	{
 
-		if (OS.isWebStart())
+		if (Env.isWebStart())
 		{
 
-			return IOCommon.openFiles("~/", exts);
+			try
+			{
+				return IOCommon.wsOpenFiles("~/", exts);
+			}
+			catch (UnavailableServiceException e)
+			{
+				JOptionPane.showMessageDialog(
+						parent,
+						"The Web Start File-Read Service is not Available.",
+						"Read Failed.",
+						JOptionPane.ERROR_MESSAGE,
+						IconFactory.getImageIcon("warn", IconSize.ICON));
+				return null;
+			}
 
 		}
 		else
@@ -81,16 +99,29 @@ public class SwingIO
 		}
 
 	}
-	
-	
+
+
 
 	public static AbstractFile openFile(Window parent, String title, String[] exts, String extDesc, String startDir)
 	{
 
-		if (OS.isWebStart())
+		if (Env.isWebStart())
 		{
 
-			return IOCommon.openFile("~/", exts);
+			try
+			{
+				return IOCommon.wsOpenFile("~/", exts);
+			}
+			catch (UnavailableServiceException e)
+			{
+				JOptionPane.showMessageDialog(
+						parent,
+						"The Web Start File-Read Service is not Available.",
+						"Read Failed.",
+						JOptionPane.ERROR_MESSAGE,
+						IconFactory.getImageIcon("warn", IconSize.ICON));
+				return null;
+			}
 
 		}
 		else
@@ -137,15 +168,28 @@ public class SwingIO
 	{
 
 		outStream.close();
-		
-		ByteArrayInputStream bais = new ByteArrayInputStream(outStream.toByteArray());
-		
 
-		
-		if (OS.isWebStart())
+		ByteArrayInputStream bais = new ByteArrayInputStream(outStream.toByteArray());
+
+
+
+		if (Env.isWebStart())
 		{
 
-			IOCommon.saveFile("~/", "", new String[] { ext }, bais);
+			try
+			{
+				IOCommon.wsSaveFile("~/", "", new String[] { ext }, bais);
+			}
+			catch (UnavailableServiceException e)
+			{
+				JOptionPane.showMessageDialog(
+						parent,
+						"The Web Start File-Write Service is not Available.",
+						"Write Failed.",
+						JOptionPane.ERROR_MESSAGE,
+						IconFactory.getImageIcon("warn", IconSize.ICON));
+				return null;
+			}
 			return "";
 
 		}
@@ -162,10 +206,10 @@ public class SwingIO
 				fos.write(outStream.toByteArray());
 				fos.flush();
 				fos.close();
-				
+
 				return savePictureFolder;
 			}
-			
+
 			return "";
 
 		}

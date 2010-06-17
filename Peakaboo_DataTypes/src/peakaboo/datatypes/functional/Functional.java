@@ -19,7 +19,7 @@ public class Functional
 	{
 
 		if (list == null) return null;
-		
+
 		List<T2> newlist = DataTypeFactory.<T2> list();
 
 		for (T1 element : list)
@@ -35,7 +35,7 @@ public class Functional
 	{
 
 		if (list == null) return null;
-		
+
 		List<T2> newlist = DataTypeFactory.<T2> list();
 
 		for (T1 element : list)
@@ -46,6 +46,7 @@ public class Functional
 
 	}
 
+
 	public static <T1> void each(T1[] list, Function1<T1, Object> f)
 	{
 
@@ -55,7 +56,7 @@ public class Functional
 		}
 
 	}
-	
+
 
 	public static <T1> void each(Iterable<T1> list, Function1<T1, Object> f)
 	{
@@ -72,7 +73,7 @@ public class Functional
 	{
 
 		if (list == null) return null;
-		
+
 		for (int i = 0; i < list.size(); i++)
 		{
 			target.set(i, f.f(list.get(i)));
@@ -85,7 +86,7 @@ public class Functional
 	public static <T1, T2> List<T2> map_index(List<T1> list, Function1<Integer, T2> f)
 	{
 		if (list == null) return null;
-		
+
 
 		List<T2> newlist = DataTypeFactory.<T2> list();
 
@@ -102,7 +103,7 @@ public class Functional
 	{
 
 		if (list == null) return null;
-		
+
 		target.clear();
 
 		for (int i = 0; i < list.size(); i++)
@@ -116,7 +117,7 @@ public class Functional
 
 	public static <T1> List<T1> filter(Collection<T1> list, Function1<T1, Boolean> f)
 	{
-		
+
 		if (list == null) return null;
 
 		List<T1> newlist = DataTypeFactory.<T1> list();
@@ -133,7 +134,7 @@ public class Functional
 	public static <T1> List<T1> filter_index(List<T1> list, Function1<Integer, Boolean> f)
 	{
 		if (list == null) return null;
-		
+
 		List<T1> newlist = DataTypeFactory.<T1> list();
 
 		for (int i = 0; i <= list.size(); i++)
@@ -284,7 +285,7 @@ public class Functional
 	{
 		if (item == null) return false;
 		if (list == null) return false;
-		
+
 		return Functional.foldr(
 					Functional.map(list, Functions.equiv(item)), false,
 					Functions.or()
@@ -314,7 +315,8 @@ public class Functional
 		return l3;
 
 	}
-	
+
+
 	public static <T1, T2, T3> List<T3> zipWith(T1[] l1, T2[] l2, Function2<T1, T2, T3> f)
 	{
 
@@ -403,6 +405,30 @@ public class Functional
 			public int compare(T1 o1, T1 o2)
 			{
 				return c.compare(f.f(o1), f.f(o2));
+			}
+		});
+
+	}
+
+
+	public static <T1> List<List<T1>> groupBy(final List<T1> list, final Function2<T1, T1, Boolean> f)
+	{
+
+		//generate a unique list
+		List<T1> uniques = Functional.unique(list, f);
+
+		//map the list into a list of lists
+		return Functional.map(uniques, new Function1<T1, List<T1>>() {
+
+			public List<T1> f(final T1 o1)
+			{
+				return Functional.filter(list, new Function1<T1, Boolean>() {
+
+					public Boolean f(T1 o2)
+					{
+						return f.f(o1, o2);
+					}
+				});
 			}
 		});
 

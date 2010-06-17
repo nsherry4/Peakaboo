@@ -340,18 +340,50 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}*/
 
+	public static TransitionSeries summation(final List<TransitionSeries> tss)
+	{
+		
+		if (tss.size() == 0) return null;
+		
+		//group the TransitionSeries by equality
+		List<List<TransitionSeries>> tsGroups = Functional.groupBy(tss, Functions.<TransitionSeries> equiv());
 
+		
+		//function for summing two TransitionSeries
+		final Function2<TransitionSeries, TransitionSeries, TransitionSeries> tsSum = new Function2<TransitionSeries, TransitionSeries, TransitionSeries>() {
+		
+			public TransitionSeries f(TransitionSeries ts1, TransitionSeries ts2)
+			{
+				return ts1.summation(ts2);
+			}
+		};
+		
+		
+		//turn the groups of primary transitionseries into a list of pile-up transitionseries
+		List<TransitionSeries> pileups = Functional.map(tsGroups, new Function1<List<TransitionSeries>, TransitionSeries>() {
+
+			public TransitionSeries f(List<TransitionSeries> tsList)
+			{
+				return Functional.foldr(tsList, tsSum);
+			}
+		});
+		
+		//sum the pileups
+		return Functional.foldr(pileups, tsSum);
+		
+	}
+	
 	public TransitionSeries summation(final TransitionSeries other)
 	{
 
 		//one of these should be a primary TS
-		if (mode != TransitionSeriesMode.PRIMARY && other.mode != TransitionSeriesMode.PRIMARY) return null;
+		//if (mode != TransitionSeriesMode.PRIMARY && other.mode != TransitionSeriesMode.PRIMARY) return null;
 		
 		TransitionSeriesMode newmode = TransitionSeriesMode.SUMMATION;
 		
 		if (this.equals(other)) newmode = TransitionSeriesMode.PILEUP;
 		if (this.mode == TransitionSeriesMode.PILEUP && this.element.equals(other.element)) newmode = TransitionSeriesMode.PILEUP;
-		if (other.mode == TransitionSeriesMode.PILEUP && other.element.equals(other.element)) newmode = TransitionSeriesMode.PILEUP;
+		if (other.mode == TransitionSeriesMode.PILEUP && other.element.equals(this.element)) newmode = TransitionSeriesMode.PILEUP;
 
 		// create the new TransitionSeries object
 		final TransitionSeries newTransitionSeries = new TransitionSeries(
@@ -515,5 +547,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			return type;
 		}
 	}
+	
+	
 	
 }

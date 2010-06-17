@@ -294,7 +294,8 @@ public class SpectrumCalculations
 	 */
 	public static Spectrum subtractFromList(Spectrum data, float value)
 	{
-		return subtractFromList(data, null, value, Float.NaN);
+		Spectrum target = new Spectrum(data.size());
+		return subtractFromList(data, target, value, Float.NaN);
 	}
 
 	/**

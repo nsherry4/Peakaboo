@@ -30,7 +30,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import peakaboo.common.OS;
+import peakaboo.common.Env;
 import peakaboo.controller.CanvasController;
 import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.fileio.SwingIO;

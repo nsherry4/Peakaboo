@@ -6,11 +6,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import peakaboo.common.Env;
+
 public class Peakaboo {
 
 
 	public static void main(String[] args) {
 		
+		
+		System.out.println(Env.inJar());
 		
 		//if this version of the JVM is new enough to support the Nimbus Look and Feel, use it
 		try {
