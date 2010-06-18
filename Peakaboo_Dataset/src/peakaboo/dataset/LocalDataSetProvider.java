@@ -51,6 +51,8 @@ public class LocalDataSetProvider extends DataSetProvider
 	protected List<Spectrum>		filteredDataSet;
 	protected Boolean				filteredDataInvalid;
 
+	protected float					maxIntensity;
+	
 	protected String				datasetName;
 
 	protected String				Created, CreatedBy, ProjectName, SessionName, Facility, Laboratory, ExperimentName,
@@ -148,8 +150,8 @@ public class LocalDataSetProvider extends DataSetProvider
 	@Override
 	public float maximumIntensity()
 	{
-		if (dsc_dataset.size() == 0) return 0;
-		return SpectrumCalculations.maxDataset(dsc_dataset);
+		if (dsc_dataset.size() == 0) return 0;		
+		return maxIntensity;
 	}
 
 
@@ -737,6 +739,8 @@ public class LocalDataSetProvider extends DataSetProvider
 		dsc_average = SpectrumCalculations.getDatasetAverage(dataset);
 		dsc_maximum = SpectrumCalculations.getDatasetMaximums(dataset);
 
+		maxIntensity = SpectrumCalculations.maxDataset(dataset);
+		
 		dsc_scanSize = dsc_average.size();
 
 	}

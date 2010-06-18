@@ -1,14 +1,11 @@
 package peakaboo.calculations;
 
 
-import java.util.List;
-
 import JSci.maths.Complex;
 import JSci.maths.FourierMath;
 import JSci.maths.polynomials.RealPolynomial;
 import JSci.maths.wavelet.daubechies2.FastDaubechies2;
 
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
 
 /**

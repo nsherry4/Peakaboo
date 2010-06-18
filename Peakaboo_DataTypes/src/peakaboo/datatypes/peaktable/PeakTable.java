@@ -101,4 +101,18 @@ public class PeakTable
 		return Functional.map(elementTransitions, Functions.<TransitionSeries>id());
 	}
 	
+	public TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
+	{
+		List<TransitionSeries> tss = Functional.filter(elementTransitions, new Function1<TransitionSeries, Boolean>() {
+
+			public Boolean f(TransitionSeries ts)
+			{
+				return (ts.element == e) && (ts.type == t);
+			}
+		});
+		
+		if (tss.size() == 0) return null;
+		return tss.get(0);
+	}
+	
 }

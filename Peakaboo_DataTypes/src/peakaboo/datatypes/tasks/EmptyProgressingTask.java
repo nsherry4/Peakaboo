@@ -1,6 +1,5 @@
 package peakaboo.datatypes.tasks;
 
-import peakaboo.datatypes.tasks.Task.State;
 
 /**
  * Dummy Task used as a place-filler when a job will not fit neatly into a task object, or for when there is no

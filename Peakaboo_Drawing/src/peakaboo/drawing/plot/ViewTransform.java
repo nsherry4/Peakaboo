@@ -12,6 +12,6 @@ package peakaboo.drawing.plot;
 public enum ViewTransform
 {
 
-	LINEAR, LOG
+	LINEAR, LOG;
 
 }

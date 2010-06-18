@@ -8,7 +8,6 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.ranges.ROI;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.MapResultSet;

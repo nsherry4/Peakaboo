@@ -13,8 +13,6 @@ import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.peaktable.Transition;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.datatypes.peaktable.TransitionType;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.plot.painters.PlotPainter;
 

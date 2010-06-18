@@ -9,35 +9,19 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.LinkedList;
-import java.util.List;
 
-import javax.jnlp.FileContents;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import peakaboo.common.Env;
 import peakaboo.controller.CanvasController;
-import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.dialogues.SimpleIODialogues;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggleGroup;
 

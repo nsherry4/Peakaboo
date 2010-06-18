@@ -52,5 +52,10 @@ public class Env
 	{
 		return (ServiceManager.getServiceNames() != null && ServiceManager.getServiceNames().length != 0);
 	}
+	
+	public static int heapSize()
+	{
+		return (int)(Runtime.getRuntime().maxMemory() / 1024f / 1024f);
+	}
 
 }

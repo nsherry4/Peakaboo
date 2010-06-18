@@ -433,5 +433,10 @@ public class Functional
 		});
 
 	}
+	
+	public static <T1> List<T1> flatten(final List<List<T1>> lists)
+	{
+		return Functional.foldr(lists, Functions.<T1>listConcat());
+	}
 
 }

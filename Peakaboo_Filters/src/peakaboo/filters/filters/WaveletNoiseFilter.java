@@ -2,7 +2,6 @@ package peakaboo.filters.filters;
 
 
 
-import java.util.List;
 import peakaboo.calculations.Noise;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.plot.painters.PlotPainter;

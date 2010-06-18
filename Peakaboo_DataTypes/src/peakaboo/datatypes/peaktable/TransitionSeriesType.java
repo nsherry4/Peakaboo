@@ -38,6 +38,12 @@ public enum TransitionSeriesType
 		{
 			return "Composite Series";
 		}
-	},
+	};
+	
+	
+	public static TransitionSeriesType fromTypeString(String type)
+	{
+		return TransitionSeriesType.valueOf(type);
+	}
 
 }

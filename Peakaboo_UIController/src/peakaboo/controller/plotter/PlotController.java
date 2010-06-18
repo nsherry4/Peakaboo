@@ -15,7 +15,6 @@ import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
-import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
@@ -23,7 +22,6 @@ import peakaboo.curvefit.painters.FittingTitlePainter;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.dataset.DataSetProvider;
 import peakaboo.dataset.LocalDataSetProvider;
-import peakaboo.dataset.OnDemandDataSetProvider;
 import peakaboo.dataset.ScanContainer;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
@@ -34,7 +32,6 @@ import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
@@ -54,8 +51,6 @@ import peakaboo.drawing.plot.painters.plot.PrimaryPlotPainter;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.mapping.MapResultSet;
-
-import javax.jnlp.FileContents;
 
 
 
@@ -77,7 +72,6 @@ public class PlotController extends CanvasController implements FilterController
 
 	private Stack<ByteArrayOutputStream>	undoStack;
 	private Stack<ByteArrayOutputStream>	redoStack;
-	private boolean							updateFromUndo;
 
 
 	public PlotController(Object toyContext)
@@ -165,8 +159,8 @@ public class PlotController extends CanvasController implements FilterController
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected
 		final DataSetProvider oldDataSet = model.dataset;
-		
-		
+
+
 		readTasks.addListener(new PeakabooSimpleListener() {
 
 			public void change()
@@ -178,8 +172,6 @@ public class PlotController extends CanvasController implements FilterController
 
 						model.dataset = dataset;
 						oldDataSet.discard();
-						
-						model.dr.maxYIntensity = model.dataset.maximumIntensity();
 
 						model.viewOptions.scanNumber = 0;
 
@@ -406,16 +398,27 @@ public class PlotController extends CanvasController implements FilterController
 	@Override
 	protected void drawBackend(Surface backend, boolean scalar)
 	{
+
+		////////////////////////////////////////////////////////////////////
+		// Data Calculation
+		////////////////////////////////////////////////////////////////////
+
 		// calculates filters and fittings if needed
 		Pair<Spectrum, Spectrum> dataForPlot = getDataForPlot();
-
-		List<PlotPainter> plotPainters = DataTypeFactory.<PlotPainter> list();
-
 		if (dataForPlot == null) return;
-		
-		
-		
 
+
+
+
+
+
+
+
+
+
+		////////////////////////////////////////////////////////////////////
+		// Colour Selections
+		////////////////////////////////////////////////////////////////////
 		Color fitting, fittingStroke, fittingSum;
 		Color proposed, proposedStroke, proposedSum;
 
@@ -437,10 +440,24 @@ public class PlotController extends CanvasController implements FilterController
 			proposedSum = new Color(0.64f, 0.0f, 0.0f, 0.8f);
 		}
 
+
+
+
+
+
+
+
+
+
+		////////////////////////////////////////////////////////////////////
+		// Plot Painters
+		////////////////////////////////////////////////////////////////////
+
 		// if axes are shown, also draw horizontal grid lines
+		List<PlotPainter> plotPainters = DataTypeFactory.<PlotPainter> list();
 		if (model.viewOptions.showAxes) plotPainters.add(new GridlinePainter(new Range<Float>(
 			0.0f,
-			model.dr.maxYIntensity)));
+			model.dataset.maximumIntensity())));
 
 		// draw the original data in the background
 		if (model.viewOptions.backgroundShowOriginal)
@@ -457,10 +474,8 @@ public class PlotController extends CanvasController implements FilterController
 		PlotPainter extension;
 		for (AbstractFilter f : model.filters)
 		{
-
 			extension = f.getPainter();
 			if (extension != null && f.enabled) plotPainters.add(extension);
-
 		}
 
 		// draw curve fitting
@@ -501,7 +516,19 @@ public class PlotController extends CanvasController implements FilterController
 		if (model.viewOptions.showElementFitMarkers) plotPainters.add(new FittingMarkersPainter(
 			model.fittingSelectionResults));
 
-		// axis painters
+
+
+
+
+
+
+
+
+
+		////////////////////////////////////////////////////////////////////
+		// Axis Painters
+		////////////////////////////////////////////////////////////////////
+		
 		if (axisPainters == null)
 		{
 
@@ -517,10 +544,10 @@ public class PlotController extends CanvasController implements FilterController
 
 				axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
 				axisPainters.add(new TickMarkAxisPainter(
-					new Range<Float>(0.0f, model.dr.maxYIntensity),
+					new Range<Float>(0.0f, model.dataset.maximumIntensity()),
 					new Range<Float>(0.0f, model.dr.unitSize * model.dataset.scanSize()),
 					null,
-					new Range<Float>(0.0f, model.dr.maxYIntensity),
+					new Range<Float>(0.0f, model.dataset.maximumIntensity()),
 					model.dr.viewTransform == ViewTransform.LOG,
 					model.dr.viewTransform == ViewTransform.LOG));
 				axisPainters.add(new LineAxisPainter(true, true, model.viewOptions.showPlotTitle, true));
@@ -528,6 +555,8 @@ public class PlotController extends CanvasController implements FilterController
 			}
 
 		}
+
+		model.dr.maxYIntensity = model.dataset.maximumIntensity();
 
 		plot = new PlotDrawing(backend, model.dr, plotPainters, axisPainters);
 		plot.draw();
@@ -760,7 +789,7 @@ public class PlotController extends CanvasController implements FilterController
 	public List<String> getAvailableFiltersByName()
 	{
 		List<String> filterNames = DataTypeFactory.<String> list();
-		
+
 		for (AbstractFilter filter : model.filters.getAvailableFilters())
 		{
 			filterNames.add(filter.getFilterName());
@@ -1158,7 +1187,6 @@ public class PlotController extends CanvasController implements FilterController
 	public void setZoom(float zoom)
 	{
 		model.viewOptions.zoom = zoom;
-		setUndoPoint();
 		updateListeners();
 	}
 
@@ -1401,13 +1429,13 @@ public class PlotController extends CanvasController implements FilterController
 		//save the current state
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		savePreferences(baos);
-		
+
 		if (undoStack.size() > 0)
 		{
 			byte[] lastState = undoStack.peek().toByteArray();
 			byte[] thisState = baos.toByteArray();
-			
-			
+
+
 			//if these two are the same size, lets compare them -- if they are identical, we don't bother saving the state
 			if (thisState.length == lastState.length)
 			{
@@ -1420,12 +1448,12 @@ public class PlotController extends CanvasController implements FilterController
 						break;
 					}
 				}
-				
+
 				if (same) return;
-				
+
 			}
 		}
-		
+
 		undoStack.push(baos);
 
 		redoStack.clear();

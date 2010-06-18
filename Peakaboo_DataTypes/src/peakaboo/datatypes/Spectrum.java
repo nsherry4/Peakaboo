@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Function2;
-import peakaboo.datatypes.functional.Functional;
 
 public class Spectrum implements Iterable<Float>
 {

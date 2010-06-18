@@ -5,9 +5,13 @@ package peakaboo.controller.settings;
 import java.io.Serializable;
 import java.util.List;
 
+import org.ho.yaml.Yaml;
+
 import peakaboo.controller.plotter.PlotViewOptions;
+import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
+import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.filters.AbstractFilter;
 
@@ -26,11 +30,17 @@ public class SerializedData implements Serializable
 	/**
 	 * Version 1 of the SerializedData class
 	 */
-	private static final long		serialVersionUID	= 1L;
+	private static final long				serialVersionUID	= 1L;
 
-	public DrawingRequest			dr;
-	public PlotViewOptions			viewOptions;
-	public List<AbstractFilter>		filters;
-	public List<TransitionSeries>	fittings;
+	public DrawingRequest					drawingRequest;
+	public PlotViewOptions					viewOptions;
+	public List<AbstractFilter>				filters;
+	public List<List<Pair<String, String>>>	fittings;
+
+
+	public String toYaml()
+	{
+		return Yaml.dump(this, true);
+	}
 
 }

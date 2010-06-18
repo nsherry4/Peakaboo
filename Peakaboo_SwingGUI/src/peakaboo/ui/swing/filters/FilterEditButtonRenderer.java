@@ -4,7 +4,6 @@ package peakaboo.ui.swing.filters;
 import java.awt.BorderLayout;
 import java.awt.Component;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;

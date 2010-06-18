@@ -4,12 +4,9 @@ package peakaboo.calculations;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Function2;
 import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.tasks.Task;

@@ -1,7 +1,6 @@
 package peakaboo.filters.filters;
 
 
-import java.util.List;
 
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;

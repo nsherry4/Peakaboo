@@ -7,17 +7,12 @@ import java.util.List;
 
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Pair;
-import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Function2;
 import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.functional.stock.Functions;
-import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.painters.axis.AxisPainter;
 
 
 

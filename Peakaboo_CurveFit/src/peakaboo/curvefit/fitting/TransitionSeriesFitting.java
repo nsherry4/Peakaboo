@@ -38,7 +38,7 @@ public class TransitionSeriesFitting
 	private int					dataWidth;
 
 	public static final float	SIGMA	= 0.062f;
-	private static float		escape	= 1.74f;
+	private float		escape	= 1.74f;
 
 
 	/**

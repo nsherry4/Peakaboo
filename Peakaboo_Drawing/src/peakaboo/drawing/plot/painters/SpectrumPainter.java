@@ -1,6 +1,5 @@
 package peakaboo.drawing.plot.painters;
 
-import java.util.List;
 
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Spectrum;

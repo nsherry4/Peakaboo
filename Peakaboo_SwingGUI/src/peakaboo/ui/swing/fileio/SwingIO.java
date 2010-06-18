@@ -3,32 +3,20 @@ package peakaboo.ui.swing.fileio;
 
 
 import java.awt.Window;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.jnlp.UnavailableServiceException;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import peakaboo.common.Env;
-import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.icons.IconFactory;

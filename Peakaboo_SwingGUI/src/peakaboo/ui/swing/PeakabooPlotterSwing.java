@@ -19,30 +19,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.security.KeyStore.LoadStoreParameter;
 import java.text.DecimalFormat;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Stack;
 
-import javax.jnlp.FileContents;
-import javax.jnlp.FileOpenService;
-import javax.jnlp.ServiceManager;
-import javax.jnlp.UnavailableServiceException;
 import javax.swing.BoundedRangeModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -50,13 +32,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
@@ -84,15 +64,9 @@ import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.eventful.PeakabooMessageListener;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
-import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.AbstractFile;
-import peakaboo.fileio.IOCommon;
 import peakaboo.mapping.MapResultSet;
 import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.filters.FiltersetViewer;
@@ -105,8 +79,6 @@ import peakaboo.ui.swing.widgets.ToolbarImageButton;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
 import peakaboo.ui.swing.widgets.dialogues.AboutDialogue;
 import peakaboo.ui.swing.widgets.dialogues.ScanInfoDialogue;
-import peakaboo.ui.swing.widgets.dialogues.SimpleFileFilter;
-import peakaboo.ui.swing.widgets.dialogues.SimpleIODialogues;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import peakaboo.ui.swing.widgets.tasks.TaskListView;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
@@ -125,24 +97,37 @@ public class PeakabooPlotterSwing
 	String									savedSessionFileName;
 
 	PlotController							controller;
-
 	PlotCanvas								canvas;
+	
+	//FILE
+	JMenuItem								snapshotMenuItem;
+	JMenuItem								saveSession;
+	
+	//EDIT
+	JMenuItem								undo, redo;
+	
+	//VIEW
+	
+	//MAP
+	JMenuItem								mapMenuItem;
+	
+	
 	JComboBox								titleCombo;
 	JFrame									frame;
 	JSpinner								scanNo;
 	JLabel									scanLabel;
 	JToggleButton							scanBlock;
 	JLabel									channelLabel;
-	JMenuItem								mapMenuItem;
-	JMenuItem								snapshotMenuItem;
+	
+	
 
-	JMenuItem								undo, redo;
+	
 
 	JSpinner								energy;
 	ChangeListener							energyListener;
 	
 	JSlider									zoomSlider;
-	JMenuItem								saveSession;
+	
 	ImageButton								toolbarSnapshot;
 	ImageButton								toolbarMap;
 	ImageButton								toolbarInfo;
@@ -947,13 +932,16 @@ public class PeakabooPlotterSwing
 			public void change()
 			{
 
-				raw.setSelected(controller.getShowRawData());
-				fittings.setSelected(controller.getShowIndividualSelections());
-
 				logPlot.setSelected(controller.getViewLog());
 				axes.setSelected(controller.getShowAxes());
+				title.setSelected(controller.getShowTitle());
 				monochrome.setSelected(controller.getMonochrome());
 
+				//etitles, emarkings, eintensities
+				etitles.setSelected(controller.getShowElementTitles());
+				emarkings.setSelected(controller.getShowElementMarkers());
+				eintensities.setSelected(controller.getShowElementIntensities());
+				
 				switch (controller.getChannelCompositeType())
 				{
 
@@ -968,6 +956,9 @@ public class PeakabooPlotterSwing
 						break;
 
 				}
+				
+				raw.setSelected(controller.getShowRawData());
+				fittings.setSelected(controller.getShowIndividualSelections());
 
 			}
 		});

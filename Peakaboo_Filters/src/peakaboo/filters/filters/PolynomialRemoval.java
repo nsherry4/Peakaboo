@@ -1,8 +1,6 @@
 package peakaboo.filters.filters;
 
 
-import java.util.List;
-
 import peakaboo.calculations.Background;
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Spectrum;

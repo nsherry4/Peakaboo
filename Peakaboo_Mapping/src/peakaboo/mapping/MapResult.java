@@ -1,9 +1,7 @@
 package peakaboo.mapping;
 
 
-import java.util.List;
 
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 

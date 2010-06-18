@@ -2,19 +2,15 @@ package peakaboo.fileio.xrf;
 
 
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import peakaboo.datatypes.Spectrum;
 import peakaboo.fileio.AbstractFile;
 
 

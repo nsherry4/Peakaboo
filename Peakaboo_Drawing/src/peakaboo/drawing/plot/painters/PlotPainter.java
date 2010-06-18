@@ -1,10 +1,8 @@
 package peakaboo.drawing.plot.painters;
 
-import java.util.List;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.DrawingRequest;

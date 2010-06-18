@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Function2;
 import peakaboo.datatypes.functional.Functional;
@@ -94,8 +94,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		transitions = DataTypeFactory.<Transition> list();
 		componentSeries = DataTypeFactory.<TransitionSeries> list();
 	}
-
-
+	
 	public TransitionSeries(Element element, TransitionSeriesType seriesType)
 	{
 		this(element, seriesType, TransitionSeriesMode.PRIMARY);
@@ -223,17 +222,18 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 			case PILEUP:
 
-				
+
 				int count = getPileupCount();
 				String suffix = "";
-				if (count > 2) suffix += " x" + + count; 
-					
-				return componentSeries.get(0).element.name() + " " + componentSeries.get(0).getBaseType().name() + " Pile-Up" + suffix;
-				
+				if (count > 2) suffix += " x" + +count;
+
+				return componentSeries.get(0).element.name() + " " + componentSeries.get(0).getBaseType().name()
+						+ " Pile-Up" + suffix;
+
 			case SUMMATION:
 
 				Collections.sort(componentSeries);
-				
+
 				return Functional.foldr(Functional.map(componentSeries, new Function1<TransitionSeries, String>() {
 
 					public String f(TransitionSeries ts)
@@ -251,7 +251,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
-	
+
 	/**
 	 * Alias for getDescription
 	 */
@@ -342,45 +342,51 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	public static TransitionSeries summation(final List<TransitionSeries> tss)
 	{
-		
+
 		if (tss.size() == 0) return null;
+
+		if (tss.size() == 1) return tss.get(0);
 		
 		//group the TransitionSeries by equality
 		List<List<TransitionSeries>> tsGroups = Functional.groupBy(tss, Functions.<TransitionSeries> equiv());
 
-		
+
 		//function for summing two TransitionSeries
 		final Function2<TransitionSeries, TransitionSeries, TransitionSeries> tsSum = new Function2<TransitionSeries, TransitionSeries, TransitionSeries>() {
-		
+
 			public TransitionSeries f(TransitionSeries ts1, TransitionSeries ts2)
 			{
 				return ts1.summation(ts2);
 			}
 		};
-		
-		
-		//turn the groups of primary transitionseries into a list of pile-up transitionseries
-		List<TransitionSeries> pileups = Functional.map(tsGroups, new Function1<List<TransitionSeries>, TransitionSeries>() {
 
-			public TransitionSeries f(List<TransitionSeries> tsList)
-			{
-				return Functional.foldr(tsList, tsSum);
-			}
-		});
-		
+
+		//turn the groups of primary transitionseries into a list of pile-up transitionseries
+		List<TransitionSeries> pileups = Functional.map(
+				tsGroups,
+				new Function1<List<TransitionSeries>, TransitionSeries>() {
+
+					public TransitionSeries f(List<TransitionSeries> tsList)
+					{
+						return Functional.foldr(tsList, tsSum);
+					}
+				});
+
 		//sum the pileups
-		return Functional.foldr(pileups, tsSum);
-		
+		TransitionSeries result = Functional.foldr(pileups, tsSum);
+		return result;
+
 	}
-	
+
+
 	public TransitionSeries summation(final TransitionSeries other)
 	{
 
 		//one of these should be a primary TS
 		//if (mode != TransitionSeriesMode.PRIMARY && other.mode != TransitionSeriesMode.PRIMARY) return null;
-		
+
 		TransitionSeriesMode newmode = TransitionSeriesMode.SUMMATION;
-		
+
 		if (this.equals(other)) newmode = TransitionSeriesMode.PILEUP;
 		if (this.mode == TransitionSeriesMode.PILEUP && this.element.equals(other.element)) newmode = TransitionSeriesMode.PILEUP;
 		if (other.mode == TransitionSeriesMode.PILEUP && other.element.equals(this.element)) newmode = TransitionSeriesMode.PILEUP;
@@ -391,6 +397,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			TransitionSeriesType.COMPOSITE,
 			newmode);
 
+		System.out.println(transitions.size() == 0);
+		
 		if (transitions.size() == 0) return newTransitionSeries;
 
 		List<List<Transition>> allPileupLists = Functional.map(
@@ -437,6 +445,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
+
 	public int compareTo(TransitionSeries otherTS)
 	{
 
@@ -448,11 +457,11 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				if (otherTS.element == element)
 				{
-					return - type.compareTo(otherTS.type);
+					return -type.compareTo(otherTS.type);
 				}
 				else
 				{
-					return - element.compareTo(otherTS.element);
+					return -element.compareTo(otherTS.element);
 				}
 
 			case SUMMATION:
@@ -461,29 +470,29 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				Collections.sort(otherTS.componentSeries);
 
 				List<Integer> differences =
-					Functional.filter(Functional.zipWith(
-						componentSeries,
-						otherTS.componentSeries,
-						new Function2<TransitionSeries, TransitionSeries, Integer>() {
-	
-							public Integer f(TransitionSeries ts1, TransitionSeries ts2)
+						Functional.filter(Functional.zipWith(
+								componentSeries,
+								otherTS.componentSeries,
+								new Function2<TransitionSeries, TransitionSeries, Integer>() {
+
+									public Integer f(TransitionSeries ts1, TransitionSeries ts2)
 							{
 								return ts1.compareTo(ts2);
 							}
-						}),
-						new Function1<Integer, Boolean>() {
-	
-							public Boolean f(Integer element)
+								}),
+								new Function1<Integer, Boolean>() {
+
+									public Boolean f(Integer element)
 							{
 								return element != 0;
 							}
-						});
-				
+								});
+
 				if (differences.size() == 0) return 0;
 				return differences.get(0);
 
 		}
-		
+
 		return 0;
 
 	}
@@ -491,14 +500,15 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	public boolean equals(Object oother)
 	{
-		
+
 		if (!(oother instanceof TransitionSeries)) return false;
 		TransitionSeries other = (TransitionSeries) oother;
-		
-		if (type != TransitionSeriesType.COMPOSITE){
+
+		if (type != TransitionSeriesType.COMPOSITE)
+		{
 			if (other.element != this.element) return false;
 		}
-		
+
 		if (other.type != this.type) return false;
 		if (other.mode != this.mode) return false;
 
@@ -516,8 +526,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		return true;
 
 	}
-	
-	
+
+
 	public int getPileupCount()
 	{
 		int count = 0;
@@ -527,27 +537,63 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			{
 				count += ts.getPileupCount();
 			}
-			
-		} else if (mode == TransitionSeriesMode.PRIMARY)
+
+		}
+		else if (mode == TransitionSeriesMode.PRIMARY)
 		{
 			count = 1;
 		}
-		
+
 		return count;
 	}
-	
+
+
 	public TransitionSeriesType getBaseType()
 	{
-				
+
 		if (mode == TransitionSeriesMode.PILEUP)
 		{
 			return componentSeries.get(0).getBaseType();
-			
-		} else {
+
+		}
+		else
+		{
 			return type;
 		}
 	}
-	
-	
-	
+
+
+	public List<TransitionSeries> getBaseTransitionSeries()
+	{
+		List<TransitionSeries> list = null;
+
+		switch (type)
+		{
+			case COMPOSITE:
+
+				list = Functional.flatten(Functional.map(componentSeries, new Function1<TransitionSeries, List<TransitionSeries>>() {
+
+					public List<TransitionSeries> f(TransitionSeries ts)
+					{
+						return ts.getBaseTransitionSeries();
+					}
+				}));
+
+				return list;
+
+			default:
+				list = DataTypeFactory.<TransitionSeries> list();
+				list.add(this);
+				return list;
+		}
+
+	}
+
+	public Pair<String, String> toSerializablePair()
+	{
+		if (type == TransitionSeriesType.COMPOSITE) return null;
+		return new Pair<String, String>(element.name(), type.name());
+	}
+
+
 }

@@ -9,15 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
 
-import peakaboo.controller.plotter.FilterController;
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Function2;
 import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.TransitionSeries;

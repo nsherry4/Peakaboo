@@ -3,6 +3,9 @@ package peakaboo.controller.plotter;
 
 import java.io.Serializable;
 
+import org.ho.yaml.YamlConfig;
+import org.ho.yaml.wrapper.SimpleObjectWrapper;
+
 /**
  * 
  * This enum lists the kinds of ways that a collection of scans can be composited together for user viewing
@@ -20,6 +23,7 @@ public enum ChannelCompositeMode implements Serializable
 		{
 			return "Single Scan";
 		}
+
 	},
 	AVERAGE {
 
@@ -36,6 +40,6 @@ public enum ChannelCompositeMode implements Serializable
 		{
 			return "Strongest 10% per Channel";
 		}
-	}
-
+	};
+	
 }

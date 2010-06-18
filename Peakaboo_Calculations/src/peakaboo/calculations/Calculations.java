@@ -3,7 +3,6 @@ package peakaboo.calculations;
 
 import java.util.List;
 
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.GridPerspective;
 import peakaboo.datatypes.Spectrum;
 

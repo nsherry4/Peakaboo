@@ -1,11 +1,6 @@
 package peakaboo.calculations;
 
 
-import java.util.List;
-
-import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.ranges.ROI;
-
 /**
  * 
  * This class contains static methods for dealing with Regions of Interest and the data sets they apply to

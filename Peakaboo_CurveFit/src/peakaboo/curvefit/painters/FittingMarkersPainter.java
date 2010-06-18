@@ -1,8 +1,5 @@
 package peakaboo.curvefit.painters;
 
-
-import java.util.List;
-
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;

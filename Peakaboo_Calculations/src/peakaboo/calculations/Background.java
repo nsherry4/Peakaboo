@@ -4,10 +4,7 @@ package peakaboo.calculations;
 
 import java.util.List;
 
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 
 
 

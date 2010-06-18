@@ -2,7 +2,6 @@ package peakaboo.drawing.plot.painters.plot;
 
 
 import java.awt.Color;
-import java.util.List;
 
 import peakaboo.datatypes.Spectrum;
 

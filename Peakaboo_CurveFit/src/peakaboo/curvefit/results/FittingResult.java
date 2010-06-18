@@ -1,8 +1,6 @@
 package peakaboo.curvefit.results;
 
 
-import java.util.List;
-
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;

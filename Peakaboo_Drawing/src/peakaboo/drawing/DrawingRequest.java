@@ -66,6 +66,18 @@ public class DrawingRequest implements Serializable, Cloneable
 		}
 	}
 
+	
+	//For JYAML Serialization Purposes -- Needs this to handle enums
+	public String getViewTransform()
+	{
+		return viewTransform.name();
+	}
+
+	
+	public void setViewTransform(String viewTransform)
+	{
+		this.viewTransform = ViewTransform.valueOf(viewTransform);
+	}
 
 
 }

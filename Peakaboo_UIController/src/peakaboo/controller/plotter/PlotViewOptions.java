@@ -28,4 +28,17 @@ public class PlotViewOptions implements Serializable{
 		showAxes = false;
 	}
 	
+	
+	//For JYAML Serialization Purposes -- Needs this to handle enums
+	public String getChannelComposite()
+	{
+		return channelComposite.name();
+	}
+
+	
+	public void setChannelComposite(String channelComposite)
+	{
+		this.channelComposite = ChannelCompositeMode.valueOf(channelComposite);
+	}
+	
 }

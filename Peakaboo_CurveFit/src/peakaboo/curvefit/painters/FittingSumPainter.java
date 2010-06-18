@@ -2,7 +2,6 @@ package peakaboo.curvefit.painters;
 
 
 import java.awt.Color;
-import java.util.List;
 
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.datatypes.Spectrum;

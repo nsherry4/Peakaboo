@@ -11,7 +11,6 @@ import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.functional.Function1;
 import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.filters.filters.Addition;
 import peakaboo.filters.filters.AgressiveWaveletNoiseFilter;
 import peakaboo.filters.filters.BruknerRemoval;

@@ -1,7 +1,6 @@
 package peakaboo.fileio.xrf;
 
 
-import java.io.File;
 import java.util.List;
 
 import peakaboo.datatypes.Coord;
