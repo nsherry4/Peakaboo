@@ -145,7 +145,7 @@ public class PeakabooPlotterSwing
 		savedSessionFileName = null;
 
 		frame = new JFrame(Version.title);
-		frame.setIconImage(IconFactory.getImage(Version.logo));
+		frame.setIconImage(IconFactory.getImage(Version.icon));
 
 		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D toy = bi.createGraphics();

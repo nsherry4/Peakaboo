@@ -137,7 +137,7 @@ public class AboutDialogue extends JDialog
 		gc.gridy += 1;
 		panel.add(buttonPanel, gc);
 		
-		panel.setBorder(new EmptyBorder(25, 50, Spacing.large, 50));
+		panel.setBorder(new EmptyBorder(0, 50, Spacing.large, 50));
 		//setPreferredSize(new Dimension(300, 300));
 		
 		
