@@ -24,12 +24,12 @@ import javax.swing.table.TableModel;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.mapping.colours.OverlayColor;
+import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
+import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.colours.ComboTableCellRenderer;
 
 public class Overlay extends JPanel {
 
@@ -141,7 +141,7 @@ public class Overlay extends JPanel {
 				else if (columnIndex == 2)
 				{
 					TransitionSeries ts = controller.getActiveTabModel().getAllTransitionSeries().get(rowIndex);
-					controller.getActiveTabModel().overlayColour.put(ts, (OverlayColor)value);
+					controller.getActiveTabModel().overlayColour.put(ts, (OverlayColour)value);
 					controller.invalidateInterpolation();
 				}
 			}
@@ -204,7 +204,7 @@ public class Overlay extends JPanel {
 				{
 					case 0:	return Boolean.class;
 					case 1: return String.class;
-					case 2: return OverlayColor.class;
+					case 2: return OverlayColour.class;
 				}
 				return Object.class;
 			}
@@ -233,7 +233,7 @@ public class Overlay extends JPanel {
 			};*/
 				
 		ComboTableCellRenderer renderer = new ComboTableCellRenderer();
-		JComboBox comboBox = new JComboBox(OverlayColor.values());
+		JComboBox comboBox = new JComboBox(OverlayColour.values());
 		comboBox.setRenderer(renderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
 		

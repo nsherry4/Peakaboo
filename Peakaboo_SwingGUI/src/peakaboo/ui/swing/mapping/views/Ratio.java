@@ -26,6 +26,7 @@ import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
+import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 
@@ -227,10 +228,12 @@ public class Ratio extends JPanel {
 		
 		
 		Integer choices[] = {1,2};
+		ComboTableCellRenderer renderer = new ComboTableCellRenderer();
 		JComboBox comboBox = new JComboBox(choices);
+		comboBox.setRenderer(renderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
 		column = table.getColumnModel().getColumn(2);
-		//column.setCellRenderer(renderer);
+		column.setCellRenderer(renderer);
 		column.setCellEditor(editor);
 		
 		/*ComboTableCellRenderer renderer = new ComboTableCellRenderer();

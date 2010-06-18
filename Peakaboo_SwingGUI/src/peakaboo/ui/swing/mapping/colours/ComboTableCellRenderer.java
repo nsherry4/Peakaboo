@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.widgets.colours;
+package peakaboo.ui.swing.mapping.colours;
 
 
 
@@ -15,7 +15,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import peakaboo.common.Stderr;
-import peakaboo.mapping.colours.OverlayColor;
+import peakaboo.mapping.colours.OverlayColour;
+import peakaboo.mapping.colours.RatioColour;
 import peakaboo.ui.swing.widgets.Spacing;
 
 
@@ -32,11 +33,21 @@ public class ComboTableCellRenderer implements ListCellRenderer, TableCellRender
 	{
 		renderer.setBorder(new MatteBorder(Spacing.iSmall(), Color.white));
 		
-		if ((value != null) && (value instanceof OverlayColor))
+		if ((value != null) && (value instanceof OverlayColour))
 		{
-			renderer.setIcon(new SquareIcon( ((OverlayColor) value).toColor() ));
+			//Overlay Mode
+			Color c = ((OverlayColour) value).toColor();
+			renderer.setIcon(new SquareIcon( c ));
 			renderer.setText("");
-			renderer.setBackground( ((OverlayColor)value).toColor() );
+			renderer.setBackground( c );
+		} 
+		else if (value != null && value instanceof Integer) 
+		{
+			//Ratio Mode
+			Color c = RatioColour.values()[((Integer)value) - 1].toColor();
+			renderer.setIcon(new SquareIcon( c ));
+			renderer.setText("");
+			renderer.setBackground( c );
 		}
 		else
 		{

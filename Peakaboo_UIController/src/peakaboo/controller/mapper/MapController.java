@@ -32,11 +32,12 @@ import peakaboo.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.map.palettes.OverlayPalette;
 import peakaboo.drawing.map.palettes.RatioPalette;
+import peakaboo.drawing.map.palettes.SingleColourPalette;
 import peakaboo.drawing.map.palettes.ThermalScalePalette;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.painters.axis.AxisPainter;
 import peakaboo.drawing.painters.axis.TitleAxisPainter;
-import peakaboo.mapping.colours.OverlayColor;
+import peakaboo.mapping.colours.OverlayColour;
 
 
 
@@ -665,7 +666,7 @@ public class MapController extends CanvasController
 
 				float redMax = Functional.fold(
 
-				activeTabData.getTransitionSeriesForColour(OverlayColor.RED),
+				activeTabData.getTransitionSeriesForColour(OverlayColour.RED),
 						0f,
 						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
@@ -678,7 +679,7 @@ public class MapController extends CanvasController
 
 				float greenMax = Functional.fold(
 
-				activeTabData.getTransitionSeriesForColour(OverlayColor.GREEN),
+				activeTabData.getTransitionSeriesForColour(OverlayColour.GREEN),
 						0f,
 						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
@@ -691,7 +692,7 @@ public class MapController extends CanvasController
 
 				float blueMax = Functional.fold(
 
-				activeTabData.getTransitionSeriesForColour(OverlayColor.BLUE),
+				activeTabData.getTransitionSeriesForColour(OverlayColour.BLUE),
 						0f,
 						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
@@ -733,10 +734,10 @@ public class MapController extends CanvasController
 									// mapping function - convert the color objects into color,string pairs (ie
 									// color/element
 									// list)
-									new Function1<OverlayColor, Pair<Color, String>>() {
+									new Function1<OverlayColour, Pair<Color, String>>() {
 
 										@Override
-										public Pair<Color, String> f(OverlayColor element)
+										public Pair<Color, String> f(OverlayColour element)
 									{
 										// create a color,string pair
 										return new Pair<Color, String>(
@@ -747,7 +748,7 @@ public class MapController extends CanvasController
 											Functional.foldr(
 
 											// map the list of transitionSeries, list double pairs to just
-											// transitionseries
+													// transitionseries
 													Functional.map(
 															activeTabData.getTransitionSeriesForColour(element),
 															Functions.<TransitionSeries, Spectrum> first()),
@@ -782,22 +783,36 @@ public class MapController extends CanvasController
 
 			case RATIO:
 
-				List<Integer> ratioSideValues = Functional.unique(activeTabData.ratioSide.values());
+				//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
+				List<Integer> ratioSideValues = Functional.unique(Functional.map(activeTabData
+					.getVisibleTransitionSeries(), new Function1<TransitionSeries, Integer>() {
+
+					@Override
+					public Integer f(TransitionSeries ts)
+					{
+						return activeTabData.ratioSide.get(ts);
+					}
+				}));
+				//this is a valid ratio if there is at least 1 visible TS for each side
 				boolean validRatio = (ratioSideValues.contains(1) && ratioSideValues.contains(2));
 
+				//how many steps/markings will we display on the spectrum
 				float steps = (float) Math.ceil(SpectrumCalculations.max(SpectrumCalculations
 					.abs(activeTabData.resultantData.get(0).second)));
-
 				mapModel.dr.maxYIntensity = steps;
 
-				palette = new RatioPalette(spectrumSteps, mapModel.viewOptions.monochrome);
+				if (validRatio){
+					palette = new RatioPalette(spectrumSteps, mapModel.viewOptions.monochrome);
+				} else {
+					palette = new SingleColourPalette(Color.black);
+				}
+				
 
 				List<Pair<Float, String>> spectrumMarkers = DataTypeFactory.<Pair<Float, String>> list();
 
 				int increment = 1;
 				if (steps > 100) increment = (int) Math.ceil(steps / 100);
 
-				
 				if (validRatio)
 				{
 					for (int i = -(int) steps; i <= (int) steps; i += increment)
@@ -857,7 +872,7 @@ public class MapController extends CanvasController
 
 					String side2Title = activeTabData.mapLongTitle(activeTabData.getTransitionSeriesForRatioSide(2));
 
-					mapTitle = "← " + side1Title + " ∶ " + side2Title + " →";
+					mapTitle = side1Title + " ∶ " + side2Title;
 					break;
 
 				case OVERLAY:
@@ -930,7 +945,7 @@ public class MapController extends CanvasController
 							@Override
 							public MapPainter f(Pair<TransitionSeries, Spectrum> mapdata)
 							{
-								OverlayColor c = activeTabData.overlayColour.get(mapdata.first);
+								OverlayColour c = activeTabData.overlayColour.get(mapdata.first);
 
 								MapPainter p = MapTechniqueFactory.getTechnique(new OverlayPalette(spectrumSteps, c
 									.toColor()), mapdata.second, false, spectrumSteps);

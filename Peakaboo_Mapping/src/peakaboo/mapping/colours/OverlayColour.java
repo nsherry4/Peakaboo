@@ -2,7 +2,7 @@ package peakaboo.mapping.colours;
 
 import java.awt.Color;
 
-	public enum OverlayColor {
+	public enum OverlayColour {
 		
 		RED {
 			public Color toColor(){return new Color(0.64f, 0.00f, 0.00f);}

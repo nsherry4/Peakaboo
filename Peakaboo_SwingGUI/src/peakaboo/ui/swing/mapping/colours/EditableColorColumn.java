@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.widgets.colours;
+package peakaboo.ui.swing.mapping.colours;
 
 
 

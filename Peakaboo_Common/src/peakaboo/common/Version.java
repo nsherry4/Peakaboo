@@ -2,7 +2,7 @@ package peakaboo.common;
 
 public class Version {
 
-	public final static boolean release = true;
+	public final static boolean release = false;
 	
 	public final static boolean inJar = Env.inJar();
 	

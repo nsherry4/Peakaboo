@@ -12,7 +12,7 @@ import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.MapResultSet;
-import peakaboo.mapping.colours.OverlayColor;
+import peakaboo.mapping.colours.OverlayColour;
 
 public class SingleMapModel {
 
@@ -22,7 +22,7 @@ public class SingleMapModel {
 	private MapResultSet mapResults;
 	
 	public Map<TransitionSeries, Integer> ratioSide;
-	public Map<TransitionSeries, OverlayColor> overlayColour;
+	public Map<TransitionSeries, OverlayColour> overlayColour;
 	public Map<TransitionSeries, Boolean> visible;
 	
 	public MapScaleMode mapScaleMode = MapScaleMode.VISIBLE_ELEMENTS;
@@ -38,13 +38,13 @@ public class SingleMapModel {
 		displayMode = MapDisplayMode.COMPOSITE;
 		
 		ratioSide = DataTypeFactory.<TransitionSeries, Integer>map();
-		overlayColour = DataTypeFactory.<TransitionSeries, OverlayColor>map();
+		overlayColour = DataTypeFactory.<TransitionSeries, OverlayColour>map();
 		visible = DataTypeFactory.<TransitionSeries, Boolean>map();
 		
 		for (TransitionSeries ts : originalData.getAllTransitionSeries())
 		{
 			ratioSide.put(ts, 1);
-			overlayColour.put(ts, OverlayColor.RED);
+			overlayColour.put(ts, OverlayColour.RED);
 			visible.put(ts, true);
 		}
 		
@@ -146,7 +146,7 @@ public class SingleMapModel {
 	}
 	
 	
-	public List<Pair<TransitionSeries, Spectrum>> getTransitionSeriesForColour(final OverlayColor c)
+	public List<Pair<TransitionSeries, Spectrum>> getTransitionSeriesForColour(final OverlayColour c)
 	{
 		return Functional.filter(
 				resultantData,
