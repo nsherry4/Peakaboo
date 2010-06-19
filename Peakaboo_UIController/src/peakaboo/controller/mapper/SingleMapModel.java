@@ -4,12 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import fava.*;
+
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.MapResultSet;
 import peakaboo.mapping.colours.OverlayColour;
@@ -54,7 +52,7 @@ public class SingleMapModel {
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<TransitionSeries> tsList = Functional.filter(visible.keySet(), Functions.<TransitionSeries>bTrue());
+		List<TransitionSeries> tsList = Fn.filter(visible.keySet(), Functions.<TransitionSeries>bTrue());
 		
 		Collections.sort(tsList);
 		
@@ -63,7 +61,7 @@ public class SingleMapModel {
 	
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return Functional.filter(getAllTransitionSeries(), new Function1<TransitionSeries, Boolean>() {
+		return Fn.filter(getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 			
 			@Override
 			public Boolean f(TransitionSeries element) {
@@ -108,14 +106,14 @@ public class SingleMapModel {
 	{
 		String separator = ", ";
 		
-		List<String> elementNames = Functional.map(list, new Function1<TransitionSeries, String>() {
+		List<String> elementNames = Fn.map(list, new FunctionMap<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.toElementString();
 			}
 		});
 
-		String title = Functional.foldr(elementNames, Functions.concat(", "));
+		String title = Fn.foldr(elementNames, Functions.strcat(", "));
 		
 		if (title == null) return "-";
 		return title;
@@ -128,7 +126,7 @@ public class SingleMapModel {
 		String separator = ", ";
 		
 		
-		List<String> elementNames = Functional.map(list, new Function1<TransitionSeries, String>() {
+		List<String> elementNames = Fn.map(list, new FunctionMap<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.element.toString();
@@ -136,9 +134,9 @@ public class SingleMapModel {
 		});
 		
 		//trim out the duplicated
-		elementNames = Functional.unique(elementNames);
+		elementNames = Fn.unique(elementNames);
 
-		String title = Functional.foldr(elementNames, Functions.concat(", "));
+		String title = Fn.foldr(elementNames, Functions.strcat(", "));
 		
 		if (title == null) return "-";
 		return title;
@@ -148,9 +146,9 @@ public class SingleMapModel {
 	
 	public List<Pair<TransitionSeries, Spectrum>> getTransitionSeriesForColour(final OverlayColour c)
 	{
-		return Functional.filter(
+		return Fn.filter(
 				resultantData,
-				new Function1<Pair<TransitionSeries, Spectrum>, Boolean>() {
+				new FunctionMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
 					@Override
 					public Boolean f(Pair<TransitionSeries, Spectrum> element)
@@ -162,9 +160,9 @@ public class SingleMapModel {
 	
 	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
-		return Functional.filter(
+		return Fn.filter(
 				getVisibleTransitionSeries(),
-				new Function1<TransitionSeries, Boolean>() {
+				new FunctionMap<TransitionSeries, Boolean>() {
 
 					@Override
 					public Boolean f(TransitionSeries element)

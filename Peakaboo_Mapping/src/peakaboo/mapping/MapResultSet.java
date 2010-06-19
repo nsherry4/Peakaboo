@@ -4,11 +4,11 @@ package peakaboo.mapping;
 import java.util.Collection;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 
 /**
@@ -119,7 +119,7 @@ public class MapResultSet implements Cloneable
 	 */
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return Functional.map(maps, new Function1<MapResult, TransitionSeries>() {
+		return Fn.map(maps, new FunctionMap<MapResult, TransitionSeries>() {
 			
 			@Override
 			public TransitionSeries f(MapResult mr) {

@@ -3,8 +3,9 @@ package peakaboo.drawing.painters.axis;
 
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.backends.Surface;

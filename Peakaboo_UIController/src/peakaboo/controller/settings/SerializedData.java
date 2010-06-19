@@ -7,8 +7,9 @@ import java.util.List;
 
 import org.ho.yaml.Yaml;
 
+import fava.*;
+
 import peakaboo.controller.plotter.PlotViewOptions;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;

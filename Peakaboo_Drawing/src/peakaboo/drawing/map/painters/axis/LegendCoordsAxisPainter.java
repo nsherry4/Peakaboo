@@ -5,12 +5,10 @@ package peakaboo.drawing.map.painters.axis;
 import java.awt.Color;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.functional.Function2;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.drawing.painters.PainterData;
 
 
@@ -60,7 +58,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		
 		
 		// concatenate the list of strings to display so we can check the width of the total string
-		String markingsText = Functional.foldr(Functional.map(entries, Functions.<Color, String>second()), Functions.concat(" "));
+		String markingsText = Fn.foldr(Fn.map(entries, Functions.<Color, String>second()), Functions.strcat(" "));
 		float legendSquareWidth = entries.size() * keyHeight * 2.5f - keyHeight; // -keyHeight because we don't need
 																					// padding on the end
 
@@ -79,7 +77,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		}
 
 		float startX = offsetX + ((width - expectedTextWidth) / 2.0f);
-		Functional.foldr(entries, startX, new Function2<Pair<Color, String>, Float, Float>() {
+		Fn.foldr(entries, startX, new FunctionCombine<Pair<Color, String>, Float, Float>() {
 
 			public Float f(Pair<Color, String> entry, Float position)
 			{

@@ -5,12 +5,13 @@ package peakaboo.curvefit.fitting;
 import java.io.Serializable;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 
 
@@ -82,7 +83,7 @@ public class FittingSet implements Serializable
 	public synchronized void addTransitionSeries(TransitionSeries ts)
 	{
 
-		if (Functional.include(fitTransitionSeries, ts)) return;
+		if (Fn.include(fitTransitionSeries, ts)) return;
 		
 		addTransitionSeriesToFittings(ts);
 		fitTransitionSeries.add(ts);

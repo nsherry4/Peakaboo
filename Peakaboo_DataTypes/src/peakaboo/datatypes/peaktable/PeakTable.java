@@ -6,11 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Collections;
 
+import fava.*;
+
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
+
 
 
 
@@ -86,7 +85,7 @@ public class PeakTable
 	public List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
 
-		return Functional.filter(elementTransitions, new Function1<TransitionSeries, Boolean>() {
+		return Fn.filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries ts)
 			{
@@ -98,12 +97,12 @@ public class PeakTable
 	
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return Functional.map(elementTransitions, Functions.<TransitionSeries>id());
+		return Fn.map(elementTransitions, Functions.<TransitionSeries>id());
 	}
 	
 	public TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
-		List<TransitionSeries> tss = Functional.filter(elementTransitions, new Function1<TransitionSeries, Boolean>() {
+		List<TransitionSeries> tss = Fn.filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries ts)
 			{

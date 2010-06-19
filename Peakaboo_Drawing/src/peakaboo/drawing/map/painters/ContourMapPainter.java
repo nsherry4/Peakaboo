@@ -4,10 +4,11 @@ package peakaboo.drawing.map.painters;
 import java.awt.Color;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.GridPerspective;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.map.MapDrawing;
 import peakaboo.drawing.map.palettes.AbstractPalette;

@@ -1,6 +1,7 @@
 package peakaboo.drawing.map.painters.linearplot;
 
-import peakaboo.datatypes.Pair;
+import fava.*;
+
 import peakaboo.drawing.Drawing;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.painters.axis.AxisPainter;

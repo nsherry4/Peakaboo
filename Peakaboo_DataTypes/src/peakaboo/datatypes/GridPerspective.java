@@ -3,6 +3,10 @@ package peakaboo.datatypes;
 
 import java.util.List;
 
+
+import fava.Pair;
+
+
 /**
  * 
  * This class provides a way to treat any List as a 2D grid of data without needing to keep the data in a

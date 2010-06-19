@@ -14,9 +14,9 @@ import javax.jnlp.UnavailableServiceException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import fava.*;
+
 import peakaboo.common.Env;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.icons.IconFactory;
@@ -70,7 +70,7 @@ public class SwingIO
 			int returnVal = chooser.showOpenDialog(parent);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
-				return Functional.map(chooser.getSelectedFiles(), new Function1<File, AbstractFile>() {
+				return Fn.map(chooser.getSelectedFiles(), new FunctionMap<File, AbstractFile>() {
 
 					public AbstractFile f(File f)
 					{

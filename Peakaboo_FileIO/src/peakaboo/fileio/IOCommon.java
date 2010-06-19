@@ -17,10 +17,7 @@ import javax.jnlp.FileSaveService;
 import javax.jnlp.ServiceManager;
 import javax.jnlp.UnavailableServiceException;
 
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Function2;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
+import fava.*;
 
 
 
@@ -81,7 +78,7 @@ public class IOCommon
 		{
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
 
-			out.write(Functional.foldr(list, stringbuilder, new Function2<T1, StringBuilder, StringBuilder>() {
+			out.write(Fn.foldr(list, stringbuilder, new FunctionCombine<T1, StringBuilder, StringBuilder>() {
 
 				@Override
 				public StringBuilder f(T1 varT1, StringBuilder builder)
@@ -155,7 +152,7 @@ public class IOCommon
 	public static void sortFiles(List<AbstractFile> filenames)
 	{
 
-		Functional.sortBy(filenames, new AlphaNumericComparitor(), new Function1<AbstractFile, String>() {
+		Fn.sortBy(filenames, new AlphaNumericComparitor(), new FunctionMap<AbstractFile, String>() {
 
 			@Override
 			public String f(AbstractFile file)
@@ -175,7 +172,7 @@ public class IOCommon
 	public static void sortFilenames(List<String> filenames)
 	{
 
-		Functional.sortBy(filenames, new AlphaNumericComparitor(), Functions.<String> id());
+		Fn.sortBy(filenames, new AlphaNumericComparitor(), Functions.<String> id());
 
 	}
 
@@ -189,9 +186,9 @@ public class IOCommon
 	public static String getFilePath(String filename)
 	{
 		
-		List<String> parts = Functional.map(filename.split(separator()), Functions.<String> id());
+		List<String> parts = Fn.map(filename.split(separator()), Functions.<String> id());
 		parts.remove(parts.size() - 1);
-		return Functional.fold(parts, Functions.concat(separator())) + separator();
+		return Fn.fold(parts, Functions.strcat(separator())) + separator();
 
 	}
 
@@ -252,7 +249,7 @@ public class IOCommon
 	{
 
 		
-		List<String> titles = Functional.map(filenames, new Function1<String, String>() {
+		List<String> titles = Fn.map(filenames, new FunctionMap<String, String>() {
 
 			@Override
 			public String f(String element)
@@ -317,7 +314,7 @@ public class IOCommon
 		{
 			fos = (FileOpenService) ServiceManager.lookup("javax.jnlp.FileOpenService");
 			
-			return Functional.map(fos.openMultiFileDialog(path, extensions), new Function1<FileContents, AbstractFile>(){
+			return Fn.map(fos.openMultiFileDialog(path, extensions), new FunctionMap<FileContents, AbstractFile>(){
 
 				@Override
 				public AbstractFile f(FileContents element)

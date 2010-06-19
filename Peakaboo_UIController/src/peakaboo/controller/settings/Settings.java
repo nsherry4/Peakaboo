@@ -16,11 +16,10 @@ import java.util.List;
 
 import org.ho.yaml.Yaml;
 
+import fava.*;
+
 import peakaboo.controller.plotter.PlotModel;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
@@ -73,15 +72,15 @@ public class Settings
 			//for each list of element/transitionseriestype string representation pairs
 			//convert that list into a single composited element (or primary if it is of length 1
 			//and add the result to the fittings set
-			Functional.each(data.fittings, new Function1<List<Pair<String, String>>, Object>() {
+			Fn.each(data.fittings, new FunctionEach<List<Pair<String, String>>>() {
 
 				@Override
-				public Object f(List<Pair<String, String>> tspairs)
+				public void f(List<Pair<String, String>> tspairs)
 				{
 
-					List<TransitionSeries> tss = Functional.map(
+					List<TransitionSeries> tss = Fn.map(
 							tspairs,
-							new Function1<Pair<String, String>, TransitionSeries>() {
+							new FunctionMap<Pair<String, String>, TransitionSeries>() {
 
 								@Override
 								public TransitionSeries f(Pair<String, String> pair)
@@ -93,7 +92,6 @@ public class Settings
 							});
 
 					model.fittingSelections.addTransitionSeries(TransitionSeries.summation(tss));
-					return null;
 				}
 			});
 
@@ -152,20 +150,20 @@ public class Settings
 
 		data.fittings =
 
-		Functional.map(fittedTSs, new Function1<TransitionSeries, List<Pair<String, String>>>() {
+		Fn.map(fittedTSs, new FunctionMap<TransitionSeries, List<Pair<String, String>>>() {
 
 			@Override
 			public List<Pair<String, String>> f(TransitionSeries ts)
 			{
-				return Functional.map(
+				return Fn.map(
 						ts.getBaseTransitionSeries(),
-						new Function1<TransitionSeries, Pair<String, String>>() {
+						new FunctionMap<TransitionSeries, Pair<String, String>>() {
 
 							@Override
 							public Pair<String, String> f(TransitionSeries ts)
-					{
-						return ts.toSerializablePair();
-					}
+							{
+								return ts.toSerializablePair();
+							}
 						});
 			}
 		});

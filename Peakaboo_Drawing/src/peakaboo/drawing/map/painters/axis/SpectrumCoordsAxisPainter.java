@@ -5,12 +5,10 @@ package peakaboo.drawing.map.painters.axis;
 import java.awt.Color;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.drawing.map.palettes.AbstractPalette;
 import peakaboo.drawing.painters.PainterData;
 
@@ -133,7 +131,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			
 
 			//concatenate the list of strings to display so we can check the width of the total string
-			String markingsText = Functional.foldr(Functional.map(markings, Functions.<Float, String>second()), Functions.concat(" "));
+			String markingsText = Fn.foldr(Fn.map(markings, Functions.<Float, String>second()), Functions.strcat(" "));
 			//keep shrinking the font size until all of the text until the font size is small enough that it fits
 			while (width > 0.0 && fontSize > 1.0)
 			{
@@ -146,14 +144,13 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 			}
 
-			Functional.each(markings, new Function1<Pair<Float, String>, Object>() {
+			Fn.each(markings, new FunctionEach<Pair<Float, String>>() {
 
-				public Object f(Pair<Float, String> element)
+				public void f(Pair<Float, String> element)
 				{
 					if (element.first > 1.0) element.first = 1.0f;
 					float textWidth = p.context.getTextWidth(element.second);
 					p.context.writeText(element.second, position + ((width - textWidth) * element.first), textBaseline);
-					return null;
 				}
 			});
 

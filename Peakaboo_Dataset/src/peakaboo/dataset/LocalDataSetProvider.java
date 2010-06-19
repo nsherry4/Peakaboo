@@ -4,7 +4,7 @@ package peakaboo.dataset;
 
 import java.util.List;
 
-// import com.sun.org.apache.xerces.internal.impl.dv.DatatypeException;
+import fava.*;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -15,8 +15,6 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.EmptyTask;
 import peakaboo.datatypes.tasks.Task;
@@ -92,13 +90,20 @@ public class LocalDataSetProvider extends DataSetProvider
 		if (excludedIndcies.size() == 0) return averagePlot();
 
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = Functional.filter_index(dsc_dataset, new Function1<Integer, Boolean>() {
+		List<Spectrum> badScans = Fn.map(excludedIndcies, new FunctionMap<Integer, Spectrum>(){
+
+			public Spectrum f(Integer index) {
+				return dsc_dataset.get(index);
+			}
+		});
+		
+		/*List<Spectrum> badScans = Fn.filter_index(dsc_dataset, new Function11<Integer, Boolean>() {
 
 			public Boolean f(Integer element)
 			{
 				return (excludedIndcies.indexOf(element) != -1);
 			}
-		});
+		});*/
 
 		Spectrum Ae;
 		Spectrum At;

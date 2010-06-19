@@ -1,9 +1,10 @@
 package peakaboo.drawing.map;
 
 
+import fava.*;
+
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.drawing.backends.Buffer;
 import peakaboo.drawing.backends.Surface;

@@ -2,7 +2,8 @@ package peakaboo.drawing.plot.painters.axis;
 
 import java.util.List;
 
-import peakaboo.datatypes.Pair;
+import fava.*;
+
 import peakaboo.datatypes.Range;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.plot.PlotDrawing;

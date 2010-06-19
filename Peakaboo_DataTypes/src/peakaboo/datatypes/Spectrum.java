@@ -2,8 +2,7 @@ package peakaboo.datatypes;
 
 import java.util.Iterator;
 
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Function2;
+import fava.*;
 
 public class Spectrum implements Iterable<Float>
 {
@@ -119,7 +118,7 @@ public class Spectrum implements Iterable<Float>
 		};
 	}
 
-	public Spectrum map(Function1<Float, Float> f)
+	public Spectrum map(FunctionMap<Float, Float> f)
 	{
 		
 		Spectrum newSpectrum = new Spectrum(size);
@@ -131,7 +130,7 @@ public class Spectrum implements Iterable<Float>
 		
 	}
 	
-	public Spectrum zipWith(Spectrum other, Function2<Float, Float, Float> f)
+	public Spectrum zipWith(Spectrum other, FunctionCombine<Float, Float, Float> f)
 	{
 		
 		Spectrum newSpectrum = new Spectrum(size);

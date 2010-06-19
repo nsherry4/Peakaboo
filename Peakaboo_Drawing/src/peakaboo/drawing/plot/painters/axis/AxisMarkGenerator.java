@@ -2,8 +2,9 @@ package peakaboo.drawing.plot.painters.axis;
 
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.drawing.backends.Surface;
 

@@ -2,11 +2,11 @@ package peakaboo.calculations;
 
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.GridPerspective;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Functional;
 
 /**
  * 
@@ -110,17 +110,17 @@ public class Interpolation {
 		float total = 0;
 		int count = 0;
 		
-		if (x >= 1 && !Functional.include(badPoints, grid.getIndexFromXY(x-1, y)))
+		if (x >= 1 && !Fn.include(badPoints, grid.getIndexFromXY(x-1, y)))
 			{ total += grid.get(list, x-1, y); count += 1; }
 		
-		if (y >= 1 && !Functional.include(badPoints, grid.getIndexFromXY(x, y-1))) 
+		if (y >= 1 && !Fn.include(badPoints, grid.getIndexFromXY(x, y-1))) 
 			{ total += grid.get(list, x, y-1); count += 1; }
 		
 		
-		if (x <= grid.width - 2 && !Functional.include(badPoints, grid.getIndexFromXY(x+1, y))) 
+		if (x <= grid.width - 2 && !Fn.include(badPoints, grid.getIndexFromXY(x+1, y))) 
 			{ total += grid.get(list, x+1, y); count += 1; }
 		
-		if (y <= grid.height- 2 && !Functional.include(badPoints, grid.getIndexFromXY(x, y+1))) 
+		if (y <= grid.height- 2 && !Fn.include(badPoints, grid.getIndexFromXY(x, y+1))) 
 			{ total += grid.get(list, x, y+1); count += 1; }
 				
 		if (count > 0)

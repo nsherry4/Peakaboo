@@ -5,21 +5,18 @@ package peakaboo.controller.mapper;
 import java.awt.Color;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.calculations.Interpolation;
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.controller.CanvasController;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.GridPerspective;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Ratios;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Function2;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.backends.Surface.CompositeModes;
@@ -80,7 +77,7 @@ public class MapController extends CanvasController
 			generateFinalData();
 		}
 
-		return Functional.map(activeTabData.resultantData, Functions.<TransitionSeries, Spectrum> second());
+		return Fn.map(activeTabData.resultantData, Functions.<TransitionSeries, Spectrum> second());
 	}
 
 
@@ -98,9 +95,9 @@ public class MapController extends CanvasController
 
 			case OVERLAY:
 
-				return Functional.foldr(
+				return Fn.foldr(
 
-				Functional.map(getVisibleMapData(), new Function1<Spectrum, String>() {
+				Fn.map(getVisibleMapData(), new FunctionMap<Spectrum, String>() {
 
 					@Override
 					public String f(Spectrum element)
@@ -109,7 +106,7 @@ public class MapController extends CanvasController
 					}
 				})
 
-				, "", Functions.concat());
+				, "", Functions.strcat());
 
 			case RATIO:
 
@@ -466,9 +463,9 @@ public class MapController extends CanvasController
 
 			case OVERLAY:
 
-				dataset = Functional.map(
+				dataset = Fn.map(
 						activeTabData.getVisibleTransitionSeries(),
-						new Function1<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
+						new FunctionMap<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
 
 							@Override
 							public Pair<TransitionSeries, Spectrum> f(TransitionSeries ts)
@@ -496,7 +493,7 @@ public class MapController extends CanvasController
 				final float side2Min = SpectrumCalculations.min(side2Data, false);
 
 				// compute the ratio of the two sides
-				data = side1Data.zipWith(side2Data, new Function2<Float, Float, Float>() {
+				data = side1Data.zipWith(side2Data, new FunctionCombine<Float, Float, Float>() {
 
 					@Override
 					public Float f(Float side1Value, Float side2Value)
@@ -528,9 +525,9 @@ public class MapController extends CanvasController
 		}
 
 		// fix bad points, do interpolation, etc
-		dataset = Functional.map(
+		dataset = Fn.map(
 				dataset,
-				new Function1<Pair<TransitionSeries, Spectrum>, Pair<TransitionSeries, Spectrum>>() {
+				new FunctionMap<Pair<TransitionSeries, Spectrum>, Pair<TransitionSeries, Spectrum>>() {
 
 					GridPerspective<Float>	grid	= new GridPerspective<Float>(
 														mapModel.dataDimensions.x,
@@ -664,11 +661,11 @@ public class MapController extends CanvasController
 
 			case OVERLAY:
 
-				float redMax = Functional.fold(
+				float redMax = Fn.fold(
 
 				activeTabData.getTransitionSeriesForColour(OverlayColour.RED),
 						0f,
-						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
+						new FunctionCombine<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
 							@Override
 							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
@@ -677,11 +674,11 @@ public class MapController extends CanvasController
 							}
 						});
 
-				float greenMax = Functional.fold(
+				float greenMax = Fn.fold(
 
 				activeTabData.getTransitionSeriesForColour(OverlayColour.GREEN),
 						0f,
-						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
+						new FunctionCombine<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
 							@Override
 							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
@@ -690,11 +687,11 @@ public class MapController extends CanvasController
 							}
 						});
 
-				float blueMax = Functional.fold(
+				float blueMax = Fn.fold(
 
 				activeTabData.getTransitionSeriesForColour(OverlayColour.BLUE),
 						0f,
-						new Function2<Pair<TransitionSeries, Spectrum>, Float, Float>() {
+						new FunctionCombine<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
 							@Override
 							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
@@ -724,51 +721,51 @@ public class MapController extends CanvasController
 
 					// create a list of color,string pairs for the legend by mapping the list of transitionseries per
 					// colour and filter for empty strings
-					Functional.filter(
-							Functional.map(
+					Fn.filter(
+							Fn.map(
 
 							// input list - get a unique list of colours in use
 
-									Functional.unique(activeTabData.overlayColour.values()),
+									Fn.unique(activeTabData.overlayColour.values()),
 
 									// mapping function - convert the color objects into color,string pairs (ie
 									// color/element
 									// list)
-									new Function1<OverlayColour, Pair<Color, String>>() {
+									new FunctionMap<OverlayColour, Pair<Color, String>>() {
 
 										@Override
 										public Pair<Color, String> f(OverlayColour element)
-									{
-										// create a color,string pair
-										return new Pair<Color, String>(
-
-										element.toColor(),
-
-										// fold the list of transition series using the concat operator
-											Functional.foldr(
-
-											// map the list of transitionSeries, list double pairs to just
-													// transitionseries
-													Functional.map(
-															activeTabData.getTransitionSeriesForColour(element),
-															Functions.<TransitionSeries, Spectrum> first()),
-													"",
-													new Function2<TransitionSeries, String, String>() {
-
-														@Override
-														public String f(TransitionSeries ts, String title)
-														{
-															return title + (title.equals("") ? "" : ", ")
-																	+ ts.toElementString();
-														}
-													})
-
-										);
-									}
+										{
+											// create a color,string pair
+											return new Pair<Color, String>(
+	
+											element.toColor(),
+	
+											// fold the list of transition series using the concat operator
+												Fn.foldr(
+	
+												// map the list of transitionSeries, list double pairs to just
+														// transitionseries
+														Fn.map(
+																activeTabData.getTransitionSeriesForColour(element),
+																Functions.<TransitionSeries, Spectrum> first()),
+														"",
+														new FunctionCombine<TransitionSeries, String, String>() {
+	
+															@Override
+															public String f(TransitionSeries ts, String title)
+															{
+																return title + (title.equals("") ? "" : ", ")
+																		+ ts.toElementString();
+															}
+														})
+	
+											);
+										}
 									}),
 
 							// filter for empty strings
-							new Function1<Pair<Color, String>, Boolean>() {
+							new FunctionMap<Pair<Color, String>, Boolean>() {
 
 								@Override
 								public Boolean f(Pair<Color, String> element)
@@ -784,8 +781,8 @@ public class MapController extends CanvasController
 			case RATIO:
 
 				//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
-				List<Integer> ratioSideValues = Functional.unique(Functional.map(activeTabData
-					.getVisibleTransitionSeries(), new Function1<TransitionSeries, Integer>() {
+				List<Integer> ratioSideValues = Fn.unique(Fn.map(activeTabData
+					.getVisibleTransitionSeries(), new FunctionMap<TransitionSeries, Integer>() {
 
 					@Override
 					public Integer f(TransitionSeries ts)
@@ -938,9 +935,9 @@ public class MapController extends CanvasController
 			case OVERLAY:
 
 				// create a list of map painters, one for each of the maps we want to show
-				List<MapPainter> painters = Functional.map(
+				List<MapPainter> painters = Fn.map(
 						activeTabData.resultantData,
-						new Function1<Pair<TransitionSeries, Spectrum>, MapPainter>() {
+						new FunctionMap<Pair<TransitionSeries, Spectrum>, MapPainter>() {
 
 							@Override
 							public MapPainter f(Pair<TransitionSeries, Spectrum> mapdata)

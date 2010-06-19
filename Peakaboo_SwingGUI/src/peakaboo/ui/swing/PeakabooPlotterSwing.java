@@ -53,6 +53,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import fava.*;
+
 import peakaboo.common.Env;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MapController;
@@ -60,7 +62,6 @@ import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.plotter.ChannelCompositeMode;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.eventful.PeakabooMessageListener;

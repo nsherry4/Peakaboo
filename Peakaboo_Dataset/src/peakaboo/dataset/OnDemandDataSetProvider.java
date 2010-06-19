@@ -4,7 +4,7 @@ package peakaboo.dataset;
 
 import java.util.List;
 
-// import com.sun.org.apache.xerces.internal.impl.dv.DatatypeException;
+import fava.*;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -15,8 +15,6 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.EmptyProgressingTask;
 import peakaboo.datatypes.tasks.Task;
@@ -88,7 +86,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = Functional.map(excludedIndcies, new Function1<Integer, Spectrum>() {
+		List<Spectrum> badScans = Fn.map(excludedIndcies, new FunctionMap<Integer, Spectrum>() {
 
 			public Spectrum f(Integer index)
 			{

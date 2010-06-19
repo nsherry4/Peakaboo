@@ -25,13 +25,10 @@ import peakaboo.dataset.LocalDataSetProvider;
 import peakaboo.dataset.ScanContainer;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
@@ -52,6 +49,7 @@ import peakaboo.fileio.AbstractFile;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.mapping.MapResultSet;
 
+import fava.*;
 
 
 /**
@@ -975,7 +973,7 @@ public class PlotController extends CanvasController implements FilterController
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
 
 
-		return Functional.filter(model.peakTable.getAllTransitionSeries(), new Function1<TransitionSeries, Boolean>() {
+		return Fn.filter(model.peakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
 			@Override
 			public Boolean f(TransitionSeries ts)
@@ -1004,7 +1002,7 @@ public class PlotController extends CanvasController implements FilterController
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
 
-		return Functional.filter(getFittedTransitionSeries(), new Function1<TransitionSeries, Boolean>() {
+		return Fn.filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
 			@Override
 			public Boolean f(TransitionSeries ts)

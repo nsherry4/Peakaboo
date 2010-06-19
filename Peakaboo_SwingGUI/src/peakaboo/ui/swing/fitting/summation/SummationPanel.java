@@ -11,11 +11,10 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 
+import fava.*;
+
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
-import peakaboo.datatypes.functional.stock.Functions;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
 import peakaboo.ui.swing.icons.IconSize;
@@ -157,7 +156,7 @@ public class SummationPanel extends ClearPanel
 	{
 
 		//get a list of all TransitionSeries to be summed
-		List<TransitionSeries> tss = Functional.filter(Functional.map(selectors, new Function1<TSSelector, TransitionSeries>() {
+		List<TransitionSeries> tss = Fn.filter(Fn.map(selectors, new FunctionMap<TSSelector, TransitionSeries>() {
 
 			public TransitionSeries f(TSSelector element)
 			{
@@ -186,7 +185,7 @@ class TSSelector extends ClearPanel
 
 
 		tsCombo = new JComboBox(
-				Functional.filter(controller.getFittedTransitionSeries(), new Function1<TransitionSeries, Boolean>() {
+				Fn.filter(controller.getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
 					public Boolean f(TransitionSeries element)
 					{

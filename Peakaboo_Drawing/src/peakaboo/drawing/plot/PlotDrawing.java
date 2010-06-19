@@ -3,10 +3,11 @@ package peakaboo.drawing.plot;
 
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.drawing.Drawing;

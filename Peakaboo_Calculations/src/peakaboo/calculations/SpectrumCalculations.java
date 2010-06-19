@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.datatypes.Spectrum;
-import peakaboo.datatypes.functional.Function2;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.executor.TaskExecutor;
 import peakaboo.datatypes.tasks.executor.implementations.SplittingTicketedTaskExecutor;
@@ -108,7 +108,7 @@ public class SpectrumCalculations
 	public static float maxDataset(List<Spectrum> dataset)
 	{
 
-		return Functional.foldr(dataset, max(dataset.get(0)), new Function2<Spectrum, Float, Float>() {
+		return Fn.foldr(dataset, max(dataset.get(0)), new FunctionCombine<Spectrum, Float, Float>() {
 
 			@Override
 			public Float f(Spectrum list, Float currentMax)
@@ -806,14 +806,7 @@ public class SpectrumCalculations
 	public static float sumValuesInList(Spectrum list)
 	{
 
-		return Functional.fold(list, 0f, new Function2<Float, Float, Float>() {
-
-			@Override
-			public Float f(Float val, Float sum)
-			{
-				return sum + val;
-			}
-		});
+		return Fn.fold(list, 0f, Functions.addf());
 
 	}
 	

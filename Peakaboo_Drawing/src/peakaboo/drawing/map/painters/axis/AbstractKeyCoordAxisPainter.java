@@ -1,8 +1,8 @@
 package peakaboo.drawing.map.painters.axis;
 
+import fava.*;
 
 import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Pair;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.SigDigits;

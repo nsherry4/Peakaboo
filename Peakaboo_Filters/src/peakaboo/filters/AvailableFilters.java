@@ -7,10 +7,10 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
+import fava.*;
+
 import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.functional.Function1;
-import peakaboo.datatypes.functional.Functional;
 import peakaboo.filters.filters.Addition;
 import peakaboo.filters.filters.AgressiveWaveletNoiseFilter;
 import peakaboo.filters.filters.BruknerRemoval;
@@ -73,9 +73,9 @@ public class AvailableFilters
 				Subtraction.class,
 				Multiply.class };
 
-		return Functional.filter(
+		return Fn.filter(
 
-		Functional.map(classes, new Function1<Class<?>, AbstractFilter>() {
+		Fn.map(classes, new FunctionMap<Class<?>, AbstractFilter>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
@@ -91,14 +91,15 @@ public class AvailableFilters
 				}
 
 			}
-		}), new Function1<AbstractFilter, Boolean>(){
+		}), new FunctionMap<AbstractFilter, Boolean>(){
 
 			@Override
 			public Boolean f(AbstractFilter filter)
 			{
 				if (filter != null && filter.showFilter()) return true;
 				return false;
-			}});
+			}
+		});
 
 	}
 
