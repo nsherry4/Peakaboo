@@ -3,7 +3,7 @@ SetCompressor /FINAL lzma
 !include "MUI.nsh"
 
 !define APPLICATION_NAME "Peakaboo"
-!define VERSION_NUMBER "2"
+!define VERSION_NUMBER "3"
 !define SOURCE_RELPATH "..\.."
 
 Name "${APPLICATION_NAME}"
