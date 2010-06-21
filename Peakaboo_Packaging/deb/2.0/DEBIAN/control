@@ -1,0 +1,13 @@
+Package: peakaboo
+Version: 2.0.0
+Section: science
+Priority: optional
+Architecture: all
+Essential: no
+Depends: sun-java6-jre
+Section: universe/net
+Installed-Size: 12700
+Maintainer: Nathaniel Sherry [nsherry4@uwo.ca]
+Description: XRF Data Visualization and Analysis Tool
+ .
+ Peakaboo is an XRF visualization and analysis programme which allows users to examine specrtral data from 0D, 1D, and 2D XRF scans. Users can select elements from a list, and the programme will attempt to fit ideal elemental curves to the data as best as possible. 1D and 2D scans can also be mapped, showing the relative intensity of a given set of element across the scanned region.
