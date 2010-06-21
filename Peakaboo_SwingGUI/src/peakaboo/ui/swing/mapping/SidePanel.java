@@ -53,15 +53,6 @@ public class SidePanel extends JPanel
 	}
 
 
-	private void actionSavePicture()
-	{
-
-		if (owner.savePictureFolder == null) owner.savePictureFolder = owner.dataSourceFolder;
-		owner.savePictureFolder = new SavePicture(owner, controller, owner.savePictureFolder).getStartingFolder();
-
-	}
-
-
 	private void createControls()
 	{
 
@@ -93,21 +84,7 @@ public class SidePanel extends JPanel
 		 * maingbc.gridy += 1; maingbc.weightx = 0.0; maingbc.weighty = 1.0; maingbc.fill = GridBagConstraints.BOTH;
 		 * elementsListPanel = createElementsList(); add(elementsListPanel, maingbc);
 		 */
-
-		ImageButton savePictures = new ImageButton("picture", "Save as Image", "Save current map as image", true);
-		savePictures.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				actionSavePicture();
-			}
-		});
-		maingbc.gridy += 1;
-		maingbc.weightx = 0.0;
-		maingbc.weighty = 0.0;
-		maingbc.fill = GridBagConstraints.HORIZONTAL;
-		add(savePictures, maingbc);
-
+		
 		controller.addListener(new PeakabooSimpleListener() {
 
 			public void change()

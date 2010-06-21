@@ -520,9 +520,7 @@ public class PeakabooPlotterSwing
 
 			public void stateChanged(ChangeEvent e)
 			{
-
-				System.out.println("***************************");
-				
+			
 				float value = ((Double) energy.getValue()).floatValue();
 				controller.setMaxEnergy(value);
 

@@ -94,7 +94,7 @@ public class SpectrumCalculations
 		for (int i = 0; i < list.size(); i++) 
 		{
 			min = (list.get(i) == 0.0 && !allowzero) ? min : Math.min(min, list.get(i));
-			min = Math.min(min, list.get(i));
+			//min = Math.min(min, list.get(i));
 		}
 		return min;
 

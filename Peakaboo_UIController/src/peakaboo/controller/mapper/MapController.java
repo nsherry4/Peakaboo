@@ -3,6 +3,10 @@ package peakaboo.controller.mapper;
 
 
 import java.awt.Color;
+import java.awt.DisplayMode;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import fava.*;
@@ -493,7 +497,7 @@ public class MapController extends CanvasController
 				Spectrum side2Data = activeTabData.sumGivenTransitionSeriesMaps(side2);
 				final float side1Min = SpectrumCalculations.min(side1Data, false);
 				final float side2Min = SpectrumCalculations.min(side2Data, false);
-
+			
 				// compute the ratio of the two sides
 				data = side1Data.zipWith(side2Data, new FunctionCombine<Float, Float, Float>() {
 
@@ -740,12 +744,12 @@ public class MapController extends CanvasController
 										{
 											// create a color,string pair
 											return new Pair<Color, String>(
-	
+
 											element.toColor(),
-	
+
 											// fold the list of transition series using the concat operator
 												foldr(
-	
+
 												// map the list of transitionSeries, list double pairs to just
 														// transitionseries
 														map(
@@ -753,7 +757,7 @@ public class MapController extends CanvasController
 																Functions.<TransitionSeries, Spectrum> first()),
 														"",
 														new FunctionCombine<TransitionSeries, String, String>() {
-	
+
 															@Override
 															public String f(TransitionSeries ts, String title)
 															{
@@ -761,7 +765,7 @@ public class MapController extends CanvasController
 																		+ ts.toElementString();
 															}
 														})
-	
+
 											);
 										}
 									}),
@@ -799,13 +803,16 @@ public class MapController extends CanvasController
 				float steps = (float) Math.ceil(SpectrumCalculations.max(SpectrumCalculations
 					.abs(activeTabData.resultantData.get(0).second)));
 				mapModel.dr.maxYIntensity = steps;
-
-				if (validRatio){
+				
+				if (validRatio)
+				{
 					palette = new RatioPalette(spectrumSteps, mapModel.viewOptions.monochrome);
-				} else {
+				}
+				else
+				{
 					palette = new SingleColourPalette(Color.black);
 				}
-				
+
 
 				List<Pair<Float, String>> spectrumMarkers = DataTypeFactory.<Pair<Float, String>> list();
 
@@ -867,11 +874,7 @@ public class MapController extends CanvasController
 			{
 				case RATIO:
 
-					String side1Title = activeTabData.mapLongTitle(activeTabData.getTransitionSeriesForRatioSide(1));
-
-					String side2Title = activeTabData.mapLongTitle(activeTabData.getTransitionSeriesForRatioSide(2));
-
-					mapTitle = side1Title + " ∶ " + side2Title;
+					mapTitle = activeTabData.mapLongTitle();
 					break;
 
 				case OVERLAY:
@@ -975,6 +978,69 @@ public class MapController extends CanvasController
 		}
 
 		mapModel.dr.drawToVectorSurface = oldVector;
+
+	}
+
+
+	public void mapAsCSV(OutputStream os)
+	{
+		final OutputStreamWriter osw = new OutputStreamWriter(os);
+
+		generateFinalData();
+
+		final int width = mapModel.dataDimensions.x;
+		FList<Pair<TransitionSeries, Spectrum>> maps = new FList<Pair<TransitionSeries, Spectrum>>(
+			activeTabData.resultantData);
+
+
+
+		maps.each(new FunctionEach<Pair<TransitionSeries, Spectrum>>() {
+
+			@Override
+			public void f(Pair<TransitionSeries, Spectrum> element)
+			{
+				
+				try {
+					
+					if (activeTabData.displayMode == MapDisplayMode.OVERLAY)
+					{
+						osw.write(element.first.toString() + "\n");
+					} else if (activeTabData.displayMode == MapDisplayMode.RATIO) {
+						osw.write(activeTabData.mapLongTitle() + " Ratio: Each value n represents " + Ratios.logValue + "^n\n");
+					}
+						
+	
+					Spectrum s = element.second;
+					String scan = Fn.chunk(s, width).showListBy(new FunctionMap<List<Float>, String>() {
+	
+						@Override
+						public String f(List<Float> list)
+						{
+							return Fn.showList(list).foldl(Functions.strcat(","));
+						}
+					}).foldl(Functions.strcat("\n"));
+	
+					osw.write(scan + "\n\n");
+					
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+
+			}
+		});
+		
+		
+		try
+		{
+			osw.close();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

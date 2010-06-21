@@ -50,11 +50,16 @@ public class SigDigits
 	
 	public static String roundFloatTo(float value, int decimals)
 	{
-		
-		BigDecimal bd = new BigDecimal(Float.toString(value));
-		bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_EVEN);
-		
-		return bd.toPlainString();
+	
+		try {
+			BigDecimal bd = new BigDecimal(Float.toString(value));
+			bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_EVEN);
+			
+			return bd.toPlainString();
+		} catch (Exception e)
+		{
+			return "?";
+		}
 		
 	}
 	

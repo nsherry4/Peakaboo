@@ -396,8 +396,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			element,
 			TransitionSeriesType.COMPOSITE,
 			newmode);
-
-		System.out.println(transitions.size() == 0);
 		
 		if (transitions.size() == 0) return newTransitionSeries;
 

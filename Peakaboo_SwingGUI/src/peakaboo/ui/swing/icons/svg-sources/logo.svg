@@ -18,9 +18,9 @@
    version="1.0"
    sodipodi:docname="newlogo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/nathaniel/Desktop/devtitle.png"
-   inkscape:export-xdpi="73.209869"
-   inkscape:export-ydpi="73.209869">
+   inkscape:export-filename="/home/nathaniel/Desktop/icons/banner.png"
+   inkscape:export-xdpi="113.67728"
+   inkscape:export-ydpi="113.67728">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -278,16 +278,16 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7071068"
-     inkscape:cx="279.68429"
-     inkscape:cy="241.71249"
+     inkscape:zoom="0.25000001"
+     inkscape:cx="-278.66076"
+     inkscape:cy="-23.882611"
      inkscape:document-units="px"
-     inkscape:current-layer="g2903"
+     inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1680"
-     inkscape:window-height="920"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-width="1440"
+     inkscape:window-height="846"
+     inkscape:window-x="1680"
+     inkscape:window-y="89"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -305,7 +305,7 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Text"
-     style="display:inline">
+     style="display:none">
     <g
        id="g3727"
        transform="matrix(0.83478447,0,0,0.83478447,42.295162,37.866853)">
@@ -344,6 +344,52 @@
            x="-175.47224"
            y="631.84052"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold">Peakaboo 3</tspan></text>
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Side Text"
+     style="display:none">
+    <g
+       style="display:inline"
+       transform="matrix(1.6864032,0,0,1.6864032,784.80424,-693.49434)"
+       id="g3691">
+      <text
+         xml:space="preserve"
+         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3683);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         x="-184.10045"
+         y="662.90381"
+         id="text3693"
+         transform="matrix(1.0313731,0,0,1.031373,14.403994,-51.86061)"><tspan
+           sodipodi:role="line"
+           id="tspan3695"
+           x="-184.10045"
+           y="662.90381"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold">Peakaboo 3</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3675);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         x="-184.10045"
+         y="662.90381"
+         id="text3697"
+         transform="matrix(1.0313731,0,0,1.031373,14.403994,-51.86061)"><tspan
+           sodipodi:role="line"
+           id="tspan3699"
+           x="-184.10045"
+           y="662.90381"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold">Peakaboo 3</tspan></text>
+      <text
+         id="text3701"
+         y="631.84052"
+         x="-175.47224"
+         style="font-size:185.97628784px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+           y="631.84052"
+           x="-175.47224"
+           id="tspan3703"
+           sodipodi:role="line">Peakaboo 3</tspan></text>
     </g>
   </g>
   <g
@@ -390,7 +436,7 @@
        transform="matrix(0.80370488,0,0,0.80370488,50.251551,54.999871)"
        id="g2903">
       <path
-         style="fill:url(#radialGradient3687);fill-opacity:1.0;fill-rule:evenodd;stroke:none"
+         style="fill:url(#radialGradient3687);fill-opacity:1;fill-rule:evenodd;stroke:none"
          d="m 182.84375,36.71875 c -16.29861,1.142333 -26.23315,16.501335 -33.5,29.375 C 129.36141,105.4144 119.93209,149.19382 110.28125,192 93.667618,272.68319 82.25646,354.36874 73.769804,436.24909 c -2.590894,7.12148 5.240374,4.25928 9.573946,4.75091 118.38539,-0.021 236.771,0.0418 355.15625,-0.0312 -4.39355,-52.77523 -12.85054,-105.18978 -23.78816,-157.08894 -8.5536,-36.7393 -16.96361,-74.48217 -35.33684,-107.66106 -6.83572,-11.75705 -17.99633,-25.00061 -33.09375,-23 -18.1292,1.96431 -28.99802,19.01541 -36.39096,33.92253 -7.5802,13.52367 -11.99944,29.6977 -24.07779,40.01497 -3.79707,3.14244 -9.39091,2.47401 -12,-1.90625 C 260.29164,207.16942 254.50716,184.90321 246.96707,163.83189 234.7123,127.96814 225.8666,90.447739 208.28125,56.8125 202.87023,47.480146 195.06463,36.087766 182.84375,36.71875 z"
          id="path2905" />
       <path
@@ -399,7 +445,7 @@
          id="path2907"
          sodipodi:nodetypes="cssscccsssssssssssssscccsssssssssssssccssssssssssssscssssscsssc" />
       <path
-         style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:url(#linearGradient3689);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:31.99799919000000159;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Abberancy;-inkscape-font-specification:Abberancy"
+         style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:url(#linearGradient3689);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:31.99799919;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Abberancy;-inkscape-font-specification:Abberancy"
          d="m 183.90625,28.03125 c -16.11687,0 -27.54183,11.161018 -36.0625,23.8125 -8.52067,12.651482 -15.5013,28.840754 -22.0625,47.84375 -13.1224,38.00599 -23.97626,87.19203 -32.875,136.3125 -17.79748,98.24095 -27.5,196.0625 -27.5,196.0625 L 64.75,438.75 l -1,10.90625 c 0.312566,-0.18742 17.450324,-3.6e-4 17.5,0 0.04968,3.6e-4 0.06272,-1.1e-4 0.09375,0 0.06206,2.2e-4 0.129754,-1.6e-4 0.21875,0 0.177991,3.2e-4 0.416826,-2.8e-4 0.75,0 0.666348,5.7e-4 1.656593,-5e-4 2.9375,0 2.561814,10e-4 6.316606,-7.5e-4 11.09375,0 9.55429,0.002 23.21836,-6.7e-4 39.59375,0 32.75079,10e-4 76.39754,9.5e-4 120.0625,0 43.66496,-9.5e-4 87.34548,0.002 120.09375,0 16.37413,-9.1e-4 30.0107,8.5e-4 39.5625,0 4.7759,-4.3e-4 8.5347,3.8e-4 11.09375,0 1.27952,-1.9e-4 2.2441,1.8e-4 2.90625,0 0.33108,-9e-5 0.57966,8e-5 0.75,0 0.0852,-4e-5 0.17156,4e-5 0.21875,0 l 17.06602,-0.0259 -1.03477,-16.72411 -0.0625,-0.75 c -3.96973,-41.94675 -13.64172,-110.557 -27.90625,-169.75 -7.13227,-29.5965 -15.3,-56.71452 -25.125,-77.6875 -4.9125,-10.48649 -10.16532,-19.48742 -16.84375,-26.78125 -6.67843,-7.29383 -15.8833,-13.59375 -27.1875,-13.59375 -14.63849,0 -26.56259,8.5046 -34.15625,17.75 -7.59366,9.2454 -12.61306,19.74627 -17.28125,29.40625 -4.66819,9.65998 -9.01798,18.54547 -12.78125,23.71875 -2.32732,3.19931 -3.51069,4.27372 -4.40625,4.78125 -0.34213,-0.31111 -0.55094,-0.42346 -1.4375,-1.5625 -2.65969,-3.41711 -6.35339,-10.00744 -10,-18.375 C 262.17558,183.32737 254.6083,159.53485 247,135.46875 239.3917,111.40265 231.74107,87.054362 223.28125,67.6875 219.05134,58.004069 214.7418,49.549651 209.1875,42.4375 203.6332,35.325349 195.63401,28.03125 183.90625,28.03125 z m 0,10.65625 c 6.80717,0 12.28288,4.432401 16.875,10.3125 4.59212,5.880099 8.68084,13.724855 12.71875,22.96875 8.07583,18.487789 15.70452,42.65383 23.3125,66.71875 7.60793,24.06492 15.20027,48.04571 22.875,65.65625 3.83737,8.80527 7.72567,16.00783 11.34375,20.65625 3.61808,4.64842 6.5797,6.21875 8.4375,6.21875 5.4332,0 9.75064,-3.23287 14.46875,-9.71875 4.71811,-6.48588 9.12597,-15.8064 13.75,-25.375 4.62403,-9.5686 9.46423,-19.40674 15.90625,-27.25 6.44202,-7.84326 15.06581,-13.84375 25.9375,-13.84375 7.31474,0 13.83105,4.07308 19.34375,10.09375 5.5127,6.02067 10.3965,14.20015 15.03125,24.09375 9.26951,19.7872 17.36655,46.47513 24.40625,75.6875 14.07939,58.42474 23.73775,126.84463 27.65625,168.25 l 0.0312,0.25 0.3352,5.59375 c -0.0139,3e-5 -5.71945,-2e-5 -5.74145,0 -0.0439,4e-5 -0.1031,-4e-5 -0.1875,0 -0.16871,8e-5 -0.41933,-9e-5 -0.75,0 -0.66133,1.7e-4 -1.62693,-1.9e-4 -2.90625,0 -2.55863,3.8e-4 -6.31796,-4.3e-4 -11.09375,0 -9.55158,8.5e-4 -23.18844,-9.1e-4 -39.5625,0 -32.74812,0.002 -76.42892,-9.5e-4 -120.09375,0 -43.66483,9.5e-4 -87.31214,10e-4 -120.0625,0 -16.37518,-6.7e-4 -30.04029,0.002 -39.59375,0 -4.776731,-7.5e-4 -8.533582,10e-4 -11.09375,0 -1.280084,-5e-4 -2.243188,5.6e-4 -2.90625,0 -0.331531,-2.8e-4 -0.578569,3e-4 -0.75,0 -0.08572,-1.5e-4 -0.16977,1.8e-4 -0.21875,0 -0.02449,-9e-5 -0.03882,1.7e-4 -0.0625,0 -0.02368,-1.7e-4 -5.653424,0.007 -5.65349,0.007 l 0.15349,-3.66329 0.21875,-2.21875 c 0,0 9.646973,-97.56493 27.34375,-195.25 8.84839,-48.84253 19.68664,-97.6983 32.46875,-134.71875 6.39106,-18.510223 13.25123,-34.055236 20.875,-45.375 7.62377,-11.319764 16.48671,-19.09375 27.1875,-19.09375 l 5e-5,4e-5 z"
          id="path2909"
          sodipodi:nodetypes="cssscccsssssssssssssccccssssssscsssssccssssssssssssscccsssssssssssssscccssscc" />

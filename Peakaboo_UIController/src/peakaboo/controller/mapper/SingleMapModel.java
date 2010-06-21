@@ -96,7 +96,24 @@ public class SingleMapModel {
 	
 	public String mapShortTitle(){ return getShortDatasetTitle(getVisibleTransitionSeries()); }
 	
-	public String mapLongTitle(){ return getDatasetTitle(getVisibleTransitionSeries()); }
+	public String mapLongTitle(){ 
+	
+		switch (displayMode)
+		{
+			case RATIO:
+				String side1Title = mapLongTitle(getTransitionSeriesForRatioSide(1));
+
+				String side2Title = mapLongTitle(getTransitionSeriesForRatioSide(2));
+
+				return side1Title + " ∶ " + side2Title;
+				
+			default:
+				
+				return getDatasetTitle(getVisibleTransitionSeries());
+				
+		}
+		
+	}
 	
 
 	public String mapShortTitle(List<TransitionSeries> list){ return getShortDatasetTitle(list); }

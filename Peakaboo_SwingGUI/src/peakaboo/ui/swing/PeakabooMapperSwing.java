@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
@@ -26,6 +28,8 @@ import peakaboo.controller.mapper.SingleMapModel;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.mapping.MapResultSet;
+import peakaboo.ui.swing.fileio.SwingIO;
+import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
 import peakaboo.ui.swing.mapping.MapTabControls;
 import peakaboo.ui.swing.mapping.MapViewer;
@@ -33,6 +37,7 @@ import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
+import peakaboo.ui.swing.widgets.pictures.SavePicture;
 
 
 /**
@@ -237,6 +242,36 @@ public class PeakabooMapperSwing extends JDialog
 		menuBar = new JMenuBar();
 		
 		
+		// FILE Menu
+		menu = new JMenu("Maps");
+		menu.setMnemonic(KeyEvent.VK_M);
+		menu.getAccessibleContext().setAccessibleDescription("Actions on these Maps");
+		menuBar.add(menu);
+		
+		
+		JMenuItem savePicture = new JMenuItem("Save Image", IconFactory.getMenuIcon("picture"));
+		savePicture.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				actionSavePicture();
+			}
+		});
+		menu.add(savePicture);
+		
+		
+		JMenuItem saveText = new JMenuItem("Save as Text", IconFactory.getMenuIcon("textfile"));
+		saveText.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				actionSaveCSV();
+			}
+		});
+		menu.add(saveText);
+		
+		
+		
 		// VIEW Menu
 		menu = new JMenu("View");
 		menu.setMnemonic(KeyEvent.VK_V);
@@ -314,5 +349,30 @@ public class PeakabooMapperSwing extends JDialog
 	}
 
 
+	
+	private void actionSavePicture()
+	{
+
+		if (savePictureFolder == null) savePictureFolder = dataSourceFolder;
+		savePictureFolder = new SavePicture(this, controller, savePictureFolder).getStartingFolder();
+
+	}
+	private void actionSaveCSV()
+	{
+
+		ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();
+		controller.mapAsCSV(baos);
+		try
+		{
+			savePictureFolder = SwingIO.saveFile(this, "Save Map(s) as Text", "txt", "Text File", savePictureFolder, baos);
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
 	
 }
