@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
@@ -52,7 +54,7 @@ public class SingleMapModel {
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<TransitionSeries> tsList = Fn.filter(visible.keySet(), Functions.<TransitionSeries>bTrue());
+		List<TransitionSeries> tsList = filter(visible.keySet(), Functions.<TransitionSeries>bTrue());
 		
 		Collections.sort(tsList);
 		
@@ -61,7 +63,7 @@ public class SingleMapModel {
 	
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return Fn.filter(getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 			
 			@Override
 			public Boolean f(TransitionSeries element) {
@@ -106,14 +108,14 @@ public class SingleMapModel {
 	{
 		String separator = ", ";
 		
-		List<String> elementNames = Fn.map(list, new FunctionMap<TransitionSeries, String>() {
+		List<String> elementNames = map(list, new FunctionMap<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.toElementString();
 			}
 		});
 
-		String title = Fn.foldr(elementNames, Functions.strcat(", "));
+		String title = foldr(elementNames, strcat(", "));
 		
 		if (title == null) return "-";
 		return title;
@@ -126,7 +128,7 @@ public class SingleMapModel {
 		String separator = ", ";
 		
 		
-		List<String> elementNames = Fn.map(list, new FunctionMap<TransitionSeries, String>() {
+		List<String> elementNames = map(list, new FunctionMap<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.element.toString();
@@ -134,9 +136,9 @@ public class SingleMapModel {
 		});
 		
 		//trim out the duplicated
-		elementNames = Fn.unique(elementNames);
+		elementNames = unique(elementNames);
 
-		String title = Fn.foldr(elementNames, Functions.strcat(", "));
+		String title = foldr(elementNames, strcat(", "));
 		
 		if (title == null) return "-";
 		return title;
@@ -146,7 +148,7 @@ public class SingleMapModel {
 	
 	public List<Pair<TransitionSeries, Spectrum>> getTransitionSeriesForColour(final OverlayColour c)
 	{
-		return Fn.filter(
+		return filter(
 				resultantData,
 				new FunctionMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
@@ -160,7 +162,7 @@ public class SingleMapModel {
 	
 	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
-		return Fn.filter(
+		return filter(
 				getVisibleTransitionSeries(),
 				new FunctionMap<TransitionSeries, Boolean>() {
 

@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.results.FittingResult;
@@ -83,7 +84,7 @@ public class FittingSet implements Serializable
 	public synchronized void addTransitionSeries(TransitionSeries ts)
 	{
 
-		if (Fn.include(fitTransitionSeries, ts)) return;
+		if (include(fitTransitionSeries, ts)) return;
 		
 		addTransitionSeriesToFittings(ts);
 		fitTransitionSeries.add(ts);

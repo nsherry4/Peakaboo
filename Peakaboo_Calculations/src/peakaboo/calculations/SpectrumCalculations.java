@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.tasks.Task;
@@ -108,7 +110,7 @@ public class SpectrumCalculations
 	public static float maxDataset(List<Spectrum> dataset)
 	{
 
-		return Fn.foldr(dataset, max(dataset.get(0)), new FunctionCombine<Spectrum, Float, Float>() {
+		return foldr(dataset, max(dataset.get(0)), new FunctionCombine<Spectrum, Float, Float>() {
 
 			@Override
 			public Float f(Spectrum list, Float currentMax)
@@ -806,7 +808,7 @@ public class SpectrumCalculations
 	public static float sumValuesInList(Spectrum list)
 	{
 
-		return Fn.fold(list, 0f, Functions.addf());
+		return fold(list, 0f, addf());
 
 	}
 	

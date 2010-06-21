@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.SISize;
@@ -131,7 +133,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			
 
 			//concatenate the list of strings to display so we can check the width of the total string
-			String markingsText = Fn.foldr(Fn.map(markings, Functions.<Float, String>second()), Functions.strcat(" "));
+			String markingsText = foldr(map(markings, Functions.<Float, String>second()), Functions.strcat(" "));
 			//keep shrinking the font size until all of the text until the font size is small enough that it fits
 			while (width > 0.0 && fontSize > 1.0)
 			{
@@ -144,7 +146,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 			}
 
-			Fn.each(markings, new FunctionEach<Pair<Float, String>>() {
+			each(markings, new FunctionEach<Pair<Float, String>>() {
 
 				public void f(Pair<Float, String> element)
 				{

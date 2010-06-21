@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.SISize;
@@ -58,7 +60,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		
 		
 		// concatenate the list of strings to display so we can check the width of the total string
-		String markingsText = Fn.foldr(Fn.map(entries, Functions.<Color, String>second()), Functions.strcat(" "));
+		String markingsText = foldr(map(entries, Functions.<Color, String>second()), strcat(" "));
 		float legendSquareWidth = entries.size() * keyHeight * 2.5f - keyHeight; // -keyHeight because we don't need
 																					// padding on the end
 
@@ -77,7 +79,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		}
 
 		float startX = offsetX + ((width - expectedTextWidth) / 2.0f);
-		Fn.foldr(entries, startX, new FunctionCombine<Pair<Color, String>, Float, Float>() {
+		foldr(entries, startX, new FunctionCombine<Pair<Color, String>, Float, Float>() {
 
 			public Float f(Pair<Color, String> entry, Float position)
 			{

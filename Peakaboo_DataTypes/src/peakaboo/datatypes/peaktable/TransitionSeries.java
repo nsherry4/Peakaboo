@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.datatypes.DataTypeFactory;
 
@@ -108,7 +110,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public Transition getTransition(final TransitionType transitionType)
 	{
-		List<Transition> matches = Fn.filter(transitions, new FunctionMap<Transition, Boolean>() {
+		List<Transition> matches = filter(transitions, new FunctionMap<Transition, Boolean>() {
 
 			public Boolean f(Transition t)
 			{
@@ -124,7 +126,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public Transition getStrongestTransition()
 	{
 
-		return Fn.foldr(transitions, new FunctionCombine<Transition, Transition, Transition>() {
+		return foldr(transitions, new FunctionCombine<Transition, Transition, Transition>() {
 
 			public Transition f(Transition t1, Transition t2)
 			{
@@ -232,13 +234,13 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				Collections.sort(componentSeries);
 
-				return Fn.foldr(Fn.map(componentSeries, new FunctionMap<TransitionSeries, String>() {
+				return foldr(map(componentSeries, new FunctionMap<TransitionSeries, String>() {
 
 					public String f(TransitionSeries ts)
 					{
 						return ts.getDescription();
 					}
-				}), Functions.strcat(" ⊕ "));
+				}), strcat(" ⊕ "));
 
 			default:
 
@@ -346,7 +348,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		if (tss.size() == 1) return tss.get(0);
 		
 		//group the TransitionSeries by equality
-		List<List<TransitionSeries>> tsGroups = Fn.group(tss);
+		List<List<TransitionSeries>> tsGroups = group(tss);
 
 
 		//function for summing two TransitionSeries
@@ -360,18 +362,18 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 		//turn the groups of primary transitionseries into a list of pile-up transitionseries
-		List<TransitionSeries> pileups = Fn.map(
+		List<TransitionSeries> pileups = map(
 				tsGroups,
 				new FunctionMap<List<TransitionSeries>, TransitionSeries>() {
 
 					public TransitionSeries f(List<TransitionSeries> tsList)
 					{
-						return Fn.foldr(tsList, tsSum);
+						return foldr(tsList, tsSum);
 					}
 				});
 
 		//sum the pileups
-		TransitionSeries result = Fn.foldr(pileups, tsSum);
+		TransitionSeries result = foldr(pileups, tsSum);
 		return result;
 
 	}
@@ -399,7 +401,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		
 		if (transitions.size() == 0) return newTransitionSeries;
 
-		List<List<Transition>> allPileupLists = Fn.map(
+		List<List<Transition>> allPileupLists = map(
 				transitions,
 				new FunctionMap<Transition, List<Transition>>() {
 
@@ -412,7 +414,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 						//
 						// For each transition in the outer map, map the list transitionList to a list of
 						// pileup values
-						return Fn.map(other.transitions, new FunctionMap<Transition, Transition>() {
+						return map(other.transitions, new FunctionMap<Transition, Transition>() {
 
 							public Transition f(Transition t2)
 							{
@@ -423,9 +425,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 					}
 				});
 
-		List<Transition> allPileups = Fn.concat(allPileupLists);
+		List<Transition> allPileups = concat(allPileupLists);
 
-		Fn.each(allPileups, new FunctionEach<Transition>() {
+		each(allPileups, new FunctionEach<Transition>() {
 
 			public void f(Transition t)
 			{
@@ -467,7 +469,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				Collections.sort(otherTS.componentSeries);
 
 				List<Integer> differences =
-						Fn.filter(Fn.zipWith(
+						filter(zipWith(
 								componentSeries,
 								otherTS.componentSeries,
 								new FunctionCombine<TransitionSeries, TransitionSeries, Integer>() {
@@ -508,7 +510,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			Collections.sort(componentSeries);
 			Collections.sort(other.componentSeries);
 
-			if ( !Fn.all(Fn.zipEquiv(componentSeries, other.componentSeries)) ) return false;
+			if ( !all(zipEquiv(componentSeries, other.componentSeries)) ) return false;
 		}
 
 		return true;
@@ -559,7 +561,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		{
 			case COMPOSITE:
 
-				list = Fn.concatMap(componentSeries, new FunctionMap<TransitionSeries, List<TransitionSeries>>() {
+				list = concatMap(componentSeries, new FunctionMap<TransitionSeries, List<TransitionSeries>>() {
 
 					public List<TransitionSeries> f(TransitionSeries ts)
 					{

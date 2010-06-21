@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Collections;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.datatypes.DataTypeFactory;
 
@@ -85,7 +87,7 @@ public class PeakTable
 	public List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
 
-		return Fn.filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries ts)
 			{
@@ -97,12 +99,12 @@ public class PeakTable
 	
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return Fn.map(elementTransitions, Functions.<TransitionSeries>id());
+		return map(elementTransitions, Functions.<TransitionSeries>id());
 	}
 	
 	public TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
-		List<TransitionSeries> tss = Fn.filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
+		List<TransitionSeries> tss = filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries ts)
 			{

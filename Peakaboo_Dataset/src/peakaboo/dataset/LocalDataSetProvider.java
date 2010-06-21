@@ -5,6 +5,8 @@ package peakaboo.dataset;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -90,14 +92,14 @@ public class LocalDataSetProvider extends DataSetProvider
 		if (excludedIndcies.size() == 0) return averagePlot();
 
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = Fn.map(excludedIndcies, new FunctionMap<Integer, Spectrum>(){
+		List<Spectrum> badScans = map(excludedIndcies, new FunctionMap<Integer, Spectrum>(){
 
 			public Spectrum f(Integer index) {
 				return dsc_dataset.get(index);
 			}
 		});
 		
-		/*List<Spectrum> badScans = Fn.filter_index(dsc_dataset, new Function11<Integer, Boolean>() {
+		/*List<Spectrum> badScans = filter_index(dsc_dataset, new Function11<Integer, Boolean>() {
 
 			public Boolean f(Integer element)
 			{

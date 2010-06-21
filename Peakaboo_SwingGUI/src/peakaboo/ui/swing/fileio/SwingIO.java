@@ -15,6 +15,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.common.Env;
 import peakaboo.fileio.AbstractFile;
@@ -70,7 +72,7 @@ public class SwingIO
 			int returnVal = chooser.showOpenDialog(parent);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
-				return Fn.map(chooser.getSelectedFiles(), new FunctionMap<File, AbstractFile>() {
+				return map(chooser.getSelectedFiles(), new FunctionMap<File, AbstractFile>() {
 
 					public AbstractFile f(File f)
 					{

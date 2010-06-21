@@ -17,6 +17,8 @@ import java.util.List;
 import org.ho.yaml.Yaml;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.controller.plotter.PlotModel;
 import peakaboo.datatypes.DataTypeFactory;
@@ -72,13 +74,13 @@ public class Settings
 			//for each list of element/transitionseriestype string representation pairs
 			//convert that list into a single composited element (or primary if it is of length 1
 			//and add the result to the fittings set
-			Fn.each(data.fittings, new FunctionEach<List<Pair<String, String>>>() {
+			each(data.fittings, new FunctionEach<List<Pair<String, String>>>() {
 
 				@Override
 				public void f(List<Pair<String, String>> tspairs)
 				{
 
-					List<TransitionSeries> tss = Fn.map(
+					List<TransitionSeries> tss = map(
 							tspairs,
 							new FunctionMap<Pair<String, String>, TransitionSeries>() {
 
@@ -150,12 +152,12 @@ public class Settings
 
 		data.fittings =
 
-		Fn.map(fittedTSs, new FunctionMap<TransitionSeries, List<Pair<String, String>>>() {
+		map(fittedTSs, new FunctionMap<TransitionSeries, List<Pair<String, String>>>() {
 
 			@Override
 			public List<Pair<String, String>> f(TransitionSeries ts)
 			{
-				return Fn.map(
+				return map(
 						ts.getBaseTransitionSeries(),
 						new FunctionMap<TransitionSeries, Pair<String, String>>() {
 

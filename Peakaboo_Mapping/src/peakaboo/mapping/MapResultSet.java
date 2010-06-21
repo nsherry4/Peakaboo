@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.DataTypeFactory;
@@ -119,7 +121,7 @@ public class MapResultSet implements Cloneable
 	 */
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return Fn.map(maps, new FunctionMap<MapResult, TransitionSeries>() {
+		return map(maps, new FunctionMap<MapResult, TransitionSeries>() {
 			
 			@Override
 			public TransitionSeries f(MapResult mr) {

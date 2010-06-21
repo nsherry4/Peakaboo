@@ -5,6 +5,8 @@ package peakaboo.dataset;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -86,7 +88,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = Fn.map(excludedIndcies, new FunctionMap<Integer, Spectrum>() {
+		List<Spectrum> badScans = map(excludedIndcies, new FunctionMap<Integer, Spectrum>() {
 
 			public Spectrum f(Integer index)
 			{

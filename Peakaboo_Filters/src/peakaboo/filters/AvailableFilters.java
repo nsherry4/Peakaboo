@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.List;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
@@ -73,9 +75,9 @@ public class AvailableFilters
 				Subtraction.class,
 				Multiply.class };
 
-		return Fn.filter(
+		return filter(
 
-		Fn.map(classes, new FunctionMap<Class<?>, AbstractFilter>() {
+		map(classes, new FunctionMap<Class<?>, AbstractFilter>() {
 
 			@SuppressWarnings("unchecked")
 			@Override

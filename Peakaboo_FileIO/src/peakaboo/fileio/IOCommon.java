@@ -18,6 +18,8 @@ import javax.jnlp.ServiceManager;
 import javax.jnlp.UnavailableServiceException;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 
 
@@ -78,7 +80,7 @@ public class IOCommon
 		{
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
 
-			out.write(Fn.foldr(list, stringbuilder, new FunctionCombine<T1, StringBuilder, StringBuilder>() {
+			out.write(foldr(list, stringbuilder, new FunctionCombine<T1, StringBuilder, StringBuilder>() {
 
 				@Override
 				public StringBuilder f(T1 varT1, StringBuilder builder)
@@ -152,7 +154,7 @@ public class IOCommon
 	public static void sortFiles(List<AbstractFile> filenames)
 	{
 
-		Fn.sortBy(filenames, new AlphaNumericComparitor(), new FunctionMap<AbstractFile, String>() {
+		sortBy(filenames, new AlphaNumericComparitor(), new FunctionMap<AbstractFile, String>() {
 
 			@Override
 			public String f(AbstractFile file)
@@ -172,7 +174,7 @@ public class IOCommon
 	public static void sortFilenames(List<String> filenames)
 	{
 
-		Fn.sortBy(filenames, new AlphaNumericComparitor(), Functions.<String> id());
+		sortBy(filenames, new AlphaNumericComparitor(), Functions.<String> id());
 
 	}
 
@@ -186,9 +188,9 @@ public class IOCommon
 	public static String getFilePath(String filename)
 	{
 		
-		List<String> parts = Fn.map(filename.split(separator()), Functions.<String> id());
+		List<String> parts = map(filename.split(separator()), Functions.<String> id());
 		parts.remove(parts.size() - 1);
-		return Fn.fold(parts, Functions.strcat(separator())) + separator();
+		return fold(parts, strcat(separator())) + separator();
 
 	}
 
@@ -249,7 +251,7 @@ public class IOCommon
 	{
 
 		
-		List<String> titles = Fn.map(filenames, new FunctionMap<String, String>() {
+		List<String> titles = map(filenames, new FunctionMap<String, String>() {
 
 			@Override
 			public String f(String element)
@@ -314,7 +316,7 @@ public class IOCommon
 		{
 			fos = (FileOpenService) ServiceManager.lookup("javax.jnlp.FileOpenService");
 			
-			return Fn.map(fos.openMultiFileDialog(path, extensions), new FunctionMap<FileContents, AbstractFile>(){
+			return map(fos.openMultiFileDialog(path, extensions), new FunctionMap<FileContents, AbstractFile>(){
 
 				@Override
 				public AbstractFile f(FileContents element)

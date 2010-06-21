@@ -50,6 +50,8 @@ import peakaboo.filters.AbstractFilter;
 import peakaboo.mapping.MapResultSet;
 
 import fava.*;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 
 /**
@@ -973,7 +975,7 @@ public class PlotController extends CanvasController implements FilterController
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
 
 
-		return Fn.filter(model.peakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(model.peakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
 			@Override
 			public Boolean f(TransitionSeries ts)
@@ -1002,7 +1004,7 @@ public class PlotController extends CanvasController implements FilterController
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
 
-		return Fn.filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
 			@Override
 			public Boolean f(TransitionSeries ts)
