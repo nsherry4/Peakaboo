@@ -17,10 +17,9 @@ import peakaboo.ui.swing.icons.IconSize;
 public class Peakaboo
 {
 
-
 	public static void main(String[] args)
 	{
-
+		
 		//if this version of the JVM is new enough to support the Nimbus Look and Feel, use it
 		try
 		{
