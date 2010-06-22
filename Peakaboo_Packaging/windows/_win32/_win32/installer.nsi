@@ -141,7 +141,7 @@ Section "Peakaboo Program Files" SecPeakaboo
 		Call DetectJRE
 
         SetDetailsPrint textonly
-        DetailPrint "Installing ${APPLICATION_NAME} ${VERSION_NUMBER} program files..."
+        DetailPrint "Installing ${APPLICATION_NAME} program files..."
         SetDetailsPrint listonly
         
         SetOutPath "$INSTDIR"
@@ -165,8 +165,10 @@ Section "Peakaboo Program Files" SecPeakaboo
         ;setting outpath back to install dir makes the shortcuts 'start in' that folder
         SetOutPath "$INSTDIR"
 
-        CreateShortCut "$DESKTOP\${APPLICATION_NAME}.lnk" 'javaw.exe' '-Xmx1536m peakaboo.Peakaboo' '$INSTDIR\logo.ico' ''
-        CreateShortCut "$SMPROGRAMS\${APPLICATION_NAME}\${APPLICATION_NAME}.lnk" 'javaw.exe' '-Xmx1536m peakaboo.Peakaboo' '$INSTDIR\logo.ico' ''
+        ;CreateShortCut "$DESKTOP\${APPLICATION_NAME}.lnk" 'javaw.exe' '-Xmx1536m peakaboo.Peakaboo' '$INSTDIR\logo.ico' ''
+        ;CreateShortCut "$SMPROGRAMS\${APPLICATION_NAME}\${APPLICATION_NAME}.lnk" 'javaw.exe' '-Xmx1536m peakaboo.Peakaboo' '$INSTDIR\logo.ico' ''
+        CreateShortCut "$DESKTOP\${APPLICATION_NAME}.lnk" 'wscript.exe' '"$INSTDIR\peakaboo.vbs"' '$INSTDIR\logo.ico' ''
+        CreateShortCut "$SMPROGRAMS\${APPLICATION_NAME}\${APPLICATION_NAME}.lnk" 'wscript.exe' '"$INSTDIR\peakaboo.vbs"' '$INSTDIR\logo.ico' ''
         CreateShortCut "$SMPROGRAMS\${APPLICATION_NAME}\Remove ${APPLICATION_NAME}.lnk" '"$INSTDIR\uninstall.exe"'
         
         StrCpy $0 "$INSTDIR\install.log"

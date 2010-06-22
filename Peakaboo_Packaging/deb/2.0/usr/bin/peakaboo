@@ -1,2 +1,0 @@
-#!/bin/bash
-exec /usr/lib/jvm/java-6-sun/bin/java -Xmx2048m -classpath /usr/share/Peakaboo/ peakaboo.Peakaboo
