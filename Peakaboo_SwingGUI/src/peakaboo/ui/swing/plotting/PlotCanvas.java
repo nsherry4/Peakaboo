@@ -1,4 +1,4 @@
-package peakaboo.ui.swing;
+package peakaboo.ui.swing.plotting;
 
 import java.awt.Color;
 import java.awt.Dimension;

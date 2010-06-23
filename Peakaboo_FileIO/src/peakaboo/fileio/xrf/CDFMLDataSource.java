@@ -45,7 +45,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public static CDFMLDataSource getCDFMLFromFile(AbstractFile file)
 	{
-		
+				
 		Document dom;
 		try {
 			dom = CDFML.createCDFMLDocument(file);
@@ -355,4 +355,11 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	}
 
 
+	public int estimateDataSourceSize()
+	{
+		Spectrum s = getScanAtIndex(0);
+		return s.size() * getScanCount();
+	}
+
+	
 }

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.fitting.fitted;
+package peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.Component;
 import java.awt.event.ItemEvent;
@@ -16,7 +16,7 @@ import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
-import peakaboo.ui.swing.fitting.TSWidget;
+import peakaboo.ui.swing.plotting.fitting.TSWidget;
 
 
 public class FittingEditor extends AbstractCellEditor implements TreeCellEditor

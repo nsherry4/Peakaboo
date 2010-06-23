@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.fitting.summation;
+package peakaboo.ui.swing.plotting.fitting.summation;
 
 
 

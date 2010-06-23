@@ -23,8 +23,6 @@ import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
-import peakaboo.ui.swing.widgets.dialogues.SimpleFileFilter;
-import peakaboo.ui.swing.widgets.dialogues.SimpleIODialogues;
 
 
 

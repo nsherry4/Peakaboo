@@ -38,7 +38,7 @@ public enum ChannelCompositeMode implements Serializable
 		@Override
 		public String toString()
 		{
-			return "Strongest 10% per Channel";
+			return "Strongest Signal per Channel";
 		}
 	};
 	

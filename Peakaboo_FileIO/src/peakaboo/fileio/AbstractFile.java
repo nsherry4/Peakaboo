@@ -3,6 +3,7 @@ package peakaboo.fileio;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -112,6 +113,30 @@ public class AbstractFile
 		}
 
 		return "";
+
+		
 	}
+	
+	public long getFileSize()
+	{
+		if (type == ReadType.STRING)
+		{
+			return new File( (String) contents ).length();
+		}
+		else if (type == ReadType.FILE_CONTENTS)
+		{
+			try
+			{
+				return ((FileContents) contents).getLength();
+			}
+			catch (IOException e)
+			{
+				return 0;
+			}
+		}
+
+		return 0;
+	}
+	
 
 }

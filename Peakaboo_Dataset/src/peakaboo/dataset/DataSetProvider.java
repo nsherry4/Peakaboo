@@ -70,9 +70,9 @@ public abstract class DataSetProvider
 
 
 	/**
-	 * Produces a single scan/list containing the average of the top 10% most intense values for each channel
+	 * Produces a single scan/list containing the most intense values for each channel
 	 * 
-	 * @return the top-10% per-channel scan
+	 * @return the top signal-per-channel scan
 	 */
 	public abstract ScanContainer maximumPlot();
 

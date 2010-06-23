@@ -62,6 +62,7 @@ public interface DataSource
 	public String getDatasetName();
 
 
-
+	public int estimateDataSourceSize();
+	
 
 }

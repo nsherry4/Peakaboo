@@ -654,7 +654,21 @@ public class SpectrumCalculations
 	{
 
 		Spectrum average = new Spectrum(dataset.get(0).size());
-
+		
+		for (Spectrum s : dataset)
+		{
+			for (int i = 0; i < s.size(); i++)
+			{
+				average.set(i, average.get(i) + s.get(i));
+			}
+		}
+		
+		for (int i = 0; i < average.size(); i++)
+		{
+			average.set(i, average.get(i) / dataset.size());
+		}
+		
+		/*
 		float channelSum;
 		for (int channel = 0; channel < dataset.get(0).size(); channel++)
 		{
@@ -665,23 +679,24 @@ public class SpectrumCalculations
 			}
 			average.set(channel, channelSum / dataset.size());
 		}
-
+		*/
+		
 		return average;
 
 	}
 
 
 	/**
-	 * Takes a dataset and returns a single scan/list containing the average of the top 10% most intense values for each
+	 * Takes a dataset and returns a single scan/list containing the most intense value for each
 	 * channel
 	 * 
 	 * @param dataset
-	 * @return the top-10% per-channel scan
+	 * @return the top signal per-channel scan
 	 */
 	public static Spectrum getDatasetMaximums(List<Spectrum> dataset)
 	{
 
-		// a list for eventual maximums, and a list for all values for a particular channel
+		/*// a list for eventual maximums, and a list for all values for a particular channel
 		Spectrum maximums = new Spectrum(dataset.get(0).size());
 		List<Float> valuesAtChannel = new ArrayList<Float>();
 
@@ -690,6 +705,8 @@ public class SpectrumCalculations
 		if (section < 0) section = 0;
 
 		float channelMax;
+		
+				
 		for (int channel = 0; channel < dataset.get(0).size(); channel++)
 		{
 
@@ -722,7 +739,22 @@ public class SpectrumCalculations
 
 			maximums.set(channel, channelMax);
 		}
-
+*/
+		
+		
+		Spectrum maximums = new Spectrum(dataset.get(0).size());
+		float currentVal, maxVal;
+		
+		for (Spectrum s : dataset)
+		{
+			for (int i = 0; i < s.size(); i++)
+			{
+				currentVal = s.get(i);
+				maxVal = maximums.get(i);
+				if (currentVal > maxVal) maximums.set(i, currentVal);
+			}
+		}
+				
 		return maximums;
 	}
 

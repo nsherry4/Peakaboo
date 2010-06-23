@@ -22,6 +22,7 @@ import peakaboo.curvefit.painters.FittingTitlePainter;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.dataset.DataSetProvider;
 import peakaboo.dataset.LocalDataSetProvider;
+import peakaboo.dataset.TempFileDataSetProvider;
 import peakaboo.dataset.ScanContainer;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
@@ -153,6 +154,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 
 		final LocalDataSetProvider dataset = new LocalDataSetProvider();
+		//final TempFileDataSetProvider dataset = new TempFileDataSetProvider();
 		// OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
 		final TaskList<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
 

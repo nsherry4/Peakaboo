@@ -70,9 +70,10 @@ import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.mapping.MapResultSet;
 import peakaboo.ui.swing.fileio.SwingIO;
-import peakaboo.ui.swing.filters.FiltersetViewer;
-import peakaboo.ui.swing.fitting.CurveFittingView;
 import peakaboo.ui.swing.icons.IconFactory;
+import peakaboo.ui.swing.plotting.PlotCanvas;
+import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
+import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
@@ -760,7 +761,7 @@ public class PeakabooPlotterSwing
 					controller.setShowChannelAverage();
 
 				}
-				else if (command == "Top Tenth per Channel")
+				else if (command == "Strongest Signal per Channel")
 				{
 
 					controller.setShowChannelMaximum();
@@ -856,7 +857,7 @@ public class PeakabooPlotterSwing
 		viewGroup.add(average);
 		menu.add(average);
 
-		maximum = new JRadioButtonMenuItem("Top Tenth per Channel");
+		maximum = new JRadioButtonMenuItem("Strongest Signal per Channel");
 		maximum.setMnemonic(KeyEvent.VK_T);
 		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, java.awt.event.ActionEvent.CTRL_MASK));
 		maximum.addActionListener(viewStyleListener);

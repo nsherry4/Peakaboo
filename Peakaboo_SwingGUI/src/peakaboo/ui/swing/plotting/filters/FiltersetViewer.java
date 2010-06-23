@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.filters;
+package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;

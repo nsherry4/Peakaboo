@@ -2,6 +2,9 @@ package peakaboo;
 
 
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,8 +35,6 @@ public class Peakaboo
 			//Do Nothing -- Not an error, just not supported 
 		}
 
-
-
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -44,7 +45,7 @@ public class Peakaboo
 				if (Env.heapSize() < 250) JOptionPane.showMessageDialog(
 						null,
 						"This system's Java VM is only allocated " + Env.heapSize()
-						+ "MB of memory, processing large data sets may not be possible.",
+						+ "MB of memory: processing large data sets may be quite slow, or impossible.",
 						"Low on Memory",
 						JOptionPane.INFORMATION_MESSAGE,
 						IconFactory.getImageIcon("warn", IconSize.ICON));

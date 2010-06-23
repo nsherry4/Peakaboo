@@ -1,10 +1,11 @@
 package peakaboo.datatypes;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import fava.*;
 
-public class Spectrum implements Iterable<Float>
+public class Spectrum implements Iterable<Float>, Serializable
 {
 
 	private float	data[];

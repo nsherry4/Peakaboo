@@ -3,6 +3,9 @@ package peakaboo.fileio.xrf;
 
 import java.util.List;
 
+import fava.Fn;
+import fava.FunctionMap;
+
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
@@ -134,5 +137,12 @@ public class XMLDataSource implements DataSource
 		return null;
 	}
 
+	public int estimateDataSourceSize()
+	{
+		Spectrum s = getScanAtIndex(0);
+		return s.size() * getScanCount();
+	}
+
+	
 	
 }

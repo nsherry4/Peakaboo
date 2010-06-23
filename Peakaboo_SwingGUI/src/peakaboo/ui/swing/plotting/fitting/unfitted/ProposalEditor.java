@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.fitting.unfitted;
+package peakaboo.ui.swing.plotting.fitting.unfitted;
 
 
 
@@ -17,7 +17,7 @@ import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.ui.swing.fitting.TSWidget;
+import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import peakaboo.ui.swing.widgets.Spacing;
 
 

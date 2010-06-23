@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.fitting;
+package peakaboo.ui.swing.plotting.fitting;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

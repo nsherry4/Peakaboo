@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.widgets.dialogues;
+package peakaboo.ui.swing.fileio;
 
 
 /*

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.fitting;
+package peakaboo.ui.swing.plotting.fitting;
 
 
 
@@ -22,11 +22,11 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.ui.swing.fitting.fitted.FittingEditor;
-import peakaboo.ui.swing.fitting.fitted.FittingRenderer;
-import peakaboo.ui.swing.fitting.summation.SummationPanel;
-import peakaboo.ui.swing.fitting.unfitted.ProposalEditor;
-import peakaboo.ui.swing.fitting.unfitted.ProposalRenderer;
+import peakaboo.ui.swing.plotting.fitting.fitted.FittingEditor;
+import peakaboo.ui.swing.plotting.fitting.fitted.FittingRenderer;
+import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
+import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalEditor;
+import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalRenderer;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.gradientpanel.TitleGradientPanel;

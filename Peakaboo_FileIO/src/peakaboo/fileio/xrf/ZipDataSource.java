@@ -275,4 +275,11 @@ public class ZipDataSource implements DataSource
 	}
 
 	
+	public int estimateDataSourceSize()
+	{
+		Spectrum s = getScanAtIndex(0);
+		return s.size() * getScanCount();
+	}
+
+	
 }
