@@ -105,7 +105,7 @@ public class MapController extends CanvasController
 
 				map(getVisibleMapData(), new FunctionMap<Spectrum, String>() {
 
-					@Override
+					
 					public String f(Spectrum element)
 					{
 						return SigDigits.roundFloatTo(mapGrid.get(element, mapCoord.x, mapCoord.y), 2);
@@ -473,7 +473,7 @@ public class MapController extends CanvasController
 						activeTabData.getVisibleTransitionSeries(),
 						new FunctionMap<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
 
-							@Override
+							
 							public Pair<TransitionSeries, Spectrum> f(TransitionSeries ts)
 							{
 								return new Pair<TransitionSeries, Spectrum>(ts, activeTabData
@@ -501,7 +501,7 @@ public class MapController extends CanvasController
 				// compute the ratio of the two sides
 				data = side1Data.zipWith(side2Data, new FunctionCombine<Float, Float, Float>() {
 
-					@Override
+					
 					public Float f(Float side1Value, Float side2Value)
 					{
 
@@ -541,7 +541,7 @@ public class MapController extends CanvasController
 														0.0f);
 
 
-					@Override
+					
 					public Pair<TransitionSeries, Spectrum> f(Pair<TransitionSeries, Spectrum> map)
 					{
 
@@ -576,7 +576,7 @@ public class MapController extends CanvasController
 	}
 
 
-	@Override
+	
 	protected void drawBackend(Surface backend, boolean vector)
 	{
 
@@ -673,7 +673,7 @@ public class MapController extends CanvasController
 						0f,
 						new FunctionCombine<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
-							@Override
+							
 							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
 							{
 								return sum + SpectrumCalculations.max(mapdata.second);
@@ -686,7 +686,7 @@ public class MapController extends CanvasController
 						0f,
 						new FunctionCombine<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
-							@Override
+							
 							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
 							{
 								return sum + SpectrumCalculations.max(mapdata.second);
@@ -699,7 +699,7 @@ public class MapController extends CanvasController
 						0f,
 						new FunctionCombine<Pair<TransitionSeries, Spectrum>, Float, Float>() {
 
-							@Override
+							
 							public Float f(Pair<TransitionSeries, Spectrum> mapdata, Float sum)
 							{
 								return sum + SpectrumCalculations.max(mapdata.second);
@@ -739,7 +739,7 @@ public class MapController extends CanvasController
 									// list)
 									new FunctionMap<OverlayColour, Pair<Color, String>>() {
 
-										@Override
+										
 										public Pair<Color, String> f(OverlayColour element)
 										{
 											// create a color,string pair
@@ -758,7 +758,7 @@ public class MapController extends CanvasController
 														"",
 														new FunctionCombine<TransitionSeries, String, String>() {
 
-															@Override
+															
 															public String f(TransitionSeries ts, String title)
 															{
 																return title + (title.equals("") ? "" : ", ")
@@ -773,7 +773,7 @@ public class MapController extends CanvasController
 							// filter for empty strings
 							new FunctionMap<Pair<Color, String>, Boolean>() {
 
-								@Override
+								
 								public Boolean f(Pair<Color, String> element)
 									{
 										return !(element.second.length() == 0);
@@ -790,7 +790,7 @@ public class MapController extends CanvasController
 				List<Integer> ratioSideValues = unique(map(activeTabData
 					.getVisibleTransitionSeries(), new FunctionMap<TransitionSeries, Integer>() {
 
-					@Override
+					
 					public Integer f(TransitionSeries ts)
 					{
 						return activeTabData.ratioSide.get(ts);
@@ -944,7 +944,7 @@ public class MapController extends CanvasController
 						activeTabData.resultantData,
 						new FunctionMap<Pair<TransitionSeries, Spectrum>, MapPainter>() {
 
-							@Override
+							
 							public MapPainter f(Pair<TransitionSeries, Spectrum> mapdata)
 							{
 								OverlayColour c = activeTabData.overlayColour.get(mapdata.first);
@@ -960,7 +960,7 @@ public class MapController extends CanvasController
 
 				painters.add(0, new MapPainter(palette, null) {
 
-					@Override
+					
 					public void drawElement(PainterData p)
 					{
 
@@ -996,7 +996,7 @@ public class MapController extends CanvasController
 
 		maps.each(new FunctionEach<Pair<TransitionSeries, Spectrum>>() {
 
-			@Override
+			
 			public void f(Pair<TransitionSeries, Spectrum> element)
 			{
 				
@@ -1013,7 +1013,7 @@ public class MapController extends CanvasController
 					Spectrum s = element.second;
 					String scan = Fn.chunk(s, width).showListBy(new FunctionMap<List<Float>, String>() {
 	
-						@Override
+						
 						public String f(List<Float> list)
 						{
 							return Fn.showList(list).foldl(Functions.strcat(","));
@@ -1045,21 +1045,21 @@ public class MapController extends CanvasController
 	}
 
 
-	@Override
+	
 	public void setOutputIsPDF(boolean isPDF)
 	{
 		mapModel.dr.drawToVectorSurface = isPDF;
 	}
 
 
-	@Override
+	
 	public float getUsedHeight()
 	{
 		return map.calculateMapDimensions().y;
 	}
 
 
-	@Override
+	
 	public float getUsedWidth()
 	{
 		return map.calculateMapDimensions().x;

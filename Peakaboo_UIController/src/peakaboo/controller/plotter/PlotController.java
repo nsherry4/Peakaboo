@@ -398,7 +398,7 @@ public class PlotController extends CanvasController implements FilterController
 	// DRAWING COMMANDS
 	// =============================================
 
-	@Override
+	
 	protected void drawBackend(Surface backend, boolean scalar)
 	{
 
@@ -658,7 +658,7 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	@Override
+	
 	public void setOutputIsPDF(boolean isPDF)
 	{
 		model.dr.drawToVectorSurface = isPDF;
@@ -666,14 +666,14 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	@Override
+	
 	public float getUsedHeight()
 	{
 		return getImageHeight();
 	}
 
 
-	@Override
+	
 	public float getUsedWidth()
 	{
 		return getImageWidth();
@@ -980,7 +980,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		return filter(model.peakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
-			@Override
+			
 			public Boolean f(TransitionSeries ts)
 			{
 				return (!fitted.contains(ts)) && tst.equals(ts.type);
@@ -1009,7 +1009,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		return filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
-			@Override
+			
 			public Boolean f(TransitionSeries ts)
 			{
 				return ts.visible;
@@ -1499,7 +1499,7 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	@Override
+	
 	public void clearUndos()
 	{
 		undoStack.clear();

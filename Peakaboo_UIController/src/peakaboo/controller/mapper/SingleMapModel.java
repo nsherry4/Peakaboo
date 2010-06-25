@@ -65,7 +65,7 @@ public class SingleMapModel {
 	{
 		return filter(getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 			
-			@Override
+			
 			public Boolean f(TransitionSeries element) {
 				return visible.get(element);
 			}
@@ -169,7 +169,7 @@ public class SingleMapModel {
 				resultantData,
 				new FunctionMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
-					@Override
+					
 					public Boolean f(Pair<TransitionSeries, Spectrum> element)
 					{
 						return c.equals(overlayColour.get(element.first)) && visible.get(element.first);
@@ -183,7 +183,7 @@ public class SingleMapModel {
 				getVisibleTransitionSeries(),
 				new FunctionMap<TransitionSeries, Boolean>() {
 
-					@Override
+					
 					public Boolean f(TransitionSeries element)
 					{
 						Integer thisSide = ratioSide.get(element);

@@ -76,7 +76,7 @@ public class Settings
 			//and add the result to the fittings set
 			each(data.fittings, new FunctionEach<List<Pair<String, String>>>() {
 
-				@Override
+				
 				public void f(List<Pair<String, String>> tspairs)
 				{
 
@@ -84,7 +84,7 @@ public class Settings
 							tspairs,
 							new FunctionMap<Pair<String, String>, TransitionSeries>() {
 
-								@Override
+								
 								public TransitionSeries f(Pair<String, String> pair)
 								{
 									return model.peakTable.getTransitionSeries(
@@ -154,14 +154,14 @@ public class Settings
 
 		map(fittedTSs, new FunctionMap<TransitionSeries, List<Pair<String, String>>>() {
 
-			@Override
+			
 			public List<Pair<String, String>> f(TransitionSeries ts)
 			{
 				return map(
 						ts.getBaseTransitionSeries(),
 						new FunctionMap<TransitionSeries, Pair<String, String>>() {
 
-							@Override
+							
 							public Pair<String, String> f(TransitionSeries ts)
 							{
 								return ts.toSerializablePair();

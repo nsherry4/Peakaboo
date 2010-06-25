@@ -187,7 +187,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	{
 		return (Fn.foldl(Fn.map(tagStack, new FunctionMap<Pair<String, Map<String, String>>, String>() {
 
-			@Override
+			
 			public String f(Pair<String, Map<String, String>> element)
 			{
 				return element.first.replace('\n', '\000');
@@ -393,7 +393,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	// VARIABLES DATA
 	////////////////////////////////////////////////////////////
 
-	@Override
+	
 	public int estimateDataSourceSize()
 	{
 		// TODO Auto-generated method stub
@@ -401,7 +401,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public Spectrum getScanAtIndex(int index)
 	{
 		Spectrum s = scandata.get(index);
@@ -416,14 +416,14 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public int getScanCount()
 	{
 		return scandata.size();
 	}
 
 
-	@Override
+	
 	public void markScanAsBad(int index)
 	{
 		// TODO Auto-generated method stub
@@ -431,7 +431,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public Coord<Number> getRealCoordinatesAtIndex(int index)
 	{
 		Coord<Number> dims = new Coord<Number>(0, 0);
@@ -471,7 +471,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public float getMaxEnergy()
 	{
 		String maxEnergyValue = getEntryForAttr(CDFML.ATTR_MAX_ENERGY, 0);
@@ -480,7 +480,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public List<String> getScanNames()
 	{
 		List<String> scannames = DataTypeFactory.<String> list();
@@ -508,7 +508,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public Coord<Integer> getDataDimensions()
 	{
 		int width = getDataWidth();
@@ -517,7 +517,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public Coord<Range<Number>> getRealDimensions()
 	{
 		float x1, x2, y1, y2;
@@ -534,7 +534,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public String getRealDimensionsUnit()
 	{
 		return getEntryForAttr(CDFML.ATTR_DIM_X_START, 1);
@@ -542,7 +542,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 
 
-	@Override
+	
 	public String getCreationTime()
 	{
 		return getEntryForAttr(CDFML.ATTR_CREATION_TIME, 0);
@@ -622,7 +622,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 
-	@Override
+	
 	public boolean hasExtendedInformation()
 	{
 		return true;

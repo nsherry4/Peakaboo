@@ -112,7 +112,6 @@ public class SpectrumCalculations
 
 		return foldr(dataset, max(dataset.get(0)), new FunctionCombine<Spectrum, Float, Float>() {
 
-			@Override
 			public Float f(Spectrum list, Float currentMax)
 			{
 				return Math.max(currentMax, max(list));

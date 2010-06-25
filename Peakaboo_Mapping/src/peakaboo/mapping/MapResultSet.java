@@ -123,7 +123,6 @@ public class MapResultSet implements Cloneable
 	{
 		return map(maps, new FunctionMap<MapResult, TransitionSeries>() {
 			
-			@Override
 			public TransitionSeries f(MapResult mr) {
 				return mr.transitionSeries;
 			}

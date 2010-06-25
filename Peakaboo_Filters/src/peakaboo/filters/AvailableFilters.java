@@ -80,7 +80,7 @@ public class AvailableFilters
 		map(classes, new FunctionMap<Class<?>, AbstractFilter>() {
 
 			@SuppressWarnings("unchecked")
-			@Override
+			
 			public AbstractFilter f(Class<?> element)
 			{
 				try
@@ -95,7 +95,7 @@ public class AvailableFilters
 			}
 		}), new FunctionMap<AbstractFilter, Boolean>(){
 
-			@Override
+			
 			public Boolean f(AbstractFilter filter)
 			{
 				if (filter != null && filter.showFilter()) return true;

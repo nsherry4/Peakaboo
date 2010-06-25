@@ -82,7 +82,7 @@ public class IOCommon
 
 			out.write(foldr(list, stringbuilder, new FunctionCombine<T1, StringBuilder, StringBuilder>() {
 
-				@Override
+				
 				public StringBuilder f(T1 varT1, StringBuilder builder)
 				{
 					return builder.append(varT1.toString() + "\n");
@@ -156,7 +156,7 @@ public class IOCommon
 
 		sortBy(filenames, new AlphaNumericComparitor(), new FunctionMap<AbstractFile, String>() {
 
-			@Override
+			
 			public String f(AbstractFile file)
 			{
 				return file.getFileName();
@@ -253,7 +253,7 @@ public class IOCommon
 		
 		List<String> titles = map(filenames, new FunctionMap<String, String>() {
 
-			@Override
+			
 			public String f(String element)
 			{
 				return getFileTitle(element);
@@ -318,7 +318,7 @@ public class IOCommon
 			
 			return map(fos.openMultiFileDialog(path, extensions), new FunctionMap<FileContents, AbstractFile>(){
 
-				@Override
+				
 				public AbstractFile f(FileContents element)
 				{
 					return new AbstractFile(element);
