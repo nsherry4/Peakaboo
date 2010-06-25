@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.jnlp.FileContents;
 
@@ -20,7 +21,7 @@ public class AbstractFile
 
 	public enum ReadType
 	{
-		STRING, FILE_CONTENTS
+		STRING, FILE_CONTENTS, URL
 	}
 
 	private ReadType	type;
@@ -40,6 +41,12 @@ public class AbstractFile
 		contents = filecontents;
 	}
 
+	public AbstractFile(URL url)
+	{
+		type = ReadType.URL;
+		contents = url;
+	}
+	
 
 	public BufferedReader getReader()
 	{
@@ -60,6 +67,16 @@ public class AbstractFile
 			try
 			{
 				return new BufferedReader(new InputStreamReader(((FileContents) contents).getInputStream()));
+			}
+			catch (IOException e)
+			{
+				return null;
+			}
+		} else if (type == ReadType.URL)
+		{
+			try
+			{
+				return new BufferedReader(new InputStreamReader(  ((URL)contents).openStream()  ));
 			}
 			catch (IOException e)
 			{
@@ -88,6 +105,10 @@ public class AbstractFile
 		else if (type == ReadType.FILE_CONTENTS)
 		{
 			return ((FileContents) contents).getInputStream();
+			
+		} else if (type == ReadType.URL)
+		{
+			return ((URL)contents).openStream();
 		}
 		
 		return null;
@@ -110,6 +131,10 @@ public class AbstractFile
 			{
 				return "";
 			}
+		}
+		else if (type == ReadType.URL)
+		{
+			return ((URL)contents).getPath();
 		}
 
 		return "";

@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.fileio;
 
 
+import java.awt.Component;
 import java.awt.Window;
 import java.io.File;
 
@@ -12,7 +13,7 @@ import javax.swing.JOptionPane;
 public class SimpleIODialogues
 {
 	
-	public static String chooseFileSave(Window parent, String title, String startingFolder, String fileExtention, String extDescription)
+	public static String chooseFileSave(Component parent, String title, String startingFolder, String fileExtention, String extDescription)
 	{
 
 		JFileChooser chooser = new JFileChooser(startingFolder);
@@ -66,7 +67,7 @@ public class SimpleIODialogues
 	}
 
 
-	private static boolean warnFileExists(Window parent, String filename)
+	private static boolean warnFileExists(Component parent, String filename)
 	{
 		File f = new File(filename);
 		

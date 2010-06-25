@@ -1,9 +1,7 @@
-package peakaboo.datatypes;
+package peakaboo.datatypes.temp;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.sun.media.sound.DataPusher;
 
 import fava.FunctionMap;
 import fava.Pair;
@@ -20,17 +17,19 @@ import fava.Pair;
 public class TempFileList<T> implements List<T>
 {
 
+
 	//stores the locations of all entries as offset/length pairs
 	private List<Pair<Long, Integer>> elementPositions;
 	
+
 	private File temp;
 	private RandomAccessFile raf;
 	
 	private FunctionMap<T, byte[]> encode;
 	private FunctionMap<byte[], T> decode;
 	
-	private T lastElement = null;
-	private int lastElementIndex = -1;
+	//private T lastElement = null;
+	//private int lastElementIndex = -1;
 	
 	public TempFileList(int initalSize, String name, FunctionMap<T, byte[]> encode, FunctionMap<byte[], T> decode) throws IOException
 	{
@@ -40,7 +39,7 @@ public class TempFileList<T> implements List<T>
 				
 		this.encode = encode;
 		this.decode = decode;
-		
+				
 	}
 	
 	protected TempFileList(FunctionMap<T, byte[]> encode, FunctionMap<byte[], T> decode, File temp, RandomAccessFile raf, List<Pair<Long, Integer>> positions) throws IOException
@@ -54,11 +53,41 @@ public class TempFileList<T> implements List<T>
 		
 	}
 	
+		
+	private void addEntry(int index, T element)
+	{
+
+		try {
+			
+			long currentLength = raf.length();
+			byte[] encoded = encode.f(element);
+			
+			raf.seek(currentLength);
+			raf.write(encoded);
+			
+			if (index >= elementPositions.size())
+			{
+				for (int i = elementPositions.size(); i <= index; i++)
+				{
+					elementPositions.add(null);
+				}
+			}
+			elementPositions.set(index, new Pair<Long, Integer>(currentLength, encoded.length));
+			
+		} catch (IOException e)
+		{
+			throw new UnsupportedOperationException("Cannot write to backend file");
+		}
+		
+		
+		
+	}
+	
 	
 	
 	public synchronized boolean add(T e)
 	{
-		try{
+		/*try{
 			long currentLength = raf.length();
 			byte[] encoded = encode.f(e);
 			long newLength = currentLength + encoded.length;
@@ -74,13 +103,15 @@ public class TempFileList<T> implements List<T>
 		} catch (IOException ex)
 		{
 			throw new UnsupportedOperationException("Cannot write to backend file");
-		}
+		}*/
+		addEntry(elementPositions.size(), e);
+		return true;
 		
 	}
 	
 	public synchronized void add(int index, T element)
 	{
-		try{
+		/*try{
 			long currentLength = raf.length();
 			byte[] encoded = encode.f(element);
 			long newLength = currentLength + encoded.length;
@@ -96,7 +127,9 @@ public class TempFileList<T> implements List<T>
 			ex.printStackTrace();
 			
 			throw new UnsupportedOperationException("Cannot write to backend file");
-		}
+		}*/
+		
+		addEntry(index, element);
 	}
 
 	public boolean addAll(Collection<? extends T> c)
@@ -145,10 +178,10 @@ public class TempFileList<T> implements List<T>
 
 	public synchronized T get(int index)
 	{
-		
-		if (index == lastElementIndex) return lastElement;
-				
+			
 		Pair<Long, Integer> position = elementPositions.get(index);
+		if (position == null) return null;
+		
 		long offset = position.first;
 		int length = position.second;
 		
@@ -157,11 +190,8 @@ public class TempFileList<T> implements List<T>
 		{
 			raf.seek(offset);
 			raf.read(data, 0, length);
-			
-			lastElementIndex = index;
-			lastElement = decode.f(data);
-			
-			return lastElement;
+						
+			return decode.f(data);
 		}
 		catch (IOException e)
 		{
@@ -333,27 +363,21 @@ public class TempFileList<T> implements List<T>
 
 	public synchronized T set(int index, T element)
 	{
+
+		T old = null;
+		
 		try{
-			
-			T old = null;
-			//old = get(index);
-			
-			long currentLength = raf.length();
-			byte[] encoded = encode.f(element);
-			long newLength = currentLength + encoded.length;
-			
-			raf.seek(currentLength);
-			//raf.setLength(newLength);
-			raf.write(encoded);
-			
-			elementPositions.set(index, new Pair<Long, Integer>(currentLength, encoded.length));
-			
-			return old;
-			
-		} catch (IOException ex)
+			old = get(index);
+		} catch (Exception e)
 		{
-			throw new UnsupportedOperationException("Cannot write to backend file");
+			//nothing
 		}
+		
+		addEntry(index, element);
+		
+		return old;
+			
+		
 	}
 
 	public int size()
@@ -362,7 +386,7 @@ public class TempFileList<T> implements List<T>
 	}
 
 	public List<T> subList(int fromIndex, int toIndex)
-	{
+	{	
 		try
 		{
 			return new TempFileList<T>(encode, decode, temp, raf, elementPositions.subList(fromIndex, toIndex));

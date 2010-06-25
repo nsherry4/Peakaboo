@@ -33,10 +33,12 @@ import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
 import peakaboo.ui.swing.mapping.MapTabControls;
 import peakaboo.ui.swing.mapping.MapViewer;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
+import peakaboo.ui.swing.widgets.dialogues.PeakabooDialog;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 
 
@@ -47,7 +49,7 @@ import peakaboo.ui.swing.widgets.pictures.SavePicture;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PeakabooMapperSwing extends JDialog
+public class PeakabooMapperSwing extends PeakabooDialog
 {
 
 	protected MapController		controller;
@@ -66,7 +68,7 @@ public class PeakabooMapperSwing extends JDialog
 	PeakabooSimpleListener 		controllerListener;
 
 	public PeakabooMapperSwing(
-			JFrame owner, 
+			PeakabooContainer owner, 
 			AllMapsModel data, 
 			String datasetName, 
 			boolean showControls, 
@@ -93,9 +95,9 @@ public class PeakabooMapperSwing extends JDialog
 	}
 
 
-	public PeakabooMapperSwing(JFrame owner, MapController defaultController, boolean showControls)
+	public PeakabooMapperSwing(PeakabooContainer owner, MapController defaultController, boolean showControls)
 	{
-		super(owner, true);
+		super(owner, "Elemental Map", true);
 
 		controller = defaultController;
 		this.showControls = showControls;
@@ -199,9 +201,11 @@ public class PeakabooMapperSwing extends JDialog
 		if (tabs.getTabCount() == 0)
 		{
 			tabs.addTab("", viewer);
-			tabs.setTabComponentAt(tabs.getTabCount()-1, controls);
+			//tabs.setTabComponentAt(tabs.getTabCount()-1, controls);
+			tabs.setTitleAt(tabs.getTabCount()-1, "Tab");
 		} else {
-			tabs.setTabComponentAt(tabs.getTabCount()-1, controls);
+			//tabs.setTabComponentAt(tabs.getTabCount()-1, controls);
+			tabs.setTitleAt(tabs.getTabCount()-1, "Tab");
 			tabs.setComponentAt(tabs.getTabCount()-1, viewer);
 		}
 				
@@ -224,7 +228,7 @@ public class PeakabooMapperSwing extends JDialog
 			}
 		});
 		
-		tabs.setTabComponentAt(tabs.getTabCount()-1, newtab);
+		//tabs.setTabComponentAt(tabs.getTabCount()-1, newtab);
 		
 		
 	}

@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.ui.swing.icons.IconSize;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
 
@@ -20,7 +21,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 {
 
 	protected ImageButton		button;
-	private JFrame			owner;
+	private PeakabooContainer			owner;
 
 	private AbstractFilter	filter;
 	private FilterController	controller;
@@ -29,7 +30,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	private boolean			isPushed;
 
 
-	public FilterEditButtonEditor(FilterController controller, JFrame owner)
+	public FilterEditButtonEditor(FilterController controller, PeakabooContainer owner)
 	{
 		super(new JCheckBox());
 

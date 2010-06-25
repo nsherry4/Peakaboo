@@ -776,7 +776,7 @@ public class MapController extends CanvasController
 								@Override
 								public Boolean f(Pair<Color, String> element)
 									{
-										return !element.second.isEmpty();
+										return !(element.second.length() == 0);
 									}
 							})
 

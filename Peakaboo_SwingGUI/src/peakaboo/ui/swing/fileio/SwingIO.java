@@ -23,13 +23,14 @@ import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
 
 
 
 public class SwingIO
 {
 
-	public static List<AbstractFile> openFiles(Window parent, String title, String[] exts, String extDesc,
+	public static List<AbstractFile> openFiles(PeakabooContainer parent, String title, String[] exts, String extDesc,
 			String startDir)
 	{
 
@@ -43,7 +44,7 @@ public class SwingIO
 			catch (UnavailableServiceException e)
 			{
 				JOptionPane.showMessageDialog(
-						parent,
+						parent.getComponent(),
 						"The Web Start File-Read Service is not Available.",
 						"Read Failed.",
 						JOptionPane.ERROR_MESSAGE,
@@ -67,7 +68,7 @@ public class SwingIO
 			filter.setDescription(extDesc);
 			chooser.setFileFilter(filter);
 
-			int returnVal = chooser.showOpenDialog(parent);
+			int returnVal = chooser.showOpenDialog(parent.getComponent());
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
 				return map(chooser.getSelectedFiles(), new FunctionMap<File, AbstractFile>() {
@@ -90,7 +91,7 @@ public class SwingIO
 
 
 
-	public static AbstractFile openFile(Window parent, String title, String[] exts, String extDesc, String startDir)
+	public static AbstractFile openFile(PeakabooContainer parent, String title, String[] exts, String extDesc, String startDir)
 	{
 
 		if (Env.isWebStart())
@@ -103,7 +104,7 @@ public class SwingIO
 			catch (UnavailableServiceException e)
 			{
 				JOptionPane.showMessageDialog(
-						parent,
+						parent.getComponent(),
 						"The Web Start File-Read Service is not Available.",
 						"Read Failed.",
 						JOptionPane.ERROR_MESSAGE,
@@ -127,7 +128,7 @@ public class SwingIO
 			filter.setDescription(extDesc);
 			chooser.setFileFilter(filter);
 
-			int returnVal = chooser.showOpenDialog(parent);
+			int returnVal = chooser.showOpenDialog(parent.getComponent());
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
 				return new AbstractFile(chooser.getSelectedFile().toString());
@@ -151,7 +152,7 @@ public class SwingIO
 	}
 
 
-	public static String saveFile(Window parent, String title, String ext, String extDesc, String startDir,
+	public static String saveFile(PeakabooContainer parent, String title, String ext, String extDesc, String startDir,
 			ByteArrayOutputStream outStream) throws IOException
 	{
 
@@ -171,7 +172,7 @@ public class SwingIO
 			catch (UnavailableServiceException e)
 			{
 				JOptionPane.showMessageDialog(
-						parent,
+						parent.getComponent(),
 						"The Web Start File-Write Service is not Available.",
 						"Write Failed.",
 						JOptionPane.ERROR_MESSAGE,
@@ -184,7 +185,7 @@ public class SwingIO
 		else
 		{
 
-			String saveFilename = SimpleIODialogues.chooseFileSave(parent, title, startDir, ext, extDesc);
+			String saveFilename = SimpleIODialogues.chooseFileSave(parent.getComponent(), title, startDir, ext, extDesc);
 
 			if (saveFilename != null)
 			{

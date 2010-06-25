@@ -53,7 +53,7 @@ public class Peakaboo
 				//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
 				JFrame.setDefaultLookAndFeelDecorated(true);
 				JDialog.setDefaultLookAndFeelDecorated(true);
-				peakaboo.ui.swing.PeakabooPlotterSwing peakaboo = new peakaboo.ui.swing.PeakabooPlotterSwing();
+				peakaboo.ui.swing.PlotterFrame peakaboo = new peakaboo.ui.swing.PlotterFrame();
 
 			}
 		});

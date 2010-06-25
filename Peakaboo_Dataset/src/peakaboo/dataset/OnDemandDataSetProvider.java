@@ -19,12 +19,14 @@ import peakaboo.datatypes.SISize;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.EmptyProgressingTask;
+import peakaboo.datatypes.tasks.EmptyTask;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon.FileType;
 import peakaboo.fileio.xrf.CDFMLDataSource;
+import peakaboo.fileio.xrf.CDFMLSaxDataSource;
 import peakaboo.fileio.xrf.DataSource;
 import peakaboo.fileio.xrf.DataSourceDimensions;
 import peakaboo.fileio.xrf.DataSourceExtendedInformation;
@@ -279,8 +281,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
-		final FileType type;
-
+		
 		// sort the filenames property
 		peakaboo.fileio.IOCommon.sortFiles(files);
 
@@ -290,61 +291,97 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		// logic for opening a file
 		final List<Spectrum> dataset;
 		// final List<String> usedFileNames;
-		final int fileCount;
+			
 
-		// a data source and a task to read from it
-		//final DataSource dataSource;
-		//final Task reading;
-
-		// a single zip file
-		if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".zip"))
-		{
-
-			type = FileType.ZIP;
-
-			dataSource = ZipDataSource.getArchiveFromFileName(files.get(0).getFileName());
-			fileCount = dataSource.getScanCount();
-			//dataset = DataTypeFactory.spectrumSetInit(fileCount);
-			//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading Zip File");
-
-		}
-		else if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".xml")
-				&& CDFMLDataSource.isCDFML(files.get(0)) == 0)
-		{
-
-			type = FileType.CDFML;
-
-			dataSource = CDFMLDataSource.getCDFMLFromFile(files.get(0));
-			fileCount = dataSource.getScanCount();
-			//dataset = DataTypeFactory.spectrumSetInit(fileCount);
-			//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading CDFML File");
-
-		}
-		else
-		{
-
-			type = FileType.CLSXML;
-
-			dataSource = XMLDataSource.getXMLFileSet(files);
-			fileCount = dataSource.getScanCount();
-			//dataset = DataTypeFactory.spectrumSetInit(fileCount);
-			//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading XML Files");
-
-		}
 		
 		
-
-		if (dataSource == null) return null;
 		
-		
+		final EmptyTask opening = new EmptyTask("Opening Data Set");
+		final EmptyProgressingTask reading = new EmptyProgressingTask("Reading Scans");
 		final EmptyProgressingTask applying = new EmptyProgressingTask("Calculating Values");
-		applying.setWorkUnits(dataSource.getScanCount());
 		
 		tasklist = new TaskList<Boolean>("Opening Data Set") {
 
 			@Override
 			protected Boolean doTasks()
 			{
+				
+				final FileType type;
+				final int fileCount;
+				
+				opening.advanceState();
+				
+				//anon function to call when we get the number of scans
+				FunctionEach<Integer> gotScanCount = new FunctionEach<Integer>() {
+					
+					public void f(Integer count)
+					{
+						reading.setWorkUnits(count);
+						opening.advanceState();
+						reading.advanceState();
+					}
+				};
+				
+				FunctionMap<Boolean, Boolean> isAborted = new FunctionMap<Boolean, Boolean>(){
+
+					public Boolean f(Boolean element)
+					{
+						return isAborted() || isAbortRequested();
+					}};
+				
+				FunctionEach<Integer> readScans = new FunctionEach<Integer>(){
+
+					public void f(Integer count)
+					{
+						reading.workUnitCompleted(count);
+					}
+				};
+				
+				
+				// a single zip file
+				if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".zip"))
+				{
+					type = FileType.ZIP;
+
+					dataSource = ZipDataSource.getArchiveFromFileName(files.get(0).getFileName());
+					fileCount = dataSource.getScanCount();
+					gotScanCount.f(fileCount);
+					//dataset = DataTypeFactory.spectrumSetInit(fileCount);
+					//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading Zip File");
+
+				}
+				else if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".xml"))
+				{
+					type = FileType.CDFML;
+
+					dataSource = new CDFMLSaxDataSource(files.get(0), gotScanCount, readScans, isAborted);
+					fileCount = dataSource.getScanCount();
+					//dataset = DataTypeFactory.spectrumSetInit(fileCount);
+					//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading CDFML File");
+
+				}
+				else
+				{
+
+					type = FileType.CLSXML;
+
+					dataSource = XMLDataSource.getXMLFileSet(files);
+					fileCount = dataSource.getScanCount();
+					gotScanCount.f(fileCount);
+					//dataset = DataTypeFactory.spectrumSetInit(fileCount);
+					//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading XML Files");
+
+				}
+				
+				reading.advanceState();
+				
+				if (dataSource == null || isAborted.f(true)) 
+				{
+					aborted();
+					return null;
+				}
+				
+				applying.setWorkUnits(dataSource.getScanCount());
 				applying.advanceState();
 				
 				//go over each scan, calculating the average, max10th and max value
@@ -435,8 +472,10 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			
 		};
 		
+		tasklist.addTask(opening);
+		tasklist.addTask(reading);
 		tasklist.addTask(applying);
-		
+				
 		return tasklist;
 
 	}

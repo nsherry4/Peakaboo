@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plotting;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
@@ -103,6 +104,16 @@ public class PlotCanvas extends JPanel implements Scrollable{
 	}
 
 
+	public Point getLocationOnScreenOffset(Point offset)
+	{
+		
+		Point p = new Point(this.getLocation());
+		p.x += offset.x;
+		p.y += offset.y;
+		
+		return p;
+		
+	}
 	
 	
 }

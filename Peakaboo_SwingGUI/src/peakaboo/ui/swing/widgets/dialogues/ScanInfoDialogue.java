@@ -19,19 +19,20 @@ import javax.swing.border.EmptyBorder;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
 
 
-public class ScanInfoDialogue extends JDialog
+public class ScanInfoDialogue extends PeakabooDialog
 {
 
 	GridBagConstraints c;
 	JPanel mainPanel;
 	
-	public ScanInfoDialogue(JFrame owner, PlotController controller)
+	public ScanInfoDialogue(PeakabooContainer owner, PlotController controller)
 	{
-		super();
+		super(owner, "Scan Information");
 		
 		Container container = getContentPane();
 		mainPanel = new JPanel(new GridBagLayout());
@@ -96,7 +97,7 @@ public class ScanInfoDialogue extends JDialog
 		
 		pack();
 		setModal(true);
-		setLocationRelativeTo(owner);
+		centreOnParent();
 		setVisible(true);
 		
 	}

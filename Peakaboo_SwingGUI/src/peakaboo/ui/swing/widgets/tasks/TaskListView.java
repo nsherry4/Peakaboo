@@ -17,15 +17,17 @@ import javax.swing.WindowConstants;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
+import peakaboo.ui.swing.widgets.dialogues.PeakabooDialog;
 
-public class TaskListView extends JDialog {
+public class TaskListView extends PeakabooDialog {
 
 	TaskList<?> tasks;
 	private JProgressBar progress;
 	
-	public TaskListView(JFrame frame, TaskList<?> _tasks){
+	public TaskListView(PeakabooContainer frame, TaskList<?> _tasks){
 		
 		super(frame, "Working...", true);
 		setResizable(false);
@@ -114,7 +116,7 @@ public class TaskListView extends JDialog {
 		
 		pack();
         
-		setLocationRelativeTo(frame);
+		centreOnParent();
 		
         tasks.startWorking();
         setVisible(true);

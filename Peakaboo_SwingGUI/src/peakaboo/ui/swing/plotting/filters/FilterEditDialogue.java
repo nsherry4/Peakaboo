@@ -10,18 +10,20 @@ import javax.swing.JFrame;
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.filters.AbstractFilter;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
+import peakaboo.ui.swing.widgets.dialogues.PeakabooDialog;
 
-public class FilterEditDialogue extends JDialog
+public class FilterEditDialogue extends PeakabooDialog
 {
 
 	protected FilterController	controller;
 	protected AbstractFilter	filter;
 
 
-	public FilterEditDialogue(AbstractFilter _filter, FilterController _controller, JFrame owner)
+	public FilterEditDialogue(AbstractFilter _filter, FilterController _controller, PeakabooContainer owner)
 	{
 
-		super(owner);
+		super(owner, _filter.getFilterName(), true);
 		
 		this.controller = _controller;
 		this.filter = _filter;
@@ -47,7 +49,7 @@ public class FilterEditDialogue extends JDialog
 			}
 		});
 
-		setLocationRelativeTo(owner);
+		centreOnParent();
 		setTitle("Filter Settings");
 		setResizable(false);
 		pack();

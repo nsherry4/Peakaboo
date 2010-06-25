@@ -19,14 +19,16 @@ import javax.swing.JPanel;
 
 import peakaboo.controller.CanvasController;
 import peakaboo.ui.swing.fileio.SwingIO;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
+import peakaboo.ui.swing.widgets.dialogues.PeakabooDialog;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggleGroup;
 
 
-public class SavePicture extends JDialog
+public class SavePicture extends PeakabooDialog
 {
 
 	private CanvasController	controller;
@@ -36,7 +38,7 @@ public class SavePicture extends JDialog
 
 	JPanel				controlsPanel;
 	
-	public SavePicture(Frame owner, CanvasController controller, String startingFolder)
+	public SavePicture(PeakabooContainer owner, CanvasController controller, String startingFolder)
 	{
 
 		super(owner, "Save as Image");
@@ -44,23 +46,11 @@ public class SavePicture extends JDialog
 		this.controller = controller;
 		this.startingFolder = startingFolder;
 
-		init(owner);
-
-	}
-
-	public SavePicture(Dialog owner, CanvasController controller, String startingFolder)
-	{
-
-		super(owner, "Save as Image");
-
-		this.controller = controller;
-		this.startingFolder = startingFolder;
-
-		init(owner);
+		init();
 
 	}
 	
-	private void init(Component owner)
+	private void init()
 	{
 
 		controlsPanel = new ClearPanel();
@@ -77,7 +67,7 @@ public class SavePicture extends JDialog
 		setResizable(false);
 
 		pack();
-		setLocationRelativeTo(owner);
+		centreOnParent();
 		setModal(true);
 		setVisible(true);
 	}

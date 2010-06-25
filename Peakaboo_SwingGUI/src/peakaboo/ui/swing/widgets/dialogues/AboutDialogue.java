@@ -24,18 +24,24 @@ import javax.swing.border.EmptyBorder;
 
 import peakaboo.common.Version;
 import peakaboo.fileio.IOCommon;
+import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
 
 
-public class AboutDialogue extends JDialog
+public class AboutDialogue extends PeakabooDialog
 {
 	
-	public AboutDialogue(JFrame owner)
+	PeakabooContainer owner;
+	
+	
+	public AboutDialogue(PeakabooContainer owner)
 	{
 		super(owner, "About " + "Peakaboo", true);
+		this.owner = owner;
+		
 		setResizable(false);
 		
 		Container c = getContentPane();
@@ -143,10 +149,11 @@ public class AboutDialogue extends JDialog
 		
 		pack();
 
-		setLocationRelativeTo(owner);
+		centreOnParent();
 		setVisible(true);
 		
 	}
+	
 	
     public JScrollPane textForJOptionPane(String text) {
 

@@ -169,7 +169,7 @@ public abstract class TaskList<T> extends Eventful implements Iterable<Task>
 
 
 	/**
-	 * Methid is used to mark this TaskList as having been aborted. UIs looking to abort a TaskList should not
+	 * Method is used to mark this TaskList as having been aborted. UIs looking to abort a TaskList should not
 	 * call this method, but rather call {@link TaskList#requestAbortWorking()}
 	 */
 	public void aborted()

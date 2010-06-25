@@ -28,6 +28,8 @@ public class CDFML
 	public static final String	ATTR_TAG					= "attribute";
 	public static final String	ATTR_ENTRY_TAG				= "entry";
 	public static final String	ATTR_NAME_ATTR				= "name";
+	public static final String	ATTR_NUMRECORDS_ATTR		= "numRecordsAllocate";
+	public static final String  ATTR_ENTRY_TAG_NUM			= "entryNum";
 
 
 	// CDFML Tags/Attributes for CDF Variables

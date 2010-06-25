@@ -1,6 +1,4 @@
-package peakaboo.ui.swing;
-
-
+package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -46,6 +45,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
@@ -53,30 +53,30 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import fava.*;
+import fava.Pair;
 
 import peakaboo.common.Env;
 import peakaboo.common.Version;
-import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.AllMapsModel;
+import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.plotter.ChannelCompositeMode;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.SigDigits;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.eventful.PeakabooMessageListener;
+import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.mapping.MapResultSet;
+import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
+import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ToolbarImageButton;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
 import peakaboo.ui.swing.widgets.dialogues.AboutDialogue;
@@ -84,20 +84,16 @@ import peakaboo.ui.swing.widgets.dialogues.ScanInfoDialogue;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import peakaboo.ui.swing.widgets.tasks.TaskListView;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
+import sun.awt.HorizBagLayout;
 
 
-
-/**
- * This class is the main window for Peakaboo, the plotting window
- * 
- * @author Nathaniel Sherry, 2009
- */
-
-public class PeakabooPlotterSwing
+public class PlotPanel extends ClearPanel
 {
 
-	String									savedSessionFileName;
+	private PeakabooContainer container;
 
+	
+	
 	PlotController							controller;
 	PlotCanvas								canvas;
 	
@@ -115,14 +111,11 @@ public class PeakabooPlotterSwing
 	
 	
 	JComboBox								titleCombo;
-	JFrame									frame;
+	
 	JSpinner								scanNo;
 	JLabel									scanLabel;
 	JToggleButton							scanBlock;
 	JLabel									channelLabel;
-	
-	
-
 	
 
 	JSpinner								energy;
@@ -139,24 +132,21 @@ public class PeakabooPlotterSwing
 	JScrollPane								scrolledCanvas;
 
 	String									savePictureFolder;
-
-
-	public PeakabooPlotterSwing()
+	String									savedSessionFileName;
+	
+	
+	public PlotPanel(PeakabooContainer container)
 	{
-
+		this.container = container;
+		
 		savedSessionFileName = null;
-
-		frame = new JFrame(Version.title);
-		frame.setIconImage(IconFactory.getImage(Version.icon));
 
 		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D toy = bi.createGraphics();
 
 		controller = new PlotController(toy);
-
-		frame.setPreferredSize(new Dimension(1000, 470));
+		
 		initGUI();
-
 
 		controller.addListener(new PeakabooMessageListener() {
 
@@ -175,10 +165,12 @@ public class PeakabooPlotterSwing
 		});
 
 		setWidgetsState();
-
+		
+		
+		
 	}
-
-
+	
+	
 	public void setWidgetsState()
 	{
 
@@ -244,7 +236,7 @@ public class PeakabooPlotterSwing
 		fullRedraw();
 
 	}
-
+	
 
 	private void setEnergySpinner(double value)
 	{
@@ -254,11 +246,10 @@ public class PeakabooPlotterSwing
 		energy.addChangeListener(energyListener);
 	}
 	
+	
 
 	private void initGUI()
 	{
-
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		canvas = new PlotCanvas(controller);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -281,9 +272,9 @@ public class PeakabooPlotterSwing
 
 		});
 
-		frame.setTitle(Version.title);
+		
 
-		Container pane = frame.getContentPane();
+		Container pane = this;
 
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -307,31 +298,91 @@ public class PeakabooPlotterSwing
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-		canvas.addMouseMotionListener(new MouseMotionListener() {
+		class MouseHandler implements MouseMotionListener, MouseListener
+		{
 
-			private int					x0;
 			private Point				p0;
-
-			private BoundedRangeModel	horizontalModel	= scrolledCanvas.getHorizontalScrollBar().getModel();
-
+			private boolean 			dragging;
+			
+			JViewport viewPort = scrolledCanvas.getViewport();
+			Point scrollPosition = viewPort.getViewPosition();
+		
+			private Point getPoint(MouseEvent e)
+			{
+				Point p = e.getPoint();
+				p.x += canvas.getLocationOnScreen().x;
+				
+				System.out.println(canvas.getLocationOnScreen().x);
+				
+				return p;
+			}
+			
+			private void update(MouseEvent e)
+			{
+							
+				Point p1 = getPoint(e);
+				int dx = p1.x - p0.x;
+				p0 = getPoint(e);
+				scrollPosition.x -= dx;
+				
+				if (scrollPosition.x < 0) scrollPosition.x = 0;
+				if (scrollPosition.x > canvas.getWidth() - viewPort.getWidth()) scrollPosition.x = canvas.getWidth() - viewPort.getWidth();
+				
+				viewPort.setViewPosition ( scrollPosition );
+				
+			}
+			
+			public void mouseDragged(MouseEvent e)
+			{
+				if (dragging)
+				{
+					update(e);
+				}
+			}
 
 			public void mouseMoved(MouseEvent e)
 			{
-				x0 = horizontalModel.getValue();
-				p0 = e.getLocationOnScreen();
+				if (dragging)
+				{
+					update(e);
+				}
 			}
 
-
-			public void mouseDragged(MouseEvent e)
+			public void mouseClicked(MouseEvent e)
 			{
 				// TODO Auto-generated method stub
-				Point p1 = e.getLocationOnScreen();
-				int x1 = p0.x - p1.x + x0;
-
-				horizontalModel.setValue(x1);
-
+				
 			}
-		});
+
+			public void mouseEntered(MouseEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mousePressed(MouseEvent e)
+			{
+				p0 = getPoint(e);
+				dragging = true;
+			}
+
+			public void mouseReleased(MouseEvent e)
+			{
+				update(e);
+				dragging = false;
+			}
+			
+		}
+		MouseHandler mh = new MouseHandler();
+		
+		canvas.addMouseMotionListener(mh);
+		canvas.addMouseListener(mh);
 
 		// pane.add(scrolledCanvas, c);
 
@@ -367,7 +418,7 @@ public class PeakabooPlotterSwing
 		 */
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.add(new CurveFittingView(controller), 0);
-		tabs.add(new FiltersetViewer(controller, frame), 1);
+		tabs.add(new FiltersetViewer(controller, container), 1);
 
 		c.gridx = 0;
 		c.gridy = 1;
@@ -383,16 +434,13 @@ public class PeakabooPlotterSwing
 
 		createMenu();
 
-		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
 
 	}
 
 
 	private void setTitleBar()
 	{
-		frame.setTitle(getTitleBarString());
+		container.setTitle(getTitleBarString());
 	}
 
 
@@ -536,7 +584,7 @@ public class PeakabooPlotterSwing
 
 			public void actionPerformed(ActionEvent e)
 			{
-				new AboutDialogue(frame);
+				new AboutDialogue(container);
 			}
 		});
 		c.gridx += 1;
@@ -925,7 +973,7 @@ public class PeakabooPlotterSwing
 
 		menuBar.add(menu);
 
-		frame.setJMenuBar(menuBar);
+		container.setJMenuBar(menuBar);
 
 		controller.addListener(new PeakabooSimpleListener() {
 
@@ -1073,20 +1121,12 @@ public class PeakabooPlotterSwing
 
 	}
 
-
-	private void fullRedraw()
-	{
-		frame.getContentPane().validate();
-		frame.repaint();
-	}
-
-
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
 	// data set, and returns it to the caller
 	public List<AbstractFile> openNewDataset(String[] exts, String desc)
 	{
-		return SwingIO.openFiles(frame, "Select Data Files to Open", exts, desc, controller.getDataSourceFolder());
+		return SwingIO.openFiles(container, "Select Data Files to Open", exts, desc, controller.getDataSourceFolder());
 	}
 
 
@@ -1108,6 +1148,12 @@ public class PeakabooPlotterSwing
 
 	}
 
+	
+	private void fullRedraw()
+	{
+		container.validate();
+		container.repaint();
+	}
 
 	public void mouseMoveCanvasEvent(int x)
 	{
@@ -1145,16 +1191,26 @@ public class PeakabooPlotterSwing
 					+ "-");
 		}
 	}
-
-
-
-
-
-
-
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// ////////////////////////////////////////////////////////
 	// UI ACTIONS
 	// ////////////////////////////////////////////////////////
@@ -1176,11 +1232,17 @@ public class PeakabooPlotterSwing
 
 		files = openNewDataset(exts, "XRF Data Sets");
 
+		loadFiles(files);
+
+	}
+	
+	public void loadFiles(List<AbstractFile> files)
+	{
 		if (files != null)
 		{
 
 			TaskList<Boolean> reading = controller.TASK_readFileListAsDataset(files);
-			new TaskListView(frame, reading);
+			new TaskListView(container, reading);
 			// TaskListView was blocking.. it is now closed
 			System.gc();
 
@@ -1189,7 +1251,6 @@ public class PeakabooPlotterSwing
 			savedSessionFileName = null;
 
 		}
-
 	}
 
 
@@ -1200,7 +1261,7 @@ public class PeakabooPlotterSwing
 
 			TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
 			if (tasks == null) return;
-			new TaskListView(frame, tasks);
+			new TaskListView(container, tasks);
 
 			if (!tasks.isAborted())
 			{
@@ -1223,7 +1284,7 @@ public class PeakabooPlotterSwing
 				{
 
 					mapperWindow = new PeakabooMapperSwing(
-						frame,
+						container,
 						datamodel,
 						controller.getDatasetName(),
 						true,
@@ -1250,7 +1311,7 @@ public class PeakabooPlotterSwing
 					}
 
 					mapperWindow = new PeakabooMapperSwing(
-						frame,
+						container,
 						datamodel,
 						controller.getDatasetName(),
 						true,
@@ -1275,7 +1336,7 @@ public class PeakabooPlotterSwing
 			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();
 			controller.savePreferences(baos);
 			savedSessionFileName = SwingIO.saveFile(
-					frame,
+					container,
 					"Save Session Data",
 					"peakaboo",
 					"Peakaboo Session File",
@@ -1295,7 +1356,7 @@ public class PeakabooPlotterSwing
 	private void actionSavePicture()
 	{
 		if (savePictureFolder == null) savePictureFolder = controller.getDataSourceFolder();
-		savePictureFolder = new SavePicture(frame, controller, savePictureFolder).getStartingFolder();
+		savePictureFolder = new SavePicture(container, controller, savePictureFolder).getStartingFolder();
 	}
 
 
@@ -1328,7 +1389,7 @@ public class PeakabooPlotterSwing
 
 			// save the contents of the output stream to a file.
 			savePictureFolder = SwingIO.saveFile(
-					frame,
+					container,
 					"Save Fitting Data to Text File",
 					"txt",
 					"Text File",
@@ -1353,7 +1414,7 @@ public class PeakabooPlotterSwing
 		try
 		{
 			AbstractFile af = SwingIO.openFile(
-					frame,
+					container,
 					"Load Session Data",
 					new String[] { "peakaboo" },
 					"Peakaboo Session Data",
@@ -1372,8 +1433,8 @@ public class PeakabooPlotterSwing
 	public void actionShowInfo()
 	{
 
-		new ScanInfoDialogue(frame, controller);
+		new ScanInfoDialogue(container, controller);
 
 	}
-
+	
 }
