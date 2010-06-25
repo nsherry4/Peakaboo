@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#Linux Launcher
+
 #hard-coded values
 linuxUserMemCap=2560
 percent=90
@@ -27,7 +29,7 @@ javaMem=$maxMem$suffix
 #launch program
 #Xmx is heap size
 #XX:MaxNewSize is maximum size of 'new' object/memory area. This is set low to keep memory consumption down
-exec /usr/lib/jvm/java-6-sun/bin/java -Xmx$javaMem -XX:MaxNewSize=20m -XX:+UseFastAccessorMethods -XX:+AggressiveOpts -classpath /usr/share/Peakaboo/ peakaboo.Peakaboo
+maxNew = ""
+#maxNew = "-XX:MaxNewSize=20m"
 
-
-#exec /usr/lib/jvm/java-6-sun/bin/java -Xmx2048m -classpath /usr/share/Peakaboo/ peakaboo.Peakaboo
+exec /usr/lib/jvm/java-6-sun/bin/java -Xmx$javaMem $maxNew -XX:+UseFastAccessorMethods -XX:+AggressiveOpts -classpath /usr/share/Peakaboo/ peakaboo.Peakaboo

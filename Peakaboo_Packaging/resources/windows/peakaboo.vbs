@@ -1,10 +1,14 @@
-' This Script Was Modified From:
-' Sample VBScript to discover how much RAM in computer
-' Author Guy Thomas http://computerperformance.co.uk/
-' Version 1.3 - August 2005
-' -------------------------------------------------------' 
+'#!/Windows/System32/wscript.exe
+'Windows Launcher
+
 
 Function systemMemory()
+
+	' This Function Was Modified From:
+	' Sample VBScript to discover how much RAM in computer
+	' Author Guy Thomas http://computerperformance.co.uk/
+	' Version 1.3 - August 2005
+	' -------------------------------------------------------' 
 
 	Dim objWMIService, objComputer, colComputer 
 	Dim strLogonUser, strComputer
