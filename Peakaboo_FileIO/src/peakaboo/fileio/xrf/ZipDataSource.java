@@ -120,6 +120,11 @@ public class ZipDataSource implements DataSource
 		
 	}
 	
+	public int getExpectedScanCount()
+	{
+		return getScanCount();
+	}
+	
 	
 	/**
 	 * Produces a list of file names for the files in this ZipArchive

@@ -11,6 +11,7 @@ import peakaboo.drawing.backends.Surface;
 import peakaboo.drawing.backends.graphics2d.ImageBuffer;
 import peakaboo.drawing.map.painters.MapPainter;
 import peakaboo.drawing.map.palettes.AbstractPalette;
+import peakaboo.drawing.Drawing;
 import peakaboo.drawing.DrawingRequest;
 import peakaboo.drawing.painters.PainterData;
 import peakaboo.drawing.painters.axis.AxisPainter;
@@ -26,7 +27,7 @@ import java.util.List;
  * 
  */
 
-public class MapDrawing extends peakaboo.drawing.Drawing
+public class MapDrawing extends Drawing
 {
 
 	private Buffer				mapBuffer;
@@ -104,6 +105,10 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 
 	public void setAxisPainters(List<AxisPainter> axisPainters) {
 		this.axisPainters = axisPainters;
+	}
+	public void setAxisPainters(AxisPainter painter) {
+		axisPainters = DataTypeFactory.<AxisPainter> list();
+		axisPainters.add(painter);
 	}
 	public void setPainters(List<MapPainter> painters) {
 		this.painters = painters;
@@ -253,7 +258,7 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 
 		float cellSize;
 		cellSize = cellWidth > cellHeight ? cellHeight : cellWidth;
-
+	
 		return cellSize;
 
 	}
@@ -269,40 +274,7 @@ public class MapDrawing extends peakaboo.drawing.Drawing
 	{
 		
 		return AxisPainter.calcAxisBorders(new PainterData(context, dr, new Coord<Float>(dr.imageWidth, dr.imageHeight), null), axisPainters);
-/*
-		Range<Double> availableX, availableY;
-		availableX = new Range<Double>(0.0, dr.imageWidth);
-		availableY = new Range<Double>(0.0, dr.imageHeight);
-		PainterData p = new PainterData(context, dr, new Coord<Double>(dr.imageWidth, dr.imageHeight), null);
 
-		if (axisPainters != null) {
-
-			Pair<Double, Double> axisSizeX, axisSizeY;
-
-			for (AxisPainter axisPainter : axisPainters) {
-
-
-				axisPainter.setDimensions(
-
-				new Range<Double>(availableX.start, availableX.end),
-						new Range<Double>(availableY.start, availableY.end)
-
-				);
-
-				axisSizeX = axisPainter.getAxisSizeX(p);
-				axisSizeY = axisPainter.getAxisSizeY(p);
-
-				availableX.start += axisSizeX.first;
-				availableX.end -= axisSizeX.second;
-				availableY.start += axisSizeY.first;
-				availableY.end -= axisSizeY.second;
-
-			}
-
-		}
-
-		return new Coord<Range<Double>>(availableX, availableY);
-*/
 	}
 
 

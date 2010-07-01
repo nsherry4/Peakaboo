@@ -20,11 +20,8 @@ import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
 import peakaboo.curvefit.painters.FittingTitlePainter;
 import peakaboo.curvefit.results.FittingResult;
-import peakaboo.dataset.DataSetProvider;
-import peakaboo.dataset.LocalDataSetProvider;
-import peakaboo.dataset.OnDemandDataSetProvider;
-import peakaboo.dataset.TempFileDataSetProvider;
-import peakaboo.dataset.ScanContainer;
+import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
@@ -49,7 +46,7 @@ import peakaboo.drawing.plot.painters.plot.OriginalDataPainter;
 import peakaboo.drawing.plot.painters.plot.PrimaryPlotPainter;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.filters.AbstractFilter;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 
 import fava.*;
 import static fava.Fn.*;
@@ -151,17 +148,40 @@ public class PlotController extends CanvasController implements FilterController
 	// DATA SET SETTINGS --
 	// =============================================
 
+	public void setDataSetProvider(DataSetProvider dsp)
+	{
+		
+		if (dsp == null) return;
+			
+		DataSetProvider old = model.dataset;
+		model.dataset = dsp;
+		
+		model.viewOptions.scanNumber = dsp.firstNonNullScanIndex();
+				
+		
+		setDataWidth(model.dataset.scanSize());
+		setDataHeight(1);
+		
+		setFittingParameters(model.dataset.scanSize(), model.dataset.energyPerChannel());
+		// clear any interpolation from previous use
+		if (mapController != null) mapController.setInterpolation(0);
+
+		clearUndos();
+		
+		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
+		// (task listener?) which is preventing them from being garbage-collected
+		if ( old != null && old != dsp ) old.discard();
+		
+		updateListeners();
+		
+	}
+	
 	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
-		//final TempFileDataSetProvider dataset = new TempFileDataSetProvider();
 		final OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
 		final TaskList<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
-
-		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
-		// (task listener?) which is preventing them from being garbage-collected
-		final DataSetProvider oldDataSet = model.dataset;
 
 
 		readTasks.addListener(new PeakabooSimpleListener() {
@@ -172,20 +192,8 @@ public class PlotController extends CanvasController implements FilterController
 				{
 					if (dataset.scanSize() > 0)
 					{
-
-						model.dataset = dataset;
-						oldDataSet.discard();
-
-						model.viewOptions.scanNumber = 0;
-
-						setDataWidth(model.dataset.scanSize());
-						setDataHeight(1);
-
-						setFittingParameters(model.dataset.scanSize(), model.dataset.energyPerChannel());
-						// clear any interpolation from previous use
-						if (mapController != null) mapController.setInterpolation(0);
-
-						clearUndos();
+						
+						setDataSetProvider(dataset);
 
 					}
 				}
@@ -269,7 +277,7 @@ public class PlotController extends CanvasController implements FilterController
 
 
 	private void setDataWidth(int width)
-	{
+	{		
 		model.dr.dataWidth = width;
 		updateListeners();
 	}
@@ -579,9 +587,9 @@ public class PlotController extends CanvasController implements FilterController
 	private Pair<Spectrum, Spectrum> getDataForPlot()
 	{
 
-		ScanContainer originalData = null;
+		Spectrum originalData = null;
 
-		if (!model.dataset.hasData()) return null;
+		if (!model.dataset.hasData() || model.currentScan() == null) return null;
 
 		// get the original data
 		// TODO: get rid of or change caching. the ScanContainers will not always return good data
@@ -604,7 +612,7 @@ public class PlotController extends CanvasController implements FilterController
 		 */
 
 		// return the filtered data and the infiltered data in a pair
-		return new Pair<Spectrum, Spectrum>(model.filteredPlot, originalData.data);
+		return new Pair<Spectrum, Spectrum>(model.filteredPlot, originalData);
 	}
 
 
@@ -612,15 +620,13 @@ public class PlotController extends CanvasController implements FilterController
 	{
 
 		// Regenerate Filtered Data
-		if (model.dataset.hasData())
+		if (model.dataset.hasData() && model.currentScan() != null)
 		{
 
 			if (model.filteredPlot == null)
 			{
 
-				ScanContainer originalData = null;
-
-				if (!model.dataset.hasData()) return;
+				Spectrum originalData = null;
 
 				// get the original data
 				// TODO: get rid of or change caching. the ScanContainers will not always return good data
@@ -628,9 +634,9 @@ public class PlotController extends CanvasController implements FilterController
 				// over the network. In these cases, we should just display a "Loading..." message and register a
 				// listener with the dataset asking to be notified when the data comes back. We will then repaint.
 				originalData = model.currentScan();
-
-				// if the filtered data has been invalidated, regenerate it
-				model.filteredPlot = model.filters.filterData(originalData.data, true);
+				
+								// if the filtered data has been invalidated, regenerate it
+				model.filteredPlot = model.filters.filterData(originalData, true);
 
 			}
 
@@ -1303,6 +1309,22 @@ public class PlotController extends CanvasController implements FilterController
 
 	public void setScanNumber(int number)
 	{
+		//negative is downwards, positive is upwards
+		int direction = number - model.viewOptions.scanNumber;
+		
+		if (direction > 0)
+		{
+			number = model.dataset.firstNonNullScanIndex(number);
+		} else {
+			number = model.dataset.lastNonNullScanIndex(number);
+		}
+		
+		if (number == -1) 
+		{
+			updateListeners();
+			return;
+		}
+		
 		if (number > model.dataset.scanCount() - 1) number = model.dataset.scanCount() - 1;
 		if (number < 0) number = 0;
 		model.viewOptions.scanNumber = number;

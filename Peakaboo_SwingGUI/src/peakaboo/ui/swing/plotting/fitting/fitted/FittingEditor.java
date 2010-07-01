@@ -8,6 +8,7 @@ import java.util.EventObject;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.JTree;
+import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 
@@ -18,6 +19,9 @@ import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 
+/*
+ * NOT CURRENTLY USED
+ */
 
 public class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 {
@@ -37,7 +41,8 @@ public class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 		
 		
 		
-		tswidget = new TSWidget(true);	
+		tswidget = new TSWidget(true);
+		tswidget.setOpaque(true);
 		
 		tswidget.getCheckBox().addItemListener(new ItemListener() {
 		
@@ -54,8 +59,7 @@ public class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 	public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
 			boolean leaf, int row)
 	{
-		
-		
+			
 		if (value instanceof TransitionSeries){
 			
 			TransitionSeries ts = (TransitionSeries)value;
@@ -74,10 +78,8 @@ public class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 
 			tswidget.setBackground(renderer.getBackgroundSelectionColor());
 			tswidget.setForeground(renderer.getTextSelectionColor());
-			tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
+			tswidget.setBorder(new EmptyBorder(1, 1, 1, 1));
 
-
-			tswidget.setSelected(controller.getTransitionSeriesVisibility(ts));
 			return tswidget;
 			
 		}

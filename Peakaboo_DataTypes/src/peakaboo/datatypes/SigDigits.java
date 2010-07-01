@@ -55,7 +55,12 @@ public class SigDigits
 			BigDecimal bd = new BigDecimal(Float.toString(value));
 			bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_EVEN);
 			
-			return bd.toPlainString();
+			String result = bd.toPlainString();
+			if (Float.parseFloat(result) == 0 && decimals < 4) 
+				return roundFloatTo(value, decimals+1);
+			else
+				return result;
+			
 		} catch (Exception e)
 		{
 			return "?";

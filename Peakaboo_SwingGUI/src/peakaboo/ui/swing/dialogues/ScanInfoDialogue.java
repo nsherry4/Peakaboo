@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.widgets.dialogues;
+package peakaboo.ui.swing.dialogues;
 
 import java.awt.Container;
 import java.awt.Dimension;

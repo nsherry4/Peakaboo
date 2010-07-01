@@ -68,8 +68,10 @@ import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.AbstractFile;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
+import peakaboo.ui.swing.dialogues.AboutDialogue;
+import peakaboo.ui.swing.dialogues.ScanInfoDialogue;
 import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
@@ -79,8 +81,6 @@ import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ToolbarImageButton;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
-import peakaboo.ui.swing.widgets.dialogues.AboutDialogue;
-import peakaboo.ui.swing.widgets.dialogues.ScanInfoDialogue;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import peakaboo.ui.swing.widgets.tasks.TaskListView;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
@@ -170,6 +170,10 @@ public class PlotPanel extends ClearPanel
 		
 	}
 	
+	public PlotController getController()
+	{
+		return controller;
+	}
 	
 	public void setWidgetsState()
 	{
@@ -181,6 +185,8 @@ public class PlotPanel extends ClearPanel
 		if (controller.hasDataSet())
 		{
 
+			canvas.setHasData(true);
+			
 			bottomPanel.setEnabled(true);
 			snapshotMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
@@ -225,6 +231,7 @@ public class PlotPanel extends ClearPanel
 		else
 		{
 			bottomPanel.setEnabled(false);
+			canvas.setHasData(false);
 		}
 
 		undo.setEnabled(controller.canUndo());
@@ -311,9 +318,7 @@ public class PlotPanel extends ClearPanel
 			{
 				Point p = e.getPoint();
 				p.x += canvas.getLocationOnScreen().x;
-				
-				System.out.println(canvas.getLocationOnScreen().x);
-				
+							
 				return p;
 			}
 			
@@ -1256,75 +1261,85 @@ public class PlotPanel extends ClearPanel
 
 	private void actionMap()
 	{
-		if (controller.hasDataSet())
+		
+		if (! controller.hasDataSet()) return;
+		
+		
+
+		final TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
+		if (tasks == null) return;
+
+		new TaskListView(container, tasks);
+		
+		if (tasks.getCompleted())
 		{
+			
+			MapController mapController = controller.getMapController();
+			PeakabooMapperSwing mapperWindow;
 
-			TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
-			if (tasks == null) return;
-			new TaskListView(container, tasks);
+			Coord<Integer> dataDimensions = controller.getDataDimensions();
 
-			if (!tasks.isAborted())
+			MapResultSet results = tasks.getResult();
+			
+							
+			AllMapsModel datamodel = new AllMapsModel(results);
+
+			datamodel.dataDimensions = dataDimensions;
+			datamodel.dimensionsProvided = controller.hasDimensions();
+			datamodel.badPoints = controller.getDiscardedScanList();
+			datamodel.realDimensions = controller.getRealDimensions();
+			datamodel.realDimensionsUnits = controller.getRealDimensionsUnits();
+
+			if (mapController == null)
 			{
 
-				MapController mapController = controller.getMapController();
-				PeakabooMapperSwing mapperWindow;
+				mapperWindow = new PeakabooMapperSwing(
+					container,
+					datamodel,
+					controller.getDatasetName(),
+					true,
+					controller.getDataSourceFolder(),
+					dataDimensions,
+					results);
 
-				Coord<Integer> dataDimensions = controller.getDataDimensions();
-
-				MapResultSet results = tasks.getResult();
-				AllMapsModel datamodel = new AllMapsModel(results);
-
-				datamodel.dataDimensions = dataDimensions;
-				datamodel.dimensionsProvided = controller.hasDimensions();
-				datamodel.badPoints = controller.getDiscardedScanList();
-				datamodel.realDimensions = controller.getRealDimensions();
-				datamodel.realDimensionsUnits = controller.getRealDimensionsUnits();
-
-				if (mapController == null)
-				{
-
-					mapperWindow = new PeakabooMapperSwing(
-						container,
-						datamodel,
-						controller.getDatasetName(),
-						true,
-						controller.getDataSourceFolder(),
-						dataDimensions,
-						results);
-
-				}
-				else
-				{
-
-					int dy = mapController.getDataHeight();
-					int dx = mapController.getDataWidth();
-
-					// if the data does not match size, discard it. either it was from
-					// a funny data set that isn't square or (more likely) they reloaded the
-					// data set
-					// TODO: invistigate -- is it easier to null the mapController pointer when
-					// loading new data and assume the data is the same size otherwise?
-					if (dataDimensions.x * dataDimensions.y == dx * dy)
-					{
-						dataDimensions.x = dx;
-						dataDimensions.y = dy;
-					}
-
-					mapperWindow = new PeakabooMapperSwing(
-						container,
-						datamodel,
-						controller.getDatasetName(),
-						true,
-						controller.getDataSourceFolder(),
-						dataDimensions,
-						results);
-				}
-
-				mapperWindow.showDialog();
-				// controller.setMapController(mapperWindow.showDialog());
-				System.gc();
 			}
+			else
+			{
+
+				int dy = mapController.getDataHeight();
+				int dx = mapController.getDataWidth();
+
+				// if the data does not match size, discard it. either it was from
+				// a funny data set that isn't square or (more likely) they reloaded the
+				// data set
+				// TODO: invistigate -- is it easier to null the mapController pointer when
+				// loading new data and assume the data is the same size otherwise?
+				if (dataDimensions.x * dataDimensions.y == dx * dy)
+				{
+					dataDimensions.x = dx;
+					dataDimensions.y = dy;
+				}
+
+				mapperWindow = new PeakabooMapperSwing(
+					container,
+					datamodel,
+					controller.getDatasetName(),
+					true,
+					controller.getDataSourceFolder(),
+					dataDimensions,
+					results);
+			}
+
+			mapperWindow.showDialog();
+			// controller.setMapController(mapperWindow.showDialog());
+			System.gc();
+			
 		}
+
+		
+		
+				
+		
 	}
 
 

@@ -73,7 +73,7 @@ import peakaboo.datatypes.eventful.PeakabooMessageListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.AbstractFile;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.plotting.PeakabooContainer;
@@ -86,8 +86,6 @@ import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.ToolbarImageButton;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
-import peakaboo.ui.swing.widgets.dialogues.AboutDialogue;
-import peakaboo.ui.swing.widgets.dialogues.ScanInfoDialogue;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import peakaboo.ui.swing.widgets.tasks.TaskListView;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
@@ -138,6 +136,11 @@ public class PlotterFrame extends JFrame implements PeakabooContainer
 	public boolean isApplet()
 	{
 		return false;
+	}
+
+	public void close()
+	{
+		System.exit(0);
 	}	
 
 }

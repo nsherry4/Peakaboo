@@ -1,4 +1,4 @@
-package peakaboo.mapping;
+package peakaboo.mapping.results;
 
 
 import java.util.Collection;
@@ -38,6 +38,7 @@ public class MapResultSet implements Cloneable
 	 */
 	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
 	{
+		
 		maps = DataTypeFactory.<MapResult> list();
 		for (TransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));

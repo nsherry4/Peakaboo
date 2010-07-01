@@ -1,7 +1,13 @@
 package peakaboo.datatypes;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
 
 import fava.*;
 
@@ -26,6 +32,18 @@ public class Spectrum implements Iterable<Float>, Serializable
 		maxIndex = size - 1;
 	}
 
+	public Spectrum(List<Float> fromList)
+	{
+		this.data = new float[fromList.size()];
+		this.size = fromList.size();
+				
+		for (int i = 0; i < size; i++)
+		{
+			data[i] = fromList.get(i);
+		}
+		maxIndex = size - 1;
+		
+	}
 
 	public Spectrum(int size)
 	{
@@ -143,5 +161,65 @@ public class Spectrum implements Iterable<Float>, Serializable
 		
 	}
 
+	public static FunctionMap<Spectrum, byte[]> getEncoder()
+	{
+	
+		//Function to serialize a spectrum
+		return  new FunctionMap<Spectrum, byte[]>()
+		{
+	
+			public byte[] f(Spectrum s)
+			{
+	
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutputStream oos;
+				try
+				{
+					oos = new ObjectOutputStream(baos);
+					oos.writeObject(s);
+					oos.close();
+					return baos.toByteArray();
+				}
+				catch (IOException e)
+				{
+					return new byte[0];
+				}
+	
+			}
+		};
+	}
+
+	public static FunctionMap<byte[], Spectrum> getDecoder(){
+		
+		//Function to deserialize a spectrum
+
+		return new FunctionMap<byte[], Spectrum>()
+		{
+
+			public Spectrum f(byte[] bs)
+			{
+				ByteArrayInputStream bais = new ByteArrayInputStream(bs);
+				ObjectInputStream ois;
+				try
+				{
+					ois = new ObjectInputStream(bais);
+					Spectrum s = (Spectrum) ois.readObject();
+					ois.close();
+					return s;
+				}
+				catch (IOException e)
+				{
+					return null;
+				}
+				catch (ClassNotFoundException e)
+				{
+					return null;
+				}
+
+			}
+		};
+		
+	}
+		
 
 }

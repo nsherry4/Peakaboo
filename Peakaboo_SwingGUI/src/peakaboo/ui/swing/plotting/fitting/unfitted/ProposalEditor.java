@@ -63,8 +63,8 @@ public class ProposalEditor extends DefaultTreeCellEditor
 			boolean leaf, int row)
 	{
 
-		Component c = renderer.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true);
-		
+		Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+				
 		if (value instanceof TransitionSeries)
 		{
 
@@ -80,17 +80,25 @@ public class ProposalEditor extends DefaultTreeCellEditor
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tswidget;
 
-		}
+		}		
 		else if (value instanceof TransitionSeriesType)
 		{
 			TransitionSeriesType tst = (TransitionSeriesType)value;
-			
+					
+			//if (isSelected)
+			//{
+				tstLabel.setForeground(renderer.getTextSelectionColor());
+			//} else {
+			//	tstLabel.setForeground(renderer.getTextNonSelectionColor());
+			//}
+
 			tstLabel.setText(tst.toString());
-			tstLabel.setForeground(c.getForeground());
-			tstLabel.setBackground(c.getBackground());
+			
 			
 			return tstLabel;
 		}
+		
+		
 		
 		return c;
 
@@ -108,8 +116,8 @@ public class ProposalEditor extends DefaultTreeCellEditor
 	{
 		JTree source = (JTree)e.getSource();
 		
-		Object selected = source.getSelectionModel().getLeadSelectionPath();
-		
+		Object selected = tree.getLastSelectedPathComponent();
+						
 		if (selected == null) return false;
 		if (selected instanceof TransitionSeriesType) return false;
 		return true;

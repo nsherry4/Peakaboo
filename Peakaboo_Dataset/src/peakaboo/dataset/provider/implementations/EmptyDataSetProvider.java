@@ -1,44 +1,77 @@
-package peakaboo.dataset;
-
-
+package peakaboo.dataset.provider.implementations;
 
 import java.util.List;
 
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
+import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.tasks.TaskList;
+import peakaboo.fileio.xrf.DataSource;
 import peakaboo.filters.FilterSet;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 
 
-
-/**
- * This class is used to run Peakaboo against a network backend so that large data sets don't need to be shipped to the
- * client, and so that processing is not limited by the client's hardware (eg netbooks)
- * 
- * @author Omid Mola, Nathaniel Sherry 2010
- */
-
-public class NetworkDataSetProvider extends DataSetProvider
+public class EmptyDataSetProvider extends DataSetProvider
 {
 
 	@Override
-	public ScanContainer averagePlot()
+	public Spectrum averagePlot()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Spectrum averagePlot(List<Integer> excludedIndices)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/*@Override
+	public Spectrum calculateSumInRegion(ROI region)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}*/
 
 	@Override
-	public ScanContainer averagePlot(List<Integer> excludedIndices)
+	public Spectrum getScan(int index)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public void invalidateFilteredData()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float maximumIntensity()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Spectrum maximumPlot()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int scanCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 	@Override
 	public TaskList<MapResultSet> calculateMap(FilterSet filters, FittingSet fittings)
@@ -46,39 +79,25 @@ public class NetworkDataSetProvider extends DataSetProvider
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-	/*@Override
-	public List<Double> calculateSumInRegion(ROI region)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
-
+	
 	@Override
-	public List<Coord<Number>> getCoordinateList()
-	{
-		// TODO Auto-generated method stub
-		return null;
+	public boolean hasData(){
+		return false;
 	}
 
-
 	@Override
-	public String getCreationTime()
+	public String getDatasetName()
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
-
 
 	@Override
-	public String getCreator()
+	public String getScanName(int index)
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
-
 
 	@Override
 	public Coord<Integer> getDataDimensions()
@@ -88,61 +107,19 @@ public class NetworkDataSetProvider extends DataSetProvider
 	}
 
 
+	/*@Override
+	public Corners getRealDimensions()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}*/
+
 	@Override
-	public String getDatasetName()
+	public List<Coord<Number>> getCoordinateList()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-	@Override
-	public String getEndTime()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getExperimentName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getFacilityName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getInstrumentName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getLaboratoryName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getProjectName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
 	public Coord<Range<Number>> getRealDimensions()
@@ -151,78 +128,12 @@ public class NetworkDataSetProvider extends DataSetProvider
 		return null;
 	}
 
-
 	@Override
 	public SISize getRealDimensionsUnits()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-	@Override
-	public String getSampleName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public ScanContainer getScan(int index)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getScanName(int index)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getScanName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getSessionName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getStartTime()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getTechniqueName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public boolean hasData()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 
 	@Override
 	public boolean hasDimensions()
@@ -231,7 +142,6 @@ public class NetworkDataSetProvider extends DataSetProvider
 		return false;
 	}
 
-
 	@Override
 	public boolean hasExtendedInformation()
 	{
@@ -239,47 +149,89 @@ public class NetworkDataSetProvider extends DataSetProvider
 		return false;
 	}
 
-
-	@Override
-	public void invalidateFilteredData()
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public float maximumIntensity()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public ScanContainer maximumPlot()
+	public String getCreationTime()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-	@Override
-	public int scanCount()
+	public String getCreator()
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
+	public String getEndTime()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getExperimentName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getFacilityName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getInstrumentName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getLaboratoryName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getProjectName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getSampleName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getScanName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getSessionName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getStartTime()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getTechniqueName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public void discard()
 	{
-		// TODO Auto-generated method stub
-		//close any network connections, delete any cached data, etc
 		
 	}
-
 
 	@Override
 	public int scanSize()
@@ -287,5 +239,42 @@ public class NetworkDataSetProvider extends DataSetProvider
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public int expectedScanCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int firstNonNullScanIndex()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int firstNonNullScanIndex(int start)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int lastNonNullScanIndex(int upto)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int lastNonNullScanIndex()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 
 }

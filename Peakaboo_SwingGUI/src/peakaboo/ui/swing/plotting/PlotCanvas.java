@@ -28,6 +28,9 @@ public class PlotCanvas extends JPanel implements Scrollable{
 	
 	private PlotController controller;
 	
+	private boolean hasData;
+	
+
 	public PlotCanvas(PlotController controller)
 	{
 		
@@ -51,13 +54,24 @@ public class PlotCanvas extends JPanel implements Scrollable{
 	@Override
 	public void paintComponent(Graphics g){
 		
-		controller.setImageWidth(this.getWidth());
-		controller.setImageHeight(this.getHeight());
-
-		g.setColor(new Color(1.0f, 1.0f, 1.0f));
-		g.fillRect(0, 0, (int)controller.getImageWidth(), (int)controller.getImageHeight());
-
-		controller.draw(g);
+		if (hasData)
+		{
+		
+			controller.setImageWidth(this.getWidth());
+			controller.setImageHeight(this.getHeight());
+	
+			g.setColor(new Color(1.0f, 1.0f, 1.0f));
+			g.fillRect(0, 0, (int)controller.getImageWidth(), (int)controller.getImageHeight());
+	
+			controller.draw(g);
+			
+		} else {
+		
+			
+			
+			
+		}
+		
 	}
 	
 	
@@ -114,6 +128,15 @@ public class PlotCanvas extends JPanel implements Scrollable{
 		return p;
 		
 	}
+	
+	
+	
+	public void setHasData(boolean hasData)
+	{
+		this.hasData = hasData;
+	}
+	
+	
 	
 	
 }

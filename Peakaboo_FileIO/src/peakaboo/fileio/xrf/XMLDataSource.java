@@ -62,6 +62,10 @@ public class XMLDataSource implements DataSource
 		return filenames.size();
 	}
 
+	public int getExpectedScanCount()
+	{
+		return getScanCount();
+	}
 
 	public List<String> getScanNames()
 	{

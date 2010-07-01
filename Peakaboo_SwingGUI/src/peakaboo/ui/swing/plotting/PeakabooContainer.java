@@ -23,5 +23,7 @@ public interface PeakabooContainer
 	public Panel getPanel();
 	public Component getComponent();
 	
+	public void close();
+	
 	
 }

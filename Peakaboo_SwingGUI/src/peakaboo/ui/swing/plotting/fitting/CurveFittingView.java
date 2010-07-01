@@ -12,9 +12,15 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import javax.swing.tree.TreePath;
 
 import peakaboo.controller.plotter.FittingController;
@@ -46,8 +52,9 @@ public class CurveFittingView extends ClearPanel
 	private final String			UNFITTED	= "Unfitted";
 	private final String			SUMMATION	= "Summation";
 
-	protected JTree					fitTree;
-	protected MutableTreeModel		tm, utm;
+	protected JTable				fitTable;
+	protected MutableTableModel		tm;
+	protected MutableTreeModel		utm;
 	protected JTree					unfitTree;
 
 	protected JPanel				cardPanel;
@@ -86,11 +93,11 @@ public class CurveFittingView extends ClearPanel
 			public void change()
 			{
 
-				// fitTable.invalidate();
-				//fitTree.invalidate();
-				//unfitTree.invalidate();
+				fitTable.invalidate();
+				//fitTable.invalidate();
+				unfitTree.invalidate();
 				
-				tm.fireChangeEvent();
+				//tm.fireChangeEvent();
 				//utm.fireChangeEvent();
 				
 
@@ -149,54 +156,43 @@ public class CurveFittingView extends ClearPanel
 			@Override
 			public void up()
 			{
-				fitTree.cancelEditing();
-				Object c = fitTree.getSelectionPath().getLastPathComponent();
-				if (c instanceof TransitionSeries)
-				{
-					TransitionSeries ts = (TransitionSeries) c;
-					controller.moveTransitionSeriesUp(ts);
-					tm.fireChangeEvent();
-					fitTree.setSelectionRow(controller.getFittedTransitionSeries().indexOf(ts));
-				}
+				int row = fitTable.getSelectedRow();
+				if (row == -1) return;
+				TransitionSeries ts = controller.getFittedTransitionSeries().get(row);
+				controller.moveTransitionSeriesUp(ts);
+				tm.fireChangeEvent();
+				row = controller.getFittedTransitionSeries().indexOf(ts);
+				fitTable.addRowSelectionInterval(row, row);
 			}
 
 
 			@Override
 			public void remove()
 			{
-				fitTree.cancelEditing();
-				if (fitTree.getSelectionPath() == null) return;
-				Object c = fitTree.getSelectionPath().getLastPathComponent();
-				if (c instanceof TransitionSeries)
-				{
-					TransitionSeries ts = (TransitionSeries) c;
-					controller.removeTransitionSeries(ts);
-					tm.fireChangeEvent();
-					utm.fireChangeEvent();
-				}
+				int row = fitTable.getSelectedRow();
+				if (row == -1) return;
+				TransitionSeries ts = controller.getFittedTransitionSeries().get(row);
+				controller.removeTransitionSeries(ts);
+				tm.fireChangeEvent();
+				utm.fireChangeEvent();
 			}
 
 
 			@Override
 			public void down()
 			{
-				fitTree.cancelEditing();
-				Object c = fitTree.getSelectionPath().getLastPathComponent();
-				if (c instanceof TransitionSeries)
-				{
-					TransitionSeries ts = (TransitionSeries) c;
-					controller.moveTransitionSeriesDown(ts);
-					tm.fireChangeEvent();
-					fitTree.setSelectionRow(controller.getFittedTransitionSeries().indexOf(ts));
-
-				}
+				int row = fitTable.getSelectedRow();
+				if (row == -1) return;
+				TransitionSeries ts = controller.getFittedTransitionSeries().get(row);
+				controller.moveTransitionSeriesDown(ts);
+				row = controller.getFittedTransitionSeries().indexOf(ts);
+				fitTable.addRowSelectionInterval(row, row);
 			}
 
 
 			@Override
 			public void clear()
 			{
-				fitTree.cancelEditing();
 				controller.clearTransitionSeries();
 				tm.fireChangeEvent();
 				utm.fireChangeEvent();
@@ -206,7 +202,6 @@ public class CurveFittingView extends ClearPanel
 			@Override
 			public void add()
 			{
-				fitTree.cancelEditing();
 				card.show(cardPanel, UNFITTED);
 				tm.fireChangeEvent();
 				utm.fireChangeEvent();
@@ -229,7 +224,6 @@ public class CurveFittingView extends ClearPanel
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				fitTree.cancelEditing();
 				summationPanel.resetSelectors();
 				card.show(cardPanel, SUMMATION);
 				tm.fireChangeEvent();
@@ -256,7 +250,7 @@ public class CurveFittingView extends ClearPanel
 			{
 				controller.clearProposedTransitionSeries();
 				card.show(cardPanel, FITTED);
-				fitTree.invalidate();
+				fitTable.invalidate();
 				unfitTree.invalidate();
 			}
 
@@ -267,7 +261,7 @@ public class CurveFittingView extends ClearPanel
 				controller.commitProposedTransitionSeries();
 				card.show(cardPanel, FITTED);
 
-				fitTree.invalidate();
+				fitTable.invalidate();
 				tm.fireChangeEvent();
 
 				unfitTree.invalidate();
@@ -303,7 +297,7 @@ public class CurveFittingView extends ClearPanel
 				//controller.clearProposedTransitionSeries();
 				summationPanel.resetSelectors();
 				card.show(cardPanel, FITTED);
-				fitTree.invalidate();
+				fitTable.invalidate();
 				
 				controller.clearProposedTransitionSeries();
 				controller.fittingProposalsInvalidated();
@@ -318,7 +312,7 @@ public class CurveFittingView extends ClearPanel
 				controller.addTransitionSeries(summationPanel.getTransitionSeries());
 				card.show(cardPanel, FITTED);
 
-				fitTree.invalidate();
+				fitTable.invalidate();
 				tm.fireChangeEvent();
 				
 				controller.clearProposedTransitionSeries();
@@ -355,112 +349,116 @@ public class CurveFittingView extends ClearPanel
 	private JScrollPane createTable()
 	{
 
-		fitTree = new JTree();
+		//fitTable = new JTree();
 		
-		tm = new MutableTreeModel() {
-
-			private List<TreeModelListener>	listeners;
-
-
-			public void valueForPathChanged(TreePath path, Object newValue)
+		fitTable = new JTable();
+		
+		tm = new MutableTableModel() {
+			
+			List<TableModelListener> listeners;
+			
+			public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 			{
-				if (path.getLastPathComponent() instanceof TransitionSeries)
+
+				if (columnIndex == 0)
 				{
-					TransitionSeries ts = (TransitionSeries) path.getLastPathComponent();
-					ts.visible = (Boolean) newValue;
-					controller.fittingDataInvalidated();
-				} /*
-				 * else if (path.getLastPathComponent() instanceof Element){ TransitionSeries ts =
-				 * (TransitionSeries)path.getLastPathComponent(); controller.setTransitionSeriesVisibility(ts,
-				 * (Boolean)newValue); }
-				 */
+					Boolean visible = (Boolean)aValue;
+					controller.setTransitionSeriesVisibility( controller.getFittedTransitionSeries().get(rowIndex), visible );
+				}
+					
 			}
-
-
-			public void removeTreeModelListener(TreeModelListener l)
+			
+		
+			public void removeTableModelListener(TableModelListener l)
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TreeModelListener> list();
+				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
 				listeners.remove(l);
 			}
-
-
-			public boolean isLeaf(Object node)
+			
+		
+			public boolean isCellEditable(int rowIndex, int columnIndex)
 			{
-
-				return (node instanceof TransitionSeries);
-
+				return columnIndex == 0;
 			}
-
-
-			public Object getRoot()
+			
+		
+			public Object getValueAt(int rowIndex, int columnIndex)
 			{
-				return "Fittings";
+				if (columnIndex == 0)
+				{
+					return controller.getFittedTransitionSeries().get(rowIndex).visible;
+				} else {
+					return controller.getFittedTransitionSeries().get(rowIndex);
+				}
 			}
-
-
-			public int getIndexOfChild(Object parent, Object child)
-			{
-
-				TransitionSeries ts = (TransitionSeries) child;
-				return controller.getFittedTransitionSeries().indexOf(ts);
-
-			}
-
-
-			public int getChildCount(Object parent)
+			
+		
+			public int getRowCount()
 			{
 				return controller.getFittedTransitionSeries().size();
 			}
-
-
-			public Object getChild(Object parent, int index)
+			
+		
+			public String getColumnName(int columnIndex)
 			{
-				return controller.getFittedTransitionSeries().get(index);
+				if (columnIndex == 0) return "Fit";
+				return "Transition Series";
+				
 			}
-
-
-			public void addTreeModelListener(TreeModelListener l)
+			
+		
+			public int getColumnCount()
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TreeModelListener> list();
+				return 2;
+			}
+			
+		
+			public Class<?> getColumnClass(int columnIndex)
+			{
+				switch (columnIndex)
+				{
+					case 0: return Boolean.class;
+					case 1: return TransitionSeries.class;
+					default: return Object.class;
+				}
+			}
+			
+		
+			public void addTableModelListener(TableModelListener l)
+			{
+				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
 				listeners.add(l);
-
 			}
 
 
 			public void fireChangeEvent()
 			{
-				Object c = null;
-				if (fitTree.getSelectionPath() != null){
-					c = fitTree.getSelectionPath().getLastPathComponent();
-				}
-				
-				for (TreeModelListener tml : listeners)
+				for(TableModelListener l : listeners)
 				{
-					tml.treeStructureChanged(new TreeModelEvent(this, new TreePath(getRoot())));
-				}
-				
-				if (c != null && c instanceof TransitionSeries)
-				{
-					TransitionSeries ts = (TransitionSeries) c;
-					fitTree.setSelectionRow(controller.getFittedTransitionSeries().indexOf(ts));
+					l.tableChanged(new TableModelEvent(this));
 				}
 			}
-
 		};
-
-		fitTree.setModel(tm);
-		fitTree.setShowsRootHandles(false);
-		fitTree.setRootVisible(false);
+		
+		
+		fitTable.setModel(tm);
+		
 
 		FittingRenderer renderer = new FittingRenderer(controller);
-		fitTree.setCellRenderer(renderer);
-		fitTree.setEditable(true);
-		fitTree.setCellEditor(new FittingEditor(renderer, controller));
+		fitTable.getColumnModel().getColumn(1).setCellRenderer(new FittingRenderer(controller));
 
-		// BasicTreeUI basicTreeUI = (BasicTreeUI) fitTree.getUI();
-		// basicTreeUI.setRightChildIndent((int)Math.round(basicTreeUI.getRightChildIndent() * 1.5));
-
-		JScrollPane scroll = new JScrollPane(fitTree);
+		fitTable.setShowVerticalLines(false);
+		fitTable.setShowHorizontalLines(false);
+		
+			
+		TableColumn column = fitTable.getColumnModel().getColumn(0);
+		column.setMinWidth(40);
+		column.setPreferredWidth(40);
+		column.setMaxWidth(100);
+		
+		fitTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		JScrollPane scroll = new JScrollPane(fitTable);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));
 

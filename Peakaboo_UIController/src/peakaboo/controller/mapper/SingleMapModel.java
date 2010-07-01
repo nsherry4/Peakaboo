@@ -11,8 +11,8 @@ import static fava.Functions.*;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.mapping.MapResultSet;
 import peakaboo.mapping.colours.OverlayColour;
+import peakaboo.mapping.results.MapResultSet;
 
 public class SingleMapModel {
 

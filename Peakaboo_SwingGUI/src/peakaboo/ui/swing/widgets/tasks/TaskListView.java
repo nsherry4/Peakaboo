@@ -17,10 +17,10 @@ import javax.swing.WindowConstants;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
+import peakaboo.ui.swing.dialogues.PeakabooDialog;
 import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.dialogues.PeakabooDialog;
 
 public class TaskListView extends PeakabooDialog {
 
@@ -120,7 +120,9 @@ public class TaskListView extends PeakabooDialog {
 		
         tasks.startWorking();
         setVisible(true);
-		
+        
+        
+        
 	}
 	
 	

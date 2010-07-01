@@ -18,12 +18,12 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import peakaboo.controller.CanvasController;
+import peakaboo.ui.swing.dialogues.PeakabooDialog;
 import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.dialogues.PeakabooDialog;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
 import peakaboo.ui.swing.widgets.toggle.ComplexToggleGroup;
 

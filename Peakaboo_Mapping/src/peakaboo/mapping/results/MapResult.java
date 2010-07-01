@@ -1,4 +1,4 @@
-package peakaboo.mapping;
+package peakaboo.mapping.results;
 
 
 

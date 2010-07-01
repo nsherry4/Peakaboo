@@ -26,7 +26,12 @@ public interface DataSource
 	 */
 	public int getScanCount();
 
-
+	/**
+	 * Returns the number of scans expected from this data set
+	 * @return the expected scan count
+	 */
+	public int getExpectedScanCount();
+	
 	/**
 	 * Returns the names of all scans not marked as bad
 	 * 

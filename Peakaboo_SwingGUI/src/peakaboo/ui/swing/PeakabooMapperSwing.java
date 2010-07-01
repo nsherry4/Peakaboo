@@ -27,7 +27,8 @@ import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.SingleMapModel;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
+import peakaboo.ui.swing.dialogues.PeakabooDialog;
 import peakaboo.ui.swing.fileio.SwingIO;
 import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.icons.IconSize;
@@ -38,7 +39,6 @@ import peakaboo.ui.swing.widgets.ClearPanel;
 import peakaboo.ui.swing.widgets.ImageButton;
 import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.ImageButton.Layout;
-import peakaboo.ui.swing.widgets.dialogues.PeakabooDialog;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 
 

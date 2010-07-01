@@ -11,6 +11,7 @@ public class ThermalScalePalette extends AbstractPalette
 {
 	
 	private List<Color> spectrum;
+	private boolean hasNegatives;
 
 	public ThermalScalePalette()
 	{
@@ -25,6 +26,22 @@ public class ThermalScalePalette extends AbstractPalette
 		} else {
 			this.spectrum = Spectrums.ThermalScale();
 		}
+		
+		this.hasNegatives = false;
+		
+	}
+	
+	public ThermalScalePalette(boolean isMonochrome, boolean hasNegatives)
+	{
+		if (isMonochrome)
+		{
+			this.spectrum = Spectrums.MonochromeScale();
+		} else {
+			this.spectrum = Spectrums.ThermalScale();
+		}
+		
+		this.hasNegatives = hasNegatives;
+		
 	}
 	
 	public ThermalScalePalette(int steps, boolean isMonochrome)
@@ -40,7 +57,13 @@ public class ThermalScalePalette extends AbstractPalette
 	@Override
 	public Color getFillColour(double intensity, double maximum)
 	{
-		double percentage = intensity / maximum;
+		double percentage;
+		if (hasNegatives) {
+			percentage = (intensity + maximum) / (2 * maximum);
+		} else {
+			percentage = intensity / maximum;
+		}
+		
 		int index = (int)(spectrum.size() * percentage);
 		if (index == spectrum.size()) index--;
 		return spectrum.get(index);

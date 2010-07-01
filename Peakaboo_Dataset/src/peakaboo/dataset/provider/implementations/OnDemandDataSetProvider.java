@@ -1,4 +1,4 @@
-package peakaboo.dataset;
+package peakaboo.dataset.provider.implementations;
 
 
 
@@ -12,6 +12,8 @@ import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
+import peakaboo.dataset.mapping.MapTS;
+import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
@@ -33,7 +35,7 @@ import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
 import peakaboo.filters.FilterSet;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 
 
 
@@ -46,11 +48,6 @@ import peakaboo.mapping.MapResultSet;
 
 public class OnDemandDataSetProvider extends DataSetProvider
 {
-
-	//protected List<Spectrum>		dsc_dataset;
-	//protected List<String>			dsc_scannames;
-	//protected List<Spectrum>		filteredDataSet;
-	//protected Boolean				filteredDataInvalid;
 
 	protected float					maxValue;
 	protected int					scanLength;
@@ -73,17 +70,27 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	{
 		super();
 	}
-
-
-	@Override
-	public ScanContainer averagePlot()
+	
+	
+	public OnDemandDataSetProvider(DataSource ds)
 	{
-		return new ScanContainer(dsc_average);
+		super();
+		
+		readDataSource(ds, null, "");
+		dataSource = ds;
+		
 	}
 
 
 	@Override
-	public ScanContainer averagePlot(final List<Integer> excludedIndcies)
+	public Spectrum averagePlot()
+	{
+		return new Spectrum(dsc_average);
+	}
+
+
+	@Override
+	public Spectrum averagePlot(final List<Integer> excludedIndcies)
 	{
 
 		if (excludedIndcies.size() == 0) return averagePlot();
@@ -121,7 +128,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
 		if (Nt == Ne)
 		{
-			return new ScanContainer(new Spectrum(dsc_average.size(), 0.0f));
+			return new Spectrum(new Spectrum(dsc_average.size(), 0.0f));
 		}
 
 		float Net = (float) Ne / (float) Nt;
@@ -133,15 +140,15 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			goodAverage.set(i, (At.get(i) - Ae.get(i) * Net) * Ntte);
 		}
 
-		return new ScanContainer(goodAverage);
+		return new Spectrum(goodAverage);
 
 	}
 
 
 	@Override
-	public ScanContainer maximumPlot()
+	public Spectrum maximumPlot()
 	{
-		return new ScanContainer(dsc_maximum);
+		return new Spectrum(dsc_maximum);
 	}
 
 
@@ -169,10 +176,11 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public ScanContainer getScan(int index)
+	public Spectrum getScan(int index)
 	{
-		// return dsc_dataset.get(index);
-		return new ScanContainer(dataSource.getScanAtIndex(index));
+		Spectrum original = dataSource.getScanAtIndex(index);
+		if (original == null) return null;
+		return new Spectrum(original);
 
 	}
 
@@ -180,7 +188,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	@Override
 	public String getScanName(int index)
 	{
-		if (dataSource == null) return "";
+		if (dataSource == null || index >= dataSource.getScanCount()) return "";
 		return dataSource.getScanNames().get(index);
 	}
 
@@ -191,6 +199,12 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		return dataSource.getScanCount();
 	}
 
+	@Override
+	public int expectedScanCount()
+	{
+		if (hasDimensions) return dataDimension.x * dataDimension.y;
+		return scanCount();
+	}
 
 	@Override
 	public void invalidateFilteredData()
@@ -203,6 +217,8 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	public TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings)
 	{
 
+		return MapTS.calculateMap(dataSource, filters, fittings);
+		/*
 		final TaskList<MapResultSet> tasklist;
 
 		// ======================================================================
@@ -212,7 +228,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		//final List<List<Double>> filteredData;
 
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, scanCount());
+		final MapResultSet maps = new MapResultSet(transitionSeries, expectedScanCount());
 		
 		final Task t_filter = new Task("Apply Filters and Fittings") {
 
@@ -274,7 +290,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		// tasklist.addTask(t_scanToMaps);
 
-		return tasklist;
+		return tasklist;*/
 	}
 
 
@@ -287,13 +303,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		// Create the tasklist for reading the files
 		final TaskList<Boolean> tasklist;
-
-		// logic for opening a file
-		final List<Spectrum> dataset;
-		// final List<String> usedFileNames;
-			
-
-		
 		
 		
 		final EmptyTask opening = new EmptyTask("Opening Data Set");
@@ -306,8 +315,8 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			protected Boolean doTasks()
 			{
 				
-				final FileType type;
 				final int fileCount;
+				final DataSource dataSource;
 				
 				opening.advanceState();
 				
@@ -338,40 +347,28 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				};
 				
 				
-				// a single zip file
+				//get the correct kind of DataSource
 				if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".zip"))
 				{
-					type = FileType.ZIP;
-
 					dataSource = ZipDataSource.getArchiveFromFileName(files.get(0).getFileName());
-					fileCount = dataSource.getScanCount();
-					gotScanCount.f(fileCount);
-					//dataset = DataTypeFactory.spectrumSetInit(fileCount);
-					//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading Zip File");
-
 				}
 				else if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".xml"))
 				{
-					type = FileType.CDFML;
-
 					dataSource = new CDFMLSaxDataSource(files.get(0), gotScanCount, readScans, isAborted);
-					fileCount = dataSource.getScanCount();
-					//dataset = DataTypeFactory.spectrumSetInit(fileCount);
-					//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading CDFML File");
-
 				}
-				else
+				else if (files.get(0).getFileName().toLowerCase().endsWith(".xml"))
 				{
-
-					type = FileType.CLSXML;
-
 					dataSource = XMLDataSource.getXMLFileSet(files);
-					fileCount = dataSource.getScanCount();
-					gotScanCount.f(fileCount);
-					//dataset = DataTypeFactory.spectrumSetInit(fileCount);
-					//reading = getReadingTaskForDataSource(dataSource, dataset, "Reading XML Files");
-
+				} 
+				else 
+				{
+					dataSource = null;
 				}
+				
+				
+				fileCount = dataSource.getScanCount();
+				gotScanCount.f(fileCount);
+				
 				
 				reading.advanceState();
 				
@@ -384,85 +381,11 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				applying.setWorkUnits(dataSource.getScanCount());
 				applying.advanceState();
 				
-				//go over each scan, calculating the average, max10th and max value
-				float max = Float.MIN_VALUE;
-				scanLength = dataSource.getScanAtIndex(0).size();
-				Spectrum avg, max10, current;
-				avg = new Spectrum(scanLength);
-				max10 = new Spectrum(scanLength);
-				for (int i = 0; i < dataSource.getScanCount(); i++)
-				{
-					current = dataSource.getScanAtIndex(i);
-					SpectrumCalculations.addLists_inplace(avg, current);
-					max = Math.max(max, SpectrumCalculations.max(current));
-					applying.workUnitCompleted();
-					
-				}
 				
-				SpectrumCalculations.divideBy_inplace(avg, dataSource.getScanCount());
+				//now that we have the datasource, read it
+				readDataSource(dataSource, applying, peakaboo.fileio.IOCommon.getFilePath(files.get(0).getFileName()));
 				
-				dsc_average = avg;
-				dsc_maximum = avg;
-				
-				maxValue = max;
-				
-				
-				
-				if (dataSource instanceof DataSourceDimensions)
-				{
-					DataSourceDimensions dims = (DataSourceDimensions) dataSource;
-					hasDimensions = true;
-		
-					dataDimension = dims.getDataDimensions();
-					// realBottomLeft = dataSource.getRealCoordinatesAtIndex(0);
-					// //cdfml.getRealCoordinatesAtIndex(0);
-					// realTopRight = dataSource.getRealCoordinatesAtIndex(dataDimension.x * dataDimension.y -
-					// 1); //cdfml.getRealCoordinatesAtIndex(dataDimension.x * dataDimension.y - 1);
-		
-					realDimension = dims.getRealDimensions();
-		
-					realCoords = DataTypeFactory.<Coord<Number>> list();
-					for (int i = 0; i < fileCount; i++)
-					{
-						realCoords.add(dims.getRealCoordinatesAtIndex(i));
-					}
-		
-					realUnits = getSISizeFromUnitName(dims.getRealDimensionsUnit());
-		
-				}
-				else
-				{
-					hasDimensions = false;
-				}
-		
-				if (dataSource instanceof DataSourceExtendedInformation)
-				{
-					DataSourceExtendedInformation info = (DataSourceExtendedInformation) dataSource;
-		
-					hasExtendedInformation = info.hasExtendedInformation();
-		
-					CreatedBy = info.getCreator();
-					Created = info.getCreationTime();
-					ProjectName = info.getProjectName();
-					SessionName = info.getSessionName();
-					Facility = info.getFacilityName();
-					Laboratory = info.getLaboratoryName();
-					ExperimentName = info.getExperimentName();
-					Instrument = info.getInstrumentName();
-					Technique = info.getTechniqueName();
-					SampleName = info.getSampleName();
-					ScanName = info.getScanName();
-					StartTime = info.getStartTime();
-					EndTime = info.getEndTime();
-		
-				}
-				else
-				{
-					hasExtendedInformation = false;
-				}
-		
-				dataSourcePath = peakaboo.fileio.IOCommon.getFilePath(files.get(0).getFileName());
-
+				//we're done
 				applying.workUnitCompleted();
 				applying.advanceState();
 				
@@ -481,32 +404,134 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	}
 
 
-	private Task getReadingTaskForDataSource(final DataSource dataSource, final List<Spectrum> targetDataset,
-			String title)
+	@Override
+	public int firstNonNullScanIndex()
 	{
+		return DataSetProvider.firstNonNullScanIndex(dataSource, 0);
+	}
+	
+	@Override
+	public int firstNonNullScanIndex(int start)
+	{
+		return DataSetProvider.firstNonNullScanIndex(dataSource, start);
+	}
+	
+	@Override
+	public int lastNonNullScanIndex()
+	{
+		return DataSetProvider.lastNonNullScanIndex(dataSource, dataSource.getScanCount()-1);
+	}
+	
+	@Override
+	public int lastNonNullScanIndex(int upto)
+	{
+		return DataSetProvider.lastNonNullScanIndex(dataSource, upto);
+	}
+	
+	
+	private void readDataSource(DataSource ds, Task applying, String dataSourcePath)
+	{
+		
+		if (ds == null || ds.getScanCount() == 0) return;
+				
 
-		return new Task(title) {
-
-			@Override
-			public boolean work(int index)
-			{
-				Spectrum dataFromFile = dataSource.getScanAtIndex(index);
-				if (dataFromFile != null)
-				{
-					targetDataset.set(index, dataFromFile);
-				}
-				else
-				{
-					dataSource.markScanAsBad(index);
-				}
-				return true;
-
-			}
+		
+		
+		Spectrum nonNullScan = ds.getScanAtIndex(DataSetProvider.firstNonNullScanIndex(ds, 0));
+		if (nonNullScan == null) return;
+		scanLength = nonNullScan.size();
+		
+		
+		
+		//go over each scan, calculating the average, max10th and max value
+		float max = Float.MIN_VALUE;
+		Spectrum avg, max10, current;
+		
+		avg = new Spectrum(scanLength);
+		max10 = new Spectrum(scanLength);
+		
+		for (int i = 0; i < ds.getScanCount(); i++)
+		{
+			current = ds.getScanAtIndex(i);
 			
-		};
+			if (current == null) continue;
+			
+			SpectrumCalculations.addLists_inplace(avg, current);
+			SpectrumCalculations.maxlist_inplace(max10, current);
+			
+			max = Math.max(max, SpectrumCalculations.max(current));
+			
+			if (applying != null) applying.workUnitCompleted();
+			
+		}
+		
+		SpectrumCalculations.divideBy_inplace(avg, ds.getScanCount());
+		
+		dsc_average = avg;
+		dsc_maximum = max10;
+		
+		maxValue = max;
+		
+		
+		
+		if (ds instanceof DataSourceDimensions)
+		{
+			DataSourceDimensions dims = (DataSourceDimensions) ds;
+			hasDimensions = true;
+
+			dataDimension = dims.getDataDimensions();
+			// realBottomLeft = dataSource.getRealCoordinatesAtIndex(0);
+			// //cdfml.getRealCoordinatesAtIndex(0);
+			// realTopRight = dataSource.getRealCoordinatesAtIndex(dataDimension.x * dataDimension.y -
+			// 1); //cdfml.getRealCoordinatesAtIndex(dataDimension.x * dataDimension.y - 1);
+
+			realDimension = dims.getRealDimensions();
+
+			realCoords = DataTypeFactory.<Coord<Number>> list();
+			for (int i = 0; i < ds.getScanCount(); i++)
+			{
+				realCoords.add(dims.getRealCoordinatesAtIndex(i));
+			}
+
+			realUnits = getSISizeFromUnitName(dims.getRealDimensionsUnit());
+
+		}
+		else
+		{
+			hasDimensions = false;
+		}
+
+		if (ds instanceof DataSourceExtendedInformation)
+		{
+			DataSourceExtendedInformation info = (DataSourceExtendedInformation) ds;
+
+			hasExtendedInformation = info.hasExtendedInformation();
+
+			CreatedBy = info.getCreator();
+			Created = info.getCreationTime();
+			ProjectName = info.getProjectName();
+			SessionName = info.getSessionName();
+			Facility = info.getFacilityName();
+			Laboratory = info.getLaboratoryName();
+			ExperimentName = info.getExperimentName();
+			Instrument = info.getInstrumentName();
+			Technique = info.getTechniqueName();
+			SampleName = info.getSampleName();
+			ScanName = info.getScanName();
+			StartTime = info.getStartTime();
+			EndTime = info.getEndTime();
+
+		}
+		else
+		{
+			hasExtendedInformation = false;
+		}
+
+		this.dataSourcePath = dataSourcePath;
+		this.dataSource = ds;
 
 	}
-
+	
 
 	private SISize getSISizeFromUnitName(String unitName)
 	{
@@ -577,7 +602,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	@Override
 	public boolean hasData()
 	{
-		return true;
+		return dataSource.getScanCount() > 0;
 	}
 
 
@@ -705,6 +730,9 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		// TODO Auto-generated method stub
 		return scanLength;
 	}
+
+
+
 
 	
 	

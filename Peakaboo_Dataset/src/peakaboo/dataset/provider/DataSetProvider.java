@@ -1,10 +1,12 @@
-package peakaboo.dataset;
+package peakaboo.dataset.provider;
 
 
 
 import java.util.List;
 
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
+import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
@@ -16,7 +18,7 @@ import peakaboo.fileio.xrf.DataSource;
 import peakaboo.fileio.xrf.DataSourceDimensions;
 import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.filters.FilterSet;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 
 
 
@@ -56,7 +58,7 @@ public abstract class DataSetProvider
 	 * 
 	 * @return average scan
 	 */
-	public abstract ScanContainer averagePlot();
+	public abstract Spectrum averagePlot();
 
 
 	/**
@@ -66,7 +68,7 @@ public abstract class DataSetProvider
 	 *            is a list of indices to exclude from the average
 	 * @return average scan
 	 */
-	public abstract ScanContainer averagePlot(List<Integer> excludedIndices);
+	public abstract Spectrum averagePlot(List<Integer> excludedIndices);
 
 
 	/**
@@ -74,7 +76,7 @@ public abstract class DataSetProvider
 	 * 
 	 * @return the top signal-per-channel scan
 	 */
-	public abstract ScanContainer maximumPlot();
+	public abstract Spectrum maximumPlot();
 
 
 	/**
@@ -83,9 +85,46 @@ public abstract class DataSetProvider
 	 * @param index
 	 * @return a single scan
 	 */
-	public abstract ScanContainer getScan(int index);
-
-
+	public abstract Spectrum getScan(int index);
+	
+	public abstract int firstNonNullScanIndex(int start);
+	
+	public abstract int firstNonNullScanIndex();
+	
+	public static int firstNonNullScanIndex(DataSource ds, int start)
+	{
+		for (int i = start; i < ds.getScanCount(); i++)
+		{
+			if (ds.getScanAtIndex(i) != null)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	
+	
+	public abstract int lastNonNullScanIndex(int upto);
+	
+	public abstract int lastNonNullScanIndex();
+	
+	public static int lastNonNullScanIndex(DataSource ds, int upto)
+	{
+		upto = Math.min(upto, ds.getScanCount()-1);
+		
+		for (int i = upto; i >= 0; i--)
+		{
+			if (ds.getScanAtIndex(i) != null)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
 	/**
 	 * Gets the name of a single scan. This could be a file name, a scan number, or something else inplementation
 	 * specific
@@ -110,7 +149,13 @@ public abstract class DataSetProvider
 	 * @return the number of scans
 	 */
 	public abstract int scanCount();
-
+	
+	/**
+	 * Gets the expected number of scans in the dataset
+	 * 
+	 * @return the number of scans
+	 */
+	public abstract int expectedScanCount();
 
 	/**
 	 * Gets the energy per channel value according to the data in the dataset

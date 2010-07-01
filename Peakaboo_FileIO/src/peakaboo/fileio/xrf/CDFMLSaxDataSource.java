@@ -51,6 +51,8 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	//scanIndex -> Spectrum
 	TempFileList<Spectrum>						scandata;
 
+	int numScans;
+	
 
 	boolean										isEntry, isRecord;
 	int											entryNo;
@@ -78,6 +80,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 	String										varSpectrumInfo = varPath + "/" + CDFML.VAR_INFO_TAG;
 	
+	
 
 	public CDFMLSaxDataSource(AbstractFile file, FunctionEach<Integer> getScanCountCallback, FunctionEach<Integer> readScanCallback, FunctionMap<Boolean, Boolean> isAborted)
 	{
@@ -91,63 +94,10 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		tagStack = new Stack<Pair<String, Map<String, String>>>();
 		scanValues = DataTypeFactory.<Integer, ScanValues> map();
 
-		//Functions to serialize and deserialize a spectrum should we end up using the 
-		//temp file backed list
-		final FunctionMap<Spectrum, byte[]> encode = new FunctionMap<Spectrum, byte[]>()
-		{
-
-			public byte[] f(Spectrum s)
-			{
-
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				ObjectOutputStream oos;
-				try
-				{
-					oos = new ObjectOutputStream(baos);
-					oos.writeObject(s);
-					oos.close();
-					return baos.toByteArray();
-				}
-				catch (IOException e)
-				{
-					return new byte[0];
-				}
-
-			}
-		};
-
-		final FunctionMap<byte[], Spectrum> decode = new FunctionMap<byte[], Spectrum>()
-		{
-
-			public Spectrum f(byte[] bs)
-			{
-				ByteArrayInputStream bais = new ByteArrayInputStream(bs);
-				ObjectInputStream ois;
-				try
-				{
-					ois = new ObjectInputStream(bais);
-					Spectrum s = (Spectrum) ois.readObject();
-					ois.close();
-					return s;
-				}
-				catch (IOException e)
-				{
-					return null;
-				}
-				catch (ClassNotFoundException e)
-				{
-					return null;
-				}
-
-			}
-		};
-
-
-
 		try
 		{
 
-			scandata = new TempFileList<Spectrum>(0, "Peakaboo", encode, decode);
+			scandata = new TempFileList<Spectrum>(0, "Peakaboo", Spectrum.getEncoder(), Spectrum.getDecoder());
 
 
 			xr = XMLReaderFactory.createXMLReader();
@@ -236,7 +186,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 			if (CDFML.SPECTRUMS.equals(  tagStack.get(tagStack.size() - 2).second.get(CDFML.ATTR_NAME_ATTR)  ))
 			{
 				//this is the cdfVarInfo tag for the XRF:Spectrum variable
-				int numScans = Integer.parseInt(atts.getValue(CDFML.ATTR_NUMRECORDS_ATTR));
+				numScans = Integer.parseInt(atts.getValue(CDFML.ATTR_NUMRECORDS_ATTR));
 				getScanCountCallback.f(numScans);
 			}
 			
@@ -415,14 +365,6 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 	}
 
-
-	
-	public int getScanCount()
-	{
-		return scandata.size();
-	}
-
-
 	
 	public void markScanAsBad(int index)
 	{
@@ -430,7 +372,17 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 	}
 
-
+	public int getScanCount()
+	{
+		return numScans;
+	}
+	
+	public int getExpectedScanCount()
+	{
+		Coord<Integer> dims = getDataDimensions();
+		return dims.x * dims.y;
+	}
+	
 	
 	public Coord<Number> getRealCoordinatesAtIndex(int index)
 	{
@@ -447,6 +399,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	////////////////////////////////////////////////////////////
 	// ATTRIBUTE DATA
 	////////////////////////////////////////////////////////////
+
 
 
 	public String getDatasetName()

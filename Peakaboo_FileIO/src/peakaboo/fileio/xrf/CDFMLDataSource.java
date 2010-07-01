@@ -173,10 +173,16 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	public int getScanCount()
 	{
 
-		String attribute = CDFML.getTagAttribute(scanValues, CDFML.VAR_INFO_TAG, "numRecordsAllocate");
+		String attribute = CDFML.getTagAttribute(scanValues, CDFML.VAR_INFO_TAG, CDFML.ATTR_NUMRECORDS_ATTR);
 		if (attribute == null) return -1;
 		return Integer.parseInt(attribute);
 
+	}
+	
+	public int getExpectedScanCount()
+	{
+		Coord<Integer> dims = getDataDimensions();
+		return dims.x * dims.y;
 	}
 
 

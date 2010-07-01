@@ -31,5 +31,6 @@ public interface DataSourceDimensions
 	 * @return integer x,y pair of values indicating the width and height of this map
 	 */
 	public Coord<Integer> getDataDimensions();
+
 	
 }

@@ -131,6 +131,7 @@ public class FilterEditViewer extends ClearPanel{
 		//t.setRowHeight(10);
 		
 		t.setShowVerticalLines(false);
+		t.setShowHorizontalLines(false);
 		
 		TableColumn column = t.getColumnModel().getColumn(0);
 		column.setMinWidth(40);

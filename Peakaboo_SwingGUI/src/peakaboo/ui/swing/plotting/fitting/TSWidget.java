@@ -40,8 +40,7 @@ public class TSWidget extends ClearPanel
 		add(elementContents, BorderLayout.CENTER);
 		//elementContents.setBorder(Spacing.bSmall());
 		elementCheck = new JCheckBox(); elementCheck.setOpaque(false);
-		if (large) elementCheck.setBorder(Spacing.bLarge());
-		add(elementCheck, BorderLayout.WEST);
+		if (!large) add(elementCheck, BorderLayout.WEST);
 		
 		elementName.setOpaque(false);
 		elementDetail.setOpaque(false);

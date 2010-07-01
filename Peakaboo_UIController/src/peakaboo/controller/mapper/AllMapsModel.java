@@ -7,7 +7,7 @@ import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SISize;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 
 public class AllMapsModel extends Model {
 

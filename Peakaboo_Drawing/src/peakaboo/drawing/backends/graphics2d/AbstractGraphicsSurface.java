@@ -298,8 +298,13 @@ abstract class AbstractGraphicsSurface implements Surface
 		BufferedImageOp op = new AffineTransformOp(new AffineTransform(scale, 0, 0, scale, 0, 0),
 				AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
-		graphics.drawImage(image, op, x, y);
+		graphics.drawImage(image, 0, 0, (int)(image.getWidth()*scale), (int)(image.getHeight()*scale), null);
+		
+		//graphics.drawImage(image, op, x, y);
+		
 	}
+	
+	
 
 
 	public Buffer getImageBuffer(int x, int y)

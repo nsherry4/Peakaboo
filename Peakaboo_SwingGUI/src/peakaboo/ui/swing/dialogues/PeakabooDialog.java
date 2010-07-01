@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.widgets.dialogues;
+package peakaboo.ui.swing.dialogues;
 
 import java.awt.Component;
 import java.awt.Frame;
@@ -25,7 +25,8 @@ public class PeakabooDialog extends JDialog implements PeakabooContainer
 		super();
 		
 		this.container = container;
-		setModal(  modal && (! container.isApplet())  );
+		setModal(  modal  );
+				
 		setTitle(title);
 		
 	}
@@ -56,6 +57,11 @@ public class PeakabooDialog extends JDialog implements PeakabooContainer
 	public boolean isApplet()
 	{
 		return false;
+	}
+
+	public void close()
+	{
+		setVisible(false);
 	}
 	
 }

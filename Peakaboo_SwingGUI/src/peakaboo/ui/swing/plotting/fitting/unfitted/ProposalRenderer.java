@@ -82,13 +82,19 @@ public class ProposalRenderer extends DefaultTreeCellRenderer
 		else if (value instanceof TransitionSeriesType)
 		{
 			TransitionSeriesType tst = (TransitionSeriesType) value;
-
+			
 			tstLabel.setText(tst.toString());
-			tstLabel.setForeground(c.getForeground());
-			tstLabel.setBackground(c.getBackground());
+			
+			if (selected)
+			{
+				tstLabel.setForeground(getTextSelectionColor());
+			} else {
+				tstLabel.setForeground(getTextNonSelectionColor());
+			}
 			
 			return tstLabel;
 		}
+		
 		return c;
 
 	}

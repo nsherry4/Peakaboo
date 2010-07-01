@@ -1,12 +1,7 @@
-package peakaboo.dataset;
+package peakaboo.dataset.provider.implementations;
 
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 
 import fava.*;
@@ -14,10 +9,10 @@ import static fava.Fn.*;
 import static fava.Functions.*;
 
 import peakaboo.calculations.SpectrumCalculations;
-import peakaboo.common.Env;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
+import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
@@ -29,7 +24,6 @@ import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.datatypes.tasks.executor.implementations.SimpleUITaskExecutor;
 import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
-import peakaboo.datatypes.temp.TempFileList;
 import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.IOCommon.FileType;
 import peakaboo.fileio.xrf.CDFMLDataSource;
@@ -39,7 +33,7 @@ import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
 import peakaboo.filters.FilterSet;
-import peakaboo.mapping.MapResultSet;
+import peakaboo.mapping.results.MapResultSet;
 
 
 
@@ -50,20 +44,9 @@ import peakaboo.mapping.MapResultSet;
  * @author Nathaniel Sherry, 2009
  */
 
-public class TempFileDataSetProvider extends DataSetProvider
+public class LocalDataSetProvider extends DataSetProvider
 {
 
-	/////////////////////////////////////////////////
-	// WARNING!!!
-	// ANY CHANGES TO THE SPECTRUMS IN DSC_DATASET
-	// MUST BE RE-ADDED TO THAT LIST OR ELSE THE
-	// CHANGE WILL BE WIPED OUT NEXT TIME IT IS
-	// READ. THIS IMPLEMENTATION USES A LIST
-	// WHICH WRITES OUT ITS VALUES TO DISK TO SAVE
-	// MEMORY.
-	/////////////////////////////////////////////////
-	
-	
 	protected List<Spectrum>		dsc_dataset;
 	protected List<String>			dsc_scannames;
 	protected List<Spectrum>		filteredDataSet;
@@ -83,13 +66,13 @@ public class TempFileDataSetProvider extends DataSetProvider
 	protected List<Coord<Number>>	realCoords;
 
 
-	public TempFileDataSetProvider()
+	public LocalDataSetProvider()
 	{
 		super();
 	}
 
 
-	public TempFileDataSetProvider(List<Spectrum> dataset)
+	public LocalDataSetProvider(List<Spectrum> dataset)
 	{
 		super();
 		setDataset(dataset);
@@ -97,14 +80,14 @@ public class TempFileDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public ScanContainer averagePlot()
+	public Spectrum averagePlot()
 	{
-		return new ScanContainer(dsc_average);
+		return new Spectrum(dsc_average);
 	}
 
 
 	@Override
-	public ScanContainer averagePlot(final List<Integer> excludedIndcies)
+	public Spectrum averagePlot(final List<Integer> excludedIndcies)
 	{
 
 		if (excludedIndcies.size() == 0) return averagePlot();
@@ -148,7 +131,7 @@ public class TempFileDataSetProvider extends DataSetProvider
 		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
 		if (Nt == Ne)
 		{
-			return new ScanContainer(new Spectrum(dsc_average.size(), 0.0f));
+			return new Spectrum(new Spectrum(dsc_average.size(), 0.0f));
 		}
 
 		float Net = (float) Ne / (float) Nt;
@@ -160,15 +143,15 @@ public class TempFileDataSetProvider extends DataSetProvider
 			goodAverage.set(i, (At.get(i) - Ae.get(i) * Net) * Ntte);
 		}
 
-		return new ScanContainer(goodAverage);
+		return new Spectrum(goodAverage);
 
 	}
 
 
 	@Override
-	public ScanContainer maximumPlot()
+	public Spectrum maximumPlot()
 	{
-		return new ScanContainer(dsc_maximum);
+		return new Spectrum(dsc_maximum);
 	}
 
 
@@ -195,14 +178,49 @@ public class TempFileDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public ScanContainer getScan(int index)
+	public Spectrum getScan(int index)
 	{
 		// return dsc_dataset.get(index);
-		return new ScanContainer(dsc_dataset.get(index));
+		return new Spectrum(dsc_dataset.get(index));
 
 	}
 
 
+	@Override
+	public int firstNonNullScanIndex()
+	{
+		return firstNonNullScanIndex(0);
+	}
+	
+	@Override
+	public int firstNonNullScanIndex(int start)
+	{
+		for (int i = start; i < scanCount(); i++)
+		{
+			if (dsc_dataset.get(i) != null) return i;
+		}
+		return -1;
+	}
+
+	
+	@Override
+	public int lastNonNullScanIndex()
+	{
+		return lastNonNullScanIndex(dsc_dataset.size()-1);
+	}
+	
+	@Override
+	public int lastNonNullScanIndex(int upto)
+	{
+		upto = Math.min(upto, dsc_dataset.size()-1);
+		
+		for (int i = upto; i >= 0; i--)
+		{
+			if (dsc_dataset.get(i) != null) return i;
+		}
+		return -1;
+	}
+	
 	@Override
 	public String getScanName(int index)
 	{
@@ -217,6 +235,12 @@ public class TempFileDataSetProvider extends DataSetProvider
 		return dsc_dataset.size();
 	}
 
+	@Override
+	public int expectedScanCount()
+	{
+		if (hasDimensions) return dataDimension.x * dataDimension.y;
+		return scanCount();
+	}
 
 	@Override
 	public void invalidateFilteredData()
@@ -258,7 +282,7 @@ public class TempFileDataSetProvider extends DataSetProvider
 		// ======================================================================================
 		// Map (the data structure) to store our maps (the XRF thingy)
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, scanCount());
+		final MapResultSet maps = new MapResultSet(transitionSeries, expectedScanCount());
 
 		final Task t_curvefit = new Task("Fitting Element Curves") {
 
@@ -364,68 +388,16 @@ public class TempFileDataSetProvider extends DataSetProvider
 		final DataSource dataSource;
 		final Task reading;
 
-		
-		
-		//Functions to serialize and deserialize a spectrum should we end up using the 
-		//temp file backed list
-		final FunctionMap<Spectrum, byte[]> encode = new FunctionMap<Spectrum, byte[]>()
-		{
-			public byte[] f(Spectrum s)
-			{
-				
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				ObjectOutputStream oos;
-				try
-				{
-					oos = new ObjectOutputStream(baos);
-					oos.writeObject(s);
-					oos.close();
-					return baos.toByteArray();
-				}
-				catch (IOException e)
-				{
-					return new byte[0];
-				}
-
-			}		
-		};
-		
-		final FunctionMap<byte[], Spectrum> decode = new FunctionMap<byte[], Spectrum>()
-		{
-			public Spectrum f(byte[] bs)
-			{
-				ByteArrayInputStream bais = new ByteArrayInputStream(bs);
-				ObjectInputStream ois;
-				try
-				{
-					ois = new ObjectInputStream(bais);
-					Spectrum s = (Spectrum)ois.readObject();
-					ois.close();
-					return s;
-				}
-				catch (IOException e)
-				{
-					return null;
-				}
-				catch (ClassNotFoundException e)
-				{
-					return null;
-				}
-
-			}		
-		};
-
-		
-		
-		//Create the data source based on the kind of file(s) that we were given
-		String typeName;
+		// a single zip file
 		if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".zip"))
 		{
 
 			type = FileType.ZIP;
 
 			dataSource = ZipDataSource.getArchiveFromFileName(files.get(0).getFileName());
-			typeName = "Zip";
+			fileCount = dataSource.getScanCount();
+			dataset = DataTypeFactory.spectrumSetInit(fileCount);
+			reading = getReadingTaskForDataSource(dataSource, dataset, "Reading Zip File");
 
 		}
 		else if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".xml")
@@ -435,7 +407,9 @@ public class TempFileDataSetProvider extends DataSetProvider
 			type = FileType.CDFML;
 
 			dataSource = CDFMLDataSource.getCDFMLFromFile(files.get(0));
-			typeName = "CDFML";
+			fileCount = dataSource.getScanCount();
+			dataset = DataTypeFactory.spectrumSetInit(fileCount);
+			reading = getReadingTaskForDataSource(dataSource, dataset, "Reading CDFML File");
 
 		}
 		else
@@ -444,54 +418,16 @@ public class TempFileDataSetProvider extends DataSetProvider
 			type = FileType.CLSXML;
 
 			dataSource = XMLDataSource.getXMLFileSet(files);
-			typeName = "XML";
+			fileCount = dataSource.getScanCount();
+			dataset = DataTypeFactory.spectrumSetInit(fileCount);
+			reading = getReadingTaskForDataSource(dataSource, dataset, "Reading XML Files");
 
 		}
+
 		if (dataSource == null) return null;
 
-		
-		//determine if we should be using the temp file backed list
-		fileCount = dataSource.getScanCount();
-		List<Spectrum> tempDataset;
-		int datumSize = 4;
-		int dataSizeMiB = dataSource.estimateDataSourceSize() * datumSize / 1024/1024;
-		
-		
-		//we'll use a temp list if the data set is more than 70% of our heap space, or if total
-		//heap space is less than 250 MiB.
-		//we do this so that we don't eat up valuable memory that we will need later to store things
-		//like maps
-		boolean useTempList = true; //dataSizeMiB > Env.heapSize() * 0.7 || Env.heapSize() < 250;
-		try
-		{
-			if (useTempList)
-			{
-								
-				tempDataset = new TempFileList<Spectrum>(fileCount, "Data Set", encode, decode);
-				for (int i = 0; i < fileCount; i++)
-				{
-					tempDataset.add(i, null);
-				}
-			} else {
-				tempDataset = DataTypeFactory.spectrumSetInit(fileCount);				
-			}
-		}
-		catch (IOException e)
-		{
-			tempDataset = DataTypeFactory.spectrumSetInit(fileCount);
-		}
-		dataset = tempDataset;
-		
-		
-		//get the reading task for this datasource, datasets
-		reading = getReadingTaskForDataSource(dataSource, dataset, "Reading " + typeName + " File");
-		
-
-		//empty task for calculating values like the average scan...
 		final EmptyTask applying = new EmptyTask("Calculating Values");
-		
-		
-		//tasklist contains logic about how to execute the various tasks
+
 		tasklist = new TaskList<Boolean>("Opening Data Set") {
 
 			@Override
@@ -603,8 +539,6 @@ public class TempFileDataSetProvider extends DataSetProvider
 
 		};
 
-		
-		//add the tasks to the task list for the sake of the gui components
 		tasklist.addTask(reading);
 		tasklist.addTask(applying);
 
@@ -877,8 +811,11 @@ public class TempFileDataSetProvider extends DataSetProvider
 		return dsc_scanSize;	
 	}
 
-	
-	
+
+
+
+
+
 	
 	
 }

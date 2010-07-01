@@ -6,9 +6,8 @@ import java.util.List;
 import peakaboo.controller.Model;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.dataset.DataSetProvider;
-import peakaboo.dataset.EmptyDataSetProvider;
-import peakaboo.dataset.ScanContainer;
+import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.PeakTable;
@@ -100,9 +99,9 @@ public class PlotModel extends Model
 	 * Get the scan that should currently be shown.
 	 * @return a ScanContainer which either contains a scan, or indicates that it is not ready yet
 	 */
-	public ScanContainer currentScan()
+	public Spectrum currentScan()
 	{
-		ScanContainer originalData = null;
+		Spectrum originalData = null;
 		
 		if (viewOptions.channelComposite == ChannelCompositeMode.AVERAGE) {
 			originalData = dataset.averagePlot(badScans);

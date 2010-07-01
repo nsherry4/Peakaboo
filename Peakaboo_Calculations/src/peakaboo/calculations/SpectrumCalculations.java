@@ -43,6 +43,18 @@ public class SpectrumCalculations
 		return max;
 	}
 
+	public static Spectrum maxlist_inplace(Spectrum s1, Spectrum s2)
+	{
+		int size = Math.min(s1.size(), s2.size());
+		
+		for (int i = 0; i < size; i++)
+		{
+			s1.set(i, Math.max(s1.get(i), s2.get(i)));
+		}
+		
+		return s1;
+	}
+	
 
 	/**
 	 * returns the absolute version of the list
