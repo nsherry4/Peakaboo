@@ -44,11 +44,13 @@ import peakaboo.drawing.plot.painters.axis.GridlinePainter;
 import peakaboo.drawing.plot.painters.axis.TickMarkAxisPainter;
 import peakaboo.drawing.plot.painters.plot.OriginalDataPainter;
 import peakaboo.drawing.plot.painters.plot.PrimaryPlotPainter;
-import peakaboo.fileio.AbstractFile;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.mapping.results.MapResultSet;
+import swidget.dialogues.fileio.AbstractFile;
 
 import fava.*;
+import fava.datatypes.Pair;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 

@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Collections;
 
 import fava.*;
+import fava.datatypes.Pair;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.datatypes.DataTypeFactory;
 

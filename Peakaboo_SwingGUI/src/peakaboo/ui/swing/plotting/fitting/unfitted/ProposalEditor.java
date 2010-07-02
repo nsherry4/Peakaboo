@@ -18,7 +18,7 @@ import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.widgets.Spacing;
 
 
 

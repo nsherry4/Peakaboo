@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import fava.*;
+import fava.datatypes.Pair;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 

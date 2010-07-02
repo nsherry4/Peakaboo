@@ -28,18 +28,18 @@ import peakaboo.controller.mapper.SingleMapModel;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.mapping.results.MapResultSet;
-import peakaboo.ui.swing.dialogues.PeakabooDialog;
-import peakaboo.ui.swing.fileio.SwingIO;
-import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.icons.IconSize;
 import peakaboo.ui.swing.mapping.MapTabControls;
 import peakaboo.ui.swing.mapping.MapViewer;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.ImageButton.Layout;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
+import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetDialog;
+import swidget.dialogues.fileio.SwingIO;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
+import swidget.widgets.ImageButton.Layout;
 
 
 /**
@@ -49,7 +49,7 @@ import peakaboo.ui.swing.widgets.pictures.SavePicture;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PeakabooMapperSwing extends PeakabooDialog
+public class PeakabooMapperSwing extends SwidgetDialog
 {
 
 	protected MapController		controller;
@@ -68,7 +68,7 @@ public class PeakabooMapperSwing extends PeakabooDialog
 	PeakabooSimpleListener 		controllerListener;
 
 	public PeakabooMapperSwing(
-			PeakabooContainer owner, 
+			SwidgetContainer owner, 
 			AllMapsModel data, 
 			String datasetName, 
 			boolean showControls, 
@@ -95,7 +95,7 @@ public class PeakabooMapperSwing extends PeakabooDialog
 	}
 
 
-	public PeakabooMapperSwing(PeakabooContainer owner, MapController defaultController, boolean showControls)
+	public PeakabooMapperSwing(SwidgetContainer owner, MapController defaultController, boolean showControls)
 	{
 		super(owner, "Elemental Map", true);
 

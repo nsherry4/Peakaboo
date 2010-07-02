@@ -23,21 +23,22 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import peakaboo.common.Version;
-import peakaboo.fileio.IOCommon;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
-import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.icons.IconSize;
+import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetDialog;
+import swidget.dialogues.fileio.IOCommon;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
 
 
-public class AboutDialogue extends PeakabooDialog
+public class AboutDialogue extends SwidgetDialog
 {
 	
-	PeakabooContainer owner;
+	SwidgetContainer owner;
 	
 	
-	public AboutDialogue(PeakabooContainer owner)
+	public AboutDialogue(SwidgetContainer owner)
 	{
 		super(owner, "About " + "Peakaboo", true);
 		this.owner = owner;

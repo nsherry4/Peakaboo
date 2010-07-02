@@ -3,6 +3,7 @@ package peakaboo.drawing.plot.painters.axis;
 import java.util.List;
 
 import fava.*;
+import fava.datatypes.Pair;
 
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.SigDigits;

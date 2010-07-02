@@ -20,9 +20,8 @@ import peakaboo.controller.mapper.MapDisplayMode;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.Spacing;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
+import swidget.widgets.Spacing;
 
 
 

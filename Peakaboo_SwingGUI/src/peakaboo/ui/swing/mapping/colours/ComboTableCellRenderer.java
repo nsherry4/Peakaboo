@@ -17,7 +17,7 @@ import javax.swing.table.TableCellRenderer;
 import peakaboo.common.Stderr;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.mapping.colours.RatioColour;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.widgets.Spacing;
 
 
 

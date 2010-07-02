@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import fava.*;
+import fava.signatures.FunctionCombine;
+import fava.signatures.FunctionMap;
 
 public class Spectrum implements Iterable<Float>, Serializable
 {

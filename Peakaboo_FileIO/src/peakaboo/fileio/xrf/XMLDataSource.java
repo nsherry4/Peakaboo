@@ -3,16 +3,13 @@ package peakaboo.fileio.xrf;
 
 import java.util.List;
 
-import fava.Fn;
-import fava.FunctionMap;
-
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.fileio.AbstractFile;
-import peakaboo.fileio.IOCommon;
 import peakaboo.fileio.xrf.support.CLSXML;
+import swidget.dialogues.fileio.AbstractFile;
+import swidget.dialogues.fileio.IOCommon;
 
 
 public class XMLDataSource implements DataSource

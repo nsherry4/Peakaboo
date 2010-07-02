@@ -1,5 +1,7 @@
 package peakaboo.common;
 
+import swidget.environment.Env;
+
 public class Version {
 
 	public final static boolean release = false;

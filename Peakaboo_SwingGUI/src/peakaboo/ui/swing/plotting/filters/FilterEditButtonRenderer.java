@@ -8,9 +8,10 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import peakaboo.ui.swing.icons.IconSize;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.ImageButton.Layout;
+import swidget.icons.IconSize;
+import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.Layout;
+
 
 public class FilterEditButtonRenderer extends JPanel implements TableCellRenderer
 {

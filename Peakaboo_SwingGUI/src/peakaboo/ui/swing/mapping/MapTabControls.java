@@ -11,11 +11,12 @@ import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
-import peakaboo.ui.swing.icons.IconSize;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.ImageButton.Layout;
+import swidget.icons.IconSize;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
+import swidget.widgets.ImageButton.Layout;
+
 
 public class MapTabControls extends ClearPanel{
 

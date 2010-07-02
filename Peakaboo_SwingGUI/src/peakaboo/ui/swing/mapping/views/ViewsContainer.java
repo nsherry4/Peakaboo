@@ -17,7 +17,7 @@ import javax.swing.border.TitledBorder;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapDisplayMode;
 import peakaboo.ui.swing.mapping.SidePanel;
-import peakaboo.ui.swing.widgets.ClearPanel;
+import swidget.widgets.ClearPanel;
 
 
 public class ViewsContainer extends ClearPanel

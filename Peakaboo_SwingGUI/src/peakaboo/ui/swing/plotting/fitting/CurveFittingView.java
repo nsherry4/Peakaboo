@@ -33,13 +33,14 @@ import peakaboo.ui.swing.plotting.fitting.fitted.FittingRenderer;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalEditor;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalRenderer;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.gradientpanel.TitleGradientPanel;
-import peakaboo.ui.swing.widgets.listcontrols.ListControlButton;
-import peakaboo.ui.swing.widgets.listcontrols.ListControls;
-import peakaboo.ui.swing.widgets.listcontrols.SelectionListControls;
-import peakaboo.ui.swing.widgets.listcontrols.ListControls.ElementCount;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
+import swidget.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.listcontrols.ListControlButton;
+import swidget.widgets.listcontrols.ListControls;
+import swidget.widgets.listcontrols.SelectionListControls;
+import swidget.widgets.listcontrols.ListControls.ElementCount;
+
 
 
 

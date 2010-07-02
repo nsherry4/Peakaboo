@@ -14,10 +14,12 @@ import javax.swing.tree.TreeSelectionModel;
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.AbstractFilter.FilterType;
-import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.gradientpanel.TitleGradientPanel;
-import peakaboo.ui.swing.widgets.listcontrols.SelectionListControls;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.listcontrols.SelectionListControls;
+
 
 public class FilterSelectionViewer extends ClearPanel
 {
@@ -159,9 +161,9 @@ public class FilterSelectionViewer extends ClearPanel
 		tree.setShowsRootHandles(true);
 		
 		FilterSelectionRenderer renderer = new FilterSelectionRenderer();
-		renderer.setLeafIcon(IconFactory.getImageIcon("filter-leaf"));
-		renderer.setClosedIcon(IconFactory.getImageIcon("filter-type-closed"));
-		renderer.setOpenIcon(IconFactory.getImageIcon("filter-type-open"));
+		renderer.setLeafIcon(IconFactory.getImageIcon("gear", IconSize.BUTTON));
+		renderer.setClosedIcon(IconFactory.getImageIcon("folder", IconSize.BUTTON));
+		renderer.setOpenIcon(IconFactory.getImageIcon("folder-open", IconSize.BUTTON));
 		tree.setCellRenderer(renderer);
 
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

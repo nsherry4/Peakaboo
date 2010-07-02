@@ -1,6 +1,7 @@
 package peakaboo.drawing.painters.axis;
 
 import fava.*;
+import fava.datatypes.Pair;
 
 import peakaboo.drawing.Drawing;
 import peakaboo.drawing.painters.PainterData;

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.List;
 
 import fava.*;
+import fava.datatypes.Pair;
 
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;

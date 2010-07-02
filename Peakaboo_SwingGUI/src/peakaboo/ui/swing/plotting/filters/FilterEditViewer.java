@@ -14,9 +14,10 @@ import javax.swing.table.TableModel;
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.filters.AbstractFilter;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.listcontrols.ListControls;
+import swidget.containers.SwidgetContainer;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.listcontrols.ListControls;
+
 
 public class FilterEditViewer extends ClearPanel{
 
@@ -29,7 +30,7 @@ public class FilterEditViewer extends ClearPanel{
 	
 	protected ListControls controls;
 	
-	public FilterEditViewer(FilterController _controller, PeakabooContainer windowOwner, FiltersetViewer _owner){
+	public FilterEditViewer(FilterController _controller, SwidgetContainer windowOwner, FiltersetViewer _owner){
 		
 		super();
 		
@@ -69,7 +70,7 @@ public class FilterEditViewer extends ClearPanel{
 		
 	}
 	
-	private JTable createFilterTable(PeakabooContainer owner){
+	private JTable createFilterTable(SwidgetContainer owner){
 		
 		m = new TableModel() {
 		

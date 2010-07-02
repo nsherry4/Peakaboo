@@ -4,6 +4,7 @@ package peakaboo.drawing.plot;
 import java.util.List;
 
 import fava.*;
+import fava.datatypes.Pair;
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Coord;

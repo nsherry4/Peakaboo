@@ -11,9 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import peakaboo.common.Env;
-import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.icons.IconSize;
+import swidget.environment.Env;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
 
 
 
@@ -22,6 +22,8 @@ public class Peakaboo
 
 	public static void main(String[] args)
 	{
+		
+		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		
 		//if this version of the JVM is new enough to support the Nimbus Look and Feel, use it
 		try
@@ -48,7 +50,7 @@ public class Peakaboo
 						+ "MB of memory: processing large data sets may be quite slow, or impossible.",
 						"Low on Memory",
 						JOptionPane.INFORMATION_MESSAGE,
-						IconFactory.getImageIcon("warn", IconSize.ICON));
+						IconFactory.getImageIcon("badge-warning", IconSize.ICON));
 
 				//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
 				JFrame.setDefaultLookAndFeelDecorated(true);

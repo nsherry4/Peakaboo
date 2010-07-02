@@ -53,9 +53,9 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import fava.Pair;
+import fava.datatypes.Pair;
 
-import peakaboo.common.Env;
+
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.MapController;
@@ -67,30 +67,32 @@ import peakaboo.datatypes.eventful.PeakabooMessageListener;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.fileio.AbstractFile;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.dialogues.AboutDialogue;
 import peakaboo.ui.swing.dialogues.ScanInfoDialogue;
-import peakaboo.ui.swing.fileio.SwingIO;
-import peakaboo.ui.swing.icons.IconFactory;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.ToolbarImageButton;
-import peakaboo.ui.swing.widgets.ImageButton.Layout;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import peakaboo.ui.swing.widgets.tasks.TaskListView;
-import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
 import sun.awt.HorizBagLayout;
+import swidget.containers.SwidgetContainer;
+import swidget.dialogues.fileio.AbstractFile;
+import swidget.dialogues.fileio.SwingIO;
+import swidget.environment.Env;
+import swidget.icons.IconFactory;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
+import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.toggle.ComplexToggle;
 
 
 public class PlotPanel extends ClearPanel
 {
 
-	private PeakabooContainer container;
+	private SwidgetContainer container;
 
 	
 	
@@ -135,7 +137,7 @@ public class PlotPanel extends ClearPanel
 	String									savedSessionFileName;
 	
 	
-	public PlotPanel(PeakabooContainer container)
+	public PlotPanel(SwidgetContainer container)
 	{
 		this.container = container;
 		
@@ -512,7 +514,7 @@ public class PlotPanel extends ClearPanel
 		c.gridx += 1;
 		toolbar.add(toolbarSnapshot, c);
 
-		toolbarInfo = new ToolbarImageButton("info", "Scan Info", "Displays extended information about this data set");
+		toolbarInfo = new ToolbarImageButton("badge-info", "Scan Info", "Displays extended information about this data set");
 		toolbarInfo.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -702,7 +704,7 @@ public class PlotPanel extends ClearPanel
 		// SEPARATOR
 		menu.addSeparator();
 
-		menuItem = new JMenuItem("Exit", IconFactory.getMenuIcon("window-close"));
+		menuItem = new JMenuItem("Exit", IconFactory.getMenuIcon("close"));
 		menuItem.setMnemonic(KeyEvent.VK_X);
 		menuItem.getAccessibleContext().setAccessibleDescription("Opens new data sets.");
 		menuItem.addActionListener(fileMenuListener);
@@ -1039,7 +1041,7 @@ public class PlotPanel extends ClearPanel
 		scanNo.getEditor().setPreferredSize(new Dimension(50, 0));
 		scanLabel = new JLabel("Scan");
 		scanLabel.setBorder(Spacing.bSmall());
-		scanBlock = new ComplexToggle("discard-scan", "", "Flag this scan as bad to exclude it from the data set");
+		scanBlock = new ComplexToggle("cancel", "", "Flag this scan as bad to exclude it from the data set");
 
 		scanSelector.add(scanLabel);
 		scanSelector.add(Box.createHorizontalStrut(2));
@@ -1159,7 +1161,7 @@ public class PlotPanel extends ClearPanel
 		container.validate();
 		container.repaint();
 	}
-
+	
 	public void mouseMoveCanvasEvent(int x)
 	{
 

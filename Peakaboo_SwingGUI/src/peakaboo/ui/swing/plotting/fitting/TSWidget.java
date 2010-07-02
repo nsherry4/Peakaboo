@@ -8,8 +8,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 
 
 public class TSWidget extends ClearPanel

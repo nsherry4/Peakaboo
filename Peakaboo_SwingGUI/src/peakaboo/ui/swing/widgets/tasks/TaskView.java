@@ -9,9 +9,9 @@ import javax.swing.JPanel;
 
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.tasks.Task;
-import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.icons.IconSize;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.widgets.Spacing;
 
 public class TaskView extends JPanel{
 

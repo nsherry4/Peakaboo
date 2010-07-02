@@ -17,20 +17,21 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.icons.IconSize;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetDialog;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
 
 
-public class ScanInfoDialogue extends PeakabooDialog
+public class ScanInfoDialogue extends SwidgetDialog
 {
 
 	GridBagConstraints c;
 	JPanel mainPanel;
 	
-	public ScanInfoDialogue(PeakabooContainer owner, PlotController controller)
+	public ScanInfoDialogue(SwidgetContainer owner, PlotController controller)
 	{
 		super(owner, "Scan Information");
 		

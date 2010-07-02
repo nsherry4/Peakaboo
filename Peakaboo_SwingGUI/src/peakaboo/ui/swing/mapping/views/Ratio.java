@@ -24,11 +24,12 @@ import javax.swing.table.TableModel;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.ui.swing.icons.IconFactory;
-import peakaboo.ui.swing.icons.IconSize;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
+
 
 public class Ratio extends JPanel {
 

@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import fava.*;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
@@ -20,10 +21,10 @@ import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
-import peakaboo.ui.swing.icons.IconSize;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.ImageButton.Layout;
+import swidget.icons.IconSize;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.Layout;
 
 
 

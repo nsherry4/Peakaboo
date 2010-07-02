@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.util.List;
 
 import fava.*;
+import fava.datatypes.Pair;
+import fava.signatures.FunctionCombine;
 import static fava.Fn.*;
 import static fava.Functions.*;
 

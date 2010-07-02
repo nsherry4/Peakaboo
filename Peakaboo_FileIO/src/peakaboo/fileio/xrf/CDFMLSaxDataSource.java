@@ -19,11 +19,11 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import fava.Fn;
-import fava.FunctionCombine;
-import fava.FunctionEach;
-import fava.FunctionMap;
 import fava.Functions;
-import fava.Pair;
+import fava.datatypes.Pair;
+import fava.signatures.FunctionEach;
+import fava.signatures.FunctionMap;
+
 
 import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.Coord;
@@ -31,8 +31,8 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.temp.TempFileList;
-import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.xrf.support.CDFML;
+import swidget.dialogues.fileio.AbstractFile;
 
 
 

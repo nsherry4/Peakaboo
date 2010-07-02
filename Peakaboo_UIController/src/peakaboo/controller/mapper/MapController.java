@@ -10,6 +10,11 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import fava.*;
+import fava.datatypes.Pair;
+import fava.lists.FList;
+import fava.signatures.FunctionCombine;
+import fava.signatures.FunctionEach;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
@@ -1011,12 +1016,21 @@ public class MapController extends CanvasController
 						
 	
 					Spectrum s = element.second;
-					String scan = Fn.chunk(s, width).showListBy(new FunctionMap<List<Float>, String>() {
+					FList<Spectrum> lines = new FList<Spectrum>();
+					
+					for (int i = 0; i < s.size(); i+=width)
+					{
+						lines.add(s.subSpectrum(i, i+width));
+					}
+					
+					
+					String scan = lines.showListBy(new FunctionMap<Spectrum, String>() {
 	
 						
-						public String f(List<Float> list)
+						public String f(Spectrum list)
 						{
-							return Fn.showList(list).foldl(Functions.strcat(","));
+							return Fn.map(list, Functions.<Float>show()).foldr(Functions.strcat(","));
+							
 						}
 					}).foldl(Functions.strcat("\n"));
 	

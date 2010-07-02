@@ -13,9 +13,9 @@ import javax.swing.JApplet;
 import javax.swing.JMenuBar;
 import javax.swing.UIManager;
 
-import peakaboo.fileio.AbstractFile;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.containers.SwidgetContainer;
+import swidget.dialogues.fileio.AbstractFile;
 
 
 public class PlotterApplet extends JApplet
@@ -23,13 +23,13 @@ public class PlotterApplet extends JApplet
 
 	PlotPanel plotter;
 	
-	PeakabooContainer container;
+	SwidgetContainer container;
 	
 	
 	public PlotterApplet()
 	{
 		
-		container = new PeakabooContainer() {
+		container = new SwidgetContainer() {
 			
 			public void validate()
 			{

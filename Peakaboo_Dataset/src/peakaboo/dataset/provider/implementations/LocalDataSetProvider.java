@@ -5,6 +5,7 @@ package peakaboo.dataset.provider.implementations;
 import java.util.List;
 
 import fava.*;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
@@ -24,8 +25,6 @@ import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.datatypes.tasks.executor.implementations.SimpleUITaskExecutor;
 import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
-import peakaboo.fileio.AbstractFile;
-import peakaboo.fileio.IOCommon.FileType;
 import peakaboo.fileio.xrf.CDFMLDataSource;
 import peakaboo.fileio.xrf.DataSource;
 import peakaboo.fileio.xrf.DataSourceDimensions;
@@ -34,6 +33,9 @@ import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
+import swidget.dialogues.fileio.AbstractFile;
+import swidget.dialogues.fileio.IOCommon;
+import swidget.dialogues.fileio.IOCommon.FileType;
 
 
 
@@ -374,7 +376,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		final FileType type;
 
 		// sort the filenames property
-		peakaboo.fileio.IOCommon.sortFiles(files);
+		IOCommon.sortFiles(files);
 
 		// Create the tasklist for reading the files
 		final TaskList<Boolean> tasklist;
@@ -500,7 +502,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 				if (isAborted()) return false;
 
-				dataSourcePath = peakaboo.fileio.IOCommon.getFilePath(files.get(0).getFileName());
+				dataSourcePath = IOCommon.getFilePath(files.get(0).getFileName());
 
 				int index;
 				while (true)

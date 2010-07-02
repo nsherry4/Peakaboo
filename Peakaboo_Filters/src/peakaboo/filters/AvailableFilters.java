@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.List;
 
 import fava.*;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 

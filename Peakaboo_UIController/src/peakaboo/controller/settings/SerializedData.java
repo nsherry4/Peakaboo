@@ -8,6 +8,7 @@ import java.util.List;
 import org.ho.yaml.Yaml;
 
 import fava.*;
+import fava.datatypes.Pair;
 
 import peakaboo.controller.plotter.PlotViewOptions;
 import peakaboo.datatypes.peaktable.Element;

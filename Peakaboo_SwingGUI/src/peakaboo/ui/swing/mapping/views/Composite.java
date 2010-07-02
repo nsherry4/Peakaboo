@@ -23,7 +23,7 @@ import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.results.MapResult;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.widgets.Spacing;
 
 public class Composite extends JPanel {
 	

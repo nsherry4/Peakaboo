@@ -14,8 +14,8 @@ import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.fileio.IOCommon;
 import peakaboo.fileio.xrf.support.CLSXML;
+import swidget.dialogues.fileio.IOCommon;
 
 
 public class ZipDataSource implements DataSource

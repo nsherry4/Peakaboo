@@ -10,17 +10,17 @@ import javax.swing.JFrame;
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.filters.AbstractFilter;
-import peakaboo.ui.swing.dialogues.PeakabooDialog;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
+import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetDialog;
 
-public class FilterEditDialogue extends PeakabooDialog
+public class FilterEditDialogue extends SwidgetDialog
 {
 
 	protected FilterController	controller;
 	protected AbstractFilter	filter;
 
 
-	public FilterEditDialogue(AbstractFilter _filter, FilterController _controller, PeakabooContainer owner)
+	public FilterEditDialogue(AbstractFilter _filter, FilterController _controller, SwidgetContainer owner)
 	{
 
 		super(owner, _filter.getFilterName(), false);

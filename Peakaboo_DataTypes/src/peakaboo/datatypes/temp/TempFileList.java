@@ -9,9 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-
-import fava.FunctionMap;
-import fava.Pair;
+import fava.datatypes.Pair;
+import fava.signatures.FunctionMap;
 
 
 public class TempFileList<T> implements List<T>

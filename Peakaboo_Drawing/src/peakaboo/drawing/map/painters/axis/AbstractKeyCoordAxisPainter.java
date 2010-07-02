@@ -1,6 +1,7 @@
 package peakaboo.drawing.map.painters.axis;
 
 import fava.*;
+import fava.datatypes.Pair;
 
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.Range;

@@ -6,8 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 import peakaboo.controller.plotter.FilterController;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
-import peakaboo.ui.swing.widgets.ClearPanel;
+import swidget.containers.SwidgetContainer;
+import swidget.widgets.ClearPanel;
 
 public class FiltersetViewer extends ClearPanel {
 
@@ -23,7 +23,7 @@ public class FiltersetViewer extends ClearPanel {
 		return "Filters";
 	}
 	
-	public FiltersetViewer(FilterController _controller, PeakabooContainer owner){
+	public FiltersetViewer(FilterController _controller, SwidgetContainer owner){
 		
 		super();
 		

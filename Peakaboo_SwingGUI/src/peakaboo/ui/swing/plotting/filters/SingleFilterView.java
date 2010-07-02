@@ -28,9 +28,9 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
 import peakaboo.filters.Parameter.ValueType;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.Spacing;
+import swidget.widgets.gradientpanel.TitleGradientPanel;
+
 
 public class SingleFilterView extends JPanel
 {

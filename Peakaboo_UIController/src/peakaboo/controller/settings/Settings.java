@@ -17,6 +17,9 @@ import java.util.List;
 import org.ho.yaml.Yaml;
 
 import fava.*;
+import fava.datatypes.Pair;
+import fava.signatures.FunctionEach;
+import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 

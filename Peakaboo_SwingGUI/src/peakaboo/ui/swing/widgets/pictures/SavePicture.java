@@ -18,27 +18,27 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import peakaboo.controller.CanvasController;
-import peakaboo.ui.swing.dialogues.PeakabooDialog;
-import peakaboo.ui.swing.fileio.SwingIO;
-import peakaboo.ui.swing.plotting.PeakabooContainer;
-import peakaboo.ui.swing.widgets.ClearPanel;
-import peakaboo.ui.swing.widgets.Spacing;
-import peakaboo.ui.swing.widgets.ImageButton;
-import peakaboo.ui.swing.widgets.toggle.ComplexToggle;
-import peakaboo.ui.swing.widgets.toggle.ComplexToggleGroup;
+import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetDialog;
+import swidget.dialogues.fileio.SwingIO;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
+import swidget.widgets.toggle.ComplexToggle;
+import swidget.widgets.toggle.ComplexToggleGroup;
 
 
-public class SavePicture extends PeakabooDialog
+public class SavePicture extends SwidgetDialog
 {
 
 	private CanvasController	controller;
 	private String				startingFolder;
-	ComplexToggleGroup			group;
+	swidget.widgets.toggle.ComplexToggleGroup			group;
 
 
 	JPanel				controlsPanel;
 	
-	public SavePicture(PeakabooContainer owner, CanvasController controller, String startingFolder)
+	public SavePicture(SwidgetContainer owner, CanvasController controller, String startingFolder)
 	{
 
 		super(owner, "Save as Image");

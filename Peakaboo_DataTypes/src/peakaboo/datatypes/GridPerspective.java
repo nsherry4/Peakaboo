@@ -3,8 +3,8 @@ package peakaboo.datatypes;
 
 import java.util.List;
 
+import fava.datatypes.Pair;
 
-import fava.Pair;
 
 
 /**

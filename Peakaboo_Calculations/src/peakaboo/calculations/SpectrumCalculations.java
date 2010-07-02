@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import fava.*;
+import fava.signatures.FunctionCombine;
 import static fava.Fn.*;
 import static fava.Functions.*;
 

@@ -11,7 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 import peakaboo.filters.AbstractFilter;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.widgets.Spacing;
 
 public class FilterRenderer extends JPanel implements TableCellRenderer
 {

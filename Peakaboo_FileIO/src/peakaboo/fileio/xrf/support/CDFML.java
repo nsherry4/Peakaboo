@@ -12,7 +12,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.AbstractFile;
+import swidget.dialogues.fileio.AbstractFile;
 
 
 public class CDFML

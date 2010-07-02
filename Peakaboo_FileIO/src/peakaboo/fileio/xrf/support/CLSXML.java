@@ -4,8 +4,8 @@ import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.fileio.AbstractFile;
-import peakaboo.fileio.IOCommon;
+import swidget.dialogues.fileio.AbstractFile;
+import swidget.dialogues.fileio.IOCommon;
 
 /**
  * 

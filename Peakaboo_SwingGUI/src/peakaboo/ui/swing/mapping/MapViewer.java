@@ -24,7 +24,7 @@ import peakaboo.controller.mapper.SingleMapModel;
 import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.PeakabooMapperSwing;
-import peakaboo.ui.swing.widgets.Spacing;
+import swidget.widgets.Spacing;
 
 
 

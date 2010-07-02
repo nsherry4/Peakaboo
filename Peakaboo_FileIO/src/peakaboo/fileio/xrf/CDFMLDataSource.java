@@ -13,8 +13,8 @@ import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.Range;
 import peakaboo.datatypes.Spectrum;
-import peakaboo.fileio.AbstractFile;
 import peakaboo.fileio.xrf.support.CDFML;
+import swidget.dialogues.fileio.AbstractFile;
 
 
 public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSourceExtendedInformation
