@@ -1,12 +1,13 @@
 package peakaboo.calculations;
 
 
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 import JSci.maths.Complex;
 import JSci.maths.FourierMath;
 import JSci.maths.polynomials.RealPolynomial;
 import JSci.maths.wavelet.daubechies2.FastDaubechies2;
 
-import peakaboo.datatypes.Spectrum;
 
 /**
  * 

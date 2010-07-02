@@ -2,20 +2,22 @@ package peakaboo.controller.mapper;
 
 import java.util.List;
 
+import fava.datatypes.Bounds;
+
 import peakaboo.controller.Model;
-import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.SISize;
 import peakaboo.mapping.results.MapResultSet;
+import scidraw.drawing.DrawingRequest;
+import scitypes.Coord;
+import scitypes.SISize;
 
 public class AllMapsModel extends Model {
 
-	public peakaboo.drawing.DrawingRequest dr;
+	public DrawingRequest dr;
 
 	public List<Integer> badPoints;
 
-	public Coord<Range<Number>> realDimensions;
+	public Coord<Bounds<Number>> realDimensions;
 	public SISize realDimensionsUnits;
 	public Coord<Integer> dataDimensions;
 	public Coord<Integer> interpolatedSize = new Coord<Integer>(0, 0);
@@ -34,7 +36,7 @@ public class AllMapsModel extends Model {
 		badPoints = DataTypeFactory.<Integer> list();
 		viewOptions = new AllMapsViewOptions();
 
-		dr = new peakaboo.drawing.DrawingRequest();
+		dr = new DrawingRequest();
 
 	}
 

@@ -4,17 +4,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import peakaboo.calculations.SpectrumCalculations;
+import fava.datatypes.Bounds;
+
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.peaktable.Transition;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.Coord;
+import scitypes.SigDigits;
+import scitypes.SpectrumCalculations;
+
 
 /**
  * 
@@ -24,7 +26,8 @@ import peakaboo.drawing.plot.painters.PlotPainter;
  *
  */
 
-public class FittingTitlePainter extends PlotPainter {
+public class FittingTitlePainter extends PlotPainter
+{
 
 	//private List<TransitionSeries> tsList;
 	//private List<Element> visibleElements;
@@ -32,7 +35,7 @@ public class FittingTitlePainter extends PlotPainter {
 	private boolean drawMaxIntensities;
 	private boolean drawElementNames;
 	
-	private List<Coord<Range<Float>>> previousLabels;
+	private List<Coord<Bounds<Float>>> previousLabels;
 	
 	public FittingTitlePainter(FittingResultSet fittings, boolean drawElementNames, boolean drawMaxIntensities){
 		
@@ -42,7 +45,7 @@ public class FittingTitlePainter extends PlotPainter {
 		this.drawMaxIntensities = drawMaxIntensities;
 		this.drawElementNames = drawElementNames;
 		
-		this.previousLabels = DataTypeFactory.<Coord<Range<Float>>>list();
+		this.previousLabels = DataTypeFactory.<Coord<Bounds<Float>>>list();
 		
 		
 	}
@@ -77,7 +80,7 @@ public class FittingTitlePainter extends PlotPainter {
 					
 					if (t != null) {
 						
-						Coord<Range<Float>> currentLabel = getTextLabelDimensions(p, title, t.energyValue);
+						Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, t.energyValue);
 						if (currentLabel.x.start.intValue() > p.dr.dataWidth) continue;
 						float baseHeightForTitle = baseHeightForTitle(p, title, t.energyValue);
 						currentLabel.y.start += baseHeightForTitle;
@@ -96,7 +99,7 @@ public class FittingTitlePainter extends PlotPainter {
 		}// for all transitionseries
 		
 		//update the channel height data to reflect the addition of text labels
-		for (Coord<Range<Float>> label : previousLabels)
+		for (Coord<Bounds<Float>> label : previousLabels)
 		{
 			for (int i = label.x.start.intValue(); i <= label.x.end; i++){
 				
@@ -110,11 +113,11 @@ public class FittingTitlePainter extends PlotPainter {
 	public float baseHeightForTitle(PainterData p, String title, float energy)
 	{
 		
-		Coord<Range<Float>> currentLabel = getTextLabelDimensions(p, title, energy);
-		List<Coord<Range<Float>>> labelsInRange = DataTypeFactory.<Coord<Range<Float>>>list();
+		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, energy);
+		List<Coord<Bounds<Float>>> labelsInRange = DataTypeFactory.<Coord<Bounds<Float>>>list();
 		
 		//get a list of all labels which might get in the way of this one
-		for (Coord<Range<Float>> label : previousLabels)
+		for (Coord<Bounds<Float>> label : previousLabels)
 		{
 			if (
 					(label.x.start <= currentLabel.x.end && label.x.start >= currentLabel.x.start)
@@ -126,9 +129,9 @@ public class FittingTitlePainter extends PlotPainter {
 		}
 		
 		//sort the elements by order of bottom y position
-		Collections.sort(labelsInRange, new Comparator<Coord<Range<Float>>>() {
+		Collections.sort(labelsInRange, new Comparator<Coord<Bounds<Float>>>() {
 
-			public int compare(Coord<Range<Float>> o1, Coord<Range<Float>> o2)
+			public int compare(Coord<Bounds<Float>> o1, Coord<Bounds<Float>> o2)
 			{
 				if (o1.y.start < o2.y.start) return -1;
 				if (o1.y.start > o2.y.start) return 1;
@@ -143,7 +146,7 @@ public class FittingTitlePainter extends PlotPainter {
 		float currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
 		
 		//go over all previous labels in order of bottom y coordinate
-		for (Coord<Range<Float>> label : labelsInRange)
+		for (Coord<Bounds<Float>> label : labelsInRange)
 		{
 			
 			//if there is enough room for the label, we've found the right baseline

@@ -6,11 +6,10 @@ import java.util.List;
 
 import peakaboo.calculations.Background;
 import peakaboo.calculations.Calculations;
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.calculations.Noise;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
-import peakaboo.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.Spectrum;
 
 /**
  * 

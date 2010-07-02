@@ -7,7 +7,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
-import peakaboo.datatypes.Coord;
+import scitypes.Coord;
+
 
 public class Lines extends JPanel{
 

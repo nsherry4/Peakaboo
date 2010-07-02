@@ -3,14 +3,14 @@ package peakaboo.filters.filters;
 
 
 import peakaboo.calculations.Background;
-import peakaboo.calculations.SpectrumCalculations;
-import peakaboo.datatypes.Spectrum;
-import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.painters.PlotPainter;
-import peakaboo.drawing.plot.painters.SpectrumPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
 import peakaboo.filters.Parameter.ValueType;
+import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.plot.painters.SpectrumPainter;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 /**
  * 

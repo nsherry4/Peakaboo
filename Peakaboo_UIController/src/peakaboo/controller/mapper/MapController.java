@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import fava.*;
+import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
@@ -19,33 +20,32 @@ import static fava.Fn.*;
 import static fava.Functions.*;
 
 import peakaboo.calculations.Interpolation;
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.controller.CanvasController;
-import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.GridPerspective;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.Ratios;
-import peakaboo.datatypes.SigDigits;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.drawing.backends.Surface;
-import peakaboo.drawing.backends.Surface.CompositeModes;
-import peakaboo.drawing.common.Spectrums;
-import peakaboo.drawing.map.MapDrawing;
-import peakaboo.drawing.map.painters.MapPainter;
-import peakaboo.drawing.map.painters.MapTechniqueFactory;
-import peakaboo.drawing.map.painters.axis.LegendCoordsAxisPainter;
-import peakaboo.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
-import peakaboo.drawing.map.palettes.AbstractPalette;
-import peakaboo.drawing.map.palettes.OverlayPalette;
-import peakaboo.drawing.map.palettes.RatioPalette;
-import peakaboo.drawing.map.palettes.SingleColourPalette;
-import peakaboo.drawing.map.palettes.ThermalScalePalette;
-import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.painters.axis.AxisPainter;
-import peakaboo.drawing.painters.axis.TitleAxisPainter;
 import peakaboo.mapping.colours.OverlayColour;
+import scidraw.drawing.backends.Surface;
+import scidraw.drawing.backends.Surface.CompositeModes;
+import scidraw.drawing.common.Spectrums;
+import scidraw.drawing.map.MapDrawing;
+import scidraw.drawing.map.painters.MapPainter;
+import scidraw.drawing.map.painters.MapTechniqueFactory;
+import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
+import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
+import scidraw.drawing.map.palettes.AbstractPalette;
+import scidraw.drawing.map.palettes.OverlayPalette;
+import scidraw.drawing.map.palettes.RatioPalette;
+import scidraw.drawing.map.palettes.SingleColourPalette;
+import scidraw.drawing.map.palettes.ThermalScalePalette;
+import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.painters.axis.AxisPainter;
+import scidraw.drawing.painters.axis.TitleAxisPainter;
+import scitypes.Coord;
+import scitypes.GridPerspective;
+import scitypes.Ratios;
+import scitypes.SigDigits;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 
@@ -110,7 +110,7 @@ public class MapController extends CanvasController
 
 				map(getVisibleMapData(), new FunctionMap<Spectrum, String>() {
 
-					
+
 					public String f(Spectrum element)
 					{
 						return SigDigits.roundFloatTo(mapGrid.get(element, mapCoord.x, mapCoord.y), 2);
@@ -188,7 +188,7 @@ public class MapController extends CanvasController
 
 		if (map == null) return null;
 
-		Coord<Range<Float>> borders = map.calcAxisBorders();
+		Coord<Bounds<Float>> borders = map.calcAxisBorders();
 		float topOffset, leftOffset;
 		topOffset = borders.y.start;
 		leftOffset = borders.x.start;
@@ -216,7 +216,7 @@ public class MapController extends CanvasController
 	{
 		if (map == null) return null;
 
-		Coord<Range<Float>> borders = map.calcAxisBorders();
+		Coord<Bounds<Float>> borders = map.calcAxisBorders();
 		float topOffset, leftOffset;
 		topOffset = borders.y.start;
 		leftOffset = borders.x.start;
@@ -478,7 +478,7 @@ public class MapController extends CanvasController
 						activeTabData.getVisibleTransitionSeries(),
 						new FunctionMap<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
 
-							
+
 							public Pair<TransitionSeries, Spectrum> f(TransitionSeries ts)
 							{
 								return new Pair<TransitionSeries, Spectrum>(ts, activeTabData
@@ -502,11 +502,11 @@ public class MapController extends CanvasController
 				Spectrum side2Data = activeTabData.sumGivenTransitionSeriesMaps(side2);
 				final float side1Min = SpectrumCalculations.min(side1Data, false);
 				final float side2Min = SpectrumCalculations.min(side2Data, false);
-			
+
 				// compute the ratio of the two sides
 				data = side1Data.zipWith(side2Data, new FunctionCombine<Float, Float, Float>() {
 
-					
+
 					public Float f(Float side1Value, Float side2Value)
 					{
 
@@ -546,7 +546,7 @@ public class MapController extends CanvasController
 														0.0f);
 
 
-					
+
 					public Pair<TransitionSeries, Spectrum> f(Pair<TransitionSeries, Spectrum> map)
 					{
 
@@ -581,7 +581,7 @@ public class MapController extends CanvasController
 	}
 
 
-	
+
 	protected void drawBackend(Surface backend, boolean vector)
 	{
 
@@ -649,9 +649,10 @@ public class MapController extends CanvasController
 
 				palette = new ThermalScalePalette(spectrumSteps, mapModel.viewOptions.monochrome);
 
+				
 				spectrumCoordPainter = new SpectrumCoordsAxisPainter(
 
-				mapModel.viewOptions.drawCoordinates,
+					mapModel.viewOptions.drawCoordinates,
 					mapModel.viewOptions.topLeftCoord,
 					mapModel.viewOptions.topRightCoord,
 					mapModel.viewOptions.bottomLeftCoord,
@@ -1001,41 +1002,45 @@ public class MapController extends CanvasController
 
 		maps.each(new FunctionEach<Pair<TransitionSeries, Spectrum>>() {
 
-			
+
 			public void f(Pair<TransitionSeries, Spectrum> element)
 			{
-				
-				try {
-					
+
+				try
+				{
+
 					if (activeTabData.displayMode == MapDisplayMode.OVERLAY)
 					{
 						osw.write(element.first.toString() + "\n");
-					} else if (activeTabData.displayMode == MapDisplayMode.RATIO) {
-						osw.write(activeTabData.mapLongTitle() + " Ratio: Each value n represents " + Ratios.logValue + "^n\n");
 					}
-						
-	
+					else if (activeTabData.displayMode == MapDisplayMode.RATIO)
+					{
+						osw.write(activeTabData.mapLongTitle() + " Ratio: Each value n represents " + Ratios.logValue
+								+ "^n\n");
+					}
+
+
 					Spectrum s = element.second;
 					FList<Spectrum> lines = new FList<Spectrum>();
-					
-					for (int i = 0; i < s.size(); i+=width)
+
+					for (int i = 0; i < s.size(); i += width)
 					{
-						lines.add(s.subSpectrum(i, i+width));
+						lines.add(s.subSpectrum(i, i + width));
 					}
-					
-					
+
+
 					String scan = lines.showListBy(new FunctionMap<Spectrum, String>() {
-	
-						
+
+
 						public String f(Spectrum list)
 						{
-							return Fn.map(list, Functions.<Float>show()).foldr(Functions.strcat(","));
-							
+							return Fn.map(list, Functions.<Float> show()).foldr(Functions.strcat(","));
+
 						}
 					}).foldl(Functions.strcat("\n"));
-	
+
 					osw.write(scan + "\n\n");
-					
+
 				}
 				catch (IOException e)
 				{
@@ -1044,8 +1049,8 @@ public class MapController extends CanvasController
 
 			}
 		});
-		
-		
+
+
 		try
 		{
 			osw.close();
@@ -1059,21 +1064,21 @@ public class MapController extends CanvasController
 	}
 
 
-	
+
 	public void setOutputIsPDF(boolean isPDF)
 	{
 		mapModel.dr.drawToVectorSurface = isPDF;
 	}
 
 
-	
+
 	public float getUsedHeight()
 	{
 		return map.calculateMapDimensions().y;
 	}
 
 
-	
+
 	public float getUsedWidth()
 	{
 		return map.calculateMapDimensions().x;

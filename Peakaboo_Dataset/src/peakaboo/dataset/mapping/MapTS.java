@@ -2,12 +2,10 @@ package peakaboo.dataset.mapping;
 
 import java.util.List;
 
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.provider.DataSetProvider;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
@@ -15,6 +13,8 @@ import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor
 import peakaboo.fileio.xrf.DataSource;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 public class MapTS

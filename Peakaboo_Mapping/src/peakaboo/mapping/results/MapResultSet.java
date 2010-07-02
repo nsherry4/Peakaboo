@@ -9,10 +9,10 @@ import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 /**
  * 

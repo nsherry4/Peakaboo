@@ -3,11 +3,12 @@ package peakaboo.fileio.xrf;
 
 import java.util.List;
 
-import peakaboo.datatypes.Coord;
+import fava.datatypes.Bounds;
+
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.fileio.xrf.support.CLSXML;
+import scitypes.Coord;
+import scitypes.Spectrum;
 import swidget.dialogues.fileio.AbstractFile;
 import swidget.dialogues.fileio.IOCommon;
 
@@ -126,7 +127,7 @@ public class XMLDataSource implements DataSource
 
 	
 
-	public Coord<Range<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		return null;
 	}

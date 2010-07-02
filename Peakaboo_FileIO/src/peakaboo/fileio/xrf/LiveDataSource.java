@@ -5,11 +5,9 @@ import java.util.List;
 
 import fava.Fn;
 
-import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.temp.TempFileList;
+import scitypes.Spectrum;
 
 
 public class LiveDataSource implements DataSource

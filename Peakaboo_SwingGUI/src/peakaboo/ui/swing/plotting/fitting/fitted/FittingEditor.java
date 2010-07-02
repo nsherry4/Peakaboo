@@ -13,11 +13,11 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 
 import peakaboo.controller.plotter.FittingController;
-import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
+import scitypes.SigDigits;
 
 /*
  * NOT CURRENTLY USED

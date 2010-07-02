@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import peakaboo.datatypes.Coord;
+import fava.datatypes.Bounds;
+
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.fileio.xrf.support.CLSXML;
+import scitypes.Coord;
+import scitypes.Spectrum;
 import swidget.dialogues.fileio.IOCommon;
 
 
@@ -267,7 +268,7 @@ public class ZipDataSource implements DataSource
 	}
 
 
-	public Coord<Range<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		return null;
 	}

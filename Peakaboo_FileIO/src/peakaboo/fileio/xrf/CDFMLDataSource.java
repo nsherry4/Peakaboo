@@ -8,12 +8,13 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import peakaboo.calculations.SpectrumCalculations;
-import peakaboo.datatypes.Coord;
+import fava.datatypes.Bounds;
+
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.fileio.xrf.support.CDFML;
+import scitypes.Coord;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 import swidget.dialogues.fileio.AbstractFile;
 
 
@@ -148,7 +149,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	}
 
 
-	public Coord<Range<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		float x1, x2, y1, y2;
 
@@ -158,9 +159,9 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 		y2 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_Y_END, 0));
 		
 
-		Range<Number> xDim = new Range<Number>(x1, x2);
-		Range<Number> yDim = new Range<Number>(y1, y2);
-		return new Coord<Range<Number>>(xDim, yDim);
+		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
+		Bounds<Number> yDim = new Bounds<Number>(y1, y2);
+		return new Coord<Bounds<Number>>(xDim, yDim);
 	}
 
 

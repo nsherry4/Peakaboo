@@ -3,7 +3,7 @@ package peakaboo.fileio.xrf.support;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
+import scitypes.Spectrum;
 import swidget.dialogues.fileio.AbstractFile;
 import swidget.dialogues.fileio.IOCommon;
 

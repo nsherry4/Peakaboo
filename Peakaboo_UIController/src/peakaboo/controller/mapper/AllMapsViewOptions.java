@@ -1,6 +1,7 @@
 package peakaboo.controller.mapper;
 
-import peakaboo.datatypes.Coord;
+import scitypes.Coord;
+
 
 
 public class AllMapsViewOptions

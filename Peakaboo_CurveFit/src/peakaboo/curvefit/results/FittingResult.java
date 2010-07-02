@@ -2,8 +2,8 @@ package peakaboo.curvefit.results;
 
 
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
+import scitypes.Spectrum;
 
 /**
  * 

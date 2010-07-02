@@ -2,11 +2,11 @@ package peakaboo.filters;
 
 
 import peakaboo.common.Version;
-import peakaboo.datatypes.Spectrum;
-import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.painters.PlotPainter;
-import peakaboo.drawing.plot.painters.SpectrumPainter;
 import peakaboo.filters.Parameter.ValueType;
+import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.plot.painters.SpectrumPainter;
+import scitypes.Spectrum;
 
 public class ExampleFilter extends AbstractFilter {
 

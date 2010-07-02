@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import peakaboo.datatypes.eventful.Eventful;
-import peakaboo.drawing.backends.SaveableSurface;
-import peakaboo.drawing.backends.Surface;
-import peakaboo.drawing.backends.SurfaceType;
-import peakaboo.drawing.backends.DrawingSurfaceFactory;
+import scidraw.drawing.backends.DrawingSurfaceFactory;
+import scidraw.drawing.backends.SaveableSurface;
+import scidraw.drawing.backends.Surface;
+import scidraw.drawing.backends.SurfaceType;
 
 /**
  * 

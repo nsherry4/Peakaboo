@@ -4,7 +4,7 @@ package peakaboo.curvefit.results;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
+import scitypes.Spectrum;
 
 /**
  * 

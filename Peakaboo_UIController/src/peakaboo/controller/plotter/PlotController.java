@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
@@ -22,33 +21,34 @@ import peakaboo.curvefit.painters.FittingTitlePainter;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
-import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.drawing.backends.Surface;
-import peakaboo.drawing.painters.axis.AxisPainter;
-import peakaboo.drawing.painters.axis.LineAxisPainter;
-import peakaboo.drawing.painters.axis.TitleAxisPainter;
-import peakaboo.drawing.plot.PlotDrawing;
-import peakaboo.drawing.plot.PlotDrawingRequestFactory;
-import peakaboo.drawing.plot.ViewTransform;
-import peakaboo.drawing.plot.painters.PlotPainter;
-import peakaboo.drawing.plot.painters.axis.GridlinePainter;
-import peakaboo.drawing.plot.painters.axis.TickMarkAxisPainter;
-import peakaboo.drawing.plot.painters.plot.OriginalDataPainter;
-import peakaboo.drawing.plot.painters.plot.PrimaryPlotPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.mapping.results.MapResultSet;
+import scidraw.drawing.ViewTransform;
+import scidraw.drawing.backends.Surface;
+import scidraw.drawing.painters.axis.AxisPainter;
+import scidraw.drawing.painters.axis.LineAxisPainter;
+import scidraw.drawing.painters.axis.TitleAxisPainter;
+import scidraw.drawing.plot.PlotDrawing;
+import scidraw.drawing.plot.PlotDrawingRequestFactory;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.plot.painters.axis.GridlinePainter;
+import scidraw.drawing.plot.painters.axis.TickMarkAxisPainter;
+import scidraw.drawing.plot.painters.plot.OriginalDataPainter;
+import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
+import scitypes.Coord;
+import scitypes.SISize;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 import swidget.dialogues.fileio.AbstractFile;
 
 import fava.*;
+import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
@@ -69,7 +69,8 @@ public class PlotController extends CanvasController implements FilterController
 	private MapController					mapController;
 	private PlotDrawing						plot;
 
-	private List<AxisPainter>				axisPainters;
+	private List<AxisPainter
+	>				axisPainters;
 
 	private Stack<ByteArrayOutputStream>	undoStack;
 	private Stack<ByteArrayOutputStream>	redoStack;
@@ -246,7 +247,7 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	public Coord<Range<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		return model.dataset.getRealDimensions();
 	}
@@ -343,7 +344,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		if (plot == null) return -1;
 
-		Coord<Range<Float>> axesSize;
+		Coord<Bounds<Float>> axesSize;
 		int channel;
 
 		// Plot p = new Plot(this.toyContext, model.dr);
@@ -468,7 +469,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		// if axes are shown, also draw horizontal grid lines
 		List<PlotPainter> plotPainters = DataTypeFactory.<PlotPainter> list();
-		if (model.viewOptions.showAxes) plotPainters.add(new GridlinePainter(new Range<Float>(
+		if (model.viewOptions.showAxes) plotPainters.add(new GridlinePainter(new Bounds<Float>(
 			0.0f,
 			model.dataset.maximumIntensity())));
 
@@ -557,10 +558,10 @@ public class PlotController extends CanvasController implements FilterController
 
 				axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
 				axisPainters.add(new TickMarkAxisPainter(
-					new Range<Float>(0.0f, model.dataset.maximumIntensity()),
-					new Range<Float>(0.0f, model.dr.unitSize * model.dataset.scanSize()),
+					new Bounds<Float>(0.0f, model.dataset.maximumIntensity()),
+					new Bounds<Float>(0.0f, model.dr.unitSize * model.dataset.scanSize()),
 					null,
-					new Range<Float>(0.0f, model.dataset.maximumIntensity()),
+					new Bounds<Float>(0.0f, model.dataset.maximumIntensity()),
 					model.dr.viewTransform == ViewTransform.LOG,
 					model.dr.viewTransform == ViewTransform.LOG));
 				axisPainters.add(new LineAxisPainter(true, true, model.viewOptions.showPlotTitle, true));
@@ -1259,11 +1260,11 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		if (log)
 		{
-			model.dr.viewTransform = peakaboo.drawing.plot.ViewTransform.LOG;
+			model.dr.viewTransform = ViewTransform.LOG;
 		}
 		else
 		{
-			model.dr.viewTransform = peakaboo.drawing.plot.ViewTransform.LINEAR;
+			model.dr.viewTransform = ViewTransform.LINEAR;
 		}
 		axisSetInvalidated();
 		setUndoPoint();
@@ -1273,7 +1274,7 @@ public class PlotController extends CanvasController implements FilterController
 
 	public boolean getViewLog()
 	{
-		return (model.dr.viewTransform == peakaboo.drawing.plot.ViewTransform.LOG);
+		return (model.dr.viewTransform == ViewTransform.LOG);
 	}
 
 

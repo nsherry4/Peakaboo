@@ -8,12 +8,12 @@ import java.util.List;
 import fava.*;
 import static fava.Fn.*;
 
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 

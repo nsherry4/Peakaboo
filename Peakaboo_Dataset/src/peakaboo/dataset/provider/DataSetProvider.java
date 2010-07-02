@@ -4,13 +4,11 @@ package peakaboo.dataset.provider;
 
 import java.util.List;
 
+import fava.datatypes.Bounds;
+
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
-import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
@@ -19,6 +17,9 @@ import peakaboo.fileio.xrf.DataSourceDimensions;
 import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
+import scitypes.Coord;
+import scitypes.SISize;
+import scitypes.Spectrum;
 
 
 
@@ -266,7 +267,7 @@ public abstract class DataSetProvider
 	/**
 	 * See {@link DataSourceDimensions}
 	 */
-	public abstract Coord<Range<Number>> getRealDimensions();
+	public abstract Coord<Bounds<Number>> getRealDimensions();
 
 	/**
 	 * See {@link DataSourceDimensions}

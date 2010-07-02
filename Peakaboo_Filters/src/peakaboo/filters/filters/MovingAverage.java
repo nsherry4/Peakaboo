@@ -2,11 +2,11 @@ package peakaboo.filters.filters;
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.datatypes.Spectrum;
-import peakaboo.drawing.plot.painters.PlotPainter;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
 import peakaboo.filters.Parameter.ValueType;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.Spectrum;
 
 /**
  * 

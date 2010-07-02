@@ -1,7 +1,7 @@
 package peakaboo.fileio.xrf;
 
-import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Range;
+import fava.datatypes.Bounds;
+import scitypes.Coord;
 
 
 public interface DataSourceDimensions
@@ -18,7 +18,7 @@ public interface DataSourceDimensions
 	 * Get the real (spatial) dimensions of this map.
 	 * @return x,y pair of start,end pairs of spatial dimensions
 	 */
-	public Coord<Range<Number>> getRealDimensions();
+	public Coord<Bounds<Number>> getRealDimensions();
 
 	/**
 	 * Returns a string representation of the units used in measurement

@@ -14,8 +14,8 @@ import peakaboo.controller.plotter.PlotViewOptions;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.drawing.DrawingRequest;
 import peakaboo.filters.AbstractFilter;
+import scidraw.drawing.DrawingRequest;
 
 
 

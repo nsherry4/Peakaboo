@@ -3,7 +3,8 @@ package peakaboo.fileio.xrf;
 
 import java.util.List;
 
-import peakaboo.datatypes.Spectrum;
+import scitypes.Spectrum;
+
 
 
 public interface DataSource

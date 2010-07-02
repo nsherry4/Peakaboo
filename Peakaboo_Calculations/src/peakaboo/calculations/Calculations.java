@@ -3,8 +3,8 @@ package peakaboo.calculations;
 
 import java.util.List;
 
-import peakaboo.datatypes.GridPerspective;
-import peakaboo.datatypes.Spectrum;
+import scitypes.GridPerspective;
+import scitypes.Spectrum;
 
 /**
  * 

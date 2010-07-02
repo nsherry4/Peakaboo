@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
+import scitypes.Spectrum;
 
 /**
  * 

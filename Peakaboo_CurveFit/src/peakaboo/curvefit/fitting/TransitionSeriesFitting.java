@@ -5,13 +5,13 @@ package peakaboo.curvefit.fitting;
 import java.util.Collections;
 import java.util.List;
 
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.Transition;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 

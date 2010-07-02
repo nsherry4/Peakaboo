@@ -2,16 +2,17 @@ package peakaboo.dataset.provider.implementations;
 
 import java.util.List;
 
+import fava.datatypes.Bounds;
+
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.DataSetProvider;
-import peakaboo.datatypes.Coord;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.xrf.DataSource;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
+import scitypes.Coord;
+import scitypes.SISize;
+import scitypes.Spectrum;
 
 
 public class EmptyDataSetProvider extends DataSetProvider
@@ -122,7 +123,7 @@ public class EmptyDataSetProvider extends DataSetProvider
 	}
 
 	@Override
-	public Coord<Range<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		// TODO Auto-generated method stub
 		return null;

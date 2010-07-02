@@ -20,18 +20,18 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import fava.Fn;
 import fava.Functions;
+import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
 
-import peakaboo.calculations.SpectrumCalculations;
-import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.temp.TempFileList;
 import peakaboo.fileio.xrf.support.CDFML;
+import scitypes.Coord;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 import swidget.dialogues.fileio.AbstractFile;
 
 
@@ -471,7 +471,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 
 	
-	public Coord<Range<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		float x1, x2, y1, y2;
 
@@ -481,9 +481,9 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		y2 = Float.parseFloat(getEntryForAttr(CDFML.ATTR_DIM_Y_END, 0));
 
 
-		Range<Number> xDim = new Range<Number>(x1, x2);
-		Range<Number> yDim = new Range<Number>(y1, y2);
-		return new Coord<Range<Number>>(xDim, yDim);
+		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
+		Bounds<Number> yDim = new Bounds<Number>(y1, y2);
+		return new Coord<Bounds<Number>>(xDim, yDim);
 	}
 
 

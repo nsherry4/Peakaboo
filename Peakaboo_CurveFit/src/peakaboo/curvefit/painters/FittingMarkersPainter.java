@@ -5,12 +5,12 @@ import peakaboo.curvefit.fitting.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.Transition;
-import peakaboo.drawing.DrawingRequest;
-import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.PlotDrawing;
-import peakaboo.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.DrawingRequest;
+import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.Spectrum;
+
 
 /**
  * 

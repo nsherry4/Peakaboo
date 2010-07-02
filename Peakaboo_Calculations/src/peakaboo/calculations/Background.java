@@ -4,7 +4,9 @@ package peakaboo.calculations;
 
 import java.util.List;
 
-import peakaboo.datatypes.Spectrum;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
+
 
 
 

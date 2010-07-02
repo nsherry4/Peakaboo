@@ -8,8 +8,8 @@ import static fava.Fn.*;
 import static fava.Functions.*;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.GridPerspective;
-import peakaboo.datatypes.Spectrum;
+import scitypes.GridPerspective;
+import scitypes.Spectrum;
 
 /**
  * 

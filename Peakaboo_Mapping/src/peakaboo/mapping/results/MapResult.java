@@ -2,8 +2,8 @@ package peakaboo.mapping.results;
 
 
 
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
+import scitypes.Spectrum;
 
 /**
  * 

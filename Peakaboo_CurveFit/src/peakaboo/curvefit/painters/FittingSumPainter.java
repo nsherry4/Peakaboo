@@ -4,10 +4,9 @@ package peakaboo.curvefit.painters;
 import java.awt.Color;
 
 import peakaboo.curvefit.results.FittingResult;
-import peakaboo.datatypes.Spectrum;
-import peakaboo.drawing.painters.PainterData;
-import peakaboo.drawing.plot.PlotDrawing;
-import peakaboo.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.Spectrum;
 
 /**
  * 

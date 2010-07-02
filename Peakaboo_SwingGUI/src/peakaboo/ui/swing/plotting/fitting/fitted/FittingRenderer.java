@@ -13,12 +13,12 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.FittingController;
-import peakaboo.datatypes.SigDigits;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
+import scitypes.SigDigits;
 
 
 public class FittingRenderer extends DefaultTableCellRenderer implements TableCellRenderer

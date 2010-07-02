@@ -9,12 +9,12 @@ import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.PeakTable;
-import peakaboo.drawing.DrawingRequest;
-import peakaboo.drawing.plot.PlotDrawingRequestFactory;
 import peakaboo.fileio.PeakTableReader;
 import peakaboo.filters.FilterSet;
+import scidraw.drawing.DrawingRequest;
+import scidraw.drawing.plot.PlotDrawingRequestFactory;
+import scitypes.Spectrum;
 
 public class PlotModel extends Model
 {

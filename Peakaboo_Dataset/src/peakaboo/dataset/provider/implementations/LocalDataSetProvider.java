@@ -5,20 +5,16 @@ package peakaboo.dataset.provider.implementations;
 import java.util.List;
 
 import fava.*;
+import fava.datatypes.Bounds;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
-import peakaboo.calculations.SpectrumCalculations;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.provider.DataSetProvider;
-import peakaboo.datatypes.Coord;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.Range;
-import peakaboo.datatypes.SISize;
-import peakaboo.datatypes.Spectrum;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.EmptyTask;
 import peakaboo.datatypes.tasks.Task;
@@ -33,6 +29,10 @@ import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
+import scitypes.Coord;
+import scitypes.SISize;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 import swidget.dialogues.fileio.AbstractFile;
 import swidget.dialogues.fileio.IOCommon;
 import swidget.dialogues.fileio.IOCommon.FileType;
@@ -61,7 +61,7 @@ public class LocalDataSetProvider extends DataSetProvider
 	protected String				Created, CreatedBy, ProjectName, SessionName, Facility, Laboratory, ExperimentName,
 			Instrument, Technique, SampleName, ScanName, StartTime, EndTime;
 
-	protected Coord<Range<Number>>	realDimension;
+	protected Coord<Bounds<Number>>	realDimension;
 	protected SISize				realUnits;
 	protected Coord<Integer>		dataDimension;
 
@@ -629,7 +629,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public Coord<Range<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		if (hasDimensions)
 		{
