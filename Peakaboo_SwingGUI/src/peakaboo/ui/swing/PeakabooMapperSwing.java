@@ -36,6 +36,7 @@ import swidget.containers.SwidgetDialog;
 import swidget.dialogues.fileio.SwingIO;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -253,7 +254,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		menuBar.add(menu);
 		
 		
-		JMenuItem savePicture = new JMenuItem("Save Image", IconFactory.getMenuIcon("picture"));
+		JMenuItem savePicture = new JMenuItem("Save Image",StockIcon.DEVICE_CAMERA.toMenuIcon());
 		savePicture.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
@@ -264,7 +265,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		menu.add(savePicture);
 		
 		
-		JMenuItem saveText = new JMenuItem("Save as Text", IconFactory.getMenuIcon("textfile"));
+		JMenuItem saveText = new JMenuItem("Save as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon());
 		saveText.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)

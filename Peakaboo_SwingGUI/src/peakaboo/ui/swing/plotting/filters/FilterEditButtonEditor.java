@@ -14,6 +14,7 @@ import peakaboo.controller.plotter.FilterController;
 import peakaboo.filters.AbstractFilter;
 import swidget.containers.SwidgetContainer;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
 
@@ -37,7 +38,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 		this.controller = controller;
 		this.owner = owner;
 
-		button = new ImageButton("preferences", "…", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
+		button = new ImageButton(StockIcon.MISC_PREFERENCES, "…", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
 		button.setOpaque(true);
 		button.addActionListener(new ActionListener() {
 

@@ -14,6 +14,7 @@ import javax.swing.UIManager;
 import swidget.environment.Env;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 
 
 
@@ -50,7 +51,7 @@ public class Peakaboo
 						+ "MB of memory: processing large data sets may be quite slow, or impossible.",
 						"Low on Memory",
 						JOptionPane.INFORMATION_MESSAGE,
-						IconFactory.getImageIcon("badge-warning", IconSize.ICON));
+						StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 
 				//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
 				JFrame.setDefaultLookAndFeelDecorated(true);

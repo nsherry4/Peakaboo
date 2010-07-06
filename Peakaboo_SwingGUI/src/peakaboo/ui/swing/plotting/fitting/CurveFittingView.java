@@ -231,7 +231,7 @@ public class CurveFittingView extends ClearPanel
 				
 			}
 		});
-		controls.addButton(cross, 2);
+		controls.addButton(cross, 1);
 
 		// panel.add(controls, BorderLayout.SOUTH);
 

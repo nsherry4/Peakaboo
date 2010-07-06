@@ -22,6 +22,7 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
@@ -44,7 +45,7 @@ public class SummationPanel extends ClearPanel
 
 		selectors = DataTypeFactory.<TSSelector> list();
 
-		addButton = new ImageButton("add", "Add", Layout.IMAGE, IconSize.BUTTON);
+		addButton = new ImageButton(StockIcon.EDIT_ADD, "Add", Layout.IMAGE, IconSize.BUTTON);
 		addButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -133,7 +134,7 @@ public class SummationPanel extends ClearPanel
 
 	private ImageButton removeButtonWidget(final TSSelector tss)
 	{
-		ImageButton remove = new ImageButton("remove", "Remove", Layout.IMAGE, IconSize.BUTTON);
+		ImageButton remove = new ImageButton(StockIcon.EDIT_DELETE, "Remove", Layout.IMAGE, IconSize.BUTTON);
 
 		remove.addActionListener(new ActionListener() {
 

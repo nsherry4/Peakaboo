@@ -21,6 +21,7 @@ import peakaboo.controller.CanvasController;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
 import swidget.dialogues.fileio.SwingIO;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -81,7 +82,7 @@ public class SavePicture extends SwidgetDialog
 
 
 		ImageButton ok = new ImageButton("document-save", "Save", true);
-		ImageButton cancel = new ImageButton("cancel", "Cancel", true);
+		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
 
 		ok.addActionListener(new ActionListener() {
 
@@ -129,14 +130,14 @@ public class SavePicture extends SwidgetDialog
 
 		ComplexToggle png, svg, pdf;
 
-		png = new ComplexToggle("picture_png", "Pixel Image (PNG)",
+		png = new ComplexToggle(StockIcon.MIME_RASTER, "Pixel Image (PNG)",
 				"Pixel based images are a grid of coloured dots. They have a fixed size and level of detail.", group);
 
-		svg = new ComplexToggle("picture_svg", "Vector Image (SVG)",
+		svg = new ComplexToggle(StockIcon.MIME_SVG, "Vector Image (SVG)",
 				"Vector images use points, lines, and curves to define an image. They can be scaled to any size.",
 				group);
 
-		pdf = new ComplexToggle("picture_pdf", "PDF File", "PDF files are a more print-oriented vector image format.",
+		pdf = new ComplexToggle(StockIcon.MIME_PDF, "PDF File", "PDF files are a more print-oriented vector image format.",
 				group);
 
 

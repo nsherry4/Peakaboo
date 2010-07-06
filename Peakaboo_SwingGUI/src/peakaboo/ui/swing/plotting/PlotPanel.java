@@ -1,5 +1,7 @@
 package peakaboo.ui.swing.plotting;
 
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -55,7 +57,6 @@ import javax.swing.event.ChangeListener;
 
 import fava.datatypes.Pair;
 
-
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.MapController;
@@ -78,9 +79,12 @@ import scitypes.SigDigits;
 import sun.awt.HorizBagLayout;
 import swidget.containers.SwidgetContainer;
 import swidget.dialogues.fileio.AbstractFile;
+import swidget.dialogues.fileio.IOCommon;
 import swidget.dialogues.fileio.SwingIO;
 import swidget.environment.Env;
 import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -89,65 +93,67 @@ import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.toggle.ComplexToggle;
 
 
+
 public class PlotPanel extends ClearPanel
 {
 
-	private SwidgetContainer container;
+	private SwidgetContainer	container;
 
-	
-	
-	PlotController							controller;
-	PlotCanvas								canvas;
-	
+
+
+	PlotController				controller;
+	PlotCanvas					canvas;
+
 	//FILE
-	JMenuItem								snapshotMenuItem;
-	JMenuItem								saveSession;
-	
+	JMenuItem					snapshotMenuItem;
+	JMenuItem					saveSession;
+
 	//EDIT
-	JMenuItem								undo, redo;
-	
+	JMenuItem					undo, redo;
+
 	//VIEW
-	
+
 	//MAP
-	JMenuItem								mapMenuItem;
-	
-	
-	JComboBox								titleCombo;
-	
-	JSpinner								scanNo;
-	JLabel									scanLabel;
-	JToggleButton							scanBlock;
-	JLabel									channelLabel;
-	
+	JMenuItem					mapMenuItem;
 
-	JSpinner								energy;
-	ChangeListener							energyListener;
-	
-	JSlider									zoomSlider;
-	
-	ImageButton								toolbarSnapshot;
-	ImageButton								toolbarMap;
-	ImageButton								toolbarInfo;
-	JPanel									zoomPanel;
-	JPanel									bottomPanel;
-	JPanel									scanSelector;
-	JScrollPane								scrolledCanvas;
 
-	String									savePictureFolder;
-	String									savedSessionFileName;
+	JComboBox					titleCombo;
+
+	JSpinner					scanNo;
+	JLabel						scanLabel;
+	JToggleButton				scanBlock;
+	JLabel						channelLabel;
+
+
+	JSpinner					energy;
+	ChangeListener				energyListener;
 	
-	
+	JSlider						zoomSlider;
+	ChangeListener 				zoomSliderListener;
+
+	ImageButton					toolbarSnapshot;
+	ImageButton					toolbarMap;
+	ImageButton					toolbarInfo;
+	JPanel						zoomPanel;
+	JPanel						bottomPanel;
+	JPanel						scanSelector;
+	JScrollPane					scrolledCanvas;
+
+	String						savePictureFolder;
+	String						savedSessionFileName;
+
+
 	public PlotPanel(SwidgetContainer container)
 	{
 		this.container = container;
-		
+
 		savedSessionFileName = null;
 
 		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D toy = bi.createGraphics();
 
 		controller = new PlotController(toy);
-		
+
 		initGUI();
 
 		controller.addListener(new PeakabooMessageListener() {
@@ -167,16 +173,18 @@ public class PlotPanel extends ClearPanel
 		});
 
 		setWidgetsState();
-		
-		
-		
+
+
+
 	}
-	
+
+
 	public PlotController getController()
 	{
 		return controller;
 	}
-	
+
+
 	public void setWidgetsState()
 	{
 
@@ -188,7 +196,7 @@ public class PlotPanel extends ClearPanel
 		{
 
 			canvas.setHasData(true);
-			
+
 			bottomPanel.setEnabled(true);
 			snapshotMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
@@ -213,8 +221,8 @@ public class PlotPanel extends ClearPanel
 				toolbarInfo.setEnabled(false);
 			}
 
-			setEnergySpinner((double)controller.getMaxEnergy());
-			
+			setEnergySpinner((double) controller.getMaxEnergy());
+
 
 			if (controller.getChannelCompositeType() == ChannelCompositeMode.NONE)
 			{
@@ -239,13 +247,14 @@ public class PlotPanel extends ClearPanel
 		undo.setEnabled(controller.canUndo());
 		redo.setEnabled(controller.canRedo());
 
-		zoomSlider.setValue((int) (controller.getZoom() * 100.0));
+		setSliderWithoutListener(zoomSlider, zoomSliderListener, (int)(controller.getZoom()*100));
+		//zoomSlider.setValue((int) (controller.getZoom() * 100.0));
 		setTitleBar();
 
 		fullRedraw();
 
 	}
-	
+
 
 	private void setEnergySpinner(double value)
 	{
@@ -254,8 +263,14 @@ public class PlotPanel extends ClearPanel
 		energy.setValue((double) controller.getMaxEnergy());
 		energy.addChangeListener(energyListener);
 	}
-	
-	
+
+	private void setSliderWithoutListener(JSlider slider, ChangeListener listener, int value)
+	{
+		slider.removeChangeListener(listener);
+		slider.setValue(value);
+		slider.addChangeListener(listener);
+	}
+
 
 	private void initGUI()
 	{
@@ -281,7 +296,7 @@ public class PlotPanel extends ClearPanel
 
 		});
 
-		
+
 
 		Container pane = this;
 
@@ -310,35 +325,41 @@ public class PlotPanel extends ClearPanel
 		class MouseHandler implements MouseMotionListener, MouseListener
 		{
 
-			private Point				p0;
-			private boolean 			dragging;
-			
-			JViewport viewPort = scrolledCanvas.getViewport();
-			Point scrollPosition = viewPort.getViewPosition();
-		
+			private Point	p0;
+			private boolean	dragging;
+
+			JViewport		viewPort		= scrolledCanvas.getViewport();
+			Point			scrollPosition	= viewPort.getViewPosition();
+
+
 			private Point getPoint(MouseEvent e)
 			{
 				Point p = e.getPoint();
 				p.x += canvas.getLocationOnScreen().x;
-							
+
 				return p;
 			}
-			
+
+
 			private void update(MouseEvent e)
 			{
-							
+
+				if (p0 == null) return;
+				
 				Point p1 = getPoint(e);
 				int dx = p1.x - p0.x;
 				p0 = getPoint(e);
 				scrollPosition.x -= dx;
-				
+
 				if (scrollPosition.x < 0) scrollPosition.x = 0;
-				if (scrollPosition.x > canvas.getWidth() - viewPort.getWidth()) scrollPosition.x = canvas.getWidth() - viewPort.getWidth();
-				
-				viewPort.setViewPosition ( scrollPosition );
-				
+				if (scrollPosition.x > canvas.getWidth() - viewPort.getWidth()) scrollPosition.x = canvas.getWidth()
+						- viewPort.getWidth();
+
+				viewPort.setViewPosition(scrollPosition);
+
 			}
-			
+
+
 			public void mouseDragged(MouseEvent e)
 			{
 				if (dragging)
@@ -346,6 +367,7 @@ public class PlotPanel extends ClearPanel
 					update(e);
 				}
 			}
+
 
 			public void mouseMoved(MouseEvent e)
 			{
@@ -355,74 +377,53 @@ public class PlotPanel extends ClearPanel
 				}
 			}
 
+
 			public void mouseClicked(MouseEvent e)
 			{
 				// TODO Auto-generated method stub
-				
 			}
+
 
 			public void mouseEntered(MouseEvent e)
 			{
 				// TODO Auto-generated method stub
-				
 			}
+
 
 			public void mouseExited(MouseEvent e)
 			{
 				// TODO Auto-generated method stub
-				
 			}
+
 
 			public void mousePressed(MouseEvent e)
 			{
 				p0 = getPoint(e);
 				dragging = true;
+				canvas.setCursor(new Cursor(Cursor.MOVE_CURSOR));
 			}
+
 
 			public void mouseReleased(MouseEvent e)
 			{
 				update(e);
 				dragging = false;
+				p0 = null;
+				canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 			}
-			
+
 		}
 		MouseHandler mh = new MouseHandler();
-		
+
 		canvas.addMouseMotionListener(mh);
 		canvas.addMouseListener(mh);
 
-		// pane.add(scrolledCanvas, c);
 
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);
 		canvasPanel.add(createBottomBar(), BorderLayout.SOUTH);
 		canvasPanel.setPreferredSize(new Dimension(600, 300));
 
-		// DockingManager.setFloatingEnabled(true);
-		// DockingManager.setDefaultSiblingSize(0.2f);
-
-		/*
-		 * DefaultDockingPort optionsPort = new DefaultDockingPort(); DefaultDockingPort spectrumPort = new
-		 * DefaultDockingPort(); optionsPort.getDockingProperties().setTabPlacement(JTabbedPane.TOP);
-		 * optionsPort.setPreferredSize(new Dimension(800, 100));
-		 * spectrumPort.getDockingProperties().setTabPlacement(JTabbedPane.TOP); spectrumPort.setPreferredSize(new
-		 * Dimension(800, 100)); // port.setTabsAsDragSource(true);
-		 * 
-		 * CurveFittingView cfv = new CurveFittingView(controller); FiltersetViewer fsv = new
-		 * FiltersetViewer(controller, frame);
-		 * 
-		 * // dock the main panel DockingManager.registerDockable(canvasPanel, "Spectrum");
-		 * 
-		 * // dock the side panels DockingManager.registerDockable(fsv, "Filters"); DockingManager.registerDockable(cfv,
-		 * "Peak Fitting");
-		 * 
-		 * optionsPort.dock(fsv, DockingConstants.CENTER_REGION); optionsPort.dock(cfv, DockingConstants.CENTER_REGION);
-		 * spectrumPort.dock(canvasPanel, DockingConstants.CENTER_REGION);
-		 * 
-		 * // DockingManager.dock(cfv, fsv, DockingConstants.CENTER_REGION);
-		 * 
-		 * // set the ratio of side panel vs main panel // DockingManager.setSplitProportion((DockingPort) port, 0.2f);
-		 */
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.add(new CurveFittingView(controller), 0);
 		tabs.add(new FiltersetViewer(controller, container), 1);
@@ -503,7 +504,10 @@ public class PlotPanel extends ClearPanel
 		button = new JButton("Export Data");
 		// controls.add(button);
 
-		toolbarSnapshot = new ToolbarImageButton("picture", "Save Image", "Save a picture of the current plot");
+		toolbarSnapshot = new ToolbarImageButton(
+			StockIcon.DEVICE_CAMERA,
+			"Save Image",
+			"Save a picture of the current plot");
 		toolbarSnapshot.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -514,7 +518,10 @@ public class PlotPanel extends ClearPanel
 		c.gridx += 1;
 		toolbar.add(toolbarSnapshot, c);
 
-		toolbarInfo = new ToolbarImageButton("badge-info", "Scan Info", "Displays extended information about this data set");
+		toolbarInfo = new ToolbarImageButton(
+			StockIcon.BADGE_INFO,
+			"Scan Info",
+			"Displays extended information about this data set");
 		toolbarInfo.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -576,7 +583,7 @@ public class PlotPanel extends ClearPanel
 
 			public void stateChanged(ChangeEvent e)
 			{
-			
+
 				float value = ((Double) energy.getValue()).floatValue();
 				controller.setMaxEnergy(value);
 
@@ -586,12 +593,25 @@ public class PlotPanel extends ClearPanel
 		c.gridx += 1;
 		toolbar.add(energyControls, c);
 
-		ibutton = new ToolbarImageButton("about", "About");
+		ibutton = new ToolbarImageButton(StockIcon.MISC_ABOUT, "About");
 		ibutton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				new AboutDialogue(container);
+				//new AboutDialogue(container);
+				new swidget.dialogues.AboutDialogue(
+					container,
+					"Peakaboo",
+					"XRF Analysis Software",
+					"www.sciencestudioproject.com",
+					"Copyright &copy; 2009-2010 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
+					IOCommon.readTextFromJar("/peakaboo/licence.txt"),
+					IOCommon.readTextFromJar("/peakaboo/credits.txt"),
+					Version.logo,
+					Integer.toString(Version.versionNo),
+					Version.longVersionNo,
+					Version.buildDate,
+					Version.release);
 			}
 		});
 		c.gridx += 1;
@@ -689,14 +709,14 @@ public class PlotPanel extends ClearPanel
 		// SEPARATOR
 		menu.addSeparator();
 
-		snapshotMenuItem = new JMenuItem("Export Plot as Image", IconFactory.getMenuIcon("picture"));
+		snapshotMenuItem = new JMenuItem("Export Plot as Image", StockIcon.DEVICE_CAMERA.toMenuIcon());
 		snapshotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, java.awt.event.ActionEvent.CTRL_MASK));
 		snapshotMenuItem.setMnemonic(KeyEvent.VK_P);
 		snapshotMenuItem.getAccessibleContext().setAccessibleDescription("Saves the current plot as an image");
 		snapshotMenuItem.addActionListener(fileMenuListener);
 		menu.add(snapshotMenuItem);
 
-		menuItem = new JMenuItem("Export Fittings as Text", IconFactory.getMenuIcon("textfile"));
+		menuItem = new JMenuItem("Export Fittings as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon());
 		menuItem.getAccessibleContext().setAccessibleDescription("Saves the current fitting data to a text file");
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
@@ -704,9 +724,9 @@ public class PlotPanel extends ClearPanel
 		// SEPARATOR
 		menu.addSeparator();
 
-		menuItem = new JMenuItem("Exit", IconFactory.getMenuIcon("close"));
+		menuItem = new JMenuItem("Exit", StockIcon.WINDOW_CLOSE.toMenuIcon());
 		menuItem.setMnemonic(KeyEvent.VK_X);
-		menuItem.getAccessibleContext().setAccessibleDescription("Opens new data sets.");
+		menuItem.getAccessibleContext().setAccessibleDescription("Exits the Program");
 		menuItem.addActionListener(fileMenuListener);
 		menu.add(menuItem);
 
@@ -726,7 +746,7 @@ public class PlotPanel extends ClearPanel
 		menu.getAccessibleContext().setAccessibleDescription("Edit this data set");
 
 
-		undo = new JMenuItem("Undo", IconFactory.getMenuIcon("undo"));
+		undo = new JMenuItem("Undo", StockIcon.EDIT_UNDO.toMenuIcon());
 		undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, java.awt.event.ActionEvent.CTRL_MASK));
 		undo.setMnemonic(KeyEvent.VK_U);
 		undo.getAccessibleContext().setAccessibleDescription("Undoes a previous action");
@@ -740,7 +760,7 @@ public class PlotPanel extends ClearPanel
 		menu.add(undo);
 
 
-		redo = new JMenuItem("Redo", IconFactory.getMenuIcon("redo"));
+		redo = new JMenuItem("Redo", StockIcon.EDIT_REDO.toMenuIcon());
 		redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, java.awt.event.ActionEvent.CTRL_MASK));
 		redo.setMnemonic(KeyEvent.VK_R);
 		redo.getAccessibleContext().setAccessibleDescription("Redoes a previously undone action");
@@ -996,7 +1016,7 @@ public class PlotPanel extends ClearPanel
 				etitles.setSelected(controller.getShowElementTitles());
 				emarkings.setSelected(controller.getShowElementMarkers());
 				eintensities.setSelected(controller.getShowElementIntensities());
-				
+
 				switch (controller.getChannelCompositeType())
 				{
 
@@ -1011,7 +1031,7 @@ public class PlotPanel extends ClearPanel
 						break;
 
 				}
-				
+
 				raw.setSelected(controller.getShowRawData());
 				fittings.setSelected(controller.getShowIndividualSelections());
 
@@ -1041,7 +1061,10 @@ public class PlotPanel extends ClearPanel
 		scanNo.getEditor().setPreferredSize(new Dimension(50, 0));
 		scanLabel = new JLabel("Scan");
 		scanLabel.setBorder(Spacing.bSmall());
-		scanBlock = new ComplexToggle("cancel", "", "Flag this scan as bad to exclude it from the data set");
+		scanBlock = new ComplexToggle(
+			StockIcon.CHOOSE_CANCEL,
+			"",
+			"Flag this scan as bad to exclude it from the data set");
 
 		scanSelector.add(scanLabel);
 		scanSelector.add(Box.createHorizontalStrut(2));
@@ -1082,8 +1105,8 @@ public class PlotPanel extends ClearPanel
 		JPanel panel = new ClearPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-		ImageButton out = new ImageButton("zoom-out", "Zoom Out", Layout.IMAGE);
-		ImageButton in = new ImageButton("zoom-in", "Zoom In", Layout.IMAGE);
+		ImageButton out = new ImageButton(StockIcon.ZOOM_OUT, "Zoom Out", Layout.IMAGE);
+		ImageButton in = new ImageButton(StockIcon.ZOOM_IN, "Zoom In", Layout.IMAGE);
 
 		in.setMargin(Spacing.iNone());
 		out.setMargin(Spacing.iNone());
@@ -1096,27 +1119,32 @@ public class PlotPanel extends ClearPanel
 		prefSize.width /= 2;
 		zoomSlider.setPreferredSize(prefSize);
 
-		zoomSlider.addChangeListener(new ChangeListener() {
+		zoomSliderListener = new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e)
 			{
 				controller.setZoom(zoomSlider.getValue() / 100.0f);
 			}
-		});
+		};
+		
+		zoomSlider.addChangeListener(zoomSliderListener);
 		out.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				int current = zoomSlider.getValue();
-				zoomSlider.setValue(current - 10);
+				//int current = zoomSlider.getValue();
+				controller.setZoom(controller.getZoom()  - 0.1f);
+				//zoomSlider.setValue(current - 10);
+				//setSliderWithoutListener(zoomSlider, zoomSliderListener, current - 10);
 			}
 		});
 		in.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				int current = zoomSlider.getValue();
-				zoomSlider.setValue(current + 10);
+				//int current = zoomSlider.getValue();
+				controller.setZoom(controller.getZoom()  + 0.1f);
+				//zoomSlider.setValue(current + 10);
 			}
 		});
 
@@ -1127,6 +1155,7 @@ public class PlotPanel extends ClearPanel
 		return panel;
 
 	}
+
 
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
@@ -1155,13 +1184,14 @@ public class PlotPanel extends ClearPanel
 
 	}
 
-	
+
 	private void fullRedraw()
 	{
 		container.validate();
 		container.repaint();
 	}
-	
+
+
 	public void mouseMoveCanvasEvent(int x)
 	{
 
@@ -1198,26 +1228,16 @@ public class PlotPanel extends ClearPanel
 					+ "-");
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
 	// ////////////////////////////////////////////////////////
 	// UI ACTIONS
 	// ////////////////////////////////////////////////////////
@@ -1242,7 +1262,8 @@ public class PlotPanel extends ClearPanel
 		loadFiles(files);
 
 	}
-	
+
+
 	public void loadFiles(List<AbstractFile> files)
 	{
 		if (files != null)
@@ -1263,27 +1284,27 @@ public class PlotPanel extends ClearPanel
 
 	private void actionMap()
 	{
-		
-		if (! controller.hasDataSet()) return;
-		
-		
+
+		if (!controller.hasDataSet()) return;
+
+
 
 		final TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
 		if (tasks == null) return;
 
 		new TaskListView(container, tasks);
-		
+
 		if (tasks.getCompleted())
 		{
-			
+
 			MapController mapController = controller.getMapController();
 			PeakabooMapperSwing mapperWindow;
 
 			Coord<Integer> dataDimensions = controller.getDataDimensions();
 
 			MapResultSet results = tasks.getResult();
-			
-							
+
+
 			AllMapsModel datamodel = new AllMapsModel(results);
 
 			datamodel.dataDimensions = dataDimensions;
@@ -1335,13 +1356,13 @@ public class PlotPanel extends ClearPanel
 			mapperWindow.showDialog();
 			// controller.setMapController(mapperWindow.showDialog());
 			System.gc();
-			
+
 		}
 
-		
-		
-				
-		
+
+
+
+
 	}
 
 
@@ -1453,5 +1474,5 @@ public class PlotPanel extends ClearPanel
 		new ScanInfoDialogue(container, controller);
 
 	}
-	
+
 }

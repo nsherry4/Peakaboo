@@ -11,6 +11,7 @@ import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.tasks.Task;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 
 public class TaskView extends JPanel{
@@ -53,17 +54,17 @@ public class TaskView extends JPanel{
 		switch (task.getState()){
 		
 		case COMPLETED:
-			icon.setIcon(IconFactory.getImageIcon("complete", IconSize.BUTTON));
+			icon.setIcon(StockIcon.CHOOSE_OK.toImageIcon(IconSize.BUTTON));
 			break;
 		case WORKING:
 		case STALLED:
-			icon.setIcon(IconFactory.getImageIcon("working", IconSize.BUTTON));
+			icon.setIcon(StockIcon.GO_NEXT.toImageIcon(IconSize.BUTTON));
 			break;
 		case UNSTARTED:
 			icon.setIcon(null);
 			break;
 		case SKIPPED:
-			icon.setIcon(IconFactory.getImageIcon("skipped", IconSize.BUTTON));
+			icon.setIcon(StockIcon.GO_DOWN.toImageIcon(IconSize.BUTTON));
 			break;
 		}
 		

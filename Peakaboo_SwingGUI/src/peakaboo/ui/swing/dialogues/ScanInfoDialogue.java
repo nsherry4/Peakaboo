@@ -21,6 +21,7 @@ import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 
@@ -53,7 +54,7 @@ public class ScanInfoDialogue extends SwidgetDialog
 		c.gridheight = 11;
 		c.weightx = 0;
 		
-		JLabel icon = new JLabel(IconFactory.getImageIcon("info", IconSize.ICON));
+		JLabel icon = new JLabel(StockIcon.BADGE_INFO.toImageIcon(IconSize.ICON));
 		icon.setBorder(new EmptyBorder(0, 0, 0, Spacing.huge));
 		mainPanel.add(icon, c);
 		
@@ -85,7 +86,7 @@ public class ScanInfoDialogue extends SwidgetDialog
 		c.ipady = 0;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.LINE_END;
-		ImageButton close = new ImageButton("close", "Close", true);
+		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
 		close.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e)

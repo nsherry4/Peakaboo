@@ -19,6 +19,7 @@ import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
+import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 
@@ -82,7 +83,7 @@ public class TaskListView extends SwidgetDialog {
 		c.weighty = 0.0;
 		c.gridy += 1;
 		c.anchor = GridBagConstraints.LAST_LINE_END;
-		ImageButton cancel = new ImageButton("cancel", "Cancel", true);
+		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
 		cancel.setMargin(Spacing.iSmall());
 		cancel.addActionListener(new ActionListener() {
 		

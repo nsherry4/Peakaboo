@@ -12,6 +12,7 @@ import javax.swing.JTabbedPane;
 
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -43,7 +44,7 @@ public class MapTabControls extends ClearPanel{
 		
 		add(title, BorderLayout.CENTER);
 		
-		close = new ImageButton("close", "Close", "Close this Map View", Layout.IMAGE, false, IconSize.BUTTON, Spacing.iNone(), Spacing.bSmall());
+		close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", "Close this Map View", Layout.IMAGE, false, IconSize.BUTTON, Spacing.iNone(), Spacing.bSmall());
 		add(close, BorderLayout.LINE_END);
 		close.setFocusable(false);
 		

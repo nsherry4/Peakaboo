@@ -36,10 +36,11 @@ public class PlotCanvas extends JPanel implements Scrollable{
 		
 		super(true);
 		
+		
 		this.controller = controller;		
 		this.setMinimumSize(new Dimension(100, 100));
 		
-		setCanvasSize();
+		//setCanvasSize();
 		
 		controller.addListener(new PeakabooSimpleListener() {
 		
@@ -53,23 +54,17 @@ public class PlotCanvas extends JPanel implements Scrollable{
 	
 	@Override
 	public void paintComponent(Graphics g){
+
 		
+		controller.setImageWidth(this.getWidth());
+		controller.setImageHeight(this.getHeight());
+
+		g.setColor(new Color(1.0f, 1.0f, 1.0f));
+		g.fillRect(0, 0, (int)controller.getImageWidth(), (int)controller.getImageHeight());
+
 		if (hasData)
 		{
-		
-			controller.setImageWidth(this.getWidth());
-			controller.setImageHeight(this.getHeight());
-	
-			g.setColor(new Color(1.0f, 1.0f, 1.0f));
-			g.fillRect(0, 0, (int)controller.getImageWidth(), (int)controller.getImageHeight());
-	
-			controller.draw(g);
-			
-		} else {
-		
-			
-			
-			
+			controller.draw(g);	
 		}
 		
 	}

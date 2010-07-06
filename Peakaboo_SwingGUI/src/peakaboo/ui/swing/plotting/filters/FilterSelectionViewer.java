@@ -16,6 +16,7 @@ import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.AbstractFilter.FilterType;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
@@ -161,9 +162,9 @@ public class FilterSelectionViewer extends ClearPanel
 		tree.setShowsRootHandles(true);
 		
 		FilterSelectionRenderer renderer = new FilterSelectionRenderer();
-		renderer.setLeafIcon(IconFactory.getImageIcon("gear", IconSize.BUTTON));
-		renderer.setClosedIcon(IconFactory.getImageIcon("folder", IconSize.BUTTON));
-		renderer.setOpenIcon(IconFactory.getImageIcon("folder-open", IconSize.BUTTON));
+		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
+		renderer.setClosedIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
+		renderer.setOpenIcon(StockIcon.PLACE_FOLDER_OPEN.toImageIcon(IconSize.BUTTON));
 		tree.setCellRenderer(renderer);
 
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
