@@ -16,11 +16,11 @@
    sodipodi:version="0.32"
    inkscape:version="0.47 r22583"
    version="1.0"
-   sodipodi:docname="newlogo.svg"
+   sodipodi:docname="logo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/nathaniel/Desktop/icons/banner.png"
-   inkscape:export-xdpi="113.67728"
-   inkscape:export-ydpi="113.67728">
+   inkscape:export-filename="/home/nathaniel/workspace/Peakaboo-Git/Peakaboo_SwingGUI/src/peakaboo/ui/swing/icons/devlogo.png"
+   inkscape:export-xdpi="45"
+   inkscape:export-ydpi="45">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -278,16 +278,16 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.25000001"
-     inkscape:cx="-278.66076"
-     inkscape:cy="-23.882611"
+     inkscape:zoom="0.70710681"
+     inkscape:cx="68.212376"
+     inkscape:cy="107.17022"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="846"
-     inkscape:window-x="1680"
-     inkscape:window-y="89"
+     inkscape:window-width="1680"
+     inkscape:window-height="919"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -297,7 +297,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
