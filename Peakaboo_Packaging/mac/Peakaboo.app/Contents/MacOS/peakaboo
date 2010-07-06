@@ -1,6 +1,0 @@
-#!/bin/sh
-
-#Mac Launcher
-
-BASEDIR=`dirname $0`
-exec java -jar $BASEDIR/Peakaboo.jar peakaboo.Peakaboo

@@ -51,8 +51,8 @@ def setup
 	
 	
 	#Mac OS Package
-	macpath = "./mac/Peakaboo.app/Contents/MacOS"
-	macrespath = "./mac/Peakaboo.app/Contents/Resources"
+	macpath = "./mac/Peakaboo/Peakaboo.app/Contents/MacOS"
+	macrespath = "./mac/Peakaboo/Peakaboo.app/Contents/Resources"
 	
 	resources = [["mac/peakaboo", macpath], ["mac/peakaboo.icns", macrespath]]
 	
@@ -78,8 +78,9 @@ puts "DONE\n\n"
 puts "Building Windows Package..."
 `rm -rf ./windows/_win32/_win32/*.exe`
 `cd ./windows/_win32/ && ./buildWindowsInstaller.sh`
-`cp "./windows/_win32/_win32/*.exe" ./build/`
+`cp ./windows/_win32/_win32/*.exe ./build/`
 puts "DONE\n\n"
 
 puts "Building Mac Package..."
-`cp -rf ./mac/Peakaboo.app/ ./build/`
+`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo3.dmg Peakaboo3`
+`cp -rf ./mac/Peakaboo3.dmg ./build/`

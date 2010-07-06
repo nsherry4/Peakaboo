@@ -1,4 +1,4 @@
-SetCompressor /FINAL lzma
+SetCompressor /FINAL /SOLID lzma
 
 !include "MUI.nsh"
 

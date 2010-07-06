@@ -3,4 +3,4 @@
 #Mac Launcher
 
 BASEDIR=`dirname $0`
-exec java -jar $BASEDIR/Peakaboo.jar Peakaboo
+exec java -Dapple.laf.useScreenMenuBar=true -jar $BASEDIR/Peakaboo.jar Peakaboo
