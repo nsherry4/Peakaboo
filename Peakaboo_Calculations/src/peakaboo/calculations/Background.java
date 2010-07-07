@@ -200,7 +200,7 @@ public class Background
 		for (int i = 0; i < iterations; i++)
 		{
 			result2.copy(result1);
-			calcBackgroundLinearTrim(result1, result2, lineSegment, lineSize);
+			calcBackgroundLinearTrimIteration(result1, result2, lineSegment, lineSize);
 			temp = result2;
 			result2 = result1;
 			result1 = temp;
@@ -210,7 +210,7 @@ public class Background
 		
 	}
 	
-	public static Spectrum calcBackgroundLinearTrim(final Spectrum scan, final Spectrum target, final Spectrum lineSegment, int lineSize)
+	public static Spectrum calcBackgroundLinearTrimIteration(final Spectrum scan, final Spectrum target, final Spectrum lineSegment, int lineSize)
 	{
 		int first = -lineSize+1;
 		int last = 0;
@@ -223,9 +223,9 @@ public class Background
 			boundedFirst = Math.max(first, 0);
 			boundedLast = Math.min(last, scan.size()-1);
 			
-			linearSegment(lineSegment, scan.get(boundedFirst), scan.get(boundedLast), boundedFirst, boundedLast);
+			linearTrimLinearSegment(lineSegment, scan.get(boundedFirst), scan.get(boundedLast), boundedFirst, boundedLast);
 			
-			commitLinearSegment(target, lineSegment, boundedFirst, boundedLast);
+			linearTrimCommitLinearSegment(target, lineSegment, boundedFirst, boundedLast);
 			
 			first++;
 			last++;
@@ -240,35 +240,25 @@ public class Background
 	}
 	
 	
-	public static Spectrum linearSegment(Spectrum target, float start, float stop, int startIndex, int stopIndex)
+	public static Spectrum linearTrimLinearSegment(Spectrum target, float start, float stop, int startIndex, int stopIndex)
 	{
 	
-		int span = (stopIndex) - startIndex;
+		float span = (stopIndex) - startIndex;
 		float delta = stop - start;
+		float percent;
 		
 		for (int i = startIndex; i <= stopIndex; i++)
 		{
-			target.set(i, start + delta*(  ((float)(i-startIndex)) / (float)span)  );
+			percent = (i-startIndex) / span;
+			target.set(i, start + delta*percent);
 		}
 		
 		return target;
 		
 	}
 	
-	public static boolean checkLinearSegment(Spectrum data, Spectrum lineSegment, int startIndex, int stopIndex)
-	{
-		
-		for (int i = startIndex; i <= stopIndex; i++)
-		{
-			if (data.get(i) < lineSegment.get(i)) return false;
-		}
-		
-		
-		return true;
-		
-	}
 	
-	public static Spectrum commitLinearSegment(Spectrum data, Spectrum lineSegment, int startIndex, int stopIndex)
+	public static Spectrum linearTrimCommitLinearSegment(Spectrum data, Spectrum lineSegment, int startIndex, int stopIndex)
 	{
 		float datapoint;
 		float linepoint;
