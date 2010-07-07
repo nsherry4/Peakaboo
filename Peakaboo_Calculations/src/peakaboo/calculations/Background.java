@@ -34,7 +34,7 @@ public class Background
 	 *            0.0 - 1.0: the percent of the background which this algorithm should try to remove
 	 * @return a background-subtracted list of values
 	 */
-	public static Spectrum removeBackgroundPolynomial(Spectrum data, int width, int power, float percentToRemove)
+	public static Spectrum calcBackgroundPolynomial(Spectrum data, int width, int power, float percentToRemove)
 	{
 
 		// y = -(x * s)^power + m upside down parabola horizontally stretched by s and shifted upwards by m
@@ -117,7 +117,17 @@ public class Background
 	}
 
 
-	public static Spectrum removeBackgroundBrukner(Spectrum data, int windowSize, int repetitions)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static Spectrum calcBackgroundBrukner(Spectrum data, int windowSize, int repetitions)
 	{
 
 		// FIRST STEP
@@ -174,5 +184,108 @@ public class Background
 		}
 		
 	}
+	
+	
+	
+	
+	public static Spectrum calcBackgroundLinearTrim(final Spectrum scan, int lineSize, int iterations)
+	{
+		
+		
+		Spectrum result1 = new Spectrum(scan);
+		Spectrum result2 = new Spectrum(scan.size());
+		Spectrum temp;
+		Spectrum lineSegment = new Spectrum(scan.size());
+		
+		for (int i = 0; i < iterations; i++)
+		{
+			result2.copy(result1);
+			calcBackgroundLinearTrim(result1, result2, lineSegment, lineSize);
+			temp = result2;
+			result2 = result1;
+			result1 = temp;
+		}
+		
+		return result1;
+		
+	}
+	
+	public static Spectrum calcBackgroundLinearTrim(final Spectrum scan, final Spectrum target, final Spectrum lineSegment, int lineSize)
+	{
+		int first = -lineSize+1;
+		int last = 0;
+		
+		int boundedFirst, boundedLast;
+
+		while(first < scan.size()-1)
+		{
+			
+			boundedFirst = Math.max(first, 0);
+			boundedLast = Math.min(last, scan.size()-1);
+			
+			linearSegment(lineSegment, scan.get(boundedFirst), scan.get(boundedLast), boundedFirst, boundedLast);
+			
+			commitLinearSegment(target, lineSegment, boundedFirst, boundedLast);
+			
+			first++;
+			last++;
+			
+			
+		}
+		
+		
+		return target;
+		
+		
+	}
+	
+	
+	public static Spectrum linearSegment(Spectrum target, float start, float stop, int startIndex, int stopIndex)
+	{
+	
+		int span = (stopIndex) - startIndex;
+		float delta = stop - start;
+		
+		for (int i = startIndex; i <= stopIndex; i++)
+		{
+			target.set(i, start + delta*(  ((float)(i-startIndex)) / (float)span)  );
+		}
+		
+		return target;
+		
+	}
+	
+	public static boolean checkLinearSegment(Spectrum data, Spectrum lineSegment, int startIndex, int stopIndex)
+	{
+		
+		for (int i = startIndex; i <= stopIndex; i++)
+		{
+			if (data.get(i) < lineSegment.get(i)) return false;
+		}
+		
+		
+		return true;
+		
+	}
+	
+	public static Spectrum commitLinearSegment(Spectrum data, Spectrum lineSegment, int startIndex, int stopIndex)
+	{
+		float datapoint;
+		float linepoint;
+		
+		for (int i = startIndex; i <= stopIndex; i++)
+		{
+			datapoint = data.get(i);
+			linepoint = lineSegment.get(i);
+			
+			if (datapoint > linepoint && linepoint >= 0)
+			{
+				data.set(i, linepoint);
+			}
+		}
+		return data;
+	}
+	
+	
 
 }

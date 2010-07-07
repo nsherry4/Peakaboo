@@ -57,6 +57,7 @@ public class TSWidget extends ClearPanel
 		elementCheck.setSelected(selected);
 	}
 
+	@Override
 	public void setName(String title)
 	{
 		elementName.setText(title);

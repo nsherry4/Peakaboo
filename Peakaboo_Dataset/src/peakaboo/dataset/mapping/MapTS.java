@@ -5,7 +5,6 @@ import java.util.List;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;

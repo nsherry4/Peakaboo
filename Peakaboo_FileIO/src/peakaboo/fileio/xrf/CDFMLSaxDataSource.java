@@ -2,11 +2,7 @@ package peakaboo.fileio.xrf;
 
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -119,13 +115,13 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		}
 	}
 
-
+	@Override
 	public void startDocument()
 	{
 		scanReadCount = 0;
 	}
 
-
+	@Override
 	public void endDocument()
 	{
 		readScanCallback.f(scanReadCount);
@@ -157,7 +153,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		tagStack.push(new Pair<String, Map<String, String>>(name, attMap));
 	}
 
-
+	@Override
 	public void startElement(String uri, String name, String qName, Attributes atts)
 	{
 
@@ -197,7 +193,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 	}
 
-
+	@Override
 	public void characters(char ch[], int start, int length)
 	{
 
@@ -241,7 +237,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		*/
 	}
 
-
+	@Override
 	public void endElement(String uri, String name, String qName) throws SAXException
 	{
 

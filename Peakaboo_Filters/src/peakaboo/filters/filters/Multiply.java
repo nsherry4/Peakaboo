@@ -19,7 +19,7 @@ public class Multiply extends AbstractFilter
 	{
 
 		super();
-		parameters.add(AMOUNT, new Parameter<Double>(ValueType.REAL, "Multiply By", 1.0));
+		parameters.put(AMOUNT, new Parameter<Double>(ValueType.REAL, "Multiply By", 1.0));
 
 	}
 	

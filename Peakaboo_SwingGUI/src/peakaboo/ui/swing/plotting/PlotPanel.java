@@ -26,14 +26,11 @@ import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import javax.swing.BoundedRangeModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -68,7 +65,6 @@ import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
-import peakaboo.ui.swing.dialogues.AboutDialogue;
 import peakaboo.ui.swing.dialogues.ScanInfoDialogue;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -76,14 +72,12 @@ import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import peakaboo.ui.swing.widgets.tasks.TaskListView;
 import scitypes.Coord;
 import scitypes.SigDigits;
-import sun.awt.HorizBagLayout;
 import swidget.containers.SwidgetContainer;
 import swidget.dialogues.fileio.AbstractFile;
 import swidget.dialogues.fileio.IOCommon;
 import swidget.dialogues.fileio.SwingIO;
 import swidget.environment.Env;
 import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
@@ -275,7 +269,7 @@ public class PlotPanel extends ClearPanel
 	private void initGUI()
 	{
 
-		canvas = new PlotCanvas(controller);
+		canvas = new PlotCanvas(controller, this);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 
 		channelLabel = new JLabel("");
@@ -316,12 +310,17 @@ public class PlotPanel extends ClearPanel
 		populateToolbar(toolBar);
 		pane.add(toolBar, c);
 
+		JPanel p = new JPanel();
+		p.setPreferredSize(new Dimension(1000, 100));
+		
 		scrolledCanvas = new JScrollPane(canvas);
 		scrolledCanvas.setAutoscrolls(true);
 		scrolledCanvas.setBorder(Spacing.bNone());
+		
+		
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
+		
 		class MouseHandler implements MouseMotionListener, MouseListener
 		{
 
@@ -399,6 +398,7 @@ public class PlotPanel extends ClearPanel
 			public void mousePressed(MouseEvent e)
 			{
 				p0 = getPoint(e);
+				scrollPosition = viewPort.getViewPosition();
 				dragging = true;
 				canvas.setCursor(new Cursor(Cursor.MOVE_CURSOR));
 			}
@@ -490,7 +490,6 @@ public class PlotPanel extends ClearPanel
 		c.weighty = 0;
 		c.fill = GridBagConstraints.NONE;
 
-		JButton button;
 		ImageButton ibutton = new ToolbarImageButton("document-open", "Open", "Open a new data set");
 		ibutton.addActionListener(new ActionListener() {
 
@@ -501,7 +500,6 @@ public class PlotPanel extends ClearPanel
 		});
 		toolbar.add(ibutton, c);
 
-		button = new JButton("Export Data");
 		// controls.add(button);
 
 		toolbarSnapshot = new ToolbarImageButton(

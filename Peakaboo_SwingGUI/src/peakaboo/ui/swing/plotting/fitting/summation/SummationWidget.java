@@ -10,12 +10,10 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
 
 import fava.*;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.DataTypeFactory;
@@ -29,7 +27,7 @@ import swidget.widgets.ImageButton.Layout;
 
 
 
-public class SummationPanel extends ClearPanel
+public class SummationWidget extends ClearPanel
 {
 
 	private FittingController	controller;
@@ -37,7 +35,7 @@ public class SummationPanel extends ClearPanel
 	private ImageButton			addButton;
 
 
-	public SummationPanel(FittingController controller)
+	public SummationWidget(FittingController controller)
 	{
 		this.controller = controller;
 
@@ -182,7 +180,7 @@ class TSSelector extends ClearPanel
 	JComboBox	tsCombo;
 
 
-	public TSSelector(FittingController controller, final SummationPanel owner)
+	public TSSelector(FittingController controller, final SummationWidget owner)
 	{
 
 		setLayout(new BorderLayout());

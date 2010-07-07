@@ -4,26 +4,19 @@ package peakaboo.dataset.provider.implementations;
 
 import java.util.List;
 
-import fava.*;
 import fava.datatypes.Bounds;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.results.FittingResult;
-import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.EmptyProgressingTask;
 import peakaboo.datatypes.tasks.EmptyTask;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
-import peakaboo.fileio.xrf.CDFMLDataSource;
 import peakaboo.fileio.xrf.CDFMLSaxDataSource;
 import peakaboo.fileio.xrf.DataSource;
 import peakaboo.fileio.xrf.DataSourceDimensions;

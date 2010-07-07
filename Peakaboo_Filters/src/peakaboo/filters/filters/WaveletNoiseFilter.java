@@ -26,7 +26,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	public WaveletNoiseFilter()
 	{
 		super();
-		parameters.add(PASSES, new Parameter<Integer>(ValueType.INTEGER, "Passes to Transform", 1));
+		parameters.put(PASSES, new Parameter<Integer>(ValueType.INTEGER, "Passes to Transform", 1));
 	}
 
 

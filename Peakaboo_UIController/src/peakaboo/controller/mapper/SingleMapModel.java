@@ -125,7 +125,6 @@ public class SingleMapModel {
 
 	private String getDatasetTitle(List<TransitionSeries> list)
 	{
-		String separator = ", ";
 		
 		List<String> elementNames = map(list, new FunctionMap<TransitionSeries, String>() {
 			
@@ -144,8 +143,6 @@ public class SingleMapModel {
 
 	private String getShortDatasetTitle(List<TransitionSeries> list)
 	{
-		String separator = ", ";
-		
 		
 		List<String> elementNames = map(list, new FunctionMap<TransitionSeries, String>() {
 			

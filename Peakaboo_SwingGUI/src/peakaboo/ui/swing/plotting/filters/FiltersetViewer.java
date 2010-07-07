@@ -3,8 +3,6 @@ package peakaboo.ui.swing.plotting.filters;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 
-import javax.swing.JFrame;
-
 import peakaboo.controller.plotter.FilterController;
 import swidget.containers.SwidgetContainer;
 import swidget.widgets.ClearPanel;
@@ -18,6 +16,7 @@ public class FiltersetViewer extends ClearPanel {
 	private String EDIT = "EDIT";
 	private String SELECT = "SELECT";
 	
+	@Override
 	public String getName()
 	{
 		return "Filters";

@@ -24,7 +24,7 @@ public final class MovingAverage extends AbstractFilter
 	public MovingAverage()
 	{
 		super();
-		parameters.add(REACH, new Parameter<Integer>(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
+		parameters.put(REACH, new Parameter<Integer>(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
 
 	}
 

@@ -12,7 +12,7 @@ public class AllMapsViewOptions
 
 	public boolean drawSpectrum = true;
 	public boolean drawTitle = true;
-	public boolean showDataSetTitle = false;;
+	public boolean showDataSetTitle = false;
 	
 	public int spectrumSteps = 15;
 	public boolean contour = false;

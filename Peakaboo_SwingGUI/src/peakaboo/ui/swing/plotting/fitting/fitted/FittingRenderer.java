@@ -3,30 +3,24 @@ package peakaboo.ui.swing.plotting.fitting.fitted;
 import java.awt.Component;
 import java.awt.Dimension;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import scitypes.SigDigits;
 
 
-public class FittingRenderer extends DefaultTableCellRenderer implements TableCellRenderer
+public class FittingRenderer extends DefaultTableCellRenderer
 {
 
 	private TSWidget tswidget;
 	private FittingController controller;
-	private JLabel tstLabel;
+
 	
 	
 	public FittingRenderer(FittingController controller){
@@ -38,7 +32,7 @@ public class FittingRenderer extends DefaultTableCellRenderer implements TableCe
 		tswidget = new TSWidget(true);		
 	}
 
-
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus,
 			int row, int column)
 	{

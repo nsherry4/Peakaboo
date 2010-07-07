@@ -15,7 +15,7 @@ public class ExampleFilter extends AbstractFilter {
 	
 	public ExampleFilter() {
 		//add a parameter with name "example parameter" and default value 1
-		parameters.add(PARAM1, new Parameter<Integer>(ValueType.INTEGER, "Example Parameter", 1));
+		parameters.put(PARAM1, new Parameter<Integer>(ValueType.INTEGER, "Example Parameter", 1));
 	}
 	
 	@Override

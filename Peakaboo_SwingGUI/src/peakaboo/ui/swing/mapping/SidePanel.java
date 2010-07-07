@@ -20,7 +20,6 @@ import peakaboo.controller.mapper.MapDisplayMode;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
-import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import swidget.widgets.Spacing;
 
 
@@ -36,7 +35,6 @@ public class SidePanel extends JPanel
 	private JSpinner			height;
 	private JSpinner			interpolation;
 
-	private PeakabooMapperSwing	owner;
 
 	public final static boolean	SHOW_UI_FRAME_BORDERS	= true;
 
@@ -45,7 +43,7 @@ public class SidePanel extends JPanel
 	{
 
 		this.controller = controller;
-		this.owner = owner;
+
 
 		createControls();
 

@@ -9,6 +9,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +24,9 @@ import javax.swing.SpinnerNumberModel;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import fava.Fn;
+import fava.Functions;
 
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.datatypes.DataTypeFactory;
@@ -77,9 +82,21 @@ public class SingleFilterView extends JPanel
 	private JPanel createSettingsPanel()
 	{
 
-		final List<Parameter<?>> paramslist = filter.getParameters();
+		//get a list of parameters
+		final List<Parameter<?>> paramslist = Fn.map( filter.getParameters().values(), Functions.<Parameter<?>>id());
+		
+		
+		Collections.sort(paramslist, new Comparator<Parameter<?>>() {
+
+			public int compare(Parameter<?> o1, Parameter<?> o2)
+			{
+				return o1.name.compareTo(o2.name);
+			}
+		});
+		
+		
 		Iterator<Parameter<?>> params = paramslist.iterator();
-		Parameter<Object> param;
+		
 		
 		final List<JComponent> controls = DataTypeFactory.<JComponent>list();
 
@@ -155,7 +172,7 @@ public class SingleFilterView extends JPanel
 
 		}
 
-
+		
 
 		// JPanel panel = new JPanel(new SpringLayout());
 		JPanel panel = new JPanel();
@@ -177,6 +194,7 @@ public class SingleFilterView extends JPanel
 
 		JLabel paramLabel;
 		JComponent component;
+		Parameter<Object> param;
 		
 		while (params.hasNext()) {
 			c.gridy += 1;

@@ -47,12 +47,10 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 import swidget.dialogues.fileio.AbstractFile;
 
-import fava.*;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 
 /**
@@ -409,7 +407,7 @@ public class PlotController extends CanvasController implements FilterController
 	// DRAWING COMMANDS
 	// =============================================
 
-	
+	@Override
 	protected void drawBackend(Surface backend, boolean scalar)
 	{
 
@@ -667,7 +665,7 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	
+	@Override
 	public void setOutputIsPDF(boolean isPDF)
 	{
 		model.dr.drawToVectorSurface = isPDF;
@@ -675,14 +673,14 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	
+	@Override
 	public float getUsedHeight()
 	{
 		return getImageHeight();
 	}
 
 
-	
+	@Override
 	public float getUsedWidth()
 	{
 		return getImageWidth();

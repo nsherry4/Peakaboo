@@ -111,6 +111,7 @@ public class PlotterApplet extends JApplet
 	
 	
 	//called from applet magic on start-up
+	@Override
 	public void init()
 	{
 		

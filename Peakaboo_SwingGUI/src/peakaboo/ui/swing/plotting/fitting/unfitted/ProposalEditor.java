@@ -58,7 +58,7 @@ public class ProposalEditor extends DefaultTreeCellEditor
 		
 	}
 
-
+	@Override
 	public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
 			boolean leaf, int row)
 	{
@@ -70,7 +70,6 @@ public class ProposalEditor extends DefaultTreeCellEditor
 
 			TransitionSeries ts = (TransitionSeries) value;
 			Element e = ts.element;
-			double intensity = controller.getTransitionSeriesIntensity(ts);
 			tswidget.setName(e.atomicNumber() + ": " + ts.element.name() + " (" + ts.element + ")");
 
 			tswidget.setBackground(renderer.getBackgroundSelectionColor());
@@ -104,7 +103,7 @@ public class ProposalEditor extends DefaultTreeCellEditor
 
 	}
 
-
+	@Override
 	public Object getCellEditorValue()
 	{
 		return tswidget.isSelected();
@@ -113,9 +112,7 @@ public class ProposalEditor extends DefaultTreeCellEditor
 
 	@Override
 	public boolean isCellEditable(EventObject e)
-	{
-		JTree source = (JTree)e.getSource();
-		
+	{		
 		Object selected = tree.getLastSelectedPathComponent();
 						
 		if (selected == null) return false;

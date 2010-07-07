@@ -82,6 +82,7 @@ public class MapViewer extends JPanel
 
 		owner.addWindowListener(new WindowAdapter()
 		{
+			@Override
 			public void windowClosing(WindowEvent e)
 			{
 				MapViewer.this.viewModel.discard();

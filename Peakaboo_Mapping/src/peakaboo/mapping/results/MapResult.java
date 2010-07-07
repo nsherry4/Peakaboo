@@ -35,6 +35,7 @@ public class MapResult implements Cloneable
 		this.data = data;
 	}
 
+	@Override
 	public MapResult clone()
 	{
 		return new MapResult(transitionSeries, data);

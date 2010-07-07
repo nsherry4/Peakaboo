@@ -3,7 +3,6 @@ package peakaboo.controller.mapper;
 
 
 import java.awt.Color;
-import java.awt.DisplayMode;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -581,7 +580,7 @@ public class MapController extends CanvasController
 	}
 
 
-
+	@Override
 	protected void drawBackend(Surface backend, boolean vector)
 	{
 
@@ -966,7 +965,7 @@ public class MapController extends CanvasController
 
 				painters.add(0, new MapPainter(palette, null) {
 
-					
+					@Override
 					public void drawElement(PainterData p)
 					{
 
@@ -1064,21 +1063,21 @@ public class MapController extends CanvasController
 	}
 
 
-
+	@Override
 	public void setOutputIsPDF(boolean isPDF)
 	{
 		mapModel.dr.drawToVectorSurface = isPDF;
 	}
 
 
-
+	@Override
 	public float getUsedHeight()
 	{
 		return map.calculateMapDimensions().y;
 	}
 
 
-
+	@Override
 	public float getUsedWidth()
 	{
 		return map.calculateMapDimensions().x;

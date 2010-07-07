@@ -8,8 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -19,7 +17,6 @@ import javax.swing.border.EmptyBorder;
 import peakaboo.controller.plotter.PlotController;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
-import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;

@@ -23,10 +23,10 @@ public class FilterRenderer extends JPanel implements TableCellRenderer
 	public FilterRenderer()
 	{
 
-		name = new JLabel("Element");
+		name = new JLabel("Filter");
 		detail = new JLabel("Detail");
 
-		name.setFont(name.getFont().deriveFont(name.getFont().getSize() * 1.1f));
+		name.setFont(name.getFont().deriveFont(Font.BOLD));
 		detail.setFont(detail.getFont().deriveFont(Font.PLAIN));
 
 		setLayout(new BorderLayout());
@@ -64,7 +64,7 @@ public class FilterRenderer extends JPanel implements TableCellRenderer
 		}
 
 		name.setText(f.getFilterName());
-		detail.setText(f.getFilterType() + " Filter");
+		detail.setText(f.getFilterType().toString());
 
 		if (table.getRowHeight() < this.getPreferredSize().height) {
 			table.setRowHeight(this.getPreferredSize().height);

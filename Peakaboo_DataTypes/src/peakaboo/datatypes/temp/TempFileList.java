@@ -35,13 +35,15 @@ public class TempFileList<T> implements List<T>
 		elementPositions = new ArrayList<Pair<Long,Integer>>(initalSize);
 		temp = File.createTempFile("peakaboo - " + name , "list");
 		raf = new RandomAccessFile(temp, "rw");
+		
+		temp.deleteOnExit();
 				
 		this.encode = encode;
 		this.decode = decode;
 				
 	}
 	
-	protected TempFileList(FunctionMap<T, byte[]> encode, FunctionMap<byte[], T> decode, File temp, RandomAccessFile raf, List<Pair<Long, Integer>> positions) throws IOException
+	protected TempFileList(FunctionMap<T, byte[]> encode, FunctionMap<byte[], T> decode, File temp, RandomAccessFile raf, List<Pair<Long, Integer>> positions)
 	{
 		elementPositions = positions;
 		this.temp = temp;
@@ -386,14 +388,7 @@ public class TempFileList<T> implements List<T>
 
 	public List<T> subList(int fromIndex, int toIndex)
 	{	
-		try
-		{
-			return new TempFileList<T>(encode, decode, temp, raf, elementPositions.subList(fromIndex, toIndex));
-		}
-		catch (IOException e)
-		{
-			return null;
-		}
+		return new TempFileList<T>(encode, decode, temp, raf, elementPositions.subList(fromIndex, toIndex));
 	}
 
 	public Object[] toArray()
@@ -427,16 +422,20 @@ public class TempFileList<T> implements List<T>
 		return t;
 	}
 	
+	@Override
 	protected void finalize()
 	{
 		try
 		{
-			raf.close();
+			raf.close();			
 		}
 		catch (IOException e)
 		{
 			
 		}
 	}
+	
+	
+	
 
 }

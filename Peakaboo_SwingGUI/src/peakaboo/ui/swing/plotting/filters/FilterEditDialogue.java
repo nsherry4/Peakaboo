@@ -4,9 +4,6 @@ package peakaboo.ui.swing.plotting.filters;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.filters.AbstractFilter;

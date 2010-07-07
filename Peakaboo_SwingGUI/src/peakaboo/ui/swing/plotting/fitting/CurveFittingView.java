@@ -20,7 +20,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import javax.swing.tree.TreePath;
 
 import peakaboo.controller.plotter.FittingController;
@@ -28,9 +27,8 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.ui.swing.plotting.fitting.fitted.FittingEditor;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingRenderer;
-import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
+import peakaboo.ui.swing.plotting.fitting.summation.SummationWidget;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalEditor;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalRenderer;
 import swidget.widgets.ClearPanel;
@@ -60,12 +58,12 @@ public class CurveFittingView extends ClearPanel
 
 	protected JPanel				cardPanel;
 	protected CardLayout			card;
-	protected SummationPanel		summationPanel;
+	protected SummationWidget		summationWidget;
 
 	protected ListControls			controls;
 	private SelectionListControls	selControls;
 
-
+	@Override
 	public String getName()
 	{
 		return "Peak Fitting";
@@ -82,7 +80,7 @@ public class CurveFittingView extends ClearPanel
 
 		JPanel fittedPanel = createFittedElementsPanel();
 		JPanel unusedTable = createUnfittedElementsPanel();
-		JPanel summationPanel = createSummationPanel();
+		JPanel summationPanel = createSummationWidget();
 
 		cardPanel = createCardPanel(fittedPanel, unusedTable, summationPanel);
 
@@ -143,7 +141,7 @@ public class CurveFittingView extends ClearPanel
 		panel.setOpaque(false);
 		panel.setLayout(new BorderLayout());
 
-		JScrollPane fitted = createTable();
+		JScrollPane fitted = createFittedTable();
 		panel.add(fitted, BorderLayout.CENTER);
 
 		String tooltips[] = {
@@ -225,7 +223,7 @@ public class CurveFittingView extends ClearPanel
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				summationPanel.resetSelectors();
+				summationWidget.resetSelectors();
 				card.show(cardPanel, SUMMATION);
 				tm.fireChangeEvent();
 				
@@ -285,10 +283,10 @@ public class CurveFittingView extends ClearPanel
 	}
 
 
-	private JPanel createSummationPanel()
+	private JPanel createSummationWidget()
 	{
 
-		summationPanel = new SummationPanel(controller);
+		summationWidget = new SummationWidget(controller);
 		
 		selControls = new SelectionListControls("Summation") {
 
@@ -296,7 +294,7 @@ public class CurveFittingView extends ClearPanel
 			protected void cancel()
 			{
 				//controller.clearProposedTransitionSeries();
-				summationPanel.resetSelectors();
+				summationWidget.resetSelectors();
 				card.show(cardPanel, FITTED);
 				fitTable.invalidate();
 				
@@ -310,7 +308,7 @@ public class CurveFittingView extends ClearPanel
 			@Override
 			protected void approve()
 			{
-				controller.addTransitionSeries(summationPanel.getTransitionSeries());
+				controller.addTransitionSeries(summationWidget.getTransitionSeries());
 				card.show(cardPanel, FITTED);
 
 				fitTable.invalidate();
@@ -327,7 +325,7 @@ public class CurveFittingView extends ClearPanel
 		JPanel panel = new ClearPanel();
 		panel.setLayout(new BorderLayout());
 
-		JScrollPane scroll = new JScrollPane(summationPanel);
+		JScrollPane scroll = new JScrollPane(summationWidget);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));
 		scroll.setBorder(Spacing.bMedium());
@@ -347,11 +345,9 @@ public class CurveFittingView extends ClearPanel
 	}
 
 
-	private JScrollPane createTable()
+	private JScrollPane createFittedTable()
 	{
-
-		//fitTable = new JTree();
-		
+	
 		fitTable = new JTable();
 		
 		tm = new MutableTableModel() {
@@ -451,6 +447,7 @@ public class CurveFittingView extends ClearPanel
 		fitTable.setShowVerticalLines(false);
 		fitTable.setShowHorizontalLines(false);
 		
+		fitTable.setRowHeight(renderer.getPreferredSize().height);
 			
 		TableColumn column = fitTable.getColumnModel().getColumn(0);
 		column.setMinWidth(40);
@@ -466,64 +463,6 @@ public class CurveFittingView extends ClearPanel
 		return scroll;
 	}
 
-
-	/*
-	 * 
-	 * private JScrollPane createUnfittedTable() {
-	 * 
-	 * TableModel m = new TableModel() {
-	 * 
-	 * public void setValueAt(Object value, int rowIndex, int columnIndex) { if (columnIndex == 0) { boolean add =
-	 * ((Boolean) value).booleanValue(); TransitionSeries e = controller.getUnfittedTransitionSeries().get(rowIndex); if
-	 * (add) { controller.addProposedTransitionSeries(e); } else { controller.removeProposedTransitionSeries(e); } }
-	 * else { return; } }
-	 * 
-	 * 
-	 * public void removeTableModelListener(TableModelListener l) { // TODO Auto-generated method stub }
-	 * 
-	 * 
-	 * public boolean isCellEditable(int rowIndex, int columnIndex) { if (columnIndex == 0) return true; return false;
-	 * 
-	 * }
-	 * 
-	 * 
-	 * public Object getValueAt(int rowIndex, int columnIndex) { TransitionSeries ts; if (columnIndex == 0) { ts =
-	 * controller.getUnfittedTransitionSeries().get(rowIndex); return
-	 * (controller.getProposedTransitionSeries().indexOf(ts) != -1); } else { ts =
-	 * controller.getUnfittedTransitionSeries().get(rowIndex); return ts.element.ordinal() + ": " + ts.element.name() +
-	 * " (" + ts.element.toString() + ")"; } }
-	 * 
-	 * 
-	 * public int getRowCount() { return controller.getUnfittedTransitionSeries().size(); }
-	 * 
-	 * 
-	 * public String getColumnName(int columnIndex) { if (columnIndex == 0) { return "Add"; } else { return
-	 * "Unfitted Elements"; } }
-	 * 
-	 * 
-	 * public int getColumnCount() { return 2; }
-	 * 
-	 * 
-	 * public Class<?> getColumnClass(int columnIndex) { if (columnIndex == 0) { return Boolean.class; } else { return
-	 * Element.class; } }
-	 * 
-	 * 
-	 * public void addTableModelListener(TableModelListener l) { // TODO Auto-generated method stub } };
-	 * 
-	 * 
-	 * unfitTable = new JTable(m); unfitTable.setShowGrid(false);
-	 * 
-	 * TableColumn column = null; column = unfitTable.getColumnModel().getColumn(0); column.setPreferredWidth(40);
-	 * column.setMaxWidth(100);
-	 * 
-	 * 
-	 * JScrollPane scroll = new JScrollPane(unfitTable);
-	 * scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); scroll.setPreferredSize(new
-	 * Dimension(200, 0));
-	 * 
-	 * 
-	 * return scroll; }
-	 */
 
 	private JScrollPane createUnfittedTable()
 	{

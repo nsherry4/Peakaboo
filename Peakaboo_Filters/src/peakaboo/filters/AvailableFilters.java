@@ -7,10 +7,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
-import fava.*;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
@@ -36,20 +34,7 @@ public class AvailableFilters
 	{
 		if (Version.inJar)
 		{
-			try
-			{
-				return generateFilterListStatic();
-			}
-			catch (InstantiationException e)
-			{
-				e.printStackTrace();
-				return DataTypeFactory.<AbstractFilter> list();
-			}
-			catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
-				return DataTypeFactory.<AbstractFilter> list();
-			}
+			return generateFilterListStatic();
 		}
 		else
 		{
@@ -59,7 +44,7 @@ public class AvailableFilters
 
 
 	// for jar files -- how do we load these dynamically when inside a jar file?
-	public static List<AbstractFilter> generateFilterListStatic() throws InstantiationException, IllegalAccessException
+	public static List<AbstractFilter> generateFilterListStatic()
 	{
 
 		Class<?>[] classes = {
@@ -132,7 +117,7 @@ public class AvailableFilters
 		{
 			for (int i = 0; i < classes.size(); i++)
 			{
-				if (classes.get(i).getSuperclass() == AbstractFilter.class)
+				if (classes.get(i).getSuperclass() == AbstractFilter.class || classes.get(i).getSuperclass().getSuperclass() == AbstractFilter.class)
 				{
 
 					// this will warn of an unchecked cast, but since we're checking

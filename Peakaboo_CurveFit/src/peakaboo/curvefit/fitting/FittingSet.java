@@ -5,7 +5,6 @@ package peakaboo.curvefit.fitting;
 import java.io.Serializable;
 import java.util.List;
 
-import fava.*;
 import static fava.Fn.*;
 
 import peakaboo.curvefit.results.FittingResult;

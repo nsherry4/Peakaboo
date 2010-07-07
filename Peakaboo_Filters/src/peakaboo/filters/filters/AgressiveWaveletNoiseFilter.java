@@ -25,7 +25,7 @@ public final class AgressiveWaveletNoiseFilter extends AbstractFilter
 	{
 
 		super();
-		parameters.add(PASSES, new Parameter<Integer>(ValueType.INTEGER, "Passes to Remove", 1));
+		parameters.put(PASSES, new Parameter<Integer>(ValueType.INTEGER, "Passes to Remove", 1));
 
 	}
 

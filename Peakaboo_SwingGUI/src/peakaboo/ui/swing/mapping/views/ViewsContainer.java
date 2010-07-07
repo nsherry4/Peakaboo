@@ -82,6 +82,7 @@ class AlignedListCellRenderer extends DefaultListCellRenderer {
         this.align = align;
     }
 
+    @Override
     public Component getListCellRendererComponent(JList list, 
                                                   Object value, 
                                                   int index, 

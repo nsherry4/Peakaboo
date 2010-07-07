@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import peakaboo.filters.AbstractFilter;
+
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -18,6 +20,7 @@ public class FilterEditButtonRenderer extends JPanel implements TableCellRendere
 {
 
 	private ImageButton	edit;
+	private JPanel noParams;
 
 
 	public FilterEditButtonRenderer()
@@ -27,13 +30,19 @@ public class FilterEditButtonRenderer extends JPanel implements TableCellRendere
 		
 		setLayout(new BorderLayout());
 		add(edit, BorderLayout.CENTER);
+		
+		noParams = new JPanel();
 
 	}
 
 
-	public Component getTableCellRendererComponent(JTable table, Object filter, boolean isSelected, boolean hasFocus,
+	public Component getTableCellRendererComponent(JTable table, Object _filter, boolean isSelected, boolean hasFocus,
 			int row, int column)
 	{
+		
+		AbstractFilter filter = (AbstractFilter)_filter;
+		
+		int numParameters = filter.getParameters().size();
 
 		if (isSelected) {
 			setOpaque(true);
@@ -53,6 +62,18 @@ public class FilterEditButtonRenderer extends JPanel implements TableCellRendere
 			table.setRowHeight(this.getPreferredSize().height);
 		}
 
+		if (numParameters == 0)
+		{
+			
+			if (isSelected) {
+				noParams.setBackground(table.getSelectionBackground());
+				noParams.setOpaque(true);
+			} else {
+				noParams.setOpaque(false);
+			}
+			
+			return noParams;
+		}
 		return this;
 	}
 }

@@ -2,11 +2,8 @@ package peakaboo.ui.swing.widgets.pictures;
 
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
@@ -14,7 +11,6 @@ import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import peakaboo.controller.CanvasController;

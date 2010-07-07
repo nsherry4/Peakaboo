@@ -1,13 +1,14 @@
 package peakaboo.ui.swing.plotting.filters;
 
 
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import peakaboo.controller.plotter.FilterController;
@@ -15,20 +16,25 @@ import peakaboo.filters.AbstractFilter;
 import swidget.containers.SwidgetContainer;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
+
+
 
 class FilterEditButtonEditor extends DefaultCellEditor
 {
 
 	protected ImageButton		button;
-	private SwidgetContainer			owner;
-
-	private AbstractFilter	filter;
-	private FilterController	controller;
+	private JPanel 				noParams;
 	
-	private String			label;
-	private boolean			isPushed;
+	private SwidgetContainer	owner;
+
+	private AbstractFilter		filter;
+	private FilterController	controller;
+
+	private String				label;
+	private boolean				isPushed;
 
 
 	public FilterEditButtonEditor(FilterController controller, SwidgetContainer owner)
@@ -48,24 +54,33 @@ class FilterEditButtonEditor extends DefaultCellEditor
 			}
 		});
 		
+		noParams = new ClearPanel();
+
 	}
 
 
 	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
+	public Component getTableCellEditorComponent(JTable table, Object _filter, boolean isSelected, int row, int column)
 	{
 
-		filter = (AbstractFilter) value;
+		filter = (AbstractFilter) _filter;
+		int numParameters = filter.getParameters().size();
 		
-		if (isSelected) {
-			// button.setForeground(table.getSelectionForeground());
-			// button.setBackground(table.getSelectionBackground());
-		} else {
-			// button.setForeground(table.getForeground());
-			// button.setBackground(table.getBackground());
-		}
-		label = (value == null) ? "" : value.toString();
+		label = (_filter == null) ? "" : _filter.toString();
 		isPushed = true;
+		
+		if (numParameters == 0)
+		{
+			
+			if (isSelected) {
+				noParams.setBackground(table.getSelectionBackground());
+				noParams.setOpaque(true);
+			} else {
+				noParams.setOpaque(false);
+			}
+			
+			return noParams;
+		}
 		return button;
 	}
 
@@ -73,7 +88,8 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	@Override
 	public Object getCellEditorValue()
 	{
-		if (isPushed) {
+		if (isPushed)
+		{
 			new FilterEditDialogue(filter, controller, owner);
 		}
 		isPushed = false;

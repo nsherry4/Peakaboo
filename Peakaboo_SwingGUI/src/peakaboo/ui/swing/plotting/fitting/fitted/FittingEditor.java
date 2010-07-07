@@ -6,7 +6,6 @@ import java.awt.event.ItemListener;
 import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
-import javax.swing.BorderFactory;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;

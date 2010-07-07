@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.tasks.Task;
-import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;

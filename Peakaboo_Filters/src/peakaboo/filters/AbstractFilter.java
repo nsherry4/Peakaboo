@@ -2,7 +2,7 @@ package peakaboo.filters;
 
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 import peakaboo.calculations.Background;
 import peakaboo.calculations.Calculations;
@@ -29,6 +29,7 @@ import scitypes.Spectrum;
 public abstract class AbstractFilter implements Serializable
 {
 
+	
 	public static enum FilterType
 	{
 		BACKGROUND {
@@ -36,7 +37,7 @@ public abstract class AbstractFilter implements Serializable
 			@Override
 			public String toString()
 			{
-				return "Background Fit";
+				return "Background Removal";
 			}
 		},
 		NOISE {
@@ -44,7 +45,7 @@ public abstract class AbstractFilter implements Serializable
 			@Override
 			public String toString()
 			{
-				return "Noise Filter";
+				return "Noise Removal";
 			}
 		},
 		MATHEMATICAL {
@@ -52,18 +53,20 @@ public abstract class AbstractFilter implements Serializable
 			@Override
 			public String toString()
 			{
-				return "Mathematical Filter";
+				return "Mathematical Function";
 			}
 		},
 	}
 	
-	protected List<Parameter<?>>	parameters;
-	public boolean					enabled;
-
+	protected Map<Object, Parameter<?>>	parameters;
+	public boolean						enabled;
+	
+	protected Spectrum	previewCache;
+	protected Spectrum	calculatedData;
 
 	public AbstractFilter()
 	{
-		this.parameters = DataTypeFactory.<Parameter<?>> list();
+		this.parameters = DataTypeFactory.<Object, Parameter<?>> map();
 		this.enabled = true;
 	}
 
@@ -77,13 +80,10 @@ public abstract class AbstractFilter implements Serializable
 	public abstract FilterType getFilterType();
 
 
-	public final List<Parameter<?>> getParameters()
+	public final Map<Object, Parameter<?>> getParameters()
 	{
 		return this.parameters;
 	}
-
-	protected Spectrum	previewCache;
-	protected Spectrum	calculatedData;
 
 
 	protected final void setPreviewCache(Spectrum data)
@@ -101,14 +101,16 @@ public abstract class AbstractFilter implements Serializable
 	public abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
 
 
-	protected <T1> T1 getParameterValue(int number)
+	@SuppressWarnings("unchecked")
+	protected <T1> T1 getParameterValue(Object key)
 	{
-		return ((Parameter<T1>)parameters.get(number)).getValue();
+		return ((Parameter<T1>)parameters.get(key)).getValue();
 	}
 	
-	protected <T1> void setParameterValue(int number, T1 value)
+	@SuppressWarnings("unchecked")
+	protected <T1> void setParameterValue(Object key, T1 value)
 	{
-		((Parameter<T1>)parameters.get(number)).setValue(value);
+		((Parameter<T1>)parameters.get(key)).setValue(value);
 	}
 	
 	public abstract boolean showFilter();

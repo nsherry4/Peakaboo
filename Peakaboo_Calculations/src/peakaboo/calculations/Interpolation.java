@@ -2,10 +2,8 @@ package peakaboo.calculations;
 
 import java.util.List;
 
-import fava.*;
 import fava.datatypes.Pair;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.datatypes.DataTypeFactory;
 import scitypes.GridPerspective;

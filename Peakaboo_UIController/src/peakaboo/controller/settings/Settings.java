@@ -2,26 +2,19 @@ package peakaboo.controller.settings;
 
 
 
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
 import org.ho.yaml.Yaml;
 
-import fava.*;
 import fava.datatypes.Pair;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.controller.plotter.PlotModel;
 import peakaboo.datatypes.DataTypeFactory;
@@ -52,11 +45,6 @@ public class Settings
 	 */
 	public static void loadPreferences(final PlotModel model, InputStream inStream)
 	{
-
-		FileInputStream fin = null;
-		//ObjectInputStream in = null;
-
-		Object read;
 
 		SerializedData data = new SerializedData();
 
@@ -123,11 +111,7 @@ public class Settings
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 
 
 

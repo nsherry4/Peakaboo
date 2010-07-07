@@ -16,44 +16,43 @@ import scitypes.SpectrumCalculations;
  * @author Nathaniel Sherry, 2009
  */
 
-public final class BruknerRemoval extends BackgroundRemovalFilter
+public final class LinearTrimRemoval extends BackgroundRemovalFilter
 {
 
-	private final int	WIDTH	= 0;
-	private final int	ITERATIONS = 1;
+	private final int	WIDTH = 1;
+	private final int	ITERATIONS = 0;
 
 
-	public BruknerRemoval()
+	public LinearTrimRemoval()
 	{
 		super();
+		
+		parameters.put(ITERATIONS, new Parameter<Integer>(ValueType.INTEGER, "Iterations", 2));
 		parameters.put(WIDTH, new Parameter<Integer>(ValueType.INTEGER, "Width of Fitting", 100));
-		parameters.put(ITERATIONS, new Parameter<Integer>(ValueType.INTEGER, "Iterations", 10));
+		
 	}
 
 
 	@Override
 	public String getFilterName()
 	{
-		return "Brukner";
+		return "Linear Trim";
 	}
 
 
 	@Override
 	protected Spectrum getBackground(Spectrum data, int percent)
 	{
-	
-		int windowSize = this.<Integer>getParameterValue(WIDTH);
+		int width = this.<Integer>getParameterValue(WIDTH);
 		int iterations = this.<Integer>getParameterValue(ITERATIONS);
 		
-		return SpectrumCalculations.multiplyBy(  Background.calcBackgroundBrukner(data, windowSize, iterations), (percent/100.0f));
-
+		return SpectrumCalculations.multiplyBy(  Background.calcBackgroundLinearTrim(data, width, iterations), (percent/100.0f));		
 	}
-
+	
 
 	@Override
 	public boolean validateCustomParameters()
 	{
-
 		int width, iterations;
 
 		// parabolas which are too wide are useless, but ones that are too
@@ -63,7 +62,7 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 		
 		
 		if (width > 400 || width < 10) return false;
-		if (iterations > 50 || iterations < 0) return false;
+		if (iterations > 20 || iterations <= 0) return false;
 
 		return true;
 	}

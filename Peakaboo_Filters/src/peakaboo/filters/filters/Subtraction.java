@@ -18,7 +18,7 @@ public class Subtraction extends AbstractFilter
 	{
 
 		super();
-		parameters.add(AMOUNT, new Parameter<Double>(ValueType.REAL, "Amount to Subtract", 1.0));
+		parameters.put(AMOUNT, new Parameter<Double>(ValueType.REAL, "Amount to Subtract", 1.0));
 
 	}
 	

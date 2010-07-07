@@ -13,6 +13,7 @@ public enum TransitionSeriesType
 
 	K {
 
+		@Override
 		public String toString()
 		{
 			return this.name() + " Series";
@@ -20,6 +21,7 @@ public enum TransitionSeriesType
 	},
 	L {
 
+		@Override
 		public String toString()
 		{
 			return this.name() + " Series";
@@ -27,6 +29,7 @@ public enum TransitionSeriesType
 	},
 	M {
 
+		@Override
 		public String toString()
 		{
 			return this.name() + " Series";
@@ -34,6 +37,7 @@ public enum TransitionSeriesType
 	},
 	COMPOSITE {
 
+		@Override
 		public String toString()
 		{
 			return "Composite Series";

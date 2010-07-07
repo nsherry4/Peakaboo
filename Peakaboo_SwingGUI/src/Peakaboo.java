@@ -1,15 +1,12 @@
 
 
 
-
-import java.io.File;
-import java.io.IOException;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+
+import peakaboo.ui.swing.PlotterFrame;
 
 import swidget.environment.Env;
 import swidget.icons.IconFactory;
@@ -56,7 +53,7 @@ public class Peakaboo
 				//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
 				JFrame.setDefaultLookAndFeelDecorated(true);
 				JDialog.setDefaultLookAndFeelDecorated(true);
-				peakaboo.ui.swing.PlotterFrame peakaboo = new peakaboo.ui.swing.PlotterFrame();
+				PlotterFrame peakaboo = new PlotterFrame();
 
 			}
 		});

@@ -1,7 +1,6 @@
 package peakaboo.datatypes.peaktable;
 
 
-import java.io.Serializable;
 
 /**
  * 
@@ -12,7 +11,7 @@ import java.io.Serializable;
  * 
  */
 
-public enum Element implements Serializable
+public enum Element
 {
 
 	

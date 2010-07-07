@@ -29,10 +29,10 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 	{
 
 		super();
-		parameters.add(REACH, new Parameter<Integer>(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
-		parameters.add(ORDER, new Parameter<Integer>(ValueType.INTEGER, "Polynomial Order", 5));
-		parameters.add(IGNORE, new Parameter<Boolean>(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
-		parameters.add(MAX, new Parameter<Double>(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
+		parameters.put(REACH, new Parameter<Integer>(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
+		parameters.put(ORDER, new Parameter<Integer>(ValueType.INTEGER, "Polynomial Order", 5));
+		parameters.put(IGNORE, new Parameter<Boolean>(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
+		parameters.put(MAX, new Parameter<Double>(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
 		
 		parameters.get(MAX).enabled = false;
 	}

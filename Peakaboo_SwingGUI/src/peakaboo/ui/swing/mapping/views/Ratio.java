@@ -59,8 +59,6 @@ public class Ratio extends JPanel {
 	}
 
 	
-	
-
 	private JPanel createScaleOptions()
 	{
 		

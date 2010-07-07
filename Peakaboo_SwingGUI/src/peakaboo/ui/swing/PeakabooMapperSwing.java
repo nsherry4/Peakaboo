@@ -13,8 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -34,7 +32,6 @@ import scitypes.Coord;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
 import swidget.dialogues.fileio.SwingIO;
-import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

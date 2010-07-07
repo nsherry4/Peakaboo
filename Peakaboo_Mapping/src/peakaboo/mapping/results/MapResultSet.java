@@ -4,10 +4,8 @@ package peakaboo.mapping.results;
 import java.util.Collection;
 import java.util.List;
 
-import fava.*;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
@@ -54,6 +52,7 @@ public class MapResultSet implements Cloneable
 		this.mapSize = mapSize;
 	}
 	
+	@Override
 	public MapResultSet clone()
 	{
 	

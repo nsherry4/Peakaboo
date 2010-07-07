@@ -7,7 +7,6 @@ import fava.datatypes.Bounds;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.fileio.xrf.DataSource;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
@@ -150,78 +149,91 @@ public class EmptyDataSetProvider extends DataSetProvider
 		return false;
 	}
 
+	@Override
 	public String getCreationTime()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getCreator()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getEndTime()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getExperimentName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getFacilityName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getInstrumentName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getLaboratoryName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getProjectName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getSampleName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getScanName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getSessionName()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
 	public String getStartTime()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String getTechniqueName()
 	{
 		// TODO Auto-generated method stub

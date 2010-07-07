@@ -34,7 +34,7 @@ public class FittingMarkersPainter extends PlotPainter
 	@Override
 	public void drawElement(PainterData p)
 	{
-		DrawingRequest dr = (DrawingRequest)p.dr;
+		DrawingRequest dr = p.dr;
 		float channel, markerHeight;
 		Spectrum markerHeights = new Spectrum(dr.dataWidth);
 
@@ -68,7 +68,7 @@ public class FittingMarkersPainter extends PlotPainter
 				
 				float positionX = getXForChannel(p, channel);
 				
-				markerHeight = transformValueForPlot((DrawingRequest)p.dr, markerHeight);
+				markerHeight = transformValueForPlot(p.dr, markerHeight);
 				
 				p.context.setSource(0.0f, 0.0f, 0.0f);
 				p.context.moveTo(positionX, p.plotSize.y);
@@ -84,7 +84,7 @@ public class FittingMarkersPainter extends PlotPainter
 				
 				markerHeight = gauss.getHeightAtPoint(t.energyValue / dr.unitSize) * fit.scaleFactor / fit.normalizationScale;
 				markerHeight *= TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element);
-				markerHeight = transformValueForPlot((DrawingRequest)p.dr, markerHeight);
+				markerHeight = transformValueForPlot(p.dr, markerHeight);
 				
 			
 				p.context.setSource(0.0f, 0.0f, 0.0f);

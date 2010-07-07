@@ -229,7 +229,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				int count = getPileupCount();
 				String suffix = "";
-				if (count > 2) suffix += " x" + +count;
+				if (count > 2) suffix += " x" + count;
 
 				return componentSeries.get(0).element.name() + " " + componentSeries.get(0).getBaseType().name()
 						+ " Pile-Up" + suffix;
@@ -244,7 +244,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 					{
 						return ts.getDescription();
 					}
-				}), strcat(" ⊕ "));
+				}), strcat(" ⨯ "));
 
 			default:
 
@@ -492,7 +492,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
-
+	@Override
 	public boolean equals(Object oother)
 	{
 
