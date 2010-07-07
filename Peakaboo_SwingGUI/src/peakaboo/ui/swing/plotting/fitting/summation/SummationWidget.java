@@ -27,7 +27,7 @@ import swidget.widgets.ImageButton.Layout;
 
 
 
-public class SummationWidget extends ClearPanel
+class SummationWidget extends ClearPanel
 {
 
 	private FittingController	controller;
@@ -54,6 +54,41 @@ public class SummationWidget extends ClearPanel
 
 		resetSelectors();
 	}
+	
+	
+	public void resetSelectors()
+	{
+
+		selectors.clear();
+
+		selectors.add(new TSSelector(controller, this));
+		selectors.add(new TSSelector(controller, this));
+
+		refreshGUI();
+
+	}
+	
+	
+	public TransitionSeries getTransitionSeries()
+	{
+
+		//get a list of all TransitionSeries to be summed
+		List<TransitionSeries> tss = filter(map(selectors, new FunctionMap<TSSelector, TransitionSeries>() {
+
+			public TransitionSeries f(TSSelector element)
+			{
+				return element.getTransitionSeries();
+			}
+		}), Functions.<TransitionSeries>notNull());
+		
+		return TransitionSeries.summation(tss);
+
+	}
+	
+	
+	
+	
+	
 
 
 	protected void removeTSSelector(TSSelector tssel)
@@ -71,17 +106,7 @@ public class SummationWidget extends ClearPanel
 	}
 
 
-	public void resetSelectors()
-	{
 
-		selectors.clear();
-
-		selectors.add(new TSSelector(controller, this));
-		selectors.add(new TSSelector(controller, this));
-
-		refreshGUI();
-
-	}
 
 
 	private void refreshGUI()
@@ -155,21 +180,7 @@ public class SummationWidget extends ClearPanel
 	}
 
 
-	public TransitionSeries getTransitionSeries()
-	{
 
-		//get a list of all TransitionSeries to be summed
-		List<TransitionSeries> tss = filter(map(selectors, new FunctionMap<TSSelector, TransitionSeries>() {
-
-			public TransitionSeries f(TSSelector element)
-			{
-				return element.getTransitionSeries();
-			}
-		}), Functions.<TransitionSeries>notNull());
-		
-		return TransitionSeries.summation(tss);
-
-	}
 }
 
 

@@ -17,18 +17,19 @@ import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
+import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import swidget.widgets.Spacing;
 
 
 
-public class ProposalEditor extends DefaultTreeCellEditor
+class ProposalEditor extends DefaultTreeCellEditor
 {
 
-	private TSWidget			tswidget;
-	private JLabel					tstLabel;
-	private FittingController		controller;
-	private DefaultTreeCellRenderer	renderer;
+	private TSWidget	tswidget;
+	private JLabel						tstLabel;
+	private FittingController			controller;
+	private DefaultTreeCellRenderer		renderer;
 
 
 	public ProposalEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller)
@@ -40,7 +41,7 @@ public class ProposalEditor extends DefaultTreeCellEditor
 		this.controller = controller;
 
 		tswidget = new TSWidget(false);
-		
+
 		tstLabel = new JLabel();
 		tstLabel.setOpaque(false);
 		tstLabel.setBorder(Spacing.bSmall());
@@ -55,8 +56,9 @@ public class ProposalEditor extends DefaultTreeCellEditor
 				ProposalEditor.this.stopCellEditing();
 			}
 		});
-		
+
 	}
+
 
 	@Override
 	public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
@@ -64,7 +66,7 @@ public class ProposalEditor extends DefaultTreeCellEditor
 	{
 
 		Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
-				
+
 		if (value instanceof TransitionSeries)
 		{
 
@@ -79,29 +81,30 @@ public class ProposalEditor extends DefaultTreeCellEditor
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tswidget;
 
-		}		
+		}
 		else if (value instanceof TransitionSeriesType)
 		{
-			TransitionSeriesType tst = (TransitionSeriesType)value;
-					
+			TransitionSeriesType tst = (TransitionSeriesType) value;
+
 			//if (isSelected)
 			//{
-				tstLabel.setForeground(renderer.getTextSelectionColor());
+			tstLabel.setForeground(renderer.getTextSelectionColor());
 			//} else {
 			//	tstLabel.setForeground(renderer.getTextNonSelectionColor());
 			//}
 
 			tstLabel.setText(tst.toString());
-			
-			
+
+
 			return tstLabel;
 		}
-		
-		
-		
+
+
+
 		return c;
 
 	}
+
 
 	@Override
 	public Object getCellEditorValue()
@@ -112,9 +115,9 @@ public class ProposalEditor extends DefaultTreeCellEditor
 
 	@Override
 	public boolean isCellEditable(EventObject e)
-	{		
+	{
 		Object selected = tree.getLastSelectedPathComponent();
-						
+
 		if (selected == null) return false;
 		if (selected instanceof TransitionSeriesType) return false;
 		return true;

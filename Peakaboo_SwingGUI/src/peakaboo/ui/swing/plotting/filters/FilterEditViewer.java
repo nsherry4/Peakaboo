@@ -152,7 +152,7 @@ public class FilterEditViewer extends ClearPanel{
 
 	private JPanel createControlPanel(){
 		
-		controls = new ListControls(null) {
+		controls = new ListControls() {
 		
 			@Override
 			public void up()

@@ -11,11 +11,12 @@ import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
+import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import scitypes.SigDigits;
 
 
-public class FittingRenderer extends DefaultTableCellRenderer
+class FittingRenderer extends DefaultTableCellRenderer
 {
 
 	private TSWidget tswidget;

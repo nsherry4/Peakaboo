@@ -15,6 +15,7 @@ import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesMode;
+import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import scitypes.SigDigits;
 
@@ -22,7 +23,7 @@ import scitypes.SigDigits;
  * NOT CURRENTLY USED
  */
 
-public class FittingEditor extends AbstractCellEditor implements TreeCellEditor
+class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 {
 	
 	private TSWidget tswidget;

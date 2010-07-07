@@ -13,12 +13,13 @@ import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
+import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import swidget.widgets.Spacing;
 
 
 
-public class ProposalRenderer extends DefaultTreeCellRenderer
+class ProposalRenderer extends DefaultTreeCellRenderer
 {
 
 	private TSWidget		tswidget;
