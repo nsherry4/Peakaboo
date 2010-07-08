@@ -438,6 +438,30 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		
 		
 		
+		//if this data source has dimensions, prepare to read them
+		DataSourceDimensions dims = null;
+		if (ds instanceof DataSourceDimensions)
+		{
+		
+			 dims = (DataSourceDimensions) ds;
+			
+			hasDimensions = true;
+
+			dataDimension = dims.getDataDimensions();
+			realDimension = dims.getRealDimensions();
+
+			realCoords = DataTypeFactory.<Coord<Number>> list();
+
+
+			realUnits = getSISizeFromUnitName(dims.getRealDimensionsUnit());
+
+		}
+		else
+		{
+			hasDimensions = false;
+		}
+		
+		
 		//go over each scan, calculating the average, max10th and max value
 		float max = Float.MIN_VALUE;
 		Spectrum avg, max10, current;
@@ -456,6 +480,10 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			
 			max = Math.max(max, SpectrumCalculations.max(current));
 			
+			//read the real coordinates for this scan
+			if (hasDimensions) realCoords.add(dims.getRealCoordinatesAtIndex(i));
+			
+			
 			if (applying != null) applying.workUnitCompleted();
 			
 		}
@@ -468,33 +496,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		maxValue = max;
 		
 		
-		
-		if (ds instanceof DataSourceDimensions)
-		{
-			DataSourceDimensions dims = (DataSourceDimensions) ds;
-			hasDimensions = true;
-
-			dataDimension = dims.getDataDimensions();
-			// realBottomLeft = dataSource.getRealCoordinatesAtIndex(0);
-			// //cdfml.getRealCoordinatesAtIndex(0);
-			// realTopRight = dataSource.getRealCoordinatesAtIndex(dataDimension.x * dataDimension.y -
-			// 1); //cdfml.getRealCoordinatesAtIndex(dataDimension.x * dataDimension.y - 1);
-
-			realDimension = dims.getRealDimensions();
-
-			realCoords = DataTypeFactory.<Coord<Number>> list();
-			for (int i = 0; i < ds.getScanCount(); i++)
-			{
-				realCoords.add(dims.getRealCoordinatesAtIndex(i));
-			}
-
-			realUnits = getSISizeFromUnitName(dims.getRealDimensionsUnit());
-
-		}
-		else
-		{
-			hasDimensions = false;
-		}
 
 		if (ds instanceof DataSourceExtendedInformation)
 		{
