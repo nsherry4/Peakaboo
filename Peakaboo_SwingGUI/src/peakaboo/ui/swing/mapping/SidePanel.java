@@ -82,7 +82,7 @@ public class SidePanel extends JPanel
 
 		
 		
-		ImageButton savePicture = new ImageButton(StockIcon.DEVICE_CAMERA, "Save Image", "Save the current map as an image");
+		ImageButton savePicture = new ImageButton(StockIcon.DEVICE_CAMERA, "Save Image", "Save the current map as an image", true);
 		savePicture.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
