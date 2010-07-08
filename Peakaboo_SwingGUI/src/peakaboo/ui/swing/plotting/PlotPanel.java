@@ -1343,6 +1343,7 @@ public class PlotPanel extends ClearPanel
 					controller.getDatasetName(),
 					true,
 					controller.getDataSourceFolder(),
+					savePictureFolder,
 					dataDimensions,
 					results);
 
@@ -1370,6 +1371,7 @@ public class PlotPanel extends ClearPanel
 					controller.getDatasetName(),
 					true,
 					controller.getDataSourceFolder(),
+					savePictureFolder,
 					dataDimensions,
 					results);
 			}

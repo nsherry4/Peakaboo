@@ -69,9 +69,10 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	public PeakabooMapperSwing(
 			SwidgetContainer owner, 
 			AllMapsModel data, 
-			String datasetName, 
+			String datasetName,
 			boolean showControls, 
-			String dataSourceFolder, 
+			String dataSourceFolder,
+			String savePictureFolder,
 			Coord<Integer> dataDimensions,
 			MapResultSet originalData
 	)
@@ -80,6 +81,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		super(owner, "Elemental Map - " + datasetName, true);
 
 		this.dataSourceFolder = dataSourceFolder;
+		this.savePictureFolder = savePictureFolder;
 		this.showControls = showControls;
 
 		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
@@ -91,17 +93,6 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		
 		init();
 
-	}
-
-
-	public PeakabooMapperSwing(SwidgetContainer owner, MapController defaultController, boolean showControls)
-	{
-		super(owner, "Elemental Map", true);
-
-		controller = defaultController;
-		this.showControls = showControls;
-
-		init();
 	}
 
 

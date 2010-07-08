@@ -43,6 +43,7 @@ public class PlotterFrame extends JFrame implements SwidgetContainer
 		
 		// Display the window.
 		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 
 	}

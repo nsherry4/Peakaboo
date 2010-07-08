@@ -259,46 +259,33 @@ public class MapViewer extends JPanel
 
 		controller.draw(g);
 
-		/*
-		 * controller.setLinearSampleStart(new Coord<Integer>(1,1)); controller.setLinearSampleStop(new
-		 * Coord<Integer>(10,10));
-		 * 
-		 * Coord<Integer> startCoord = controller.getPointForMapCoordinate(controller.getLinearSampleStart());
-		 * Coord<Integer> stopCoord = controller.getPointForMapCoordinate(controller.getLinearSampleStop());
-		 * 
-		 * if (startCoord != null && stopCoord != null) {
-		 * 
-		 * g.drawArc(startCoord.x, startCoord.y, 10, 10, 0, 360); g.drawArc(stopCoord.x, stopCoord.y, 10, 10, 0, 360);
-		 * 
-		 * }
-		 */
-
 	}
 
 
 	public void showValueAtCoord(Coord<Integer> mapCoord)
 	{
+		String noValue = "Index: -, X: -, Y: -, Value: -";
+		
 		if (mapCoord == null)
 		{
-			mapMouseMonitor.setText("X: -, Y: -, Value: -");
+			mapMouseMonitor.setText(noValue);
 			return;
 		}
 
-		// GridPerspective<Double> mapGrid = new GridPerspective<Double>(controller.getDataWidth(),
-		// controller.getDataHeight(), null);
-		// Double value = mapGrid.get(controller.getSummedVisibleMaps(), mapCoord.x, mapCoord.y);
-
 		int index = mapCoord.y * controller.getDataWidth() + mapCoord.x;
-		
+		index++;
 		
 		if (controller.isValidPoint(mapCoord))
 		{
+			String value = controller.getIntensityMeasurementAtPoint(mapCoord);
+			if (controller.getInterpolation() != 0) value += " (raw data)";
+			
 			mapMouseMonitor.setText("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
-					+ controller.getIntensityMeasurementAtPoint(mapCoord));
+					+ value);
 		}
 		else
 		{
-			mapMouseMonitor.setText("X: -, Y: -, Value: -");
+			mapMouseMonitor.setText(noValue);
 		}
 
 	}

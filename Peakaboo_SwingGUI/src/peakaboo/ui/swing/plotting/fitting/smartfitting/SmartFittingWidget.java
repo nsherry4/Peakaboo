@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -15,6 +16,7 @@ import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
 import peakaboo.controller.plotter.FittingController;
+import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
@@ -31,12 +33,16 @@ class SmartFittingWidget extends TSSelectorGroup
 {
 
 	private int	activeIndex;
+	
+	private List<ImageButton> editButtons;
 
 
 	public SmartFittingWidget(FittingController controller, PlotCanvas canvas)
 	{
 		super(controller, 1);
-				
+		
+		editButtons = DataTypeFactory.<ImageButton>list();
+		
 		resetSelectors();
 		activeIndex = 0;
 
@@ -76,6 +82,8 @@ class SmartFittingWidget extends TSSelectorGroup
 
 		removeAll();
 
+		editButtons.clear();
+		
 		GridBagConstraints c = new GridBagConstraints();
 
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -99,7 +107,10 @@ class SmartFittingWidget extends TSSelectorGroup
 
 			c.gridx = 1;
 			c.weightx = 0.0;
-			add(createEditButton(selector, i), c);
+			ImageButton edit = createEditButton(selector, i);
+			editButtons.add(edit);
+			edit.setEnabled(! (i == activeIndex));
+			add(edit, c);
 			
 			c.gridx = 2;
 			c.weightx = 0.0;
@@ -146,7 +157,7 @@ class SmartFittingWidget extends TSSelectorGroup
 	private ImageButton createEditButton(final TSSelector selector, final int index)
 	{
 
-		ImageButton edit = new ImageButton(
+		final ImageButton edit = new ImageButton(
 			StockIcon.EDIT_EDIT,
 			"Edit",
 			"Edit this fitting",
@@ -160,6 +171,7 @@ class SmartFittingWidget extends TSSelectorGroup
 				activeIndex = index;
 				disableAllSelectors();
 				selector.setEnabled(true);
+				edit.setEnabled(false);
 			}
 		});
 
@@ -170,13 +182,16 @@ class SmartFittingWidget extends TSSelectorGroup
 
 	private void disableAllSelectors()
 	{
-		Fn.each(selectors, new FunctionEach<TSSelector>() {
-
-			public void f(TSSelector selector)
-			{
-				selector.setEnabled(false);
-			}
-		});
+		for (TSSelector selector : selectors)
+		{
+			selector.setEnabled(false);
+		}
+		
+		for (ImageButton edit : editButtons)
+		{
+			edit.setEnabled(true);
+		}
+		
 	}
 
 

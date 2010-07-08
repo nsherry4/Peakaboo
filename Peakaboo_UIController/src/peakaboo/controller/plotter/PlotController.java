@@ -158,29 +158,29 @@ public class PlotController extends CanvasController implements FilterController
 
 	public void setDataSetProvider(DataSetProvider dsp)
 	{
-
+	
 		if (dsp == null) return;
-
+		
 		DataSetProvider old = model.dataset;
 		model.dataset = dsp;
-
+		
 		model.viewOptions.scanNumber = dsp.firstNonNullScanIndex();
-
-
+		
 		setDataWidth(model.dataset.scanSize());
 		setDataHeight(1);
-
+		
 		setFittingParameters(model.dataset.scanSize(), model.dataset.energyPerChannel());
-		// clear any interpolation from previous use
+				
 		if (mapController != null) mapController.setInterpolation(0);
-
+		
 		clearUndos();
-
+			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected
 		if (old != null && old != dsp) old.discard();
-
+	
 		updateListeners();
+
 
 	}
 
@@ -193,22 +193,28 @@ public class PlotController extends CanvasController implements FilterController
 		final TaskList<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 
-		readTasks.addListener(new PeakabooSimpleListener() {
+		
+		PeakabooSimpleListener datasetListener = new PeakabooSimpleListener() {
 
+			boolean loadedNewDataSet = false;
+			
 			public void change()
 			{
 				if (readTasks.getCompleted())
 				{
-					if (dataset.scanSize() > 0)
+					if (dataset.scanSize() > 0 && !loadedNewDataSet)
 					{
-
+												
 						setDataSetProvider(dataset);
+						loadedNewDataSet = true;
 
 					}
 				}
 			}
 
-		});
+		};
+		
+		readTasks.addListener(datasetListener);
 
 		return readTasks;
 

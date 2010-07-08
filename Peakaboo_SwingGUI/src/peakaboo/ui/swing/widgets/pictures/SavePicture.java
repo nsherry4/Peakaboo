@@ -164,7 +164,11 @@ public class SavePicture extends SwidgetDialog
 
 			String result = SwingIO.saveFile(this, "Save Picture As...", "png", "Portable Network Graphic", startingFolder, baos);
 
-			if (result != null) setVisible(false);
+			if (result != null)
+			{
+				setVisible(false);
+				startingFolder = result;
+			}
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			setEnabled(true);
 			
@@ -193,7 +197,11 @@ public class SavePicture extends SwidgetDialog
 
 			String result = SwingIO.saveFile(this, "Save Picture As...", "svg", "Scalable Vector Graphic", startingFolder, baos);
 
-			if (result != null) setVisible(false);
+			if (result != null)
+			{
+				setVisible(false);
+				startingFolder = result;
+			}
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			setEnabled(true);
 			
@@ -223,7 +231,11 @@ public class SavePicture extends SwidgetDialog
 
 			String result = SwingIO.saveFile(this, "Save Picture As...", "pdf", "Portable Document Format", startingFolder, baos);
 
-			if (result != null) setVisible(false);
+			if (result != null)
+			{
+				setVisible(false);
+				startingFolder = result;
+			}
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			setEnabled(true);
 			

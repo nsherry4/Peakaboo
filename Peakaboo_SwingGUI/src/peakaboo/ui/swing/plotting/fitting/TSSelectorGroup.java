@@ -100,10 +100,7 @@ public abstract class TSSelectorGroup extends ClearPanel
 	
 	public final void resetSelectors()
 	{
-
 		selectors.clear();
-
-		System.out.println("reseted");
 		
 		for (int i = 0; i < minSelectors; i++)
 		{
