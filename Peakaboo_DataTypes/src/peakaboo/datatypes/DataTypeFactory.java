@@ -77,6 +77,18 @@ public class DataTypeFactory {
     }
     
     /**
+     * Creates a new list of type T and initialises it with a single value of that type
+	 * @param <T> type of data this list should hold
+     * @param element the element to add to the list.
+     * @return a new list of size 'size' filled with null values
+     */
+    public static <T> List<T> listInit(T element){
+    	List<T> list = list();
+    	list.add(element);
+    	return list;
+    }
+    
+    /**
      * Creates a list of {@link Spectrum}s
      * @return a list which can contain Spectrums
      */

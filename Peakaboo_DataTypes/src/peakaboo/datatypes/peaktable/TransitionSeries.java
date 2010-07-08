@@ -275,7 +275,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	{
 		return getDescription(true);
 	}
-
+	
 
 	public double getLowestEnergyValue()
 	{
@@ -495,16 +495,16 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	@Override
 	public boolean equals(Object oother)
 	{
-
+	
 		if (!(oother instanceof TransitionSeries)) return false;
 		TransitionSeries other = (TransitionSeries) oother;
-
+		
 		if (type != TransitionSeriesType.COMPOSITE)
 		{
 			if (other.element != this.element) return false;
 		}
-
-		if (other.type != this.type) return false;
+		
+		if (other.type != this.type) return false;	
 		if (other.mode != this.mode) return false;
 
 		if (type == TransitionSeriesType.COMPOSITE)
@@ -514,7 +514,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 			if ( !all(zipEquiv(componentSeries, other.componentSeries)) ) return false;
 		}
-
+		
 		return true;
 
 	}
