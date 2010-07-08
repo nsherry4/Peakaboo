@@ -8,12 +8,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
+import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
@@ -24,6 +27,7 @@ import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.Element;
+import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.tasks.TaskList;
@@ -47,10 +51,14 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 import swidget.dialogues.fileio.AbstractFile;
 
+import fava.Fn;
+import fava.Functions;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
+import fava.lists.FList;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
+
 
 
 /**
@@ -67,8 +75,7 @@ public class PlotController extends CanvasController implements FilterController
 	private MapController					mapController;
 	private PlotDrawing						plot;
 
-	private List<AxisPainter
-	>				axisPainters;
+	private List<AxisPainter>				axisPainters;
 
 	private Stack<ByteArrayOutputStream>	undoStack;
 	private Stack<ByteArrayOutputStream>	redoStack;
@@ -151,32 +158,33 @@ public class PlotController extends CanvasController implements FilterController
 
 	public void setDataSetProvider(DataSetProvider dsp)
 	{
-		
+
 		if (dsp == null) return;
-			
+
 		DataSetProvider old = model.dataset;
 		model.dataset = dsp;
-		
+
 		model.viewOptions.scanNumber = dsp.firstNonNullScanIndex();
-				
-		
+
+
 		setDataWidth(model.dataset.scanSize());
 		setDataHeight(1);
-		
+
 		setFittingParameters(model.dataset.scanSize(), model.dataset.energyPerChannel());
 		// clear any interpolation from previous use
 		if (mapController != null) mapController.setInterpolation(0);
 
 		clearUndos();
-		
+
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected
-		if ( old != null && old != dsp ) old.discard();
-		
+		if (old != null && old != dsp) old.discard();
+
 		updateListeners();
-		
+
 	}
-	
+
+
 	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
@@ -193,7 +201,7 @@ public class PlotController extends CanvasController implements FilterController
 				{
 					if (dataset.scanSize() > 0)
 					{
-						
+
 						setDataSetProvider(dataset);
 
 					}
@@ -278,7 +286,7 @@ public class PlotController extends CanvasController implements FilterController
 
 
 	private void setDataWidth(int width)
-	{		
+	{
 		model.dr.dataWidth = width;
 		updateListeners();
 	}
@@ -337,7 +345,7 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	public int channelFromCoordinate(int x, int width)
+	public int channelFromCoordinate(int x)
 	{
 
 		if (plot == null) return -1;
@@ -540,7 +548,7 @@ public class PlotController extends CanvasController implements FilterController
 		////////////////////////////////////////////////////////////////////
 		// Axis Painters
 		////////////////////////////////////////////////////////////////////
-		
+
 		if (axisPainters == null)
 		{
 
@@ -585,6 +593,9 @@ public class PlotController extends CanvasController implements FilterController
 	// =============================================
 	// DATA RETRIEVAL FOR PLOTS AND MAPS
 	// =============================================
+	/**
+	 * Returns a pair of spectra. The first one is the filtered data, the second is the original
+	 */
 	private Pair<Spectrum, Spectrum> getDataForPlot()
 	{
 
@@ -635,8 +646,8 @@ public class PlotController extends CanvasController implements FilterController
 				// over the network. In these cases, we should just display a "Loading..." message and register a
 				// listener with the dataset asking to be notified when the data comes back. We will then repaint.
 				originalData = model.currentScan();
-				
-								// if the filtered data has been invalidated, regenerate it
+
+				// if the filtered data has been invalidated, regenerate it
 				model.filteredPlot = model.filters.filterData(originalData, true);
 
 			}
@@ -987,7 +998,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		return filter(model.peakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
-			
+
 			public Boolean f(TransitionSeries ts)
 			{
 				return (!fitted.contains(ts)) && tst.equals(ts.type);
@@ -1016,7 +1027,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		return filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
-			
+
 			public Boolean f(TransitionSeries ts)
 			{
 				return ts.visible;
@@ -1185,6 +1196,147 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
+	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
+	{
+
+		/*
+		 * 
+		 * Method description
+		 * ------------------
+		 * 
+		 * We try to figure out which Transition Series are the best fit for the given channel.
+		 * This is done in the following steps
+		 * 
+		 * 1. If we have suggested a TS previously, it should be passed in in currentTS
+		 * 2. If currentTS isn't null, we remove it from the proposals, refit, and then readd it
+		 * 		* we do this so that we can still suggest that same TS this time, otherwise, there would be no signal for it to fit
+		 * 3. We get all TSs from the peak table, and add all summations of all fitted & proposed TSs
+		 * 4. We remove all TSs which are already fitted or proposed.
+		 * 5. We add currentTS to the list, since the last step will have removed it
+		 * 6. We unique the list, don't want duplicates showing up
+		 * 7. We sort by proximity, and take the top 15
+		 * 8. We sort by a more detailed scoring function which involves fitting each TS and seeing how well it fits
+		 * 9. We return the top 5 from the list in the last step
+		 * 
+		 */
+		
+		
+		
+		//remove the current transitionseries from the list of proposed trantision series so we can re-suggest it.
+		//otherwise, the copy getting fitted eats all the signal from the one we would suggest during scoring
+		boolean currentTSisUsed = currentTS != null && getProposedTransitionSeries().contains(currentTS);
+		if (currentTSisUsed) removeProposedTransitionSeries(currentTS);
+		regenerateCahcedData();
+		
+		final Spectrum s = model.fittingProposalResults.residual;
+		
+		if (currentTSisUsed) addProposedTransitionSeries(currentTS);
+		regenerateCahcedData();
+		
+		
+		
+		
+		final float energyPerChannel = getEnergyPerChannel();
+		final float energy = channel * energyPerChannel;
+		
+		
+		//scoring function to evaluate each TransitionSeries
+		final FunctionMap<TransitionSeries, Float> score = new FunctionMap<TransitionSeries, Float>() {
+
+			public Float f(TransitionSeries ts)
+			{
+				Double prox = Math.abs(ts.getProximityToEnergy(energy));
+				if (prox <= 0.001) prox = 0.001;
+				
+				
+				TransitionSeriesFitting tsf = new TransitionSeriesFitting(ts, getDataWidth(), energyPerChannel, FittingSet.escape);
+				Float ratio = tsf.getRatioForCurveUnderData(s);
+				ratio = (float) Math.pow(ratio, 2);
+				
+				return (ratio / prox.floatValue()) / tsf.getSizeOfBase();
+			}
+		};
+
+
+		//get a list of all transition series to start with
+		FList<TransitionSeries> tss = Fn.map(model.peakTable.getAllTransitionSeries(), Functions
+			.<TransitionSeries> id());
+
+		
+		//add in any 2x summations from the list of previously fitted AND proposed peaks.
+		//we exclude any that the caller requests so that if a UI component is *replacing* a TS with
+		//these suggestions, it doesn't get summations for the now-removed TS
+		List<TransitionSeries> summationCandidates = getFittedTransitionSeries();
+		summationCandidates.addAll(getProposedTransitionSeries());
+		if (currentTSisUsed) summationCandidates.remove(currentTS);
+		
+		for (TransitionSeries ts1 : summationCandidates)
+		{
+			for (TransitionSeries ts2 : summationCandidates)
+			{
+				tss.add(ts1.summation(ts2));
+			}
+		}
+		
+
+		//remove the transition series we have already fit, including any summations
+		tss.removeAll(getFittedTransitionSeries());
+		tss.removeAll(getProposedTransitionSeries());
+		
+		
+		//We then re-add the TS passed to us so that we can still suggest the 
+		//TS that is currently selected, if it fits
+		if (currentTSisUsed) {
+			tss.add(currentTS);
+		}
+		
+		
+		//remove any duplicates we might have created while adding the summations
+		tss = Fn.unique(tss);
+		
+
+		//sort first by how close they are to the channel in quesiton
+		Fn.sortBy(tss, new Comparator<TransitionSeries>() {
+
+			public int compare(TransitionSeries ts1, TransitionSeries ts2)
+			{
+				Double prox1, prox2;
+
+				prox1 = Math.abs(ts1.getProximityToEnergy(energy));
+				prox2 = Math.abs(ts2.getProximityToEnergy(energy));
+
+				return prox1.compareTo(prox2);
+
+			}
+		}, Functions.<TransitionSeries> id());
+		
+		//take the top n based on position alone
+		tss = tss.take(15);
+		
+		//now sort by score
+		Collections.sort(tss, new Comparator<TransitionSeries>() {
+
+			public int compare(TransitionSeries ts1, TransitionSeries ts2)
+			{
+				Float prox1, prox2;
+
+				prox1 = score.f(ts1);
+				prox2 = score.f(ts2);
+
+				return prox2.compareTo(prox1);
+
+			}
+		});
+			
+		//take the 5 best in sorted order based on score
+		return tss.take(5);
+	}
+
+
+
+
+
+
 	// =============================================
 	// UI SETTINGS FUNCTIONS TO IMPLEMENT SettingsController
 	// =============================================
@@ -1312,20 +1464,22 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		//negative is downwards, positive is upwards
 		int direction = number - model.viewOptions.scanNumber;
-		
+
 		if (direction > 0)
 		{
 			number = model.dataset.firstNonNullScanIndex(number);
-		} else {
+		}
+		else
+		{
 			number = model.dataset.lastNonNullScanIndex(number);
 		}
-		
-		if (number == -1) 
+
+		if (number == -1)
 		{
 			updateListeners();
 			return;
 		}
-		
+
 		if (number > model.dataset.scanCount() - 1) number = model.dataset.scanCount() - 1;
 		if (number < 0) number = 0;
 		model.viewOptions.scanNumber = number;
@@ -1522,7 +1676,7 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	
+
 	public void clearUndos()
 	{
 		undoStack.clear();

@@ -91,72 +91,7 @@ public class TransitionSeriesFitting
 
 	}
 
-
-	// generates an initial unscaled curvefit from which later curves are scaled as needed
-	private void calcUnscaledFit(TransitionSeries ts, float energyPerChannel, boolean fitEscape)
-	{
-
-		Spectrum fit = new Spectrum(dataWidth);
-		List<FittingFunction> functions = DataTypeFactory.<FittingFunction> list();
-
-		for (Transition t : ts)
-		{
-
-			// GaussianFittingFunction g = new GaussianFittingFunction(t.energyValue / energyPerChannel, SIGMA
-			// / energyPerChannel, t.relativeIntensity / 100.0);
-			FittingFunction g = new GaussianFittingFunction(
-
-			t.energyValue / energyPerChannel, getSigmaForTransition(SIGMA, t) / energyPerChannel, t.relativeIntensity);
-
-			functions.add(g);
-
-			if (fitEscape)
-			{
-				g = new GaussianFittingFunction((t.energyValue - escape) / energyPerChannel, getSigmaForTransition(
-						SIGMA,
-						t)
-						/ energyPerChannel, t.relativeIntensity * escapeIntensity(ts.element));
-			}
-
-			functions.add(g);
-
-		}
-
-		float value;
-		for (int i = 0; i < dataWidth; i++)
-		{
-
-			value = 0.0f;
-			for (FittingFunction f : functions)
-			{
-
-				value += f.getHeightAtPoint(i);
-
-			}
-			fit.set(i, value);
-
-		}
-
-		if (dataWidth > 0)
-		{
-			// //ListCalculations.normalize_inplace(fit);
-			normalizationScale = SpectrumCalculations.max(fit);
-			if (normalizationScale == 0.0)
-			{
-				normalizedUnscaledFit = SpectrumCalculations.multiplyBy(fit, 0.0f);
-			}
-			else
-			{
-				normalizedUnscaledFit = SpectrumCalculations.divideBy(fit, normalizationScale);
-			}
-			// unscaledFit = fit;
-			// normalizedRatio = ListCalculations.max(fit) / ListCalculations.max(unscaledFit);
-			// unscaledFit = fit;
-		}
-
-	}
-
-
+	
 	/**
 	 * Returns a scaled fit based on the given scale value
 	 * 
@@ -168,6 +103,7 @@ public class TransitionSeriesFitting
 	{
 		return SpectrumCalculations.multiplyBy(normalizedUnscaledFit, scale);
 	}
+	
 
 
 	/**
@@ -275,5 +211,89 @@ public class TransitionSeriesFitting
 	{
 		return normalizationScale;
 	}
+	
+	/**
+	 * Gets the width in channels of the base of this TransitionSeries.
+	 * For example, L and M series will likely be broader than K
+	 * series
+	 * @return
+	 */
+	public int getSizeOfBase()
+	{
+		int count = 0;
+		for (int i = 0; i < constraintMask.size(); i++)
+		{
+			if (constraintMask.get(i)) count++;
+		}
+		return count;
+	}
+	
+	
+	
+
+	// generates an initial unscaled curvefit from which later curves are scaled as needed
+	private void calcUnscaledFit(TransitionSeries ts, float energyPerChannel, boolean fitEscape)
+	{
+
+		Spectrum fit = new Spectrum(dataWidth);
+		List<FittingFunction> functions = DataTypeFactory.<FittingFunction> list();
+
+		for (Transition t : ts)
+		{
+
+			// GaussianFittingFunction g = new GaussianFittingFunction(t.energyValue / energyPerChannel, SIGMA
+			// / energyPerChannel, t.relativeIntensity / 100.0);
+			FittingFunction g = new GaussianFittingFunction(
+
+			t.energyValue / energyPerChannel, getSigmaForTransition(SIGMA, t) / energyPerChannel, t.relativeIntensity);
+
+			functions.add(g);
+
+			if (fitEscape)
+			{
+				g = new GaussianFittingFunction((t.energyValue - escape) / energyPerChannel, getSigmaForTransition(
+						SIGMA,
+						t)
+						/ energyPerChannel, t.relativeIntensity * escapeIntensity(ts.element));
+			}
+
+			functions.add(g);
+
+		}
+
+		float value;
+		for (int i = 0; i < dataWidth; i++)
+		{
+
+			value = 0.0f;
+			for (FittingFunction f : functions)
+			{
+
+				value += f.getHeightAtPoint(i);
+
+			}
+			fit.set(i, value);
+
+		}
+
+		if (dataWidth > 0)
+		{
+			// //ListCalculations.normalize_inplace(fit);
+			normalizationScale = SpectrumCalculations.max(fit);
+			if (normalizationScale == 0.0)
+			{
+				normalizedUnscaledFit = SpectrumCalculations.multiplyBy(fit, 0.0f);
+			}
+			else
+			{
+				normalizedUnscaledFit = SpectrumCalculations.divideBy(fit, normalizationScale);
+			}
+			// unscaledFit = fit;
+			// normalizedRatio = ListCalculations.max(fit) / ListCalculations.max(unscaledFit);
+			// unscaledFit = fit;
+		}
+
+	}
+
 
 }

@@ -44,4 +44,6 @@ public interface FittingController extends IEventful
 	
 	public void fittingProposalsInvalidated();	
 	
+	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTransition);
+	
 }

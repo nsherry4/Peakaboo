@@ -17,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -352,14 +353,14 @@ public class PeakabooMapperSwing extends SwidgetDialog
 
 
 	
-	private void actionSavePicture()
+	public void actionSavePicture()
 	{
 
 		if (savePictureFolder == null) savePictureFolder = dataSourceFolder;
 		savePictureFolder = new SavePicture(this, controller, savePictureFolder).getStartingFolder();
 
 	}
-	private void actionSaveCSV()
+	public void actionSaveCSV()
 	{
 
 		ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();

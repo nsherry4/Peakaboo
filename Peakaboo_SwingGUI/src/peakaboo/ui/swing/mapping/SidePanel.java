@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.border.TitledBorder;
@@ -20,6 +21,8 @@ import peakaboo.controller.mapper.MapDisplayMode;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
+import swidget.icons.StockIcon;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 
 
@@ -28,6 +31,7 @@ public class SidePanel extends JPanel
 {
 
 	protected MapController		controller;
+	
 
 	private JSpinner			shadesSpinner;
 	private JCheckBox			contours;
@@ -45,12 +49,12 @@ public class SidePanel extends JPanel
 		this.controller = controller;
 
 
-		createControls();
+		createControls(owner);
 
 	}
 
 
-	private void createControls()
+	private void createControls(final PeakabooMapperSwing owner)
 	{
 
 		setBorder(Spacing.bSmall());
@@ -76,6 +80,22 @@ public class SidePanel extends JPanel
 		maingbc.fill = GridBagConstraints.BOTH;
 		add(new ViewsContainer(controller), maingbc);
 
+		
+		
+		ImageButton savePicture = new ImageButton(StockIcon.DEVICE_CAMERA, "Save Image", "Save the current map as an image");
+		savePicture.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				owner.actionSavePicture();
+			}
+		});
+		maingbc.gridy += 1;
+		maingbc.weightx = 1.0;
+		maingbc.weighty = 0.0;
+		maingbc.fill = GridBagConstraints.HORIZONTAL;
+		add(savePicture, maingbc);
+		
 		// elements list
 		/*
 		 * maingbc.gridy += 1; maingbc.weightx = 0.0; maingbc.weighty = 1.0; maingbc.fill = GridBagConstraints.BOTH;

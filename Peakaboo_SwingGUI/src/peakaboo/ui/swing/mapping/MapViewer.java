@@ -288,9 +288,12 @@ public class MapViewer extends JPanel
 		// controller.getDataHeight(), null);
 		// Double value = mapGrid.get(controller.getSummedVisibleMaps(), mapCoord.x, mapCoord.y);
 
+		int index = mapCoord.y * controller.getDataWidth() + mapCoord.x;
+		
+		
 		if (controller.isValidPoint(mapCoord))
 		{
-			mapMouseMonitor.setText("X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
+			mapMouseMonitor.setText("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
 					+ controller.getIntensityMeasurementAtPoint(mapCoord));
 		}
 		else

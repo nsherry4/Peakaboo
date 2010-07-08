@@ -67,9 +67,6 @@ public class ProposalPanel extends ClearPanel implements Changeable
 		JScrollPane fitted = createUnfittedTable();
 		this.add(fitted, BorderLayout.CENTER);
 
-		// panel.setBorder(new RoundedTitleBorder("Add New Elements", new Color(0f, 0f, 0f, 0.3f), new Color(0f, 0f, 0f,
-		// 0f)));
-		// panel.add(selControls, BorderLayout.SOUTH);
 		this.add(new TitleGradientPanel("Add Elemental Fittings", true, selControls), BorderLayout.NORTH);
 
 
@@ -79,7 +76,7 @@ public class ProposalPanel extends ClearPanel implements Changeable
 	public void changed()
 	{
 		utm.fireChangeEvent();
-		unfitTree.setSelectionRow(0);
+		//unfitTree.setSelectionRow(0);
 	}
 
 

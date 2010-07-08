@@ -15,6 +15,8 @@ import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -271,6 +273,7 @@ public class PlotPanel extends ClearPanel
 
 		canvas = new PlotCanvas(controller, this);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+		
 
 		channelLabel = new JLabel("");
 		channelLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -330,6 +333,7 @@ public class PlotPanel extends ClearPanel
 			JViewport		viewPort		= scrolledCanvas.getViewport();
 			Point			scrollPosition	= viewPort.getViewPosition();
 
+			Cursor oldCursor;
 
 			private Point getPoint(MouseEvent e)
 			{
@@ -400,6 +404,7 @@ public class PlotPanel extends ClearPanel
 				p0 = getPoint(e);
 				scrollPosition = viewPort.getViewPosition();
 				dragging = true;
+				oldCursor = canvas.getCursor();
 				canvas.setCursor(new Cursor(Cursor.MOVE_CURSOR));
 			}
 
@@ -409,7 +414,7 @@ public class PlotPanel extends ClearPanel
 				update(e);
 				dragging = false;
 				p0 = null;
-				canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+				canvas.setCursor(oldCursor);
 			}
 
 		}
@@ -424,8 +429,25 @@ public class PlotPanel extends ClearPanel
 		canvasPanel.add(createBottomBar(), BorderLayout.SOUTH);
 		canvasPanel.setPreferredSize(new Dimension(600, 300));
 
+		canvasPanel.addComponentListener(new ComponentListener() {
+			
+			public void componentShown(ComponentEvent e)
+			{}
+					
+			public void componentResized(ComponentEvent e)
+			{
+				canvas.setCanvasSize();
+			}
+			
+			public void componentMoved(ComponentEvent e)
+			{}
+			
+			public void componentHidden(ComponentEvent e)
+			{}
+		});
+		
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.add(new CurveFittingView(controller), 0);
+		tabs.add(new CurveFittingView(controller, canvas), 0);
 		tabs.add(new FiltersetViewer(controller, container), 1);
 
 		c.gridx = 0;
@@ -440,6 +462,7 @@ public class PlotPanel extends ClearPanel
 		split.setBorder(Spacing.bNone());
 		pane.add(split, c);
 
+		
 		createMenu();
 
 
@@ -1193,7 +1216,7 @@ public class PlotPanel extends ClearPanel
 	public void mouseMoveCanvasEvent(int x)
 	{
 
-		int channel = controller.channelFromCoordinate(x, canvas.getWidth());
+		int channel = controller.channelFromCoordinate(x);
 		float energy = controller.getEnergyForChannel(channel);
 		Pair<Float, Float> values = controller.getValueForChannel(channel);
 

@@ -7,12 +7,17 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
 import fava.Fn;
+import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
 import peakaboo.controller.plotter.PlotController;
@@ -32,12 +37,13 @@ public class PlotCanvas extends JPanel implements Scrollable
 {
 
 
-	private PlotController	controller;
+	private PlotController			controller;
 
-	private boolean			hasData;
+	private boolean					hasData;
+	private FunctionEach<Integer>	grabChannelFromClickCallback;
 
 
-	public PlotCanvas(PlotController controller, final PlotPanel parent)
+	public PlotCanvas(final PlotController controller, final PlotPanel parent)
 	{
 
 		super(true);
@@ -46,7 +52,7 @@ public class PlotCanvas extends JPanel implements Scrollable
 		this.controller = controller;
 		this.setMinimumSize(new Dimension(100, 100));
 		this.setFocusable(false);
-		
+
 		//setCanvasSize();
 
 		controller.addListener(new PeakabooSimpleListener() {
@@ -57,33 +63,63 @@ public class PlotCanvas extends JPanel implements Scrollable
 				setCanvasSize();
 			}
 		});
-
+		
+		
 		//can't accept drag'n'drop if we're in a webstart session, since
 		//there are security restrictions
 		if (!Env.isWebStart())
 		{
-			
+
 			FileDrop fileDrop = new FileDrop(this, new FileDrop.Listener() {
+
 				public void filesDropped(File[] files)
 				{
-					
-					
+
+
+
 					parent.loadFiles(
 						Fn.map(files, new FunctionMap<File, AbstractFile>() {
-	
+
 							public AbstractFile f(File element)
 							{
 								return new AbstractFile(element);
 							}
 						})
-					);
-					
-					
+						);
+
+
+
 				}
 			});
-			
+
 		}
 
+		
+		addMouseListener(new MouseListener() {
+			
+			public void mouseReleased(MouseEvent e)
+			{}
+			
+		
+			public void mousePressed(MouseEvent e)
+			{}
+			
+		
+			public void mouseExited(MouseEvent e)
+			{}
+			
+		
+			public void mouseEntered(MouseEvent e)
+			{}
+			
+		
+			public void mouseClicked(MouseEvent e)
+			{
+				if (grabChannelFromClickCallback != null){
+					grabChannelFromClickCallback.f(controller.channelFromCoordinate(e.getX()));
+				}
+			}
+		});
 
 	}
 
@@ -107,8 +143,25 @@ public class PlotCanvas extends JPanel implements Scrollable
 	}
 
 
-	private void setCanvasSize()
+	public void setHasData(boolean hasData)
 	{
+		this.hasData = hasData;
+	}
+
+
+	public void grabChannelFromClick(FunctionEach<Integer> callback)
+	{
+		grabChannelFromClickCallback = callback;
+	}
+
+
+
+
+
+
+	public void setCanvasSize()
+	{
+	
 		double parentWidth = 1.0;
 		if (this.getParent() != null)
 		{
@@ -125,66 +178,45 @@ public class PlotCanvas extends JPanel implements Scrollable
 	}
 
 
+	private int channelWidth(int multiplier)
+	{
+		return (int) Math.max(1.0f, Math.round(controller.getZoom() * multiplier));
+	}
+
+
+
+
+	//**************************************************************
+	// Scrollable Interface
+	//**************************************************************
 	public Dimension getPreferredScrollableViewportSize()
 	{
-		// TODO Auto-generated method stub
-
 		return new Dimension(600, 300);
 	}
 
 
 	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2)
 	{
-		// TODO Auto-generated method stub
 		return channelWidth(50);
 	}
 
 
 	public boolean getScrollableTracksViewportHeight()
 	{
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 
 	public boolean getScrollableTracksViewportWidth()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2)
 	{
-		// TODO Auto-generated method stub
 		return channelWidth(5);
 	}
-
-
-	public Point getLocationOnScreenOffset(Point offset)
-	{
-
-		Point p = new Point(this.getLocation());
-		p.x += offset.x;
-		p.y += offset.y;
-
-		return p;
-
-	}
-
-
-
-	public void setHasData(boolean hasData)
-	{
-		this.hasData = hasData;
-	}
-
-
-	private int channelWidth(int multiplier)
-	{
-		return (int) Math.max(1.0f, Math.round(controller.getZoom() * multiplier));
-	}
-
 
 
 }

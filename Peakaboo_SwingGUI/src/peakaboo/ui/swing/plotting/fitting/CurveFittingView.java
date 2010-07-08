@@ -15,7 +15,9 @@ import javax.swing.JPanel;
 
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
+import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
+import peakaboo.ui.swing.plotting.fitting.smartfitting.SmartFittingPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalPanel;
 import swidget.widgets.ClearPanel;
@@ -32,18 +34,20 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	private final String			FITTED		= "Fitted";
 	private final String			UNFITTED	= "Unfitted";
 	private final String			SUMMATION	= "Summation";
+	private final String			SMART		= "Smart";
 
 
 	protected FittingPanel			fittedPanel;
 	protected ProposalPanel			proposalPanel;
 	protected SummationPanel		summationPanel;
+	protected SmartFittingPanel		smartPanel;
 	
 	
 	protected JPanel				cardPanel;
 	protected CardLayout			card;
 	
 
-	public CurveFittingView(FittingController _controller)
+	public CurveFittingView(FittingController _controller, PlotCanvas canvas)
 	{
 		super();
 
@@ -54,8 +58,9 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		fittedPanel = new FittingPanel(controller, this);
 		proposalPanel = new ProposalPanel(controller, this);
 		summationPanel = new SummationPanel(controller, this);
+		smartPanel = new SmartFittingPanel(controller, this, canvas);
 
-		cardPanel = createCardPanel(fittedPanel, proposalPanel, summationPanel);
+		cardPanel = createCardPanel();
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(cardPanel);
@@ -64,7 +69,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 
 			public void change()
 			{
-				CurveFittingView.this.changed();
+				//CurveFittingView.this.changed();
 			}
 		});
 
@@ -100,24 +105,34 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		changed();
 	}
 	
+	public void smartAdd()
+	{
+		smartPanel.resetSelectors();
+		smartPanel.setSelectionMode(true);
+		card.show(cardPanel, SMART);
+		changed();
+	}
+	
 	
 	public void dialogClose()
 	{
 		card.show(cardPanel, FITTED);
+		smartPanel.setSelectionMode(false);
 		changed();
 	}
 	
 
 
-	private JPanel createCardPanel(JPanel t1, JPanel t2, JPanel t3)
+	private JPanel createCardPanel()
 	{
 		JPanel panel = new ClearPanel();
 		card = new CardLayout();
 		panel.setLayout(card);
 
-		panel.add(t1, FITTED);
-		panel.add(t2, UNFITTED);
-		panel.add(t3, SUMMATION);
+		panel.add(fittedPanel, FITTED);
+		panel.add(proposalPanel, UNFITTED);
+		panel.add(summationPanel, SUMMATION);
+		panel.add(smartPanel, SMART);
 
 		return panel;
 	}

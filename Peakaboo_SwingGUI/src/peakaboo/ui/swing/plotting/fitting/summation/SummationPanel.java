@@ -5,11 +5,13 @@ package peakaboo.ui.swing.plotting.fitting.summation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import fava.Fn;
+import fava.signatures.FunctionEach;
+
 import peakaboo.controller.plotter.FittingController;
-import peakaboo.ui.swing.plotting.fitting.Changeable;
+import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 import swidget.widgets.ClearPanel;
@@ -22,21 +24,22 @@ import swidget.widgets.listcontrols.SelectionListControls;
 public class SummationPanel extends ClearPanel
 {
 
-	protected SummationWidget		summationWidget;
+	protected SummationWidget	summationWidget;
+
 
 	public SummationPanel(final FittingController controller, final CurveFittingView owner)
 	{
-		
+
 		SelectionListControls selControls = new SelectionListControls("Summation") {
 
 			@Override
 			protected void cancel()
 			{
 				summationWidget.resetSelectors();
-				
+
 				controller.clearProposedTransitionSeries();
 				controller.fittingProposalsInvalidated();
-				
+
 				owner.dialogClose();
 
 			}
@@ -45,13 +48,21 @@ public class SummationPanel extends ClearPanel
 			@Override
 			protected void approve()
 			{
-				controller.addTransitionSeries(summationWidget.getTransitionSeries());
+				//add all of the transition series that come back from the summation widget
+				Fn.each(summationWidget.getTransitionSeries(), new FunctionEach<TransitionSeries>() {
+
+					public void f(TransitionSeries ts)
+					{
+						controller.addTransitionSeries(ts);
+					}
+				});
+
 
 				controller.clearProposedTransitionSeries();
 				controller.fittingProposalsInvalidated();
 
 				owner.dialogClose();
-				
+
 			}
 		};
 
@@ -76,6 +87,6 @@ public class SummationPanel extends ClearPanel
 	{
 		summationWidget.resetSelectors();
 	}
-	
+
 
 }

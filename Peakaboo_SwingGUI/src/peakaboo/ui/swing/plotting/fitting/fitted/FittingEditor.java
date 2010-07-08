@@ -72,7 +72,7 @@ class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 			{
 				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1);
 			} else {
-				desc = "Atomic #: " + (e.atomicNumber()) + ", Intensity: " + SigDigits.roundFloatTo(intensity, 1);
+				desc = "Atomic # " + (e.atomicNumber()) + ", Intensity: " + SigDigits.roundFloatTo(intensity, 1);
 			}
 			tswidget.setDescription(desc);
 
