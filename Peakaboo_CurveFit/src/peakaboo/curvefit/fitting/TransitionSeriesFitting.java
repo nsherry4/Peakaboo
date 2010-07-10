@@ -5,6 +5,10 @@ package peakaboo.curvefit.fitting;
 import java.util.Collections;
 import java.util.List;
 
+import fava.Fn;
+import fava.datatypes.Range;
+import fava.datatypes.RangeSet;
+
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.Transition;
@@ -27,18 +31,23 @@ public class TransitionSeriesFitting
 
 	// private List<Double> unscaledFit;
 	Spectrum					normalizedUnscaledFit;
-	private List<Boolean>		constraintMask;
+	//private List<Boolean>		constraintMask;
 	private float				normalizationScale;
+	
 
+	private RangeSet			transitionRanges;
+	
 	/**
 	 * The {@link TransitionSeries} that this fitting is based on.
 	 */
 	public TransitionSeries		transitionSeries;
 
+	private int					baseSize;
 	private int					dataWidth;
+	private float 				energyPerChannel;
 
 	public static final float	SIGMA	= 0.062f;
-	private float		escape	= 1.74f;
+	private float				escape	= 1.74f;
 
 
 	/**
@@ -56,41 +65,24 @@ public class TransitionSeriesFitting
 
 		this.dataWidth = dataWidth;
 		this.escape = escape;
+		this.energyPerChannel = energyPerChannel;
 		
-		constraintMask = DataTypeFactory.<Boolean> list();
-		for (int i = 0; i < dataWidth; i++)
-		{
-			constraintMask.add(false);
-		}
-
-		float range;
-		float mean;
-		int start, stop;
-
-		for (Transition t : ts)
-		{
-
-			range = getSigmaForTransition(SIGMA, t) / energyPerChannel;
-
-			mean = t.energyValue / energyPerChannel;
-
-			start = (int) (mean - range);
-			stop = (int) (mean + range);
-			if (start < 0) start = 0;
-			if (stop > dataWidth - 1) stop = dataWidth - 1;
-
-			for (int i = start; i <= stop; i++)
-			{
-				constraintMask.set(i, true);
-			}
-		}
-
-		calcUnscaledFit(ts, energyPerChannel, (ts.type != TransitionSeriesType.COMPOSITE));
-
-		this.transitionSeries = ts;
+		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
+		transitionRanges = new RangeSet();
+		
+		if (ts != null) setTransitionSeries(ts);
 
 	}
 
+	
+	public void setTransitionSeries(TransitionSeries ts)
+	{
+		calculateConstraintMask(ts);
+		calcUnscaledFit(ts, energyPerChannel, (ts.type != TransitionSeriesType.COMPOSITE));
+
+		this.transitionSeries = ts;
+	}
+	
 	
 	/**
 	 * Returns a scaled fit based on the given scale value
@@ -115,30 +107,31 @@ public class TransitionSeriesFitting
 	 */
 	public float getRatioForCurveUnderData(Spectrum data)
 	{
-
-		List<Float> dataConsidered = DataTypeFactory.<Float> list();
-		List<Float> ratios = DataTypeFactory.<Float> list();
-		for (int i = 0; i < data.size(); i++)
+			
+		float topIntensity = Float.MIN_VALUE;
+		boolean dataConsidered = false;
+		float currentIntensity;
+		float cutoff;
+		
+	
+		//look at every point in the ranges covered by transitions 
+		for (Integer i : transitionRanges)
 		{
-			if (constraintMask.get(i) == true)
-			{
-				dataConsidered.add(data.get(i));
-			}
-
+	
+			currentIntensity = data.get(i);
+			if (currentIntensity > topIntensity) topIntensity = currentIntensity;
+			dataConsidered = true;
+			
 		}
 
-		Collections.sort(dataConsidered);
 
-		if (dataConsidered.size() == 0) return 0.0f;
-
-		float topIntensity = dataConsidered.get(dataConsidered.size() - 1);
-		float cutoff;
-
+		if (! dataConsidered) return 0.0f;	
+		
 		// calculate cut-off point where we do not consider any signal weaker than this when trying to fit
-		if (topIntensity != 0.0)
+		if (topIntensity > 0.0)
 		{
 			cutoff = (float) Math.log(topIntensity * 2);
-			cutoff = cutoff / topIntensity; // expresessed as a percentage
+			cutoff = cutoff / topIntensity; // expresessed w.r.t strongest signal
 		}
 		else
 		{
@@ -146,23 +139,28 @@ public class TransitionSeriesFitting
 		}
 
 		float thisFactor;
+		float smallestFactor = Float.MAX_VALUE;
+		boolean ratiosConsidered = false;
 
-		for (int i = 0; i < data.size(); i++)
+		
+		//look at every point in the ranges covered by transitions 
+		for (Integer i : transitionRanges)
 		{
-
-			if (constraintMask.get(i) == true && normalizedUnscaledFit.get(i) >= cutoff)
+			if (normalizedUnscaledFit.get(i) >= cutoff)
 			{
 
 				thisFactor = data.get(i) / normalizedUnscaledFit.get(i);
-				if (thisFactor != Float.NaN) ratios.add(thisFactor);
+				if (thisFactor < smallestFactor && thisFactor != Float.NaN) 
+				{
+					smallestFactor = thisFactor;
+					ratiosConsidered = true;
+				}
 			}
 		}
 
-		Collections.sort(ratios);
+		if (! ratiosConsidered) return 0.0f;
 
-		if (ratios.size() == 0) return 0.0f;
-
-		return ratios.get(0);
+		return smallestFactor;
 
 	}
 
@@ -220,15 +218,57 @@ public class TransitionSeriesFitting
 	 */
 	public int getSizeOfBase()
 	{
-		int count = 0;
-		for (int i = 0; i < constraintMask.size(); i++)
-		{
-			if (constraintMask.get(i)) count++;
-		}
-		return count;
+		return baseSize;
 	}
 	
 	
+	
+	
+	
+	
+	private void calculateConstraintMask(TransitionSeries ts)
+	{
+		/*
+		for (int i = 0; i < dataWidth; i++)
+		{
+			constraintMask.set(i, false);
+		}
+		*/
+		
+
+		float range;
+		float mean;
+		int start, stop;
+
+		baseSize = 0;
+		
+		for (Transition t : ts)
+		{
+
+			range = getSigmaForTransition(SIGMA, t) / energyPerChannel;
+
+			mean = t.energyValue / energyPerChannel;
+
+			start = (int) (mean - range);
+			stop = (int) (mean + range);
+			if (start < 0) start = 0;
+			if (stop > dataWidth - 1) stop = dataWidth - 1;
+			if (start > dataWidth - 1) start = dataWidth - 1;
+
+			baseSize += stop - start + 1;
+			
+			/*
+			for (int i = start; i <= stop; i++)
+			{
+				constraintMask.set(i, true);
+			}
+			*/
+			
+			transitionRanges.addRange(new Range(start, stop));
+			
+		}
+
+	}
 	
 
 	// generates an initial unscaled curvefit from which later curves are scaled as needed
@@ -237,15 +277,15 @@ public class TransitionSeriesFitting
 
 		Spectrum fit = new Spectrum(dataWidth);
 		List<FittingFunction> functions = DataTypeFactory.<FittingFunction> list();
-
+		
 		for (Transition t : ts)
 		{
 
-			// GaussianFittingFunction g = new GaussianFittingFunction(t.energyValue / energyPerChannel, SIGMA
-			// / energyPerChannel, t.relativeIntensity / 100.0);
 			FittingFunction g = new GaussianFittingFunction(
-
-			t.energyValue / energyPerChannel, getSigmaForTransition(SIGMA, t) / energyPerChannel, t.relativeIntensity);
+					t.energyValue / energyPerChannel, 
+					getSigmaForTransition(SIGMA, t) / energyPerChannel, 
+					t.relativeIntensity
+				);
 
 			functions.add(g);
 
@@ -276,9 +316,9 @@ public class TransitionSeriesFitting
 
 		}
 
+		
 		if (dataWidth > 0)
 		{
-			// //ListCalculations.normalize_inplace(fit);
 			normalizationScale = SpectrumCalculations.max(fit);
 			if (normalizationScale == 0.0)
 			{
@@ -288,9 +328,7 @@ public class TransitionSeriesFitting
 			{
 				normalizedUnscaledFit = SpectrumCalculations.divideBy(fit, normalizationScale);
 			}
-			// unscaledFit = fit;
-			// normalizedRatio = ListCalculations.max(fit) / ListCalculations.max(unscaledFit);
-			// unscaledFit = fit;
+
 		}
 
 	}
