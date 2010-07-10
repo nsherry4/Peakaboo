@@ -170,7 +170,7 @@ public class Noise
 		// get the data into a list of doubles for returning
 		Spectrum result = new Spectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
-			result.set(i, (float)transformedData[i].real());
+			result.set(  i, Math.max(0f, (float)transformedData[i].real())  );
 		}
 
 		return result;
@@ -294,7 +294,7 @@ public class Noise
 		fwt.invTransform(resultAsArray);
 
 		for (int i = 0; i < data.size(); i++) {
-			result.set(i, resultAsArray[i]);
+			result.set(i, Math.max(0, resultAsArray[i]));
 		}
 
 		return result;
@@ -350,7 +350,7 @@ public class Noise
 
 		// back to list
 		for (int i = 0; i < data.size(); i++) {
-			result.set(i, dataAsArray[i]);
+			result.set(i, Math.max(0, dataAsArray[i]));
 		}
 
 		return result;
@@ -361,7 +361,7 @@ public class Noise
 	/**
 	 * Savitsky-Golay filter is like a moving average, but with higher order polynomials. <br>
 	 * <br>
-	 * Regular moving average can be seen as calculating a line/slope which is fitted to the data points in
+	 * Regular moving average can be seen as calculating a line which is fitted to the data points in
 	 * the moving average window, and then taking the value of the line at the centre-point (where the data
 	 * point being averaged is)<br>
 	 * <br>
@@ -387,7 +387,10 @@ public class Noise
 		RealPolynomial soln;
 
 		double[] allDataAsArray = new double[data.size()];
-		double[] indexAsArray = new double[reach * 2 + 2];
+		double[] indexAsArray = new double[reach * 2];
+		double[][] dataAsArray = new double[2][reach * 2];
+		
+		
 		for (int i = 0; i < data.size(); i++) {
 			allDataAsArray[i] = data.get(i);
 		}
@@ -399,11 +402,14 @@ public class Noise
 
 
 		int subStart, subStop;
+		
+		boolean needsCustomArray = false;
+		int customArraySize;
 		for (int i = 0; i < data.size(); i++) {
 
 			if (data.get(i) < min || data.get(i) > max)
 			{
-				result.add(data.get(i));
+				result.set(i, data.get(i));
 			}
 			else
 			{
@@ -411,18 +417,34 @@ public class Noise
 				subStart = i - reach;
 				subStop = i + reach + 1;
 
-				if (subStart < 0) subStart = 0;
-				if (subStop >= data.size()) subStop = data.size() - 1;
+				if (subStart < 0) 
+				{
+					subStart = 0;
+					needsCustomArray = true;
+				}
+				if (subStop >= data.size()) 
+				{
+					subStop = data.size() - 1;
+					needsCustomArray = true;
+				}
 
 				// pack the data into an array
-				double[][] dataAsArray = new double[2][subStop - subStart + 1];
-				// for (int j = subStart; j <= subStop; j++){
-				// dataAsArray[0][j - subStart] = j - subStart;
-				// dataAsArray[1][j - subStart] = data.get(j);
-				// }
-				System.arraycopy(indexAsArray, 0, dataAsArray[0], 0, subStop - subStart + 1);
-				System.arraycopy(allDataAsArray, subStart, dataAsArray[1], 0, subStop - subStart + 1);
+				if (needsCustomArray)
+				{
+					customArraySize = subStop - subStart + 1;
+					dataAsArray = new double[2][customArraySize];
+					System.arraycopy(indexAsArray, 0, dataAsArray[0], 0, subStop - subStart - 1);
+					
+					
+					if (customArraySize == reach*2) needsCustomArray = false;
+					
+					
+				}
 
+				//System.arraycopy(indexAsArray, 0, dataAsArray[0], 0, subStop - subStart - 1);
+				System.arraycopy(allDataAsArray, subStart, dataAsArray[1], 0, subStop - subStart - 1);
+			
+				
 				soln = JSci.maths.LinearMath.leastSquaresFit(order, dataAsArray);
 
 				result.set(i, (float)Math.max(soln.map(reach), 0.0));
@@ -432,6 +454,61 @@ public class Noise
 
 
 		return result;
+	}
+	
+	public static Spectrum testFilter(Spectrum data, float springConstant, float signalAnchorPower, int iterations)
+	{
+		Spectrum result = new Spectrum(data);
+		
+		for (int i = 0; i < iterations; i++)
+		{
+			testFilterIteration(result, springConstant, signalAnchorPower);
+		}
+		
+		return result;
+
+	}
+	
+	public static void testFilterIteration(Spectrum data, float springConstant, float signalAnchorPower)
+	{
+
+	
+		Spectrum deltas = deriv(data);
+		
+		Spectrum forces = new Spectrum(data.size());
+		
+		//calculate the forces for each point
+		//forces represent how much pull a points neighbours are exerting on it.
+		//the further away its neighbour are, the more the "spring" has streched, and
+		//the stronger the force will be.
+		//Then, we want to make sure that peaks aren't distorted, so we reduce the force
+		//as the signal gets stronger. This fits with the assumption that weaker signal will be
+		//noisier.
+		float value, force;
+		for (int i = 0; i < forces.size(); i++)
+		{
+			
+			if (i == 0) 						force = -deltas.get(0) / 2.0f;
+			else if (i == forces.size() - 1)  	force = deltas.get(deltas.size()-1) / 2.0f;
+			else 								force = (deltas.get(i-1) + (-deltas.get(i))) / 4.0f; 
+
+			//value = (float) Math.log1p(value);
+			value = data.get(i);
+			value = (float) Math.pow(value, signalAnchorPower);
+			if (value < 1) value = 1f;
+			
+			//distFromAverage = 1f;
+			if (force < 0)
+			{
+				force = Math.max(force,  (force / value) * springConstant);
+			} else {
+				force = Math.min(force, (force / value) * springConstant);
+			}
+			
+			data.set(i, data.get(i) - force);
+			
+		}
+		
 	}
 
 	
