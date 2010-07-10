@@ -1246,6 +1246,8 @@ public class PlotController extends CanvasController implements FilterController
 		final float energy = channel * energyPerChannel;
 		
 		
+		final TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, getDataWidth(), energyPerChannel, FittingSet.escape);
+		
 		//scoring function to evaluate each TransitionSeries
 		final FunctionMap<TransitionSeries, Float> score = new FunctionMap<TransitionSeries, Float>() {
 
@@ -1254,10 +1256,11 @@ public class PlotController extends CanvasController implements FilterController
 				Double prox = Math.abs(ts.getProximityToEnergy(energy));
 				if (prox <= 0.001) prox = 0.001;
 				
-				
-				TransitionSeriesFitting tsf = new TransitionSeriesFitting(ts, getDataWidth(), energyPerChannel, FittingSet.escape);
-				Float ratio = tsf.getRatioForCurveUnderData(s);
+				tsf.setTransitionSeries(ts);
+				Float ratio;
+				ratio = tsf.getRatioForCurveUnderData(s);
 				ratio = (float) Math.pow(ratio, 2);
+				
 				
 				return (ratio / prox.floatValue()) / tsf.getSizeOfBase();
 			}

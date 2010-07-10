@@ -9,6 +9,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -20,6 +23,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JToolTip;
 import javax.swing.SpinnerNumberModel;
 
 import javax.swing.event.ChangeEvent;
@@ -33,7 +37,12 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
 import peakaboo.filters.Parameter.ValueType;
+import peakaboo.ui.swing.JMultiLineToolTip;
+import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 
 
@@ -58,7 +67,25 @@ public class SingleFilterView extends JPanel
 		settingsPanel = createSettingsPanel();
 		settingsPanel.setOpaque(false);
 
-		this.add(new TitleGradientPanel(filter.getFilterName() + " Filter", true), BorderLayout.NORTH);
+		JLabel info = new JLabel(StockIcon.BADGE_INFO.toImageIcon(IconSize.BUTTON)){
+			
+			@Override
+			public JToolTip createToolTip()
+			{
+				JMultiLineToolTip t = new JMultiLineToolTip();
+				t.setFixedWidth(400);
+				return t;
+			}
+		};
+		
+		info.setToolTipText(filter.getFilterDescription());
+		
+		//info.setToolTipText("<html>" + filter.getFilterDescription() + "</html>");
+		info.setBorder(Spacing.bMedium());
+
+		
+		
+		this.add(new TitleGradientPanel(filter.getFilterName() + " Filter", true, info, TitleGradientPanel.Side.LEFT), BorderLayout.NORTH);
 		this.add(settingsPanel, BorderLayout.CENTER);
 		// this.add(Box.createHorizontalStrut(15), BorderLayout.WEST);
 
@@ -85,15 +112,7 @@ public class SingleFilterView extends JPanel
 		//get a list of parameters
 		final List<Parameter<?>> paramslist = Fn.map( filter.getParameters().values(), Functions.<Parameter<?>>id());
 		
-		
-		Collections.sort(paramslist, new Comparator<Parameter<?>>() {
-
-			public int compare(Parameter<?> o1, Parameter<?> o2)
-			{
-				return o1.name.compareTo(o2.name);
-			}
-		});
-		
+				
 		
 		Iterator<Parameter<?>> params = paramslist.iterator();
 		

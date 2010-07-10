@@ -209,6 +209,7 @@ public class FilterSelectionViewer extends ClearPanel
 				owner.showEditPane();
 			}
 		};
+		controls.setOpaque(false);
 		
 		return controls;
 

@@ -62,6 +62,7 @@ public class SmartFittingPanel extends ClearPanel
 				owner.dialogClose();
 			}
 		};
+		selControls.setOpaque(false);
 
 		this.setLayout(new BorderLayout());
 
@@ -85,11 +86,15 @@ public class SmartFittingPanel extends ClearPanel
 
 				public void f(Integer channel)
 				{
+					canvas.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					
 					potentials = controller.proposeTransitionSeriesFromChannel(
 							channel, 
 							smartWidget.getActiveTransitionSeries()
 						);
 					smartWidget.setTransitionSeriesOptions(potentials);
+					
+					canvas.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 				}
 			});

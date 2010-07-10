@@ -65,7 +65,8 @@ public class SummationPanel extends ClearPanel
 
 			}
 		};
-
+		selControls.setOpaque(false);
+		
 		this.setLayout(new BorderLayout());
 
 		summationWidget = new SummationWidget(controller);

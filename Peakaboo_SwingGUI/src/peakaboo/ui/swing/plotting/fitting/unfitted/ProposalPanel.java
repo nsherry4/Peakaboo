@@ -61,7 +61,8 @@ public class ProposalPanel extends ClearPanel implements Changeable
 				owner.dialogClose();
 			}
 		};
-
+		selControls.setOpaque(false);
+		
 		this.setLayout(new BorderLayout());
 
 		JScrollPane fitted = createUnfittedTable();
