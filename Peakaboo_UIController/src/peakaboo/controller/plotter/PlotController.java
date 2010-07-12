@@ -12,6 +12,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
+import commonenvironment.AbstractFile;
+
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
@@ -49,7 +51,6 @@ import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import swidget.dialogues.fileio.AbstractFile;
 
 import fava.Fn;
 import fava.Functions;

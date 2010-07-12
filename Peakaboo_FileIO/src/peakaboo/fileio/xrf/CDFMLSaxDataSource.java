@@ -14,6 +14,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import commonenvironment.AbstractFile;
+
 import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Bounds;
@@ -28,7 +30,6 @@ import peakaboo.fileio.xrf.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import swidget.dialogues.fileio.AbstractFile;
 
 
 

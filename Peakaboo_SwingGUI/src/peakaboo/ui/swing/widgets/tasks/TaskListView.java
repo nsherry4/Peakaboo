@@ -82,7 +82,6 @@ public class TaskListView extends SwidgetDialog {
 		c.gridy += 1;
 		c.anchor = GridBagConstraints.LAST_LINE_END;
 		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
-		cancel.setMargin(Spacing.iSmall());
 		cancel.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {

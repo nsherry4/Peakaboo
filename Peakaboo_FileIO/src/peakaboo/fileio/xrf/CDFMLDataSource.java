@@ -8,6 +8,8 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import commonenvironment.AbstractFile;
+
 import fava.datatypes.Bounds;
 
 import peakaboo.datatypes.DataTypeFactory;
@@ -15,7 +17,6 @@ import peakaboo.fileio.xrf.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import swidget.dialogues.fileio.AbstractFile;
 
 
 public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSourceExtendedInformation

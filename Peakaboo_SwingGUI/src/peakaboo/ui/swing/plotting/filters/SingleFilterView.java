@@ -22,6 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JToolTip;
 import javax.swing.SpinnerNumberModel;
@@ -37,13 +38,14 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filters.AbstractFilter;
 import peakaboo.filters.Parameter;
 import peakaboo.filters.Parameter.ValueType;
-import peakaboo.ui.swing.JMultiLineToolTip;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
+import swidget.widgets.JMultiLineToolTip;
 import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.gradientpanel.TitleGradientPanel.Side;
 
 
 public class SingleFilterView extends JPanel
@@ -67,16 +69,8 @@ public class SingleFilterView extends JPanel
 		settingsPanel = createSettingsPanel();
 		settingsPanel.setOpaque(false);
 
-		JLabel info = new JLabel(StockIcon.BADGE_INFO.toImageIcon(IconSize.BUTTON)){
-			
-			@Override
-			public JToolTip createToolTip()
-			{
-				JMultiLineToolTip t = new JMultiLineToolTip();
-				t.setFixedWidth(400);
-				return t;
-			}
-		};
+		ImageButton info = new ImageButton(StockIcon.BADGE_INFO, "Info", "", Layout.IMAGE, false, IconSize.BUTTON);
+		
 		
 		info.setToolTipText(filter.getFilterDescription());
 		
@@ -84,8 +78,11 @@ public class SingleFilterView extends JPanel
 		info.setBorder(Spacing.bMedium());
 
 		
+		TitleGradientPanel panel = new TitleGradientPanel(filter.getFilterName() + " Filter", true);
+		panel.addSideComponent(info, Side.LEFT);
+		this.add(panel, BorderLayout.NORTH);
 		
-		this.add(new TitleGradientPanel(filter.getFilterName() + " Filter", true, info, TitleGradientPanel.Side.LEFT), BorderLayout.NORTH);
+		
 		this.add(settingsPanel, BorderLayout.CENTER);
 		// this.add(Box.createHorizontalStrut(15), BorderLayout.WEST);
 

@@ -4,6 +4,9 @@ package peakaboo.dataset.provider.implementations;
 
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+import commonenvironment.IOOperations;
+
 import fava.datatypes.Bounds;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
@@ -25,15 +28,13 @@ import peakaboo.fileio.xrf.DataSourceDimensions;
 import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
+import peakaboo.fileio.xrf.DataSource.FileType;
 import peakaboo.filters.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import swidget.dialogues.fileio.AbstractFile;
-import swidget.dialogues.fileio.IOCommon;
-import swidget.dialogues.fileio.IOCommon.FileType;
 
 
 
@@ -374,7 +375,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		final FileType type;
 
 		// sort the filenames property
-		IOCommon.sortFiles(files);
+		IOOperations.sortAbstractFiles(files);
 
 		// Create the tasklist for reading the files
 		final TaskList<Boolean> tasklist;
@@ -500,7 +501,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 				if (isAborted()) return false;
 
-				dataSourcePath = IOCommon.getFilePath(files.get(0).getFileName());
+				dataSourcePath = IOOperations.getFilePath(files.get(0).getFileName());
 
 				int index;
 				while (true)

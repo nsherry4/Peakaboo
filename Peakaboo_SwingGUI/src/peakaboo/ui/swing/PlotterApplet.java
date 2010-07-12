@@ -13,9 +13,10 @@ import javax.swing.JApplet;
 import javax.swing.JMenuBar;
 import javax.swing.UIManager;
 
+import commonenvironment.AbstractFile;
+
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.containers.SwidgetContainer;
-import swidget.dialogues.fileio.AbstractFile;
 
 
 public class PlotterApplet extends JApplet

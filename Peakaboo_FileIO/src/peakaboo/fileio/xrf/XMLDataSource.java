@@ -3,14 +3,15 @@ package peakaboo.fileio.xrf;
 
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+import commonenvironment.IOOperations;
+
 import fava.datatypes.Bounds;
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.fileio.xrf.support.CLSXML;
 import scitypes.Coord;
 import scitypes.Spectrum;
-import swidget.dialogues.fileio.AbstractFile;
-import swidget.dialogues.fileio.IOCommon;
 
 
 public class XMLDataSource implements DataSource
@@ -44,7 +45,7 @@ public class XMLDataSource implements DataSource
 
 	public float getMaxEnergy()
 	{
-		String fileContents = IOCommon.readerToString(filenames.get(getFirstGoodScan()).getReader());
+		String fileContents = IOOperations.readerToString(filenames.get(getFirstGoodScan()).getReader());
 		return CLSXML.readMaxEnergy(fileContents);
 	}
 
@@ -99,8 +100,8 @@ public class XMLDataSource implements DataSource
 	
 	public String getDatasetName()
 	{
-		String commonFileName = IOCommon.getCommonFileName(getScanNames());
-		String parentFolder = IOCommon.getParentFolder(getScanNames().get(0));
+		String commonFileName = IOOperations.getCommonFileName(getScanNames());
+		String parentFolder = IOOperations.getParentFolder(getScanNames().get(0));
 		
 		if (parentFolder == null) return commonFileName;
 		return parentFolder + ": " + commonFileName;

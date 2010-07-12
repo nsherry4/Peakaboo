@@ -11,8 +11,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import commonenvironment.AbstractFile;
+
 import peakaboo.datatypes.DataTypeFactory;
-import swidget.dialogues.fileio.AbstractFile;
 
 
 public class CDFML

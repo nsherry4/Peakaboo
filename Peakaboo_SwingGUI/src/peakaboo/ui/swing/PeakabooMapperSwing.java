@@ -32,7 +32,7 @@ import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import scitypes.Coord;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
-import swidget.dialogues.fileio.SwingIO;
+import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -354,11 +354,11 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	public void actionSaveCSV()
 	{
 
-		ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();
+		ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();
 		controller.mapAsCSV(baos);
 		try
 		{
-			savePictureFolder = SwingIO.saveFile(this, "Save Map(s) as Text", "txt", "Text File", savePictureFolder, baos);
+			savePictureFolder = SwidgetIO.saveFile(this, "Save Map(s) as Text", "txt", "Text File", savePictureFolder, baos);
 		}
 		catch (IOException e)
 		{

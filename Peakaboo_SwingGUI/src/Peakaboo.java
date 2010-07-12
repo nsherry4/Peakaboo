@@ -6,9 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import commonenvironment.Env;
+
 import peakaboo.ui.swing.PlotterFrame;
 
-import swidget.environment.Env;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -34,6 +35,7 @@ public class Peakaboo
 		{
 			//Do Nothing -- Not an error, just not supported 
 		}
+
 
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.

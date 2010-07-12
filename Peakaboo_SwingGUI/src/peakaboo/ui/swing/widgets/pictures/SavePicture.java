@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import peakaboo.controller.CanvasController;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
-import swidget.dialogues.fileio.SwingIO;
+import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
@@ -159,10 +159,10 @@ public class SavePicture extends SwidgetDialog
 			controlsPanel.setEnabled(false);
 			controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			
-			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();				
+			ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();				
 			controller.writePNG(baos);
 
-			String result = SwingIO.saveFile(this, "Save Picture As...", "png", "Portable Network Graphic", startingFolder, baos);
+			String result = SwidgetIO.saveFile(this, "Save Picture As...", "png", "Portable Network Graphic", startingFolder, baos);
 
 			if (result != null)
 			{
@@ -192,10 +192,10 @@ public class SavePicture extends SwidgetDialog
 			controlsPanel.setEnabled(false);
 			controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			
-			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();				
+			ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();				
 			controller.writeSVG(baos);
 
-			String result = SwingIO.saveFile(this, "Save Picture As...", "svg", "Scalable Vector Graphic", startingFolder, baos);
+			String result = SwidgetIO.saveFile(this, "Save Picture As...", "svg", "Scalable Vector Graphic", startingFolder, baos);
 
 			if (result != null)
 			{
@@ -226,10 +226,10 @@ public class SavePicture extends SwidgetDialog
 			controlsPanel.setEnabled(false);
 			controlsPanel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			
-			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();				
+			ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();				
 			controller.writePDF(baos);
 
-			String result = SwingIO.saveFile(this, "Save Picture As...", "pdf", "Portable Document Format", startingFolder, baos);
+			String result = SwidgetIO.saveFile(this, "Save Picture As...", "pdf", "Portable Document Format", startingFolder, baos);
 
 			if (result != null)
 			{

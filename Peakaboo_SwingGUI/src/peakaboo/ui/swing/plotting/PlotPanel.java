@@ -54,6 +54,10 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import commonenvironment.AbstractFile;
+import commonenvironment.Env;
+import commonenvironment.IOOperations;
+
 import fava.datatypes.Pair;
 
 import peakaboo.common.Version;
@@ -75,10 +79,7 @@ import peakaboo.ui.swing.widgets.tasks.TaskListView;
 import scitypes.Coord;
 import scitypes.SigDigits;
 import swidget.containers.SwidgetContainer;
-import swidget.dialogues.fileio.AbstractFile;
-import swidget.dialogues.fileio.IOCommon;
-import swidget.dialogues.fileio.SwingIO;
-import swidget.environment.Env;
+import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconFactory;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -626,8 +627,8 @@ public class PlotPanel extends ClearPanel
 					"XRF Analysis Software",
 					"www.sciencestudioproject.com",
 					"Copyright &copy; 2009-2010 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
-					IOCommon.readTextFromJar("/peakaboo/licence.txt"),
-					IOCommon.readTextFromJar("/peakaboo/credits.txt"),
+					IOOperations.readTextFromJar("/peakaboo/licence.txt"),
+					IOOperations.readTextFromJar("/peakaboo/credits.txt"),
 					Version.logo,
 					Integer.toString(Version.versionNo),
 					Version.longVersionNo,
@@ -1129,8 +1130,6 @@ public class PlotPanel extends ClearPanel
 		ImageButton out = new ImageButton(StockIcon.ZOOM_OUT, "Zoom Out", Layout.IMAGE);
 		ImageButton in = new ImageButton(StockIcon.ZOOM_IN, "Zoom In", Layout.IMAGE);
 
-		in.setMargin(Spacing.iNone());
-		out.setMargin(Spacing.iNone());
 
 		zoomSlider = new JSlider(10, 500);
 		zoomSlider.setPaintLabels(false);
@@ -1183,7 +1182,7 @@ public class PlotPanel extends ClearPanel
 	// data set, and returns it to the caller
 	public List<AbstractFile> openNewDataset(String[] exts, String desc)
 	{
-		return SwingIO.openFiles(container, "Select Data Files to Open", exts, desc, controller.getDataSourceFolder());
+		return SwidgetIO.openFiles(container, "Select Data Files to Open", exts, desc, controller.getDataSourceFolder());
 	}
 
 
@@ -1394,9 +1393,9 @@ public class PlotPanel extends ClearPanel
 
 		try
 		{
-			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();
+			ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();
 			controller.savePreferences(baos);
-			savedSessionFileName = SwingIO.saveFile(
+			savedSessionFileName = SwidgetIO.saveFile(
 					container,
 					"Save Session Data",
 					"peakaboo",
@@ -1433,7 +1432,7 @@ public class PlotPanel extends ClearPanel
 		{
 
 			// get an output stream to write the data to
-			ByteArrayOutputStream baos = SwingIO.getSaveFileBuffer();
+			ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();
 			OutputStreamWriter osw = new OutputStreamWriter(baos);
 
 			// write out the data
@@ -1449,7 +1448,7 @@ public class PlotPanel extends ClearPanel
 			osw.close();
 
 			// save the contents of the output stream to a file.
-			savePictureFolder = SwingIO.saveFile(
+			savePictureFolder = SwidgetIO.saveFile(
 					container,
 					"Save Fitting Data to Text File",
 					"txt",
@@ -1474,7 +1473,7 @@ public class PlotPanel extends ClearPanel
 
 		try
 		{
-			AbstractFile af = SwingIO.openFile(
+			AbstractFile af = SwidgetIO.openFile(
 					container,
 					"Load Session Data",
 					new String[] { "peakaboo" },

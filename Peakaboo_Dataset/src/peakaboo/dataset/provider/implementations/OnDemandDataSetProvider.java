@@ -4,6 +4,9 @@ package peakaboo.dataset.provider.implementations;
 
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+import commonenvironment.IOOperations;
+
 import fava.datatypes.Bounds;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
@@ -29,8 +32,6 @@ import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import swidget.dialogues.fileio.AbstractFile;
-import swidget.dialogues.fileio.IOCommon;
 
 
 
@@ -294,7 +295,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		
 		// sort the filenames property
-		IOCommon.sortFiles(files);
+		IOOperations.sortAbstractFiles(files);
 
 		// Create the tasklist for reading the files
 		final TaskList<Boolean> tasklist;
@@ -378,7 +379,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				
 				//now that we have the datasource, read it
-				readDataSource(dataSource, applying, IOCommon.getFilePath(files.get(0).getFileName()));
+				readDataSource(dataSource, applying, IOOperations.getFilePath(files.get(0).getFileName()));
 				
 				//we're done
 				applying.workUnitCompleted();

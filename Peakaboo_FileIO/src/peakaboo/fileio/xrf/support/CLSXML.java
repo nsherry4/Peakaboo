@@ -2,10 +2,11 @@ package peakaboo.fileio.xrf.support;
 
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+import commonenvironment.IOOperations;
+
 import peakaboo.datatypes.DataTypeFactory;
 import scitypes.Spectrum;
-import swidget.dialogues.fileio.AbstractFile;
-import swidget.dialogues.fileio.IOCommon;
 
 /**
  * 
@@ -25,10 +26,10 @@ public class CLSXML {
 	public static Spectrum readScanFromFile(AbstractFile file)
 	{
 		
-		if (IOCommon.checkFileExtension(file.getFileName(), ".xml"))
+		if (IOOperations.checkFileExtension(file.getFileName(), ".xml"))
 		{	
 			//get the whole file
-			String contents = IOCommon.readerToString(file.getReader());
+			String contents = IOOperations.readerToString(file.getReader());
 			return readScanFromString(contents);
 			
 		}
@@ -67,7 +68,7 @@ public class CLSXML {
 		
 		for (AbstractFile file : files){
 			
-			if (!  IOCommon.checkFileExtension(file.getFileName(), ".xml")  ) badFiles.add(file);
+			if (!  IOOperations.checkFileExtension(file.getFileName(), ".xml")  ) badFiles.add(file);
 			
 		}
 		

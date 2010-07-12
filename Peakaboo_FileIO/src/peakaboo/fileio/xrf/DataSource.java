@@ -11,6 +11,16 @@ public interface DataSource
 {
 
 	/**
+	 * The types of files that Peakaboo is capable of reading
+	 * 
+	 * @author Nathaniel Sherry, 2009
+	 */
+	public enum FileType
+	{
+		CLSXML, ZIP, CDFML
+	}
+	
+	/**
 	 * Retrieves the values from the scan at the given index
 	 * 
 	 * @param index

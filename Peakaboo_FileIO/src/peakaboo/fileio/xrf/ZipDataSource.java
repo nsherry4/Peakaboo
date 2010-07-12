@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import commonenvironment.IOOperations;
+
 import fava.datatypes.Bounds;
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.fileio.xrf.support.CLSXML;
 import scitypes.Coord;
 import scitypes.Spectrum;
-import swidget.dialogues.fileio.IOCommon;
 
 
 public class ZipDataSource implements DataSource
@@ -81,13 +82,13 @@ public class ZipDataSource implements DataSource
 			
 			entry = entries.nextElement();
 			filename = entry.getName();
-			if (IOCommon.checkFileExtension(filename, ".xml")) entryNames.add(  filename  );
+			if (IOOperations.checkFileExtension(filename, ".xml")) entryNames.add(  filename  );
 			
 			i++;
 			
 		}
 		
-		IOCommon.sortFilenames(entryNames);
+		IOOperations.sortFilenames(entryNames);
 		
 		return entryNames;
 	}
@@ -184,7 +185,7 @@ public class ZipDataSource implements DataSource
 		try {
 			
 			InputStream in = zip.getInputStream(zip.getEntry(filename));
-			String contents = IOCommon.readerToString(new BufferedReader(new InputStreamReader(in)));
+			String contents = IOOperations.readerToString(new BufferedReader(new InputStreamReader(in)));
 			return CLSXML.readScanFromString(contents);
 			
 			
@@ -211,7 +212,7 @@ public class ZipDataSource implements DataSource
 		try {
 			
 			InputStream in = zip.getInputStream(zip.getEntry(filename));
-			String contents = IOCommon.readerToString(new BufferedReader(new InputStreamReader(in)));
+			String contents = IOOperations.readerToString(new BufferedReader(new InputStreamReader(in)));
 			return CLSXML.readMaxEnergy(contents);
 			
 			

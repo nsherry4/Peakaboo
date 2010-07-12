@@ -16,14 +16,15 @@ import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
+import commonenvironment.AbstractFile;
+import commonenvironment.Env;
+
 import fava.Fn;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
-import swidget.dialogues.fileio.AbstractFile;
-import swidget.environment.Env;
 
 
 
