@@ -18,6 +18,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import eventful.EventfulTypeListener;
+
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
@@ -60,9 +62,9 @@ public class Composite extends JPanel {
 		//maingbc.gridy+=1;
 		add(createElementsList(), maingbc);
 		
-		controller.addListener(new PeakabooSimpleListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String s)
 			{
 				
 				allElements.setSelected(controller.getMapScaleMode() == MapScaleMode.ALL_ELEMENTS);

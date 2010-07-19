@@ -2,11 +2,13 @@ package peakaboo.controller.plotter;
 
 import java.util.List;
 
+import eventful.IEventfulType;
+
 import peakaboo.datatypes.eventful.IEventful;
-import peakaboo.filters.AbstractFilter;
+import peakaboo.filter.AbstractFilter;
 
 
-public interface FilterController extends IEventful
+public interface FilterController extends IEventfulType<String>
 {
 
 	public List<String> getAvailableFiltersByName();

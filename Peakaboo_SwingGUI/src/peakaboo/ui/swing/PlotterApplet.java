@@ -1,7 +1,9 @@
 package peakaboo.ui.swing;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Panel;
 import java.awt.Window;
 import java.net.MalformedURLException;
@@ -16,7 +18,9 @@ import javax.swing.UIManager;
 import commonenvironment.AbstractFile;
 
 import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.Swidget;
 import swidget.containers.SwidgetContainer;
+import swidget.icons.IconFactory;
 
 
 public class PlotterApplet extends JApplet
@@ -29,6 +33,9 @@ public class PlotterApplet extends JApplet
 	
 	public PlotterApplet()
 	{
+		
+		Swidget.initialize();
+		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		
 		container = new SwidgetContainer() {
 			
@@ -83,6 +90,18 @@ public class PlotterApplet extends JApplet
 			public void close()
 			{
 				System.exit(0);
+			}
+
+
+			public Dialog getDialog()
+			{
+				return null;
+			}
+
+
+			public Frame getFrame()
+			{
+				return null;
 			}
 		};
 		

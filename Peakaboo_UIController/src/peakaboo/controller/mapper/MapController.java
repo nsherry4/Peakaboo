@@ -76,7 +76,7 @@ public class MapController extends CanvasController
 	public void setActiveTabModel(SingleMapModel activeviewmodel)
 	{
 		this.activeTabData = activeviewmodel;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -141,7 +141,7 @@ public class MapController extends CanvasController
 
 		if (dataDimensions != null) mapModel.dataDimensions = dataDimensions;
 
-		updateListeners();
+		updateListeners("");
 
 	}
 
@@ -283,7 +283,7 @@ public class MapController extends CanvasController
 	public void invalidateInterpolation()
 	{
 		activeTabData.resultantData = null;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -322,7 +322,7 @@ public class MapController extends CanvasController
 	public void setContours(boolean contours)
 	{
 		mapModel.viewOptions.contour = contours;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -340,7 +340,7 @@ public class MapController extends CanvasController
 		{
 			mapModel.viewOptions.spectrumSteps = steps;
 		}
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -353,7 +353,7 @@ public class MapController extends CanvasController
 	public void setMonochrome(boolean mono)
 	{
 		mapModel.viewOptions.monochrome = mono;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -372,7 +372,7 @@ public class MapController extends CanvasController
 	public void setMapScaleMode(MapScaleMode mode)
 	{
 		activeTabData.mapScaleMode = mode;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -395,7 +395,7 @@ public class MapController extends CanvasController
 	public void setFlipY(boolean flip)
 	{
 		mapModel.viewOptions.yflip = flip;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -408,7 +408,7 @@ public class MapController extends CanvasController
 	public void setShowSpectrum(boolean show)
 	{
 		mapModel.viewOptions.drawSpectrum = show;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -421,7 +421,7 @@ public class MapController extends CanvasController
 	public void setShowTitle(boolean show)
 	{
 		mapModel.viewOptions.drawTitle = show;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -446,7 +446,7 @@ public class MapController extends CanvasController
 	public void setShowCoords(boolean show)
 	{
 		mapModel.viewOptions.drawCoordinates = show;
-		updateListeners();
+		updateListeners("");
 	}
 
 
@@ -509,8 +509,7 @@ public class MapController extends CanvasController
 					public Float f(Float side1Value, Float side2Value)
 					{
 
-						if (side1Value == 0.0) side1Value = side1Min;
-						if (side2Value == 0.0) side2Value = side2Min;
+						if (side1Value <= 0.0 || side2Value <= 0.0) return 0.0f;
 
 						float value = side1Value / side2Value;
 
@@ -822,7 +821,7 @@ public class MapController extends CanvasController
 				List<Pair<Float, String>> spectrumMarkers = DataTypeFactory.<Pair<Float, String>> list();
 
 				int increment = 1;
-				if (steps > 100) increment = (int) Math.ceil(steps / 100);
+				if (steps > 8) increment = (int) Math.ceil(steps / 8);
 
 				if (validRatio)
 				{
@@ -834,7 +833,7 @@ public class MapController extends CanvasController
 						 * int ratioValue = (int)Math.pow(10, Math.abs(i)); String ratio = ""; if (i < 0) ratio = "1:" +
 						 * ratioValue; if (i > 0) ratio = ratioValue + ":1"; if (i == 0) ratio = "1:1";
 						 */
-
+						
 						spectrumMarkers.add(new Pair<Float, String>(percent, Ratios.fromFloat(i, true)));
 					}
 				}
@@ -1022,9 +1021,11 @@ public class MapController extends CanvasController
 					Spectrum s = element.second;
 					FList<Spectrum> lines = new FList<Spectrum>();
 
+					
+					
 					for (int i = 0; i < s.size(); i += width)
 					{
-						lines.add(s.subSpectrum(i, i + width));
+						lines.add(s.subSpectrum(i, Math.min(i + width-1, s.size()-1)));
 					}
 
 
@@ -1033,7 +1034,7 @@ public class MapController extends CanvasController
 
 						public String f(Spectrum list)
 						{
-							return Fn.map(list, Functions.<Float> show()).foldr(Functions.strcat(","));
+							return Fn.map(list, Functions.<Float> show()).foldl(Functions.strcat(","));
 
 						}
 					}).foldl(Functions.strcat("\n"));

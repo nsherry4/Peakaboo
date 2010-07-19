@@ -1,11 +1,11 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
@@ -29,10 +29,10 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 	{
 
 		super();
-		parameters.put(REACH, new Parameter<Integer>(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
-		parameters.put(ORDER, new Parameter<Integer>(ValueType.INTEGER, "Polynomial Order", 5));
-		parameters.put(IGNORE, new Parameter<Boolean>(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
-		parameters.put(MAX, new Parameter<Double>(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
+		parameters.put(REACH, new Parameter(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
+		parameters.put(ORDER, new Parameter(ValueType.INTEGER, "Polynomial Order", 5));
+		parameters.put(IGNORE, new Parameter(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
+		parameters.put(MAX, new Parameter(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
 		
 		parameters.get(MAX).enabled = false;
 	}
@@ -62,19 +62,19 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 		
 		// reach shouldn't be any larger than about 30, or else we start to distort the data more than we
 		// would like
-		reach = this.<Integer>getParameterValue(REACH);
+		reach = getParameter(REACH).intValue();
 		if (reach > 30 || reach < 1) return false;
 
 		// a 0th order polynomial isn't going to be terribly useful, and this algorithm starts to get a little
 		// wonky
 		// when it goes over 10
-		order = this.<Integer>getParameterValue(ORDER);
+		order = getParameter(ORDER).intValue();
 		if (order > 10 || order < 1) return false;
 
 		// polynomial of order k needs at least k+1 data points in set.
 		if (order >= reach * 2 + 1) return false;
 
-		parameters.get(MAX).enabled = this.<Boolean>getParameterValue(IGNORE);
+		parameters.get(MAX).enabled = getParameter(IGNORE).boolValue();
 		
 		return true;
 	}
@@ -101,10 +101,10 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 	{
 		return Noise.SavitskyGolayFilter(
 			data, 
-			this.<Integer>getParameterValue(ORDER), 
-			this.<Integer>getParameterValue(REACH),
+			getParameter(ORDER).intValue(), 
+			getParameter(REACH).intValue(),
 			0.0f,
-			(this.<Boolean>getParameterValue(IGNORE)) ? this.<Double>getParameterValue(MAX).floatValue() : Float.MAX_VALUE
+			(getParameter(IGNORE).boolValue()) ? getParameter(MAX).realValue() : Float.MAX_VALUE
 			
 		);
 	}

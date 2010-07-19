@@ -10,6 +10,8 @@ import java.awt.event.MouseListener;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 
+import eventful.EventfulTypeListener;
+
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -48,9 +50,9 @@ public class MapTabControls extends ClearPanel{
 		add(close, BorderLayout.LINE_END);
 		close.setFocusable(false);
 		
-		viewer.controller.addListener(new PeakabooSimpleListener() {
+		viewer.controller.addListener(new EventfulTypeListener<String>() {
 			
-			public void change() {
+			public void change(String s) {
 				String titlestring = viewer.getMapViewModel().mapShortTitle();
 				title.setText(titlestring);
 				title.setToolTipText(titlestring);

@@ -1,8 +1,8 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -18,14 +18,14 @@ public class Addition extends AbstractFilter
 	{
 
 		super();
-		parameters.put(AMOUNT, new Parameter<Double>(ValueType.REAL, "Amount to Add", 1.0));
+		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
 
 	}
 	
 	@Override
 	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return SpectrumCalculations.subtractFromList(data, 0.0f-this.<Double>getParameterValue(AMOUNT).floatValue());
+		return SpectrumCalculations.subtractFromList(data, 0.0f-getParameter(AMOUNT).realValue());
 	}
 
 

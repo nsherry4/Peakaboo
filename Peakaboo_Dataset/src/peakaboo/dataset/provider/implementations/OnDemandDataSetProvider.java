@@ -26,7 +26,8 @@ import peakaboo.fileio.xrf.DataSourceDimensions;
 import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
-import peakaboo.filters.FilterSet;
+import peakaboo.filter.FilterSet;
+import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -210,10 +211,10 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings)
+	public TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type)
 	{
 
-		return MapTS.calculateMap(dataSource, filters, fittings);
+		return MapTS.calculateMap(dataSource, filters, fittings, type);
 		/*
 		final TaskList<MapResultSet> tasklist;
 

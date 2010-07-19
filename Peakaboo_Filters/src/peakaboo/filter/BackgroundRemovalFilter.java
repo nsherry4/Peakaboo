@@ -1,6 +1,6 @@
-package peakaboo.filters;
+package peakaboo.filter;
 
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -18,8 +18,8 @@ public abstract class BackgroundRemovalFilter extends AbstractFilter
 	
 	public BackgroundRemovalFilter()
 	{
-		parameters.put(backgroundParams.PERCENT, new Parameter<Integer>(ValueType.INTEGER, "Percent to Remove", 90));
-		parameters.put(backgroundParams.PREVIEW, new Parameter<Boolean>(ValueType.BOOLEAN, "Preview Only", false));
+		parameters.put(backgroundParams.PERCENT, new Parameter(ValueType.INTEGER, "Percent to Remove", 90));
+		parameters.put(backgroundParams.PREVIEW, new Parameter(ValueType.BOOLEAN, "Preview Only", false));
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public abstract class BackgroundRemovalFilter extends AbstractFilter
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
-		percent = this.<Integer>getParameterValue(backgroundParams.PERCENT);
+		percent = getParameter(backgroundParams.PERCENT).intValue();
 		
 		if (percent > 100 || percent < 0) return false;
 
@@ -50,7 +50,7 @@ public abstract class BackgroundRemovalFilter extends AbstractFilter
 	
 	private final Spectrum getBackground(Spectrum data)
 	{
-		int percent = this.<Integer>getParameterValue(backgroundParams.PERCENT);
+		int percent = getParameter(backgroundParams.PERCENT).intValue();
 		
 		return getBackground(data, percent);
 		
@@ -59,7 +59,7 @@ public abstract class BackgroundRemovalFilter extends AbstractFilter
 	@Override
 	public final Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		if (!this.<Boolean>getParameterValue(backgroundParams.PREVIEW) == true) {
+		if (!getParameter(backgroundParams.PREVIEW).boolValue() == true) {
 
 			Spectrum background = getBackground(data);
 			return SpectrumCalculations.subtractLists(data, background);
@@ -72,7 +72,7 @@ public abstract class BackgroundRemovalFilter extends AbstractFilter
 	@Override
 	public final PlotPainter getPainter()
 	{
-		if (!this.<Boolean>getParameterValue(backgroundParams.PREVIEW) == true) return null;
+		if (!getParameter(backgroundParams.PREVIEW).boolValue() == true) return null;
 
 		return new SpectrumPainter(getBackground(previewCache)) {
 

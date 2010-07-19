@@ -19,6 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import eventful.EventfulTypeListener;
+
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.SingleMapModel;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
@@ -71,9 +73,9 @@ public class MapViewer extends JPanel
 			}
 		});
 
-		controller.addListener(new PeakabooSimpleListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String s)
 			{
 				setNeedsRedraw();
 				repaint();
@@ -115,9 +117,9 @@ public class MapViewer extends JPanel
 			}
 		});
 
-		controller.addListener(new PeakabooSimpleListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String ss)
 			{
 
 				if (controller.getDataHeight() * controller.getDataWidth() == controller.getMapSize())
@@ -135,7 +137,7 @@ public class MapViewer extends JPanel
 
 		add(new SidePanel(controller, owner), BorderLayout.WEST);
 
-		controller.updateListeners();
+		controller.updateListeners("");
 
 	}
 

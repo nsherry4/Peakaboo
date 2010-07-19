@@ -23,8 +23,11 @@ import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.listcontrols.ListControlButton;
 import swidget.widgets.listcontrols.ListControls;
+import swidget.widgets.listcontrols.ListControls.ElementCount;
 
 
 
@@ -115,6 +118,28 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		};
 
+
+		/*
+		ListControlButton fitwizard = new ListControlButton(StockIcon.EDIT_SORT_DES, "Optimal Fitting", "Find the optimal fitting") {
+			
+			@Override
+			public void setEnableState(ElementCount ec)
+			{
+				this.setEnabled(ec == ElementCount.MANY);
+			}
+		};
+		
+		controls.addButton(fitwizard, 4);
+		fitwizard.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				
+				controller.optimizeTransitionSeriesOrdering();
+			}
+		});
+		*/
+		
 		this.add(controls, BorderLayout.NORTH);
 
 	}

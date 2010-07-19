@@ -1,9 +1,14 @@
 package peakaboo.ui.swing.plotting.fitting;
 
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
 
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.DataTypeFactory;
@@ -18,7 +23,7 @@ import fava.Fn;
 import fava.signatures.FunctionEach;
 
 
-public abstract class TSSelectorGroup extends ClearPanel
+public abstract class TSSelectorGroup extends JPanel implements Scrollable
 {
 
 	protected FittingController controller;
@@ -124,6 +129,42 @@ public abstract class TSSelectorGroup extends ClearPanel
 			}
 		});
 		
+	}
+
+	
+	/* SCROLLABLE METHODS */
+
+	public Dimension getPreferredScrollableViewportSize()
+	{
+		return getPreferredSize();
+	}
+
+
+	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction)
+	{
+		TSSelector s = selectors.get(0);
+		if (s == null) return 4;
+		return s.getPreferredSize().height;
+	}
+
+
+	public boolean getScrollableTracksViewportHeight()
+	{
+		return false;
+	}
+
+
+	public boolean getScrollableTracksViewportWidth()
+	{
+		return true;
+	}
+
+
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction)
+	{
+		TSSelector s = selectors.get(0);
+		if (s == null) return 1;
+		return s.getPreferredSize().height / 4;
 	}
 
 	

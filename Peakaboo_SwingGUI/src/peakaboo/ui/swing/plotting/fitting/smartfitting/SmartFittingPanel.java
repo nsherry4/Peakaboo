@@ -67,9 +67,10 @@ public class SmartFittingPanel extends ClearPanel
 		this.setLayout(new BorderLayout());
 
 		smartWidget = new SmartFittingWidget(controller, canvas);
+		smartWidget.setBorder(Spacing.bMedium());
 		JScrollPane scroll = new JScrollPane(smartWidget);
 		scroll.setPreferredSize(new Dimension(200, 0));
-		scroll.setBorder(Spacing.bMedium());
+		
 
 		this.add(scroll, BorderLayout.CENTER);
 		this.add(new TitleGradientPanel("Click Plot to Fit", true, selControls), BorderLayout.NORTH);

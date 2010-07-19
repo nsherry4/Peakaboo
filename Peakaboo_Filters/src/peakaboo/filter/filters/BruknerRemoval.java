@@ -1,11 +1,11 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 
 import peakaboo.calculations.Background;
-import peakaboo.filters.BackgroundRemovalFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.BackgroundRemovalFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -26,8 +26,8 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 	public BruknerRemoval()
 	{
 		super();
-		parameters.put(WIDTH, new Parameter<Integer>(ValueType.INTEGER, "Width of Fitting", 100));
-		parameters.put(ITERATIONS, new Parameter<Integer>(ValueType.INTEGER, "Iterations", 10));
+		parameters.put(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
+		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 10));
 	}
 
 
@@ -42,8 +42,8 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 	protected Spectrum getBackground(Spectrum data, int percent)
 	{
 	
-		int windowSize = this.<Integer>getParameterValue(WIDTH);
-		int iterations = this.<Integer>getParameterValue(ITERATIONS);
+		int windowSize = getParameter(WIDTH).intValue();
+		int iterations = getParameter(ITERATIONS).intValue();
 		
 		return SpectrumCalculations.multiplyBy(  Background.calcBackgroundBrukner(data, windowSize, iterations), (percent/100.0f));
 
@@ -58,8 +58,8 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
-		width = this.<Integer>getParameterValue(WIDTH);
-		iterations = this.<Integer>getParameterValue(ITERATIONS);
+		width = getParameter(WIDTH).intValue();
+		iterations = getParameter(ITERATIONS).intValue();
 		
 		
 		if (width > 400 || width < 10) return false;

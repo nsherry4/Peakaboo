@@ -1,5 +1,7 @@
 package peakaboo.ui.swing.dialogues;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -8,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -19,6 +22,7 @@ import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 
@@ -31,15 +35,18 @@ public class ScanInfoDialogue extends SwidgetDialog
 	
 	public ScanInfoDialogue(SwidgetContainer owner, PlotController controller)
 	{
-		super(owner, "Scan Information");
+		super(owner, "Dataset Information");
+		
 		
 		Container container = getContentPane();
+		JPanel containerPanel = new ClearPanel();
+		containerPanel.setLayout(new BorderLayout());
+		containerPanel.setBorder(Spacing.bHuge());
+		container.add(containerPanel);
+
+		
 		mainPanel = new JPanel(new GridBagLayout());
-		container.add(mainPanel);
-		mainPanel.setBorder(Spacing.bHuge());
-		
-		setTitle("Dataset Information");
-		
+
 		c = new GridBagConstraints();
 		c.ipadx = 8;
 		c.ipady = 8;
@@ -75,14 +82,15 @@ public class ScanInfoDialogue extends SwidgetDialog
 		addJLabelPair("Instrument: ", controller.getScanInstrumentName());
 		addJLabelPair("Technique: ", controller.getScanTechniqueName());
 		
-		c.gridwidth = 3;
-		c.ipadx = 0;
-		mainPanel.add(new JSeparator(JSeparator.HORIZONTAL), c);
+
+			
+		JPanel buttonBox = new ClearPanel();
+		buttonBox.setLayout(new BorderLayout());
 		
-		c.gridy += 1;
-		c.ipady = 0;
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.LINE_END;
+		JSeparator s = new JSeparator(JSeparator.HORIZONTAL);
+		s.setBorder(new EmptyBorder(Spacing.medium, 0, Spacing.medium, 0));
+		buttonBox.add(s, BorderLayout.NORTH);
+		
 		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
 		close.addActionListener(new ActionListener() {
 		
@@ -91,8 +99,11 @@ public class ScanInfoDialogue extends SwidgetDialog
 				ScanInfoDialogue.this.setVisible(false);
 			}
 		});
-		mainPanel.add(close, c);
+		buttonBox.add(close, BorderLayout.EAST);
 		
+		
+		containerPanel.add(mainPanel, BorderLayout.NORTH);
+		containerPanel.add(buttonBox, BorderLayout.SOUTH);
 		
 		pack();
 		setModal(true);

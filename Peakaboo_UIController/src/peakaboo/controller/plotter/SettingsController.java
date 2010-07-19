@@ -1,9 +1,9 @@
 package peakaboo.controller.plotter;
 
-import peakaboo.datatypes.eventful.IEventful;
+import eventful.IEventfulType;
 
 
-public interface SettingsController extends IEventful
+public interface SettingsController extends IEventfulType<String>
 {
 
 	public void setZoom(float zoom);

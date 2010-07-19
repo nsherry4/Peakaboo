@@ -6,8 +6,8 @@ import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.AbstractFilter.FilterType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractFilter.FilterType;
 import swidget.widgets.Spacing;
 
 public class FilterSelectionRenderer extends DefaultTreeCellRenderer

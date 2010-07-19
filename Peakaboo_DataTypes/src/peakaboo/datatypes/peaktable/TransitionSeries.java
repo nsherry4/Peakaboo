@@ -5,10 +5,12 @@ package peakaboo.datatypes.peaktable;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import fava.*;
 import fava.datatypes.Pair;
+import fava.lists.FList;
 import fava.signatures.FunctionCombine;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
@@ -244,7 +246,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 					{
 						return ts.getDescription();
 					}
-				}), strcat(" ⨯ "));
+				}), strcat(" + "));
 
 			default:
 
@@ -581,10 +583,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
-	public Pair<String, String> toSerializablePair()
+	public List<String> toSerializableList()
 	{
 		if (type == TransitionSeriesType.COMPOSITE) return null;
-		return new Pair<String, String>(element.name(), type.name());
+		return new FList<String>(element.name(), type.name());
 	}
 
 

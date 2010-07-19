@@ -2,26 +2,24 @@ package peakaboo.controller.settings;
 
 
 
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
-import org.ho.yaml.Yaml;
 
-import fava.datatypes.Pair;
-import fava.signatures.FunctionEach;
+import commonenvironment.IOOperations;
+import fava.Fn;
+import fava.Functions;
 import fava.signatures.FunctionMap;
-import static fava.Fn.*;
+
+
 
 import peakaboo.controller.plotter.PlotModel;
-import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.filters.AbstractFilter;
+import peakaboo.filter.AbstractFilter;
 
 
 
@@ -46,73 +44,36 @@ public class Settings
 	public static void loadPreferences(final PlotModel model, InputStream inStream)
 	{
 
-		SerializedData data = new SerializedData();
-
-		try
+		SerializedData data;
+		String yaml = IOOperations.readerToString(new BufferedReader(new InputStreamReader(inStream)));
+		data = SerializedData.deserialize(yaml);
+		
+		// load transition series
+		model.fittingSelections.clear();		
+		
+		
+		//we can't serialize TransitionSeries directly, so we store a list of Ni:K strings instead
+		//we now convert them back to TransitionSeries
+		for (SerializedTransitionSeries sts : data.fittings)
 		{
-			/*in = new ObjectInputStream(inStream);
-
-			read = in.readObject();*/
-
-			data = Yaml.loadType(inStream, SerializedData.class);
-
-			//if (read == null) return;
-			//data = (SerializedData) read;
-
-			// load transition series
-			model.fittingSelections.clear();
-
-			//for each list of element/transitionseriestype string representation pairs
-			//convert that list into a single composited element (or primary if it is of length 1
-			//and add the result to the fittings set
-			each(data.fittings, new FunctionEach<List<Pair<String, String>>>() {
-
-				
-				public void f(List<Pair<String, String>> tspairs)
-				{
-
-					List<TransitionSeries> tss = map(
-							tspairs,
-							new FunctionMap<Pair<String, String>, TransitionSeries>() {
-
-								
-								public TransitionSeries f(Pair<String, String> pair)
-								{
-									return model.peakTable.getTransitionSeries(
-											Element.valueOf(pair.first),
-											TransitionSeriesType.valueOf(pair.second));
-								}
-							});
-
-					model.fittingSelections.addTransitionSeries(TransitionSeries.summation(tss));
-				}
-			});
-
-			/*for (TransitionSeries ts : data.fittings)
-			{
-				model.fittingSelections.addTransitionSeries(ts);
-			}*/
-
-			// load filters
-			model.filters.clearFilters();
-			for (AbstractFilter f : data.filters)
-			{
-				model.filters.addFilter(f);
-			}
-
-			// read in the drawing request
-			model.dr = data.drawingRequest;
-			model.viewOptions = data.viewOptions;
-
-
-		}
-		catch (FileNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			model.fittingSelections.addTransitionSeries(sts.toTS(model.peakTable));
 		}
 
+		
+		// load filters
+		model.filters.clearFilters();
+		for (AbstractFilter f : data.filters)
+		{
+			model.filters.addFilter(f);
+		}
 
+		
+		// read in the drawing request
+		model.dr = data.drawingRequest;
+		model.viewOptions = data.viewOptions;
+		
+		
+		if (model.dataset.hasData()) model.fittingSelections.setDataParameters(model.dataset.scanSize(), model.dr.unitSize);
 
 
 		return;
@@ -130,54 +91,36 @@ public class Settings
 	public static void savePreferences(PlotModel model, OutputStream outStream)
 	{
 
-		//FileOutputStream fos = null;
-		//ObjectOutputStream out = null;
 
 		SerializedData data = new SerializedData();
 
-		List<TransitionSeries> fittedTSs = model.fittingSelections.getFittedTransitionSeries();
+		//map our list of TransitionSeries to SerializedTransitionSeries since we can't use the
+		//yaml library to build TransitionSeries
+		data.fittings = Fn.map(
+				model.fittingSelections.getFittedTransitionSeries(), 
+				new FunctionMap<TransitionSeries, SerializedTransitionSeries>() {
 
-		data.fittings =
-
-		map(fittedTSs, new FunctionMap<TransitionSeries, List<Pair<String, String>>>() {
-
-			
-			public List<Pair<String, String>> f(TransitionSeries ts)
-			{
-				return map(
-						ts.getBaseTransitionSeries(),
-						new FunctionMap<TransitionSeries, Pair<String, String>>() {
-
-							
-							public Pair<String, String> f(TransitionSeries ts)
-							{
-								return ts.toSerializablePair();
-							}
-						});
-			}
-		});
-
-		data.filters = DataTypeFactory.<AbstractFilter> list();
-		for (AbstractFilter f : model.filters)
-		{
-			data.filters.add(f);
-		}
-
+					public SerializedTransitionSeries f(TransitionSeries ts)
+					{
+						return new SerializedTransitionSeries(ts);
+					}
+				});
+		
+		//map the filters from a FilterSet to a list
+		data.filters = Fn.map(model.filters, Functions.<AbstractFilter>id());
+		
+		
+		//other structs
 		data.drawingRequest = model.dr;
 		data.viewOptions = model.viewOptions;
 
 
+		//try writing the serialized data
 		try
 		{
-			/*out = new ObjectOutputStream(outStream);
 
-			// Write out the SerializedData object
-			out.writeObject(data);
-
-			out.close();*/
-
-			OutputStreamWriter osw = new OutputStreamWriter(outStream);
-			osw.write(data.toYaml());
+			OutputStreamWriter osw = new OutputStreamWriter(outStream);	
+			osw.write(data.serialize());
 			osw.close();
 
 		}

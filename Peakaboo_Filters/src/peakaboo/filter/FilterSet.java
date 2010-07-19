@@ -1,4 +1,4 @@
-package peakaboo.filters;
+package peakaboo.filter;
 
 
 import java.util.Iterator;

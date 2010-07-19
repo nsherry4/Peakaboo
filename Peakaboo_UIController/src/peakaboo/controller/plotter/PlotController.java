@@ -25,6 +25,7 @@ import peakaboo.curvefit.painters.FittingSumPainter;
 import peakaboo.curvefit.painters.FittingTitlePainter;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
@@ -33,8 +34,10 @@ import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.filters.AbstractFilter;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
+import plural.workers.PluralMap;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.painters.axis.AxisPainter;
@@ -57,6 +60,7 @@ import fava.Functions;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.lists.FList;
+import fava.signatures.FunctionCombine;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
@@ -71,17 +75,21 @@ import static fava.Fn.*;
 public class PlotController extends CanvasController implements FilterController, FittingController,
 		SettingsController, UndoController
 {
-
 	private PlotModel						model;
 	private MapController					mapController;
 	private PlotDrawing						plot;
 
 	private List<AxisPainter>				axisPainters;
 
-	private Stack<ByteArrayOutputStream>	undoStack;
-	private Stack<ByteArrayOutputStream>	redoStack;
+	private Stack<Pair<String, ByteArrayOutputStream>>	undoStack;
+	private Stack<Pair<String, ByteArrayOutputStream>>	redoStack;
 
 
+	public static enum UpdateType
+	{
+		DATA, FITTING, FILTER, UNDO, UI
+	}
+	
 	public PlotController(Object toyContext)
 	{
 		super(toyContext);
@@ -96,8 +104,8 @@ public class PlotController extends CanvasController implements FilterController
 		model.dr = PlotDrawingRequestFactory.getDrawingRequest();
 		model.viewOptions.channelComposite = ChannelCompositeMode.NONE;
 
-		undoStack = new Stack<ByteArrayOutputStream>();
-		redoStack = new Stack<ByteArrayOutputStream>();
+		undoStack = new Stack<Pair<String, ByteArrayOutputStream>>();
+		redoStack = new Stack<Pair<String, ByteArrayOutputStream>>();
 		setUndoPoint();
 	}
 
@@ -148,7 +156,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void loadPreferences(InputStream inStream, boolean isUndoAction)
 	{
 		Settings.loadPreferences(model, inStream);
-		if (!isUndoAction) setUndoPoint();
+		if (!isUndoAction) setUndoPoint("Load Session");
 		filteredDataInvalidated();
 	}
 
@@ -170,7 +178,7 @@ public class PlotController extends CanvasController implements FilterController
 		setDataWidth(model.dataset.scanSize());
 		setDataHeight(1);
 		
-		setFittingParameters(model.dataset.scanSize(), model.dataset.energyPerChannel());
+		setFittingParameters(model.dataset.energyPerChannel());
 				
 		if (mapController != null) mapController.setInterpolation(0);
 		
@@ -180,7 +188,7 @@ public class PlotController extends CanvasController implements FilterController
 		// (task listener?) which is preventing them from being garbage-collected
 		if (old != null && old != dsp) old.discard();
 	
-		updateListeners();
+		updateListeners(UpdateType.DATA.toString());
 
 
 	}
@@ -282,7 +290,7 @@ public class PlotController extends CanvasController implements FilterController
 	private void setDataHeight(int height)
 	{
 		model.dr.dataHeight = height;
-		updateListeners();
+		updateListeners(UpdateType.DATA.toString());
 	}
 
 
@@ -295,7 +303,7 @@ public class PlotController extends CanvasController implements FilterController
 	private void setDataWidth(int width)
 	{
 		model.dr.dataWidth = width;
-		updateListeners();
+		updateListeners(UpdateType.DATA.toString());
 	}
 
 
@@ -310,7 +318,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		float oldHeight = model.dr.imageHeight;
 		model.dr.imageHeight = height;
-		if (height != oldHeight) updateListeners();
+		if (height != oldHeight) updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -324,7 +332,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		float oldWidth = model.dr.imageWidth;
 		model.dr.imageWidth = width;
-		if (width != oldWidth) updateListeners();
+		if (width != oldWidth) updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -334,14 +342,17 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	private void setFittingParameters(int scanSize, float energyPerChannel)
+	private void setFittingParameters(float energyPerChannel)
 	{
 
+		int scanSize = 0;
+		if (model.dataset != null) scanSize = model.dataset.scanSize();
+		
 		model.dr.unitSize = energyPerChannel;
 		model.fittingSelections.setDataParameters(scanSize, energyPerChannel);
 		model.fittingProposals.setDataParameters(scanSize, energyPerChannel);
 
-		setUndoPoint();
+		setUndoPoint("Calibration");
 		filteredDataInvalidated();
 	}
 
@@ -401,7 +412,7 @@ public class PlotController extends CanvasController implements FilterController
 			filteredDataInvalidated();
 		}
 
-		setUndoPoint();
+		setUndoPoint("Marking Bad");
 
 	}
 
@@ -677,9 +688,9 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	public TaskList<MapResultSet> TASK_getDataForMapFromSelectedRegions()
+	public TaskList<MapResultSet> TASK_getDataForMapFromSelectedRegions(FittingTransform type)
 	{
-		return model.dataset.calculateMap(model.filters, model.fittingSelections);
+		return model.dataset.calculateMap(model.filters, model.fittingSelections, type);
 	}
 
 
@@ -809,7 +820,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void clearFilters()
 	{
 		model.filters.clearFilters();
-		setUndoPoint();
+		setUndoPoint("Clear Filters");
 		filteredDataInvalidated();
 	}
 
@@ -848,7 +859,6 @@ public class PlotController extends CanvasController implements FilterController
 					// this will call filterschanged, so we don't need to
 					// manually update the listeners
 					addFilter(f.getClass().newInstance());
-					setUndoPoint();
 					break;
 				}
 				catch (InstantiationException e)
@@ -869,7 +879,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void addFilter(AbstractFilter f)
 	{
 		model.filters.addFilter(f);
-		setUndoPoint();
+		setUndoPoint("Add Filter");
 		filteredDataInvalidated();
 	}
 
@@ -877,7 +887,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void removeFilter(int index)
 	{
 		model.filters.removeFilter(index);
-		setUndoPoint();
+		setUndoPoint("Remove Filter");
 		filteredDataInvalidated();
 	}
 
@@ -897,7 +907,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setFilterEnabled(int index, boolean enabled)
 	{
 		model.filters.setFilterEnabled(index, enabled);
-		setUndoPoint();
+		setUndoPoint("Enable Filter");
 		filteredDataInvalidated();
 	}
 
@@ -911,7 +921,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveFilterUp(int index)
 	{
 		model.filters.moveFilterUp(index);
-		setUndoPoint();
+		setUndoPoint("Move Filter Up");
 		filteredDataInvalidated();
 	}
 
@@ -919,7 +929,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveFilterDown(int index)
 	{
 		model.filters.moveFilterDown(index);
-		setUndoPoint();
+		setUndoPoint("Move Filter Down");
 		filteredDataInvalidated();
 	}
 
@@ -959,7 +969,7 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		if (e == null) return;
 		model.fittingSelections.addTransitionSeries(e);
-		setUndoPoint();
+		setUndoPoint("Add Fitting");
 		fittingDataInvalidated();
 	}
 
@@ -970,7 +980,7 @@ public class PlotController extends CanvasController implements FilterController
 		{
 			model.fittingSelections.addTransitionSeries(ts);
 		}
-		setUndoPoint();
+		setUndoPoint("Add Fittings");
 		fittingDataInvalidated();
 	}
 
@@ -978,7 +988,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void clearTransitionSeries()
 	{
 		model.fittingSelections.clear();
-		setUndoPoint();
+		setUndoPoint("Clear Fittings");
 		fittingDataInvalidated();
 	}
 
@@ -986,7 +996,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void removeTransitionSeries(TransitionSeries e)
 	{
 		model.fittingSelections.remove(e);
-		setUndoPoint();
+		setUndoPoint("Remove Fitting");
 		fittingDataInvalidated();
 	}
 
@@ -1018,7 +1028,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show)
 	{
 		model.fittingSelections.setTransitionSeriesVisibility(e, show);
-		setUndoPoint();
+		setUndoPoint("Fitting Visiblitiy");
 		fittingDataInvalidated();
 	}
 
@@ -1044,42 +1054,6 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	public List<TransitionSeriesType> getTransitionSeriesTypesForElement(Element e, boolean onlyInEnergyRange)
-	{
-
-		List<TransitionSeries> tsl = model.fittingSelections.getFittedTransitionSeries();
-		List<TransitionSeriesType> tst = DataTypeFactory.<TransitionSeriesType> list();
-
-		for (TransitionSeries ts : tsl)
-		{
-
-			if (ts.element == e)
-			{
-				if (ts.getLowestEnergyValue() < 50 + (model.dr.unitSize * model.dr.dataWidth) || !onlyInEnergyRange)
-				{
-					tst.add(ts.type);
-				}
-			}
-
-		}
-
-		return tst;
-
-	}
-
-
-	public TransitionSeries getTransitionSeriesForElement(Element e, TransitionSeriesType tst)
-	{
-		List<TransitionSeries> tsl = model.fittingSelections.getFittedTransitionSeries();
-
-		for (TransitionSeries ts : tsl)
-		{
-			if (ts.element == e && ts.type == tst) return ts;
-		}
-
-		return null;
-
-	}
 
 
 	public float getTransitionSeriesIntensity(TransitionSeries ts)
@@ -1090,40 +1064,9 @@ public class PlotController extends CanvasController implements FilterController
 
 		for (FittingResult result : model.fittingSelectionResults.fits)
 		{
-			if (result.transitionSeries == ts) return result.scaleFactor;
+			if (result.transitionSeries == ts) return SpectrumCalculations.max(result.fit);
 		}
 		return 0.0f;
-
-	}
-
-
-	public float getTransitionSeriesIntensityForElement(Element e, TransitionSeriesType tst)
-	{
-		regenerateCahcedData();
-
-		if (model.fittingSelectionResults == null) return 0.0f;
-
-		for (FittingResult result : model.fittingSelectionResults.fits)
-		{
-			if (result.transitionSeries.element == e && result.transitionSeries.type == tst) return result.scaleFactor;
-		}
-		return 0.0f;
-
-	}
-
-
-	public float getIntensityForElement(Element e)
-	{
-		regenerateCahcedData();
-
-		if (model.fittingSelectionResults == null) return 0.0f;
-
-		float intensity = 0.0f;
-		for (FittingResult result : model.fittingSelectionResults.fits)
-		{
-			if (result.transitionSeries.element == e && result.scaleFactor > intensity) intensity = result.scaleFactor;
-		}
-		return intensity;
 
 	}
 
@@ -1131,7 +1074,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveTransitionSeriesUp(TransitionSeries e)
 	{
 		model.fittingSelections.moveTransitionSeriesUp(e);
-		setUndoPoint();
+		setUndoPoint("Move Fitting Up");
 		fittingDataInvalidated();
 	}
 
@@ -1139,7 +1082,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void moveTransitionSeriesDown(TransitionSeries e)
 	{
 		model.fittingSelections.moveTransitionSeriesDown(e);
-		setUndoPoint();
+		setUndoPoint("Move Fitting Down");
 		fittingDataInvalidated();
 	}
 
@@ -1185,12 +1128,8 @@ public class PlotController extends CanvasController implements FilterController
 
 	public void commitProposedTransitionSeries()
 	{
-		for (TransitionSeries e : model.fittingProposals.getFittedTransitionSeries())
-		{
-			model.fittingSelections.addTransitionSeries(e);
-		}
+		addAllTransitionSeries(model.fittingProposals.getFittedTransitionSeries());
 		model.fittingProposals.clear();
-		setUndoPoint();
 		fittingDataInvalidated();
 	}
 
@@ -1199,10 +1138,223 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		// Clear cached values, since they now have to be recalculated
 		model.fittingProposalResults = null;
-		updateListeners();
+		updateListeners(UpdateType.FITTING.toString());
 	}
 
+	
+	public void optimizeTransitionSeriesOrdering()
+	{
+		//all visible TSs
+		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), Functions.<TransitionSeries>id());
+		
+		//all invisible TSs
+		FList<TransitionSeries> invisibles = Fn.filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
+			public Boolean f(TransitionSeries element)
+			{
+				return ! tss.include(element);
+			}
+		});
+		
+		
+		//find all the TSs which overlap with other TSs
+		final FList<TransitionSeries> overlappers = tss.filter(new FunctionMap<TransitionSeries, Boolean>() {
+
+			//create fittings which create fitting masks 1.5 stddevs from TS centre
+			TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, model.filteredPlot.size(), getEnergyPerChannel(), FittingSet.escape, 1.5f);
+			TransitionSeriesFitting tsf2 = new TransitionSeriesFitting(null, model.filteredPlot.size(), getEnergyPerChannel(), FittingSet.escape, 1.5f);
+			
+			public Boolean f(final TransitionSeries ts)
+			{
+				
+				//we want the true flag so that we make sure that elements which overlap an escape peak are still considered overlapping
+				tsf1.setTransitionSeries(ts, true);
+				
+				//map all other TSs to booleans to check if this overlaps
+				return Fn.any(tss.map(new FunctionMap<TransitionSeries, Boolean>() {
+
+					public Boolean f(TransitionSeries otherts)
+					{
+												
+						if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
+						
+						tsf2.setTransitionSeries(otherts, true);						
+						return (tsf1.isOverlapping(tsf2));
+						
+					}
+				}));
+				
+				
+			}
+		});
+		
+		//then get all the TSs which don't overlap
+		FList<TransitionSeries> nonOverlappers = tss.filter(new FunctionMap<TransitionSeries, Boolean>() {
+
+			public Boolean f(TransitionSeries element)
+			{
+				return ! overlappers.include(element);
+			}
+		});
+				
+
+		//score each of the overlappers w/o competition
+		FList<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.map(new FunctionMap<TransitionSeries, Pair<TransitionSeries, Float>>() {
+
+			public Pair<TransitionSeries, Float> f(TransitionSeries ts)
+			{
+				return new Pair<TransitionSeries, Float>(ts, fScoreTransitionSeries(model.filteredPlot).f(ts));
+			}
+		});
+		
+		//sort all the overlappig visible elements according to how strongly they would fit on their own (ie no competition)
+		Fn.sortBy(scoredOverlappers, new Comparator<Float>() {
+			
+			public int compare(Float f1, Float f2)
+			{
+				return (f2.compareTo(f1));
+				
+			}
+		}, Functions.<TransitionSeries, Float>second());
+		
+		
+		
+		//find the optimal ordering of the visible overlapping TSs based on how they fit with competition
+		FList<TransitionSeries> bestfit = optimizeTSOrderingHelper(scoredOverlappers.map(Functions.<TransitionSeries, Float>first()), new FList<TransitionSeries>());
+		
+		//re-add all of the overlappers
+		bestfit.addAll(nonOverlappers);
+		
+		//re-add all of the invisible TSs
+		bestfit.addAll(invisibles);
+		
+		//set the TS selection for the model to be the ordering we have just calculated
+		clearTransitionSeries();
+		addAllTransitionSeries(bestfit);
+		updateListeners(UpdateType.FITTING.toString());
+		
+	}
+	
+	private FList<TransitionSeries> optimizeTSOrderingHelper(FList<TransitionSeries> unfitted, FList<TransitionSeries> fitted)
+	{
+		
+		//assumption: unfitted will be in sorted order based on how well each TS fits independently
+		if (unfitted.size() == 0) return fitted;
+		
+		int n = 5;
+		
+		FList<TransitionSeries> topn = unfitted.take(n);
+		unfitted.removeAll(topn);
+		FList<List<TransitionSeries>> perms = Fn.permutations(topn);
+				
+		//function to score an ordering of Transition Series
+		final FunctionMap<List<TransitionSeries>, Float> scoreTSs = new FunctionMap<List<TransitionSeries>, Float>() {
+
+			public Float f(List<TransitionSeries> tss)
+			{
+				
+				final FunctionMap<TransitionSeries, Float> scoreTS = fScoreTransitionSeries(model.filteredPlot);
+				
+				Float score = 0f;
+				for (TransitionSeries ts : tss)
+				{
+					score = scoreTS.f(ts);
+				}
+				return score;
+				
+
+			}
+		};
+
+		PluralMap<List<TransitionSeries>, Pair<List<TransitionSeries>, Float>> permsScoring = 
+			new PluralMap<List<TransitionSeries>, Pair<List<TransitionSeries>,Float>>() {
+
+			public Pair<List<TransitionSeries>, Float> f(List<TransitionSeries> tss)
+			{
+				return new Pair<List<TransitionSeries>, Float>(tss, scoreTSs.f(tss));
+			}
+		};
+		
+		
+		//find the best fitting for the currently selected fittings
+		FList<TransitionSeries> bestfit = new FList<TransitionSeries>(perms.fold(new FunctionCombine<List<TransitionSeries>, List<TransitionSeries>, List<TransitionSeries>>() {
+			
+			public List<TransitionSeries> f(List<TransitionSeries> l1, List<TransitionSeries> l2)
+			{
+				Float s1, s2; //scores
+				s1 = scoreTSs.f(l1);
+				s2 = scoreTSs.f(l2);				
+				
+				if (s1 < s2) return l1;
+				return l2;
+				
+			}
+		}));
+
+		
+		//add the best of the fitted elements to the fititngs list
+		//and the rest back into the start of the unfitted elements list
+		fitted.add(bestfit.head());
+		unfitted.addAll(0, bestfit.tail());
+		
+		
+		//recurse
+		return optimizeTSOrderingHelper(unfitted, fitted);
+
+				
+	}
+
+	
+	
+	private FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(final Spectrum spectrum)
+	{
+		return fScoreTransitionSeries(spectrum, null);
+	}
+	
+	private FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(final Spectrum spectrum, final Float energy)
+	{
+	
+		//scoring function to evaluate each TransitionSeries
+		return new FunctionMap<TransitionSeries, Float>() {
+
+			float energyPerChannel = getEnergyPerChannel();
+			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, getDataWidth(), energyPerChannel, FittingSet.escape);
+			Spectrum s = new Spectrum(spectrum);
+			
+			public Float f(TransitionSeries ts)
+			{
+				Double prox;
+				if (energy == null)
+				{
+					prox = 1.0;
+				} else  {
+					prox = Math.abs(ts.getProximityToEnergy(energy));
+					if (prox <= 0.001) prox = 0.001;
+					prox = Math.log1p(prox);
+					
+				}
+
+				tsf.setTransitionSeries(ts);
+				Float ratio, remainingArea;
+				
+				//get the fitting ratio, and the fitting spectrum
+				ratio = tsf.getRatioForCurveUnderData(s);
+				Spectrum fitting = tsf.scaleFitToData(ratio);
+				//remove this fitting from the spectrum
+				SpectrumCalculations.subtractLists_inplace(s, fitting, 0.0f);
+				
+				//square the values left in s
+				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
+				
+				remainingArea = SpectrumCalculations.sumValuesInList(unfit) / s.size();
+
+				
+				return (float)( remainingArea * tsf.getSizeOfBase() * prox );
+			}
+		};
+		
+	}
+	
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
 	{
 
@@ -1248,24 +1400,7 @@ public class PlotController extends CanvasController implements FilterController
 		
 		
 		final TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, getDataWidth(), energyPerChannel, FittingSet.escape);
-		
-		//scoring function to evaluate each TransitionSeries
-		final FunctionMap<TransitionSeries, Float> score = new FunctionMap<TransitionSeries, Float>() {
-
-			public Float f(TransitionSeries ts)
-			{
-				Double prox = Math.abs(ts.getProximityToEnergy(energy));
-				if (prox <= 0.001) prox = 0.001;
-				
-				tsf.setTransitionSeries(ts);
-				Float ratio;
-				ratio = tsf.getRatioForCurveUnderData(s);
-				ratio = (float) Math.pow(ratio, 2);
-				
-				
-				return (ratio / prox.floatValue()) / tsf.getSizeOfBase();
-			}
-		};
+			
 
 
 		//get a list of all transition series to start with
@@ -1330,10 +1465,10 @@ public class PlotController extends CanvasController implements FilterController
 			{
 				Float prox1, prox2;
 
-				prox1 = score.f(ts1);
-				prox2 = score.f(ts2);
-
-				return prox2.compareTo(prox1);
+				prox1 = fScoreTransitionSeries(s, energy).f(ts1);
+				prox2 = fScoreTransitionSeries(s, energy).f(ts2);
+				
+				return prox1.compareTo(prox2);
 
 			}
 		});
@@ -1359,14 +1494,14 @@ public class PlotController extends CanvasController implements FilterController
 	public void setZoom(float zoom)
 	{
 		model.viewOptions.zoom = zoom;
-		updateListeners();
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
 	public void setShowIndividualSelections(boolean showIndividualSelections)
 	{
 		model.viewOptions.showIndividualFittings = showIndividualSelections;
-		setUndoPoint();
+		setUndoPoint("Individual Fittings");
 		fittingDataInvalidated();
 	}
 
@@ -1379,10 +1514,8 @@ public class PlotController extends CanvasController implements FilterController
 
 	public void setEnergyPerChannel(float energy)
 	{
-		int scanSize = 0;
-		if (model.dataset != null) scanSize = model.dataset.scanSize();
 		//dont call setUndoPoint, as setFittingParameters will do that for us
-		setFittingParameters(scanSize, energy);
+		setFittingParameters(energy);
 		axisSetInvalidated();
 	}
 
@@ -1427,8 +1560,8 @@ public class PlotController extends CanvasController implements FilterController
 			model.dr.viewTransform = ViewTransform.LINEAR;
 		}
 		axisSetInvalidated();
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Log View");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -1443,7 +1576,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowChannelAverage()
 	{
 		model.viewOptions.channelComposite = ChannelCompositeMode.AVERAGE;
-		setUndoPoint();
+		setUndoPoint("Mean Spectrum");
 		filteredDataInvalidated();
 	}
 
@@ -1451,7 +1584,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowChannelMaximum()
 	{
 		model.viewOptions.channelComposite = ChannelCompositeMode.MAXIMUM;
-		setUndoPoint();
+		setUndoPoint("Max Spectrum");
 		filteredDataInvalidated();
 	}
 
@@ -1459,7 +1592,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowChannelSingle()
 	{
 		model.viewOptions.channelComposite = ChannelCompositeMode.NONE;
-		setUndoPoint();
+		setUndoPoint("Individual Spectrum");
 		filteredDataInvalidated();
 	}
 
@@ -1486,7 +1619,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		if (number == -1)
 		{
-			updateListeners();
+			updateListeners(UpdateType.UI.toString());
 			return;
 		}
 
@@ -1508,8 +1641,8 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		model.viewOptions.showAxes = axes;
 		axisPainters = null;
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Axes");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -1529,8 +1662,8 @@ public class PlotController extends CanvasController implements FilterController
 	{
 		model.viewOptions.showPlotTitle = show;
 		axisPainters = null;
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Title");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -1539,8 +1672,8 @@ public class PlotController extends CanvasController implements FilterController
 	public void setMonochrome(boolean mono)
 	{
 		model.viewOptions.monochrome = mono;
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Monochrome");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -1553,24 +1686,24 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowElementTitles(boolean show)
 	{
 		model.viewOptions.showElementFitTitles = show;
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Fitting Titles");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
 	public void setShowElementMarkers(boolean show)
 	{
 		model.viewOptions.showElementFitMarkers = show;
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Fitting Markers");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
 	public void setShowElementIntensities(boolean show)
 	{
 		model.viewOptions.showElementFitIntensities = show;
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Fitting Heights");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -1595,8 +1728,8 @@ public class PlotController extends CanvasController implements FilterController
 	public void setShowRawData(boolean show)
 	{
 		model.viewOptions.backgroundShowOriginal = show;
-		setUndoPoint();
-		updateListeners();
+		setUndoPoint("Raw Data Outline");
+		updateListeners(UpdateType.UI.toString());
 	}
 
 
@@ -1615,14 +1748,17 @@ public class PlotController extends CanvasController implements FilterController
 	//////////////////////////////////////////////////////////////
 	public void setUndoPoint()
 	{
-
+		setUndoPoint("");
+	}
+	public void setUndoPoint(String change)
+	{
 		//save the current state
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		savePreferences(baos);
 
 		if (undoStack.size() > 0)
 		{
-			byte[] lastState = undoStack.peek().toByteArray();
+			byte[] lastState = undoStack.peek().second.toByteArray();
 			byte[] thisState = baos.toByteArray();
 
 
@@ -1644,12 +1780,27 @@ public class PlotController extends CanvasController implements FilterController
 			}
 		}
 
-		undoStack.push(baos);
+		undoStack.push(new Pair<String, ByteArrayOutputStream>(change, baos));
 
 		redoStack.clear();
 
 	}
 
+	public String getNextUndo()
+	{
+		if (undoStack.size() < 2) return "";
+		
+		return undoStack.peek().first;
+	}
+	
+	public String getNextRedo()
+	{
+		if (redoStack.isEmpty()) return "";
+		
+		return redoStack.peek().first;
+		
+	}
+	
 
 	public void undo()
 	{
@@ -1657,8 +1808,10 @@ public class PlotController extends CanvasController implements FilterController
 
 		redoStack.push(undoStack.pop());
 
-		loadPreferences(new ByteArrayInputStream(undoStack.peek().toByteArray()), true);
+		loadPreferences(new ByteArrayInputStream(undoStack.peek().second.toByteArray()), true);
 
+		updateListeners(UpdateType.UNDO.toString());
+		
 	}
 
 
@@ -1669,8 +1822,10 @@ public class PlotController extends CanvasController implements FilterController
 
 		undoStack.push(redoStack.pop());
 
-		loadPreferences(new ByteArrayInputStream(undoStack.peek().toByteArray()), true);
+		loadPreferences(new ByteArrayInputStream(undoStack.peek().second.toByteArray()), true);
 
+		updateListeners(UpdateType.UNDO.toString());
+		
 	}
 
 

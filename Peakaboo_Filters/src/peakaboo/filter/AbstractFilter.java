@@ -1,4 +1,4 @@
-package peakaboo.filters;
+package peakaboo.filter;
 
 
 import java.io.Serializable;
@@ -58,7 +58,7 @@ public abstract class AbstractFilter implements Serializable
 		},
 	}
 	
-	protected Map<Object, Parameter<?>>	parameters;
+	public Map<Object, Parameter>		parameters;
 	public boolean						enabled;
 	
 	protected Spectrum	previewCache;
@@ -66,7 +66,7 @@ public abstract class AbstractFilter implements Serializable
 
 	public AbstractFilter()
 	{
-		this.parameters = DataTypeFactory.<Object, Parameter<?>> map();
+		this.parameters = DataTypeFactory.<Object, Parameter> map();
 		this.enabled = true;
 	}
 
@@ -80,11 +80,19 @@ public abstract class AbstractFilter implements Serializable
 	public abstract FilterType getFilterType();
 
 
-	public final Map<Object, Parameter<?>> getParameters()
+	public final Map<Object, Parameter> getParameters()
 	{
 		return this.parameters;
 	}
+	public final void setParameters(Map<Object, Parameter> params)
+	{
+		parameters = params;
+	}
 
+	public final Parameter getParameter(Object key)
+	{
+		return parameters.get(key);
+	}
 
 	protected final void setPreviewCache(Spectrum data)
 	{
@@ -100,18 +108,6 @@ public abstract class AbstractFilter implements Serializable
 	
 	public abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
 
-
-	@SuppressWarnings("unchecked")
-	protected <T1> T1 getParameterValue(Object key)
-	{
-		return ((Parameter<T1>)parameters.get(key)).getValue();
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected <T1> void setParameterValue(Object key, T1 value)
-	{
-		((Parameter<T1>)parameters.get(key)).setValue(value);
-	}
 	
 	public abstract boolean showFilter();
 

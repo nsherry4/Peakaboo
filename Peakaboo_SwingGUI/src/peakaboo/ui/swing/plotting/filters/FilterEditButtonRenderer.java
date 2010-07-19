@@ -8,30 +8,30 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import peakaboo.filters.AbstractFilter;
+import peakaboo.filter.AbstractFilter;
 
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;
 
 
-public class FilterEditButtonRenderer extends JPanel implements TableCellRenderer
+public class FilterEditButtonRenderer implements TableCellRenderer
 {
 
 	private ImageButton	edit;
-	private JPanel noParams;
+	private JPanel container;
 
 
 	public FilterEditButtonRenderer()
 	{
 
-		edit = new ImageButton(StockIcon.MISC_PREFERENCES, "…", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
-		
-		setLayout(new BorderLayout());
-		add(edit, BorderLayout.CENTER);
-		
-		noParams = new JPanel();
+		edit = new ImageButton(StockIcon.MISC_PREFERENCES, "…", "Edit Filter", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
+		edit.setOpaque(false);
+				
+		container = new JPanel();
+		container.setBorder(Spacing.bNone());
 
 	}
 
@@ -44,36 +44,25 @@ public class FilterEditButtonRenderer extends JPanel implements TableCellRendere
 		
 		int numParameters = filter.getParameters().size();
 
+		if (table.getRowHeight() < container.getPreferredSize().height) {
+			table.setRowHeight(container.getPreferredSize().height);
+		}
+
+		container.remove(edit);
+		
 		if (isSelected) {
-			setOpaque(true);
-			
-			setBackground(table.getSelectionBackground());
-			setForeground(table.getSelectionForeground());
-			
+			container.setBackground(table.getSelectionBackground());
+			container.setOpaque(true);
 		} else {
-			setOpaque(false);
-
-			setForeground(table.getForeground());
-			setBackground(table.getBackground());
+			container.setBackground(table.getBackground());
+			container.setOpaque(false);
 		}
-
-
-		if (table.getRowHeight() < this.getPreferredSize().height) {
-			table.setRowHeight(this.getPreferredSize().height);
-		}
-
+		
 		if (numParameters == 0)
 		{
-			
-			if (isSelected) {
-				noParams.setBackground(table.getSelectionBackground());
-				noParams.setOpaque(true);
-			} else {
-				noParams.setOpaque(false);
-			}
-			
-			return noParams;
+			return container;
 		}
-		return this;
+		container.add(edit);
+		return container;
 	}
 }

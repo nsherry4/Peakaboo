@@ -19,6 +19,7 @@ import javax.swing.Scrollable;
 import commonenvironment.AbstractFile;
 import commonenvironment.Env;
 
+import eventful.EventfulTypeListener;
 import fava.Fn;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
@@ -56,12 +57,18 @@ public class PlotCanvas extends JPanel implements Scrollable
 
 		//setCanvasSize();
 
-		controller.addListener(new PeakabooSimpleListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String s)
 			{
-				// TODO Auto-generated method stub
-				setCanvasSize();
+				if (
+						s.equals(PlotController.UpdateType.UI.toString())
+						||
+						s.equals(PlotController.UpdateType.DATA.toString())
+						||
+						s.equals(PlotController.UpdateType.UNDO.toString())
+					) 
+					setCanvasSize();
 			}
 		});
 		

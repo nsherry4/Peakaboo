@@ -16,6 +16,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import eventful.EventfulTypeListener;
+
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapDisplayMode;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
@@ -102,9 +104,9 @@ public class SidePanel extends JPanel
 		 * elementsListPanel = createElementsList(); add(elementsListPanel, maingbc);
 		 */
 		
-		controller.addListener(new PeakabooSimpleListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String s)
 			{
 
 				width.setEnabled(!controller.dimensionsProvided());

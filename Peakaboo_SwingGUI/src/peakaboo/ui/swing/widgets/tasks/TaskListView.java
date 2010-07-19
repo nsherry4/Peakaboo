@@ -17,6 +17,7 @@ import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
+import swidget.containers.SwidgetFrame;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -25,10 +26,21 @@ public class TaskListView extends SwidgetDialog {
 
 	TaskList<?> tasks;
 	private JProgressBar progress;
+
+	public TaskListView(SwidgetContainer container, TaskList<?> _tasks){
+		
+		super(container, "Working...");
+		init(container, _tasks);
+		
+	}
 	
-	public TaskListView(SwidgetContainer frame, TaskList<?> _tasks){
+	public TaskListView(SwidgetFrame frame, TaskList<?> _tasks){
 		
 		super(frame, "Working...", true);
+		init(frame, _tasks);	
+	}
+	private void init(SwidgetContainer container, TaskList<?> _tasks)
+	{
 		setResizable(false);
 		
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

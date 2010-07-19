@@ -70,9 +70,9 @@ public class SummationPanel extends ClearPanel
 		this.setLayout(new BorderLayout());
 
 		summationWidget = new SummationWidget(controller);
+		summationWidget.setBorder(Spacing.bMedium());
 		JScrollPane scroll = new JScrollPane(summationWidget);
 		scroll.setPreferredSize(new Dimension(200, 0));
-		scroll.setBorder(Spacing.bMedium());
 
 		this.add(scroll, BorderLayout.CENTER);
 

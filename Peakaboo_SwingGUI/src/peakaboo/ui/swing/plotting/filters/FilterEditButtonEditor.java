@@ -2,6 +2,7 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,12 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import peakaboo.controller.plotter.FilterController;
-import peakaboo.filters.AbstractFilter;
+import peakaboo.filter.AbstractFilter;
 import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetFrame;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;
 
 
@@ -26,7 +29,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 {
 
 	protected ImageButton		button;
-	private JPanel 				noParams;
+	private JPanel 				container;
 	
 	private SwidgetContainer	owner;
 
@@ -44,8 +47,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 		this.controller = controller;
 		this.owner = owner;
 
-		button = new ImageButton(StockIcon.MISC_PREFERENCES, "…", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
-		button.setOpaque(true);
+		button = new ImageButton(StockIcon.MISC_PREFERENCES, "…", "Edit Filter", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
 		button.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -53,8 +55,12 @@ class FilterEditButtonEditor extends DefaultCellEditor
 				fireEditingStopped();
 			}
 		});
+		button.setOpaque(false);
 		
-		noParams = new ClearPanel();
+		container = new JPanel();
+		container.setBorder(Spacing.bNone());
+		
+		
 
 	}
 
@@ -69,19 +75,18 @@ class FilterEditButtonEditor extends DefaultCellEditor
 		label = (_filter == null) ? "" : _filter.toString();
 		isPushed = true;
 		
+		
+		container.setBackground(table.getSelectionBackground());
+		container.setOpaque(true);
+
+		
+		container.remove(button);
 		if (numParameters == 0)
-		{
-			
-			if (isSelected) {
-				noParams.setBackground(table.getSelectionBackground());
-				noParams.setOpaque(true);
-			} else {
-				noParams.setOpaque(false);
-			}
-			
-			return noParams;
+		{		
+			return container;
 		}
-		return button;
+		container.add(button);
+		return container;
 	}
 
 
@@ -90,7 +95,10 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	{
 		if (isPushed)
 		{
-			new FilterEditDialogue(filter, controller, owner);
+			if (owner instanceof SwidgetFrame)
+				new FilterEditDialogue(filter, controller, (SwidgetFrame)owner);
+			else
+				new FilterEditDialogue(filter, controller, owner);
 		}
 		isPushed = false;
 		return new String(label);

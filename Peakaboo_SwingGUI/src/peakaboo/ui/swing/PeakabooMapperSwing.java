@@ -21,6 +21,8 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import eventful.EventfulTypeListener;
+
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.SingleMapModel;
@@ -32,6 +34,7 @@ import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import scitypes.Coord;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
+import swidget.containers.SwidgetFrame;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -64,8 +67,27 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	public String				savePictureFolder;
 	public String				dataSourceFolder;
 	
-	PeakabooSimpleListener 		controllerListener;
+	EventfulTypeListener<String> controllerListener;
 
+	
+	
+	public PeakabooMapperSwing(
+			SwidgetFrame owner, 
+			AllMapsModel data, 
+			String datasetName,
+			boolean showControls, 
+			String dataSourceFolder,
+			String savePictureFolder,
+			Coord<Integer> dataDimensions,
+			MapResultSet originalData
+	)
+	{
+		
+		super(owner, "Elemental Map - " + datasetName, true);
+		setup(data, datasetName, showControls, dataSourceFolder, savePictureFolder, dataDimensions, originalData);
+		
+	}
+	
 	public PeakabooMapperSwing(
 			SwidgetContainer owner, 
 			AllMapsModel data, 
@@ -78,8 +100,21 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	)
 	{
 
-		super(owner, "Elemental Map - " + datasetName, true);
+		super(owner, "Elemental Map - " + datasetName);
+		setup(data, datasetName, showControls, dataSourceFolder, savePictureFolder, dataDimensions, originalData);
 
+
+	}
+	
+	private void setup(			
+			AllMapsModel data, 
+			String datasetName,
+			boolean showControls, 
+			String dataSourceFolder,
+			String savePictureFolder,
+			Coord<Integer> dataDimensions,
+			MapResultSet originalData)
+	{
 		this.dataSourceFolder = dataSourceFolder;
 		this.savePictureFolder = savePictureFolder;
 		this.showControls = showControls;
@@ -92,7 +127,6 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		this.originalData = originalData;
 		
 		init();
-
 	}
 
 
@@ -163,9 +197,9 @@ public class PeakabooMapperSwing extends SwidgetDialog
 
 		this.pack();
 		
-		controllerListener = new PeakabooSimpleListener() {
+		controllerListener = new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String s)
 			{				
 				monochrome.setSelected(controller.getMonochrome());
 				spectrum.setSelected(controller.getShowSpectrum());
@@ -176,7 +210,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		
 		controller.addListener(controllerListener);
 			
-		controller.updateListeners();
+		controller.updateListeners("");
 
 	}
 

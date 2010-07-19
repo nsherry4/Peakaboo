@@ -49,6 +49,8 @@ public class TransitionSeriesFitting
 	public static final float	SIGMA	= 0.062f;
 	private float				escape	= 1.74f;
 
+	
+	private float				standardDeviations;
 
 	/**
 	 * Create a new TransitionSeriesFitting.
@@ -60,24 +62,35 @@ public class TransitionSeriesFitting
 	 * @param energyPerChannel
 	 *            the energy per data point in the source data
 	 */
+	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, float escape, float standardDeviations)
+	{
+		this(ts, dataWidth, energyPerChannel, escape);
+		this.standardDeviations = standardDeviations;
+		
+	}
 	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, float escape)
 	{
 
 		this.dataWidth = dataWidth;
 		this.escape = escape;
 		this.energyPerChannel = energyPerChannel;
+		standardDeviations = 1f;
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		transitionRanges = new RangeSet();
 		
-		if (ts != null) setTransitionSeries(ts);
+		if (ts != null) setTransitionSeries(ts, false);
 
 	}
 
-	
 	public void setTransitionSeries(TransitionSeries ts)
 	{
-		calculateConstraintMask(ts);
+		setTransitionSeries(ts, false);
+	}
+	
+	public void setTransitionSeries(TransitionSeries ts, boolean fitEscapes)
+	{
+		calculateConstraintMask(ts, fitEscapes);
 		calcUnscaledFit(ts, energyPerChannel, (ts.type != TransitionSeriesType.COMPOSITE));
 
 		this.transitionSeries = ts;
@@ -222,11 +235,17 @@ public class TransitionSeriesFitting
 	}
 	
 	
+	public boolean isOverlapping(TransitionSeriesFitting other)
+	{
+		return transitionRanges.isOverlapping(other.transitionRanges);
+		
+	}
 	
 	
 	
 	
-	private void calculateConstraintMask(TransitionSeries ts)
+	
+	private void calculateConstraintMask(TransitionSeries ts, boolean fitEscapes)
 	{
 		/*
 		for (int i = 0; i < dataWidth; i++)
@@ -235,6 +254,7 @@ public class TransitionSeriesFitting
 		}
 		*/
 		
+		transitionRanges.clear();
 
 		float range;
 		float mean;
@@ -246,7 +266,8 @@ public class TransitionSeriesFitting
 		{
 
 			range = getSigmaForTransition(SIGMA, t) / energyPerChannel;
-
+			range *= standardDeviations;
+			
 			mean = t.energyValue / energyPerChannel;
 
 			start = (int) (mean - range);
@@ -257,16 +278,27 @@ public class TransitionSeriesFitting
 
 			baseSize += stop - start + 1;
 			
-			/*
-			for (int i = start; i <= stop; i++)
-			{
-				constraintMask.set(i, true);
-			}
-			*/
-			
 			transitionRanges.addRange(new Range(start, stop));
 			
+			if (fitEscapes)
+			{
+				mean = (t.energyValue-escape) / energyPerChannel;
+				
+				start = (int) (mean - range);
+				stop = (int) (mean + range);
+				if (start < 0) start = 0;
+				if (stop > dataWidth - 1) stop = dataWidth - 1;
+				if (start > dataWidth - 1) start = dataWidth - 1;
+
+				baseSize += stop - start + 1;
+				
+				transitionRanges.addRange(new Range(start, stop));
+				
+			}
+			
 		}
+		
+		
 
 	}
 	

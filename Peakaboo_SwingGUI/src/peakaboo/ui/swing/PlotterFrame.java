@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import peakaboo.common.Version;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetFrame;
 import swidget.icons.IconFactory;
 
 
@@ -27,7 +28,7 @@ import swidget.icons.IconFactory;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PlotterFrame extends JFrame implements SwidgetContainer
+public class PlotterFrame extends SwidgetFrame
 {
 
 	public PlotterFrame()

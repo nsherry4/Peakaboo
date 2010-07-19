@@ -4,6 +4,8 @@ package peakaboo.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import eventful.EventfulType;
+
 import peakaboo.datatypes.eventful.Eventful;
 import scidraw.drawing.backends.DrawingSurfaceFactory;
 import scidraw.drawing.backends.SaveableSurface;
@@ -18,7 +20,7 @@ import scidraw.drawing.backends.SurfaceType;
  * 
  */
 
-public abstract class CanvasController extends Eventful
+public abstract class CanvasController extends EventfulType<String>
 {
 
 

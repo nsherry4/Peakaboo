@@ -13,7 +13,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import eventful.EventfulTypeListener;
+
 import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
@@ -65,11 +68,13 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(cardPanel);
 
-		controller.addListener(new PeakabooSimpleListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String s)
 			{
-				//CurveFittingView.this.changed();
+				if (s.equals(PlotController.UpdateType.UNDO)) {
+					changed();
+				}
 			}
 		});
 

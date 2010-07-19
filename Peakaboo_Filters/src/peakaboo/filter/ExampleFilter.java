@@ -1,8 +1,9 @@
-package peakaboo.filters;
+package peakaboo.filter;
 
 
 import peakaboo.common.Version;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.BackgroundRemovalFilter.backgroundParams;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -15,7 +16,7 @@ public class ExampleFilter extends AbstractFilter {
 	
 	public ExampleFilter() {
 		//add a parameter with name "example parameter" and default value 1
-		parameters.put(PARAM1, new Parameter<Integer>(ValueType.INTEGER, "Example Parameter", 1));
+		parameters.put(PARAM1, new Parameter(ValueType.INTEGER, "Example Parameter", 1));
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class ExampleFilter extends AbstractFilter {
 
 	@Override
 	public boolean validateParameters() {
-		return (this.<Integer>getParameterValue(PARAM1) > 0);
+		return (getParameter(PARAM1).intValue() > 0);
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.fileio.PeakTableReader;
-import peakaboo.filters.FilterSet;
+import peakaboo.filter.FilterSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.plot.PlotDrawingRequestFactory;
 import scitypes.Spectrum;

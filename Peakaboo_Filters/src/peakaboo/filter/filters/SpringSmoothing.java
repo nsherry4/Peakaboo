@@ -1,10 +1,10 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
@@ -26,9 +26,9 @@ public final class SpringSmoothing extends AbstractFilter
 	public SpringSmoothing()
 	{
 		super();
-		parameters.put(MULTIPLIER, new Parameter<Double>(ValueType.REAL, "Force Multiplier", 1.0d));
-		parameters.put(FALLOFF, new Parameter<Double>(ValueType.REAL, "Force Falloff Power", 1.0d));
-		parameters.put(ITERATIONS, new Parameter<Integer>(ValueType.INTEGER, "Iterations", 1));
+		parameters.put(MULTIPLIER, new Parameter(ValueType.REAL, "Force Multiplier", 1.0d));
+		parameters.put(FALLOFF, new Parameter(ValueType.REAL, "Force Falloff Power", 1.0d));
+		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 1));
 
 	}
 
@@ -53,17 +53,17 @@ public final class SpringSmoothing extends AbstractFilter
 	public boolean validateParameters()
 	{
 
-		double mult, power;
+		float mult, power;
 		int iterations;
 
 		
-		mult = this.<Double>getParameterValue(MULTIPLIER);
+		mult = getParameter(MULTIPLIER).realValue();
 		if (mult > 40 || mult < 0.1) return false;
 		
-		power = this.<Double>getParameterValue(FALLOFF);
+		power = getParameter(FALLOFF).realValue();
 		if (power > 10 || power < 0.0) return false;
 		
-		iterations = this.<Integer>getParameterValue(ITERATIONS);
+		iterations = getParameter(ITERATIONS).intValue();
 		if (iterations > 50 || iterations < 1) return false;
 		
 
@@ -94,9 +94,9 @@ public final class SpringSmoothing extends AbstractFilter
 	{
 		data = Noise.testFilter(
 				data, 
-				this.<Double>getParameterValue(MULTIPLIER).floatValue(), 
-				this.<Double>getParameterValue(FALLOFF).floatValue(), 
-				this.<Integer>getParameterValue(ITERATIONS)
+				getParameter(MULTIPLIER).realValue(), 
+				getParameter(FALLOFF).realValue(), 
+				getParameter(ITERATIONS).intValue()
 			);
 		return data;
 	}

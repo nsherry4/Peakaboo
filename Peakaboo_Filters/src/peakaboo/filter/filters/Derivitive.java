@@ -1,8 +1,8 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.filters.AbstractFilter;
+import peakaboo.filter.AbstractFilter;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 

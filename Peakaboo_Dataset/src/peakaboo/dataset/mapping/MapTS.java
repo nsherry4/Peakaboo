@@ -10,7 +10,8 @@ import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
 import peakaboo.fileio.xrf.DataSource;
-import peakaboo.filters.FilterSet;
+import peakaboo.filter.FilterSet;
+import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -19,7 +20,7 @@ import scitypes.SpectrumCalculations;
 public class MapTS
 {
 
-	public static TaskList<MapResultSet> calculateMap(final DataSource dataSource, final FilterSet filters, final FittingSet fittings)
+	public static TaskList<MapResultSet> calculateMap(final DataSource dataSource, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
 	{
 
 		final TaskList<MapResultSet> tasklist;
@@ -52,7 +53,7 @@ public class MapTS
 				for (FittingResult result : frs.fits)
 				{
 					maps.putIntensityInMapAtPoint(
-						SpectrumCalculations.sumValuesInList(result.fit),
+						type == FittingTransform.AREA ? SpectrumCalculations.sumValuesInList(result.fit) : SpectrumCalculations.max(result.fit),
 						result.transitionSeries,
 						ordinal);
 				}

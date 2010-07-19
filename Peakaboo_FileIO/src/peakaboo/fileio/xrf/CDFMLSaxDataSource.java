@@ -131,15 +131,17 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 
 	private String currentPath()
-	{
+	{	
+		
 		return (Fn.foldl(Fn.map(tagStack, new FunctionMap<Pair<String, Map<String, String>>, String>() {
 
 			
 			public String f(Pair<String, Map<String, String>> element)
 			{
-				return element.first.replace('\n', '\000');
+				return element.first;
 			}
-		}), Functions.strcat("/")));
+		}), Functions.strcat("/"))).replace('\n', '\000');
+		
 	}
 
 
@@ -206,36 +208,6 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 			}
 		}
 
-
-
-		/*
-		System.out.print("Characters:    \"");
-		for (int i = start; i < start + length; i++)
-		{
-			switch (ch[i])
-			{
-				case '\\':
-					System.out.print("\\\\");
-					break;
-				case '"':
-					System.out.print("\\\"");
-					break;
-				case '\n':
-					System.out.print("\\n");
-					break;
-				case '\r':
-					System.out.print("\\r");
-					break;
-				case '\t':
-					System.out.print("\\t");
-					break;
-				default:
-					System.out.print(ch[i]);
-					break;
-			}
-		}
-		System.out.print("\"\n");
-		*/
 	}
 
 	@Override
@@ -279,7 +251,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 			if (CDFML.Y_INDEX.equals(variableName)) sv.yind = Integer.parseInt(sb.toString());
 			if (CDFML.NORMALISE.equals(variableName)) sv.iNaught = Float.parseFloat(sb.toString());
 
-			if (CDFML.SPECTRUMS.equals(variableName)) 
+			if (CDFML.SPECTRUMS.equals(variableName))
 			{
 				scandata.set(entryNo, getSpectrumFromString(sb.toString()));
 				scanReadCount++;

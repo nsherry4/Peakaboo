@@ -1,12 +1,12 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
@@ -28,9 +28,9 @@ public final class FourierLowPass extends AbstractFilter
 	public FourierLowPass()
 	{
 		super();
-		parameters.put(ROLLOFF, new Parameter<FFTStyle>(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
-		parameters.put(START, new Parameter<Integer>(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
-		parameters.put(END, new Parameter<Integer>(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
+		parameters.put(ROLLOFF, new Parameter(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
+		parameters.put(START, new Parameter(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
+		parameters.put(END, new Parameter(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
 
 	}
 
@@ -40,13 +40,13 @@ public final class FourierLowPass extends AbstractFilter
 	{
 
 		int start, end;
-		boolean isCutoff = this.<FFTStyle>getParameterValue(ROLLOFF) == FFTStyle.CUTOFF;
+		boolean isCutoff = getParameter(ROLLOFF).<FFTStyle>enumValue() == FFTStyle.CUTOFF;
 		parameters.get(END).enabled = (!isCutoff);
 
-		start = this.<Integer>getParameterValue(START);
+		start = getParameter(START).intValue();
 		if (start > 15 || start < 1) return false;
 
-		end = this.<Integer>getParameterValue(END);
+		end = getParameter(END).intValue();
 		if (end > 15 || end < 0) return false;
 
 		if (!isCutoff && start < end) return false;
@@ -94,9 +94,9 @@ public final class FourierLowPass extends AbstractFilter
 		
 		data = Noise.FFTLowPassFilter(
 			data,
-			this.<FFTStyle>getParameterValue(ROLLOFF),
-			this.<Integer>getParameterValue(START),
-			this.<Integer>getParameterValue(END)
+			getParameter(ROLLOFF).<FFTStyle>enumValue(),
+			getParameter(START).intValue(),
+			getParameter(END).intValue()
 		);
 
 		return data;

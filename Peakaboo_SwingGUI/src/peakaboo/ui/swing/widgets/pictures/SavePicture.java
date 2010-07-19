@@ -58,12 +58,13 @@ public class SavePicture extends SwidgetDialog
 
 		add(controlsPanel);
 
-		int height = getPreferredSize().height;
-		setPreferredSize(new Dimension(500, height));
+		//int height = getPreferredSize().height;
+		//setPreferredSize(new Dimension(500, height));
 
-		setResizable(false);
+		
 
 		pack();
+		setResizable(false);
 		centreOnParent();
 		setModal(true);
 		setVisible(true);
@@ -121,14 +122,14 @@ public class SavePicture extends SwidgetDialog
 
 		JPanel panel = new ClearPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-
+	
 		group = new ComplexToggleGroup();
 
 		ComplexToggle png, svg, pdf;
 
 		png = new ComplexToggle(StockIcon.MIME_RASTER, "Pixel Image (PNG)",
 				"Pixel based images are a grid of coloured dots. They have a fixed size and level of detail.", group);
-
+		
 		svg = new ComplexToggle(StockIcon.MIME_SVG, "Vector Image (SVG)",
 				"Vector images use points, lines, and curves to define an image. They can be scaled to any size.",
 				group);
@@ -136,6 +137,9 @@ public class SavePicture extends SwidgetDialog
 		pdf = new ComplexToggle(StockIcon.MIME_PDF, "PDF File", "PDF files are a more print-oriented vector image format.",
 				group);
 
+		png.setPreferredSize(new Dimension(500, png.getPreferredSize().height));
+		svg.setPreferredSize(new Dimension(500, svg.getPreferredSize().height));
+		pdf.setPreferredSize(new Dimension(500, pdf.getPreferredSize().height));
 
 		panel.add(png);
 		panel.add(svg);

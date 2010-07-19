@@ -7,7 +7,8 @@ import fava.datatypes.Bounds;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.filters.FilterSet;
+import peakaboo.filter.FilterSet;
+import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -74,7 +75,7 @@ public class EmptyDataSetProvider extends DataSetProvider
 	}
 
 	@Override
-	public TaskList<MapResultSet> calculateMap(FilterSet filters, FittingSet fittings)
+	public TaskList<MapResultSet> calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
 	{
 		// TODO Auto-generated method stub
 		return null;

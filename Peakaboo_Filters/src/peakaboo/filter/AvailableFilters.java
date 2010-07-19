@@ -1,4 +1,4 @@
-package peakaboo.filters;
+package peakaboo.filter;
 
 
 
@@ -12,18 +12,18 @@ import static fava.Fn.*;
 
 import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.filters.filters.Addition;
-import peakaboo.filters.filters.AgressiveWaveletNoiseFilter;
-import peakaboo.filters.filters.BruknerRemoval;
-import peakaboo.filters.filters.Derivitive;
-import peakaboo.filters.filters.FourierLowPass;
-import peakaboo.filters.filters.Integrate;
-import peakaboo.filters.filters.MovingAverage;
-import peakaboo.filters.filters.Multiply;
-import peakaboo.filters.filters.PolynomialRemoval;
-import peakaboo.filters.filters.SavitskyGolaySmoothing;
-import peakaboo.filters.filters.Subtraction;
-import peakaboo.filters.filters.WaveletNoiseFilter;
+import peakaboo.filter.filters.Addition;
+import peakaboo.filter.filters.AgressiveWaveletNoiseFilter;
+import peakaboo.filter.filters.BruknerRemoval;
+import peakaboo.filter.filters.Derivitive;
+import peakaboo.filter.filters.FourierLowPass;
+import peakaboo.filter.filters.Integrate;
+import peakaboo.filter.filters.MovingAverage;
+import peakaboo.filter.filters.Multiply;
+import peakaboo.filter.filters.PolynomialRemoval;
+import peakaboo.filter.filters.SavitskyGolaySmoothing;
+import peakaboo.filter.filters.Subtraction;
+import peakaboo.filter.filters.WaveletNoiseFilter;
 
 
 

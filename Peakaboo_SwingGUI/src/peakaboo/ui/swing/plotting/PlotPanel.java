@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -33,11 +34,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -58,7 +61,10 @@ import commonenvironment.AbstractFile;
 import commonenvironment.Env;
 import commonenvironment.IOOperations;
 
+import eventful.EventfulEnumListener;
+import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
+import fava.lists.FList;
 
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.AllMapsModel;
@@ -69,6 +75,7 @@ import peakaboo.datatypes.eventful.PeakabooMessageListener;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.TaskList;
+import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.dialogues.ScanInfoDialogue;
@@ -81,11 +88,14 @@ import scitypes.SigDigits;
 import swidget.containers.SwidgetContainer;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.DropdownImageButton;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.DropdownImageButton.Actions;
 import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.toggle.ComplexToggle;
 
@@ -107,11 +117,9 @@ public class PlotPanel extends ClearPanel
 
 	//EDIT
 	JMenuItem					undo, redo;
-
-	//VIEW
-
+	
 	//MAP
-	JMenuItem					mapMenuItem;
+	List<JComponent>			mapButtons;
 
 
 	JComboBox					titleCombo;
@@ -129,7 +137,7 @@ public class PlotPanel extends ClearPanel
 	ChangeListener 				zoomSliderListener;
 
 	ImageButton					toolbarSnapshot;
-	ImageButton					toolbarMap;
+	DropdownImageButton			toolbarMap;
 	ImageButton					toolbarInfo;
 	JPanel						zoomPanel;
 	JPanel						bottomPanel;
@@ -151,19 +159,12 @@ public class PlotPanel extends ClearPanel
 
 		controller = new PlotController(toy);
 
+		mapButtons = new FList<JComponent>();
 		initGUI();
 
-		controller.addListener(new PeakabooMessageListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change(Object message)
-			{
-
-				// special notifications go here...
-
-			}
-
-
-			public void change()
+			public void change(String message)
 			{
 				setWidgetsState();
 			}
@@ -200,12 +201,12 @@ public class PlotPanel extends ClearPanel
 
 			if (controller.getFittedTransitionSeries().size() == 0 || controller.datasetScanCount() == 0)
 			{
-				mapMenuItem.setEnabled(false);
+				for (JComponent c : mapButtons) { c.setEnabled(false); }
 				toolbarMap.setEnabled(false);
 			}
 			else
 			{
-				mapMenuItem.setEnabled(true);
+				for (JComponent c : mapButtons) { c.setEnabled(true); }
 				toolbarMap.setEnabled(true);
 			}
 
@@ -243,6 +244,8 @@ public class PlotPanel extends ClearPanel
 
 		undo.setEnabled(controller.canUndo());
 		redo.setEnabled(controller.canRedo());
+		undo.setText("Undo " + controller.getNextUndo());
+		redo.setText("Redo " + controller.getNextRedo());
 
 		setSliderWithoutListener(zoomSlider, zoomSliderListener, (int)(controller.getZoom()*100));
 		//zoomSlider.setValue((int) (controller.getZoom() * 100.0));
@@ -255,7 +258,7 @@ public class PlotPanel extends ClearPanel
 
 	private void setEnergySpinner(double value)
 	{
-		//dont let the listeners get wind of this change
+		//dont let the listeners get wind of this change		
 		energy.removeChangeListener(energyListener);
 		energy.setValue((double) controller.getMaxEnergy());
 		energy.addChangeListener(energyListener);
@@ -555,18 +558,26 @@ public class PlotPanel extends ClearPanel
 		toolbarInfo.setEnabled(false);
 		toolbar.add(toolbarInfo, c);
 
-		toolbarMap = new ToolbarImageButton(
-			"map",
-			"Map Fittings",
-			"Display a 2D map of the relative intensities of the fitted elements",
-			true);
-		toolbarMap.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
+		JPopupMenu mapMenu = new JPopupMenu();
+		populateFittingMenu(mapMenu);
+		
+		
+		toolbarMap = new DropdownImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", IconSize.TOOLBAR_SMALL, Layout.IMAGE_ON_SIDE, mapMenu);
+		toolbarMap.addListener(new EventfulEnumListener<Actions>() {
+			
+			public void change(Actions message)
 			{
-				actionMap();
+				switch (message)
+				{
+					case MAIN: 
+						actionMap(FittingTransform.AREA);
+						break;
+					case MENU:
+						break;
+				}
 			}
 		});
+		
 		c.gridx += 1;
 		toolbarMap.setEnabled(false);
 		toolbar.add(toolbarMap, c);
@@ -641,6 +652,34 @@ public class PlotPanel extends ClearPanel
 
 	}
 
+	
+	public void populateFittingMenu(JComponent menu)
+	{
+		JMenuItem mapArea = new JMenuItem("Map Fitting Area");
+		mapArea.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				actionMap(FittingTransform.AREA);
+			}
+		});
+		mapArea.setEnabled(false);
+		mapButtons.add(mapArea);
+		menu.add(mapArea);
+		
+		
+		JMenuItem mapHeights = new JMenuItem("Map Fitting Heights");
+		mapHeights.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				actionMap(FittingTransform.HEIGHT);
+			}
+		});
+		mapHeights.setEnabled(false);
+		mapButtons.add(mapHeights);
+		menu.add(mapHeights);
+	}
 
 	public void createMenu()
 	{
@@ -994,39 +1033,27 @@ public class PlotPanel extends ClearPanel
 		});
 		menu.add(fittings);
 
-		// SELECT Menu
-		ActionListener selectMenuListener = new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-
-				String command = e.getActionCommand();
-
-				if (command == "Map Visible Fittings")
-				{
-					actionMap();
-				}
-
-			}
-
-		};
 
 		menu = new JMenu("Mapping");
 		menu.setMnemonic(KeyEvent.VK_S);
 
+		/*
 		mapMenuItem = new JMenuItem("Map Visible Fittings");
 		mapMenuItem.setMnemonic(KeyEvent.VK_M);
 		mapMenuItem.addActionListener(selectMenuListener);
 		mapMenuItem.setEnabled(false); // not until we have data and fittings
 		menu.add(mapMenuItem);
+		*/
+		
+		populateFittingMenu(menu);
 
 		menuBar.add(menu);
 
 		container.setJMenuBar(menuBar);
 
-		controller.addListener(new PeakabooSimpleListener() {
+		controller.addListener(new EventfulTypeListener<String>() {
 
-			public void change()
+			public void change(String s)
 			{
 
 				logPlot.setSelected(controller.getViewLog());
@@ -1302,14 +1329,14 @@ public class PlotPanel extends ClearPanel
 	}
 
 
-	private void actionMap()
+	private void actionMap(FittingTransform type)
 	{
 
 		if (!controller.hasDataSet()) return;
 
 
 
-		final TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions();
+		final TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
 		if (tasks == null) return;
 
 		new TaskListView(container, tasks);

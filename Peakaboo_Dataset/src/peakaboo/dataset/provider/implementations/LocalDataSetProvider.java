@@ -29,7 +29,8 @@ import peakaboo.fileio.xrf.DataSourceExtendedInformation;
 import peakaboo.fileio.xrf.XMLDataSource;
 import peakaboo.fileio.xrf.ZipDataSource;
 import peakaboo.fileio.xrf.DataSource.FileType;
-import peakaboo.filters.FilterSet;
+import peakaboo.filter.FilterSet;
+import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -251,7 +252,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings)
+	public TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, final FittingTransform type)
 	{
 
 		final TaskList<MapResultSet> tasklist;
@@ -297,7 +298,7 @@ public class LocalDataSetProvider extends DataSetProvider
 				for (FittingResult result : frs.fits)
 				{
 					maps.putIntensityInMapAtPoint(
-						SpectrumCalculations.sumValuesInList(result.fit),
+							type == FittingTransform.AREA ? SpectrumCalculations.sumValuesInList(result.fit) : SpectrumCalculations.max(result.fit),
 						result.transitionSeries,
 						ordinal);
 				}

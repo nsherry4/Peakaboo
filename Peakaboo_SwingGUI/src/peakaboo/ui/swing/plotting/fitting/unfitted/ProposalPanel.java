@@ -20,6 +20,8 @@ import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTreeModel;
+import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
@@ -216,6 +218,11 @@ public class ProposalPanel extends ClearPanel implements Changeable
 		unfitTree.setRootVisible(false);
 
 		ProposalRenderer renderer = new ProposalRenderer(controller);
+		
+		renderer.setLeafIcon(null);
+		renderer.setClosedIcon(null);
+		renderer.setOpenIcon(null);
+		
 		unfitTree.setCellRenderer(renderer);
 		unfitTree.setEditable(true);
 		unfitTree.setCellEditor(new ProposalEditor(unfitTree, renderer, controller));

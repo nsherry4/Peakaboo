@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -25,6 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JToolTip;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 import javax.swing.SpinnerNumberModel;
 
 import javax.swing.event.ChangeEvent;
@@ -35,13 +38,12 @@ import fava.Functions;
 
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
-import swidget.widgets.JMultiLineToolTip;
 import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
@@ -68,18 +70,14 @@ public class SingleFilterView extends JPanel
 
 		settingsPanel = createSettingsPanel();
 		settingsPanel.setOpaque(false);
-
-		ImageButton info = new ImageButton(StockIcon.BADGE_INFO, "Info", "", Layout.IMAGE, false, IconSize.BUTTON);
 		
 		
-		info.setToolTipText(filter.getFilterDescription());
-		
-		//info.setToolTipText("<html>" + filter.getFilterDescription() + "</html>");
-		info.setBorder(Spacing.bMedium());
 
 		
 		TitleGradientPanel panel = new TitleGradientPanel(filter.getFilterName() + " Filter", true);
-		panel.addSideComponent(info, Side.LEFT);
+		
+		panel.setToolTipText(filter.getFilterDescription());
+		
 		this.add(panel, BorderLayout.NORTH);
 		
 		
@@ -107,11 +105,11 @@ public class SingleFilterView extends JPanel
 	{
 
 		//get a list of parameters
-		final List<Parameter<?>> paramslist = Fn.map( filter.getParameters().values(), Functions.<Parameter<?>>id());
+		final List<Parameter> paramslist = Fn.map( filter.getParameters().values(), Functions.<Parameter>id());
 		
 				
 		
-		Iterator<Parameter<?>> params = paramslist.iterator();
+		Iterator<Parameter> params = paramslist.iterator();
 		
 		
 		final List<JComponent> controls = DataTypeFactory.<JComponent>list();
@@ -119,10 +117,10 @@ public class SingleFilterView extends JPanel
 		class ParamListener implements ActionListener, ChangeListener
 		{
 
-			private Parameter<Object>	param;
+			private Parameter	param;
 
 
-			public ParamListener(Parameter<Object> param)
+			public ParamListener(Parameter param)
 			{
 				this.param = param;
 			}
@@ -210,7 +208,7 @@ public class SingleFilterView extends JPanel
 
 		JLabel paramLabel;
 		JComponent component;
-		Parameter<Object> param;
+		Parameter param;
 		
 		while (params.hasNext()) {
 			c.gridy += 1;
@@ -218,7 +216,7 @@ public class SingleFilterView extends JPanel
 			c.weightx = 1.0;
 			c.anchor = GridBagConstraints.LINE_START;
 
-			param = (Parameter<Object>)params.next();
+			param = params.next();
 
 			paramLabel = new JLabel(param.name);
 			paramLabel.setFont(paramLabel.getFont().deriveFont(Font.PLAIN));

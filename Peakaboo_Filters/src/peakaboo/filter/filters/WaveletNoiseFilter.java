@@ -1,11 +1,11 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
@@ -26,7 +26,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	public WaveletNoiseFilter()
 	{
 		super();
-		parameters.put(PASSES, new Parameter<Integer>(ValueType.INTEGER, "Passes to Transform", 1));
+		parameters.put(PASSES, new Parameter(ValueType.INTEGER, "Passes to Transform", 1));
 	}
 
 
@@ -53,7 +53,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 		// data
 		// probably a bad idea to do more than 3 passes, but less than 1 is
 		// senseless
-		passes = this.<Integer> getParameterValue(PASSES);
+		passes = getParameter(PASSES).intValue();
 		if (passes > 8 || passes < 1) return false;
 
 		return true;
@@ -80,7 +80,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		Spectrum result;
-		int passes = this.<Integer> getParameterValue(PASSES);
+		int passes = getParameter(PASSES).intValue();
 
 		result = Noise.FWTLowPassFilter(data, passes);
 

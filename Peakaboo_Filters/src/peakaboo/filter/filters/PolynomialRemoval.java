@@ -1,10 +1,10 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 import peakaboo.calculations.Background;
-import peakaboo.filters.BackgroundRemovalFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.BackgroundRemovalFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 /**
@@ -24,8 +24,8 @@ public final class PolynomialRemoval extends BackgroundRemovalFilter
 	public PolynomialRemoval()
 	{
 		super();
-		parameters.put(WIDTH, new Parameter<Integer>(ValueType.INTEGER, "Width of Polynomial", 300));
-		parameters.put(POWER, new Parameter<Integer>(ValueType.INTEGER, "Power of Polynomial", 3));
+		parameters.put(WIDTH, new Parameter(ValueType.INTEGER, "Width of Polynomial", 300));
+		parameters.put(POWER, new Parameter(ValueType.INTEGER, "Power of Polynomial", 3));
 		
 	}
 
@@ -42,8 +42,8 @@ public final class PolynomialRemoval extends BackgroundRemovalFilter
 	{
 		return Background.calcBackgroundPolynomial(
 				data,
-				this.<Integer>getParameterValue(WIDTH),
-				this.<Integer>getParameterValue(POWER),
+				getParameter(WIDTH).intValue(),
+				getParameter(POWER).intValue(),
 				percent / 100.0f);
 	}
 
@@ -57,8 +57,8 @@ public final class PolynomialRemoval extends BackgroundRemovalFilter
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
-		width = this.<Integer>getParameterValue(WIDTH);
-		power = this.<Integer>getParameterValue(POWER);
+		width = getParameter(WIDTH).intValue();
+		power = getParameter(POWER).intValue();
 		
 		if (width > 800 || width < 50) return false;
 		if (power > 128 || power < 0) return false;

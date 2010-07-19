@@ -6,7 +6,9 @@ import java.awt.Component;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.FittingController;
@@ -15,6 +17,7 @@ import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 
 
@@ -22,10 +25,10 @@ import swidget.widgets.Spacing;
 class ProposalRenderer extends DefaultTreeCellRenderer
 {
 
-	private TSWidget		tswidget;
+	private TSWidget			tswidget;
 	private FittingController	controller;
 	private JLabel				tstLabel;
-
+	private JPanel 				tstPanel;
 
 	public ProposalRenderer(FittingController controller)
 	{
@@ -34,10 +37,9 @@ class ProposalRenderer extends DefaultTreeCellRenderer
 
 		tswidget = new TSWidget(false);
 		
-		
 		tstLabel = new JLabel();
-		tstLabel.setOpaque(false);
-		tstLabel.setBorder(Spacing.bSmall());
+		tstLabel.setOpaque(true);
+		tstLabel.setBorder(Spacing.bTiny());
 		//tstLabel.setFont(tstLabel.getFont().deriveFont(Font.BOLD).deriveFont(tstLabel.getFont().getSize() * 1.25f));
 
 	}
@@ -53,10 +55,13 @@ class ProposalRenderer extends DefaultTreeCellRenderer
 		
 		if (selected)
 		{
-
+			
+			
+			
 			tswidget.setBackground(getBackgroundSelectionColor());
 			tswidget.setForeground(getTextSelectionColor());
 			tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, getBorderSelectionColor()));
+			tswidget.setOpaque(true);
 
 		}
 		else
@@ -64,7 +69,7 @@ class ProposalRenderer extends DefaultTreeCellRenderer
 			tswidget.setBackground(getBackgroundNonSelectionColor());
 			tswidget.setForeground(getTextNonSelectionColor());
 			tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, getBackgroundNonSelectionColor()));
-
+			tswidget.setOpaque(false);
 		}
 
 		Element e;
@@ -77,7 +82,7 @@ class ProposalRenderer extends DefaultTreeCellRenderer
 
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			// element.setPreferredSize(new Dimension(0, element.getPreferredSize().height));
-
+			
 			return tswidget;
 		}
 		else if (value instanceof TransitionSeriesType)
@@ -86,13 +91,17 @@ class ProposalRenderer extends DefaultTreeCellRenderer
 			
 			tstLabel.setText(tst.toString());
 			
+			tstLabel.setBackground(getBackgroundSelectionColor());
+			
 			if (selected)
 			{
 				tstLabel.setForeground(getTextSelectionColor());
+				tstLabel.setOpaque(true);
 			} else {
 				tstLabel.setForeground(getTextNonSelectionColor());
+				tstLabel.setOpaque(false);
 			}
-			
+						
 			return tstLabel;
 		}
 		

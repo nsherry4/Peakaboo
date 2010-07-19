@@ -2,13 +2,13 @@ package peakaboo.controller.plotter;
 
 import java.util.List;
 
-import peakaboo.datatypes.eventful.IEventful;
-import peakaboo.datatypes.peaktable.Element;
+import eventful.IEventfulType;
+
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 
 
-public interface FittingController extends IEventful
+public interface FittingController extends IEventfulType<String>
 {
 
 	public void addTransitionSeries(TransitionSeries e);
@@ -24,10 +24,6 @@ public interface FittingController extends IEventful
 	public List<TransitionSeries> getVisibleTransitionSeries();
 	
 	public float getTransitionSeriesIntensity(TransitionSeries ts);
-	public List<TransitionSeriesType> getTransitionSeriesTypesForElement(Element e, boolean onlyInEnergyRange);
-	public TransitionSeries getTransitionSeriesForElement(Element e, TransitionSeriesType tst);
-	public float getTransitionSeriesIntensityForElement(Element e, TransitionSeriesType tst);
-	public float getIntensityForElement(Element e);
 	public void moveTransitionSeriesUp(TransitionSeries e);
 	public void moveTransitionSeriesDown(TransitionSeries e);
 	
@@ -45,5 +41,5 @@ public interface FittingController extends IEventful
 	public void fittingProposalsInvalidated();	
 	
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTransition);
-	
+	public void optimizeTransitionSeriesOrdering();
 }

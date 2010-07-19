@@ -1,10 +1,10 @@
-package peakaboo.filters.filters;
+package peakaboo.filter.filters;
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.filters.AbstractFilter;
-import peakaboo.filters.Parameter;
-import peakaboo.filters.Parameter.ValueType;
+import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
@@ -24,7 +24,7 @@ public final class MovingAverage extends AbstractFilter
 	public MovingAverage()
 	{
 		super();
-		parameters.put(REACH, new Parameter<Integer>(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
+		parameters.put(REACH, new Parameter(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
 
 	}
 
@@ -52,7 +52,7 @@ public final class MovingAverage extends AbstractFilter
 		int reach;
 
 		// has to at least have a 3-point, but cannot exceed a 10*2+1=21-point moving average
-		reach = this.<Integer>getParameterValue(REACH);
+		reach = getParameter(REACH).intValue();
 		if (reach > 10 || reach < 1) return false;
 
 		return true;
@@ -80,7 +80,7 @@ public final class MovingAverage extends AbstractFilter
 	@Override
 	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		data = Noise.MovingAverage(data, this.<Integer>getParameterValue(REACH));
+		data = Noise.MovingAverage(data, getParameter(REACH).intValue());
 		return data;
 	}
 

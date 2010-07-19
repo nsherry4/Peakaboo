@@ -15,7 +15,8 @@ import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.xrf.DataSource;
 import peakaboo.fileio.xrf.DataSourceDimensions;
 import peakaboo.fileio.xrf.DataSourceExtendedInformation;
-import peakaboo.filters.FilterSet;
+import peakaboo.filter.FilterSet;
+import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -252,7 +253,7 @@ public abstract class DataSetProvider
 	 *            fittings to be used on this data
 	 * @return a {@link Task} which will calculate the map
 	 */
-	public abstract TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings);
+	public abstract TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type);
 
 
 	/**

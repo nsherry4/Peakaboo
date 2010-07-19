@@ -9,6 +9,7 @@ import java.util.EventObject;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -19,6 +20,7 @@ import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 
 
@@ -32,6 +34,7 @@ class ProposalEditor extends DefaultTreeCellEditor
 	private DefaultTreeCellRenderer		renderer;
 
 
+
 	public ProposalEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller)
 	{
 
@@ -41,10 +44,13 @@ class ProposalEditor extends DefaultTreeCellEditor
 		this.controller = controller;
 
 		tswidget = new TSWidget(false);
+		tswidget.setOpaque(true);
+		
 
 		tstLabel = new JLabel();
-		tstLabel.setOpaque(false);
-		tstLabel.setBorder(Spacing.bSmall());
+		tstLabel.setOpaque(true);
+		tstLabel.setBorder(Spacing.bTiny());
+
 		//tstLabel.setFont(tstLabel.getFont().deriveFont(Font.BOLD).deriveFont(tstLabel.getFont().getSize() * 1.25f));
 
 
@@ -77,7 +83,7 @@ class ProposalEditor extends DefaultTreeCellEditor
 			tswidget.setBackground(renderer.getBackgroundSelectionColor());
 			tswidget.setForeground(renderer.getTextSelectionColor());
 			tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
-
+			
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tswidget;
 
@@ -86,17 +92,13 @@ class ProposalEditor extends DefaultTreeCellEditor
 		{
 			TransitionSeriesType tst = (TransitionSeriesType) value;
 
-			//if (isSelected)
-			//{
+			tstLabel.setBackground(renderer.getBackgroundSelectionColor());
 			tstLabel.setForeground(renderer.getTextSelectionColor());
-			//} else {
-			//	tstLabel.setForeground(renderer.getTextNonSelectionColor());
-			//}
-
+			
 			tstLabel.setText(tst.toString());
-
-
+			
 			return tstLabel;
+		
 		}
 
 
@@ -120,6 +122,7 @@ class ProposalEditor extends DefaultTreeCellEditor
 
 		if (selected == null) return false;
 		if (selected instanceof TransitionSeriesType) return false;
+		if (selected instanceof String) return false;
 		return true;
 	}
 
