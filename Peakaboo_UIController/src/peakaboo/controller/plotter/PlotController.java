@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import commonenvironment.AbstractFile;
@@ -17,6 +18,7 @@ import commonenvironment.AbstractFile;
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
+import peakaboo.curvefit.automation.TSOrdering;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
@@ -61,6 +63,7 @@ import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
+import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
@@ -1144,6 +1147,9 @@ public class PlotController extends CanvasController implements FilterController
 	
 	public void optimizeTransitionSeriesOrdering()
 	{
+		
+		
+		
 		//all visible TSs
 		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), Functions.<TransitionSeries>id());
 		
@@ -1160,33 +1166,14 @@ public class PlotController extends CanvasController implements FilterController
 		//find all the TSs which overlap with other TSs
 		final FList<TransitionSeries> overlappers = tss.filter(new FunctionMap<TransitionSeries, Boolean>() {
 
-			//create fittings which create fitting masks 1.5 stddevs from TS centre
-			TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, model.filteredPlot.size(), getEnergyPerChannel(), FittingSet.escape, 1.5f);
-			TransitionSeriesFitting tsf2 = new TransitionSeriesFitting(null, model.filteredPlot.size(), getEnergyPerChannel(), FittingSet.escape, 1.5f);
-			
 			public Boolean f(final TransitionSeries ts)
 			{
 				
-				//we want the true flag so that we make sure that elements which overlap an escape peak are still considered overlapping
-				tsf1.setTransitionSeries(ts, true);
-				
-				//map all other TSs to booleans to check if this overlaps
-				return Fn.any(tss.map(new FunctionMap<TransitionSeries, Boolean>() {
-
-					public Boolean f(TransitionSeries otherts)
-					{
-												
-						if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
-						
-						tsf2.setTransitionSeries(otherts, true);						
-						return (tsf1.isOverlapping(tsf2));
-						
-					}
-				}));
-				
+				return TSOrdering.getTSsOverlappingTS(ts, tss, getEnergyPerChannel(), getDataWidth()).size() != 0;			
 				
 			}
 		});
+		
 		
 		//then get all the TSs which don't overlap
 		FList<TransitionSeries> nonOverlappers = tss.filter(new FunctionMap<TransitionSeries, Boolean>() {
@@ -1196,14 +1183,15 @@ public class PlotController extends CanvasController implements FilterController
 				return ! overlappers.include(element);
 			}
 		});
-				
+	
+		
 
 		//score each of the overlappers w/o competition
 		FList<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.map(new FunctionMap<TransitionSeries, Pair<TransitionSeries, Float>>() {
 
 			public Pair<TransitionSeries, Float> f(TransitionSeries ts)
 			{
-				return new Pair<TransitionSeries, Float>(ts, fScoreTransitionSeries(model.filteredPlot).f(ts));
+				return new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(getEnergyPerChannel(), model.filteredPlot).f(ts));
 			}
 		});
 		
@@ -1222,18 +1210,26 @@ public class PlotController extends CanvasController implements FilterController
 		//find the optimal ordering of the visible overlapping TSs based on how they fit with competition
 		FList<TransitionSeries> bestfit = optimizeTSOrderingHelper(scoredOverlappers.map(Functions.<TransitionSeries, Float>first()), new FList<TransitionSeries>());
 		
+
+		
+		//FList<TransitionSeries> bestfit = TSOrdering.optimizeTSOrdering(getEnergyPerChannel(), tss, model.filteredPlot);
+
 		//re-add all of the overlappers
 		bestfit.addAll(nonOverlappers);
 		
 		//re-add all of the invisible TSs
 		bestfit.addAll(invisibles);
 		
+		
 		//set the TS selection for the model to be the ordering we have just calculated
 		clearTransitionSeries();
 		addAllTransitionSeries(bestfit);
+		setUndoPoint("Fitting Ordering");
 		updateListeners(UpdateType.FITTING.toString());
 		
 	}
+	
+	
 	
 	private FList<TransitionSeries> optimizeTSOrderingHelper(FList<TransitionSeries> unfitted, FList<TransitionSeries> fitted)
 	{
@@ -1241,7 +1237,7 @@ public class PlotController extends CanvasController implements FilterController
 		//assumption: unfitted will be in sorted order based on how well each TS fits independently
 		if (unfitted.size() == 0) return fitted;
 		
-		int n = 5;
+		int n = 4;
 		
 		FList<TransitionSeries> topn = unfitted.take(n);
 		unfitted.removeAll(topn);
@@ -1253,7 +1249,7 @@ public class PlotController extends CanvasController implements FilterController
 			public Float f(List<TransitionSeries> tss)
 			{
 				
-				final FunctionMap<TransitionSeries, Float> scoreTS = fScoreTransitionSeries(model.filteredPlot);
+				final FunctionMap<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(getEnergyPerChannel(), model.filteredPlot);
 				
 				Float score = 0f;
 				for (TransitionSeries ts : tss)
@@ -1292,10 +1288,11 @@ public class PlotController extends CanvasController implements FilterController
 		}));
 
 		
-		//add the best of the fitted elements to the fititngs list
+		//add the best half of the fitted elements to the fititngs list
 		//and the rest back into the start of the unfitted elements list
-		fitted.add(bestfit.head());
-		unfitted.addAll(0, bestfit.tail());
+		fitted.addAll(bestfit.take(n/2));
+		bestfit.removeAll(fitted);
+		unfitted.addAll(0, bestfit);
 		
 		
 		//recurse
@@ -1306,58 +1303,10 @@ public class PlotController extends CanvasController implements FilterController
 
 	
 	
-	private FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(final Spectrum spectrum)
-	{
-		return fScoreTransitionSeries(spectrum, null);
-	}
-	
-	private FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(final Spectrum spectrum, final Float energy)
-	{
-	
-		//scoring function to evaluate each TransitionSeries
-		return new FunctionMap<TransitionSeries, Float>() {
-
-			float energyPerChannel = getEnergyPerChannel();
-			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, getDataWidth(), energyPerChannel, FittingSet.escape);
-			Spectrum s = new Spectrum(spectrum);
-			
-			public Float f(TransitionSeries ts)
-			{
-				Double prox;
-				if (energy == null)
-				{
-					prox = 1.0;
-				} else  {
-					prox = Math.abs(ts.getProximityToEnergy(energy));
-					if (prox <= 0.001) prox = 0.001;
-					prox = Math.log1p(prox);
-					
-				}
-
-				tsf.setTransitionSeries(ts);
-				Float ratio, remainingArea;
-				
-				//get the fitting ratio, and the fitting spectrum
-				ratio = tsf.getRatioForCurveUnderData(s);
-				Spectrum fitting = tsf.scaleFitToData(ratio);
-				//remove this fitting from the spectrum
-				SpectrumCalculations.subtractLists_inplace(s, fitting, 0.0f);
-				
-				//square the values left in s
-				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
-				
-				remainingArea = SpectrumCalculations.sumValuesInList(unfit) / s.size();
-
-				
-				return (float)( remainingArea * tsf.getSizeOfBase() * prox );
-			}
-		};
-		
-	}
 	
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
 	{
-
+		
 		/*
 		 * 
 		 * Method description
@@ -1465,8 +1414,8 @@ public class PlotController extends CanvasController implements FilterController
 			{
 				Float prox1, prox2;
 
-				prox1 = fScoreTransitionSeries(s, energy).f(ts1);
-				prox2 = fScoreTransitionSeries(s, energy).f(ts2);
+				prox1 = TSOrdering.fScoreTransitionSeries(energyPerChannel, s, energy, true).f(ts1);
+				prox2 = TSOrdering.fScoreTransitionSeries(energyPerChannel, s, energy, true).f(ts2);
 				
 				return prox1.compareTo(prox2);
 

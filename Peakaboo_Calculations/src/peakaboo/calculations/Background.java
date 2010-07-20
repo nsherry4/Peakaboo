@@ -20,9 +20,9 @@ public class Background
 {
 
 	/**
-	 * Fits a polynomial curve to the underside of the data for each data point, takes the union of the polynomials and
-	 * subtracts that from the given data. This is a convenience method for
-	 * {@link #removeBackgroundFunctionFit(List, List)}.
+	 * Fits a parabolic curve to the underside of the data for each data point, and returns the 
+	 * union of the parabolas. This is a convenience method for
+	 * {@link #removeBackgroundFunctionFit(Spectrum, Spectrum, percent)}.
 	 * 
 	 * @param data
 	 *            the data to perform subtraction on
@@ -34,7 +34,7 @@ public class Background
 	 *            0.0 - 1.0: the percent of the background which this algorithm should try to remove
 	 * @return a background-subtracted list of values
 	 */
-	public static Spectrum calcBackgroundPolynomial(Spectrum data, int width, int power, float percentToRemove)
+	public static Spectrum calcBackgroundParabolic(Spectrum data, int width, int power, float percentToRemove)
 	{
 
 		// y = -(x * s)^power + m upside down parabola horizontally stretched by s and shifted upwards by m
@@ -63,8 +63,7 @@ public class Background
 
 
 	/**
-	 * Fits a given function to the underside of the data for each data point, takes the union of the fitted functions
-	 * and subtracts that from the given data
+	 * Fits a given function to the underside of the data for each data point, and returns the union of the fitted functions
 	 * 
 	 * @param data
 	 *            the data to perform subtraction on

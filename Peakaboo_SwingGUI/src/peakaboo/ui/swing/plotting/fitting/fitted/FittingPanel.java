@@ -119,7 +119,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 		};
 
 
-		/*
+		
 		ListControlButton fitwizard = new ListControlButton(StockIcon.EDIT_SORT_DES, "Optimal Fitting", "Find the optimal fitting") {
 			
 			@Override
@@ -138,7 +138,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 				controller.optimizeTransitionSeriesOrdering();
 			}
 		});
-		*/
+		
+		
 		
 		this.add(controls, BorderLayout.NORTH);
 

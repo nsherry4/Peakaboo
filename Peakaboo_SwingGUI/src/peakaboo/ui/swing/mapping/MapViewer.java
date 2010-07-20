@@ -280,7 +280,7 @@ public class MapViewer extends JPanel
 		if (controller.isValidPoint(mapCoord))
 		{
 			String value = controller.getIntensityMeasurementAtPoint(mapCoord);
-			if (controller.getInterpolation() != 0) value += " (raw data)";
+			if (controller.getInterpolation() != 0) value += " (not interpolated)";
 			
 			mapMouseMonitor.setText("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
 					+ value);

@@ -21,6 +21,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import eventful.EventfulTypeListener;
+
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.peaktable.TransitionSeries;
@@ -28,6 +30,7 @@ import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 
@@ -36,8 +39,8 @@ public class Overlay extends JPanel {
 
 	private MapController controller;
 
-	private JRadioButton 		visibleElements;
-	private JRadioButton 		allElements;
+	private JRadioButton 		relativeScale;
+	private JRadioButton 		absoluteScale;
 	
 	public Overlay(MapController _controller) {
 
@@ -57,6 +60,17 @@ public class Overlay extends JPanel {
 		maingbc.fill = GridBagConstraints.BOTH;
 		add(createElementsList(), maingbc);
 
+		controller.addListener(new EventfulTypeListener<String>() {
+
+			public void change(String s)
+			{
+				
+				absoluteScale.setSelected(controller.getMapScaleMode() == MapScaleMode.ABSOLUTE);
+				relativeScale.setSelected(controller.getMapScaleMode() == MapScaleMode.RELATIVE);			
+
+			}
+		});
+		
 	}
 
 	
@@ -66,7 +80,7 @@ public class Overlay extends JPanel {
 		
 		JPanel modeFrame = new JPanel();
 		
-		TitledBorder titleBorder = new TitledBorder("Scale Colour Groups:");
+		TitledBorder titleBorder = new TitledBorder("Scale Colours:");
 		titleBorder.setBorder(Spacing.bNone());
 		
 		modeFrame.setBorder(titleBorder);
@@ -75,39 +89,39 @@ public class Overlay extends JPanel {
 		JPanel visibleElementsPanel = new ClearPanel();
 		visibleElementsPanel.setLayout(new BorderLayout());
 		
-		visibleElements = new JRadioButton("Independantly");
-		JLabel warning = new JLabel(IconFactory.getImageIcon("warn", IconSize.BUTTON));
-		visibleElementsPanel.add(visibleElements, BorderLayout.WEST);
+		relativeScale = new JRadioButton("Separately (Qualitative)");
+		JLabel warning = new JLabel( StockIcon.BADGE_WARNING.toImageIcon(IconSize.BUTTON) );
+		visibleElementsPanel.add(relativeScale, BorderLayout.WEST);
 		visibleElementsPanel.add(warning, BorderLayout.EAST);
 		
-		visibleElements.setToolTipText("Warning: This option gives qualitative results only. Scaling each colour group independantly may lead to better looking graphs, but they will not be accurate.");
+		relativeScale.setToolTipText("Warning: This option gives qualitative results only. Scaling each colour group independantly may lead to better looking graphs, but they will not be accurate.");
 		warning.setToolTipText("Warning: This option gives qualitative results only. Scaling each colour group independantly may lead to better looking graphs, but they will not be accurate.");
 		
-		allElements = new JRadioButton("Against Strongest Group");
+		absoluteScale = new JRadioButton("As a Group");
 		
 		
 		
 		ButtonGroup scaleGroup = new ButtonGroup();
-		scaleGroup.add(visibleElements);
-		scaleGroup.add(allElements);
-		allElements.setSelected(true);
+		scaleGroup.add(relativeScale);
+		scaleGroup.add(absoluteScale);
+		absoluteScale.setSelected(true);
 		
-		visibleElements.addActionListener(new ActionListener() {
+		relativeScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.VISIBLE_ELEMENTS);
+				controller.setMapScaleMode(MapScaleMode.RELATIVE);
 			}
 		});
-		allElements.addActionListener(new ActionListener() {
+		absoluteScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.ALL_ELEMENTS);
+				controller.setMapScaleMode(MapScaleMode.ABSOLUTE);
 			}
 		});
 		
 		
 		modeFrame.add(visibleElementsPanel, BorderLayout.NORTH);
-		modeFrame.add(allElements, BorderLayout.SOUTH);
+		modeFrame.add(absoluteScale, BorderLayout.SOUTH);
 		
 		return modeFrame;
 		
@@ -120,7 +134,7 @@ public class Overlay extends JPanel {
 
 		// elements list
 		elementsPanel.add(createTransitionSeriesList(), BorderLayout.CENTER);
-		//elementsPanel.add(createScaleOptions(), BorderLayout.SOUTH);
+		elementsPanel.add(createScaleOptions(), BorderLayout.SOUTH);
 		
 		return elementsPanel;
 	}

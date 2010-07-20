@@ -31,8 +31,8 @@ public class Composite extends JPanel {
 	
 	private MapController		controller;
 	
-	private JRadioButton 		visibleElements;
-	private JRadioButton 		allElements;
+	private JRadioButton 		relativeScale;
+	private JRadioButton 		absoluteScale;
 	
 	
 	public Composite(MapController _controller) {
@@ -67,8 +67,8 @@ public class Composite extends JPanel {
 			public void change(String s)
 			{
 				
-				allElements.setSelected(controller.getMapScaleMode() == MapScaleMode.ALL_ELEMENTS);
-				visibleElements.setSelected(controller.getMapScaleMode() == MapScaleMode.VISIBLE_ELEMENTS);			
+				absoluteScale.setSelected(controller.getMapScaleMode() == MapScaleMode.ABSOLUTE);
+				relativeScale.setSelected(controller.getMapScaleMode() == MapScaleMode.RELATIVE);			
 
 			}
 		});
@@ -102,29 +102,29 @@ public class Composite extends JPanel {
 		modeFrame.setBorder(titleBorder);
 		modeFrame.setLayout(new BoxLayout(modeFrame, BoxLayout.Y_AXIS));
 		
-		visibleElements = new JRadioButton("Visible Elements");
-		allElements = new JRadioButton("All Elements");
+		relativeScale = new JRadioButton("Visible Elements");
+		absoluteScale = new JRadioButton("All Elements");
 		ButtonGroup scaleGroup = new ButtonGroup();
-		scaleGroup.add(visibleElements);
-		scaleGroup.add(allElements);
-		allElements.setSelected(true);
+		scaleGroup.add(relativeScale);
+		scaleGroup.add(absoluteScale);
+		absoluteScale.setSelected(true);
 		
-		visibleElements.addActionListener(new ActionListener() {
+		relativeScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.VISIBLE_ELEMENTS);
+				controller.setMapScaleMode(MapScaleMode.RELATIVE);
 			}
 		});
-		allElements.addActionListener(new ActionListener() {
+		absoluteScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.ALL_ELEMENTS);
+				controller.setMapScaleMode(MapScaleMode.ABSOLUTE);
 			}
 		});
 		
 		
-		modeFrame.add(visibleElements);
-		modeFrame.add(allElements);
+		modeFrame.add(relativeScale);
+		modeFrame.add(absoluteScale);
 		
 		return modeFrame;
 		

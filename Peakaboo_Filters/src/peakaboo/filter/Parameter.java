@@ -74,6 +74,7 @@ public class Parameter implements Serializable
 	public float realValue()
 	{
 		try{
+			if (value instanceof Double) return ((Double)value).floatValue();
 			return (Float)value;
 		} catch (ClassCastException e)
 		{

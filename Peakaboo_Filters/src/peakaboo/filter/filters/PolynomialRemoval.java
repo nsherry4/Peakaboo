@@ -40,7 +40,7 @@ public final class PolynomialRemoval extends BackgroundRemovalFilter
 	@Override
 	protected Spectrum getBackground(Spectrum data, int percent)
 	{
-		return Background.calcBackgroundPolynomial(
+		return Background.calcBackgroundParabolic(
 				data,
 				getParameter(WIDTH).intValue(),
 				getParameter(POWER).intValue(),

@@ -17,9 +17,6 @@ import peakaboo.mapping.results.MapResultSet;
 import scitypes.Spectrum;
 
 public class SingleMapModel {
-
-	//public List<List<Double>> summedVisibleMaps;
-	public List<Pair<TransitionSeries, Spectrum>> resultantData;
 	
 	private MapResultSet mapResults;
 	
@@ -27,14 +24,12 @@ public class SingleMapModel {
 	public Map<TransitionSeries, OverlayColour> overlayColour;
 	public Map<TransitionSeries, Boolean> visible;
 	
-	public MapScaleMode mapScaleMode = MapScaleMode.VISIBLE_ELEMENTS;
+	public MapScaleMode mapScaleMode = MapScaleMode.RELATIVE;
 	
 	public MapDisplayMode displayMode;
 	
 	public SingleMapModel(MapResultSet originalData){
-		
-		resultantData = null;
-		
+				
 		this.mapResults = originalData;
 		
 		displayMode = MapDisplayMode.COMPOSITE;
@@ -161,21 +156,7 @@ public class SingleMapModel {
 		
 	}
 	
-	
-	public List<Pair<TransitionSeries, Spectrum>> getTransitionSeriesForColour(final OverlayColour c)
-	{
-		return filter(
-				resultantData,
-				new FunctionMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
-
-					
-					public Boolean f(Pair<TransitionSeries, Spectrum> element)
-					{
-						return c.equals(overlayColour.get(element.first)) && visible.get(element.first);
-					}
-				});
-	}
-	
+		
 	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
 		return filter(
@@ -193,7 +174,6 @@ public class SingleMapModel {
 	
 	public void discard()
 	{
-		resultantData.clear();
 		ratioSide.clear();
 		overlayColour.clear();
 		visible.clear();
