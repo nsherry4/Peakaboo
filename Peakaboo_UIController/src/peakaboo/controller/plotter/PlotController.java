@@ -19,6 +19,7 @@ import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
 import peakaboo.curvefit.automation.TSOrdering;
+import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
@@ -352,8 +353,8 @@ public class PlotController extends CanvasController implements FilterController
 		if (model.dataset != null) scanSize = model.dataset.scanSize();
 		
 		model.dr.unitSize = energyPerChannel;
-		model.fittingSelections.setDataParameters(scanSize, energyPerChannel);
-		model.fittingProposals.setDataParameters(scanSize, energyPerChannel);
+		model.fittingSelections.setDataParameters(scanSize, energyPerChannel, model.viewOptions.escape);
+		model.fittingProposals.setDataParameters(scanSize, energyPerChannel, model.viewOptions.escape);
 
 		setUndoPoint("Calibration");
 		filteredDataInvalidated();
@@ -529,6 +530,8 @@ public class PlotController extends CanvasController implements FilterController
 		{
 			plotPainters.add(new FittingSumPainter(model.fittingSelectionResults.totalFit, fittingSum, fitting));
 		}
+		
+		//draw curve fitting for proposed fittings
 		if (getProposedTransitionSeries().size() > 0)
 		{
 			if (model.viewOptions.showIndividualFittings)
@@ -543,20 +546,36 @@ public class PlotController extends CanvasController implements FilterController
 
 			plotPainters.add(
 
-			new FittingSumPainter(SpectrumCalculations.addLists(
+				new FittingSumPainter(SpectrumCalculations.addLists(
 					model.fittingProposalResults.totalFit,
 					model.fittingSelectionResults.totalFit), proposedSum)
 
 			);
 		}
+		
 
 		plotPainters.add(new FittingTitlePainter(
-			model.fittingSelectionResults,
-			model.viewOptions.showElementFitTitles,
-			model.viewOptions.showElementFitIntensities));
-		if (model.viewOptions.showElementFitMarkers) plotPainters.add(new FittingMarkersPainter(
-			model.fittingSelectionResults));
-
+				model.fittingSelectionResults,
+				model.viewOptions.showElementFitTitles,
+				model.viewOptions.showElementFitIntensities,
+				fittingStroke
+			)
+		);
+		
+		plotPainters.add(new FittingTitlePainter(
+				model.fittingProposalResults,
+				model.viewOptions.showElementFitTitles,
+				model.viewOptions.showElementFitIntensities,
+				proposedStroke
+			)
+		);
+		
+		if (model.viewOptions.showElementFitMarkers) plotPainters.add(
+				new FittingMarkersPainter(model.fittingSelectionResults, model.viewOptions.escape, fittingStroke)
+		);
+		if (model.viewOptions.showElementFitMarkers) plotPainters.add(
+				new FittingMarkersPainter(model.fittingProposalResults, model.viewOptions.escape, proposedStroke)
+		);
 
 
 
@@ -597,8 +616,10 @@ public class PlotController extends CanvasController implements FilterController
 
 		}
 
-		model.dr.maxYIntensity = model.dataset.maximumIntensity();
-
+		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
+		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
+		model.dr.maxYIntensity = Math.max(model.dataset.maximumIntensity(), SpectrumCalculations.max(model.filteredPlot));
+	
 		plot = new PlotDrawing(backend, model.dr, plotPainters, axisPainters);
 		plot.draw();
 
@@ -964,6 +985,10 @@ public class PlotController extends CanvasController implements FilterController
 
 	}
 
+	
+	
+	
+	
 
 	// =============================================
 	// FITTING FUNCTIONS TO IMPLEMENT FittingController
@@ -1144,6 +1169,24 @@ public class PlotController extends CanvasController implements FilterController
 		updateListeners(UpdateType.FITTING.toString());
 	}
 
+	public void setEscapeType(EscapePeakType type)
+	{
+		model.viewOptions.escape = type;
+		model.fittingSelections.setEscapeType(type);
+		model.fittingProposals.setEscapeType(type);
+		
+		fittingDataInvalidated();
+		
+		setUndoPoint("Escape Peaks");
+		updateListeners(UpdateType.FITTING.toString());
+	}
+	
+	
+	public EscapePeakType getEscapeType()
+	{
+		return model.viewOptions.escape;
+	}
+	
 	
 	public void optimizeTransitionSeriesOrdering()
 	{
@@ -1169,7 +1212,7 @@ public class PlotController extends CanvasController implements FilterController
 			public Boolean f(final TransitionSeries ts)
 			{
 				
-				return TSOrdering.getTSsOverlappingTS(ts, tss, getEnergyPerChannel(), getDataWidth()).size() != 0;			
+				return TSOrdering.getTSsOverlappingTS(ts, tss, getEnergyPerChannel(), getDataWidth(), model.viewOptions.escape).size() != 0;			
 				
 			}
 		});
@@ -1191,7 +1234,7 @@ public class PlotController extends CanvasController implements FilterController
 
 			public Pair<TransitionSeries, Float> f(TransitionSeries ts)
 			{
-				return new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(getEnergyPerChannel(), model.filteredPlot).f(ts));
+				return new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(model.viewOptions.escape, getEnergyPerChannel(), model.filteredPlot).f(ts));
 			}
 		});
 		
@@ -1249,7 +1292,7 @@ public class PlotController extends CanvasController implements FilterController
 			public Float f(List<TransitionSeries> tss)
 			{
 				
-				final FunctionMap<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(getEnergyPerChannel(), model.filteredPlot);
+				final FunctionMap<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(model.viewOptions.escape, getEnergyPerChannel(), model.filteredPlot);
 				
 				Float score = 0f;
 				for (TransitionSeries ts : tss)
@@ -1307,28 +1350,18 @@ public class PlotController extends CanvasController implements FilterController
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
 	{
 		
+		return TSOrdering.proposeTransitionSeriesFromChannel(
+				model.viewOptions.escape,
+				getEnergyPerChannel(),
+				model.filteredPlot,
+				model.fittingSelections,
+				model.fittingProposals,
+				model.peakTable.getAllTransitionSeries(),
+				channel,
+				currentTS	
+		);
+		
 		/*
-		 * 
-		 * Method description
-		 * ------------------
-		 * 
-		 * We try to figure out which Transition Series are the best fit for the given channel.
-		 * This is done in the following steps
-		 * 
-		 * 1. If we have suggested a TS previously, it should be passed in in currentTS
-		 * 2. If currentTS isn't null, we remove it from the proposals, refit, and then readd it
-		 * 		* we do this so that we can still suggest that same TS this time, otherwise, there would be no signal for it to fit
-		 * 3. We get all TSs from the peak table, and add all summations of all fitted & proposed TSs
-		 * 4. We remove all TSs which are already fitted or proposed.
-		 * 5. We add currentTS to the list, since the last step will have removed it
-		 * 6. We unique the list, don't want duplicates showing up
-		 * 7. We sort by proximity, and take the top 15
-		 * 8. We sort by a more detailed scoring function which involves fitting each TS and seeing how well it fits
-		 * 9. We return the top 5 from the list in the last step
-		 * 
-		 */
-		
-		
 		
 		//remove the current transitionseries from the list of proposed trantision series so we can re-suggest it.
 		//otherwise, the copy getting fitted eats all the signal from the one we would suggest during scoring
@@ -1424,12 +1457,17 @@ public class PlotController extends CanvasController implements FilterController
 			
 		//take the 5 best in sorted order based on score
 		return tss.take(5);
+		
+		
+		*/
 	}
 
 
 
 
 
+	
+	
 
 	// =============================================
 	// UI SETTINGS FUNCTIONS TO IMPLEMENT SettingsController
@@ -1688,6 +1726,9 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
+
+	
+	
 
 
 

@@ -1,4 +1,4 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.noise;
 
 
 
@@ -97,7 +97,7 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 
 
 	@Override
-	public Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		return Noise.SavitskyGolayFilter(
 			data, 

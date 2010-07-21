@@ -73,7 +73,7 @@ public class Settings
 		model.viewOptions = data.viewOptions;
 		
 		
-		if (model.dataset.hasData()) model.fittingSelections.setDataParameters(model.dataset.scanSize(), model.dr.unitSize);
+		if (model.dataset.hasData()) model.fittingSelections.setDataParameters(model.dataset.scanSize(), model.dr.unitSize, model.viewOptions.escape);
 
 
 		return;

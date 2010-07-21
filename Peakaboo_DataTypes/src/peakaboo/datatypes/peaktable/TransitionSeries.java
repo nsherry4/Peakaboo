@@ -212,6 +212,37 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 		return nearest;
 	}
+	
+	/**
+	 * Calculates a score representing how close this TransitionSeries is to a given energy by ranking all of the Transitions
+	 * {@link Transition} in this TransitionSeries using {@link TransitionSeries#getProximityToEnergy}
+	 * 
+	 * @param energy
+	 *            the energy to compare to
+	 * @return the minimum distance of any {@link Transition} in this TransitionSeries to energy
+	 */
+	public double getProximityScore(final double energy, Double minEnergyDistance)
+	{
+		
+		final double minDistance;
+		if (minEnergyDistance == null)
+		{
+			minDistance = 0d;
+		} else {
+			minDistance = minEnergyDistance;
+		}
+		
+		FList<Double> scores = Fn.map(transitions, new FunctionMap<Transition, Double>() {
+
+			public Double f(Transition t)
+			{
+				return  t.relativeIntensity / (Math.max( Math.abs(t.energyValue - energy), minDistance ));
+			}});
+		
+		
+		return 1 / scores.fold(Functions.addd());
+
+	}
 
 
 

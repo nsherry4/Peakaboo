@@ -242,7 +242,7 @@ public class SingleFilterView extends JPanel
 			} else if (param.type == ValueType.REAL) {
 
 				JSpinner spinner = new JSpinner();
-				spinner.setModel(new SpinnerNumberModel(((Double)param.getValue()).doubleValue(), Double.MIN_VALUE, Double.MAX_VALUE, 0.01));				
+				spinner.setModel(new SpinnerNumberModel(((Double)param.getValue()).doubleValue(), Double.MIN_VALUE, Double.MAX_VALUE, 0.1));				
 				spinner.getEditor().setPreferredSize(new Dimension(50, spinner.getEditor().getPreferredSize().height));
 				
 				spinner.addChangeListener(new ParamListener(param));

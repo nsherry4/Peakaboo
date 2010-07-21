@@ -74,6 +74,12 @@ public class PlotModel extends Model
 		// peak table read
 		peakTable = PeakTableReader.readPeakTable();
 		
+		
+		// view/plot options
+		dr = PlotDrawingRequestFactory.getDrawingRequest();
+		viewOptions = new PlotViewOptions();
+		
+		
 		// Filter Data
 		filters = new FilterSet();
 		filteredPlot = null;
@@ -82,13 +88,13 @@ public class PlotModel extends Model
 		// fittings
 		fittingSelections = new FittingSet();
 		fittingProposals = new FittingSet();
+		fittingSelections.setEscapeType(viewOptions.escape);
+		fittingProposals.setEscapeType(viewOptions.escape);
 		fittingSelectionResults = null;
 		fittingProposalResults = null;
 
 
-		// view/plot options
-		dr = PlotDrawingRequestFactory.getDrawingRequest();
-		viewOptions = new PlotViewOptions();
+
 		
 		badScans = DataTypeFactory.<Integer>list();
 

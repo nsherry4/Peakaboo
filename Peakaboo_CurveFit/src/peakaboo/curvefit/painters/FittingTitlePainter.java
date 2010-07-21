@@ -1,5 +1,6 @@
 package peakaboo.curvefit.painters;
 
+import java.awt.Color;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +38,15 @@ public class FittingTitlePainter extends PlotPainter
 	
 	private List<Coord<Bounds<Float>>> previousLabels;
 	
+	private Color colour;
+	
 	public FittingTitlePainter(FittingResultSet fittings, boolean drawElementNames, boolean drawMaxIntensities){
+		
+		this(fittings, drawElementNames, drawMaxIntensities, Color.black);	
+		
+	}
+	
+	public FittingTitlePainter(FittingResultSet fittings, boolean drawElementNames, boolean drawMaxIntensities, Color colour){
 		
 		//this.tsList = tsList;
 		//this.visibleElements = visibleElements;
@@ -47,6 +56,7 @@ public class FittingTitlePainter extends PlotPainter
 		
 		this.previousLabels = DataTypeFactory.<Coord<Bounds<Float>>>list();
 		
+		this.colour = new Color(colour.getRed(), colour.getGreen(), colour.getBlue());
 		
 	}
 	
@@ -57,57 +67,60 @@ public class FittingTitlePainter extends PlotPainter
 		String titleName, titleHeight, title;
 		Transition t;
 		
-		for (FittingResult fit : fittings.fits){
+		p.context.save();
 			
-			//if (fit.transitionSeries.visible && visibleElements.contains(fit.transitionSeries.element)){
-				titleName = fit.transitionSeries.getDescription();
-
-				
-				titleHeight = SigDigits.roundFloatTo(fit.scaleFactor, 1);
-
-				title = "";
-				if (drawElementNames) title += titleName;
-				if (drawElementNames && drawMaxIntensities) title += " (";
-				if (drawMaxIntensities) title += titleHeight;
-				if (drawElementNames && drawMaxIntensities) title += ")";
-				
-				
-				//if (fit.transitionSeries.type != TransitionSeriesType.Kx2)
-				//{
-				
-					//TransitionType type = TransitionType.a1;
-					t = fit.transitionSeries.getStrongestTransition();
-					
-					if (t != null) {
-						
-						Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, t.energyValue);
-						if (currentLabel.x.start.intValue() > p.dr.dataWidth) continue;
-						float baseHeightForTitle = baseHeightForTitle(p, title, t.energyValue);
-						currentLabel.y.start += baseHeightForTitle;
-						currentLabel.y.end += baseHeightForTitle;
-						float channelSize = p.plotSize.x / p.dr.dataWidth;
-						
-						drawTextLabel(p, title, t.energyValue, currentLabel.x.start * channelSize, currentLabel.y.start);
-						
-						previousLabels.add(currentLabel);
-					}
-				//}
-				
-			//} //visible?
+			p.context.setSource(colour);
 			
-			
-		}// for all transitionseries
+			for (FittingResult fit : fittings.fits){
 		
-		//update the channel height data to reflect the addition of text labels
-		for (Coord<Bounds<Float>> label : previousLabels)
-		{
-			for (int i = label.x.start.intValue(); i <= label.x.end; i++){
+			titleName = fit.transitionSeries.getDescription();
+
+			
+			titleHeight = SigDigits.roundFloatTo(fit.scaleFactor, 1);
+
+			title = "";
+			if (drawElementNames) title += titleName;
+			if (drawElementNames && drawMaxIntensities) title += " (";
+			if (drawMaxIntensities) title += titleHeight;
+			if (drawElementNames && drawMaxIntensities) title += ")";
+			
+			
+
+				//TransitionType type = TransitionType.a1;
+				t = fit.transitionSeries.getStrongestTransition();
 				
-				if (i < 0 || i > p.dr.dataWidth) continue;
-				if (p.dataHeights.get(i) < label.y.end) p.dataHeights.set(i, label.y.end);
+				if (t != null) {
+					
+					Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, t.energyValue);
+					if (currentLabel.x.start.intValue() > p.dr.dataWidth) continue;
+					float baseHeightForTitle = baseHeightForTitle(p, title, t.energyValue);
+					currentLabel.y.start += baseHeightForTitle;
+					currentLabel.y.end += baseHeightForTitle;
+					float channelSize = p.plotSize.x / p.dr.dataWidth;
+					
+					drawTextLabel(p, title, t.energyValue, currentLabel.x.start * channelSize, currentLabel.y.start, false);
+					
+					previousLabels.add(currentLabel);
+				}
+
+			
 				
+				
+			}// for all transitionseries
+			
+			//update the channel height data to reflect the addition of text labels
+			for (Coord<Bounds<Float>> label : previousLabels)
+			{
+				for (int i = label.x.start.intValue(); i <= label.x.end; i++){
+					
+					if (i < 0 || i > p.dr.dataWidth) continue;
+					if (p.dataHeights.get(i) < label.y.end) p.dataHeights.set(i, label.y.end);
+					
+				}
 			}
-		}
+			
+		p.context.restore();
+			
 	}
 	
 	public float baseHeightForTitle(PainterData p, String title, float energy)

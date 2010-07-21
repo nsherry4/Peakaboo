@@ -1,4 +1,4 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.background;
 
 
 import peakaboo.calculations.Background;

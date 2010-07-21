@@ -48,14 +48,22 @@ public abstract class AbstractFilter implements Serializable
 				return "Noise Removal";
 			}
 		},
-		MATHEMATICAL {
+		ARITHMETIC {
 
 			@Override
 			public String toString()
 			{
-				return "Mathematical Function";
+				return "Arithmetic";
 			}
 		},
+		ADVANCED {
+
+			@Override
+			public String toString()
+			{
+				return "Advanced";
+			}	
+		}
 	}
 	
 	public Map<Object, Parameter>		parameters;
@@ -106,8 +114,20 @@ public abstract class AbstractFilter implements Serializable
 	public abstract boolean validateParameters();
 	
 	
-	public abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
+	protected abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
 
+	
+	public Spectrum filter(Spectrum data, boolean cache)
+	{
+		try{
+			return filterApplyTo(data, cache);
+		}
+		catch(Exception e)
+		{
+			System.err.println(getFilterName() + " Failed");
+			return data;
+		}
+	}
 	
 	public abstract boolean showFilter();
 

@@ -47,9 +47,9 @@ public class TransitionSeriesFitting
 	private float 				energyPerChannel;
 
 	public static final float	SIGMA	= 0.062f;
-	private float				escape	= 1.74f;
+	private EscapePeakType		escape	= EscapePeakType.SILICON;
 
-	
+	public static float			defaultStandardDeviations = 1f;
 	private float				standardDeviations;
 
 	/**
@@ -62,25 +62,25 @@ public class TransitionSeriesFitting
 	 * @param energyPerChannel
 	 *            the energy per data point in the source data
 	 */
-	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, float escape, float standardDeviations)
+	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, EscapePeakType escape, float standardDeviations)
 	{
 		this(ts, dataWidth, energyPerChannel, escape);
 		this.standardDeviations = standardDeviations;
 		
 	}
-	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, float escape)
+	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, EscapePeakType escape)
 	{
 
 		this.dataWidth = dataWidth;
 		this.escape = escape;
 		this.energyPerChannel = energyPerChannel;
-		standardDeviations = 1f;
+		standardDeviations = defaultStandardDeviations;
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		transitionRanges = new RangeSet();
 		
 		if (ts != null) setTransitionSeries(ts, false);
-
+		
 	}
 
 	public void setTransitionSeries(TransitionSeries ts)
@@ -280,9 +280,11 @@ public class TransitionSeriesFitting
 			
 			transitionRanges.addRange(new Range(start, stop));
 			
-			if (fitEscapes)
+			
+			
+			if (fitEscapes && escape.hasOffset())
 			{
-				mean = (t.energyValue-escape) / energyPerChannel;
+				mean = (t.energyValue-escape.offset()) / energyPerChannel;
 				
 				start = (int) (mean - range);
 				stop = (int) (mean + range);
@@ -321,9 +323,9 @@ public class TransitionSeriesFitting
 
 			functions.add(g);
 
-			if (fitEscape)
+			if (fitEscape && escape.hasOffset())
 			{
-				g = new GaussianFittingFunction((t.energyValue - escape) / energyPerChannel, getSigmaForTransition(
+				g = new GaussianFittingFunction((t.energyValue - escape.offset()) / energyPerChannel, getSigmaForTransition(
 						SIGMA,
 						t)
 						/ energyPerChannel, t.relativeIntensity * escapeIntensity(ts.element));

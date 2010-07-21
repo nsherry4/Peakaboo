@@ -21,6 +21,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.MapController;
@@ -30,12 +31,14 @@ import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.mapping.MapTabControls;
 import peakaboo.ui.swing.mapping.MapViewer;
+import peakaboo.ui.swing.mapping.TabIconButton;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import scitypes.Coord;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
 import swidget.containers.SwidgetFrame;
 import swidget.dialogues.fileio.SwidgetIO;
+import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -178,7 +181,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 				//does the new-tab tab the focused tab?
 				if (tabs.getSelectedIndex() == tabs.getTabCount() -1)
 				{
-					tabs.setSelectedIndex(tabs.getTabCount() - 2);
+					createMapsViewer();
 				}
 				
 				MapViewer viewer = ((MapViewer)tabs.getSelectedComponent());
@@ -187,7 +190,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 					controller.setActiveTabModel( viewer.getMapViewModel() );
 					controller.invalidateInterpolation();
 					viewer.fullRedraw();
-					//elementsListPanel.repaint();
+					
 				}
 				
 			}
@@ -205,6 +208,14 @@ public class PeakabooMapperSwing extends SwidgetDialog
 				spectrum.setSelected(controller.getShowSpectrum());
 				coords.setSelected(controller.getShowCoords());
 				
+				//update the working tab's title
+				if (tabs.getSelectedComponent() != null && tabs.getSelectedComponent() instanceof MapViewer)
+				{
+					MapViewer viewer = (MapViewer)tabs.getSelectedComponent();
+				
+					tabs.setTitleAt(tabs.getSelectedIndex(), viewer.getMapViewModel().mapLongTitle());
+				}
+				
 			}
 		};
 		
@@ -219,19 +230,49 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		
 		SingleMapModel viewModel = new SingleMapModel(originalData.clone());
 		controller.setActiveTabModel(viewModel);
-		MapViewer viewer = new MapViewer(viewModel, controller, this);
+		final MapViewer viewer = new MapViewer(viewModel, controller, this);
 		
 		MapTabControls controls = new MapTabControls(tabs, viewer);
+		
+		
+		final TabIconButton closeButton = new TabIconButton(StockIcon.WINDOW_CLOSE);
+		closeButton.addListener(new EventfulListener() {
+			
+			public void change()
+			{	
+				int index = tabs.getSelectedIndex();
+				
+				//detatch the listener, or else old tabpane listeners which only 
+				//check the bounds of the click against where it painted *last time*
+				//will start closing the active tab on you
+				closeButton.detatchListener();
+				
+				if (index > 0) tabs.setSelectedIndex(index-1);
+				if (index == 0) tabs.setSelectedIndex(1);
+				tabs.remove(index);
+			}
+		});
+		
+		
+		
 		if (tabs.getTabCount() == 0)
 		{
-			tabs.addTab("", viewer);
+			tabs.addTab("", closeButton, viewer);
 			//tabs.setTabComponentAt(tabs.getTabCount()-1, controls);
-			tabs.setTitleAt(tabs.getTabCount()-1, "Tab");
+			tabs.setTitleAt(tabs.getTabCount()-1, viewer.getMapViewModel().mapLongTitle());
 		} else {
-			//tabs.setTabComponentAt(tabs.getTabCount()-1, controls);
-			tabs.setTitleAt(tabs.getTabCount()-1, "Tab");
+			
+			//detatch the listener, or else old tabpane listeners which only 
+			//check the bounds of the click against where it painted *last time*
+			//will start closing the active tab on you
+			((TabIconButton)(tabs.getIconAt(tabs.getTabCount()-1))).detatchListener();
+			
+			tabs.setIconAt(tabs.getTabCount()-1, closeButton);
+			tabs.setTitleAt(tabs.getTabCount()-1, viewer.getMapViewModel().mapLongTitle());
 			tabs.setComponentAt(tabs.getTabCount()-1, viewer);
 		}
+		
+		
 				
 		create_NewTab_Tab();
 		
@@ -241,8 +282,19 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	
 	private void create_NewTab_Tab(){
 		
-		tabs.addTab("New Map", new ClearPanel());
+		TabIconButton newmapButton = new TabIconButton("map-new");
+		newmapButton.addListener(new EventfulListener() {
+			
+			public void change()
+			{
+				//System.out.println("new map button click registered");
+				//createMapsViewer();
+			}
+		});
 		
+		tabs.addTab("", newmapButton, new ClearPanel());
+		
+		/*
 		ImageButton newtab = new ImageButton("map-new", "", "Create a new map", Layout.IMAGE, false, IconSize.BUTTON, Spacing.iNone(), Spacing.bSmall() );
 		
 		newtab.addActionListener(new ActionListener() {
@@ -251,7 +303,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 				createMapsViewer();
 			}
 		});
-		
+		*/
 		//tabs.setTabComponentAt(tabs.getTabCount()-1, newtab);
 		
 		

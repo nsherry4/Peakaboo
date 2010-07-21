@@ -5,6 +5,8 @@ package peakaboo.curvefit.fitting;
 import java.io.Serializable;
 import java.util.List;
 
+import fava.lists.FList;
+
 import static fava.Fn.*;
 
 import peakaboo.curvefit.results.FittingResult;
@@ -25,10 +27,12 @@ public class FittingSet implements Serializable
 	private float							energyPerChannel;
 	private int								dataWidth;
 
-	public static float						escape	= 1.74f;
 
+	private EscapePeakType					escapeType;
+	
+	
 
-	public FittingSet(int dataWidth, float energyPerChannel)
+	public FittingSet(int dataWidth, float energyPerChannel, EscapePeakType escapeType)
 	{
 		fittings = DataTypeFactory.<TransitionSeriesFitting> list();
 		fitTransitionSeries = DataTypeFactory.<TransitionSeries> list();
@@ -45,8 +49,10 @@ public class FittingSet implements Serializable
 
 		this.energyPerChannel = 0.0f;
 		this.dataWidth = 0;
+		this.escapeType = EscapePeakType.NONE;
 	}
 
+	
 
 	public synchronized void setEnergyPerChannel(float energyPerChannel)
 	{
@@ -62,7 +68,20 @@ public class FittingSet implements Serializable
 	}
 
 
-	public synchronized void setDataParameters(int dataWidth, float energy)
+	public EscapePeakType getEscapeType()
+	{
+		return escapeType;
+	}
+
+
+	
+	public void setEscapeType(EscapePeakType escapeType)
+	{
+		this.escapeType = escapeType;
+		regenerateFittings();
+	}
+	
+	public synchronized void setDataParameters(int dataWidth, float energy, EscapePeakType escapeType)
 	{
 		this.dataWidth = dataWidth;
 		this.energyPerChannel = energy;
@@ -70,6 +89,7 @@ public class FittingSet implements Serializable
 	}
 
 
+	
 	private synchronized void regenerateFittings()
 	{
 		fittings.clear();
@@ -93,7 +113,7 @@ public class FittingSet implements Serializable
 
 	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-		fittings.add(new TransitionSeriesFitting(ts, dataWidth, energyPerChannel, escape));
+		fittings.add(new TransitionSeriesFitting(ts, dataWidth, energyPerChannel, escapeType));
 	}
 
 

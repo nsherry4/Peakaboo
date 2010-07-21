@@ -106,6 +106,9 @@ public class ScanInfoDialogue extends SwidgetDialog
 		containerPanel.add(buttonBox, BorderLayout.SOUTH);
 		
 		pack();
+		
+		setMinimumSize(getPreferredSize());
+		
 		setModal(true);
 		centreOnParent();
 		setVisible(true);
@@ -118,9 +121,12 @@ public class ScanInfoDialogue extends SwidgetDialog
 		JLabel label;
 		
 		c.gridx = 1;
+		c.weightx = 0.0f;
 		label = new JLabel(one, SwingConstants.LEFT);
 		mainPanel.add(label, c);
+		
 		c.gridx = 2;
+		c.weightx = 1f;
 		label = new JLabel(two, SwingConstants.RIGHT);
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 		label.setPreferredSize(new Dimension(225, label.getPreferredSize().height));

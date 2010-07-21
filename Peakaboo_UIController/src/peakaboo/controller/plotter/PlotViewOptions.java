@@ -2,6 +2,8 @@ package peakaboo.controller.plotter;
 
 import java.io.Serializable;
 
+import peakaboo.curvefit.fitting.EscapePeakType;
+
 
 
 public class PlotViewOptions implements Serializable{
@@ -18,6 +20,8 @@ public class PlotViewOptions implements Serializable{
 	public boolean monochrome;
 	public boolean showAxes;
 	
+	public EscapePeakType escape;
+	
 	public PlotViewOptions(){
 		scanNumber = 0;
 		showIndividualFittings = false;
@@ -26,6 +30,7 @@ public class PlotViewOptions implements Serializable{
 		zoom = 1.0f;
 		monochrome = false;
 		showAxes = false;
+		escape = EscapePeakType.SILICON;
 	}
 	
 	

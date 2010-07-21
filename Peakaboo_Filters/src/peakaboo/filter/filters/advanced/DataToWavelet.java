@@ -1,6 +1,6 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.advanced;
 
-
+import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
@@ -9,23 +9,24 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class Subtraction extends AbstractFilter
+
+public class DataToWavelet extends AbstractFilter
 {
 
 	private static final int AMOUNT = 0;
 	
-	public Subtraction()
+	public DataToWavelet()
 	{
 
 		super();
-		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Amount to Subtract", 1.0));
+		parameters.put(AMOUNT, new Parameter(ValueType.INTEGER, "Passes", 1));
 
 	}
 	
 	@Override
-	public Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return SpectrumCalculations.subtractFromList(data, getParameter(AMOUNT).realValue());
+		return Noise.DataToWavelet(data, getParameter(AMOUNT).intValue());
 	}
 
 
@@ -33,7 +34,7 @@ public class Subtraction extends AbstractFilter
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The" + getFilterName() + " filter subtracts a constant value to all points on a spectrum.";
+		return "The" + getFilterName() + " filter converts spectrum data into a wavelet representation";
 	}
 
 
@@ -41,7 +42,7 @@ public class Subtraction extends AbstractFilter
 	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
-		return "Subtract";
+		return "Signal -> Wavelet";
 	}
 
 
@@ -49,13 +50,14 @@ public class Subtraction extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.MATHEMATICAL;
+		return FilterType.ADVANCED;
 	}
 
 
 	@Override
 	public PlotPainter getPainter()
 	{
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -63,6 +65,10 @@ public class Subtraction extends AbstractFilter
 	@Override
 	public boolean validateParameters()
 	{
+		
+		if (getParameter(AMOUNT).intValue() < 1) return false;
+		if (getParameter(AMOUNT).intValue() > 5) return false;
+		
 		return true;
 	}
 

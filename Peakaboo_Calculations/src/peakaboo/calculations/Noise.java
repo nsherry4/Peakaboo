@@ -301,6 +301,73 @@ public class Noise
 
 	}
 
+	
+	public static Spectrum DataToWavelet(Spectrum data, int stop)
+	{
+		Spectrum filter;
+		Spectrum result = new Spectrum(data.size());
+
+
+		float[] dataAsArray = data.toArray();
+		int lastSize = data.size();
+
+		// transform
+		for (int i = 0; i < stop; i++) {
+			FastDaubechies2.transform(dataAsArray, lastSize);
+			lastSize /= 2;
+
+			
+			//take a subset of the data
+			for (int j = 0; j < data.size(); j++) {
+				result.set(i, dataAsArray[j]);
+			}
+
+			// FILTERING
+			filter = result.subSpectrum(lastSize-1, lastSize * 2-1);	
+
+			// out of list for processing
+			for (int j = lastSize; j < lastSize * 2; j++) {
+				dataAsArray[j] = filter.get(j - lastSize);
+			}
+
+		}
+
+		// back to list
+		for (int i = 0; i < data.size(); i++) {
+			result.set(i, Math.max(0, dataAsArray[i]));
+		}
+
+		return result;
+	}
+	
+	
+	public static Spectrum WaveletToData(Spectrum data, int stop)
+	{
+		Spectrum result = new Spectrum(data.size());
+
+
+		float[] dataAsArray = data.toArray();
+		int lastSize = data.size();
+
+		for (int i = 0; i < stop; i++) {
+			lastSize /=2;
+		}
+
+		// inverse transform
+		for (int i = 0; i < stop; i++) {
+			FastDaubechies2.invTransform(dataAsArray, lastSize);
+			lastSize *= 2;
+		}
+
+
+		// back to list
+		for (int i = 0; i < data.size(); i++) {
+			result.set(i, Math.max(0, dataAsArray[i]));
+		}
+
+		return result;
+	}
+	
 	/**
 	 * Applies a Wavelet transform into a frequency domain and attenuates high-frequency noise
 	 * @param data the data to be eliminated
@@ -330,7 +397,9 @@ public class Noise
 
 			// FILTERING
 			filter = result.subSpectrum(lastSize-1, lastSize * 2-1);
-			filter = SavitskyGolayFilter(filter, 1, 3, 0.0f, Float.MAX_VALUE);
+			//filter = SavitskyGolayFilter(filter, 1, 3, 0.0f, Float.MAX_VALUE);
+			filter = SpringFilter(filter, 10, 2, 10);
+			
 
 			// out of list for processing
 			for (int j = lastSize; j < lastSize * 2; j++) {
@@ -456,20 +525,22 @@ public class Noise
 		return result;
 	}
 	
-	public static Spectrum testFilter(Spectrum data, float springConstant, float signalAnchorPower, int iterations)
+	
+	
+	public static Spectrum SpringFilter(Spectrum data, float forceMultiplier, float falloffExp, int iterations)
 	{
 		Spectrum result = new Spectrum(data);
 		
 		for (int i = 0; i < iterations; i++)
 		{
-			testFilterIteration(result, springConstant, signalAnchorPower);
+			SpringFilterIteration(result, forceMultiplier, falloffExp);
 		}
 		
 		return result;
 
 	}
 	
-	public static void testFilterIteration(Spectrum data, float springConstant, float signalAnchorPower)
+	private static void SpringFilterIteration(Spectrum data, float forceMultiplier, float falloffExp)
 	{
 
 	
@@ -479,12 +550,12 @@ public class Noise
 		
 		//calculate the forces for each point
 		//forces represent how much pull a points neighbours are exerting on it.
-		//the further away its neighbour are, the more the "spring" has streched, and
+		//the further away its neighbours are, the more the "spring" has streched, and
 		//the stronger the force will be.
 		//Then, we want to make sure that peaks aren't distorted, so we reduce the force
 		//as the signal gets stronger. This fits with the assumption that weaker signal will be
 		//noisier.
-		float value, force;
+		float dist, force;
 		for (int i = 0; i < forces.size(); i++)
 		{
 			
@@ -492,17 +563,17 @@ public class Noise
 			else if (i == forces.size() - 1)  	force = deltas.get(deltas.size()-1) / 2.0f;
 			else 								force = (deltas.get(i-1) + (-deltas.get(i))) / 4.0f; 
 
-			//value = (float) Math.log1p(value);
-			value = data.get(i);
-			value = (float) Math.pow(value, signalAnchorPower);
-			if (value < 1) value = 1f;
+			//if dist dips below 0 and we use a falloff exp like 1.6, we'd like to get a sensible answer, rather than NaN
+			dist = Math.abs(data.get(i));
+			dist = (float) Math.pow(dist, falloffExp);
+			if (dist < 1) dist = 1f;
 			
 			//distFromAverage = 1f;
 			if (force < 0)
 			{
-				force = Math.max(force,  (force / value) * springConstant);
+				force = Math.max(force,  (force / dist) * forceMultiplier);
 			} else {
-				force = Math.min(force, (force / value) * springConstant);
+				force = Math.min(force, (force / dist) * forceMultiplier);
 			}
 			
 			data.set(i, data.get(i) - force);

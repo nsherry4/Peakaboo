@@ -1,4 +1,4 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.noise;
 
 
 import peakaboo.calculations.Noise;
@@ -78,7 +78,7 @@ public final class MovingAverage extends AbstractFilter
 
 
 	@Override
-	public Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		data = Noise.MovingAverage(data, getParameter(REACH).intValue());
 		return data;

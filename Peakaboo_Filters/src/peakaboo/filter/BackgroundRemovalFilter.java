@@ -57,7 +57,7 @@ public abstract class BackgroundRemovalFilter extends AbstractFilter
 	}
 	
 	@Override
-	public final Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected final Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		if (!getParameter(backgroundParams.PREVIEW).boolValue() == true) {
 

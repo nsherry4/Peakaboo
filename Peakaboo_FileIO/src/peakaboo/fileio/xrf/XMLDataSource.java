@@ -72,7 +72,9 @@ public class XMLDataSource implements DataSource
 		
 		//collect the names of the good scans only
 		for (int i = 0; i < filenames.size(); i++){
-			if (badScans.get(i) == false) scanNames.add(filenames.get(i).getFileName());
+			if (badScans.get(i) == false) scanNames.add(
+					IOOperations.getFileTitle( filenames.get(i).getFileName() )
+			);
 		}
 		
 		return scanNames;
@@ -101,7 +103,9 @@ public class XMLDataSource implements DataSource
 	public String getDatasetName()
 	{
 		String commonFileName = IOOperations.getCommonFileName(getScanNames());
-		String parentFolder = IOOperations.getParentFolder(getScanNames().get(0));
+		String parentFolder = IOOperations.getParentFolder(filenames.get(0).getFileName());
+		
+		
 		
 		if (parentFolder == null) return commonFileName;
 		return parentFolder + ": " + commonFileName;

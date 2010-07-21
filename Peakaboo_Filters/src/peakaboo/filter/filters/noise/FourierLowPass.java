@@ -1,4 +1,4 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.noise;
 
 
 
@@ -89,7 +89,7 @@ public final class FourierLowPass extends AbstractFilter
 
 
 	@Override
-	public Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		
 		data = Noise.FFTLowPassFilter(

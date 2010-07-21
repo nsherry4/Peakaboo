@@ -56,6 +56,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 import commonenvironment.AbstractFile;
 import commonenvironment.Env;
@@ -71,6 +72,7 @@ import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.plotter.ChannelCompositeMode;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.datatypes.eventful.PeakabooMessageListener;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
@@ -834,8 +836,6 @@ public class PlotPanel extends ClearPanel
 		});
 		menu.add(redo);
 
-
-
 		menuBar.add(menu);
 
 
@@ -857,7 +857,7 @@ public class PlotPanel extends ClearPanel
 				String command = e.getActionCommand();
 				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
 
-				if (command == "Logarithmic Plot")
+				if (command == "Logarithmic Scale")
 				{
 					controller.setViewLog(menuitem.isSelected());
 				}
@@ -911,10 +911,10 @@ public class PlotPanel extends ClearPanel
 		final JMenuItem logPlot, axes, monochrome, title;
 
 		// a group of JMenuItems
-		logPlot = new JCheckBoxMenuItem("Logarithmic Plot");
+		logPlot = new JCheckBoxMenuItem("Logarithmic Scale");
 		logPlot.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, java.awt.event.ActionEvent.CTRL_MASK));
 		logPlot.setMnemonic(KeyEvent.VK_L);
-		logPlot.getAccessibleContext().setAccessibleDescription("Toggles the plot to be shown in logarithmic scale");
+		logPlot.getAccessibleContext().setAccessibleDescription("Toggles the plot between a linear and logarithmic scale");
 		logPlot.addActionListener(toggleOptionListener);
 		menu.add(logPlot);
 
@@ -931,44 +931,36 @@ public class PlotPanel extends ClearPanel
 		monochrome.addActionListener(toggleOptionListener);
 		menu.add(monochrome);
 
-		// Element Markings submenu
-		JMenu elementTitles = new JMenu("Curve Fit");
-		final JCheckBoxMenuItem etitles, emarkings, eintensities;
+		final JMenuItem raw, fittings;
 
-		// element name option
-		etitles = new JCheckBoxMenuItem("Names");
-		etitles.addActionListener(new ActionListener() {
+		raw = new JCheckBoxMenuItem("Raw Data Outline");
+		raw.setMnemonic(KeyEvent.VK_O);
+		raw.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setShowElementTitles(etitles.isSelected());
-			}
-		});
-		elementTitles.add(etitles);
 
-		// element markings option
-		emarkings = new JCheckBoxMenuItem("Markings");
-		emarkings.addActionListener(new ActionListener() {
+				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+				controller.setShowRawData(menuitem.isSelected());
+			}
+
+		});
+		menu.add(raw);
+
+		fittings = new JCheckBoxMenuItem("Individual Fittings");
+		fittings.setSelected(controller.getShowIndividualSelections());
+		fittings.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setShowElementMarkers(emarkings.isSelected());
+
+				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+				controller.setShowIndividualSelections(menuitem.isSelected());
 			}
+
 		});
-		elementTitles.add(emarkings);
-
-		// element intensities option
-		eintensities = new JCheckBoxMenuItem("Heights");
-		eintensities.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.setShowElementIntensities(eintensities.isSelected());
-			}
-		});
-		elementTitles.add(eintensities);
-
-		menu.add(elementTitles);
+		menu.add(fittings);
+		
 
 		// SEPARATOR
 		menu.addSeparator();
@@ -1003,37 +995,102 @@ public class PlotPanel extends ClearPanel
 		// SEPARATOR
 		menu.addSeparator();
 
-		final JMenuItem raw, fittings;
 
-		raw = new JCheckBoxMenuItem("Raw Data Outline");
-		raw.setMnemonic(KeyEvent.VK_O);
-		raw.addActionListener(new ActionListener() {
+		// Element Drawing submenu
+		JMenu elementDrawing = new JMenu("Curve Fit");
+		final JCheckBoxMenuItem etitles, emarkings, eintensities;
 
-			public void actionPerformed(ActionEvent e)
-			{
-
-				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-				controller.setShowRawData(menuitem.isSelected());
-			}
-
-		});
-		menu.add(raw);
-
-		fittings = new JCheckBoxMenuItem("Individual Fittings");
-		fittings.setSelected(controller.getShowIndividualSelections());
-		fittings.addActionListener(new ActionListener() {
+		// element name option
+		etitles = new JCheckBoxMenuItem("Names");
+		etitles.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-
-				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-				controller.setShowIndividualSelections(menuitem.isSelected());
+				controller.setShowElementTitles(etitles.isSelected());
 			}
-
 		});
-		menu.add(fittings);
+		elementDrawing.add(etitles);
 
+		// element markings option
+		emarkings = new JCheckBoxMenuItem("Markings");
+		emarkings.addActionListener(new ActionListener() {
 
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.setShowElementMarkers(emarkings.isSelected());
+			}
+		});
+		elementDrawing.add(emarkings);
+
+		// element intensities option
+		eintensities = new JCheckBoxMenuItem("Heights");
+		eintensities.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.setShowElementIntensities(eintensities.isSelected());
+			}
+		});
+		elementDrawing.add(eintensities);
+
+		menu.add(elementDrawing);
+		
+		
+		
+		JMenu escapePeaks = new JMenu("Escape Peaks");
+		final JRadioButtonMenuItem escNone, escSilicon, escGermanium;
+		
+		// element name option
+		escNone 		= new JRadioButtonMenuItem("None");
+		escSilicon 		= new JRadioButtonMenuItem("Silicon");
+		escGermanium 	= new JRadioButtonMenuItem("Germanium");
+		
+		if (controller.getEscapeType() == EscapePeakType.NONE) escNone.setSelected(true);
+		if (controller.getEscapeType() == EscapePeakType.SILICON) escSilicon.setSelected(true);
+		if (controller.getEscapeType() == EscapePeakType.GERMANIUM) escGermanium.setSelected(true);
+		
+		escNone.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				if (escNone.isSelected()) {
+					controller.setEscapeType(EscapePeakType.NONE);
+					escSilicon.setSelected(false);
+					escGermanium.setSelected(false);
+				}
+			}
+		});
+		escSilicon.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				if (escSilicon.isSelected()) {
+					controller.setEscapeType(EscapePeakType.SILICON);
+					escNone.setSelected(false);
+					escGermanium.setSelected(false);
+				}
+			}
+		});
+		escGermanium.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				if (escGermanium.isSelected()) {
+					controller.setEscapeType(EscapePeakType.GERMANIUM);
+					escSilicon.setSelected(false);
+					escNone.setSelected(false);
+				}
+			}
+		});
+		
+		escapePeaks.add(escNone);
+		escapePeaks.add(escSilicon);
+		escapePeaks.add(escGermanium);
+		
+		menu.add(escapePeaks);
+		
+		
+		//Mapping Menu
 		menu = new JMenu("Mapping");
 		menu.setMnemonic(KeyEvent.VK_S);
 

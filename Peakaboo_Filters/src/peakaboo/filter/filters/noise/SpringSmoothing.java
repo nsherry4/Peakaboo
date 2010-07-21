@@ -1,4 +1,4 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.noise;
 
 
 import peakaboo.calculations.Noise;
@@ -26,9 +26,9 @@ public final class SpringSmoothing extends AbstractFilter
 	public SpringSmoothing()
 	{
 		super();
-		parameters.put(MULTIPLIER, new Parameter(ValueType.REAL, "Force Multiplier", 1.0d));
-		parameters.put(FALLOFF, new Parameter(ValueType.REAL, "Force Falloff Power", 1.0d));
-		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 1));
+		parameters.put(MULTIPLIER, new Parameter(ValueType.REAL, "Linear Force Multiplier", 20.0d));
+		parameters.put(FALLOFF, new Parameter(ValueType.REAL, "Exponential Force Falloff Rate", 2.0d));
+		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 20));
 
 	}
 
@@ -58,10 +58,10 @@ public final class SpringSmoothing extends AbstractFilter
 
 		
 		mult = getParameter(MULTIPLIER).realValue();
-		if (mult > 40 || mult < 0.1) return false;
+		if (mult > 100 || mult < 0.1) return false;
 		
 		power = getParameter(FALLOFF).realValue();
-		if (power > 10 || power < 0.0) return false;
+		if (power > 10 || power <= 0.0) return false;
 		
 		iterations = getParameter(ITERATIONS).intValue();
 		if (iterations > 50 || iterations < 1) return false;
@@ -77,7 +77,7 @@ public final class SpringSmoothing extends AbstractFilter
 		// TODO Auto-generated method stub
 		return "The "
 				+ getFilterName()
-				+ " Filter treats each pair of points as if they were connected by a spring. With each iteration, a tension force draws neighbouring points closer together. The Force Multiplier controls how strongly the two elements are pulled together, and the Force Falloff Power controls how aggressively stronger signal becomes fixed in place, unmoved by spring forces.";
+				+ " Filter operates on the assumption that weak signal should be smoothed more than strong signal. It treats each pair of points as if they were connected by a spring. With each iteration, a tension force draws neighbouring points closer together. The Force Multiplier controls how strongly the two elements are pulled together, and the Force Falloff Rate controls how aggressively stronger signal is anchored in place, unmoved by spring forces. This prevents peaks from being distorted by the smoothing algorithm.";
 	}
 
 
@@ -92,7 +92,7 @@ public final class SpringSmoothing extends AbstractFilter
 	@Override
 	public Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		data = Noise.testFilter(
+		data = Noise.SpringFilter(
 				data, 
 				getParameter(MULTIPLIER).realValue(), 
 				getParameter(FALLOFF).realValue(), 

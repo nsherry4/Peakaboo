@@ -1,5 +1,8 @@
 package peakaboo.curvefit.painters;
 
+import java.awt.Color;
+
+import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
@@ -24,10 +27,14 @@ public class FittingMarkersPainter extends PlotPainter
 {
 
 	private FittingResultSet	fitResults;
+	private EscapePeakType		escapeType;
+	private Color				colour;
 
-	public FittingMarkersPainter(FittingResultSet fitResults)
+	public FittingMarkersPainter(FittingResultSet fitResults, EscapePeakType escapeType, Color c)
 	{
 		this.fitResults = fitResults;
+		this.escapeType = escapeType;
+		this.colour = new Color(c.getRed(), c.getGreen(), c.getBlue());
 	}
 
 
@@ -40,7 +47,8 @@ public class FittingMarkersPainter extends PlotPainter
 
 		p.context.save();
 		p.context.setLineWidth(1.0f);
-
+		p.context.setSource(colour);
+		
 		for (FittingResult fit : fitResults.fits) {
 
 			
@@ -70,27 +78,26 @@ public class FittingMarkersPainter extends PlotPainter
 				
 				markerHeight = transformValueForPlot(p.dr, markerHeight);
 				
-				p.context.setSource(0.0f, 0.0f, 0.0f);
 				p.context.moveTo(positionX, p.plotSize.y);
 				p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
 				
 				
+				if (escapeType.hasOffset())
+				{
+					channel = getChannelAtEnergy(p.dr, t.energyValue - escapeType.offset());
+					if (channel < 0) continue;
+					
+					positionX = getXForChannel(p, channel);
+					
+					
+					markerHeight = gauss.getHeightAtPoint(t.energyValue / dr.unitSize) * fit.scaleFactor / fit.normalizationScale;
+					markerHeight *= TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element);
+					markerHeight = transformValueForPlot(p.dr, markerHeight);
+					
 				
-				channel = getChannelAtEnergy(p.dr, t.energyValue - FittingSet.escape);
-				if (channel < 0) continue;
-				
-				positionX = getXForChannel(p, channel);
-				
-				
-				markerHeight = gauss.getHeightAtPoint(t.energyValue / dr.unitSize) * fit.scaleFactor / fit.normalizationScale;
-				markerHeight *= TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element);
-				markerHeight = transformValueForPlot(p.dr, markerHeight);
-				
-			
-				p.context.setSource(0.0f, 0.0f, 0.0f);
-				p.context.moveTo(positionX, p.plotSize.y);
-				p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
-				
+					p.context.moveTo(positionX, p.plotSize.y);
+					p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
+				}
 
 				//markerHeights.set((int)channel, markerHeight * TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element));
 

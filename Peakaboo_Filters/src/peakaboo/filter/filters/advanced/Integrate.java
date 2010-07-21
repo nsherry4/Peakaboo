@@ -1,4 +1,4 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.advanced;
 
 
 import peakaboo.calculations.Noise;
@@ -11,7 +11,7 @@ public class Integrate extends AbstractFilter
 {
 
 	@Override
-	public Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		return Noise.integ(data);
 	}
@@ -29,7 +29,7 @@ public class Integrate extends AbstractFilter
 	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
-		return "Integral (Area Under Curve)";
+		return "Integral";
 	}
 
 
@@ -37,7 +37,7 @@ public class Integrate extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.MATHEMATICAL;
+		return FilterType.ADVANCED;
 	}
 
 

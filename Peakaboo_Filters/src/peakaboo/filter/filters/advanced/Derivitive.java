@@ -1,31 +1,19 @@
-package peakaboo.filter.filters;
+package peakaboo.filter.filters.advanced;
 
+
+import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
-
-public class Addition extends AbstractFilter
+public class Derivitive extends AbstractFilter
 {
 
-	private static final int AMOUNT = 0;
-	
-	public Addition()
-	{
-
-		super();
-		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
-
-	}
-	
 	@Override
-	public Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return SpectrumCalculations.subtractFromList(data, 0.0f-getParameter(AMOUNT).realValue());
+		return Noise.deriv(data);
 	}
 
 
@@ -33,7 +21,7 @@ public class Addition extends AbstractFilter
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The" + getFilterName() + " filter adds a constant value to all points on a spectrum.";
+		return "";
 	}
 
 
@@ -41,7 +29,7 @@ public class Addition extends AbstractFilter
 	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
-		return "Add";
+		return "Derivitive";
 	}
 
 
@@ -49,7 +37,7 @@ public class Addition extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.MATHEMATICAL;
+		return FilterType.ADVANCED;
 	}
 
 

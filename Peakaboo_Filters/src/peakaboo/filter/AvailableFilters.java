@@ -7,23 +7,25 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
+import fava.lists.FList;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
 import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.filter.filters.Addition;
-import peakaboo.filter.filters.AgressiveWaveletNoiseFilter;
-import peakaboo.filter.filters.BruknerRemoval;
-import peakaboo.filter.filters.Derivitive;
-import peakaboo.filter.filters.FourierLowPass;
-import peakaboo.filter.filters.Integrate;
-import peakaboo.filter.filters.MovingAverage;
-import peakaboo.filter.filters.Multiply;
-import peakaboo.filter.filters.PolynomialRemoval;
-import peakaboo.filter.filters.SavitskyGolaySmoothing;
-import peakaboo.filter.filters.Subtraction;
-import peakaboo.filter.filters.WaveletNoiseFilter;
+import peakaboo.filter.AbstractFilter.FilterType;
+import peakaboo.filter.filters.advanced.Derivitive;
+import peakaboo.filter.filters.advanced.Integrate;
+import peakaboo.filter.filters.arithmetic.Addition;
+import peakaboo.filter.filters.arithmetic.Multiply;
+import peakaboo.filter.filters.arithmetic.Subtraction;
+import peakaboo.filter.filters.background.BruknerRemoval;
+import peakaboo.filter.filters.background.PolynomialRemoval;
+import peakaboo.filter.filters.noise.AgressiveWaveletNoiseFilter;
+import peakaboo.filter.filters.noise.FourierLowPass;
+import peakaboo.filter.filters.noise.MovingAverage;
+import peakaboo.filter.filters.noise.SavitskyGolaySmoothing;
+import peakaboo.filter.filters.noise.WaveletNoiseFilter;
 
 
 
@@ -99,11 +101,14 @@ public class AvailableFilters
 		List<AbstractFilter> list = DataTypeFactory.<AbstractFilter> list();
 
 		Package p = AbstractFilter.class.getPackage();
-		List<Class<?>> classes = null;
+		List<Class<?>> classes = new FList<Class<?>>();
 
 		try
 		{
-			classes = getClasses(p.getName() + ".filters");
+			for (FilterType ft : FilterType.values())
+			{
+				classes.addAll( getClasses(p.getName() + ".filters." + ft.name().toLowerCase()) );
+			}
 		}
 		catch (ClassNotFoundException e)
 		{

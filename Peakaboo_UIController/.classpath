@@ -14,5 +14,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/CommonEnvironment"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Plural"/>
 	<classpathentry kind="lib" path="snakeyaml-1.6.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Eventful"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

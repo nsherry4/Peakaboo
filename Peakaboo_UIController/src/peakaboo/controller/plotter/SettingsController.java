@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter;
 
+import peakaboo.curvefit.fitting.EscapePeakType;
 import eventful.IEventfulType;
 
 
@@ -49,6 +50,5 @@ public interface SettingsController extends IEventfulType<String>
 	public void setShowRawData(boolean show);
 	public boolean getShowRawData();
 
-	
 	
 }

@@ -51,8 +51,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	
 	protected DataSource			dataSource;
 	
-	protected String				datasetName;
-
 	protected String				Created, CreatedBy, ProjectName, SessionName, Facility, Laboratory, ExperimentName,
 			Instrument, Technique, SampleName, ScanName, StartTime, EndTime;
 
@@ -549,7 +547,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	@Override
 	public String getDatasetName()
 	{
-		return datasetName;
+		return dataSource.getDatasetName();
 	}
 
 
@@ -715,9 +713,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	public void discard()
 	{
 		//discard references to large chunks of data
-		//dsc_dataset.clear();
-		//filteredDataSet.clear();
-		//dsc_scannames.clear();
 		dataSource = null;
 	}
 
