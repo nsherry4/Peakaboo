@@ -1,4 +1,4 @@
-package peakaboo.datatypes.peaktable;
+package peakaboo.curvefit.peaktable;
 
 import java.io.Serializable;
 

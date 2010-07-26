@@ -1,4 +1,4 @@
-package peakaboo.fileio.xrf;
+package peakaboo.fileio;
 
 import fava.datatypes.Bounds;
 import scitypes.Coord;

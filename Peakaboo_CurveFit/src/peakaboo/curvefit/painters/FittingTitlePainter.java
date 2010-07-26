@@ -7,11 +7,11 @@ import java.util.List;
 
 import fava.datatypes.Bounds;
 
+import peakaboo.curvefit.peaktable.Transition;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.Transition;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Coord;

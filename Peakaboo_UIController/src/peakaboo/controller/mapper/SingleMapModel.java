@@ -9,8 +9,8 @@ import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Spectrum;

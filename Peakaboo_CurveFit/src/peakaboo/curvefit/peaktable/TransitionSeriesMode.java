@@ -1,4 +1,4 @@
-package peakaboo.datatypes.peaktable;
+package peakaboo.curvefit.peaktable;
 
 
 public enum TransitionSeriesMode

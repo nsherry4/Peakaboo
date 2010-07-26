@@ -11,7 +11,7 @@ import fava.Fn;
 import fava.signatures.FunctionEach;
 
 import peakaboo.controller.plotter.FittingController;
-import peakaboo.datatypes.peaktable.TransitionSeries;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 import swidget.widgets.ClearPanel;

@@ -7,8 +7,8 @@ import java.util.List;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 

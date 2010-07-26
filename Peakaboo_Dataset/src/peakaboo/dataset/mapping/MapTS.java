@@ -3,16 +3,16 @@ package peakaboo.dataset.mapping;
 import java.util.List;
 
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.tasks.Task;
-import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
-import peakaboo.fileio.xrf.DataSource;
+import peakaboo.fileio.DataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
+import plural.workers.PluralEachIndex;
+import plural.workers.PluralSet;
+import plural.workers.executor.eachindex.implementations.PluralUIEachIndexExecutor;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -20,10 +20,10 @@ import scitypes.SpectrumCalculations;
 public class MapTS
 {
 
-	public static TaskList<MapResultSet> calculateMap(final DataSource dataSource, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
+	public static PluralSet<MapResultSet> calculateMap(final DataSource dataSource, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
 	{
 
-		final TaskList<MapResultSet> tasklist;
+		final PluralSet<MapResultSet> tasklist;
 
 		// ======================================================================
 		// LOGIC FOR FILTERS AND FITTING
@@ -34,15 +34,14 @@ public class MapTS
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		final MapResultSet maps = new MapResultSet(transitionSeries, dataSource.getExpectedScanCount());
 		
-		final Task t_filter = new Task("Apply Filters and Fittings") {
+		final PluralEachIndex t_filter = new PluralEachIndex("Apply Filters and Fittings") {
 
-			@Override
-			public boolean work(int ordinal)
+			public void f(Integer ordinal)
 			{
-
+				
 				Spectrum original = dataSource.getScanAtIndex(ordinal);
 				
-				if (original == null) return true;
+				if (original == null) return;
 				
 				Spectrum data = filters.filterDataUnsynchronized(dataSource.getScanAtIndex(ordinal), false);
 				//filteredDataSet.set(ordinal, data);
@@ -58,7 +57,7 @@ public class MapTS
 						ordinal);
 				}
 
-				return true;
+				return;
 				
 
 			}
@@ -66,13 +65,13 @@ public class MapTS
 		};
 
 
-		tasklist = new TaskList<MapResultSet>("Generating Data for Map") {
+		tasklist = new PluralSet<MapResultSet>("Generating Data for Map") {
 
 			@Override
-			public MapResultSet doTasks()
+			public MapResultSet doMaps()
 			{
 
-				TicketingUITaskExecutor executor;
+				PluralUIEachIndexExecutor executor;
 
 				// ================================
 				// PROCESS FILTERS, FITTINGS
@@ -81,7 +80,7 @@ public class MapTS
 
 					
 				// process these scans in parallel
-				executor = new TicketingUITaskExecutor(dataSource.getScanCount(), t_filter, this);
+				executor = new PluralUIEachIndexExecutor(dataSource.getScanCount(), t_filter, this);
 				executor.executeBlocking();
 				
 				if (isAborted()) return null;

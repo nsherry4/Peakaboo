@@ -7,11 +7,11 @@ import java.util.List;
 import fava.datatypes.Range;
 import fava.datatypes.RangeSet;
 
+import peakaboo.curvefit.peaktable.Element;
+import peakaboo.curvefit.peaktable.Transition;
+import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.Element;
-import peakaboo.datatypes.peaktable.Transition;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 

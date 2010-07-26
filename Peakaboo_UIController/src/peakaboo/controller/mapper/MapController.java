@@ -19,8 +19,8 @@ import static fava.Fn.*;
 
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.CanvasController;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.Surface.CompositeModes;

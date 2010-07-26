@@ -18,7 +18,7 @@ import fava.signatures.FunctionMap;
 
 
 import peakaboo.controller.plotter.PlotModel;
-import peakaboo.datatypes.peaktable.TransitionSeries;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.filter.AbstractFilter;
 
 

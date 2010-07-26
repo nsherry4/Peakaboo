@@ -5,11 +5,11 @@ import java.util.List;
 
 import peakaboo.controller.Model;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.PeakTableReader;
 import peakaboo.filter.FilterSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.plot.PlotDrawingRequestFactory;

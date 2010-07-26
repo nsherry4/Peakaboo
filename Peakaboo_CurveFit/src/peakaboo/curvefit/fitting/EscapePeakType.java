@@ -3,10 +3,10 @@ package peakaboo.curvefit.fitting;
 import java.util.List;
 
 
-import peakaboo.datatypes.peaktable.Element;
-import peakaboo.datatypes.peaktable.PeakTable;
-import peakaboo.datatypes.peaktable.Transition;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
+import peakaboo.curvefit.peaktable.Element;
+import peakaboo.curvefit.peaktable.PeakTable;
+import peakaboo.curvefit.peaktable.Transition;
+import peakaboo.curvefit.peaktable.TransitionSeriesType;
 import scidraw.datatypes.DataTypeFactory;
 
 

@@ -1,4 +1,4 @@
-package peakaboo.fileio.xrf.support;
+package peakaboo.fileio.support;
 
 import java.util.List;
 

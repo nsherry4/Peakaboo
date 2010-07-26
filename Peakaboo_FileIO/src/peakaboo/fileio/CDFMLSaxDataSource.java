@@ -1,4 +1,4 @@
-package peakaboo.fileio.xrf;
+package peakaboo.fileio;
 
 
 
@@ -24,8 +24,8 @@ import fava.signatures.FunctionMap;
 
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.temp.TempFileList;
-import peakaboo.fileio.xrf.support.CDFML;
+import peakaboo.datatypes.TempFileList;
+import peakaboo.fileio.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

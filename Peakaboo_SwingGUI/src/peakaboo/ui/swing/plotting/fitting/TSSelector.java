@@ -11,8 +11,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import peakaboo.controller.plotter.FittingController;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesMode;
+import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.peaktable.TransitionSeriesMode;
 import eventful.swing.EventfulPanel;
 import fava.signatures.FunctionMap;
 

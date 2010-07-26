@@ -1,4 +1,4 @@
-package peakaboo.fileio;
+package peakaboo.curvefit.peaktable;
 
 
 import java.io.BufferedReader;
@@ -9,12 +9,7 @@ import java.util.List;
 import java.util.Arrays;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.Element;
-import peakaboo.datatypes.peaktable.PeakTable;
-import peakaboo.datatypes.peaktable.Transition;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.datatypes.peaktable.TransitionType;
+
 
 /**
  * 
@@ -36,7 +31,7 @@ public class PeakTableReader
 		
 		int elementDataWidth = 2;
 
-		InputStream ins = PeakTableReader.class.getResourceAsStream("/peakaboo/fileio/PeakTable.tsv");
+		InputStream ins = PeakTableReader.class.getResourceAsStream("/peakaboo/curvefit/peaktable/PeakTable.tsv");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
 		
 

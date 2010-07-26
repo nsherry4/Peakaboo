@@ -9,14 +9,13 @@ import fava.datatypes.Bounds;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
-import peakaboo.datatypes.tasks.Task;
-import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.fileio.xrf.DataSource;
-import peakaboo.fileio.xrf.DataSourceDimensions;
-import peakaboo.fileio.xrf.DataSourceExtendedInformation;
+import peakaboo.fileio.DataSource;
+import peakaboo.fileio.DataSourceDimensions;
+import peakaboo.fileio.DataSourceExtendedInformation;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
+import plural.workers.PluralSet;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
@@ -250,7 +249,7 @@ public abstract class DataSetProvider
 	 *            fittings to be used on this data
 	 * @return a {@link Task} which will calculate the map
 	 */
-	public abstract TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type);
+	public abstract PluralSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type);
 
 
 	/**

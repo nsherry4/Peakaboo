@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
 import peakaboo.controller.plotter.FittingController;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;

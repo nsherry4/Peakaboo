@@ -1,4 +1,4 @@
-package peakaboo.fileio.xrf;
+package peakaboo.fileio;
 
 
 
@@ -13,7 +13,7 @@ import commonenvironment.AbstractFile;
 import fava.datatypes.Bounds;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.xrf.support.CDFML;
+import peakaboo.fileio.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

@@ -1,4 +1,4 @@
-package peakaboo.datatypes.temp;
+package peakaboo.datatypes;
 
 import java.io.File;
 import java.io.IOException;

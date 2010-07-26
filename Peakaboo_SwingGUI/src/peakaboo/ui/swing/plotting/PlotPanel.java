@@ -71,8 +71,7 @@ import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.plotter.ChannelCompositeMode;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.EscapePeakType;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.tasks.TaskList;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
@@ -80,10 +79,12 @@ import peakaboo.ui.swing.dialogues.ScanInfoDialogue;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
-import peakaboo.ui.swing.widgets.tasks.TaskListView;
+import plural.swing.PluralSetView;
+import plural.workers.PluralSet;
 import scitypes.Coord;
 import scitypes.SigDigits;
 import swidget.containers.SwidgetContainer;
+import swidget.containers.SwidgetFrame;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -1432,8 +1433,11 @@ public class PlotPanel extends ClearPanel
 		if (files != null)
 		{
 
-			TaskList<Boolean> reading = controller.TASK_readFileListAsDataset(files);
-			new TaskListView(container, reading);
+			PluralSet<Boolean> reading = controller.TASK_readFileListAsDataset(files);
+			if (container instanceof SwidgetFrame)
+				new PluralSetView((SwidgetFrame)container, reading);
+			else
+				new PluralSetView(container, reading);
 			// TaskListView was blocking.. it is now closed
 			System.gc();
 
@@ -1452,10 +1456,13 @@ public class PlotPanel extends ClearPanel
 
 
 
-		final TaskList<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
+		final PluralSet<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
 		if (tasks == null) return;
 
-		new TaskListView(container, tasks);
+		if (container instanceof SwidgetFrame)
+			new PluralSetView((SwidgetFrame)container, tasks);
+		else
+			new PluralSetView(container, tasks);
 
 		if (tasks.getCompleted())
 		{

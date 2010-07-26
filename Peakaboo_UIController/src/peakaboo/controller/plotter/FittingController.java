@@ -5,8 +5,8 @@ import java.util.List;
 import eventful.IEventfulType;
 
 import peakaboo.curvefit.fitting.EscapePeakType;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
+import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.peaktable.TransitionSeriesType;
 
 
 public interface FittingController extends IEventfulType<String>

@@ -1,4 +1,4 @@
-package peakaboo.fileio.xrf;
+package peakaboo.fileio;
 
 
 public interface DataSourceExtendedInformation

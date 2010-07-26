@@ -1,4 +1,4 @@
-package peakaboo.fileio.xrf;
+package peakaboo.fileio;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,7 +15,7 @@ import commonenvironment.IOOperations;
 import fava.datatypes.Bounds;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.xrf.support.CLSXML;
+import peakaboo.fileio.support.CLSXML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 

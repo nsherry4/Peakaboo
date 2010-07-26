@@ -23,18 +23,17 @@ import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
 import peakaboo.curvefit.painters.FittingTitlePainter;
+import peakaboo.curvefit.peaktable.PeakTable;
+import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.peaktable.TransitionSeriesType;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
-import peakaboo.datatypes.peaktable.PeakTable;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
+import plural.workers.PluralSet;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.painters.axis.AxisPainter;
@@ -52,6 +51,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
+import eventful.EventfulListener;
 import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Bounds;
@@ -192,16 +192,16 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public PluralSet<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
-		final TaskList<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
+		final PluralSet<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 
 		
-		PeakabooSimpleListener datasetListener = new PeakabooSimpleListener() {
+		EventfulListener datasetListener = new EventfulListener() {
 
 			boolean loadedNewDataSet = false;
 			
@@ -706,7 +706,7 @@ public class PlotController extends CanvasController implements FilterController
 	}
 
 
-	public TaskList<MapResultSet> TASK_getDataForMapFromSelectedRegions(FittingTransform type)
+	public PluralSet<MapResultSet> TASK_getDataForMapFromSelectedRegions(FittingTransform type)
 	{
 		return model.dataset.calculateMap(model.filters, model.fittingSelections, type);
 	}

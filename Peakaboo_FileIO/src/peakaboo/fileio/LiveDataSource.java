@@ -1,4 +1,4 @@
-package peakaboo.fileio.xrf;
+package peakaboo.fileio;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import fava.Fn;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.temp.TempFileList;
+import peakaboo.datatypes.TempFileList;
 import scitypes.Spectrum;
 
 

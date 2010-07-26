@@ -16,19 +16,19 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.tasks.EmptyProgressingTask;
-import peakaboo.datatypes.tasks.EmptyTask;
-import peakaboo.datatypes.tasks.Task;
-import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.fileio.xrf.CDFMLSaxDataSource;
-import peakaboo.fileio.xrf.DataSource;
-import peakaboo.fileio.xrf.DataSourceDimensions;
-import peakaboo.fileio.xrf.DataSourceExtendedInformation;
-import peakaboo.fileio.xrf.XMLDataSource;
-import peakaboo.fileio.xrf.ZipDataSource;
+import peakaboo.fileio.CDFMLSaxDataSource;
+import peakaboo.fileio.DataSource;
+import peakaboo.fileio.DataSourceDimensions;
+import peakaboo.fileio.DataSourceExtendedInformation;
+import peakaboo.fileio.XMLDataSource;
+import peakaboo.fileio.ZipDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
+import plural.workers.AbstractPlural;
+import plural.workers.EmptyMap;
+import plural.workers.EmptyProgressingMap;
+import plural.workers.PluralSet;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
@@ -209,7 +209,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type)
+	public PluralSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type)
 	{
 
 		return MapTS.calculateMap(dataSource, filters, fittings, type);
@@ -289,7 +289,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	}
 
 
-	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public PluralSet<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		
@@ -297,17 +297,17 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		IOOperations.sortAbstractFiles(files);
 
 		// Create the tasklist for reading the files
-		final TaskList<Boolean> tasklist;
+		final PluralSet<Boolean> tasklist;
 		
 		
-		final EmptyTask opening = new EmptyTask("Opening Data Set");
-		final EmptyProgressingTask reading = new EmptyProgressingTask("Reading Scans");
-		final EmptyProgressingTask applying = new EmptyProgressingTask("Calculating Values");
+		final EmptyMap opening = new EmptyMap("Opening Data Set");
+		final EmptyProgressingMap reading = new EmptyProgressingMap("Reading Scans");
+		final EmptyProgressingMap applying = new EmptyProgressingMap("Calculating Values");
 		
-		tasklist = new TaskList<Boolean>("Opening Data Set") {
+		tasklist = new PluralSet<Boolean>("Opening Data Set") {
 
 			@Override
-			protected Boolean doTasks()
+			protected Boolean doMaps()
 			{
 				
 				final int fileCount;
@@ -432,7 +432,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	}
 	
 	
-	private void readDataSource(DataSource ds, Task applying, String dataSourcePath)
+	private void readDataSource(DataSource ds, AbstractPlural applying, String dataSourcePath)
 	{
 		
 		if (ds == null || ds.getScanCount() == 0) return;

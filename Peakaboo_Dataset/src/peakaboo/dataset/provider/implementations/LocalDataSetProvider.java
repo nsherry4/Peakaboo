@@ -12,26 +12,28 @@ import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.tasks.EmptyTask;
-import peakaboo.datatypes.tasks.Task;
-import peakaboo.datatypes.tasks.TaskList;
-import peakaboo.datatypes.tasks.executor.implementations.SimpleUITaskExecutor;
-import peakaboo.datatypes.tasks.executor.implementations.TicketingUITaskExecutor;
-import peakaboo.fileio.xrf.CDFMLDataSource;
-import peakaboo.fileio.xrf.DataSource;
-import peakaboo.fileio.xrf.DataSourceDimensions;
-import peakaboo.fileio.xrf.DataSourceExtendedInformation;
-import peakaboo.fileio.xrf.XMLDataSource;
-import peakaboo.fileio.xrf.ZipDataSource;
-import peakaboo.fileio.xrf.DataSource.FileType;
+import peakaboo.fileio.CDFMLDataSource;
+import peakaboo.fileio.DataSource;
+import peakaboo.fileio.DataSourceDimensions;
+import peakaboo.fileio.DataSourceExtendedInformation;
+import peakaboo.fileio.XMLDataSource;
+import peakaboo.fileio.ZipDataSource;
+import peakaboo.fileio.DataSource.FileType;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
+import plural.workers.EmptyMap;
+import plural.workers.PluralEachIndex;
+import plural.workers.PluralSet;
+import plural.workers.executor.eachindex.implementations.PluralEachIndexExecutor;
+import plural.workers.executor.eachindex.implementations.PluralUIEachIndexExecutor;
+import plural.workers.executor.eachindex.implementations.SimpleUIEachIndexExecutor;
+import plural.workers.executor.maps.implementations.PluralUIMapExecutor;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
@@ -252,10 +254,10 @@ public class LocalDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public TaskList<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, final FittingTransform type)
+	public PluralSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, final FittingTransform type)
 	{
 
-		final TaskList<MapResultSet> tasklist;
+		final PluralSet<MapResultSet> tasklist;
 
 		// ======================================================================
 		// LOGIC FOR FILTERS: List<List<Double>> => List<List<Double>>
@@ -264,15 +266,13 @@ public class LocalDataSetProvider extends DataSetProvider
 
 
 		
-		final Task t_filter = new Task("Apply Filters") {
+		final PluralEachIndex t_filter = new PluralEachIndex("Apply Filters") {
 
-			@Override
-			public boolean work(int ordinal)
+			public void f(Integer ordinal)
 			{
 
 				Spectrum data = filters.filterDataUnsynchronized(dsc_dataset.get(ordinal), false);
 				filteredDataSet.set(ordinal, data);
-				return true;
 
 			}
 
@@ -286,10 +286,9 @@ public class LocalDataSetProvider extends DataSetProvider
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		final MapResultSet maps = new MapResultSet(transitionSeries, expectedScanCount());
 
-		final Task t_curvefit = new Task("Fitting Element Curves") {
+		final PluralEachIndex t_curvefit = new PluralEachIndex("Fitting Element Curves") {
 
-			@Override
-			public boolean work(int ordinal)
+			public void f(Integer ordinal)
 			{
 
 				FittingResultSet frs = fittings.calculateFittings(filteredDataSet.get(ordinal));
@@ -303,18 +302,17 @@ public class LocalDataSetProvider extends DataSetProvider
 						ordinal);
 				}
 
-				return true;
 			}
 
 		};
 
-		tasklist = new TaskList<MapResultSet>("Generating Data for Map") {
+		tasklist = new PluralSet<MapResultSet>("Generating Data for Map") {
 
 			@Override
-			public MapResultSet doTasks()
+			public MapResultSet doMaps()
 			{
 
-				TicketingUITaskExecutor executor;
+				PluralUIEachIndexExecutor executor;
 
 				// ================================
 				// PROCESS FILTERS
@@ -326,7 +324,7 @@ public class LocalDataSetProvider extends DataSetProvider
 					filteredDataInvalid = true;
 					
 					// process these scans in parallel
-					executor = new TicketingUITaskExecutor(scanCount(), t_filter, this);
+					executor = new PluralUIEachIndexExecutor(scanCount(), t_filter, this);
 
 					executor.executeBlocking();
 
@@ -350,7 +348,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 				// executor which will manage the threads and have them call the
 				// work() method in the task
-				executor = new TicketingUITaskExecutor(filteredDataSet.size(), t_curvefit, this);
+				executor = new PluralUIEachIndexExecutor(filteredDataSet.size(), t_curvefit, this);
 				executor.executeBlocking();
 
 				if (isAborted()) return null;
@@ -364,13 +362,12 @@ public class LocalDataSetProvider extends DataSetProvider
 
 		tasklist.addTask(t_filter);
 		tasklist.addTask(t_curvefit);
-		// tasklist.addTask(t_scanToMaps);
 
 		return tasklist;
 	}
 
 
-	public TaskList<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public PluralSet<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		final FileType type;
@@ -379,7 +376,7 @@ public class LocalDataSetProvider extends DataSetProvider
 		IOOperations.sortAbstractFiles(files);
 
 		// Create the tasklist for reading the files
-		final TaskList<Boolean> tasklist;
+		final PluralSet<Boolean> tasklist;
 
 		// logic for opening a file
 		final List<Spectrum> dataset;
@@ -388,7 +385,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 		// a data source and a task to read from it
 		final DataSource dataSource;
-		final Task reading;
+		final PluralEachIndex reading;
 
 		// a single zip file
 		if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".zip"))
@@ -428,23 +425,23 @@ public class LocalDataSetProvider extends DataSetProvider
 
 		if (dataSource == null) return null;
 
-		final EmptyTask applying = new EmptyTask("Calculating Values");
+		final EmptyMap applying = new EmptyMap("Calculating Values");
 
-		tasklist = new TaskList<Boolean>("Opening Data Set") {
+		tasklist = new PluralSet<Boolean>("Opening Data Set") {
 
 			@Override
-			public Boolean doTasks()
+			public Boolean doMaps()
 			{
 
 				// XML parser doesn't play nice with multithreading?
 				if (type != FileType.CDFML)
 				{
-					new TicketingUITaskExecutor(fileCount, reading, this).executeBlocking();
+					new PluralUIEachIndexExecutor(fileCount, reading, this).executeBlocking();
 					hasDimensions = false;
 				}
 				else
 				{
-					new SimpleUITaskExecutor(fileCount, reading, this).executeBlocking();
+					new SimpleUIEachIndexExecutor(fileCount, reading, this).executeBlocking();
 				}
 
 				if (dataSource instanceof DataSourceDimensions)
@@ -549,14 +546,13 @@ public class LocalDataSetProvider extends DataSetProvider
 	}
 
 
-	private Task getReadingTaskForDataSource(final DataSource dataSource, final List<Spectrum> targetDataset,
+	private PluralEachIndex getReadingTaskForDataSource(final DataSource dataSource, final List<Spectrum> targetDataset,
 			String title)
 	{
 
-		return new Task(title) {
+		return new PluralEachIndex(title) {
 
-			@Override
-			public boolean work(int index)
+			public void f(Integer index)
 			{
 				Spectrum dataFromFile = dataSource.getScanAtIndex(index);
 				if (dataFromFile != null)
@@ -567,7 +563,7 @@ public class LocalDataSetProvider extends DataSetProvider
 				{
 					dataSource.markScanAsBad(index);
 				}
-				return true;
+				return;
 
 			}
 			
@@ -578,7 +574,7 @@ public class LocalDataSetProvider extends DataSetProvider
 
 	public void readFileListAsDataset(final List<AbstractFile> files)
 	{
-		TaskList<Boolean> tl = TASK_readFileListAsDataset(files);
+		PluralSet<Boolean> tl = TASK_readFileListAsDataset(files);
 		if (tl == null) return;
 		tl.startWorkingBlocking();
 	}
