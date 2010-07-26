@@ -2,7 +2,6 @@ package peakaboo.fileio.xrf;
 
 
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -79,7 +78,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	
 	
 
-	public CDFMLSaxDataSource(AbstractFile file, FunctionEach<Integer> getScanCountCallback, FunctionEach<Integer> readScanCallback, FunctionMap<Boolean, Boolean> isAborted)
+	public CDFMLSaxDataSource(AbstractFile file, FunctionEach<Integer> getScanCountCallback, FunctionEach<Integer> readScanCallback, FunctionMap<Boolean, Boolean> isAborted) throws Exception
 	{
 		super();
 		
@@ -104,15 +103,9 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 			xr.parse(new InputSource(file.getInputStream()));
 
 		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		catch (SAXException e)
 		{
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			throw new Exception();
 		}
 	}
 
@@ -125,7 +118,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	@Override
 	public void endDocument()
 	{
-		readScanCallback.f(scanReadCount);
+		if (readScanCallback != null) readScanCallback.f(scanReadCount);
 		calcNormalisationData();
 	}
 
@@ -186,7 +179,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 			{
 				//this is the cdfVarInfo tag for the XRF:Spectrum variable
 				numScans = Integer.parseInt(atts.getValue(CDFML.ATTR_NUMRECORDS_ATTR));
-				getScanCountCallback.f(numScans);
+				if (getScanCountCallback != null) getScanCountCallback.f(numScans);
 			}
 			
 		}
@@ -257,11 +250,11 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 				scanReadCount++;
 				if (scanReadCount == 100) 
 				{
-					if (isAborted.f(true))
+					if (isAborted != null && isAborted.f(true))
 					{
 						throw new SAXException("Aborted by User");
 					}
-					readScanCallback.f(scanReadCount);
+					if (readScanCallback != null) readScanCallback.f(scanReadCount);
 					scanReadCount = 0;
 				}
 			}

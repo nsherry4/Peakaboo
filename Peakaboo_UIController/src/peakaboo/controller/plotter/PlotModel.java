@@ -9,7 +9,6 @@ import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.fileio.PeakTableReader;
 import peakaboo.filter.FilterSet;
 import scidraw.drawing.DrawingRequest;
@@ -28,10 +27,6 @@ public class PlotModel extends Model
 	public FilterSet			filters;
 	public Spectrum				filteredPlot;
 	//public List<List<Double>>	filteredDataSet;
-
-
-	// peak table holds all information on transitions/elements
-	public PeakTable			peakTable;
 
 
 	// Data related to fitting elemental curves to the data post-filtering
@@ -68,11 +63,10 @@ public class PlotModel extends Model
 
 		super();
 
+		PeakTableReader.readPeakTable();
+		
 		// data
 		dataset = new EmptyDataSetProvider();
-
-		// peak table read
-		peakTable = PeakTableReader.readPeakTable();
 		
 		
 		// view/plot options

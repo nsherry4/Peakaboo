@@ -27,7 +27,6 @@ import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapScaleMode;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
-import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

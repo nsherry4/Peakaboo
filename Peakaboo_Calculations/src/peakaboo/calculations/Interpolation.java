@@ -43,7 +43,7 @@ public class Interpolation {
 			for (int y=0; y < grid.height; y++){
 				
 				float average;
-				
+								
 				if (x == grid.width-1 && y == grid.height-1){
 					//nothing to do here, at the bottom right corner of the grid
 				} else if (x == grid.width-1){

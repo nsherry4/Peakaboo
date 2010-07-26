@@ -26,13 +26,8 @@ import peakaboo.datatypes.DataTypeFactory;
 public class PeakTable
 {
 
-	private List<TransitionSeries>	elementTransitions;
+	private static List<TransitionSeries> elementTransitions = DataTypeFactory.<TransitionSeries> list();
 
-
-	public PeakTable()
-	{
-		elementTransitions = DataTypeFactory.<TransitionSeries> list();
-	}
 
 
 	/**
@@ -41,7 +36,7 @@ public class PeakTable
 	 * @param ts
 	 *            the {@link TransitionSeries} to add
 	 */
-	public void addSeries(TransitionSeries ts)
+	public static void addSeries(TransitionSeries ts)
 	{
 		if (ts.getTransitionCount() == 0) return;
 		elementTransitions.add(ts);
@@ -56,7 +51,7 @@ public class PeakTable
 	 *            the energy level to match against
 	 * @return a list of pairs of {@link TransitionSeries} and Doubles indicating how far away each TransitionSeries is
 	 */
-	public List<Pair<TransitionSeries, Double>> getNearestMatchesToEnergy(double energy)
+	public static List<Pair<TransitionSeries, Double>> getNearestMatchesToEnergy(double energy)
 	{
 
 		List<Pair<TransitionSeries, Double>> matches = DataTypeFactory.<Pair<TransitionSeries, Double>> list();
@@ -85,7 +80,7 @@ public class PeakTable
 	 *            the {@link Element} to retrieve the {@link TransitionSeries} for
 	 * @return a list of {@link TransitionSeries} for the given {@link Element}
 	 */
-	public List<TransitionSeries> getTransitionSeriesForElement(final Element e)
+	public static List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
 
 		return filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
@@ -98,12 +93,12 @@ public class PeakTable
 
 	}
 	
-	public List<TransitionSeries> getAllTransitionSeries()
+	public static List<TransitionSeries> getAllTransitionSeries()
 	{
 		return map(elementTransitions, Functions.<TransitionSeries>id());
 	}
 	
-	public TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
+	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
 		List<TransitionSeries> tss = filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
 

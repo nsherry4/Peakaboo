@@ -52,6 +52,9 @@ public class XMLDataSource implements DataSource
 
 	public Spectrum getScanAtIndex(int index)
 	{
+		if (index < 0) return null;
+		if (index >= filenames.size()) return null;
+		
 		return CLSXML.readScanFromFile(filenames.get(index));
 	}
 

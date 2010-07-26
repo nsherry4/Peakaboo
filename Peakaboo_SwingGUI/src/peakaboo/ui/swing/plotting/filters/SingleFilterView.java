@@ -7,14 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,11 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
-import javax.swing.JToolTip;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
 import javax.swing.SpinnerNumberModel;
 
 import javax.swing.event.ChangeEvent;
@@ -41,13 +31,8 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
-import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
-import swidget.widgets.gradientpanel.TitleGradientPanel.Side;
 
 
 public class SingleFilterView extends JPanel

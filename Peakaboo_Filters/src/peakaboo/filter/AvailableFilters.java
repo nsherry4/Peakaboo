@@ -7,11 +7,12 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
+import commonenvironment.Env;
+
 import fava.lists.FList;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
-import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter.FilterType;
 import peakaboo.filter.filters.advanced.Derivitive;
@@ -34,7 +35,7 @@ public class AvailableFilters
 
 	public static List<AbstractFilter> generateFilterList()
 	{
-		if (Version.inJar)
+		if (Env.inJar())
 		{
 			return generateFilterListStatic();
 		}

@@ -8,10 +8,8 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 
-import fava.datatypes.Pair;
 
 import peakaboo.controller.plotter.PlotViewOptions;
-import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.filter.AbstractFilter;
 import scidraw.drawing.DrawingRequest;
 

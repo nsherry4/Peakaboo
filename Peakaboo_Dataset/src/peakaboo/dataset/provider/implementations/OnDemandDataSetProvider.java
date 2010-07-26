@@ -127,7 +127,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		}
 
 		float Net = (float) Ne / (float) Nt;
-		float Ntte = (float) Nt / ((float) Nt - (float) Ne);
+		float Ntte = Nt / ((float) Nt - (float) Ne);
 
 		Spectrum goodAverage = new Spectrum(dsc_average.size());
 		for (int i = 0; i < dsc_average.size(); i++)
@@ -349,7 +349,15 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				}
 				else if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".xml"))
 				{
-					dataSource = new CDFMLSaxDataSource(files.get(0), gotScanCount, readScans, isAborted);
+					try
+					{
+						dataSource = new CDFMLSaxDataSource(files.get(0), gotScanCount, readScans, isAborted);
+					}
+					catch (Exception e)
+					{
+						aborted();
+						return null;
+					}
 				}
 				else if (files.get(0).getFileName().toLowerCase().endsWith(".xml"))
 				{
@@ -431,9 +439,11 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 
 		
-		
-		Spectrum nonNullScan = ds.getScanAtIndex(DataSetProvider.firstNonNullScanIndex(ds, 0));
+		int nonNullScanIndex = DataSetProvider.firstNonNullScanIndex(ds, 0);
+		if (nonNullScanIndex == -1) return;
+		Spectrum nonNullScan = ds.getScanAtIndex(nonNullScanIndex);
 		if (nonNullScan == null) return;
+		
 		scanLength = nonNullScan.size();
 		
 		

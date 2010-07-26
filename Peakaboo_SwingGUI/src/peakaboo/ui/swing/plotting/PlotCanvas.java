@@ -5,10 +5,7 @@ package peakaboo.ui.swing.plotting;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -25,7 +22,6 @@ import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 
 
 
@@ -53,7 +49,6 @@ public class PlotCanvas extends JPanel implements Scrollable
 
 		this.controller = controller;
 		this.setMinimumSize(new Dimension(100, 100));
-		this.setFocusable(false);
 
 		//setCanvasSize();
 
@@ -78,7 +73,7 @@ public class PlotCanvas extends JPanel implements Scrollable
 		if (!Env.isWebStart())
 		{
 
-			FileDrop fileDrop = new FileDrop(this, new FileDrop.Listener() {
+			new FileDrop(this, new FileDrop.Listener() {
 
 				public void filesDropped(File[] files)
 				{
@@ -123,7 +118,7 @@ public class PlotCanvas extends JPanel implements Scrollable
 		
 			public void mouseClicked(MouseEvent e)
 			{
-				if (grabChannelFromClickCallback != null){
+				if (controller.hasDataSet() && grabChannelFromClickCallback != null){
 					grabChannelFromClickCallback.f(controller.channelFromCoordinate(e.getX()));
 				}
 			}

@@ -6,7 +6,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -20,8 +19,6 @@ import peakaboo.datatypes.peaktable.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTreeModel;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
@@ -70,7 +67,7 @@ public class ProposalPanel extends ClearPanel implements Changeable
 		JScrollPane fitted = createUnfittedTable();
 		this.add(fitted, BorderLayout.CENTER);
 
-		this.add(new TitleGradientPanel("Add Elemental Fittings", true, selControls), BorderLayout.NORTH);
+		this.add(new TitleGradientPanel("Element Lookup", true, selControls), BorderLayout.NORTH);
 
 
 	}

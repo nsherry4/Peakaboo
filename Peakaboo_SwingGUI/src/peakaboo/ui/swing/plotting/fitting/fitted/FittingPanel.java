@@ -17,6 +17,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
+import fava.Fn;
+import fava.signatures.FunctionMap;
+
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
@@ -58,23 +61,33 @@ public class FittingPanel extends ClearPanel implements Changeable
 		JPopupMenu addMenu = createAddMenu();
 
 		String tooltips[] = {
-				"Add elemental fittings",
-				"Remove the selected fitting",
+				"Add fittings",
+				"Remove the selected fittings",
 				"Clear all fittings",
-				"Move the selected fitting up",
-				"Move the selected fitting down" };
+				"Move the selected fittings up",
+				"Move the selected fittings down" };
 		controls = new ListControls(tooltips, addMenu) {
 
 			@Override
 			public void up()
 			{
-				int row = fitTable.getSelectedRow();
-				if (row == -1) return;
-				TransitionSeries ts = controller.getFittedTransitionSeries().get(row);
-				controller.moveTransitionSeriesUp(ts);
+
+				int rows[] = fitTable.getSelectedRows();
+				List<TransitionSeries> tss = Fn.map(Fn.boxi(rows), new FunctionMap<Integer, TransitionSeries>(){
+
+					public TransitionSeries f(Integer i)
+					{
+						return controller.getFittedTransitionSeries().get(i);
+					}});
+					
+				if (tss.size() == 0) return;
+				
+				controller.moveTransitionSeriesUp(tss);
 				owner.changed();
-				row = controller.getFittedTransitionSeries().indexOf(ts);
-				fitTable.addRowSelectionInterval(row, row);
+				for (TransitionSeries ts : tss) {
+					int row = controller.getFittedTransitionSeries().indexOf(ts);
+					fitTable.addRowSelectionInterval(row, row);
+				}
 			}
 
 
@@ -92,12 +105,22 @@ public class FittingPanel extends ClearPanel implements Changeable
 			@Override
 			public void down()
 			{
-				int row = fitTable.getSelectedRow();
-				if (row == -1) return;
-				TransitionSeries ts = controller.getFittedTransitionSeries().get(row);
-				controller.moveTransitionSeriesDown(ts);
-				row = controller.getFittedTransitionSeries().indexOf(ts);
-				fitTable.addRowSelectionInterval(row, row);
+				int rows[] = fitTable.getSelectedRows();
+				List<TransitionSeries> tss = Fn.map(Fn.boxi(rows), new FunctionMap<Integer, TransitionSeries>(){
+
+					public TransitionSeries f(Integer i)
+					{
+						return controller.getFittedTransitionSeries().get(i);
+					}});
+					
+				if (tss.size() == 0) return;
+				
+				controller.moveTransitionSeriesDown(tss);
+				owner.changed();
+				for (TransitionSeries ts : tss) {
+					int row = controller.getFittedTransitionSeries().indexOf(ts);
+					fitTable.addRowSelectionInterval(row, row);
+				}
 			}
 
 
@@ -112,7 +135,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			@Override
 			public void add()
 			{
-				owner.elementalAdd();
+				owner.smartAdd();
 
 			}
 
@@ -120,7 +143,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 
 		
-		ListControlButton fitwizard = new ListControlButton(StockIcon.EDIT_SORT_DES, "Optimal Fitting", "Find the optimal fitting") {
+		ListControlButton fitwizard = new ListControlButton(StockIcon.EDIT_SORT_DES, "Optimal Fitting", "Attempt to find the optimal fitting") {
 			
 			@Override
 			public void setEnableState(ElementCount ec)
@@ -171,7 +194,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 	{
 		JPopupMenu menu = new JPopupMenu();
 
-		JMenuItem elementalAddItem = new JMenuItem("Add Elemental Fitting");
+		JMenuItem elementalAddItem = new JMenuItem("Element Lookup");
 		elementalAddItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -180,7 +203,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			}
 		});
 
-		JMenuItem summationAddItem = new JMenuItem("Add Summation Fitting");
+		JMenuItem summationAddItem = new JMenuItem("Summation Fitting");
 		summationAddItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -198,9 +221,10 @@ public class FittingPanel extends ClearPanel implements Changeable
 			}
 		});
 
-		menu.add(elementalAddItem);
-		menu.add(summationAddItem);
 		menu.add(smartAddItem);
+		menu.add(elementalAddItem);		
+		menu.add(summationAddItem);
+		
 
 
 		return menu;
@@ -310,7 +334,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		fitTable.setModel(tm);
 
-
+		
+		
 		FittingRenderer renderer = new FittingRenderer(controller);
 		fitTable.getColumnModel().getColumn(1).setCellRenderer(new FittingRenderer(controller));
 
@@ -324,8 +349,9 @@ public class FittingPanel extends ClearPanel implements Changeable
 		column.setPreferredWidth(40);
 		column.setMaxWidth(100);
 
-		fitTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+		//fitTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		fitTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		
 		JScrollPane scroll = new JScrollPane(fitTable);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.border.TitledBorder;
@@ -19,8 +18,6 @@ import javax.swing.event.ChangeListener;
 import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.MapDisplayMode;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
 import swidget.icons.StockIcon;
@@ -115,7 +112,7 @@ public class SidePanel extends JPanel
 				shadesSpinner.setValue(controller.getSpectrumSteps());
 				shadesSpinner.setEnabled(controller.getContours());
 				contours.setSelected(controller.getContours());
-				contours.setEnabled(controller.getActiveTabModel().displayMode == MapDisplayMode.COMPOSITE);
+				//contours.setEnabled(controller.getActiveTabModel().displayMode == MapDisplayMode.COMPOSITE);
 				width.setValue(controller.getDataWidth());
 				height.setValue(controller.getDataHeight());
 				interpolation.setValue(controller.getInterpolation());

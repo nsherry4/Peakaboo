@@ -2,8 +2,6 @@ package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,7 +13,6 @@ import javax.swing.table.TableModel;
 import eventful.EventfulTypeListener;
 
 import peakaboo.controller.plotter.FilterController;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.filter.AbstractFilter;
 import swidget.containers.SwidgetContainer;
 import swidget.widgets.ClearPanel;

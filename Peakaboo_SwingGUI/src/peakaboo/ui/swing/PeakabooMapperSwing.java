@@ -17,7 +17,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -27,7 +26,6 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.SingleMapModel;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.mapping.MapTabControls;
 import peakaboo.ui.swing.mapping.MapViewer;
@@ -38,13 +36,8 @@ import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
 import swidget.containers.SwidgetFrame;
 import swidget.dialogues.fileio.SwidgetIO;
-import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
-import swidget.widgets.Spacing;
-import swidget.widgets.ImageButton.Layout;
 
 
 /**

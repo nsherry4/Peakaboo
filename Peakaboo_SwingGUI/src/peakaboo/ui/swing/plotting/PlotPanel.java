@@ -13,7 +13,6 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -56,7 +55,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 import commonenvironment.AbstractFile;
 import commonenvironment.Env;
@@ -73,8 +71,6 @@ import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.plotter.ChannelCompositeMode;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.EscapePeakType;
-import peakaboo.datatypes.eventful.PeakabooMessageListener;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.mapping.FittingTransform;
@@ -407,6 +403,9 @@ public class PlotPanel extends ClearPanel
 
 			public void mousePressed(MouseEvent e)
 			{
+				if (e.getButton() != MouseEvent.BUTTON1) return;
+				if (dragging) return;
+				
 				p0 = getPoint(e);
 				scrollPosition = viewPort.getViewPosition();
 				dragging = true;
@@ -417,6 +416,9 @@ public class PlotPanel extends ClearPanel
 
 			public void mouseReleased(MouseEvent e)
 			{
+				
+				if (e.getButton() != MouseEvent.BUTTON1) return;
+				
 				update(e);
 				dragging = false;
 				p0 = null;
@@ -1038,6 +1040,34 @@ public class PlotPanel extends ClearPanel
 		
 		
 		JMenu escapePeaks = new JMenu("Escape Peaks");
+		
+		
+		final ButtonGroup escapePeakGroup = new ButtonGroup();
+		
+		for (EscapePeakType t : EscapePeakType.values())
+		{
+			final JRadioButtonMenuItem escapeItem = new JRadioButtonMenuItem(t.show());
+			escapePeakGroup.add(escapeItem);
+			escapePeaks.add(escapeItem);
+			if (t == EscapePeakType.SILICON) escapeItem.setSelected(true);
+			
+			
+			final EscapePeakType finalt = t;
+			
+			escapeItem.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent e)
+				{
+					escapeItem.setSelected(true);
+					controller.setEscapeType(finalt);
+				}
+			});
+			
+			
+			
+		}
+		
+		/*
 		final JRadioButtonMenuItem escNone, escSilicon, escGermanium;
 		
 		// element name option
@@ -1086,6 +1116,7 @@ public class PlotPanel extends ClearPanel
 		escapePeaks.add(escNone);
 		escapePeaks.add(escSilicon);
 		escapePeaks.add(escGermanium);
+		*/
 		
 		menu.add(escapePeaks);
 		
@@ -1303,14 +1334,33 @@ public class PlotPanel extends ClearPanel
 		float energy = controller.getEnergyForChannel(channel);
 		Pair<Float, Float> values = controller.getValueForChannel(channel);
 
+		StringBuilder sb = new StringBuilder();
 		String sep = ",  ";
 
 		if (values != null)
 		{
 
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
-
-			channelLabel.setText("View Type: "
+			
+			sb.append("View Type: ");
+			sb.append(controller.getChannelCompositeType().toString());
+			sb.append(sep);
+			sb.append("Channel: ");
+			sb.append(String.valueOf(channel));
+			sb.append(sep);
+			sb.append("Energy: ");
+			sb.append(fmtObj.format(energy));
+			sb.append(sep);
+			sb.append("Value: ");
+			sb.append(fmtObj.format(values.first));
+			if (! values.first.equals(values.second)) {
+				sb.append("Unfiltered Value: ");
+				sb.append(fmtObj.format(values.second));
+			}
+			
+			
+					
+					/*"View Type: "
 					+ controller.getChannelCompositeType().toString()
 					+ sep
 					+ "Channel: "
@@ -1322,15 +1372,24 @@ public class PlotPanel extends ClearPanel
 					+ "Value: "
 					+ fmtObj.format(values.first)
 					+ ((values.first.equals(values.second)) ? "" : sep + "Unfiltered Value: "
-							+ fmtObj.format(values.second)));
+							+ fmtObj.format(values.second)));*/
 
 		}
 		else
 		{
-
-			channelLabel.setText("View Type: " + controller.getChannelCompositeType().toString() + sep + "Channel: "
-					+ "-");
+			
+			sb.append("View Type: ");
+			sb.append(controller.getChannelCompositeType().toString());
+			sb.append(sep);
+			sb.append("Channel: ");
+			sb.append("-");
+			
+			
+			//channelLabel.setText("View Type: " + controller.getChannelCompositeType().toString() + sep + "Channel: " + "-");
 		}
+		
+		channelLabel.setText(sb.toString());
+		
 	}
 
 

@@ -11,14 +11,11 @@ import java.util.Map;
 
 import fava.*;
 import fava.datatypes.Bounds;
-import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
-import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
-import static fava.Functions.*;
 
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.CanvasController;
@@ -40,7 +37,6 @@ import scidraw.drawing.map.palettes.RatioPalette;
 import scidraw.drawing.map.palettes.SaturationPalette;
 import scidraw.drawing.map.palettes.SingleColourPalette;
 import scidraw.drawing.map.palettes.ThermalScalePalette;
-import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scitypes.Coord;
@@ -195,8 +191,23 @@ public class MapController extends CanvasController
 	// interpolation
 	public void setInterpolation(int passes)
 	{
+		int side, newside;
+		while (true) {
+			
+			side = (int)Math.sqrt( getDataHeight() * getDataWidth() );
+			
+			newside = (int)(side * Math.pow(2, passes));
+		
+			if (newside > 1500) {
+				passes--;
+			} else {
+				break;
+			}
+		
+		}
+
+		
 		if (passes < 0) passes = 0;
-		if (passes > 3) passes = 3;
 		mapModel.viewOptions.interpolation = passes;
 		invalidateInterpolation();
 	}
@@ -218,6 +229,9 @@ public class MapController extends CanvasController
 		// datamodel is the 'official' place for storing data dimensions
 		mapModel.dataDimensions.y = height;
 		mapModel.dr.dataHeight = height;
+		
+		setInterpolation(mapModel.viewOptions.interpolation);
+		
 		invalidateInterpolation();
 	}
 
@@ -237,6 +251,9 @@ public class MapController extends CanvasController
 		// datamodel is the 'official' place for storing data dimensions
 		mapModel.dataDimensions.x = width;
 		mapModel.dr.dataWidth = width;
+		
+		setInterpolation(mapModel.viewOptions.interpolation);
+		
 		invalidateInterpolation();
 	}
 
@@ -417,6 +434,27 @@ public class MapController extends CanvasController
 
 
 	
+	private Pair<GridPerspective<Float>, Spectrum> interpolate(Spectrum data, GridPerspective<Float> grid, int passes)
+	{
+		
+		GridPerspective<Float> interpGrid = grid;
+		
+		Spectrum mapdata = new Spectrum(data);
+		
+		Pair<GridPerspective<Float>, Spectrum> interpolationResult;
+		int count = 0;
+		while (count < passes)
+		{
+			interpolationResult = Interpolation.interpolateGridLinear(interpGrid, mapdata);
+			interpGrid = interpolationResult.first;
+			mapdata = interpolationResult.second;
+			count++;
+		}
+		
+		return new Pair<GridPerspective<Float>, Spectrum>(interpGrid, mapdata);
+		
+	}
+	
 	private Spectrum getCompositeMapData()
 	{
 		Spectrum data = activeTabData.sumVisibleTransitionSeriesMaps();
@@ -429,27 +467,15 @@ public class MapController extends CanvasController
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, data, mapModel.badPoints);
 		
-		GridPerspective<Float> interpGrid = grid;
-		
-		Spectrum mapdata = data;
-		
 		// interpolation of data
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult;
-		int count = 0;
-		while (count < mapModel.viewOptions.interpolation)
-		{
-			interpolationResult = Interpolation.interpolateGridLinear(interpGrid, mapdata);
-			interpGrid = interpolationResult.first;
-			mapdata = interpolationResult.second;
-			count++;
-		}
+		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(data, grid, mapModel.viewOptions.interpolation);
+
+		mapModel.interpolatedSize.x = interpolationResult.first.width;
+		mapModel.interpolatedSize.y = interpolationResult.first.height;
 		
-		mapModel.interpolatedSize.x = interpGrid.width;
-		mapModel.interpolatedSize.y = interpGrid.height;
-		
-		data = mapdata;
+		//data = mapdata;
 		putValueFunctionForComposite(data);
-		return data;
+		return interpolationResult.second;
 		
 		
 	}
@@ -457,6 +483,13 @@ public class MapController extends CanvasController
 	
 	private Map<OverlayColour, Spectrum> getOverlayMapData()
 	{
+		
+		GridPerspective<Float>	grid	= new GridPerspective<Float>(
+				mapModel.dataDimensions.x,
+				mapModel.dataDimensions.y,
+				0.0f);
+		
+		
 		List<Pair<TransitionSeries, Spectrum>> dataset = map(
 				activeTabData.getVisibleTransitionSeries(),
 				new FunctionMap<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
@@ -470,6 +503,7 @@ public class MapController extends CanvasController
 					}
 				});
 		
+		/*
 		dataset = map(
 				dataset,
 				new FunctionMap<Pair<TransitionSeries, Spectrum>, Pair<TransitionSeries, Spectrum>>() {
@@ -509,10 +543,11 @@ public class MapController extends CanvasController
 					}
 				});
 		
-		
+		*/
 		
 
 		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null;
+		Map<OverlayColour, Spectrum> uninterpolatedColours = DataTypeFactory.<OverlayColour, Spectrum>map();
 		
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = Fn.filter(
@@ -537,6 +572,14 @@ public class MapController extends CanvasController
 						}
 					}
 			);
+			
+			uninterpolatedColours.put(OverlayColour.RED, redSpectrum);
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(redSpectrum, grid, mapModel.viewOptions.interpolation);
+			redSpectrum = interpolationResult.second;
+			mapModel.interpolatedSize.x = interpolationResult.first.width;
+			mapModel.interpolatedSize.y = interpolationResult.first.height;
+			
+			
 		} else {
 			redSpectrum = null;
 		}
@@ -565,6 +608,13 @@ public class MapController extends CanvasController
 						}
 					}
 			);
+			
+			uninterpolatedColours.put(OverlayColour.GREEN, greenSpectrum);
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, mapModel.viewOptions.interpolation);
+			greenSpectrum = interpolationResult.second;
+			mapModel.interpolatedSize.x = interpolationResult.first.width;
+			mapModel.interpolatedSize.y = interpolationResult.first.height;
+			
 		} else {
 			greenSpectrum = null;
 		}
@@ -594,10 +644,18 @@ public class MapController extends CanvasController
 						}
 					}
 			);
+			
+			uninterpolatedColours.put(OverlayColour.BLUE, blueSpectrum);
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, mapModel.viewOptions.interpolation);
+			blueSpectrum = interpolationResult.second;
+			mapModel.interpolatedSize.x = interpolationResult.first.width;
+			mapModel.interpolatedSize.y = interpolationResult.first.height;
+					
 		} else {
 			blueSpectrum = null;
 		}
 			
+		
 		
 		if (activeTabData.mapScaleMode == MapScaleMode.RELATIVE)
 		{
@@ -612,14 +670,14 @@ public class MapController extends CanvasController
 		colours.put(OverlayColour.GREEN, greenSpectrum);
 		colours.put(OverlayColour.BLUE, blueSpectrum);
 		
-		putValueFunctionForOverlay(colours);
+		putValueFunctionForOverlay(uninterpolatedColours);
 		return colours;
 		
 	}
 	
 	
 
-	private Pair<Spectrum, List<Integer>> getRatioMapData()
+	private Pair<Spectrum, Spectrum> getRatioMapData()
 	{
 
 		// get transition series on ratio side 1
@@ -636,8 +694,7 @@ public class MapController extends CanvasController
 			SpectrumCalculations.normalize_inplace(side1Data);
 			SpectrumCalculations.normalize_inplace(side2Data);
 		}
-		
-		final FList<Integer> invalidPoints = new FList<Integer>();
+				
 		Spectrum ratioData = new Spectrum(side1Data.size());
 		
 		
@@ -647,8 +704,7 @@ public class MapController extends CanvasController
 			Float side2Value = side2Data.get(i);
 			
 			if (side1Value <= 0.0 || side2Value <= 0.0) {
-				invalidPoints.add(i);
-				ratioData.set(i, 0f);
+				ratioData.set(i, Float.NaN);
 				continue;
 			}
 
@@ -677,28 +733,38 @@ public class MapController extends CanvasController
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, ratioData, mapModel.badPoints);
 		
-		GridPerspective<Float> interpGrid = grid;
+	
+		Spectrum mapdata;
 		
-		Spectrum mapdata = ratioData;
+		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(ratioData, grid, mapModel.viewOptions.interpolation);
+		mapdata = interpolationResult.second;
+		mapModel.interpolatedSize.x = interpolationResult.first.width;
+		mapModel.interpolatedSize.y = interpolationResult.first.height;
 		
-		// interpolation of data
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult;
-		int count = 0;
-		while (count < mapModel.viewOptions.interpolation)
+		Spectrum invalidPoints = new Spectrum(ratioData.size(), 0f);
+		for (int i = 0; i < ratioData.size(); i++)
 		{
-			interpolationResult = Interpolation.interpolateGridLinear(interpGrid, mapdata);
-			interpGrid = interpolationResult.first;
-			mapdata = interpolationResult.second;
-			count++;
+			if (  Float.isNaN(ratioData.get(i))  )
+			{
+				invalidPoints.set(i, 1f);
+				ratioData.set(i, 0f);
+			}
 		}
 		
-		mapModel.interpolatedSize.x = interpGrid.width;
-		mapModel.interpolatedSize.y = interpGrid.height;
+		Spectrum invalidPointsInterpolated = new Spectrum(mapdata.size(), 0f);
+		for (int i = 0; i < mapdata.size(); i++)
+		{
+			if (  Float.isNaN(mapdata.get(i))  )
+			{
+				invalidPointsInterpolated.set(i, 1f);
+				mapdata.set(i, 0f);
+			}
+		}
+				
+		putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
 		
-		ratioData = mapdata;
-		Pair<Spectrum, List<Integer>> result = new Pair<Spectrum, List<Integer>>(ratioData, invalidPoints);
-		putValueFunctionForRatio(result);
-		return result;
+		
+		return new Pair<Spectrum, Spectrum>(mapdata, invalidPointsInterpolated);
 
 		
 	}
@@ -738,7 +804,7 @@ public class MapController extends CanvasController
 	 * to a function which reports values from the data passed in ratioData
 	 * @param ratioData the ratio data to report on
 	 */
-	private void putValueFunctionForRatio(final Pair<Spectrum, List<Integer>> ratioData)
+	private void putValueFunctionForRatio(final Pair<Spectrum, Spectrum> ratioData)
 	{
 		valueAtCoord = new FunctionMap<Coord<Integer>, String>() {
 
@@ -748,7 +814,7 @@ public class MapController extends CanvasController
 				if (activeTabData.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 				
 				int index = getDataWidth() * coord.y + coord.x;
-				if (ratioData.second.contains(index)) return "Invalid";
+				if (ratioData.second.get(index) != 0) return "Invalid";
 				return Ratios.fromFloat(  ratioData.first.get(index)  );
 			}
 		};
@@ -990,7 +1056,7 @@ public class MapController extends CanvasController
 		mapPainter = MapTechniqueFactory.getTechnique(
 				paletteList,
 				data,
-				mapModel.viewOptions.contour,
+				false,
 				spectrumSteps);
 		map.setPainters(mapPainter);
 		map.draw();
@@ -1008,13 +1074,12 @@ public class MapController extends CanvasController
 	 */
 	private void drawBackendRatio(Surface backend, boolean vector, int spectrumSteps)
 	{
-		AbstractPalette palette 			=		new ThermalScalePalette(spectrumSteps, mapModel.viewOptions.monochrome);
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AbstractPalette> paletteList	=		DataTypeFactory.<AbstractPalette> list();
 		List<AxisPainter> axisPainters 		= 		DataTypeFactory.<AxisPainter> list();
 		MapPainter mapPainter;
 		
-		Pair<Spectrum, List<Integer>> ratiodata = getRatioMapData();
+		Pair<Spectrum, Spectrum> ratiodata = getRatioMapData();
 		
 		mapModel.dr.dataWidth = mapModel.interpolatedSize.x;
 		mapModel.dr.dataHeight = mapModel.interpolatedSize.y;
@@ -1122,14 +1187,20 @@ public class MapController extends CanvasController
 				false,
 				spectrumSteps);
 		
-		Spectrum s = new Spectrum(ratiodata.first.size());
-		float datamax = mapModel.dr.maxYIntensity;
-		for (Integer i : ratiodata.second)
-		{
-			s.set(i, datamax);
-		}
+		Spectrum invalidPoints = ratiodata.second;
+		final float datamax = mapModel.dr.maxYIntensity;
 		
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(Color.gray, new Color(0,0,0,0)), s, false, 0);
+		
+		invalidPoints.map_i(new FunctionMap<Float, Float>() {
+
+			public Float f(Float value)
+			{
+				if (value == 1f) return datamax;
+				return 0f;
+			}});
+		
+
+		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints, false, 0);
 		
 		
 		
@@ -1163,6 +1234,7 @@ public class MapController extends CanvasController
 		Spectrum redSpectrum = data.get(OverlayColour.RED);
 		Spectrum greenSpectrum = data.get(OverlayColour.GREEN);
 		Spectrum blueSpectrum = data.get(OverlayColour.BLUE);
+		
 		
 		if (redSpectrum != null ) redMax = SpectrumCalculations.max(redSpectrum);
 		if (greenSpectrum != null ) greenMax = SpectrumCalculations.max(greenSpectrum);
@@ -1299,7 +1371,7 @@ public class MapController extends CanvasController
 		//need to paint the background black first
 		painters.add(
 				0, 
-				new ThreadedRasterMapPainter(  new SingleColourPalette(Color.black), new Spectrum(getDataHeight()*getDataWidth())  )
+				new ThreadedRasterMapPainter(  new SingleColourPalette(Color.black), new Spectrum(mapModel.interpolatedSize.x * mapModel.interpolatedSize.y)  )
 		);
 
 		// set the new data

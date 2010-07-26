@@ -1,16 +1,13 @@
 package peakaboo.controller.settings;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import fava.lists.FList;
 
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesMode;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
 
 
@@ -37,7 +34,7 @@ public class SerializedTransitionSeries
 	}
 	
 	
-	public TransitionSeries toTS(PeakTable pt)
+	public TransitionSeries toTS()
 	{
 		
 		
@@ -52,7 +49,7 @@ public class SerializedTransitionSeries
 			Element e = Element.valueOf(parts[0]);
 			TransitionSeriesType tst = TransitionSeriesType.fromTypeString(parts[1]);
 			
-			created = pt.getTransitionSeries(e, tst);
+			created = PeakTable.getTransitionSeries(e, tst);
 			
 			tss.add(created);
 		}

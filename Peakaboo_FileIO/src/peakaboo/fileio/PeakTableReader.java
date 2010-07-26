@@ -30,16 +30,15 @@ public class PeakTableReader
 	 * Read a peak table from a predetermined relative location 
 	 * @return a populated PeakTable object
 	 */
-	public static PeakTable readPeakTable()
+	public static void readPeakTable()
 	{
 
-		PeakTable table = new PeakTable();
+		
 		int elementDataWidth = 2;
 
 		InputStream ins = PeakTableReader.class.getResourceAsStream("/peakaboo/fileio/PeakTable.tsv");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
-
-
+		
 
 		String line;
 		List<String> elements = DataTypeFactory.<String> list();
@@ -127,7 +126,7 @@ public class PeakTableReader
 			ts.setTransition(k2);
 			ts.setTransition(k3);
 
-			table.addSeries(ts);
+			PeakTable.addSeries(ts);
 			//table.addSeries(ts.pileup());
 
 
@@ -170,7 +169,7 @@ public class PeakTableReader
 
 			ts.setTransition(ll);
 
-			if (e.atomicNumber() > 44) table.addSeries(ts);
+			if (e.atomicNumber() > 44) PeakTable.addSeries(ts);
 
 
 			
@@ -200,13 +199,12 @@ public class PeakTableReader
 			ts.setTransition(mb1);
 			ts.setTransition(mg);
 
-			if (e.atomicNumber() > 72) table.addSeries(ts);
+			if (e.atomicNumber() > 72) PeakTable.addSeries(ts);
 
 			atomicNumber++;
 
 		}
 
-		return table;
 	}
 
 	private static Transition createTransition(List<String> sections, int column, TransitionType type)

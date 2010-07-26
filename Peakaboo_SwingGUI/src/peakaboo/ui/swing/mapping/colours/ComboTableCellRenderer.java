@@ -14,7 +14,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import peakaboo.common.Stderr;
+import peakaboo.common.Version;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.mapping.colours.RatioColour;
 import swidget.widgets.Spacing;
@@ -54,7 +54,7 @@ public class ComboTableCellRenderer implements ListCellRenderer, TableCellRender
 			renderer.setIcon(null);
 			renderer.setText((String) value);
 			renderer.setBackground(Color.yellow);
-			Stderr.debug("ERROR");
+			if (!Version.release) System.err.println("ERROR");
 		}
 	}
 

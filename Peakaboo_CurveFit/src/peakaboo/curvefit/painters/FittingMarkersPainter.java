@@ -3,7 +3,6 @@ package peakaboo.curvefit.painters;
 import java.awt.Color;
 
 import peakaboo.curvefit.fitting.EscapePeakType;
-import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.results.FittingResult;
@@ -84,19 +83,24 @@ public class FittingMarkersPainter extends PlotPainter
 				
 				if (escapeType.hasOffset())
 				{
-					channel = getChannelAtEnergy(p.dr, t.energyValue - escapeType.offset());
-					if (channel < 0) continue;
+					for (Transition esc : escapeType.offset()) {
 					
-					positionX = getXForChannel(p, channel);
+						channel = getChannelAtEnergy(p.dr, t.energyValue - esc.energyValue);
+						if (channel < 0) continue;
+						
+						positionX = getXForChannel(p, channel);
+						
+						
+						markerHeight = gauss.getHeightAtPoint(t.energyValue / dr.unitSize) * fit.scaleFactor / fit.normalizationScale;
+						markerHeight *= TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element);
+						markerHeight *= esc.relativeIntensity;
+						markerHeight = transformValueForPlot(p.dr, markerHeight);
+						
 					
-					
-					markerHeight = gauss.getHeightAtPoint(t.energyValue / dr.unitSize) * fit.scaleFactor / fit.normalizationScale;
-					markerHeight *= TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element);
-					markerHeight = transformValueForPlot(p.dr, markerHeight);
-					
-				
-					p.context.moveTo(positionX, p.plotSize.y);
-					p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
+						p.context.moveTo(positionX, p.plotSize.y);
+						p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
+						
+					}
 				}
 
 				//markerHeights.set((int)channel, markerHeight * TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element));

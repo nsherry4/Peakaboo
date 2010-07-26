@@ -56,7 +56,7 @@ public class Settings
 		//we now convert them back to TransitionSeries
 		for (SerializedTransitionSeries sts : data.fittings)
 		{
-			model.fittingSelections.addTransitionSeries(sts.toTS(model.peakTable));
+			model.fittingSelections.addTransitionSeries(sts.toTS());
 		}
 
 		

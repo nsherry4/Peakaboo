@@ -402,24 +402,25 @@ public class TempFileList<T> implements List<T>
 		
 	}
 
-	public <T> T[] toArray(T[] a)
+	@SuppressWarnings("unchecked")
+	public <S> S[] toArray(S[] a)
 	{
-		T[] t;
+		S[] s;
 		
 		if (a.length >= size())
 		{
-			t = a;
+			s = a;
 		} else {
-			t = (T[])(new Object[size()]);
+			s = (S[])(new Object[size()]);
 		}
 
 		for (int i = 0; i < size(); i++)
 		{
-			t[i] = (T) get(i);
+			s[i] = (S) get(i);
 		}
 		
 		
-		return t;
+		return s;
 	}
 	
 	@Override

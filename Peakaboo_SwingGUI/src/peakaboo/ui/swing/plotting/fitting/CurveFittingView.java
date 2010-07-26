@@ -2,29 +2,22 @@ package peakaboo.ui.swing.plotting.fitting;
 
 
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import eventful.EventfulTypeListener;
 
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import peakaboo.ui.swing.plotting.fitting.smartfitting.SmartFittingPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalPanel;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
 
 
 

@@ -2,7 +2,6 @@ package peakaboo.calculations;
 
 
 
-import java.util.List;
 
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

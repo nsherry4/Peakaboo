@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import commonenvironment.AbstractFile;
@@ -20,19 +19,15 @@ import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.settings.Settings;
 import peakaboo.curvefit.automation.TSOrdering;
 import peakaboo.curvefit.fitting.EscapePeakType;
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
 import peakaboo.curvefit.painters.FittingTitlePainter;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.dataset.provider.DataSetProvider;
-import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.eventful.PeakabooSimpleListener;
-import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
@@ -40,7 +35,6 @@ import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.workers.PluralMap;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.painters.axis.AxisPainter;
@@ -64,7 +58,6 @@ import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
-import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
@@ -194,6 +187,7 @@ public class PlotController extends CanvasController implements FilterController
 	
 		updateListeners(UpdateType.DATA.toString());
 
+		
 
 	}
 
@@ -1015,6 +1009,7 @@ public class PlotController extends CanvasController implements FilterController
 
 	public void clearTransitionSeries()
 	{
+		
 		model.fittingSelections.clear();
 		setUndoPoint("Clear Fittings");
 		fittingDataInvalidated();
@@ -1023,6 +1018,7 @@ public class PlotController extends CanvasController implements FilterController
 
 	public void removeTransitionSeries(TransitionSeries e)
 	{
+		
 		model.fittingSelections.remove(e);
 		setUndoPoint("Remove Fitting");
 		fittingDataInvalidated();
@@ -1041,7 +1037,7 @@ public class PlotController extends CanvasController implements FilterController
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
 
 
-		return filter(model.peakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(PeakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
 
 
 			public Boolean f(TransitionSeries ts)
@@ -1092,7 +1088,11 @@ public class PlotController extends CanvasController implements FilterController
 
 		for (FittingResult result : model.fittingSelectionResults.fits)
 		{
-			if (result.transitionSeries == ts) return SpectrumCalculations.max(result.fit);
+			if (result.transitionSeries == ts) {
+				float max = SpectrumCalculations.max(result.fit);
+				if (Float.isNaN(max)) max = 0f;
+				return max;
+			}
 		}
 		return 0.0f;
 
@@ -1106,7 +1106,14 @@ public class PlotController extends CanvasController implements FilterController
 		fittingDataInvalidated();
 	}
 
-
+	public void moveTransitionSeriesUp(List<TransitionSeries> tss)
+	{
+		model.fittingSelections.moveTransitionSeriesUp(tss);
+		setUndoPoint("Move Fitting Up");
+		fittingDataInvalidated();
+	}
+	
+	
 	public void moveTransitionSeriesDown(TransitionSeries e)
 	{
 		model.fittingSelections.moveTransitionSeriesDown(e);
@@ -1114,6 +1121,12 @@ public class PlotController extends CanvasController implements FilterController
 		fittingDataInvalidated();
 	}
 
+	public void moveTransitionSeriesDown(List<TransitionSeries> tss)
+	{
+		model.fittingSelections.moveTransitionSeriesDown(tss);
+		setUndoPoint("Move Fitting Down");
+		fittingDataInvalidated();
+	}
 
 	public void fittingDataInvalidated()
 	{
@@ -1304,16 +1317,7 @@ public class PlotController extends CanvasController implements FilterController
 
 			}
 		};
-
-		PluralMap<List<TransitionSeries>, Pair<List<TransitionSeries>, Float>> permsScoring = 
-			new PluralMap<List<TransitionSeries>, Pair<List<TransitionSeries>,Float>>() {
-
-			public Pair<List<TransitionSeries>, Float> f(List<TransitionSeries> tss)
-			{
-				return new Pair<List<TransitionSeries>, Float>(tss, scoreTSs.f(tss));
-			}
-		};
-		
+	
 		
 		//find the best fitting for the currently selected fittings
 		FList<TransitionSeries> bestfit = new FList<TransitionSeries>(perms.fold(new FunctionCombine<List<TransitionSeries>, List<TransitionSeries>, List<TransitionSeries>>() {
@@ -1350,13 +1354,15 @@ public class PlotController extends CanvasController implements FilterController
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
 	{
 		
+		if (! hasDataSet() ) return null;
+		
 		return TSOrdering.proposeTransitionSeriesFromChannel(
 				model.viewOptions.escape,
 				getEnergyPerChannel(),
 				model.filteredPlot,
 				model.fittingSelections,
 				model.fittingProposals,
-				model.peakTable.getAllTransitionSeries(),
+				PeakTable.getAllTransitionSeries(),
 				channel,
 				currentTS	
 		);

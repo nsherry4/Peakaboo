@@ -6,18 +6,14 @@ import java.awt.Component;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTree;
-import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.peaktable.Element;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.datatypes.peaktable.TransitionSeriesType;
-import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
-import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 
 
@@ -28,7 +24,6 @@ class ProposalRenderer extends DefaultTreeCellRenderer
 	private TSWidget			tswidget;
 	private FittingController	controller;
 	private JLabel				tstLabel;
-	private JPanel 				tstPanel;
 
 	public ProposalRenderer(FittingController controller)
 	{

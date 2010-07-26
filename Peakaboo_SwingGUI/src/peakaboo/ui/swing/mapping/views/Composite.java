@@ -22,7 +22,6 @@ import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapScaleMode;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import peakaboo.mapping.results.MapResult;
 import swidget.widgets.Spacing;

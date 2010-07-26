@@ -2,7 +2,6 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +17,6 @@ import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetFrame;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;

@@ -1,7 +1,6 @@
 package peakaboo.ui.swing.plotting.filters;
 
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.JPanel;

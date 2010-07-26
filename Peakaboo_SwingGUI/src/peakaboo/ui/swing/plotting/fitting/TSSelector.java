@@ -3,7 +3,6 @@ package peakaboo.ui.swing.plotting.fitting;
 import static fava.Fn.filter;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;

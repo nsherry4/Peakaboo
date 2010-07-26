@@ -75,6 +75,7 @@ public class SmartFittingPanel extends ClearPanel
 		this.add(scroll, BorderLayout.CENTER);
 		this.add(new TitleGradientPanel("Click Plot to Fit", true, selControls), BorderLayout.NORTH);
 
+		
 	}
 
 

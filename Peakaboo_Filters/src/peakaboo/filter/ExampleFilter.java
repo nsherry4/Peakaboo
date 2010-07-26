@@ -2,7 +2,6 @@ package peakaboo.filter;
 
 
 import peakaboo.common.Version;
-import peakaboo.filter.BackgroundRemovalFilter.backgroundParams;
 import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;

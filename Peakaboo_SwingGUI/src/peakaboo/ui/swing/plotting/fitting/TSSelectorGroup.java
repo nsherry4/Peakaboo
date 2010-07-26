@@ -15,7 +15,6 @@ import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
 import eventful.EventfulListener;
@@ -46,8 +45,10 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 			public void actionPerformed(ActionEvent e)
 			{
 				addTSSelector();
+				addButton.requestFocusInWindow();
 			}
 		});
+		
 				
 		selectors = DataTypeFactory.<TSSelector> list();
 		
@@ -111,6 +112,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		{
 			addTSSelector();	
 		}
+		
 
 	}
 	

@@ -5,11 +5,9 @@ package peakaboo.datatypes.peaktable;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import fava.*;
-import fava.datatypes.Pair;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
 import fava.signatures.FunctionEach;
@@ -129,6 +127,11 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
+	public List<Transition> getAllTransitions()
+	{
+		return Fn.map(transitions, Functions.<Transition>id());
+	}
+	
 	public Transition getStrongestTransition()
 	{
 

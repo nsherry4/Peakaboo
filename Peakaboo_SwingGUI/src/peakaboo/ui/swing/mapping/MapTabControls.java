@@ -12,7 +12,6 @@ import javax.swing.JTabbedPane;
 
 import eventful.EventfulTypeListener;
 
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

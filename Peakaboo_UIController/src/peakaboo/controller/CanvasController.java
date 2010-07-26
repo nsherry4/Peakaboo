@@ -6,7 +6,6 @@ import java.io.OutputStream;
 
 import eventful.EventfulType;
 
-import peakaboo.datatypes.eventful.Eventful;
 import scidraw.drawing.backends.DrawingSurfaceFactory;
 import scidraw.drawing.backends.SaveableSurface;
 import scidraw.drawing.backends.Surface;

@@ -28,6 +28,8 @@ public interface FittingController extends IEventfulType<String>
 	public float getTransitionSeriesIntensity(TransitionSeries ts);
 	public void moveTransitionSeriesUp(TransitionSeries e);
 	public void moveTransitionSeriesDown(TransitionSeries e);
+	public void moveTransitionSeriesUp(List<TransitionSeries> e);
+	public void moveTransitionSeriesDown(List<TransitionSeries> e);
 	
 	public void fittingDataInvalidated();
 	

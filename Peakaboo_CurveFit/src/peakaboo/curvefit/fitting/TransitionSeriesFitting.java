@@ -2,10 +2,8 @@ package peakaboo.curvefit.fitting;
 
 
 
-import java.util.Collections;
 import java.util.List;
 
-import fava.Fn;
 import fava.datatypes.Range;
 import fava.datatypes.RangeSet;
 
@@ -284,18 +282,20 @@ public class TransitionSeriesFitting
 			
 			if (fitEscapes && escape.hasOffset())
 			{
-				mean = (t.energyValue-escape.offset()) / energyPerChannel;
-				
-				start = (int) (mean - range);
-				stop = (int) (mean + range);
-				if (start < 0) start = 0;
-				if (stop > dataWidth - 1) stop = dataWidth - 1;
-				if (start > dataWidth - 1) start = dataWidth - 1;
-
-				baseSize += stop - start + 1;
-				
-				transitionRanges.addRange(new Range(start, stop));
-				
+				for (Transition esc : escape.offset()) {
+					mean = (t.energyValue-esc.energyValue) / energyPerChannel;
+					
+					start = (int) (mean - range);
+					stop = (int) (mean + range);
+					if (start < 0) start = 0;
+					if (stop > dataWidth - 1) stop = dataWidth - 1;
+					if (start > dataWidth - 1) start = dataWidth - 1;
+	
+					baseSize += stop - start + 1;
+					
+					transitionRanges.addRange(new Range(start, stop));
+					
+				}
 			}
 			
 		}
@@ -325,13 +325,18 @@ public class TransitionSeriesFitting
 
 			if (fitEscape && escape.hasOffset())
 			{
-				g = new GaussianFittingFunction((t.energyValue - escape.offset()) / energyPerChannel, getSigmaForTransition(
-						SIGMA,
-						t)
-						/ energyPerChannel, t.relativeIntensity * escapeIntensity(ts.element));
+				for (Transition esc : escape.offset()) {
+									
+					g = new GaussianFittingFunction((t.energyValue - esc.energyValue) / energyPerChannel, getSigmaForTransition(
+								SIGMA,
+								t)
+								/ energyPerChannel, t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity);
+					
+					functions.add(g);
+				}
 			}
 
-			functions.add(g);
+			
 
 		}
 

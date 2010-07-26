@@ -9,7 +9,6 @@ import fava.datatypes.Bounds;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
-import peakaboo.datatypes.peaktable.PeakTable;
 import peakaboo.datatypes.tasks.Task;
 import peakaboo.datatypes.tasks.TaskList;
 import peakaboo.fileio.xrf.DataSource;
@@ -47,8 +46,6 @@ public abstract class DataSetProvider
 	protected int			dsc_scanSize;
 
 	protected String		dataSourcePath;
-
-	protected PeakTable		peakTable;
 
 	protected boolean		hasDimensions;
 

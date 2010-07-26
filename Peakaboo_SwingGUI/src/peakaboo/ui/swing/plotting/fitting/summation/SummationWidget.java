@@ -2,16 +2,9 @@ package peakaboo.ui.swing.plotting.fitting.summation;
 
 
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JComboBox;
-
-import eventful.EventfulListener;
 import fava.*;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
@@ -20,14 +13,9 @@ import static fava.Fn.*;
 import peakaboo.controller.plotter.FittingController;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.datatypes.peaktable.TransitionSeries;
-import peakaboo.datatypes.peaktable.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
 
 
 

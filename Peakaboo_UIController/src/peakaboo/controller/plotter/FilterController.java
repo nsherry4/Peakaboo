@@ -4,7 +4,6 @@ import java.util.List;
 
 import eventful.IEventfulType;
 
-import peakaboo.datatypes.eventful.IEventful;
 import peakaboo.filter.AbstractFilter;
 
 

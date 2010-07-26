@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.net.URI;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This class makes it easy to drag and drop files from the operating
@@ -298,7 +301,8 @@ public class FileDrop
                     // over the drag target.
                 }   // end dragOver
 
-                public void drop( java.awt.dnd.DropTargetDropEvent evt )
+                @SuppressWarnings("unchecked")
+				public void drop( java.awt.dnd.DropTargetDropEvent evt )
                 {   log( out, "FileDrop: drop event." );
                     try
                     {   // Get whatever was dropped
@@ -313,9 +317,8 @@ public class FileDrop
                             log( out, "FileDrop: file list accepted." );
 
                             // Get a useful list
-                            java.util.List fileList = (java.util.List) 
-                                tr.getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
-                            java.util.Iterator iterator = fileList.iterator();
+                            List<File> fileList = (List<File>) tr.getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
+                            fileList.iterator();
 
                             // Convert list to array
                             java.io.File[] filesTemp = new java.io.File[ fileList.size() ];
@@ -425,7 +428,7 @@ public class FileDrop
         {   
             boolean support = false;
             try
-            {   Class arbitraryDndClass = Class.forName( "java.awt.dnd.DnDConstants" );
+            {   Class<?> arbitraryDndClass = Class.forName( "java.awt.dnd.DnDConstants" );
                 support = true;
             }   // end try
             catch( Exception e )
@@ -442,21 +445,21 @@ public class FileDrop
      private static File[] createFileArray(BufferedReader bReader, PrintStream out)
      {
         try { 
-            java.util.List list = new java.util.ArrayList();
-            java.lang.String line = null;
+            List<File> list = new java.util.ArrayList<File>();
+            String line = null;
             while ((line = bReader.readLine()) != null) {
                 try {
                     // kde seems to append a 0 char to the end of the reader
                     if(ZERO_CHAR_STRING.equals(line)) continue; 
                     
-                    java.io.File file = new java.io.File(new java.net.URI(line));
+                    File file = new File(new URI(line));
                     list.add(file);
                 } catch (Exception ex) {
                     log(out, "Error with " + line + ": " + ex.getMessage());
                 }
             }
 
-            return (java.io.File[]) list.toArray(new File[list.size()]);
+            return list.toArray(new File[list.size()]);
         } catch (IOException ex) {
             log(out, "FileDrop: IOException");
         }
@@ -802,7 +805,7 @@ public class FileDrop
          * @param fetcher The {@link Fetcher} that will return the data object
          * @since 1.1
          */
-        public TransferableObject( Class dataClass, Fetcher fetcher )
+        public TransferableObject( Class<?> dataClass, Fetcher fetcher )
         {   this.fetcher = fetcher;
             this.customFlavor = new java.awt.datatransfer.DataFlavor( dataClass, MIME_TYPE );
         }   // end constructor

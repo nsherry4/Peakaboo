@@ -1,22 +1,15 @@
 package peakaboo.ui.swing;
 
 
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Panel;
 import java.awt.Window;
 
-
-
 import javax.swing.JFrame;
-
-
-
 
 import peakaboo.common.Version;
 import peakaboo.ui.swing.plotting.PlotPanel;
-import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetFrame;
 import swidget.icons.IconFactory;
 
@@ -49,26 +42,31 @@ public class PlotterFrame extends SwidgetFrame
 
 	}
 
+	@Override
 	public Component getComponent()
 	{
 		return this;
 	}
 
+	@Override
 	public Window getWindow()
 	{
 		return this;
 	}
 
+	@Override
 	public Panel getPanel()
 	{
 		return null;
 	}
 
+	@Override
 	public boolean isApplet()
 	{
 		return false;
 	}
 
+	@Override
 	public void close()
 	{
 		System.exit(0);

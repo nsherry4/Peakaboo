@@ -2,17 +2,13 @@ package peakaboo.ui.swing.plotting.fitting.smartfitting;
 
 
 
-import java.awt.ActiveEvent;
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
 import java.util.List;
 
 
 import fava.*;
-import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
 import peakaboo.controller.plotter.FittingController;
@@ -47,9 +43,9 @@ class SmartFittingWidget extends TSSelectorGroup
 		activeIndex = 0;
 
 		refreshGUI();
-
+		
 	}
-
+	
 
 	@Override
 	public List<TransitionSeries> getTransitionSeries()
@@ -121,6 +117,8 @@ class SmartFittingWidget extends TSSelectorGroup
 		c.gridy++;
 		c.gridx = 2;
 		add(addButton, c);
+		
+		
 
 		c.gridy++;
 		c.gridx = 0;
@@ -128,8 +126,10 @@ class SmartFittingWidget extends TSSelectorGroup
 		c.fill = GridBagConstraints.BOTH;
 		add(new ClearPanel(), c);
 
+		
 		revalidate();
-
+		
+		
 		TSSelectorUpdated();
 
 
@@ -148,7 +148,6 @@ class SmartFittingWidget extends TSSelectorGroup
 		if (selectors.get(activeIndex) == tssel || activeIndex == selectors.size()-1)
 		{
 			activeIndex = Math.max(0, selectors.size() - 2);
-			System.out.println(activeIndex);
 		}
 		
 		super.removeTSSelector(tssel);

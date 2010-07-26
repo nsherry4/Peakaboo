@@ -5,8 +5,6 @@ package peakaboo.curvefit.fitting;
 import java.io.Serializable;
 import java.util.List;
 
-import fava.lists.FList;
-
 import static fava.Fn.*;
 
 import peakaboo.curvefit.results.FittingResult;
@@ -135,12 +133,35 @@ public class FittingSet implements Serializable
 
 		fittings.removeAll(fittingsToRemove);
 		
+		ts.setVisible(true);
+		
+	}
+	
+	//if this has been set to false, and it is a primary TS, we may see it again, so we don't want this
+	//setting hanging around
+	public synchronized void clear()
+	{
+		
+		for (TransitionSeries t : fitTransitionSeries)
+		{
+			t.setVisible(true);
+		}
+		
+		fitTransitionSeries.clear();
+		fittings.clear();
 	}
 
 
-	public synchronized void moveTransitionSeriesUp(TransitionSeries e)
+	public synchronized boolean isEmpty()
+	{
+		return fitTransitionSeries.isEmpty();
+	}
+
+	
+	public synchronized boolean moveTransitionSeriesUp(TransitionSeries e)
 	{
 		int insertionPoint;
+		boolean movedTS = false;
 		TransitionSeries ts;
 
 		for (int i = 0; i < fitTransitionSeries.size(); i++)
@@ -152,16 +173,32 @@ public class FittingSet implements Serializable
 				insertionPoint = i - 1;
 				if (insertionPoint == -1) insertionPoint = 0;
 				fitTransitionSeries.add(insertionPoint, ts);
+				movedTS = insertionPoint != i;
 				break;
+				
 			}
 		}
+		
 		regenerateFittings();
+		
+		return movedTS;
+		
+	}
+	public synchronized void moveTransitionSeriesUp(List<TransitionSeries> tss)
+	{
+		for (int i = 0; i < tss.size(); i++)
+		{
+			//method returns true if it was able to move the TS.
+			//if we weren't able to move it, we don't try to move any of them
+			if (  ! moveTransitionSeriesUp(tss.get(i))  ) break;
+		}
 	}
 
 
-	public synchronized void moveTransitionSeriesDown(TransitionSeries e)
+	public synchronized boolean moveTransitionSeriesDown(TransitionSeries e)
 	{
 		int insertionPoint;
+		boolean movedTS = false;
 		TransitionSeries ts;
 
 		for (int i = 0; i < fitTransitionSeries.size(); i++)
@@ -175,12 +212,25 @@ public class FittingSet implements Serializable
 				insertionPoint = i + 1;
 				if (insertionPoint == fitTransitionSeries.size() + 1) insertionPoint = fitTransitionSeries.size();
 				fitTransitionSeries.add(insertionPoint, ts);
+				movedTS = insertionPoint != i;
 				break;
 			}
 		}
 		regenerateFittings();
+		
+		return movedTS;
+		
 	}
 
+	public synchronized void moveTransitionSeriesDown(List<TransitionSeries> tss)
+	{
+		for (int i = tss.size()-1; i >= 0; i--)
+		{
+			//method returns true if it was able to move the TS.
+			//if we weren't able to move it, we don't try to move any of them
+			if (  ! moveTransitionSeriesDown(tss.get(i))  ) break;
+		}
+	}
 
 	public synchronized boolean hasTransitionSeries(TransitionSeries ts)
 	{
@@ -228,19 +278,6 @@ public class FittingSet implements Serializable
 
 		return fittedElements;
 
-	}
-
-
-	public synchronized void clear()
-	{
-		fitTransitionSeries.clear();
-		fittings.clear();
-	}
-
-
-	public synchronized boolean isEmpty()
-	{
-		return fitTransitionSeries.isEmpty();
 	}
 
 

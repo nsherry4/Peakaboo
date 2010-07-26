@@ -1,6 +1,5 @@
 package peakaboo.controller.plotter;
 
-import peakaboo.curvefit.fitting.EscapePeakType;
 import eventful.IEventfulType;
 
 

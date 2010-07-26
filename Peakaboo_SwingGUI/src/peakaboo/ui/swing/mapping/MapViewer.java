@@ -23,7 +23,6 @@ import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.SingleMapModel;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import scitypes.Coord;
 import swidget.widgets.Spacing;

@@ -1,38 +1,53 @@
 package peakaboo.curvefit.fitting;
 
+import java.util.List;
+
+
+import peakaboo.datatypes.peaktable.Element;
+import peakaboo.datatypes.peaktable.PeakTable;
+import peakaboo.datatypes.peaktable.Transition;
+import peakaboo.datatypes.peaktable.TransitionSeriesType;
+import scidraw.datatypes.DataTypeFactory;
+
 
 public enum EscapePeakType
 {
-	
+	NONE {
+		@Override
+		public boolean hasOffset() { return false; }
+		@Override
+		public String show() { return "None"; }
+	}
+	,
 	SILICON {
 		@Override
-		public float offset()
-		{
-			return 1.74f;
+		public List<Transition> offset() { 
+			
+			return PeakTable.getTransitionSeries(Element.Si, TransitionSeriesType.K).getAllTransitions();
+			
 		}
+		@Override
+		public String show() { return "Silicon"; }
 	}
 	,
 	GERMANIUM {
 		@Override
-		public float offset()
-		{
-			return 3f;
+		public List<Transition> offset() { 
+			
+			return PeakTable.getTransitionSeries(Element.Ge, TransitionSeriesType.K).getAllTransitions();
+			
 		}
+		@Override
+		public String show() { return "Germanium"; }
 	}		
 	,
-	NONE {
-		@Override
-		public boolean hasOffset()
-		{
-			return false;
-		}
-	}
-	,
+
 	
 	;
 	
-	public boolean hasOffset() 	{ return true; }
-	public float offset()		{ return 1.74f; }
+	public boolean hasOffset() 			{ return true; }
+	public List<Transition> offset()	{ return DataTypeFactory.<Transition>list(); }
+	public String show()				{ return this.name().toLowerCase(); }
 	
 
 }

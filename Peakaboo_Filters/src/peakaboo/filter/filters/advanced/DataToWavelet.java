@@ -6,7 +6,6 @@ import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
 

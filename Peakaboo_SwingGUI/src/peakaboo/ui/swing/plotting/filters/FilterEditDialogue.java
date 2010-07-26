@@ -7,7 +7,6 @@ import java.awt.Container;
 import eventful.EventfulTypeListener;
 
 import peakaboo.controller.plotter.FilterController;
-import peakaboo.datatypes.eventful.PeakabooSimpleListener;
 import peakaboo.filter.AbstractFilter;
 import swidget.containers.SwidgetContainer;
 import swidget.containers.SwidgetDialog;
