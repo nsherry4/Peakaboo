@@ -27,7 +27,6 @@ import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.SingleMapModel;
 import peakaboo.mapping.results.MapResultSet;
-import peakaboo.ui.swing.mapping.MapTabControls;
 import peakaboo.ui.swing.mapping.MapViewer;
 import peakaboo.ui.swing.mapping.TabIconButton;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
@@ -224,9 +223,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		SingleMapModel viewModel = new SingleMapModel(originalData.clone());
 		controller.setActiveTabModel(viewModel);
 		final MapViewer viewer = new MapViewer(viewModel, controller, this);
-		
-		MapTabControls controls = new MapTabControls(tabs, viewer);
-		
+				
 		
 		final TabIconButton closeButton = new TabIconButton(StockIcon.WINDOW_CLOSE);
 		closeButton.addListener(new EventfulListener() {
@@ -276,30 +273,8 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	private void create_NewTab_Tab(){
 		
 		TabIconButton newmapButton = new TabIconButton("map-new");
-		newmapButton.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				//System.out.println("new map button click registered");
-				//createMapsViewer();
-			}
-		});
 		
-		tabs.addTab("", newmapButton, new ClearPanel());
-		
-		/*
-		ImageButton newtab = new ImageButton("map-new", "", "Create a new map", Layout.IMAGE, false, IconSize.BUTTON, Spacing.iNone(), Spacing.bSmall() );
-		
-		newtab.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				createMapsViewer();
-			}
-		});
-		*/
-		//tabs.setTabComponentAt(tabs.getTabCount()-1, newtab);
-		
-		
+		tabs.addTab("", newmapButton, new ClearPanel());		
 	}
 		
 	private void createMenuBar()

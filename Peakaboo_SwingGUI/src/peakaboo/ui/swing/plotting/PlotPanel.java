@@ -566,7 +566,7 @@ public class PlotPanel extends ClearPanel
 		populateFittingMenu(mapMenu);
 		
 		
-		toolbarMap = new DropdownImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", IconSize.TOOLBAR_SMALL, Layout.IMAGE_ON_SIDE, mapMenu);
+		toolbarMap = new DropdownImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", IconSize.TOOLBAR_SMALL, ToolbarImageButton.significantLayout, mapMenu);
 		toolbarMap.addListener(new EventfulEnumListener<Actions>() {
 			
 			public void change(Actions message)
