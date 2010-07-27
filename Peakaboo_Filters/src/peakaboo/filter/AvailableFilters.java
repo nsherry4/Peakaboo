@@ -9,6 +9,7 @@ import java.util.List;
 
 import commonenvironment.Env;
 
+import fava.Fn;
 import fava.lists.FList;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
@@ -33,21 +34,95 @@ import peakaboo.filter.filters.noise.WaveletNoiseFilter;
 public class AvailableFilters
 {
 
-	public static List<AbstractFilter> generateFilterList()
+	public static List<Class<AbstractFilter>> availableFilters;
+	
+	public static List<Class<AbstractFilter>> generateFilterList()
 	{
-		if (Env.inJar())
-		{
-			return generateFilterListStatic();
+		if (availableFilters == null) {
+		
+			if (Env.inJar())
+			{
+				availableFilters = generateFilterListStatic();
+			}
+			else
+			{
+				availableFilters = generateFilterListDynamic();
+			}
 		}
-		else
-		{
-			return generateFilterListDynamic();
-		}
+		return availableFilters;
 	}
 
+	
+	
+	public static List<AbstractFilter> getNewInstancesForAllFilters()
+	{
+		return Fn.map(
+				
+				AvailableFilters.generateFilterList(),
+				
+				new FunctionMap<Class<AbstractFilter>, AbstractFilter>() {
+
+					public AbstractFilter f(Class<AbstractFilter> f)
+					{
+						return AvailableFilters.createNewInstance(f);
+					}
+				}
+			);
+	}
+	
+
+	public static List<AbstractFilter> getNewInstancesForAllFilters(final FilterType type)
+	{
+		return Fn.map(
+				
+				Fn.filter(
+						AvailableFilters.generateFilterList(),
+						
+						new FunctionMap<Class<AbstractFilter>, Boolean>() {
+
+							public Boolean f(Class<AbstractFilter> f)
+							{
+								return createNewInstance(f).getFilterType() == type;
+							}}
+				),
+				
+				new FunctionMap<Class<AbstractFilter>, AbstractFilter>() {
+
+					public AbstractFilter f(Class<AbstractFilter> f)
+					{
+						return AvailableFilters.createNewInstance(f);
+					}
+				}
+			);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static AbstractFilter createNewInstance(AbstractFilter f)
+	{
+		return createNewInstance((Class<AbstractFilter>)f.getClass());
+	}
+	
+	public static AbstractFilter createNewInstance(Class<AbstractFilter> f)
+	{
+		try
+		{
+			return f.newInstance();
+		}
+		catch (InstantiationException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 
 	// for jar files -- how do we load these dynamically when inside a jar file?
-	public static List<AbstractFilter> generateFilterListStatic()
+	private static List<Class<AbstractFilter>> generateFilterListStatic()
 	{
 
 		Class<?>[] classes = {
@@ -62,19 +137,20 @@ public class AvailableFilters
 				Derivitive.class,
 				Addition.class,
 				Subtraction.class,
-				Multiply.class };
+				Multiply.class 
+		};
 
 		return filter(
 
-		map(classes, new FunctionMap<Class<?>, AbstractFilter>() {
+		map(classes, new FunctionMap<Class<?>, Class<AbstractFilter>>() {
 
 			@SuppressWarnings("unchecked")
 			
-			public AbstractFilter f(Class<?> element)
+			public Class<AbstractFilter> f(Class<?> element)
 			{
 				try
 				{
-					return ((Class<AbstractFilter>) element).newInstance();
+					return (Class<AbstractFilter>) element;
 				}
 				catch (Exception e)
 				{
@@ -82,12 +158,12 @@ public class AvailableFilters
 				}
 
 			}
-		}), new FunctionMap<AbstractFilter, Boolean>(){
+		}), new FunctionMap<Class<AbstractFilter>, Boolean>(){
 
 			
-			public Boolean f(AbstractFilter filter)
+			public Boolean f(Class<AbstractFilter> c)
 			{
-				if (filter != null && filter.showFilter()) return true;
+				if (createNewInstance(c) != null && createNewInstance(c).showFilter()) return true;
 				return false;
 			}
 		});
@@ -96,10 +172,11 @@ public class AvailableFilters
 
 
 	// messy logic for getting a list of all available filters
-	public static List<AbstractFilter> generateFilterListDynamic()
+	@SuppressWarnings("unchecked")
+	private static List<Class<AbstractFilter>> generateFilterListDynamic()
 	{
 
-		List<AbstractFilter> list = DataTypeFactory.<AbstractFilter> list();
+		List<Class<AbstractFilter>> list = DataTypeFactory.<Class<AbstractFilter>> list();
 
 		Package p = AbstractFilter.class.getPackage();
 		List<Class<?>> classes = new FList<Class<?>>();
@@ -117,7 +194,7 @@ public class AvailableFilters
 			e.printStackTrace();
 		}
 
-		AbstractFilter f;
+		Class<AbstractFilter> f;
 
 		if (classes != null)
 		{
@@ -126,23 +203,8 @@ public class AvailableFilters
 				if (classes.get(i).getSuperclass() == AbstractFilter.class || classes.get(i).getSuperclass().getSuperclass() == AbstractFilter.class)
 				{
 
-					// this will warn of an unchecked cast, but since we're checking
-					// for ourselves on the line above, this can be ignored.
-					try
-					{
-						f = (AbstractFilter) classes.get(i).newInstance();
-						if (f.showFilter()) list.add(f);
-					}
-					catch (InstantiationException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					catch (IllegalAccessException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					f = (Class<AbstractFilter>) classes.get(i);
+					if (createNewInstance(f) != null && createNewInstance(f).showFilter()) list.add(f);
 
 				}
 			}

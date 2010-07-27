@@ -10,12 +10,20 @@ import scitypes.Spectrum;
 public class Integrate extends AbstractFilter
 {
 
+
+	@Override
+	public void initialize()
+	{
+
+	}
+	
+	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		return Noise.integ(data);
 	}
-
+	
 
 	@Override
 	public String getFilterDescription()
@@ -58,6 +66,13 @@ public class Integrate extends AbstractFilter
 	
 	@Override
 	public boolean showFilter()
+	{
+		return true;
+	}
+	
+	
+	@Override
+	public boolean canFilterSubset()
 	{
 		return true;
 	}

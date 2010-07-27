@@ -16,10 +16,13 @@ public class Addition extends AbstractFilter
 	
 	public Addition()
 	{
-
 		super();
+	}
+	
+	@Override
+	public void initialize()
+	{
 		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
-
 	}
 	
 	@Override
@@ -70,6 +73,13 @@ public class Addition extends AbstractFilter
 
 	@Override
 	public boolean showFilter()
+	{
+		return true;
+	}
+	
+	
+	@Override
+	public boolean canFilterSubset()
 	{
 		return true;
 	}

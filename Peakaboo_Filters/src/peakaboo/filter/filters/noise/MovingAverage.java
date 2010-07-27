@@ -24,11 +24,15 @@ public final class MovingAverage extends AbstractFilter
 	public MovingAverage()
 	{
 		super();
-		parameters.put(REACH, new Parameter(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
 
 	}
 
-
+	@Override
+	public void initialize()
+	{
+		parameters.put(REACH, new Parameter(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
+	}
+	
 	@Override
 	public String getFilterName()
 	{
@@ -86,6 +90,12 @@ public final class MovingAverage extends AbstractFilter
 
 	@Override
 	public boolean showFilter()
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean canFilterSubset()
 	{
 		return true;
 	}

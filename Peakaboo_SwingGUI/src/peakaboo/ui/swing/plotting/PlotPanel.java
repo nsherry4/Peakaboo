@@ -1355,6 +1355,7 @@ public class PlotPanel extends ClearPanel
 			sb.append("Value: ");
 			sb.append(fmtObj.format(values.first));
 			if (! values.first.equals(values.second)) {
+				sb.append(sep);
 				sb.append("Unfiltered Value: ");
 				sb.append(fmtObj.format(values.second));
 			}

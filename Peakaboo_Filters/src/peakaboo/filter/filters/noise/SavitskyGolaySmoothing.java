@@ -29,12 +29,19 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 	{
 
 		super();
+
+	}
+	
+	
+	@Override
+	public void initialize()
+	{
 		parameters.put(REACH, new Parameter(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
 		parameters.put(ORDER, new Parameter(ValueType.INTEGER, "Polynomial Order", 5));
 		parameters.put(IGNORE, new Parameter(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
 		parameters.put(MAX, new Parameter(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
 		
-		parameters.get(MAX).enabled = false;
+		parameters.get(MAX).enabled = false;		
 	}
 	
 	@Override
@@ -111,6 +118,12 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 
 	@Override
 	public boolean showFilter()
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean canFilterSubset()
 	{
 		return true;
 	}

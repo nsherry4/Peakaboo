@@ -23,7 +23,7 @@ public class LiveDataSource implements DataSource
 	{
 		try
 		{
-			scans = new TempFileList<Spectrum>(0, "Peakaboo Live Dataset", Spectrum.getEncoder(), Spectrum.getDecoder());
+			scans = new TempFileList<Spectrum>("Peakaboo Live Dataset", Spectrum.getEncoder(), Spectrum.getDecoder());
 		}
 		catch (IOException e)
 		{

@@ -93,7 +93,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		try
 		{
 
-			scandata = new TempFileList<Spectrum>(0, "Peakaboo", Spectrum.getEncoder(), Spectrum.getDecoder());
+			scandata = new TempFileList<Spectrum>("Peakaboo", Spectrum.getEncoder(), Spectrum.getDecoder());
 
 
 			xr = XMLReaderFactory.createXMLReader();

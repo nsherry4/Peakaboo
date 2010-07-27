@@ -16,10 +16,13 @@ public class Subtraction extends AbstractFilter
 	
 	public Subtraction()
 	{
-
 		super();
+	}
+	
+	@Override
+	public void initialize()
+	{
 		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Amount to Subtract", 1.0));
-
 	}
 	
 	@Override
@@ -68,6 +71,13 @@ public class Subtraction extends AbstractFilter
 
 	@Override
 	public boolean showFilter()
+	{
+		return true;
+	}
+	
+	
+	@Override
+	public boolean canFilterSubset()
 	{
 		return true;
 	}

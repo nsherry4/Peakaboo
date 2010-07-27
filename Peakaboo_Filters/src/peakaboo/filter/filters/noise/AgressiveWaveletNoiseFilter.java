@@ -25,10 +25,15 @@ public final class AgressiveWaveletNoiseFilter extends AbstractFilter
 	{
 
 		super();
-		parameters.put(PASSES, new Parameter(ValueType.INTEGER, "Passes to Remove", 1));
 
 	}
 
+	
+	@Override
+	public void initialize()
+	{
+		parameters.put(PASSES, new Parameter(ValueType.INTEGER, "Passes to Remove", 1));
+	}
 
 	@Override
 	public String getFilterName()
@@ -93,6 +98,12 @@ public final class AgressiveWaveletNoiseFilter extends AbstractFilter
 	public boolean showFilter()
 	{
 		return true;
+	}
+	
+	@Override
+	public boolean canFilterSubset()
+	{
+		return false;
 	}
 
 }

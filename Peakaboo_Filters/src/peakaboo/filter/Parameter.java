@@ -15,7 +15,7 @@ public class Parameter implements Serializable
 
 	public static enum ValueType
 	{
-		INTEGER, REAL, BOOLEAN, SET_ELEMENT
+		INTEGER, REAL, BOOLEAN, SET_ELEMENT, FILTER
 	}
 	
 	public ValueType	type;
@@ -92,6 +92,21 @@ public class Parameter implements Serializable
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public AbstractFilter filterValue()
+	{
+		
+		try
+		{
+			return (AbstractFilter)value;
+		} 
+		catch (ClassCastException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 	
 	@SuppressWarnings("unchecked")

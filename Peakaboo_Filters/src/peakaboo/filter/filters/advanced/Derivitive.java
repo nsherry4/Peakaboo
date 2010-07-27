@@ -10,6 +10,13 @@ import scitypes.Spectrum;
 public class Derivitive extends AbstractFilter
 {
 
+	
+	@Override
+	public void initialize()
+	{
+
+	}
+	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
@@ -58,6 +65,13 @@ public class Derivitive extends AbstractFilter
 
 	@Override
 	public boolean showFilter()
+	{
+		return true;
+	}
+	
+	
+	@Override
+	public boolean canFilterSubset()
 	{
 		return true;
 	}

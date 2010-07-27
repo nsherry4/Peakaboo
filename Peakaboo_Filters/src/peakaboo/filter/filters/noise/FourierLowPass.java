@@ -28,12 +28,16 @@ public final class FourierLowPass extends AbstractFilter
 	public FourierLowPass()
 	{
 		super();
+	}
+
+	@Override
+	public void initialize()
+	{
 		parameters.put(ROLLOFF, new Parameter(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
 		parameters.put(START, new Parameter(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
 		parameters.put(END, new Parameter(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
-
 	}
-
+	
 
 	@Override
 	public boolean validateParameters()
@@ -109,4 +113,10 @@ public final class FourierLowPass extends AbstractFilter
 	}
 
 
+	@Override
+	public boolean canFilterSubset()
+	{
+		return false;
+	}
+	
 }

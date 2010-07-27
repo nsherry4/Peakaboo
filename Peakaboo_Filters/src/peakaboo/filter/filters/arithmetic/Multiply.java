@@ -17,10 +17,14 @@ public class Multiply extends AbstractFilter
 	
 	public Multiply()
 	{
-
 		super();
+	}
+	
+	
+	@Override
+	public void initialize()
+	{
 		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Multiply By", 1.0));
-
 	}
 	
 	@Override
@@ -72,6 +76,13 @@ public class Multiply extends AbstractFilter
 	public boolean showFilter()
 	{
 		return false;
+	}
+	
+	
+	@Override
+	public boolean canFilterSubset()
+	{
+		return true;
 	}
 	
 }

@@ -14,7 +14,13 @@ public class ExampleFilter extends AbstractFilter {
 	private final int PARAM1 = 1;
 	
 	public ExampleFilter() {
-		//add a parameter with name "example parameter" and default value 1
+		super();
+	}
+	
+	
+	@Override
+	public void initialize()
+	{
 		parameters.put(PARAM1, new Parameter(ValueType.INTEGER, "Example Parameter", 1));
 	}
 	
@@ -72,5 +78,14 @@ public class ExampleFilter extends AbstractFilter {
 	{
 		return !Version.release;
 	}
+
+
+	@Override
+	public boolean canFilterSubset()
+	{
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
 
 }

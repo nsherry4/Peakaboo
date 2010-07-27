@@ -62,9 +62,12 @@ public class TabIconButton extends Eventful implements Icon
 					// asking for isConsumed is *very* important, otherwise more than one tab might get closed!
 					if ( mPosition.contains( e.getX(), e.getY() ) )
 					{
-						//final int index = mTabbedPane.getSelectedIndex();
-						//mTabbedPane.remove( index );
-						updateListeners();
+						if (! e.isConsumed()) {
+							//final int index = mTabbedPane.getSelectedIndex();
+							//mTabbedPane.remove( index );
+							e.consume();
+							updateListeners();
+						}
 					}
 				}
 				

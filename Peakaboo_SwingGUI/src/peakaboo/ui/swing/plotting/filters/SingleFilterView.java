@@ -2,6 +2,7 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -20,15 +21,25 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import eventful.EventfulListener;
+import eventful.EventfulTypeListener;
+import eventful.swing.EventfulPanel;
+import eventful.swing.EventfulTypePanel;
 import fava.Fn;
 import fava.Functions;
+import fava.lists.FList;
+import fava.signatures.FunctionMap;
 
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AvailableFilters;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import swidget.widgets.Spacing;
@@ -46,6 +57,11 @@ public class SingleFilterView extends JPanel
 
 	public SingleFilterView(AbstractFilter filter, FilterController controller)
 	{
+		this(filter, controller, true);
+	}
+	
+	public SingleFilterView(AbstractFilter filter, FilterController controller, boolean showTitle)
+	{
 
 		super(new BorderLayout());
 
@@ -58,16 +74,14 @@ public class SingleFilterView extends JPanel
 		
 		
 
-		
-		TitleGradientPanel panel = new TitleGradientPanel(filter.getFilterName() + " Filter", true);
-		
-		panel.setToolTipText(filter.getFilterDescription());
-		
-		this.add(panel, BorderLayout.NORTH);
+		if (showTitle) {
+			TitleGradientPanel panel = new TitleGradientPanel(filter.getFilterName() + " Filter", true);
+			panel.setToolTipText(filter.getFilterDescription());
+			this.add(panel, BorderLayout.NORTH);
+		}
 		
 		
 		this.add(settingsPanel, BorderLayout.CENTER);
-		// this.add(Box.createHorizontalStrut(15), BorderLayout.WEST);
 
 
 	}
@@ -99,7 +113,7 @@ public class SingleFilterView extends JPanel
 		
 		final List<JComponent> controls = DataTypeFactory.<JComponent>list();
 
-		class ParamListener implements ActionListener, ChangeListener
+		class ParamListener implements ActionListener, ChangeListener, EventfulTypeListener<SubfilterView>
 		{
 
 			private Parameter	param;
@@ -130,14 +144,26 @@ public class SingleFilterView extends JPanel
 				
 				Object oldValue = param.getValue();
 
-				if (param.type == ValueType.INTEGER || param.type == ValueType.REAL) {
-					param.setValue(  ((JSpinner) source).getValue()  );
-				} else if (param.type == ValueType.SET_ELEMENT) {
-					param.setValue(  ((JComboBox) source).getSelectedItem()  );
-				} else if (param.type == ValueType.BOOLEAN) {
-					param.setValue(  ((JCheckBox) source).isSelected()  );
+				switch (param.type)
+				{
+					case INTEGER:
+					case REAL:
+						param.setValue(  ((JSpinner) source).getValue()  );
+						break;
+						
+					case SET_ELEMENT:
+						param.setValue(  ((JComboBox) source).getSelectedItem()  );
+						break;
+						
+					case BOOLEAN:
+						param.setValue(  ((JCheckBox) source).isSelected()  );
+						break;
+						
+					case FILTER:
+						param.setValue(  ((SubfilterView)source).getFilter()  );
+						break;
 				}
-
+				
 				// if this input validates, signal the change, otherwise, reset
 				// the value
 				if (filter.validateParameters()) {
@@ -153,20 +179,39 @@ public class SingleFilterView extends JPanel
 					param.setValue(oldValue);
 
 					// reset the control to the value of the parameter
-					if (param.type == ValueType.INTEGER) {
-						((JSpinner) source).setValue(((Integer) param.getValue()).intValue());
-					} else if (param.type == ValueType.REAL) {
-						((JSpinner) source).setValue(((Double) param.getValue()).doubleValue());
-					} else if (param.type == ValueType.SET_ELEMENT) {
-						((JComboBox) source).setSelectedItem(param.getValue());
-					} else if (param.type == ValueType.BOOLEAN) {
-						((JCheckBox) source).setSelected(((Boolean) param.getValue()).booleanValue());
+					switch (param.type)
+					{
+						case INTEGER:
+							((JSpinner) source).setValue(param.intValue());
+							break;
+							
+						case REAL:
+							((JSpinner) source).setValue(param.realValue());
+							break;
+							
+						case SET_ELEMENT:
+							((JComboBox) source).setSelectedItem(param.getValue());
+							break;
+							
+						case BOOLEAN:
+							((JCheckBox) source).setSelected(param.boolValue());
+							break;
+							
+						case FILTER:
+							((SubfilterView)source).setFilter(param.filterValue());
+							break;
 					}
 					
 				}
 
 
 
+			}
+
+
+			public void change(SubfilterView message)
+			{
+				update(message);
 			}
 
 		}
@@ -179,10 +224,7 @@ public class SingleFilterView extends JPanel
 		GridBagConstraints c = new GridBagConstraints();
 		panel.setLayout(layout);
 
-
 		
-
-
 
 		c.weighty = 0;
 		c.gridx = 0;
@@ -206,66 +248,111 @@ public class SingleFilterView extends JPanel
 			paramLabel = new JLabel(param.name);
 			paramLabel.setFont(paramLabel.getFont().deriveFont(Font.PLAIN));
 			paramLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-			panel.add(paramLabel, c);
+			
 
-			c.gridx = 1;
-			c.weightx = 0;
-			c.anchor = GridBagConstraints.LINE_END;
+
 
 			
 			component = null;
-			if (param.type == ValueType.INTEGER) {
+			JSpinner spinner;
+			
+			//generate the control which will display the value for this filter
+			switch (param.type)
+			{
+				case INTEGER:
 
-				JSpinner spinner = new JSpinner();
-				spinner.getEditor().setPreferredSize(new Dimension(50, spinner.getEditor().getPreferredSize().height));
-				spinner.setValue(param.getValue());
+					spinner = new JSpinner();
+					spinner.getEditor().setPreferredSize(new Dimension(50, spinner.getEditor().getPreferredSize().height));
+					spinner.setValue(param.intValue());
+	
+					spinner.addChangeListener(new ParamListener(param));
+	
+					component = spinner;
+					
+					break;
 
-				spinner.addChangeListener(new ParamListener(param));
+				case REAL:
 
-				component = spinner;
+					spinner = new JSpinner();
+					spinner.setModel(new SpinnerNumberModel(param.realValue(), Double.MIN_VALUE, Double.MAX_VALUE, 0.1));				
+					spinner.getEditor().setPreferredSize(new Dimension(50, spinner.getEditor().getPreferredSize().height));
+					
+					spinner.addChangeListener(new ParamListener(param));
+	
+					component = spinner;
 
-			} else if (param.type == ValueType.REAL) {
+					break;
+					
+				case SET_ELEMENT:
 
-				JSpinner spinner = new JSpinner();
-				spinner.setModel(new SpinnerNumberModel(((Double)param.getValue()).doubleValue(), Double.MIN_VALUE, Double.MAX_VALUE, 0.1));				
-				spinner.getEditor().setPreferredSize(new Dimension(50, spinner.getEditor().getPreferredSize().height));
-				
-				spinner.addChangeListener(new ParamListener(param));
+					Enum<?>[] enumValues = (Enum<?>[]) param.possibleValues;
+	
+					JComboBox enumCombo = new JComboBox(enumValues);
+	
+					enumCombo.setSelectedItem(param.getValue());
+					enumCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
+					
+					enumCombo.addActionListener(new ParamListener(param));
+					
+					component = enumCombo;
+					
+					break;
 
-				component = spinner;
+				case BOOLEAN:
 
-			} else if (param.type == ValueType.SET_ELEMENT) {
-
-				Enum<?>[] enumValues = (Enum<?>[]) param.possibleValues;
-
-				JComboBox enumCombo = new JComboBox(enumValues);
-
-				enumCombo.setSelectedItem(param.getValue());
-				enumCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
-				
-				enumCombo.addActionListener(new ParamListener(param));
-				
-				component = enumCombo;
-
-			} else if (param.type == ValueType.BOOLEAN) {
-
-				// JSpinner spinner = new JSpinner();
-				JCheckBox check = new JCheckBox();
-				check.setSelected((Boolean) param.getValue());
-				check.setAlignmentX(Component.LEFT_ALIGNMENT);
-				check.setOpaque(false);
-				
-				check.addChangeListener(new ParamListener(param));
-				
-				component = check;
+					JCheckBox check = new JCheckBox();
+					check.setSelected(param.boolValue());
+					check.setAlignmentX(Component.LEFT_ALIGNMENT);
+					check.setOpaque(false);
+					
+					check.addChangeListener(new ParamListener(param));
+					
+					component = check;
+					
+					break;
+					
+					
+				case FILTER:
+					
+					final SubfilterView subfilterView = new SubfilterView(controller, param.possibleValues);
+					param.setValue(subfilterView.getFilter());
+					subfilterView.addListener(new ParamListener(param));
+					
+					component = subfilterView;
+					
+					
 			}
+			
 			
 			if (component != null)
 			{
-				panel.add(component, c);
+				
+				if (param.type != ValueType.FILTER)
+				{
+					panel.add(paramLabel, c);
+					
+					c.gridx++;
+					c.weightx = 0;
+					c.anchor = GridBagConstraints.LINE_END;
+					
+					panel.add(component, c);
+					
+				} else {
+					
+					c.gridwidth = 2;
+					panel.add(component, c);
+					
+					c.gridwidth = 1;
+					
+				}
+				
+
+				
 				component.setEnabled(param.enabled);
 				controls.add(component);
 			}
+			
+			
 
 		}
 
@@ -276,4 +363,81 @@ public class SingleFilterView extends JPanel
 
 	}
 
+}
+
+
+class SubfilterView extends EventfulTypePanel<SubfilterView>
+{
+	
+	List<AbstractFilter> 	filters;
+	SingleFilterView		filterView;
+	AbstractFilter 			filter;
+	FilterController		controller;
+	
+	public SubfilterView(final FilterController controller, Object[] options)
+	{
+		
+		this.controller = controller;
+
+		CompoundBorder b = 	new CompoundBorder(			
+				new MatteBorder(0, 1, 0, 0, Color.gray),
+				new EmptyBorder(0, 4, 0, 0)
+			);
+		setBorder(b);
+
+		
+		//create one new filter of each kind which can be used to filter a subset
+		filters = Fn.map(options, new FunctionMap<Object, AbstractFilter>(){
+
+			public AbstractFilter f(Object o)
+			{
+				return (AbstractFilter)o;
+			}});
+		
+		setLayout(new BorderLayout());
+		
+		final JComboBox filterCombo = new JComboBox(filters.toArray());
+		add(filterCombo, BorderLayout.NORTH);
+		
+		filter = filters.get(0);
+		changeFilter(filter);
+		
+		
+		filterCombo.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				changeFilter((AbstractFilter)filterCombo.getSelectedItem());
+				updateListeners(SubfilterView.this);
+			}
+		});
+
+		
+	}
+	
+	
+	public AbstractFilter getFilter()
+	{
+		return filter;
+	}
+	
+	
+	public void setFilter(AbstractFilter f)
+	{
+		changeFilter(f);
+	}
+	
+	private void changeFilter(AbstractFilter f)
+	{
+		
+		if (f == null) return;
+		
+		if (filterView != null) SubfilterView.this.remove(filterView);
+		filter = f;
+		filterView = new SingleFilterView(filter, controller, false);
+		SubfilterView.this.add(filterView, BorderLayout.CENTER);
+	}
+	
+	
+	
 }

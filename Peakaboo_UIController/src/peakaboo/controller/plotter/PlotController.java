@@ -1362,7 +1362,6 @@ public class PlotController extends CanvasController implements FilterController
 				model.filteredPlot,
 				model.fittingSelections,
 				model.fittingProposals,
-				PeakTable.getAllTransitionSeries(),
 				channel,
 				currentTS	
 		);

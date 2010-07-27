@@ -7,6 +7,7 @@ import java.util.Map;
 import peakaboo.calculations.Background;
 import peakaboo.calculations.Calculations;
 import peakaboo.calculations.Noise;
+import peakaboo.common.Version;
 import peakaboo.datatypes.DataTypeFactory;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
@@ -79,6 +80,8 @@ public abstract class AbstractFilter implements Serializable
 	}
 
 
+	public abstract void initialize();
+	
 	public abstract String getFilterName();
 
 
@@ -124,11 +127,19 @@ public abstract class AbstractFilter implements Serializable
 		}
 		catch(Exception e)
 		{
-			System.err.println(getFilterName() + " Failed");
+			System.err.println(getFilterName() + "Filter Failed");
+			if (!Version.release) e.printStackTrace();
 			return data;
 		}
 	}
 	
 	public abstract boolean showFilter();
+	
+	public abstract boolean canFilterSubset();
 
+	
+	public String toString()
+	{
+		return this.getFilterName();
+	}
 }

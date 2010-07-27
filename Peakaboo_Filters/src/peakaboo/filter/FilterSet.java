@@ -27,7 +27,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	{
 
 		filters = DataTypeFactory.<AbstractFilter> list();
-		availableFilters = AvailableFilters.generateFilterList();
+		availableFilters = AvailableFilters.getNewInstancesForAllFilters();
 
 	}
 
@@ -136,7 +136,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 		for (AbstractFilter f : filters) {
 			if (f != null && f.enabled) {
 
-				data = f.filterApplyTo(data, filtersShouldCache);
+				data = f.filter(data, filtersShouldCache);
 			}
 		}
 

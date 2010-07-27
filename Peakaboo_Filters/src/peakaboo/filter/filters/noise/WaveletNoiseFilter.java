@@ -26,9 +26,14 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	public WaveletNoiseFilter()
 	{
 		super();
-		parameters.put(PASSES, new Parameter(ValueType.INTEGER, "Passes to Transform", 1));
+
 	}
 
+	@Override
+	public void initialize()
+	{
+		parameters.put(PASSES, new Parameter(ValueType.INTEGER, "Passes to Transform", 1));
+	}
 
 	@Override
 	public String getFilterName()
@@ -92,5 +97,15 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	{
 		return true;
 	}
+
+
+	@Override
+	public boolean canFilterSubset()
+	{
+		return false;
+	}
+
+
+
 
 }

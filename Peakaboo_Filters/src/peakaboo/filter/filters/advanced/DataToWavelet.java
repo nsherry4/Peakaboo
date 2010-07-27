@@ -6,6 +6,7 @@ import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 
@@ -18,8 +19,14 @@ public class DataToWavelet extends AbstractFilter
 	{
 
 		super();
-		parameters.put(AMOUNT, new Parameter(ValueType.INTEGER, "Passes", 1));
 
+	}
+	
+
+	@Override
+	public void initialize()
+	{
+		parameters.put(AMOUNT, new Parameter(ValueType.INTEGER, "Passes", 1));
 	}
 	
 	@Override
@@ -76,5 +83,14 @@ public class DataToWavelet extends AbstractFilter
 	{
 		return true;
 	}
+	
+	@Override
+	public boolean canFilterSubset()
+	{
+		return false;
+	}
+
+
+
 	
 }

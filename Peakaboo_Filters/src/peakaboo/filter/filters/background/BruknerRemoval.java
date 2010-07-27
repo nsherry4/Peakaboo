@@ -26,6 +26,12 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 	public BruknerRemoval()
 	{
 		super();
+
+	}
+	
+	@Override
+	public void initialize()
+	{
 		parameters.put(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
 		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 10));
 	}
@@ -80,6 +86,12 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 
 	@Override
 	public boolean showFilter()
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean canFilterSubset()
 	{
 		return true;
 	}
