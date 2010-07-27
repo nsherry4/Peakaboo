@@ -9,6 +9,12 @@ import peakaboo.curvefit.peaktable.Transition;
 import peakaboo.curvefit.peaktable.TransitionSeriesType;
 import scidraw.datatypes.DataTypeFactory;
 
+/**
+ * Describes the kind of escape peaks that would be expected from different kinds of detectors.
+ * @author Nathaniel Sherry, 2010
+ *
+ */
+
 
 public enum EscapePeakType
 {
@@ -45,8 +51,23 @@ public enum EscapePeakType
 	
 	;
 	
+	/**
+	 * returns true if this kind of {@link EscapePeakType} contains any {@link Transition}s
+	 * @return true if this {@link EscapePeakType} is non-empty
+	 */
 	public boolean hasOffset() 			{ return true; }
+	
+	
+	/**
+	 * Returns a list of {@link Transition}s representing this escape peak
+	 * @return a list of {@link Transition}s
+	 */
 	public List<Transition> offset()	{ return DataTypeFactory.<Transition>list(); }
+	
+	/**
+	 * Returns a pretty-printed description of this {@link EscapePeakType}
+	 * @return a {@link String} describing this {@link EscapePeakType}
+	 */
 	public String show()				{ return this.name().toLowerCase(); }
 	
 

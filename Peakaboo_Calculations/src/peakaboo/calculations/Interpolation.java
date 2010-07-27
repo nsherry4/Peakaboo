@@ -22,7 +22,7 @@ public class Interpolation {
 	/**
 	 * Linear interpolation of a grid of values by averaging neighbouring values. Grid size expands from x,y to x*2-1, y*2-1
 	 * @param grid the {@link GridPerspective} defining the dimensions for the data
-	 * @param list the list of data
+	 * @param list the {@link Spectrum} of data
 	 * @return an interpolated grid
 	 */
 	public static Pair<GridPerspective<Float>, Spectrum> interpolateGridLinear(GridPerspective<Float> grid, Spectrum list){
@@ -75,6 +75,13 @@ public class Interpolation {
 	}
 	
 	
+	/**
+	 * Given a set of data, a definition of its 2D dimensions, and a list of bad indices, interpolate the data
+	 * to replace the bad indices with approximations based off of neighbouring values. In place.
+	 * @param grid the {@link GridPerspective} defining the dimensions for the data
+	 * @param list the {@link Spectrum} of data
+	 * @param badPoints the list of indices of bad points
+	 */
 	public static void interpolateBadPoints(GridPerspective<Float> grid, Spectrum list, List<Integer> badPoints)
 	{
 		
@@ -105,7 +112,17 @@ public class Interpolation {
 		
 	}
 	
-	public static float interpolateBadPoint(GridPerspective<Float> grid, Spectrum list, List<Integer> badPoints, int x, int y)
+	
+	/**
+	 * interpolate a single bad point
+	 * @param grid dimensions of data
+	 * @param list Spectrum containing data
+	 * @param badPoints list of bad points
+	 * @param x x coordinate value to replace with interpolation
+	 * @param y y coordinate value to replace with interpolation
+	 * @return a new value for the given point
+	 */
+	private static float interpolateBadPoint(GridPerspective<Float> grid, Spectrum list, List<Integer> badPoints, int x, int y)
 	{
 		
 		float total = 0;

@@ -9,6 +9,7 @@ import fava.datatypes.Bounds;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
+import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
@@ -24,7 +25,7 @@ import scitypes.Spectrum;
 
 /**
  * Abstract class defining the methods needed for loading and working with a set of XRF scans, and for producing maps
- * with them. Subclasses can implement different ways of delivering the data -- {@link LocalDataSetProvider} provides an
+ * with them. Subclasses can implement different ways of delivering the data -- {@link OnDemandDataSetProvider} provides an
  * implementation using the local file system as a source for the data. <br>
  * <br>
  * Another implementation could use a network data source. Some sets of XRF data can be rather large, so this has been
@@ -85,10 +86,26 @@ public abstract class DataSetProvider
 	 */
 	public abstract Spectrum getScan(int index);
 	
+	/**
+	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
+	 * @param start the index from which to start searching
+	 * @return the index of the first non-null scan
+	 */
 	public abstract int firstNonNullScanIndex(int start);
 	
+	/**
+	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
+	 * @return the index of the first non-null scan
+	 */
 	public abstract int firstNonNullScanIndex();
 	
+	
+	/**
+	 * Given a {@link DataSource} finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
+	 * @param ds the {@link DataSource} to check
+	 * @param start the index from which to start searching
+	 * @return the index of the first non-null scan
+	 */
 	public static int firstNonNullScanIndex(DataSource ds, int start)
 	{
 		for (int i = start; i < ds.getScanCount(); i++)
@@ -103,11 +120,27 @@ public abstract class DataSetProvider
 	}
 	
 	
-	
+	/**
+	 * Finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
+	 * @param upto the maximum index to consider
+	 * @return the index of the last non-null scan
+	 */
 	public abstract int lastNonNullScanIndex(int upto);
 	
+	
+	/**
+	 * Finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
+	 * @return the index of the last non-null scan
+	 */
 	public abstract int lastNonNullScanIndex();
 	
+	
+	/**
+	 * Given a {@link DataSource} finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
+	 * @param ds the {@link DataSource} to check
+	 * @param upto the maximum index to consider
+	 * @return the index of the last non-null scan
+	 */
 	public static int lastNonNullScanIndex(DataSource ds, int upto)
 	{
 		upto = Math.min(upto, ds.getScanCount()-1);

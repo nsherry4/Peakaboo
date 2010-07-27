@@ -9,6 +9,7 @@ import java.util.Map;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.TransitionSeriesFitting;
+import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.datatypes.DataTypeFactory;
@@ -22,10 +23,24 @@ import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
 
+/**
+ * This class contains functions to do things like score, suggest, or sort TransitionSeries based on provided data.
+ * @author Nathaniel Sherry, 2010
+ *
+ */
+
 public class TSOrdering
 {
 
 
+	/**
+	 * Attempts to find an optimal ordering for a given list of {@link TransitionSeries}
+	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
+	 * @param unfitted the list of {@link TransitionSeries} to attempt to order
+	 * @param s the data to use to score orderings
+	 * @param escape the kind of {@link EscapePeakType} these fittings should use
+	 * @return an ordered list of {@link TransitionSeries}
+	 */
 	public static FList<TransitionSeries> optimizeTSOrdering(final float energyPerChannel, final FList<TransitionSeries> unfitted, final Spectrum s, final EscapePeakType escape)
 	{
 		FList<TransitionSeries> ordered = unfitted.toSink();
@@ -42,29 +57,47 @@ public class TSOrdering
 	}
 	
 	
-
+	/**
+	 * Creates an anonymous function to score a {@link TransitionSeries}
+	 * @param escape the kind of {@link EscapePeakType} the fitting should use
+	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
+	 * @param spectrum the data to use to score this {@link TransitionSeries}
+	 * @return a score for this {@link TransitionSeries}
+	 */
 	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, true);
 	}
 	
+	/**
+	 * Creates an anonymous function to score a {@link TransitionSeries}
+	 * @param escape the kind of {@link EscapePeakType} the fitting should use
+	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
+	 * @param spectrum the data to use to score this {@link TransitionSeries}
+	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
+	 * @return a score for this {@link TransitionSeries}
+	 */
 	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, boolean useBaseSize)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, useBaseSize);
 	}
 	
-	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize)
-	{
-		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, energy, useBaseSize, TransitionSeriesFitting.defaultStandardDeviations);
-	}
-	
-	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize, final float stddevs)
+	/**
+	 * Creates an anonymous function to score a {@link TransitionSeries}
+	 * @param escape the kind of {@link EscapePeakType} the fitting should use
+	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
+	 * @param spectrum the data to use to score this {@link TransitionSeries}
+	 * @param energy score {@link TransitionSeries} better the closer they are to the given energy value
+	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
+	 * @return a score for this {@link TransitionSeries}
+	 */
+	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize)
 	{
 	
 		//scoring function to evaluate each TransitionSeries
 		return new FunctionMap<TransitionSeries, Float>() {
 
-			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, spectrum.size(), energyPerChannel, escape, stddevs);
+			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, spectrum.size(), energyPerChannel, escape);
 			Spectrum s = new Spectrum(spectrum);
 			
 			public Float f(TransitionSeries ts)
@@ -108,8 +141,15 @@ public class TSOrdering
 	
 	
 	
-	
-	//get a list of all TSs which overlap with the given TS from the list of TSs 
+	/**
+	 * Return a list of all {@link TransitionSeries} which overlap with the given {@link TransitionSeries}
+	 * @param ts the {@link TransitionSeries} with which to check for overlaps
+	 * @param tss the other {@link TransitionSeries}, which should be checked for overlaps with ts
+	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
+	 * @param spectrumSize the size of the data to be fitted
+	 * @param escape the kind of {@link EscapePeakType} that should
+	 * @return a list of all {@link TransitionSeries} which overlap with the given one
+	 */
 	public static FList<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final FList<TransitionSeries> tss, float energyPerChannel, int spectrumSize, final EscapePeakType escape)
 	{
 		final TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, spectrumSize, energyPerChannel, escape);
@@ -131,45 +171,6 @@ public class TSOrdering
 				
 			}
 		});
-	}
-	
-	
-	//get a list of ordered pairs, each pair containing ts and one element from tss. ordering determines which TS ordering results in a better fit
-	private static FList<Pair<TransitionSeries, TransitionSeries>> getOrderedTSPairs(final TransitionSeries ts, final FList<TransitionSeries> tss, final float energyPerChannel, final Spectrum s, final EscapePeakType escape)
-	{
-		return tss.map(new FunctionMap<TransitionSeries, Pair<TransitionSeries, TransitionSeries>>() {
-
-			public Pair<TransitionSeries, TransitionSeries> f(TransitionSeries ts2)
-			{
-				return orderTSPairByScore(ts, ts2, energyPerChannel, s, escape);
-			}
-		});
-	}
-	
-	
-	
-	//generate a map between each TS in tss, and a list of ordered pairs each containing the TS and one other TS, where the ordering indicates the preferred fitting sequence for best results
-	public static Map<TransitionSeries, FList<Pair<TransitionSeries, TransitionSeries>>> getOrderedTSPairsMap(final FList<TransitionSeries> tss, final float energyPerChannel, final Spectrum s, final EscapePeakType escape)
-	{
-		
-		final Map<TransitionSeries, FList<Pair<TransitionSeries, TransitionSeries>>> pairsForTS = DataTypeFactory.map();
-		
-		
-		tss.each(new FunctionEach<TransitionSeries>() {
-
-			public void f(TransitionSeries ts)
-			{
-				//get a list of all TSs which overlap with this one
-				FList<TransitionSeries> otherTSs = getTSsOverlappingTS(ts, tss, energyPerChannel, s.size(), escape);
-				
-				//generate the ordered pairs from the list of overlapping TSs, and add it to the map
-				pairsForTS.put(ts, getOrderedTSPairs(ts, otherTSs, energyPerChannel, s, escape));
-				
-			}
-		});
-		
-		return pairsForTS;		
-		
 	}
 	
 	
@@ -204,6 +205,7 @@ public class TSOrdering
 	}
 	
 	
+	//compare two TransitionSeries -- useful for implementing a Comparator
 	private static int compareTSs(TransitionSeries ts1, TransitionSeries ts2, final float energyPerChannel, final Spectrum s, final EscapePeakType escape)
 	{
 		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, energyPerChannel, s, escape);
@@ -215,14 +217,23 @@ public class TSOrdering
 	
 	
 	
-
+	/**
+	 * Generates a list of {@link TransitionSeries} which are good fits for the given data at the given channel index
+	 * @param escape the kind of {@link EscapePeakType} to use when finding good matches
+	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
+	 * @param data the data against which {@link TransitionSeries} should be scored
+	 * @param fits the current set of fitted {@link TransitionSeries}
+	 * @param proposed the current set of proposed {@link TransitionSeries}
+	 * @param channel the channel for which the recommendations have been requested
+	 * @param currentTS the currently suggested {@link TransitionSeries}. If a previous suggestion was made, it should not be included in the fittings subtracted from the given data, as it will prevent good fittigs from being propsed.
+	 * @return an ordered list of {@link TransitionSeries} which are good fits for the given data at the given channel
+	 */
 	public static List<TransitionSeries> proposeTransitionSeriesFromChannel(
 			final EscapePeakType escape,
 			final float energyPerChannel, 
 			final Spectrum data, 
 			final FittingSet fits,
 			final FittingSet proposed,
-			final List<TransitionSeries> allTransitionSeries,
 			final int channel, 
 			TransitionSeries currentTS
 	)
@@ -271,7 +282,7 @@ public class TSOrdering
 
 
 		//get a list of all transition series to start with
-		FList<TransitionSeries> tss = Fn.map(allTransitionSeries, Functions.<TransitionSeries>id());
+		FList<TransitionSeries> tss = Fn.map(PeakTable.getAllTransitionSeries(), Functions.<TransitionSeries>id());
 
 		
 		//add in any 2x summations from the list of previously fitted AND proposed peaks.

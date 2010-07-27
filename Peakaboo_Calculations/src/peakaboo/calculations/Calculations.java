@@ -44,7 +44,7 @@ public class Calculations
 	 * Reverses a data grid along the y axis.
 	 * @param data the data to be reversed
 	 * @param grid the {@link GridPerspective} defining the dimensions of the data
-	 * @return a list of values reversed on the Y axis
+	 * @return a {@link Spectrum} of values reversed on the Y axis
 	 */
 	public static Spectrum gridYReverse(Spectrum data, GridPerspective<Float> grid)
 	{

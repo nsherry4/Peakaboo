@@ -14,7 +14,11 @@ import peakaboo.datatypes.DataTypeFactory;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
-
+/**
+ * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link TransitionSeriesFitting}s based on various provided parameters. 
+ * @author Nathaniel Sherry, 2009-2010
+ *
+ */
 
 public class FittingSet implements Serializable
 {

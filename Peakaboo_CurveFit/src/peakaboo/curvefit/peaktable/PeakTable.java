@@ -20,7 +20,7 @@ import peakaboo.datatypes.DataTypeFactory;
  * This class stores the information from the peak table in the form of a list of transition objects. It also provides
  * methods for looking up nearby transitions based on information such as by energy
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2010
  */
 
 public class PeakTable

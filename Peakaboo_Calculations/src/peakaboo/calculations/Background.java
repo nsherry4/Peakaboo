@@ -13,7 +13,7 @@ import scitypes.SpectrumCalculations;
  * This section contains various methods of removing backound (low-frequency noise) from datasets. While these
  * algorithms are intended to be used on XRF data, they can probably be used with other types of data as well.
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2010
  */
 public class Background
 {
@@ -21,7 +21,7 @@ public class Background
 	/**
 	 * Fits a parabolic curve to the underside of the data for each data point, and returns the 
 	 * union of the parabolas. This is a convenience method for
-	 * {@link #removeBackgroundFunctionFit(Spectrum, Spectrum, percent)}.
+	 * {@link #calcBackgroundFunctionFit(Spectrum, Spectrum, percent)}.
 	 * 
 	 * @param data
 	 *            the data to perform subtraction on
@@ -56,7 +56,7 @@ public class Background
 
 		SpectrumCalculations.normalize_inplace(function);
 
-		return removeBackgroundFunctionFit(data, function, percentToRemove);
+		return calcBackgroundFunctionFit(data, function, percentToRemove);
 
 	}
 
@@ -72,7 +72,7 @@ public class Background
 	 *            0.0 - 1.0: the percent of the background which this algorithm should try to remove
 	 * @return a background-subtracted list of values
 	 */
-	public static Spectrum removeBackgroundFunctionFit(Spectrum data, Spectrum function, float percentToRemove)
+	public static Spectrum calcBackgroundFunctionFit(Spectrum data, Spectrum function, float percentToRemove)
 	{
 
 		float value, minRatio, ratio;
@@ -124,7 +124,16 @@ public class Background
 	
 	
 	
-	
+	/**
+	 * Calculates the background using the Brukner technique. Brukner technique works by taking 
+	 * min(data, moving_average(data)) repeatedly. This prevents strong signal from
+	 * bleeding into nearby areas, while reducing the strong signal at the same time.
+	 * 
+	 * @param data the {@link Spectrum} data to calculate the background from
+	 * @param windowSize the window size for the moving average 
+	 * @param repetitions the number of iterations of the smoothing/minvalue step to perform
+	 * @return the calculated background
+	 */
 	public static Spectrum calcBackgroundBrukner(Spectrum data, int windowSize, int repetitions)
 	{
 
@@ -168,7 +177,13 @@ public class Background
 	}
 
 
-	public static void removeBackgroundBruknerIteration(final Spectrum source, final Spectrum target, final int windowSize)
+	/**
+	 * Performs a single iteration of the brukner min(data, moving average) process
+	 * @param source the data to look at
+	 * @param target the {@link Spectrum} to write the new values out to
+	 * @param windowSize the window size for the moving average
+	 */
+	private static void removeBackgroundBruknerIteration(final Spectrum source, final Spectrum target, final int windowSize)
 	{
 
 		for (int i = 0; i < source.size(); i++)
@@ -186,6 +201,16 @@ public class Background
 	
 	
 	
+	/**
+	 * The Linear Trim background removal algorithm works by defining a sequence of line segments between
+	 * each pair of data points m point apart. (ie (1,5), (2,6), (3, 7) if m = 4) with the height of each
+	 * end of the line segment being the height of the signal at that point. Any values in the source data
+	 * between those two points which exceed the height of the line segment are cropped.  
+	 * @param scan the source data to calculate the background of
+	 * @param lineSize the length of the line segments to be generated (m, from the description above)
+	 * @param iterations the number of iterations of this algorithm to run.
+	 * @return
+	 */
 	public static Spectrum calcBackgroundLinearTrim(final Spectrum scan, int lineSize, int iterations)
 	{
 		
@@ -208,7 +233,15 @@ public class Background
 		
 	}
 	
-	public static Spectrum calcBackgroundLinearTrimIteration(final Spectrum scan, final Spectrum target, final Spectrum lineSegment, int lineSize)
+	/**
+	 * Runs an individual iteration of the Linear Trim background removal technique
+	 * @param scan the source data to from which we calculate the background
+	 * @param target the target to which we write the results
+	 * @param lineSegment a {@link Spectrum} in which we can store the height/intensity values of a line segment.
+	 * @param lineSize the length of the line segments
+	 * @return
+	 */
+	private static Spectrum calcBackgroundLinearTrimIteration(final Spectrum scan, final Spectrum target, final Spectrum lineSegment, int lineSize)
 	{
 		int first = -lineSize+1;
 		int last = 0;
@@ -238,7 +271,16 @@ public class Background
 	}
 	
 	
-	public static Spectrum linearTrimLinearSegment(Spectrum target, float start, float stop, int startIndex, int stopIndex)
+	/**
+	 * Generate a line segment from the given parameters
+	 * @param target the {@link Spectrum} that we write the line segment to
+	 * @param start the start value (ie height, intensity) for this line segment
+	 * @param stop the stop value (ie height, intensity) for this line segment
+	 * @param startIndex the index where the line segment begins
+	 * @param stopIndex the index where the line segment ends
+	 * @return target
+	 */
+	private static Spectrum linearTrimLinearSegment(Spectrum target, float start, float stop, int startIndex, int stopIndex)
 	{
 	
 		float span = (stopIndex) - startIndex;
@@ -255,8 +297,16 @@ public class Background
 		
 	}
 	
-	
-	public static Spectrum linearTrimCommitLinearSegment(Spectrum data, Spectrum lineSegment, int startIndex, int stopIndex)
+	/**
+	 * Takes a data {@link Spectrum} and a Spectrum containing a line segment, and sets the values in the data spectrum to the values
+	 * in the line segment spectrum if the line segment value is lower, but >=0
+	 * @param data the Spectrum containing the data
+	 * @param lineSegment the Spectrum containing the line segment
+	 * @param startIndex the index to start at
+	 * @param stopIndex the index to stop at
+	 * @return
+	 */
+	private static Spectrum linearTrimCommitLinearSegment(Spectrum data, Spectrum lineSegment, int startIndex, int stopIndex)
 	{
 		float datapoint;
 		float linepoint;

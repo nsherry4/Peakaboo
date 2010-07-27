@@ -40,19 +40,32 @@ public class FittingTitlePainter extends PlotPainter
 	
 	private Color colour;
 	
-	public FittingTitlePainter(FittingResultSet fittings, boolean drawElementNames, boolean drawMaxIntensities){
+	/**
+	 * Create a FittingTitlePainter which draws in black
+	 * @param fittings the {@link FittingResultSet} for the data being drawn
+	 * @param drawTSNames flag to indicate if the names of {@link TransitionSeries} should be drawn
+	 * @param drawMaxIntensities flag to indicate if the heights of {@link TransitionSeries} should be drawn
+	 */
+	public FittingTitlePainter(FittingResultSet fittings, boolean drawTSNames, boolean drawMaxIntensities){
 		
-		this(fittings, drawElementNames, drawMaxIntensities, Color.black);	
+		this(fittings, drawTSNames, drawMaxIntensities, Color.black);	
 		
 	}
 	
-	public FittingTitlePainter(FittingResultSet fittings, boolean drawElementNames, boolean drawMaxIntensities, Color colour){
+	/**
+	 * Create a FittingTitlePainter which draws in the given {@link Color}
+	 * @param fittings the {@link FittingResultSet} for the data being drawn
+	 * @param drawTSNames flag to indicate if the names of {@link TransitionSeries} should be drawn
+	 * @param drawMaxIntensities flag to indicate if the heights of {@link TransitionSeries} should be drawn
+	 * @param colour the {@link Color} that should be used to draw the titles
+	 */
+	public FittingTitlePainter(FittingResultSet fittings, boolean drawTSNames, boolean drawMaxIntensities, Color colour){
 		
 		//this.tsList = tsList;
 		//this.visibleElements = visibleElements;
 		this.fittings = fittings;
 		this.drawMaxIntensities = drawMaxIntensities;
-		this.drawElementNames = drawElementNames;
+		this.drawElementNames = drawTSNames;
 		
 		this.previousLabels = DataTypeFactory.<Coord<Bounds<Float>>>list();
 		
@@ -122,6 +135,7 @@ public class FittingTitlePainter extends PlotPainter
 		p.context.restore();
 			
 	}
+	
 	
 	public float baseHeightForTitle(PainterData p, String title, float energy)
 	{

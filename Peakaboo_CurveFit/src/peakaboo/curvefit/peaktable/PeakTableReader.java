@@ -13,9 +13,9 @@ import peakaboo.datatypes.DataTypeFactory;
 
 /**
  * 
- * This class reads a peak table and generates a PeakTable object
+ * This class reads a peak table definitions file and populates the static PeakTable class with data
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2010
  */
 
 public class PeakTableReader

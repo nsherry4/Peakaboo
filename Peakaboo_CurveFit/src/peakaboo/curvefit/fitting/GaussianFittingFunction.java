@@ -30,7 +30,7 @@ public class GaussianFittingFunction implements FittingFunction {
 				
 				               1.0f
 				/*------------------------------*/ /
-			    sigma*(Math.sqrt(2*Math.PI))
+				   sigma*(Math.sqrt(2*Math.PI))
 				
 		);
 		
@@ -42,7 +42,7 @@ public class GaussianFittingFunction implements FittingFunction {
 	{
 		double exp = - (
 		
-				Math.pow((point - mean), 2)
+				   Math.pow((point - mean), 2)
 				/*-----------------------------*/ /
 						TwoSigmaSquared
 		

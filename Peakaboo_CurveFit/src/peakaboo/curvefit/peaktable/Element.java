@@ -817,6 +817,10 @@ public enum Element
 		}
 	};
 	
+	/**
+	 * Returns the atomic number of this element (ie H=1, H2=2, ...)
+	 * @return the atomic number of this element
+	 */
 	public int atomicNumber()
 	{
 		return this.ordinal()+1;

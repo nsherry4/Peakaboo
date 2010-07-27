@@ -17,10 +17,13 @@ public class Transition implements Serializable, Comparable<Transition>{
 	 */
 	public float energyValue;
 	
+	/**
+	 * The {@link TransitionType} for this {@link Transition}
+	 */
 	public TransitionType type;
 	
 	/**
-	 * The relative intensity of this peak compared to the a1 peak of the same {@link TransitionSeriesType}
+	 * The relative intensity of this peak compared to the a1 peak of the same {@link TransitionSeries}
 	 */
 	public float relativeIntensity;
 
@@ -53,6 +56,11 @@ public class Transition implements Serializable, Comparable<Transition>{
 		return 0;
 	}
 	
+	/**
+	 * Creates a new Transition representing the effect of a detector recording both this Transition and the other given Transition simultaneously
+	 * @param other the other Transition
+	 * @return a new Transition representing simultaneous detection of both
+	 */
 	public Transition summation(Transition other)
 	{
 		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity, TransitionType.pileup);

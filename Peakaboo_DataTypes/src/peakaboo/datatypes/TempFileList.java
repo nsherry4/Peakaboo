@@ -12,6 +12,11 @@ import java.util.ListIterator;
 import fava.datatypes.Pair;
 import fava.signatures.FunctionMap;
 
+/**
+ * TempFileList is an implementation of the List interface which writes out values to a temporary file, rather than store elements in memory. This means that get operations are idempotent when there are no intervening set operations, even if the accessed elements are modified externally 
+ * @author Nathaniel Sherry, 2010
+ *
+ */
 
 public class TempFileList<T> implements List<T>
 {
@@ -27,12 +32,17 @@ public class TempFileList<T> implements List<T>
 	private FunctionMap<T, byte[]> encode;
 	private FunctionMap<byte[], T> decode;
 	
-	//private T lastElement = null;
-	//private int lastElementIndex = -1;
 	
-	public TempFileList(int initalSize, String name, FunctionMap<T, byte[]> encode, FunctionMap<byte[], T> decode) throws IOException
+	/**
+	 * Createa new TempFileList
+	 * @param name the name prefix to give the temporary file
+	 * @param encode a function which can take an element T, and serialize it for output to the temporary file
+	 * @param decode a function which can take a serialized representation of T and deserialize it into an element T
+	 * @throws IOException
+	 */
+	public TempFileList(String name, FunctionMap<T, byte[]> encode, FunctionMap<byte[], T> decode) throws IOException
 	{
-		elementPositions = new ArrayList<Pair<Long,Integer>>(initalSize);
+		elementPositions = new ArrayList<Pair<Long,Integer>>();
 		temp = File.createTempFile("peakaboo - " + name , "list");
 		raf = new RandomAccessFile(temp, "rw");
 		
@@ -88,48 +98,13 @@ public class TempFileList<T> implements List<T>
 	
 	public synchronized boolean add(T e)
 	{
-		/*try{
-			long currentLength = raf.length();
-			byte[] encoded = encode.f(e);
-			long newLength = currentLength + encoded.length;
-			
-			raf.seek(currentLength);
-			//raf.setLength(newLength);
-			raf.write(encoded);
-			
-			elementPositions.add(new Pair<Long, Integer>(currentLength, encoded.length));
-			
-			return true;
-			
-		} catch (IOException ex)
-		{
-			throw new UnsupportedOperationException("Cannot write to backend file");
-		}*/
 		addEntry(elementPositions.size(), e);
 		return true;
 		
 	}
 	
 	public synchronized void add(int index, T element)
-	{
-		/*try{
-			long currentLength = raf.length();
-			byte[] encoded = encode.f(element);
-			long newLength = currentLength + encoded.length;
-			
-			raf.seek(currentLength);
-			//raf.setLength(newLength);
-			raf.write(encoded);
-			
-			elementPositions.add(index, new Pair<Long, Integer>(currentLength, encoded.length));
-			
-		} catch (IOException ex)
-		{
-			ex.printStackTrace();
-			
-			throw new UnsupportedOperationException("Cannot write to backend file");
-		}*/
-		
+	{		
 		addEntry(index, element);
 	}
 

@@ -108,11 +108,20 @@ public class DataTypeFactory {
     	return dataset;
     }
     
+    /**
+     * Creates a list of {@link Spectrum}s
+     * @return a new list of {@link Spectrum}s
+     */
     public static List<Spectrum> spectrumSet()
     {
     	return DataTypeFactory.<Spectrum>list();
     }
     
+    /**
+     * Creates a list of {@link Spectrum}s, initialzed to null values
+     * @param size the initial size of the list
+     * @return a new null-initialized list of {@link Spectrum}s
+     */
     public static List<Spectrum> spectrumSetInit(int size)
     {
     	List<Spectrum> dataset = DataTypeFactory.<Spectrum>list();

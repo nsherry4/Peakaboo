@@ -29,6 +29,12 @@ public class FittingMarkersPainter extends PlotPainter
 	private EscapePeakType		escapeType;
 	private Color				colour;
 
+	/**
+	 * Create a FittingMarkersPainter
+	 * @param fitResults the {@link FittingResultSet} for the data being drawn
+	 * @param escapeType the {@link EscapePeakType} used to generate the {@link FittingResultSet}
+	 * @param c the {@link Color} to use when drawing the markings
+	 */
 	public FittingMarkersPainter(FittingResultSet fitResults, EscapePeakType escapeType, Color c)
 	{
 		this.fitResults = fitResults;

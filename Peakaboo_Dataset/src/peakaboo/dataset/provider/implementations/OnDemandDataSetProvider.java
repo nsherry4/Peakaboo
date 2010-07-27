@@ -213,82 +213,15 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	{
 
 		return MapTS.calculateMap(dataSource, filters, fittings, type);
-		/*
-		final TaskList<MapResultSet> tasklist;
-
-		// ======================================================================
-		// LOGIC FOR FILTERS AND FITTING
-		// Original => Filtered => Fittings => Stored-In-Map
-		// ======================================================================
-		//final List<List<Double>> filteredData;
-
-		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, expectedScanCount());
 		
-		final Task t_filter = new Task("Apply Filters and Fittings") {
-
-			@Override
-			public boolean work(int ordinal)
-			{
-
-				Spectrum data = filters.filterDataUnsynchronized(dataSource.getScanAtIndex(ordinal), false);
-				//filteredDataSet.set(ordinal, data);
-				
-				FittingResultSet frs = fittings.calculateFittings(data);
-				// fittingResults.set(ordinal, frs);
-
-				for (FittingResult result : frs.fits)
-				{
-					maps.putIntensityInMapAtPoint(
-						SpectrumCalculations.sumValuesInList(result.fit),
-						result.transitionSeries,
-						ordinal);
-				}
-
-				return true;
-				
-
-			}
-
-		};
-
-
-		tasklist = new TaskList<MapResultSet>("Generating Data for Map") {
-
-			@Override
-			public MapResultSet doTasks()
-			{
-
-				TicketingUITaskExecutor executor;
-
-				// ================================
-				// PROCESS FILTERS, FITTINGS
-				// ================================
-				
-
-					
-				// process these scans in parallel
-				executor = new TicketingUITaskExecutor(scanCount(), t_filter, this);
-				executor.executeBlocking();
-				
-				if (isAborted()) return null;
-
-
-				// return intensities;
-				// return ListCalculations.subtractFromList(intensities, 0.0, 0.0);
-				return maps;
-			}
-
-		};
-
-		tasklist.addTask(t_filter);
-
-		// tasklist.addTask(t_scanToMaps);
-
-		return tasklist;*/
 	}
 
 
+	/**
+	 * Reads the list of {@link AbstractFile}s as a {@link DataSource}
+	 * @param files the files to read as a {@link DataSource}
+	 * @return {@link PluralSet} which, when complated, returns a Boolean indicating success
+	 */
 	public PluralSet<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
@@ -716,8 +649,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		return Technique;
 	}
 
-	
-	
 
 	@Override
 	public void discard()
@@ -733,10 +664,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		// TODO Auto-generated method stub
 		return scanLength;
 	}
-
-
-
-
 	
 	
 }

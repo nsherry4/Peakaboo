@@ -21,10 +21,11 @@ import peakaboo.datatypes.DataTypeFactory;
 
 
 /**
- * This class is a representation of all the {@link Transition}s for a given {@link Element} that fall into a specific
- * {@link TransitionSeriesType}
+ * This class can represent: 1) a representation of all the {@link Transition}s for a given {@link Element} that fall into a specific
+ * {@link TransitionSeriesType}. 2) A representation of all of the {@link TransitionSeries} that are involved in the simultaneous 
+ * detection of two or more X-Ray signals
  * 
- * @author Nathaniel Sherry
+ * @author Nathaniel Sherry, 2009-2010
  */
 
 public class TransitionSeries implements Serializable, Iterable<Transition>, Comparable<TransitionSeries>
@@ -34,6 +35,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 * The {@link TransitionSeriesType} that this TransitionSeries represents
 	 */
 	public TransitionSeriesType		type;
+	
+	/**
+	 * the {@link TransitionSeriesMode} which describes this TransitionSeries.
+	 */
 	public TransitionSeriesMode		mode;
 
 	/**
@@ -82,10 +87,11 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 	/**
-	 * Creates a new TransitionSeries for the given {@link Element} and {@link TransitionSeriesType}
+	 * Creates a new TransitionSeries based on the given parameters
 	 * 
-	 * @param element
-	 * @param seriesType
+	 * @param element the {@link Element} that this {@link TransitionSeries} represents (eg H, He, ...)
+	 * @param seriesType the {@link TransitionSeriesType} that this {@link TransitionSeries} represents (eg K, L, ...)
+	 * @param mode the {@link TransitionSeriesMode} that this {@link TransitionSeries} represents (eg Primary, Pile-Up, ...)
 	 */
 	public TransitionSeries(Element element, TransitionSeriesType seriesType, TransitionSeriesMode mode)
 	{
@@ -99,6 +105,12 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		componentSeries = DataTypeFactory.<TransitionSeries> list();
 	}
 	
+	/**
+	 * Creates a new TransitionSeries with a {@link TransitionSeriesMode} of {@link TransitionSeriesMode#PRIMARY}
+	 * 
+	 * @param element the {@link Element} that this {@link TransitionSeries} represents (eg H, He, ...)
+	 * @param seriesType the {@link TransitionSeriesType} that this {@link TransitionSeries} represents (eg K, L, ...)
+	 */
 	public TransitionSeries(Element element, TransitionSeriesType seriesType)
 	{
 		this(element, seriesType, TransitionSeriesMode.PRIMARY);
@@ -127,11 +139,19 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
+	/**
+	 * Returns a list of all {@link Transition}s that this {@link TransitionSeries} is composed of
+	 * @return a list of constituent {@link Transition}s
+	 */
 	public List<Transition> getAllTransitions()
 	{
 		return Fn.map(transitions, Functions.<Transition>id());
 	}
 	
+	/**
+	 * Returns the strongest {@link Transition} for this {@link TransitionSeries}.
+	 * @return the most intense {@link Transition}
+	 */
 	public Transition getStrongestTransition()
 	{
 
@@ -147,6 +167,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
+	/**
+	 * Checks to see if this {@link TransitionSeries} is empty
+	 * @return true if this {@link TransitionSeries} is non-empty, false otherwise
+	 */
 	public boolean hasTransitions()
 	{
 		return transitions.size() != 0;
@@ -248,7 +272,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
-
+	/**
+	 * Returns a description of this {@link TransitionSeries}, including the {@link Element} and the {@link TransitionSeriesType}. If the {@link TransitionSeries} is a pile-up or summation, it will be reflected in the description
+	 * @return
+	 */
 	public String getDescription()
 	{
 		return getDescription(true);
@@ -313,6 +340,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 	
 
+	/**
+	 * Returns the lowest energy value of any {@link Transition} in this {@link TransitionSeries}
+	 * @return lowest energy values
+	 */
 	public double getLowestEnergyValue()
 	{
 		double lowest = Double.MAX_VALUE;
@@ -324,62 +355,11 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
-	/*public TransitionSeries pileup()
-	{	
-		
-		// make a copy of the transitions list
-		final List<Transition> transitionList = Functional.map(transitions, Functions.<Transition> id());
-
-		// create the new TransitionSeries object
-		final TransitionSeries newTransitionSeries = new TransitionSeries(element, type, TransitionSeriesMode.PILEUP);
-
-		if (transitions.size() == 0) return newTransitionSeries;
-
-		List<List<Transition>> allPileupLists = Functional.map(
-				transitions,
-				new Function1<Transition, List<Transition>>() {
-
-					// map each of the transitions
-
-					public List<Transition> f(final Transition t1)
-					{
-
-						//
-						//
-						// For each transition in the outer map, map the list transitionList to a list of
-						// pileup values
-						transitionList.remove(t1);
-						return Functional.map(transitionList, new Function1<Transition, Transition>() {
-
-							public Transition f(Transition t2)
-							{
-								return t1.summation(t2);
-							}
-						});
-
-					}
-				});
-
-		List<Transition> allPileups = Functional.foldr(allPileupLists, Functions.<Transition> listConcat());
-
-		Functional.each(allPileups, new Function1<Transition, Object>() {
-
-			public Object f(Transition t)
-			{
-				newTransitionSeries.setTransition(t);
-				return null;
-			}
-		}
-
-		);
-
-		newTransitionSeries.componentSeries.add(this);
-		newTransitionSeries.componentSeries.add(this);
-
-		return newTransitionSeries;
-
-	}*/
-
+	/**
+	 * Accepts a list of {@link TransitionSeries} and generates a composite TransitionSeries representing the occasional simultaneous detection of all of the given {@link TransitionSeries}
+	 * @param tss list of {@link TransitionSeries}
+	 * @return a Composite {@link TransitionSeries}
+	 */
 	public static TransitionSeries summation(final List<TransitionSeries> tss)
 	{
 
@@ -418,7 +398,11 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
-
+	/**
+	 * Creates a new {@link TransitionSeries} representing the effect of two {@link TransitionSeries} occasionally being detected simultaneously by a detector 
+	 * @param other the other {@link TransitionSeries} being detected
+	 * @return a Composite {@link TransitionSeries}
+	 */
 	public TransitionSeries summation(final TransitionSeries other)
 	{
 
@@ -481,6 +465,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		return newTransitionSeries;
 
 	}
+
 
 
 	public int compareTo(TransitionSeries otherTS)
@@ -556,6 +541,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
+	/**
+	 * Returns the number of times the base {@link Element} {@link TransitionSeries} appears duplicated in this {@link TransitionSeries}. If this {@link TransitionSeries} is not a pile-up, the result is 1
+	 * @return the number of times the base {@link TransitionSeries} has been piled-up
+	 */
 	public int getPileupCount()
 	{
 		int count = 0;
@@ -576,6 +565,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
+	/**
+	 * Returns the base {@link TransitionSeriesType} for this {@link TransitionSeries}
+	 * @return the base {@link TransitionSeriesType}
+	 */
 	public TransitionSeriesType getBaseType()
 	{
 
@@ -591,6 +584,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
+	/**
+	 * Returns a list of all primary {@link TransitionSeries} which compose this {@link TransitionSeries}
+	 * @return a list of all primary {@link TransitionSeries} represented by this
+	 */
 	public List<TransitionSeries> getBaseTransitionSeries()
 	{
 		List<TransitionSeries> list = null;
@@ -617,6 +614,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
+	/**
+	 * Returns a list containing the {@link Element} name and {@link TransitionSeriesType} for this {@link TransitionSeries}. if this {@link TransitionSeries} is not a primary one, null is returned 
+	 * @return
+	 */
 	public List<String> toSerializableList()
 	{
 		if (type == TransitionSeriesType.COMPOSITE) return null;

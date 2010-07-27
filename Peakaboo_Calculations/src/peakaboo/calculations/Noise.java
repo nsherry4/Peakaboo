@@ -301,68 +301,64 @@ public class Noise
 
 	}
 
-	
-	public static Spectrum DataToWavelet(Spectrum data, int stop)
+	/**
+	 * Transforms  the given data to wavelet form
+	 * @param data the data to transform
+	 * @param steps the number of iterations to transform
+	 * @return wavelet form data
+	 */
+	public static Spectrum DataToWavelet(Spectrum data, int steps)
 	{
 		Spectrum filter;
 		Spectrum result = new Spectrum(data.size());
 
-
+		
 		float[] dataAsArray = data.toArray();
-		int lastSize = data.size();
 
-		// transform
-		for (int i = 0; i < stop; i++) {
+		int lastSize = data.size();
+		for (int i = 0; i < steps; i++) {
 			FastDaubechies2.transform(dataAsArray, lastSize);
 			lastSize /= 2;
-
-			
-			//take a subset of the data
-			for (int j = 0; j < data.size(); j++) {
-				result.set(i, dataAsArray[j]);
-			}
-
-			// FILTERING
-			filter = result.subSpectrum(lastSize-1, lastSize * 2-1);	
-
-			// out of list for processing
-			for (int j = lastSize; j < lastSize * 2; j++) {
-				dataAsArray[j] = filter.get(j - lastSize);
-			}
-
 		}
+		
+		// transform
+		
 
 		// back to list
 		for (int i = 0; i < data.size(); i++) {
-			result.set(i, Math.max(0, dataAsArray[i]));
+			result.set(i, dataAsArray[i]);
 		}
 
 		return result;
 	}
 	
-	
-	public static Spectrum WaveletToData(Spectrum data, int stop)
+	/**
+	 * Transforms wavelet data back to normal
+	 * @param data the wavelet data to untransform
+	 * @param steps the number of iterations to untransform
+	 * @return the untransformed data
+	 */
+	public static Spectrum WaveletToData(Spectrum data, int steps)
 	{
 		Spectrum result = new Spectrum(data.size());
 
 
 		float[] dataAsArray = data.toArray();
+
 		int lastSize = data.size();
-
-		for (int i = 0; i < stop; i++) {
-			lastSize /=2;
+		for (int i = 0; i < steps; i++) {
+			lastSize /= 2;
 		}
-
-		// inverse transform
-		for (int i = 0; i < stop; i++) {
+		
+		for (int i = 0; i < steps; i++) {
+			// inverse transform
 			FastDaubechies2.invTransform(dataAsArray, lastSize);
 			lastSize *= 2;
 		}
 
-
 		// back to list
 		for (int i = 0; i < data.size(); i++) {
-			result.set(i, Math.max(0, dataAsArray[i]));
+			result.set(i, dataAsArray[i]);
 		}
 
 		return result;
@@ -526,7 +522,19 @@ public class Noise
 	}
 	
 	
-	
+	/**
+	 * The Spring filter is designed to smooth weaker data while preserving the structure of stronger signals.
+	 * The Spring filter Filter operates on the assumption that weak signal should be smoothed more than strong signal.
+	 * It treats each pair of points as if they were connected by a spring. With each iteration, a tension force draws
+	 * neighbouring points closer together. The Force Multiplier controls how strongly the two elements are pulled 
+	 * together, and the Force Falloff Rate controls how aggressively stronger signal is anchored in place, unmoved 
+	 * by spring forces. This prevents peaks from being distorted by the smoothing algorithm.
+	 * @param data the {@link Spectrum} to smooth
+	 * @param forceMultiplier the linear force multiplier value
+	 * @param falloffExp the exponential force falloff value
+	 * @param iterations the number of iterations to perform the smoothing
+	 * @return the smoothed data
+	 */
 	public static Spectrum SpringFilter(Spectrum data, float forceMultiplier, float falloffExp, int iterations)
 	{
 		Spectrum result = new Spectrum(data);
@@ -583,6 +591,11 @@ public class Noise
 	}
 
 	
+	/**
+	 * Calculates the derivitive (deltas) for a spectrum
+	 * @param list the data to find the deltas for
+	 * @return a list of deltas
+	 */
 	public static Spectrum deriv(Spectrum list)
 	{
 	
@@ -598,6 +611,11 @@ public class Noise
 		
 	}
 	
+	/**
+	 * Calculates the integral (sums up to X) for a spectrum
+	 * @param list the data to find the integral for
+	 * @return a list of sums
+	 */
 	public static Spectrum integ(Spectrum list)
 	{
 		
