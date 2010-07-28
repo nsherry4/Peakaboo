@@ -6,8 +6,8 @@ import java.util.List;
 import fava.Fn;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.TempFileList;
 import scitypes.Spectrum;
+import scitypes.filebacked.FileBackedList;
 
 
 public class LiveDataSource implements DataSource
@@ -23,7 +23,7 @@ public class LiveDataSource implements DataSource
 	{
 		try
 		{
-			scans = new TempFileList<Spectrum>("Peakaboo Live Dataset", Spectrum.getEncoder(), Spectrum.getDecoder());
+			scans = new FileBackedList<Spectrum>("Peakaboo Live Dataset");
 		}
 		catch (IOException e)
 		{

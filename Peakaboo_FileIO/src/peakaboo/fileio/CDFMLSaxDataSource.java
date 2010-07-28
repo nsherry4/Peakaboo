@@ -24,11 +24,11 @@ import fava.signatures.FunctionMap;
 
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.datatypes.TempFileList;
 import peakaboo.fileio.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import scitypes.filebacked.FileBackedList;
 
 
 
@@ -45,7 +45,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	//scanIndex -> (x, y, i, j, iNaught)
 	Map<Integer, ScanValues>					scanValues;
 	//scanIndex -> Spectrum
-	TempFileList<Spectrum>						scandata;
+	FileBackedList<Spectrum>						scandata;
 
 	int numScans;
 	
@@ -93,7 +93,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		try
 		{
 
-			scandata = new TempFileList<Spectrum>("Peakaboo", Spectrum.getEncoder(), Spectrum.getDecoder());
+			scandata = new FileBackedList<Spectrum>("Peakaboo");
 
 
 			xr = XMLReaderFactory.createXMLReader();

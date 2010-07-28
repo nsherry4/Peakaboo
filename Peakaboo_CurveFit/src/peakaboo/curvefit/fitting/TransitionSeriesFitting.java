@@ -235,7 +235,7 @@ public class TransitionSeriesFitting
 	
 	public boolean isOverlapping(TransitionSeriesFitting other)
 	{
-		return transitionRanges.isOverlapping(other.transitionRanges);
+		return transitionRanges.isTouching(other.transitionRanges);
 		
 	}
 	
