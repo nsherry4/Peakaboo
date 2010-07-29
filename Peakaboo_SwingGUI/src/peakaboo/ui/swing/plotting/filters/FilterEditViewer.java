@@ -2,6 +2,7 @@ package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -14,7 +15,6 @@ import eventful.EventfulTypeListener;
 
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.filter.AbstractFilter;
-import swidget.containers.SwidgetContainer;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.listcontrols.ListControls;
 
@@ -30,7 +30,7 @@ public class FilterEditViewer extends ClearPanel{
 	
 	protected ListControls controls;
 	
-	public FilterEditViewer(FilterController _controller, SwidgetContainer windowOwner, FiltersetViewer _owner){
+	public FilterEditViewer(FilterController _controller, JFrame windowOwner, FiltersetViewer _owner){
 		
 		super();
 		
@@ -70,7 +70,7 @@ public class FilterEditViewer extends ClearPanel{
 		
 	}
 	
-	private JTable createFilterTable(SwidgetContainer owner){
+	private JTable createFilterTable(JFrame owner){
 		
 		m = new TableModel() {
 		

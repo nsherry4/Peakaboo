@@ -288,6 +288,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					}
 					catch (Exception e)
 					{
+						e.printStackTrace();
 						aborted();
 						return null;
 					}
@@ -383,11 +384,11 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		
 		//if this data source has dimensions, prepare to read them
 		DataSourceDimensions dims = null;
-		if (ds instanceof DataSourceDimensions)
+		if (ds instanceof DataSourceDimensions && ((DataSourceDimensions) ds).hasRealDimensions())
 		{
 		
-			 dims = (DataSourceDimensions) ds;
-			
+			dims = (DataSourceDimensions) ds;
+
 			hasDimensions = true;
 
 			dataDimension = dims.getDataDimensions();
@@ -397,6 +398,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 
 			realUnits = getSISizeFromUnitName(dims.getRealDimensionsUnit());
+
 
 		}
 		else
@@ -663,6 +665,13 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	{
 		// TODO Auto-generated method stub
 		return scanLength;
+	}
+
+
+	@Override
+	public DataSource getDataSource()
+	{
+		return dataSource;
 	}
 	
 	

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -34,6 +35,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -72,10 +74,12 @@ import peakaboo.controller.plotter.ChannelCompositeMode;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
-import peakaboo.ui.swing.dialogues.ScanInfoDialogue;
+import peakaboo.ui.swing.PlotterFrame;
+import peakaboo.ui.swing.dialogues.PropertyDialogue;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
@@ -83,8 +87,6 @@ import plural.swing.PluralSetView;
 import plural.workers.PluralSet;
 import scitypes.Coord;
 import scitypes.SigDigits;
-import swidget.containers.SwidgetContainer;
-import swidget.containers.SwidgetFrame;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -103,7 +105,7 @@ import swidget.widgets.toggle.ComplexToggle;
 public class PlotPanel extends ClearPanel
 {
 
-	private SwidgetContainer	container;
+	private PlotterFrame		container;
 
 
 
@@ -147,7 +149,7 @@ public class PlotPanel extends ClearPanel
 	String						savedSessionFileName;
 
 
-	public PlotPanel(SwidgetContainer container)
+	public PlotPanel(PlotterFrame container)
 	{
 		this.container = container;
 
@@ -1435,10 +1437,8 @@ public class PlotPanel extends ClearPanel
 		{
 
 			PluralSet<Boolean> reading = controller.TASK_readFileListAsDataset(files);
-			if (container instanceof SwidgetFrame)
-				new PluralSetView((SwidgetFrame)container, reading);
-			else
-				new PluralSetView(container, reading);
+			new PluralSetView(container, reading);
+
 			// TaskListView was blocking.. it is now closed
 			System.gc();
 
@@ -1460,10 +1460,8 @@ public class PlotPanel extends ClearPanel
 		final PluralSet<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
 		if (tasks == null) return;
 
-		if (container instanceof SwidgetFrame)
-			new PluralSetView((SwidgetFrame)container, tasks);
-		else
-			new PluralSetView(container, tasks);
+		new PluralSetView(container, tasks);
+
 
 		if (tasks.getCompleted())
 		{
@@ -1491,11 +1489,12 @@ public class PlotPanel extends ClearPanel
 					container,
 					datamodel,
 					controller.getDatasetName(),
-					true,
 					controller.getDataSourceFolder(),
 					savePictureFolder,
 					dataDimensions,
-					results);
+					results,
+					getController()
+				);
 
 			}
 			else
@@ -1519,11 +1518,12 @@ public class PlotPanel extends ClearPanel
 					container,
 					datamodel,
 					controller.getDatasetName(),
-					true,
 					controller.getDataSourceFolder(),
 					savePictureFolder,
 					dataDimensions,
-					results);
+					results,
+					getController()
+				);
 			}
 
 			mapperWindow.showDialog();
@@ -1643,8 +1643,24 @@ public class PlotPanel extends ClearPanel
 
 	public void actionShowInfo()
 	{
+		
+		Map<String, String> properties = DataTypeFactory.<String, String>map();
 
-		new ScanInfoDialogue(container, controller);
+		properties.put("Date of Creation:", controller.getScanCreationTime());
+		properties.put("Created By:", controller.getScanCreator());
+		
+		properties.put("Project Name: ", controller.getScanProjectName());
+		properties.put("Session Name: ", controller.getScanSessionName());
+		properties.put("Experiment Name: ", controller.getScanExperimentName());
+		properties.put("Sample Name: ", controller.getScanSampleName());
+		properties.put("Scan Name: ", controller.getScanScanName());
+		
+		properties.put("Facility: ", controller.getScanFacilityName());
+		properties.put("Laboratory: ", controller.getScanLaboratoryName());
+		properties.put("Instrument: ", controller.getScanInstrumentName());
+		properties.put("Technique: ", controller.getScanTechniqueName());
+		
+		new PropertyDialogue("Dataset Information", container, properties);
 
 	}
 

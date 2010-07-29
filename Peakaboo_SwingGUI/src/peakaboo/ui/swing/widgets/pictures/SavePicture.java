@@ -4,6 +4,7 @@ package peakaboo.ui.swing.widgets.pictures;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
@@ -11,11 +12,11 @@ import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import peakaboo.controller.CanvasController;
-import swidget.containers.SwidgetContainer;
-import swidget.containers.SwidgetDialog;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -25,7 +26,7 @@ import swidget.widgets.toggle.ComplexToggle;
 import swidget.widgets.toggle.ComplexToggleGroup;
 
 
-public class SavePicture extends SwidgetDialog
+public class SavePicture extends JDialog
 {
 
 	private CanvasController	controller;
@@ -35,19 +36,31 @@ public class SavePicture extends SwidgetDialog
 
 	JPanel				controlsPanel;
 	
-	public SavePicture(SwidgetContainer owner, CanvasController controller, String startingFolder)
+	public SavePicture(JFrame owner, CanvasController controller, String startingFolder)
 	{
 
-		super(owner, "Save as Image");
+		super(owner, "Save as Image", true);
 
 		this.controller = controller;
 		this.startingFolder = startingFolder;
 
-		init();
+		init(owner);
 
 	}
 	
-	private void init()
+	public SavePicture(JDialog owner, CanvasController controller, String startingFolder)
+	{
+
+		super(owner, "Save as Image", true);
+
+		this.controller = controller;
+		this.startingFolder = startingFolder;
+
+		init(owner);
+
+	}
+	
+	private void init(Window owner)
 	{
 
 		controlsPanel = new ClearPanel();
@@ -65,7 +78,7 @@ public class SavePicture extends SwidgetDialog
 
 		pack();
 		setResizable(false);
-		centreOnParent();
+		setLocationRelativeTo(owner);
 		setModal(true);
 		setVisible(true);
 	}

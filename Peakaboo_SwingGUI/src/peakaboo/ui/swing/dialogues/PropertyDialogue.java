@@ -6,9 +6,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -16,8 +21,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import peakaboo.controller.plotter.PlotController;
-import swidget.containers.SwidgetContainer;
-import swidget.containers.SwidgetDialog;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -25,16 +28,24 @@ import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 
 
-public class ScanInfoDialogue extends SwidgetDialog
+public class PropertyDialogue extends JDialog
 {
 
 	GridBagConstraints c;
 	JPanel mainPanel;
 	
-	public ScanInfoDialogue(SwidgetContainer owner, PlotController controller)
+	public PropertyDialogue(String title, JFrame owner, Map<String, String> properties)
 	{
-		super(owner, "Dataset Information");
-		
+		super(owner, title);
+		init(owner, properties);
+	}
+	public PropertyDialogue(String title, JDialog owner, Map<String, String> properties)
+	{
+		super(owner, title);
+		init(owner, properties);
+	}
+	
+	private void init(Window owner, Map<String, String> properties){
 		
 		Container container = getContentPane();
 		JPanel containerPanel = new ClearPanel();
@@ -66,21 +77,11 @@ public class ScanInfoDialogue extends SwidgetDialog
 		c.gridy = 0;
 		c.gridx = 1;
 		
-		addJLabelPair("Date of Creation:", controller.getScanCreationTime());
-		addJLabelPair("Created By:", controller.getScanCreator());
+		for (Entry<String, String> property : properties.entrySet())
+		{
+			addJLabelPair(property.getKey(), property.getValue());
+		}
 		
-		addJLabelPair("Project Name: ", controller.getScanProjectName());
-		addJLabelPair("Session Name: ", controller.getScanSessionName());
-		addJLabelPair("Experiment Name: ", controller.getScanExperimentName());
-		addJLabelPair("Sample Name: ", controller.getScanSampleName());
-		addJLabelPair("Scan Name: ", controller.getScanScanName());
-		
-		addJLabelPair("Facility: ", controller.getScanFacilityName());
-		addJLabelPair("Laboratory: ", controller.getScanLaboratoryName());
-		addJLabelPair("Instrument: ", controller.getScanInstrumentName());
-		addJLabelPair("Technique: ", controller.getScanTechniqueName());
-		
-
 			
 		JPanel buttonBox = new ClearPanel();
 		buttonBox.setLayout(new BorderLayout());
@@ -94,7 +95,7 @@ public class ScanInfoDialogue extends SwidgetDialog
 		
 			public void actionPerformed(ActionEvent e)
 			{
-				ScanInfoDialogue.this.setVisible(false);
+				PropertyDialogue.this.setVisible(false);
 			}
 		});
 		buttonBox.add(close, BorderLayout.EAST);
@@ -108,7 +109,7 @@ public class ScanInfoDialogue extends SwidgetDialog
 		setMinimumSize(getPreferredSize());
 		
 		setModal(true);
-		centreOnParent();
+		setLocationRelativeTo(owner);
 		setVisible(true);
 		
 	}

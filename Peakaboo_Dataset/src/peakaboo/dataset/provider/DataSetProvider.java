@@ -8,7 +8,6 @@ import fava.datatypes.Bounds;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
-import peakaboo.dataset.provider.implementations.LocalDataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
@@ -388,5 +387,9 @@ public abstract class DataSetProvider
 
 		
 	public abstract void discard();
+	
+	
+	public abstract DataSource getDataSource();
+	
 	
 }

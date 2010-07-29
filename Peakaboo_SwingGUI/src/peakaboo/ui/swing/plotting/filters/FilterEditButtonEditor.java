@@ -8,13 +8,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import peakaboo.controller.plotter.FilterController;
 import peakaboo.filter.AbstractFilter;
-import swidget.containers.SwidgetContainer;
-import swidget.containers.SwidgetFrame;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -29,7 +28,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	protected ImageButton		button;
 	private JPanel 				container;
 	
-	private SwidgetContainer	owner;
+	private JFrame				owner;
 
 	private AbstractFilter		filter;
 	private FilterController	controller;
@@ -38,7 +37,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	private boolean				isPushed;
 
 
-	public FilterEditButtonEditor(FilterController controller, SwidgetContainer owner)
+	public FilterEditButtonEditor(FilterController controller, JFrame owner)
 	{
 		super(new JCheckBox());
 
@@ -93,10 +92,9 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	{
 		if (isPushed)
 		{
-			if (owner instanceof SwidgetFrame)
-				new FilterEditDialogue(filter, controller, (SwidgetFrame)owner);
-			else
-				new FilterEditDialogue(filter, controller, owner);
+
+			new FilterEditDialogue(filter, controller, owner);
+
 		}
 		isPushed = false;
 		return new String(label);

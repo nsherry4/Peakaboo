@@ -369,5 +369,11 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 		return s.size() * getScanCount();
 	}
 
+
+	public boolean hasRealDimensions()
+	{
+		return true;
+	}
+
 	
 }

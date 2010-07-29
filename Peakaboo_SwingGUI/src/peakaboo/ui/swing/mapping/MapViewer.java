@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -76,7 +77,7 @@ public class MapViewer extends JPanel
 
 			public void change(String s)
 			{
-				setNeedsRedraw();
+				if (! s.equals(MapController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
 				repaint();
 			}
 		});
@@ -101,20 +102,56 @@ public class MapViewer extends JPanel
 		setLayout(new BorderLayout());
 		add(createMapView(), BorderLayout.CENTER);
 
-		canvas.addMouseMotionListener(new MouseMotionListener() {
+		
+		class CompleteMouseListener implements MouseMotionListener, MouseListener
+		{
+			
+			public void mouseDragged(MouseEvent e)
+			{
+				controller.setDragEnd( controller.getMapCoordinateAtPoint(e.getX(), e.getY()) );
+				controller.setHasBoundingRegion( true );
+			}
 
 			public void mouseMoved(MouseEvent e)
 			{
 				showValueAtCoord(controller.getMapCoordinateAtPoint(e.getX(), e.getY()));
 			}
 
-
-			public void mouseDragged(MouseEvent e)
+			public void mouseClicked(MouseEvent e)
 			{
-				// Nothing to do here
-
+				// TODO Auto-generated method stub
+				
 			}
-		});
+
+			public void mouseEntered(MouseEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mousePressed(MouseEvent e)
+			{			
+				controller.setDragStart( controller.getMapCoordinateAtPoint(e.getX(), e.getY()) );
+				controller.setDragEnd( null );
+				controller.setHasBoundingRegion( false );
+			}
+
+			public void mouseReleased(MouseEvent e)
+			{
+				
+			}
+			
+		}
+		
+		canvas.addMouseMotionListener(new CompleteMouseListener());
+		canvas.addMouseListener(new CompleteMouseListener());
+		
 
 		controller.addListener(new EventfulTypeListener<String>() {
 
@@ -263,6 +300,7 @@ public class MapViewer extends JPanel
 	}
 
 
+	
 	public void showValueAtCoord(Coord<Integer> mapCoord)
 	{
 		String noValue = "Index: -, X: -, Y: -, Value: -";

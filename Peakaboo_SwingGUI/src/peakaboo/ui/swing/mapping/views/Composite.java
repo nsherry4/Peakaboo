@@ -101,8 +101,8 @@ public class Composite extends JPanel {
 		modeFrame.setBorder(titleBorder);
 		modeFrame.setLayout(new BoxLayout(modeFrame, BoxLayout.Y_AXIS));
 		
-		relativeScale = new JRadioButton("Visible Elements");
-		absoluteScale = new JRadioButton("All Elements");
+		relativeScale = new JRadioButton("Visible Fittings");
+		absoluteScale = new JRadioButton("All Fittings");
 		ButtonGroup scaleGroup = new ButtonGroup();
 		scaleGroup.add(relativeScale);
 		scaleGroup.add(absoluteScale);
@@ -186,7 +186,7 @@ public class Composite extends JPanel {
 			public String getColumnName(int columnIndex)
 			{
 				if (columnIndex == 0) return "Map";
-				return "Element";
+				return "Fitting";
 			}
 
 

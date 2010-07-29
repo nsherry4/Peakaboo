@@ -40,12 +40,15 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 	//store each tag and its attributes on the stack
 	Stack<Pair<String, Map<String, String>>>	tagStack;
+	
 	//attrName -> (entryNo -> contents)
 	Map<String, Map<Integer, String>>			attrEntries;
+	
 	//scanIndex -> (x, y, i, j, iNaught)
 	Map<Integer, ScanValues>					scanValues;
+	
 	//scanIndex -> Spectrum
-	FileBackedList<Spectrum>						scandata;
+	FileBackedList<Spectrum>					scandata;
 
 	int numScans;
 	
@@ -561,6 +564,11 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	public Spectrum getNormalisationData()
 	{
 		return normaliseSpectrum;
+	}
+
+	public boolean hasRealDimensions()
+	{
+		return true;
 	}
 
 }

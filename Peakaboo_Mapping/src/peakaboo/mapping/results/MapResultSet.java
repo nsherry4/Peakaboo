@@ -2,6 +2,7 @@ package peakaboo.mapping.results;
 
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import fava.signatures.FunctionMap;
@@ -21,7 +22,7 @@ import scitypes.SpectrumCalculations;
  * 
  */
 
-public class MapResultSet implements Cloneable
+public class MapResultSet implements Cloneable, Iterable<MapResult>
 {
 
 	private List<MapResult>	maps;
@@ -178,6 +179,11 @@ public class MapResultSet implements Cloneable
 
 		return sums;
 
+	}
+
+	public Iterator<MapResult> iterator()
+	{
+		return maps.iterator();
 	}
 	
 }

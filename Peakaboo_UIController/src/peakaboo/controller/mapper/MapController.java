@@ -4,6 +4,7 @@ package peakaboo.controller.mapper;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Map;
 import fava.*;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
+import fava.datatypes.Range;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
 import fava.signatures.FunctionMap;
@@ -19,15 +21,19 @@ import static fava.Fn.*;
 
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.CanvasController;
+import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.settings.SerializedData;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.fileio.DataSource;
 import peakaboo.mapping.colours.OverlayColour;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.Surface.CompositeModes;
 import scidraw.drawing.common.Spectrums;
 import scidraw.drawing.map.MapDrawing;
+import scidraw.drawing.map.painters.BoundedRegionPainter;
+import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
-import scidraw.drawing.map.painters.MapTechniqueFactory;
 import scidraw.drawing.map.painters.ThreadedRasterMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
@@ -35,7 +41,6 @@ import scidraw.drawing.map.palettes.AbstractPalette;
 import scidraw.drawing.map.palettes.OverlayPalette;
 import scidraw.drawing.map.palettes.RatioPalette;
 import scidraw.drawing.map.palettes.SaturationPalette;
-import scidraw.drawing.map.palettes.SingleColourPalette;
 import scidraw.drawing.map.palettes.ThermalScalePalette;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
@@ -51,6 +56,11 @@ import scitypes.SpectrumCalculations;
 public class MapController extends CanvasController
 {
 
+	public enum UpdateType
+	{
+		VIEW_OPTIONS, BOUNDING_REGION, TABS, DATA;
+	}
+	
 	private Coord<Integer>		linearSampleStart, linearSampleStop;
 	private static final long	serialVersionUID	= 1L;
 	private SingleMapModel		activeTabData;
@@ -59,17 +69,102 @@ public class MapController extends CanvasController
 	private String				datasetTitle;
 
 
+	private PlotController		plotcontroller;
+	
 	private FunctionMap<Coord<Integer>, String> valueAtCoord;
+
+	
+	private MapPainter contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue;
+	
+	//bounding region on map
+	private Coord<Integer> dragStart, dragEnd;
+	private boolean hasBoundingRegion = false;
 	
 	
-	public MapController(Object toyContext, AllMapsModel model)
+	public MapController(Object toyContext, AllMapsModel model, PlotController plotcontroller)
 	{
 		super(toyContext);
 		mapModel = model;
+		this.plotcontroller = plotcontroller;
 		map = new MapDrawing(this.toyContext, mapModel.dr);
 	}
 
 
+	public DataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
+	{
+		return plotcontroller.getDataSourceForSubset(getDataWidth(), getDataHeight(), cstart, cend);
+	}
+	
+	public InputStream getSerializedPlotSettings()
+	{
+		return plotcontroller.getSerializedPlotSettings();
+	}
+	
+	
+	
+
+	public Coord<Integer> getDragStart()
+	{
+		return dragStart;
+	}
+
+
+	
+	public void setDragStart(Coord<Integer> dragStart)
+	{
+		if (dragStart != null) 
+		{
+			if (dragStart.x < 0) dragStart.x = 0;
+			if (dragStart.y < 0) dragStart.y = 0;
+			if (dragStart.x >= getDataWidth()) dragStart.x = getDataWidth()-1;
+			if (dragStart.y >= getDataHeight()) dragStart.y = getDataHeight()-1;
+		}
+		
+		this.dragStart = dragStart;
+		
+		updateListeners(UpdateType.BOUNDING_REGION.toString());
+	}
+
+
+	
+	public Coord<Integer> getDragEnd()
+	{
+		return dragEnd;
+	}
+
+
+	
+	public void setDragEnd(Coord<Integer> dragEnd)
+	{
+		if (dragEnd != null)
+		{
+			if (dragEnd.x < 0) dragEnd.x = 0;
+			if (dragEnd.y < 0) dragEnd.y = 0;
+			if (dragEnd.x >= getDataWidth()) dragEnd.x = getDataWidth()-1;
+			if (dragEnd.y >= getDataHeight()) dragEnd.y = getDataHeight()-1;
+		}
+		
+		this.dragEnd = dragEnd;
+		
+		updateListeners(UpdateType.BOUNDING_REGION.toString());
+	}
+
+
+	
+	public boolean hasBoundingRegion()
+	{
+		return hasBoundingRegion;
+			
+	}
+
+
+	
+	public void setHasBoundingRegion(boolean hasBoundingRegion)
+	{
+		this.hasBoundingRegion = hasBoundingRegion;
+		updateListeners(UpdateType.BOUNDING_REGION.toString());
+	}
+	
 	public SingleMapModel getActiveTabModel()
 	{
 		return activeTabData;
@@ -79,7 +174,7 @@ public class MapController extends CanvasController
 	public void setActiveTabModel(SingleMapModel activeviewmodel)
 	{
 		this.activeTabData = activeviewmodel;
-		updateListeners("");
+		updateListeners(UpdateType.TABS.toString());
 	}
 
 
@@ -98,7 +193,7 @@ public class MapController extends CanvasController
 
 		if (dataDimensions != null) mapModel.dataDimensions = dataDimensions;
 
-		updateListeners("");
+		updateListeners(UpdateType.DATA.toString());
 
 	}
 
@@ -180,9 +275,9 @@ public class MapController extends CanvasController
 		Coord<Float> mapSize = map.calcMapSize();
 		int locX, locY;
 		locX = (int) (leftOffset + (((float) coord.x / (float) mapModel.dataDimensions.x) * mapSize.x) - (MapDrawing
-			.calcCellSize(mapSize.x, mapSize.y, mapModel.dr) * 0.5));
+			.calcInterpolatedCellSize(mapSize.x, mapSize.y, mapModel.dr) * 0.5));
 		locY = (int) (topOffset + (((float) coord.y / (float) mapModel.dataDimensions.y) * mapSize.y) - (MapDrawing
-			.calcCellSize(mapSize.x, mapSize.y, mapModel.dr) * 0.5));
+			.calcInterpolatedCellSize(mapSize.x, mapSize.y, mapModel.dr) * 0.5));
 
 		return new Coord<Integer>(locX, locY);
 	}
@@ -260,7 +355,7 @@ public class MapController extends CanvasController
 
 	public void invalidateInterpolation()
 	{
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -299,7 +394,7 @@ public class MapController extends CanvasController
 	public void setContours(boolean contours)
 	{
 		mapModel.viewOptions.contour = contours;
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -317,7 +412,7 @@ public class MapController extends CanvasController
 		{
 			mapModel.viewOptions.spectrumSteps = steps;
 		}
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -330,7 +425,7 @@ public class MapController extends CanvasController
 	public void setMonochrome(boolean mono)
 	{
 		mapModel.viewOptions.monochrome = mono;
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -349,7 +444,7 @@ public class MapController extends CanvasController
 	public void setMapScaleMode(MapScaleMode mode)
 	{
 		activeTabData.mapScaleMode = mode;
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -372,7 +467,7 @@ public class MapController extends CanvasController
 	public void setFlipY(boolean flip)
 	{
 		mapModel.viewOptions.yflip = flip;
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -385,7 +480,7 @@ public class MapController extends CanvasController
 	public void setShowSpectrum(boolean show)
 	{
 		mapModel.viewOptions.drawSpectrum = show;
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -398,7 +493,7 @@ public class MapController extends CanvasController
 	public void setShowTitle(boolean show)
 	{
 		mapModel.viewOptions.drawTitle = show;
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -423,7 +518,7 @@ public class MapController extends CanvasController
 	public void setShowCoords(boolean show)
 	{
 		mapModel.viewOptions.drawCoordinates = show;
-		updateListeners("");
+		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
 
@@ -981,10 +1076,12 @@ public class MapController extends CanvasController
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AbstractPalette> paletteList	=		DataTypeFactory.<AbstractPalette> list();
 		List<AxisPainter> axisPainters 		= 		DataTypeFactory.<AxisPainter> list();
-		MapPainter mapPainter;
+		
 		
 		Spectrum data = getCompositeMapData();
 		
+		mapModel.dr.uninterpolatedWidth = mapModel.dataDimensions.x;
+		mapModel.dr.uninterpolatedHeight = mapModel.dataDimensions.y;
 		mapModel.dr.dataWidth = mapModel.interpolatedSize.x;
 		mapModel.dr.dataHeight = mapModel.interpolatedSize.y;
 		
@@ -1053,12 +1150,24 @@ public class MapController extends CanvasController
 
 
 		paletteList.add(palette);
-		mapPainter = MapTechniqueFactory.getTechnique(
-				paletteList,
-				data,
-				false,
-				spectrumSteps);
-		map.setPainters(mapPainter);
+		
+		List<MapPainter> mapPainters = DataTypeFactory.<MapPainter>list();
+		if (contourMapPainter == null) {
+			contourMapPainter = new ThreadedRasterMapPainter(paletteList, data); 
+		} else {
+			contourMapPainter.setData(data);
+			contourMapPainter.setPalettes(paletteList);
+		}
+		mapPainters.add(contourMapPainter);
+		
+		
+		if (hasBoundingRegion)
+		{
+			mapPainters.add(new BoundedRegionPainter(Color.white, dragStart, dragEnd, true));
+		}
+		
+		
+		map.setPainters(mapPainters);
 		map.draw();
 
 		mapModel.dr.drawToVectorSurface = oldVector;
@@ -1077,10 +1186,11 @@ public class MapController extends CanvasController
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AbstractPalette> paletteList	=		DataTypeFactory.<AbstractPalette> list();
 		List<AxisPainter> axisPainters 		= 		DataTypeFactory.<AxisPainter> list();
-		MapPainter mapPainter;
 		
 		Pair<Spectrum, Spectrum> ratiodata = getRatioMapData();
 		
+		mapModel.dr.uninterpolatedWidth = mapModel.dataDimensions.x;
+		mapModel.dr.uninterpolatedHeight = mapModel.dataDimensions.y;
 		mapModel.dr.dataWidth = mapModel.interpolatedSize.x;
 		mapModel.dr.dataHeight = mapModel.interpolatedSize.y;
 		
@@ -1179,13 +1289,18 @@ public class MapController extends CanvasController
 
 
 		
+		List<MapPainter> mapPainters = DataTypeFactory.<MapPainter>list();
+		if (ratioMapPainter == null) {
+			ratioMapPainter = new ThreadedRasterMapPainter(paletteList, ratiodata.first); 
+		} else {
+			ratioMapPainter.setData(ratiodata.first);
+			ratioMapPainter.setPalettes(paletteList);
+		}
+		mapPainters.add(ratioMapPainter);
 		
 		
-		mapPainter = MapTechniqueFactory.getTechnique(
-				paletteList,
-				ratiodata.first,
-				false,
-				spectrumSteps);
+
+				
 		
 		Spectrum invalidPoints = ratiodata.second;
 		final float datamax = mapModel.dr.maxYIntensity;
@@ -1200,11 +1315,15 @@ public class MapController extends CanvasController
 			}});
 		
 
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints, false, 0);
+		MapPainter invalidPainter = new ThreadedRasterMapPainter(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints);
+		mapPainters.add(invalidPainter);
 		
+		if (hasBoundingRegion)
+		{
+			mapPainters.add(new BoundedRegionPainter(Color.white, dragStart, dragEnd, true));
+		}
 		
-		
-		map.setPainters(new FList<MapPainter>(mapPainter, invalidPainter));
+		map.setPainters(mapPainters);
 		map.draw();
 
 		
@@ -1225,8 +1344,12 @@ public class MapController extends CanvasController
 		
 		Map<OverlayColour, Spectrum> data = getOverlayMapData();
 		
+		
+		mapModel.dr.uninterpolatedWidth = mapModel.dataDimensions.x;
+		mapModel.dr.uninterpolatedHeight = mapModel.dataDimensions.y;
 		mapModel.dr.dataWidth = mapModel.interpolatedSize.x;
 		mapModel.dr.dataHeight = mapModel.interpolatedSize.y;
+		
 		
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f;
@@ -1348,31 +1471,47 @@ public class MapController extends CanvasController
 
 		// create a list of map painters, one for each of the maps we want to show
 		List<MapPainter> painters = DataTypeFactory.<MapPainter>list();
-		MapPainter p;
 		
 		if (redSpectrum != null){
-			p = MapTechniqueFactory.getTechnique(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColor()), redSpectrum, false, spectrumSteps);
-			p.setCompositeMode(CompositeModes.ADD);
-			painters.add(p);
+			if (overlayMapPainterRed == null) {
+				overlayMapPainterRed = new ThreadedRasterMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColor()), redSpectrum);
+				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
+			}
+			overlayMapPainterRed.setData(redSpectrum);
+			overlayMapPainterRed.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColor()));
+			painters.add(overlayMapPainterRed);
 		}
 			
 		if (greenSpectrum != null) {
-			p = MapTechniqueFactory.getTechnique(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColor()), greenSpectrum, false, spectrumSteps);
-			p.setCompositeMode(CompositeModes.ADD);
-			painters.add(p);
+			if (overlayMapPainterGreen == null) {
+				overlayMapPainterGreen = new ThreadedRasterMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColor()), greenSpectrum);
+				overlayMapPainterGreen.setCompositeMode(CompositeModes.ADD);
+			}
+			overlayMapPainterGreen.setData(greenSpectrum);
+			overlayMapPainterGreen.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColor()));
+			painters.add(overlayMapPainterGreen);
 		}
 		
 		if (blueSpectrum != null) {
-			p = MapTechniqueFactory.getTechnique(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()), blueSpectrum, false, spectrumSteps);
-			p.setCompositeMode(CompositeModes.ADD);
-			painters.add(p);
+			if (overlayMapPainterBlue == null) {
+				overlayMapPainterBlue = new ThreadedRasterMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()), blueSpectrum);
+				overlayMapPainterBlue.setCompositeMode(CompositeModes.ADD);
+			}
+			overlayMapPainterBlue.setData(blueSpectrum);
+			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()));
+			painters.add(overlayMapPainterBlue);
 		}
 		
 		//need to paint the background black first
 		painters.add(
 				0, 
-				new ThreadedRasterMapPainter(  new SingleColourPalette(Color.black), new Spectrum(mapModel.interpolatedSize.x * mapModel.interpolatedSize.y)  )
+				new FloodMapPainter(Color.black)
 		);
+		
+		if (hasBoundingRegion)
+		{
+			painters.add(new BoundedRegionPainter(Color.white, dragStart, dragEnd, true));
+		}
 
 		// set the new data
 		map.setPainters(painters);
@@ -1950,6 +2089,12 @@ public class MapController extends CanvasController
 	public void setNeedsRedraw()
 	{
 		map.needsMapRepaint();
+		
+		if (contourMapPainter != null)		contourMapPainter.clearBuffer();
+		if (ratioMapPainter != null) 		ratioMapPainter.clearBuffer();
+		if (overlayMapPainterBlue != null) 	overlayMapPainterBlue.clearBuffer();
+		if (overlayMapPainterGreen != null)	overlayMapPainterGreen.clearBuffer();
+		if (overlayMapPainterRed != null) 	overlayMapPainterRed.clearBuffer();
 	}
 
 

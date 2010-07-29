@@ -13,7 +13,7 @@ public interface UndoController
 	public String getNextUndo();
 	public String getNextRedo();
 	
-	public void setUndoPoint();
+	public void setUndoPoint(String s);
 	public void clearUndos();
 	
 }

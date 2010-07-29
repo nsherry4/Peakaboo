@@ -16,6 +16,7 @@ import commonenvironment.AbstractFile;
 
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
+import peakaboo.controller.settings.SerializedData;
 import peakaboo.controller.settings.Settings;
 import peakaboo.curvefit.automation.TSOrdering;
 import peakaboo.curvefit.fitting.EscapePeakType;
@@ -30,6 +31,8 @@ import peakaboo.curvefit.results.FittingResult;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.fileio.CopiedDataSource;
+import peakaboo.fileio.DataSource;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -56,6 +59,7 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
+import fava.datatypes.Range;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
 import fava.signatures.FunctionMap;
@@ -103,7 +107,7 @@ public class PlotController extends CanvasController implements FilterController
 
 		undoStack = new Stack<Pair<String, ByteArrayOutputStream>>();
 		redoStack = new Stack<Pair<String, ByteArrayOutputStream>>();
-		setUndoPoint();
+		setUndoPoint("");
 	}
 
 
@@ -118,6 +122,25 @@ public class PlotController extends CanvasController implements FilterController
 		this.mapController = mapController;
 	}
 
+	
+	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
+	{
+		return new CopiedDataSource(model.dataset.getDataSource(), x, y, cstart, cend);
+	}
+	
+	public InputStream getSerializedPlotSettings()
+	{
+		//save the current state
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		savePreferences(baos);
+		
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+		return bais;
+		
+		
+	}
+	
+	
 
 	// =============================================
 	// DATA/UNIT CONVERSION FUNCTIONS
@@ -162,6 +185,11 @@ public class PlotController extends CanvasController implements FilterController
 	// DATA SET SETTINGS --
 	// =============================================
 
+	public void setDataSource(DataSource ds)
+	{
+		setDataSetProvider(new OnDemandDataSetProvider(ds));
+	}
+	
 	public void setDataSetProvider(DataSetProvider dsp)
 	{
 	
@@ -1741,10 +1769,6 @@ public class PlotController extends CanvasController implements FilterController
 	//////////////////////////////////////////////////////////////
 	// UNDO CONTROLLER METHODS
 	//////////////////////////////////////////////////////////////
-	public void setUndoPoint()
-	{
-		setUndoPoint("");
-	}
 	public void setUndoPoint(String change)
 	{
 		//save the current state
@@ -1774,12 +1798,20 @@ public class PlotController extends CanvasController implements FilterController
 
 			}
 		}
-
+		
+		
+		//if the last change description is the same as this one, but isnt blank
+		//replace the last undo state with this one instead of adding it on top of
+		if (  undoStack.size() > 0 && undoStack.peek().first.equals(change)  && (!change.equals("")))
+		{
+			undoStack.pop();
+		}
 		undoStack.push(new Pair<String, ByteArrayOutputStream>(change, baos));
 
 		redoStack.clear();
 
 	}
+	
 
 	public String getNextUndo()
 	{
@@ -1840,7 +1872,7 @@ public class PlotController extends CanvasController implements FilterController
 	public void clearUndos()
 	{
 		undoStack.clear();
-		setUndoPoint();
+		setUndoPoint("");
 	}
 
 

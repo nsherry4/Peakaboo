@@ -80,21 +80,6 @@ public class SidePanel extends JPanel
 		add(new ViewsContainer(controller), maingbc);
 
 		
-		
-		ImageButton savePicture = new ImageButton(StockIcon.DEVICE_CAMERA, "Save Image", "Save the current map as an image", true);
-		savePicture.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				owner.actionSavePicture();
-			}
-		});
-		maingbc.gridy += 1;
-		maingbc.weightx = 1.0;
-		maingbc.weighty = 0.0;
-		maingbc.fill = GridBagConstraints.HORIZONTAL;
-		add(savePicture, maingbc);
-		
 		// elements list
 		/*
 		 * maingbc.gridy += 1; maingbc.weightx = 0.0; maingbc.weighty = 1.0; maingbc.fill = GridBagConstraints.BOTH;

@@ -8,35 +8,47 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
+import fava.datatypes.Range;
 
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.SingleMapModel;
+import peakaboo.controller.plotter.PlotController;
+import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.mapping.results.MapResult;
 import peakaboo.mapping.results.MapResultSet;
+import peakaboo.ui.swing.dialogues.PropertyDialogue;
 import peakaboo.ui.swing.mapping.MapViewer;
 import peakaboo.ui.swing.mapping.TabIconButton;
 import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import scitypes.Coord;
-import swidget.containers.SwidgetContainer;
-import swidget.containers.SwidgetDialog;
-import swidget.containers.SwidgetFrame;
+import scitypes.GridPerspective;
+import scitypes.SigDigits;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.ToolbarImageButton;
 
 
 /**
@@ -46,16 +58,16 @@ import swidget.widgets.ClearPanel;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PeakabooMapperSwing extends SwidgetDialog
+public class PeakabooMapperSwing extends JDialog
 {
 
 	protected MapController		controller;
-	private boolean				showControls;
 
 	private JTabbedPane			tabs;
 	
 	private JCheckBoxMenuItem	monochrome;
 	private JMenuItem			title, spectrum, coords, dstitle;
+	private ToolbarImageButton	readIntensities, examineSubset;
 	
 	private MapResultSet		originalData;
 	
@@ -67,58 +79,41 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	
 	
 	public PeakabooMapperSwing(
-			SwidgetFrame owner, 
+			JFrame owner, 
 			AllMapsModel data, 
 			String datasetName,
-			boolean showControls, 
 			String dataSourceFolder,
 			String savePictureFolder,
 			Coord<Integer> dataDimensions,
-			MapResultSet originalData
+			MapResultSet originalData,
+			PlotController plotcontroller
 	)
 	{
 		
-		super(owner, "Elemental Map - " + datasetName, true);
-		setup(data, datasetName, showControls, dataSourceFolder, savePictureFolder, dataDimensions, originalData);
+		super(owner, "Elemental Map - " + datasetName);
+		setup(data, datasetName, dataSourceFolder, savePictureFolder, dataDimensions, originalData, plotcontroller);
 		
 	}
 	
-	public PeakabooMapperSwing(
-			SwidgetContainer owner, 
-			AllMapsModel data, 
-			String datasetName,
-			boolean showControls, 
-			String dataSourceFolder,
-			String savePictureFolder,
-			Coord<Integer> dataDimensions,
-			MapResultSet originalData
-	)
-	{
-
-		super(owner, "Elemental Map - " + datasetName);
-		setup(data, datasetName, showControls, dataSourceFolder, savePictureFolder, dataDimensions, originalData);
-
-
-	}
 	
 	private void setup(			
 			AllMapsModel data, 
 			String datasetName,
-			boolean showControls, 
 			String dataSourceFolder,
 			String savePictureFolder,
 			Coord<Integer> dataDimensions,
-			MapResultSet originalData)
+			MapResultSet originalData,
+			PlotController plotcontroller)
 	{
 		this.dataSourceFolder = dataSourceFolder;
 		this.savePictureFolder = savePictureFolder;
-		this.showControls = showControls;
 
 		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D toy = bi.createGraphics();
-		controller = new MapController(toy, data);
+		
+		controller = new MapController(toy, data, plotcontroller);
 		controller.setMapData(data, datasetName, dataDimensions);
-
+		
 		this.originalData = originalData;
 		
 		init();
@@ -128,9 +123,6 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	public MapController showDialog()
 	{
 		setVisible(true);
-		
-		controller.removeListener(controllerListener);
-		originalData = null;
 		
 		return controller;
 	}
@@ -149,15 +141,46 @@ public class PeakabooMapperSwing extends SwidgetDialog
 		tabs = new JTabbedPane();	
 		tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-		
+		pane.add(createToolbar(), BorderLayout.NORTH);
 		pane.add(tabs, BorderLayout.CENTER);
 		createMapsViewer();
 
-		if (showControls) {
-			//pane.add(createControls(), BorderLayout.LINE_START);
-			createMenuBar();
-		}
+
+		createMenuBar();
 		
+		
+		addWindowListener(new WindowListener() {
+			
+			public void windowOpened(WindowEvent e)
+			{}
+			
+		
+			public void windowIconified(WindowEvent e)
+			{}
+			
+		
+			public void windowDeiconified(WindowEvent e)
+			{}
+			
+		
+			public void windowDeactivated(WindowEvent e)
+			{}
+			
+		
+			public void windowClosing(WindowEvent e)
+			{
+				controller.removeListener(controllerListener);
+				originalData = null;
+			}
+			
+		
+			public void windowClosed(WindowEvent e)
+			{}
+			
+		
+			public void windowActivated(WindowEvent e)
+			{}
+		});
 		
 		tabs.addChangeListener(new ChangeListener() {
 			
@@ -184,7 +207,7 @@ public class PeakabooMapperSwing extends SwidgetDialog
 					viewer.fullRedraw();
 					
 				}
-				
+								
 			}
 		});
 		
@@ -206,6 +229,15 @@ public class PeakabooMapperSwing extends SwidgetDialog
 					MapViewer viewer = (MapViewer)tabs.getSelectedComponent();
 				
 					tabs.setTitleAt(tabs.getSelectedIndex(), viewer.getMapViewModel().mapLongTitle());
+				}
+				
+				if (controller.hasBoundingRegion())
+				{
+					readIntensities.setEnabled(true);
+					examineSubset.setEnabled(true);
+				} else {
+					readIntensities.setEnabled(false);
+					examineSubset.setEnabled(false);
 				}
 				
 			}
@@ -397,13 +429,100 @@ public class PeakabooMapperSwing extends SwidgetDialog
 	}
 
 
+	private JToolBar createToolbar()
+	{
+		
+		JToolBar toolbar = new JToolBar();
+		toolbar.setFloatable(false);
+		
+		ToolbarImageButton savePicture = new ToolbarImageButton(StockIcon.DEVICE_CAMERA, "Save Image", "Save the current map as an image");
+		savePicture.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				actionSavePicture();
+			}
+		});
+		toolbar.add(savePicture);
+		
+		
+		ToolbarImageButton saveText = new ToolbarImageButton(StockIcon.DOCUMENT_EXPORT, "Export as Text", "Export the current map as a comma separated value file");
+		saveText.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				actionSaveCSV();
+			}
+		});
+		toolbar.add(saveText);
+		
+		
+		toolbar.addSeparator();
+		
+		
+		readIntensities =  new ToolbarImageButton(StockIcon.BADGE_INFO, "Get Intensities", "Get fitting intensities for the selected region");
+		readIntensities.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				Map<String, String> fittings = DataTypeFactory.<String, String>map();
+				
+				int xstart = controller.getDragStart().x;
+				int ystart = controller.getDragStart().y;
+				
+				int xend = controller.getDragEnd().x;
+				int yend = controller.getDragEnd().y;
+				
+				int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
+				
+				GridPerspective<Float> grid = new GridPerspective<Float>(controller.getDataWidth(), controller.getDataHeight(), 0f);
+				
+				for (MapResult r : originalData)
+				{
+					float sum = 0;
+					for (int x : new Range(xstart, xend)) {
+						for (int y : new Range(ystart, yend)){
+							sum += r.data.get(grid.getIndexFromXY(x, y));
+						}
+					}
+					sum /= size;
+					
+					fittings.put(r.transitionSeries.getDescription(), SigDigits.roundFloatTo(sum, 2));
+					
+				}
+				
+				new PropertyDialogue("Fitting Intensities", PeakabooMapperSwing.this, fittings);
+			}
+		});
+		toolbar.add(readIntensities);
+		
+		
+		examineSubset =  new ToolbarImageButton("view-subset", "Plot Region", "Plot the selected region");
+		examineSubset.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				new PlotterFrame(controller.getDataSourceForSubset(controller.getDragStart(), controller.getDragEnd()), controller.getSerializedPlotSettings());
+			}
+		});
+		toolbar.add(examineSubset);
+		
+		
+		readIntensities.setEnabled(false);
+		examineSubset.setEnabled(false);
+		
+		
+		return toolbar;
+		
+	}
+	
 	
 	public void actionSavePicture()
 	{
 
 		if (savePictureFolder == null) savePictureFolder = dataSourceFolder;
 		savePictureFolder = new SavePicture(this, controller, savePictureFolder).getStartingFolder();
-
+		
 	}
 	public void actionSaveCSV()
 	{

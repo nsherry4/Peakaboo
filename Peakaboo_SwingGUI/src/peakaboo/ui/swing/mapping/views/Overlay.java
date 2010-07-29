@@ -202,7 +202,7 @@ public class Overlay extends JPanel {
 				switch (columnIndex)
 				{
 					case 0:	return "Map";
-					case 1: return "Element";
+					case 1: return "Fitting";
 					case 2: return "Colour";
 				}
 				return "";

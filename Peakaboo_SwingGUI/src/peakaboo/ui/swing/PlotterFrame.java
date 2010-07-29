@@ -5,12 +5,19 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Panel;
 import java.awt.Window;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.InputStream;
 
 import javax.swing.JFrame;
 
+import fava.datatypes.Range;
+
 import peakaboo.common.Version;
+import peakaboo.controller.settings.SerializedData;
+import peakaboo.fileio.CopiedDataSource;
+import peakaboo.fileio.DataSource;
 import peakaboo.ui.swing.plotting.PlotPanel;
-import swidget.containers.SwidgetFrame;
 import swidget.icons.IconFactory;
 
 
@@ -21,55 +28,73 @@ import swidget.icons.IconFactory;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PlotterFrame extends SwidgetFrame
+public class PlotterFrame extends JFrame
 {
 
+	public PlotPanel plotPanel;
+
+	private static int openWindows = 0;
+	
 	public PlotterFrame()
 	{
 		
+		openWindows++;
+		
 		setIconImage(IconFactory.getImage(Version.icon));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(1000, 470));
 		
 		setTitle(Version.title);
 		
-		getContentPane().add(new PlotPanel(this));
+		plotPanel = new PlotPanel(this);
+		getContentPane().add(plotPanel);
+		
+		
+		addWindowListener(new WindowListener() {
+			
+			public void windowOpened(WindowEvent e)
+			{}
+		
+			public void windowIconified(WindowEvent e)
+			{}
+		
+			public void windowDeiconified(WindowEvent e)
+			{}
+		
+			public void windowDeactivated(WindowEvent e)
+			{}
+			
+			public void windowClosing(WindowEvent e)
+			{
+				openWindows--;
+				if (openWindows == 0) System.exit(0);
+			}
+			
+			public void windowClosed(WindowEvent e)
+			{}
+			
+			public void windowActivated(WindowEvent e)
+			{}
+		});
 		
 		// Display the window.
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-
+		
+	}
+	
+	public PlotterFrame(DataSource ds, InputStream sessionData)
+	{
+	
+		this();
+		
+		
+		
+		//create a new datasource which is a subset of the passed one		
+		plotPanel.getController().setDataSource(ds);
+		plotPanel.getController().loadPreferences(sessionData, false);
+		
 	}
 
-	@Override
-	public Component getComponent()
-	{
-		return this;
-	}
-
-	@Override
-	public Window getWindow()
-	{
-		return this;
-	}
-
-	@Override
-	public Panel getPanel()
-	{
-		return null;
-	}
-
-	@Override
-	public boolean isApplet()
-	{
-		return false;
-	}
-
-	@Override
-	public void close()
-	{
-		System.exit(0);
-	}	
 
 }

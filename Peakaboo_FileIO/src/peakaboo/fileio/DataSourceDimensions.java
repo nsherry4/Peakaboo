@@ -31,6 +31,13 @@ public interface DataSourceDimensions
 	 * @return integer x,y pair of values indicating the width and height of this map
 	 */
 	public Coord<Integer> getDataDimensions();
+	
+	
+	/**
+	 * Returns true if this data source supports information on real dimensions
+	 * @return
+	 */
+	public boolean hasRealDimensions();
 
 	
 }
