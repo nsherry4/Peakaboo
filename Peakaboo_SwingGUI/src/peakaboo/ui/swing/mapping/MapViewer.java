@@ -58,8 +58,6 @@ public class MapViewer extends JPanel
 
 			public void componentResized(ComponentEvent e)
 			{
-				setNeedsRedraw();
-				repaint();
 			}
 
 

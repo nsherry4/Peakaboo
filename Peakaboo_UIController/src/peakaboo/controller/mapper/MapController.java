@@ -34,6 +34,7 @@ import scidraw.drawing.map.MapDrawing;
 import scidraw.drawing.map.painters.BoundedRegionPainter;
 import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
+import scidraw.drawing.map.painters.MapTechniqueFactory;
 import scidraw.drawing.map.painters.ThreadedRasterMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
@@ -293,7 +294,7 @@ public class MapController extends CanvasController
 			
 			newside = (int)(side * Math.pow(2, passes));
 		
-			if (newside > 1500) {
+			if (newside > 750) {
 				passes--;
 			} else {
 				break;
@@ -394,6 +395,10 @@ public class MapController extends CanvasController
 	public void setContours(boolean contours)
 	{
 		mapModel.viewOptions.contour = contours;
+		
+		contourMapPainter = null;
+		ratioMapPainter = null;
+		
 		updateListeners(UpdateType.VIEW_OPTIONS.toString());
 	}
 
@@ -1153,7 +1158,7 @@ public class MapController extends CanvasController
 		
 		List<MapPainter> mapPainters = DataTypeFactory.<MapPainter>list();
 		if (contourMapPainter == null) {
-			contourMapPainter = new ThreadedRasterMapPainter(paletteList, data); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data, mapModel.viewOptions.contour, spectrumSteps); 
 		} else {
 			contourMapPainter.setData(data);
 			contourMapPainter.setPalettes(paletteList);
@@ -1291,7 +1296,7 @@ public class MapController extends CanvasController
 		
 		List<MapPainter> mapPainters = DataTypeFactory.<MapPainter>list();
 		if (ratioMapPainter == null) {
-			ratioMapPainter = new ThreadedRasterMapPainter(paletteList, ratiodata.first); 
+			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, mapModel.viewOptions.contour, spectrumSteps); 
 		} else {
 			ratioMapPainter.setData(ratiodata.first);
 			ratioMapPainter.setPalettes(paletteList);
@@ -1315,7 +1320,7 @@ public class MapController extends CanvasController
 			}});
 		
 
-		MapPainter invalidPainter = new ThreadedRasterMapPainter(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints);
+		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints, false, 0);
 		mapPainters.add(invalidPainter);
 		
 		if (hasBoundingRegion)
