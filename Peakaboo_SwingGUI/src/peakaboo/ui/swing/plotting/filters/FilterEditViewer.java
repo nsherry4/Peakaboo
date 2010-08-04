@@ -11,9 +11,10 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 
-import peakaboo.controller.plotter.FilterController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.listcontrols.ListControls;
@@ -22,7 +23,7 @@ import swidget.widgets.listcontrols.ListControls;
 public class FilterEditViewer extends ClearPanel{
 
 	
-	protected FilterController controller;
+	protected IFilteringController controller;
 	protected FiltersetViewer owner;
 	
 	protected JTable t;
@@ -30,7 +31,7 @@ public class FilterEditViewer extends ClearPanel{
 	
 	protected ListControls controls;
 	
-	public FilterEditViewer(FilterController _controller, JFrame windowOwner, FiltersetViewer _owner){
+	public FilterEditViewer(IFilteringController _controller, JFrame windowOwner, FiltersetViewer _owner){
 		
 		super();
 		
@@ -47,9 +48,9 @@ public class FilterEditViewer extends ClearPanel{
 		//add(new TitleGradientPanel("Data Filters", true, createControlPanel()), BorderLayout.NORTH);
 		add(createControlPanel(), BorderLayout.NORTH);
 		
-		controller.addListener(new EventfulTypeListener<String>() {
+		controller.addListener(new EventfulListener() {
 			
-			public void change(String s) {
+			public void change() {
 
 				t.invalidate();
 				
@@ -95,7 +96,7 @@ public class FilterEditViewer extends ClearPanel{
 		
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				if (columnIndex == 0) return controller.getFilterEnabled(rowIndex);
-				return controller.getFilter(rowIndex);
+				return controller.getActiveFilter(rowIndex);
 			}
 		
 			public int getRowCount() {
@@ -159,7 +160,7 @@ public class FilterEditViewer extends ClearPanel{
 			@Override
 			public void up()
 			{
-				AbstractFilter selection = controller.getFilter(t.getSelectedRow());
+				AbstractFilter selection = controller.getActiveFilter(t.getSelectedRow());
 				controller.moveFilterUp(t.getSelectedRow());
 				int selRow = controller.filterIndex(selection);
 				t.addRowSelectionInterval(selRow, selRow);
@@ -169,7 +170,7 @@ public class FilterEditViewer extends ClearPanel{
 			@Override
 			public void down()
 			{
-				AbstractFilter selection = controller.getFilter(t.getSelectedRow());
+				AbstractFilter selection = controller.getActiveFilter(t.getSelectedRow());
 				controller.moveFilterDown(t.getSelectedRow());
 				int selRow = controller.filterIndex(selection);
 				t.addRowSelectionInterval(selRow, selRow);

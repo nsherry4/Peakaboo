@@ -36,6 +36,9 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		DataSourceExtendedInformation
 {
 
+	
+	private static final String ABORT_MESSAGE = "Aborted by User"; 
+	
 	XMLReader									xr;
 
 	//store each tag and its attributes on the stack
@@ -108,7 +111,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		}
 		catch (SAXException e)
 		{
-			throw new Exception();
+			if (! e.getMessage().equals(ABORT_MESSAGE)) throw new Exception();
 		}
 	}
 
@@ -255,7 +258,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 				{
 					if (isAborted != null && isAborted.f(true))
 					{
-						throw new SAXException("Aborted by User");
+						throw new SAXException(ABORT_MESSAGE);
 					}
 					if (readScanCallback != null) readScanCallback.f(scanReadCount);
 					scanReadCount = 0;

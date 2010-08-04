@@ -11,7 +11,7 @@ import java.util.List;
 import fava.*;
 import fava.signatures.FunctionMap;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.plotting.PlotCanvas;
@@ -33,7 +33,7 @@ class SmartFittingWidget extends TSSelectorGroup
 	private List<ImageButton> editButtons;
 
 
-	public SmartFittingWidget(FittingController controller, PlotCanvas canvas)
+	public SmartFittingWidget(IFittingController controller, PlotCanvas canvas)
 	{
 		super(controller, 1);
 		

@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_DataTypes"/>
 	<classpathentry kind="lib" path="JSci/jsci-core.jar"/>
 	<classpathentry kind="lib" path="JSci/jsci-wavelet.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_DataTypes"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

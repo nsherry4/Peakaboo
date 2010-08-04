@@ -118,7 +118,7 @@ public class PlotCanvas extends JPanel implements Scrollable
 		
 			public void mouseClicked(MouseEvent e)
 			{
-				if (controller.hasDataSet() && grabChannelFromClickCallback != null){
+				if (controller.dataController.hasDataSet() && grabChannelFromClickCallback != null){
 					grabChannelFromClickCallback.f(controller.channelFromCoordinate(e.getX()));
 				}
 			}
@@ -171,7 +171,7 @@ public class PlotCanvas extends JPanel implements Scrollable
 			parentWidth = this.getParent().getWidth();
 		}
 
-		int newWidth = (int) (controller.getDataWidth() * controller.getZoom());
+		int newWidth = (int) (controller.dataController.getDataWidth() * controller.settingsController.getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
 		this.setPreferredSize(new Dimension(newWidth, 1));
@@ -183,7 +183,7 @@ public class PlotCanvas extends JPanel implements Scrollable
 
 	private int channelWidth(int multiplier)
 	{
-		return (int) Math.max(1.0f, Math.round(controller.getZoom() * multiplier));
+		return (int) Math.max(1.0f, Math.round(controller.settingsController.getZoom() * multiplier));
 	}
 
 

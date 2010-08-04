@@ -34,13 +34,12 @@ public class FittingSet implements Serializable
 	
 	
 
-	public FittingSet(int dataWidth, float energyPerChannel, EscapePeakType escapeType)
+	public FittingSet(float energyPerChannel, EscapePeakType escapeType)
 	{
 		fittings = DataTypeFactory.<TransitionSeriesFitting> list();
 		fitTransitionSeries = DataTypeFactory.<TransitionSeries> list();
 
 		this.energyPerChannel = energyPerChannel;
-		this.dataWidth = dataWidth;
 	}
 
 
@@ -50,7 +49,6 @@ public class FittingSet implements Serializable
 		fitTransitionSeries = DataTypeFactory.<TransitionSeries> list();
 
 		this.energyPerChannel = 0.0f;
-		this.dataWidth = 0;
 		this.escapeType = EscapePeakType.NONE;
 	}
 
@@ -63,7 +61,7 @@ public class FittingSet implements Serializable
 	}
 
 
-	public synchronized void setDataWidth(int dataWidth)
+	private synchronized void setDataWidth(int dataWidth)
 	{
 		this.dataWidth = dataWidth;
 		regenerateFittings();
@@ -289,6 +287,8 @@ public class FittingSet implements Serializable
 	public synchronized FittingResultSet calculateFittings(Spectrum data)
 	{
 
+		if (data.size() != dataWidth) setDataWidth(data.size());
+		
 		FittingResultSet results = new FittingResultSet(data.size());
 
 		Spectrum curve = null;

@@ -36,7 +36,7 @@ import fava.Functions;
 import fava.lists.FList;
 import fava.signatures.FunctionMap;
 
-import peakaboo.controller.plotter.FilterController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.AvailableFilters;
@@ -50,17 +50,17 @@ public class SingleFilterView extends JPanel
 {
 
 	private AbstractFilter	filter;
-	private FilterController	controller;
+	private IFilteringController	controller;
 
 	private JPanel			settingsPanel;
 
 
-	public SingleFilterView(AbstractFilter filter, FilterController controller)
+	public SingleFilterView(AbstractFilter filter, IFilteringController controller)
 	{
 		this(filter, controller, true);
 	}
 	
-	public SingleFilterView(AbstractFilter filter, FilterController controller, boolean showTitle)
+	public SingleFilterView(AbstractFilter filter, IFilteringController controller, boolean showTitle)
 	{
 
 		super(new BorderLayout());
@@ -372,9 +372,9 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 	List<AbstractFilter> 	filters;
 	SingleFilterView		filterView;
 	AbstractFilter 			filter;
-	FilterController		controller;
+	IFilteringController		controller;
 	
-	public SubfilterView(final FilterController controller, Object[] options)
+	public SubfilterView(final IFilteringController controller, Object[] options)
 	{
 		
 		this.controller = controller;

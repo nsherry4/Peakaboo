@@ -1,15 +1,19 @@
-package peakaboo.controller.plotter;
+package peakaboo.controller.plotter.fitting;
 
 import java.util.List;
 
+import eventful.IEventful;
 import eventful.IEventfulType;
 
 import peakaboo.curvefit.fitting.EscapePeakType;
+import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.peaktable.TransitionSeriesType;
+import peakaboo.curvefit.results.FittingResultSet;
+import scitypes.Spectrum;
 
 
-public interface FittingController extends IEventfulType<String>
+public interface IFittingController extends IEventfulType<Boolean>
 {
 
 	//For Committed Fittings
@@ -31,7 +35,13 @@ public interface FittingController extends IEventfulType<String>
 	public void moveTransitionSeriesUp(List<TransitionSeries> e);
 	public void moveTransitionSeriesDown(List<TransitionSeries> e);
 	
+	public FittingSet getFittingSelections();
+	public void calculateSelectionFittings(Spectrum data);
 	public void fittingDataInvalidated();
+	public boolean hasSelectionFitting();
+	public FittingResultSet	getFittingSelectionResults();
+	
+	public boolean canMap();
 	
 	
 	
@@ -43,8 +53,10 @@ public interface FittingController extends IEventfulType<String>
 	public List<TransitionSeries> getProposedTransitionSeries();
 	public void commitProposedTransitionSeries();
 	
-	public void fittingProposalsInvalidated();	
-	
+	public void calculateProposalFittings();
+	public void fittingProposalsInvalidated();
+	public boolean hasProposalFitting();
+	public FittingResultSet	getFittingProposalResults();
 	
 	
 	//Escape Peaks

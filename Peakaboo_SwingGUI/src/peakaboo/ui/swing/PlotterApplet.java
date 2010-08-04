@@ -1,11 +1,14 @@
 package peakaboo.ui.swing;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JApplet;
+import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import commonenvironment.AbstractFile;
@@ -29,6 +32,9 @@ public class PlotterApplet extends JApplet
 		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		
+		
+		
+		
 		//if this version of the JVM is new enough to support the Nimbus Look and Feel, use it
 		try
 		{
@@ -41,15 +47,12 @@ public class PlotterApplet extends JApplet
 			//Do Nothing -- Not an error, just not supported 
 		}
 		
-		
-	
-		//plotter = new PlotPanel(container);
-		//getContentPane().add(plotter);
-
-	
-		//setPreferredSize(new Dimension(1000, 470));
-
-		
+		JLabel logo = new  JLabel(IconFactory.getImageIcon("live"));
+		logo.setOpaque(true);
+		logo.setBackground(new Color(43, 56, 29));
+		this.setPreferredSize(logo.getPreferredSize());
+		this.getContentPane().add(logo);
+				
 	}
 	
 	
@@ -59,7 +62,7 @@ public class PlotterApplet extends JApplet
 	public void init()
 	{
 		
-		
+		/*
 		String datafile = getParameter("datafile");
 		if (datafile != null)
 		{
@@ -80,7 +83,7 @@ public class PlotterApplet extends JApplet
 			}
 
 		}
-		
+		*/
 		
 	}
 	

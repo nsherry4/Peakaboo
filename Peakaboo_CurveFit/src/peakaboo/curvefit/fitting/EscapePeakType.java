@@ -71,4 +71,8 @@ public enum EscapePeakType
 	public String show()				{ return this.name().toLowerCase(); }
 	
 
+	public static EscapePeakType getDefault()
+	{
+		return SILICON;
+	}
 }

@@ -20,7 +20,7 @@ import javax.swing.table.TableColumn;
 import fava.Fn;
 import fava.signatures.FunctionMap;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
@@ -43,10 +43,10 @@ public class FittingPanel extends ClearPanel implements Changeable
 	protected MutableTableModel	tm;
 
 	CurveFittingView			owner;
-	FittingController			controller;
+	IFittingController			controller;
 
 
-	public FittingPanel(final FittingController controller, final CurveFittingView owner)
+	public FittingPanel(final IFittingController controller, final CurveFittingView owner)
 	{
 
 		this.owner = owner;
@@ -94,11 +94,22 @@ public class FittingPanel extends ClearPanel implements Changeable
 			@Override
 			public void remove()
 			{
-				int row = fitTable.getSelectedRow();
-				if (row == -1) return;
-				TransitionSeries ts = controller.getFittedTransitionSeries().get(row);
-				controller.removeTransitionSeries(ts);
+				
+				int rows[] = fitTable.getSelectedRows();
+				List<TransitionSeries> tss = Fn.map(Fn.boxi(rows), new FunctionMap<Integer, TransitionSeries>(){
+
+					public TransitionSeries f(Integer i)
+					{
+						return controller.getFittedTransitionSeries().get(i);
+					}});
+					
+				if (tss.size() == 0) return;
+				for (TransitionSeries ts : tss)
+				{
+					controller.removeTransitionSeries(ts);
+				}
 				owner.changed();
+					
 			}
 
 

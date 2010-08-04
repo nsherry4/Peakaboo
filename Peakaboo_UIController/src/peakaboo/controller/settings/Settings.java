@@ -17,7 +17,11 @@ import fava.signatures.FunctionMap;
 
 
 
-import peakaboo.controller.plotter.PlotModel;
+import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.data.DataController;
+import peakaboo.controller.plotter.filtering.FilteringModel;
+import peakaboo.controller.plotter.fitting.FittingModel;
+import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.filter.AbstractFilter;
 
@@ -41,7 +45,13 @@ public class Settings
 	 * @param filename
 	 *            name of the preferences file
 	 */
-	public static void loadPreferences(final PlotModel model, InputStream inStream)
+	public static void loadPreferences(
+			PlotController plotController,
+			DataController dataController,
+			final SettingsModel settings,
+			final FittingModel fittings,
+			final FilteringModel filters,
+			InputStream inStream)
 	{
 
 		SerializedData data;
@@ -49,31 +59,31 @@ public class Settings
 		data = SerializedData.deserialize(yaml);
 		
 		// load transition series
-		model.fittingSelections.clear();		
+		fittings.selections.clear();		
 		
 		
 		//we can't serialize TransitionSeries directly, so we store a list of Ni:K strings instead
 		//we now convert them back to TransitionSeries
 		for (SerializedTransitionSeries sts : data.fittings)
 		{
-			model.fittingSelections.addTransitionSeries(sts.toTS());
+			fittings.selections.addTransitionSeries(sts.toTS());
 		}
 
 		
 		// load filters
-		model.filters.clearFilters();
+		filters.filters.clearFilters();
 		for (AbstractFilter f : data.filters)
 		{
-			model.filters.addFilter(f);
+			filters.filters.addFilter(f);
 		}
 
 		
 		// read in the drawing request
-		model.dr = data.drawingRequest;
-		model.viewOptions = data.viewOptions;
+		plotController.dr = data.drawingRequest;
+		settings.copy( data.settings );
 		
 		
-		if (model.dataset.hasData()) model.fittingSelections.setDataParameters(model.dataset.scanSize(), model.dr.unitSize, model.viewOptions.escape);
+		if (dataController.hasDataSet()) fittings.selections.setDataParameters(dataController.datasetScanSize(), plotController.dr.unitSize, settings.escape);
 
 
 		return;
@@ -88,7 +98,12 @@ public class Settings
 	 * @param filename
 	 *            name of the preferences file
 	 */
-	public static void savePreferences(PlotModel model, OutputStream outStream)
+	public static void savePreferences(
+			final PlotController plotController,
+			final SettingsModel settings,
+			final FittingModel fittings,
+			final FilteringModel filters,
+			OutputStream outStream)
 	{
 
 
@@ -97,7 +112,7 @@ public class Settings
 		//map our list of TransitionSeries to SerializedTransitionSeries since we can't use the
 		//yaml library to build TransitionSeries
 		data.fittings = Fn.map(
-				model.fittingSelections.getFittedTransitionSeries(), 
+				fittings.selections.getFittedTransitionSeries(), 
 				new FunctionMap<TransitionSeries, SerializedTransitionSeries>() {
 
 					public SerializedTransitionSeries f(TransitionSeries ts)
@@ -107,12 +122,12 @@ public class Settings
 				});
 		
 		//map the filters from a FilterSet to a list
-		data.filters = Fn.map(model.filters, Functions.<AbstractFilter>id());
+		data.filters = Fn.map(filters.filters, Functions.<AbstractFilter>id());
 		
 		
 		//other structs
-		data.drawingRequest = model.dr;
-		data.viewOptions = model.viewOptions;
+		data.drawingRequest = plotController.dr;
+		data.settings = settings;
 
 
 		//try writing the serialized data

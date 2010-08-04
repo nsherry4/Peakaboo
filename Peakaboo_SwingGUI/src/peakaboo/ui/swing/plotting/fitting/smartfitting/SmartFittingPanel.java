@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 
 import fava.signatures.FunctionEach;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.plotting.PlotCanvas;
@@ -27,7 +27,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 public class SmartFittingPanel extends ClearPanel
 {
 
-	private FittingController		controller;
+	private IFittingController		controller;
 	private PlotCanvas				canvas;
 
 	private Cursor					canvasCursor;
@@ -38,7 +38,7 @@ public class SmartFittingPanel extends ClearPanel
 	List<TransitionSeries>			potentials;
 
 
-	public SmartFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas)
+	public SmartFittingPanel(final IFittingController controller, final CurveFittingView owner, PlotCanvas canvas)
 	{
 		this.controller = controller;
 		this.canvas = canvas;

@@ -8,20 +8,21 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 
-import peakaboo.controller.plotter.FilterController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 
 
 public class FilterEditDialogue extends JDialog
 {
 
-	protected FilterController	controller;
+	protected IFilteringController	controller;
 	protected AbstractFilter	filter;
 
 
-	public FilterEditDialogue(AbstractFilter _filter, FilterController _controller, JFrame owner)
+	public FilterEditDialogue(AbstractFilter _filter, IFilteringController _controller, JFrame owner)
 	{
 
 		super(owner, _filter.getFilterName(), false);
@@ -29,7 +30,7 @@ public class FilterEditDialogue extends JDialog
 
 	}
 
-	private void init(AbstractFilter _filter, FilterController _controller, Window owner){
+	private void init(AbstractFilter _filter, IFilteringController _controller, Window owner){
 		
 		this.controller = _controller;
 		this.filter = _filter;
@@ -43,9 +44,9 @@ public class FilterEditDialogue extends JDialog
 
 
 
-		controller.addListener(new EventfulTypeListener<String>() {
+		controller.addListener(new EventfulListener() {
 
-			public void change(String s)
+			public void change()
 			{
 				// TODO Auto-generated method stub
 				if (!controller.filterSetContains(filter)) {

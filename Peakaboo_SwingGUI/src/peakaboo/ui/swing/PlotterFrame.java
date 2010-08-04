@@ -91,7 +91,7 @@ public class PlotterFrame extends JFrame
 		
 		
 		//create a new datasource which is a subset of the passed one		
-		plotPanel.getController().setDataSource(ds);
+		plotPanel.getController().dataController.setDataSource(ds);
 		plotPanel.getController().loadPreferences(sessionData, false);
 		
 	}

@@ -9,7 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 
 
-import peakaboo.controller.plotter.PlotViewOptions;
+import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.filter.AbstractFilter;
 import scidraw.drawing.DrawingRequest;
 
@@ -26,7 +26,7 @@ public class SerializedData
 {
 
 	public DrawingRequest					drawingRequest;
-	public PlotViewOptions					viewOptions;
+	public SettingsModel					settings;
 	public List<AbstractFilter>				filters;
 
 	

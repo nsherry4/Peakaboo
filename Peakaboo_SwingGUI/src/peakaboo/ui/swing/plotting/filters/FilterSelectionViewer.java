@@ -11,7 +11,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import peakaboo.controller.plotter.FilterController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.AvailableFilters;
 import peakaboo.filter.AbstractFilter.FilterType;
@@ -25,7 +25,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 public class FilterSelectionViewer extends ClearPanel
 {
 
-	protected FilterController		controller;
+	protected IFilteringController		controller;
 	protected FiltersetViewer		owner;
 
 	protected JTree					tree;
@@ -33,7 +33,7 @@ public class FilterSelectionViewer extends ClearPanel
 	private SelectionListControls 	controls;
 
 
-	public FilterSelectionViewer(FilterController _controller, FiltersetViewer _owner)
+	public FilterSelectionViewer(IFilteringController _controller, FiltersetViewer _owner)
 	{
 
 		this.controller = _controller;

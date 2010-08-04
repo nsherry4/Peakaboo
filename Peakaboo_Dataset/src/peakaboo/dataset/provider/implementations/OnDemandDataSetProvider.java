@@ -470,6 +470,8 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		this.dataSourcePath = dataSourcePath;
 		this.dataSource = ds;
+		
+		System.out.println(dataSourcePath);
 
 	}
 	

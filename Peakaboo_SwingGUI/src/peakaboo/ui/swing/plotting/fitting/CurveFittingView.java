@@ -8,10 +8,11 @@ import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 
-import peakaboo.controller.plotter.FittingController;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import peakaboo.ui.swing.plotting.fitting.smartfitting.SmartFittingPanel;
@@ -25,7 +26,7 @@ import swidget.widgets.ClearPanel;
 public class CurveFittingView extends ClearPanel implements Changeable
 {
 
-	protected FittingController		controller;
+	protected IFittingController		controller;
 
 	private final String			FITTED		= "Fitted";
 	private final String			UNFITTED	= "Unfitted";
@@ -43,7 +44,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	protected CardLayout			card;
 	
 
-	public CurveFittingView(FittingController _controller, PlotCanvas canvas)
+	public CurveFittingView(IFittingController _controller, PlotCanvas canvas)
 	{
 		super();
 
@@ -61,11 +62,14 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(cardPanel);
 
-		controller.addListener(new EventfulTypeListener<String>() {
+		
+		controller.addListener(new EventfulTypeListener<Boolean>() {
 
-			public void change(String s)
+			public void change(Boolean b)
 			{
-				if (s.equals(PlotController.UpdateType.UNDO)) {
+				//b will be true if the fitting model has been changed in some way
+				//other than through the FittingController (ie load session, undo, etc)
+				if (b) {
 					changed();
 				}
 			}

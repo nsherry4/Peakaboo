@@ -16,17 +16,21 @@ import static fava.Fn.*;
 
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter.FilterType;
+import peakaboo.filter.filters.advanced.DataToWavelet;
 import peakaboo.filter.filters.advanced.Derivitive;
 import peakaboo.filter.filters.advanced.Integrate;
+import peakaboo.filter.filters.advanced.WaveletToData;
 import peakaboo.filter.filters.arithmetic.Addition;
 import peakaboo.filter.filters.arithmetic.Multiply;
 import peakaboo.filter.filters.arithmetic.Subtraction;
 import peakaboo.filter.filters.background.BruknerRemoval;
+import peakaboo.filter.filters.background.LinearTrimRemoval;
 import peakaboo.filter.filters.background.PolynomialRemoval;
 import peakaboo.filter.filters.noise.AgressiveWaveletNoiseFilter;
 import peakaboo.filter.filters.noise.FourierLowPass;
 import peakaboo.filter.filters.noise.MovingAverage;
 import peakaboo.filter.filters.noise.SavitskyGolaySmoothing;
+import peakaboo.filter.filters.noise.SpringSmoothing;
 import peakaboo.filter.filters.noise.WaveletNoiseFilter;
 
 
@@ -34,12 +38,14 @@ import peakaboo.filter.filters.noise.WaveletNoiseFilter;
 public class AvailableFilters
 {
 
-	public static List<Class<AbstractFilter>> availableFilters;
-	
-	public static List<Class<AbstractFilter>> generateFilterList()
+	public static List<Class<? extends AbstractFilter>>	availableFilters;
+
+
+	public static List<Class<? extends AbstractFilter>> generateFilterList()
 	{
-		if (availableFilters == null) {
-		
+		if (availableFilters == null)
+		{
+
 			if (Env.inJar())
 			{
 				availableFilters = generateFilterListStatic();
@@ -52,57 +58,59 @@ public class AvailableFilters
 		return availableFilters;
 	}
 
-	
-	
+
+
 	public static List<AbstractFilter> getNewInstancesForAllFilters()
 	{
 		return Fn.map(
-				
-				AvailableFilters.generateFilterList(),
-				
-				new FunctionMap<Class<AbstractFilter>, AbstractFilter>() {
 
-					public AbstractFilter f(Class<AbstractFilter> f)
+		AvailableFilters.generateFilterList(),
+
+		new FunctionMap<Class<? extends AbstractFilter>, AbstractFilter>() {
+
+			public AbstractFilter f(Class<? extends AbstractFilter> f)
 					{
 						return AvailableFilters.createNewInstance(f);
 					}
-				}
+		}
 			);
 	}
-	
+
 
 	public static List<AbstractFilter> getNewInstancesForAllFilters(final FilterType type)
 	{
 		return Fn.map(
-				
-				Fn.filter(
-						AvailableFilters.generateFilterList(),
-						
-						new FunctionMap<Class<AbstractFilter>, Boolean>() {
 
-							public Boolean f(Class<AbstractFilter> f)
+		Fn.filter(
+						AvailableFilters.generateFilterList(),
+
+						new FunctionMap<Class<? extends AbstractFilter>, Boolean>() {
+
+							public Boolean f(Class<? extends AbstractFilter> f)
 							{
 								return createNewInstance(f).getFilterType() == type;
-							}}
+							}
+						}
 				),
-				
-				new FunctionMap<Class<AbstractFilter>, AbstractFilter>() {
 
-					public AbstractFilter f(Class<AbstractFilter> f)
+		new FunctionMap<Class<? extends AbstractFilter>, AbstractFilter>() {
+
+			public AbstractFilter f(Class<? extends AbstractFilter> f)
 					{
 						return AvailableFilters.createNewInstance(f);
 					}
-				}
+		}
 			);
 	}
 
-	@SuppressWarnings("unchecked")
+
 	public static AbstractFilter createNewInstance(AbstractFilter f)
 	{
-		return createNewInstance((Class<AbstractFilter>)f.getClass());
+		return createNewInstance(f.getClass());
 	}
-	
-	public static AbstractFilter createNewInstance(Class<AbstractFilter> f)
+
+
+	public static AbstractFilter createNewInstance(Class<? extends AbstractFilter> f)
 	{
 		try
 		{
@@ -119,64 +127,55 @@ public class AvailableFilters
 			return null;
 		}
 	}
-	
+
 
 	// for jar files -- how do we load these dynamically when inside a jar file?
-	private static List<Class<AbstractFilter>> generateFilterListStatic()
+	private static List<Class<? extends AbstractFilter>> generateFilterListStatic()
 	{
 
-		Class<?>[] classes = {
-				FourierLowPass.class,
-				MovingAverage.class,
-				PolynomialRemoval.class,
-				BruknerRemoval.class,
-				SavitskyGolaySmoothing.class,
-				AgressiveWaveletNoiseFilter.class,
-				WaveletNoiseFilter.class,
-				Integrate.class,
-				Derivitive.class,
-				Addition.class,
-				Subtraction.class,
-				Multiply.class 
-		};
+		List<Class<? extends AbstractFilter>> l = DataTypeFactory.<Class<? extends AbstractFilter>> list();
+		l.add(FourierLowPass.class);
+		l.add(MovingAverage.class);
+		l.add(SavitskyGolaySmoothing.class);
+		l.add(AgressiveWaveletNoiseFilter.class);
+		l.add(WaveletNoiseFilter.class);
+		l.add(SpringSmoothing.class);
+
+		l.add(PolynomialRemoval.class);
+		l.add(BruknerRemoval.class);
+		l.add(LinearTrimRemoval.class);
+
+		l.add(Integrate.class);
+		l.add(Derivitive.class);
+		l.add(Addition.class);
+		l.add(Subtraction.class);
+		l.add(Multiply.class);
+		l.add(DataToWavelet.class);
+		l.add(WaveletToData.class);
+
 
 		return filter(
 
-		map(classes, new FunctionMap<Class<?>, Class<AbstractFilter>>() {
+		l,
 
-			@SuppressWarnings("unchecked")
-			
-			public Class<AbstractFilter> f(Class<?> element)
-			{
-				try
+		new FunctionMap<Class<? extends AbstractFilter>, Boolean>() {
+
+
+			public Boolean f(Class<? extends AbstractFilter> c)
 				{
-					return (Class<AbstractFilter>) element;
+					if (createNewInstance(c) != null && createNewInstance(c).showFilter()) return true;
+					return false;
 				}
-				catch (Exception e)
-				{
-					return null;
-				}
-
-			}
-		}), new FunctionMap<Class<AbstractFilter>, Boolean>(){
-
-			
-			public Boolean f(Class<AbstractFilter> c)
-			{
-				if (createNewInstance(c) != null && createNewInstance(c).showFilter()) return true;
-				return false;
-			}
 		});
 
 	}
 
 
 	// messy logic for getting a list of all available filters
-	@SuppressWarnings("unchecked")
-	private static List<Class<AbstractFilter>> generateFilterListDynamic()
+	private static List<Class<? extends AbstractFilter>> generateFilterListDynamic()
 	{
 
-		List<Class<AbstractFilter>> list = DataTypeFactory.<Class<AbstractFilter>> list();
+		List<Class<? extends AbstractFilter>> list = DataTypeFactory.<Class<? extends AbstractFilter>> list();
 
 		Package p = AbstractFilter.class.getPackage();
 		List<Class<?>> classes = new FList<Class<?>>();
@@ -185,7 +184,7 @@ public class AvailableFilters
 		{
 			for (FilterType ft : FilterType.values())
 			{
-				classes.addAll( getClasses(p.getName() + ".filters." + ft.name().toLowerCase()) );
+				classes.addAll(getClasses(p.getName() + ".filters." + ft.name().toLowerCase()));
 			}
 		}
 		catch (ClassNotFoundException e)
@@ -194,16 +193,17 @@ public class AvailableFilters
 			e.printStackTrace();
 		}
 
-		Class<AbstractFilter> f;
+		Class<? extends AbstractFilter> f;
 
 		if (classes != null)
 		{
 			for (int i = 0; i < classes.size(); i++)
 			{
-				if (classes.get(i).getSuperclass() == AbstractFilter.class || classes.get(i).getSuperclass().getSuperclass() == AbstractFilter.class)
+				if (classes.get(i).getSuperclass() == AbstractFilter.class
+						|| classes.get(i).getSuperclass().getSuperclass() == AbstractFilter.class)
 				{
 
-					f = (Class<AbstractFilter>) classes.get(i);
+					f = (Class<? extends AbstractFilter>) classes.get(i);
 					if (createNewInstance(f) != null && createNewInstance(f).showFilter()) list.add(f);
 
 				}

@@ -10,7 +10,7 @@ import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
@@ -23,7 +23,7 @@ class SummationWidget extends TSSelectorGroup
 {
 
 
-	public SummationWidget(FittingController controller)
+	public SummationWidget(IFittingController controller)
 	{
 
 		super(controller, 2);

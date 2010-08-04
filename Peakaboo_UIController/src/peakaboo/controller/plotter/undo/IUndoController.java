@@ -1,7 +1,9 @@
-package peakaboo.controller.plotter;
+package peakaboo.controller.plotter.undo;
+
+import eventful.IEventful;
 
 
-public interface UndoController
+public interface IUndoController extends IEventful
 {
 
 	public void undo();

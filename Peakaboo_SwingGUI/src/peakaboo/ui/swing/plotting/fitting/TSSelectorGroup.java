@@ -10,7 +10,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.datatypes.DataTypeFactory;
 import swidget.icons.IconSize;
@@ -25,14 +25,14 @@ import fava.signatures.FunctionEach;
 public abstract class TSSelectorGroup extends JPanel implements Scrollable
 {
 
-	protected FittingController controller;
+	protected IFittingController controller;
 
 	protected List<TSSelector>	selectors;
 	protected ImageButton		addButton;
 	
 	private int					minSelectors;
 	
-	public TSSelectorGroup(FittingController controller, int minimumSelectors)
+	public TSSelectorGroup(IFittingController controller, int minimumSelectors)
 	{
 		this.controller = controller;
 		this.minSelectors = minimumSelectors;

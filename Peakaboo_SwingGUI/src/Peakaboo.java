@@ -9,6 +9,7 @@ import javax.swing.UIManager;
 
 import commonenvironment.Env;
 
+import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.ui.swing.PlotterFrame;
 
 import swidget.Swidget;
@@ -21,12 +22,15 @@ import swidget.icons.StockIcon;
 public class Peakaboo
 {
 
-	public static void main(String[] args)
+	/**
+	 * Performs one-time only start-up tasks like reading the peak table
+	 */
+	public static void initialize()
 	{
-		
+		PeakTableReader.readPeakTable();
 		
 		Swidget.initialize();
-				
+		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		
 		//if this version of the JVM is new enough to support the Nimbus Look and Feel, use it
@@ -41,8 +45,16 @@ public class Peakaboo
 			
 		}
 		
+		//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
 		
-
+	}
+	
+	public static void main(String[] args)
+	{
+		
+		initialize();
 
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
@@ -61,10 +73,6 @@ public class Peakaboo
 						StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 				}
 				
-						
-				//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
-				JFrame.setDefaultLookAndFeelDecorated(true);
-				JDialog.setDefaultLookAndFeelDecorated(true);
 				new PlotterFrame();
 
 			}

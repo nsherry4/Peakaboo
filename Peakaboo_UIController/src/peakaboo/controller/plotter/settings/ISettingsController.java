@@ -1,9 +1,12 @@
-package peakaboo.controller.plotter;
+package peakaboo.controller.plotter.settings;
 
+import peakaboo.curvefit.fitting.EscapePeakType;
+import eventful.IEventful;
 import eventful.IEventfulType;
+import fava.datatypes.Pair;
 
 
-public interface SettingsController extends IEventfulType<String>
+public interface ISettingsController extends IEventful
 {
 
 	public void setZoom(float zoom);
@@ -48,6 +51,13 @@ public interface SettingsController extends IEventfulType<String>
 
 	public void setShowRawData(boolean show);
 	public boolean getShowRawData();
+	
+	
+	public float getEnergyForChannel(int channel);
+	public Pair<Float, Float> getValueForChannel(int channel);
 
+	
+	public EscapePeakType getEscapePeakType();
+	public void setEscapePeakType(EscapePeakType type);
 	
 }

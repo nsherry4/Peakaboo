@@ -93,7 +93,7 @@ public class MapController extends CanvasController
 
 	public DataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return plotcontroller.getDataSourceForSubset(getDataWidth(), getDataHeight(), cstart, cend);
+		return plotcontroller.dataController.getDataSourceForSubset(getDataWidth(), getDataHeight(), cstart, cend);
 	}
 	
 	public InputStream getSerializedPlotSettings()

@@ -13,7 +13,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.peaktable.TransitionSeriesType;
@@ -27,12 +27,12 @@ class ProposalEditor extends DefaultTreeCellEditor
 
 	private TSWidget	tswidget;
 	private JLabel						tstLabel;
-	private FittingController			controller;
+	private IFittingController			controller;
 	private DefaultTreeCellRenderer		renderer;
 
 
 
-	public ProposalEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller)
+	public ProposalEditor(JTree tree, DefaultTreeCellRenderer renderer, IFittingController controller)
 	{
 
 		super(tree, renderer);

@@ -12,7 +12,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.peaktable.TransitionSeriesType;
 import peakaboo.datatypes.DataTypeFactory;
@@ -32,12 +32,12 @@ public class ProposalPanel extends ClearPanel implements Changeable
 	protected JTree					unfitTree;
 
 	CurveFittingView				owner;
-	FittingController				controller;
+	IFittingController				controller;
 
 	private SelectionListControls	selControls;
 
 
-	public ProposalPanel(final FittingController controller, final CurveFittingView owner)
+	public ProposalPanel(final IFittingController controller, final CurveFittingView owner)
 	{
 
 		this.owner = owner;

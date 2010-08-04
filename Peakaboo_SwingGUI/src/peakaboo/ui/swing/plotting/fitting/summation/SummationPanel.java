@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 import fava.Fn;
 import fava.signatures.FunctionEach;
 
-import peakaboo.controller.plotter.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
@@ -27,7 +27,7 @@ public class SummationPanel extends ClearPanel
 	protected SummationWidget	summationWidget;
 
 
-	public SummationPanel(final FittingController controller, final CurveFittingView owner)
+	public SummationPanel(final IFittingController controller, final CurveFittingView owner)
 	{
 
 		SelectionListControls selControls = new SelectionListControls("Summation") {

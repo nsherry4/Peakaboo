@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import peakaboo.controller.plotter.FilterController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -31,13 +31,13 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	private JFrame				owner;
 
 	private AbstractFilter		filter;
-	private FilterController	controller;
+	private IFilteringController	controller;
 
 	private String				label;
 	private boolean				isPushed;
 
 
-	public FilterEditButtonEditor(FilterController controller, JFrame owner)
+	public FilterEditButtonEditor(IFilteringController controller, JFrame owner)
 	{
 		super(new JCheckBox());
 

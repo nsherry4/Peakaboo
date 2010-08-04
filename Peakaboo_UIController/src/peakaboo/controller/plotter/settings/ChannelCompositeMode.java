@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter;
+package peakaboo.controller.plotter.settings;
 
 /**
  * 

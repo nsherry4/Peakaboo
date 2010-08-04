@@ -245,12 +245,7 @@ public class TransitionSeriesFitting
 	
 	private void calculateConstraintMask(TransitionSeries ts, boolean fitEscapes)
 	{
-		/*
-		for (int i = 0; i < dataWidth; i++)
-		{
-			constraintMask.set(i, false);
-		}
-		*/
+
 		
 		transitionRanges.clear();
 
@@ -259,6 +254,7 @@ public class TransitionSeriesFitting
 		int start, stop;
 
 		baseSize = 0;
+		
 		
 		for (Transition t : ts)
 		{
