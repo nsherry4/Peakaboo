@@ -33,13 +33,6 @@ public class EmptyDataSetProvider extends DataSetProvider
 		return null;
 	}
 
-	/*@Override
-	public Spectrum calculateSumInRegion(ROI region)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
 	@Override
 	public Spectrum getScan(int index)
 	{

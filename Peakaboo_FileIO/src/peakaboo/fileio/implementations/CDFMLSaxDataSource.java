@@ -1,4 +1,4 @@
-package peakaboo.fileio;
+package peakaboo.fileio.implementations;
 
 
 
@@ -20,11 +20,15 @@ import fava.Functions;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.signatures.FunctionEach;
+import fava.signatures.FunctionGet;
 import fava.signatures.FunctionMap;
 
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.support.CDFML;
+import peakaboo.fileio.DataSource;
+import peakaboo.fileio.DataSourceDimensions;
+import peakaboo.fileio.DataSourceExtendedInformation;
+import peakaboo.fileio.implementations.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -65,7 +69,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	Spectrum									normaliseSpectrum;
 
 
-	FunctionMap<Boolean, Boolean>				isAborted;
+	FunctionGet<Boolean>						isAborted;
 	FunctionEach<Integer>						getScanCountCallback;
 	FunctionEach<Integer>						readScanCallback;
 	int											scanReadCount;
@@ -84,7 +88,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	
 	
 
-	public CDFMLSaxDataSource(AbstractFile file, FunctionEach<Integer> getScanCountCallback, FunctionEach<Integer> readScanCallback, FunctionMap<Boolean, Boolean> isAborted) throws Exception
+	public CDFMLSaxDataSource(AbstractFile file, FunctionEach<Integer> getScanCountCallback, FunctionEach<Integer> readScanCallback, FunctionGet<Boolean> isAborted) throws Exception
 	{
 		super();
 		
@@ -96,10 +100,12 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		tagStack = new Stack<Pair<String, Map<String, String>>>();
 		scanValues = DataTypeFactory.<Integer, ScanValues> map();
 
+		scandata = new FileBackedList<Spectrum>("Peakaboo");
+		
 		try
 		{
 
-			scandata = new FileBackedList<Spectrum>("Peakaboo");
+			
 
 
 			xr = XMLReaderFactory.createXMLReader();
@@ -256,7 +262,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 				scanReadCount++;
 				if (scanReadCount == 100) 
 				{
-					if (isAborted != null && isAborted.f(true))
+					if (isAborted != null && isAborted.f())
 					{
 						throw new SAXException(ABORT_MESSAGE);
 					}
@@ -334,12 +340,6 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	}
 
 	
-	public void markScanAsBad(int index)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 	public int getScanCount()
 	{
 		return numScans;
@@ -574,6 +574,19 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		return true;
 	}
 
+	
+	public static boolean filesMatchCriteria(List<AbstractFile> files)
+	{
+		if (files.size() != 1) return false;
+		if (! files.get(0).getFileName().toLowerCase().endsWith(".xml")) return false;
+		return true;
+	}
+	
+	public static String extension()
+	{
+		return "xml";
+	}
+	
 }
 
 

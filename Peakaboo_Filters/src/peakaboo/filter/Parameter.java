@@ -75,6 +75,7 @@ public class Parameter implements Serializable
 	{
 		try{
 			if (value instanceof Double) return ((Double)value).floatValue();
+			//if (value instanceof Integer) return ((Integer)value).floatValue();
 			return (Float)value;
 		} catch (ClassCastException e)
 		{
@@ -120,5 +121,6 @@ public class Parameter implements Serializable
 			return null;
 		}
 	}
+
 
 }

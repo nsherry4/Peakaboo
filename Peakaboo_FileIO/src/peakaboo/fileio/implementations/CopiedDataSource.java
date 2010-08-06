@@ -1,10 +1,15 @@
-package peakaboo.fileio;
+package peakaboo.fileio.implementations;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.fileio.DataSource;
+import peakaboo.fileio.DataSourceDimensions;
+import peakaboo.fileio.DataSourceExtendedInformation;
 
 import fava.Fn;
 import fava.Functions;
@@ -104,12 +109,6 @@ public class CopiedDataSource implements DataSource, DataSourceDimensions, DataS
 	public List<String> getScanNames()
 	{
 		return Fn.map(scannames, Functions.<String>id());
-	}
-
-
-	public void markScanAsBad(int index)
-	{
-		//do not mark scans as bad
 	}
 
 
@@ -297,4 +296,14 @@ public class CopiedDataSource implements DataSource, DataSourceDimensions, DataS
 		return ((DataSourceExtendedInformation)originalDataSource).hasExtendedInformation();
 	}
 
+	public static boolean filesMatchCriteria(List<AbstractFile> files)
+	{
+		return false;
+	}
+	
+	public static String extension()
+	{
+		return null;
+	}
+	
 }

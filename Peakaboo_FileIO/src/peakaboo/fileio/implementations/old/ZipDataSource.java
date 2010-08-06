@@ -1,4 +1,4 @@
-package peakaboo.fileio;
+package peakaboo.fileio.implementations.old;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
 
 import fava.datatypes.Bounds;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.support.CLSXML;
+import peakaboo.fileio.DataSource;
+import peakaboo.fileio.implementations.support.CLSXML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
@@ -288,5 +290,20 @@ public class ZipDataSource implements DataSource
 		return s.size() * getScanCount();
 	}
 
+	
+	public static boolean filesMatchCriteria(List<AbstractFile> files)
+	{
+		if (files.size() != 1) return false;
+		if (! files.get(0).getFileName().toLowerCase().endsWith(".zip")) return false;
+		
+		return true;
+		
+	}
+	
+	
+	public static String extension()
+	{
+		return "zip";
+	}
 	
 }

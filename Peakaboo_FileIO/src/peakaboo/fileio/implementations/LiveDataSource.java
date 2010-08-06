@@ -1,11 +1,14 @@
-package peakaboo.fileio;
+package peakaboo.fileio.implementations;
 
 import java.io.IOException;
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+
 import fava.Fn;
 
 import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.fileio.DataSource;
 import scitypes.Spectrum;
 import scitypes.filebacked.FileBackedList;
 
@@ -16,7 +19,6 @@ public class LiveDataSource implements DataSource
 	float maxEnergy;
 	
 	List<Spectrum> scans;
-	List<Integer> badScans;
 	
 	
 	public LiveDataSource()
@@ -30,7 +32,6 @@ public class LiveDataSource implements DataSource
 			scans = DataTypeFactory.<Spectrum>list();
 		}
 		
-		badScans = DataTypeFactory.<Integer>list();
 	}
 	
 	/////////////////////////////////////////////////
@@ -86,12 +87,7 @@ public class LiveDataSource implements DataSource
 	}
 
 
-	public void markScanAsBad(int index)
-	{
-		badScans.add(index);
-		badScans = Fn.unique(badScans);
-	}
-	
+
 	
 	public void setScan(int index, Spectrum scan)
 	{
@@ -106,4 +102,14 @@ public class LiveDataSource implements DataSource
 	}
 
 
+	public static boolean filesMatchCriteria(List<AbstractFile> files)
+	{
+		return false;
+	}
+	
+	public static String extension()
+	{
+		return null;
+	}
+	
 }

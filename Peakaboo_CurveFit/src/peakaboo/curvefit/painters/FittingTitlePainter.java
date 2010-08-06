@@ -139,7 +139,7 @@ public class FittingTitlePainter extends PlotPainter
 	
 	public float baseHeightForTitle(PainterData p, String title, float energy)
 	{
-		
+			
 		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, energy);
 		List<Coord<Bounds<Float>>> labelsInRange = DataTypeFactory.<Coord<Bounds<Float>>>list();
 		
@@ -167,8 +167,7 @@ public class FittingTitlePainter extends PlotPainter
 
 		});
 		
-		
-		//get the starting baseline from the pre-existing dataHeights
+				
 		float baseline = SpectrumCalculations.max(p.dataHeights.subSpectrum(currentLabel.x.start.intValue(), currentLabel.x.end.intValue()));
 		float currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
 		

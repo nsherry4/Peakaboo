@@ -3,6 +3,8 @@ package peakaboo.fileio;
 
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+
 import scitypes.Spectrum;
 
 
@@ -20,6 +22,8 @@ public interface DataSource
 		CLSXML, ZIP, CDFML
 	}
 	
+
+	
 	/**
 	 * Retrieves the values from the scan at the given index
 	 * 
@@ -29,7 +33,7 @@ public interface DataSource
 	 */
 	public Spectrum getScanAtIndex(int index);
 
-
+	
 	/**
 	 * Returns the number of scans in this data set, including any which have been marked as bad
 	 * 
@@ -58,15 +62,6 @@ public interface DataSource
 	 */
 	public float getMaxEnergy();
 
-
-	/**
-	 * Mark this scan as bad. This generally means that there is something wrong with this scan/file/record
-	 * such that it is not intended to be a part of this data set
-	 * 
-	 * @param index
-	 *            the index of the scan to mark as bad
-	 */
-	public void markScanAsBad(int index);
 
 
 	/**

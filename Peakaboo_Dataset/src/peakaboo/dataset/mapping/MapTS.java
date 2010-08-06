@@ -8,7 +8,6 @@ import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.fileio.DataSource;
-import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -47,7 +46,7 @@ public class MapTS
 		//final List<List<Double>> filteredData;
 
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, dataSource.getExpectedScanCount());
+		final MapResultSet maps = new MapResultSet(transitionSeries, dataSource.getScanCount());
 		
 		final PluralEachIndex t_filter = new PluralEachIndex("Apply Filters and Fittings") {
 

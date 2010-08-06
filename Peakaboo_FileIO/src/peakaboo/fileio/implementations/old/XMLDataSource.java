@@ -1,4 +1,4 @@
-package peakaboo.fileio;
+package peakaboo.fileio.implementations.old;
 
 
 import java.util.List;
@@ -9,7 +9,8 @@ import commonenvironment.IOOperations;
 import fava.datatypes.Bounds;
 
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.support.CLSXML;
+import peakaboo.fileio.DataSource;
+import peakaboo.fileio.implementations.support.CLSXML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
@@ -153,6 +154,20 @@ public class XMLDataSource implements DataSource
 		return s.size() * getScanCount();
 	}
 
+	public static boolean filesMatchCriteria(List<AbstractFile> files)
+	{
+		if (files.size() <= 1) return false;
+		if (! files.get(0).getFileName().toLowerCase().endsWith(".xml")) return false;
+		
+		return true;
+		
+	}
+	
+	
+	public static String extension()
+	{
+		return "xml";
+	}
 	
 	
 }

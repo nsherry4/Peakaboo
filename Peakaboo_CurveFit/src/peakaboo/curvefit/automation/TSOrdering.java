@@ -240,7 +240,6 @@ public class TSOrdering
 	{
 		
 		
-		
 		/*
 		 * 
 		 * Method description

@@ -9,6 +9,7 @@ import commonenvironment.IOOperations;
 
 import fava.datatypes.Bounds;
 import fava.signatures.FunctionEach;
+import fava.signatures.FunctionGet;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
@@ -16,12 +17,14 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.CDFMLSaxDataSource;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
-import peakaboo.fileio.XMLDataSource;
-import peakaboo.fileio.ZipDataSource;
+import peakaboo.fileio.implementations.CDFMLSaxDataSource;
+import peakaboo.fileio.implementations.PlainTextDataSource;
+import peakaboo.fileio.implementations.old.XMLDataSource;
+import peakaboo.fileio.implementations.old.ZipDataSource;
+import peakaboo.fileio.implementations.support.CLSXML;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -156,20 +159,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	}
 
 
-	/*@Override
-	public List<Double> calculateSumInRegion(ROI region)
-	{
-		List<Double> sums = DataTypeFactory.<Double> list();
-
-		for (List<Double> scan : dsc_dataset)
-		{
-			sums.add(ROICalculations.getSumInRegion(scan, region));
-		}
-
-		return sums;
-	}*/
-
-
 	@Override
 	public Spectrum getScan(int index)
 	{
@@ -259,9 +248,9 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					}
 				};
 				
-				FunctionMap<Boolean, Boolean> isAborted = new FunctionMap<Boolean, Boolean>(){
+				FunctionGet<Boolean> isAborted = new FunctionGet<Boolean>(){
 
-					public Boolean f(Boolean element)
+					public Boolean f()
 					{
 						return isAborted() || isAbortRequested();
 					}};
@@ -276,11 +265,26 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				
 				//get the correct kind of DataSource
-				if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".zip"))
+				
+				if (PlainTextDataSource.filesMatchCriteria(files))
+				{
+					try
+					{
+						dataSource = new PlainTextDataSource(files.get(0), readScans, isAborted);
+					}
+					catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						aborted();
+						return null;
+					}
+				} 
+				else if (ZipDataSource.filesMatchCriteria(files))
 				{
 					dataSource = ZipDataSource.getArchiveFromFileName(files.get(0).getFileName());
 				}
-				else if (files.size() == 1 && files.get(0).getFileName().toLowerCase().endsWith(".xml"))
+				else if (CDFMLSaxDataSource.filesMatchCriteria(files))
 				{
 					try
 					{
@@ -293,7 +297,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 						return null;
 					}
 				}
-				else if (files.get(0).getFileName().toLowerCase().endsWith(".xml"))
+				else if (XMLDataSource.filesMatchCriteria(files))
 				{
 					dataSource = XMLDataSource.getXMLFileSet(files);
 				} 
@@ -309,7 +313,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				reading.advanceState();
 				
-				if (dataSource == null || isAborted.f(true)) 
+				if (dataSource == null || isAborted.f()) 
 				{
 					aborted();
 					return null;
