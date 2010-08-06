@@ -77,7 +77,7 @@ public class SidePanel extends JPanel
 		maingbc.weightx = 0.0;
 		maingbc.weighty = 1.0;
 		maingbc.fill = GridBagConstraints.BOTH;
-		add(new ViewsContainer(controller), maingbc);
+		add(new ViewsContainer(controller.getActiveTabController()), maingbc);
 
 		
 		// elements list
@@ -91,16 +91,16 @@ public class SidePanel extends JPanel
 			public void change(String s)
 			{
 
-				width.setEnabled(!controller.dimensionsProvided());
-				height.setEnabled(!controller.dimensionsProvided());
+				width.setEnabled(!controller.mapsController.isDimensionsProvided());
+				height.setEnabled(!controller.mapsController.isDimensionsProvided());
 
-				shadesSpinner.setValue(controller.getSpectrumSteps());
-				shadesSpinner.setEnabled(controller.getContours());
-				contours.setSelected(controller.getContours());
+				shadesSpinner.setValue(controller.mapsController.getSpectrumSteps());
+				shadesSpinner.setEnabled(controller.mapsController.getContours());
+				contours.setSelected(controller.mapsController.getContours());
 				//contours.setEnabled(controller.getActiveTabModel().displayMode == MapDisplayMode.COMPOSITE);
-				width.setValue(controller.getDataWidth());
-				height.setValue(controller.getDataHeight());
-				interpolation.setValue(controller.getInterpolation());
+				width.setValue(controller.mapsController.getDataWidth());
+				height.setValue(controller.mapsController.getDataHeight());
+				interpolation.setValue(controller.mapsController.getInterpolation());
 
 			}
 		});
@@ -125,12 +125,12 @@ public class SidePanel extends JPanel
 		c.weighty = 0.0;
 		c.gridy = 0;
 		width = new JSpinner();
-		width.setValue(controller.getDataWidth());
+		width.setValue(controller.mapsController.getDataWidth());
 		width.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e)
 			{
-				controller.setDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
+				controller.mapsController.setDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
 			}
 		});
 
@@ -141,12 +141,12 @@ public class SidePanel extends JPanel
 
 		c.gridy += 1;
 		height = new JSpinner();
-		height.setValue(controller.getDataHeight());
+		height.setValue(controller.mapsController.getDataHeight());
 		height.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e)
 			{
-				controller.setDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
+				controller.mapsController.setDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
 			}
 		});
 
@@ -157,12 +157,12 @@ public class SidePanel extends JPanel
 
 		c.gridy += 1;
 		interpolation = new JSpinner();
-		interpolation.setValue(controller.getInterpolation());
+		interpolation.setValue(controller.mapsController.getInterpolation());
 		interpolation.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e)
 			{
-				controller.setInterpolation((Integer) ((JSpinner) e.getSource()).getValue());
+				controller.mapsController.setInterpolation((Integer) ((JSpinner) e.getSource()).getValue());
 			}
 		});
 		c.gridx = 0;
@@ -172,23 +172,23 @@ public class SidePanel extends JPanel
 
 		c.gridy += 1;
 		contours = new JCheckBox("Contours");
-		contours.setSelected(controller.getContours());
+		contours.setSelected(controller.mapsController.getContours());
 		contours.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setContours(((JCheckBox) e.getSource()).isSelected());
+				controller.mapsController.setContours(((JCheckBox) e.getSource()).isSelected());
 			}
 		});
 
 		shadesSpinner = new JSpinner();
-		shadesSpinner.setValue(controller.getSpectrumSteps());
-		shadesSpinner.setEnabled(controller.getContours());
+		shadesSpinner.setValue(controller.mapsController.getSpectrumSteps());
+		shadesSpinner.setEnabled(controller.mapsController.getContours());
 		shadesSpinner.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e)
 			{
-				controller.setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
+				controller.mapsController.setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
 			}
 		});
 		c.gridx = 0;

@@ -68,8 +68,8 @@ import fava.datatypes.Pair;
 import fava.lists.FList;
 
 import peakaboo.common.Version;
-import peakaboo.controller.mapper.AllMapsModel;
 import peakaboo.controller.mapper.MapController;
+import peakaboo.controller.mapper.maps.AllMapsModel;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
@@ -85,9 +85,9 @@ import peakaboo.ui.swing.PlotterFrame;
 import peakaboo.ui.swing.dialogues.PropertyDialogue;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
-import peakaboo.ui.swing.widgets.pictures.SavePicture;
 import plural.swing.PluralSetView;
 import plural.workers.PluralSet;
+import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import scitypes.SigDigits;
 import swidget.dialogues.fileio.SwidgetIO;
@@ -163,10 +163,11 @@ public class PlotPanel extends ClearPanel
 		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D toy = bi.createGraphics();
 
-		controller = new PlotController(toy);
+		controller = new PlotController();
 		dataController = controller.dataController;
 		settingsController = controller.settingsController;
 		undoController = controller.undoController;
+		
 		
 
 		initGUI();
@@ -201,8 +202,6 @@ public class PlotPanel extends ClearPanel
 		// anything to do with the dataset
 		if (dataController.hasDataSet())
 		{
-
-			canvas.setHasData(true);
 
 			bottomPanel.setEnabled(true);
 			snapshotMenuItem.setEnabled(true);
@@ -241,7 +240,6 @@ public class PlotPanel extends ClearPanel
 		else
 		{
 			bottomPanel.setEnabled(false);
-			canvas.setHasData(false);
 		}
 
 		undo.setEnabled(undoController.canUndo());
@@ -448,7 +446,7 @@ public class PlotPanel extends ClearPanel
 					
 			public void componentResized(ComponentEvent e)
 			{
-				canvas.setCanvasSize();
+				canvas.updateCanvasSize();
 			}
 			
 			public void componentMoved(ComponentEvent e)
@@ -1268,6 +1266,7 @@ public class PlotPanel extends ClearPanel
 	public void paintCanvasEvent(Graphics g)
 	{
 
+		/*
 		controller.setImageWidth(canvas.getWidth());
 		controller.setImageHeight(canvas.getHeight());
 
@@ -1275,7 +1274,7 @@ public class PlotPanel extends ClearPanel
 		g.fillRect(0, 0, (int) controller.getImageWidth(), (int) controller.getImageHeight());
 
 		controller.draw(g);
-
+		 */
 	}
 
 
@@ -1289,7 +1288,7 @@ public class PlotPanel extends ClearPanel
 	public void mouseMoveCanvasEvent(int x)
 	{
 
-		int channel = controller.channelFromCoordinate(x);
+		int channel = canvas.channelFromCoordinate(x);
 		float energy = settingsController.getEnergyForChannel(channel);
 		Pair<Float, Float> values = settingsController.getValueForChannel(channel);
 
@@ -1373,11 +1372,11 @@ public class PlotPanel extends ClearPanel
 		String[] exts;
 		if (Env.isWebStart())
 		{
-			exts = new String[] { "xml" };
+			exts = new String[] { "xml", "txt" };
 		}
 		else
 		{
-			exts = new String[] { "xml", "zip" };
+			exts = new String[] { "xml", "txt", "zip" };
 		}
 
 		files = openNewDataset(exts, "XRF Data Sets");
@@ -1425,62 +1424,35 @@ public class PlotPanel extends ClearPanel
 			MapController mapController = controller.getMapController();
 			PeakabooMapperSwing mapperWindow;
 
-			Coord<Integer> dataDimensions = dataController.getDataDimensions();
-
 			MapResultSet results = tasks.getResult();
 
 
-			AllMapsModel datamodel = new AllMapsModel(results);
-
-			datamodel.dataDimensions = dataDimensions;
-			datamodel.dimensionsProvided = dataController.hasDimensions();
-			datamodel.badPoints = dataController.getDiscardedScanList();
-			datamodel.realDimensions = dataController.getRealDimensions();
-			datamodel.realDimensionsUnits = dataController.getRealDimensionsUnits();
-
-			if (mapController == null)
+			if (dataController.hasDimensions())
 			{
 
-				mapperWindow = new PeakabooMapperSwing(
-					container,
-					datamodel,
-					dataController.getDatasetName(),
-					dataController.getDataSourceFolder(),
-					savePictureFolder,
-					dataDimensions,
-					results,
-					getController()
-				);
-
+				mapController.mapsController.setMapData(
+						results,
+						dataController.getDatasetName(),
+						dataController.getDataDimensions(),
+						dataController.getRealDimensions(),
+						dataController.getRealDimensionsUnits(),
+						dataController.badScans
+					);
+				
+			} else {
+								
+				mapController.mapsController.setMapData(
+						results,
+						dataController.getDatasetName(),
+						dataController.badScans
+					);
+				
 			}
-			else
-			{
+			
+			mapController.mapsController.setInterpolation(0);
 
-				int dy = mapController.getDataHeight();
-				int dx = mapController.getDataWidth();
-
-				// if the data does not match size, discard it. either it was from
-				// a funny data set that isn't square or (more likely) they reloaded the
-				// data set
-				// TODO: invistigate -- is it easier to null the mapController pointer when
-				// loading new data and assume the data is the same size otherwise?
-				if (dataDimensions.x * dataDimensions.y == dx * dy)
-				{
-					dataDimensions.x = dx;
-					dataDimensions.y = dy;
-				}
-
-				mapperWindow = new PeakabooMapperSwing(
-					container,
-					datamodel,
-					dataController.getDatasetName(),
-					dataController.getDataSourceFolder(),
-					savePictureFolder,
-					dataDimensions,
-					results,
-					getController()
-				);
-			}
+			
+			mapperWindow = new PeakabooMapperSwing(container, mapController, controller);
 
 			mapperWindow.showDialog();
 			// controller.setMapController(mapperWindow.showDialog());
@@ -1523,7 +1495,10 @@ public class PlotPanel extends ClearPanel
 	private void actionSavePicture()
 	{
 		if (savePictureFolder == null) savePictureFolder = dataController.getDataSourceFolder();
-		savePictureFolder = new SavePicture(container, controller, savePictureFolder).getStartingFolder();
+		SavePicture sp = new SavePicture(container, canvas, savePictureFolder);
+		savePictureFolder = sp.getStartingFolder(); 
+		
+		//new SavePicture(container, controller, savePictureFolder).getStartingFolder();
 	}
 
 

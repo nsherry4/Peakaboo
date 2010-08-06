@@ -9,8 +9,8 @@ import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.datatypes.DataTypeFactory;
-import peakaboo.fileio.CopiedDataSource;
 import peakaboo.fileio.DataSource;
+import peakaboo.fileio.implementations.CopiedDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -29,15 +29,15 @@ import fava.datatypes.Bounds;
 public class DataController extends Eventful implements IDataController
 {
 
-	private DataSetProvider dataModel;
-	private PlotController plotController;
+	private DataSetProvider 	dataModel;
+	private PlotController 		plot;
 	public List<Integer>		badScans;
-	private int dataHeight, dataWidth;
+	private int 				dataHeight, dataWidth;
 	
 	
 	public DataController(PlotController plotController)
 	{
-		this.plotController = plotController;
+		this.plot = plotController;
 		dataModel = new EmptyDataSetProvider();
 		badScans = DataTypeFactory.<Integer>list();
 	}
@@ -156,16 +156,16 @@ public class DataController extends Eventful implements IDataController
 		DataSetProvider old = dataModel;
 		dataModel = dsp;
 		
-		plotController.settingsController.setScanNumber( dsp.firstNonNullScanIndex() );
+		plot.settingsController.setScanNumber( dsp.firstNonNullScanIndex() );
 		
 		setDataWidth(dataModel.scanSize());
 		setDataHeight(1);
 		
-		plotController.fittingController.setFittingParameters(dataModel.energyPerChannel());
+		plot.fittingController.setFittingParameters(dataModel.energyPerChannel());
 				
-		if (plotController.mapController != null) plotController.mapController.setInterpolation(0);
+		if (plot.mapController != null) plot.mapController.mapsController.setInterpolation(0);
 		
-		plotController.undoController.clearUndos();
+		plot.undoController.clearUndos();
 			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected
@@ -184,7 +184,7 @@ public class DataController extends Eventful implements IDataController
 
 	public String getCurrentScanName()
 	{
-		return dataModel.getScanName(plotController.settingsController.getScanNumber());
+		return dataModel.getScanName(plot.settingsController.getScanNumber());
 	}
 
 	public boolean getScanHasExtendedInformation()
@@ -278,7 +278,7 @@ public class DataController extends Eventful implements IDataController
 
 	public boolean getScanDiscarded()
 	{
-		return getScanDiscarded(plotController.settingsController.getScanNumber());
+		return getScanDiscarded(plot.settingsController.getScanNumber());
 	}
 
 	public void setScanDiscarded(int scanNo, boolean discarded)
@@ -287,21 +287,21 @@ public class DataController extends Eventful implements IDataController
 		if (discarded)
 		{
 			if (!getScanDiscarded(scanNo)) badScans.add(scanNo);
-			plotController.filteringController.filteredDataInvalidated();
+			plot.filteringController.filteredDataInvalidated();
 		}
 		else
 		{
 			if (getScanDiscarded(scanNo)) badScans.remove(badScans.indexOf(scanNo));
-			plotController.filteringController.filteredDataInvalidated();
+			plot.filteringController.filteredDataInvalidated();
 		}
 
-		plotController.undoController.setUndoPoint("Marking Bad");
+		plot.undoController.setUndoPoint("Marking Bad");
 
 	}
 
 	public void setScanDiscarded(boolean discarded)
 	{
-		setScanDiscarded(plotController.settingsController.getScanNumber(), discarded);
+		setScanDiscarded(plot.settingsController.getScanNumber(), discarded);
 	}
 
 	public List<Integer> getDiscardedScanList()

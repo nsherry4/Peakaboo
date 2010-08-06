@@ -23,8 +23,10 @@ import javax.swing.SwingConstants;
 import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.SingleMapModel;
+import peakaboo.controller.mapper.maptab.TabController;
+import peakaboo.controller.mapper.maptab.TabModel;
 import peakaboo.ui.swing.PeakabooMapperSwing;
+import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import swidget.widgets.Spacing;
 
@@ -33,21 +35,24 @@ import swidget.widgets.Spacing;
 public class MapViewer extends JPanel
 {
 
-	private JPanel			canvas;
+	private MapCanvas			canvas;
 
 	protected MapController	controller;
 
 	private JLabel			warnOnTooSmallDataset;
 	private JLabel			mapMouseMonitor;
 
-	private SingleMapModel	viewModel;
+	private TabController	tabController;
+	//private SingleMapModel	viewModel;
+	
+	PeakabooMapperSwing		owner;
 
 
-	public MapViewer(SingleMapModel viewModel, MapController controller, PeakabooMapperSwing owner)
+	public MapViewer(TabController _tabController, MapController controller, PeakabooMapperSwing owner)
 	{
 
 		this.controller = controller;
-		this.viewModel = viewModel;
+		this.tabController = _tabController;
 
 		addComponentListener(new ComponentListener() {
 
@@ -80,15 +85,8 @@ public class MapViewer extends JPanel
 			}
 		});
 
-		owner.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				MapViewer.this.viewModel.discard();
-			}
-		});
-		
+
+		this.owner = owner;
 		init(owner);
 
 	}
@@ -106,13 +104,13 @@ public class MapViewer extends JPanel
 			
 			public void mouseDragged(MouseEvent e)
 			{
-				controller.setDragEnd( controller.getMapCoordinateAtPoint(e.getX(), e.getY()) );
-				controller.setHasBoundingRegion( true );
+				tabController.setDragEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY()) );
+				tabController.setHasBoundingRegion( true );
 			}
 
 			public void mouseMoved(MouseEvent e)
 			{
-				showValueAtCoord(controller.getMapCoordinateAtPoint(e.getX(), e.getY()));
+				showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY()));
 			}
 
 			public void mouseClicked(MouseEvent e)
@@ -135,9 +133,9 @@ public class MapViewer extends JPanel
 
 			public void mousePressed(MouseEvent e)
 			{			
-				controller.setDragStart( controller.getMapCoordinateAtPoint(e.getX(), e.getY()) );
-				controller.setDragEnd( null );
-				controller.setHasBoundingRegion( false );
+				tabController.setDragStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY()) );
+				tabController.setDragEnd( null );
+				tabController.setHasBoundingRegion( false );
 			}
 
 			public void mouseReleased(MouseEvent e)
@@ -156,7 +154,7 @@ public class MapViewer extends JPanel
 			public void change(String ss)
 			{
 
-				if (controller.getDataHeight() * controller.getDataWidth() == controller.getMapSize())
+				if (controller.mapsController.getDataHeight() * controller.mapsController.getDataWidth() == controller.mapsController.getMapSize())
 				{
 					warnOnTooSmallDataset.setVisible(false);
 				}
@@ -165,7 +163,7 @@ public class MapViewer extends JPanel
 					warnOnTooSmallDataset.setVisible(true);
 				}
 
-				if (controller.getActiveTabModel() == viewModel) fullRedraw();
+				if (controller.getActiveTabController() == tabController) fullRedraw();
 			}
 		});
 
@@ -174,11 +172,16 @@ public class MapViewer extends JPanel
 		controller.updateListeners("");
 
 	}
-
-
-	public SingleMapModel getMapViewModel()
+	
+	public String savePicture(String folder)
 	{
-		return viewModel;
+		return new SavePicture(owner, canvas, folder).getStartingFolder();
+	}
+
+
+	public TabController getTabController()
+	{
+		return tabController;
 	}
 
 
@@ -198,14 +201,7 @@ public class MapViewer extends JPanel
 
 	private JPanel createCanvasPanel()
 	{
-		canvas = new JPanel(true) {
-
-			@Override
-			public void paint(Graphics g)
-			{
-				MapViewer.this.paintCanvasEvent(g);
-			}
-		};
+		canvas = new MapCanvas(controller, tabController);
 
 		JPanel canvasContainer = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -218,13 +214,14 @@ public class MapViewer extends JPanel
 		canvasContainer.add(canvas, c);
 
 		warnOnTooSmallDataset = new JLabel("Warning: Map dimensions are smaller than data set ("
-				+ controller.getMapSize() + ")");
+				+ controller.mapsController.getMapSize() + ")");
 		warnOnTooSmallDataset.setBorder(Spacing.bSmall());
 		warnOnTooSmallDataset.setBackground(new Color(0.64f, 0.0f, 0.0f));
 		warnOnTooSmallDataset.setForeground(new Color(1.0f, 1.0f, 1.0f));
 		warnOnTooSmallDataset.setOpaque(true);
 		warnOnTooSmallDataset.setHorizontalAlignment(SwingConstants.CENTER);
-		if (controller.getDataHeight() * controller.getDataWidth() == controller.getMapSize())
+		
+		if (controller.mapsController.getDataHeight() * controller.mapsController.getDataWidth() == controller.mapsController.getMapSize())
 		{
 			warnOnTooSmallDataset.setVisible(false);
 		}
@@ -276,27 +273,8 @@ public class MapViewer extends JPanel
 
 	public void setNeedsRedraw()
 	{
-		controller.setNeedsRedraw();
+		canvas.setNeedsRedraw();
 	}
-
-
-	/*
-	 * METHODS FOR HANDLING CANVAS EVENTS
-	 */
-
-	public void paintCanvasEvent(Graphics g)
-	{
-
-		controller.setImageWidth(canvas.getWidth());
-		controller.setImageHeight(canvas.getHeight());
-
-		g.setColor(new Color(1.0f, 1.0f, 1.0f));
-		g.fillRect(0, 0, (int) controller.getImageWidth(), (int) controller.getImageHeight());
-
-		controller.draw(g);
-
-	}
-
 
 	
 	public void showValueAtCoord(Coord<Integer> mapCoord)
@@ -309,13 +287,13 @@ public class MapViewer extends JPanel
 			return;
 		}
 
-		int index = mapCoord.y * controller.getDataWidth() + mapCoord.x;
+		int index = mapCoord.y * controller.mapsController.getDataWidth() + mapCoord.x;
 		index++;
 		
-		if (controller.isValidPoint(mapCoord))
+		if (controller.mapsController.isValidPoint(mapCoord))
 		{
-			String value = controller.getIntensityMeasurementAtPoint(mapCoord);
-			if (controller.getInterpolation() != 0) value += " (not interpolated)";
+			String value = tabController.getIntensityMeasurementAtPoint(mapCoord);
+			if (controller.mapsController.getInterpolation() != 0) value += " (not interpolated)";
 			
 			mapMouseMonitor.setText("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
 					+ value);

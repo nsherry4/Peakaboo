@@ -5,6 +5,7 @@ package peakaboo.controller.plotter.settings;
 import java.io.Serializable;
 
 import peakaboo.curvefit.fitting.EscapePeakType;
+import scidraw.drawing.ViewTransform;
 
 
 // Holds settings related to the way the data is presented to the user.
@@ -31,6 +32,8 @@ public class SettingsModel implements Serializable
 	public boolean				showAxes;
 
 	public EscapePeakType		escape;
+	
+	public ViewTransform		viewTransform;
 
 
 	public SettingsModel()
@@ -43,6 +46,7 @@ public class SettingsModel implements Serializable
 		monochrome = false;
 		showAxes = false;
 		escape = EscapePeakType.SILICON;
+		viewTransform = ViewTransform.LINEAR;
 	}
 
 	public void copy(SettingsModel copy)
@@ -62,6 +66,7 @@ public class SettingsModel implements Serializable
 		showAxes = copy.showAxes;
 		
 		escape = copy.escape;
+		viewTransform = copy.viewTransform;
 		
 	}
 

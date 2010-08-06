@@ -15,12 +15,12 @@ import scitypes.Spectrum;
 public class FilteringController extends Eventful implements IFilteringController
 {
 
-	PlotController 	plotController;
+	PlotController 	plot;
 	FilteringModel	filteringModel;
 	
 	public FilteringController(PlotController plotController)
 	{
-		this.plotController = plotController;
+		this.plot = plotController;
 		filteringModel = new FilteringModel();
 	}
 	
@@ -32,7 +32,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void clearFilters()
 	{
 		filteringModel.filters.clearFilters();
-		plotController.undoController.setUndoPoint("Clear Filters");
+		plot.undoController.setUndoPoint("Clear Filters");
 		filteredDataInvalidated();
 	}
 
@@ -87,14 +87,14 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void addFilter(AbstractFilter f)
 	{
 		filteringModel.filters.addFilter(f);
-		plotController.undoController.setUndoPoint("Add Filter");
+		plot.undoController.setUndoPoint("Add Filter");
 		filteredDataInvalidated();
 	}
 
 	public void removeFilter(int index)
 	{
 		filteringModel.filters.removeFilter(index);
-		plotController.undoController.setUndoPoint("Remove Filter");
+		plot.undoController.setUndoPoint("Remove Filter");
 		filteredDataInvalidated();
 	}
 
@@ -111,7 +111,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void setFilterEnabled(int index, boolean enabled)
 	{
 		filteringModel.filters.setFilterEnabled(index, enabled);
-		plotController.undoController.setUndoPoint("Enable Filter");
+		plot.undoController.setUndoPoint("Enable Filter");
 		filteredDataInvalidated();
 	}
 
@@ -123,14 +123,14 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void moveFilterUp(int index)
 	{
 		filteringModel.filters.moveFilterUp(index);
-		plotController.undoController.setUndoPoint("Move Filter Up");
+		plot.undoController.setUndoPoint("Move Filter Up");
 		filteredDataInvalidated();
 	}
 
 	public void moveFilterDown(int index)
 	{
 		filteringModel.filters.moveFilterDown(index);
-		plotController.undoController.setUndoPoint("Move Filter Down");
+		plot.undoController.setUndoPoint("Move Filter Down");
 		filteredDataInvalidated();
 	}
 
@@ -155,12 +155,9 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	{
 		// Clear cached values, since they now have to be recalculated
 		filteringModel.filteredPlot = null;
-		plotController.dataController.invalidateFilteredData();
+		plot.dataController.invalidateFilteredData();
 
-		// a convenient place to clear the axis painters, since values such as max intensity will have changed
-		plotController.axisSetInvalidated();
-
-		plotController.fittingController.fittingDataInvalidated();
+		plot.fittingController.fittingDataInvalidated();
 		updateListeners();
 
 	}

@@ -30,15 +30,7 @@ public class TSSelector extends EventfulPanel
 
 		setLayout(new BorderLayout());
 
-		tsCombo = new JComboBox(
-				filter(controller.getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
-
-					public Boolean f(TransitionSeries element)
-					{
-						return element.mode == TransitionSeriesMode.PRIMARY;
-					}
-				}).toArray()
-				);
+		tsCombo = new JComboBox();
 		
 		tsLabel = new JLabel();
 		tsLabel.setPreferredSize(tsCombo.getPreferredSize());
@@ -66,22 +58,16 @@ public class TSSelector extends EventfulPanel
 	{
 		
 		tsCombo.removeActionListener(tsComboListener);
-		
 		tsCombo.removeAllItems();
-		
-		
+				
 		if (tss == null) return;
 		
-		for (TransitionSeries ts : tss)
-		{
-			tsCombo.addItem(ts);
-		}
-		tsCombo.setSelectedIndex(0);
+		for (TransitionSeries ts : tss) { tsCombo.addItem(ts); }
+		if (tss.size() > 0) tsCombo.setSelectedIndex(0);
 		
 		updateLabelText();
 		
 		tsCombo.addActionListener(tsComboListener);
-		
 		updateListeners();
 		
 	}
@@ -111,7 +97,12 @@ public class TSSelector extends EventfulPanel
 	
 	private void updateLabelText()
 	{
-		tsLabel.setText(  tsCombo.getSelectedItem().toString()  );
+		if (tsCombo.getSelectedItem() == null)
+		{
+			tsLabel.setText("");
+		} else {
+			tsLabel.setText(  tsCombo.getSelectedItem().toString()  );
+		}
 	}
 
 }

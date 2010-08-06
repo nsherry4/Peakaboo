@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plotting.fitting.fitted;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -366,7 +367,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 		JScrollPane scroll = new JScrollPane(fitTable);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));
-
+		scroll.getViewport().setBackground(Color.white);
+		
 		return scroll;
 	}
 

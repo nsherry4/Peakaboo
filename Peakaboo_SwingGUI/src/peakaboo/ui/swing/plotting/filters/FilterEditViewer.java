@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -41,7 +42,7 @@ public class FilterEditViewer extends ClearPanel{
 		setLayout(new BorderLayout());
 		
 		JScrollPane scroller = new JScrollPane(createFilterTable(windowOwner), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
+		scroller.getViewport().setBackground(Color.white);
 		
 		add(scroller, BorderLayout.CENTER);
 		//add(createControlPanel(), BorderLayout.SOUTH);
@@ -125,7 +126,8 @@ public class FilterEditViewer extends ClearPanel{
 		};
 		
 		t = new JTable(m);
-						
+		
+		
 		t.getColumnModel().getColumn(1).setCellRenderer(new FilterEditButtonRenderer());
 		t.getColumnModel().getColumn(1).setCellEditor(new FilterEditButtonEditor(controller, owner));
 		

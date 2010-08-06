@@ -136,10 +136,10 @@ class SmartFittingWidget extends TSSelectorGroup
 	}
 
 	@Override
-	protected void addTSSelector()
+	protected TSSelector addTSSelector()
 	{	
 		activeIndex = selectors.size();
-		super.addTSSelector();
+		return super.addTSSelector();
 	}
 	
 	@Override

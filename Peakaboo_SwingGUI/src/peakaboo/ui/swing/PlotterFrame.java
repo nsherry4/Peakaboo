@@ -15,8 +15,8 @@ import fava.datatypes.Range;
 
 import peakaboo.common.Version;
 import peakaboo.controller.settings.SerializedData;
-import peakaboo.fileio.CopiedDataSource;
 import peakaboo.fileio.DataSource;
+import peakaboo.fileio.implementations.CopiedDataSource;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconFactory;
 

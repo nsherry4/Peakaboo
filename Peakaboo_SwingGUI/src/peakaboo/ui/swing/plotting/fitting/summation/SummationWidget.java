@@ -12,6 +12,7 @@ import static fava.Fn.*;
 
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.peaktable.TransitionSeriesMode;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
@@ -114,6 +115,32 @@ class SummationWidget extends TSSelectorGroup
 
 
 	}
+	
+	
+	
+	@Override
+	protected TSSelector addTSSelector()
+	{	
+		TSSelector sel = super.addTSSelector();
+		
+		sel.setTransitionSeries(
+		
+				filter(controller.getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+
+					public Boolean f(TransitionSeries element)
+					{
+						return element.mode == TransitionSeriesMode.PRIMARY;
+					}
+				})
+				
+		);
+		
+		
+		return sel;
+				
+		
+	}
+
 
 
 }

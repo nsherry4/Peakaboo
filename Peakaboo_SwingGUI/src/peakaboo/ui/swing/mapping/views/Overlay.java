@@ -24,7 +24,8 @@ import javax.swing.table.TableModel;
 import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.MapScaleMode;
+import peakaboo.controller.mapper.maptab.MapScaleMode;
+import peakaboo.controller.mapper.maptab.TabController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
@@ -36,12 +37,12 @@ import swidget.widgets.Spacing;
 
 public class Overlay extends JPanel {
 
-	private MapController controller;
+	private TabController controller;
 
 	private JRadioButton 		relativeScale;
 	private JRadioButton 		absoluteScale;
 	
-	public Overlay(MapController _controller) {
+	public Overlay(TabController _controller) {
 
 		this.controller = _controller;
 
@@ -147,15 +148,15 @@ public class Overlay extends JPanel {
 				if (columnIndex == 0) {
 					
 					Boolean bvalue = (Boolean) value;
-					TransitionSeries ts = controller.getActiveTabModel().getAllTransitionSeries().get(rowIndex);
+					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
 
-					controller.getActiveTabModel().visible.put(ts, bvalue);
+					controller.setTransitionSeriesVisibility(ts, bvalue);
 					controller.invalidateInterpolation();
 				} 
 				else if (columnIndex == 2)
 				{
-					TransitionSeries ts = controller.getActiveTabModel().getAllTransitionSeries().get(rowIndex);
-					controller.getActiveTabModel().overlayColour.put(ts, (OverlayColour)value);
+					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
+					controller.setOverlayColour(ts, (OverlayColour)value);
 					controller.invalidateInterpolation();
 				}
 			}
@@ -180,13 +181,13 @@ public class Overlay extends JPanel {
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
 
-				TransitionSeries ts = controller.getActiveTabModel().getAllTransitionSeries().get(rowIndex);
+				TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
 
-					case 0: return controller.getActiveTabModel().visible.get(ts);
+					case 0: return controller.getTransitionSeriesVisibility(ts);
 					case 1: return ts.toElementString();
-					case 2: return controller.getActiveTabModel().overlayColour.get(ts);
+					case 2: return controller.getOverlayColour(ts);
 				}
 
 				return null;
@@ -194,7 +195,7 @@ public class Overlay extends JPanel {
 			}
 
 			public int getRowCount() {
-				return controller.getActiveTabModel().getAllTransitionSeries().size();
+				return controller.getAllTransitionSeries().size();
 			}
 
 			public String getColumnName(int columnIndex) {

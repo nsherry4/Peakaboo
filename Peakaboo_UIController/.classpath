@@ -10,7 +10,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_FileIO"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Mapping"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/SciDraw"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SciDraw"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CommonEnvironment"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Plural"/>
 	<classpathentry kind="lib" path="snakeyaml-1.6.jar"/>

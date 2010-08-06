@@ -262,7 +262,7 @@ public class SingleFilterView extends JPanel
 				case INTEGER:
 
 					spinner = new JSpinner();
-					spinner.getEditor().setPreferredSize(new Dimension(50, spinner.getEditor().getPreferredSize().height));
+					spinner.getEditor().setPreferredSize(new Dimension(70, spinner.getEditor().getPreferredSize().height));
 					spinner.setValue(param.intValue());
 	
 					spinner.addChangeListener(new ParamListener(param));
@@ -274,8 +274,9 @@ public class SingleFilterView extends JPanel
 				case REAL:
 
 					spinner = new JSpinner();
-					spinner.setModel(new SpinnerNumberModel(param.realValue(), Double.MIN_VALUE, Double.MAX_VALUE, 0.1));				
-					spinner.getEditor().setPreferredSize(new Dimension(50, spinner.getEditor().getPreferredSize().height));
+					spinner.setModel(new SpinnerNumberModel(param.realValue(), null, null, 0.1));
+					spinner.getEditor().setPreferredSize(new Dimension(70, spinner.getEditor().getPreferredSize().height));
+					spinner.setValue(param.realValue());
 					
 					spinner.addChangeListener(new ParamListener(param));
 	

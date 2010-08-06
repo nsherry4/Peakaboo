@@ -15,13 +15,13 @@ import fava.datatypes.Pair;
 public class UndoController extends Eventful
 {
 
-	PlotController	plotController;
+	PlotController	plot;
 	UndoModel		undoModel;
 
 
 	public UndoController(PlotController plotController)
 	{
-		this.plotController = plotController;
+		this.plot = plotController;
 		undoModel = new UndoModel();
 	}
 
@@ -30,7 +30,7 @@ public class UndoController extends Eventful
 	{
 		//save the current state
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		plotController.savePreferences(baos);
+		plot.savePreferences(baos);
 
 		if (undoModel.undoStack.size() > 0)
 		{
@@ -93,12 +93,9 @@ public class UndoController extends Eventful
 
 		undoModel.redoStack.push(undoModel.undoStack.pop());
 
-		plotController.loadPreferences(new ByteArrayInputStream(undoModel.undoStack.peek().second.toByteArray()), true);
+		plot.loadPreferences(new ByteArrayInputStream(undoModel.undoStack.peek().second.toByteArray()), true);
 
 		updateListeners();
-		plotController.settingsController.updateListeners();
-		plotController.filteringController.updateListeners();
-		plotController.fittingController.updateListeners(true);
 
 	}
 
@@ -110,12 +107,12 @@ public class UndoController extends Eventful
 
 		undoModel.undoStack.push(undoModel.redoStack.pop());
 
-		plotController.loadPreferences(new ByteArrayInputStream(undoModel.undoStack.peek().second.toByteArray()), true);
+		plot.loadPreferences(new ByteArrayInputStream(undoModel.undoStack.peek().second.toByteArray()), true);
 
 		updateListeners();
-		plotController.settingsController.updateListeners();
-		plotController.filteringController.updateListeners();
-		plotController.fittingController.updateListeners(true);
+		plot.settingsController.updateListeners();
+		plot.filteringController.updateListeners();
+		plot.fittingController.updateListeners(true);
 
 	}
 

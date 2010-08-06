@@ -31,8 +31,9 @@ import eventful.EventfulTypeListener;
 import fava.datatypes.Range;
 
 import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.AllMapsModel;
-import peakaboo.controller.mapper.SingleMapModel;
+import peakaboo.controller.mapper.maps.AllMapsModel;
+import peakaboo.controller.mapper.maptab.TabController;
+import peakaboo.controller.mapper.maptab.TabModel;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.mapping.results.MapResult;
@@ -62,14 +63,14 @@ public class PeakabooMapperSwing extends JDialog
 {
 
 	protected MapController		controller;
+	protected PlotController	plotController;
+	
 
 	private JTabbedPane			tabs;
 	
 	private JCheckBoxMenuItem	monochrome;
 	private JMenuItem			title, spectrum, coords, dstitle;
 	private ToolbarImageButton	readIntensities, examineSubset;
-	
-	private MapResultSet		originalData;
 	
 	public String				savePictureFolder;
 	public String				dataSourceFolder;
@@ -78,6 +79,17 @@ public class PeakabooMapperSwing extends JDialog
 
 	
 	
+	public PeakabooMapperSwing(JFrame owner, MapController controller, PlotController plotcontroller)
+	{
+		super(owner, "Map - " + controller.mapsController.getDatasetTitle());
+		this.controller = controller;
+		this.plotController = plotcontroller;
+		
+		init();
+		
+	}
+	
+	/*
 	public PeakabooMapperSwing(
 			JFrame owner, 
 			AllMapsModel data, 
@@ -119,6 +131,8 @@ public class PeakabooMapperSwing extends JDialog
 		init();
 	}
 
+*/
+	
 
 	public MapController showDialog()
 	{
@@ -170,7 +184,6 @@ public class PeakabooMapperSwing extends JDialog
 			public void windowClosing(WindowEvent e)
 			{
 				controller.removeListener(controllerListener);
-				originalData = null;
 			}
 			
 		
@@ -202,8 +215,8 @@ public class PeakabooMapperSwing extends JDialog
 				MapViewer viewer = ((MapViewer)tabs.getSelectedComponent());
 				
 				if (viewer != null) {
-					controller.setActiveTabModel( viewer.getMapViewModel() );
-					controller.invalidateInterpolation();
+					controller.setTabController( viewer.getTabController() );
+					controller.getActiveTabController().invalidateInterpolation();
 					viewer.fullRedraw();
 					
 				}
@@ -219,19 +232,17 @@ public class PeakabooMapperSwing extends JDialog
 
 			public void change(String s)
 			{				
-				monochrome.setSelected(controller.getMonochrome());
-				spectrum.setSelected(controller.getShowSpectrum());
-				coords.setSelected(controller.getShowCoords());
+				monochrome.setSelected(controller.mapsController.getMonochrome());
+				spectrum.setSelected(controller.mapsController.getShowSpectrum());
+				coords.setSelected(controller.mapsController.getShowCoords());
 				
 				//update the working tab's title
 				if (tabs.getSelectedComponent() != null && tabs.getSelectedComponent() instanceof MapViewer)
-				{
-					MapViewer viewer = (MapViewer)tabs.getSelectedComponent();
-				
-					tabs.setTitleAt(tabs.getSelectedIndex(), viewer.getMapViewModel().mapLongTitle());
+				{			
+					tabs.setTitleAt(tabs.getSelectedIndex(), controller.getActiveTabController().mapLongTitle());
 				}
 				
-				if (controller.hasBoundingRegion())
+				if (controller.getActiveTabController().hasBoundingRegion())
 				{
 					readIntensities.setEnabled(true);
 					examineSubset.setEnabled(true);
@@ -252,9 +263,10 @@ public class PeakabooMapperSwing extends JDialog
 	private void createMapsViewer()
 	{
 		
-		SingleMapModel viewModel = new SingleMapModel(originalData.clone());
-		controller.setActiveTabModel(viewModel);
-		final MapViewer viewer = new MapViewer(viewModel, controller, this);
+		TabController tabController = new TabController(controller, controller.mapsController.getMapResultSet().getAllTransitionSeries());
+		
+		controller.setTabController(tabController);
+		final MapViewer viewer = new MapViewer(tabController, controller, this);
 				
 		
 		final TabIconButton closeButton = new TabIconButton(StockIcon.WINDOW_CLOSE);
@@ -281,7 +293,7 @@ public class PeakabooMapperSwing extends JDialog
 		{
 			tabs.addTab("", closeButton, viewer);
 			//tabs.setTabComponentAt(tabs.getTabCount()-1, controls);
-			tabs.setTitleAt(tabs.getTabCount()-1, viewer.getMapViewModel().mapLongTitle());
+			tabs.setTitleAt(tabs.getTabCount()-1, viewer.getTabController().mapLongTitle());
 		} else {
 			
 			//detatch the listener, or else old tabpane listeners which only 
@@ -290,7 +302,7 @@ public class PeakabooMapperSwing extends JDialog
 			((TabIconButton)(tabs.getIconAt(tabs.getTabCount()-1))).detatchListener();
 			
 			tabs.setIconAt(tabs.getTabCount()-1, closeButton);
-			tabs.setTitleAt(tabs.getTabCount()-1, viewer.getMapViewModel().mapLongTitle());
+			tabs.setTitleAt(tabs.getTabCount()-1, viewer.getTabController().mapLongTitle());
 			tabs.setComponentAt(tabs.getTabCount()-1, viewer);
 		}
 		
@@ -364,10 +376,10 @@ public class PeakabooMapperSwing extends JDialog
 		spectrum = new JCheckBoxMenuItem("Show Spectrum");
 		coords = new JCheckBoxMenuItem("Show Coordinates");
 
-		title.setSelected(controller.getShowTitle());
-		spectrum.setSelected(controller.getShowSpectrum());
-		coords.setSelected(controller.getShowCoords());
-		dstitle.setSelected(controller.getShowDatasetTitle());
+		title.setSelected(controller.mapsController.getShowTitle());
+		spectrum.setSelected(controller.mapsController.getShowSpectrum());
+		coords.setSelected(controller.mapsController.getShowCoords());
+		dstitle.setSelected(controller.mapsController.getShowDatasetTitle());
 
 		menu.add(title);
 		menu.add(dstitle);
@@ -378,7 +390,7 @@ public class PeakabooMapperSwing extends JDialog
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setShowSpectrum(spectrum.isSelected());
+				controller.mapsController.setShowSpectrum(spectrum.isSelected());
 			}
 		});
 
@@ -386,7 +398,7 @@ public class PeakabooMapperSwing extends JDialog
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setShowCoords(coords.isSelected());
+				controller.mapsController.setShowCoords(coords.isSelected());
 			}
 		});
 
@@ -394,7 +406,7 @@ public class PeakabooMapperSwing extends JDialog
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setShowTitle(title.isSelected());
+				controller.mapsController.setShowTitle(title.isSelected());
 			}
 		});
 		
@@ -402,7 +414,7 @@ public class PeakabooMapperSwing extends JDialog
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setShowDatasetTitle(dstitle.isSelected());
+				controller.mapsController.setShowDatasetTitle(dstitle.isSelected());
 			}
 		});
 
@@ -414,7 +426,7 @@ public class PeakabooMapperSwing extends JDialog
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.setMonochrome(monochrome.isSelected());
+				controller.mapsController.setMonochrome(monochrome.isSelected());
 			}
 		});
 		menu.add(monochrome);
@@ -467,17 +479,17 @@ public class PeakabooMapperSwing extends JDialog
 			{
 				Map<String, String> fittings = DataTypeFactory.<String, String>map();
 				
-				int xstart = controller.getDragStart().x;
-				int ystart = controller.getDragStart().y;
+				int xstart = controller.getActiveTabController().getDragStart().x;
+				int ystart = controller.getActiveTabController().getDragStart().y;
 				
-				int xend = controller.getDragEnd().x;
-				int yend = controller.getDragEnd().y;
+				int xend = controller.getActiveTabController().getDragEnd().x;
+				int yend = controller.getActiveTabController().getDragEnd().y;
 				
 				int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
 				
-				GridPerspective<Float> grid = new GridPerspective<Float>(controller.getDataWidth(), controller.getDataHeight(), 0f);
+				GridPerspective<Float> grid = new GridPerspective<Float>(controller.mapsController.getDataWidth(), controller.mapsController.getDataHeight(), 0f);
 				
-				for (MapResult r : originalData)
+				for (MapResult r : controller.mapsController.getMapResultSet())
 				{
 					float sum = 0;
 					for (int x : new Range(xstart, xend)) {
@@ -502,7 +514,7 @@ public class PeakabooMapperSwing extends JDialog
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				new PlotterFrame(controller.getDataSourceForSubset(controller.getDragStart(), controller.getDragEnd()), controller.getSerializedPlotSettings());
+				new PlotterFrame(controller.getDataSourceForSubset(controller.getActiveTabController().getDragStart(), controller.getActiveTabController().getDragEnd()), controller.getSerializedPlotSettings());
 			}
 		});
 		toolbar.add(examineSubset);
@@ -520,15 +532,18 @@ public class PeakabooMapperSwing extends JDialog
 	public void actionSavePicture()
 	{
 
-		if (savePictureFolder == null) savePictureFolder = dataSourceFolder;
-		savePictureFolder = new SavePicture(this, controller, savePictureFolder).getStartingFolder();
+
+		MapViewer viewer = ((MapViewer)tabs.getSelectedComponent());
 		
+		if (savePictureFolder == null) savePictureFolder = dataSourceFolder;
+		savePictureFolder = viewer.savePicture(savePictureFolder);
+				
 	}
 	public void actionSaveCSV()
 	{
 
 		ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();
-		controller.mapAsCSV(baos);
+		controller.getActiveTabController().mapAsCSV(baos);
 		try
 		{
 			savePictureFolder = SwidgetIO.saveFile(this, "Save Map(s) as Text", "txt", "Text File", savePictureFolder, baos);

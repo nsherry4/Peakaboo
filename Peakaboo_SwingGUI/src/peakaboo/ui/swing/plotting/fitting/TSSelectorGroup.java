@@ -68,7 +68,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	}
 
 	
-	protected void addTSSelector()
+	protected TSSelector addTSSelector()
 	{
 		
 		TSSelector sel = new TSSelector(controller);
@@ -84,6 +84,8 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		selectors.add(sel);
 		
 		refreshGUI();
+		
+		return sel;
 	}
 	
 	

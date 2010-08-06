@@ -14,11 +14,11 @@ public class SettingsController extends Eventful implements ISettingsController
 
 	
 	private SettingsModel settingsModel;
-	private PlotController plotController;
+	private PlotController plot;
 	
 	public SettingsController(PlotController plotController)
 	{
-		this.plotController = plotController;
+		this.plot = plotController;
 		settingsModel = new SettingsModel();
 	}
 	
@@ -29,7 +29,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	
 	private void setUndoPoint(String change)
 	{
-		plotController.undoController.setUndoPoint(change);
+		plot.undoController.setUndoPoint(change);
 	}
 	
 	
@@ -48,7 +48,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	{
 		settingsModel.showIndividualFittings = showIndividualSelections;
 		setUndoPoint("Individual Fittings");
-		plotController.fittingController.fittingDataInvalidated();
+		plot.fittingController.fittingDataInvalidated();
 	}
 
 	public boolean getShowIndividualSelections()
@@ -58,75 +58,73 @@ public class SettingsController extends Eventful implements ISettingsController
 
 	public void setEnergyPerChannel(float energy)
 	{
-		//dont call setUndoPoint, as setFittingParameters will do that for us
-		plotController.fittingController.setFittingParameters(energy);
-		plotController.axisSetInvalidated();
+		plot.fittingController.setFittingParameters(energy);
+		updateListeners();
 	}
 
 	public float getEnergyPerChannel()
 	{
-		return plotController.dr.unitSize;
+		return plot.dr.unitSize;
 	}
 
 	public void setMaxEnergy(float energy)
 	{
-		if (!plotController.dataController.hasDataSet() || plotController.dataController.datasetScanSize() == 0)
+		if (!plot.dataController.hasDataSet() || plot.dataController.datasetScanSize() == 0)
 		{
 			return;
 		}
 		//dont set an undo point here -- setEnergyPerChannel does that already
-		setEnergyPerChannel(energy / (plotController.dataController.datasetScanSize()));
+		setEnergyPerChannel(energy / (plot.dataController.datasetScanSize()));
 
 	}
 
 	public float getMaxEnergy()
 	{
-		if (!plotController.dataController.hasDataSet() || plotController.dataController.datasetScanSize() == 0)
+		if (!plot.dataController.hasDataSet() || plot.dataController.datasetScanSize() == 0)
 		{
 			return 20.48f;
 		}
-		return plotController.dr.unitSize * (plotController.dataController.datasetScanSize());
+		return plot.dr.unitSize * (plot.dataController.datasetScanSize());
 	}
 
 	public void setViewLog(boolean log)
 	{
 		if (log)
 		{
-			plotController.dr.viewTransform = ViewTransform.LOG;
+			settingsModel.viewTransform = ViewTransform.LOG;
 		}
 		else
 		{
-			plotController.dr.viewTransform = ViewTransform.LINEAR;
+			settingsModel.viewTransform = ViewTransform.LINEAR;
 		}
-		plotController.axisSetInvalidated();
 		setUndoPoint("Log View");
 		updateListeners();
 	}
 
 	public boolean getViewLog()
 	{
-		return (plotController.dr.viewTransform == ViewTransform.LOG);
+		return settingsModel.viewTransform == ViewTransform.LOG;
 	}
 
 	public void setShowChannelAverage()
 	{
 		settingsModel.channelComposite = ChannelCompositeMode.AVERAGE;
 		setUndoPoint("Mean Spectrum");
-		plotController.filteringController.filteredDataInvalidated();
+		plot.filteringController.filteredDataInvalidated();
 	}
 
 	public void setShowChannelMaximum()
 	{
 		settingsModel.channelComposite = ChannelCompositeMode.MAXIMUM;
 		setUndoPoint("Max Spectrum");
-		plotController.filteringController.filteredDataInvalidated();
+		plot.filteringController.filteredDataInvalidated();
 	}
 
 	public void setShowChannelSingle()
 	{
 		settingsModel.channelComposite = ChannelCompositeMode.NONE;
 		setUndoPoint("Individual Spectrum");
-		plotController.filteringController.filteredDataInvalidated();
+		plot.filteringController.filteredDataInvalidated();
 	}
 
 	public ChannelCompositeMode getChannelCompositeType()
@@ -141,11 +139,11 @@ public class SettingsController extends Eventful implements ISettingsController
 
 		if (direction > 0)
 		{
-			number = plotController.dataController.firstNonNullScanIndex(number);
+			number = plot.dataController.firstNonNullScanIndex(number);
 		}
 		else
 		{
-			number = plotController.dataController.lastNonNullScanIndex(number);
+			number = plot.dataController.lastNonNullScanIndex(number);
 		}
 
 		if (number == -1)
@@ -155,10 +153,10 @@ public class SettingsController extends Eventful implements ISettingsController
 		}
 
 		
-		if (number > plotController.dataController.datasetScanCount() - 1) number = plotController.dataController.datasetScanCount() - 1;
+		if (number > plot.dataController.datasetScanCount() - 1) number = plot.dataController.datasetScanCount() - 1;
 		if (number < 0) number = 0;
 		settingsModel.scanNumber = number;
-		plotController.filteringController.filteredDataInvalidated();
+		plot.filteringController.filteredDataInvalidated();
 	}
 
 	public int getScanNumber()
@@ -169,7 +167,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	public void setShowAxes(boolean axes)
 	{
 		settingsModel.showAxes = axes;
-		plotController.axisPainters = null;
+		plot.axisPainters = null;
 		setUndoPoint("Axes");
 		updateListeners();
 	}
@@ -187,7 +185,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	public void setShowTitle(boolean show)
 	{
 		settingsModel.showPlotTitle = show;
-		plotController.axisPainters = null;
+		plot.axisPainters = null;
 		setUndoPoint("Title");
 		updateListeners();
 	}
@@ -254,16 +252,16 @@ public class SettingsController extends Eventful implements ISettingsController
 
 	public float getEnergyForChannel(int channel)
 	{
-		if (!plotController.dataController.hasDataSet()) return 0.0f;
-		return channel * plotController.dr.unitSize;
+		if (!plot.dataController.hasDataSet()) return 0.0f;
+		return channel * plot.dr.unitSize;
 	}
 
 	public Pair<Float, Float> getValueForChannel(int channel)
 	{
 		if (channel == -1) return null;
-		if (channel >= plotController.dataController.datasetScanSize()) return null;
+		if (channel >= plot.dataController.datasetScanSize()) return null;
 
-		Pair<Spectrum, Spectrum> scans = plotController.getDataForPlot();
+		Pair<Spectrum, Spectrum> scans = plot.getDataForPlot();
 		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
 
 		return new Pair<Float, Float>(scans.first.get(channel), scans.second.get(channel));
@@ -276,7 +274,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	}
 	public void setEscapePeakType(EscapePeakType type)
 	{
-		plotController.fittingController.setEscapeType(type);
+		plot.fittingController.setEscapeType(type);
 		settingsModel.escape = type;
 	}
 	
