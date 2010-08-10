@@ -86,14 +86,14 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="1062.5477"
-     inkscape:cy="193.45446"
+     inkscape:zoom="0.35"
+     inkscape:cx="1071.8263"
+     inkscape:cy="11.919743"
      inkscape:document-units="px"
-     inkscape:current-layer="g3718"
+     inkscape:current-layer="g3698"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1068"
+     inkscape:window-width="1680"
+     inkscape:window-height="919"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
@@ -408,7 +408,7 @@
                 <rect
                    style="fill:#4e9a06;fill-opacity:1;stroke:none"
                    id="rect2900"
-                   width="2038.571"
+                   width="1844.6217"
                    height="65.714287"
                    x="-20.714025"
                    y="222.14285"
@@ -417,14 +417,14 @@
                 <text
                    id="text2922"
                    y="270.01999"
-                   x="997.45239"
+                   x="900.41779"
                    style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
                    xml:space="preserve"><tspan
                      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Fontin Sans CR;-inkscape-font-specification:Fontin Sans CR Bold"
                      y="270.01999"
-                     x="997.45239"
+                     x="900.41779"
                      id="tspan2924"
-                     sodipodi:role="line">User Interface</tspan></text>
+                     sodipodi:role="line">Plotting User Interface</tspan></text>
               </g>
             </g>
             <g
@@ -486,7 +486,7 @@
             </g>
             <g
                id="g3042"
-               transform="translate(30.714283,-40.591635)">
+               transform="translate(-791.54989,-40.591635)">
               <g
                  transform="translate(1330.714,-6.339447)"
                  id="g3036-1">
@@ -667,7 +667,7 @@
             </g>
             <g
                id="g3986"
-               transform="translate(4.9609343e-7,-6.284824)">
+               transform="translate(822.26417,-6.284824)">
               <g
                  id="g3981">
                 <rect
@@ -804,6 +804,136 @@
                  y="423.5293"
                  rx="5"
                  ry="5" />
+            </g>
+            <g
+               transform="translate(440.71428,-40.591635)"
+               id="g2962">
+              <g
+                 id="g2964"
+                 transform="translate(1330.714,-6.339447)">
+                <rect
+                   style="fill:#a40000;fill-opacity:1;stroke:none;display:inline"
+                   id="rect2966"
+                   width="394.28571"
+                   height="65.713997"
+                   x="-2254.2856"
+                   y="392.67795"
+                   rx="5"
+                   ry="5" />
+                <text
+                   xml:space="preserve"
+                   style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans"
+                   x="-2058.262"
+                   y="440.55493"
+                   id="text2968"><tspan
+                     sodipodi:role="line"
+                     id="tspan2970"
+                     x="-2058.262"
+                     y="440.55493"
+                     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Fontin Sans CR;-inkscape-font-specification:Fontin Sans CR Bold">Map Set Model</tspan></text>
+              </g>
+              <g
+                 id="g2972"
+                 transform="translate(-1725.0001,84.650571)">
+                <rect
+                   ry="5"
+                   rx="5"
+                   y="222.14285"
+                   x="801.42847"
+                   height="65.714287"
+                   width="394.28601"
+                   id="rect2974"
+                   style="fill:#204a87;fill-opacity:1;stroke:none" />
+                <text
+                   id="text2976"
+                   y="269.94"
+                   x="997.888"
+                   style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Fontin Sans CR;-inkscape-font-specification:Abberancy Bold"
+                   xml:space="preserve"><tspan
+                     y="269.94"
+                     x="997.888"
+                     id="tspan2978"
+                     sodipodi:role="line">Map Set Controller</tspan></text>
+              </g>
+            </g>
+            <g
+               transform="translate(-469.28566,-62.02014)"
+               id="g2980">
+              <g
+                 transform="translate(7.1428571,27.142857)"
+                 id="g2982">
+                <rect
+                   ry="5"
+                   rx="5"
+                   y="222.14285"
+                   x="-214.66331"
+                   height="65.714287"
+                   width="1001.0918"
+                   id="rect2984"
+                   style="fill:#4e9a06;fill-opacity:1;stroke:none" />
+                <text
+                   xml:space="preserve"
+                   style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+                   x="284.88351"
+                   y="270.01999"
+                   id="text2986"><tspan
+                     sodipodi:role="line"
+                     id="tspan2988"
+                     x="284.88351"
+                     y="270.01999"
+                     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Fontin Sans CR;-inkscape-font-specification:Fontin Sans CR Bold">Mapping User Interface</tspan></text>
+              </g>
+            </g>
+            <g
+               id="g2990"
+               transform="translate(853.57142,-40.591635)">
+              <g
+                 transform="translate(1330.714,-6.339447)"
+                 id="g2992">
+                <rect
+                   ry="5"
+                   rx="5"
+                   y="392.67795"
+                   x="-2254.2856"
+                   height="65.713997"
+                   width="394.28571"
+                   id="rect2994"
+                   style="fill:#a40000;fill-opacity:1;stroke:none;display:inline" />
+                <text
+                   id="text2996"
+                   y="440.55493"
+                   x="-2058.262"
+                   style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans"
+                   xml:space="preserve"><tspan
+                     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Fontin Sans CR;-inkscape-font-specification:Fontin Sans CR Bold"
+                     y="440.55493"
+                     x="-2058.262"
+                     id="tspan2998"
+                     sodipodi:role="line">Map Tab Model</tspan></text>
+              </g>
+              <g
+                 transform="translate(-1725.0001,84.650571)"
+                 id="g3000">
+                <rect
+                   style="fill:#204a87;fill-opacity:1;stroke:none"
+                   id="rect3002"
+                   width="394.28601"
+                   height="65.714287"
+                   x="801.42847"
+                   y="222.14285"
+                   rx="5"
+                   ry="5" />
+                <text
+                   xml:space="preserve"
+                   style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Fontin Sans CR;-inkscape-font-specification:Abberancy Bold"
+                   x="997.888"
+                   y="269.94"
+                   id="text3004"><tspan
+                     sodipodi:role="line"
+                     id="tspan3006"
+                     x="997.888"
+                     y="269.94">Map Tab Controller</tspan></text>
+              </g>
             </g>
           </g>
         </g>

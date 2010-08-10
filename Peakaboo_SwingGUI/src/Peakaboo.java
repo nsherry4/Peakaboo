@@ -33,17 +33,6 @@ public class Peakaboo
 		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		
-		//if this version of the JVM is new enough to support the Nimbus Look and Feel, use it
-		try
-		{
-			if (! Env.isMac() && !Env.isWindows()) UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-
-			if (Env.isMac() || Env.isWindows()) UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e)
-		{
-			
-		}
 		
 		//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
 		JFrame.setDefaultLookAndFeelDecorated(true);

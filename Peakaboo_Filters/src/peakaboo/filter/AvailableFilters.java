@@ -19,6 +19,8 @@ import peakaboo.filter.AbstractFilter.FilterType;
 import peakaboo.filter.filters.advanced.DataToWavelet;
 import peakaboo.filter.filters.advanced.Derivitive;
 import peakaboo.filter.filters.advanced.Integrate;
+import peakaboo.filter.filters.advanced.SegmentFilter;
+import peakaboo.filter.filters.advanced.SpectrumNormalization;
 import peakaboo.filter.filters.advanced.WaveletToData;
 import peakaboo.filter.filters.arithmetic.Addition;
 import peakaboo.filter.filters.arithmetic.Multiply;
@@ -134,6 +136,8 @@ public class AvailableFilters
 	{
 
 		List<Class<? extends AbstractFilter>> l = DataTypeFactory.<Class<? extends AbstractFilter>> list();
+		
+		//noise
 		l.add(FourierLowPass.class);
 		l.add(MovingAverage.class);
 		l.add(SavitskyGolaySmoothing.class);
@@ -141,18 +145,24 @@ public class AvailableFilters
 		l.add(WaveletNoiseFilter.class);
 		l.add(SpringSmoothing.class);
 
+		//background
 		l.add(PolynomialRemoval.class);
 		l.add(BruknerRemoval.class);
 		l.add(LinearTrimRemoval.class);
 
+		//advanced
 		l.add(Integrate.class);
 		l.add(Derivitive.class);
+		l.add(DataToWavelet.class);
+		l.add(WaveletToData.class);
+		l.add(SegmentFilter.class);
+		l.add(SpectrumNormalization.class);
+		
+		//arithmetic
 		l.add(Addition.class);
 		l.add(Subtraction.class);
 		l.add(Multiply.class);
-		l.add(DataToWavelet.class);
-		l.add(WaveletToData.class);
-
+		
 
 		return filter(
 
