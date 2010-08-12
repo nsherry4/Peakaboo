@@ -30,7 +30,7 @@ import scidraw.drawing.map.painters.BoundedRegionPainter;
 import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
 import scidraw.drawing.map.painters.MapTechniqueFactory;
-import scidraw.drawing.map.painters.ThreadedRasterMapPainter;
+import scidraw.drawing.map.painters.RasterSpectrumMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import scidraw.drawing.map.palettes.AbstractPalette;
@@ -97,27 +97,7 @@ public class MapCanvas extends GraphicsPanel
 	{
 
 		if (map == null) return null;
-
-		Coord<Bounds<Float>> borders = map.calcAxisBorders();
-		float topOffset, leftOffset;
-		topOffset = borders.y.start;
-		leftOffset = borders.x.start;
-
-		float mapX, mapY;
-		mapX = x - leftOffset;
-		mapY = y - topOffset;
-
-		Coord<Float> mapSize = map.calcMapSize();
-		float percentX, percentY;
-		percentX = mapX / mapSize.x;
-		percentY = mapY / mapSize.y;
-
-		percentY = 1.0f - percentY;
-
-		int indexX = (int) Math.floor(controller.mapsController.getDataWidth() * percentX);
-		int indexY = (int) Math.floor(controller.mapsController.getDataHeight() * percentY);
-
-		return new Coord<Integer>(indexX, indexY);
+		return map.getMapCoordinateAtPoint(x, y);
 
 	}
 
@@ -565,7 +545,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		if (redSpectrum != null){
 			if (overlayMapPainterRed == null) {
-				overlayMapPainterRed = new ThreadedRasterMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColor()), redSpectrum);
+				overlayMapPainterRed = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColor()), redSpectrum);
 				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterRed.setData(redSpectrum);
@@ -575,7 +555,7 @@ public class MapCanvas extends GraphicsPanel
 			
 		if (greenSpectrum != null) {
 			if (overlayMapPainterGreen == null) {
-				overlayMapPainterGreen = new ThreadedRasterMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColor()), greenSpectrum);
+				overlayMapPainterGreen = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColor()), greenSpectrum);
 				overlayMapPainterGreen.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterGreen.setData(greenSpectrum);
@@ -585,7 +565,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		if (blueSpectrum != null) {
 			if (overlayMapPainterBlue == null) {
-				overlayMapPainterBlue = new ThreadedRasterMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()), blueSpectrum);
+				overlayMapPainterBlue = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()), blueSpectrum);
 				overlayMapPainterBlue.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterBlue.setData(blueSpectrum);
