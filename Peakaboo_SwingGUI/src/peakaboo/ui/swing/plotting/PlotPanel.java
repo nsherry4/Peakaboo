@@ -32,6 +32,7 @@ import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -67,6 +68,7 @@ import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
 import fava.lists.FList;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.maps.AllMapsModel;
@@ -77,7 +79,6 @@ import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
@@ -193,7 +194,7 @@ public class PlotPanel extends ClearPanel
 	}
 
 
-	public void setWidgetsState()
+	private void setWidgetsState()
 	{
 
 		snapshotMenuItem.setEnabled(false);
@@ -248,10 +249,10 @@ public class PlotPanel extends ClearPanel
 		redo.setText("Redo " + undoController.getNextRedo());
 
 		setSliderWithoutListener(zoomSlider, zoomSliderListener, (int)(settingsController.getZoom()*100));
-		//zoomSlider.setValue((int) (controller.getZoom() * 100.0));
 		setTitleBar();
 
-		fullRedraw();
+		container.validate();
+		container.repaint();
 
 	}
 
@@ -659,28 +660,34 @@ public class PlotPanel extends ClearPanel
 	}
 
 	
-	public void populateFittingMenu(JComponent menu)
+	private void populateFittingMenu(JComponent menu)
 	{
-		final JMenuItem mapArea = new JMenuItem("Map Fitting Area");
-		mapArea.addActionListener(new ActionListener() {
+		final JMenuItem mapArea = createMenuItem(
+				"Map Fitting Area", null, null, 
+				new ActionListener() {
 			
-			public void actionPerformed(ActionEvent e)
-			{
-				actionMap(FittingTransform.AREA);
-			}
-		});
+					public void actionPerformed(ActionEvent e)
+					{
+						actionMap(FittingTransform.AREA);
+					}
+				},
+				null, null
+		);
 		mapArea.setEnabled(false);
 		menu.add(mapArea);
 		
 		
-		final JMenuItem mapHeights = new JMenuItem("Map Fitting Heights");
-		mapHeights.addActionListener(new ActionListener() {
+		final JMenuItem mapHeights = createMenuItem(
+				"Map Fitting Heights", null, null, 
+				new ActionListener() {
 			
-			public void actionPerformed(ActionEvent e)
-			{
-				actionMap(FittingTransform.HEIGHT);
-			}
-		});
+					public void actionPerformed(ActionEvent e)
+					{
+						actionMap(FittingTransform.HEIGHT);
+					}
+				},
+				null, null
+		);
 		mapHeights.setEnabled(false);
 		menu.add(mapHeights);
 		
@@ -695,115 +702,152 @@ public class PlotPanel extends ClearPanel
 		
 	}
 
-	public void createMenu()
+	
+	private JCheckBoxMenuItem createMenuCheckItem(String title, ImageIcon icon, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
+	{
+		
+		JCheckBoxMenuItem menuItem;
+		if (icon != null) {
+			menuItem = new JCheckBoxMenuItem(title, icon);
+		} else {
+			menuItem = new JCheckBoxMenuItem(title);
+		}
+		
+		configureMenuItem(menuItem, title, icon, description, listener, key, mnemonic);
+		
+		return menuItem;
+		
+	}
+	
+	private JMenuItem createMenuItem(String title, ImageIcon icon, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
+	{
+		JMenuItem menuItem;
+		if (icon != null) {
+			menuItem = new JMenuItem(title, icon);
+		} else {
+			menuItem = new JMenuItem(title);
+		}
+		
+		configureMenuItem(menuItem, title, icon, description, listener, key, mnemonic);
+		
+		return menuItem;
+		
+	}
+	
+	private void configureMenuItem(JMenuItem menuItem, String title, ImageIcon icon, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
+	{
+		if (key != null) menuItem.setAccelerator(key);
+		if (mnemonic != null) menuItem.setMnemonic(mnemonic);
+		if (description != null) menuItem.getAccessibleContext().setAccessibleDescription(description);
+		if (description != null) menuItem.setToolTipText(description);
+		if (listener != null) menuItem.addActionListener(listener);
+	}
+	
+	private void createMenu()
 	{
 
 		// Where the GUI is created:
 		JMenuBar menuBar;
 		JMenu menu;
-		JMenuItem menuItem;
 
 		// Create the menu bar.
 		menuBar = new JMenuBar();
 
-		ActionListener fileMenuListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e)
-			{
-
-				String command = e.getActionCommand();
-
-				if (command == "Open Data...")
-				{
-
-					actionOpenData();
-
-				}
-				else if (command == "Export Data as Compressed File")
-				{
-
-				}
-				else if (command == "Export Plot as Image")
-				{
-
-					actionSavePicture();
-
-				}
-				else if (command == "Export Fittings as Text")
-				{
-
-					actionSaveFittingInformation();
-
-				}
-				else if (command == "Save Session...")
-				{
-
-					actionSaveSession();
-
-				}
-				else if (command == "Load Session...")
-				{
-
-					actionLoadSession();
-
-				}
-				else if (command == "Exit")
-				{
-
-					System.exit(0);
-
-				}
-
-			}
-
-		};
 
 		// FILE Menu
 		menu = new JMenu("File");
 		menu.setMnemonic(KeyEvent.VK_F);
 		menu.getAccessibleContext().setAccessibleDescription("Read and Write Data Sets");
 
-		menuItem = new JMenuItem("Open Data...", IconFactory.getMenuIcon("document-open"));
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.event.ActionEvent.CTRL_MASK));
-		menuItem.setMnemonic(KeyEvent.VK_O);
-		menuItem.getAccessibleContext().setAccessibleDescription("Opens new data sets.");
-		menuItem.addActionListener(fileMenuListener);
-		menu.add(menuItem);
-
+		
+		menu.add(createMenuItem(
+				"Open Data\u2026", StockIcon.DOCUMENT_OPEN.toMenuIcon(), "Opens new data sets.",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionOpenData();
+					}
+				},
+				KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_O
+		));
+		
 		menu.addSeparator();
 
-		menuItem = new JMenuItem("Save Session...", IconFactory.getMenuIcon("document-save-as"));
-		menuItem.addActionListener(fileMenuListener);
-		menu.add(menuItem);
-
-		menuItem = new JMenuItem("Load Session...");
-		menuItem.addActionListener(fileMenuListener);
-		menu.add(menuItem);
+		
+		menu.add(createMenuItem(
+				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionSaveSession();
+					}
+				}, 
+				null, null
+		));
+		
+		menu.add(createMenuItem(
+				"Load Session", null, null,
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionLoadSession();
+					}
+				}, 
+				null, null
+		));
+		
 
 
 		// SEPARATOR
 		menu.addSeparator();
 
-		snapshotMenuItem = new JMenuItem("Export Plot as Image", StockIcon.DEVICE_CAMERA.toMenuIcon());
-		snapshotMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, java.awt.event.ActionEvent.CTRL_MASK));
-		snapshotMenuItem.setMnemonic(KeyEvent.VK_P);
-		snapshotMenuItem.getAccessibleContext().setAccessibleDescription("Saves the current plot as an image");
-		snapshotMenuItem.addActionListener(fileMenuListener);
+		
+		snapshotMenuItem = createMenuItem(
+				"Export Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionSavePicture();
+					}
+				}, 
+				KeyStroke.getKeyStroke(KeyEvent.VK_P, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_P
+		);
 		menu.add(snapshotMenuItem);
 
-		menuItem = new JMenuItem("Export Fittings as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon());
-		menuItem.getAccessibleContext().setAccessibleDescription("Saves the current fitting data to a text file");
-		menuItem.addActionListener(fileMenuListener);
-		menu.add(menuItem);
+		
+		menu.add(createMenuItem(
+				"Export Fittings as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the current fitting data to a text file",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionSaveFittingInformation();
+					}
+				}, 
+				null, null
+		));
+
 
 		// SEPARATOR
 		menu.addSeparator();
 
-		menuItem = new JMenuItem("Exit", StockIcon.WINDOW_CLOSE.toMenuIcon());
-		menuItem.setMnemonic(KeyEvent.VK_X);
-		menuItem.getAccessibleContext().setAccessibleDescription("Exits the Program");
-		menuItem.addActionListener(fileMenuListener);
-		menu.add(menuItem);
+		
+		menu.add(createMenuItem(
+				"Exit", StockIcon.WINDOW_CLOSE.toMenuIcon(), "Exits the Program",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						System.exit(0);
+					}
+				}, 
+				null, KeyEvent.VK_X
+		));
 
 		menuBar.add(menu);
 
@@ -821,31 +865,31 @@ public class PlotPanel extends ClearPanel
 		menu.getAccessibleContext().setAccessibleDescription("Edit this data set");
 
 
-		undo = new JMenuItem("Undo", StockIcon.EDIT_UNDO.toMenuIcon());
-		undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, java.awt.event.ActionEvent.CTRL_MASK));
-		undo.setMnemonic(KeyEvent.VK_U);
-		undo.getAccessibleContext().setAccessibleDescription("Undoes a previous action");
-		undo.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				undoController.undo();
-			}
-		});
+		
+		undo = createMenuItem(
+				"Undo", StockIcon.EDIT_UNDO.toMenuIcon(), "Undoes a previous action",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						undoController.undo();
+					}
+				}, 
+				KeyStroke.getKeyStroke(KeyEvent.VK_Z, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_U
+		);
 		menu.add(undo);
 
-
-		redo = new JMenuItem("Redo", StockIcon.EDIT_REDO.toMenuIcon());
-		redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, java.awt.event.ActionEvent.CTRL_MASK));
-		redo.setMnemonic(KeyEvent.VK_R);
-		redo.getAccessibleContext().setAccessibleDescription("Redoes a previously undone action");
-		redo.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				undoController.redo();
-			}
-		});
+		redo = createMenuItem(
+				"Redo", StockIcon.EDIT_REDO.toMenuIcon(), "Redoes a previously undone action",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						undoController.redo();
+					}
+				}, 
+				KeyStroke.getKeyStroke(KeyEvent.VK_Y, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_R
+		);
 		menu.add(redo);
 
 		menuBar.add(menu);
@@ -861,34 +905,6 @@ public class PlotPanel extends ClearPanel
 		menu.getAccessibleContext().setAccessibleDescription("Change the way the plot is viewed");
 		menuBar.add(menu);
 
-		ActionListener toggleOptionListener = new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-
-				String command = e.getActionCommand();
-				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-
-				if (command == "Logarithmic Scale")
-				{
-					settingsController.setViewLog(menuitem.isSelected());
-				}
-				else if (command == "Axes")
-				{
-					settingsController.setShowAxes(menuitem.isSelected());
-				}
-				else if (command == "Title")
-				{
-					settingsController.setShowTitle(menuitem.isSelected());
-				}
-				else if (command == "Monochrome")
-				{
-					settingsController.setMonochrome(menuitem.isSelected());
-				}
-
-			}
-
-		};
 
 		ActionListener viewStyleListener = new ActionListener() {
 
@@ -920,132 +936,152 @@ public class PlotPanel extends ClearPanel
 
 		};
 
-		final JMenuItem logPlot, axes, monochrome, title;
+		final JMenuItem logPlot, axes, monochrome, title, raw, fittings;
 
-		// a group of JMenuItems
-		logPlot = new JCheckBoxMenuItem("Logarithmic Scale");
-		logPlot.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, java.awt.event.ActionEvent.CTRL_MASK));
-		logPlot.setMnemonic(KeyEvent.VK_L);
-		logPlot.getAccessibleContext().setAccessibleDescription("Toggles the plot between a linear and logarithmic scale");
-		logPlot.addActionListener(toggleOptionListener);
-		menu.add(logPlot);
+		
+		logPlot = createMenuCheckItem(
+				"Logarithmic Scale", null, "Toggles the plot between a linear and logarithmic scale",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setViewLog(menuitem.isSelected());
+					}
+				},
+				KeyStroke.getKeyStroke(KeyEvent.VK_L, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_L
+		);
+		
+		axes = createMenuCheckItem(
+				"Axes", null, "Toggles display of axes and grid lines",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setShowAxes(menuitem.isSelected());
+					}
+				},
+				null, null
+		);
 
-		axes = new JCheckBoxMenuItem("Axes");
-		axes.addActionListener(toggleOptionListener);
-		menu.add(axes);
+		title = createMenuCheckItem(
+				"Title", null, "Toggles display of the current data set's title",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setShowTitle(menuitem.isSelected());
+					}
+				},
+				null, null
+		);
 
-		title = new JCheckBoxMenuItem("Title");
-		title.addActionListener(toggleOptionListener);
-		menu.add(title);
-
-		monochrome = new JCheckBoxMenuItem("Monochrome");
-		monochrome.setMnemonic(KeyEvent.VK_O);
-		monochrome.addActionListener(toggleOptionListener);
-		menu.add(monochrome);
-
-		final JMenuItem raw, fittings;
-
-		raw = new JCheckBoxMenuItem("Raw Data Outline");
-		raw.setMnemonic(KeyEvent.VK_O);
-		raw.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-
-				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-				settingsController.setShowRawData(menuitem.isSelected());
-			}
-
-		});
-		menu.add(raw);
-
-		fittings = new JCheckBoxMenuItem("Individual Fittings");
-		fittings.setSelected(settingsController.getShowIndividualSelections());
-		fittings.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-
-				JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-				settingsController.setShowIndividualSelections(menuitem.isSelected());
-			}
-
-		});
-		menu.add(fittings);
+		monochrome = createMenuCheckItem(
+				"Monochrome", null, "Toggles the monochrome colour palette",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setMonochrome(menuitem.isSelected());
+					}
+				},
+				null, KeyEvent.VK_M
+		);
+		
 		
 
-		// SEPARATOR
+		raw = createMenuCheckItem(
+				"Raw Data Outline", null, "Toggles an outline of the original raw data",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setShowRawData(menuitem.isSelected());
+					}
+				},
+				null, KeyEvent.VK_O
+		);
+		
+		fittings = createMenuCheckItem(
+				"Individual Fittings", null, "Switches between showing all fittings as a single curve and showing all fittings individually",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setShowIndividualSelections(menuitem.isSelected());
+					}
+				},
+				null, KeyEvent.VK_O
+		);	
+		
+		menu.add(logPlot);
+		menu.add(axes);
+		menu.add(title);
+		menu.add(monochrome);
+		
 		menu.addSeparator();
-
-		final JRadioButtonMenuItem individual, average, maximum;
-
-		// a group of radio button menu items
-		ButtonGroup viewGroup = new ButtonGroup();
-
-		individual = new JRadioButtonMenuItem("Individual Spectrum");
-		individual.setSelected(true);
-		individual.setMnemonic(KeyEvent.VK_I);
-		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, java.awt.event.ActionEvent.CTRL_MASK));
-		individual.addActionListener(viewStyleListener);
-		viewGroup.add(individual);
-		menu.add(individual);
-
-		average = new JRadioButtonMenuItem("Mean Spectrum");
-		average.setMnemonic(KeyEvent.VK_M);
-		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, java.awt.event.ActionEvent.CTRL_MASK));
-		average.addActionListener(viewStyleListener);
-		viewGroup.add(average);
-		menu.add(average);
-
-		maximum = new JRadioButtonMenuItem("Strongest Signal per Channel");
-		maximum.setMnemonic(KeyEvent.VK_T);
-		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, java.awt.event.ActionEvent.CTRL_MASK));
-		maximum.addActionListener(viewStyleListener);
-		viewGroup.add(maximum);
-		menu.add(maximum);
-
-		// SEPARATOR
-		menu.addSeparator();
+		
+		menu.add(raw);
+		menu.add(fittings);
 
 
 		// Element Drawing submenu
 		JMenu elementDrawing = new JMenu("Curve Fit");
 		final JCheckBoxMenuItem etitles, emarkings, eintensities;
 
-		// element name option
-		etitles = new JCheckBoxMenuItem("Names");
-		etitles.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				settingsController.setShowElementTitles(etitles.isSelected());
-			}
-		});
+		
+		etitles = createMenuCheckItem(
+				"Names", null, "Label fittings with their names",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setShowElementTitles(menuitem.isSelected());
+					}
+				},
+				null, null
+		);
 		elementDrawing.add(etitles);
 
-		// element markings option
-		emarkings = new JCheckBoxMenuItem("Markings");
-		emarkings.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				settingsController.setShowElementMarkers(emarkings.isSelected());
-			}
-		});
+		
+		emarkings = createMenuCheckItem(
+				"Markings", null, "Label fittings with lines denoting their energies",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setShowElementMarkers(menuitem.isSelected());
+					}
+				},
+				null, null
+		);
 		elementDrawing.add(emarkings);
 
-		// element intensities option
-		eintensities = new JCheckBoxMenuItem("Heights");
-		eintensities.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				settingsController.setShowElementIntensities(eintensities.isSelected());
-			}
-		});
+		
+		eintensities = createMenuCheckItem(
+				"Heights", null, "Label fittings with their heights",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+						settingsController.setShowElementIntensities(menuitem.isSelected());
+					}
+				},
+				null, null
+		);
 		elementDrawing.add(eintensities);
 
+		
 		menu.add(elementDrawing);
+		
 		
 		
 		
@@ -1083,6 +1119,43 @@ public class PlotPanel extends ClearPanel
 		}
 		
 		menu.add(escapePeaks);
+		
+
+		menu.addSeparator();
+		
+
+
+		final JRadioButtonMenuItem individual, average, maximum;
+
+		// a group of radio button menu items
+		ButtonGroup viewGroup = new ButtonGroup();
+
+		individual = new JRadioButtonMenuItem("Individual Spectrum");
+		individual.setSelected(true);
+		individual.setMnemonic(KeyEvent.VK_I);
+		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, java.awt.event.ActionEvent.CTRL_MASK));
+		individual.addActionListener(viewStyleListener);
+		viewGroup.add(individual);
+		menu.add(individual);
+
+		average = new JRadioButtonMenuItem("Mean Spectrum");
+		average.setMnemonic(KeyEvent.VK_M);
+		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, java.awt.event.ActionEvent.CTRL_MASK));
+		average.addActionListener(viewStyleListener);
+		viewGroup.add(average);
+		menu.add(average);
+
+		maximum = new JRadioButtonMenuItem("Strongest Signal per Channel");
+		maximum.setMnemonic(KeyEvent.VK_T);
+		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, java.awt.event.ActionEvent.CTRL_MASK));
+		maximum.addActionListener(viewStyleListener);
+		viewGroup.add(maximum);
+		menu.add(maximum);
+		
+		
+		
+		
+		
 		
 		
 		//Mapping Menu
@@ -1258,34 +1331,7 @@ public class PlotPanel extends ClearPanel
 	}
 
 
-	/*
-	 * ===================================================================
-	 * METHODS FOR HANDLING CANVAS EVENTS
-	 * ===================================================================
-	 */
-	public void paintCanvasEvent(Graphics g)
-	{
-
-		/*
-		controller.setImageWidth(canvas.getWidth());
-		controller.setImageHeight(canvas.getHeight());
-
-		g.setColor(new Color(1.0f, 1.0f, 1.0f));
-		g.fillRect(0, 0, (int) controller.getImageWidth(), (int) controller.getImageHeight());
-
-		controller.draw(g);
-		 */
-	}
-
-
-	private void fullRedraw()
-	{
-		container.validate();
-		container.repaint();
-	}
-
-
-	public void mouseMoveCanvasEvent(int x)
+	private void mouseMoveCanvasEvent(int x)
 	{
 
 		int channel = canvas.channelFromCoordinate(x);

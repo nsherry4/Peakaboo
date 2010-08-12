@@ -3,7 +3,8 @@ package peakaboo.curvefit.results;
 
 import java.util.List;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
+
 import scitypes.Spectrum;
 
 /**

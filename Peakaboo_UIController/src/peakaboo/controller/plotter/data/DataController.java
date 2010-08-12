@@ -2,13 +2,13 @@ package peakaboo.controller.plotter.data;
 
 import java.util.List;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.UpdateType;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.implementations.CopiedDataSource;
 import peakaboo.filter.FilterSet;

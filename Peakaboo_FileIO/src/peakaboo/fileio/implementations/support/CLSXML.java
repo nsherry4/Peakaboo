@@ -5,7 +5,7 @@ import java.util.List;
 import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import scitypes.Spectrum;
 
 /**

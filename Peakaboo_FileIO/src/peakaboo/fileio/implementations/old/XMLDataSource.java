@@ -8,7 +8,7 @@ import commonenvironment.IOOperations;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.implementations.support.CLSXML;
 import scitypes.Coord;

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.mapping.colours.OverlayColour;
 
 

@@ -2,10 +2,11 @@ package peakaboo.calculations;
 
 import java.util.List;
 
+import peakaboo.common.DataTypeFactory;
+
 import fava.datatypes.Pair;
 import static fava.Fn.*;
 
-import peakaboo.datatypes.DataTypeFactory;
 import scitypes.GridPerspective;
 import scitypes.Spectrum;
 

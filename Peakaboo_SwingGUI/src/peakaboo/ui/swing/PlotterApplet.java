@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 
 import commonenvironment.AbstractFile;
 
+import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.Swidget;
 import swidget.icons.IconFactory;
@@ -30,22 +31,11 @@ public class PlotterApplet extends JApplet
 		
 		Swidget.initialize();
 		
+		PeakTableReader.readPeakTable();
+		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		
 		
-		
-		
-		//if this version of the JVM is new enough to support the Nimbus Look and Feel, use it
-		try
-		{
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-
-			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e)
-		{
-			//Do Nothing -- Not an error, just not supported 
-		}
 		
 		JLabel logo = new  JLabel(IconFactory.getImageIcon("live"));
 		logo.setOpaque(true);

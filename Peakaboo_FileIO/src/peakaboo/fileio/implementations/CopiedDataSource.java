@@ -6,7 +6,7 @@ import java.util.List;
 
 import commonenvironment.AbstractFile;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;

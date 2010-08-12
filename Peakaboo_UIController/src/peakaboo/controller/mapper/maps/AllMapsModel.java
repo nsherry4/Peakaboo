@@ -6,18 +6,17 @@ import java.util.List;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.controller.Model;
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.SISize;
 
 
 
-public class AllMapsModel extends Model
+public class AllMapsModel
 {
 
-	public List<Integer>			badPoints			= DataTypeFactory.<Integer> list();	;
+	public List<Integer>			badPoints			= DataTypeFactory.<Integer> list();
 
 	public Coord<Bounds<Number>>	realDimensions;
 	public SISize					realDimensionsUnits;

@@ -34,9 +34,7 @@ public class Peakaboo
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		
 		
-		//TODO: JAVA 5 doesn't seem to resize windows properly on linux (at least not with compiz)
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		JDialog.setDefaultLookAndFeelDecorated(true);
+		
 		
 	}
 	

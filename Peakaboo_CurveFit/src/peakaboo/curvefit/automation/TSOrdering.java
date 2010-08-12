@@ -12,7 +12,6 @@ import peakaboo.curvefit.fitting.TransitionSeriesFitting;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.datatypes.DataTypeFactory;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 import fava.Fn;

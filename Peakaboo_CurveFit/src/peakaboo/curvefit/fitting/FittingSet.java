@@ -7,10 +7,10 @@ import java.util.List;
 
 import static fava.Fn.*;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.datatypes.DataTypeFactory;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 

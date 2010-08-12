@@ -7,7 +7,7 @@ import commonenvironment.AbstractFile;
 
 import fava.Fn;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import scitypes.Spectrum;
 import scitypes.filebacked.FileBackedList;

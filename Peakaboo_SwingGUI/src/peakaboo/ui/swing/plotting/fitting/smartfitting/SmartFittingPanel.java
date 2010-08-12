@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 
 import fava.signatures.FunctionEach;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 

@@ -11,9 +11,9 @@ import java.util.List;
 import fava.*;
 import fava.signatures.FunctionMap;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;

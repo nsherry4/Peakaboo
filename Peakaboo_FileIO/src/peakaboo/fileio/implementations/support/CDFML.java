@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 
 import commonenvironment.AbstractFile;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 
 
 public class CDFML

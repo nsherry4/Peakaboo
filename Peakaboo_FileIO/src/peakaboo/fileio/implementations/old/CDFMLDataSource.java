@@ -12,7 +12,7 @@ import commonenvironment.AbstractFile;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;

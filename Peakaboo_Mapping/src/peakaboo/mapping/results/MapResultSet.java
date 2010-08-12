@@ -5,11 +5,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+
+
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.datatypes.DataTypeFactory;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -39,7 +41,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
 	{
 		
-		maps = DataTypeFactory.<MapResult> list();
+		maps = DataTypeFactory.<MapResult>list();
 		for (TransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));
 		}

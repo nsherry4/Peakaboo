@@ -24,6 +24,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -36,12 +37,13 @@ import fava.Functions;
 import fava.lists.FList;
 import fava.signatures.FunctionMap;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.filtering.IFilteringController;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.AvailableFilters;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
+import sun.net.www.http.Hurryable;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 
@@ -57,10 +59,10 @@ public class SingleFilterView extends JPanel
 
 	public SingleFilterView(AbstractFilter filter, IFilteringController controller)
 	{
-		this(filter, controller, true);
+		this(filter, controller, true, true);
 	}
 	
-	public SingleFilterView(AbstractFilter filter, IFilteringController controller, boolean showTitle)
+	public SingleFilterView(AbstractFilter filter, IFilteringController controller, boolean showTitle, boolean bigBorder)
 	{
 
 		super(new BorderLayout());
@@ -69,7 +71,7 @@ public class SingleFilterView extends JPanel
 		this.filter = filter;
 		this.controller = controller;
 
-		settingsPanel = createSettingsPanel();
+		settingsPanel = createSettingsPanel(bigBorder);
 		settingsPanel.setOpaque(false);
 		
 		
@@ -100,7 +102,7 @@ public class SingleFilterView extends JPanel
 	}
 
 
-	private JPanel createSettingsPanel()
+	private JPanel createSettingsPanel(boolean bigBorder)
 	{
 
 		//get a list of parameters
@@ -358,7 +360,11 @@ public class SingleFilterView extends JPanel
 		}
 
 
-		panel.setBorder(Spacing.bHuge());
+		if (bigBorder) {
+			panel.setBorder(Spacing.bHuge());
+		} else {
+			panel.setBorder(Spacing.bNone());
+		}
 
 		return panel;
 
@@ -375,16 +381,12 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 	AbstractFilter 			filter;
 	IFilteringController		controller;
 	
+	JPanel					filterPanel;
+	
 	public SubfilterView(final IFilteringController controller, Object[] options)
 	{
 		
 		this.controller = controller;
-
-		CompoundBorder b = 	new CompoundBorder(			
-				new MatteBorder(0, 1, 0, 0, Color.gray),
-				new EmptyBorder(0, 4, 0, 0)
-			);
-		setBorder(b);
 
 		
 		//create one new filter of each kind which can be used to filter a subset
@@ -399,6 +401,10 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 		
 		final JComboBox filterCombo = new JComboBox(filters.toArray());
 		add(filterCombo, BorderLayout.NORTH);
+		
+		filterPanel = new JPanel();
+		filterPanel.setBorder(new TitledBorder(""));
+		add(filterPanel, BorderLayout.CENTER);
 		
 		filter = filters.get(0);
 		changeFilter(filter);
@@ -433,10 +439,11 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 		
 		if (f == null) return;
 		
-		if (filterView != null) SubfilterView.this.remove(filterView);
+		if (filterView != null) filterPanel.removeAll(); //SubfilterView.this.remove(filterView);
 		filter = f;
-		filterView = new SingleFilterView(filter, controller, false);
-		SubfilterView.this.add(filterView, BorderLayout.CENTER);
+		filterView = new SingleFilterView(filter, controller, false, false);
+		//SubfilterView.this.add(filterView, BorderLayout.CENTER);
+		filterPanel.add(filterView);
 	}
 	
 	

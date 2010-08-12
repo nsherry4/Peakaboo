@@ -4,7 +4,7 @@ package peakaboo.filter;
 import java.util.Iterator;
 import java.util.List;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import scitypes.Spectrum;
 
 /**

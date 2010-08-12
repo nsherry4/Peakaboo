@@ -24,12 +24,12 @@ import fava.datatypes.Pair;
 import fava.signatures.FunctionEach;
 import fava.signatures.FunctionMap;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
 import peakaboo.curvefit.painters.FittingTitlePainter;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;

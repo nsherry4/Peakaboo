@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import peakaboo.common.DataTypeFactory;
+
 import fava.*;
 import fava.lists.FList;
 import fava.signatures.FunctionCombine;
@@ -15,7 +17,6 @@ import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
-import peakaboo.datatypes.DataTypeFactory;
 
 
 

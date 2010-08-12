@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.plotter.data.DataController;
@@ -23,7 +24,6 @@ import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
 import peakaboo.curvefit.painters.FittingTitlePainter;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;

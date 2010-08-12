@@ -4,11 +4,11 @@ import java.util.List;
 
 
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.peaktable.TransitionSeriesType;
-import peakaboo.datatypes.DataTypeFactory;
 
 
 public class SerializedTransitionSeries

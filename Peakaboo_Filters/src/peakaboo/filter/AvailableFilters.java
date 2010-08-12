@@ -14,7 +14,7 @@ import fava.lists.FList;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
-import peakaboo.datatypes.DataTypeFactory;
+import peakaboo.common.DataTypeFactory;
 import peakaboo.filter.AbstractFilter.FilterType;
 import peakaboo.filter.filters.advanced.DataToWavelet;
 import peakaboo.filter.filters.advanced.Derivitive;

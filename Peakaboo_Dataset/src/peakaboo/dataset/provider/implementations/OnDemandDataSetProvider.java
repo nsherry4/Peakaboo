@@ -13,10 +13,10 @@ import fava.signatures.FunctionGet;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.DataSetProvider;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;

@@ -6,12 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Collections;
 
+import peakaboo.common.DataTypeFactory;
+
 import fava.*;
 import fava.datatypes.Pair;
 import fava.signatures.FunctionMap;
 import static fava.Fn.*;
 
-import peakaboo.datatypes.DataTypeFactory;
 
 
 

@@ -9,13 +9,13 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.maptab.ITabController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.TabController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.datatypes.DataTypeFactory;
 import peakaboo.mapping.colours.OverlayColour;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
