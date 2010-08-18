@@ -13,7 +13,7 @@ import java.io.OutputStreamWriter;
 import commonenvironment.IOOperations;
 import fava.Fn;
 import fava.Functions;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 
 
 
@@ -83,7 +83,10 @@ public class Settings
 		settings.copy( data.settings );
 		
 		
-		if (dataController.hasDataSet()) fittings.selections.setDataParameters(dataController.datasetScanSize(), plotController.dr.unitSize, settings.escape);
+		if (dataController.hasDataSet()) {
+			fittings.selections.setDataParameters(dataController.datasetScanSize(), plotController.dr.unitSize, settings.escape);
+			fittings.proposals.setDataParameters(dataController.datasetScanSize(), plotController.dr.unitSize, settings.escape);
+		}
 
 
 		return;
@@ -113,7 +116,7 @@ public class Settings
 		//yaml library to build TransitionSeries
 		data.fittings = Fn.map(
 				fittings.selections.getFittedTransitionSeries(), 
-				new FunctionMap<TransitionSeries, SerializedTransitionSeries>() {
+				new FnMap<TransitionSeries, SerializedTransitionSeries>() {
 
 					public SerializedTransitionSeries f(TransitionSeries ts)
 					{

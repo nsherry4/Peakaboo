@@ -23,8 +23,8 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.lists.FList;
-import fava.signatures.FunctionCombine;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnCombine;
+import fava.signatures.FnMap;
 import peakaboo.calculations.Interpolation;
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.mapper.MapController;
@@ -46,7 +46,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	
 	private TabModel 	tabModel;
 	private MapController 	map;
-	private FunctionMap<Coord<Integer>, String> valueAtCoord;
+	private FnMap<Coord<Integer>, String> valueAtCoord;
 	
 	private Coord<Integer> dragStart, dragEnd;
 	private boolean hasBoundingRegion = false;
@@ -163,7 +163,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		
 		List<Pair<TransitionSeries, Spectrum>> dataset = map(
 				getVisibleTransitionSeries(),
-				new FunctionMap<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
+				new FnMap<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
 
 
 					public Pair<TransitionSeries, Spectrum> f(TransitionSeries ts)
@@ -180,7 +180,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = Fn.filter(
 			dataset, 
-			new FunctionMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
+			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
 				public Boolean f(Pair<TransitionSeries, Spectrum> element)
 				{
@@ -192,7 +192,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		if (redSpectrums != null && redSpectrums.size() > 0) {
 			redSpectrum = fold(
 					redSpectrums,
-					new FunctionCombine<Spectrum, Spectrum, Spectrum>() {
+					new FnCombine<Spectrum, Spectrum, Spectrum>() {
 
 						public Spectrum f(Spectrum mapdata, Spectrum sum)
 						{
@@ -216,7 +216,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> greenSpectrums = Fn.filter(
 			dataset, 
-			new FunctionMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
+			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
 				public Boolean f(Pair<TransitionSeries, Spectrum> element)
 				{
@@ -228,7 +228,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
 			greenSpectrum = fold(
 					greenSpectrums,
-					new FunctionCombine<Spectrum, Spectrum, Spectrum>() {
+					new FnCombine<Spectrum, Spectrum, Spectrum>() {
 
 						public Spectrum f(Spectrum mapdata, Spectrum sum)
 						{
@@ -252,7 +252,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> blueSpectrums = Fn.filter(
 			dataset, 
-			new FunctionMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
+			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
 				public Boolean f(Pair<TransitionSeries, Spectrum> element)
 				{
@@ -264,7 +264,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
 			blueSpectrum = fold(
 					blueSpectrums,
-					new FunctionCombine<Spectrum, Spectrum, Spectrum>() {
+					new FnCombine<Spectrum, Spectrum, Spectrum>() {
 
 						public Spectrum f(Spectrum mapdata, Spectrum sum)
 						{
@@ -409,7 +409,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	 */
 	private void putValueFunctionForOverlay(final Map<OverlayColour, Spectrum> overlayData)
 	{
-		valueAtCoord = new FunctionMap<Coord<Integer>, String>() {
+		valueAtCoord = new FnMap<Coord<Integer>, String>() {
 
 			public String f(Coord<Integer> coord)
 			{
@@ -438,7 +438,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	 */
 	private void putValueFunctionForRatio(final Pair<Spectrum, Spectrum> ratioData)
 	{
-		valueAtCoord = new FunctionMap<Coord<Integer>, String>() {
+		valueAtCoord = new FnMap<Coord<Integer>, String>() {
 
 			public String f(Coord<Integer> coord)
 			{
@@ -464,7 +464,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		
 		
 		
-		valueAtCoord = new FunctionMap<Coord<Integer>, String>() {
+		valueAtCoord = new FnMap<Coord<Integer>, String>() {
 
 			public String f(Coord<Integer> coord)
 			{
@@ -671,7 +671,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 
 				String side2Title = mapLongTitle(getTransitionSeriesForRatioSide(2));
 
-				return side1Title + " ∶ " + side2Title;
+				return side1Title + " : " + side2Title;
 				
 			default:
 				
@@ -686,7 +686,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	private String getDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, new FunctionMap<TransitionSeries, String>() {
+		List<String> elementNames = map(list, new FnMap<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.toElementString();
@@ -704,7 +704,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	private String getShortDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, new FunctionMap<TransitionSeries, String>() {
+		List<String> elementNames = map(list, new FnMap<TransitionSeries, String>() {
 			
 			public String f(TransitionSeries ts) {
 				return ts.element.toString();
@@ -742,7 +742,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	 */
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return filter(getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(getAllTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
 			
 			
 			public Boolean f(TransitionSeries element) {
@@ -796,7 +796,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	{
 		return filter(
 				getVisibleTransitionSeries(),
-				new FunctionMap<TransitionSeries, Boolean>() {
+				new FnMap<TransitionSeries, Boolean>() {
 
 					
 					public Boolean f(TransitionSeries element)

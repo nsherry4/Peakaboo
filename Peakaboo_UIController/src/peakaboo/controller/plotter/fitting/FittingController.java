@@ -24,8 +24,8 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.lists.FList;
-import fava.signatures.FunctionCombine;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnCombine;
+import fava.signatures.FnMap;
 
 
 public class FittingController extends EventfulType<Boolean> implements IFittingController
@@ -97,7 +97,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
 
 
-		return filter(PeakTable.getAllTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(PeakTable.getAllTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
 
 
 			public Boolean f(TransitionSeries ts)
@@ -123,7 +123,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
 
-		return filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(getFittedTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
 
 
 			public Boolean f(TransitionSeries ts)
@@ -254,7 +254,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), Functions.<TransitionSeries>id());
 		
 		//all invisible TSs
-		FList<TransitionSeries> invisibles = Fn.filter(getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+		FList<TransitionSeries> invisibles = Fn.filter(getFittedTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries element)
 			{
@@ -264,7 +264,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//find all the TSs which overlap with other TSs
-		final FList<TransitionSeries> overlappers = tss.filter(new FunctionMap<TransitionSeries, Boolean>() {
+		final FList<TransitionSeries> overlappers = tss.filter(new FnMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(final TransitionSeries ts)
 			{
@@ -276,7 +276,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//then get all the TSs which don't overlap
-		FList<TransitionSeries> nonOverlappers = tss.filter(new FunctionMap<TransitionSeries, Boolean>() {
+		FList<TransitionSeries> nonOverlappers = tss.filter(new FnMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries element)
 			{
@@ -287,7 +287,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 
 		//score each of the overlappers w/o competition
-		FList<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.map(new FunctionMap<TransitionSeries, Pair<TransitionSeries, Float>>() {
+		FList<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.map(new FnMap<TransitionSeries, Pair<TransitionSeries, Float>>() {
 
 			public Pair<TransitionSeries, Float> f(TransitionSeries ts)
 			{
@@ -367,12 +367,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		FList<List<TransitionSeries>> perms = Fn.permutations(topn);
 				
 		//function to score an ordering of Transition Series
-		final FunctionMap<List<TransitionSeries>, Float> scoreTSs = new FunctionMap<List<TransitionSeries>, Float>() {
+		final FnMap<List<TransitionSeries>, Float> scoreTSs = new FnMap<List<TransitionSeries>, Float>() {
 
 			public Float f(List<TransitionSeries> tss)
 			{
 				
-				final FunctionMap<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(plot.settingsController.getEscapePeakType(), plot.settingsController.getEnergyPerChannel(), plot.filteringController.getFilteredPlot());
+				final FnMap<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(plot.settingsController.getEscapePeakType(), plot.settingsController.getEnergyPerChannel(), plot.filteringController.getFilteredPlot());
 				
 				Float score = 0f;
 				for (TransitionSeries ts : tss)
@@ -387,7 +387,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	
 		
 		//find the best fitting for the currently selected fittings
-		FList<TransitionSeries> bestfit = new FList<TransitionSeries>(perms.fold(new FunctionCombine<List<TransitionSeries>, List<TransitionSeries>, List<TransitionSeries>>() {
+		FList<TransitionSeries> bestfit = new FList<TransitionSeries>(perms.fold(new FnCombine<List<TransitionSeries>, List<TransitionSeries>, List<TransitionSeries>>() {
 			
 			public List<TransitionSeries> f(List<TransitionSeries> l1, List<TransitionSeries> l2)
 			{

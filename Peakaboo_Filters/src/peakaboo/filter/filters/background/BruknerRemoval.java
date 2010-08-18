@@ -80,7 +80,7 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 	{
 		return "The "
 				+ getFilterName()
-				+ " Filter attempts to determine which portion of the signal is background and remove it.";
+				+ " filter attempts to determine which portion of the signal is background and remove it. It does this over several iterations by smoothing the data and taking the minimum of the unsmoothed and smoothed data for each channel.";
 	}
 
 

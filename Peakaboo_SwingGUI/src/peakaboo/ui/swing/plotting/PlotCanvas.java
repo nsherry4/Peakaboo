@@ -21,8 +21,8 @@ import eventful.EventfulTypeListener;
 import fava.Fn;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
-import fava.signatures.FunctionEach;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnEach;
+import fava.signatures.FnMap;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
@@ -66,7 +66,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	private PlotController			controller;
 
-	private FunctionEach<Integer>	grabChannelFromClickCallback;
+	private FnEach<Integer>	grabChannelFromClickCallback;
 
 
 	public PlotCanvas(final PlotController controller, final PlotPanel parent)
@@ -113,7 +113,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 
 					parent.loadFiles(
-						Fn.map(files, new FunctionMap<File, AbstractFile>() {
+						Fn.map(files, new FnMap<File, AbstractFile>() {
 
 							public AbstractFile f(File element)
 							{
@@ -159,7 +159,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	}
 
 
-	public void grabChannelFromClick(FunctionEach<Integer> callback)
+	public void grabChannelFromClick(FnEach<Integer> callback)
 	{
 		grabChannelFromClickCallback = callback;
 	}

@@ -18,8 +18,8 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.lists.FList;
-import fava.signatures.FunctionEach;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnEach;
+import fava.signatures.FnMap;
 
 
 /**
@@ -63,7 +63,7 @@ public class TSOrdering
 	 * @param spectrum the data to use to score this {@link TransitionSeries}
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum)
+	public static FnMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, true);
 	}
@@ -76,7 +76,7 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, boolean useBaseSize)
+	public static FnMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, boolean useBaseSize)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, useBaseSize);
 	}
@@ -90,11 +90,11 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static FunctionMap<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize)
+	public static FnMap<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize)
 	{
 	
 		//scoring function to evaluate each TransitionSeries
-		return new FunctionMap<TransitionSeries, Float>() {
+		return new FnMap<TransitionSeries, Float>() {
 
 			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, spectrum.size(), energyPerChannel, escape);
 			Spectrum s = new Spectrum(spectrum);
@@ -158,7 +158,7 @@ public class TSOrdering
 		tsf1.setTransitionSeries(ts, true);
 		
 		//map all other TSs to booleans to check if this overlaps
-		return tss.filter(new FunctionMap<TransitionSeries, Boolean>() {
+		return tss.filter(new FnMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries otherts)
 			{
@@ -181,7 +181,7 @@ public class TSOrdering
 		Pair<TransitionSeries, TransitionSeries> order = new Pair<TransitionSeries, TransitionSeries>();
 		
 		Float ordering1, ordering2;
-		FunctionMap<TransitionSeries, Float> scorer;
+		FnMap<TransitionSeries, Float> scorer;
 		
 		scorer = fScoreTransitionSeries(escape, energyPerChannel, s, false);
 		scorer.f(ts1);

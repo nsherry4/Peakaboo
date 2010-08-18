@@ -11,14 +11,17 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
@@ -26,12 +29,21 @@ import javax.swing.event.ChangeListener;
 
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
+import fava.Fn;
+import fava.Functions;
+import fava.datatypes.Pair;
 import fava.datatypes.Range;
+import fava.lists.FList;
+import fava.signatures.FnCombine;
+import fava.signatures.FnMap;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.maptab.TabController;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.mapping.correction.Corrections;
+import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
 import peakaboo.ui.swing.mapping.MapViewer;
 import peakaboo.ui.swing.mapping.TabIconButton;
@@ -40,7 +52,11 @@ import scitypes.SigDigits;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.StockIcon;
+import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.PropertyPanel;
+import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 
 
@@ -78,56 +94,16 @@ public class PeakabooMapperSwing extends JDialog
 		this.plotController = plotcontroller;
 		
 		init();
+
+		setLocationRelativeTo(owner);
 		
 	}
 	
-	/*
-	public PeakabooMapperSwing(
-			JFrame owner, 
-			AllMapsModel data, 
-			String datasetName,
-			String dataSourceFolder,
-			String savePictureFolder,
-			Coord<Integer> dataDimensions,
-			MapResultSet originalData,
-			PlotController plotcontroller
-	)
-	{
-		
-		super(owner, "Elemental Map - " + datasetName);
-		setup(data, datasetName, dataSourceFolder, savePictureFolder, dataDimensions, originalData, plotcontroller);
-		
-	}
-	
-	
-	private void setup(			
-			AllMapsModel data, 
-			String datasetName,
-			String dataSourceFolder,
-			String savePictureFolder,
-			Coord<Integer> dataDimensions,
-			MapResultSet originalData,
-			PlotController plotcontroller)
-	{
-		this.dataSourceFolder = dataSourceFolder;
-		this.savePictureFolder = savePictureFolder;
-
-		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D toy = bi.createGraphics();
-		
-		controller = new MapController(toy, data, plotcontroller);
-		controller.setMapData(data, datasetName, dataDimensions);
-		
-		this.originalData = originalData;
-		
-		init();
-	}
-
-*/
-	
-
 	public MapController showDialog()
 	{
+		
+
+		
 		setVisible(true);
 		
 		return controller;
@@ -145,7 +121,7 @@ public class PeakabooMapperSwing extends JDialog
 		
 
 		tabs = new JTabbedPane();	
-		tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		//tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		pane.add(createToolbar(), BorderLayout.NORTH);
 		pane.add(tabs, BorderLayout.CENTER);
@@ -157,20 +133,16 @@ public class PeakabooMapperSwing extends JDialog
 		
 		addWindowListener(new WindowListener() {
 			
-			public void windowOpened(WindowEvent e)
-			{}
+			public void windowOpened(WindowEvent e){}
 			
 		
-			public void windowIconified(WindowEvent e)
-			{}
+			public void windowIconified(WindowEvent e){}
 			
 		
-			public void windowDeiconified(WindowEvent e)
-			{}
+			public void windowDeiconified(WindowEvent e){}
 			
 		
-			public void windowDeactivated(WindowEvent e)
-			{}
+			public void windowDeactivated(WindowEvent e){}
 			
 		
 			public void windowClosing(WindowEvent e)
@@ -179,12 +151,10 @@ public class PeakabooMapperSwing extends JDialog
 			}
 			
 		
-			public void windowClosed(WindowEvent e)
-			{}
+			public void windowClosed(WindowEvent e){}
 			
 		
-			public void windowActivated(WindowEvent e)
-			{}
+			public void windowActivated(WindowEvent e){}
 		});
 		
 		tabs.addChangeListener(new ChangeListener() {
@@ -464,44 +434,98 @@ public class PeakabooMapperSwing extends JDialog
 		toolbar.addSeparator();
 		
 		
-		readIntensities =  new ToolbarImageButton(StockIcon.BADGE_INFO, "Get Intensities", "Get fitting intensities for the selected region");
+		readIntensities =  new ToolbarImageButton(StockIcon.BADGE_INFO, "Get Intensities", "Get fitting intensities for the selected region", true);
 		readIntensities.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
 				Map<String, String> fittings = DataTypeFactory.<String, String>map();
 				
-				int xstart = controller.getActiveTabController().getDragStart().x;
-				int ystart = controller.getActiveTabController().getDragStart().y;
+				final Corrections corr = CorrectionsManager.getCorrections("WL");
 				
-				int xend = controller.getActiveTabController().getDragEnd().x;
-				int yend = controller.getActiveTabController().getDragEnd().y;
+				final int xstart = controller.getActiveTabController().getDragStart().x;
+				final int ystart = controller.getActiveTabController().getDragStart().y;
 				
-				int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
+				final int xend = controller.getActiveTabController().getDragEnd().x;
+				final int yend = controller.getActiveTabController().getDragEnd().y;
 				
-				GridPerspective<Float> grid = new GridPerspective<Float>(controller.mapsController.getDataWidth(), controller.mapsController.getDataHeight(), 0f);
+				final int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
 				
-				for (MapResult r : controller.mapsController.getMapResultSet())
-				{
-					float sum = 0;
-					for (int x : new Range(xstart, xend)) {
-						for (int y : new Range(ystart, yend)){
-							sum += r.data.get(grid.getIndexFromXY(x, y));
+				final GridPerspective<Float> grid = new GridPerspective<Float>(controller.mapsController.getDataWidth(), controller.mapsController.getDataHeight(), 0f);
+				
+				
+				//generate a list of pairings of TransitionSeries and their intensity values
+				FList<Pair<TransitionSeries, Float>> averages = Fn.map(controller.mapsController.getMapResultSet(), new FnMap<MapResult, Pair<TransitionSeries, Float>>() {
+
+					public Pair<TransitionSeries, Float> f(MapResult r)
+					{
+						float sum = 0;
+						for (int x : new Range(xstart, xend)) {
+							for (int y : new Range(ystart, yend)){
+								sum += r.data.get(grid.getIndexFromXY(x, y));
+							}
 						}
-					}
-					sum /= size;
+						return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / size);
+					}});
+				
+				
+				//get the total of all of the corrected values
+				float total = averages.map(new FnMap<Pair<TransitionSeries,Float>, Float>() {
+
+					public Float f(Pair<TransitionSeries, Float> p)
+					{
+						Float corrFactor = corr.getCorrection(p.first);
+						return (corrFactor == null) ? 0f : p.second * corrFactor;
+					}}).fold(Functions.addf());
+				
+				for (Pair<TransitionSeries, Float> p : averages)
+				{
+					float average = p.second;
+					Float corrFactor = corr.getCorrection(p.first);
+					String corrected = "(-)";
+					if (corrFactor != null) corrected = "(~" + SigDigits.toIntSigDigit((average*corrFactor/total*100), 1) + "%)";
 					
-					fittings.put(r.transitionSeries.getDescription(), SigDigits.roundFloatTo(sum, 2));
-					
+					fittings.put(p.first.getDescription(), SigDigits.roundFloatTo(average, 2) + " " + corrected);
 				}
 				
-				new PropertyDialogue("Fitting Intensities", PeakabooMapperSwing.this, fittings);
+				PropertyPanel correctionsPanel = new PropertyPanel(fittings);
+				final JDialog correctionsDialog = new JDialog(PeakabooMapperSwing.this, corr.getName(), true);
+				
+				Container c0 = correctionsDialog.getContentPane();
+				JPanel c = new JPanel(new BorderLayout());
+				c0.add(c);
+				JPanel contentPanel = new JPanel(new BorderLayout());
+				c.add(contentPanel, BorderLayout.CENTER);
+				
+				contentPanel.add(new JLabel("Concentrations accurate to a factor of 5", JLabel.CENTER), BorderLayout.SOUTH);
+				contentPanel.add(correctionsPanel, BorderLayout.CENTER);
+				contentPanel.setBorder(Spacing.bHuge());
+				
+				ButtonBox bbox = new ButtonBox(Spacing.bHuge());
+				ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", "Close this window");
+				close.addActionListener(new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						correctionsDialog.setVisible(false);
+						correctionsDialog.dispose();
+					}
+				});
+				bbox.addRight(close);
+				c.add(bbox, BorderLayout.SOUTH);
+				
+				
+				correctionsDialog.pack();
+				correctionsDialog.setLocationRelativeTo(PeakabooMapperSwing.this);
+				correctionsDialog.setVisible(true);
+				
+				
 			}
 		});
 		toolbar.add(readIntensities);
 		
 		
-		examineSubset =  new ToolbarImageButton("view-subset", "Plot Region", "Plot the selected region");
+		examineSubset =  new ToolbarImageButton("view-subset", "Plot Region", "Plot the selected region", true);
 		examineSubset.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
@@ -542,7 +566,6 @@ public class PeakabooMapperSwing extends JDialog
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

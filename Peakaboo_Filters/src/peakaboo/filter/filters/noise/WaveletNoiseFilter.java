@@ -70,7 +70,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	{
 		return "The "
 				+ getFilterName()
-				+ " Filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then attenuated, and a reverse transform is applied.";
+				+ " filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then smoothed, and a reverse transform is applied.";
 	}
 
 

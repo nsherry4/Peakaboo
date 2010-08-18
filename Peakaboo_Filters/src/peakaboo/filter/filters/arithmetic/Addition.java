@@ -36,7 +36,7 @@ public class Addition extends AbstractFilter
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The" + getFilterName() + " filter adds a constant value to all points on a spectrum.";
+		return "The " + getFilterName() + " filter adds a constant value to all points on a spectrum.";
 	}
 
 

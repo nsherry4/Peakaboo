@@ -37,7 +37,7 @@ public class Multiply extends AbstractFilter
 	@Override
 	public String getFilterDescription()
 	{
-		return "The" + getFilterName() + " filter multiplies all points on a spectrum by a constant value.";
+		return "The " + getFilterName() + " filter multiplies all points on a spectrum by a constant value.";
 	}
 
 

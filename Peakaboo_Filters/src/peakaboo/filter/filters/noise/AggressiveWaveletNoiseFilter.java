@@ -16,12 +16,12 @@ import scitypes.Spectrum;
  * 
  */
 
-public final class AgressiveWaveletNoiseFilter extends AbstractFilter
+public final class AggressiveWaveletNoiseFilter extends AbstractFilter
 {
 
 	private final int	PASSES	= 0;
 
-	public AgressiveWaveletNoiseFilter()
+	public AggressiveWaveletNoiseFilter()
 	{
 
 		super();
@@ -39,7 +39,7 @@ public final class AgressiveWaveletNoiseFilter extends AbstractFilter
 	public String getFilterName()
 	{
 
-		return "Agressive Wavelet Low-Pass";
+		return "Aggressive Wavelet Low-Pass";
 	}
 
 
@@ -71,7 +71,7 @@ public final class AgressiveWaveletNoiseFilter extends AbstractFilter
 		// TODO Auto-generated method stub
 		return "The "
 				+ getFilterName()
-				+ " Filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then completely removed, and a reverse transform is applied.";
+				+ " filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then completely removed, and a reverse transform is applied.";
 	}
 
 

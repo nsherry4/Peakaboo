@@ -45,7 +45,7 @@ public class SpectrumNormalization extends AbstractFilter
 	@Override
 	public String getFilterDescription()
 	{
-		return "Scales each spectrum so that the intensity at a given channel is always the same.";
+		return "The " + getFilterName() + " scales each spectrum so that the intensity at a given channel is always the same.";
 	}
 
 	@Override

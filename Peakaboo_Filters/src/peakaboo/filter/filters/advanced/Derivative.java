@@ -7,7 +7,7 @@ import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 
-public class Derivitive extends AbstractFilter
+public class Derivative extends AbstractFilter
 {
 
 	
@@ -28,7 +28,7 @@ public class Derivitive extends AbstractFilter
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "";
+		return "The " + getFilterName() + " transforms the data such that each channel represents the difference between itself and the channel before it.";
 	}
 
 
@@ -36,7 +36,7 @@ public class Derivitive extends AbstractFilter
 	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
-		return "Derivitive";
+		return "Derivative";
 	}
 
 

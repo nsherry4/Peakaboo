@@ -32,4 +32,4 @@ javaMem=$maxMem$suffix
 maxNew = ""
 #maxNew = "-XX:MaxNewSize=20m"
 
-exec /usr/lib/jvm/java-6-sun/bin/java -Xmx$javaMem $maxNew -XX:+UseFastAccessorMethods -XX:+AggressiveOpts -classpath /usr/share/Peakaboo/ Peakaboo
+exec /usr/lib/jvm/java-6-sun/bin/java -Xmx$javaMem $maxNew -XX:+UseFastAccessorMethods -XX:+AggressiveOpts -XX:SurvivorRatio=2 -XX:NewRatio=8 -XX:+UseConcMarkSweepGC -classpath /usr/share/Peakaboo/ Peakaboo

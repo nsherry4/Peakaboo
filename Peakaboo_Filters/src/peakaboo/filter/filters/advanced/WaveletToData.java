@@ -38,7 +38,7 @@ public class WaveletToData extends AbstractFilter
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The" + getFilterName() + " filter converts a wavelet representation of data back into spectrum data";
+		return "The " + getFilterName() + " filter converts a wavelet representation of data back into spectrum data.  This is intended to be used in conjunction with other filters (especially the 'Filter Partial Spectrum' filter) to perform custom wavelet operations.";
 	}
 
 

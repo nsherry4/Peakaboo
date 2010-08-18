@@ -14,7 +14,7 @@ import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.peaktable.TransitionSeriesMode;
 import eventful.swing.EventfulPanel;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 
 
 public class TSSelector extends EventfulPanel

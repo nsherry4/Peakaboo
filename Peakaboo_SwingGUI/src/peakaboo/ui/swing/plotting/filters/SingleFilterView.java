@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIDefaults;
 
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -35,7 +36,7 @@ import eventful.swing.EventfulTypePanel;
 import fava.Fn;
 import fava.Functions;
 import fava.lists.FList;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.filtering.IFilteringController;
@@ -43,6 +44,7 @@ import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.AvailableFilters;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
+import peakaboo.filter.filters.advanced.SegmentFilter;
 import sun.net.www.http.Hurryable;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
@@ -66,7 +68,7 @@ public class SingleFilterView extends JPanel
 	{
 
 		super(new BorderLayout());
-
+		
 
 		this.filter = filter;
 		this.controller = controller;
@@ -317,7 +319,7 @@ public class SingleFilterView extends JPanel
 					
 				case FILTER:
 					
-					final SubfilterView subfilterView = new SubfilterView(controller, param.possibleValues);
+					final SubfilterView subfilterView = new SubfilterView(param.filterValue(), controller, param.possibleValues);
 					param.setValue(subfilterView.getFilter());
 					subfilterView.addListener(new ParamListener(param));
 					
@@ -336,6 +338,7 @@ public class SingleFilterView extends JPanel
 					
 					c.gridx++;
 					c.weightx = 0;
+					c.fill = GridBagConstraints.NONE;
 					c.anchor = GridBagConstraints.LINE_END;
 					
 					panel.add(component, c);
@@ -343,6 +346,8 @@ public class SingleFilterView extends JPanel
 				} else {
 					
 					c.gridwidth = 2;
+					c.fill = GridBagConstraints.HORIZONTAL;
+					
 					panel.add(component, c);
 					
 					c.gridwidth = 1;
@@ -379,18 +384,19 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 	List<AbstractFilter> 	filters;
 	SingleFilterView		filterView;
 	AbstractFilter 			filter;
-	IFilteringController		controller;
+	IFilteringController	controller;
+	
+	JComboBox				filterCombo;
 	
 	JPanel					filterPanel;
 	
-	public SubfilterView(final IFilteringController controller, Object[] options)
+	public SubfilterView(AbstractFilter selectedFilter, final IFilteringController controller, Object[] options)
 	{
 		
 		this.controller = controller;
-
 		
 		//create one new filter of each kind which can be used to filter a subset
-		filters = Fn.map(options, new FunctionMap<Object, AbstractFilter>(){
+		filters = Fn.map(options, new FnMap<Object, AbstractFilter>(){
 
 			public AbstractFilter f(Object o)
 			{
@@ -399,15 +405,21 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 		
 		setLayout(new BorderLayout());
 		
-		final JComboBox filterCombo = new JComboBox(filters.toArray());
+		filterCombo = new JComboBox(filters.toArray());
 		add(filterCombo, BorderLayout.NORTH);
 		
-		filterPanel = new JPanel();
+		
+		filterPanel = new JPanel();	
+		TitledBorder tb = new TitledBorder("");		
 		filterPanel.setBorder(new TitledBorder(""));
+		
+		
+		
+		
 		add(filterPanel, BorderLayout.CENTER);
 		
-		filter = filters.get(0);
-		changeFilter(filter);
+		filter = selectedFilter;
+		changeFilter(selectedFilter);
 		
 		
 		filterCombo.addActionListener(new ActionListener() {
@@ -439,10 +451,14 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 		
 		if (f == null) return;
 		
-		if (filterView != null) filterPanel.removeAll(); //SubfilterView.this.remove(filterView);
+		if (! filterCombo.getSelectedItem().equals(f)) filterCombo.setSelectedItem(f);
+		
+		filterPanel.setVisible(f.parameters.size() != 0);
+		
+		
+		if (filterView != null) filterPanel.removeAll();
 		filter = f;
 		filterView = new SingleFilterView(filter, controller, false, false);
-		//SubfilterView.this.add(filterView, BorderLayout.CENTER);
 		filterPanel.add(filterView);
 	}
 	

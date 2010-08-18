@@ -29,7 +29,7 @@ public class Integrate extends AbstractFilter
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "";
+		return "The " + getFilterName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
 	}
 
 

@@ -6,8 +6,8 @@ import java.awt.GridBagConstraints;
 import java.util.List;
 
 import fava.*;
-import fava.signatures.FunctionEach;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnEach;
+import fava.signatures.FnMap;
 import static fava.Fn.*;
 
 import peakaboo.common.DataTypeFactory;
@@ -42,7 +42,7 @@ class SummationWidget extends TSSelectorGroup
 	{
 
 		//get a list of all TransitionSeries to be summed
-		List<TransitionSeries> tss = filter(map(selectors, new FunctionMap<TSSelector, TransitionSeries>() {
+		List<TransitionSeries> tss = filter(map(selectors, new FnMap<TSSelector, TransitionSeries>() {
 
 			public TransitionSeries f(TSSelector element)
 			{
@@ -60,7 +60,7 @@ class SummationWidget extends TSSelectorGroup
 	@Override
 	public void setTransitionSeriesOptions(final List<TransitionSeries> tss)
 	{
-		Fn.each(selectors, new FunctionEach<TSSelector>() {
+		Fn.each(selectors, new FnEach<TSSelector>() {
 
 			public void f(TSSelector selector)
 			{
@@ -125,7 +125,7 @@ class SummationWidget extends TSSelectorGroup
 		
 		sel.setTransitionSeries(
 		
-				filter(controller.getFittedTransitionSeries(), new FunctionMap<TransitionSeries, Boolean>() {
+				filter(controller.getFittedTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
 
 					public Boolean f(TransitionSeries element)
 					{

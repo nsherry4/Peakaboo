@@ -11,4 +11,4 @@ Categories=GTK;Utility
 StartupNotify=true
 MimeType=application/scandata-zip;
 Name=Peakaboo
-StartupWMClass=peakaboo-Peakaboo
+StartupWMClass=Peakaboo

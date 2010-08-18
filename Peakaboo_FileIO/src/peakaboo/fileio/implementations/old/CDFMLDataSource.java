@@ -68,16 +68,16 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 		//get the elements for the variables PositionX, PositionY, and Spectrums
 		//as well as the sub-element which contains the recordset.
-		cdfmlDS.positionX = CDFML.getVariableByName(cdfmlDS.root, CDFML.X_POSITONS);
+		cdfmlDS.positionX = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_X_POSITONS);
 		//cdfmlDS.positionXData = CDFML.getDataElementFromVariableElement(cdfmlDS.positionX);
 		
-		cdfmlDS.positionY = CDFML.getVariableByName(cdfmlDS.root, CDFML.Y_POSITONS);
+		cdfmlDS.positionY = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_Y_POSITONS);
 		//cdfmlDS.positionYData = CDFML.getDataElementFromVariableElement(cdfmlDS.positionY);
 		
-		cdfmlDS.scanValues = CDFML.getVariableByName(cdfmlDS.root, CDFML.SPECTRUMS);
+		cdfmlDS.scanValues = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_XRF_SPECTRUMS);
 		cdfmlDS.scanValuesData = CDFML.getDataElementFromVariableElement(cdfmlDS.scanValues);
 		
-		Element normalise = CDFML.getVariableByName(cdfmlDS.root, CDFML.NORMALISE);
+		Element normalise = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_NORMALISE);
 		if (normalise != null){
 			cdfmlDS.normaliseData = CDFML.getDataElementFromVariableElement(normalise);
 			cdfmlDS.isNormalised = true;
@@ -178,7 +178,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	public int getScanCount()
 	{
 
-		String attribute = CDFML.getTagAttribute(scanValues, CDFML.VAR_INFO_TAG, CDFML.ATTR_NUMRECORDS_ATTR);
+		String attribute = CDFML.getTagAttribute(scanValues, CDFML.TAG_VAR_INFO, CDFML.XML_ATTR_NUMRECORDS);
 		if (attribute == null) return -1;
 		return Integer.parseInt(attribute);
 
@@ -193,14 +193,14 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	private int getDataWidth()
 	{
-		int width = Integer.parseInt(CDFML.getAttributeValue(root, CDFML.ATTR_DATAX, 0));
+		int width = Integer.parseInt(CDFML.getAttributeValue(root, CDFML.ATTR_DATA_X, 0));
 		return width;
 	}
 
 
 	private int getDataHeight()
 	{
-		int height = Integer.parseInt(CDFML.getAttributeValue(root, CDFML.ATTR_DATAY, 0));
+		int height = Integer.parseInt(CDFML.getAttributeValue(root, CDFML.ATTR_DATA_Y, 0));
 		return height;
 	}
 
@@ -215,7 +215,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public float getMaxEnergy()
 	{
-		String maxEnergyValue = CDFML.getAttributeValue(root, CDFML.ATTR_MAX_ENERGY, 0);
+		String maxEnergyValue = CDFML.getAttributeValue(root, CDFML.ATTR_XRF_MAX_ENERGY, 0);
 		if (maxEnergyValue == null) return 20.48f;
 		return Float.parseFloat(maxEnergyValue) / 1000.0f;
 	}

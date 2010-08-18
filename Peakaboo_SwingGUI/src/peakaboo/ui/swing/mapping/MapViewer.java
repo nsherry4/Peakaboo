@@ -18,6 +18,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import eventful.EventfulTypeListener;
@@ -54,28 +55,6 @@ public class MapViewer extends JPanel
 		this.controller = controller;
 		this.tabController = _tabController;
 
-		addComponentListener(new ComponentListener() {
-
-			public void componentShown(ComponentEvent e)
-			{
-			}
-
-
-			public void componentResized(ComponentEvent e)
-			{
-			}
-
-
-			public void componentMoved(ComponentEvent e)
-			{
-			}
-
-
-			public void componentHidden(ComponentEvent e)
-			{
-			}
-		});
-
 		controller.addListener(new EventfulTypeListener<String>() {
 
 			public void change(String s)
@@ -95,53 +74,54 @@ public class MapViewer extends JPanel
 	private void init(PeakabooMapperSwing owner)
 	{
 
-		setLayout(new BorderLayout());
-		add(createMapView(), BorderLayout.CENTER);
-
+		
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+				
+		c.fill = GridBagConstraints.BOTH;
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 0;
+		c.weighty = 1;
+		add(new SidePanel(controller, owner), c);
+		
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 1;
+		add(createMapView(), c);
+		
+		
+		
 		
 		class CompleteMouseListener implements MouseMotionListener, MouseListener
 		{
 			
 			public void mouseDragged(MouseEvent e)
 			{
-				tabController.setDragEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY()) );
+				tabController.setDragEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
 				tabController.setHasBoundingRegion( true );
 			}
 
 			public void mouseMoved(MouseEvent e)
 			{
-				showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY()));
+				showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
 			}
 
-			public void mouseClicked(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseClicked(MouseEvent e){}
 
-			public void mouseEntered(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent e){}
 
-			public void mouseExited(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent e){}
 
 			public void mousePressed(MouseEvent e)
 			{			
-				tabController.setDragStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY()) );
+				tabController.setDragStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
 				tabController.setDragEnd( null );
 				tabController.setHasBoundingRegion( false );
 			}
 
-			public void mouseReleased(MouseEvent e)
-			{
-				
-			}
+			public void mouseReleased(MouseEvent e){}
 			
 		}
 		
@@ -167,8 +147,6 @@ public class MapViewer extends JPanel
 			}
 		});
 
-		add(new SidePanel(controller, owner), BorderLayout.WEST);
-
 		controller.updateListeners("");
 
 	}
@@ -193,7 +171,8 @@ public class MapViewer extends JPanel
 		pane.setLayout(new BorderLayout());
 
 		pane.add(createCanvasPanel(), BorderLayout.CENTER);
-
+		pane.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.WEST);
+		
 		return pane;
 
 	}

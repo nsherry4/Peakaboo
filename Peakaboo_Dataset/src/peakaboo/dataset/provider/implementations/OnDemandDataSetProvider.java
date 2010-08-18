@@ -8,12 +8,14 @@ import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
 
 import fava.datatypes.Bounds;
-import fava.signatures.FunctionEach;
-import fava.signatures.FunctionGet;
-import fava.signatures.FunctionMap;
+import fava.datatypes.Maybe;
+import fava.signatures.FnEach;
+import fava.signatures.FnGet;
+import fava.signatures.FnMap;
 import static fava.Fn.*;
 
 import peakaboo.common.DataTypeFactory;
+import peakaboo.common.Version;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.DataSetProvider;
@@ -95,7 +97,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = map(excludedIndcies, new FunctionMap<Integer, Spectrum>() {
+		List<Spectrum> badScans = map(excludedIndcies, new FnMap<Integer, Spectrum>() {
 
 			public Spectrum f(Integer index)
 			{
@@ -211,7 +213,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	 * @param files the files to read as a {@link DataSource}
 	 * @return {@link PluralSet} which, when complated, returns a Boolean indicating success
 	 */
-	public PluralSet<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public PluralSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		
@@ -219,17 +221,17 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		IOOperations.sortAbstractFiles(files);
 
 		// Create the tasklist for reading the files
-		final PluralSet<Boolean> tasklist;
+		final PluralSet<Maybe<Boolean>> tasklist;
 		
 		
 		final EmptyMap opening = new EmptyMap("Opening Data Set");
 		final EmptyProgressingMap reading = new EmptyProgressingMap("Reading Scans");
 		final EmptyProgressingMap applying = new EmptyProgressingMap("Calculating Values");
 		
-		tasklist = new PluralSet<Boolean>("Opening Data Set") {
+		tasklist = new PluralSet<Maybe<Boolean>>("Opening Data Set") {
 
 			@Override
-			protected Boolean doMaps()
+			protected Maybe<Boolean> doMaps()
 			{
 				
 				final int fileCount;
@@ -238,7 +240,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				opening.advanceState();
 				
 				//anon function to call when we get the number of scans
-				FunctionEach<Integer> gotScanCount = new FunctionEach<Integer>() {
+				FnEach<Integer> gotScanCount = new FnEach<Integer>() {
 					
 					public void f(Integer count)
 					{
@@ -248,14 +250,14 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					}
 				};
 				
-				FunctionGet<Boolean> isAborted = new FunctionGet<Boolean>(){
+				FnGet<Boolean> isAborted = new FnGet<Boolean>(){
 
 					public Boolean f()
 					{
 						return isAborted() || isAbortRequested();
 					}};
 				
-				FunctionEach<Integer> readScans = new FunctionEach<Integer>(){
+				FnEach<Integer> readScans = new FnEach<Integer>(){
 
 					public void f(Integer count)
 					{
@@ -274,10 +276,9 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					}
 					catch (Exception e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						aborted();
-						return null;
+						return new Maybe<Boolean>();
 					}
 				} 
 				else if (ZipDataSource.filesMatchCriteria(files))
@@ -294,7 +295,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					{
 						e.printStackTrace();
 						aborted();
-						return null;
+						return new Maybe<Boolean>();
 					}
 				}
 				else if (XMLDataSource.filesMatchCriteria(files))
@@ -313,10 +314,16 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				reading.advanceState();
 				
-				if (dataSource == null || isAborted.f()) 
+				if (dataSource == null) 
 				{
 					aborted();
-					return null;
+					return new Maybe<Boolean>();
+				}
+				
+				if (isAborted.f())
+				{
+					aborted();
+					return new Maybe<Boolean>(false);
 				}
 				
 				applying.setWorkUnits(dataSource.getScanCount());
@@ -330,7 +337,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				applying.workUnitCompleted();
 				applying.advanceState();
 				
-				return true;
+				return new Maybe<Boolean>(true);
 				
 			}
 			

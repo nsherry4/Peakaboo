@@ -7,7 +7,7 @@ import java.util.List;
 
 
 
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 import static fava.Fn.*;
 
 import peakaboo.common.DataTypeFactory;
@@ -125,7 +125,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	 */
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return map(maps, new FunctionMap<MapResult, TransitionSeries>() {
+		return map(maps, new FnMap<MapResult, TransitionSeries>() {
 			
 			public TransitionSeries f(MapResult mr) {
 				return mr.transitionSeries;

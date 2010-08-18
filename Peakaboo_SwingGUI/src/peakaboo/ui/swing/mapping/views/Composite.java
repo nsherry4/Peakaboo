@@ -47,19 +47,11 @@ public class Composite extends JPanel {
 		maingbc.ipady = 0;
 		
 
-		/*maingbc.weightx = 1.0;
-		maingbc.weighty = 0.0;
-		maingbc.fill = GridBagConstraints.HORIZONTAL;
-		maingbc.gridx = 0;
-		maingbc.gridy = 0;
-		add(createScaleOptions(), maingbc);*/
-
 		maingbc.gridx = 0;
 		maingbc.gridy = 0;		
 		maingbc.weightx = 1.0;
 		maingbc.weighty = 1.0;
 		maingbc.fill = GridBagConstraints.BOTH;
-		//maingbc.gridy+=1;
 		add(createElementsList(), maingbc);
 		
 		controller.addListener(new EventfulTypeListener<String>() {
@@ -141,7 +133,6 @@ public class Composite extends JPanel {
 					Boolean bvalue = (Boolean) value;
 					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
 					controller.setTransitionSeriesVisibility(ts, bvalue);
-					//controller.getActiveTabModel().mapResults.getMap(rowIndex).visible = bvalue;
 					controller.invalidateInterpolation();
 				}
 			}
@@ -220,7 +211,6 @@ public class Composite extends JPanel {
 
 		JScrollPane scroll = new JScrollPane(table);
 
-		scroll.setPreferredSize(new Dimension(200, scroll.getPreferredSize().height));
 
 		return scroll;
 

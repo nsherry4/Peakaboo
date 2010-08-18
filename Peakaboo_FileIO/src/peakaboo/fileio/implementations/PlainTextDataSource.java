@@ -11,9 +11,9 @@ import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
 import fava.Fn;
 import fava.datatypes.Range;
-import fava.signatures.FunctionEach;
-import fava.signatures.FunctionGet;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnEach;
+import fava.signatures.FnGet;
+import fava.signatures.FnMap;
 
 import scitypes.Spectrum;
 import scitypes.filebacked.FileBackedList;
@@ -22,14 +22,14 @@ import scitypes.filebacked.FileBackedList;
 public class PlainTextDataSource implements DataSource
 {
 
-	FunctionGet<Boolean>						isAborted;
-	FunctionEach<Integer>						readScanCallback;
+	FnGet<Boolean>						isAborted;
+	FnEach<Integer>						readScanCallback;
 	FileBackedList<Spectrum>					scandata;
 	
 
 	String										datasetName;
 	
-	public PlainTextDataSource(AbstractFile file, FunctionEach<Integer> readScanCallback, FunctionGet<Boolean> isAborted) throws Exception
+	public PlainTextDataSource(AbstractFile file, FnEach<Integer> readScanCallback, FnGet<Boolean> isAborted) throws Exception
 	{
 		
 		this.readScanCallback = readScanCallback;
@@ -51,7 +51,7 @@ public class PlainTextDataSource implements DataSource
 			if (line == null || isAborted.f()) break;
 			
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(Fn.map(line.split("\\D"), new FunctionMap<String, Float>(){
+			Spectrum scan = new Spectrum(Fn.map(line.split("\\D"), new FnMap<String, Float>(){
 
 				public Float f(String s)
 				{
@@ -100,7 +100,7 @@ public class PlainTextDataSource implements DataSource
 
 	public List<String> getScanNames()
 	{
-		return Fn.map(new Range(0, scandata.size()-1), new FunctionMap<Integer, String>(){
+		return Fn.map(new Range(0, scandata.size()-1), new FnMap<Integer, String>(){
 
 			public String f(Integer element)
 			{

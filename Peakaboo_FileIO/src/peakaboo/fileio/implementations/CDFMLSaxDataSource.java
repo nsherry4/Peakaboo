@@ -3,25 +3,15 @@ package peakaboo.fileio.implementations;
 
 
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.DefaultHandler2;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import commonenvironment.AbstractFile;
 
-import fava.Fn;
-import fava.Functions;
+
 import fava.datatypes.Bounds;
-import fava.datatypes.Pair;
-import fava.signatures.FunctionEach;
-import fava.signatures.FunctionGet;
-import fava.signatures.FunctionMap;
+import fava.datatypes.Range;
+import fava.signatures.FnEach;
+import fava.signatures.FnGet;
 
 
 import peakaboo.common.DataTypeFactory;
@@ -36,282 +26,114 @@ import scitypes.filebacked.FileBackedList;
 
 
 
-public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, DataSourceDimensions,
+public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataSourceDimensions,
 		DataSourceExtendedInformation
 {
 
-	
-	private static final String ABORT_MESSAGE = "Aborted by User"; 
-	
-	XMLReader									xr;
-
-	//store each tag and its attributes on the stack
-	Stack<Pair<String, Map<String, String>>>	tagStack;
-	
-	//attrName -> (entryNo -> contents)
-	Map<String, Map<Integer, String>>			attrEntries;
-	
-	//scanIndex -> (x, y, i, j, iNaught)
-	Map<Integer, ScanValues>					scanValues;
-	
-	//scanIndex -> Spectrum
-	FileBackedList<Spectrum>					scandata;
-
-	int numScans;
-	
-
-	boolean										isEntry, isRecord;
-	int											entryNo;
-
-	StringBuilder								sb;
-
-
-	Spectrum									normaliseSpectrum;
-
-
-	FunctionGet<Boolean>						isAborted;
-	FunctionEach<Integer>						getScanCountCallback;
-	FunctionEach<Integer>						readScanCallback;
+	FnEach<Integer>								getScanCountCallback;
+	FnEach<Integer>								readScanCallback;
 	int											scanReadCount;
+
+	FileBackedList<Spectrum>					correctedData;
+	Spectrum									iNaughtNormalized;
 	
 
-	String										attrPath		= CDFML.CDF_ROOT_NAME + "/" + CDFML.ATTRS_TAG + "/"
-																		+ CDFML.ATTR_TAG;
-	String										attrEntryPath	= attrPath + "/" + CDFML.ATTR_ENTRY_TAG;
-
-	String										varPath			= CDFML.CDF_ROOT_NAME + "/" + CDFML.VARS_TAG + "/"
-																		+ CDFML.VAR_TAG;
-	String										varDataPath		= varPath + "/" + CDFML.VAR_DATA_TAG;
-	String										varRecordPath	= varDataPath + "/" + CDFML.VAR_DATA_RECORD_TAG;
-
-	String										varSpectrumInfo = varPath + "/" + CDFML.VAR_INFO_TAG;
-	
-	
-
-	public CDFMLSaxDataSource(AbstractFile file, FunctionEach<Integer> getScanCountCallback, FunctionEach<Integer> readScanCallback, FunctionGet<Boolean> isAborted) throws Exception
+	public CDFMLSaxDataSource(AbstractFile file, FnEach<Integer> getScanCountCallback, FnEach<Integer> readScanCallback, FnGet<Boolean> isAborted) throws Exception
 	{
 		super();
 		
-		this.getScanCountCallback = getScanCountCallback;
 		this.readScanCallback = readScanCallback;
-		this.isAborted = isAborted;
+		this.getScanCountCallback = getScanCountCallback;
 		
-		attrEntries = DataTypeFactory.<String, Map<Integer, String>> map();
-		tagStack = new Stack<Pair<String, Map<String, String>>>();
-		scanValues = DataTypeFactory.<Integer, ScanValues> map();
-
-		scandata = new FileBackedList<Spectrum>("Peakaboo");
+		read(file, isAborted);
 		
-		try
-		{
+		correctedData = new FileBackedList<Spectrum>("corrected data");
 
-			
-
-
-			xr = XMLReaderFactory.createXMLReader();
-			xr.setContentHandler(this);
-			xr.setErrorHandler(this);
-
-			xr.parse(new InputSource(file.getInputStream()));
-
-		}
-		catch (SAXException e)
-		{
-			if (! e.getMessage().equals(ABORT_MESSAGE)) throw new Exception();
-		}
 	}
-
-	@Override
-	public void startDocument()
+	
+	
+	private boolean isNewVersion()
 	{
-		scanReadCount = 0;
+		if (hasVar(CDFML.VAR_MCA_SPECTRUM)) return true;
+		return false;
 	}
-
-	@Override
-	public void endDocument()
+	
+	private int numElements()
 	{
-		if (readScanCallback != null) readScanCallback.f(scanReadCount);
-		calcNormalisationData();
+		if (isNewVersion())
+			return getAttrInt(CDFML.ATTR_MCA_NUM_ELEMENTS, 0);
+		else
+			return 1;
 	}
-
-
-	private String currentPath()
-	{	
-		
-		return (Fn.foldl(Fn.map(tagStack, new FunctionMap<Pair<String, Map<String, String>>, String>() {
-
-			
-			public String f(Pair<String, Map<String, String>> element)
-			{
-				return element.first;
+	
+	private Spectrum getScan(int element, int index)
+	{
+		if (hasVar(CDFML.VAR_MCA_SPECTRUM)) {
+			if (numElements() == 1 && element == 1){
+				return getVarSpectra(CDFML.VAR_MCA_SPECTRUM).get(index);
 			}
-		}), Functions.strcat("/"))).replace('\n', '\000');
+			return getVarSpectra(CDFML.VAR_MCA_SPECTRUM + element).get(index);	
+		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) {
+			return getVarSpectra(CDFML.VAR_XRF_SPECTRUMS).get(index);
+		} else {
+			return null;
+		}
 		
 	}
-
-
-	private void addTagToPath(String name, Attributes atts)
+	
+	private Spectrum getScan(int index)
 	{
-		Map<String, String> attMap = DataTypeFactory.<String, String> map();
-		for (int i = 0; i < atts.getLength(); i++)
-		{
-			attMap.put(atts.getLocalName(i), atts.getValue(i));
-		}
-
-		tagStack.push(new Pair<String, Map<String, String>>(name, attMap));
+		return getScan(1, index);
 	}
-
-	@Override
-	public void startElement(String uri, String name, String qName, Attributes atts)
+	
+	private Float getDeadtime(int index)
 	{
-
-
-		addTagToPath(name, atts);
-		String tag = currentPath();
-
-		isEntry = false;
-		isRecord = false;
-
-		if (tag.equals(attrEntryPath))
-		{
-			//this is an attribute entry
-			isEntry = true;
-			entryNo = Integer.parseInt(atts.getValue(CDFML.ATTR_ENTRY_TAG_NUM));
+		return getDeadtime(1, index);
+	}
+	private Float getDeadtime(int element, int index)
+	{
+		if (hasVar(CDFML.VAR_MCA_DEADTIME)) {
+			if (numElements() == 1 && element == 1){
+				return getVarFloats(CDFML.VAR_MCA_DEADTIME).get(index);
+			}
+			return getVarFloats(CDFML.VAR_MCA_DEADTIME + element).get(index);	
+		} else {
+			return 0f;
 		}
-		else if (tag.equals(varRecordPath))
+		
+	}
+	
+	private Float getINaught(int index)
+	{
+		if (!hasVar(CDFML.VAR_NORMALISE)) return 1f;
+		
+		if (iNaughtNormalized == null) {
+			iNaughtNormalized = SpectrumCalculations.normalize(new Spectrum(getVarFloats(CDFML.VAR_NORMALISE)));
+		}
+		
+		return iNaughtNormalized.get(index);
+		
+	}
+	
+	private int numScans()
+	{
+		if (hasVar(CDFML.VAR_MCA_SPECTRUM))
 		{
-			//this is a variable record
-			isRecord = true;
-			entryNo = Integer.parseInt(atts.getValue(CDFML.VAR_DATA_RECORD_NAME_ATTR));
-		} else if (tag.equals(varSpectrumInfo)){
+			return getVarAttrInt(CDFML.VAR_MCA_SPECTRUM, CDFML.XML_ATTR_NUMRECORDS);
 			
-			//this is a cdfVarInfo tag
+		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) 
+		{
+			return getVarAttrInt(CDFML.VAR_XRF_SPECTRUMS, CDFML.XML_ATTR_NUMRECORDS);
 			
-			if (CDFML.SPECTRUMS.equals(  tagStack.get(tagStack.size() - 2).second.get(CDFML.ATTR_NAME_ATTR)  ))
-			{
-				//this is the cdfVarInfo tag for the XRF:Spectrum variable
-				numScans = Integer.parseInt(atts.getValue(CDFML.ATTR_NUMRECORDS_ATTR));
-				if (getScanCountCallback != null) getScanCountCallback.f(numScans);
-			}
-			
-		}
-
-		//create a new string builder for the data we are about to receive
-		sb = new StringBuilder();
-
-	}
-
-	@Override
-	public void characters(char ch[], int start, int length)
-	{
-
-		if (isRecord || isEntry)
+		} else 
 		{
-			for (int i = start; i < start + length; i++)
-			{
-				sb.append(ch[i]);
-			}
+			return 0;
 		}
-
 	}
+	
 
-	@Override
-	public void endElement(String uri, String name, String qName) throws SAXException
-	{
-
-		if (isEntry)
-		{
-
-			//get the attribute tag data.
-			//we store a map of attr-tag-name -> map<integer, string> to keep track of entrynum/value for each attribute 
-			Map<String, String> attrTagAttributes = tagStack.get(tagStack.size() - 2).second;
-			String attrTagName = attrTagAttributes.get(CDFML.VAR_TAG_ATTR_NAME);
-
-			//loop up the map of entries for this attr name, create it if it doesnt exist yet
-			Map<Integer, String> entryList = attrEntries.get(attrTagName);
-			if (entryList == null)
-			{
-				entryList = DataTypeFactory.<Integer, String> map();
-				attrEntries.put(attrTagName, entryList);
-			}
-
-			entryList.put(entryNo, sb.toString());
-
-		}
-		else if (isRecord)
-		{
-			//get the name of the variable that this record belongs to
-			String variableName = tagStack.get(tagStack.size() - 3).second.get(CDFML.VAR_TAG_ATTR_NAME);
-
-			ScanValues sv = scanValues.get(entryNo);
-			if (sv == null)
-			{
-				sv = new ScanValues();
-				scanValues.put(entryNo, sv);
-			}
-
-			if (CDFML.X_POSITONS.equals(variableName)) sv.xpos = Float.parseFloat(sb.toString());
-			if (CDFML.Y_POSITONS.equals(variableName)) sv.ypos = Float.parseFloat(sb.toString());
-			if (CDFML.X_INDEX.equals(variableName)) sv.xind = Integer.parseInt(sb.toString());
-			if (CDFML.Y_INDEX.equals(variableName)) sv.yind = Integer.parseInt(sb.toString());
-			if (CDFML.NORMALISE.equals(variableName)) sv.iNaught = Float.parseFloat(sb.toString());
-
-			if (CDFML.SPECTRUMS.equals(variableName))
-			{
-				scandata.set(entryNo, getSpectrumFromString(sb.toString()));
-				scanReadCount++;
-				if (scanReadCount == 100) 
-				{
-					if (isAborted != null && isAborted.f())
-					{
-						throw new SAXException(ABORT_MESSAGE);
-					}
-					if (readScanCallback != null) readScanCallback.f(scanReadCount);
-					scanReadCount = 0;
-				}
-			}
-
-		}
-
-		tagStack.pop();
-
-		isRecord = false;
-		isEntry = false;
-
-		/*
-		if ("".equals(uri)) System.out.println("End element: " + qName);
-		else System.out.println("End element:   {" + uri + "}" + name);
-		*/
-	}
-
-
-	private Map<Integer, String> getEntriesForAttr(String attr)
-	{
-		return attrEntries.get(attr);
-	}
-
-
-	private String getEntryForAttr(String attr, int entry)
-	{
-		Map<Integer, String> entries = getEntriesForAttr(attr);
-		if (entries == null) return null;
-		return entries.get(entry);
-	}
-
-
-	private Spectrum getSpectrumFromString(String scanString)
-	{
-		String[] scanPoints = scanString.split(" ");
-		Spectrum results = new Spectrum(scanPoints.length);
-		for (int i = 0; i < scanPoints.length; i++)
-		{
-			results.set(i, Float.parseFloat(scanPoints[i]));
-		}
-		return results;
-	}
-
-
-
+	
+	
 
 	////////////////////////////////////////////////////////////
 	// VARIABLES DATA
@@ -328,21 +150,71 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	
 	public Spectrum getScanAtIndex(int index)
 	{
-		Spectrum s = scandata.get(index);
+		Spectrum s, s2;
+		
+		//if this is a multi-element data set, we store the averaged data in the 0th index list
+		//and the individual spectra in indices 1-N. The first time this data is accessed, the
+		//0th index value will be empty, because we won't have calcualted it yet.
+		if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() > 1)
+		{
+			
+			
+			s = new Spectrum(getScan(1, 0).size());
+			for (Integer i : new Range(1, numElements()))
+			{
+				
+				s2 = getScan(1, index);
+				
+				//divide by deadtime percent if not 0
+				if (getDeadtime(i, index) != 0) {
+					SpectrumCalculations.divideBy_inplace(s2, getDeadtime(i, index));
+				}
+				//add the adjusted value to the total
+				SpectrumCalculations.addLists_inplace(s, s2);
+				
+				
+			}
+			
+			float iNaught = getINaught(index);
 
-		float iNaught = getNormalisationData().get(index);
+			if (iNaught != 0) SpectrumCalculations.divideBy_inplace(s, iNaught);
+			else SpectrumCalculations.multiplyBy(s, 0);
+			
+			//commit the newly calculated value to the dataset
+			correctedData.set(index, s);
+			
+			
+			
+		} else if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() == 1) {
+			
+			
+			s = new Spectrum(getScan(index));
+			
+			//adjust for deadtime
+			if (getDeadtime(index) != 0){
+				SpectrumCalculations.divideBy_inplace(s, getDeadtime(index));
+			}
+			
+			
+			float iNaught = getINaught(index);
 
-		if (iNaught != 0) SpectrumCalculations.divideBy_inplace(s, iNaught);
-		else SpectrumCalculations.multiplyBy(s, 0);
+			if (iNaught != 0) SpectrumCalculations.divideBy_inplace(s, iNaught);
+			else SpectrumCalculations.multiplyBy(s, 0);
+			
+			//commit the newly calculated value to the dataset
+			correctedData.set(index, s);	
+			
+		}
+		
 
-		return s;
-
+		return correctedData.get(index);
+		
 	}
 
 	
 	public int getScanCount()
 	{
-		return numScans;
+		return numScans();
 	}
 	
 	public int getExpectedScanCount()
@@ -356,13 +228,23 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	{
 		Coord<Number> dims = new Coord<Number>(0, 0);
 
-		dims.x = scanValues.get(index).xpos;
-		dims.y = scanValues.get(index).ypos;
+		
+		
+		dims.x =  getVarFloats(CDFML.VAR_X_POSITONS).get(index);
+		dims.y = getVarFloats(CDFML.VAR_Y_POSITONS).get(index);
 		return dims;
 
 	}
 
 
+	
+	
+	
+	
+	
+	
+	
+	
 
 	////////////////////////////////////////////////////////////
 	// ATTRIBUTE DATA
@@ -372,9 +254,9 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 	public String getDatasetName()
 	{
-		String Project = getEntryForAttr(CDFML.ATTR_PROJECT_NAME, 0);
-		String DatasetName = getEntryForAttr(CDFML.ATTR_DATASET_NAME, 0);
-		String SampleName = getEntryForAttr(CDFML.ATTR_SAMPLE_NAME, 0);
+		String Project = getAttr(CDFML.ATTR_PROJECT_NAME, 0);
+		String DatasetName = getAttr(CDFML.ATTR_DATASET_NAME, 0);
+		String SampleName = getAttr(CDFML.ATTR_SAMPLE_NAME, 0);
 
 		String name = "";
 
@@ -395,8 +277,18 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	
 	public float getMaxEnergy()
 	{
-		String maxEnergyValue = getEntryForAttr(CDFML.ATTR_MAX_ENERGY, 0);
-		if (maxEnergyValue == null) return 20.48f;
+		
+		String maxEnergyValue;
+		
+		if (hasAttr(CDFML.ATTR_MCA_MAX_ENERGY)) {
+			maxEnergyValue = getAttr(CDFML.ATTR_MCA_MAX_ENERGY, 0);
+		} else if (hasAttr(CDFML.ATTR_XRF_MAX_ENERGY)) {
+			maxEnergyValue = getAttr(CDFML.ATTR_XRF_MAX_ENERGY, 0);
+		} else {
+			return 0f;
+		}
+		if (maxEnergyValue == null) return 0f;
+		
 		return Float.parseFloat(maxEnergyValue) / 1000.0f;
 	}
 
@@ -417,14 +309,14 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 
 	private int getDataWidth()
 	{
-		int width = Integer.parseInt(getEntryForAttr(CDFML.ATTR_DATAX, 0));
+		int width = Integer.parseInt(getAttr(CDFML.ATTR_DATA_X, 0));
 		return width;
 	}
 
 
 	private int getDataHeight()
 	{
-		int height = Integer.parseInt(getEntryForAttr(CDFML.ATTR_DATAY, 0));
+		int height = Integer.parseInt(getAttr(CDFML.ATTR_DATA_Y, 0));
 		return height;
 	}
 
@@ -443,10 +335,10 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	{
 		float x1, x2, y1, y2;
 
-		x1 = Float.parseFloat(getEntryForAttr(CDFML.ATTR_DIM_X_START, 0));
-		x2 = Float.parseFloat(getEntryForAttr(CDFML.ATTR_DIM_X_END, 0));
-		y1 = Float.parseFloat(getEntryForAttr(CDFML.ATTR_DIM_Y_START, 0));
-		y2 = Float.parseFloat(getEntryForAttr(CDFML.ATTR_DIM_Y_END, 0));
+		x1 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_X_START, 0));
+		x2 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_X_END, 0));
+		y1 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_Y_START, 0));
+		y2 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_Y_END, 0));
 
 
 		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
@@ -458,7 +350,7 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	
 	public String getRealDimensionsUnit()
 	{
-		return getEntryForAttr(CDFML.ATTR_DIM_X_START, 1);
+		return getAttr(CDFML.ATTR_DIM_X_START, 1);
 	}
 
 
@@ -466,80 +358,80 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	
 	public String getCreationTime()
 	{
-		return getEntryForAttr(CDFML.ATTR_CREATION_TIME, 0);
+		return getAttr(CDFML.ATTR_CREATION_TIME, 0);
 	}
 
 
 	public String getCreator()
 	{
-		return getEntryForAttr(CDFML.ATTR_CREATOR, 0);
+		return getAttr(CDFML.ATTR_CREATOR, 0);
 	}
 
 
 	public String getEndTime()
 	{
-		return getEntryForAttr(CDFML.ATTR_END_TIME, 0);
+		return getAttr(CDFML.ATTR_END_TIME, 0);
 	}
 
 
 
 	public String getExperimentName()
 	{
-		return getEntryForAttr(CDFML.ATTR_EXPERIMENT_NAME, 0);
+		return getAttr(CDFML.ATTR_EXPERIMENT_NAME, 0);
 	}
 
 
 	public String getFacilityName()
 	{
-		return getEntryForAttr(CDFML.ATTR_FACILITY, 0);
+		return getAttr(CDFML.ATTR_FACILITY, 0);
 	}
 
 
 	public String getInstrumentName()
 	{
-		return getEntryForAttr(CDFML.ATTR_INSTRUMENT, 0);
+		return getAttr(CDFML.ATTR_INSTRUMENT, 0);
 	}
 
 
 	public String getLaboratoryName()
 	{
-		return getEntryForAttr(CDFML.ATTR_LABORATORY, 0);
+		return getAttr(CDFML.ATTR_LABORATORY, 0);
 	}
 
 
 	public String getProjectName()
 	{
-		return getEntryForAttr(CDFML.ATTR_PROJECT_NAME, 0);
+		return getAttr(CDFML.ATTR_PROJECT_NAME, 0);
 	}
 
 
 	public String getSampleName()
 	{
-		return getEntryForAttr(CDFML.ATTR_SAMPLE_NAME, 0);
+		return getAttr(CDFML.ATTR_SAMPLE_NAME, 0);
 	}
 
 
 	public String getScanName()
 	{
-		return getEntryForAttr(CDFML.ATTR_DATASET_NAME, 0);
+		return getAttr(CDFML.ATTR_DATASET_NAME, 0);
 	}
 
 
 	public String getSessionName()
 	{
-		return getEntryForAttr(CDFML.ATTR_SESSION_NAME, 0);
+		return getAttr(CDFML.ATTR_SESSION_NAME, 0);
 	}
 
 
 	public String getStartTime()
 	{
-		return getEntryForAttr(CDFML.ATTR_START_TIME, 0);
+		return getAttr(CDFML.ATTR_START_TIME, 0);
 	}
 
 
 	public String getTechniqueName()
 	{
-		return getEntryForAttr(CDFML.ATTR_TECHNIQUE, 0);
+		return getAttr(CDFML.ATTR_TECHNIQUE, 0);
 	}
 
 
@@ -549,25 +441,6 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 		return true;
 	}
 
-
-	private void calcNormalisationData()
-	{
-		normaliseSpectrum = new Spectrum(getScanCount());
-
-		for (int i = 0; i < getScanCount(); i++)
-		{
-			normaliseSpectrum.set(i, scanValues.get(i).iNaught);
-		}
-
-		SpectrumCalculations.normalize_inplace(normaliseSpectrum);
-
-	}
-
-
-	public Spectrum getNormalisationData()
-	{
-		return normaliseSpectrum;
-	}
 
 	public boolean hasRealDimensions()
 	{
@@ -586,16 +459,40 @@ public class CDFMLSaxDataSource extends DefaultHandler2 implements DataSource, D
 	{
 		return "xml";
 	}
+
+
+	@Override
+	protected void processedSpectrum(String varname)
+	{
+		//if this is the first scan we're looking at
+		if (scanReadCount == 0) {
+			
+			//new version and old version have different criteria for determining how many scans
+			if (isNewVersion()) {
+			
+				//we assume that all recordsets have the same length here, and require that both that and the NElements attribute be present
+				if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS) && hasAttr(CDFML.ATTR_MCA_NUM_ELEMENTS)) {
+					getScanCountCallback.f(
+							getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS) * 
+							getAttrInt(CDFML.ATTR_MCA_NUM_ELEMENTS, 0)
+						);
+				}
+					
+			} else {
+				
+				System.out.println(getScanCountCallback);
+				
+				//we assume that in the older version, there will be only one spectrum recordset
+				if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS)) {
+					getScanCountCallback.f(getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS));
+				}
+				
+			}
+		}
+		
+		scanReadCount++;
+		readScanCallback.f(1);
+		
+	}
 	
-}
-
-
-
-class ScanValues
-{
-
-	public float	xpos, ypos;
-	public int		xind, yind;
-	public float	iNaught;
-
 }

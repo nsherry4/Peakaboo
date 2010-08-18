@@ -20,79 +20,89 @@ public class CDFML
 {
 
 	// CDFML Markers
-	public static final String	CDF_ROOT_NAME				= "CDF";
-	public static final String	CDF_TECHNIQUE_XRF			= "XRF";
+	public static final String	CDF_ROOT_NAME			= "CDF";
+	public static final String	CDF_TECHNIQUE_XRF		= "XRF";
 
+	//Attributes
+	public static final String	XML_ATTR_NAME			= "name";
+	public static final String	XML_ATTR_NUMRECORDS		= "numRecordsAllocate";
+	public static final String  XML_ATTR_ENTRYNUM		= "entryNum";
+	public static final String	XML_ATTR_RECORD_NUMBER	= "recNum";
 
-	// CDFML Tags/Attributes for CDF Attributes
-	public static final String	ATTRS_TAG					= "cdfGAttributes";
-	public static final String	ATTR_TAG					= "attribute";
-	public static final String	ATTR_ENTRY_TAG				= "entry";
-	public static final String	ATTR_NAME_ATTR				= "name";
-	public static final String	ATTR_NUMRECORDS_ATTR		= "numRecordsAllocate";
-	public static final String  ATTR_ENTRY_TAG_NUM			= "entryNum";
+	
+	// CDFML Tags for CDF Attributes
+	public static final String	TAG_ATTRS				= "cdfGAttributes";
+	public static final String	TAG_ATTR				= "attribute";
+	public static final String	TAG_ENTRY				= "entry";
+	
 
-
-	// CDFML Tags/Attributes for CDF Variables
-	public static final String	VARS_TAG					= "cdfVariables";
-	public static final String	VAR_TAG						= "variable";
-	public static final String	VAR_DATA_TAG				= "cdfVarData";
-	public static final String	VAR_INFO_TAG				= "cdfVarInfo";
-	public static final String	VAR_TAG_ATTR_NAME			= "name";
-	public static final String	VAR_DATA_RECORD_TAG			= "record";
-	public static final String	VAR_DATA_RECORD_NAME_ATTR	= "recNum";
+	// CDFML Tags for CDF Variables
+	public static final String	TAG_VARS				= "cdfVariables";
+	public static final String	TAG_VAR					= "variable";
+	public static final String	TAG_VAR_DATA			= "cdfVarData";
+	public static final String	TAG_VAR_INFO			= "cdfVarInfo";
+	public static final String	TAG_VAR_RECORD			= "record";
 
 
 
 	// CDF Variable & Attribute Names
 
 	// Variables
-	public static final String	X_POSITONS					= "MapXY:X";
-	public static final String	Y_POSITONS					= "MapXY:Y";
-	public static final String	X_INDEX						= "MapXY:I";
-	public static final String	Y_INDEX						= "MapXY:J";
-	public static final String	SPECTRUMS					= "XRF:Spectrum";
-	public static final String  NORMALISE					= "BeamI:I0";
+	public static final String	VAR_X_POSITONS			= "MapXY:X";
+	public static final String	VAR_Y_POSITONS			= "MapXY:Y";
+	public static final String	VAR_X_INDEX				= "MapXY:I";
+	public static final String	VAR_Y_INDEX				= "MapXY:J";
+	public static final String  VAR_NORMALISE			= "BeamI:I0";
 
+	//Old "XRF" Spectrum Data
+	public static final String	TOC_XRF					= "XRF:1.0";
+	public static final String	ATTR_XRF_MAX_ENERGY		= "XRF:MaxEnergy";
+	public static final String	VAR_XRF_SPECTRUMS		= "XRF:Spectrum";
+	
+	//new "MCA" Spectrum Data
+	public static final String 	TOC_MCA					= "MCA:1.0";
+	public static final String	ATTR_MCA_MAX_ENERGY		= "MCA:MaxEnergy";
+	public static final String	ATTR_MCA_NUM_ELEMENTS	= "MCA:NElements";
+	public static final String	VAR_MCA_DEADTIME		= "MCA:DeadTimePct";
+	public static final String	VAR_MCA_SPECTRUM		= "MCA:Spectrum";
+	
+	
 	// Attributes
-	public static final String	ATTR_TOC					= "ScienceStudio";
-	public static final String	TOC_MAP						= "MapXY:1.0";
-	public static final String	TOC_XRF						= "XRF:1.0";
-	public static final String	TOC_MODEL					= "SSModel:1.0";
+	public static final String	ATTR_TOC				= "ScienceStudio";
+	public static final String	TOC_MAP					= "MapXY:1.0";
+	public static final String	TOC_MODEL				= "SSModel:1.0";
 	
-	public static final String	ATTR_DATAX					= "MapXY:SizeX";
-	public static final String	ATTR_DATAY					= "MapXY:SizeY";
-	public static final String	ATTR_DIM_X_START			= "MapXY:StartX";
-	public static final String	ATTR_DIM_X_END				= "MapXY:EndX";
-	public static final String	ATTR_DIM_Y_START			= "MapXY:StartY";
-	public static final String	ATTR_DIM_Y_END				= "MapXY:EndY";
+	public static final String	ATTR_DATA_X				= "MapXY:SizeX";
+	public static final String	ATTR_DATA_Y				= "MapXY:SizeY";
+	public static final String	ATTR_DIM_X_START		= "MapXY:StartX";
+	public static final String	ATTR_DIM_X_END			= "MapXY:EndX";
+	public static final String	ATTR_DIM_Y_START		= "MapXY:StartY";
+	public static final String	ATTR_DIM_Y_END			= "MapXY:EndY";
 	
-	public static final String	ATTR_CREATION_TIME			= "SS:Created";
-	public static final String	ATTR_CREATOR				= "SS:CreatedBy";
+	public static final String	ATTR_CREATION_TIME		= "SS:Created";
+	public static final String	ATTR_CREATOR			= "SS:CreatedBy";
 	
-	public static final String	ATTR_PROJECT_NAME			= "SSModel:ProjectName";
-	public static final String	ATTR_SESSION_NAME			= "SSModel:SessionName";
-	public static final String	ATTR_FACILITY				= "SSModel:Facility";
-	public static final String	ATTR_LABORATORY				= "SSModel:Laboratory";
-	public static final String	ATTR_EXPERIMENT_NAME		= "SSModel:ExperimentName";
-	public static final String	ATTR_INSTRUMENT				= "SSModel:Instrument";
-	public static final String	ATTR_TECHNIQUE				= "SSModel:Technique";
-	public static final String	ATTR_DATASET_NAME			= "SSModel:ScanName";
-	public static final String	ATTR_SAMPLE_NAME			= "SSModel:SampleName";
+	public static final String	ATTR_PROJECT_NAME		= "SSModel:ProjectName";
+	public static final String	ATTR_SESSION_NAME		= "SSModel:SessionName";
+	public static final String	ATTR_FACILITY			= "SSModel:Facility";
+	public static final String	ATTR_LABORATORY			= "SSModel:Laboratory";
+	public static final String	ATTR_EXPERIMENT_NAME	= "SSModel:ExperimentName";
+	public static final String	ATTR_INSTRUMENT			= "SSModel:Instrument";
+	public static final String	ATTR_TECHNIQUE			= "SSModel:Technique";
+	public static final String	ATTR_DATASET_NAME		= "SSModel:ScanName";
+	public static final String	ATTR_SAMPLE_NAME		= "SSModel:SampleName";
 	
-	public static final String	ATTR_MAX_ENERGY				= "XRF:MaxEnergy";
-	
-	public static final String	ATTR_START_TIME				= "Scan:StartTime";
-	public static final String	ATTR_END_TIME				= "Scan:EndTime";
+	public static final String	ATTR_START_TIME			= "Scan:StartTime";
+	public static final String	ATTR_END_TIME			= "Scan:EndTime";
 
 	
 	
 
 	public static Element getAttributeElement(Element root, String attributeName){
 		
-		Element attrs = (Element) root.getElementsByTagName(ATTRS_TAG).item(0);
+		Element attrs = (Element) root.getElementsByTagName(TAG_ATTRS).item(0);
 		
-		Element pxAttr = getElementFromSetByAttribute(attrs.getElementsByTagName(ATTR_TAG), ATTR_NAME_ATTR,
+		Element pxAttr = getElementFromSetByAttribute(attrs.getElementsByTagName(TAG_ATTR), XML_ATTR_NAME,
 				attributeName);
 		if (pxAttr == null) return null;
 		
@@ -106,7 +116,7 @@ public class CDFML
 		Element pxAttr = getAttributeElement(root, attributeName);
 		if (pxAttr == null) return null;
 		
-		NodeList entries = pxAttr.getElementsByTagName(ATTR_ENTRY_TAG);
+		NodeList entries = pxAttr.getElementsByTagName(TAG_ENTRY);
 
 		Node entry = entries.item(entryNumber);
 		if (entry == null) return null;
@@ -123,7 +133,7 @@ public class CDFML
 		Element pxAttr = getAttributeElement(root, attributeName);
 		if (pxAttr == null) return null;
 		
-		NodeList entries = pxAttr.getElementsByTagName(ATTR_ENTRY_TAG);
+		NodeList entries = pxAttr.getElementsByTagName(TAG_ENTRY);
 		
 		Node entry, value;
 		List<String> values = DataTypeFactory.<String>list();
@@ -159,14 +169,14 @@ public class CDFML
 	public static String getStringRecordFromVariableData(Element variableData, int recordNumber)
 	{
 
-		NodeList records = variableData.getElementsByTagName(VAR_DATA_RECORD_TAG);
+		NodeList records = variableData.getElementsByTagName(TAG_VAR_RECORD);
 
 		Element recElement;
 		int curRecNum;
 
 		for (int i = 0; i < records.getLength(); i++) {
 			recElement = (Element) records.item(i);
-			curRecNum = Integer.parseInt(recElement.getAttribute(VAR_DATA_RECORD_NAME_ATTR));
+			curRecNum = Integer.parseInt(recElement.getAttribute(XML_ATTR_RECORD_NUMBER));
 			if (curRecNum == recordNumber) {
 
 				Node child = recElement.getFirstChild();
@@ -209,17 +219,17 @@ public class CDFML
 	{
 
 		// get the <cdfVariables> tag
-		Element variableSetTag = (Element) root.getElementsByTagName(VARS_TAG).item(0);
+		Element variableSetTag = (Element) root.getElementsByTagName(TAG_VARS).item(0);
 
 		// get the list of <variable> tags
-		NodeList variableTagList = variableSetTag.getElementsByTagName(VAR_TAG);
+		NodeList variableTagList = variableSetTag.getElementsByTagName(TAG_VAR);
 
 		Element variableElement;
 		for (int i = 0; i < variableTagList.getLength(); i++) {
 
 			variableElement = (Element) variableTagList.item(i);
 
-			if (variableName.equals(variableElement.getAttribute(VAR_TAG_ATTR_NAME))) {
+			if (variableName.equals(variableElement.getAttribute(XML_ATTR_NAME))) {
 				return variableElement;
 			}
 
@@ -232,7 +242,7 @@ public class CDFML
 
 	public static Element getDataElementFromVariableElement(Element variableElement)
 	{
-		return (Element) variableElement.getElementsByTagName(VAR_DATA_TAG).item(0);
+		return (Element) variableElement.getElementsByTagName(TAG_VAR_DATA).item(0);
 	}
 
 
@@ -261,13 +271,13 @@ public class CDFML
 		if (! components.contains(TOC_XRF)) return -7;
 		
 		//check that variables we need exist
-		if (getVariableByName(root, SPECTRUMS) == null) return -8;
-		if (getVariableByName(root, X_POSITONS) == null) return -9;
-		if (getVariableByName(root, Y_POSITONS) == null) return -10;
+		if (getVariableByName(root, VAR_XRF_SPECTRUMS) == null) return -8;
+		if (getVariableByName(root, VAR_X_POSITONS) == null) return -9;
+		if (getVariableByName(root, VAR_Y_POSITONS) == null) return -10;
 		
 		//check that attributes we need exist
-		if (getAttributeElement(root, ATTR_DATAX) == null) return -11;
-		if (getAttributeElement(root, ATTR_DATAY) == null) return -12;
+		if (getAttributeElement(root, ATTR_DATA_X) == null) return -11;
+		if (getAttributeElement(root, ATTR_DATA_Y) == null) return -12;
 		
 		if (getAttributeElement(root, ATTR_DIM_X_START) == null) return -13;
 		if (getAttributeElement(root, ATTR_DIM_X_END) == null) return -14;

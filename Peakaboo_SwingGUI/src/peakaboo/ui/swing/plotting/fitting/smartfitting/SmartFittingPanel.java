@@ -7,9 +7,10 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.util.List;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fava.signatures.FunctionEach;
+import fava.signatures.FnEach;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
@@ -24,7 +25,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 
 
 
-public class SmartFittingPanel extends ClearPanel
+public class SmartFittingPanel extends JPanel
 {
 
 	private IFittingController		controller;
@@ -84,7 +85,7 @@ public class SmartFittingPanel extends ClearPanel
 		if (mode)
 		{
 			smartWidget.setTransitionSeriesOptions(null);
-			canvas.grabChannelFromClick(new FunctionEach<Integer>() {
+			canvas.grabChannelFromClick(new FnEach<Integer>() {
 
 				public void f(Integer channel)
 				{

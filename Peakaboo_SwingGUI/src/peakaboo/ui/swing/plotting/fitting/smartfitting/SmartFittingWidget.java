@@ -9,7 +9,7 @@ import java.util.List;
 
 
 import fava.*;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
@@ -50,7 +50,7 @@ class SmartFittingWidget extends TSSelectorGroup
 	@Override
 	public List<TransitionSeries> getTransitionSeries()
 	{
-		return Fn.map(selectors, new FunctionMap<TSSelector, TransitionSeries>() {
+		return Fn.map(selectors, new FnMap<TSSelector, TransitionSeries>() {
 
 			public TransitionSeries f(TSSelector selector)
 			{

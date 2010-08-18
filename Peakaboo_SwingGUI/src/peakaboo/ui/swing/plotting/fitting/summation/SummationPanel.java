@@ -5,10 +5,11 @@ package peakaboo.ui.swing.plotting.fitting.summation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fava.Fn;
-import fava.signatures.FunctionEach;
+import fava.signatures.FnEach;
 
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
@@ -21,7 +22,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 
 
 
-public class SummationPanel extends ClearPanel
+public class SummationPanel extends JPanel
 {
 
 	protected SummationWidget	summationWidget;
@@ -49,7 +50,7 @@ public class SummationPanel extends ClearPanel
 			protected void approve()
 			{
 				//add all of the transition series that come back from the summation widget
-				Fn.each(summationWidget.getTransitionSeries(), new FunctionEach<TransitionSeries>() {
+				Fn.each(summationWidget.getTransitionSeries(), new FnEach<TransitionSeries>() {
 
 					public void f(TransitionSeries ts)
 					{

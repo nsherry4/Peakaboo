@@ -5,6 +5,7 @@ import java.util.List;
 import commonenvironment.AbstractFile;
 import eventful.IEventful;
 import fava.datatypes.Bounds;
+import fava.datatypes.Maybe;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.DataSetProvider;
@@ -25,7 +26,7 @@ public interface IDataController extends IEventful
 	
 	public void setDataSource(DataSource ds);
 	public void setDataSetProvider(DataSetProvider dsp);
-	public PluralSet<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files);
+	public PluralSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files);
 	
 	public PluralSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	

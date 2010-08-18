@@ -19,7 +19,7 @@ import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
 import eventful.EventfulListener;
 import fava.Fn;
-import fava.signatures.FunctionEach;
+import fava.signatures.FnEach;
 
 
 public abstract class TSSelectorGroup extends JPanel implements Scrollable
@@ -125,7 +125,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		if (tss == null) return;
 		
 		//add all of the transition series that come back from the summation widget
-		Fn.each(tss, new FunctionEach<TransitionSeries>() {
+		Fn.each(tss, new FnEach<TransitionSeries>() {
 
 			public void f(TransitionSeries ts)
 			{

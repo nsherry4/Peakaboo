@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+require 'fileutils'
 
 #function to extract the jar file
 def setup
@@ -6,9 +7,12 @@ def setup
 	def doSetup(jarfile, path, resources, unzip=true)
 
 		if unzip
+			FileUtils.mkdir_p(path)
 			`rm -rf #{path}`
+			FileUtils.mkdir_p(path)
 			`unzip "#{jarfile}" -d "#{path}"`
 		else
+			FileUtils.mkdir_p(path)
 			`cp "#{jarfile}" "#{path}"`
 		end
 		
@@ -51,10 +55,9 @@ def setup
 	
 	
 	#Mac OS Package
-	macpath = "./mac/Peakaboo/Peakaboo.app/Contents/MacOS"
-	macrespath = "./mac/Peakaboo/Peakaboo.app/Contents/Resources"
+	macpath = "./mac/Peakaboo/Peakaboo.app/Contents/Resources/Java"
 	
-	resources = [["mac/peakaboo", macpath], ["mac/peakaboo.icns", macrespath]]
+	resources = []
 	
 	doSetup(jarfile, macpath, resources, false)
 

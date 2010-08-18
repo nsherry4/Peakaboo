@@ -36,6 +36,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
@@ -60,6 +61,7 @@ import commonenvironment.IOOperations;
 import eventful.EventfulEnumListener;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
+import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
 
 import peakaboo.common.DataTypeFactory;
@@ -1146,7 +1148,6 @@ public class PlotPanel extends ClearPanel
 	{
 		bottomPanel = new ClearPanel();
 		bottomPanel.setBorder(Spacing.bTiny());
-
 		bottomPanel.setLayout(new BorderLayout());
 
 		channelLabel.setBorder(Spacing.bSmall());
@@ -1310,9 +1311,17 @@ public class PlotPanel extends ClearPanel
 		if (files != null)
 		{
 
-			PluralSet<Boolean> reading = dataController.TASK_readFileListAsDataset(files);
-			new PluralSetView(container, reading);
+			PluralSet<Maybe<Boolean>> reading = dataController.TASK_readFileListAsDataset(files);
+			PluralSetView view = new PluralSetView(container, reading);
+			
+			//handle some race condition where the window gets told to close too early on failure
+			//I don't think its in my code, but I don't know for sure
+			view.setVisible(false);
 
+			if (! reading.getResult().is()) {
+				JOptionPane.showMessageDialog(this, "Failed to open dataset", "Read Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+			}
+			
 			// TaskListView was blocking.. it is now closed
 			System.gc();
 

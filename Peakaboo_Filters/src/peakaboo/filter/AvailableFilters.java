@@ -11,13 +11,13 @@ import commonenvironment.Env;
 
 import fava.Fn;
 import fava.lists.FList;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 import static fava.Fn.*;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.filter.AbstractFilter.FilterType;
 import peakaboo.filter.filters.advanced.DataToWavelet;
-import peakaboo.filter.filters.advanced.Derivitive;
+import peakaboo.filter.filters.advanced.Derivative;
 import peakaboo.filter.filters.advanced.Integrate;
 import peakaboo.filter.filters.advanced.SegmentFilter;
 import peakaboo.filter.filters.advanced.SpectrumNormalization;
@@ -28,7 +28,7 @@ import peakaboo.filter.filters.arithmetic.Subtraction;
 import peakaboo.filter.filters.background.BruknerRemoval;
 import peakaboo.filter.filters.background.LinearTrimRemoval;
 import peakaboo.filter.filters.background.PolynomialRemoval;
-import peakaboo.filter.filters.noise.AgressiveWaveletNoiseFilter;
+import peakaboo.filter.filters.noise.AggressiveWaveletNoiseFilter;
 import peakaboo.filter.filters.noise.FourierLowPass;
 import peakaboo.filter.filters.noise.MovingAverage;
 import peakaboo.filter.filters.noise.SavitskyGolaySmoothing;
@@ -68,14 +68,12 @@ public class AvailableFilters
 
 		AvailableFilters.generateFilterList(),
 
-		new FunctionMap<Class<? extends AbstractFilter>, AbstractFilter>() {
+		new FnMap<Class<? extends AbstractFilter>, AbstractFilter>() {
 
 			public AbstractFilter f(Class<? extends AbstractFilter> f)
-					{
-						return AvailableFilters.createNewInstance(f);
-					}
-		}
-			);
+			{
+					return AvailableFilters.createNewInstance(f);
+			}});
 	}
 
 
@@ -86,7 +84,7 @@ public class AvailableFilters
 		Fn.filter(
 						AvailableFilters.generateFilterList(),
 
-						new FunctionMap<Class<? extends AbstractFilter>, Boolean>() {
+						new FnMap<Class<? extends AbstractFilter>, Boolean>() {
 
 							public Boolean f(Class<? extends AbstractFilter> f)
 							{
@@ -95,7 +93,7 @@ public class AvailableFilters
 						}
 				),
 
-		new FunctionMap<Class<? extends AbstractFilter>, AbstractFilter>() {
+		new FnMap<Class<? extends AbstractFilter>, AbstractFilter>() {
 
 			public AbstractFilter f(Class<? extends AbstractFilter> f)
 					{
@@ -141,7 +139,7 @@ public class AvailableFilters
 		l.add(FourierLowPass.class);
 		l.add(MovingAverage.class);
 		l.add(SavitskyGolaySmoothing.class);
-		l.add(AgressiveWaveletNoiseFilter.class);
+		l.add(AggressiveWaveletNoiseFilter.class);
 		l.add(WaveletNoiseFilter.class);
 		l.add(SpringSmoothing.class);
 
@@ -152,7 +150,7 @@ public class AvailableFilters
 
 		//advanced
 		l.add(Integrate.class);
-		l.add(Derivitive.class);
+		l.add(Derivative.class);
 		l.add(DataToWavelet.class);
 		l.add(WaveletToData.class);
 		l.add(SegmentFilter.class);
@@ -168,7 +166,7 @@ public class AvailableFilters
 
 		l,
 
-		new FunctionMap<Class<? extends AbstractFilter>, Boolean>() {
+		new FnMap<Class<? extends AbstractFilter>, Boolean>() {
 
 
 			public Boolean f(Class<? extends AbstractFilter> c)

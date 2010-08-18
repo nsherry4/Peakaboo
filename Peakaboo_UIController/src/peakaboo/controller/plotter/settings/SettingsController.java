@@ -58,6 +58,11 @@ public class SettingsController extends Eventful implements ISettingsController
 
 	public void setEnergyPerChannel(float energy)
 	{
+		if (!plot.dataController.hasDataSet() || plot.dataController.datasetScanSize() == 0)
+		{
+			return;
+		}
+		
 		plot.fittingController.setFittingParameters(energy);
 		updateListeners();
 	}

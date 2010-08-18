@@ -10,7 +10,7 @@ import peakaboo.common.DataTypeFactory;
 
 import fava.*;
 import fava.datatypes.Pair;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 import static fava.Fn.*;
 
 
@@ -84,7 +84,7 @@ public class PeakTable
 	public static List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
 
-		return filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
+		return filter(elementTransitions, new FnMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries ts)
 			{
@@ -101,7 +101,7 @@ public class PeakTable
 	
 	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
-		List<TransitionSeries> tss = filter(elementTransitions, new FunctionMap<TransitionSeries, Boolean>() {
+		List<TransitionSeries> tss = filter(elementTransitions, new FnMap<TransitionSeries, Boolean>() {
 
 			public Boolean f(TransitionSeries ts)
 			{

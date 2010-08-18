@@ -3,7 +3,7 @@ package peakaboo.filter.filters.advanced;
 import java.util.List;
 
 import fava.Fn;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnMap;
 
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.AvailableFilters;
@@ -17,7 +17,7 @@ import scitypes.Spectrum;
 public class SegmentFilter extends AbstractFilter
 {
 
-	private static final int FILTER = 0;
+	public static final int FILTER = 0;
 	private static final int START = 1;
 	private static final int END = 2;
 	
@@ -34,14 +34,15 @@ public class SegmentFilter extends AbstractFilter
 		List<AbstractFilter> filters = Fn.filter(
 				AvailableFilters.getNewInstancesForAllFilters(), 
 				
-				new FunctionMap<AbstractFilter, Boolean>() {
+				new FnMap<AbstractFilter, Boolean>() {
 
 					public Boolean f(AbstractFilter f)
 					{
-						return f.canFilterSubset();
+						return f.showFilter() && f.canFilterSubset();
 					}}
 
 		);
+		filters.add(0, new Identity());
 		
 		for (AbstractFilter f : filters)
 		{
@@ -80,13 +81,13 @@ public class SegmentFilter extends AbstractFilter
 	@Override
 	public String getFilterDescription()
 	{
-		return "";
+		return "The " + getFilterName() + " filter allows the application of another filter to a portion of a spectrum.";
 	}
 
 	@Override
 	public String getFilterName()
 	{
-		return "Partial Spectrum";
+		return "Filter Partial Spectrum";
 	}
 
 	@Override

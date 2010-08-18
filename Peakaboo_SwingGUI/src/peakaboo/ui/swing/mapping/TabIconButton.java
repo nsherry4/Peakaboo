@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.Icon;
 import javax.swing.JTabbedPane;
@@ -30,7 +31,8 @@ public class TabIconButton extends Eventful implements Icon
 	private JTabbedPane mTabbedPane = null;
 	private transient Rectangle mPosition = null;
 	
-	private MouseListener listener;
+	private MouseListener mouseListener;
+	
 	
 	/**
 	 * Creates a new instance of TabCloseIcon.
@@ -51,33 +53,57 @@ public class TabIconButton extends Eventful implements Icon
 	 */
 	public void paintIcon(Component c, Graphics g, int x, int y)
 	{
-		if( null==mTabbedPane && listener == null )
+		if( null==mTabbedPane && mouseListener == null )
 		{
 			mTabbedPane = (JTabbedPane)c;
 			
-			listener = new MouseAdapter()
-			{
-				@Override public void mouseClicked(MouseEvent e)
+			
+			
+			mouseListener = new MouseListener() {
+				
+				boolean pressed = false;;
+			
+				public void mousePressed(MouseEvent e)
+				{
+					pressed = true;
+				}
+				
+			
+				public void mouseExited(MouseEvent e)
+				{
+					
+				}
+				
+			
+				public void mouseEntered(MouseEvent e)
+				{
+					
+				}
+				
+
+				public void mouseClicked(MouseEvent e)
 				{
 					// asking for isConsumed is *very* important, otherwise more than one tab might get closed!
 					if ( mPosition.contains( e.getX(), e.getY() ) )
 					{
-						if (! e.isConsumed()) {
-							//final int index = mTabbedPane.getSelectedIndex();
-							//mTabbedPane.remove( index );
+						if (  (! e.isConsumed()) && pressed  ) {
 							e.consume();
 							updateListeners();
+							pressed = false;
 						}
 					}
 				}
 				
-				@Override public void mouseReleased( MouseEvent e )
+				public void mouseReleased( MouseEvent e )
 				{
-
+					
 				}
 			};
 			
-			mTabbedPane.addMouseListener( listener );
+
+			
+			
+			mTabbedPane.addMouseListener( mouseListener );
 		}
 		
 		mPosition = new Rectangle( x,y, getIconWidth(), getIconHeight() );
@@ -87,9 +113,9 @@ public class TabIconButton extends Eventful implements Icon
 	
 	public void detatchListener()
 	{
-		if (listener != null && mTabbedPane != null)
+		if (mouseListener != null && mTabbedPane != null)
 		{
-			mTabbedPane.removeMouseListener(listener);
+			mTabbedPane.removeMouseListener(mouseListener);
 		}
 	}
 	

@@ -2,6 +2,7 @@ package peakaboo.ui.swing.mapping;
 
 
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -59,22 +60,24 @@ public class SidePanel extends JPanel
 		setBorder(Spacing.bSmall());
 		setLayout(new GridBagLayout());
 
+		
+		
 		GridBagConstraints maingbc = new GridBagConstraints();
 		maingbc.insets = Spacing.iTiny();
 		maingbc.ipadx = 0;
 		maingbc.ipady = 0;
+		maingbc.weightx = 1;
 
+		
 		// map settings
 		maingbc.gridx = 0;
 		maingbc.gridy = 0;
-		maingbc.weightx = 0.0;
 		maingbc.weighty = 0.0;
 		maingbc.fill = GridBagConstraints.HORIZONTAL;
 		add(createMapOptions(), maingbc);
 
 		// map scale mode selector
 		maingbc.gridy += 1;
-		maingbc.weightx = 0.0;
 		maingbc.weighty = 1.0;
 		maingbc.fill = GridBagConstraints.BOTH;
 		add(new ViewsContainer(controller.getActiveTabController()), maingbc);
@@ -135,8 +138,10 @@ public class SidePanel extends JPanel
 		});
 
 		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
 		mapProperties.add(new JLabel("Width:"), c);
 		c.gridx = 1;
+		c.anchor = GridBagConstraints.LINE_END;
 		mapProperties.add(width, c);
 
 		c.gridy += 1;
@@ -151,8 +156,10 @@ public class SidePanel extends JPanel
 		});
 
 		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
 		mapProperties.add(new JLabel("Height:"), c);
 		c.gridx = 1;
+		c.anchor = GridBagConstraints.LINE_END;
 		mapProperties.add(height, c);
 
 		c.gridy += 1;
@@ -166,8 +173,10 @@ public class SidePanel extends JPanel
 			}
 		});
 		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
 		mapProperties.add(new JLabel("Interpolation Passes:"), c);
 		c.gridx = 1;
+		c.anchor = GridBagConstraints.LINE_END;
 		mapProperties.add(interpolation, c);
 
 		c.gridy += 1;
@@ -191,9 +200,12 @@ public class SidePanel extends JPanel
 				controller.mapsController.setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
 			}
 		});
+		
 		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
 		mapProperties.add(contours, c);
 		c.gridx = 1;
+		c.anchor = GridBagConstraints.LINE_END;
 		mapProperties.add(shadesSpinner, c);
 
 		return mapProperties;

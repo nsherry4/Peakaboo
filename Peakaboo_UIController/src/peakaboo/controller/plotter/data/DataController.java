@@ -24,6 +24,7 @@ import commonenvironment.AbstractFile;
 import eventful.Eventful;
 import eventful.EventfulListener;
 import fava.datatypes.Bounds;
+import fava.datatypes.Maybe;
 
 
 public class DataController extends Eventful implements IDataController
@@ -51,12 +52,12 @@ public class DataController extends Eventful implements IDataController
 	// Functions to implement IDataController
 	// =============================================
 	
-	public PluralSet<Boolean> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public PluralSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
-		final PluralSet<Boolean> readTasks = dataset.TASK_readFileListAsDataset(files);
+		final PluralSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 
 		

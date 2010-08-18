@@ -19,8 +19,8 @@ import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
-import fava.signatures.FunctionCombine;
-import fava.signatures.FunctionMap;
+import fava.signatures.FnCombine;
+import fava.signatures.FnMap;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.Surface.CompositeModes;
@@ -93,11 +93,11 @@ public class MapCanvas extends GraphicsPanel
 	
 	
 
-	public Coord<Integer> getMapCoordinateAtPoint(float x, float y)
+	public Coord<Integer> getMapCoordinateAtPoint(float x, float y, boolean allowOutOfBounds)
 	{
 
 		if (map == null) return null;
-		return map.getMapCoordinateAtPoint(x, y);
+		return map.getMapCoordinateAtPoint(x, y, allowOutOfBounds);
 
 	}
 
@@ -262,7 +262,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
-		List<Integer> ratioSideValues = unique(map(tabController.getVisibleTransitionSeries(), new FunctionMap<TransitionSeries, Integer>() {
+		List<Integer> ratioSideValues = unique(map(tabController.getVisibleTransitionSeries(), new FnMap<TransitionSeries, Integer>() {
 
 			public Integer f(TransitionSeries ts)
 			{
@@ -372,7 +372,7 @@ public class MapCanvas extends GraphicsPanel
 		final float datamax = dr.maxYIntensity;
 		
 		
-		invalidPoints.map_i(new FunctionMap<Float, Float>() {
+		invalidPoints.map_i(new FnMap<Float, Float>() {
 
 			public Float f(Float value)
 			{
@@ -460,7 +460,7 @@ public class MapCanvas extends GraphicsPanel
 							// mapping function - convert the color objects into color,string pairs (ie
 							// color/element
 							// list)
-							new FunctionMap<OverlayColour, Pair<Color, String>>() {
+							new FnMap<OverlayColour, Pair<Color, String>>() {
 
 								
 								public Pair<Color, String> f(final OverlayColour ocolour)
@@ -478,7 +478,7 @@ public class MapCanvas extends GraphicsPanel
 														
 													tabController.getOverlayColourKeys(), 
 													
-													new FunctionMap<TransitionSeries, Boolean>() {
+													new FnMap<TransitionSeries, Boolean>() {
 														public Boolean f(TransitionSeries ts)
 														{
 															return tabController.getOverlayColour(ts) == ocolour;
@@ -488,7 +488,7 @@ public class MapCanvas extends GraphicsPanel
 												)//filter transitionseries
 												,
 												"",
-												new FunctionCombine<TransitionSeries, String, String>() {
+												new FnCombine<TransitionSeries, String, String>() {
 
 													
 													public String f(TransitionSeries ts, String title)
@@ -504,7 +504,7 @@ public class MapCanvas extends GraphicsPanel
 							}),
 
 					// filter for empty strings
-					new FunctionMap<Pair<Color, String>, Boolean>() {
+					new FnMap<Pair<Color, String>, Boolean>() {
 
 						
 						public Boolean f(Pair<Color, String> element)

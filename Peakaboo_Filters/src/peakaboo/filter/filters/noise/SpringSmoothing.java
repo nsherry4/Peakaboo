@@ -81,7 +81,7 @@ public final class SpringSmoothing extends AbstractFilter
 		// TODO Auto-generated method stub
 		return "The "
 				+ getFilterName()
-				+ " Filter operates on the assumption that weak signal should be smoothed more than strong signal. It treats each pair of points as if they were connected by a spring. With each iteration, a tension force draws neighbouring points closer together. The Force Multiplier controls how strongly the two elements are pulled together, and the Force Falloff Rate controls how aggressively stronger signal is anchored in place, unmoved by spring forces. This prevents peaks from being distorted by the smoothing algorithm.";
+				+ " filter operates on the assumption that weak signal should be smoothed more than strong signal. It treats each pair of points as if they were connected by a spring. With each iteration, a tension force draws neighbouring points closer together. The Force Multiplier controls how strongly a pair of elements are pulled together, and the Force Falloff Rate controls how aggressively stronger signal is anchored in place, unmoved by spring forces. This prevents peak shapes from being distorted by the smoothing algorithm.";
 	}
 
 

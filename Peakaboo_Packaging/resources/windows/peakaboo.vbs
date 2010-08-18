@@ -45,4 +45,4 @@ End Function
 
 Dim WshShell
 Set WshShell = CreateObject("WScript.Shell")
-WshShell.exec("javaw.exe -Xmx" + getRecommendedMemory() + " -XX:MaxNewSize=20m -XX:+UseFastAccessorMethods -XX:+AggressiveOpts Peakaboo")
+WshShell.exec("javaw.exe -Xmx" + getRecommendedMemory() + " -XX:SurvivorRatio=2 -XX:NewRatio=8 -XX:+UseConcMarkSweepGC -XX:+UseFastAccessorMethods -XX:+AggressiveOpts Peakaboo")

@@ -69,7 +69,7 @@ public final class MovingAverage extends AbstractFilter
 		// TODO Auto-generated method stub
 		return "The "
 				+ getFilterName()
-				+ " Filter refines the values of each point in a scan by sampling it and the points around it, and replacing it with an average of the sampled points.";
+				+ " filter refines the values of each point in a scan by sampling it and the points around it, and replacing it with an average of the sampled points.";
 	}
 
 
