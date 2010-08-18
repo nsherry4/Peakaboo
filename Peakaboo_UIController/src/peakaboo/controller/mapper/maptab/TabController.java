@@ -23,7 +23,7 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.lists.FList;
-import fava.signatures.FnCombine;
+import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 import peakaboo.calculations.Interpolation;
 import peakaboo.common.DataTypeFactory;
@@ -192,7 +192,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		if (redSpectrums != null && redSpectrums.size() > 0) {
 			redSpectrum = fold(
 					redSpectrums,
-					new FnCombine<Spectrum, Spectrum, Spectrum>() {
+					new FnFold<Spectrum, Spectrum>() {
 
 						public Spectrum f(Spectrum mapdata, Spectrum sum)
 						{
@@ -228,7 +228,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
 			greenSpectrum = fold(
 					greenSpectrums,
-					new FnCombine<Spectrum, Spectrum, Spectrum>() {
+					new FnFold<Spectrum, Spectrum>() {
 
 						public Spectrum f(Spectrum mapdata, Spectrum sum)
 						{
@@ -264,7 +264,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
 			blueSpectrum = fold(
 					blueSpectrums,
-					new FnCombine<Spectrum, Spectrum, Spectrum>() {
+					new FnFold<Spectrum, Spectrum>() {
 
 						public Spectrum f(Spectrum mapdata, Spectrum sum)
 						{

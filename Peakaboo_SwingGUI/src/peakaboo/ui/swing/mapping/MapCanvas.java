@@ -19,7 +19,7 @@ import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
-import fava.signatures.FnCombine;
+import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.backends.Surface;
@@ -488,7 +488,7 @@ public class MapCanvas extends GraphicsPanel
 												)//filter transitionseries
 												,
 												"",
-												new FnCombine<TransitionSeries, String, String>() {
+												new FnFold<TransitionSeries, String>() {
 
 													
 													public String f(TransitionSeries ts, String title)

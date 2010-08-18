@@ -12,6 +12,7 @@ import peakaboo.common.DataTypeFactory;
 import fava.*;
 import fava.lists.FList;
 import fava.signatures.FnCombine;
+import fava.signatures.FnFold;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 import static fava.Fn.*;
@@ -156,7 +157,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public Transition getStrongestTransition()
 	{
 
-		return foldr(transitions, new FnCombine<Transition, Transition, Transition>() {
+		return foldr(transitions, new FnFold<Transition, Transition>() {
 
 			public Transition f(Transition t1, Transition t2)
 			{
@@ -373,7 +374,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 		//function for summing two TransitionSeries
-		final FnCombine<TransitionSeries, TransitionSeries, TransitionSeries> tsSum = new FnCombine<TransitionSeries, TransitionSeries, TransitionSeries>() {
+		final FnFold<TransitionSeries, TransitionSeries> tsSum = new FnFold<TransitionSeries, TransitionSeries>() {
 
 			public TransitionSeries f(TransitionSeries ts1, TransitionSeries ts2)
 			{
@@ -496,7 +497,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 						filter(zipWith(
 								componentSeries,
 								otherTS.componentSeries,
-								new FnCombine<TransitionSeries, TransitionSeries, Integer>() {
+								new FnCombine<TransitionSeries, Integer>() {
 
 									public Integer f(TransitionSeries ts1, TransitionSeries ts2)
 									{
