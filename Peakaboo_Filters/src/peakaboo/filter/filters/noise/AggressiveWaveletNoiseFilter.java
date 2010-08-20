@@ -32,7 +32,7 @@ public final class AggressiveWaveletNoiseFilter extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(PASSES, new Parameter(ValueType.INTEGER, "Passes to Remove", 1));
+		addParameter(PASSES, new Parameter(ValueType.INTEGER, "Passes to Remove", 1));
 	}
 
 	@Override

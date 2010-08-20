@@ -22,7 +22,7 @@ public class Addition extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
+		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
 	}
 	
 	@Override

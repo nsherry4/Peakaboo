@@ -140,6 +140,17 @@ public class DataTypeFactory {
     public static <T, S> Map<T, S> map(){
     	return new HashMap<T, S>();
     }
+    
+    /**
+     * Creates a map from values of type T to values of type S
+     * @param <T> type of keys
+     * @param <S> type of values
+     * @param initialSize the initial capacity this map should be expecting
+     * @return a new map; T => S
+     */
+    public static <T, S> Map<T, S> map(int initialSize){
+    	return new HashMap<T, S>(initialSize);
+    }
 
 
 }

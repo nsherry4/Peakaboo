@@ -24,7 +24,7 @@ public class WaveletToData extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(AMOUNT, new Parameter(ValueType.INTEGER, "Passes", 1));		
+		addParameter(AMOUNT, new Parameter(ValueType.INTEGER, "Passes", 1));		
 	}
 	
 	@Override

@@ -301,9 +301,4 @@ public class ZipDataSource implements DataSource
 	}
 	
 	
-	public static String extension()
-	{
-		return "zip";
-	}
-	
 }

@@ -11,7 +11,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -34,7 +33,6 @@ import fava.Functions;
 import fava.datatypes.Pair;
 import fava.datatypes.Range;
 import fava.lists.FList;
-import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 
 import peakaboo.common.DataTypeFactory;
@@ -49,7 +47,6 @@ import peakaboo.ui.swing.mapping.MapViewer;
 import peakaboo.ui.swing.mapping.TabIconButton;
 import scitypes.GridPerspective;
 import scitypes.SigDigits;
-import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;

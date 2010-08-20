@@ -31,8 +31,9 @@ public final class LinearTrimRemoval extends BackgroundRemovalFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 2));
-		parameters.put(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
+		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
+		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 2));
+		
 	}
 
 	@Override

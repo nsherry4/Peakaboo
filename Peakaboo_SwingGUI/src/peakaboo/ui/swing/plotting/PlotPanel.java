@@ -600,7 +600,7 @@ public class PlotPanel extends ClearPanel
 			{
 				new swidget.dialogues.AboutDialogue(
 					container,
-					"Peakaboo",
+					Version.program_name,
 					"XRF Analysis Software",
 					"www.sciencestudioproject.com",
 					"Copyright &copy; 2009-2010 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
@@ -1292,11 +1292,11 @@ public class PlotPanel extends ClearPanel
 		String[] exts;
 		if (Env.isWebStart())
 		{
-			exts = new String[] { "xml", "txt" };
+			exts = new String[] { "xml", "txt", "cdfml" };
 		}
 		else
 		{
-			exts = new String[] { "xml", "txt", "zip" };
+			exts = new String[] { "xml", "txt", "zip", "cdfml" };
 		}
 
 		files = openNewDataset(exts, "XRF Data Sets");

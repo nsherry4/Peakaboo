@@ -142,8 +142,8 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	 * @param index the index in the map data at which to place the new value
 	 */
 	public void putIntensityInMapAtPoint(float intensity, TransitionSeries ts, int index)
-	{
-
+	{	
+		
 		MapResult m = getMap(ts);
 		if (m == null) return;
 

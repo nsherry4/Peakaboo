@@ -15,7 +15,7 @@ public class Parameter implements Serializable
 
 	public static enum ValueType
 	{
-		INTEGER, REAL, BOOLEAN, SET_ELEMENT, FILTER
+		INTEGER, REAL, BOOLEAN, SET_ELEMENT, FILTER, SEPARATOR
 	}
 	
 	public ValueType	type;

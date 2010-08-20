@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plotting.fitting.smartfitting;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.util.List;
@@ -71,6 +72,7 @@ public class SmartFittingPanel extends JPanel
 		smartWidget.setBorder(Spacing.bMedium());
 		JScrollPane scroll = new JScrollPane(smartWidget);
 		scroll.setPreferredSize(new Dimension(200, 0));
+		scroll.getViewport().setOpaque(false);
 		
 
 		this.add(scroll, BorderLayout.CENTER);

@@ -49,9 +49,10 @@ public class SegmentFilter extends AbstractFilter
 			f.initialize();
 		}
 		
-		parameters.put(FILTER, new Parameter(ValueType.FILTER, "Filter", filters.get(0), filters.toArray()));
-		parameters.put(START, new Parameter(ValueType.INTEGER, "Start Index", 0));
-		parameters.put(END, new Parameter(ValueType.INTEGER, "Stop Index", 10));
+		
+		addParameter(END, new Parameter(ValueType.INTEGER, "Stop Index", 10));
+		addParameter(START, new Parameter(ValueType.INTEGER, "Start Index", 0));
+		addParameter(FILTER, new Parameter(ValueType.FILTER, "Filter", filters.get(0), filters.toArray()));
 	}
 	
 	
@@ -59,8 +60,8 @@ public class SegmentFilter extends AbstractFilter
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		
-		int start = parameters.get(START).intValue();
-		int stop = parameters.get(END).intValue();
+		int start = getParameter(START).intValue();
+		int stop = getParameter(END).intValue();
 		
 		if (start >= data.size()) start = data.size()-1;
 		if (stop >= data.size()) stop = data.size()-1;
@@ -68,7 +69,7 @@ public class SegmentFilter extends AbstractFilter
 		Spectrum result = new Spectrum(data);
 		Spectrum subspectrum = data.subSpectrum(start, stop);
 		
-		subspectrum = parameters.get(FILTER).filterValue().filter(subspectrum, cache);
+		subspectrum = getParameter(FILTER).filterValue().filter(subspectrum, cache);
 		
 		for (int i = start; i <= stop; i++)
 		{
@@ -100,7 +101,7 @@ public class SegmentFilter extends AbstractFilter
 	public PlotPainter getPainter()
 	{
 
-		if (parameters.get(FILTER).filterValue().getPainter() == null) return null;
+		if (getParameter(FILTER).filterValue().getPainter() == null) return null;
 		
 		return new PlotPainter() {
 
@@ -110,8 +111,8 @@ public class SegmentFilter extends AbstractFilter
 				p.context.save();
 				
 					float pointWidth = p.plotSize.x / p.dr.dataWidth;
-					p.context.translate(pointWidth*parameters.get(START).intValue(), 0f);
-					parameters.get(FILTER).filterValue().getPainter().draw(p);
+					p.context.translate(pointWidth*getParameter(START).intValue(), 0f);
+					getParameter(FILTER).filterValue().getPainter().draw(p);
 					
 				p.context.restore();
 			}
@@ -129,8 +130,8 @@ public class SegmentFilter extends AbstractFilter
 	public boolean validateParameters()
 	{
 		
-		int start = parameters.get(START).intValue();
-		int stop = parameters.get(END).intValue();
+		int start = getParameter(START).intValue();
+		int stop = getParameter(END).intValue();
 		
 		if (start < 0) return false;
 		if (stop < 0) return false;

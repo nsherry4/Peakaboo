@@ -29,8 +29,9 @@ public final class PolynomialRemoval extends BackgroundRemovalFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(WIDTH, new Parameter(ValueType.INTEGER, "Width of Polynomial", 300));
-		parameters.put(POWER, new Parameter(ValueType.INTEGER, "Power of Polynomial", 3));
+		addParameter(POWER, new Parameter(ValueType.INTEGER, "Power of Polynomial", 3));
+		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Polynomial", 300));
+		
 	}
 
 

@@ -33,9 +33,9 @@ public final class FourierLowPass extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(ROLLOFF, new Parameter(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
-		parameters.put(START, new Parameter(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
-		parameters.put(END, new Parameter(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
+		addParameter(END, new Parameter(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
+		addParameter(START, new Parameter(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
+		addParameter(ROLLOFF, new Parameter(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
 	}
 	
 
@@ -45,7 +45,7 @@ public final class FourierLowPass extends AbstractFilter
 
 		int start, end;
 		boolean isCutoff = getParameter(ROLLOFF).<FFTStyle>enumValue() == FFTStyle.CUTOFF;
-		parameters.get(END).enabled = (!isCutoff);
+		getParameter(END).enabled = (!isCutoff);
 
 		start = getParameter(START).intValue();
 		if (start > 15 || start < 1) return false;

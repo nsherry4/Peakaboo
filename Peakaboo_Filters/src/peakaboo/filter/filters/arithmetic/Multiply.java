@@ -24,7 +24,7 @@ public class Multiply extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Multiply By", 1.0));
+		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Multiply By", 1.0));
 	}
 	
 	@Override

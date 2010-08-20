@@ -15,6 +15,7 @@ import fava.signatures.FnGet;
 
 
 import peakaboo.common.DataTypeFactory;
+import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
@@ -34,7 +35,8 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	FnEach<Integer>								readScanCallback;
 	int											scanReadCount;
 
-	FileBackedList<Spectrum>					correctedData;
+	//FileBackedList, if it could be created. ArrayList of not
+	List<Spectrum>								correctedData;
 	Spectrum									iNaughtNormalized;
 	
 
@@ -47,14 +49,14 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 		
 		read(file, isAborted);
 		
-		correctedData = new FileBackedList<Spectrum>("corrected data");
+		correctedData = FileBackedList.<Spectrum>create(Version.program_name + " - Corrected Spectrum");
 
 	}
 	
 	
 	private boolean isNewVersion()
 	{
-		if (hasVar(CDFML.VAR_MCA_SPECTRUM)) return true;
+		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0")) return true;
 		return false;
 	}
 	
@@ -67,11 +69,9 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	}
 	
 	private Spectrum getScan(int element, int index)
-	{
-		if (hasVar(CDFML.VAR_MCA_SPECTRUM)) {
-			if (numElements() == 1 && element == 1){
-				return getVarSpectra(CDFML.VAR_MCA_SPECTRUM).get(index);
-			}
+	{	
+		
+		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0")) {
 			return getVarSpectra(CDFML.VAR_MCA_SPECTRUM + element).get(index);	
 		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) {
 			return getVarSpectra(CDFML.VAR_XRF_SPECTRUMS).get(index);
@@ -83,20 +83,20 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	private Spectrum getScan(int index)
 	{
-		return getScan(1, index);
+		return getScan(0, index);
 	}
 	
 	private Float getDeadtime(int index)
 	{
-		return getDeadtime(1, index);
+		return getDeadtime(0, index);
 	}
 	private Float getDeadtime(int element, int index)
 	{
-		if (hasVar(CDFML.VAR_MCA_DEADTIME)) {
+		if (hasVar(CDFML.VAR_MCA_DEADTIME + "0")) {
 			if (numElements() == 1 && element == 1){
-				return getVarFloats(CDFML.VAR_MCA_DEADTIME).get(index);
+				return Math.max(0f, getVarFloats(CDFML.VAR_MCA_DEADTIME).get(index) / 100f);
 			}
-			return getVarFloats(CDFML.VAR_MCA_DEADTIME + element).get(index);	
+			return Math.max(0f, getVarFloats(CDFML.VAR_MCA_DEADTIME + element).get(index) / 100f);	
 		} else {
 			return 0f;
 		}
@@ -117,9 +117,9 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	private int numScans()
 	{
-		if (hasVar(CDFML.VAR_MCA_SPECTRUM))
+		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0"))
 		{
-			return getVarAttrInt(CDFML.VAR_MCA_SPECTRUM, CDFML.XML_ATTR_NUMRECORDS);
+			return getVarAttrInt(CDFML.VAR_MCA_SPECTRUM + "0", CDFML.XML_ATTR_NUMRECORDS);
 			
 		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) 
 		{
@@ -152,22 +152,22 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	{
 		Spectrum s, s2;
 		
-		//if this is a multi-element data set, we store the averaged data in the 0th index list
-		//and the individual spectra in indices 1-N. The first time this data is accessed, the
-		//0th index value will be empty, because we won't have calcualted it yet.
+		//if this is a multi-element data set, we store the averaged data the 'correctedData' list
+		//and the individual spectra in indices 0->N-1. The first time this data is accessed, the
+		//'correctedData' index value will be empty, because we won't have calcualted it yet.
 		if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() > 1)
 		{
 			
 			
-			s = new Spectrum(getScan(1, 0).size());
-			for (Integer i : new Range(1, numElements()))
+			s = new Spectrum(getScan(0, 0).size(), 0f);
+			for (Integer i : new Range(0, numElements()-1))
 			{
 				
-				s2 = getScan(1, index);
+				s2 = getScan(i, index);
 				
 				//divide by deadtime percent if not 0
 				if (getDeadtime(i, index) != 0) {
-					SpectrumCalculations.divideBy_inplace(s2, getDeadtime(i, index));
+					SpectrumCalculations.multiplyBy_inplace(s2, 1f - getDeadtime(i, index));
 				}
 				//add the adjusted value to the total
 				SpectrumCalculations.addLists_inplace(s, s2);
@@ -192,7 +192,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 			
 			//adjust for deadtime
 			if (getDeadtime(index) != 0){
-				SpectrumCalculations.divideBy_inplace(s, getDeadtime(index));
+				SpectrumCalculations.multiplyBy_inplace(s, 1f - getDeadtime(index));
 			}
 			
 			
@@ -451,13 +451,9 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	public static boolean filesMatchCriteria(List<AbstractFile> files)
 	{
 		if (files.size() != 1) return false;
-		if (! files.get(0).getFileName().toLowerCase().endsWith(".xml")) return false;
+		String ext = files.get(0).getFileName().toLowerCase();
+		if (!   (ext.endsWith(".xml") || ext.endsWith(".cdfml"))  ) return false;
 		return true;
-	}
-	
-	public static String extension()
-	{
-		return "xml";
 	}
 
 
@@ -479,9 +475,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 				}
 					
 			} else {
-				
-				System.out.println(getScanCountCallback);
-				
+								
 				//we assume that in the older version, there will be only one spectrum recordset
 				if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS)) {
 					getScanCountCallback.f(getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS));

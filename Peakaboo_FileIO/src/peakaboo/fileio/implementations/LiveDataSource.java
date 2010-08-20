@@ -18,20 +18,13 @@ public class LiveDataSource implements DataSource
 
 	float maxEnergy;
 	
+	//FileBackedList if it can be created, Another implementation if it cannot
 	List<Spectrum> scans;
 	
 	
 	public LiveDataSource()
 	{
-		try
-		{
-			scans = new FileBackedList<Spectrum>("Peakaboo Live Dataset");
-		}
-		catch (IOException e)
-		{
-			scans = DataTypeFactory.<Spectrum>list();
-		}
-		
+		scans = FileBackedList.<Spectrum>create("Peakaboo Live Dataset");
 	}
 	
 	/////////////////////////////////////////////////
@@ -107,9 +100,5 @@ public class LiveDataSource implements DataSource
 		return false;
 	}
 	
-	public static String extension()
-	{
-		return null;
-	}
 	
 }

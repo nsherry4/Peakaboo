@@ -4,9 +4,14 @@ package peakaboo.fileio.implementations.old;
 
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import commonenvironment.AbstractFile;
 
@@ -16,11 +21,11 @@ import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
-import peakaboo.fileio.implementations.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
+import static peakaboo.fileio.implementations.support.CDFML.*;
 
 public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSourceExtendedInformation
 {
@@ -37,23 +42,13 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	private Spectrum			iNaught;
 
 
-	//private String				cdfFileName;
-
-
-	public static int isCDFML(AbstractFile filename)
-	{
-
-		return CDFML.isCDFML(filename, CDFML.CDF_TECHNIQUE_XRF);
-		
-	}
-
 
 	public static CDFMLDataSource getCDFMLFromFile(AbstractFile file)
 	{
 				
 		Document dom;
 		try {
-			dom = CDFML.createCDFMLDocument(file);
+			dom = createCDFMLDocument(file);
 		} catch (Exception e) {
 			return null;
 		}
@@ -68,18 +63,18 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 		//get the elements for the variables PositionX, PositionY, and Spectrums
 		//as well as the sub-element which contains the recordset.
-		cdfmlDS.positionX = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_X_POSITONS);
-		//cdfmlDS.positionXData = CDFML.getDataElementFromVariableElement(cdfmlDS.positionX);
+		cdfmlDS.positionX = getVariableByName(cdfmlDS.root, VAR_X_POSITONS);
+		//cdfmlDS.positionXData = getDataElementFromVariableElement(cdfmlDS.positionX);
 		
-		cdfmlDS.positionY = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_Y_POSITONS);
-		//cdfmlDS.positionYData = CDFML.getDataElementFromVariableElement(cdfmlDS.positionY);
+		cdfmlDS.positionY = getVariableByName(cdfmlDS.root, VAR_Y_POSITONS);
+		//cdfmlDS.positionYData = getDataElementFromVariableElement(cdfmlDS.positionY);
 		
-		cdfmlDS.scanValues = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_XRF_SPECTRUMS);
-		cdfmlDS.scanValuesData = CDFML.getDataElementFromVariableElement(cdfmlDS.scanValues);
+		cdfmlDS.scanValues = getVariableByName(cdfmlDS.root, VAR_XRF_SPECTRUMS);
+		cdfmlDS.scanValuesData = getDataElementFromVariableElement(cdfmlDS.scanValues);
 		
-		Element normalise = CDFML.getVariableByName(cdfmlDS.root, CDFML.VAR_NORMALISE);
+		Element normalise = getVariableByName(cdfmlDS.root, VAR_NORMALISE);
 		if (normalise != null){
-			cdfmlDS.normaliseData = CDFML.getDataElementFromVariableElement(normalise);
+			cdfmlDS.normaliseData = getDataElementFromVariableElement(normalise);
 			cdfmlDS.isNormalised = true;
 		} else {
 			cdfmlDS.isNormalised = false;
@@ -114,7 +109,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 			//Common.listToFile("/home/nathaniel/Desktop/iNaught", iNaught);
 		}
 		
-		String scanString = CDFML.getStringRecordFromVariableData(scanValuesData, index);
+		String scanString = getStringRecordFromVariableData(scanValuesData, index);
 		if (scanString == null) return null;
 
 		String[] scanPoints = scanString.split(" ");
@@ -145,8 +140,8 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	public Coord<Number> getRealCoordinatesAtIndex(int index)
 	{
 
-		float x = Float.parseFloat(CDFML.getStringRecordFromVariableData(positionX, index));
-		float y = Float.parseFloat(CDFML.getStringRecordFromVariableData(positionY, index));
+		float x = Float.parseFloat(getStringRecordFromVariableData(positionX, index));
+		float y = Float.parseFloat(getStringRecordFromVariableData(positionY, index));
 
 		return new Coord<Number>(x, y);
 
@@ -157,10 +152,10 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 	{
 		float x1, x2, y1, y2;
 
-		x1 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_X_START, 0));
-		x2 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_X_END, 0));
-		y1 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_Y_START, 0));
-		y2 = Float.parseFloat(CDFML.getAttributeValue(root, CDFML.ATTR_DIM_Y_END, 0));
+		x1 = Float.parseFloat(getAttributeValue(root, ATTR_DIM_X_START, 0));
+		x2 = Float.parseFloat(getAttributeValue(root, ATTR_DIM_X_END, 0));
+		y1 = Float.parseFloat(getAttributeValue(root, ATTR_DIM_Y_START, 0));
+		y2 = Float.parseFloat(getAttributeValue(root, ATTR_DIM_Y_END, 0));
 		
 
 		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
@@ -171,14 +166,14 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public String getRealDimensionsUnit()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_DIM_X_START, 1);
+		return getAttributeValue(root, ATTR_DIM_X_START, 1);
 	}
 
 
 	public int getScanCount()
 	{
 
-		String attribute = CDFML.getTagAttribute(scanValues, CDFML.TAG_VAR_INFO, CDFML.XML_ATTR_NUMRECORDS);
+		String attribute = getTagAttribute(scanValues, TAG_VAR_INFO, XML_ATTR_NUMRECORDS);
 		if (attribute == null) return -1;
 		return Integer.parseInt(attribute);
 
@@ -193,14 +188,14 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	private int getDataWidth()
 	{
-		int width = Integer.parseInt(CDFML.getAttributeValue(root, CDFML.ATTR_DATA_X, 0));
+		int width = Integer.parseInt(getAttributeValue(root, ATTR_DATA_X, 0));
 		return width;
 	}
 
 
 	private int getDataHeight()
 	{
-		int height = Integer.parseInt(CDFML.getAttributeValue(root, CDFML.ATTR_DATA_Y, 0));
+		int height = Integer.parseInt(getAttributeValue(root, ATTR_DATA_Y, 0));
 		return height;
 	}
 
@@ -215,7 +210,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public float getMaxEnergy()
 	{
-		String maxEnergyValue = CDFML.getAttributeValue(root, CDFML.ATTR_XRF_MAX_ENERGY, 0);
+		String maxEnergyValue = getAttributeValue(root, ATTR_XRF_MAX_ENERGY, 0);
 		if (maxEnergyValue == null) return 20.48f;
 		return Float.parseFloat(maxEnergyValue) / 1000.0f;
 	}
@@ -241,9 +236,9 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public String getDatasetName()
 	{
-		String Project = CDFML.getAttributeValue(root, CDFML.ATTR_PROJECT_NAME, 0);
-		String DatasetName = CDFML.getAttributeValue(root, CDFML.ATTR_DATASET_NAME, 0);
-		String SampleName = CDFML.getAttributeValue(root, CDFML.ATTR_SAMPLE_NAME, 0);
+		String Project = getAttributeValue(root, ATTR_PROJECT_NAME, 0);
+		String DatasetName = getAttributeValue(root, ATTR_DATASET_NAME, 0);
+		String SampleName = getAttributeValue(root, ATTR_SAMPLE_NAME, 0);
 		
 		String name = "";
 		
@@ -258,85 +253,85 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 		
 		return name;
 		
-		//return CDFML.getAttributeValue(root, CDFML.ATTR_PROJECT_NAME, 0) + ": " + CDFML.getAttributeValue(root, CDFML.ATTR_DATASET_NAME, 0) + " on " + CDFML.getAttributeValue(root, CDFML.ATTR_SAMPLE_NAME, 0);
+		//return getAttributeValue(root, ATTR_PROJECT_NAME, 0) + ": " + getAttributeValue(root, ATTR_DATASET_NAME, 0) + " on " + getAttributeValue(root, ATTR_SAMPLE_NAME, 0);
 	}
 
 
 	public String getCreationTime()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_CREATION_TIME, 0);
+		return getAttributeValue(root, ATTR_CREATION_TIME, 0);
 	}
 
 
 	public String getCreator()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_CREATOR, 0);
+		return getAttributeValue(root, ATTR_CREATOR, 0);
 	}
 
 
 	public String getEndTime()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_END_TIME, 0);
+		return getAttributeValue(root, ATTR_END_TIME, 0);
 	}
 
 
 	public String getExperimentName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_EXPERIMENT_NAME, 0);
+		return getAttributeValue(root, ATTR_EXPERIMENT_NAME, 0);
 	}
 
 
 	public String getFacilityName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_FACILITY, 0);
+		return getAttributeValue(root, ATTR_FACILITY, 0);
 	}
 
 
 	public String getInstrumentName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_INSTRUMENT, 0);
+		return getAttributeValue(root, ATTR_INSTRUMENT, 0);
 	}
 
 
 	public String getLaboratoryName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_LABORATORY, 0);
+		return getAttributeValue(root, ATTR_LABORATORY, 0);
 	}
 
 
 	public String getProjectName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_PROJECT_NAME, 0);
+		return getAttributeValue(root, ATTR_PROJECT_NAME, 0);
 	}
 
 
 	public String getSampleName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_SAMPLE_NAME, 0);
+		return getAttributeValue(root, ATTR_SAMPLE_NAME, 0);
 	}
 
 
 	public String getScanName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_DATASET_NAME, 0);
+		return getAttributeValue(root, ATTR_DATASET_NAME, 0);
 	}
 
 
 	public String getSessionName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_SESSION_NAME, 0);
+		return getAttributeValue(root, ATTR_SESSION_NAME, 0);
 	}
 
 
 	public String getStartTime()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_START_TIME, 0);
+		return getAttributeValue(root, ATTR_START_TIME, 0);
 	}
 
 
 	public String getTechniqueName()
 	{
-		return CDFML.getAttributeValue(root, CDFML.ATTR_TECHNIQUE, 0);
+		return getAttributeValue(root, ATTR_TECHNIQUE, 0);
 	}
 
 
@@ -349,7 +344,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 		Spectrum normaliser = new Spectrum(getScanCount());
 			
 		for (int i = 0; i < getScanCount(); i++){
-			normaliser.set(i, Float.parseFloat(CDFML.getStringRecordFromVariableData(normaliseData, i)) );
+			normaliser.set(i, Float.parseFloat(getStringRecordFromVariableData(normaliseData, i)) );
 		}
 				
 		SpectrumCalculations.normalize_inplace(normaliser);
@@ -360,8 +355,8 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public boolean hasExtendedInformation()
 	{
-		List<String> components = CDFML.getAttributeValues(root, CDFML.ATTR_TOC);
-		if (components.contains(CDFML.TOC_MODEL)) return true;
+		List<String> components = getAttributeValues(root, ATTR_TOC);
+		if (components.contains(TOC_MODEL)) return true;
 		return false;
 	}
 
@@ -378,5 +373,248 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 		return true;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	public static Element getAttributeElement(Element root, String attributeName){
+		
+		Element attrs = (Element) root.getElementsByTagName(TAG_ATTRS).item(0);
+		
+		Element pxAttr = getElementFromSetByAttribute(attrs.getElementsByTagName(TAG_ATTR), XML_ATTR_NAME,
+				attributeName);
+		if (pxAttr == null) return null;
+		
+		return pxAttr;
+		
+	}
+
+	public static String getAttributeValue(Element root, String attributeName, int entryNumber)
+	{
+
+		Element pxAttr = getAttributeElement(root, attributeName);
+		if (pxAttr == null) return null;
+		
+		NodeList entries = pxAttr.getElementsByTagName(TAG_ENTRY);
+
+		Node entry = entries.item(entryNumber);
+		if (entry == null) return null;
+
+		Node value = entry.getChildNodes().item(0);
+		if (value == null) return null;
+
+		return value.getNodeValue();
+	}
+	
+	public static List<String> getAttributeValues(Element root, String attributeName)
+	{
+		
+		Element pxAttr = getAttributeElement(root, attributeName);
+		if (pxAttr == null) return null;
+		
+		NodeList entries = pxAttr.getElementsByTagName(TAG_ENTRY);
+		
+		Node entry, value;
+		List<String> values = DataTypeFactory.<String>list();
+		
+		for (int i = 0; i < entries.getLength(); i++){
+			
+			entry = entries.item(i);
+			if (entry == null) continue;
+			
+			value = entry.getChildNodes().item(0);
+			if (value == null) continue;
+			
+			values.add(value.getNodeValue());
+			
+		}
+		
+		return values;
+		
+	}
+	
+
+
+
+	/**
+	 * Returns the string held in a given record number
+	 * 
+	 * @param variableData
+	 *            the recordset (aka cdfVarData)
+	 * @param recordNumber
+	 *            the record number
+	 * @return a String representation of the value for the record
+	 */
+	public static String getStringRecordFromVariableData(Element variableData, int recordNumber)
+	{
+
+		NodeList records = variableData.getElementsByTagName(TAG_VAR_RECORD);
+
+		Element recElement;
+		int curRecNum;
+
+		for (int i = 0; i < records.getLength(); i++) {
+			recElement = (Element) records.item(i);
+			curRecNum = Integer.parseInt(recElement.getAttribute(XML_ATTR_RECORD_NUMBER));
+			if (curRecNum == recordNumber) {
+
+				Node child = recElement.getFirstChild();
+				String result = child.getNodeValue();
+
+				return result;
+			}
+		}
+
+		return null;
+	}
+
+
+	public static String getTagAttribute(Element element, String tag, String attribute)
+	{
+		Element varInfo = (Element) element.getElementsByTagName(tag).item(0);
+		return varInfo.getAttribute(attribute);
+	}
+
+
+
+	public static Element getElementFromSetByAttribute(NodeList nodes, String attribute, String match)
+	{
+
+		Element e;
+
+		for (int i = 0; i < nodes.getLength(); i++) {
+			e = (Element) nodes.item(i);
+			if (match.equals(e.getAttribute(attribute))) {
+				return e;
+			}
+		}
+
+		return null;
+
+	}
+
+
+	public static Element getVariableByName(Element root, String variableName)
+	{
+
+		// get the <cdfVariables> tag
+		Element variableSetTag = (Element) root.getElementsByTagName(TAG_VARS).item(0);
+
+		// get the list of <variable> tags
+		NodeList variableTagList = variableSetTag.getElementsByTagName(TAG_VAR);
+
+		Element variableElement;
+		for (int i = 0; i < variableTagList.getLength(); i++) {
+
+			variableElement = (Element) variableTagList.item(i);
+
+			if (variableName.equals(variableElement.getAttribute(XML_ATTR_NAME))) {
+				return variableElement;
+			}
+
+		}
+
+		return null;
+
+	}
+
+
+	public static Element getDataElementFromVariableElement(Element variableElement)
+	{
+		return (Element) variableElement.getElementsByTagName(TAG_VAR_DATA).item(0);
+	}
+
+
+	public static int isCDFML(AbstractFile filename, String technique)
+	{
+
+		Document dom;
+		try {
+			dom = createCDFMLDocument(filename);
+		} catch (Exception e) {
+			return -1;
+		}
+
+		if (dom == null) return -2;
+
+		Element root = dom.getDocumentElement();
+		if (root == null) return -3;
+
+		//make sure root name matches
+		if (!CDF_ROOT_NAME.equals(root.getNodeName())) return -4;
+		
+		//check the TOC
+		if (getAttributeElement(root, ATTR_TOC) == null) return -5;
+		List<String> components = getAttributeValues(root, ATTR_TOC);
+		if (! components.contains(TOC_MAP)) return -6;
+		if (! components.contains(TOC_XRF)) return -7;
+		
+		//check that variables we need exist
+		if (getVariableByName(root, VAR_XRF_SPECTRUMS) == null) return -8;
+		if (getVariableByName(root, VAR_X_POSITONS) == null) return -9;
+		if (getVariableByName(root, VAR_Y_POSITONS) == null) return -10;
+		
+		//check that attributes we need exist
+		if (getAttributeElement(root, ATTR_DATA_X) == null) return -11;
+		if (getAttributeElement(root, ATTR_DATA_Y) == null) return -12;
+		
+		if (getAttributeElement(root, ATTR_DIM_X_START) == null) return -13;
+		if (getAttributeElement(root, ATTR_DIM_X_END) == null) return -14;
+		
+		if (getAttributeElement(root, ATTR_DIM_Y_START) == null) return -15;
+		if (getAttributeElement(root, ATTR_DIM_Y_END) == null) return -16;
+		
+		
+		//String givenTechnique = getAttributeValue(root, ATTR_TECHNIQUE, 0);
+		//if (!technique.equals(givenTechnique)) return false;
+
+		return 0;
+
+	}
+
+
+	public static Document createCDFMLDocument(AbstractFile file) throws Exception
+	{
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+
+		DocumentBuilder db;
+
+		
+		db = dbf.newDocumentBuilder();
+				
+		//File f = new File(filename);
+		Document dom = db.parse(file.getInputStream());
+		
+		return dom;
+
+	}
+	
 	
 }

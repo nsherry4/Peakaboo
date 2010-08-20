@@ -75,21 +75,9 @@ public class MapViewer extends JPanel
 	{
 
 		
-		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-				
-		c.fill = GridBagConstraints.BOTH;
-		
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 0;
-		c.weighty = 1;
-		add(new SidePanel(controller, owner), c);
-		
-		c.gridx = 1;
-		c.gridy = 0;
-		c.weightx = 1;
-		add(createMapView(), c);
+		setLayout(new BorderLayout());
+		add(new SidePanel(controller, owner), BorderLayout.WEST);
+		add(createMapView(), BorderLayout.CENTER);
 		
 		
 		

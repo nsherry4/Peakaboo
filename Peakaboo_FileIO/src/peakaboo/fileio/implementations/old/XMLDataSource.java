@@ -164,10 +164,5 @@ public class XMLDataSource implements DataSource
 	}
 	
 	
-	public static String extension()
-	{
-		return "xml";
-	}
-	
 	
 }

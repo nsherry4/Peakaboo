@@ -30,7 +30,7 @@ public class SummationPanel extends JPanel
 
 	public SummationPanel(final IFittingController controller, final CurveFittingView owner)
 	{
-
+		
 		SelectionListControls selControls = new SelectionListControls("Summation") {
 
 			@Override
@@ -74,7 +74,8 @@ public class SummationPanel extends JPanel
 		summationWidget.setBorder(Spacing.bMedium());
 		JScrollPane scroll = new JScrollPane(summationWidget);
 		scroll.setPreferredSize(new Dimension(200, 0));
-
+		scroll.getViewport().setOpaque(false);
+		
 		this.add(scroll, BorderLayout.CENTER);
 
 

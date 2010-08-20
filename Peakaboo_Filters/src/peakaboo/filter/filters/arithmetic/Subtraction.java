@@ -22,7 +22,7 @@ public class Subtraction extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(AMOUNT, new Parameter(ValueType.REAL, "Amount to Subtract", 1.0));
+		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Subtract", 1.0));
 	}
 	
 	@Override

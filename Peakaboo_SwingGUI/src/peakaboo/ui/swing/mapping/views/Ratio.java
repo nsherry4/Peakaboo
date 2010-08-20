@@ -262,7 +262,7 @@ public class Ratio extends JPanel {
 		
 		
 		JScrollPane scroll = new JScrollPane(table);
-
+		scroll.setPreferredSize(new Dimension(0,0));
 
 		return scroll;
 

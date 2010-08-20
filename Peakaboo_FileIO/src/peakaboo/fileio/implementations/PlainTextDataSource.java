@@ -24,10 +24,12 @@ public class PlainTextDataSource implements DataSource
 
 	FnGet<Boolean>						isAborted;
 	FnEach<Integer>						readScanCallback;
-	FileBackedList<Spectrum>					scandata;
+	
+	//FileBackedList if it can be created, another implementation otherwise
+	List<Spectrum>						scandata;
 	
 
-	String										datasetName;
+	String								datasetName;
 	
 	public PlainTextDataSource(AbstractFile file, FnEach<Integer> readScanCallback, FnGet<Boolean> isAborted) throws Exception
 	{
@@ -35,7 +37,7 @@ public class PlainTextDataSource implements DataSource
 		this.readScanCallback = readScanCallback;
 		this.isAborted = isAborted;
 		
-		scandata = new FileBackedList<Spectrum>("Peakaboo");
+		scandata = FileBackedList.<Spectrum>create("Peakaboo");
 		datasetName = IOOperations.getFileTitle(  file.getFileName()  );
 		
 		InputStreamReader r = new InputStreamReader(file.getInputStream());
@@ -119,9 +121,5 @@ public class PlainTextDataSource implements DataSource
 	}
 	
 	
-	public static String extension()
-	{
-		return "txt";
-	}
 
 }

@@ -23,6 +23,7 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 	private final int	ORDER	= 1;
 	private final int	IGNORE	= 2;
 	private final int	MAX	= 3;
+	private final int	SEP = 4;
 
 
 	public SavitskyGolaySmoothing()
@@ -36,12 +37,16 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(REACH, new Parameter(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
-		parameters.put(ORDER, new Parameter(ValueType.INTEGER, "Polynomial Order", 5));
-		parameters.put(IGNORE, new Parameter(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
-		parameters.put(MAX, new Parameter(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
 		
-		parameters.get(MAX).enabled = false;		
+		
+		
+		addParameter(MAX, new Parameter(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
+		addParameter(IGNORE, new Parameter(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
+		addParameter(SEP, new Parameter(ValueType.SEPARATOR, null, null));
+		addParameter(ORDER, new Parameter(ValueType.INTEGER, "Polynomial Order", 5));
+		addParameter(REACH, new Parameter(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
+		
+		getParameter(MAX).enabled = false;		
 	}
 	
 	@Override
@@ -81,7 +86,7 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 		// polynomial of order k needs at least k+1 data points in set.
 		if (order >= reach * 2 + 1) return false;
 
-		parameters.get(MAX).enabled = getParameter(IGNORE).boolValue();
+		getParameter(MAX).enabled = getParameter(IGNORE).boolValue();
 		
 		return true;
 	}

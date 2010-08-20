@@ -226,6 +226,7 @@ public class AllMapsController extends EventfulType<String> implements IAllMapsC
 	public void setShowDatasetTitle(boolean show)
 	{
 		mapModel.showDataSetTitle = show;
+		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
 
 

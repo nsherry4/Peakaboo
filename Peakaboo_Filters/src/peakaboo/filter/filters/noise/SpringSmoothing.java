@@ -31,9 +31,9 @@ public final class SpringSmoothing extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(MULTIPLIER, new Parameter(ValueType.REAL, "Linear Force Multiplier", 20.0d));
-		parameters.put(FALLOFF, new Parameter(ValueType.REAL, "Exponential Force Falloff Rate", 2.0d));
-		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 20));
+		addParameter(FALLOFF, new Parameter(ValueType.REAL, "Exponential Force Falloff Rate", 2.0d));
+		addParameter(MULTIPLIER, new Parameter(ValueType.REAL, "Linear Force Multiplier", 20.0d));
+		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 20));
 	}
 
 

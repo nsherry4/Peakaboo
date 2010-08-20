@@ -287,6 +287,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				}
 				else if (CDFMLSaxDataSource.filesMatchCriteria(files))
 				{
+										
 					try
 					{
 						dataSource = new CDFMLSaxDataSource(files.get(0), gotScanCount, readScans, isAborted);
@@ -482,7 +483,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		this.dataSourcePath = dataSourcePath;
 		this.dataSource = ds;
 		
-		System.out.println(dataSourcePath);
 
 	}
 	

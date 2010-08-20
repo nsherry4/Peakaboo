@@ -2,12 +2,14 @@ package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -15,8 +17,10 @@ import javax.swing.table.TableModel;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 
+import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
+import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.listcontrols.ListControls;
 
@@ -28,7 +32,7 @@ public class FilterEditViewer extends ClearPanel{
 	protected FiltersetViewer owner;
 	
 	protected JTable t;
-	private TableModel m;
+	private MutableTableModel m;
 	
 	protected ListControls controls;
 	
@@ -54,6 +58,7 @@ public class FilterEditViewer extends ClearPanel{
 			public void change() {
 
 				t.invalidate();
+				m.fireChangeEvent();
 				
 				int elements = controller.getFilterCount();
 				
@@ -74,7 +79,9 @@ public class FilterEditViewer extends ClearPanel{
 	
 	private JTable createFilterTable(JFrame owner){
 		
-		m = new TableModel() {
+		m = new MutableTableModel() {
+		
+			List<TableModelListener> listeners;
 		
 			public void setValueAt(Object value, int rowIndex, int columnIndex) {
 				
@@ -85,9 +92,10 @@ public class FilterEditViewer extends ClearPanel{
 				
 			}
 		
-			public void removeTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-		
+			public void removeTableModelListener(TableModelListener l)
+			{
+				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
+				listeners.remove(l);
 			}
 		
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -119,9 +127,19 @@ public class FilterEditViewer extends ClearPanel{
 				return AbstractFilter.class;
 			}
 		
-			public void addTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-		
+			public void addTableModelListener(TableModelListener l)
+			{
+				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
+				listeners.add(l);
+			}
+
+
+			public void fireChangeEvent()
+			{
+				for (TableModelListener l : listeners)
+				{
+					l.tableChanged(new TableModelEvent(this));
+				}
 			}
 		};
 		

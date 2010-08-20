@@ -17,8 +17,9 @@ public class SpectrumNormalization extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(CHANNEL, new Parameter(ValueType.INTEGER, "Channel", 1));
-		parameters.put(HEIGHT, new Parameter(ValueType.REAL, "Intensity", 10d));
+		addParameter(HEIGHT, new Parameter(ValueType.REAL, "Intensity", 10d));
+		addParameter(CHANNEL, new Parameter(ValueType.INTEGER, "Channel", 1));
+		
 	}
 	
 	@Override
@@ -31,8 +32,8 @@ public class SpectrumNormalization extends AbstractFilter
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 
-		int channel = parameters.get(CHANNEL).intValue()+1;
-		float height = parameters.get(HEIGHT).realValue();
+		int channel = getParameter(CHANNEL).intValue()+1;
+		float height = getParameter(HEIGHT).realValue();
 		
 		if (channel >= data.size()) return data;
 		
@@ -82,8 +83,8 @@ public class SpectrumNormalization extends AbstractFilter
 	public boolean validateParameters()
 	{
 		
-		int channel = parameters.get(CHANNEL).intValue();
-		float height = parameters.get(HEIGHT).realValue();
+		int channel = getParameter(CHANNEL).intValue();
+		float height = getParameter(HEIGHT).realValue();
 		
 		if (channel < 1) return false;
 		if (height < 1) return false;

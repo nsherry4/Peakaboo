@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIDefaults;
@@ -108,7 +109,7 @@ public class SingleFilterView extends JPanel
 	{
 
 		//get a list of parameters
-		final List<Parameter> paramslist = Fn.map( filter.getParameters().values(), Functions.<Parameter>id());
+		final List<Parameter> paramslist = Fn.map( filter.getParameters().values(), Functions.<Parameter>id()).reverse();
 		
 				
 		
@@ -166,6 +167,8 @@ public class SingleFilterView extends JPanel
 					case FILTER:
 						param.setValue(  ((SubfilterView)source).getFilter()  );
 						break;
+					case SEPARATOR:
+						break;
 				}
 				
 				// if this input validates, signal the change, otherwise, reset
@@ -203,6 +206,8 @@ public class SingleFilterView extends JPanel
 							
 						case FILTER:
 							((SubfilterView)source).setFilter(param.filterValue());
+							break;
+						case SEPARATOR:
 							break;
 					}
 					
@@ -325,6 +330,14 @@ public class SingleFilterView extends JPanel
 					
 					component = subfilterView;
 					
+					break;
+					
+				case SEPARATOR:
+					
+					component = new JSeparator(JSeparator.HORIZONTAL);
+					
+					break;
+					
 					
 			}
 			
@@ -332,7 +345,7 @@ public class SingleFilterView extends JPanel
 			if (component != null)
 			{
 				
-				if (param.type != ValueType.FILTER)
+				if (param.type != ValueType.FILTER && param.type != ValueType.SEPARATOR)
 				{
 					panel.add(paramLabel, c);
 					
@@ -453,7 +466,7 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 		
 		if (! filterCombo.getSelectedItem().equals(f)) filterCombo.setSelectedItem(f);
 		
-		filterPanel.setVisible(f.parameters.size() != 0);
+		filterPanel.setVisible(f.getParameters().size() != 0);
 		
 		
 		if (filterView != null) filterPanel.removeAll();

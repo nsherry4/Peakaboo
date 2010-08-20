@@ -32,8 +32,9 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
-		parameters.put(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 10));
+		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 10));
+		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
+		
 	}
 
 

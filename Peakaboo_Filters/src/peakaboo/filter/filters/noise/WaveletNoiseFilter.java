@@ -32,7 +32,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(PASSES, new Parameter(ValueType.INTEGER, "Passes to Transform", 1));
+		addParameter(PASSES, new Parameter(ValueType.INTEGER, "Passes to Transform", 1));
 	}
 
 	@Override

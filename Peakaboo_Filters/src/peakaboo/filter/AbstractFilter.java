@@ -2,7 +2,11 @@ package peakaboo.filter;
 
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import fava.datatypes.Pair;
 
 import peakaboo.calculations.Background;
 import peakaboo.calculations.Calculations;
@@ -67,15 +71,15 @@ public abstract class AbstractFilter implements Serializable
 		}
 	}
 	
-	public Map<Object, Parameter>		parameters;
-	public boolean						enabled;
+	private Map<Object, Parameter>			parameters;
+	public boolean							enabled;
 	
 	protected Spectrum	previewCache;
 	protected Spectrum	calculatedData;
 
 	public AbstractFilter()
 	{
-		this.parameters = DataTypeFactory.<Object, Parameter> map();
+		this.parameters = new LinkedHashMap<Object, Parameter>();
 		this.enabled = true;
 	}
 
@@ -98,6 +102,11 @@ public abstract class AbstractFilter implements Serializable
 	public final void setParameters(Map<Object, Parameter> params)
 	{
 		parameters = params;
+	}
+	
+	protected void addParameter(Object key, Parameter value)
+	{
+		parameters.put(key, value);
 	}
 
 	public final Parameter getParameter(Object key)

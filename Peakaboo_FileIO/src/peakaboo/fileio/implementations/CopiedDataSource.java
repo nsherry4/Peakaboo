@@ -301,9 +301,5 @@ public class CopiedDataSource implements DataSource, DataSourceDimensions, DataS
 		return false;
 	}
 	
-	public static String extension()
-	{
-		return null;
-	}
 	
 }

@@ -30,7 +30,7 @@ public final class MovingAverage extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		parameters.put(REACH, new Parameter(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
+		addParameter(REACH, new Parameter(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
 	}
 	
 	@Override

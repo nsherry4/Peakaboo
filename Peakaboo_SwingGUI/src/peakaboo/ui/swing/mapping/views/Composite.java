@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.mapping.views;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -38,21 +39,8 @@ public class Composite extends JPanel {
 	public Composite(TabController _controller) {
 		
 		this.controller = _controller;
-			
-		setLayout(new GridBagLayout());
 		
-		GridBagConstraints maingbc = new GridBagConstraints();
-		maingbc.insets = Spacing.iNone();
-		maingbc.ipadx = 0;
-		maingbc.ipady = 0;
-		
-
-		maingbc.gridx = 0;
-		maingbc.gridy = 0;		
-		maingbc.weightx = 1.0;
-		maingbc.weighty = 1.0;
-		maingbc.fill = GridBagConstraints.BOTH;
-		add(createElementsList(), maingbc);
+		createElementsList();
 		
 		controller.addListener(new EventfulTypeListener<String>() {
 
@@ -68,18 +56,15 @@ public class Composite extends JPanel {
 	}
 	
 	
-	private JPanel createElementsList()
+	private void createElementsList()
 	{
 				
-		JPanel elementsPanel = new JPanel();
-		elementsPanel.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
 				
 		//elements list
-		elementsPanel.add(createTransitionSeriesList(), BorderLayout.CENTER);
-		elementsPanel.add(createScaleOptions(), BorderLayout.SOUTH);
+		add(createTransitionSeriesList(), BorderLayout.CENTER);
+		add(createScaleOptions(), BorderLayout.SOUTH);
 		
-		
-		return elementsPanel;
 	}
 	
 	
@@ -210,7 +195,8 @@ public class Composite extends JPanel {
 		column.setMaxWidth(100);
 
 		JScrollPane scroll = new JScrollPane(table);
-
+		scroll.setPreferredSize(new Dimension(0,0));
+		
 
 		return scroll;
 

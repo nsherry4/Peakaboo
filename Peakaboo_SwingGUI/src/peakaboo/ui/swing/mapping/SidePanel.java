@@ -3,6 +3,7 @@ package peakaboo.ui.swing.mapping;
 
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -47,7 +48,6 @@ public class SidePanel extends JPanel
 	{
 
 		this.controller = controller;
-
 
 		createControls(owner);
 
