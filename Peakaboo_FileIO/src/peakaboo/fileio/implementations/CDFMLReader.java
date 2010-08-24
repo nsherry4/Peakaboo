@@ -210,16 +210,14 @@ public abstract class CDFMLReader extends DefaultHandler2
 			recordRecord();
 
 			
-		} else {
-			
-			//we only check for aborted status on non-record, non-entry tags
-			//so that we don't end up calling isAborted.f() for every record of every variable
-			
-			if (isAborted != null && isAborted.f())
-			{
-				throw new SAXException(ABORT_MESSAGE);
-			}
 		}
+			
+
+		if (isAborted != null && isAborted.f())
+		{
+			throw new SAXException(ABORT_MESSAGE);
+		}
+		
 
 		tagStack.pop();
 

@@ -56,6 +56,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	private boolean isNewVersion()
 	{
+		
 		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0")) return true;
 		return false;
 	}
@@ -460,30 +461,31 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	@Override
 	protected void processedSpectrum(String varname)
 	{
+		
 		//if this is the first scan we're looking at
 		if (scanReadCount == 0) {
+		
+			int totalScanCount = 0;
+			
 			
 			//new version and old version have different criteria for determining how many scans
-			if (isNewVersion()) {
-			
-				//we assume that all recordsets have the same length here, and require that both that and the NElements attribute be present
-				if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS) && hasAttr(CDFML.ATTR_MCA_NUM_ELEMENTS)) {
-					getScanCountCallback.f(
-							getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS) * 
-							getAttrInt(CDFML.ATTR_MCA_NUM_ELEMENTS, 0)
-						);
-				}
-					
-			} else {
-								
-				//we assume that in the older version, there will be only one spectrum recordset
-				if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS)) {
-					getScanCountCallback.f(getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS));
-				}
+			if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS) && hasAttr(CDFML.ATTR_MCA_NUM_ELEMENTS)) {
+						
+				totalScanCount = getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS) * getAttrInt(CDFML.ATTR_MCA_NUM_ELEMENTS, 0);
+
+			}
+			//we assume that in the older version, there will be only one spectrum recordset
+			else if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS)) {
+				
+				totalScanCount = getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS);
 				
 			}
+			
+			getScanCountCallback.f(totalScanCount);
+			
+			
 		}
-		
+				
 		scanReadCount++;
 		readScanCallback.f(1);
 		

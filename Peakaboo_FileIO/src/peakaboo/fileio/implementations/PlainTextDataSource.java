@@ -52,14 +52,20 @@ public class PlainTextDataSource implements DataSource
 			line = reader.readLine();
 			if (line == null || isAborted.f()) break;
 			
+			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
+						
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(Fn.map(line.split("\\D"), new FnMap<String, Float>(){
-
+			Spectrum scan = new Spectrum(Fn.map(line.trim().split("[ \\t]+"), new FnMap<String, Float>(){
+				
 				public Float f(String s)
 				{
-					return Float.parseFloat(s);
+					try { return Float.parseFloat(s); } 
+					catch (Exception e) { return 0f; }
+					
 				}}));
 			
+			
+			if (scandata.size() > 0 && scan.size() != scandata.get(0).size()) throw new Exception("Spectra sizes are not equal");
 			
 			scandata.add(scan);
 			
@@ -67,6 +73,8 @@ public class PlainTextDataSource implements DataSource
 			count++;
 			
 		}
+		
+		reader.close();
 		
 	}
 	
