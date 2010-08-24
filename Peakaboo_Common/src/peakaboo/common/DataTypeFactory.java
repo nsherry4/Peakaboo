@@ -1,6 +1,6 @@
 package peakaboo.common;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -138,7 +138,7 @@ public class DataTypeFactory {
      * @return a new map; T => S
      */
     public static <T, S> Map<T, S> map(){
-    	return new HashMap<T, S>();
+    	return new LinkedHashMap<T, S>();
     }
     
     /**
@@ -149,7 +149,7 @@ public class DataTypeFactory {
      * @return a new map; T => S
      */
     public static <T, S> Map<T, S> map(int initialSize){
-    	return new HashMap<T, S>(initialSize);
+    	return new LinkedHashMap<T, S>(initialSize);
     }
 
 
