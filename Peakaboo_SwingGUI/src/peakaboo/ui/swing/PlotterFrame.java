@@ -90,9 +90,16 @@ public class PlotterFrame extends JFrame
 		
 		
 		
-		//create a new datasource which is a subset of the passed one		
+		//create a new datasource which is a subset of the passed one
 		plotPanel.getController().dataController.setDataSource(ds);
+		
 		plotPanel.getController().loadPreferences(sessionData, false);
+		
+		//TODO: temporary work-around. Right now, the bad scan indexes aren't adjusted to fit the new data dimensions
+		//so they cause good data to be discarded, or an index out of bounds exception to be thrown when the index
+		//exceeds the dimensions of the new dataset
+		plotPanel.getController().dataController.clearDiscardedScanList();		
+
 		
 	}
 

@@ -83,5 +83,6 @@ public interface IDataController extends IEventful
 	public void setScanDiscarded(int scanNo, boolean discarded);
 	public void setScanDiscarded(boolean discarded);
 	public List<Integer> getDiscardedScanList();
+	public void clearDiscardedScanList();
 	
 }

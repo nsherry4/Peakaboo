@@ -32,7 +32,7 @@ public class DataController extends Eventful implements IDataController
 
 	private DataSetProvider 	dataModel;
 	private PlotController 		plot;
-	public List<Integer>		badScans;
+	private List<Integer>		badScans;
 	private int 				dataHeight, dataWidth;
 	
 	
@@ -309,6 +309,11 @@ public class DataController extends Eventful implements IDataController
 	{
 		return DataTypeFactory.<Integer> listInit(badScans);
 	}	
+	
+	public void clearDiscardedScanList()
+	{
+		badScans.clear();
+	}
 	
 	
 	public Spectrum getAveragePlot()

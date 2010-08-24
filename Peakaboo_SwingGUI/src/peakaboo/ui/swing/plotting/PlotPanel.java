@@ -1434,7 +1434,7 @@ public class PlotPanel extends ClearPanel
 						dataController.getDataDimensions(),
 						dataController.getRealDimensions(),
 						dataController.getRealDimensionsUnits(),
-						dataController.badScans
+						dataController.getDiscardedScanList()
 					);
 				
 			} else {
@@ -1442,7 +1442,7 @@ public class PlotPanel extends ClearPanel
 				mapController.mapsController.setMapData(
 						results,
 						dataController.getDatasetName(),
-						dataController.badScans
+						dataController.getDiscardedScanList()
 					);
 				
 			}

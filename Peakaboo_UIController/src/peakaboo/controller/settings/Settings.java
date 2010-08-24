@@ -78,9 +78,12 @@ public class Settings
 		}
 
 		
+		
 		for (Integer i : data.badScans)
 		{
-			dataController.setScanDiscarded(i, true);
+			if (  (dataController.hasDataSet() && dataController.datasetScanCount() <= i)  ||  (!dataController.hasDataSet())  ) {
+				dataController.setScanDiscarded(i, true);
+			}
 		}
 		
 		
