@@ -55,6 +55,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import commonenvironment.AbstractFile;
+import commonenvironment.Apps;
 import commonenvironment.Env;
 import commonenvironment.IOOperations;
 
@@ -63,6 +64,7 @@ import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
+import fava.lists.FList;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
@@ -598,19 +600,7 @@ public class PlotPanel extends ClearPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
-				new swidget.dialogues.AboutDialogue(
-					container,
-					Version.program_name,
-					"XRF Analysis Software",
-					"www.sciencestudioproject.com",
-					"Copyright &copy; 2009-2010 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
-					IOOperations.readTextFromJar("/peakaboo/licence.txt"),
-					IOOperations.readTextFromJar("/peakaboo/credits.txt"),
-					Version.logo,
-					Integer.toString(Version.versionNo),
-					Version.longVersionNo,
-					Version.buildDate,
-					Version.release);
+				actionAbout();
 			}
 		});
 		c.gridx += 1;
@@ -729,6 +719,19 @@ public class PlotPanel extends ClearPanel
 				},
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
+		/*
+		menu.add(createMenuItem(
+				"Open Sample Data", null, "Open a sample data set for learning or demonstrating Peakaboo",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionOpenSampleData();
+					}
+				},
+				null, null
+		));
+		*/
 		
 		menu.addSeparator();
 
@@ -1103,6 +1106,47 @@ public class PlotPanel extends ClearPanel
 		populateFittingMenu(menu);
 
 		menuBar.add(menu);
+		
+		
+		
+		
+		
+		
+		//HELP Menu
+		menu = new JMenu("Help");
+		menu.setMnemonic(KeyEvent.VK_H);
+		
+		JMenuItem contents = createMenuItem(
+				"Help", StockIcon.BADGE_HELP.toMenuIcon(), "",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionHelp();
+					}
+				},
+				KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
+		);
+		menu.add(contents);
+		
+		JMenuItem about = createMenuItem(
+				"About", StockIcon.MISC_ABOUT.toMenuIcon(), "",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionAbout();
+					}
+				},
+				null, null
+		);
+		menu.add(about);
+		
+		
+		menuBar.add(menu);
+		
+		
+		
 
 		container.setJMenuBar(menuBar);
 
@@ -1284,6 +1328,28 @@ public class PlotPanel extends ClearPanel
 	// UI ACTIONS
 	// ////////////////////////////////////////////////////////
 
+	private void actionAbout()
+	{
+		new swidget.dialogues.AboutDialogue(
+				container,
+				Version.program_name,
+				"XRF Analysis Software",
+				"www.sciencestudioproject.com",
+				"Copyright &copy; 2009-2010 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
+				IOOperations.readTextFromJar("/peakaboo/licence.txt"),
+				IOOperations.readTextFromJar("/peakaboo/credits.txt"),
+				Version.logo,
+				Integer.toString(Version.versionNo),
+				Version.longVersionNo,
+				Version.buildDate,
+				Version.release);
+	}
+	
+	private void actionHelp()
+	{
+		Apps.browser("http://sciencestudioproject.com/Peakaboo/help.php");
+	}
+	
 	private void actionOpenData()
 	{
 
@@ -1303,6 +1369,11 @@ public class PlotPanel extends ClearPanel
 		
 		loadFiles(files);
 
+	}
+	
+	private void actionOpenSampleData()
+	{
+		loadFiles(  new FList<AbstractFile>(IOOperations.getFileFromJar("/peakaboo/ui/swing/sampledata/"))  );
 	}
 
 

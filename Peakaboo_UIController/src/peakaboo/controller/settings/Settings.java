@@ -78,6 +78,12 @@ public class Settings
 		}
 
 		
+		for (Integer i : data.badScans)
+		{
+			dataController.setScanDiscarded(i, true);
+		}
+		
+		
 		// read in the drawing request
 		plotController.dr = data.drawingRequest;
 		settings.copy( data.settings );
@@ -132,6 +138,7 @@ public class Settings
 		data.drawingRequest = plotController.dr;
 		data.settings = settings;
 
+		data.badScans = plotController.dataController.getDiscardedScanList();
 
 		//try writing the serialized data
 		try

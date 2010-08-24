@@ -22,6 +22,7 @@ import scitypes.filebacked.FileBackedList;
 
 import commonenvironment.AbstractFile;
 
+import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.datatypes.Range;
@@ -445,12 +446,19 @@ public abstract class CDFMLReader extends DefaultHandler2
 	{	
 		return variableEntries.containsKey(var);
 	}
+	protected List<String> getVars()
+	{
+		return Fn.map(variableEntries.keySet(), Functions.<String>id());
+	}
 	
 	protected boolean hasAttr(String attr)
 	{
 		return attrEntries.containsKey(attr);
 	}
-	
+	protected List<String> getAttrs()
+	{
+		return Fn.map(attrEntries.keySet(), Functions.<String>id());
+	}
 	
 	
 	
@@ -460,6 +468,10 @@ public abstract class CDFMLReader extends DefaultHandler2
 		List<String> entries = getEntriesForAttr(attr);
 		if (entries == null) return null;
 		return entries.get(entry);
+	}
+	protected int getAttrCount(String attr)
+	{
+		return getEntriesForAttr(attr).size();
 	}
 	protected Integer getAttrInt(String attr, int entry)
 	{
@@ -478,6 +490,8 @@ public abstract class CDFMLReader extends DefaultHandler2
 	{
 		return varTypes.get(var);
 	}
+	
+	
 	protected List<Float> getVarFloats(String var)
 	{
 				

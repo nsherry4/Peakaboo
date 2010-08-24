@@ -28,6 +28,7 @@ public class SerializedData
 	public DrawingRequest					drawingRequest;
 	public SettingsModel					settings;
 	public List<AbstractFilter>				filters;
+	public List<Integer>					badScans;
 
 	
 	//Outer List - list of fitting
@@ -37,6 +38,10 @@ public class SerializedData
 	//public List<List<List<String>>>	fittings;
 	public List<SerializedTransitionSeries> fittings;
 
+	
+	
+	
+	
 	
 	public static SerializedData deserialize(String yaml)
 	{

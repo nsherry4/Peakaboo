@@ -309,11 +309,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				}
 				
 				
-				fileCount = dataSource.getScanCount();
-				gotScanCount.f(fileCount);
-				
-				
-				reading.advanceState();
 				
 				if (dataSource == null) 
 				{
@@ -326,6 +321,11 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					aborted();
 					return new Maybe<Boolean>(false);
 				}
+				
+				
+				fileCount = dataSource.getScanCount();
+				gotScanCount.f(fileCount);
+				reading.advanceState();
 				
 				applying.setWorkUnits(dataSource.getScanCount());
 				applying.advanceState();
