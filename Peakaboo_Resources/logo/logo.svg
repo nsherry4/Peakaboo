@@ -18,9 +18,9 @@
    version="1.0"
    sodipodi:docname="logo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/nathaniel/workspace/Peakaboo-Git/Peakaboo_SwingGUI/src/peakaboo/ui/swing/icons/rclogo.png"
-   inkscape:export-xdpi="45"
-   inkscape:export-ydpi="45">
+   inkscape:export-filename="/home/nathaniel/Projects/Peakaboo/Icons/logo/devtitle.png"
+   inkscape:export-xdpi="72.768906"
+   inkscape:export-ydpi="72.768906">
   <defs
      id="defs4">
     <linearGradient
@@ -525,11 +525,11 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.25000001"
-     inkscape:cx="-602.18287"
-     inkscape:cy="228.63062"
+     inkscape:zoom="0.70710682"
+     inkscape:cx="175.29876"
+     inkscape:cy="273.74741"
      inkscape:document-units="px"
-     inkscape:current-layer="layer6"
+     inkscape:current-layer="g3694"
      showgrid="false"
      inkscape:window-width="1680"
      inkscape:window-height="919"
@@ -544,7 +544,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -552,16 +552,16 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Text"
-     style="display:none">
+     style="display:inline">
     <g
        id="g3727"
-       transform="matrix(0.83478447,0,0,0.83478447,42.295162,29.381571)">
+       transform="matrix(0.83478447,0,0,0.83478447,42.295162,56.958734)">
       <text
          transform="matrix(1.0313731,0,0,1.031373,14.403994,-51.86061)"
          id="text3679"
          y="662.90381"
          x="-184.10045"
-         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3683);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;opacity:0.7;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3683);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
            y="662.90381"
@@ -573,7 +573,7 @@
          id="text3671"
          y="662.90381"
          x="-184.10045"
-         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3675);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;opacity:0.7;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3675);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
            y="662.90381"
@@ -604,7 +604,7 @@
        id="g3691">
       <text
          xml:space="preserve"
-         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3683);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;opacity:0.7;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3683);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
          x="-184.10045"
          y="662.90381"
          id="text3693"
@@ -616,7 +616,7 @@
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold">Peakaboo 3</tspan></text>
       <text
          xml:space="preserve"
-         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3675);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         style="font-size:180.31912231px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;opacity:0.7;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter3675);font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
          x="-184.10045"
          y="662.90381"
          id="text3697"
@@ -630,9 +630,9 @@
          id="text3701"
          y="631.84052"
          x="-175.47224"
-         style="font-size:185.97628784px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+         style="font-size:185.97569275px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
+           style="font-size:185.97569275px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Springsteel;-inkscape-font-specification:Springsteel Bold"
            y="631.84052"
            x="-175.47224"
            id="tspan3703"
@@ -685,7 +685,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Release Curve"
-     style="display:inline">
+     style="display:none">
     <g
        style="display:inline"
        transform="matrix(0.87322183,0,0,0.87322183,32.455213,18.350531)"
@@ -735,7 +735,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Dev Curve"
-     style="display:none">
+     style="display:inline">
     <g
        id="g3694"
        transform="matrix(0.87322183,0,0,0.87322183,32.455213,18.350531)"
