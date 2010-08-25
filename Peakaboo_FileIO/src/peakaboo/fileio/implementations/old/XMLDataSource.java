@@ -13,6 +13,7 @@ import peakaboo.fileio.DataSource;
 import peakaboo.fileio.implementations.support.CLSXML;
 import scitypes.Coord;
 import scitypes.Spectrum;
+import scitypes.filebacked.FileBackedList;
 
 
 public class XMLDataSource implements DataSource
@@ -20,6 +21,8 @@ public class XMLDataSource implements DataSource
 
 	private List<AbstractFile>	filenames;
 	private List<Boolean>		badScans;
+	
+	private List<Spectrum>		spectra;
 
 
 	public static XMLDataSource getXMLFileSet(List<AbstractFile> filenames)
@@ -34,6 +37,8 @@ public class XMLDataSource implements DataSource
 			xml.badScans.add(false);
 		}
 
+		xml.spectra = FileBackedList.<Spectrum>create("Peakaboo - Spectra");
+		
 		return xml;
 
 	}
@@ -56,7 +61,11 @@ public class XMLDataSource implements DataSource
 		if (index < 0) return null;
 		if (index >= filenames.size()) return null;
 		
-		return CLSXML.readScanFromFile(filenames.get(index));
+		if (spectra.get(index) == null) {
+			spectra.set(index, CLSXML.readScanFromFile(filenames.get(index)));
+		}
+		
+		return spectra.get(index);
 	}
 
 
