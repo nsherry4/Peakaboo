@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +67,6 @@ import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
 import fava.lists.FList;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.plotter.PlotController;
@@ -719,7 +719,7 @@ public class PlotPanel extends ClearPanel
 				},
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
-		/*
+		
 		menu.add(createMenuItem(
 				"Open Sample Data", null, "Open a sample data set for learning or demonstrating Peakaboo",
 				new ActionListener() {
@@ -731,7 +731,7 @@ public class PlotPanel extends ClearPanel
 				},
 				null, null
 		));
-		*/
+		
 		
 		menu.addSeparator();
 
@@ -1373,7 +1373,7 @@ public class PlotPanel extends ClearPanel
 	
 	private void actionOpenSampleData()
 	{
-		loadFiles(  new FList<AbstractFile>(IOOperations.getFileFromJar("/peakaboo/ui/swing/sampledata/"))  );
+		loadFiles(  new FList<AbstractFile>(IOOperations.getFileFromJar("/peakaboo/fileio/SampleData.xml"))  );
 	}
 
 
@@ -1562,7 +1562,7 @@ public class PlotPanel extends ClearPanel
 	public void actionShowInfo()
 	{
 		
-		Map<String, String> properties = DataTypeFactory.<String, String>map();
+		Map<String, String> properties = new HashMap<String, String>();
 
 		properties.put("Date of Creation:", dataController.getScanCreationTime());
 		properties.put("Created By:", dataController.getScanCreator());

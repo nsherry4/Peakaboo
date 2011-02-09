@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.plotter.data.DataController;

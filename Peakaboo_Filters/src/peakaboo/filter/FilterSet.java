@@ -1,10 +1,10 @@
 package peakaboo.filter;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import peakaboo.common.DataTypeFactory;
 import scitypes.Spectrum;
 
 /**
@@ -26,7 +26,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	public FilterSet()
 	{
 
-		filters = DataTypeFactory.<AbstractFilter> list();
+		filters = new ArrayList<AbstractFilter>();
 		availableFilters = AvailableFilters.getNewInstancesForAllFilters();
 
 	}

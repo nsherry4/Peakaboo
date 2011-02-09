@@ -1,8 +1,7 @@
 package peakaboo.calculations;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import peakaboo.common.DataTypeFactory;
 
 import fava.datatypes.Pair;
 import static fava.Fn.*;
@@ -89,7 +88,7 @@ public class Interpolation {
 		Pair<Integer, Integer> coords;
 		int x, y;
 		float newval;
-		List<Integer> newBadPoints = DataTypeFactory.<Integer>list();
+		List<Integer> newBadPoints = new ArrayList<Integer>();
 		boolean repeat = false;
 		
 		for (int i : badPoints){

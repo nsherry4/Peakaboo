@@ -1,10 +1,10 @@
 package peakaboo.controller.plotter.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.PlotController.UpdateType;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
@@ -40,7 +40,7 @@ public class DataController extends Eventful implements IDataController
 	{
 		this.plot = plotController;
 		dataModel = new EmptyDataSetProvider();
-		badScans = DataTypeFactory.<Integer>list();
+		badScans = new ArrayList<Integer>();
 	}
 	
 	public DataSetProvider getDataModel()

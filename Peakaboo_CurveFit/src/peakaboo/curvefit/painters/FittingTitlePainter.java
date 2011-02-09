@@ -1,13 +1,13 @@
 package peakaboo.curvefit.painters;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.Transition;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
@@ -67,7 +67,7 @@ public class FittingTitlePainter extends PlotPainter
 		this.drawMaxIntensities = drawMaxIntensities;
 		this.drawElementNames = drawTSNames;
 		
-		this.previousLabels = DataTypeFactory.<Coord<Bounds<Float>>>list();
+		this.previousLabels = new ArrayList<Coord<Bounds<Float>>>();
 		
 		this.colour = new Color(colour.getRed(), colour.getGreen(), colour.getBlue());
 		
@@ -141,7 +141,7 @@ public class FittingTitlePainter extends PlotPainter
 	{
 			
 		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, energy);
-		List<Coord<Bounds<Float>>> labelsInRange = DataTypeFactory.<Coord<Bounds<Float>>>list();
+		List<Coord<Bounds<Float>>> labelsInRange = new ArrayList<Coord<Bounds<Float>>>();
 		
 		//get a list of all labels which might get in the way of this one
 		for (Coord<Bounds<Float>> label : previousLabels)

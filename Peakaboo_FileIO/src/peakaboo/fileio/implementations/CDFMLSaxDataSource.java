@@ -2,6 +2,7 @@ package peakaboo.fileio.implementations;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,7 +15,6 @@ import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
@@ -297,7 +297,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	public List<String> getScanNames()
 	{
-		List<String> scannames = DataTypeFactory.<String> list();
+		List<String> scannames = new ArrayList<String>();
 
 		for (int i = 0; i < getScanCount(); i++)
 		{

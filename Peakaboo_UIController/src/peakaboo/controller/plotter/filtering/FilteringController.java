@@ -1,11 +1,11 @@
 package peakaboo.controller.plotter.filtering;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import eventful.Eventful;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.FilterSet;
@@ -38,7 +38,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 	public List<String> getAvailableFiltersByName()
 	{
-		List<String> filterNames = DataTypeFactory.<String> list();
+		List<String> filterNames = new ArrayList<String>();
 
 		for (AbstractFilter filter : filteringModel.filters.getAvailableFilters())
 		{

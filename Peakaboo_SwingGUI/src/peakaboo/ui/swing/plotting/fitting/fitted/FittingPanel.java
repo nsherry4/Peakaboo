@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
@@ -21,7 +22,6 @@ import javax.swing.table.TableColumn;
 import fava.Fn;
 import fava.signatures.FnMap;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
@@ -269,7 +269,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 			public void removeTableModelListener(TableModelListener l)
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
+				if (listeners == null) listeners = new ArrayList<TableModelListener>();
 				listeners.remove(l);
 			}
 
@@ -329,7 +329,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 			public void addTableModelListener(TableModelListener l)
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
+				if (listeners == null) listeners = new ArrayList<TableModelListener>();
 				listeners.add(l);
 			}
 

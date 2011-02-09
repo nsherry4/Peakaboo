@@ -6,10 +6,10 @@ import static fava.Fn.map;
 import static fava.Fn.unique;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.maptab.ITabController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
@@ -139,8 +139,8 @@ public class MapCanvas extends GraphicsPanel
 		
 		AbstractPalette palette 			=		new ThermalScalePalette(spectrumSteps, controller.mapsController.getMonochrome());
 		AxisPainter spectrumCoordPainter 	= 		null;
-		List<AbstractPalette> paletteList	=		DataTypeFactory.<AbstractPalette> list();
-		List<AxisPainter> axisPainters 		= 		DataTypeFactory.<AxisPainter> list();
+		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
+		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
 		
 		Spectrum data = tabController.getCompositeMapData();
@@ -217,7 +217,7 @@ public class MapCanvas extends GraphicsPanel
 
 		paletteList.add(palette);
 		
-		List<MapPainter> mapPainters = DataTypeFactory.<MapPainter>list();
+		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (contourMapPainter == null) {
 			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data, controller.mapsController.getContours(), spectrumSteps); 
 		} else {
@@ -250,8 +250,8 @@ public class MapCanvas extends GraphicsPanel
 	private void drawBackendRatio(Surface backend, boolean vector, int spectrumSteps)
 	{
 		AxisPainter spectrumCoordPainter 	= 		null;
-		List<AbstractPalette> paletteList	=		DataTypeFactory.<AbstractPalette> list();
-		List<AxisPainter> axisPainters 		= 		DataTypeFactory.<AxisPainter> list();
+		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
+		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
 		Pair<Spectrum, Spectrum> ratiodata = tabController.getRatioMapData();
 		
@@ -290,7 +290,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//generate a list of markers to be drawn along the spectrum to indicate the ratio at those points
-		List<Pair<Float, String>> spectrumMarkers = DataTypeFactory.<Pair<Float, String>> list();
+		List<Pair<Float, String>> spectrumMarkers = new ArrayList<Pair<Float, String>>();
 
 		int increment = 1;
 		if (steps > 8) increment = (int) Math.ceil(steps / 8);
@@ -355,7 +355,7 @@ public class MapCanvas extends GraphicsPanel
 
 
 		
-		List<MapPainter> mapPainters = DataTypeFactory.<MapPainter>list();
+		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (ratioMapPainter == null) {
 			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, controller.mapsController.getContours(), spectrumSteps); 
 		} else {
@@ -406,7 +406,7 @@ public class MapCanvas extends GraphicsPanel
 	private void drawBackendOverlay(Surface backend, boolean vector, int spectrumSteps)
 	{
 		AxisPainter spectrumCoordPainter 	= 		null;
-		List<AxisPainter> axisPainters 		= 		DataTypeFactory.<AxisPainter> list();
+		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
 		Map<OverlayColour, Spectrum> data = tabController.getOverlayMapData();
 		
@@ -541,7 +541,7 @@ public class MapCanvas extends GraphicsPanel
 	
 
 		// create a list of map painters, one for each of the maps we want to show
-		List<MapPainter> painters = DataTypeFactory.<MapPainter>list();
+		List<MapPainter> painters = new ArrayList<MapPainter>();
 		
 		if (redSpectrum != null){
 			if (overlayMapPainterRed == null) {

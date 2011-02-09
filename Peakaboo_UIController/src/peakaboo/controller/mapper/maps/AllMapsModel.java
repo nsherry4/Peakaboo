@@ -2,11 +2,11 @@ package peakaboo.controller.mapper.maps;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -16,7 +16,7 @@ import scitypes.SISize;
 public class AllMapsModel
 {
 
-	public List<Integer>			badPoints			= DataTypeFactory.<Integer> list();
+	public List<Integer>			badPoints			= new ArrayList<Integer>();
 
 	public Coord<Bounds<Number>>	realDimensions;
 	public SISize					realDimensionsUnits;

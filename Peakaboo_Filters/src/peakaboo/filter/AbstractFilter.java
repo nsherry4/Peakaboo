@@ -11,7 +11,6 @@ import fava.datatypes.Pair;
 import peakaboo.calculations.Background;
 import peakaboo.calculations.Calculations;
 import peakaboo.calculations.Noise;
-import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;

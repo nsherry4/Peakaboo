@@ -4,6 +4,7 @@ package peakaboo.ui.swing.plotting.fitting.unfitted;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JScrollPane;
@@ -12,7 +13,6 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.peaktable.TransitionSeriesType;
@@ -116,7 +116,7 @@ public class ProposalPanel extends ClearPanel implements Changeable
 
 			public void removeTreeModelListener(TreeModelListener l)
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TreeModelListener> list();
+				if (listeners == null) listeners = new ArrayList<TreeModelListener>();
 				listeners.remove(l);
 			}
 
@@ -194,7 +194,7 @@ public class ProposalPanel extends ClearPanel implements Changeable
 
 			public void addTreeModelListener(TreeModelListener l)
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TreeModelListener> list();
+				if (listeners == null) listeners = new ArrayList<TreeModelListener>();
 				listeners.add(l);
 
 			}

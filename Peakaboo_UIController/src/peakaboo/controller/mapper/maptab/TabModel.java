@@ -1,10 +1,10 @@
 package peakaboo.controller.mapper.maptab;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 
@@ -25,9 +25,9 @@ public class TabModel {
 		displayMode = MapDisplayMode.COMPOSITE;
 		mapScaleMode = MapScaleMode.ABSOLUTE;
 		
-		ratioSide = DataTypeFactory.<TransitionSeries, Integer>map();
-		overlayColour = DataTypeFactory.<TransitionSeries, OverlayColour>map();
-		visible = DataTypeFactory.<TransitionSeries, Boolean>map();
+		ratioSide = new HashMap<TransitionSeries, Integer>();
+		overlayColour = new HashMap<TransitionSeries, OverlayColour>();
+		visible = new HashMap<TransitionSeries, Boolean>();
 		
 		for (TransitionSeries ts : tss)
 		{

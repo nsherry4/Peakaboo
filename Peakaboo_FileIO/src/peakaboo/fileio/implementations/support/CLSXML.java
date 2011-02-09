@@ -1,11 +1,11 @@
 package peakaboo.fileio.implementations.support;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
 
-import peakaboo.common.DataTypeFactory;
 import scitypes.Spectrum;
 
 /**
@@ -64,7 +64,7 @@ public class CLSXML {
 	
 	public static void filterNonXMLFilesFromFileList(List<AbstractFile> files){
 		
-		List<AbstractFile> badFiles = DataTypeFactory.<AbstractFile>list();
+		List<AbstractFile> badFiles = new ArrayList<AbstractFile>();
 		
 		for (AbstractFile file : files){
 			

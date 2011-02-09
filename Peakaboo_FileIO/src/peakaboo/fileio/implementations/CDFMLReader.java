@@ -2,6 +2,7 @@ package peakaboo.fileio.implementations;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -98,13 +99,13 @@ public abstract class CDFMLReader extends DefaultHandler2
 		
 		this.isAborted = isAborted;
 		
-		attrEntries = DataTypeFactory.<String, List<String>> map();
-		variableEntries = DataTypeFactory.<String, List<?>>map();
-		variableAttributes = DataTypeFactory.<String, Map<String, String>>map();
+		attrEntries = new HashMap<String, List<String>>();
+		variableEntries = new HashMap<String, List<?>>();
+		variableAttributes = new HashMap<String, Map<String, String>>();
 		tagStack = new Stack<Pair<String, Map<String, String>>>();
-		varTypes = DataTypeFactory.<String, CDF_DATATYPE>map();
+		varTypes = new HashMap<String, CDF_DATATYPE>();
 		
-		tagStackMapsList = DataTypeFactory.<Pair<String, Map<String, String>>>list(20);
+		tagStackMapsList = new ArrayList<Pair<String, Map<String, String>>>(20);
 		
 		
 		try
@@ -163,7 +164,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 			
 			String varName = getTagAttribute(CDFML.TAG_VAR, CDFML.XML_ATTR_NAME);
 			
-			Map<String, String> attsMap = DataTypeFactory.<String, String>map(12);
+			Map<String, String> attsMap = new HashMap<String, String>(12);
 			for (Integer i : new Range(0, atts.getLength()-1))
 			{
 				attsMap.put(atts.getQName(i), atts.getValue(i));
@@ -256,7 +257,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		
 		if (tagStackMapsList.size() < tagStack.size()+1)
 		{
-			attMap = DataTypeFactory.<String, String> map(8);
+			attMap = new HashMap<String, String>(8);
 			tagData	= new Pair<String, Map<String, String>>(name, attMap); 
 			tagStackMapsList.add(tagData);
 			

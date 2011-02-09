@@ -2,6 +2,7 @@ package peakaboo.dataset.provider.implementations;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
@@ -14,7 +15,6 @@ import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 import static fava.Fn.*;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
@@ -406,7 +406,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			dataDimension = dims.getDataDimensions();
 			realDimension = dims.getRealDimensions();
 
-			realCoords = DataTypeFactory.<Coord<Number>> list();
+			realCoords = new ArrayList<Coord<Number>>();
 
 
 			realUnits = getSISizeFromUnitName(dims.getRealDimensionsUnit());

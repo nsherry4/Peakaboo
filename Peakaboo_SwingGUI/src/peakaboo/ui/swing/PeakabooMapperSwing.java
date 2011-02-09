@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -35,7 +36,6 @@ import fava.datatypes.Range;
 import fava.lists.FList;
 import fava.signatures.FnMap;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.maptab.TabController;
 import peakaboo.controller.plotter.PlotController;
@@ -436,7 +436,7 @@ public class PeakabooMapperSwing extends JDialog
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				Map<String, String> fittings = DataTypeFactory.<String, String>map();
+				Map<String, String> fittings = new HashMap<String, String>();
 				
 				final Corrections corr = CorrectionsManager.getCorrections("WL");
 				

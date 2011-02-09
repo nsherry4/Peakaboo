@@ -2,6 +2,7 @@ package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -17,7 +18,6 @@ import javax.swing.table.TableModel;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
@@ -94,7 +94,7 @@ public class FilterEditViewer extends ClearPanel{
 		
 			public void removeTableModelListener(TableModelListener l)
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
+				if (listeners == null) listeners = new ArrayList<TableModelListener>();
 				listeners.remove(l);
 			}
 		
@@ -129,7 +129,7 @@ public class FilterEditViewer extends ClearPanel{
 		
 			public void addTableModelListener(TableModelListener l)
 			{
-				if (listeners == null) listeners = DataTypeFactory.<TableModelListener> list();
+				if (listeners == null) listeners = new ArrayList<TableModelListener>();
 				listeners.add(l);
 			}
 

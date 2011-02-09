@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -13,7 +14,6 @@ import javax.swing.JScrollPane;
 
 import fava.signatures.FnEach;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
@@ -45,7 +45,7 @@ public class SmartFittingPanel extends JPanel
 		this.controller = controller;
 		this.canvas = canvas;
 
-		potentials = DataTypeFactory.<TransitionSeries> list();
+		potentials =new ArrayList<TransitionSeries>();
 
 		selControls = new SelectionListControls("Fittings") {
 

@@ -9,6 +9,7 @@ import javax.swing.UIManager;
 
 import commonenvironment.Env;
 
+import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.ui.swing.PlotterFrame;
 
@@ -59,8 +60,28 @@ public class Peakaboo
 						JOptionPane.INFORMATION_MESSAGE,
 						StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 				}
+					
 				
-				new PlotterFrame();
+				//Any errors that don't get handled anywhere else come here and get shown
+				//to the user and printed to standard out.
+				try {
+						
+					new PlotterFrame();
+					
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+					StringBuilder sb = new StringBuilder();
+					
+					sb.append("A general error has occured in " + Version.program_name + ":\n\n");
+					
+					for (StackTraceElement ste : e.getStackTrace()) {
+						sb.append( ste.toString() + "\n" );
+					}
+					
+					JOptionPane.showMessageDialog(null, sb.toString(), "General Error in " + Version.program_name, JOptionPane.ERROR_MESSAGE, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+					
+				}
 
 			}
 		});

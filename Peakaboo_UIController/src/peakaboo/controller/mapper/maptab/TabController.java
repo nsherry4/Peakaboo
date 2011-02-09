@@ -12,8 +12,10 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +28,6 @@ import fava.lists.FList;
 import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 import peakaboo.calculations.Interpolation;
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.mapper.MapController;
 import peakaboo.controller.mapper.MapController.UpdateType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
@@ -175,7 +176,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 				
 
 		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null;
-		Map<OverlayColour, Spectrum> uninterpolatedColours = DataTypeFactory.<OverlayColour, Spectrum>map();
+		Map<OverlayColour, Spectrum> uninterpolatedColours = new HashMap<OverlayColour, Spectrum>();
 		
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = Fn.filter(
@@ -292,7 +293,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 			if (blueSpectrum != null ) SpectrumCalculations.normalize_inplace(blueSpectrum);
 		}
 		
-		Map<OverlayColour, Spectrum> colours = DataTypeFactory.<OverlayColour, Spectrum>map();
+		Map<OverlayColour, Spectrum> colours = new HashMap<OverlayColour, Spectrum>();
 		
 		colours.put(OverlayColour.RED, redSpectrum);
 		colours.put(OverlayColour.GREEN, greenSpectrum);
@@ -764,7 +765,7 @@ public class TabController extends EventfulType<String> implements ITabControlle
 	 */
 	public Spectrum getMapForTransitionSeries(TransitionSeries ts)
 	{
-		List<TransitionSeries> tss = DataTypeFactory.<TransitionSeries>list();
+		List<TransitionSeries> tss = new ArrayList<TransitionSeries>();
 		tss.add(ts);
 		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss);
 	}
