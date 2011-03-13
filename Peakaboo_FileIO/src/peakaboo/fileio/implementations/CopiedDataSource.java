@@ -6,7 +6,6 @@ import java.util.List;
 
 import commonenvironment.AbstractFile;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
@@ -25,7 +24,7 @@ import scitypes.filebacked.FileBackedList;
 public class CopiedDataSource implements DataSource, DataSourceDimensions, DataSourceExtendedInformation
 {
 
-	private List<String>				scannames = DataTypeFactory.<String>list();
+	private List<String>				scannames = new ArrayList<String>();
 	private DataSource					originalDataSource;
 	
 	private int							sizeX, sizeY;

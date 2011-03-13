@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -24,7 +25,6 @@ import fava.datatypes.Pair;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
@@ -290,7 +290,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		////////////////////////////////////////////////////////////////////
 
 		// if axes are shown, also draw horizontal grid lines
-		List<PlotPainter> plotPainters = DataTypeFactory.<PlotPainter> list();
+		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
 		if (controller.settingsController.getShowAxes()) plotPainters.add(new GridlinePainter(new Bounds<Float>(
 			0.0f,
 			controller.dataController.maximumIntensity())));
@@ -379,7 +379,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		if (axisPainters == null)
 		{
 
-			axisPainters = DataTypeFactory.<AxisPainter> list();
+			axisPainters = new ArrayList<AxisPainter>();
 
 			if (controller.settingsController.getShowTitle())
 			{

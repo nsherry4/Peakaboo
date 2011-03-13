@@ -2,12 +2,12 @@ package peakaboo.curvefit.fitting;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fava.functionable.Range;
 import fava.functionable.RangeSet;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.Transition;
 import peakaboo.curvefit.peaktable.TransitionSeries;
@@ -306,7 +306,7 @@ public class TransitionSeriesFitting
 	{
 
 		Spectrum fit = new Spectrum(dataWidth);
-		List<FittingFunction> functions = DataTypeFactory.<FittingFunction> list();
+		List<FittingFunction> functions = new ArrayList<FittingFunction>();
 		
 		for (Transition t : ts)
 		{

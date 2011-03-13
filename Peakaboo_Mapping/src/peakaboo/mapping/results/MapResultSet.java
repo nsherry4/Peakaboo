@@ -1,6 +1,7 @@
 package peakaboo.mapping.results;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.List;
 import fava.signatures.FnMap;
 import static fava.Fn.*;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -41,7 +41,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
 	{
 		
-		maps = DataTypeFactory.<MapResult>list();
+		maps = new ArrayList<MapResult>();
 		for (TransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));
 		}
@@ -59,7 +59,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	public MapResultSet clone()
 	{
 	
-		List<MapResult> mapresults = DataTypeFactory.<MapResult>list();
+		List<MapResult> mapresults = new ArrayList<MapResult>();
 		
 		for (MapResult map : maps)
 		{

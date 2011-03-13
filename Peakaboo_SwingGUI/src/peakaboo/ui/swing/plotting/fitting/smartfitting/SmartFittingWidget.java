@@ -5,13 +5,13 @@ package peakaboo.ui.swing.plotting.fitting.smartfitting;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 
 import fava.*;
 import fava.signatures.FnMap;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
@@ -37,7 +37,7 @@ class SmartFittingWidget extends TSSelectorGroup
 	{
 		super(controller, 1);
 		
-		editButtons = DataTypeFactory.<ImageButton>list();
+		editButtons = new ArrayList<ImageButton>();
 		
 		resetSelectors();
 		activeIndex = 0;

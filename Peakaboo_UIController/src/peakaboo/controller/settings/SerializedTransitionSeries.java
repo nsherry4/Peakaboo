@@ -1,10 +1,10 @@
 package peakaboo.controller.settings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.TransitionSeries;
@@ -19,7 +19,7 @@ public class SerializedTransitionSeries
 
 	public SerializedTransitionSeries()
 	{
-		components = DataTypeFactory.<String>list();
+		components = new ArrayList<String>();
 	}
 	
 	public SerializedTransitionSeries(TransitionSeries ts)
@@ -40,7 +40,7 @@ public class SerializedTransitionSeries
 		
 		
 		String parts[];
-		List<TransitionSeries> tss = DataTypeFactory.<TransitionSeries>list();
+		List<TransitionSeries> tss = new ArrayList<TransitionSeries>();
 		TransitionSeries created;
 		
 		for (String tsd : components)

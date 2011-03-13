@@ -5,10 +5,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
-import peakaboo.common.DataTypeFactory;
 
 
 
@@ -37,7 +37,7 @@ public class PeakTableReader
 		
 
 		String line;
-		List<String> elements = DataTypeFactory.<String> list();
+		List<String> elements = new ArrayList<String>();
 
 		try {
 

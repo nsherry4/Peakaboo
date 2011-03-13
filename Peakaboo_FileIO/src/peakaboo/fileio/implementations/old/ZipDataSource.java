@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -15,7 +16,6 @@ import commonenvironment.IOOperations;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.implementations.support.CLSXML;
 import scitypes.Coord;
@@ -58,7 +58,7 @@ public class ZipDataSource implements DataSource
 		
 		filenames = getAllXMLFileNames();
 		
-		badScans = DataTypeFactory.<Boolean>list();
+		badScans = new ArrayList<Boolean>();
 		for (int i = 0; i < filenames.size(); i++){
 			badScans.add(false);
 		}
@@ -71,7 +71,7 @@ public class ZipDataSource implements DataSource
 		
 		
 		
-		List<String> entryNames = DataTypeFactory.<String>list();		
+		List<String> entryNames = new ArrayList<String>();		
 		if (zip == null) return entryNames;
 		
 		Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -161,7 +161,7 @@ public class ZipDataSource implements DataSource
 		
 		return entryNames;*/
 		
-		List<String> entryNames = DataTypeFactory.<String>list();	
+		List<String> entryNames = new ArrayList<String>();	
 		
 		for (int i = 0; i < filenames.size(); i++)
 		{

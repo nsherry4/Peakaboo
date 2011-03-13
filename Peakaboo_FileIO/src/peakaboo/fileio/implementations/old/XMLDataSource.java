@@ -1,6 +1,7 @@
 package peakaboo.fileio.implementations.old;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
@@ -8,7 +9,6 @@ import commonenvironment.IOOperations;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.implementations.support.CLSXML;
 import scitypes.Coord;
@@ -32,7 +32,7 @@ public class XMLDataSource implements DataSource
 		CLSXML.filterNonXMLFilesFromFileList(filenames);
 
 		xml.filenames = filenames;
-		xml.badScans = DataTypeFactory.<Boolean> list();
+		xml.badScans = new ArrayList<Boolean>();
 		for (int i = 0; i < xml.filenames.size(); i++) {
 			xml.badScans.add(false);
 		}
@@ -81,7 +81,7 @@ public class XMLDataSource implements DataSource
 
 	public List<String> getScanNames()
 	{
-		List<String> scanNames = DataTypeFactory.<String>list();
+		List<String> scanNames = new ArrayList<String>();
 		
 		//collect the names of the good scans only
 		for (int i = 0; i < filenames.size(); i++){

@@ -2,11 +2,11 @@ package peakaboo.curvefit.peaktable;
 
 
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Collections;
 
-import peakaboo.common.DataTypeFactory;
 
 import fava.*;
 import fava.datatypes.Pair;
@@ -27,7 +27,7 @@ import static fava.Fn.*;
 public class PeakTable
 {
 
-	private static List<TransitionSeries> elementTransitions = DataTypeFactory.<TransitionSeries> list();
+	private static List<TransitionSeries> elementTransitions = new ArrayList<TransitionSeries>();
 
 
 
@@ -55,7 +55,7 @@ public class PeakTable
 	public static List<Pair<TransitionSeries, Double>> getNearestMatchesToEnergy(double energy)
 	{
 
-		List<Pair<TransitionSeries, Double>> matches = DataTypeFactory.<Pair<TransitionSeries, Double>> list();
+		List<Pair<TransitionSeries, Double>> matches = new ArrayList<Pair<TransitionSeries, Double>>();
 
 		for (TransitionSeries ts : elementTransitions)
 		{

@@ -5,6 +5,7 @@ package peakaboo.filter;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import commonenvironment.Env;
@@ -14,7 +15,6 @@ import fava.functionable.FList;
 import fava.signatures.FnMap;
 import static fava.Fn.*;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.filter.AbstractFilter.FilterType;
 import peakaboo.filter.filters.advanced.DataToWavelet;
 import peakaboo.filter.filters.advanced.Derivative;
@@ -133,7 +133,7 @@ public class AvailableFilters
 	private static List<Class<? extends AbstractFilter>> generateFilterListStatic()
 	{
 
-		List<Class<? extends AbstractFilter>> l = DataTypeFactory.<Class<? extends AbstractFilter>> list();
+		List<Class<? extends AbstractFilter>> l = new ArrayList<Class<? extends AbstractFilter>>();
 		
 		//noise
 		l.add(FourierLowPass.class);
@@ -183,7 +183,7 @@ public class AvailableFilters
 	private static List<Class<? extends AbstractFilter>> generateFilterListDynamic()
 	{
 
-		List<Class<? extends AbstractFilter>> list = DataTypeFactory.<Class<? extends AbstractFilter>> list();
+		List<Class<? extends AbstractFilter>> list = new ArrayList<Class<? extends AbstractFilter>>();
 
 		Package p = AbstractFilter.class.getPackage();
 		List<Class<?>> classes = new FList<Class<?>>();
@@ -227,7 +227,7 @@ public class AvailableFilters
 	private static List<Class<?>> getClasses(String pckgname) throws ClassNotFoundException
 	{
 
-		List<Class<?>> classes = DataTypeFactory.<Class<?>> list();
+		List<Class<?>> classes = new ArrayList<Class<?>>();
 		// Get a File object for the package
 		File directory = null;
 		try

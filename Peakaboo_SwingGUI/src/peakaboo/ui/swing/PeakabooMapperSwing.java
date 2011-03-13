@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -35,9 +36,8 @@ import fava.functionable.Range;
 import fava.functionable.FList;
 import fava.signatures.FnMap;
 
-import peakaboo.common.DataTypeFactory;
-import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.maptab.TabController;
+import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.correction.Corrections;
@@ -67,7 +67,7 @@ import swidget.widgets.ToolbarImageButton;
 public class PeakabooMapperSwing extends JDialog
 {
 
-	protected MapController		controller;
+	protected MappingController		controller;
 	protected PlotController	plotController;
 	
 
@@ -84,7 +84,7 @@ public class PeakabooMapperSwing extends JDialog
 
 	
 	
-	public PeakabooMapperSwing(JFrame owner, MapController controller, PlotController plotcontroller)
+	public PeakabooMapperSwing(JFrame owner, MappingController controller, PlotController plotcontroller)
 	{
 		super(owner, "Map - " + controller.mapsController.getDatasetTitle());
 		this.controller = controller;
@@ -96,7 +96,7 @@ public class PeakabooMapperSwing extends JDialog
 		
 	}
 	
-	public MapController showDialog()
+	public MappingController showDialog()
 	{
 		
 
@@ -222,7 +222,7 @@ public class PeakabooMapperSwing extends JDialog
 	private void createMapsViewer()
 	{
 		
-		TabController tabController = new TabController(controller, controller.mapsController.getMapResultSet().getAllTransitionSeries());
+		MapTabController tabController = new MapTabController(controller, controller.mapsController.getMapResultSet().getAllTransitionSeries());
 		
 		controller.setTabController(tabController);
 		final MapViewer viewer = new MapViewer(tabController, controller, this);
@@ -436,7 +436,7 @@ public class PeakabooMapperSwing extends JDialog
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				Map<String, String> fittings = DataTypeFactory.<String, String>map();
+				Map<String, String> fittings = new HashMap<String, String>();
 				
 				final Corrections corr = CorrectionsManager.getCorrections("WL");
 				

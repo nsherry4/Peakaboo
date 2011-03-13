@@ -1,13 +1,13 @@
 package peakaboo.fileio.implementations;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
 
 import fava.Fn;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import scitypes.Spectrum;
 import scitypes.filebacked.FileBackedList;
@@ -70,7 +70,7 @@ public class LiveDataSource implements DataSource
 
 	public List<String> getScanNames()
 	{
-		List<String> names = DataTypeFactory.<String>list();
+		List<String> names = new ArrayList<String>();
 		for (int i = 0; i < getScanCount(); i++)
 		{
 			names.add("Scan " + i);

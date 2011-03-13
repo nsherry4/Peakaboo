@@ -3,11 +3,11 @@ package peakaboo.curvefit.peaktable;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import peakaboo.common.DataTypeFactory;
 
 import fava.*;
 import fava.functionable.FList;
@@ -103,8 +103,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		intensity = 1.0;
 		visible = true;
 
-		transitions = DataTypeFactory.<Transition> list();
-		componentSeries = DataTypeFactory.<TransitionSeries> list();
+		transitions = new ArrayList<Transition>();
+		componentSeries = new ArrayList<TransitionSeries>();
 	}
 	
 	/**
@@ -609,7 +609,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				return list;
 
 			default:
-				list = DataTypeFactory.<TransitionSeries> list();
+				list = new ArrayList<TransitionSeries>();
 				list.add(this);
 				return list;
 		}

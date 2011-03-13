@@ -12,7 +12,6 @@ import fava.functionable.FList;
 import fava.signatures.FnMap;
 
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.peaktable.TransitionSeriesMode;

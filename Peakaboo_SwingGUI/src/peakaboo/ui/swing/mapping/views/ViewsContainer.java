@@ -14,9 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
-import peakaboo.controller.mapper.MapController;
+import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
-import peakaboo.controller.mapper.maptab.TabController;
+import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.ui.swing.mapping.SidePanel;
 import swidget.widgets.ClearPanel;
 
@@ -32,7 +32,7 @@ public class ViewsContainer extends ClearPanel
 	
 	
 	
-	public ViewsContainer(final TabController controller)
+	public ViewsContainer(final MapTabController controller)
 	{
 		//create the card panel
 		cardPanel = new ClearPanel();

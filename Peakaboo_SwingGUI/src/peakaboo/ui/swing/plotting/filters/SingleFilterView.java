@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,7 +37,6 @@ import fava.Fn;
 import fava.Functions;
 import fava.signatures.FnMap;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
@@ -110,7 +110,7 @@ public class SingleFilterView extends JPanel
 		Iterator<Parameter> params = paramslist.iterator();
 		
 		
-		final List<JComponent> controls = DataTypeFactory.<JComponent>list();
+		final List<JComponent> controls = new ArrayList<JComponent>();
 
 		class ParamListener implements ActionListener, ChangeListener, EventfulTypeListener<SubfilterView>
 		{

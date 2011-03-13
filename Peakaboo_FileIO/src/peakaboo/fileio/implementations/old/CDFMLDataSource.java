@@ -2,6 +2,7 @@ package peakaboo.fileio.implementations.old;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,7 +18,6 @@ import commonenvironment.AbstractFile;
 
 import fava.datatypes.Bounds;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
@@ -218,7 +218,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 
 	public List<String> getScanNames()
 	{
-		List<String> scannames = DataTypeFactory.<String> list();
+		List<String> scannames = new ArrayList<String>();
 
 		for (int i = 0; i < getScanCount(); i++) {
 			scannames.add("Scan #" + (i + 1));
@@ -441,7 +441,7 @@ public class CDFMLDataSource implements DataSource, DataSourceDimensions, DataSo
 		NodeList entries = pxAttr.getElementsByTagName(TAG_ENTRY);
 		
 		Node entry, value;
-		List<String> values = DataTypeFactory.<String>list();
+		List<String> values = new ArrayList<String>();
 		
 		for (int i = 0; i < entries.getLength(); i++){
 			

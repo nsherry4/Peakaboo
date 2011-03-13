@@ -3,11 +3,11 @@ package peakaboo.curvefit.fitting;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fava.Fn.*;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
@@ -36,8 +36,8 @@ public class FittingSet implements Serializable
 
 	public FittingSet(float energyPerChannel, EscapePeakType escapeType)
 	{
-		fittings = DataTypeFactory.<TransitionSeriesFitting> list();
-		fitTransitionSeries = DataTypeFactory.<TransitionSeries> list();
+		fittings = new ArrayList<TransitionSeriesFitting>();
+		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
 		this.energyPerChannel = energyPerChannel;
 	}
@@ -45,8 +45,8 @@ public class FittingSet implements Serializable
 
 	public FittingSet()
 	{
-		fittings = DataTypeFactory.<TransitionSeriesFitting> list();
-		fitTransitionSeries = DataTypeFactory.<TransitionSeries> list();
+		fittings = new ArrayList<TransitionSeriesFitting>();
+		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
 		this.energyPerChannel = 0.0f;
 		this.escapeType = EscapePeakType.NONE;
@@ -121,7 +121,7 @@ public class FittingSet implements Serializable
 	{
 		fitTransitionSeries.remove(ts);
 
-		List<TransitionSeriesFitting> fittingsToRemove = DataTypeFactory.<TransitionSeriesFitting> list();
+		List<TransitionSeriesFitting> fittingsToRemove = new ArrayList<TransitionSeriesFitting>();
 		for (TransitionSeriesFitting f : fittings)
 		{
 
@@ -257,7 +257,7 @@ public class FittingSet implements Serializable
 
 	public synchronized List<TransitionSeries> getFittedTransitionSeries()
 	{
-		List<TransitionSeries> fittedElements = DataTypeFactory.<TransitionSeries> list();
+		List<TransitionSeries> fittedElements = new ArrayList<TransitionSeries>();
 
 		for (TransitionSeries e : fitTransitionSeries)
 		{
@@ -271,7 +271,7 @@ public class FittingSet implements Serializable
 	public synchronized List<TransitionSeries> getVisibleTransitionSeries()
 	{
 
-		List<TransitionSeries> fittedElements = DataTypeFactory.<TransitionSeries> list();
+		List<TransitionSeries> fittedElements = new ArrayList<TransitionSeries>();
 
 		for (TransitionSeries e : fitTransitionSeries)
 		{

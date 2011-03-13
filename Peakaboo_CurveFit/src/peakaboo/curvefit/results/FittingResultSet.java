@@ -1,9 +1,9 @@
 package peakaboo.curvefit.results;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.common.DataTypeFactory;
 
 import scitypes.Spectrum;
 
@@ -26,7 +26,7 @@ public class FittingResultSet
 	
 	public FittingResultSet(int size)
 	{
-		fits = DataTypeFactory.<FittingResult>list();
+		fits = new ArrayList<FittingResult>();
 		totalFit = new Spectrum(size);
 		residual = new Spectrum(size);
 	}
