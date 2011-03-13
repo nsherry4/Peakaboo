@@ -1,22 +1,15 @@
 package peakaboo.ui.swing;
 
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Panel;
-import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.InputStream;
 
 import javax.swing.JFrame;
 
-import fava.datatypes.Range;
-
 import peakaboo.common.Version;
-import peakaboo.controller.settings.SerializedData;
 import peakaboo.fileio.DataSource;
-import peakaboo.fileio.implementations.CopiedDataSource;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconFactory;
 

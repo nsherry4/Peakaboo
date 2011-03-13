@@ -8,7 +8,7 @@ import java.util.Map;
 import commonenvironment.AbstractFile;
 import fava.Functions;
 import fava.datatypes.Pair;
-import fava.lists.FList;
+import fava.functionable.FList;
 import fava.signatures.FnMap;
 
 

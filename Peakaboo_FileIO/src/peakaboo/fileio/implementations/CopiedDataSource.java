@@ -14,7 +14,7 @@ import peakaboo.fileio.DataSourceExtendedInformation;
 import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Bounds;
-import fava.datatypes.Range;
+import fava.functionable.Range;
 
 import scitypes.Coord;
 import scitypes.GridPerspective;

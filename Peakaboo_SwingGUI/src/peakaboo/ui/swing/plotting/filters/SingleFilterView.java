@@ -30,23 +30,17 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
-import eventful.swing.EventfulPanel;
 import eventful.swing.EventfulTypePanel;
 import fava.Fn;
 import fava.Functions;
-import fava.lists.FList;
 import fava.signatures.FnMap;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
-import peakaboo.filter.AvailableFilters;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import peakaboo.filter.filters.advanced.SegmentFilter;
-import sun.net.www.http.Hurryable;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 

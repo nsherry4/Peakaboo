@@ -31,8 +31,8 @@ import eventful.EventfulTypeListener;
 import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
-import fava.datatypes.Range;
-import fava.lists.FList;
+import fava.functionable.Range;
+import fava.functionable.FList;
 import fava.signatures.FnMap;
 
 import peakaboo.common.DataTypeFactory;

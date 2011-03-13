@@ -64,7 +64,7 @@ import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
-import fava.lists.FList;
+import fava.functionable.FList;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;

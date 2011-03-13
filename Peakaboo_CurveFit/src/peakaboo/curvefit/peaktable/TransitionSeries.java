@@ -10,7 +10,7 @@ import java.util.List;
 import peakaboo.common.DataTypeFactory;
 
 import fava.*;
-import fava.lists.FList;
+import fava.functionable.FList;
 import fava.signatures.FnCombine;
 import fava.signatures.FnFold;
 import fava.signatures.FnEach;

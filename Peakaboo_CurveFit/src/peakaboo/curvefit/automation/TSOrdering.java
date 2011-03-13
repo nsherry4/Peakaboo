@@ -17,7 +17,7 @@ import scitypes.SpectrumCalculations;
 import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
-import fava.lists.FList;
+import fava.functionable.FList;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 

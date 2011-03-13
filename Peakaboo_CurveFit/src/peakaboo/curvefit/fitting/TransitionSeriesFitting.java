@@ -4,8 +4,8 @@ package peakaboo.curvefit.fitting;
 
 import java.util.List;
 
-import fava.datatypes.Range;
-import fava.datatypes.RangeSet;
+import fava.functionable.Range;
+import fava.functionable.RangeSet;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.peaktable.Element;

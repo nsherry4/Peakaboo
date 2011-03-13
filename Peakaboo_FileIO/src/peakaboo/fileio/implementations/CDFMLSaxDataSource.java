@@ -9,7 +9,7 @@ import commonenvironment.AbstractFile;
 
 
 import fava.datatypes.Bounds;
-import fava.datatypes.Range;
+import fava.functionable.Range;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 

@@ -10,7 +10,7 @@ import java.util.List;
 import commonenvironment.Env;
 
 import fava.Fn;
-import fava.lists.FList;
+import fava.functionable.FList;
 import fava.signatures.FnMap;
 import static fava.Fn.*;
 

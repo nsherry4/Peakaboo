@@ -10,7 +10,7 @@ import peakaboo.fileio.DataSource;
 import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
 import fava.Fn;
-import fava.datatypes.Range;
+import fava.functionable.Range;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 import fava.signatures.FnMap;

@@ -1,13 +1,12 @@
 package peakaboo.curvefit.fitting;
 
 import java.util.List;
-
+import java.util.ArrayList;
 
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.Transition;
 import peakaboo.curvefit.peaktable.TransitionSeriesType;
-import scidraw.datatypes.DataTypeFactory;
 
 /**
  * Describes the kind of escape peaks that would be expected from different kinds of detectors.
@@ -62,7 +61,7 @@ public enum EscapePeakType
 	 * Returns a list of {@link Transition}s representing this escape peak
 	 * @return a list of {@link Transition}s
 	 */
-	public List<Transition> offset()	{ return DataTypeFactory.<Transition>list(); }
+	public List<Transition> offset()	{ return new ArrayList<Transition>(); }
 	
 	/**
 	 * Returns a pretty-printed description of this {@link EscapePeakType}

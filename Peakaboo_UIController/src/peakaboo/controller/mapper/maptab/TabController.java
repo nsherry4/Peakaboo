@@ -22,7 +22,7 @@ import eventful.EventfulType;
 import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
-import fava.lists.FList;
+import fava.functionable.FList;
 import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 import peakaboo.calculations.Interpolation;
