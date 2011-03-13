@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.maptab.ITabController;
+import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.maptab.IMapTabController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
-import peakaboo.controller.mapper.maptab.TabController;
+import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import fava.datatypes.Bounds;
@@ -50,8 +50,8 @@ import scitypes.SpectrumCalculations;
 public class MapCanvas extends GraphicsPanel
 {
 
-	MapController 		controller;
-	TabController		tabController;
+	MappingController 		controller;
+	MapTabController		tabController;
 	DrawingRequest 		dr;
 	
 	private MapPainter 	contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue;
@@ -59,7 +59,7 @@ public class MapCanvas extends GraphicsPanel
 	
 	private static final int	SPECTRUM_HEIGHT = 15;
 	
-	public MapCanvas(MapController controller, TabController tabController)
+	public MapCanvas(MappingController controller, MapTabController tabController)
 	{
 		this.controller = controller;
 		this.tabController = tabController;

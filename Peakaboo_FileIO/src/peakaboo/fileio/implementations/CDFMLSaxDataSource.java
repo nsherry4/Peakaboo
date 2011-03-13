@@ -3,7 +3,11 @@ package peakaboo.fileio.implementations;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 import commonenvironment.AbstractFile;
@@ -39,6 +43,8 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	List<Spectrum>								correctedData;
 	Spectrum									iNaughtNormalized;
 	
+	Set<String>									hasCategory;
+	
 
 	public CDFMLSaxDataSource(AbstractFile file, FnEach<Integer> getScanCountCallback, FnEach<Integer> readScanCallback, FnGet<Boolean> isAborted) throws Exception
 	{
@@ -50,6 +56,13 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 		read(file, isAborted);
 		
 		correctedData = FileBackedList.<Spectrum>create(Version.program_name + " - Corrected Spectrum");
+		
+		//get a listing of all of the categories that this supports
+		hasCategory = new HashSet<String>();
+		for (String s : getAttrEntries("ScienceStudio"))
+		{
+			if (s != null) hasCategory.add(s);
+		}
 
 	}
 	
@@ -58,27 +71,48 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	{
 		
 		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0")) return true;
+		if (hasVar(CDFML.VAR_MCA_SUMSPECTRUM)) return true;
 		return false;
 	}
 	
+	private boolean hasSumSpectrum()
+	{
+		if (!isNewVersion()) return false;
+		if (hasVar(CDFML.VAR_MCA_SUMSPECTRUM)) return true;
+		return false;
+	}
+	
+	
 	private int numElements()
 	{
-		if (isNewVersion())
+		if (isNewVersion()) {
+			
+			if (hasSumSpectrum()) return 1;
+			
 			return getAttrInt(CDFML.ATTR_MCA_NUM_ELEMENTS, 0);
-		else
+			
+		} else {
 			return 1;
+		}
 	}
 	
 	private Spectrum getScan(int element, int index)
 	{	
 		
-		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0")) {
-			return getVarSpectra(CDFML.VAR_MCA_SPECTRUM + element).get(index);	
-		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) {
+		if (isNewVersion()) {
+			
+			if (hasSumSpectrum() && element == 0) {
+				return getVarSpectra(CDFML.VAR_MCA_SUMSPECTRUM).get(index);
+			} else {
+				return getVarSpectra(CDFML.VAR_MCA_SPECTRUM + element).get(index);
+			}
+			
+		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)){
 			return getVarSpectra(CDFML.VAR_XRF_SPECTRUMS).get(index);
-		} else {
-			return null;
 		}
+		
+		return null;
+		
 		
 	}
 	
@@ -118,16 +152,21 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	private int numScans()
 	{
-		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0"))
-		{
-			return getVarAttrInt(CDFML.VAR_MCA_SPECTRUM + "0", CDFML.XML_ATTR_NUMRECORDS);
+		
+		if (isNewVersion()) {
 			
-		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) 
-		{
+			if (hasSumSpectrum()) {
+				return getVarAttrInt(CDFML.VAR_MCA_SUMSPECTRUM, CDFML.XML_ATTR_NUMRECORDS);
+			} else {
+				return getVarAttrInt(CDFML.VAR_MCA_SPECTRUM + "0", CDFML.XML_ATTR_NUMRECORDS);	
+			}
+						
+		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) {
+			
 			return getVarAttrInt(CDFML.VAR_XRF_SPECTRUMS, CDFML.XML_ATTR_NUMRECORDS);
 			
-		} else 
-		{
+		} else {
+			
 			return 0;
 		}
 	}
@@ -152,7 +191,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	public Spectrum getScanAtIndex(int index)
 	{
 		Spectrum s, s2;
-		
+				
 		//if this is a multi-element data set, we store the averaged data the 'correctedData' list
 		//and the individual spectra in indices 0->N-1. The first time this data is accessed, the
 		//'correctedData' index value will be empty, because we won't have calcualted it yet.
@@ -166,12 +205,16 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 				
 				s2 = getScan(i, index);
 				
-				//divide by deadtime percent if not 0
-				if (getDeadtime(i, index) != 0) {
-					SpectrumCalculations.multiplyBy_inplace(s2, 1f - getDeadtime(i, index));
+				if (s2 != null) {
+					
+					//divide by deadtime percent if not 0
+					if (getDeadtime(i, index) != 0) {
+						SpectrumCalculations.multiplyBy_inplace(s2, 1f - getDeadtime(i, index));
+					}
+					//add the adjusted value to the total
+					SpectrumCalculations.addLists_inplace(s, s2);
+					
 				}
-				//add the adjusted value to the total
-				SpectrumCalculations.addLists_inplace(s, s2);
 				
 				
 			}
@@ -188,8 +231,13 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 			
 		} else if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() == 1) {
 			
+			Spectrum raw = getScan(index);
 			
-			s = new Spectrum(getScan(index));
+			if (raw == null) {
+				s = new Spectrum(getScan(0, 0).size(), 0f);
+			} else {
+				s = new Spectrum(getScan(index));
+			}
 			
 			//adjust for deadtime
 			if (getDeadtime(index) != 0){
@@ -445,7 +493,8 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 
 	public boolean hasRealDimensions()
 	{
-		return true;
+		if (hasCategory.contains(CDFML.CAT_MapXY_1)) return true;
+		return false;
 	}
 
 	

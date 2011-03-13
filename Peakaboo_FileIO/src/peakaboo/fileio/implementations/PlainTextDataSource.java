@@ -31,7 +31,7 @@ public class PlainTextDataSource implements DataSource
 
 	String								datasetName;
 	
-	public PlainTextDataSource(AbstractFile file, FnEach<Integer> readScanCallback, FnGet<Boolean> isAborted) throws Exception
+	public PlainTextDataSource(AbstractFile file, FnEach<Integer> getScanCountCallback, FnEach<Integer> readScanCallback, FnGet<Boolean> isAborted) throws Exception
 	{
 		
 		this.readScanCallback = readScanCallback;
@@ -40,12 +40,15 @@ public class PlainTextDataSource implements DataSource
 		scandata = FileBackedList.<Spectrum>create("Peakaboo");
 		datasetName = IOOperations.getFileTitle(  file.getFileName()  );
 		
-		InputStreamReader r = new InputStreamReader(file.getInputStream());
+		InputStreamReader r = new InputStreamReader(file.getInputStream(), "UTF-8");
 		BufferedReader reader = new BufferedReader(r);
 		
+		//we count the number of linebreaks in the file. This will slow down
+		//reading marginally, but not by a lot, since the slowest part is
+		//human readable to machine readable conversion.
+		getScanCountCallback.f(IOOperations.characterCount(file, '\n'));
 		
 		String line;
-		int count = 0;
 		while (true)
 		{
 			
@@ -55,7 +58,7 @@ public class PlainTextDataSource implements DataSource
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(Fn.map(line.trim().split("[ \\t]+"), new FnMap<String, Float>(){
+			Spectrum scan = new Spectrum(Fn.map(line.trim().split("[, \\t]+"), new FnMap<String, Float>(){
 				
 				public Float f(String s)
 				{
@@ -69,8 +72,7 @@ public class PlainTextDataSource implements DataSource
 			
 			scandata.add(scan);
 			
-			readScanCallback.f(count);		
-			count++;
+			readScanCallback.f(1);
 			
 		}
 		
@@ -114,7 +116,7 @@ public class PlainTextDataSource implements DataSource
 
 			public String f(Integer element)
 			{
-				return "Scan #" + element;
+				return "Scan #" + (element+1);
 			}});
 	}
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 
 import peakaboo.controller.CanvasController;
-import peakaboo.controller.mapper.MapController;
+import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
@@ -69,7 +69,7 @@ public class PlotController extends EventfulType<String>
 
 	
 	public UndoController					undoController;
-	public MapController					mapController;
+	public MappingController					mapController;
 	public DataController					dataController;
 	public FilteringController				filteringController;
 	public FittingController				fittingController;
@@ -98,7 +98,7 @@ public class PlotController extends EventfulType<String>
 		filteringController = new FilteringController(this);
 		fittingController = new FittingController(this);
 		settingsController = new SettingsController(this);
-		mapController = new MapController(this);
+		mapController = new MappingController(this);
 		
 		undoController.addListener(new EventfulListener() {
 			
@@ -144,13 +144,39 @@ public class PlotController extends EventfulType<String>
 		undoController.setUndoPoint("");
 	}
 
+	/**
+	 * Attempts to retrieve the map controller from the plot controller.
+	 * If another mapping window is currently using the map controller,
+	 * a new map controller is created. When the mapping windows are closed,
+	 * whichever mapping window is closed last will be the last to check-in
+	 * their map controller, and that will be the one saved for future use
+	 * @return
+	 */
+	public MappingController checkoutMapController()
+	{
+		//TODO: copy the current controller, rather than creating a new one
+		return new MappingController(mapController, this);
+	}
 	
+	/**
+	 * After using the map controller, return it to the plot controller.
+	 * If a new map window is opened after this controller is checked in,
+	 * but before any other map controller is checked in, this will be 
+	 * the map controller used for that new window
+	 */
+	public void checkinMapController(MappingController controller)
+	{
+		this.mapController = controller;
+	}
+	
+	/*
 	public MapController getMapController()
 	{
 		return mapController;
 	}
+	*/
 
-	public void setMapController(MapController mapController)
+	public void setMapController(MappingController mapController)
 	{
 		this.mapController = mapController;
 	}

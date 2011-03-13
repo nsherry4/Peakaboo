@@ -272,7 +272,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				{
 					try
 					{
-						dataSource = new PlainTextDataSource(files.get(0), readScans, isAborted);
+						dataSource = new PlainTextDataSource(files.get(0), gotScanCount, readScans, isAborted);
 					}
 					catch (Exception e)
 					{

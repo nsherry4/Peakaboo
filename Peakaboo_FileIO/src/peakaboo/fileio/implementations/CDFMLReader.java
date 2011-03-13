@@ -480,6 +480,10 @@ public abstract class CDFMLReader extends DefaultHandler2
 		if (entries == null) return null;
 		return Integer.parseInt(entries.get(entry));
 	}
+	protected List<String> getAttrEntries(String attr)
+	{
+		return getEntriesForAttr(attr);
+	}
 	
 	
 	

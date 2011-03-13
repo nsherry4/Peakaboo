@@ -68,7 +68,7 @@ import fava.datatypes.Pair;
 import fava.lists.FList;
 
 import peakaboo.common.Version;
-import peakaboo.controller.mapper.MapController;
+import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
@@ -1419,7 +1419,7 @@ public class PlotPanel extends ClearPanel
 		if (tasks.getCompleted())
 		{
 
-			MapController mapController = controller.getMapController();
+			MappingController mapController = controller.checkoutMapController();
 			PeakabooMapperSwing mapperWindow;
 
 			MapResultSet results = tasks.getResult();

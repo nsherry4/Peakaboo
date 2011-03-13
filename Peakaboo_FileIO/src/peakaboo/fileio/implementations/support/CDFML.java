@@ -5,6 +5,18 @@ package peakaboo.fileio.implementations.support;
 public class CDFML
 {
 
+	//ScienceStudio Data Categories
+	public static final String CAT_SS_1					= "SS:1.0";
+	public static final String CAT_SSMODEL_1			= "SSModel:1.0";
+	public static final String CAT_EPICS_1				= "Epics:1.0";
+	public static final String CAT_SCAN_1				= "Scan:1.0";
+	public static final String CAT_BeamI_1				= "BeamI:1.0";
+	public static final String CAT_BeamI_1_1			= "BeamI:1.1";
+	public static final String CAT_MapXY_1				= "MapXY:1.0";
+	public static final String CAT_XRF_1				= "XRF:1.0";
+	public static final String CAT_MCA_1				= "MCA:1.0";
+	
+	
 	// CDFML Markers
 	public static final String	CDF_ROOT_NAME			= "CDF";
 	public static final String	CDF_TECHNIQUE_XRF		= "XRF";
@@ -51,6 +63,7 @@ public class CDFML
 	public static final String	ATTR_MCA_NUM_ELEMENTS	= "MCA:NElements";
 	public static final String	VAR_MCA_DEADTIME		= "MCA:DeadTimePct";
 	public static final String	VAR_MCA_SPECTRUM		= "MCA:Spectrum";
+	public static final String	VAR_MCA_SUMSPECTRUM		= "MCA:SumSpectrum";
 	
 	
 	// Attributes

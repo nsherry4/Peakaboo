@@ -23,9 +23,9 @@ import javax.swing.SwingConstants;
 
 import eventful.EventfulTypeListener;
 
-import peakaboo.controller.mapper.MapController;
-import peakaboo.controller.mapper.maptab.TabController;
-import peakaboo.controller.mapper.maptab.TabModel;
+import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.maptab.MapTabController;
+import peakaboo.controller.mapper.maptab.MapTabModel;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
@@ -38,18 +38,18 @@ public class MapViewer extends JPanel
 
 	private MapCanvas			canvas;
 
-	protected MapController	controller;
+	protected MappingController	controller;
 
 	private JLabel			warnOnTooSmallDataset;
 	private JLabel			mapMouseMonitor;
 
-	private TabController	tabController;
+	private MapTabController	tabController;
 	//private SingleMapModel	viewModel;
 	
 	PeakabooMapperSwing		owner;
 
 
-	public MapViewer(TabController _tabController, MapController controller, PeakabooMapperSwing owner)
+	public MapViewer(MapTabController _tabController, MappingController controller, PeakabooMapperSwing owner)
 	{
 
 		this.controller = controller;
@@ -59,7 +59,7 @@ public class MapViewer extends JPanel
 
 			public void change(String s)
 			{
-				if (! s.equals(MapController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
+				if (! s.equals(MappingController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
 				repaint();
 			}
 		});
@@ -145,7 +145,7 @@ public class MapViewer extends JPanel
 	}
 
 
-	public TabController getTabController()
+	public MapTabController getTabController()
 	{
 		return tabController;
 	}
