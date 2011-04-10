@@ -15,12 +15,13 @@ public class Parameter implements Serializable
 
 	public static enum ValueType
 	{
-		INTEGER, REAL, BOOLEAN, SET_ELEMENT, FILTER, SEPARATOR
+		INTEGER, REAL, BOOLEAN, SET_ELEMENT, FILTER, SEPARATOR, CODE
 	}
 	
 	public ValueType	type;
 	public String		name;
 	private Object		value;
+	public String		errorMessage;
 	
 	public boolean		enabled;
 
@@ -101,6 +102,21 @@ public class Parameter implements Serializable
 		try
 		{
 			return (AbstractFilter)value;
+		} 
+		catch (ClassCastException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	public String textValue()
+	{
+		
+		try
+		{
+			return (String)value;
 		} 
 		catch (ClassCastException e)
 		{

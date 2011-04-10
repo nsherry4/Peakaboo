@@ -32,7 +32,6 @@ import scitypes.Spectrum;
 
 public abstract class AbstractFilter implements Serializable
 {
-
 	
 	public static enum FilterType
 	{
@@ -135,7 +134,7 @@ public abstract class AbstractFilter implements Serializable
 		}
 		catch(Exception e)
 		{
-			System.err.println(getFilterName() + "Filter Failed");
+			System.err.println(getFilterName() + " Filter Failed");
 			if (!Version.release) e.printStackTrace();
 			return data;
 		}
