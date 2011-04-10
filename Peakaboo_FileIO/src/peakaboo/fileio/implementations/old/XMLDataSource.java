@@ -13,7 +13,7 @@ import peakaboo.fileio.DataSource;
 import peakaboo.fileio.implementations.support.CLSXML;
 import scitypes.Coord;
 import scitypes.Spectrum;
-import scitypes.filebacked.FileBackedList;
+import scratch.ScratchList;
 
 
 public class XMLDataSource implements DataSource
@@ -37,7 +37,7 @@ public class XMLDataSource implements DataSource
 			xml.badScans.add(false);
 		}
 
-		xml.spectra = FileBackedList.<Spectrum>create("Peakaboo - Spectra");
+		xml.spectra = ScratchList.<Spectrum>create("Peakaboo - Spectra");
 		
 		return xml;
 

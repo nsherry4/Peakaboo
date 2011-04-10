@@ -27,7 +27,7 @@ import peakaboo.fileio.implementations.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import scitypes.filebacked.FileBackedList;
+import scratch.ScratchList;
 
 
 
@@ -55,7 +55,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 		
 		read(file, isAborted);
 		
-		correctedData = FileBackedList.<Spectrum>create(Version.program_name + " - Corrected Spectrum");
+		correctedData = ScratchList.<Spectrum>create(Version.program_name + " - Corrected Spectrum");
 		
 		//get a listing of all of the categories that this supports
 		hasCategory = new HashSet<String>();

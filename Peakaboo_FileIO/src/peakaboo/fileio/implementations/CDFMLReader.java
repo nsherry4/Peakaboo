@@ -19,7 +19,7 @@ import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.fileio.implementations.support.CDFML;
 import scitypes.Spectrum;
-import scitypes.filebacked.FileBackedList;
+import scratch.ScratchList;
 
 import commonenvironment.AbstractFile;
 
@@ -354,7 +354,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				break;
 			case SPECTRUM:
 				List<Spectrum> svalues = (List<Spectrum>)variableEntries.get(variableName);
-				if (svalues == null) variableEntries.put(variableName, FileBackedList.<Spectrum>create(Version.program_name + " - " + variableName));
+				if (svalues == null) variableEntries.put(variableName, ScratchList.<Spectrum>create(Version.program_name + " - " + variableName));
 				svalues = (List<Spectrum>)variableEntries.get(variableName);
 				svalues.set(entryNo, getSpectrumFromString(dimSize, sb.toString()));
 				

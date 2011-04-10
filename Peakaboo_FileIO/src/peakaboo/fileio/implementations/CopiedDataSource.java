@@ -18,7 +18,6 @@ import fava.functionable.Range;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.Spectrum;
-import scitypes.filebacked.FileBackedList;
 
 
 public class CopiedDataSource implements DataSource, DataSourceDimensions, DataSourceExtendedInformation
