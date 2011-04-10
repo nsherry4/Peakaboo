@@ -340,6 +340,7 @@ public class MapCanvas extends GraphicsPanel
 
 			controller.mapsController.isDimensionsProvided(),
 			"Intensity (ratio)" + (tabController.getMapScaleMode() == MapScaleMode.RELATIVE ? " - Ratio sides scaled independently" : ""),
+			1,
 			tabController.getMapDisplayMode() == MapDisplayMode.RATIO,
 			spectrumMarkers
 		);

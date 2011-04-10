@@ -1209,8 +1209,7 @@ public class PlotPanel extends ClearPanel
 		scanLabel.setBorder(Spacing.bSmall());
 		scanBlock = new ComplexToggle(
 			StockIcon.CHOOSE_CANCEL,
-			"",
-			"Flag this scan as bad to exclude it from the data set");
+			"Flag this scan as bad to exclude it from the data set", "");
 
 		scanSelector.add(scanLabel);
 		scanSelector.add(Box.createHorizontalStrut(2));

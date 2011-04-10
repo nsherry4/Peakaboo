@@ -18,9 +18,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIDefaults;
 
@@ -30,6 +32,9 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 
 import eventful.EventfulTypeListener;
 import eventful.swing.EventfulTypePanel;
@@ -41,6 +46,10 @@ import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
+import scidraw.drawing.backends.graphics2d.ImageBuffer;
+import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 
@@ -161,7 +170,12 @@ public class SingleFilterView extends JPanel
 					case FILTER:
 						param.setValue(  ((SubfilterView)source).getFilter()  );
 						break;
+						
 					case SEPARATOR:
+						break;
+						
+					case CODE:
+						param.setValue( ((JTextArea)source).getText() );
 						break;
 				}
 				
@@ -201,8 +215,20 @@ public class SingleFilterView extends JPanel
 						case FILTER:
 							((SubfilterView)source).setFilter(param.filterValue());
 							break;
+						
 						case SEPARATOR:
 							break;
+						
+						case CODE:
+							JOptionPane.showMessageDialog(
+									SingleFilterView.this, 
+									param.errorMessage, 
+									"Code Error", 
+									JOptionPane.ERROR_MESSAGE,
+									StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON)
+								);
+							break;
+							
 					}
 					
 				}
@@ -216,6 +242,7 @@ public class SingleFilterView extends JPanel
 			{
 				update(message);
 			}
+			
 
 		}
 
@@ -332,6 +359,36 @@ public class SingleFilterView extends JPanel
 					
 					break;
 					
+				case CODE:
+					
+					final JTextArea textarea = new JTextArea();
+					textarea.setFont(new Font("Courier New", Font.PLAIN, textarea.getFont().getSize()));
+					textarea.setColumns(80);
+					textarea.setRows(20);
+
+					final ParamListener pl = new ParamListener(param);
+					
+					ImageButton okbutton = new ImageButton(StockIcon.CHOOSE_OK, "Apply");
+					okbutton.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							pl.update(textarea);
+						}
+					});
+					
+					
+					JPanel textPanel = new JPanel();
+					textPanel.setLayout(new BorderLayout());
+					textPanel.add(textarea, BorderLayout.CENTER);
+					textPanel.add(okbutton, BorderLayout.SOUTH);
+					
+					textarea.setText(param.textValue());
+					
+					component = textPanel;
+					
+					break;
+					
 					
 			}
 			
@@ -339,8 +396,16 @@ public class SingleFilterView extends JPanel
 			if (component != null)
 			{
 				
-				if (param.type != ValueType.FILTER && param.type != ValueType.SEPARATOR)
-				{
+				if (param.type == ValueType.CODE) {
+				
+					c.gridwidth = 2;
+					panel.add(paramLabel, c);
+					c.gridy++;
+					panel.add(component, c);
+					
+					c.gridwidth = 1;
+					
+				} else if (param.type != ValueType.FILTER && param.type != ValueType.SEPARATOR) {
 					panel.add(paramLabel, c);
 					
 					c.gridx++;
@@ -349,7 +414,7 @@ public class SingleFilterView extends JPanel
 					c.anchor = GridBagConstraints.LINE_END;
 					
 					panel.add(component, c);
-					
+									
 				} else {
 					
 					c.gridwidth = 2;
