@@ -13,13 +13,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.jar.JarEntry;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
@@ -35,6 +38,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+
+import jsyntaxpane.DefaultSyntaxKit;
 
 import eventful.EventfulTypeListener;
 import eventful.swing.EventfulTypePanel;
@@ -175,7 +180,7 @@ public class SingleFilterView extends JPanel
 						break;
 						
 					case CODE:
-						param.setValue( ((JTextArea)source).getText() );
+						param.setValue( ((JEditorPane)source).getText() );
 						break;
 				}
 				
@@ -268,10 +273,6 @@ public class SingleFilterView extends JPanel
 		Parameter param;
 		
 		while (params.hasNext()) {
-			c.gridy += 1;
-			c.gridx = 0;
-			c.weightx = 1.0;
-			c.anchor = GridBagConstraints.LINE_START;
 
 			param = params.next();
 
@@ -360,12 +361,16 @@ public class SingleFilterView extends JPanel
 					break;
 					
 				case CODE:
+							
+					DefaultSyntaxKit.initKit();
 					
-					final JTextArea textarea = new JTextArea();
-					textarea.setFont(new Font("Courier New", Font.PLAIN, textarea.getFont().getSize()));
-					textarea.setColumns(80);
-					textarea.setRows(20);
-
+					final JEditorPane codeEditor = new JEditorPane();
+			        JScrollPane scrPane = new JScrollPane(codeEditor);
+			        codeEditor.setContentType("text/python");
+			        codeEditor.setText(param.textValue());
+			        scrPane.setPreferredSize(new Dimension(600, 400));
+			        	        
+			        
 					final ParamListener pl = new ParamListener(param);
 					
 					ImageButton okbutton = new ImageButton(StockIcon.CHOOSE_OK, "Apply");
@@ -373,18 +378,16 @@ public class SingleFilterView extends JPanel
 						
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							pl.update(textarea);
+							pl.update(codeEditor);
 						}
 					});
 					
 					
 					JPanel textPanel = new JPanel();
 					textPanel.setLayout(new BorderLayout());
-					textPanel.add(textarea, BorderLayout.CENTER);
+					textPanel.add(scrPane, BorderLayout.CENTER);
 					textPanel.add(okbutton, BorderLayout.SOUTH);
-					
-					textarea.setText(param.textValue());
-					
+
 					component = textPanel;
 					
 					break;
@@ -392,13 +395,17 @@ public class SingleFilterView extends JPanel
 					
 			}
 			
-			
+			c.gridy += 1;
+			c.gridx = 0;
+			c.weightx = 1.0;
+			c.anchor = GridBagConstraints.LINE_START;
 			if (component != null)
 			{
 				
 				if (param.type == ValueType.CODE) {
 				
 					c.gridwidth = 2;
+					
 					panel.add(paramLabel, c);
 					c.gridy++;
 					panel.add(component, c);
@@ -436,6 +443,7 @@ public class SingleFilterView extends JPanel
 
 		}
 
+		panel.doLayout();
 
 		if (bigBorder) {
 			panel.setBorder(Spacing.bHuge());
