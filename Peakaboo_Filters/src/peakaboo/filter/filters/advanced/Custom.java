@@ -21,13 +21,13 @@ public class Custom extends AbstractFilter {
 	public Custom() {
 		super();
 		
-		boltmap = new BoltMap<float[], float[]>("jruby", "", "spectrumIn", "spectrumOut");
+		boltmap = new BoltMap<float[], float[]>("spectrumIn", "spectrumOut", "");
 		
 	}
 	
 	@Override
 	public void initialize() {
-		addParameter(CODE, new Parameter(ValueType.CODE, "Custom Code", "$spectrumOut = $spectrumIn"));
+		addParameter(CODE, new Parameter(ValueType.CODE, "Custom Code", "spectrumOut = spectrumIn"));
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import fava.Fn;
 
 import peakaboo.fileio.DataSource;
 import scitypes.Spectrum;
-import scitypes.filebacked.FileBackedList;
+import scratch.ScratchList;
 
 
 public class LiveDataSource implements DataSource
@@ -24,7 +24,7 @@ public class LiveDataSource implements DataSource
 	
 	public LiveDataSource()
 	{
-		scans = FileBackedList.<Spectrum>create("Peakaboo Live Dataset");
+		scans = ScratchList.<Spectrum>create("Peakaboo Live Dataset");
 	}
 	
 	/////////////////////////////////////////////////

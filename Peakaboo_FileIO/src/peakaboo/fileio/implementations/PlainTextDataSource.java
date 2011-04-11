@@ -16,7 +16,7 @@ import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 
 import scitypes.Spectrum;
-import scitypes.filebacked.FileBackedList;
+import scratch.ScratchList;
 
 
 public class PlainTextDataSource implements DataSource
@@ -37,7 +37,7 @@ public class PlainTextDataSource implements DataSource
 		this.readScanCallback = readScanCallback;
 		this.isAborted = isAborted;
 		
-		scandata = FileBackedList.<Spectrum>create("Peakaboo");
+		scandata = ScratchList.<Spectrum>create("Peakaboo");
 		datasetName = IOOperations.getFileTitle(  file.getFileName()  );
 		
 		InputStreamReader r = new InputStreamReader(file.getInputStream(), "UTF-8");
