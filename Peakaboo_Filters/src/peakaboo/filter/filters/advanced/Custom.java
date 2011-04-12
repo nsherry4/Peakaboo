@@ -1,8 +1,5 @@
 package peakaboo.filter.filters.advanced;
 
-import java.util.List;
-
-import fava.functionable.FList;
 
 import bolt.BoltMap;
 import peakaboo.filter.AbstractFilter;
@@ -21,7 +18,8 @@ public class Custom extends AbstractFilter {
 	public Custom() {
 		super();
 		
-		boltmap = new BoltMap<float[], float[]>("spectrumIn", "spectrumOut", "");
+		boltmap = new BoltMap<float[], float[]>("jython", "spectrumIn", "spectrumOut", "");
+		boltmap.setMultithreaded(true);
 		
 	}
 	
@@ -65,11 +63,12 @@ public class Custom extends AbstractFilter {
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache) {
 		
-		//can't have more than one thread futzing about with the script context
-		synchronized (this) {
-			boltmap.setScript(getParameter(CODE).textValue());
-			return new Spectrum(boltmap.f(data.toArray()));	
-		}
+		boltmap.setScript(getParameter(CODE).textValue());
+		
+		float[] source = data.backingArray();
+		float[] result = boltmap.f(source);
+				
+		return new Spectrum(result);	
 		
 	}
 
