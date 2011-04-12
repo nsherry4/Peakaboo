@@ -57,7 +57,7 @@ public class MapTS
 				
 				if (original == null) return;
 				
-				Spectrum data = filters.filterDataUnsynchronized(dataSource.getScanAtIndex(ordinal), false);
+				Spectrum data = filters.filterDataUnsynchronized(new Spectrum(dataSource.getScanAtIndex(ordinal)), false);
 				//filteredDataSet.set(ordinal, data);
 				
 				FittingResultSet frs = fittings.calculateFittings(data);
