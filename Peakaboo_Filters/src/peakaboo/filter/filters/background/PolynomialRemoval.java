@@ -36,7 +36,7 @@ public final class PolynomialRemoval extends BackgroundRemovalFilter
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "Polynomial";
 	}
@@ -73,17 +73,17 @@ public final class PolynomialRemoval extends BackgroundRemovalFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		return "The "
-				+ getFilterName()
+				+ getPluginName()
 				+ " filter attempts to determine which portion of the signal is background and remove it. It accomplishes this by attempting to fit a series of parabolic (or higher order single-term) curves under the data, with a curve centred at each channel, and attempting to make each curve as tall as possible while still staying completely under the spectrum. The union of these curves is calculated and subtracted from the original data.";
 	}
 
 
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

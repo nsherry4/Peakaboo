@@ -34,7 +34,7 @@ public final class MovingAverage extends AbstractFilter
 	}
 	
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "Moving Average";
 	}
@@ -64,11 +64,11 @@ public final class MovingAverage extends AbstractFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		// TODO Auto-generated method stub
 		return "The "
-				+ getFilterName()
+				+ getPluginName()
 				+ " filter refines the values of each point in a scan by sampling it and the points around it, and replacing it with an average of the sampled points.";
 	}
 
@@ -89,7 +89,7 @@ public final class MovingAverage extends AbstractFilter
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

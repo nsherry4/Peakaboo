@@ -30,12 +30,12 @@ public class ExampleFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String getFilterDescription() {
+	public String getPluginDescription() {
 		return "This filter is an example of how to make filters";
 	}
 
 	@Override
-	public String getFilterName() {
+	public String getPluginName() {
 		return "Example Filter";
 	}
 
@@ -74,7 +74,7 @@ public class ExampleFilter extends AbstractFilter {
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return !Version.release;
 	}

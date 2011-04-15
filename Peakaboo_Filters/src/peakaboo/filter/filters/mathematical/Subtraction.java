@@ -1,5 +1,4 @@
-package peakaboo.filter.filters.arithmetic;
-
+package peakaboo.filter.filters.mathematical;
 
 
 import peakaboo.filter.AbstractFilter;
@@ -10,42 +9,42 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class Multiply extends AbstractFilter
+public class Subtraction extends AbstractFilter
 {
 
 	private static final int AMOUNT = 0;
 	
-	public Multiply()
+	public Subtraction()
 	{
 		super();
 	}
 	
-	
 	@Override
 	public void initialize()
 	{
-		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Multiply By", 1.0));
+		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Subtract", 1.0));
 	}
 	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return SpectrumCalculations.multiplyBy(data, getParameter(AMOUNT).realValue());
+		return SpectrumCalculations.subtractFromList(data, getParameter(AMOUNT).realValue());
 	}
 
 
 	@Override
-	public String getFilterDescription()
-	{
-		return "The " + getFilterName() + " filter multiplies all points on a spectrum by a constant value.";
-	}
-
-
-	@Override
-	public String getFilterName()
+	public String getPluginDescription()
 	{
 		// TODO Auto-generated method stub
-		return "Multiply";
+		return "The " + getPluginName() + " filter subtracts a constant value to all points on a spectrum.";
+	}
+
+
+	@Override
+	public String getPluginName()
+	{
+		// TODO Auto-generated method stub
+		return "Subtract";
 	}
 
 
@@ -53,14 +52,13 @@ public class Multiply extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.ARITHMETIC;
+		return FilterType.MATHEMATICAL;
 	}
 
 
 	@Override
 	public PlotPainter getPainter()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -68,14 +66,13 @@ public class Multiply extends AbstractFilter
 	@Override
 	public boolean validateParameters()
 	{
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
-		return false;
+		return true;
 	}
 	
 	

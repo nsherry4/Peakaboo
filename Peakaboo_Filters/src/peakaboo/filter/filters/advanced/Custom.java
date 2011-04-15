@@ -1,7 +1,7 @@
 package peakaboo.filter.filters.advanced;
 
 
-import bolt.BoltMap;
+import bolt.scripting.BoltMap;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
@@ -11,6 +11,21 @@ import scitypes.Spectrum;
 public class Custom extends AbstractFilter {
 
 	private static int CODE = 0;
+	
+	private static final String header = "" + 
+	"from java.util import * \n" +
+	"from scitypes import Spectrum \n" +
+	"from peakaboo.calculations import * \n" +
+	"from JSci.maths import Complex \n" +
+	"import array\n" +
+	"\n" +
+	"# spectrumIn and spectrumOut are of Java type float[]. \n" +
+	"# \n" +
+	"# Calling functions in Peakaboo (eg. peakaboo.calculations) \n" +
+	"# will usually require wrapping the float[] in a Spectrum class. \n" +
+	"# For Example: \n" +
+	"# complexArray = Noise.DataToFFT(Spectrum(spectrumIn)) \n" +
+	"\n\n";
 	
 	
 	private BoltMap<float[], float[]> boltmap;
@@ -25,16 +40,16 @@ public class Custom extends AbstractFilter {
 	
 	@Override
 	public void initialize() {
-		addParameter(CODE, new Parameter(ValueType.CODE, "Custom Code", "spectrumOut = spectrumIn"));
+		addParameter(CODE, new Parameter(ValueType.CODE, "Custom Code", header + "spectrumOut = spectrumIn"));
 	}
 
 	@Override
-	public String getFilterName() {
+	public String getPluginName() {
 		return "Custom";
 	}
 
 	@Override
-	public String getFilterDescription() {
+	public String getPluginDescription() {
 		return "";
 	}
 
@@ -51,19 +66,23 @@ public class Custom extends AbstractFilter {
 	@Override
 	public boolean validateParameters() {
 		try {
-			boltmap.setScript(getParameter(CODE).textValue());
-			boltmap.f(new float[]{1, 2, 3, 4});
+			boltmap.setScript(getCode());
+			if (  boltmap.f(new float[]{1, 2, 3, 4}) instanceof float[]  ){
+				return true;
+			} else {
+				throw new Exception("Type mismatch for spectrumOut");
+			}
 		} catch (Exception e) {
 			getParameter(CODE).errorMessage = e.getMessage();
 			return false;
 		}
-		return true;
+		
 	}
 
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache) {
 		
-		boltmap.setScript(getParameter(CODE).textValue());
+		boltmap.setScript(getCode());
 		
 		float[] source = data.backingArray();
 		float[] result = boltmap.f(source);
@@ -72,8 +91,13 @@ public class Custom extends AbstractFilter {
 		
 	}
 
+	private String getCode()
+	{
+		return getParameter(CODE).codeValue();
+	}
+	
 	@Override
-	public boolean showFilter() {
+	public boolean pluginEnabled() {
 		return true;
 	}
 

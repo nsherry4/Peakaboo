@@ -42,7 +42,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 		for (AbstractFilter filter : filteringModel.filters.getAvailableFilters())
 		{
-			filterNames.add(filter.getFilterName());
+			filterNames.add(filter.getPluginName());
 		}
 
 		Collections.sort(filterNames);
@@ -60,7 +60,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 		for (AbstractFilter f : filteringModel.filters.getAvailableFilters())
 		{
-			if (f.getFilterName().equals(name))
+			if (f.getPluginName().equals(name))
 			{
 
 				try

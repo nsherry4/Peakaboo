@@ -111,7 +111,7 @@ public class Parameter implements Serializable
 		
 	}
 	
-	public String textValue()
+	public String codeValue()
 	{
 		
 		try

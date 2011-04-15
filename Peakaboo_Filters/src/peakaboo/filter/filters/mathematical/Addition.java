@@ -1,5 +1,4 @@
-package peakaboo.filter.filters.arithmetic;
-
+package peakaboo.filter.filters.mathematical;
 
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
@@ -9,12 +8,13 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class Subtraction extends AbstractFilter
+
+public class Addition extends AbstractFilter
 {
 
 	private static final int AMOUNT = 0;
 	
-	public Subtraction()
+	public Addition()
 	{
 		super();
 	}
@@ -22,29 +22,29 @@ public class Subtraction extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Subtract", 1.0));
+		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
 	}
 	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return SpectrumCalculations.subtractFromList(data, getParameter(AMOUNT).realValue());
+		return SpectrumCalculations.subtractFromList(data, 0.0f-getParameter(AMOUNT).realValue());
 	}
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getFilterName() + " filter subtracts a constant value to all points on a spectrum.";
+		return "The " + getPluginName() + " filter adds a constant value to all points on a spectrum.";
 	}
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		// TODO Auto-generated method stub
-		return "Subtract";
+		return "Add";
 	}
 
 
@@ -52,13 +52,14 @@ public class Subtraction extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.ARITHMETIC;
+		return FilterType.MATHEMATICAL;
 	}
 
 
 	@Override
 	public PlotPainter getPainter()
 	{
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -66,11 +67,12 @@ public class Subtraction extends AbstractFilter
 	@Override
 	public boolean validateParameters()
 	{
+		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

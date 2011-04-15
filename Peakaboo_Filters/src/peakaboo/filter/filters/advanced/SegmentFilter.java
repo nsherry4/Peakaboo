@@ -6,7 +6,6 @@ import fava.Fn;
 import fava.signatures.FnMap;
 
 import peakaboo.filter.AbstractFilter;
-import peakaboo.filter.AvailableFilters;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.painters.PainterData;
@@ -32,13 +31,13 @@ public class SegmentFilter extends AbstractFilter
 	public void initialize()
 	{
 		List<AbstractFilter> filters = Fn.filter(
-				AvailableFilters.getNewInstancesForAllFilters(), 
+				AbstractFilter.getAvailableFilters(), 
 				
 				new FnMap<AbstractFilter, Boolean>() {
 
 					public Boolean f(AbstractFilter f)
 					{
-						return f.showFilter() && f.canFilterSubset();
+						return f.pluginEnabled() && f.canFilterSubset();
 					}}
 
 		);
@@ -80,13 +79,13 @@ public class SegmentFilter extends AbstractFilter
 	}
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
-		return "The " + getFilterName() + " filter allows the application of another filter to a portion of a spectrum.";
+		return "The " + getPluginName() + " filter allows the application of another filter to a portion of a spectrum.";
 	}
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "Filter Partial Spectrum";
 	}
@@ -121,7 +120,7 @@ public class SegmentFilter extends AbstractFilter
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

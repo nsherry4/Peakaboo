@@ -61,7 +61,7 @@ public final class FourierLowPass extends AbstractFilter
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "Fourier Low-Pass";
 	}
@@ -75,11 +75,11 @@ public final class FourierLowPass extends AbstractFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		// TODO Auto-generated method stub
 		return "The "
-				+ getFilterName()
+				+ getPluginName()
 				+ " filter transforms the spectral data with a Fourier Transformation into a frequency domain. Data from a high frequency range (noise) is filtered out, while lower frequencies (peaks, background) are passed through.";
 	}
 
@@ -107,7 +107,7 @@ public final class FourierLowPass extends AbstractFilter
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

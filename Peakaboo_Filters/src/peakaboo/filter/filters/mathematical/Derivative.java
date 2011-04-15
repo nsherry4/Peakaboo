@@ -1,4 +1,4 @@
-package peakaboo.filter.filters.advanced;
+package peakaboo.filter.filters.mathematical;
 
 
 import peakaboo.calculations.Noise;
@@ -7,37 +7,36 @@ import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 
-public class Integrate extends AbstractFilter
+public class Derivative extends AbstractFilter
 {
 
-
+	
 	@Override
 	public void initialize()
 	{
 
 	}
 	
-	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return Noise.integ(data);
-	}
-	
-
-	@Override
-	public String getFilterDescription()
-	{
-		// TODO Auto-generated method stub
-		return "The " + getFilterName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
+		return Noise.deriv(data);
 	}
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginDescription()
 	{
 		// TODO Auto-generated method stub
-		return "Integral";
+		return "The " + getPluginName() + " transforms the data such that each channel represents the difference between itself and the channel before it.";
+	}
+
+
+	@Override
+	public String getPluginName()
+	{
+		// TODO Auto-generated method stub
+		return "Derivative";
 	}
 
 
@@ -45,7 +44,7 @@ public class Integrate extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.ADVANCED;
+		return FilterType.MATHEMATICAL;
 	}
 
 
@@ -63,9 +62,9 @@ public class Integrate extends AbstractFilter
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
+
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}
@@ -76,5 +75,5 @@ public class Integrate extends AbstractFilter
 	{
 		return true;
 	}
-
+	
 }

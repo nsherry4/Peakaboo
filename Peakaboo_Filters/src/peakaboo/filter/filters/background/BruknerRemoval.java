@@ -39,7 +39,7 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "Brukner";
 	}
@@ -77,16 +77,16 @@ public final class BruknerRemoval extends BackgroundRemovalFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		return "The "
-				+ getFilterName()
+				+ getPluginName()
 				+ " filter attempts to determine which portion of the signal is background and remove it. It does this over several iterations by smoothing the data and taking the minimum of the unsmoothed and smoothed data for each channel.";
 	}
 
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

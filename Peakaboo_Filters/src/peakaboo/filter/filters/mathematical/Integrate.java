@@ -1,50 +1,43 @@
-package peakaboo.filter.filters.arithmetic;
+package peakaboo.filter.filters.mathematical;
 
+
+import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
-
-public class Addition extends AbstractFilter
+public class Integrate extends AbstractFilter
 {
 
-	private static final int AMOUNT = 0;
-	
-	public Addition()
-	{
-		super();
-	}
-	
+
 	@Override
 	public void initialize()
 	{
-		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
+
 	}
+	
 	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return SpectrumCalculations.subtractFromList(data, 0.0f-getParameter(AMOUNT).realValue());
+		return Noise.integ(data);
+	}
+	
+
+	@Override
+	public String getPluginDescription()
+	{
+		// TODO Auto-generated method stub
+		return "The " + getPluginName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
 	}
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginName()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getFilterName() + " filter adds a constant value to all points on a spectrum.";
-	}
-
-
-	@Override
-	public String getFilterName()
-	{
-		// TODO Auto-generated method stub
-		return "Add";
+		return "Integral";
 	}
 
 
@@ -52,7 +45,7 @@ public class Addition extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.ARITHMETIC;
+		return FilterType.MATHEMATICAL;
 	}
 
 
@@ -70,9 +63,9 @@ public class Addition extends AbstractFilter
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+	
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}
@@ -83,5 +76,5 @@ public class Addition extends AbstractFilter
 	{
 		return true;
 	}
-	
+
 }

@@ -37,7 +37,7 @@ public final class LinearTrimRemoval extends BackgroundRemovalFilter
 	}
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "Linear Trim";
 	}
@@ -72,16 +72,16 @@ public final class LinearTrimRemoval extends BackgroundRemovalFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		return "The "
-				+ getFilterName()
+				+ getPluginName()
 				+ " filter attempts to determine which portion of the signal is background and remove it. It does this by examining all pairs of points which are n channels apart (ie (1, 10), (2, 11) where n = 10). For each pair of points, any signal which exceeds a straight line connecting the two points is removed.";
 	}
 
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

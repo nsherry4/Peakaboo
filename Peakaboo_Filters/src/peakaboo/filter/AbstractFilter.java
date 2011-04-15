@@ -2,9 +2,12 @@ package peakaboo.filter;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import bolt.plugin.BoltPlugin;
 
 import fava.datatypes.Pair;
 
@@ -30,18 +33,19 @@ import scitypes.Spectrum;
  * 
  */
 
-public abstract class AbstractFilter implements Serializable
+public abstract class AbstractFilter extends BoltPlugin implements Serializable
 {
 	
 	public static enum FilterType
 	{
+		
 		BACKGROUND {
 
 			@Override
 			public String toString()
 			{
 				return "Background Removal";
-			}
+			}			
 		},
 		NOISE {
 
@@ -51,12 +55,12 @@ public abstract class AbstractFilter implements Serializable
 				return "Noise Removal";
 			}
 		},
-		ARITHMETIC {
+		MATHEMATICAL {
 
 			@Override
 			public String toString()
 			{
-				return "Arithmetic";
+				return "Mathematical";
 			}
 		},
 		ADVANCED {
@@ -66,6 +70,11 @@ public abstract class AbstractFilter implements Serializable
 			{
 				return "Advanced";
 			}	
+		};
+		
+		public String getSubPackage()
+		{
+			return "filters." + name().toLowerCase();
 		}
 	}
 	
@@ -75,21 +84,37 @@ public abstract class AbstractFilter implements Serializable
 	protected Spectrum	previewCache;
 	protected Spectrum	calculatedData;
 
+	
+	
+	
 	public AbstractFilter()
 	{
 		this.parameters = new LinkedHashMap<Object, Parameter>();
 		this.enabled = true;
 	}
 
+	public static List<AbstractFilter> getAvailableFilters()
+	{
+		List<AbstractFilter> filters = new ArrayList<AbstractFilter>(); 
+		
+		Package p;
+		for (FilterType ft : FilterType.values()) {
+			p = AbstractFilter.class.getPackage();
+			filters.addAll(  BoltPlugin.getAvailablePlugins(AbstractFilter.class, p.getName() + "." + ft.getSubPackage())  );
+		}
+		
+		return filters;
+	}
 
-	public abstract void initialize();
+	public static AbstractFilter createNewInstance(AbstractFilter f)
+	{
+		return BoltPlugin.createNewInstance(f);
+	}
 	
-	public abstract String getFilterName();
-
-
-	public abstract String getFilterDescription();
-
-
+	
+	
+	
+	
 	public abstract FilterType getFilterType();
 
 
@@ -134,19 +159,19 @@ public abstract class AbstractFilter implements Serializable
 		}
 		catch(Exception e)
 		{
-			System.err.println(getFilterName() + " Filter Failed");
+			System.err.println(getPluginName() + " Filter Failed");
 			if (!Version.release) e.printStackTrace();
 			return data;
 		}
 	}
 	
-	public abstract boolean showFilter();
-	
+		
 	public abstract boolean canFilterSubset();
 
 	
+	
 	public String toString()
 	{
-		return this.getFilterName();
+		return this.getPluginName();
 	}
 }

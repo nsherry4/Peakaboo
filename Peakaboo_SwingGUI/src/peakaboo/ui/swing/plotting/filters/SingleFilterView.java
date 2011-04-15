@@ -88,8 +88,8 @@ public class SingleFilterView extends JPanel
 		
 
 		if (showTitle) {
-			TitleGradientPanel panel = new TitleGradientPanel(filter.getFilterName() + " Filter", true);
-			panel.setToolTipText(filter.getFilterDescription());
+			TitleGradientPanel panel = new TitleGradientPanel(filter.getPluginName() + " Filter", true);
+			panel.setToolTipText(filter.getPluginDescription());
 			this.add(panel, BorderLayout.NORTH);
 		}
 		
@@ -103,7 +103,7 @@ public class SingleFilterView extends JPanel
 	@Override
 	public String toString()
 	{
-		return filter.getFilterName();
+		return filter.getPluginName();
 	}
 
 
@@ -367,7 +367,7 @@ public class SingleFilterView extends JPanel
 					final JEditorPane codeEditor = new JEditorPane();
 			        JScrollPane scrPane = new JScrollPane(codeEditor);
 			        codeEditor.setContentType("text/python");
-			        codeEditor.setText(param.textValue());
+			        codeEditor.setText(param.codeValue());
 			        scrPane.setPreferredSize(new Dimension(600, 400));
 			        	        
 			        

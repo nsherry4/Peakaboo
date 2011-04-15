@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import bolt.plugin.BoltPlugin;
+
 import scitypes.Spectrum;
 
 /**
@@ -27,7 +29,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	{
 
 		filters = new ArrayList<AbstractFilter>();
-		availableFilters = AvailableFilters.getNewInstancesForAllFilters();
+		availableFilters = AbstractFilter.getAvailableFilters();
 
 	}
 
@@ -166,7 +168,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 
 	public synchronized String getFilterName(int index)
 	{
-		return filters.get(index).getFilterName();
+		return filters.get(index).getPluginName();
 	}
 
 

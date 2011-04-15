@@ -23,14 +23,14 @@ public class Identity extends AbstractFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		return "This filter is the identity function -- it does no processing to the data";
 	}
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "None";
 	}
@@ -58,7 +58,7 @@ public class Identity extends AbstractFilter
 
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return false;
 	}

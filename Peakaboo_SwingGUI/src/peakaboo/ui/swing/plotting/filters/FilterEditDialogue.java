@@ -39,7 +39,7 @@ public class FilterEditDialogue extends JDialog
 	public FilterEditDialogue(AbstractFilter _filter, IFilteringController _controller, JFrame owner)
 	{
 
-		super(owner, _filter.getFilterName(), false);
+		super(owner, _filter.getPluginName(), false);
 		init(_filter, _controller, owner);
 
 	}
@@ -99,7 +99,7 @@ public class FilterEditDialogue extends JDialog
 			public void actionPerformed(ActionEvent e)
 			{
 				JDialog infodialog = new JDialog(FilterEditDialogue.this, true);
-				WrappingLabel infotext = new WrappingLabel(f.getFilterDescription(), 400);
+				WrappingLabel infotext = new WrappingLabel(f.getPluginDescription(), 400);
 				infotext.setBorder(Spacing.bMedium());
 				infodialog.getContentPane().add(infotext);
 				infodialog.pack();

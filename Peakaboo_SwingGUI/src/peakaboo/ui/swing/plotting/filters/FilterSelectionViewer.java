@@ -13,7 +13,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
-import peakaboo.filter.AvailableFilters;
 import peakaboo.filter.AbstractFilter.FilterType;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -195,7 +194,7 @@ public class FilterSelectionViewer extends ClearPanel
 
 				if (leaf instanceof AbstractFilter) {
 					AbstractFilter filter = (AbstractFilter) leaf;
-					filter = AvailableFilters.createNewInstance(filter);
+					filter = AbstractFilter.createNewInstance(filter);
 					filter.initialize();
 					controller.addFilter(filter);
 				}

@@ -36,7 +36,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	}
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		return "Wavelet Low-Pass";
 	}
@@ -66,10 +66,10 @@ public final class WaveletNoiseFilter extends AbstractFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		return "The "
-				+ getFilterName()
+				+ getPluginName()
 				+ " filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then smoothed, and a reverse transform is applied.";
 	}
 
@@ -93,7 +93,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	}
 	
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

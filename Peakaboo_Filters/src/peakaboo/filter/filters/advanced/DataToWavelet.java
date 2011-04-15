@@ -37,15 +37,15 @@ public class DataToWavelet extends AbstractFilter
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getFilterName() + " filter converts spectrum data into a wavelet representation. This is intended to be used in conjunction with other filters (especially the 'Filter Partial Spectrum' filter) to perform custom wavelet operations.";
+		return "The " + getPluginName() + " filter converts spectrum data into a wavelet representation. This is intended to be used in conjunction with other filters (especially the 'Filter Partial Spectrum' filter) to perform custom wavelet operations.";
 	}
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		// TODO Auto-generated method stub
 		return "Signal -> Wavelet";
@@ -79,7 +79,7 @@ public class DataToWavelet extends AbstractFilter
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
 		return true;
 	}

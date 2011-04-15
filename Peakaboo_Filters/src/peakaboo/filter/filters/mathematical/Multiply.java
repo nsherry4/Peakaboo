@@ -1,42 +1,51 @@
-package peakaboo.filter.filters.advanced;
+package peakaboo.filter.filters.mathematical;
 
 
-import peakaboo.calculations.Noise;
+
 import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.Parameter;
+import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
-public class Derivative extends AbstractFilter
+public class Multiply extends AbstractFilter
 {
 
+	private static final int AMOUNT = 0;
+	
+	public Multiply()
+	{
+		super();
+	}
+	
 	
 	@Override
 	public void initialize()
 	{
-
+		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Multiply By", 1.0));
 	}
 	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		return Noise.deriv(data);
+		return SpectrumCalculations.multiplyBy(data, getParameter(AMOUNT).realValue());
 	}
 
 
 	@Override
-	public String getFilterDescription()
+	public String getPluginDescription()
 	{
-		// TODO Auto-generated method stub
-		return "The " + getFilterName() + " transforms the data such that each channel represents the difference between itself and the channel before it.";
+		return "The " + getPluginName() + " filter multiplies all points on a spectrum by a constant value.";
 	}
 
 
 	@Override
-	public String getFilterName()
+	public String getPluginName()
 	{
 		// TODO Auto-generated method stub
-		return "Derivative";
+		return "Multiply";
 	}
 
 
@@ -44,7 +53,7 @@ public class Derivative extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.ADVANCED;
+		return FilterType.MATHEMATICAL;
 	}
 
 
@@ -64,9 +73,9 @@ public class Derivative extends AbstractFilter
 	}
 
 	@Override
-	public boolean showFilter()
+	public boolean pluginEnabled()
 	{
-		return true;
+		return false;
 	}
 	
 	
