@@ -97,7 +97,41 @@ public class Noise
 
 	}
 
+	
+	public static Complex[] DataToFFT(Spectrum data)
+	{
+		
+		// Fast Fourier Transform
 
+		double[] dataAsDoubles = new double[data.size()];
+
+		for (int i = 0; i < data.size(); i++) {
+			dataAsDoubles[i] = data.get(i);
+		}
+
+
+		// FFT Transform
+		return FourierMath.transform(dataAsDoubles);
+		
+	}
+	
+
+	public static Spectrum FFTToData(Complex[] fft)
+	{
+		// FFT Inverse Transform
+		fft = FourierMath.inverseTransform(fft);
+
+
+		// get the data into a list of doubles for returning
+		Spectrum result = new Spectrum(fft.length);
+		for (int i = 0; i < fft.length; i++) {
+			result.set(  i, Math.max(  0f, (float)(fft[i].real())  )  );
+		}
+		
+		return result;
+	}
+	
+	
 	/**
 	 * Performs a Fast Fourier Transformation, and proceeds to remove high-frequency data.
 	 * 
@@ -139,18 +173,8 @@ public class Noise
 	private static Spectrum doFFTFilter(Spectrum data, FFTStyle style, int start, int stop)
 	{
 
-		// Fast Fourier Transform
-
-		double[] dataAsDoubles = new double[data.size()];
-		Complex[] transformedData;
-
-		for (int i = 0; i < data.size(); i++) {
-			dataAsDoubles[i] = data.get(i);
-		}
-
-
-		// FFT Transform
-		transformedData = FourierMath.transform(dataAsDoubles);
+		// FFT
+		Complex[] transformedData = DataToFFT(data);
 
 
 		// Do something with the transformed data
@@ -213,7 +237,7 @@ public class Noise
 			// in between start and stop
 			if (di < start && di > stop) {
 				percentLeftInLine = 1.0 - ((double) (di - start) / (double) (stop - start));
-				data[i] = new Complex(data[i].real() * percentLeftInLine, data[i].imag());
+				data[i] = new Complex(data[i].real() * percentLeftInLine, data[i].imag() * percentLeftInLine);
 			} else if (di < start) {
 
 				data[i] = new Complex(0.0, 0.0);
@@ -247,7 +271,7 @@ public class Noise
 			if (di < start && di > stop) {
 				percentLeftInLine = 1.0 - ((double) (di - start) / (double) (stop - start));
 				sine = (Math.sin(Math.PI * percentLeftInLine - Math.PI / 2.0) + 1.0) / 2.0;
-				data[i] = new Complex(data[i].real() * sine, data[i].imag());
+				data[i] = new Complex(data[i].real() * sine, data[i].imag() * sine);
 			} else if (di < start) {
 
 				data[i] = new Complex(0.0, 0.0);
