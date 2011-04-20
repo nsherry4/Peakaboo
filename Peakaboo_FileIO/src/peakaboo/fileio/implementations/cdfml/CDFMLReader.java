@@ -1,4 +1,4 @@
-package peakaboo.fileio.implementations;
+package peakaboo.fileio.implementations.cdfml;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
-import peakaboo.fileio.implementations.support.CDFML;
 import scitypes.Spectrum;
 import scratch.ScratchList;
 
@@ -77,16 +76,16 @@ public abstract class CDFMLReader extends DefaultHandler2
 	private StringBuilder								sb;
 	
 
-	private String										attrPath		= CDFML.CDF_ROOT_NAME + "/" + CDFML.TAG_ATTRS + "/"
-																		+ CDFML.TAG_ATTR;
-	private String										attrEntryPath	= attrPath + "/" + CDFML.TAG_ENTRY;
+	private String										attrPath		= CDFMLStrings.CDF_ROOT_NAME + "/" + CDFMLStrings.TAG_ATTRS + "/"
+																		+ CDFMLStrings.TAG_ATTR;
+	private String										attrEntryPath	= attrPath + "/" + CDFMLStrings.TAG_ENTRY;
 
-	private String										varPath			= CDFML.CDF_ROOT_NAME + "/" + CDFML.TAG_VARS + "/"
-																		+ CDFML.TAG_VAR;
-	private String										varDataPath		= varPath + "/" + CDFML.TAG_VAR_DATA;
-	private String										varRecordPath	= varDataPath + "/" + CDFML.TAG_VAR_RECORD;
+	private String										varPath			= CDFMLStrings.CDF_ROOT_NAME + "/" + CDFMLStrings.TAG_VARS + "/"
+																		+ CDFMLStrings.TAG_VAR;
+	private String										varDataPath		= varPath + "/" + CDFMLStrings.TAG_VAR_DATA;
+	private String										varRecordPath	= varDataPath + "/" + CDFMLStrings.TAG_VAR_RECORD;
 
-	private String										varVarInfo 		= varPath + "/" + CDFML.TAG_VAR_INFO;
+	private String										varVarInfo 		= varPath + "/" + CDFMLStrings.TAG_VAR_INFO;
 		
 
 	public CDFMLReader()
@@ -150,19 +149,19 @@ public abstract class CDFMLReader extends DefaultHandler2
 		{
 			//this is a variable record
 			isRecord = true;
-			entryNo = Integer.parseInt(atts.getValue(CDFML.XML_ATTR_RECORD_NUMBER));
+			entryNo = Integer.parseInt(atts.getValue(CDFMLStrings.XML_ATTR_RECORD_NUMBER));
 		}
 		else if (tag.equals(attrEntryPath))
 		{
 			//this is an attribute entry
 			isEntry = true;
-			entryNo = Integer.parseInt(atts.getValue(CDFML.XML_ATTR_ENTRYNUM)); 
+			entryNo = Integer.parseInt(atts.getValue(CDFMLStrings.XML_ATTR_ENTRYNUM)); 
 		} 
 		else if (tag.equals(varVarInfo)){
 			
 			//this is a cdfVarInfo tag
 			
-			String varName = getTagAttribute(CDFML.TAG_VAR, CDFML.XML_ATTR_NAME);
+			String varName = getTagAttribute(CDFMLStrings.TAG_VAR, CDFMLStrings.XML_ATTR_NAME);
 			
 			Map<String, String> attsMap = new HashMap<String, String>(12);
 			for (Integer i : new Range(0, atts.getLength()-1))
@@ -175,7 +174,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		{
 			//we're about to parse a lot of records. rather than looking up the name of the variable each time
 			//we can look up the variable name once, and check this instead of a lookup per record
-			currentVarName = atts.getValue(CDFML.XML_ATTR_NAME);
+			currentVarName = atts.getValue(CDFMLStrings.XML_ATTR_NAME);
 		}
 
 		//create a new string builder for the data we are about to receive
@@ -285,7 +284,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	private void recordEntry()
 	{
 		//get the tag's name attribute
-		String tagAttrName = getTagAttribute(CDFML.TAG_ATTR, CDFML.XML_ATTR_NAME);
+		String tagAttrName = getTagAttribute(CDFMLStrings.TAG_ATTR, CDFMLStrings.XML_ATTR_NAME);
 
 		//loop up the map of entry numbers to entry values for this attr name, create it if it doesnt exist yet
 		List<String> entryList = attrEntries.get(tagAttrName);
@@ -610,7 +609,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	
 	protected int varRecordCount(String var)
 	{
-		return Integer.parseInt(getVarAttr(var, CDFML.XML_ATTR_NUMRECORDS));
+		return Integer.parseInt(getVarAttr(var, CDFMLStrings.XML_ATTR_NUMRECORDS));
 	}
 	
 	protected abstract void processedSpectrum(String varname);

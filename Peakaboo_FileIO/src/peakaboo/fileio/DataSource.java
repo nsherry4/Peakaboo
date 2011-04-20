@@ -19,7 +19,7 @@ public interface DataSource
 	 */
 	public enum FileType
 	{
-		CLSXML, ZIP, CDFML
+		CDFML
 	}
 	
 

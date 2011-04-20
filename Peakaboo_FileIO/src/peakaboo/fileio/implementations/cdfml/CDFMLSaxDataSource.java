@@ -1,4 +1,4 @@
-package peakaboo.fileio.implementations;
+package peakaboo.fileio.implementations.cdfml;
 
 
 
@@ -23,7 +23,6 @@ import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
-import peakaboo.fileio.implementations.support.CDFML;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -70,15 +69,15 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	private boolean isNewVersion()
 	{
 		
-		if (hasVar(CDFML.VAR_MCA_SPECTRUM + "0")) return true;
-		if (hasVar(CDFML.VAR_MCA_SUMSPECTRUM)) return true;
+		if (hasVar(CDFMLStrings.VAR_MCA_SPECTRUM + "0")) return true;
+		if (hasVar(CDFMLStrings.VAR_MCA_SUMSPECTRUM)) return true;
 		return false;
 	}
 	
 	private boolean hasSumSpectrum()
 	{
 		if (!isNewVersion()) return false;
-		if (hasVar(CDFML.VAR_MCA_SUMSPECTRUM)) return true;
+		if (hasVar(CDFMLStrings.VAR_MCA_SUMSPECTRUM)) return true;
 		return false;
 	}
 	
@@ -89,7 +88,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 			
 			if (hasSumSpectrum()) return 1;
 			
-			return getAttrInt(CDFML.ATTR_MCA_NUM_ELEMENTS, 0);
+			return getAttrInt(CDFMLStrings.ATTR_MCA_NUM_ELEMENTS, 0);
 			
 		} else {
 			return 1;
@@ -102,13 +101,13 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 		if (isNewVersion()) {
 			
 			if (hasSumSpectrum() && element == 0) {
-				return getVarSpectra(CDFML.VAR_MCA_SUMSPECTRUM).get(index);
+				return getVarSpectra(CDFMLStrings.VAR_MCA_SUMSPECTRUM).get(index);
 			} else {
-				return getVarSpectra(CDFML.VAR_MCA_SPECTRUM + element).get(index);
+				return getVarSpectra(CDFMLStrings.VAR_MCA_SPECTRUM + element).get(index);
 			}
 			
-		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)){
-			return getVarSpectra(CDFML.VAR_XRF_SPECTRUMS).get(index);
+		} else if (hasVar(CDFMLStrings.VAR_XRF_SPECTRUMS)){
+			return getVarSpectra(CDFMLStrings.VAR_XRF_SPECTRUMS).get(index);
 		}
 		
 		return null;
@@ -127,11 +126,11 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	}
 	private Float getDeadtime(int element, int index)
 	{
-		if (hasVar(CDFML.VAR_MCA_DEADTIME + "0")) {
+		if (hasVar(CDFMLStrings.VAR_MCA_DEADTIME + "0")) {
 			if (numElements() == 1 && element == 1){
-				return Math.max(0f, getVarFloats(CDFML.VAR_MCA_DEADTIME).get(index) / 100f);
+				return Math.max(0f, getVarFloats(CDFMLStrings.VAR_MCA_DEADTIME).get(index) / 100f);
 			}
-			return Math.max(0f, getVarFloats(CDFML.VAR_MCA_DEADTIME + element).get(index) / 100f);	
+			return Math.max(0f, getVarFloats(CDFMLStrings.VAR_MCA_DEADTIME + element).get(index) / 100f);	
 		} else {
 			return 0f;
 		}
@@ -140,10 +139,10 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	private Float getINaught(int index)
 	{
-		if (!hasVar(CDFML.VAR_NORMALISE)) return 1f;
+		if (!hasVar(CDFMLStrings.VAR_NORMALISE)) return 1f;
 		
 		if (iNaughtNormalized == null) {
-			iNaughtNormalized = SpectrumCalculations.normalize(new Spectrum(getVarFloats(CDFML.VAR_NORMALISE)));
+			iNaughtNormalized = SpectrumCalculations.normalize(new Spectrum(getVarFloats(CDFMLStrings.VAR_NORMALISE)));
 		}
 		
 		return iNaughtNormalized.get(index);
@@ -156,14 +155,14 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 		if (isNewVersion()) {
 			
 			if (hasSumSpectrum()) {
-				return getVarAttrInt(CDFML.VAR_MCA_SUMSPECTRUM, CDFML.XML_ATTR_NUMRECORDS);
+				return getVarAttrInt(CDFMLStrings.VAR_MCA_SUMSPECTRUM, CDFMLStrings.XML_ATTR_NUMRECORDS);
 			} else {
-				return getVarAttrInt(CDFML.VAR_MCA_SPECTRUM + "0", CDFML.XML_ATTR_NUMRECORDS);	
+				return getVarAttrInt(CDFMLStrings.VAR_MCA_SPECTRUM + "0", CDFMLStrings.XML_ATTR_NUMRECORDS);	
 			}
 						
-		} else if (hasVar(CDFML.VAR_XRF_SPECTRUMS)) {
+		} else if (hasVar(CDFMLStrings.VAR_XRF_SPECTRUMS)) {
 			
-			return getVarAttrInt(CDFML.VAR_XRF_SPECTRUMS, CDFML.XML_ATTR_NUMRECORDS);
+			return getVarAttrInt(CDFMLStrings.VAR_XRF_SPECTRUMS, CDFMLStrings.XML_ATTR_NUMRECORDS);
 			
 		} else {
 			
@@ -279,8 +278,8 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 
 		
 		
-		dims.x =  getVarFloats(CDFML.VAR_X_POSITONS).get(index);
-		dims.y = getVarFloats(CDFML.VAR_Y_POSITONS).get(index);
+		dims.x =  getVarFloats(CDFMLStrings.VAR_X_POSITONS).get(index);
+		dims.y = getVarFloats(CDFMLStrings.VAR_Y_POSITONS).get(index);
 		return dims;
 
 	}
@@ -303,9 +302,9 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 
 	public String getDatasetName()
 	{
-		String Project = getAttr(CDFML.ATTR_PROJECT_NAME, 0);
-		String DatasetName = getAttr(CDFML.ATTR_DATASET_NAME, 0);
-		String SampleName = getAttr(CDFML.ATTR_SAMPLE_NAME, 0);
+		String Project = getAttr(CDFMLStrings.ATTR_PROJECT_NAME, 0);
+		String DatasetName = getAttr(CDFMLStrings.ATTR_DATASET_NAME, 0);
+		String SampleName = getAttr(CDFMLStrings.ATTR_SAMPLE_NAME, 0);
 
 		String name = "";
 
@@ -329,10 +328,10 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 		
 		String maxEnergyValue;
 		
-		if (hasAttr(CDFML.ATTR_MCA_MAX_ENERGY)) {
-			maxEnergyValue = getAttr(CDFML.ATTR_MCA_MAX_ENERGY, 0);
-		} else if (hasAttr(CDFML.ATTR_XRF_MAX_ENERGY)) {
-			maxEnergyValue = getAttr(CDFML.ATTR_XRF_MAX_ENERGY, 0);
+		if (hasAttr(CDFMLStrings.ATTR_MCA_MAX_ENERGY)) {
+			maxEnergyValue = getAttr(CDFMLStrings.ATTR_MCA_MAX_ENERGY, 0);
+		} else if (hasAttr(CDFMLStrings.ATTR_XRF_MAX_ENERGY)) {
+			maxEnergyValue = getAttr(CDFMLStrings.ATTR_XRF_MAX_ENERGY, 0);
 		} else {
 			return 0f;
 		}
@@ -358,14 +357,14 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 
 	private int getDataWidth()
 	{
-		int width = Integer.parseInt(getAttr(CDFML.ATTR_DATA_X, 0));
+		int width = Integer.parseInt(getAttr(CDFMLStrings.ATTR_DATA_X, 0));
 		return width;
 	}
 
 
 	private int getDataHeight()
 	{
-		int height = Integer.parseInt(getAttr(CDFML.ATTR_DATA_Y, 0));
+		int height = Integer.parseInt(getAttr(CDFMLStrings.ATTR_DATA_Y, 0));
 		return height;
 	}
 
@@ -384,10 +383,10 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	{
 		float x1, x2, y1, y2;
 
-		x1 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_X_START, 0));
-		x2 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_X_END, 0));
-		y1 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_Y_START, 0));
-		y2 = Float.parseFloat(getAttr(CDFML.ATTR_DIM_Y_END, 0));
+		x1 = Float.parseFloat(getAttr(CDFMLStrings.ATTR_DIM_X_START, 0));
+		x2 = Float.parseFloat(getAttr(CDFMLStrings.ATTR_DIM_X_END, 0));
+		y1 = Float.parseFloat(getAttr(CDFMLStrings.ATTR_DIM_Y_START, 0));
+		y2 = Float.parseFloat(getAttr(CDFMLStrings.ATTR_DIM_Y_END, 0));
 
 
 		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
@@ -399,7 +398,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	public String getRealDimensionsUnit()
 	{
-		return getAttr(CDFML.ATTR_DIM_X_START, 1);
+		return getAttr(CDFMLStrings.ATTR_DIM_X_START, 1);
 	}
 
 
@@ -407,80 +406,80 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	
 	public String getCreationTime()
 	{
-		return getAttr(CDFML.ATTR_CREATION_TIME, 0);
+		return getAttr(CDFMLStrings.ATTR_CREATION_TIME, 0);
 	}
 
 
 	public String getCreator()
 	{
-		return getAttr(CDFML.ATTR_CREATOR, 0);
+		return getAttr(CDFMLStrings.ATTR_CREATOR, 0);
 	}
 
 
 	public String getEndTime()
 	{
-		return getAttr(CDFML.ATTR_END_TIME, 0);
+		return getAttr(CDFMLStrings.ATTR_END_TIME, 0);
 	}
 
 
 
 	public String getExperimentName()
 	{
-		return getAttr(CDFML.ATTR_EXPERIMENT_NAME, 0);
+		return getAttr(CDFMLStrings.ATTR_EXPERIMENT_NAME, 0);
 	}
 
 
 	public String getFacilityName()
 	{
-		return getAttr(CDFML.ATTR_FACILITY, 0);
+		return getAttr(CDFMLStrings.ATTR_FACILITY, 0);
 	}
 
 
 	public String getInstrumentName()
 	{
-		return getAttr(CDFML.ATTR_INSTRUMENT, 0);
+		return getAttr(CDFMLStrings.ATTR_INSTRUMENT, 0);
 	}
 
 
 	public String getLaboratoryName()
 	{
-		return getAttr(CDFML.ATTR_LABORATORY, 0);
+		return getAttr(CDFMLStrings.ATTR_LABORATORY, 0);
 	}
 
 
 	public String getProjectName()
 	{
-		return getAttr(CDFML.ATTR_PROJECT_NAME, 0);
+		return getAttr(CDFMLStrings.ATTR_PROJECT_NAME, 0);
 	}
 
 
 	public String getSampleName()
 	{
-		return getAttr(CDFML.ATTR_SAMPLE_NAME, 0);
+		return getAttr(CDFMLStrings.ATTR_SAMPLE_NAME, 0);
 	}
 
 
 	public String getScanName()
 	{
-		return getAttr(CDFML.ATTR_DATASET_NAME, 0);
+		return getAttr(CDFMLStrings.ATTR_DATASET_NAME, 0);
 	}
 
 
 	public String getSessionName()
 	{
-		return getAttr(CDFML.ATTR_SESSION_NAME, 0);
+		return getAttr(CDFMLStrings.ATTR_SESSION_NAME, 0);
 	}
 
 
 	public String getStartTime()
 	{
-		return getAttr(CDFML.ATTR_START_TIME, 0);
+		return getAttr(CDFMLStrings.ATTR_START_TIME, 0);
 	}
 
 
 	public String getTechniqueName()
 	{
-		return getAttr(CDFML.ATTR_TECHNIQUE, 0);
+		return getAttr(CDFMLStrings.ATTR_TECHNIQUE, 0);
 	}
 
 
@@ -493,7 +492,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 
 	public boolean hasRealDimensions()
 	{
-		if (hasCategory.contains(CDFML.CAT_MapXY_1)) return true;
+		if (hasCategory.contains(CDFMLStrings.CAT_MapXY_1)) return true;
 		return false;
 	}
 
@@ -518,15 +517,15 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 			
 			
 			//new version and old version have different criteria for determining how many scans
-			if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS) && hasAttr(CDFML.ATTR_MCA_NUM_ELEMENTS)) {
+			if (hasVarAttr(varname, CDFMLStrings.XML_ATTR_NUMRECORDS) && hasAttr(CDFMLStrings.ATTR_MCA_NUM_ELEMENTS)) {
 						
-				totalScanCount = getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS) * getAttrInt(CDFML.ATTR_MCA_NUM_ELEMENTS, 0);
+				totalScanCount = getVarAttrInt(varname, CDFMLStrings.XML_ATTR_NUMRECORDS) * getAttrInt(CDFMLStrings.ATTR_MCA_NUM_ELEMENTS, 0);
 
 			}
 			//we assume that in the older version, there will be only one spectrum recordset
-			else if (hasVarAttr(varname, CDFML.XML_ATTR_NUMRECORDS)) {
+			else if (hasVarAttr(varname, CDFMLStrings.XML_ATTR_NUMRECORDS)) {
 				
-				totalScanCount = getVarAttrInt(varname, CDFML.XML_ATTR_NUMRECORDS);
+				totalScanCount = getVarAttrInt(varname, CDFMLStrings.XML_ATTR_NUMRECORDS);
 				
 			}
 			

@@ -1,8 +1,8 @@
-package peakaboo.fileio.implementations.support;
+package peakaboo.fileio.implementations.cdfml;
 
 
 
-public class CDFML
+public class CDFMLStrings
 {
 
 	//ScienceStudio Data Categories

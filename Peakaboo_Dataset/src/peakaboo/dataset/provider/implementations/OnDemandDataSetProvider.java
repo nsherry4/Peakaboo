@@ -22,11 +22,8 @@ import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
-import peakaboo.fileio.implementations.CDFMLSaxDataSource;
 import peakaboo.fileio.implementations.PlainTextDataSource;
-import peakaboo.fileio.implementations.old.XMLDataSource;
-import peakaboo.fileio.implementations.old.ZipDataSource;
-import peakaboo.fileio.implementations.support.CLSXML;
+import peakaboo.fileio.implementations.cdfml.CDFMLSaxDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -281,10 +278,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 						return new Maybe<Boolean>();
 					}
 				} 
-				else if (ZipDataSource.filesMatchCriteria(files))
-				{
-					dataSource = ZipDataSource.getArchiveFromFileName(files.get(0).getFileName());
-				}
 				else if (CDFMLSaxDataSource.filesMatchCriteria(files))
 				{
 										
@@ -299,10 +292,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 						return new Maybe<Boolean>();
 					}
 				}
-				else if (XMLDataSource.filesMatchCriteria(files))
-				{
-					dataSource = XMLDataSource.getXMLFileSet(files);
-				} 
 				else 
 				{
 					dataSource = null;
