@@ -70,6 +70,15 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 			{
 				return "Advanced";
 			}	
+		},
+		PROGRAMMING {
+		
+			@Override
+			public String toString()
+			{
+				return "Programming";
+			}
+			
 		};
 		
 		public String getSubPackage()
