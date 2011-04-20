@@ -227,7 +227,7 @@ public class SingleFilterView extends JPanel
 						case CODE:
 							JOptionPane.showMessageDialog(
 									SingleFilterView.this, 
-									param.errorMessage, 
+									param.getProperty("ErrorMessage"), 
 									"Code Error", 
 									JOptionPane.ERROR_MESSAGE,
 									StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON)
@@ -366,9 +366,15 @@ public class SingleFilterView extends JPanel
 					
 					final JEditorPane codeEditor = new JEditorPane();
 			        JScrollPane scrPane = new JScrollPane(codeEditor);
-			        codeEditor.setContentType("text/python");
+			        
+			        if (param.getProperty("Language") != null) codeEditor.setContentType("text/" + param.getProperty("Language"));
+			        
 			        codeEditor.setText(param.codeValue());
-			        scrPane.setPreferredSize(new Dimension(600, 400));
+			        
+			        int height = 400;
+			        if (param.getProperty("CodeHeight") != null) height = Integer.parseInt(param.getProperty("CodeHeight"));
+			        
+			        scrPane.setPreferredSize(new Dimension(600, height));
 			        	        
 			        
 					final ParamListener pl = new ParamListener(param);
