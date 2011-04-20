@@ -1,4 +1,4 @@
-package peakaboo.filter.filters.advanced;
+package peakaboo.filter.filters.programming;
 
 
 import bolt.scripting.BoltMap;
@@ -8,7 +8,7 @@ import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
-public class Custom extends AbstractFilter {
+public class JPython extends AbstractFilter {
 
 	private static int CODE = 0;
 	
@@ -30,7 +30,7 @@ public class Custom extends AbstractFilter {
 	
 	private BoltMap<float[], float[]> boltmap;
 	
-	public Custom() {
+	public JPython() {
 		super();
 		
 		boltmap = new BoltMap<float[], float[]>("jython", "spectrumIn", "spectrumOut", "");
@@ -45,7 +45,7 @@ public class Custom extends AbstractFilter {
 
 	@Override
 	public String getPluginName() {
-		return "Custom";
+		return "JPython";
 	}
 
 	@Override
