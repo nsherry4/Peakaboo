@@ -2,6 +2,8 @@ package peakaboo.filter;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -21,17 +23,16 @@ public class Parameter implements Serializable
 	public ValueType	type;
 	public String		name;
 	private Object		value;
-	public String		errorMessage;
 	
 	public boolean		enabled;
 
 	public Object[]		possibleValues;
+	
+	private Map<String, String>		properties;
 
 	public Parameter()
 	{
-		type = null;
-		name = "";
-		value = null;
+		this(null, "", null);
 	}
 	
 	public Parameter(ValueType type, String name, Object value)
@@ -41,6 +42,8 @@ public class Parameter implements Serializable
 		this.value = value;
 		this.possibleValues = null;
 		this.enabled = true;
+		
+		properties = new HashMap<String, String>();
 	}
 	
 
@@ -136,6 +139,16 @@ public class Parameter implements Serializable
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void setProperty(String propertyName, String propertyValue)
+	{
+		properties.put(propertyName, propertyValue);
+	}
+	
+	public String getProperty(String propertyName)
+	{
+		return properties.get(propertyName);
 	}
 
 

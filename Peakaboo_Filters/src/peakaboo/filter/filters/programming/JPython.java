@@ -42,6 +42,8 @@ public class JPython extends AbstractFilter {
 	@Override
 	public void initialize() {
 		addParameter(CODE, new Parameter(ValueType.CODE, "Custom Code", header + "spectrumOut = spectrumIn"));
+		
+		getParameter(CODE).setProperty("Language", "python");
 	}
 
 	@Override
@@ -74,7 +76,7 @@ public class JPython extends AbstractFilter {
 				throw new Exception("Type mismatch for spectrumOut");
 			}
 		} catch (Exception e) {
-			getParameter(CODE).errorMessage = e.getMessage();
+			getParameter(CODE).setProperty("ErrorMessage", e.getMessage());
 			return false;
 		}
 		
