@@ -2,11 +2,8 @@ package peakaboo.mapping.correction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import commonenvironment.AbstractFile;
-import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.signatures.FnMap;

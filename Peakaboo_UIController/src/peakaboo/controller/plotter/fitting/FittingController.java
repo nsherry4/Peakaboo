@@ -387,7 +387,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	
 		
 		//find the best fitting for the currently selected fittings
-		FList<TransitionSeries> bestfit = new FList<TransitionSeries>(perms.fold(new FnFold<List<TransitionSeries>, List<TransitionSeries>>() {
+		FList<TransitionSeries> bestfit = FList.<TransitionSeries>wrap(perms.fold(new FnFold<List<TransitionSeries>, List<TransitionSeries>>() {
 			
 			public List<TransitionSeries> f(List<TransitionSeries> l1, List<TransitionSeries> l2)
 			{

@@ -2,8 +2,6 @@ package peakaboo.dataset.provider.implementations;
 
 import java.util.List;
 
-import fava.datatypes.Bounds;
-
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.fileio.DataSource;
@@ -11,6 +9,7 @@ import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.workers.PluralSet;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;

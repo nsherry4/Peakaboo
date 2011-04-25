@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import fava.datatypes.Bounds;
 
 import peakaboo.curvefit.peaktable.Transition;
 import peakaboo.curvefit.peaktable.TransitionSeries;
@@ -14,6 +13,7 @@ import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SigDigits;
 import scitypes.SpectrumCalculations;

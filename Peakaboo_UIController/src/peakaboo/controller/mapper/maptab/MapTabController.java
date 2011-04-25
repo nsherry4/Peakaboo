@@ -1,12 +1,7 @@
 package peakaboo.controller.mapper.maptab;
 
-import static fava.Fn.filter;
-import static fava.Fn.fold;
-import static fava.Fn.foldr;
-import static fava.Fn.foldl;
-import static fava.Fn.map;
-import static fava.Fn.unique;
-import static fava.Functions.strcat;
+import static fava.Fn.*;
+import static fava.Functions.*;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -179,7 +174,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		Map<OverlayColour, Spectrum> uninterpolatedColours = new HashMap<OverlayColour, Spectrum>();
 		
 		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> redSpectrums = Fn.filter(
+		List<Spectrum> redSpectrums = filter(
 			dataset, 
 			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
@@ -215,7 +210,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			
 		
 		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> greenSpectrums = Fn.filter(
+		List<Spectrum> greenSpectrums = filter(
 			dataset, 
 			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
@@ -251,7 +246,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 
 			
 		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> blueSpectrums = Fn.filter(
+		List<Spectrum> blueSpectrums = filter(
 			dataset, 
 			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
 
@@ -425,7 +420,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				{
 					if (overlayData.get(c) != null) results.add(  c.toString() + ": " + SigDigits.roundFloatTo(overlayData.get(c).get(index), 2)  );
 				}
-				return results.foldl(Functions.strcat(", "));
+				return results.foldl(strcat(", "));
 			}
 		};
 	}

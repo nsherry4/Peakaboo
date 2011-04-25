@@ -328,7 +328,7 @@ public class TSOrdering
 				return prox1.compareTo(prox2);
 
 			}
-		}, Functions.<TransitionSeries> id());
+		}, Functions.<TransitionSeries>id());
 		
 		//take the top n based on position alone
 		tss = tss.take(15);

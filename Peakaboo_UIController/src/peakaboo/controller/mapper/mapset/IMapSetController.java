@@ -4,10 +4,9 @@ package peakaboo.controller.mapper.mapset;
 
 import java.util.List;
 
-import fava.datatypes.Bounds;
-
 import peakaboo.mapping.results.MapResultSet;
 
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 

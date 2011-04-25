@@ -8,7 +8,6 @@ import java.util.List;
 import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
 
-import fava.datatypes.Bounds;
 import fava.datatypes.Maybe;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
@@ -31,6 +30,7 @@ import plural.workers.AbstractPlural;
 import plural.workers.EmptyMap;
 import plural.workers.EmptyProgressingMap;
 import plural.workers.PluralSet;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;

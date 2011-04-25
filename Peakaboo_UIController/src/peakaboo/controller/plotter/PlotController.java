@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 
-import peakaboo.controller.CanvasController;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
@@ -19,35 +18,18 @@ import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.controller.settings.Settings;
-import peakaboo.curvefit.painters.FittingMarkersPainter;
-import peakaboo.curvefit.painters.FittingPainter;
-import peakaboo.curvefit.painters.FittingSumPainter;
-import peakaboo.curvefit.painters.FittingTitlePainter;
-import peakaboo.filter.AbstractFilter;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.workers.PluralSet;
 import scidraw.drawing.DrawingRequest;
-import scidraw.drawing.ViewTransform;
-import scidraw.drawing.backends.Surface;
 import scidraw.drawing.painters.axis.AxisPainter;
-import scidraw.drawing.painters.axis.LineAxisPainter;
-import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scidraw.drawing.plot.PlotDrawing;
-import scidraw.drawing.plot.painters.PlotPainter;
-import scidraw.drawing.plot.painters.axis.GridlinePainter;
-import scidraw.drawing.plot.painters.axis.TickMarkAxisPainter;
-import scidraw.drawing.plot.painters.plot.OriginalDataPainter;
-import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
-import scitypes.Coord;
 import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
 import eventful.EventfulListener;
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
-import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 
 

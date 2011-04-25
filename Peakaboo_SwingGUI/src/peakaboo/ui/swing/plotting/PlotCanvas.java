@@ -20,7 +20,6 @@ import commonenvironment.Env;
 
 import eventful.EventfulTypeListener;
 import fava.Fn;
-import fava.datatypes.Bounds;
 import fava.datatypes.Pair;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
@@ -44,6 +43,7 @@ import scidraw.drawing.plot.painters.axis.TickMarkAxisPainter;
 import scidraw.drawing.plot.painters.plot.OriginalDataPainter;
 import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scidraw.swing.GraphicsPanel;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

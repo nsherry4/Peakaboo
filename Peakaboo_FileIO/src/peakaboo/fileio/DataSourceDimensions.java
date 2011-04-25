@@ -1,6 +1,6 @@
 package peakaboo.fileio;
 
-import fava.datatypes.Bounds;
+import scitypes.Bounds;
 import scitypes.Coord;
 
 

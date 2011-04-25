@@ -15,6 +15,7 @@ import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.workers.PluralSet;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
@@ -23,7 +24,6 @@ import commonenvironment.AbstractFile;
 
 import eventful.Eventful;
 import eventful.EventfulListener;
-import fava.datatypes.Bounds;
 import fava.datatypes.Maybe;
 
 

@@ -13,7 +13,6 @@ import java.util.Set;
 import commonenvironment.AbstractFile;
 
 
-import fava.datatypes.Bounds;
 import fava.functionable.Range;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
@@ -23,6 +22,7 @@ import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

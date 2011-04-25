@@ -4,12 +4,12 @@ import java.util.List;
 
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.mapping.results.MapResultSet;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import eventful.EventfulType;
 import fava.Fn;
 import fava.Functions;
-import fava.datatypes.Bounds;
 
 
 public class MapSetController extends EventfulType<String> implements IMapSetController

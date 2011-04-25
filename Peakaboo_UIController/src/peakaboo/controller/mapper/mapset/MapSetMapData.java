@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fava.datatypes.Bounds;
 
 import peakaboo.mapping.results.MapResultSet;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import commonenvironment.AbstractFile;
 import eventful.IEventful;
-import fava.datatypes.Bounds;
 import fava.datatypes.Maybe;
 
 import peakaboo.curvefit.fitting.FittingSet;
@@ -14,6 +13,7 @@ import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.workers.PluralSet;
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;

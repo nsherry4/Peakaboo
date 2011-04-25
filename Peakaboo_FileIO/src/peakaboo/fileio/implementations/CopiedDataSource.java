@@ -12,9 +12,9 @@ import peakaboo.fileio.DataSourceExtendedInformation;
 
 import fava.Fn;
 import fava.Functions;
-import fava.datatypes.Bounds;
 import fava.functionable.Range;
 
+import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.Spectrum;

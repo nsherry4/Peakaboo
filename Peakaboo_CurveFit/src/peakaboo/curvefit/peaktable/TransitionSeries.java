@@ -21,7 +21,6 @@ import static fava.Functions.*;
 
 
 
-
 /**
  * This class can represent: 1) a representation of all the {@link Transition}s for a given {@link Element} that fall into a specific
  * {@link TransitionSeriesType}. 2) A representation of all of the {@link TransitionSeries} that are involved in the simultaneous 
@@ -147,7 +146,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public List<Transition> getAllTransitions()
 	{
-		return Fn.map(transitions, Functions.<Transition>id());
+		return map(transitions, Functions.<Transition>id());
 	}
 	
 	/**
@@ -261,7 +260,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			minDistance = minEnergyDistance;
 		}
 		
-		FList<Double> scores = Fn.map(transitions, new FnMap<Transition, Double>() {
+		FList<Double> scores = map(transitions, new FnMap<Transition, Double>() {
 
 			public Double f(Transition t)
 			{
@@ -269,7 +268,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			}});
 		
 		
-		return 1 / scores.fold(Functions.addd());
+		return 1 / scores.fold(addd());
 
 	}
 
@@ -504,7 +503,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 										return ts1.compareTo(ts2);
 									}
 								}),
-								Functions.notEquiv(0));
+								notEquiv(0));
 
 				if (differences.size() == 0) return 0;
 				return differences.get(0);

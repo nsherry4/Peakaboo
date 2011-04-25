@@ -505,7 +505,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				return (List<Float>)getEntriesForVar(var);
 				
 			case INTEGER:
-				return new FList<Integer>(  (List<Integer>)getEntriesForVar(var)  ).map(new FnMap<Integer, Float>() {
+				return FList.<Integer>wrap(  (List<Integer>)getEntriesForVar(var)  ).map(new FnMap<Integer, Float>() {
 
 					public Float f(Integer v)
 					{
@@ -514,7 +514,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				
 			case SPECTRUM:
 				
-				return new FList<Spectrum>(  (List<Spectrum>)getEntriesForVar(var)  ).map(new FnMap<Spectrum, Float>() {
+				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new FnMap<Spectrum, Float>() {
 
 					public Float f(Spectrum v)
 					{
@@ -534,7 +534,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 		
 			case REAL:
-				return new FList<Float>(  (List<Float>)getEntriesForVar(var)  ).map(new FnMap<Float, Integer>() {
+				return FList.<Float>wrap(  (List<Float>)getEntriesForVar(var)  ).map(new FnMap<Float, Integer>() {
 
 					public Integer f(Float v)
 					{
@@ -547,7 +547,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				
 			case SPECTRUM:
 				
-				return new FList<Spectrum>(  (List<Spectrum>)getEntriesForVar(var)  ).map(new FnMap<Spectrum, Integer>() {
+				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new FnMap<Spectrum, Integer>() {
 
 					public Integer f(Spectrum v)
 					{
@@ -565,7 +565,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 			
 			case REAL:
-				return new FList<Float>((List<Float>)getEntriesForVar(var)).map(new FnMap<Float, Spectrum>() {
+				return FList.<Float>wrap((List<Float>)getEntriesForVar(var)).map(new FnMap<Float, Spectrum>() {
 
 					public Spectrum f(Float v)
 					{
@@ -574,7 +574,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				
 			case INTEGER:
 
-				return new FList<Integer>((List<Integer>)getEntriesForVar(var)).map(new FnMap<Integer, Spectrum>() {
+				return FList.<Integer>wrap((List<Integer>)getEntriesForVar(var)).map(new FnMap<Integer, Spectrum>() {
 
 					public Spectrum f(Integer v)
 					{
