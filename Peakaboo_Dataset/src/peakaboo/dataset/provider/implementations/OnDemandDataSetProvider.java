@@ -21,6 +21,7 @@ import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
+import peakaboo.fileio.implementations.MCADataSource;
 import peakaboo.fileio.implementations.PlainTextDataSource;
 import peakaboo.fileio.implementations.cdfml.CDFMLSaxDataSource;
 import peakaboo.filter.FilterSet;
@@ -284,6 +285,20 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					try
 					{
 						dataSource = new CDFMLSaxDataSource(files.get(0), gotScanCount, readScans, isAborted);
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+						aborted();
+						return new Maybe<Boolean>();
+					}
+				}
+				else if (MCADataSource.filesMatchCriteria(files.get(0)))
+				{
+										
+					try
+					{
+						dataSource = new MCADataSource(files.get(0));
 					}
 					catch (Exception e)
 					{
