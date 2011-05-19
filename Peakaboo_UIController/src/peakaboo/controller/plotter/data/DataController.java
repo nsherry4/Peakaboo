@@ -14,7 +14,7 @@ import peakaboo.fileio.implementations.CopiedDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.executor.PluralSet;
+import plural.executor.ExecutorSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -52,12 +52,12 @@ public class DataController extends Eventful implements IDataController
 	// Functions to implement IDataController
 	// =============================================
 	
-	public PluralSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
-		final PluralSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(files);
+		final ExecutorSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 
 		
@@ -332,7 +332,7 @@ public class DataController extends Eventful implements IDataController
 	}
 	
 	
-	public PluralSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
+	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
 	{
 		return dataModel.calculateMap(filters, fittings, type);
 	}

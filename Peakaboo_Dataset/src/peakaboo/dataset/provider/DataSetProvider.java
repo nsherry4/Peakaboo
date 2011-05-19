@@ -13,7 +13,7 @@ import peakaboo.fileio.DataSourceExtendedInformation;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.executor.PluralSet;
+import plural.executor.ExecutorSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -280,7 +280,7 @@ public abstract class DataSetProvider
 	 *            fittings to be used on this data
 	 * @return a {@link Task} which will calculate the map
 	 */
-	public abstract PluralSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type);
+	public abstract ExecutorSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type);
 
 
 	/**

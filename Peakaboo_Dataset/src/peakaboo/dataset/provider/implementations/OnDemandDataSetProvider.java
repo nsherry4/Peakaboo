@@ -28,8 +28,7 @@ import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.DummyExecutor;
-import plural.executor.Plural;
-import plural.executor.PluralSet;
+import plural.executor.ExecutorSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -197,7 +196,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 
 	@Override
-	public PluralSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type)
+	public ExecutorSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type)
 	{
 
 		return MapTS.calculateMap(dataSource, filters, fittings, type);
@@ -208,9 +207,9 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	/**
 	 * Reads the list of {@link AbstractFile}s as a {@link DataSource}
 	 * @param files the files to read as a {@link DataSource}
-	 * @return {@link PluralSet} which, when complated, returns a Boolean indicating success
+	 * @return {@link ExecutorSet} which, when complated, returns a Boolean indicating success
 	 */
-	public PluralSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		
@@ -218,7 +217,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		IOOperations.sortAbstractFiles(files);
 
 		// Create the tasklist for reading the files
-		final PluralSet<Maybe<Boolean>> tasklist;
+		final ExecutorSet<Maybe<Boolean>> tasklist;
 		
 		/*
 		final EmptyMap opening = new EmptyMap("Opening Data Set");
@@ -231,7 +230,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		final DummyExecutor applying = new DummyExecutor();//"Calculating Values");
 		
 		
-		tasklist = new PluralSet<Maybe<Boolean>>("Opening Data Set") {
+		tasklist = new ExecutorSet<Maybe<Boolean>>("Opening Data Set") {
 
 			@Override
 			protected Maybe<Boolean> doMaps()

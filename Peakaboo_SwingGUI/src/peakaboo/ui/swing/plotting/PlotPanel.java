@@ -82,8 +82,8 @@ import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.PlotterFrame;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
-import plural.executor.PluralSet;
-import plural.swing.PluralSetView;
+import plural.executor.ExecutorSet;
+import plural.swing.ExecutorSetView;
 import scidraw.swing.SavePicture;
 import scitypes.SigDigits;
 import swidget.dialogues.PropertyDialogue;
@@ -1381,8 +1381,8 @@ public class PlotPanel extends ClearPanel
 		if (files != null)
 		{
 
-			PluralSet<Maybe<Boolean>> reading = dataController.TASK_readFileListAsDataset(files);
-			PluralSetView view = new PluralSetView(container, reading);
+			ExecutorSet<Maybe<Boolean>> reading = dataController.TASK_readFileListAsDataset(files);
+			ExecutorSetView view = new ExecutorSetView(container, reading);
 			
 			//handle some race condition where the window gets told to close too early on failure
 			//I don't think its in my code, but I don't know for sure
@@ -1409,10 +1409,10 @@ public class PlotPanel extends ClearPanel
 		if (!dataController.hasDataSet()) return;
 
 
-		final PluralSet<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
+		final ExecutorSet<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
 		if (tasks == null) return;
 
-		new PluralSetView(container, tasks);
+		new ExecutorSetView(container, tasks);
 
 
 		if (tasks.getCompleted())

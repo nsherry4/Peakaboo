@@ -20,7 +20,7 @@ import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.controller.settings.Settings;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.executor.PluralSet;
+import plural.executor.ExecutorSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.plot.PlotDrawing;
@@ -274,7 +274,7 @@ public class PlotController extends EventfulType<String>
 
 	}
 	
-	public PluralSet<MapResultSet> TASK_getDataForMapFromSelectedRegions(FittingTransform type)
+	public ExecutorSet<MapResultSet> TASK_getDataForMapFromSelectedRegions(FittingTransform type)
 	{
 		return dataController.TASK_calculateMap(filteringController.getActiveFilters(), fittingController.getFittingSelections(), type);
 	}

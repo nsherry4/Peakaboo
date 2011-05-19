@@ -8,7 +8,7 @@ import peakaboo.fileio.DataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.executor.PluralSet;
+import plural.executor.ExecutorSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -68,7 +68,7 @@ public class EmptyDataSetProvider extends DataSetProvider
 	}
 
 	@Override
-	public PluralSet<MapResultSet> calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
+	public ExecutorSet<MapResultSet> calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
 	{
 		// TODO Auto-generated method stub
 		return null;
