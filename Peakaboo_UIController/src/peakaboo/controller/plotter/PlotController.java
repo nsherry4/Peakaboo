@@ -20,7 +20,7 @@ import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.controller.settings.Settings;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.workers.PluralSet;
+import plural.executor.PluralSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.plot.PlotDrawing;
