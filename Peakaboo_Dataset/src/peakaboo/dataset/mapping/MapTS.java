@@ -2,6 +2,8 @@ package peakaboo.dataset.mapping;
 
 import java.util.List;
 
+import fava.signatures.FnEach;
+
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
@@ -11,9 +13,8 @@ import peakaboo.fileio.DataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.workers.PluralEachIndex;
-import plural.workers.PluralSet;
-import plural.workers.executor.eachindex.implementations.PluralUIEachIndexExecutor;
+import plural.executor.PluralSet;
+import plural.executor.eachindex.implementations.PluralUIEachIndexExecutor;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -48,7 +49,7 @@ public class MapTS
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		final MapResultSet maps = new MapResultSet(transitionSeries, dataSource.getScanCount());
 		
-		final PluralEachIndex t_filter = new PluralEachIndex("Apply Filters and Fittings") {
+		final FnEach<Integer> t_filter = new FnEach<Integer>() {
 
 			public void f(Integer ordinal)
 			{
@@ -79,13 +80,15 @@ public class MapTS
 		};
 
 
+		final PluralUIEachIndexExecutor executor = new PluralUIEachIndexExecutor(dataSource.getScanCount(), t_filter);;
+		
 		tasklist = new PluralSet<MapResultSet>("Generating Data for Map") {
 
 			@Override
 			public MapResultSet doMaps()
 			{
 
-				PluralUIEachIndexExecutor executor;
+				
 
 				// ================================
 				// PROCESS FILTERS, FITTINGS
@@ -94,21 +97,19 @@ public class MapTS
 
 					
 				// process these scans in parallel
-				executor = new PluralUIEachIndexExecutor(dataSource.getScanCount(), t_filter, this);
+				
 				executor.executeBlocking();
 				
 				if (isAborted()) return null;
-
-
-				// return intensities;
-				// return ListCalculations.subtractFromList(intensities, 0.0, 0.0);
-								
+							
 				return maps;
 			}
 
 		};
-
-		tasklist.addTask(t_filter);
+		
+		tasklist.addExecutor(executor, "Apply Filters and Fittings");
+		//tasklist.addTask(executor.getPlural(), );
+		
 
 		// tasklist.addTask(t_scanToMaps);
 

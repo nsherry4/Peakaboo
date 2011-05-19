@@ -14,7 +14,7 @@ import peakaboo.fileio.implementations.CopiedDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.workers.PluralSet;
+import plural.executor.PluralSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;

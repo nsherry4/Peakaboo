@@ -26,10 +26,9 @@ import peakaboo.fileio.implementations.cdfml.CDFMLSaxDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
-import plural.workers.AbstractPlural;
-import plural.workers.EmptyMap;
-import plural.workers.EmptyProgressingMap;
-import plural.workers.PluralSet;
+import plural.executor.DummyExecutor;
+import plural.executor.Plural;
+import plural.executor.PluralSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -220,10 +219,16 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		// Create the tasklist for reading the files
 		final PluralSet<Maybe<Boolean>> tasklist;
 		
-		
+		/*
 		final EmptyMap opening = new EmptyMap("Opening Data Set");
 		final EmptyProgressingMap reading = new EmptyProgressingMap("Reading Scans");
 		final EmptyProgressingMap applying = new EmptyProgressingMap("Calculating Values");
+		*/
+		
+		final DummyExecutor opening = new DummyExecutor(true);//"Opening Data Set");
+		final DummyExecutor reading = new DummyExecutor();//"Reading Scans");
+		final DummyExecutor applying = new DummyExecutor();//"Calculating Values");
+		
 		
 		tasklist = new PluralSet<Maybe<Boolean>>("Opening Data Set") {
 
@@ -333,9 +338,9 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			
 		};
 		
-		tasklist.addTask(opening);
-		tasklist.addTask(reading);
-		tasklist.addTask(applying);
+		tasklist.addExecutor(opening, "Opening Data Set");
+		tasklist.addExecutor(reading, "Reading Scans");
+		tasklist.addExecutor(applying, "Calculating Values");
 				
 		return tasklist;
 
@@ -367,7 +372,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	}
 	
 	
-	private void readDataSource(DataSource ds, AbstractPlural applying, String dataSourcePath)
+	private void readDataSource(DataSource ds, DummyExecutor applying, String dataSourcePath)
 	{
 		
 		if (ds == null || ds.getScanCount() == 0) return;
