@@ -18,6 +18,7 @@ import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import fava.datatypes.Pair;
+import fava.signatures.FnCondition;
 import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 import scidraw.drawing.DrawingRequest;
@@ -479,7 +480,7 @@ public class MapCanvas extends GraphicsPanel
 														
 													tabController.getOverlayColourKeys(), 
 													
-													new FnMap<TransitionSeries, Boolean>() {
+													new FnCondition<TransitionSeries>() {
 														public Boolean f(TransitionSeries ts)
 														{
 															return tabController.getOverlayColour(ts) == ocolour;
@@ -505,7 +506,7 @@ public class MapCanvas extends GraphicsPanel
 							}),
 
 					// filter for empty strings
-					new FnMap<Pair<Color, String>, Boolean>() {
+					new FnCondition<Pair<Color, String>>() {
 
 						
 						public Boolean f(Pair<Color, String> element)

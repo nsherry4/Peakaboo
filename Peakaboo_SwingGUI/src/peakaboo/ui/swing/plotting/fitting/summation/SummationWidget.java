@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.util.List;
 
 import fava.*;
+import fava.signatures.FnCondition;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 import static fava.Fn.*;
@@ -125,7 +126,7 @@ class SummationWidget extends TSSelectorGroup
 		
 		sel.setTransitionSeries(
 		
-				filter(controller.getFittedTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
+				filter(controller.getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {
 
 					public Boolean f(TransitionSeries element)
 					{

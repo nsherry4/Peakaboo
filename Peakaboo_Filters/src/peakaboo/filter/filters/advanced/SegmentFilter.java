@@ -3,6 +3,7 @@ package peakaboo.filter.filters.advanced;
 import java.util.List;
 
 import fava.Fn;
+import fava.signatures.FnCondition;
 import fava.signatures.FnMap;
 
 import peakaboo.filter.AbstractFilter;
@@ -33,7 +34,7 @@ public class SegmentFilter extends AbstractFilter
 		List<AbstractFilter> filters = Fn.filter(
 				AbstractFilter.getAvailableFilters(), 
 				
-				new FnMap<AbstractFilter, Boolean>() {
+				new FnCondition<AbstractFilter>() {
 
 					public Boolean f(AbstractFilter f)
 					{

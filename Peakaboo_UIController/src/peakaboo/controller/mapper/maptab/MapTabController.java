@@ -20,6 +20,7 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
+import fava.signatures.FnCondition;
 import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 import peakaboo.calculations.Interpolation;
@@ -176,7 +177,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = filter(
 			dataset, 
-			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
+			new FnCondition<Pair<TransitionSeries, Spectrum>>() {
 
 				public Boolean f(Pair<TransitionSeries, Spectrum> element)
 				{
@@ -212,7 +213,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> greenSpectrums = filter(
 			dataset, 
-			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
+			new FnCondition<Pair<TransitionSeries, Spectrum>>() {
 
 				public Boolean f(Pair<TransitionSeries, Spectrum> element)
 				{
@@ -248,7 +249,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> blueSpectrums = filter(
 			dataset, 
-			new FnMap<Pair<TransitionSeries, Spectrum>, Boolean>() {
+			new FnCondition<Pair<TransitionSeries, Spectrum>>() {
 
 				public Boolean f(Pair<TransitionSeries, Spectrum> element)
 				{
@@ -738,7 +739,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return filter(getAllTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
+		return filter(getAllTransitionSeries(), new FnCondition<TransitionSeries>() {
 			
 			
 			public Boolean f(TransitionSeries element) {
@@ -792,7 +793,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	{
 		return filter(
 				getVisibleTransitionSeries(),
-				new FnMap<TransitionSeries, Boolean>() {
+				new  FnCondition<TransitionSeries>() {
 
 					
 					public Boolean f(TransitionSeries element)

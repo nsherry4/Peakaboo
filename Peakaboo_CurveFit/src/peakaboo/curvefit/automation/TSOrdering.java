@@ -18,6 +18,7 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
+import fava.signatures.FnCondition;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 
@@ -158,7 +159,7 @@ public class TSOrdering
 		tsf1.setTransitionSeries(ts, true);
 		
 		//map all other TSs to booleans to check if this overlaps
-		return tss.filter(new FnMap<TransitionSeries, Boolean>() {
+		return tss.filter(new FnCondition<TransitionSeries>() {
 
 			public Boolean f(TransitionSeries otherts)
 			{

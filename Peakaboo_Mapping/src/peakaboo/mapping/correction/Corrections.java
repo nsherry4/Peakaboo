@@ -6,6 +6,7 @@ import java.io.IOException;
 import commonenvironment.AbstractFile;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
+import fava.signatures.FnCondition;
 import fava.signatures.FnMap;
 
 
@@ -50,7 +51,7 @@ public class Corrections
 	
 	public Float getCorrection(final TransitionSeries ts)
 	{		
-		FList<Pair<TransitionSeries, Float>> matches = correctionPairs.filter(new FnMap<Pair<TransitionSeries, Float>, Boolean>() {
+		FList<Pair<TransitionSeries, Float>> matches = correctionPairs.filter(new FnCondition<Pair<TransitionSeries, Float>>() {
 			
 			public Boolean f(Pair<TransitionSeries, Float> p)
 			{

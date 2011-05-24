@@ -12,6 +12,7 @@ import java.util.List;
 import fava.*;
 import fava.functionable.FList;
 import fava.signatures.FnCombine;
+import fava.signatures.FnCondition;
 import fava.signatures.FnFold;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
@@ -127,7 +128,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public Transition getTransition(final TransitionType transitionType)
 	{
-		List<Transition> matches = filter(transitions, new FnMap<Transition, Boolean>() {
+		List<Transition> matches = filter(transitions, new FnCondition<Transition>() {
 
 			public Boolean f(Transition t)
 			{

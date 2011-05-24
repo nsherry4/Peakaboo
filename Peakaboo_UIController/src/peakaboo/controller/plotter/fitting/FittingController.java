@@ -24,6 +24,7 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
+import fava.signatures.FnCondition;
 import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 
@@ -97,7 +98,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
 
 
-		return filter(PeakTable.getAllTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
+		return filter(PeakTable.getAllTransitionSeries(), new FnCondition<TransitionSeries>() {
 
 
 			public Boolean f(TransitionSeries ts)
@@ -123,7 +124,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
 
-		return filter(getFittedTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
+		return filter(getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {
 
 
 			public Boolean f(TransitionSeries ts)
@@ -254,7 +255,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), Functions.<TransitionSeries>id());
 		
 		//all invisible TSs
-		FList<TransitionSeries> invisibles = Fn.filter(getFittedTransitionSeries(), new FnMap<TransitionSeries, Boolean>() {
+		FList<TransitionSeries> invisibles = Fn.filter(getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {
 
 			public Boolean f(TransitionSeries element)
 			{
@@ -264,7 +265,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//find all the TSs which overlap with other TSs
-		final FList<TransitionSeries> overlappers = tss.filter(new FnMap<TransitionSeries, Boolean>() {
+		final FList<TransitionSeries> overlappers = tss.filter(new FnCondition<TransitionSeries>() {
 
 			public Boolean f(final TransitionSeries ts)
 			{
@@ -276,7 +277,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//then get all the TSs which don't overlap
-		FList<TransitionSeries> nonOverlappers = tss.filter(new FnMap<TransitionSeries, Boolean>() {
+		FList<TransitionSeries> nonOverlappers = tss.filter(new FnCondition<TransitionSeries>() {
 
 			public Boolean f(TransitionSeries element)
 			{
