@@ -2,8 +2,6 @@ package peakaboo.ui.swing.mapping;
 
 
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -22,8 +20,6 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
-import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 
 

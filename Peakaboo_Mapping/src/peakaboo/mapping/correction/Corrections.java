@@ -7,8 +7,6 @@ import commonenvironment.AbstractFile;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.signatures.FnCondition;
-import fava.signatures.FnMap;
-
 
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.TransitionSeries;

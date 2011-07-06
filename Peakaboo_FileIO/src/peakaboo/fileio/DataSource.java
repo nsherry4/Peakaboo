@@ -3,8 +3,6 @@ package peakaboo.fileio;
 
 import java.util.List;
 
-import commonenvironment.AbstractFile;
-
 import scitypes.Spectrum;
 
 

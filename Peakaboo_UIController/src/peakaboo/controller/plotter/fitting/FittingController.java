@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.PlotController.UpdateType;
-import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.curvefit.automation.TSOrdering;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -18,7 +16,6 @@ import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import eventful.Eventful;
 import eventful.EventfulType;
 import fava.Fn;
 import fava.Functions;

@@ -1,12 +1,19 @@
 package peakaboo.fileio.implementations;
 
 import java.io.BufferedReader;
+<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
+=======
+>>>>>>> be968aa933f6be68f78f6ff9bd93b9bc1e6d19d7
 import java.io.InputStreamReader;
 import java.util.List;
 
+import com.esotericsoftware.kryo.serialize.ArraySerializer;
+
+import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;
+import peakaboo.fileio.KryoScratchList;
 
 import commonenvironment.AbstractFile;
 import fava.Fn;
@@ -17,7 +24,6 @@ import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 
 import scitypes.Spectrum;
-import scratch.ScratchList;
 
 
 public class PlainTextDataSource implements DataSource
@@ -26,7 +32,7 @@ public class PlainTextDataSource implements DataSource
 	FnGet<Boolean>						isAborted;
 	FnEach<Integer>						readScanCallback;
 	
-	//FileBackedList if it can be created, another implementation otherwise
+	//File-backed List, if it could be created. Some other kind if not
 	List<Spectrum>						scandata;
 	
 
@@ -38,7 +44,10 @@ public class PlainTextDataSource implements DataSource
 		this.readScanCallback = readScanCallback;
 		this.isAborted = isAborted;
 		
-		scandata = ScratchList.<Spectrum>create("Peakaboo");
+
+		KryoScratchList<Spectrum> newlist = new KryoScratchList<Spectrum>(Version.program_name, Spectrum.class);
+		newlist.register(float[].class, new ArraySerializer(newlist.getKryo()));
+		scandata = newlist;
 		datasetName = new File(file.getFileName()).getName();
 		
 		InputStreamReader r = new InputStreamReader(file.getInputStream(), "UTF-8");

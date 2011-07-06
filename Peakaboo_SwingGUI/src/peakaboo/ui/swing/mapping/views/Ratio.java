@@ -23,7 +23,6 @@ import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
 
-import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.curvefit.peaktable.TransitionSeries;

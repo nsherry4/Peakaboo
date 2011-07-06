@@ -6,7 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.PlotController.UpdateType;
 import eventful.Eventful;
 import fava.datatypes.Pair;
 

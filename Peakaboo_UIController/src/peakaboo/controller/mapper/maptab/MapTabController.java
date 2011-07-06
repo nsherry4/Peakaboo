@@ -3,7 +3,6 @@ package peakaboo.controller.mapper.maptab;
 import static fava.Fn.*;
 import static fava.Functions.*;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -16,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import eventful.EventfulType;
-import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
@@ -28,7 +26,6 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
-import peakaboo.mapping.results.MapResultSet;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.Ratios;

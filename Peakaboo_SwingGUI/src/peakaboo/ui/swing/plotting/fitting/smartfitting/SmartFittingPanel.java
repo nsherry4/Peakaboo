@@ -3,7 +3,6 @@ package peakaboo.ui.swing.plotting.fitting.smartfitting;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
-import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;

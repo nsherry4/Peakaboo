@@ -1,6 +1,5 @@
 package peakaboo.ui.swing.plotting.fitting;
 
-import static fava.Fn.filter;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -12,9 +11,7 @@ import javax.swing.JLabel;
 
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.curvefit.peaktable.TransitionSeriesMode;
 import eventful.swing.EventfulPanel;
-import fava.signatures.FnMap;
 
 
 public class TSSelector extends EventfulPanel

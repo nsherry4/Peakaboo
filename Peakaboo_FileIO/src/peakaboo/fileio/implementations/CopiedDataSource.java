@@ -1,6 +1,5 @@
 package peakaboo.fileio.implementations;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,16 +39,16 @@ public class CopiedDataSource implements DataSource, DataSourceDimensions, DataS
 		this.rangeX = new Range(cstart.x, cend.x);
 		this.rangeY = new Range(cstart.y, cend.y);
 		
-		GridPerspective<Spectrum> dsGrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
-		
+				
 		int counter = 0;
 		for (Integer y : rangeY)
 		{
 			for (Integer x : rangeX )
 			{
 				scannames.add("Scan " + counter);
+				counter++;
 			}
-			counter++;
+			
 		}
 		
 	}

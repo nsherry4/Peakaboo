@@ -4,7 +4,6 @@ package peakaboo.controller.mapper;
 
 import java.io.InputStream;
 
-import eventful.EventfulListener;
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
 

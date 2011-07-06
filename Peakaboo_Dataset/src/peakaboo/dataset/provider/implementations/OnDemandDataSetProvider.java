@@ -1,7 +1,6 @@
 package peakaboo.dataset.provider.implementations;
 
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +14,6 @@ import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 import static fava.Fn.*;
 
-import peakaboo.common.Version;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.DataSetProvider;

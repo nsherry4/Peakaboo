@@ -2,7 +2,6 @@ package peakaboo.controller.plotter.fitting;
 
 import java.util.List;
 
-import eventful.IEventful;
 import eventful.IEventfulType;
 
 import peakaboo.curvefit.fitting.EscapePeakType;

@@ -2,17 +2,19 @@ package peakaboo.fileio.implementations.cdfml;
 
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
+import com.esotericsoftware.kryo.serialize.ArraySerializer;
 
 
 import commonenvironment.AbstractFile;
 
 
+import fava.functionable.FList;
 import fava.functionable.Range;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
@@ -22,11 +24,11 @@ import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
+import peakaboo.fileio.KryoScratchList;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import scratch.ScratchList;
 
 
 
@@ -38,7 +40,7 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 	FnEach<Integer>								readScanCallback;
 	int											scanReadCount;
 
-	//FileBackedList, if it could be created. ArrayList of not
+	//File-backed List, if it could be created. Some other kind if not
 	List<Spectrum>								correctedData;
 	Spectrum									iNaughtNormalized;
 	
@@ -54,7 +56,14 @@ public class CDFMLSaxDataSource extends CDFMLReader implements DataSource, DataS
 		
 		read(file, isAborted);
 		
-		correctedData = ScratchList.<Spectrum>create(Version.program_name + " - Corrected Spectrum");
+		KryoScratchList<Spectrum> newlist;
+		try {
+			newlist = new KryoScratchList<Spectrum>(Version.program_name + " - Corrected Spectrum", Spectrum.class);
+			newlist.register(float[].class, new ArraySerializer(newlist.getKryo()));
+			correctedData = newlist;
+		} catch (IOException e) {
+			correctedData = new FList<Spectrum>();
+		}
 		
 		//get a listing of all of the categories that this supports
 		hasCategory = new HashSet<String>();

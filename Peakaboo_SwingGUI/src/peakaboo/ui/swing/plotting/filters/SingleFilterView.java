@@ -2,7 +2,6 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -13,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.jar.JarEntry;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -25,19 +23,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
-import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.UIDefaults;
 
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 
 import jsyntaxpane.DefaultSyntaxKit;
 
@@ -51,7 +41,6 @@ import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.backends.graphics2d.ImageBuffer;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -496,7 +485,6 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 		
 		
 		filterPanel = new JPanel();	
-		TitledBorder tb = new TitledBorder("");		
 		filterPanel.setBorder(new TitledBorder(""));
 		
 		

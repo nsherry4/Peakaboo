@@ -1,7 +1,6 @@
 package peakaboo.ui.swing.plotting.fitting.summation;
 
 
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -15,7 +14,6 @@ import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
-import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;

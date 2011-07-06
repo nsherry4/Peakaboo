@@ -1,6 +1,5 @@
 package peakaboo.filter.filters.programming;
 
-import javax.swing.JOptionPane;
 
 import bolt.compiler.BoltJavaMap;
 import peakaboo.common.Version;
@@ -10,6 +9,7 @@ import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
+
 
 public class Java extends AbstractFilter{
 
