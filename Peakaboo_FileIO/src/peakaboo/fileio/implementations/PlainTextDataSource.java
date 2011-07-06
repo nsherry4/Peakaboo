@@ -1,11 +1,7 @@
 package peakaboo.fileio.implementations;
 
 import java.io.BufferedReader;
-<<<<<<< HEAD
 import java.io.File;
-import java.io.IOException;
-=======
->>>>>>> be968aa933f6be68f78f6ff9bd93b9bc1e6d19d7
 import java.io.InputStreamReader;
 import java.util.List;
 
