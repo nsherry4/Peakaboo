@@ -302,6 +302,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	//then we look up the variable (list of values) in a variable name -> list of values map
 	//creating it if it does not exist yet, and add the current value to that list at
 	//a position determined by a value calculated while parsing the tags 
+	@SuppressWarnings("unchecked")
 	private void recordRecord()
 	{
 
@@ -494,6 +495,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	protected List<Float> getVarFloats(String var)
 	{
 				
@@ -525,6 +527,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 			
 		
 	}
+	@SuppressWarnings("unchecked")
 	protected List<Integer> getVarInts(String var)
 	{
 		
@@ -558,6 +561,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		
 		
 	}
+	@SuppressWarnings("unchecked")
 	protected List<Spectrum> getVarSpectra(String var)
 	{
 		switch (getVarType(var)) {

@@ -73,7 +73,6 @@ public class KryoScratchList<T extends Serializable> extends ScratchList<T>{
 		return buffer.writeObject(element);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected T decodeObject(byte[] byteArray) throws IOException
 	{

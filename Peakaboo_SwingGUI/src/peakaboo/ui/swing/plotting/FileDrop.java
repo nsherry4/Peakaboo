@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.net.URI;
-import java.util.Iterator;
 import java.util.List;
 
 /**
