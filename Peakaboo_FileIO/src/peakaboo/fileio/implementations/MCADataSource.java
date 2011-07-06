@@ -1,11 +1,12 @@
 package peakaboo.fileio.implementations;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
-import commonenvironment.IOOperations;
 import fava.functionable.FList;
+import fava.functionable.FStringInput;
 import fava.signatures.FnMap;
 
 import peakaboo.fileio.DataSource;
@@ -18,13 +19,13 @@ public class MCADataSource implements DataSource {
 	
 	public MCADataSource(AbstractFile file) {
 		spectrum = readMCA(file);
-		scanName = IOOperations.getFileTitle(file.getFileName());
+		scanName = new File(file.getFileName()).getName();
 	}
 	
 	private Spectrum readMCA(AbstractFile file)
 	{
 		BufferedReader r = file.getReader();
-		FList<String> lines = IOOperations.readerToLines(r);
+		FList<String> lines = FStringInput.lines(r).toSink();
 		
 		int startIndex = lines.indexOf("<<DATA>>") + 1;
 		int endIndex = lines.indexOf("<<END>>");

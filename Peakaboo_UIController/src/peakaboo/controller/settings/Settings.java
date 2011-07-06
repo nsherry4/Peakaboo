@@ -9,13 +9,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-
-import commonenvironment.IOOperations;
 import fava.Fn;
 import fava.Functions;
+import fava.functionable.FStringInput;
 import fava.signatures.FnMap;
-
-
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
@@ -55,7 +52,7 @@ public class Settings
 	{
 
 		SerializedData data;
-		String yaml = IOOperations.readerToString(new BufferedReader(new InputStreamReader(inStream)));
+		String yaml = FStringInput.contents(inStream); //IOOperations.readerToString(new BufferedReader(new InputStreamReader(inStream)));
 		data = SerializedData.deserialize(yaml);
 		
 		// load transition series

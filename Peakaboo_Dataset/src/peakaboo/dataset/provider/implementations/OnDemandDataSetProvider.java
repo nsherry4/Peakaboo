@@ -2,11 +2,12 @@ package peakaboo.dataset.provider.implementations;
 
 
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
-import commonenvironment.IOOperations;
 
 import fava.datatypes.Maybe;
 import fava.signatures.FnEach;
@@ -214,8 +215,8 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		
 		// sort the filenames property
-		IOOperations.sortAbstractFiles(files);
-
+		Collections.sort(files);
+		
 		// Create the tasklist for reading the files
 		final ExecutorSet<Maybe<Boolean>> tasklist;
 		
@@ -340,7 +341,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				
 				//now that we have the datasource, read it
-				readDataSource(dataSource, applying, IOOperations.getFilePath(files.get(0).getFileName()));
+				readDataSource(  dataSource, applying, new File(files.get(0).getFileName()).getParent()  );
 				
 				//we're done
 				applying.workUnitCompleted();

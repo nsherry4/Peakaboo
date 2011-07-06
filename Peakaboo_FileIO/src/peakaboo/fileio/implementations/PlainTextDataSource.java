@@ -1,6 +1,7 @@
 package peakaboo.fileio.implementations;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 import peakaboo.fileio.DataSource;
 
 import commonenvironment.AbstractFile;
-import commonenvironment.IOOperations;
 import fava.Fn;
+import fava.functionable.FStringInput;
 import fava.functionable.Range;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
@@ -38,7 +39,7 @@ public class PlainTextDataSource implements DataSource
 		this.isAborted = isAborted;
 		
 		scandata = ScratchList.<Spectrum>create("Peakaboo");
-		datasetName = IOOperations.getFileTitle(  file.getFileName()  );
+		datasetName = new File(file.getFileName()).getName();
 		
 		InputStreamReader r = new InputStreamReader(file.getInputStream(), "UTF-8");
 		BufferedReader reader = new BufferedReader(r);
@@ -46,7 +47,7 @@ public class PlainTextDataSource implements DataSource
 		//we count the number of linebreaks in the file. This will slow down
 		//reading marginally, but not by a lot, since the slowest part is
 		//human readable to machine readable conversion.
-		getScanCountCallback.f(IOOperations.characterCount(file, '\n'));
+		getScanCountCallback.f(FStringInput.lines(file.getInputStream()).toSink().size());
 		
 		String line;
 		while (true)
