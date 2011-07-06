@@ -11,7 +11,6 @@ import java.util.Collections;
 import fava.*;
 import fava.datatypes.Pair;
 import fava.signatures.FnCondition;
-import fava.signatures.FnMap;
 import static fava.Fn.*;
 
 

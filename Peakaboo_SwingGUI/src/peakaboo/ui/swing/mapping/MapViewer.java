@@ -5,16 +5,11 @@ package peakaboo.ui.swing.mapping;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,7 +20,6 @@ import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapTabController;
-import peakaboo.controller.mapper.maptab.MapTabModel;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;

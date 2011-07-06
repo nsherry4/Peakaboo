@@ -1,17 +1,9 @@
 package peakaboo.ui.swing;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JApplet;
 import javax.swing.JLabel;
-import javax.swing.UIManager;
-
-import commonenvironment.AbstractFile;
 
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.ui.swing.plotting.PlotPanel;

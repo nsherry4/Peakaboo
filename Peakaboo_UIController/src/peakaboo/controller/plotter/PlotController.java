@@ -1,14 +1,10 @@
 package peakaboo.controller.plotter;
 
-
-
-import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-
 
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.data.DataController;
@@ -23,9 +19,7 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
-import scidraw.drawing.plot.PlotDrawing;
 import scitypes.Spectrum;
-
 
 import eventful.EventfulListener;
 import eventful.EventfulType;
@@ -44,8 +38,6 @@ import fava.datatypes.Pair;
 public class PlotController extends EventfulType<String>
 {
 	
-	
-	private PlotDrawing						plot;
 	public List<AxisPainter>				axisPainters;
 	public DrawingRequest					dr;
 

@@ -1,10 +1,7 @@
 package peakaboo.ui.swing.mapping.views;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,7 +21,6 @@ import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
 
-import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.curvefit.peaktable.TransitionSeries;

@@ -1,11 +1,8 @@
 package peakaboo.common;
 
-import java.util.LinkedHashMap;
+
 import java.util.List;
-import java.util.AbstractSet;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
 
 import scitypes.Spectrum;
 

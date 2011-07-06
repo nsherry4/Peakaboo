@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.esotericsoftware.kryo.serialize.ArraySerializer;
+
 import commonenvironment.AbstractFile;
+import fava.functionable.FList;
 
-import fava.Fn;
-
+import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;
+import peakaboo.fileio.KryoScratchList;
 import scitypes.Spectrum;
-import scratch.ScratchList;
 
 
 public class LiveDataSource implements DataSource
@@ -18,13 +20,21 @@ public class LiveDataSource implements DataSource
 
 	float maxEnergy;
 	
-	//FileBackedList if it can be created, Another implementation if it cannot
+	//File-backed List, if it could be created. Some other kind if not
 	List<Spectrum> scans;
 	
 	
 	public LiveDataSource()
 	{
-		scans = ScratchList.<Spectrum>create("Peakaboo Live Dataset");
+		KryoScratchList<Spectrum> newlist;
+		try {
+			newlist = new KryoScratchList<Spectrum>(Version.program_name + " Live Dataset", Spectrum.class);
+			newlist.register(float[].class, new ArraySerializer(newlist.getKryo()));
+			scans = newlist;
+		} catch (IOException e) {
+			scans = new FList<Spectrum>();
+		}
+
 	}
 	
 	/////////////////////////////////////////////////

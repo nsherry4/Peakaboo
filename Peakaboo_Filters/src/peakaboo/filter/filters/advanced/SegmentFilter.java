@@ -4,7 +4,6 @@ import java.util.List;
 
 import fava.Fn;
 import fava.signatures.FnCondition;
-import fava.signatures.FnMap;
 
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;

@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
-import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.ui.swing.mapping.SidePanel;

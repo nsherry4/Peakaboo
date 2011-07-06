@@ -3,7 +3,6 @@ package peakaboo.controller.plotter.filtering;
 import java.util.List;
 
 import eventful.IEventful;
-import eventful.IEventfulType;
 
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.FilterSet;

@@ -8,10 +8,8 @@ import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 
-import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;

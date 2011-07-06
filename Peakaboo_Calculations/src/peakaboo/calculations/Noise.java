@@ -333,7 +333,6 @@ public class Noise
 	 */
 	public static Spectrum DataToWavelet(Spectrum data, int steps)
 	{
-		Spectrum filter;
 		Spectrum result = new Spectrum(data.size());
 
 		

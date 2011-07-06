@@ -1,15 +1,18 @@
 package peakaboo.filter;
 
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import bolt.plugin.BoltPlugin;
+import commonenvironment.Env;
 
-import fava.datatypes.Pair;
+import bolt.plugin.BoltPlugin;
+import bolt.plugin.BoltPluginLoader;
+import bolt.plugin.ClassInheritanceException;
 
 import peakaboo.calculations.Background;
 import peakaboo.calculations.Calculations;
@@ -104,15 +107,36 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 
 	public static List<AbstractFilter> getAvailableFilters()
 	{
-		List<AbstractFilter> filters = new ArrayList<AbstractFilter>(); 
-		
-		Package p;
-		for (FilterType ft : FilterType.values()) {
-			p = AbstractFilter.class.getPackage();
-			filters.addAll(  BoltPlugin.getAvailablePlugins(AbstractFilter.class, p.getName() + "." + ft.getSubPackage())  );
+
+		try {
+			
+			List<AbstractFilter> filters = new ArrayList<AbstractFilter>(); 
+			
+			BoltPluginLoader<AbstractFilter> pluginLoader;
+			pluginLoader = new BoltPluginLoader<AbstractFilter>(AbstractFilter.class);
+			
+			Package p;
+			for (FilterType ft : FilterType.values()) {
+				
+				p = AbstractFilter.class.getPackage();				
+				pluginLoader.loadLocalPlugins(p.getName() + "." + ft.getSubPackage());
+				
+			}
+			
+			File appDataDir = Env.appDataDirectory(Version.program_name);
+			appDataDir.mkdirs();
+			
+			pluginLoader.loadPluginsFromJarsInDirectory(appDataDir);
+			
+			filters.addAll(pluginLoader.getNewInstancesForAllPlugins());
+			return filters;
+			
+		} catch (ClassInheritanceException e) {
+			e.printStackTrace();
 		}
+				
+		return null;
 		
-		return filters;
 	}
 
 	public static AbstractFilter createNewInstance(AbstractFilter f)

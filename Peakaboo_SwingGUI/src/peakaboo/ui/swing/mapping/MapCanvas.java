@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.maptab.IMapTabController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;

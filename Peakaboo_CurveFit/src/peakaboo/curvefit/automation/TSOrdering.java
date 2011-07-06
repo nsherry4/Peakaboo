@@ -1,10 +1,9 @@
 package peakaboo.curvefit.automation;
 
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-
 
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -19,7 +18,6 @@ import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.signatures.FnCondition;
-import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 
 

@@ -2,7 +2,6 @@ package peakaboo.curvefit.fitting;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ArrayList;
 
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
