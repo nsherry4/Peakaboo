@@ -13,6 +13,7 @@ import peakaboo.fileio.KryoScratchList;
 
 import commonenvironment.AbstractFile;
 import fava.Fn;
+import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import fava.functionable.Range;
 import fava.signatures.FnEach;
@@ -34,7 +35,12 @@ public class PlainTextDataSource implements DataSource
 
 	String								datasetName;
 	
-	public PlainTextDataSource(AbstractFile file, FnEach<Integer> getScanCountCallback, FnEach<Integer> readScanCallback, FnGet<Boolean> isAborted) throws Exception
+	public PlainTextDataSource(
+			AbstractFile file, 
+			FnEach<Integer> getScanCountCallback, 
+			FnEach<Integer> readScanCallback, 
+			FnGet<Boolean> isAborted
+		) throws Exception
 	{
 		
 		this.readScanCallback = readScanCallback;
@@ -46,19 +52,16 @@ public class PlainTextDataSource implements DataSource
 		scandata = newlist;
 		datasetName = new File(file.getFileName()).getName();
 		
-		InputStreamReader r = new InputStreamReader(file.getInputStream(), "UTF-8");
-		BufferedReader reader = new BufferedReader(r);
-		
+	
 		//we count the number of linebreaks in the file. This will slow down
 		//reading marginally, but not by a lot, since the slowest part is
 		//human readable to machine readable conversion.
-		getScanCountCallback.f(FStringInput.lines(file.getInputStream()).toSink().size());
+		FList<String> lines = FStringInput.lines(new InputStreamReader(file.getInputStream(), "UTF-8")).toSink();
+		getScanCountCallback.f(lines.size());
 		
-		String line;
-		while (true)
-		{
+		
+		for (String line : lines) {
 			
-			line = reader.readLine();
 			if (line == null || isAborted.f()) break;
 			
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
@@ -82,7 +85,6 @@ public class PlainTextDataSource implements DataSource
 			
 		}
 		
-		reader.close();
 		
 	}
 	
