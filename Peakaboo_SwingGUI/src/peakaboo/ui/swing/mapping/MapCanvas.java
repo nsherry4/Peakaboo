@@ -42,6 +42,7 @@ import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.GridPerspective;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -190,10 +191,10 @@ public class MapCanvas extends GraphicsPanel
 		(
 
 			controller.mapsController.getDrawCoords(),
-			controller.mapsController.getTopLeftCoord(),
-			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getBottomLeftCoord(),
 			controller.mapsController.getBottomRightCoord(),
+			controller.mapsController.getTopLeftCoord(),
+			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getRealDimensionUnits(),
 
 			controller.mapsController.getShowSpectrum(),
@@ -221,6 +222,9 @@ public class MapCanvas extends GraphicsPanel
 		if (contourMapPainter == null) {
 			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data, controller.mapsController.getContours(), spectrumSteps); 
 		} else {
+			/*Spectrum modData = SpectrumCalculations.gridYReverse(
+					data, 
+					new GridPerspective<Float>(dr.dataWidth, dr.dataHeight, 0f));*/
 			contourMapPainter.setData(data);
 			contourMapPainter.setPalettes(paletteList);
 		}
@@ -229,7 +233,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		if (tabController.hasBoundingRegion())
 		{
-			mapPainters.add(new BoundedRegionPainter(Color.white, tabController.getDragStart(), tabController.getDragEnd(), true));
+			mapPainters.add(new BoundedRegionPainter(Color.white, tabController.getDragStart(), tabController.getDragEnd()));
 		}
 		
 		
@@ -327,10 +331,10 @@ public class MapCanvas extends GraphicsPanel
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter
 		(
 			controller.mapsController.getDrawCoords(),
-			controller.mapsController.getTopLeftCoord(),
-			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getBottomLeftCoord(),
 			controller.mapsController.getBottomRightCoord(),
+			controller.mapsController.getTopLeftCoord(),
+			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getRealDimensionUnits(),
 
 			controller.mapsController.getShowSpectrum(),
@@ -387,7 +391,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		if (tabController.hasBoundingRegion())
 		{
-			mapPainters.add(new BoundedRegionPainter(Color.white, tabController.getDragStart(), tabController.getDragEnd(), true));
+			mapPainters.add(new BoundedRegionPainter(Color.white, tabController.getDragStart(), tabController.getDragEnd()));
 		}
 		
 		map.setPainters(mapPainters);
@@ -437,10 +441,10 @@ public class MapCanvas extends GraphicsPanel
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
 			controller.mapsController.getDrawCoords(),
-			controller.mapsController.getTopLeftCoord(),
-			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getBottomLeftCoord(),
 			controller.mapsController.getBottomRightCoord(),
+			controller.mapsController.getTopLeftCoord(),
+			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getRealDimensionUnits(),
 
 			controller.mapsController.getShowSpectrum(),
@@ -582,7 +586,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		if (tabController.hasBoundingRegion())
 		{
-			painters.add(new BoundedRegionPainter(Color.white, tabController.getDragStart(), tabController.getDragEnd(), true));
+			painters.add(new BoundedRegionPainter(Color.white, tabController.getDragStart(), tabController.getDragEnd()));
 		}
 
 		// set the new data
