@@ -8,8 +8,10 @@ import java.util.List;
 
 
 
+import fava.functionable.FIterable;
+import fava.functionable.FList;
+import fava.functionable.Functionable;
 import fava.signatures.FnMap;
-import static fava.Fn.*;
 
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import scitypes.Spectrum;
@@ -24,11 +26,11 @@ import scitypes.SpectrumCalculations;
  * 
  */
 
-public class MapResultSet implements Cloneable, Iterable<MapResult>
+public class MapResultSet extends Functionable<MapResult> implements Cloneable
 {
 
-	private List<MapResult>	maps;
-	private int				mapSize;
+	private FList<MapResult>	maps;
+	private int					mapSize;
 
 
 	/**
@@ -41,7 +43,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
 	{
 		
-		maps = new ArrayList<MapResult>();
+		maps = new FList<MapResult>();
 		for (TransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));
 		}
@@ -51,7 +53,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	
 	public MapResultSet(List<MapResult> maps, int mapSize, boolean flagToMakeSignatureDifferent)
 	{
-		this.maps = maps;
+		this.maps = FList.wrap(maps);
 		this.mapSize = mapSize;
 	}
 	
@@ -123,9 +125,9 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	/**
 	 * Generates a list of all of the TransitionSeries included in this MapResultSet
 	 */
-	public List<TransitionSeries> getAllTransitionSeries()
+	public FList<TransitionSeries> getAllTransitionSeries()
 	{
-		return map(maps, new FnMap<MapResult, TransitionSeries>() {
+		return maps.map(new FnMap<MapResult, TransitionSeries>() {
 			
 			public TransitionSeries f(MapResult mr) {
 				return mr.transitionSeries;

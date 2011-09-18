@@ -10,8 +10,8 @@ import java.util.Collections;
 
 import fava.*;
 import fava.datatypes.Pair;
+import fava.functionable.FList;
 import fava.signatures.FnCondition;
-import static fava.Fn.*;
 
 
 
@@ -27,7 +27,7 @@ import static fava.Fn.*;
 public class PeakTable
 {
 
-	private static List<TransitionSeries> elementTransitions = new ArrayList<TransitionSeries>();
+	private static FList<TransitionSeries> elementTransitions = new FList<TransitionSeries>();
 
 
 
@@ -84,7 +84,7 @@ public class PeakTable
 	public static List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
 
-		return filter(elementTransitions, new FnCondition<TransitionSeries>() {
+		return elementTransitions.filter(new FnCondition<TransitionSeries>() {
 
 			public Boolean f(TransitionSeries ts)
 			{
@@ -96,12 +96,12 @@ public class PeakTable
 	
 	public static List<TransitionSeries> getAllTransitionSeries()
 	{
-		return map(elementTransitions, Functions.<TransitionSeries>id());
+		return elementTransitions.map(Functions.<TransitionSeries>id());
 	}
 	
 	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
-		List<TransitionSeries> tss = filter(elementTransitions, new FnCondition<TransitionSeries>() {
+		List<TransitionSeries> tss = elementTransitions.filter(new FnCondition<TransitionSeries>() {
 
 			public Boolean f(TransitionSeries ts)
 			{

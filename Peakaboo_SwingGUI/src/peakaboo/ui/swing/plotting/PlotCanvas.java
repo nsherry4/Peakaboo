@@ -17,8 +17,8 @@ import commonenvironment.AbstractFile;
 import commonenvironment.Env;
 
 import eventful.EventfulTypeListener;
-import fava.Fn;
 import fava.datatypes.Pair;
+import fava.functionable.FArray;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 
@@ -58,7 +58,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 {
 
 	private PlotDrawing				plot;
-	public List<AxisPainter>		axisPainters;
 	public DrawingRequest			dr;
 	
 
@@ -91,7 +90,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 						s.equals(PlotController.UpdateType.UNDO.toString())
 					)
 				{
-					axisPainters = null;
 					updateCanvasSize();
 				}
 			}
@@ -111,13 +109,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 
 					parent.loadFiles(
-						Fn.map(files, new FnMap<File, AbstractFile>() {
+						FArray.wrap(files).map(new FnMap<File, AbstractFile>() {
 
 							public AbstractFile f(File element)
 							{
 								return new AbstractFile(element);
 							}
-						})
+						}).toSink()
 						);
 
 
@@ -287,11 +285,17 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		// Plot Painters
 		////////////////////////////////////////////////////////////////////
 
+		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
+		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
+		final Spectrum drawingData = dataForPlot.first;
+		final float maxIntensity = Math.max(controller.dataController.maximumIntensity(), SpectrumCalculations.max(drawingData));
+		final int datasetSize = Math.min(controller.dataController.datasetScanSize(), drawingData.size());
+		
 		// if axes are shown, also draw horizontal grid lines
 		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
 		if (controller.settingsController.getShowAxes()) plotPainters.add(new GridlinePainter(new Bounds<Float>(
 			0.0f,
-			controller.dataController.maximumIntensity())));
+			maxIntensity)));
 
 		// draw the original data in the background
 		if (controller.settingsController.getShowRawData())
@@ -301,7 +305,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		}
 
 		// draw the filtered data
-		final Spectrum drawingData = dataForPlot.first;
+		
 		plotPainters.add(new PrimaryPlotPainter(drawingData, controller.settingsController.getMonochrome()));
 
 		// get any painters that the filters might want to add to the mix
@@ -309,7 +313,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		for (AbstractFilter f : controller.filteringController.getActiveFilters())
 		{
 			extension = f.getPainter();
-			if (extension != null && f.enabled) plotPainters.add(extension);
+			
+			if (extension != null && f.enabled) {
+				extension.setSourceName(f.getPluginName());
+				plotPainters.add(extension);
+			}
 		}
 
 		// draw curve fitting
@@ -374,37 +382,35 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		// Axis Painters
 		////////////////////////////////////////////////////////////////////
 
-		if (axisPainters == null)
+		//if (axisPainters == null)
+		//{
+		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+
+		if (controller.settingsController.getShowTitle())
+		{
+			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.dataController.getDatasetName(), null));
+		}
+
+		if (controller.settingsController.getShowAxes())
 		{
 
-			axisPainters = new ArrayList<AxisPainter>();
-
-			if (controller.settingsController.getShowTitle())
-			{
-				axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.dataController.getDatasetName(), null));
-			}
-
-			if (controller.settingsController.getShowAxes())
-			{
-
-				axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
-				axisPainters.add(new TickMarkAxisPainter(
-					new Bounds<Float>(0.0f, controller.dataController.maximumIntensity()),
-					new Bounds<Float>(0.0f, dr.unitSize * controller.dataController.datasetScanSize()),
-					null,
-					new Bounds<Float>(0.0f, controller.dataController.maximumIntensity()),
-					dr.viewTransform == ViewTransform.LOG,
-					dr.viewTransform == ViewTransform.LOG));
-				axisPainters.add(new LineAxisPainter(true, true, controller.settingsController.getShowTitle(), true));
-
-			}
+			axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
+			axisPainters.add(new TickMarkAxisPainter(
+				new Bounds<Float>(0.0f, maxIntensity),
+				new Bounds<Float>(0.0f, dr.unitSize * datasetSize),
+				null,
+				new Bounds<Float>(0.0f, maxIntensity),
+				dr.viewTransform == ViewTransform.LOG,
+				dr.viewTransform == ViewTransform.LOG));
+			axisPainters.add(new LineAxisPainter(true, true, controller.settingsController.getShowTitle(), true));
 
 		}
 
-		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
-		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
-		dr.maxYIntensity = Math.max(controller.dataController.maximumIntensity(), SpectrumCalculations.max(controller.filteringController.getFilteredPlot()));
-		dr.dataWidth = controller.dataController.datasetScanSize();
+		//}
+
+		
+		dr.maxYIntensity = maxIntensity;
+		dr.dataWidth = datasetSize;
 		
 		
 		plot = new PlotDrawing(context, dr, plotPainters, axisPainters);

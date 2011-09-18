@@ -84,12 +84,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
-	public List<TransitionSeries> getFittedTransitionSeries()
+	public FList<TransitionSeries> getFittedTransitionSeries()
 	{
-		return fittingModel.selections.getFittedTransitionSeries();
+		return FList.wrap(fittingModel.selections.getFittedTransitionSeries());
 	}
 
-	public List<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
+	public FList<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
 	{
 
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
@@ -118,7 +118,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		return e.visible;
 	}
 
-	public List<TransitionSeries> getVisibleTransitionSeries()
+	public FList<TransitionSeries> getVisibleTransitionSeries()
 	{
 
 		return filter(getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {

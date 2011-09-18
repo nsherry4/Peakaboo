@@ -4,6 +4,8 @@ package peakaboo.common;
 import java.util.List;
 import java.util.ArrayList;
 
+import fava.functionable.FList;
+
 import scitypes.Spectrum;
 
 
@@ -23,8 +25,8 @@ public class DataTypeFactory {
      * @param copyFrom the list of data to initialise this list with.
      * @return a new list of type T containing the same values as copyFrom
      */
-    public static <T> List<T> listInit(List<T> copyFrom) {
-    	List<T> copy = new ArrayList<T>();
+    public static <T> FList<T> listInit(List<T> copyFrom) {
+    	FList<T> copy = new FList<T>();
     	if (copyFrom == null) return copy;
     	for (int i = 0; i < copyFrom.size(); i++){
     		copy.add(i, copyFrom.get(i));
@@ -40,8 +42,8 @@ public class DataTypeFactory {
      * @param size the initial size of the list.
      * @return a new list of size 'size' filled with null values
      */
-    public static <T> List<T> listInit(int size){
-    	List<T> list = new ArrayList<T>(size);
+    public static <T> FList<T> listInit(int size){
+    	FList<T> list = new FList<T>(size);
     	for (int i = 0; i < size; i++){ list.add(null); }
     	return list;
     }
@@ -52,8 +54,8 @@ public class DataTypeFactory {
      * @param element the element to add to the list.
      * @return a new list of size 'size' filled with null values
      */
-    public static <T> List<T> listInit(T element){
-    	List<T> list = new ArrayList<T>();
+    public static <T> FList<T> listInit(T element){
+    	FList<T> list = new FList<T>();
     	list.add(element);
     	return list;
     }
@@ -62,16 +64,16 @@ public class DataTypeFactory {
      * Creates a list of {@link Spectrum}s
      * @return a list which can contain Spectrums
      */
-    public static <T> List<List<T>> dataset(){
-    	return new ArrayList<List<T>>();
+    public static <T> FList<List<T>> dataset(){
+    	return new FList<List<T>>();
     }
     
     /**
      * Creates a list of {@link Spectrum}s
      * @return a list which can contain Spectrums, initialized with nulls
      */
-    public static <T> List<List<T>> datasetInit(int size){
-    	List<List<T>> dataset = dataset();
+    public static <T> FList<List<T>> datasetInit(int size){
+    	FList<List<T>> dataset = dataset();
     	for (int i = 0; i < size; i++){
     		dataset.add(null);
     	}
@@ -82,9 +84,9 @@ public class DataTypeFactory {
      * Creates a list of {@link Spectrum}s
      * @return a new list of {@link Spectrum}s
      */
-    public static List<Spectrum> spectrumSet()
+    public static FList<Spectrum> spectrumSet()
     {
-    	return new ArrayList<Spectrum>();
+    	return new FList<Spectrum>();
     }
     
     /**
@@ -92,9 +94,9 @@ public class DataTypeFactory {
      * @param size the initial size of the list
      * @return a new null-initialized list of {@link Spectrum}s
      */
-    public static List<Spectrum> spectrumSetInit(int size)
+    public static FList<Spectrum> spectrumSetInit(int size)
     {
-    	List<Spectrum> dataset = new ArrayList<Spectrum>();
+    	FList<Spectrum> dataset = new FList<Spectrum>();
     	for (int i = 0; i < size; i++){
     		dataset.add(null);
     	}

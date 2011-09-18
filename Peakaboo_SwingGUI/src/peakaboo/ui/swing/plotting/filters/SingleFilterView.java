@@ -33,8 +33,9 @@ import jsyntaxpane.DefaultSyntaxKit;
 
 import eventful.EventfulTypeListener;
 import eventful.swing.EventfulTypePanel;
-import fava.Fn;
 import fava.Functions;
+import fava.functionable.FArray;
+import fava.functionable.FList;
 import fava.signatures.FnMap;
 
 import peakaboo.controller.plotter.filtering.IFilteringController;
@@ -106,7 +107,7 @@ public class SingleFilterView extends JPanel
 	{
 
 		//get a list of parameters
-		final List<Parameter> paramslist = Fn.map( filter.getParameters().values(), Functions.<Parameter>id()).reverse();
+		final List<Parameter> paramslist = new FList<Parameter>(filter.getParameters().values()).reverse();
 		
 				
 		
@@ -471,12 +472,12 @@ class SubfilterView extends EventfulTypePanel<SubfilterView>
 		this.controller = controller;
 		
 		//create one new filter of each kind which can be used to filter a subset
-		filters = Fn.map(options, new FnMap<Object, AbstractFilter>(){
+		filters = FArray.wrap(options).map(new FnMap<Object, AbstractFilter>(){
 
 			public AbstractFilter f(Object o)
 			{
 				return (AbstractFilter)o;
-			}});
+			}}).toSink();
 		
 		setLayout(new BorderLayout());
 		

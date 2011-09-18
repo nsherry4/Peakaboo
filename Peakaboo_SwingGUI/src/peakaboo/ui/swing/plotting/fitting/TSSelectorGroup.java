@@ -18,7 +18,7 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
 import eventful.EventfulListener;
-import fava.Fn;
+import fava.functionable.FList;
 import fava.signatures.FnEach;
 
 
@@ -27,7 +27,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 
 	protected IFittingController controller;
 
-	protected List<TSSelector>	selectors;
+	protected FList<TSSelector>	selectors;
 	protected ImageButton		addButton;
 	
 	private int					minSelectors;
@@ -50,7 +50,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		});
 		
 				
-		selectors = new ArrayList<TSSelector>();
+		selectors = new FList<TSSelector>();
 		
 		
 	}
@@ -58,7 +58,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	protected abstract void refreshGUI();
 	public abstract void setTransitionSeriesOptions(final List<TransitionSeries> tss);
-	public abstract List<TransitionSeries> getTransitionSeries();
+	public abstract FList<TransitionSeries> getTransitionSeries();
 	
 	protected void removeTSSelector(TSSelector tssel)
 	{
@@ -121,11 +121,11 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	protected final void TSSelectorUpdated()
 	{
 		controller.clearProposedTransitionSeries();
-		List<TransitionSeries> tss = getTransitionSeries();
+		FList<TransitionSeries> tss = getTransitionSeries();
 		if (tss == null) return;
 		
 		//add all of the transition series that come back from the summation widget
-		Fn.each(tss, new FnEach<TransitionSeries>() {
+		tss.each(new FnEach<TransitionSeries>() {
 
 			public void f(TransitionSeries ts)
 			{

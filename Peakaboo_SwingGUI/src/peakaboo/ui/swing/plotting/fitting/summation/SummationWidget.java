@@ -6,10 +6,10 @@ import java.awt.GridBagConstraints;
 import java.util.List;
 
 import fava.*;
+import fava.functionable.FList;
 import fava.signatures.FnCondition;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
-import static fava.Fn.*;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
@@ -39,17 +39,17 @@ class SummationWidget extends TSSelectorGroup
 	
 	
 	@Override
-	public List<TransitionSeries> getTransitionSeries()
+	public FList<TransitionSeries> getTransitionSeries()
 	{
 
 		//get a list of all TransitionSeries to be summed
-		List<TransitionSeries> tss = filter(map(selectors, new FnMap<TSSelector, TransitionSeries>() {
+		FList<TransitionSeries> tss = selectors.map(new FnMap<TSSelector, TransitionSeries>() {
 
 			public TransitionSeries f(TSSelector element)
 			{
 				return element.getTransitionSeries();
 			}
-		}), Functions.<TransitionSeries>notNull());
+		}).filter(Functions.<TransitionSeries>notNull());
 		
 		
 		return DataTypeFactory.<TransitionSeries>listInit(TransitionSeries.summation(tss));
@@ -61,7 +61,7 @@ class SummationWidget extends TSSelectorGroup
 	@Override
 	public void setTransitionSeriesOptions(final List<TransitionSeries> tss)
 	{
-		Fn.each(selectors, new FnEach<TSSelector>() {
+		selectors.each(new FnEach<TSSelector>() {
 
 			public void f(TSSelector selector)
 			{
@@ -126,7 +126,7 @@ class SummationWidget extends TSSelectorGroup
 		
 		sel.setTransitionSeries(
 		
-				filter(controller.getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {
+				controller.getFittedTransitionSeries().filter(new FnCondition<TransitionSeries>() {
 
 					public Boolean f(TransitionSeries element)
 					{

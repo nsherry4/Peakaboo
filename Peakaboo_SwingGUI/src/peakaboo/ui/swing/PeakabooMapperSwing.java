@@ -29,9 +29,9 @@ import javax.swing.event.ChangeListener;
 
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
-import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
+import fava.functionable.Functionable;
 import fava.functionable.Range;
 import fava.functionable.FList;
 import fava.signatures.FnMap;
@@ -452,7 +452,7 @@ public class PeakabooMapperSwing extends JDialog
 				
 				
 				//generate a list of pairings of TransitionSeries and their intensity values
-				FList<Pair<TransitionSeries, Float>> averages = Fn.map(controller.mapsController.getMapResultSet(), new FnMap<MapResult, Pair<TransitionSeries, Float>>() {
+				Functionable<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().map(new FnMap<MapResult, Pair<TransitionSeries, Float>>() {
 
 					public Pair<TransitionSeries, Float> f(MapResult r)
 					{

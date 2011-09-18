@@ -9,8 +9,8 @@ import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DataSourceDimensions;
 import peakaboo.fileio.DataSourceExtendedInformation;
 
-import fava.Fn;
 import fava.Functions;
+import fava.functionable.FList;
 import fava.functionable.Range;
 
 import scitypes.Bounds;
@@ -22,7 +22,7 @@ import scitypes.Spectrum;
 public class CopiedDataSource implements DataSource, DataSourceDimensions, DataSourceExtendedInformation
 {
 
-	private List<String>				scannames = new ArrayList<String>();
+	private FList<String>				scannames = new FList<String>();
 	private DataSource					originalDataSource;
 	
 	private int							sizeX, sizeY;
@@ -105,7 +105,7 @@ public class CopiedDataSource implements DataSource, DataSourceDimensions, DataS
 
 	public List<String> getScanNames()
 	{
-		return Fn.map(scannames, Functions.<String>id());
+		return scannames.toSink();
 	}
 
 
