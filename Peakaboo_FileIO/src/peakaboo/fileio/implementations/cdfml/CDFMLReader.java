@@ -1,5 +1,6 @@
 package peakaboo.fileio.implementations.cdfml;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,14 +14,16 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import com.esotericsoftware.kryo.serialize.ArraySerializer;
+
 import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
+import peakaboo.fileio.KryoScratchList;
 import scitypes.Spectrum;
 import scratch.ScratchList;
 
 import commonenvironment.AbstractFile;
 
-import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.Range;
@@ -352,7 +355,18 @@ public abstract class CDFMLReader extends DefaultHandler2
 				break;
 			case SPECTRUM:
 				List<Spectrum> svalues = (List<Spectrum>)variableEntries.get(variableName);
-				if (svalues == null) variableEntries.put(variableName, ScratchList.<Spectrum>create(Version.program_name + " - " + variableName));
+				if (svalues == null) {
+					List<Spectrum> newlist;
+					try {
+						KryoScratchList<Spectrum> kryolist = new KryoScratchList<Spectrum>(Version.program_name + " - " + variableName, Spectrum.class);
+						kryolist.register(float[].class, new ArraySerializer(kryolist.getKryo()));
+						newlist = kryolist;
+					} catch (IOException e) {
+						newlist = ScratchList.<Spectrum>create(Version.program_name + " - " + variableName);
+					}
+					
+					variableEntries.put(variableName, newlist);
+				}
 				svalues = (List<Spectrum>)variableEntries.get(variableName);
 				svalues.set(entryNo, getSpectrumFromString(dimSize, sb.toString()));
 				
@@ -447,7 +461,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	}
 	protected List<String> getVars()
 	{
-		return Fn.map(variableEntries.keySet(), Functions.<String>id());
+		return new FList<String>(variableEntries.keySet());
 	}
 	
 	protected boolean hasAttr(String attr)
@@ -456,7 +470,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	}
 	protected List<String> getAttrs()
 	{
-		return Fn.map(attrEntries.keySet(), Functions.<String>id());
+		return new FList<String>(attrEntries.keySet());
 	}
 	
 	
