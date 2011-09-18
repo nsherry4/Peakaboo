@@ -2,6 +2,7 @@ package peakaboo.filter.filters.noise;
 
 
 
+import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.AbstractFilter;
@@ -17,6 +18,7 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
+@Plugin
 public final class FourierLowPass extends AbstractFilter
 {
 

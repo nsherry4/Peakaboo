@@ -1,5 +1,6 @@
 package peakaboo.filter.filters.advanced;
 
+import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
@@ -8,7 +9,7 @@ import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 
-
+@Plugin
 public class WaveletToData extends AbstractFilter
 {
 

@@ -1,7 +1,9 @@
 package peakaboo.filter.filters.programming;
 
 
+import bolt.plugin.Plugin;
 import bolt.scripting.BoltMap;
+import bolt.scripting.languages.Language;
 import peakaboo.common.Version;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
@@ -9,6 +11,7 @@ import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
+@Plugin
 public class JPython extends AbstractFilter {
 
 	private static int CODE = 0;
@@ -34,7 +37,7 @@ public class JPython extends AbstractFilter {
 	public JPython() {
 		super();
 		
-		boltmap = new BoltMap<float[], float[]>("jython", "spectrumIn", "spectrumOut", "");
+		boltmap = new BoltMap<float[], float[]>(Language.python(), "spectrumIn", "spectrumOut", "");
 		boltmap.setMultithreaded(true);
 		
 	}

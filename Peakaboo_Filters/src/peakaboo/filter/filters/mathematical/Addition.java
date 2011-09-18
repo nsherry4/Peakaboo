@@ -1,5 +1,6 @@
 package peakaboo.filter.filters.mathematical;
 
+import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
@@ -8,7 +9,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-
+@Plugin
 public class Addition extends AbstractFilter
 {
 

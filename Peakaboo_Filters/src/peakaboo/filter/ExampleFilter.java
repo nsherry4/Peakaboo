@@ -76,7 +76,7 @@ public class ExampleFilter extends AbstractFilter {
 	@Override
 	public boolean pluginEnabled()
 	{
-		return !Version.release;
+		return false;
 	}
 
 

@@ -66,79 +66,36 @@ public class Parameter implements Serializable
 	
 	public int intValue()
 	{
-		try{
-			return (Integer)value;
-		} catch (ClassCastException e)
-		{
-			e.printStackTrace();
-			return 0;
-		}
+		return (Integer)value;
+
 	}
 
 	public float realValue()
 	{
-		try{
-			if (value instanceof Double) return ((Double)value).floatValue();
-			//if (value instanceof Integer) return ((Integer)value).floatValue();
-			return (Float)value;
-		} catch (ClassCastException e)
-		{
-			e.printStackTrace();
-			return 0;
-		}
+		if (value instanceof Double) return ((Double)value).floatValue();
+		return (Float)value;
+
 	}
 	
 	public boolean boolValue()
 	{
-		try{
-			return (Boolean)value;
-		} catch (ClassCastException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+		return (Boolean)value;
 	}
 	
 	public AbstractFilter filterValue()
 	{
-		
-		try
-		{
-			return (AbstractFilter)value;
-		} 
-		catch (ClassCastException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		
+		return (AbstractFilter)value;
 	}
 	
 	public String codeValue()
 	{
-		
-		try
-		{
-			return (String)value;
-		} 
-		catch (ClassCastException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		
+		return (String)value;	
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <T extends Enum<T>> T enumValue()
 	{
-		try{
-			return (T)value;
-		} catch (ClassCastException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		return (T)value;
 	}
 	
 	public void setProperty(String propertyName, String propertyValue)

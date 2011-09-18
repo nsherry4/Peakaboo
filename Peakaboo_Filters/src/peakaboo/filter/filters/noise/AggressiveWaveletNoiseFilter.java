@@ -1,6 +1,7 @@
 package peakaboo.filter.filters.noise;
 
 
+import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
@@ -16,6 +17,7 @@ import scitypes.Spectrum;
  * 
  */
 
+@Plugin
 public final class AggressiveWaveletNoiseFilter extends AbstractFilter
 {
 
