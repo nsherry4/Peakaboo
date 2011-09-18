@@ -2,6 +2,7 @@ package peakaboo.filter.filters.programming;
 
 
 import bolt.scripting.BoltMap;
+import bolt.scripting.languages.Language;
 import peakaboo.common.Version;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
@@ -34,7 +35,7 @@ public class JPython extends AbstractFilter {
 	public JPython() {
 		super();
 		
-		boltmap = new BoltMap<float[], float[]>("jython", "spectrumIn", "spectrumOut", "");
+		boltmap = new BoltMap<float[], float[]>(Language.python(), "spectrumIn", "spectrumOut", "");
 		boltmap.setMultithreaded(true);
 		
 	}
