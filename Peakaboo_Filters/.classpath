@@ -4,7 +4,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Calculations"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SciDraw"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Bolt"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

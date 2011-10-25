@@ -7,7 +7,5 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_SwingGUI"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_Common"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_Dataset"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Eventful"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CommonEnvironment"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

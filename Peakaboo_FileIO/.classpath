@@ -4,8 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Calculations"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CommonEnvironment"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Scratch"/>
 	<classpathentry kind="lib" path="jars/kryo-1.04-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
