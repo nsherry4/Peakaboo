@@ -3,6 +3,7 @@ package peakaboo.controller.plotter.fitting;
 import java.util.List;
 
 import eventful.IEventfulType;
+import fava.functionable.FList;
 
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -21,12 +22,12 @@ public interface IFittingController extends IEventfulType<Boolean>
 	public void removeTransitionSeries(TransitionSeries e);
 	public void clearTransitionSeries();
 	
-	public List<TransitionSeries> getFittedTransitionSeries();
-	public List<TransitionSeries> getUnfittedTransitionSeries(TransitionSeriesType tst);
+	public FList<TransitionSeries> getFittedTransitionSeries();
+	public FList<TransitionSeries> getUnfittedTransitionSeries(TransitionSeriesType tst);
 	
 	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show);
 	public boolean getTransitionSeriesVisibility(TransitionSeries e);
-	public List<TransitionSeries> getVisibleTransitionSeries();
+	public FList<TransitionSeries> getVisibleTransitionSeries();
 	
 	public float getTransitionSeriesIntensity(TransitionSeries ts);
 	public void moveTransitionSeriesUp(TransitionSeries e);

@@ -1,10 +1,11 @@
 package peakaboo.filter.filters.advanced;
 
+import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractFilter;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
-
+@Plugin
 public class Identity extends AbstractFilter
 {
 

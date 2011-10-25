@@ -46,14 +46,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	/**
 	 * If this is a compound TransitionSeries, this list contains the component TransitionSeries
 	 */
-	private List<TransitionSeries>	componentSeries;
+	private FList<TransitionSeries>	componentSeries;
 
 	/**
 	 * The {@link Element} that this TransitionSeries represents
 	 */
 	public Element					element;
 
-	private List<Transition>		transitions;
+	private FList<Transition>		transitions;
 
 	/**
 	 * The general intensity of this TransitionSeries
@@ -103,8 +103,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		intensity = 1.0;
 		visible = true;
 
-		transitions = new ArrayList<Transition>();
-		componentSeries = new ArrayList<TransitionSeries>();
+		transitions = new FList<Transition>();
+		componentSeries = new FList<TransitionSeries>();
 	}
 	
 	/**
@@ -128,7 +128,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public Transition getTransition(final TransitionType transitionType)
 	{
-		List<Transition> matches = filter(transitions, new FnCondition<Transition>() {
+		List<Transition> matches = transitions.filter(new FnCondition<Transition>() {
 
 			public Boolean f(Transition t)
 			{
@@ -147,7 +147,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public List<Transition> getAllTransitions()
 	{
-		return map(transitions, Functions.<Transition>id());
+		return transitions.map(Functions.<Transition>id());
 	}
 	
 	/**
@@ -157,7 +157,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public Transition getStrongestTransition()
 	{
 
-		return foldr(transitions, new FnFold<Transition, Transition>() {
+		return transitions.foldr(new FnFold<Transition, Transition>() {
 
 			public Transition f(Transition t1, Transition t2)
 			{
@@ -261,7 +261,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			minDistance = minEnergyDistance;
 		}
 		
-		FList<Double> scores = map(transitions, new FnMap<Transition, Double>() {
+		FList<Double> scores = transitions.map(new FnMap<Transition, Double>() {
 
 			public Double f(Transition t)
 			{
@@ -303,13 +303,13 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				Collections.sort(componentSeries);
 
-				return foldr(map(componentSeries, new FnMap<TransitionSeries, String>() {
+				return componentSeries.map(new FnMap<TransitionSeries, String>() {
 
 					public String f(TransitionSeries ts)
 					{
 						return ts.getDescription();
 					}
-				}), strcat(" + "));
+				}).foldr(strcat(" + "));
 
 			default:
 

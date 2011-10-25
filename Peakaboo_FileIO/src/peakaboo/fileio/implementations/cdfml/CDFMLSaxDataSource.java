@@ -1,7 +1,6 @@
 package peakaboo.fileio.implementations.cdfml;
 
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,15 +9,12 @@ import java.util.Set;
 
 import com.esotericsoftware.kryo.serialize.ArraySerializer;
 
-
 import commonenvironment.AbstractFile;
-
 
 import fava.functionable.FList;
 import fava.functionable.Range;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
-
 
 import peakaboo.common.Version;
 import peakaboo.fileio.DataSource;

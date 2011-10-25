@@ -2,6 +2,7 @@ package peakaboo.filter.filters.programming;
 
 
 import bolt.compiler.BoltJavaMap;
+import bolt.plugin.Plugin;
 import peakaboo.common.Version;
 
 import peakaboo.filter.AbstractFilter;
@@ -10,7 +11,7 @@ import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
-
+@Plugin
 public class Java extends AbstractFilter{
 
 	BoltJavaMap<float[], float[]> boltJavaMap;

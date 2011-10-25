@@ -8,8 +8,8 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import eventful.EventfulType;
-import fava.Fn;
 import fava.Functions;
+import fava.functionable.FList;
 
 
 public class MapSetController extends EventfulType<String> implements IMapSetController
@@ -49,7 +49,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 		
 		mapModel.mapResults = data;
 		mapModel.datasetTitle = datasetName;
-		mapModel.badPoints = badPoints;
+		mapModel.badPoints = FList.wrap(badPoints);
 		
 		mapModel.dimensionsProvided = false;
 		mapModel.dataDimensions = new Coord<Integer>(data.getMap(0).data.size(), 1);
@@ -73,7 +73,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 		
 		mapModel.mapResults = data;
 		mapModel.datasetTitle = datasetName;
-		mapModel.badPoints = badPoints;
+		mapModel.badPoints = FList.wrap(badPoints);
 		
 		mapModel.dataDimensions = dataDimensions;
 		mapModel.dimensionsProvided = true;
@@ -272,7 +272,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 
 	public List<Integer> getBadPoints()
 	{
-		return Fn.map(mapModel.badPoints, Functions.<Integer>id());
+		return mapModel.badPoints.toSink();
 	}
 
 

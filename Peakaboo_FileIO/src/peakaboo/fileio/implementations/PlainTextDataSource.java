@@ -12,7 +12,6 @@ import peakaboo.fileio.DataSource;
 import peakaboo.fileio.KryoScratchList;
 
 import commonenvironment.AbstractFile;
-import fava.Fn;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import fava.functionable.Range;
@@ -67,7 +66,7 @@ public class PlainTextDataSource implements DataSource
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(Fn.map(line.trim().split("[, \\t]+"), new FnMap<String, Float>(){
+			Spectrum scan = new Spectrum(new FList<String>(line.trim().split("[, \\t]+")).map(new FnMap<String, Float>(){
 				
 				public Float f(String s)
 				{
@@ -120,12 +119,12 @@ public class PlainTextDataSource implements DataSource
 
 	public List<String> getScanNames()
 	{
-		return Fn.map(new Range(0, scandata.size()-1), new FnMap<Integer, String>(){
+		return new Range(0, scandata.size()-1).map(new FnMap<Integer, String>(){
 
 			public String f(Integer element)
 			{
 				return "Scan #" + (element+1);
-			}});
+			}}).toSink();
 	}
 
 	

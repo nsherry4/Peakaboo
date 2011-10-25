@@ -19,9 +19,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
-import fava.Fn;
+import fava.functionable.FArray;
 import fava.signatures.FnMap;
-import fava.wip.FArray;
 
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
@@ -75,7 +74,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Fn.map(FArray.boxi(rows), new FnMap<Integer, TransitionSeries>(){
+				List<TransitionSeries> tss = FArray.boxi(rows).map(new FnMap<Integer, TransitionSeries>(){
+
 
 					public TransitionSeries f(Integer i)
 					{
@@ -98,7 +98,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 				
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Fn.map(FArray.boxi(rows), new FnMap<Integer, TransitionSeries>(){
+				List<TransitionSeries> tss = FArray.boxi(rows).map(new FnMap<Integer, TransitionSeries>(){
+
 
 					public TransitionSeries f(Integer i)
 					{
@@ -119,7 +120,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 			public void down()
 			{
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Fn.map(FArray.boxi(rows), new FnMap<Integer, TransitionSeries>(){
+				List<TransitionSeries> tss = FArray.boxi(rows).map(new FnMap<Integer, TransitionSeries>(){
+
 
 					public TransitionSeries f(Integer i)
 					{

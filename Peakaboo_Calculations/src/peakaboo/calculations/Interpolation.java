@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fava.datatypes.Pair;
-import static fava.Fn.*;
 
 import scitypes.GridPerspective;
 import scitypes.Spectrum;
@@ -128,17 +127,17 @@ public class Interpolation {
 		float total = 0;
 		int count = 0;
 		
-		if (x >= 1 && !include(badPoints, grid.getIndexFromXY(x-1, y)))
+		if (x >= 1 && !badPoints.contains(grid.getIndexFromXY(x-1, y)))
 			{ total += grid.get(list, x-1, y); count += 1; }
 		
-		if (y >= 1 && !include(badPoints, grid.getIndexFromXY(x, y-1))) 
+		if (y >= 1 && !badPoints.contains(grid.getIndexFromXY(x, y-1))) 
 			{ total += grid.get(list, x, y-1); count += 1; }
 		
 		
-		if (x <= grid.width - 2 && !include(badPoints, grid.getIndexFromXY(x+1, y))) 
+		if (x <= grid.width - 2 && !badPoints.contains(grid.getIndexFromXY(x+1, y))) 
 			{ total += grid.get(list, x+1, y); count += 1; }
 		
-		if (y <= grid.height- 2 && !include(badPoints, grid.getIndexFromXY(x, y+1))) 
+		if (y <= grid.height- 2 && !badPoints.contains(grid.getIndexFromXY(x, y+1))) 
 			{ total += grid.get(list, x, y+1); count += 1; }
 				
 		if (count > 0)

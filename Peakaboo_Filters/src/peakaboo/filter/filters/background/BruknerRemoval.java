@@ -2,6 +2,7 @@ package peakaboo.filter.filters.background;
 
 
 
+import bolt.plugin.Plugin;
 import peakaboo.calculations.Background;
 import peakaboo.filter.BackgroundRemovalFilter;
 import peakaboo.filter.Parameter;
@@ -16,6 +17,7 @@ import scitypes.SpectrumCalculations;
  * @author Nathaniel Sherry, 2009
  */
 
+@Plugin
 public final class BruknerRemoval extends BackgroundRemovalFilter
 {
 

@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fava.Fn;
 import fava.signatures.FnEach;
 
 import peakaboo.controller.plotter.fitting.IFittingController;
@@ -48,7 +47,7 @@ public class SummationPanel extends JPanel
 			protected void approve()
 			{
 				//add all of the transition series that come back from the summation widget
-				Fn.each(summationWidget.getTransitionSeries(), new FnEach<TransitionSeries>() {
+				summationWidget.getTransitionSeries().each(new FnEach<TransitionSeries>() {
 
 					public void f(TransitionSeries ts)
 					{

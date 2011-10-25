@@ -9,10 +9,10 @@ import java.util.List;
 import commonenvironment.AbstractFile;
 
 import fava.datatypes.Maybe;
+import fava.functionable.FList;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 import fava.signatures.FnMap;
-import static fava.Fn.*;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
@@ -28,6 +28,7 @@ import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
+import plural.executor.Plural;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -92,7 +93,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = map(excludedIndcies, new FnMap<Integer, Spectrum>() {
+		FList<Spectrum> badScans = FList.wrap(excludedIndcies).map(new FnMap<Integer, Spectrum>() {
 
 			public Spectrum f(Integer index)
 			{
@@ -432,6 +433,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		
 		avg = new Spectrum(scanLength);
 		max10 = new Spectrum(scanLength);
+		
 		
 		for (int i = 0; i < ds.getScanCount(); i++)
 		{

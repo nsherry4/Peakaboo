@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import commonenvironment.Env;
+import fava.functionable.FList;
 
 import bolt.plugin.BoltPlugin;
 import bolt.plugin.BoltPluginLoader;
@@ -105,12 +106,12 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 		this.enabled = true;
 	}
 
-	public static List<AbstractFilter> getAvailableFilters()
+	public static FList<AbstractFilter> getAvailableFilters()
 	{
 
 		try {
 			
-			List<AbstractFilter> filters = new ArrayList<AbstractFilter>(); 
+			FList<AbstractFilter> filters = new FList<AbstractFilter>(); 
 			
 			BoltPluginLoader<AbstractFilter> pluginLoader;
 			pluginLoader = new BoltPluginLoader<AbstractFilter>(AbstractFilter.class);
@@ -127,6 +128,7 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 			appDataDir.mkdirs();
 			
 			pluginLoader.loadPluginsFromJarsInDirectory(appDataDir);
+			if (Env.isClassInJar(AbstractFilter.class)) pluginLoader.loadPluginsFromJarsInDirectory(Env.getJarForClass(AbstractFilter.class).getParentFile());
 			
 			filters.addAll(pluginLoader.getNewInstancesForAllPlugins());
 			return filters;
@@ -187,15 +189,17 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 	
 	public Spectrum filter(Spectrum data, boolean cache)
 	{
+		
 		try{
 			return filterApplyTo(data, cache);
 		}
-		catch(Exception e)
+		catch(Throwable e)
 		{
-			System.err.println(getPluginName() + " Filter Failed");
+			System.out.println(getPluginName() + " Filter Failed");
 			if (!Version.release) e.printStackTrace();
 			return data;
 		}
+		
 	}
 	
 		
