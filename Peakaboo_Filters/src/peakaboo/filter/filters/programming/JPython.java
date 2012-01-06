@@ -15,6 +15,7 @@ import scitypes.Spectrum;
 public class JPython extends AbstractFilter {
 
 	private static int CODE = 0;
+	private boolean pythonSupported = true;
 	
 	private static final String header = "" + 
 	"from java.util import * \n" +
@@ -37,8 +38,15 @@ public class JPython extends AbstractFilter {
 	public JPython() {
 		super();
 		
-		boltmap = new BoltMap<float[], float[]>(Language.python(), "spectrumIn", "spectrumOut", "");
-		boltmap.setMultithreaded(true);
+		try 
+		{
+			boltmap = new BoltMap<float[], float[]>(Language.python(), "spectrumIn", "spectrumOut", "");
+			boltmap.setMultithreaded(true);	
+		}
+		catch (Throwable t)
+		{
+			pythonSupported = false;
+		}
 		
 	}
 	
@@ -104,7 +112,7 @@ public class JPython extends AbstractFilter {
 	
 	@Override
 	public boolean pluginEnabled() {
-		return !Version.release;
+		return !Version.release && pythonSupported;
 	}
 
 	@Override
