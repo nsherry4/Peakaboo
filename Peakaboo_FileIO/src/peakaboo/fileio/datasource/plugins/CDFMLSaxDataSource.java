@@ -175,13 +175,6 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 	// VARIABLES DATA
 	////////////////////////////////////////////////////////////
 
-	
-	public int estimateDataSourceSize()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 
 	
 	public Spectrum getScanAtIndex(int index)
@@ -261,13 +254,7 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 	{
 		return numScans();
 	}
-	
-	public int getExpectedScanCount()
-	{
-		Coord<Integer> dims = getDataDimensions();
-		return dims.x * dims.y;
-	}
-	
+
 	
 	public Coord<Number> getRealCoordinatesAtIndex(int index)
 	{

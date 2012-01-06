@@ -27,15 +27,9 @@ public interface DSScanData
 	public int getScanCount();
 
 	
+
 	/**
-	 * Returns the number of scans expected from this data set
-	 * @return the expected scan count
-	 */
-	public int getExpectedScanCount();
-	
-	
-	/**
-	 * Returns the names of all scans not marked as bad
+	 * Returns the names of all scans, eg ["Scan 1", "Scan 2", ...]
 	 * 
 	 * @return a list of scan names for non-bad scans
 	 */
@@ -58,15 +52,6 @@ public interface DSScanData
 	 * @return the data set name
 	 */
 	public String getDatasetName();
-
-
-	/**
-	 * Attempt to estimate the size of the data size. This is used before 
-	 * the data has been loaded in order to try and provide a progress 
-	 * estimate for loading larger data sets.
-	 * @return
-	 */
-	public int estimateDataSourceSize();
 	
 
 }

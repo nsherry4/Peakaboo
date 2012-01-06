@@ -348,8 +348,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		
 		List<AbstractDataSourcePlugin> datasources = DataSourcePluginLoader.getDataSourcePlugins();
 		
-		System.out.println(datasources);
-		
 		if (filenames.size() == 1)
 		{
 			String filename = filenames.get(0);

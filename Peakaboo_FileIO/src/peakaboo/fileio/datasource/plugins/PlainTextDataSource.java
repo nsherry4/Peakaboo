@@ -38,19 +38,9 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 	String								datasetName;
 
 	
-	public int estimateDataSourceSize()
-	{
-		return 1;
-	}
-
 	public String getDatasetName()
 	{
 		return datasetName;
-	}
-
-	public int getExpectedScanCount()
-	{
-		return 1;
 	}
 
 	public float getMaxEnergy()

@@ -66,11 +66,6 @@ public class MCADataSource extends AbstractDataSourcePlugin {
 	}
 
 	@Override
-	public int getExpectedScanCount() {
-		return 1;
-	}
-
-	@Override
 	public List<String> getScanNames() {
 		return new FList<String>("Scan");
 	}
@@ -85,10 +80,6 @@ public class MCADataSource extends AbstractDataSourcePlugin {
 		return scanName;
 	}
 
-	@Override
-	public int estimateDataSourceSize() {
-		return 1;
-	}
 	
 	public static boolean filesMatchCriteria(AbstractFile file)
 	{
