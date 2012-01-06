@@ -10,7 +10,7 @@ import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.fileio.DataSource;
-import peakaboo.fileio.implementations.CopiedDataSource;
+import peakaboo.fileio.datasource.internal.CopiedDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;

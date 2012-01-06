@@ -2,7 +2,6 @@ package peakaboo.common;
 
 
 import java.util.List;
-import java.util.ArrayList;
 
 import fava.functionable.FList;
 

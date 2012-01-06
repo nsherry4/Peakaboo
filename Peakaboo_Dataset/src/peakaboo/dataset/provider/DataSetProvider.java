@@ -8,8 +8,8 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
 import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DataSourceDimensions;
-import peakaboo.fileio.DataSourceExtendedInformation;
+import peakaboo.fileio.DSRealDimensions;
+import peakaboo.fileio.DSMetadata;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -47,7 +47,7 @@ public abstract class DataSetProvider
 
 	protected boolean		hasDimensions;
 
-	protected boolean		hasExtendedInformation;
+	protected boolean		hasMetadata;
 
 
 	/**
@@ -240,7 +240,7 @@ public abstract class DataSetProvider
 
 	/**
 	 * Does this implementation of the DataSetContainer contain dimensional information? This will depend on if the
-	 * {@link DataSource} implements {@link DataSourceDimensions}
+	 * {@link DataSource} implements {@link DSRealDimensions}
 	 * 
 	 * @return true if this dataset has dimensional information, false otherwise
 	 */
@@ -249,7 +249,7 @@ public abstract class DataSetProvider
 
 	/**
 	 * Does this implementation of the DataSetContainer contain extended information such as where the scan was taken?
-	 * This will depend on if the {@link DataSource} implements {@link DataSourceExtendedInformation}
+	 * This will depend on if the {@link DataSource} implements {@link DSMetadata}
 	 * 
 	 * @return true if this dataset has extended information, false otherwise
 	 */
@@ -293,81 +293,81 @@ public abstract class DataSetProvider
 
 	
 	/**
-	 * See {@link DataSourceDimensions}
+	 * See {@link DSRealDimensions}
 	 */
 	public abstract Coord<Bounds<Number>> getRealDimensions();
 
 	/**
-	 * See {@link DataSourceDimensions}
+	 * See {@link DSRealDimensions}
 	 */
 	public abstract SISize getRealDimensionsUnits();
 
 	/**
-	 * See {@link DataSourceDimensions}
+	 * See {@link DSRealDimensions}
 	 */
 	public abstract Coord<Integer> getDataDimensions();
 
 	/**
-	 * See {@link DataSourceDimensions}
+	 * See {@link DSRealDimensions}
 	 */
 	public abstract List<Coord<Number>> getCoordinateList();
 
 
 	// SS Namespace
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getCreationTime();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getCreator();
 
 
 	// SSModel Namespace
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getProjectName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getSessionName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getFacilityName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getLaboratoryName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getExperimentName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getInstrumentName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getTechniqueName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getSampleName();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getScanName();
 
@@ -375,12 +375,12 @@ public abstract class DataSetProvider
 	// Scan Namespace
 	
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getStartTime();
 
 	/**
-	 * See {@link DataSourceExtendedInformation}
+	 * See {@link DSMetadata}
 	 */
 	public abstract String getEndTime();
 

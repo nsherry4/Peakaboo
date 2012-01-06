@@ -18,17 +18,14 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.DataSetProvider;
 import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DataSourceDimensions;
-import peakaboo.fileio.DataSourceExtendedInformation;
-import peakaboo.fileio.implementations.MCADataSource;
-import peakaboo.fileio.implementations.PlainTextDataSource;
-import peakaboo.fileio.implementations.cdfml.CDFMLSaxDataSource;
+import peakaboo.fileio.DSRealDimensions;
+import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
+import peakaboo.fileio.datasource.DataSourcePluginLoader;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
-import plural.executor.Plural;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -237,7 +234,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			{
 				
 				final int fileCount;
-				final DataSource dataSource;
+				final AbstractDataSourcePlugin dataSource;
 				
 				opening.advanceState();
 				
@@ -270,39 +267,30 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				//get the correct kind of DataSource
 				
-				if (PlainTextDataSource.filesMatchCriteria(files))
+				List<String> filenames = new ArrayList<String>();
+				for (AbstractFile file : files)
 				{
-					try
-					{
-						dataSource = new PlainTextDataSource(files.get(0), gotScanCount, readScans, isAborted);
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-						aborted();
-						return new Maybe<Boolean>();
-					}
-				} 
-				else if (CDFMLSaxDataSource.filesMatchCriteria(files))
-				{
-										
-					try
-					{
-						dataSource = new CDFMLSaxDataSource(files.get(0), gotScanCount, readScans, isAborted);
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-						aborted();
-						return new Maybe<Boolean>();
-					}
+					filenames.add(file.getFileName());
 				}
-				else if (MCADataSource.filesMatchCriteria(files.get(0)))
+				
+
+				
+				dataSource = findDataSourceForFiles(filenames);
+				if (dataSource != null)
 				{
-										
 					try
 					{
-						dataSource = new MCADataSource(files.get(0));
+						dataSource.setCallbacks(gotScanCount, readScans, isAborted);
+						dataSource.initialize();
+						if (files.size() == 1)
+						{
+							dataSource.read(filenames.get(0));
+						}
+						else
+						{
+							dataSource.read(filenames);
+						}
+					
 					}
 					catch (Exception e)
 					{
@@ -310,15 +298,9 @@ public class OnDemandDataSetProvider extends DataSetProvider
 						aborted();
 						return new Maybe<Boolean>();
 					}
+					
 				}
 				else 
-				{
-					dataSource = null;
-				}
-				
-				
-				
-				if (dataSource == null) 
 				{
 					aborted();
 					return new Maybe<Boolean>();
@@ -361,6 +343,43 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	}
 
 
+	private AbstractDataSourcePlugin findDataSourceForFiles(List<String> filenames)
+	{
+		
+		List<AbstractDataSourcePlugin> datasources = DataSourcePluginLoader.getDataSourcePlugins();
+		
+		System.out.println(datasources);
+		
+		if (filenames.size() == 1)
+		{
+			String filename = filenames.get(0);
+			for (AbstractDataSourcePlugin datasource : datasources)
+			{
+				if (!datasource.singleFile()) continue;
+				if (!datasource.canRead(filename)) continue;
+				
+				return datasource;
+				
+			}
+		}
+		else
+		{
+			
+			for (AbstractDataSourcePlugin datasource : datasources)
+			{
+				if (datasource.singleFile()) continue;
+				if (!datasource.canRead(filenames)) continue;
+				
+				return datasource;
+				
+			}
+			
+		}
+		
+		return null;
+		
+	}
+	
 	@Override
 	public int firstNonNullScanIndex()
 	{
@@ -403,11 +422,11 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		
 		
 		//if this data source has dimensions, prepare to read them
-		DataSourceDimensions dims = null;
-		if (ds instanceof DataSourceDimensions && ((DataSourceDimensions) ds).hasRealDimensions())
+		DSRealDimensions dims = null;
+		if (ds.hasRealDimensions())
 		{
 		
-			dims = (DataSourceDimensions) ds;
+			dims = (DSRealDimensions) ds;
 
 			hasDimensions = true;
 
@@ -463,30 +482,29 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		
 		
 
-		if (ds instanceof DataSourceExtendedInformation)
+		if (ds.hasMetadata())
 		{
-			DataSourceExtendedInformation info = (DataSourceExtendedInformation) ds;
+			
+			hasMetadata = true;
 
-			hasExtendedInformation = info.hasExtendedInformation();
-
-			CreatedBy = info.getCreator();
-			Created = info.getCreationTime();
-			ProjectName = info.getProjectName();
-			SessionName = info.getSessionName();
-			Facility = info.getFacilityName();
-			Laboratory = info.getLaboratoryName();
-			ExperimentName = info.getExperimentName();
-			Instrument = info.getInstrumentName();
-			Technique = info.getTechniqueName();
-			SampleName = info.getSampleName();
-			ScanName = info.getScanName();
-			StartTime = info.getStartTime();
-			EndTime = info.getEndTime();
+			CreatedBy = ds.getCreator();
+			Created = ds.getCreationTime();
+			ProjectName = ds.getProjectName();
+			SessionName = ds.getSessionName();
+			Facility = ds.getFacilityName();
+			Laboratory = ds.getLaboratoryName();
+			ExperimentName = ds.getExperimentName();
+			Instrument = ds.getInstrumentName();
+			Technique = ds.getTechniqueName();
+			SampleName = ds.getSampleName();
+			ScanName = ds.getScanName();
+			StartTime = ds.getStartTime();
+			EndTime = ds.getEndTime();
 
 		}
 		else
 		{
-			hasExtendedInformation = false;
+			hasMetadata = false;
 		}
 
 		this.dataSourcePath = dataSourcePath;
@@ -579,7 +597,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	@Override
 	public boolean hasExtendedInformation()
 	{
-		return hasExtendedInformation;
+		return hasMetadata;
 	}
 
 
