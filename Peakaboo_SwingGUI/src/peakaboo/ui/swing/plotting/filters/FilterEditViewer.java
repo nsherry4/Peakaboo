@@ -178,6 +178,8 @@ public class FilterEditViewer extends ClearPanel{
 			@Override
 			public void up()
 			{
+				if (t.getSelectedRow() == -1) return;
+				
 				AbstractFilter selection = controller.getActiveFilter(t.getSelectedRow());
 				controller.moveFilterUp(t.getSelectedRow());
 				int selRow = controller.filterIndex(selection);
@@ -188,9 +190,12 @@ public class FilterEditViewer extends ClearPanel{
 			@Override
 			public void down()
 			{
+				if (t.getSelectedRow() == -1) return;
+				
 				AbstractFilter selection = controller.getActiveFilter(t.getSelectedRow());
 				controller.moveFilterDown(t.getSelectedRow());
 				int selRow = controller.filterIndex(selection);
+				System.out.println(selRow);
 				t.addRowSelectionInterval(selRow, selRow);
 			}
 			
@@ -198,6 +203,8 @@ public class FilterEditViewer extends ClearPanel{
 			@Override
 			public void remove()
 			{
+				if (t.getSelectedRow() == -1) return;
+				
 				controller.removeFilter(t.getSelectedRow());
 			}
 		
