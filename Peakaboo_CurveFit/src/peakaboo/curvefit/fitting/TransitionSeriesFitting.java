@@ -2,6 +2,7 @@ package peakaboo.curvefit.fitting;
 
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import scitypes.SpectrumCalculations;
  * @author Nathaniel Sherry, 2009
  */
 
-public class TransitionSeriesFitting
+public class TransitionSeriesFitting implements Serializable
 {
 
 	// private List<Double> unscaledFit;
@@ -161,7 +162,7 @@ public class TransitionSeriesFitting
 			{
 
 				thisFactor = data.get(i) / normalizedUnscaledFit.get(i);
-				if (thisFactor < smallestFactor && thisFactor != Float.NaN) 
+				if (thisFactor < smallestFactor && Float.isNaN(thisFactor)) 
 				{
 					smallestFactor = thisFactor;
 					ratiosConsidered = true;
