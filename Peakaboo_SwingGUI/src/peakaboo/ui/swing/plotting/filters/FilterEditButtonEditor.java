@@ -67,7 +67,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	{
 
 		filter = (AbstractFilter) _filter;
-		int numParameters = filter.getParameters().size();
+		int numParameters = (_filter == null) ? 0 : filter.getParameters().size();
 		
 		label = (_filter == null) ? "" : _filter.toString();
 		isPushed = true;
