@@ -27,7 +27,7 @@ public class Peakaboo
 	{
 		PeakTableReader.readPeakTable();
 		
-		System.setProperty("sun.java2d.pmoffscreen", "false");
+		//System.setProperty("sun.java2d.pmoffscreen", "false");
 		Swidget.initialize();
 		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
