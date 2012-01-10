@@ -43,7 +43,7 @@ public class PlotController extends EventfulType<String>
 
 	
 	public UndoController					undoController;
-	public MappingController					mapController;
+	public MappingController				mapController;
 	public DataController					dataController;
 	public FilteringController				filteringController;
 	public FittingController				fittingController;

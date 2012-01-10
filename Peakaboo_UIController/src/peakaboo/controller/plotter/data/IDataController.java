@@ -1,13 +1,14 @@
 package peakaboo.controller.plotter.data;
 
 import java.util.List;
+import java.util.Set;
 
 import commonenvironment.AbstractFile;
 import eventful.IEventful;
 import fava.datatypes.Maybe;
 
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.AbstractDataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -25,7 +26,8 @@ public interface IDataController extends IEventful
 	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend);
 	
 	public void setDataSource(DataSource ds);
-	public void setDataSetProvider(DataSetProvider dsp);
+	public void setDataSetProvider(AbstractDataSetProvider dsp);
+	public Set<String> getSupportedFileExtensions();
 	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files);
 	
 	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);

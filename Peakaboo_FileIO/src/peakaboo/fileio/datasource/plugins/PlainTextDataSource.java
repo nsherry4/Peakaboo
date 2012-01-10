@@ -1,8 +1,6 @@
 package peakaboo.fileio.datasource.plugins;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import bolt.plugin.Plugin;
@@ -10,18 +8,13 @@ import bolt.plugin.Plugin;
 import com.esotericsoftware.kryo.serialize.ArraySerializer;
 
 import peakaboo.common.Version;
-import peakaboo.fileio.DataSource;
 import peakaboo.fileio.KryoScratchList;
 import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
 
 import commonenvironment.AbstractFile;
-import commonenvironment.Env;
-import commonenvironment.IOOperations;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import fava.functionable.Range;
-import fava.signatures.FnEach;
-import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 
 import scitypes.Bounds;
@@ -89,11 +82,6 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 	// PLUGIN METHODS
 	//==============================================
 
-	@Override
-	public boolean singleFile()
-	{
-		return true;
-	}
 
 	@Override
 	public boolean canRead(String filename)
@@ -173,7 +161,17 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 		return "This plugin provides support for the plain text data format used by Peakaboo";
 	}
 
-	
+	@Override
+	public void initialize()
+	{
+		
+	}
+
+	@Override
+	public List<String> getFileExtensions()
+	{
+		return new FList<String>("txt");
+	}
 	
 	
 	
@@ -297,5 +295,8 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 	{
 		throw new UnsupportedOperationException();
 	}
+
+
+	
 
 }

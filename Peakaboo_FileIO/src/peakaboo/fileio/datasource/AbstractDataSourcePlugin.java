@@ -7,8 +7,7 @@ import fava.signatures.FnGet;
 
 import bolt.plugin.BoltPlugin;
 import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DSRealDimensions;
-import peakaboo.fileio.DSMetadata;
+
 
 public abstract class AbstractDataSourcePlugin extends BoltPlugin implements DataSource
 {
@@ -17,11 +16,6 @@ public abstract class AbstractDataSourcePlugin extends BoltPlugin implements Dat
 	protected FnEach<Integer>	readScanCallback;
 	protected FnEach<Integer> 	getScanCountCallback;
 	
-	@Override
-	public void initialize()
-	{
-		
-	}
 
 	@Override
 	public boolean pluginEnabled()
@@ -40,17 +34,6 @@ public abstract class AbstractDataSourcePlugin extends BoltPlugin implements Dat
 		this.getScanCountCallback = getScanCountCallback;
 	}
 	
-	
-	
-	public abstract boolean singleFile();
-	
-	public abstract boolean canRead(String filename);
-	public abstract boolean canRead(List<String> filenames);
-	
-	public abstract void read(String filename) throws Exception;
-	public abstract void read(List<String> filenames) throws Exception;
-
-
 	
 	
 }

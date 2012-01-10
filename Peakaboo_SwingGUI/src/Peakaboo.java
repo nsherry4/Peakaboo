@@ -1,7 +1,4 @@
 
-
-
-
 import javax.swing.JOptionPane;
 
 import commonenvironment.Env;
@@ -25,6 +22,8 @@ public class Peakaboo
 	 */
 	public static void initialize()
 	{
+		
+		
 		PeakTableReader.readPeakTable();
 		
 		//System.setProperty("sun.java2d.pmoffscreen", "false");

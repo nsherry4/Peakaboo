@@ -3,7 +3,7 @@ package peakaboo.dataset.provider.implementations;
 import java.util.List;
 
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.AbstractDataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -15,7 +15,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class EmptyDataSetProvider extends DataSetProvider
+public class EmptyDataSetProvider extends AbstractDataSetProvider
 {
 
 	@Override

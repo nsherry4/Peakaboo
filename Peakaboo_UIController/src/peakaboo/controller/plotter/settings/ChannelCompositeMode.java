@@ -11,29 +11,31 @@ public enum ChannelCompositeMode
 {
 
 	NONE {
-
 		@Override
-		public String toString()
+		public String prettyprint()
 		{
 			return "Single Scan";
 		}
-
 	},
 	AVERAGE {
-
 		@Override
-		public String toString()
+		public String prettyprint()
 		{
 			return "Average of Scans";
 		}
 	},
 	MAXIMUM {
-
 		@Override
-		public String toString()
+		public String prettyprint()
 		{
-			return "Strongest Signal per Channel";
+			return "Maximum per Channel";
 		}
-	};
+	}
+	
+	;
+	
+	public abstract String prettyprint();
+
+	
 	
 }

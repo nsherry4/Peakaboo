@@ -66,4 +66,11 @@ public class Transition implements Serializable, Comparable<Transition>{
 		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity, TransitionType.pileup);
 	}
 	
+	
+	@Override
+	public String toString()
+	{
+		return type + "(" + energyValue + "keV) @ " + relativeIntensity;
+	}
+	
 }

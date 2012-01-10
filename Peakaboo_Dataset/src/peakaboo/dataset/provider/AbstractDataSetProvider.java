@@ -6,7 +6,7 @@ import java.util.List;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
-import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
+import peakaboo.dataset.provider.implementations.DataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DSRealDimensions;
 import peakaboo.fileio.DSMetadata;
@@ -23,7 +23,7 @@ import scitypes.Spectrum;
 
 /**
  * Abstract class defining the methods needed for loading and working with a set of XRF scans, and for producing maps
- * with them. Subclasses can implement different ways of delivering the data -- {@link OnDemandDataSetProvider} provides an
+ * with them. Subclasses can implement different ways of delivering the data -- {@link DataSetProvider} provides an
  * implementation using the local file system as a source for the data. <br>
  * <br>
  * Another implementation could use a network data source. Some sets of XRF data can be rather large, so this has been
@@ -34,7 +34,7 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-public abstract class DataSetProvider
+public abstract class AbstractDataSetProvider
 {
 
 	protected Spectrum		dsc_average;

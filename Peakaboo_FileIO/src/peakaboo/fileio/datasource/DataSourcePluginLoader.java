@@ -2,7 +2,9 @@ package peakaboo.fileio.datasource;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import peakaboo.common.Version;
 
@@ -16,10 +18,7 @@ public class DataSourcePluginLoader
 
 	public static List<AbstractDataSourcePlugin> getDataSourcePlugins()
 	{
-		
-		
-		
-		
+
 		try
 		{
 			BoltPluginLoader<AbstractDataSourcePlugin> loader;
@@ -50,8 +49,22 @@ public class DataSourcePluginLoader
 			e.printStackTrace();
 		}
 		
+		//failure -- return empty list
 		List<AbstractDataSourcePlugin> plugins = new ArrayList<AbstractDataSourcePlugin>();
 		return plugins;
+	}
+
+	public static Set<String> getSupportedFileExtensions()
+	{
+		Set<String> exts = new LinkedHashSet<String>();
+		
+		for (AbstractDataSourcePlugin plugin : getDataSourcePlugins())
+		{
+			exts.addAll(plugin.getFileExtensions());
+		}
+		
+		return exts;
+		
 	}
 	
 	public static void main(String[] args)

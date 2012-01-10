@@ -3,6 +3,7 @@ package peakaboo.filter.filters.programming;
 
 import bolt.plugin.Plugin;
 import bolt.scripting.BoltMap;
+import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.Language;
 import peakaboo.common.Version;
 import peakaboo.filter.AbstractFilter;
@@ -84,7 +85,7 @@ public class JPython extends AbstractFilter {
 			if (  boltmap.f(new float[]{1, 2, 3, 4}) instanceof float[]  ){
 				return true;
 			} else {
-				throw new Exception("Type mismatch for spectrumOut");
+				throw new BoltScriptExecutionException("Type mismatch for spectrumOut");
 			}
 		} catch (Exception e) {
 			getParameter(CODE).setProperty("ErrorMessage", e.getMessage());

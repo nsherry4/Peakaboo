@@ -369,9 +369,9 @@ public abstract class CDFMLReader extends DefaultHandler2
 					variableEntries.put(variableName, newlist);
 				}
 				svalues = (List<Spectrum>)variableEntries.get(variableName);
-				svalues.set(entryNo, getSpectrumFromString(dimSize, sb.toString()));
+				//svalues.set(entryNo, getSpectrumFromString(dimSize, sb.toString()));
 				
-				processedSpectrum(variableName);
+				processedSpectrum(variableName, entryNo, getSpectrumFromString(dimSize, sb.toString()));
 				
 				break;
 			
@@ -629,7 +629,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		return Integer.parseInt(getVarAttr(var, CDFMLStrings.XML_ATTR_NUMRECORDS));
 	}
 	
-	protected abstract void processedSpectrum(String varname);
+	protected abstract void processedSpectrum(String varname, int entryNo, Spectrum spectrum);
 	
 
 

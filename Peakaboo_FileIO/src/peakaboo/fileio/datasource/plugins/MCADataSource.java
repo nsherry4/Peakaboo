@@ -218,13 +218,6 @@ public class MCADataSource extends AbstractDataSourcePlugin {
 	// PLUGIN METHODS
 	//==============================================
 
-
-	@Override
-	public boolean singleFile()
-	{
-		return true;
-	}
-
 	@Override
 	public boolean canRead(String filename)
 	{
@@ -260,6 +253,19 @@ public class MCADataSource extends AbstractDataSourcePlugin {
 	public String getPluginDescription()
 	{
 		return "This plugin provides support for the MCA data format in Peakaboo";
+	}
+
+
+	@Override
+	public void initialize()
+	{
+		
+	}
+	
+	@Override
+	public List<String> getFileExtensions()
+	{
+		return new FList<String>("mca");
 	}
 	
 }

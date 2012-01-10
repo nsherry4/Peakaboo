@@ -16,7 +16,7 @@ import scidraw.drawing.ViewTransform;
 // data to plot
 public class SettingsModel implements Serializable
 {
-
+	
 	public int					scanNumber;
 	public boolean				showIndividualFittings;
 	

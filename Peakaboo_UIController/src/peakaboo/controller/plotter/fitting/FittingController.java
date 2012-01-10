@@ -250,7 +250,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		//all visible TSs
 		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), Functions.<TransitionSeries>id());
-		
+				
 		//all invisible TSs
 		FList<TransitionSeries> invisibles = Fn.filter(getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {
 
@@ -259,7 +259,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 				return ! tss.include(element);
 			}
 		});
-		
+				
 		
 		//find all the TSs which overlap with other TSs
 		final FList<TransitionSeries> overlappers = tss.filter(new FnCondition<TransitionSeries>() {

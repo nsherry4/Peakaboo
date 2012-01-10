@@ -8,7 +8,7 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.AbstractDataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -20,7 +20,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 /**
- * This class contains logic for generating maps for a {@link DataSetProvider}, so that functionality does not have to be duplicated across various implementations
+ * This class contains logic for generating maps for a {@link AbstractDataSetProvider}, so that functionality does not have to be duplicated across various implementations
  * @author Nathaniel Sherry, 2010
  *
  */

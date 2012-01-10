@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import commonenvironment.AbstractFile;
 
@@ -16,7 +17,7 @@ import fava.signatures.FnMap;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
-import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.AbstractDataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DSRealDimensions;
 import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
@@ -35,13 +36,13 @@ import scitypes.SpectrumCalculations;
 
 
 /**
- * This class contains a set of data. Given a data set, it calculated the average and max. This allows this data to be
- * calculated once and accessed many times without adding cache logic elsewhere in the programme.
+ * This class contains a set of data. Given a data set, it calculates the average and max. This allows this data to be
+ * calculated once and accessed many times without adding cache logic elsewhere in the program.
  * 
  * @author Nathaniel Sherry, 2009
  */
 
-public class OnDemandDataSetProvider extends DataSetProvider
+public class DataSetProvider extends AbstractDataSetProvider
 {
 
 	protected float					maxValue;
@@ -59,17 +60,17 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	protected List<Coord<Number>>	realCoords;
 
 
-	public OnDemandDataSetProvider()
+	public DataSetProvider()
 	{
 		super();
 	}
 	
 	
-	public OnDemandDataSetProvider(DataSource ds)
+	public DataSetProvider(DataSource ds)
 	{
 		super();
 		
-		readDataSource(ds, null, "");
+		readDataSource(ds, null, null, "");
 		dataSource = ds;
 		
 	}
@@ -249,6 +250,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 					}
 				};
 				
+				//anon function to call to check if the user has requested the operation be aborted
 				FnGet<Boolean> isAborted = new FnGet<Boolean>(){
 
 					public Boolean f()
@@ -256,6 +258,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 						return isAborted() || isAbortRequested();
 					}};
 				
+				//anon function to call when the loader reads a scan from the input data
 				FnEach<Integer> readScans = new FnEach<Integer>(){
 
 					public void f(Integer count)
@@ -266,16 +269,11 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				
 				//get the correct kind of DataSource
-				
 				List<String> filenames = new ArrayList<String>();
-				for (AbstractFile file : files)
-				{
-					filenames.add(file.getFileName());
-				}
-				
-
+				for (AbstractFile file : files) {   filenames.add(file.getFileName());   }
 				
 				dataSource = findDataSourceForFiles(filenames);
+				
 				if (dataSource != null)
 				{
 					try
@@ -322,7 +320,15 @@ public class OnDemandDataSetProvider extends DataSetProvider
 				
 				
 				//now that we have the datasource, read it
-				readDataSource(  dataSource, applying, new File(files.get(0).getFileName()).getParent()  );
+				readDataSource(  dataSource, applying, isAborted, new File(files.get(0).getFileName()).getParent()  );
+				
+				
+				if (isAborted.f())
+				{
+					aborted();
+					return new Maybe<Boolean>(false);
+				}
+				
 				
 				//we're done
 				applying.workUnitCompleted();
@@ -353,7 +359,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			String filename = filenames.get(0);
 			for (AbstractDataSourcePlugin datasource : datasources)
 			{
-				if (!datasource.singleFile()) continue;
 				if (!datasource.canRead(filename)) continue;
 				
 				return datasource;
@@ -365,7 +370,6 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			
 			for (AbstractDataSourcePlugin datasource : datasources)
 			{
-				if (datasource.singleFile()) continue;
 				if (!datasource.canRead(filenames)) continue;
 				
 				return datasource;
@@ -381,36 +385,36 @@ public class OnDemandDataSetProvider extends DataSetProvider
 	@Override
 	public int firstNonNullScanIndex()
 	{
-		return DataSetProvider.firstNonNullScanIndex(dataSource, 0);
+		return AbstractDataSetProvider.firstNonNullScanIndex(dataSource, 0);
 	}
 	
 	@Override
 	public int firstNonNullScanIndex(int start)
 	{
-		return DataSetProvider.firstNonNullScanIndex(dataSource, start);
+		return AbstractDataSetProvider.firstNonNullScanIndex(dataSource, start);
 	}
 	
 	@Override
 	public int lastNonNullScanIndex()
 	{
-		return DataSetProvider.lastNonNullScanIndex(dataSource, dataSource.getScanCount()-1);
+		return AbstractDataSetProvider.lastNonNullScanIndex(dataSource, dataSource.getScanCount()-1);
 	}
 	
 	@Override
 	public int lastNonNullScanIndex(int upto)
 	{
-		return DataSetProvider.lastNonNullScanIndex(dataSource, upto);
+		return AbstractDataSetProvider.lastNonNullScanIndex(dataSource, upto);
 	}
 	
 	
-	private void readDataSource(DataSource ds, DummyExecutor applying, String dataSourcePath)
+	private void readDataSource(DataSource ds, DummyExecutor applying, FnGet<Boolean> isAborted, String dataSourcePath)
 	{
 		
 		if (ds == null || ds.getScanCount() == 0) return;
 				
 
 		
-		int nonNullScanIndex = DataSetProvider.firstNonNullScanIndex(ds, 0);
+		int nonNullScanIndex = AbstractDataSetProvider.firstNonNullScanIndex(ds, 0);
 		if (nonNullScanIndex == -1) return;
 		Spectrum nonNullScan = ds.getScanAtIndex(nonNullScanIndex);
 		if (nonNullScan == null) return;
@@ -468,6 +472,7 @@ public class OnDemandDataSetProvider extends DataSetProvider
 			
 			
 			if (applying != null) applying.workUnitCompleted();
+			if (isAborted != null && isAborted.f()) return;
 			
 		}
 		
@@ -712,5 +717,23 @@ public class OnDemandDataSetProvider extends DataSetProvider
 		return dataSource;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * 
+	 * STATIC METHODS
+	 * 
+	 */
+	
+
+	public static Set<String> getSupportedFileExtensions()
+	{
+		return DataSourcePluginLoader.getSupportedFileExtensions();
+	}
 	
 }

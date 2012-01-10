@@ -1,7 +1,11 @@
 package peakaboo.fileio.datasource.plugins;
 
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +28,7 @@ import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DSRealDimensions;
 import peakaboo.fileio.DSMetadata;
 import peakaboo.fileio.KryoScratchList;
+import peakaboo.fileio.datasource.AbstractCachedDataSourcePlugin;
 import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
 import peakaboo.fileio.datasource.plugins.cdfml.CDFMLReader;
 import peakaboo.fileio.datasource.plugins.cdfml.CDFMLStrings;
@@ -34,13 +39,13 @@ import scitypes.SpectrumCalculations;
 
 
 @Plugin
-public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
+public class CDFMLSaxDataSource extends AbstractCachedDataSourcePlugin
 {
 
 	int											scanReadCount;
 
 	//File-backed List, if it could be created. Some other kind if not
-	List<Spectrum>								correctedData;
+	//List<Spectrum>								correctedData;
 	Spectrum									iNaughtNormalized;
 	
 	Set<String>									hasCategory;
@@ -53,9 +58,9 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 		reader = new CDFMLReader() {
 			
 			@Override
-			protected void processedSpectrum(String varname)
+			protected void processedSpectrum(String varname, int entryNo, Spectrum spectrum)
 			{
-				handleProcessedSpectrum(varname);
+				handleProcessedSpectrum(varname, entryNo, spectrum);
 			}
 		};
 		
@@ -176,15 +181,18 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 	////////////////////////////////////////////////////////////
 
 
-	
-	public Spectrum getScanAtIndex(int index)
+	@Override
+	public Spectrum loadScanAtIndex(int index)
 	{
+
 		Spectrum s, s2;
 				
 		//if this is a multi-element data set, we store the averaged data the 'correctedData' list
 		//and the individual spectra in indices 0->N-1. The first time this data is accessed, the
 		//'correctedData' index value will be empty, because we won't have calcualted it yet.
-		if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() > 1)
+		//if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() > 1)
+		
+		if (numElements() > 1)
 		{
 			
 			
@@ -214,11 +222,13 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 			else SpectrumCalculations.multiplyBy(s, 0);
 			
 			//commit the newly calculated value to the dataset
-			correctedData.set(index, s);
+			//correctedData.set(index, s);
+			return s;
 			
 			
-			
-		} else if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() == 1) {
+		//dont have the data cached yet, and its just a single-element dataset
+		//} else if ( (correctedData.size() <= index || correctedData.get(index) == null) && numElements() == 1) {
+		} else {
 			
 			Spectrum raw = getScan(index);
 			
@@ -240,12 +250,13 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 			else SpectrumCalculations.multiplyBy(s, 0);
 			
 			//commit the newly calculated value to the dataset
-			correctedData.set(index, s);	
+			//correctedData.set(index, s);
+			return s;
 			
 		}
 		
 
-		return correctedData.get(index);
+		//return correctedData.get(index);
 		
 	}
 
@@ -490,7 +501,7 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 	}
 
 
-	protected void handleProcessedSpectrum(String varname)
+	protected void handleProcessedSpectrum(String varname, int entryNo, Spectrum spectrum)
 	{
 		
 		//if this is the first scan we're looking at
@@ -516,7 +527,9 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 			
 			
 		}
-				
+		
+		cache(entryNo, spectrum);
+		
 		scanReadCount++;
 		readScanCallback.f(1);
 		
@@ -535,17 +548,30 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 
 
 	@Override
-	public boolean singleFile()
-	{
-		return true;
-	}
-
-	@Override
 	public boolean canRead(String filename)
 	{	
 		String ext = filename.toLowerCase();
 		if (!   (ext.endsWith(".xml") || ext.endsWith(".cdfml"))  ) return false;
-		return true;
+		
+		try
+		{
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+			
+			int lineCount = 0;
+			String start = "", line;
+			while (lineCount < 10)
+			{
+				line = reader.readLine().trim();
+				if (line.length() == 0) continue;
+				start += line + "\n";
+				lineCount++;
+			}
+			
+			return start.toLowerCase().contains("http://cdf.gsfc.nasa.gov");
+		}
+		catch (Exception e){}
+		
+		return false;
 	}
 
 	@Override
@@ -562,6 +588,7 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 		
 		reader.read(filename, isAborted);
 		
+		/*
 		KryoScratchList<Spectrum> newlist;
 		try {
 			newlist = new KryoScratchList<Spectrum>(Version.program_name + " - Corrected Spectrum", Spectrum.class);
@@ -570,6 +597,7 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 		} catch (IOException e) {
 			correctedData = new FList<Spectrum>();
 		}
+		*/
 		
 		//get a listing of all of the categories that this supports
 		hasCategory = new HashSet<String>();
@@ -596,5 +624,22 @@ public class CDFMLSaxDataSource extends AbstractDataSourcePlugin
 	{
 		return "This plugin provides support for the CDFML data format in Peakaboo";
 	}
+
+
+	@Override
+	public void initialize()
+	{
+		
+	}
+	
+	@Override
+	public List<String> getFileExtensions()
+	{
+		return new FList<String>("xml", "cdfml");
+	}
+
+
+
+
 	
 }

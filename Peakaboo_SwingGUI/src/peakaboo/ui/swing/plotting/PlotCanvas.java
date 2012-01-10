@@ -18,9 +18,9 @@ import commonenvironment.Env;
 
 import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
+import fava.functionable.FArray;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
-import fava.wip.FArray;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.painters.FittingMarkersPainter;

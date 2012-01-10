@@ -58,16 +58,16 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	}
 	
 	@Override
-	public MapResultSet clone()
+	public MapResultSet clone() throws CloneNotSupportedException
 	{
-	
+			
 		List<MapResult> mapresults = new ArrayList<MapResult>();
 		
 		for (MapResult map : maps)
 		{
 			mapresults.add(map.clone());
 		}
-		
+				
 		return new MapResultSet(mapresults, mapSize, true);
 		
 	}

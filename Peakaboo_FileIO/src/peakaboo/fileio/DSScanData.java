@@ -2,6 +2,8 @@ package peakaboo.fileio;
 
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import scitypes.Spectrum;
 
 
@@ -16,7 +18,7 @@ public interface DSScanData
 	 *            the scan number to retrieve
 	 * @return the values from the requested scan
 	 */
-	public Spectrum getScanAtIndex(int index);
+	public Spectrum getScanAtIndex(int index) throws IndexOutOfBoundsException;
 
 	
 	/**

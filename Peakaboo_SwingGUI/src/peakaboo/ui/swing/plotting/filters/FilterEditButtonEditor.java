@@ -97,7 +97,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 
 		}
 		isPushed = false;
-		return new String(label);
+		return label;
 	}
 
 

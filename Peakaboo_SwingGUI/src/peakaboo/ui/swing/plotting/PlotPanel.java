@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -117,7 +118,9 @@ public class PlotPanel extends ClearPanel
 
 	//FILE
 	JMenuItem					snapshotMenuItem;
+	JMenuItem					exportTextMenuItem;
 	JMenuItem					saveSession;
+	
 
 	
 	//EDIT
@@ -187,6 +190,7 @@ public class PlotPanel extends ClearPanel
 	{
 
 		snapshotMenuItem.setEnabled(false);
+		exportTextMenuItem.setEnabled(false);
 		toolbarSnapshot.setEnabled(false);
 
 		if (dataController.hasDataSet())
@@ -194,6 +198,7 @@ public class PlotPanel extends ClearPanel
 
 			bottomPanel.setEnabled(true);
 			snapshotMenuItem.setEnabled(true);
+			exportTextMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
 
 
@@ -469,7 +474,7 @@ public class PlotPanel extends ClearPanel
 			}
 			else
 			{
-				titleString.append(" - " + settingsController.getChannelCompositeType());
+				titleString.append(" - " + settingsController.getChannelCompositeType().prettyprint());
 			}
 
 		}
@@ -779,7 +784,7 @@ public class PlotPanel extends ClearPanel
 		menu.add(snapshotMenuItem);
 
 		
-		menu.add(createMenuItem(
+		exportTextMenuItem = createMenuItem(
 				"Export Fittings as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the current fitting data to a text file",
 				new ActionListener() {
 					
@@ -789,7 +794,8 @@ public class PlotPanel extends ClearPanel
 					}
 				}, 
 				null, null
-		));
+		);
+		menu.add(exportTextMenuItem);
 
 
 		menu.addSeparator();
@@ -1282,7 +1288,7 @@ public class PlotPanel extends ClearPanel
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 			
 			sb.append("View Type: ");
-			sb.append(settingsController.getChannelCompositeType().toString());
+			sb.append(settingsController.getChannelCompositeType().prettyprint());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append(String.valueOf(channel));
@@ -1303,7 +1309,7 @@ public class PlotPanel extends ClearPanel
 		{
 			
 			sb.append("View Type: ");
-			sb.append(settingsController.getChannelCompositeType().toString());
+			sb.append(settingsController.getChannelCompositeType().prettyprint());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append("-");
@@ -1354,15 +1360,10 @@ public class PlotPanel extends ClearPanel
 
 		List<AbstractFile> files;
 
-		String[] exts;
-		if (Env.isWebStart())
-		{
-			exts = new String[] { "xml", "txt", "cdfml" };
-		}
-		else
-		{
-			exts = new String[] { "xml", "txt", "zip", "cdfml" };
-		}
+		Set<String> extSet = dataController.getSupportedFileExtensions();
+		String[] exts = extSet.toArray(new String[]{});
+		
+		
 
 		files = openNewDataset(exts, "XRF Data Sets");
 		

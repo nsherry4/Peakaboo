@@ -2,13 +2,14 @@ package peakaboo.controller.plotter.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.dataset.provider.DataSetProvider;
+import peakaboo.dataset.provider.AbstractDataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
-import peakaboo.dataset.provider.implementations.OnDemandDataSetProvider;
+import peakaboo.dataset.provider.implementations.DataSetProvider;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.datasource.internal.CopiedDataSource;
 import peakaboo.filter.FilterSet;
@@ -30,7 +31,7 @@ import fava.datatypes.Maybe;
 public class DataController extends Eventful implements IDataController
 {
 
-	private DataSetProvider 	dataModel;
+	private AbstractDataSetProvider 	dataModel;
 	private PlotController 		plot;
 	private List<Integer>		badScans;
 	private int 				dataHeight, dataWidth;
@@ -43,7 +44,7 @@ public class DataController extends Eventful implements IDataController
 		badScans = new ArrayList<Integer>();
 	}
 	
-	public DataSetProvider getDataModel()
+	public AbstractDataSetProvider getDataModel()
 	{
 		return dataModel;
 	}
@@ -52,11 +53,17 @@ public class DataController extends Eventful implements IDataController
 	// Functions to implement IDataController
 	// =============================================
 	
+	@Override
+	public Set<String> getSupportedFileExtensions()
+	{
+		return DataSetProvider.getSupportedFileExtensions();
+	}
+	
 	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
-		final OnDemandDataSetProvider dataset = new OnDemandDataSetProvider();
+		final DataSetProvider dataset = new DataSetProvider();
 		final ExecutorSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 
@@ -149,12 +156,12 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.hasDimensions();
 	}
 
-	public void setDataSetProvider(DataSetProvider dsp)
+	public void setDataSetProvider(AbstractDataSetProvider dsp)
 	{
 	
 		if (dsp == null) return;
 		
-		DataSetProvider old = dataModel;
+		AbstractDataSetProvider old = dataModel;
 		dataModel = dsp;
 		
 		plot.settingsController.setScanNumber( dsp.firstNonNullScanIndex() );
@@ -180,7 +187,7 @@ public class DataController extends Eventful implements IDataController
 
 	public void setDataSource(DataSource ds)
 	{
-		setDataSetProvider(new OnDemandDataSetProvider(ds));
+		setDataSetProvider(new DataSetProvider(ds));
 	}
 
 	public String getCurrentScanName()
@@ -389,6 +396,8 @@ public class DataController extends Eventful implements IDataController
 		dataWidth = width;
 		updateListeners();
 	}
+
+
 
 
 	

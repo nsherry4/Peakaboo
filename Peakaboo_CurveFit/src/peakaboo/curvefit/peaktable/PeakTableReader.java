@@ -87,7 +87,7 @@ public class PeakTableReader
 
 
 			Element e = Element.values()[atomicNumber];
-			
+						
 			// K
 			TransitionSeries ts = new TransitionSeries(e, TransitionSeriesType.K);
 
@@ -103,6 +103,7 @@ public class PeakTableReader
 			column += elementDataWidth;
 			k2 = createTransition(sections, column, TransitionType.a2);
 			column += elementDataWidth;
+
 
 			ts.setTransition(k1);
 			ts.setTransition(k2);

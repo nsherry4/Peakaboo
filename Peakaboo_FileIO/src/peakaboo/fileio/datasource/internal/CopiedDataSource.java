@@ -5,8 +5,6 @@ import java.util.List;
 import commonenvironment.AbstractFile;
 
 import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DSRealDimensions;
-import peakaboo.fileio.DSMetadata;
 
 import fava.functionable.FList;
 import fava.functionable.Range;
@@ -260,6 +258,45 @@ public class CopiedDataSource implements DataSource
 	public static boolean filesMatchCriteria(List<AbstractFile> files)
 	{
 		return false;
+	}
+
+
+	@Override
+	public boolean canRead(String filename)
+	{
+		return originalDataSource.canRead(filename);
+	}
+
+
+	@Override
+	public boolean canRead(List<String> filenames)
+	{
+		return originalDataSource.canRead(filenames);
+	}
+
+
+	@Override
+	public List<String> getFileExtensions()
+	{
+		return originalDataSource.getFileExtensions();
+	}
+
+
+	@Override
+	public void read(String filename) throws Exception
+	{
+		//This should never be called, since the data source this one copies from
+		//should already have been initialized
+		throw new UnsupportedOperationException();
+	}
+
+
+	@Override
+	public void read(List<String> filenames) throws Exception
+	{
+		//This should never be called, since the data source this one copies from
+		//should already have been initialized
+		throw new UnsupportedOperationException();
 	}
 	
 	
