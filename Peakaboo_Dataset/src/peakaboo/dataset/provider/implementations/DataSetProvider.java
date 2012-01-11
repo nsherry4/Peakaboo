@@ -3,11 +3,13 @@ package peakaboo.dataset.provider.implementations;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import commonenvironment.AbstractFile;
+import commonenvironment.IOOperations;
 
 import fava.datatypes.Maybe;
 import fava.functionable.FList;
@@ -351,27 +353,33 @@ public class DataSetProvider extends AbstractDataSetProvider
 
 	private AbstractDataSourcePlugin findDataSourceForFiles(List<String> filenames)
 	{
+
 		
 		List<AbstractDataSourcePlugin> datasources = DataSourcePluginLoader.getDataSourcePlugins();
 		
 		if (filenames.size() == 1)
 		{
 			String filename = filenames.get(0);
-			for (AbstractDataSourcePlugin datasource : datasources)
-			{
-				if (!datasource.canRead(filename)) continue;
-				
-				return datasource;
-				
-			}
-		}
-		else
-		{
 			
 			for (AbstractDataSourcePlugin datasource : datasources)
 			{
-				if (!datasource.canRead(filenames)) continue;
+			
+				if ( !matchFileExtension(filename, datasource.getFileExtensions()) ) continue;
+				if ( !datasource.canRead(filename) ) continue;
+				return datasource;
+
 				
+			}//for datasources
+		}
+		else
+		{
+		
+			//loop over every datasource
+			for (AbstractDataSourcePlugin datasource : datasources)
+			{
+				
+				if ( !matchFileExtensions(filenames, datasource.getFileExtensions()) ) continue;
+				if ( !datasource.canRead(filenames) ) continue;
 				return datasource;
 				
 			}
@@ -381,6 +389,26 @@ public class DataSetProvider extends AbstractDataSetProvider
 		return null;
 		
 	}
+	
+	private boolean matchFileExtension(String filename, Collection<String> dsexts)
+	{
+		for (String dsext : dsexts)
+		{
+			
+			if (IOOperations.getFileExt(filename).compareToIgnoreCase(dsext) == 0) return true;
+		}
+		return false;
+	}
+	
+	private boolean matchFileExtensions(Collection<String> filenames, Collection<String> dsexts)
+	{
+		for (String filename : filenames)
+		{
+			if (!matchFileExtension(filename, dsexts)) return false;
+		}
+		return true;
+	}
+	
 	
 	@Override
 	public int firstNonNullScanIndex()
