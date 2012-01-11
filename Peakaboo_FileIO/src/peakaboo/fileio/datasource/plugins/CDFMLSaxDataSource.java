@@ -3,8 +3,6 @@ package peakaboo.fileio.datasource.plugins;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,23 +11,12 @@ import java.util.Set;
 
 import bolt.plugin.Plugin;
 
-import com.esotericsoftware.kryo.serialize.ArraySerializer;
-
 import commonenvironment.AbstractFile;
-import commonenvironment.IOOperations;
 
 import fava.functionable.FList;
 import fava.functionable.Range;
-import fava.signatures.FnEach;
-import fava.signatures.FnGet;
 
-import peakaboo.common.Version;
-import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DSRealDimensions;
-import peakaboo.fileio.DSMetadata;
-import peakaboo.fileio.KryoScratchList;
 import peakaboo.fileio.datasource.AbstractCachedDataSourcePlugin;
-import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
 import peakaboo.fileio.datasource.plugins.cdfml.CDFMLReader;
 import peakaboo.fileio.datasource.plugins.cdfml.CDFMLStrings;
 import scitypes.Bounds;
@@ -585,19 +572,8 @@ public class CDFMLSaxDataSource extends AbstractCachedDataSourcePlugin
 	public void read(String filename) throws Exception
 	{
 		
-		
 		reader.read(filename, isAborted);
-		
-		/*
-		KryoScratchList<Spectrum> newlist;
-		try {
-			newlist = new KryoScratchList<Spectrum>(Version.program_name + " - Corrected Spectrum", Spectrum.class);
-			newlist.register(float[].class, new ArraySerializer(newlist.getKryo()));
-			correctedData = newlist;
-		} catch (IOException e) {
-			correctedData = new FList<Spectrum>();
-		}
-		*/
+
 		
 		//get a listing of all of the categories that this supports
 		hasCategory = new HashSet<String>();

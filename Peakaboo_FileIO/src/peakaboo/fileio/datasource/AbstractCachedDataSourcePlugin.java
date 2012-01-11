@@ -2,7 +2,6 @@ package peakaboo.fileio.datasource;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import peakaboo.common.Version;
 import peakaboo.fileio.KryoScratchList;
@@ -18,6 +17,7 @@ public abstract class AbstractCachedDataSourcePlugin extends AbstractDataSourceP
 {
 
 	private List<Spectrum> cache;
+	private List<Boolean> cached;
 	
 	
 	public AbstractCachedDataSourcePlugin()
@@ -39,6 +39,8 @@ public abstract class AbstractCachedDataSourcePlugin extends AbstractDataSourceP
 			}
 		}
 		
+		cached = new FList<Boolean>();
+		
 	}
 	
 	
@@ -48,10 +50,8 @@ public abstract class AbstractCachedDataSourcePlugin extends AbstractDataSourceP
 
 		if (index >= getScanCount()) throw new IndexOutOfBoundsException();
 		if (index < 0) throw new IndexOutOfBoundsException();
-		
-		Spectrum s;
-		
-		if (cache.size() <= index || cache.get(index) == null)
+				
+		if (!cached.get(index))
 		{
 			setCache(index);
 		}
@@ -64,12 +64,22 @@ public abstract class AbstractCachedDataSourcePlugin extends AbstractDataSourceP
 		Spectrum s;
 		s = loadScanAtIndex(index);
 		cache.set(index, s);
+		cached.set(index, true);
 	}
 	
 	
+	/**
+	 * Returns the spectrum for the given scan index. This method will only be called
+	 * once for any given index value. 
+	 * @param index
+	 * @return
+	 */
 	public abstract Spectrum loadScanAtIndex(int index);
 
-		
+	
+	/**
+	 * Adds the given spectrum to the list of cached spectra at the given scan index.
+	 */
 	protected void cache(int index, Spectrum spectrum) throws IndexOutOfBoundsException
 	{
 		if (index >= getScanCount()) throw new IndexOutOfBoundsException();
@@ -78,6 +88,7 @@ public abstract class AbstractCachedDataSourcePlugin extends AbstractDataSourceP
 		if (spectrum == null) return;
 		
 		cache.set(index, spectrum);
+		cached.set(index, true);
 		
 	}
 	
