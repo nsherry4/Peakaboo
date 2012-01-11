@@ -246,7 +246,7 @@ public class MCADataSource extends AbstractDataSourcePlugin {
 	@Override
 	public String getPluginName()
 	{
-		return "Peakaboo MCA Data Loader";
+		return "MCA";
 	}
 
 	@Override
@@ -255,12 +255,6 @@ public class MCADataSource extends AbstractDataSourcePlugin {
 		return "This plugin provides support for the MCA data format in Peakaboo";
 	}
 
-
-	@Override
-	public void initialize()
-	{
-		
-	}
 	
 	@Override
 	public List<String> getFileExtensions()

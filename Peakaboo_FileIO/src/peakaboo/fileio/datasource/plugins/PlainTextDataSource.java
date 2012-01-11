@@ -5,13 +5,8 @@ import java.util.List;
 
 import bolt.plugin.Plugin;
 
-import com.esotericsoftware.kryo.serialize.ArraySerializer;
+import peakaboo.fileio.datasource.AbstractCachedDataSourcePlugin;
 
-import peakaboo.common.Version;
-import peakaboo.fileio.KryoScratchList;
-import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
-
-import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import fava.functionable.Range;
@@ -23,12 +18,12 @@ import scitypes.Spectrum;
 
 
 @Plugin
-public class PlainTextDataSource extends AbstractDataSourcePlugin
+public class PlainTextDataSource extends AbstractCachedDataSourcePlugin
 {
 
-	//File-backed List, if it could be created. Some other kind if not
-	List<Spectrum>						scandata;
-	String								datasetName;
+	String	datasetName;
+	int 	size = 0;
+	int		scanSize = -1;
 
 	
 	public String getDatasetName()
@@ -41,19 +36,19 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 		return 0;
 	}
 
-	public Spectrum getScanAtIndex(int index)
+	public Spectrum loadScanAtIndex(int index)
 	{
-		return scandata.get(index);
+		return null;
 	}
 
 	public int getScanCount()
 	{
-		return scandata.size();
+		return size;
 	}
 
 	public List<String> getScanNames()
 	{
-		return new Range(0, scandata.size()-1).map(new FnMap<Integer, String>(){
+		return new Range(0, size-1).map(new FnMap<Integer, String>(){
 
 			public String f(Integer element)
 			{
@@ -62,15 +57,7 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 	}
 
 	
-	public static boolean filesMatchCriteria(List<AbstractFile> files)
-	{
-		if (files.size() != 1) return false;
-		if (! files.get(0).getFileName().toLowerCase().endsWith(".txt")) return false;
-		
-		return true;
-		
-	}
-	
+
 	
 	
 	
@@ -92,21 +79,17 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 	@Override
 	public boolean canRead(List<String> filenames)
 	{
-		for (String file : filenames)
-		{
-			if (!canRead(file)) return false;
-		}
+		if (filenames == null) return false;
+		if (filenames.size() == 0) return false;
+		if (filenames.size() > 1) return false;
 		
-		return true;
+		return canRead(filenames.get(0));
 	}
 
 	@Override
 	public void read(String filename) throws Exception
 	{
 
-		KryoScratchList<Spectrum> newlist = new KryoScratchList<Spectrum>(Version.program_name, Spectrum.class);
-		newlist.register(float[].class, new ArraySerializer(newlist.getKryo()));
-		scandata = newlist;
 		datasetName = new File(filename).getName();
 		
 	
@@ -134,9 +117,18 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 				}}));
 			
 			
-			if (scandata.size() > 0 && scan.size() != scandata.get(0).size()) throw new Exception("Spectra sizes are not equal");
+			if (size > 0 && scan.size() != scanSize) 
+			{
+				throw new Exception("Spectra sizes are not equal");
+			}
+			else if (size == 0)
+			{
+				scanSize = scan.size();
+			}
 			
-			scandata.add(scan);
+			
+			cache(size, scan);
+			size++;
 			
 			readScanCallback.f(1);
 			
@@ -144,15 +136,20 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 	}
 
 	@Override
-	public void read(List<String> filenames)
+	public void read(List<String> filenames) throws Exception
 	{
-		throw new UnsupportedOperationException();
+		
+		if (filenames == null) throw new UnsupportedOperationException();
+		if (filenames.size() == 0) throw new UnsupportedOperationException();
+		if (filenames.size() > 1) throw new UnsupportedOperationException();
+		
+		read(filenames.get(0));
 	}
 
 	@Override
 	public String getPluginName()
 	{
-		return "Peakaboo Plain Text Data Loader";
+		return "Peakaboo Plain Text";
 	}
 
 	@Override
@@ -161,11 +158,6 @@ public class PlainTextDataSource extends AbstractDataSourcePlugin
 		return "This plugin provides support for the plain text data format used by Peakaboo";
 	}
 
-	@Override
-	public void initialize()
-	{
-		
-	}
 
 	@Override
 	public List<String> getFileExtensions()

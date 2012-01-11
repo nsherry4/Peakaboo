@@ -592,7 +592,7 @@ public class CDFMLSaxDataSource extends AbstractCachedDataSourcePlugin
 	@Override
 	public String getPluginName()
 	{
-		return "Peakaboo CDFML Reader";
+		return "CDFML";
 	}
 
 	@Override
@@ -601,12 +601,6 @@ public class CDFMLSaxDataSource extends AbstractCachedDataSourcePlugin
 		return "This plugin provides support for the CDFML data format in Peakaboo";
 	}
 
-
-	@Override
-	public void initialize()
-	{
-		
-	}
 	
 	@Override
 	public List<String> getFileExtensions()

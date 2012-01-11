@@ -281,7 +281,6 @@ public class DataSetProvider extends AbstractDataSetProvider
 					try
 					{
 						dataSource.setCallbacks(gotScanCount, readScans, isAborted);
-						dataSource.initialize();
 						if (files.size() == 1)
 						{
 							dataSource.read(filenames.get(0));

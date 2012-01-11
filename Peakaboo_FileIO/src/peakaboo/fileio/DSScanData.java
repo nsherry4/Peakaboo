@@ -2,7 +2,6 @@ package peakaboo.fileio;
 
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import scitypes.Spectrum;
 
@@ -16,15 +15,12 @@ public interface DSScanData
 	 * 
 	 * @param index
 	 *            the scan number to retrieve
-	 * @return the values from the requested scan
 	 */
 	public Spectrum getScanAtIndex(int index) throws IndexOutOfBoundsException;
 
 	
 	/**
 	 * Returns the number of scans in this data set, including any which have been marked as bad
-	 * 
-	 * @return the total number of scans
 	 */
 	public int getScanCount();
 
@@ -32,26 +28,22 @@ public interface DSScanData
 
 	/**
 	 * Returns the names of all scans, eg ["Scan 1", "Scan 2", ...]
-	 * 
-	 * @return a list of scan names for non-bad scans
 	 */
 	public List<String> getScanNames();
 
 
 	/**
 	 * Returns the maximum energy value for any channel for the scans in this set.
-	 * 
-	 * @return the maximum energy
 	 */
 	public float getMaxEnergy();
 
 
 
 	/**
-	 * Returns a nice, human readable name for this data set. Eg. the 
-	 * name of the file, the folder the files were found it, etc...
-	 * 
-	 * @return the data set name
+	 * Returns a nice, human readable name for this data set. Depending 
+	 * on the data stored in the file, it could be the name of the data
+	 * file, the folder the set of files were found it, a name specified 
+	 * within the file itself, etc...
 	 */
 	public String getDatasetName();
 	

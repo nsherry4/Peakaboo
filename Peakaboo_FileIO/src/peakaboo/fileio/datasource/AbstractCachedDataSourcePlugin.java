@@ -63,16 +63,16 @@ public abstract class AbstractCachedDataSourcePlugin extends AbstractDataSourceP
 	{
 		Spectrum s;
 		s = loadScanAtIndex(index);
-		cache.set(index, s);
-		cached.set(index, true);
+		cache(index, s);
 	}
 	
 	
 	/**
-	 * Returns the spectrum for the given scan index. This method will only be called
-	 * once for any given index value. 
+	 * Returns the spectrum for the given scan index. This method will be called
+	 * at most once for any given index value. If the subclass has called 
+	 * {@link AbstractCachedDataSourcePlugin#cache(int, Spectrum)} previously for
+	 * a given scan index, this method will be never be called for that index.
 	 * @param index
-	 * @return
 	 */
 	public abstract Spectrum loadScanAtIndex(int index);
 
@@ -82,11 +82,8 @@ public abstract class AbstractCachedDataSourcePlugin extends AbstractDataSourceP
 	 */
 	protected void cache(int index, Spectrum spectrum) throws IndexOutOfBoundsException
 	{
-		if (index >= getScanCount()) throw new IndexOutOfBoundsException();
 		if (index < 0) throw new IndexOutOfBoundsException();
-		
-		if (spectrum == null) return;
-		
+				
 		cache.set(index, spectrum);
 		cached.set(index, true);
 		
