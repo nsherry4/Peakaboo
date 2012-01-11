@@ -125,8 +125,8 @@ public class TransitionSeriesFitting implements Serializable
 		float currentIntensity;
 		float cutoff;
 		
-	
-		//look at every point in the ranges covered by transitions 
+
+		//look at every point in the ranges covered by transitions, find the max intensity
 		for (Integer i : transitionRanges)
 		{
 	
@@ -135,9 +135,9 @@ public class TransitionSeriesFitting implements Serializable
 			dataConsidered = true;
 			
 		}
-
-
 		if (! dataConsidered) return 0.0f;	
+		
+		
 		
 		// calculate cut-off point where we do not consider any signal weaker than this when trying to fit
 		if (topIntensity > 0.0)
@@ -160,9 +160,9 @@ public class TransitionSeriesFitting implements Serializable
 		{
 			if (normalizedUnscaledFit.get(i) >= cutoff)
 			{
-
+				
 				thisFactor = data.get(i) / normalizedUnscaledFit.get(i);
-				if (thisFactor < smallestFactor && Float.isNaN(thisFactor)) 
+				if (thisFactor < smallestFactor && !Float.isNaN(thisFactor)) 
 				{
 					smallestFactor = thisFactor;
 					ratiosConsidered = true;
@@ -369,5 +369,10 @@ public class TransitionSeriesFitting implements Serializable
 
 	}
 
+	
+	public String toString()
+	{
+		return "[" + transitionSeries + "] x " + normalizationScale;
+	}
 
 }

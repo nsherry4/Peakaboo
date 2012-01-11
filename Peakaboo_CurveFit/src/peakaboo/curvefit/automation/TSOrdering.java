@@ -105,12 +105,12 @@ public class TSOrdering
 				{
 					prox = 1.0;
 				} else  {
-					prox = ts.getProximityScore(energy, (double)energyPerChannel*2); //Math.abs(ts.getProximityToEnergy(energy));
+					prox = ts.getProximityScore(energy, ((double)(energyPerChannel))*2d); //Math.abs(ts.getProximityToEnergy(energy));
 					//if (prox <= energyPerChannel*10) prox = energyPerChannel*10;
 					prox = Math.log1p(prox);
 					
 				}
-
+				
 				tsf.setTransitionSeries(ts);
 				Float ratio, remainingArea;
 				
@@ -124,7 +124,7 @@ public class TSOrdering
 				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
 				
 				remainingArea = SpectrumCalculations.sumValuesInList(unfit) / s.size();
-
+				
 				if (useBaseSize)
 				{
 					return (float)( remainingArea * tsf.getSizeOfBase() * prox );
@@ -338,15 +338,16 @@ public class TSOrdering
 			public int compare(TransitionSeries ts1, TransitionSeries ts2)
 			{
 				Float prox1, prox2;
-
+				
 				prox1 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).f(ts1);
 				prox2 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).f(ts2);
+				
 				
 				return prox1.compareTo(prox2);
 
 			}
 		});
-			
+				
 		//take the 5 best in sorted order based on score
 		return tss.take(5);
 	}

@@ -289,6 +289,7 @@ public class FittingSet implements Serializable
 
 		if (data.size() != dataWidth) setDataWidth(data.size());
 		
+		
 		FittingResultSet results = new FittingResultSet(data.size());
 
 		Spectrum curve = null;
@@ -297,7 +298,7 @@ public class FittingSet implements Serializable
 		// calculate the fittings
 		for (TransitionSeriesFitting f : fittings)
 		{
-
+			
 			if (f.transitionSeries.visible)
 			{
 
@@ -305,12 +306,13 @@ public class FittingSet implements Serializable
 				curve = f.scaleFitToData(scale);
 				normalization = f.getNormalizationScale();
 				data = SpectrumCalculations.subtractLists(data, curve, 0.0f);
-
+				
 				results.fits.add(new FittingResult(curve, f.transitionSeries, scale, normalization));
 
 				SpectrumCalculations.addLists_inplace(results.totalFit, curve);
 
 			}
+			
 
 		}
 
