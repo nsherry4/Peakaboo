@@ -178,14 +178,12 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 	}
 
 
+	public abstract void initialize();
 	public abstract PlotPainter getPainter();
-
-
 	public abstract boolean validateParameters();
-	
-	
 	protected abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
-
+	public abstract boolean canFilterSubset();
+	
 	
 	public Spectrum filter(Spectrum data, boolean cache)
 	{
@@ -203,7 +201,7 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 	}
 	
 		
-	public abstract boolean canFilterSubset();
+	
 
 	
 	
