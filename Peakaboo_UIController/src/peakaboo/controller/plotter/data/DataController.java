@@ -10,6 +10,7 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.AbstractDataSetProvider;
 import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
 import peakaboo.dataset.provider.implementations.DataSetProvider;
+import peakaboo.fileio.DataFormat;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.datasource.internal.CopiedDataSource;
 import peakaboo.filter.FilterSet;
@@ -54,9 +55,9 @@ public class DataController extends Eventful implements IDataController
 	// =============================================
 	
 	@Override
-	public Set<String> getSupportedFileExtensions()
+	public List<DataFormat> getDataFormats()
 	{
-		return DataSetProvider.getSupportedFileExtensions();
+		return DataSetProvider.getDataFormats();
 	}
 	
 	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)

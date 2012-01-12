@@ -67,7 +67,9 @@ public class FilteringController extends Eventful implements IFilteringControlle
 				{
 					// this will call filterschanged, so we don't need to
 					// manually update the listeners
-					addFilter(f.getClass().newInstance());
+					AbstractFilter filter = f.getClass().newInstance();
+					filter.initialize();
+					addFilter(filter);
 					break;
 				}
 				catch (InstantiationException e)

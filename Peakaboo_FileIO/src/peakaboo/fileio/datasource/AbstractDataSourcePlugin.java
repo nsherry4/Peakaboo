@@ -1,7 +1,5 @@
 package peakaboo.fileio.datasource;
 
-import java.util.List;
-
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 
@@ -9,7 +7,7 @@ import bolt.plugin.BoltPlugin;
 import peakaboo.fileio.DataSource;
 
 
-public abstract class AbstractDataSourcePlugin extends BoltPlugin implements DataSource
+public abstract class AbstractDataSourcePlugin implements BoltPlugin, DataSource
 {
 
 	protected FnGet<Boolean>	isAborted;

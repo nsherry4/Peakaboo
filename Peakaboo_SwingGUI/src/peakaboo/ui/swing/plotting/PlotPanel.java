@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.fileio.DataFormat;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
@@ -1266,7 +1268,7 @@ public class PlotPanel extends ClearPanel
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
 	// data set, and returns it to the caller
-	public List<AbstractFile> openNewDataset(String[] exts, String desc)
+	public List<AbstractFile> openNewDataset(String[][] exts, String[] desc)
 	{
 		return SwidgetIO.openFiles(container, "Select Data Files to Open", exts, desc, dataController.getDataSourceFolder());
 	}
@@ -1360,12 +1362,17 @@ public class PlotPanel extends ClearPanel
 
 		List<AbstractFile> files;
 
-		Set<String> extSet = dataController.getSupportedFileExtensions();
-		String[] exts = extSet.toArray(new String[]{});
-		
-		
+		List<DataFormat> formats =  new ArrayList<DataFormat>(dataController.getDataFormats());
+			
+		String[][] exts = new String[formats.size()][];
+		String[] descs = new String[formats.size()];
+		for (int i = 0; i < formats.size(); i++)
+		{
+			exts[i] = formats.get(i).extensions.toArray(new String[]{});
+			descs[i] = formats.get(i).name;
+		}
 
-		files = openNewDataset(exts, "XRF Data Sets");
+		files = openNewDataset(exts, descs);
 		
 		loadFiles(files);
 
@@ -1546,8 +1553,8 @@ public class PlotPanel extends ClearPanel
 			AbstractFile af = SwidgetIO.openFile(
 					container,
 					"Load Session Data",
-					new String[] { "peakaboo" },
-					"Peakaboo Session Data",
+					new String[][] {{"peakaboo"}},
+					new String[] {"Peakaboo Session Data"},
 					savedSessionFileName);
 			if (af != null) controller.loadPreferences(af.getInputStream(), false);
 		}

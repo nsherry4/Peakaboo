@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import peakaboo.common.Version;
+import peakaboo.fileio.DataFormat;
 
 import commonenvironment.Env;
 
@@ -54,16 +55,22 @@ public class DataSourcePluginLoader
 		return plugins;
 	}
 
-	public static Set<String> getSupportedFileExtensions()
+	
+	public static List<DataFormat> getDataFormats()
 	{
-		Set<String> exts = new LinkedHashSet<String>();
+		List<DataFormat> formats = new ArrayList<DataFormat>();
 		
+		DataFormat format;
 		for (AbstractDataSourcePlugin plugin : getDataSourcePlugins())
 		{
-			exts.addAll(plugin.getFileExtensions());
+			format = new DataFormat();
+			format.extensions = new ArrayList<String>(plugin.getFileExtensions());
+			format.name = plugin.getPluginName();
+			format.description = plugin.getPluginDescription();
+			formats.add(format);
 		}
 		
-		return exts;
+		return formats;
 		
 	}
 	

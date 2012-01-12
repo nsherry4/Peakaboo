@@ -20,6 +20,7 @@ import fava.signatures.FnMap;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.mapping.MapTS;
 import peakaboo.dataset.provider.AbstractDataSetProvider;
+import peakaboo.fileio.DataFormat;
 import peakaboo.fileio.DataSource;
 import peakaboo.fileio.DSRealDimensions;
 import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
@@ -758,9 +759,9 @@ public class DataSetProvider extends AbstractDataSetProvider
 	 */
 	
 
-	public static Set<String> getSupportedFileExtensions()
+	public static List<DataFormat> getDataFormats()
 	{
-		return DataSourcePluginLoader.getSupportedFileExtensions();
+		return DataSourcePluginLoader.getDataFormats();
 	}
 	
 }

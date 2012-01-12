@@ -37,7 +37,7 @@ import scitypes.Spectrum;
  * 
  */
 
-public abstract class AbstractFilter extends BoltPlugin implements Serializable
+public abstract class AbstractFilter implements BoltPlugin, Serializable
 {
 	
 	public static enum FilterType
@@ -128,7 +128,10 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 			appDataDir.mkdirs();
 			
 			pluginLoader.loadPluginsFromJarsInDirectory(appDataDir);
-			if (Env.isClassInJar(AbstractFilter.class)) pluginLoader.loadPluginsFromJarsInDirectory(Env.getJarForClass(AbstractFilter.class).getParentFile());
+			if (Env.isClassInJar(AbstractFilter.class)) 
+			{
+				pluginLoader.loadPluginsFromJarsInDirectory(Env.getJarForClass(AbstractFilter.class).getParentFile());
+			}
 			
 			filters.addAll(pluginLoader.getNewInstancesForAllPlugins());
 			return filters;
@@ -141,10 +144,7 @@ public abstract class AbstractFilter extends BoltPlugin implements Serializable
 		
 	}
 
-	public static AbstractFilter createNewInstance(AbstractFilter f)
-	{
-		return BoltPlugin.createNewInstance(f);
-	}
+
 	
 	
 	

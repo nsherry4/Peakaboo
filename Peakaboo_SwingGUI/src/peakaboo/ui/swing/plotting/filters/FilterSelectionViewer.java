@@ -24,7 +24,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 public class FilterSelectionViewer extends ClearPanel
 {
 
-	protected IFilteringController		controller;
+	protected IFilteringController	controller;
 	protected FiltersetViewer		owner;
 
 	protected JTree					tree;
@@ -194,9 +194,9 @@ public class FilterSelectionViewer extends ClearPanel
 
 				if (leaf instanceof AbstractFilter) {
 					AbstractFilter filter = (AbstractFilter) leaf;
-					filter = AbstractFilter.createNewInstance(filter);
-					filter.initialize();
-					controller.addFilter(filter);
+					//filter = AbstractFilter.createNewInstance(filter);
+					//filter.initialize();
+					controller.addFilter(filter.getPluginName());
 				}
 
 				owner.showEditPane();

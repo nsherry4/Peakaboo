@@ -9,6 +9,7 @@ import fava.datatypes.Maybe;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.provider.AbstractDataSetProvider;
+import peakaboo.fileio.DataFormat;
 import peakaboo.fileio.DataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -27,7 +28,7 @@ public interface IDataController extends IEventful
 	
 	public void setDataSource(DataSource ds);
 	public void setDataSetProvider(AbstractDataSetProvider dsp);
-	public Set<String> getSupportedFileExtensions();
+	public List<DataFormat> getDataFormats();
 	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files);
 	
 	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
