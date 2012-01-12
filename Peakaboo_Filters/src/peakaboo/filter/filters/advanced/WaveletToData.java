@@ -2,15 +2,14 @@ package peakaboo.filter.filters.advanced;
 
 import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 
 @Plugin
-public class WaveletToData extends AbstractFilter
+public class WaveletToData extends AbstractSimpleFilter
 {
 
 	private static final int AMOUNT = 0;
@@ -29,7 +28,7 @@ public class WaveletToData extends AbstractFilter
 	}
 	
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		return Noise.WaveletToData(data, getParameter(AMOUNT).intValue());
 	}
@@ -56,14 +55,6 @@ public class WaveletToData extends AbstractFilter
 	{
 		// TODO Auto-generated method stub
 		return FilterType.ADVANCED;
-	}
-
-
-	@Override
-	public PlotPainter getPainter()
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

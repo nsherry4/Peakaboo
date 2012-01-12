@@ -1,5 +1,7 @@
 package peakaboo.controller.plotter.settings;
 
+import peakaboo.common.Showable;
+
 /**
  * 
  * This enum lists the kinds of ways that a collection of scans can be composited together for user viewing
@@ -7,34 +9,34 @@ package peakaboo.controller.plotter.settings;
  * @author Nathaniel Sherry, 2009
  */
 
-public enum ChannelCompositeMode
+public enum ChannelCompositeMode implements Showable
 {
 
 	NONE {
 		@Override
-		public String prettyprint()
+		public String show()
 		{
-			return "Single Scan";
+			return "Individual Spectrum";
 		}
 	},
 	AVERAGE {
 		@Override
-		public String prettyprint()
+		public String show()
 		{
-			return "Average of Scans";
+			return "Mean Average of Spectra";
 		}
 	},
 	MAXIMUM {
 		@Override
-		public String prettyprint()
+		public String show()
 		{
-			return "Maximum per Channel";
+			return "Strongest Signal per Channel";
 		}
 	}
 	
 	;
 	
-	public abstract String prettyprint();
+	public abstract String show();
 
 	
 	

@@ -3,7 +3,7 @@ package peakaboo.filter.filters.background;
 
 import bolt.plugin.Plugin;
 import peakaboo.calculations.Background;
-import peakaboo.filter.BackgroundRemovalFilter;
+import peakaboo.filter.AbstractBackgroundFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
@@ -16,7 +16,7 @@ import scitypes.Spectrum;
  */
 
 @Plugin
-public final class PolynomialRemoval extends BackgroundRemovalFilter
+public final class PolynomialRemoval extends AbstractBackgroundFilter
 {
 
 	private final int	WIDTH	= 0;

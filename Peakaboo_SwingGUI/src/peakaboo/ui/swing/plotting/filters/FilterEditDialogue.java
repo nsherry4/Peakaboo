@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 
 import eventful.EventfulListener;
@@ -29,7 +30,8 @@ public class FilterEditDialogue extends JDialog
 
 	protected IFilteringController	controller;
 	protected AbstractFilter	filter;
-
+	private JScrollPane scroller;
+	
 
 	public FilterEditDialogue(AbstractFilter _filter, IFilteringController _controller, JFrame owner)
 	{
@@ -44,12 +46,19 @@ public class FilterEditDialogue extends JDialog
 		this.controller = _controller;
 		this.filter = _filter;
 
+		
 
 
 		Container c = this.getContentPane();
 		c.setLayout(new BorderLayout());
 		SingleFilterView view = new SingleFilterView(filter, controller);
-		c.add(view, BorderLayout.CENTER);
+		
+		scroller = new JScrollPane(view);
+		scroller.setBorder(Spacing.bNone());
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		c.add(scroller, BorderLayout.CENTER);
 
 
 		c.add(createButtonBox(filter), BorderLayout.SOUTH);

@@ -5,14 +5,13 @@ import bolt.compiler.BoltJavaMap;
 import bolt.plugin.Plugin;
 import peakaboo.common.Version;
 
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 @Plugin
-public class Java extends AbstractFilter{
+public class Java extends AbstractSimpleFilter {
 
 	BoltJavaMap<float[], float[]> boltJavaMap;
 	
@@ -52,8 +51,8 @@ public class Java extends AbstractFilter{
 		addParameter(INCLUDES, new Parameter(ValueType.CODE, "Imports", defaultIncludes));
 		
 		
-		getParameter(INCLUDES).setProperty("CodeHeight", "75");
-		getParameter(FUNCTION).setProperty("CodeHeight", "75");
+		getParameter(INCLUDES).setProperty("CodeHeight", "100");
+		getParameter(FUNCTION).setProperty("CodeHeight", "250");
 		getParameter(OTHERCODE).setProperty("CodeHeight", "250");
 		
 		getParameter(INCLUDES).setProperty("Language", "java");
@@ -66,10 +65,6 @@ public class Java extends AbstractFilter{
 		return FilterType.PROGRAMMING;
 	}
 
-	@Override
-	public PlotPainter getPainter() {
-		return null;
-	}
 
 	@Override
 	public boolean validateParameters() {
@@ -78,7 +73,7 @@ public class Java extends AbstractFilter{
 			boltJavaMap.setIncludeText(getParameter(INCLUDES).codeValue());
 			boltJavaMap.setFunctionText(getParameter(FUNCTION).codeValue());
 			boltJavaMap.setOtherText(getParameter(OTHERCODE).codeValue());
-			boltJavaMap.f(new float[]{1, 2, 3});
+			boltJavaMap.f(new float[]{1, 2, 3, 4});
 			return true;
 		} catch (Exception e) {
 			getParameter(FUNCTION).setProperty("ErrorMessage", e.getMessage());
@@ -90,7 +85,11 @@ public class Java extends AbstractFilter{
 	}
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache) {
+	protected Spectrum filterApplyTo(Spectrum data) {
+		
+		//in this plugin, validate also puts the user code into the mapper 
+		validateParameters();
+		
 		return new Spectrum(boltJavaMap.f(data.backingArray()));
 	}
 

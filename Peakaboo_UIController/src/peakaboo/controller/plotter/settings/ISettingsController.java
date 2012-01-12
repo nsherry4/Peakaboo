@@ -22,9 +22,7 @@ public interface ISettingsController extends IEventful
 	public void setViewLog(boolean log);
 	public boolean getViewLog();
 
-	public void setShowChannelAverage();
-	public void setShowChannelMaximum();
-	public void setShowChannelSingle();
+	public void setShowChannelMode(ChannelCompositeMode mode);
 	public ChannelCompositeMode getChannelCompositeType();
 	
 	public void setScanNumber(int number);

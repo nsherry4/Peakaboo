@@ -3,9 +3,7 @@ package peakaboo.filter;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import commonenvironment.Env;
@@ -21,6 +19,7 @@ import peakaboo.calculations.Noise;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 /**
  * 

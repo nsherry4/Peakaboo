@@ -3,12 +3,11 @@ package peakaboo.filter.filters.mathematical;
 
 import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
-import peakaboo.filter.AbstractFilter;
-import scidraw.drawing.plot.painters.PlotPainter;
+import peakaboo.filter.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 @Plugin
-public class Derivative extends AbstractFilter
+public class Derivative extends AbstractSimpleFilter
 {
 
 	
@@ -19,7 +18,7 @@ public class Derivative extends AbstractFilter
 	}
 	
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		return Noise.deriv(data);
 	}
@@ -46,14 +45,6 @@ public class Derivative extends AbstractFilter
 	{
 		// TODO Auto-generated method stub
 		return FilterType.MATHEMATICAL;
-	}
-
-
-	@Override
-	public PlotPainter getPainter()
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

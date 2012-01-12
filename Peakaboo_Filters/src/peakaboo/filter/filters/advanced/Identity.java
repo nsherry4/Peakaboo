@@ -1,12 +1,11 @@
 package peakaboo.filter.filters.advanced;
 
 import bolt.plugin.Plugin;
-import peakaboo.filter.AbstractFilter;
-import scidraw.drawing.plot.painters.PlotPainter;
+import peakaboo.filter.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 @Plugin
-public class Identity extends AbstractFilter
+public class Identity extends AbstractSimpleFilter
 {
 
 	@Override
@@ -17,7 +16,7 @@ public class Identity extends AbstractFilter
 
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		return data;
 	}
@@ -41,13 +40,6 @@ public class Identity extends AbstractFilter
 	public FilterType getFilterType()
 	{
 		return FilterType.ADVANCED;
-	}
-
-
-	@Override
-	public PlotPainter getPainter()
-	{
-		return null;
 	}
 
 

@@ -6,14 +6,13 @@ import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.Language;
 import peakaboo.common.Version;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 @Plugin
-public class JPython extends AbstractFilter {
+public class JPython extends AbstractSimpleFilter {
 
 	private static int CODE = 0;
 	private boolean pythonSupported = true;
@@ -74,11 +73,6 @@ public class JPython extends AbstractFilter {
 	}
 
 	@Override
-	public PlotPainter getPainter() {
-		return null;
-	}
-
-	@Override
 	public boolean validateParameters() {
 		try {
 			boltmap.setScript(getCode());
@@ -95,7 +89,7 @@ public class JPython extends AbstractFilter {
 	}
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache) {
+	protected Spectrum filterApplyTo(Spectrum data) {
 		
 		boltmap.setScript(getCode());
 		

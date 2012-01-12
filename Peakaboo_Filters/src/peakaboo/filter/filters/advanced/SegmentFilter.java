@@ -22,12 +22,6 @@ public class SegmentFilter extends AbstractFilter
 	private static final int END = 2;
 	
 	
-	public SegmentFilter()
-	{
-
-	}
-	
-	
 	@Override
 	public void initialize()
 	{

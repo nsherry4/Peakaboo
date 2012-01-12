@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
+import javax.swing.Scrollable;
 import javax.swing.SpinnerNumberModel;
 
 import javax.swing.border.TitledBorder;
@@ -49,7 +51,7 @@ import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 
 
-public class SingleFilterView extends JPanel
+public class SingleFilterView extends JPanel implements Scrollable
 {
 
 	private AbstractFilter	filter;
@@ -449,6 +451,41 @@ public class SingleFilterView extends JPanel
 
 		return panel;
 
+	}
+
+	
+	////////////////////////////////////
+	// SCROLLABLE INTERFACE
+	////////////////////////////////////
+	
+	@Override
+	public Dimension getPreferredScrollableViewportSize()
+	{
+		return new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 500));
+	}
+
+	@Override
+	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction)
+	{
+		return 50;
+	}
+
+	@Override
+	public boolean getScrollableTracksViewportHeight()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean getScrollableTracksViewportWidth()
+	{
+		return true;
+	}
+
+	@Override
+	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2)
+	{
+		return 5;
 	}
 
 }

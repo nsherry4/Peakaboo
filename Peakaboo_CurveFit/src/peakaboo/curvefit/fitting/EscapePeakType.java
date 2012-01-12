@@ -3,6 +3,7 @@ package peakaboo.curvefit.fitting;
 import java.util.ArrayList;
 import java.util.List;
 
+import peakaboo.common.Showable;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.Transition;
@@ -15,7 +16,7 @@ import peakaboo.curvefit.peaktable.TransitionSeriesType;
  */
 
 
-public enum EscapePeakType
+public enum EscapePeakType implements Showable
 {
 	NONE {
 		@Override

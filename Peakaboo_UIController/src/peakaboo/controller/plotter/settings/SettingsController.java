@@ -110,26 +110,13 @@ public class SettingsController extends Eventful implements ISettingsController
 		return settingsModel.viewTransform == ViewTransform.LOG;
 	}
 
-	public void setShowChannelAverage()
+	public void setShowChannelMode(ChannelCompositeMode mode)
 	{
-		settingsModel.channelComposite = ChannelCompositeMode.AVERAGE;
-		setUndoPoint("Mean Spectrum");
+		settingsModel.channelComposite = mode;
+		setUndoPoint(mode.show());
 		plot.filteringController.filteredDataInvalidated();
 	}
-
-	public void setShowChannelMaximum()
-	{
-		settingsModel.channelComposite = ChannelCompositeMode.MAXIMUM;
-		setUndoPoint("Max Spectrum");
-		plot.filteringController.filteredDataInvalidated();
-	}
-
-	public void setShowChannelSingle()
-	{
-		settingsModel.channelComposite = ChannelCompositeMode.NONE;
-		setUndoPoint("Individual Spectrum");
-		plot.filteringController.filteredDataInvalidated();
-	}
+	
 
 	public ChannelCompositeMode getChannelCompositeType()
 	{

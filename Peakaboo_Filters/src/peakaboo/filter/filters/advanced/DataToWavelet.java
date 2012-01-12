@@ -3,14 +3,13 @@ package peakaboo.filter.filters.advanced;
 
 import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 @Plugin
-public class DataToWavelet extends AbstractFilter
+public class DataToWavelet extends AbstractSimpleFilter
 {
 
 	private static final int AMOUNT = 0;
@@ -30,7 +29,7 @@ public class DataToWavelet extends AbstractFilter
 	}
 	
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		return Noise.DataToWavelet(data, getParameter(AMOUNT).intValue());
 	}
@@ -39,7 +38,6 @@ public class DataToWavelet extends AbstractFilter
 	@Override
 	public String getPluginDescription()
 	{
-		// TODO Auto-generated method stub
 		return "The " + getPluginName() + " filter converts spectrum data into a wavelet representation. This is intended to be used in conjunction with other filters (especially the 'Filter Partial Spectrum' filter) to perform custom wavelet operations.";
 	}
 
@@ -47,7 +45,6 @@ public class DataToWavelet extends AbstractFilter
 	@Override
 	public String getPluginName()
 	{
-		// TODO Auto-generated method stub
 		return "Signal -> Wavelet";
 	}
 
@@ -55,16 +52,7 @@ public class DataToWavelet extends AbstractFilter
 	@Override
 	public FilterType getFilterType()
 	{
-		// TODO Auto-generated method stub
 		return FilterType.ADVANCED;
-	}
-
-
-	@Override
-	public PlotPainter getPainter()
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

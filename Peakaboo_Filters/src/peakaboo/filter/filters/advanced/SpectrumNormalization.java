@@ -1,15 +1,14 @@
 package peakaboo.filter.filters.advanced;
 
 import bolt.plugin.Plugin;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 @Plugin
-public class SpectrumNormalization extends AbstractFilter
+public class SpectrumNormalization extends AbstractSimpleFilter
 {
 	
 	public static int	CHANNEL = 0;
@@ -30,7 +29,7 @@ public class SpectrumNormalization extends AbstractFilter
 	}
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 
 		int channel = getParameter(CHANNEL).intValue()+1;
@@ -63,14 +62,6 @@ public class SpectrumNormalization extends AbstractFilter
 		// TODO Auto-generated method stub
 		return FilterType.ADVANCED;
 	}
-
-	@Override
-	public PlotPainter getPainter()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 
 	@Override

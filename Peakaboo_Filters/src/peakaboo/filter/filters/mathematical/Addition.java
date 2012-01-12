@@ -1,25 +1,19 @@
 package peakaboo.filter.filters.mathematical;
 
 import bolt.plugin.Plugin;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
 @Plugin
-public class Addition extends AbstractFilter
+public class Addition extends AbstractSimpleFilter
 {
 
 	private static final int AMOUNT = 0;
-	
-	public Addition()
-	{
-		super();
-	}
-	
+
 	@Override
 	public void initialize()
 	{
@@ -27,7 +21,7 @@ public class Addition extends AbstractFilter
 	}
 	
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		return SpectrumCalculations.subtractFromList(data, 0.0f-getParameter(AMOUNT).realValue());
 	}
@@ -54,14 +48,6 @@ public class Addition extends AbstractFilter
 	{
 		// TODO Auto-generated method stub
 		return FilterType.MATHEMATICAL;
-	}
-
-
-	@Override
-	public PlotPainter getPainter()
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

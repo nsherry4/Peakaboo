@@ -4,10 +4,9 @@ package peakaboo.filter.filters.noise;
 
 import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 /**
@@ -18,7 +17,7 @@ import scitypes.Spectrum;
  */
 
 @Plugin
-public final class SavitskyGolaySmoothing extends AbstractFilter
+public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 {
 
 	private final int	REACH	= 0;
@@ -104,14 +103,7 @@ public final class SavitskyGolaySmoothing extends AbstractFilter
 
 
 	@Override
-	public PlotPainter getPainter()
-	{
-		return null;
-	}
-
-
-	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		return Noise.SavitskyGolayFilter(
 			data, 

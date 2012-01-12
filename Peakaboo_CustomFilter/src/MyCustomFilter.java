@@ -1,10 +1,9 @@
 import bolt.plugin.Plugin;
-import peakaboo.filter.AbstractFilter;
-import scidraw.drawing.plot.painters.PlotPainter;
+import peakaboo.filter.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 @Plugin
-public class MyCustomFilter extends AbstractFilter
+public class MyCustomFilter extends AbstractSimpleFilter
 {
 
 	@Override
@@ -16,7 +15,7 @@ public class MyCustomFilter extends AbstractFilter
 	@Override
 	public String getPluginDescription()
 	{
-		return "This filter calculates the reciporical value of each " +
+		return "This filter calculates the reciprocal value of each " +
 				"channel, and normalizes the data so that the strongest" +
 				"channel in the resultant spectrum is the same intensity" +
 				"as the strongest channel in the input spectrum";
@@ -25,7 +24,7 @@ public class MyCustomFilter extends AbstractFilter
 	@Override
 	public String getPluginName()
 	{
-		return "Reciporical";
+		return "Reciprocal";
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class MyCustomFilter extends AbstractFilter
 	}
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		Spectrum result = new Spectrum(data.size());
 		float maxIn = data.get(0);
@@ -91,10 +90,5 @@ public class MyCustomFilter extends AbstractFilter
 		return result;
 	}
 
-	@Override
-	public PlotPainter getPainter()
-	{
-		return null;
-	}
 
 }

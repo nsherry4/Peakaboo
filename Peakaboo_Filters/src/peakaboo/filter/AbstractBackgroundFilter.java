@@ -8,7 +8,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public abstract class BackgroundRemovalFilter extends AbstractFilter
+public abstract class AbstractBackgroundFilter extends AbstractFilter
 {
 
 	protected enum backgroundParams
@@ -16,7 +16,7 @@ public abstract class BackgroundRemovalFilter extends AbstractFilter
 		PERCENT, PREVIEW, STARTINDEX, STOPINDEX, PARTIALFILTER, SEP1, SEP2
 	}
 	
-	public BackgroundRemovalFilter()
+	public AbstractBackgroundFilter()
 	{
 		
 		

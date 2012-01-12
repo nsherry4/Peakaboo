@@ -4,7 +4,7 @@ package peakaboo.filter.filters.background;
 
 import bolt.plugin.Plugin;
 import peakaboo.calculations.Background;
-import peakaboo.filter.BackgroundRemovalFilter;
+import peakaboo.filter.AbstractBackgroundFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
@@ -18,7 +18,7 @@ import scitypes.SpectrumCalculations;
  */
 
 @Plugin
-public final class LinearTrimRemoval extends BackgroundRemovalFilter
+public final class LinearTrimRemoval extends AbstractBackgroundFilter
 {
 
 	private final int	WIDTH = 1;

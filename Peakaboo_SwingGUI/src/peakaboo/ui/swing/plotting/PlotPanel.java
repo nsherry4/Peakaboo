@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -59,7 +58,6 @@ import javax.swing.event.ChangeListener;
 
 import commonenvironment.AbstractFile;
 import commonenvironment.Apps;
-import commonenvironment.Env;
 import commonenvironment.IOOperations;
 
 import eventful.EventfulEnumListener;
@@ -476,7 +474,7 @@ public class PlotPanel extends ClearPanel
 			}
 			else
 			{
-				titleString.append(" - " + settingsController.getChannelCompositeType().prettyprint());
+				titleString.append(" - " + settingsController.getChannelCompositeType().show());
 			}
 
 		}
@@ -1064,7 +1062,7 @@ public class PlotPanel extends ClearPanel
 
 		ButtonGroup viewGroup = new ButtonGroup();
 
-		individual = new JRadioButtonMenuItem("Individual Spectrum");
+		individual = new JRadioButtonMenuItem(ChannelCompositeMode.NONE.show());
 		individual.setSelected(true);
 		individual.setMnemonic(KeyEvent.VK_I);
 		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, java.awt.event.ActionEvent.CTRL_MASK));
@@ -1072,31 +1070,31 @@ public class PlotPanel extends ClearPanel
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				settingsController.setShowChannelSingle();
+				settingsController.setShowChannelMode(ChannelCompositeMode.NONE);
 			}});
 		viewGroup.add(individual);
 		menu.add(individual);
 
-		average = new JRadioButtonMenuItem("Mean Spectrum");
+		average = new JRadioButtonMenuItem(ChannelCompositeMode.AVERAGE.show());
 		average.setMnemonic(KeyEvent.VK_M);
 		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, java.awt.event.ActionEvent.CTRL_MASK));
 		average.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				settingsController.setShowChannelAverage();
+				settingsController.setShowChannelMode(ChannelCompositeMode.AVERAGE);
 			}});
 		viewGroup.add(average);
 		menu.add(average);
 
-		maximum = new JRadioButtonMenuItem("Strongest Signal per Channel");
+		maximum = new JRadioButtonMenuItem(ChannelCompositeMode.MAXIMUM.show());
 		maximum.setMnemonic(KeyEvent.VK_T);
 		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, java.awt.event.ActionEvent.CTRL_MASK));
 		maximum.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				settingsController.setShowChannelMaximum();
+				settingsController.setShowChannelMode(ChannelCompositeMode.MAXIMUM);
 			}});
 		viewGroup.add(maximum);
 		menu.add(maximum);
@@ -1290,7 +1288,7 @@ public class PlotPanel extends ClearPanel
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 			
 			sb.append("View Type: ");
-			sb.append(settingsController.getChannelCompositeType().prettyprint());
+			sb.append(settingsController.getChannelCompositeType().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append(String.valueOf(channel));
@@ -1311,7 +1309,7 @@ public class PlotPanel extends ClearPanel
 		{
 			
 			sb.append("View Type: ");
-			sb.append(settingsController.getChannelCompositeType().prettyprint());
+			sb.append(settingsController.getChannelCompositeType().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append("-");

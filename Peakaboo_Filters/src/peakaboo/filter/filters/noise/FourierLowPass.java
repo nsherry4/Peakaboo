@@ -5,10 +5,9 @@ package peakaboo.filter.filters.noise;
 import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 /**
@@ -19,7 +18,7 @@ import scitypes.Spectrum;
  */
 
 @Plugin
-public final class FourierLowPass extends AbstractFilter
+public final class FourierLowPass extends AbstractSimpleFilter
 {
 
 	private final int	ROLLOFF	= 0;
@@ -86,16 +85,9 @@ public final class FourierLowPass extends AbstractFilter
 	}
 
 
-	@Override
-	public PlotPainter getPainter()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected Spectrum filterApplyTo(Spectrum data)
 	{
 		
 		data = Noise.FFTLowPassFilter(
