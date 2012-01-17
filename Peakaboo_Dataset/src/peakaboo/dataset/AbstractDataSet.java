@@ -1,19 +1,12 @@
-package peakaboo.dataset.provider;
+package peakaboo.dataset;
 
 
 
 import java.util.List;
 
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
-import peakaboo.dataset.provider.implementations.DataSetProvider;
-import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DSRealDimensions;
-import peakaboo.fileio.DSMetadata;
-import peakaboo.filter.FilterSet;
-import peakaboo.mapping.FittingTransform;
-import peakaboo.mapping.results.MapResultSet;
-import plural.executor.ExecutorSet;
+import peakaboo.datasource.DSMetadata;
+import peakaboo.datasource.DSRealDimensions;
+import peakaboo.datasource.DataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -22,32 +15,16 @@ import scitypes.Spectrum;
 
 
 /**
- * Abstract class defining the methods needed for loading and working with a set of XRF scans, and for producing maps
- * with them. Subclasses can implement different ways of delivering the data -- {@link DataSetProvider} provides an
- * implementation using the local file system as a source for the data. <br>
- * <br>
- * Another implementation could use a network data source. Some sets of XRF data can be rather large, so this has been
- * designed so that only one scan, or a set of maps needs requested from the DataSetContainer at a time -- any work
- * requiring access to more than one scan is done either in the DataSetContainer (or somewhere else linked with a
- * specific implementation).
+ * Abstract class defining the methods needed for loading and working with a set of
+ * XRF scans. This class, or its subclasses, wrap a DataSource object and provide a
+ * somewhat richer interface to the data without requiring each DataSource 
+ * implementation to handle this logic manually. 
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2012
  */
 
-public abstract class AbstractDataSetProvider
+public abstract class AbstractDataSet
 {
-
-	protected Spectrum		dsc_average;
-	protected Spectrum		dsc_maximum;
-
-	protected float			dsc_maxEnergy;
-	protected int			dsc_scanSize;
-
-	protected String		dataSourcePath;
-
-	protected boolean		hasDimensions;
-
-	protected boolean		hasMetadata;
 
 
 	/**
@@ -191,10 +168,7 @@ public abstract class AbstractDataSetProvider
 	 * 
 	 * @return the energy per channel
 	 */
-	public float energyPerChannel()
-	{
-		return dsc_maxEnergy / scanSize();
-	}
+	public abstract float energyPerChannel();
 
 
 	/**
@@ -207,30 +181,16 @@ public abstract class AbstractDataSetProvider
 
 
 	/**
-	 * Sets the maximum energy value according to the data in the dataset
-	 * 
-	 * @param maxEnergy
-	 */
-	protected void setMaxEnergy(float maxEnergy)
-	{
-		this.dsc_maxEnergy = maxEnergy;
-	}
-
-
-	/**
 	 * Gets the string representation of the data source. Could be a file path, a network address, or anything else
 	 * implementation specific
 	 * 
 	 * @return data source string
 	 */
-	public String getDataSourcePath()
-	{
-		return dataSourcePath;
-	}
+	public abstract String getDataSourcePath();
 
 
 	/**
-	 * Does this implementation of the DataSetContainer actually contain data? {@link EmptyDataSetProvider} purposefully
+	 * Does this implementation of the DataSetContainer actually contain data? {@link EmptyDataSet} purposefully
 	 * doesn't
 	 * 
 	 * @return true if this dataset has data, false otherwise
@@ -270,7 +230,6 @@ public abstract class AbstractDataSetProvider
 	 */
 	//public abstract List<Double> calculateSumInRegion(ROI region);
 
-
 	/**
 	 * Creates a map based on a given FilterSet, a given FittingSet, and the data in the dataset.
 	 * 
@@ -280,7 +239,7 @@ public abstract class AbstractDataSetProvider
 	 *            fittings to be used on this data
 	 * @return a {@link Task} which will calculate the map
 	 */
-	public abstract ExecutorSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type);
+	//public abstract ExecutorSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type);
 
 
 	/**

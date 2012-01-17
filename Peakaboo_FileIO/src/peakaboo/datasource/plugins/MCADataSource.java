@@ -1,9 +1,8 @@
-package peakaboo.fileio.datasource.plugins;
+package peakaboo.datasource.plugins;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -15,10 +14,7 @@ import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import fava.signatures.FnMap;
 
-import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DSRealDimensions;
-import peakaboo.fileio.DSMetadata;
-import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
+import peakaboo.datasource.AbstractDataSourcePlugin;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;

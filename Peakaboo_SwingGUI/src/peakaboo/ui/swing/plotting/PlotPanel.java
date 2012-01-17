@@ -76,7 +76,7 @@ import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.fileio.DataFormat;
+import peakaboo.datasource.DataFormat;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
@@ -1378,7 +1378,7 @@ public class PlotPanel extends ClearPanel
 	
 	private void actionOpenSampleData()
 	{
-		loadFiles(  new FList<AbstractFile>(IOOperations.getFileFromJar("/peakaboo/fileio/SampleData.xml"))  );
+		loadFiles(  new FList<AbstractFile>(IOOperations.getFileFromJar("/peakaboo/datasource/SampleData.xml"))  );
 	}
 
 

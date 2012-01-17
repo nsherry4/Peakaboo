@@ -1,10 +1,10 @@
-package peakaboo.fileio.datasource.internal;
+package peakaboo.datasource.internal;
 
 import java.util.List;
 
 import commonenvironment.AbstractFile;
 
-import peakaboo.fileio.DataSource;
+import peakaboo.datasource.DataSource;
 
 import fava.functionable.FList;
 import fava.functionable.Range;
@@ -35,16 +35,10 @@ public class CopiedDataSource implements DataSource
 		this.rangeX = new Range(cstart.x, cend.x);
 		this.rangeY = new Range(cstart.y, cend.y);
 		
-				
-		int counter = 0;
-		for (Integer y : rangeY)
+		scannames = new FList<String>();
+		for (Integer c : new Range(0, getScanCount()))
 		{
-			for (Integer x : rangeX )
-			{
-				scannames.add("Scan " + counter);
-				counter++;
-			}
-			
+			scannames.add("Scan " + c);			
 		}
 		
 	}
@@ -134,12 +128,12 @@ public class CopiedDataSource implements DataSource
 	{		
 		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
-		Coord<Number> bottomLeft, bottomRight, topLeft, topRight;
+		Coord<Number> bottomLeft, bottomRight, topLeft;
 		
 		bottomLeft 	= getRealCoordinatesAtIndex(0);
 		topLeft 	= getRealCoordinatesAtIndex(grid.getIndexFromXY( 0, 				rangeY.size()-1	));
 		bottomRight = getRealCoordinatesAtIndex(grid.getIndexFromXY( rangeX.size()-1, 	0				));
-		topRight	= getRealCoordinatesAtIndex(grid.getIndexFromXY( rangeX.size()-1, 	rangeY.size()-1	));
+		//topRight	= getRealCoordinatesAtIndex(grid.getIndexFromXY( rangeX.size()-1, 	rangeY.size()-1	));
 				
 		Bounds<Number> bx = new Bounds<Number>(bottomLeft.x, bottomRight.x);
 		Bounds<Number> by = new Bounds<Number>(bottomLeft.y, topLeft.y);

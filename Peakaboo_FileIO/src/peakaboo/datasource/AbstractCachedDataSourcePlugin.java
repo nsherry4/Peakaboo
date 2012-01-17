@@ -1,10 +1,9 @@
-package peakaboo.fileio.datasource;
+package peakaboo.datasource;
 
 import java.io.IOException;
 import java.util.List;
 
 import peakaboo.common.Version;
-import peakaboo.fileio.KryoScratchList;
 
 import com.esotericsoftware.kryo.serialize.ArraySerializer;
 

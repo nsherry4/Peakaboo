@@ -1,4 +1,4 @@
-package peakaboo.fileio.datasource.plugins.cdfml;
+package peakaboo.datasource.plugins.cdfml;
 
 
 

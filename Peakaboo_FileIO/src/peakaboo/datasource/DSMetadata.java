@@ -1,4 +1,4 @@
-package peakaboo.fileio;
+package peakaboo.datasource;
 
 
 public interface DSMetadata

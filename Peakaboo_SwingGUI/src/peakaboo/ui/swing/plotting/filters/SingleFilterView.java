@@ -35,7 +35,6 @@ import jsyntaxpane.DefaultSyntaxKit;
 
 import eventful.EventfulTypeListener;
 import eventful.swing.EventfulTypePanel;
-import fava.Functions;
 import fava.functionable.FArray;
 import fava.functionable.FList;
 import fava.signatures.FnMap;

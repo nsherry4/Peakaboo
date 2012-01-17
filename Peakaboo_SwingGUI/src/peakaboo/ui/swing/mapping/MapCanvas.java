@@ -42,7 +42,6 @@ import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.GridPerspective;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

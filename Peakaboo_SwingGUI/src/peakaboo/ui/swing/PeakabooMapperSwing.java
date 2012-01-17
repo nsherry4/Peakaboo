@@ -33,7 +33,6 @@ import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.Functionable;
 import fava.functionable.Range;
-import fava.functionable.FList;
 import fava.signatures.FnMap;
 
 import peakaboo.controller.mapper.MappingController;

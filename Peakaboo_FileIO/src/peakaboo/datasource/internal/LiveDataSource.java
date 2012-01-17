@@ -1,4 +1,4 @@
-package peakaboo.fileio.datasource.internal;
+package peakaboo.datasource.internal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,9 +10,8 @@ import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 
 import peakaboo.common.Version;
-import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DSScanData;
-import peakaboo.fileio.KryoScratchList;
+import peakaboo.datasource.DSScanData;
+import peakaboo.datasource.KryoScratchList;
 import scitypes.Spectrum;
 
 
@@ -62,7 +61,6 @@ public class LiveDataSource implements DSScanData
 
 	public float getMaxEnergy()
 	{
-		// TODO Auto-generated method stub
 		return maxEnergy;
 	}
 

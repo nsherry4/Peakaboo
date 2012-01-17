@@ -1,4 +1,4 @@
-package peakaboo.dataset.mapping;
+package peakaboo.mapping;
 
 import java.util.List;
 
@@ -8,10 +8,8 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.curvefit.results.FittingResult;
 import peakaboo.curvefit.results.FittingResultSet;
-import peakaboo.dataset.provider.AbstractDataSetProvider;
-import peakaboo.fileio.DataSource;
+import peakaboo.dataset.AbstractDataSet;
 import peakaboo.filter.FilterSet;
-import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import plural.executor.eachindex.EachIndexExecutor;
@@ -20,7 +18,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 /**
- * This class contains logic for generating maps for a {@link AbstractDataSetProvider}, so that functionality does not have to be duplicated across various implementations
+ * This class contains logic for generating maps for a {@link AbstractDataSet}, so that functionality does not have to be duplicated across various implementations
  * @author Nathaniel Sherry, 2010
  *
  */
@@ -36,7 +34,7 @@ public class MapTS
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
 	 * @return a {@link ExecutorSet} which will return a {@link MapResultSet}
 	 */
-	public static ExecutorSet<MapResultSet> calculateMap(final DataSource dataSource, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
+	public static ExecutorSet<MapResultSet> calculateMap(final AbstractDataSet datasetProvider, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
 	{
 
 		final ExecutorSet<MapResultSet> tasklist;
@@ -48,18 +46,18 @@ public class MapTS
 		//final List<List<Double>> filteredData;
 
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, dataSource.getScanCount());
+		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.scanCount());
 		
 		final FnEach<Integer> t_filter = new FnEach<Integer>() {
 
 			public void f(Integer ordinal)
 			{
 				
-				Spectrum original = dataSource.getScanAtIndex(ordinal);
+				Spectrum original = datasetProvider.getScan(ordinal); 
 				
 				if (original == null) return;
 				
-				Spectrum data = filters.filterDataUnsynchronized(new Spectrum(dataSource.getScanAtIndex(ordinal)), false);
+				Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
 				//filteredDataSet.set(ordinal, data);
 				
 				FittingResultSet frs = fittings.calculateFittings(data);
@@ -81,7 +79,7 @@ public class MapTS
 		};
 
 
-		final EachIndexExecutor executor = new PluralEachIndexExecutor(dataSource.getScanCount(), t_filter);;
+		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.scanCount(), t_filter);;
 		
 		tasklist = new ExecutorSet<MapResultSet>("Generating Data for Map") {
 

@@ -1,4 +1,4 @@
-package peakaboo.fileio;
+package peakaboo.datasource;
 
 import java.awt.Color;
 import java.io.File;

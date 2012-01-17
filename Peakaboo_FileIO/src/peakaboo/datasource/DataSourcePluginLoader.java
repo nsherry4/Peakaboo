@@ -1,13 +1,10 @@
-package peakaboo.fileio.datasource;
+package peakaboo.datasource;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import peakaboo.common.Version;
-import peakaboo.fileio.DataFormat;
 
 import commonenvironment.Env;
 
@@ -27,7 +24,7 @@ public class DataSourcePluginLoader
 			
 			
 			//load plugins shipped with peakaboo
-			loader.loadLocalPlugins("peakaboo.fileio.datasource.plugins");
+			loader.loadLocalPlugins("peakaboo.datasource.plugins");
 						
 			//if peakaboo is in a jar file, look in other jar files in the same directory
 			if (Env.isClassInJar(AbstractDataSourcePlugin.class))

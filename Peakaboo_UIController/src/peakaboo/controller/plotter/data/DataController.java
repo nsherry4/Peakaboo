@@ -2,19 +2,19 @@ package peakaboo.controller.plotter.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.dataset.provider.AbstractDataSetProvider;
-import peakaboo.dataset.provider.implementations.EmptyDataSetProvider;
-import peakaboo.dataset.provider.implementations.DataSetProvider;
-import peakaboo.fileio.DataFormat;
-import peakaboo.fileio.DataSource;
-import peakaboo.fileio.datasource.internal.CopiedDataSource;
+import peakaboo.dataset.AbstractDataSet;
+import peakaboo.dataset.DataSet;
+import peakaboo.dataset.EmptyDataSet;
+import peakaboo.datasource.DataFormat;
+import peakaboo.datasource.DataSource;
+import peakaboo.datasource.internal.CopiedDataSource;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
+import peakaboo.mapping.MapTS;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scitypes.Bounds;
@@ -32,7 +32,7 @@ import fava.datatypes.Maybe;
 public class DataController extends Eventful implements IDataController
 {
 
-	private AbstractDataSetProvider 	dataModel;
+	private AbstractDataSet 	dataModel;
 	private PlotController 		plot;
 	private List<Integer>		badScans;
 	private int 				dataHeight, dataWidth;
@@ -41,11 +41,11 @@ public class DataController extends Eventful implements IDataController
 	public DataController(PlotController plotController)
 	{
 		this.plot = plotController;
-		dataModel = new EmptyDataSetProvider();
+		dataModel = new EmptyDataSet();
 		badScans = new ArrayList<Integer>();
 	}
 	
-	public AbstractDataSetProvider getDataModel()
+	public AbstractDataSet getDataModel()
 	{
 		return dataModel;
 	}
@@ -57,14 +57,14 @@ public class DataController extends Eventful implements IDataController
 	@Override
 	public List<DataFormat> getDataFormats()
 	{
-		return DataSetProvider.getDataFormats();
+		return DataSet.getDataFormats();
 	}
 	
 	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
-		final DataSetProvider dataset = new DataSetProvider();
+		final DataSet dataset = new DataSet();
 		final ExecutorSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(files);
 
 
@@ -157,12 +157,12 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.hasDimensions();
 	}
 
-	public void setDataSetProvider(AbstractDataSetProvider dsp)
+	public void setDataSetProvider(AbstractDataSet dsp)
 	{
 	
 		if (dsp == null) return;
 		
-		AbstractDataSetProvider old = dataModel;
+		AbstractDataSet old = dataModel;
 		dataModel = dsp;
 		
 		plot.settingsController.setScanNumber( dsp.firstNonNullScanIndex() );
@@ -188,7 +188,7 @@ public class DataController extends Eventful implements IDataController
 
 	public void setDataSource(DataSource ds)
 	{
-		setDataSetProvider(new DataSetProvider(ds));
+		setDataSetProvider(new DataSet(ds));
 	}
 
 	public String getCurrentScanName()
@@ -342,7 +342,7 @@ public class DataController extends Eventful implements IDataController
 	
 	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
 	{
-		return dataModel.calculateMap(filters, fittings, type);
+		return MapTS.calculateMap(dataModel, filters, fittings, type);
 	}
 	
 	public float maximumIntensity()

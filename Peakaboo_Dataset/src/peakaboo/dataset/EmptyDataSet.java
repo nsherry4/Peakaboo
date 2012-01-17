@@ -1,21 +1,15 @@
-package peakaboo.dataset.provider.implementations;
+package peakaboo.dataset;
 
 import java.util.List;
 
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.dataset.provider.AbstractDataSetProvider;
-import peakaboo.fileio.DataSource;
-import peakaboo.filter.FilterSet;
-import peakaboo.mapping.FittingTransform;
-import peakaboo.mapping.results.MapResultSet;
-import plural.executor.ExecutorSet;
+import peakaboo.datasource.DataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class EmptyDataSetProvider extends AbstractDataSetProvider
+public class EmptyDataSet extends AbstractDataSet
 {
 
 	@Override
@@ -67,12 +61,6 @@ public class EmptyDataSetProvider extends AbstractDataSetProvider
 		return 0;
 	}
 
-	@Override
-	public ExecutorSet<MapResultSet> calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public boolean hasData(){
@@ -287,6 +275,19 @@ public class EmptyDataSetProvider extends AbstractDataSetProvider
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getDataSourcePath()
+	{
+		return "";
+	}
+
+	@Override
+	public float energyPerChannel()
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 

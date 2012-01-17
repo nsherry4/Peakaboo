@@ -8,7 +8,6 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import eventful.EventfulType;
-import fava.Functions;
 import fava.functionable.FList;
 
 

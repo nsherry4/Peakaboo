@@ -61,10 +61,8 @@ public class PeakTableReader
 		List<String> sections;
 
 
-		String name;
-		int number;
 
-		float intensity;
+
 		int atomicNumber = 0;
 
 		for (String element : elements) {
@@ -74,13 +72,15 @@ public class PeakTableReader
 			lineSplit = element.split("\t");
 			sections = Arrays.asList(lineSplit);
 
-			// name and number
-			number = Integer.parseInt(sections.get(0));
-			name = sections.get(1);
+			//name
+			//Integer.parseInt(sections.get(0));
+			
+			//number
+			//sections.get(1);
 
 			int column = 2;
 
-			Transition k, k1, k2, k3, esc;
+			Transition k1, k2, k3;
 
 			// table.addElement( createTransition(sections, name, number,
 			// TransitionType.esc, column++) );
@@ -91,13 +91,15 @@ public class PeakTableReader
 			// K
 			TransitionSeries ts = new TransitionSeries(e, TransitionSeriesType.K);
 
-			esc = createTransition(sections, column, TransitionType.esc);
+			//escape
+			//createTransition(sections, column, TransitionType.esc);
 			column += elementDataWidth;
 
 			// ts.setTransition(TransitionType.esc, esc);
 
 			// ka
-			k = createTransition(sections, column, TransitionType.other);
+			//k
+			//createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
 			k1 = createTransition(sections, column, TransitionType.a1);
 			column += elementDataWidth;
@@ -110,7 +112,8 @@ public class PeakTableReader
 
 
 			// kB
-			k = createTransition(sections, column, TransitionType.other);
+			//k
+			//createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
 			k1 = createTransition(sections, column, TransitionType.b1);
 			column += elementDataWidth;
@@ -130,7 +133,8 @@ public class PeakTableReader
 			ts = new TransitionSeries(e, TransitionSeriesType.L);
 			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
 
-			esc = createTransition(sections, column, TransitionType.esc);
+			//escape
+			//createTransition(sections, column, TransitionType.esc);
 			column += elementDataWidth;
 
 			la = createTransition(sections, column, TransitionType.a1);
@@ -171,14 +175,18 @@ public class PeakTableReader
 
 			
 			ts = new TransitionSeries(e, TransitionSeriesType.M);
-			Transition mz, ma1, mb1, mg, mn, unknown;
+			Transition ma1, mb1, mg;
 
-			esc = createTransition(sections, column, TransitionType.esc);
+			//escape
+			//createTransition(sections, column, TransitionType.esc);
 			column += elementDataWidth;
 
-			mz = createTransition(sections, column, TransitionType.other);
+			//mz
+			//createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
-			unknown = createTransition(sections, column, TransitionType.other);
+			
+			//unknown
+			//createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
 			ma1 = createTransition(sections, column, TransitionType.a1);
 			column += elementDataWidth;
@@ -186,9 +194,13 @@ public class PeakTableReader
 			column += elementDataWidth;
 			mg = createTransition(sections, column, TransitionType.g1);
 			column += elementDataWidth;
-			mn = createTransition(sections, column, TransitionType.other);
+			
+			//mn
+			createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
-			unknown = createTransition(sections, column, TransitionType.other);
+			
+			//unknown
+			createTransition(sections, column, TransitionType.other);
 			column += elementDataWidth;
 
 			

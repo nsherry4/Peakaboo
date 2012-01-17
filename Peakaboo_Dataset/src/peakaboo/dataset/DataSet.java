@@ -1,4 +1,4 @@
-package peakaboo.dataset.provider.implementations;
+package peakaboo.dataset;
 
 
 import java.io.File;
@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
@@ -17,17 +16,10 @@ import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.dataset.mapping.MapTS;
-import peakaboo.dataset.provider.AbstractDataSetProvider;
-import peakaboo.fileio.DataFormat;
-import peakaboo.fileio.DataSource;
-import peakaboo.fileio.DSRealDimensions;
-import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
-import peakaboo.fileio.datasource.DataSourcePluginLoader;
-import peakaboo.filter.FilterSet;
-import peakaboo.mapping.FittingTransform;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.datasource.AbstractDataSourcePlugin;
+import peakaboo.datasource.DataFormat;
+import peakaboo.datasource.DataSource;
+import peakaboo.datasource.DataSourcePluginLoader;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Bounds;
@@ -39,37 +31,41 @@ import scitypes.SpectrumCalculations;
 
 
 /**
- * This class contains a set of data. Given a data set, it calculates the average and max. This allows this data to be
- * calculated once and accessed many times without adding cache logic elsewhere in the program.
+ * Given a DataSource, this class calculates the average and max spectra,
+ * along with a few other values. This allows the data to be calculated 
+ * once and accessed many times without adding cache logic elsewhere 
+ * in the program.
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009,2012
  */
 
-public class DataSetProvider extends AbstractDataSetProvider
+public class DataSet extends AbstractDataSet
 {
 
+	protected Spectrum				averagedSpectrum;
+	protected Spectrum				maximumSpectrum;
+	
 	protected float					maxValue;
-	protected int					scanLength;
+	protected int					spectrumLength;
 	
 	protected DataSource			dataSource;
-	
-	protected String				Created, CreatedBy, ProjectName, SessionName, Facility, Laboratory, ExperimentName,
-			Instrument, Technique, SampleName, ScanName, StartTime, EndTime;
 
-	protected Coord<Bounds<Number>>	realDimension;
-	protected SISize				realUnits;
-	protected Coord<Integer>		dataDimension;
-
+	//list of real coordinates for each scan
 	protected List<Coord<Number>>	realCoords;
+	
+	protected String				dataSourcePath;
 
+	protected float					maxEnergy;
 
-	public DataSetProvider()
+	
+
+	public DataSet()
 	{
 		super();
 	}
 	
 	
-	public DataSetProvider(DataSource ds)
+	public DataSet(DataSource ds)
 	{
 		super();
 		
@@ -82,7 +78,7 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public Spectrum averagePlot()
 	{
-		return new Spectrum(dsc_average);
+		return new Spectrum(averagedSpectrum);
 	}
 
 
@@ -118,21 +114,21 @@ public class DataSetProvider extends AbstractDataSetProvider
 		// (At - Ae*(Ne/Nt)) * (Nt/(Nt-Ne))
 
 		Ae = SpectrumCalculations.getDatasetAverage(badScans);
-		At = dsc_average;
+		At = averagedSpectrum;
 		Nt = dataSource.getScanCount();
 		Ne = badScans.size();
 
 		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
 		if (Nt == Ne)
 		{
-			return new Spectrum(new Spectrum(dsc_average.size(), 0.0f));
+			return new Spectrum(new Spectrum(averagedSpectrum.size(), 0.0f));
 		}
 
 		float Net = (float) Ne / (float) Nt;
 		float Ntte = Nt / ((float) Nt - (float) Ne);
 
-		Spectrum goodAverage = new Spectrum(dsc_average.size());
-		for (int i = 0; i < dsc_average.size(); i++)
+		Spectrum goodAverage = new Spectrum(averagedSpectrum.size());
+		for (int i = 0; i < averagedSpectrum.size(); i++)
 		{
 			goodAverage.set(i, (At.get(i) - Ae.get(i) * Net) * Ntte);
 		}
@@ -145,7 +141,7 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public Spectrum maximumPlot()
 	{
-		return new Spectrum(dsc_maximum);
+		return new Spectrum(maximumSpectrum);
 	}
 
 
@@ -185,7 +181,12 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public int expectedScanCount()
 	{
-		if (hasDimensions) return dataDimension.x * dataDimension.y;
+		
+		if (dataSource.hasRealDimensions()) 
+		{
+			Coord<Integer> dataDimension = dataSource.getDataDimensions();
+			return dataDimension.x * dataDimension.y;
+		}
 		return scanCount();
 	}
 
@@ -196,13 +197,6 @@ public class DataSetProvider extends AbstractDataSetProvider
 	}
 
 
-	@Override
-	public ExecutorSet<MapResultSet> calculateMap(final FilterSet filters, final FittingSet fittings, FittingTransform type)
-	{
-
-		return MapTS.calculateMap(dataSource, filters, fittings, type);
-		
-	}
 
 
 	/**
@@ -413,75 +407,57 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public int firstNonNullScanIndex()
 	{
-		return AbstractDataSetProvider.firstNonNullScanIndex(dataSource, 0);
+		return AbstractDataSet.firstNonNullScanIndex(dataSource, 0);
 	}
 	
 	@Override
 	public int firstNonNullScanIndex(int start)
 	{
-		return AbstractDataSetProvider.firstNonNullScanIndex(dataSource, start);
+		return AbstractDataSet.firstNonNullScanIndex(dataSource, start);
 	}
 	
 	@Override
 	public int lastNonNullScanIndex()
 	{
-		return AbstractDataSetProvider.lastNonNullScanIndex(dataSource, dataSource.getScanCount()-1);
+		return AbstractDataSet.lastNonNullScanIndex(dataSource, dataSource.getScanCount()-1);
 	}
 	
 	@Override
 	public int lastNonNullScanIndex(int upto)
 	{
-		return AbstractDataSetProvider.lastNonNullScanIndex(dataSource, upto);
+		return AbstractDataSet.lastNonNullScanIndex(dataSource, upto);
 	}
 	
 	
-	private void readDataSource(DataSource ds, DummyExecutor applying, FnGet<Boolean> isAborted, String dataSourcePath)
+	private void readDataSource(DataSource ds, DummyExecutor applying, FnGet<Boolean> isAborted, String path)
 	{
 		
 		if (ds == null || ds.getScanCount() == 0) return;
 				
 
 		
-		int nonNullScanIndex = AbstractDataSetProvider.firstNonNullScanIndex(ds, 0);
+		int nonNullScanIndex = AbstractDataSet.firstNonNullScanIndex(ds, 0);
 		if (nonNullScanIndex == -1) return;
 		Spectrum nonNullScan = ds.getScanAtIndex(nonNullScanIndex);
 		if (nonNullScan == null) return;
 		
-		scanLength = nonNullScan.size();
+		spectrumLength = nonNullScan.size();
 		
 		
 		
-		//if this data source has dimensions, prepare to read them
-		DSRealDimensions dims = null;
+		//if this data source has dimensions, make space to store them all in a list
 		if (ds.hasRealDimensions())
 		{
-		
-			dims = (DSRealDimensions) ds;
-
-			hasDimensions = true;
-
-			dataDimension = dims.getDataDimensions();
-			realDimension = dims.getRealDimensions();
-
 			realCoords = new ArrayList<Coord<Number>>();
-
-
-			realUnits = getSISizeFromUnitName(dims.getRealDimensionsUnit());
-
-
 		}
-		else
-		{
-			hasDimensions = false;
-		}
-		
+
 		
 		//go over each scan, calculating the average, max10th and max value
 		float max = Float.MIN_VALUE;
 		Spectrum avg, max10, current;
 		
-		avg = new Spectrum(scanLength);
-		max10 = new Spectrum(scanLength);
+		avg = new Spectrum(spectrumLength);
+		max10 = new Spectrum(spectrumLength);
 		
 		
 		for (int i = 0; i < ds.getScanCount(); i++)
@@ -496,7 +472,7 @@ public class DataSetProvider extends AbstractDataSetProvider
 			max = Math.max(max, SpectrumCalculations.max(current));
 			
 			//read the real coordinates for this scan
-			if (hasDimensions) realCoords.add(dims.getRealCoordinatesAtIndex(i));
+			if (ds.hasRealDimensions()) realCoords.add(ds.getRealCoordinatesAtIndex(i));
 			
 			
 			if (applying != null) applying.workUnitCompleted();
@@ -506,45 +482,23 @@ public class DataSetProvider extends AbstractDataSetProvider
 		
 		SpectrumCalculations.divideBy_inplace(avg, ds.getScanCount());
 		
-		dsc_average = avg;
-		dsc_maximum = max10;
+		averagedSpectrum = avg;
+		maximumSpectrum = max10;
 		
 		maxValue = max;
-		
-		
 
-		if (ds.hasMetadata())
-		{
-			
-			hasMetadata = true;
-
-			CreatedBy = ds.getCreator();
-			Created = ds.getCreationTime();
-			ProjectName = ds.getProjectName();
-			SessionName = ds.getSessionName();
-			Facility = ds.getFacilityName();
-			Laboratory = ds.getLaboratoryName();
-			ExperimentName = ds.getExperimentName();
-			Instrument = ds.getInstrumentName();
-			Technique = ds.getTechniqueName();
-			SampleName = ds.getSampleName();
-			ScanName = ds.getScanName();
-			StartTime = ds.getStartTime();
-			EndTime = ds.getEndTime();
-
-		}
-		else
-		{
-			hasMetadata = false;
-		}
-
-		this.dataSourcePath = dataSourcePath;
+		dataSourcePath = path;
 		this.dataSource = ds;
 		
 
 	}
 	
+	public String getDataSourcePath()
+	{
+		return dataSourcePath;
+	}
 
+	
 	private SISize getSISizeFromUnitName(String unitName)
 	{
 
@@ -570,9 +524,9 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public Coord<Integer> getDataDimensions()
 	{
-		if (hasDimensions)
+		if (dataSource.hasRealDimensions())
 		{
-			return dataDimension;
+			return dataSource.getDataDimensions();
 		}
 		return new Coord<Integer>(dataSource.getScanCount(), 1);
 	}
@@ -581,7 +535,7 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public List<Coord<Number>> getCoordinateList()
 	{
-		if (hasDimensions)
+		if (dataSource.hasRealDimensions())
 		{
 			return realCoords;
 		}
@@ -592,9 +546,9 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public Coord<Bounds<Number>> getRealDimensions()
 	{
-		if (hasDimensions)
+		if (dataSource.hasRealDimensions())
 		{
-			return realDimension;
+			return dataSource.getRealDimensions();
 		}
 		return null;
 	}
@@ -603,9 +557,9 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public SISize getRealDimensionsUnits()
 	{
-		if (hasDimensions)
+		if (dataSource.hasRealDimensions())
 		{
-			return realUnits;
+			return getSISizeFromUnitName(dataSource.getRealDimensionsUnit());
 		}
 		return null;
 	}
@@ -621,112 +575,125 @@ public class DataSetProvider extends AbstractDataSetProvider
 	@Override
 	public boolean hasDimensions()
 	{
-		return hasDimensions;
+		return dataSource.hasRealDimensions();
 	}
 
 
 	@Override
 	public boolean hasExtendedInformation()
 	{
-		return hasMetadata;
+		return dataSource.hasMetadata();
 	}
 
 
 	@Override
 	public String getCreationTime()
 	{
-		return Created;
+		if (dataSource.hasMetadata()) return dataSource.getCreationTime();
+		return "";
 	}
 
 
 	@Override
 	public String getCreator()
 	{
-		return CreatedBy;
+		if (dataSource.hasMetadata()) return dataSource.getCreator();
+		return "";
 	}
 
 
 	@Override
 	public String getEndTime()
 	{
-		return EndTime;
+		if (dataSource.hasMetadata()) return dataSource.getEndTime();
+		return "";
 	}
 
 
 	@Override
 	public String getExperimentName()
 	{
-		return ExperimentName;
+		if (dataSource.hasMetadata()) return dataSource.getExperimentName();
+		return "";
 	}
 
 
 	@Override
 	public String getFacilityName()
 	{
-		return Facility;
+		if (dataSource.hasMetadata()) return dataSource.getFacilityName();
+		return "";
 	}
 
 
 	@Override
 	public String getInstrumentName()
 	{
-		return Instrument;
+		if (dataSource.hasMetadata()) return dataSource.getInstrumentName();
+		return "";
 	}
 
 
 	@Override
 	public String getLaboratoryName()
 	{
-		return Laboratory;
+		if (dataSource.hasMetadata()) return dataSource.getLaboratoryName();
+		return "";
 	}
 
 
 	@Override
 	public String getProjectName()
 	{
-		return ProjectName;
+		if (dataSource.hasMetadata()) return dataSource.getProjectName();
+		return "";
 	}
 
 
 	@Override
 	public String getSampleName()
 	{
-		return SampleName;
+		if (dataSource.hasMetadata()) return dataSource.getSampleName();
+		return "";
 	}
 
 
 	@Override
 	public String getScanName()
 	{
-		return ScanName;
+		if (dataSource.hasMetadata()) return dataSource.getScanName();
+		return "";
 	}
 
 
 	@Override
 	public String getSessionName()
 	{
-		return SessionName;
+		if (dataSource.hasMetadata()) return dataSource.getSessionName();
+		return "";
 	}
 
 
 	@Override
 	public String getStartTime()
 	{
-		return StartTime;
+		if (dataSource.hasMetadata()) return dataSource.getStartTime();
+		return "";
 	}
 
 
 	@Override
 	public String getTechniqueName()
 	{
-		return Technique;
+		if (dataSource.hasMetadata()) return dataSource.getTechniqueName();
+		return "";
 	}
 
 
 	@Override
 	public void discard()
 	{
-		//discard references to large chunks of data
+		//discard our reference to the datasource
 		dataSource = null;
 	}
 
@@ -735,9 +702,14 @@ public class DataSetProvider extends AbstractDataSetProvider
 	public int scanSize()
 	{
 		// TODO Auto-generated method stub
-		return scanLength;
+		return spectrumLength;
 	}
 
+
+	public float energyPerChannel()
+	{
+		return maxEnergy / scanSize();
+	}
 
 	@Override
 	public DataSource getDataSource()

@@ -1,12 +1,7 @@
 package peakaboo.controller.mapper.mapset;
 
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import fava.functionable.FList;
-
 
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;

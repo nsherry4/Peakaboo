@@ -1,6 +1,5 @@
 package peakaboo.controller.plotter.settings;
 
-import peakaboo.common.Showable;
 
 /**
  * 
@@ -9,7 +8,7 @@ import peakaboo.common.Showable;
  * @author Nathaniel Sherry, 2009
  */
 
-public enum ChannelCompositeMode implements Showable
+public enum ChannelCompositeMode
 {
 
 	NONE {

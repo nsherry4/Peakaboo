@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Calculations"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_CurveFit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Filters"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Dataset"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

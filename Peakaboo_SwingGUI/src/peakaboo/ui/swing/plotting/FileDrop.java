@@ -427,7 +427,8 @@ public class FileDrop
         {   
             boolean support = false;
             try
-            {   Class<?> arbitraryDndClass = Class.forName( "java.awt.dnd.DnDConstants" );
+            {   @SuppressWarnings("unused")
+			Class<?> arbitraryDndClass = Class.forName( "java.awt.dnd.DnDConstants" );
                 support = true;
             }   // end try
             catch( Exception e )

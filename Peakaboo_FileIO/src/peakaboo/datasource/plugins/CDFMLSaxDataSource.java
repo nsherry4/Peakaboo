@@ -1,4 +1,4 @@
-package peakaboo.fileio.datasource.plugins;
+package peakaboo.datasource.plugins;
 
 
 import java.io.BufferedReader;
@@ -16,9 +16,9 @@ import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.Range;
 
-import peakaboo.fileio.datasource.AbstractCachedDataSourcePlugin;
-import peakaboo.fileio.datasource.plugins.cdfml.CDFMLReader;
-import peakaboo.fileio.datasource.plugins.cdfml.CDFMLStrings;
+import peakaboo.datasource.AbstractCachedDataSourcePlugin;
+import peakaboo.datasource.plugins.cdfml.CDFMLReader;
+import peakaboo.datasource.plugins.cdfml.CDFMLStrings;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
@@ -510,7 +510,7 @@ public class CDFMLSaxDataSource extends AbstractCachedDataSourcePlugin
 				
 			}
 			
-			getScanCountCallback.f(totalScanCount);
+			getScanCountCallback(totalScanCount);
 			
 			
 		}
@@ -518,7 +518,7 @@ public class CDFMLSaxDataSource extends AbstractCachedDataSourcePlugin
 		cache(entryNo, spectrum);
 		
 		scanReadCount++;
-		readScanCallback.f(1);
+		readScanCallback(1);
 		
 	}
 	
@@ -572,7 +572,7 @@ public class CDFMLSaxDataSource extends AbstractCachedDataSourcePlugin
 	public void read(String filename) throws Exception
 	{
 		
-		reader.read(filename, isAborted);
+		reader.read(filename, fn_isAborted);
 
 		
 		//get a listing of all of the categories that this supports

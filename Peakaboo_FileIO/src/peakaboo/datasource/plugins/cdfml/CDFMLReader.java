@@ -1,4 +1,4 @@
-package peakaboo.fileio.datasource.plugins.cdfml;
+package peakaboo.datasource.plugins.cdfml;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,11 +19,9 @@ import com.esotericsoftware.kryo.serialize.ArraySerializer;
 
 import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
-import peakaboo.fileio.KryoScratchList;
+import peakaboo.datasource.KryoScratchList;
 import scitypes.Spectrum;
 import scratch.ScratchList;
-
-import commonenvironment.AbstractFile;
 
 import fava.Functions;
 import fava.datatypes.Pair;
@@ -384,10 +382,11 @@ public abstract class CDFMLReader extends DefaultHandler2
 	//as we parse the XML file, we keep track of all the tags we are in the middle of (ie between <X> and </X>)
 	//by placing (tagname, map:(attribute -> value)) values on a stack. If we need to look up an attribute of a parent tag
 	//we can look it up here by n-levels-up
+	/*
 	private String getTagAttribute(int levelsUp, String attrName)
 	{
 		return tagStack.get(tagStack.size() - 1 - levelsUp).second.get(attrName);
-	}
+	*/
 	
 	private String getTagAttribute(String tagname, String attrName)
 	{
@@ -398,6 +397,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		return null;
 	}
 	
+	/*
 	private Integer getTagAttributeInt(String tagname, String attrName)
 	{
 		String result = getTagAttribute(tagname, attrName);
@@ -411,7 +411,8 @@ public abstract class CDFMLReader extends DefaultHandler2
 		if (val == null) return null;
 		return Integer.parseInt(val);
 	}
-		
+	*/
+	
 	private Spectrum getSpectrumFromString(int size, String scanString)
 	{
 		

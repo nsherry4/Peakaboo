@@ -1,4 +1,4 @@
-package peakaboo.fileio;
+package peakaboo.datasource;
 
 import scitypes.Bounds;
 import scitypes.Coord;

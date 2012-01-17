@@ -8,7 +8,6 @@ import java.util.List;
 
 
 
-import fava.functionable.FIterable;
 import fava.functionable.FList;
 import fava.functionable.Functionable;
 import fava.signatures.FnMap;

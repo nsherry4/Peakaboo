@@ -1,11 +1,11 @@
-package peakaboo.fileio.datasource.plugins;
+package peakaboo.datasource.plugins;
 
 import java.io.File;
 import java.util.List;
 
 import bolt.plugin.Plugin;
 
-import peakaboo.fileio.datasource.AbstractCachedDataSourcePlugin;
+import peakaboo.datasource.AbstractCachedDataSourcePlugin;
 
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
@@ -97,12 +97,12 @@ public class PlainTextDataSource extends AbstractCachedDataSourcePlugin
 		//reading marginally, but not by a lot, since the slowest part is
 		//human readable to machine readable conversion.
 		FList<String> lines = FStringInput.lines(new File(filename)).toSink();
-		getScanCountCallback.f(lines.size());
+		getScanCountCallback(lines.size());
 		
 		
 		for (String line : lines) {
 			
-			if (line == null || isAborted.f()) break;
+			if (line == null || isAborted()) break;
 			
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
@@ -130,7 +130,7 @@ public class PlainTextDataSource extends AbstractCachedDataSourcePlugin
 			cache(size, scan);
 			size++;
 			
-			readScanCallback.f(1);
+			readScanCallback(1);
 			
 		}
 	}
