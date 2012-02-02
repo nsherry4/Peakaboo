@@ -51,9 +51,9 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
-import swidget.widgets.PropertyPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.properties.PropertyViewPanel;
 
 
 /**
@@ -484,7 +484,7 @@ public class PeakabooMapperSwing extends JDialog
 					fittings.put(p.first.getDescription(), SigDigits.roundFloatTo(average, 2) + " " + corrected);
 				}
 				
-				PropertyPanel correctionsPanel = new PropertyPanel(fittings);
+				PropertyViewPanel correctionsPanel = new PropertyViewPanel(fittings);
 				final JDialog correctionsDialog = new JDialog(PeakabooMapperSwing.this, corr.getName(), true);
 				
 				Container c0 = correctionsDialog.getContentPane();
@@ -554,7 +554,7 @@ public class PeakabooMapperSwing extends JDialog
 	public void actionSaveCSV()
 	{
 
-		ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		controller.getActiveTabController().mapAsCSV(baos);
 		try
 		{

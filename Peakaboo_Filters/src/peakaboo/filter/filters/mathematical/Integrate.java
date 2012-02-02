@@ -26,15 +26,15 @@ public class Integrate extends AbstractSimpleFilter
 	
 
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getPluginName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
+		return "The " + getFilterName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
 	}
 
 
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
 		return "Integral";

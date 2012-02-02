@@ -63,7 +63,7 @@ public class FilterRenderer extends JPanel implements TableCellRenderer
 			setBackground(table.getBackground());
 		}
 
-		name.setText(f.getPluginName());
+		name.setText(f.getFilterName());
 		detail.setText(f.getFilterType().toString());
 
 		if (table.getRowHeight() < this.getPreferredSize().height) {

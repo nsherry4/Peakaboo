@@ -1,9 +1,11 @@
+package customfilter;
+
 import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 @Plugin
-public class MyCustomFilter extends AbstractSimpleFilter
+public class Reciprocal extends AbstractSimpleFilter
 {
 
 	@Override
@@ -13,7 +15,7 @@ public class MyCustomFilter extends AbstractSimpleFilter
 	}
 	
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
 		return "This filter calculates the reciprocal value of each " +
 				"channel, and normalizes the data so that the strongest" +
@@ -22,7 +24,7 @@ public class MyCustomFilter extends AbstractSimpleFilter
 	}
 
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 		return "Reciprocal";
 	}

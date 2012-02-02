@@ -29,14 +29,14 @@ public class Multiply extends AbstractSimpleFilter
 
 
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
-		return "The " + getPluginName() + " filter multiplies all points on a spectrum by a constant value.";
+		return "The " + getFilterName() + " filter multiplies all points on a spectrum by a constant value.";
 	}
 
 
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
 		return "Multiply";

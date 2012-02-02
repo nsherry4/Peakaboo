@@ -8,8 +8,8 @@ import fava.datatypes.Maybe;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
-import peakaboo.datasource.DataFormat;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -27,8 +27,8 @@ public interface IDataController extends IEventful
 	
 	public void setDataSource(DataSource ds);
 	public void setDataSetProvider(AbstractDataSet dsp);
-	public List<DataFormat> getDataFormats();
-	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files);
+	public List<AbstractDSP> getDataSourcePlugins();
+	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp);
 	
 	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	

@@ -1,24 +1,27 @@
+package customdatasource;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import peakaboo.datasource.plugin.AbstractDSP;
+
 import bolt.plugin.Plugin;
 
-import peakaboo.fileio.datasource.AbstractDataSourcePlugin;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
 @Plugin
-public class MyDataSource extends AbstractDataSourcePlugin
+public class CSV extends AbstractDSP
 {
 
 	List<Spectrum> 	data;
 	int				spectrumSize;
 	String			filename;
 	
-	public MyDataSource()
+	public CSV()
 	{
 		super();
 		data = new ArrayList<Spectrum>();
@@ -28,7 +31,8 @@ public class MyDataSource extends AbstractDataSourcePlugin
 	@Override
 	public boolean canRead(String filename)
 	{
-		return filename.toLowerCase().endsWith(".custom");
+		filename = filename.toLowerCase();
+		return filename.endsWith(".csv") || filename.endsWith(".txt");
 	}
 
 	@Override
@@ -45,7 +49,8 @@ public class MyDataSource extends AbstractDataSourcePlugin
 	public List<String> getFileExtensions()
 	{
 		List<String> extensions = new ArrayList<String>();
-		extensions.add("custom");
+		extensions.add("csv");
+		extensions.add("txt");
 		return extensions;
 	}
 
@@ -126,18 +131,18 @@ public class MyDataSource extends AbstractDataSourcePlugin
 		
 		read(filenames.get(0));
 	}
-	@Override
-	public String getPluginDescription()
-	{
-		return "Provides support for My Custom Format for XRD Data";
-	}
 
 	@Override
-	public String getPluginName()
+	public String getDataFormat()
 	{
-		return "My Custom Format";
+		return "Comma Separated Values";
 	}
-
+	
+	@Override
+	public String getDataFormatDescription()
+	{
+		return "The Comma Separated Value format is a simple XRF format comprised of rows of comma-separated numbers.";
+	}
 
 	
 	
@@ -306,6 +311,20 @@ public class MyDataSource extends AbstractDataSourcePlugin
 	{
 		throw new UnsupportedOperationException();
 	}
+
+
+	@Override
+	public Coord<Integer> getDataCoordinatesAtIndex(int arg0) throws IndexOutOfBoundsException
+	{
+		throw new UnsupportedOperationException();
+	}
+
+
+	public static void main(String[] args)
+	{
+		
+	}
+
 
 
 

@@ -66,6 +66,8 @@ import eventful.EventfulTypeListener;
 import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
+import fava.signatures.FnCondition;
+import fava.signatures.FnMap;
 
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
@@ -76,11 +78,13 @@ import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.datasource.DataFormat;
+import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.PlotterFrame;
+import peakaboo.ui.swing.plotting.datasource.DataSourceLookup;
+import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import plural.executor.ExecutorSet;
@@ -1359,35 +1363,76 @@ public class PlotPanel extends ClearPanel
 	{
 
 		List<AbstractFile> files;
-
-		List<DataFormat> formats =  new ArrayList<DataFormat>(dataController.getDataFormats());
-			
+		List<AbstractDSP> formats =  new ArrayList<AbstractDSP>(dataController.getDataSourcePlugins());
+		
+		
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
 		for (int i = 0; i < formats.size(); i++)
 		{
-			exts[i] = formats.get(i).extensions.toArray(new String[]{});
-			descs[i] = formats.get(i).name;
+			exts[i] = formats.get(i).getFileExtensions().toArray(new String[]{});
+			descs[i] = formats.get(i).getDataFormat();
 		}
 
 		files = openNewDataset(exts, descs);
+		if (files == null) return;
 		
-		loadFiles(files);
+		FList<String> filenames = FList.wrap(files).map(new FnMap<AbstractFile, String>() {
+
+			@Override
+			public String f(AbstractFile v)
+			{
+				return v.getFileName();
+			}});
+		
+		
+		loadFiles(filenames);
+		
+		
 
 	}
 	
 	private void actionOpenSampleData()
 	{
-		loadFiles(  new FList<AbstractFile>(IOOperations.getFileFromJar("/peakaboo/datasource/SampleData.xml"))  );
+		loadFiles(  new FList<String>(IOOperations.getFileFromJar("/peakaboo/datasource/SampleData.xml").getFileName())  );
 	}
 
 
-	public void loadFiles(List<AbstractFile> files)
+	public void loadFiles(List<String> filenames)
+	{
+
+		List<AbstractDSP> formats =  new ArrayList<AbstractDSP>(dataController.getDataSourcePlugins());
+		formats = DataSourceLookup.findDataSourcesForFiles(filenames, formats);
+		
+		if (formats.size() > 1)
+		{
+			DataSourceSelection selection = new DataSourceSelection();
+			AbstractDSP dsp = selection.pickDSP(container, formats);
+			if (dsp != null) loadFiles(filenames, dsp);
+		}
+		else if (formats.size() == 0)
+		{
+			JOptionPane.showMessageDialog(
+					this, 
+					"Could not determine the data format of the selected file(s)", 
+					"Open Failed", 
+					JOptionPane.ERROR_MESSAGE, 
+					StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON)
+				);
+		}
+		else
+		{
+			loadFiles(filenames, formats.get(0));
+		}
+		
+	}
+	
+	public void loadFiles(List<String> files, AbstractDSP dsp)
 	{
 		if (files != null)
 		{
 
-			ExecutorSet<Maybe<Boolean>> reading = dataController.TASK_readFileListAsDataset(files);
+			ExecutorSet<Maybe<Boolean>> reading = dataController.TASK_readFileListAsDataset(files, dsp);
 			ExecutorSetView view = new ExecutorSetView(container, reading);
 			
 			//handle some race condition where the window gets told to close too early on failure
@@ -1395,11 +1440,8 @@ public class PlotPanel extends ClearPanel
 			view.setVisible(false);
 
 			if (! reading.getResult().is()) {
-				JOptionPane.showMessageDialog(this, "Failed to open dataset", "Read Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+				JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.", "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 			}
-			
-			// TaskListView was blocking.. it is now closed
-			System.gc();
 
 			// set some controls based on the fact that we have just loaded a
 			// new data set
@@ -1469,7 +1511,7 @@ public class PlotPanel extends ClearPanel
 
 		try
 		{
-			ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			controller.savePreferences(baos);
 			savedSessionFileName = SwidgetIO.saveFile(
 					container,
@@ -1508,7 +1550,7 @@ public class PlotPanel extends ClearPanel
 		{
 
 			// get an output stream to write the data to
-			ByteArrayOutputStream baos = SwidgetIO.getSaveFileBuffer();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			OutputStreamWriter osw = new OutputStreamWriter(baos);
 
 			// write out the data

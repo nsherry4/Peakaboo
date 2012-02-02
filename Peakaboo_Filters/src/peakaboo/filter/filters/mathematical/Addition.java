@@ -28,15 +28,15 @@ public class Addition extends AbstractSimpleFilter
 
 
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getPluginName() + " filter adds a constant value to all points on a spectrum.";
+		return "The " + getFilterName() + " filter adds a constant value to all points on a spectrum.";
 	}
 
 
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
 		return "Add";

@@ -109,11 +109,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 
 					parent.loadFiles(
-						FArray.wrap(files).map(new FnMap<File, AbstractFile>() {
+						FArray.wrap(files).map(new FnMap<File, String>() {
 
-							public AbstractFile f(File element)
+							public String f(File element)
 							{
-								return new AbstractFile(element);
+								return element.getAbsolutePath();
 							}
 						}).toSink()
 						);
@@ -315,7 +315,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			extension = f.getPainter();
 			
 			if (extension != null && f.enabled) {
-				extension.setSourceName(f.getPluginName());
+				extension.setSourceName(f.getFilterName());
 				plotPainters.add(extension);
 			}
 		}

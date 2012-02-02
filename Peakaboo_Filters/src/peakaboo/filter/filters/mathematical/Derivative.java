@@ -25,15 +25,15 @@ public class Derivative extends AbstractSimpleFilter
 
 
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getPluginName() + " transforms the data such that each channel represents the difference between itself and the channel before it.";
+		return "The " + getFilterName() + " transforms the data such that each channel represents the difference between itself and the channel before it.";
 	}
 
 
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
 		return "Derivative";

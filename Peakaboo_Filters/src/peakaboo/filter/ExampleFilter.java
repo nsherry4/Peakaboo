@@ -29,12 +29,12 @@ public class ExampleFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String getPluginDescription() {
+	public String getFilterDescription() {
 		return "This filter is an example of how to make filters";
 	}
 
 	@Override
-	public String getPluginName() {
+	public String getFilterName() {
 		return "Example Filter";
 	}
 

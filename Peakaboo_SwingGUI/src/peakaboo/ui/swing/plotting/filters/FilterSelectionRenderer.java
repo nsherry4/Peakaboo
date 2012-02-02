@@ -31,7 +31,7 @@ public class FilterSelectionRenderer extends DefaultTreeCellRenderer
 		if (value instanceof AbstractFilter) {
 
 			AbstractFilter f = (AbstractFilter) value;
-			setText(f.getPluginName());
+			setText(f.getFilterName());
 
 		} else if (value instanceof FilterType) {
 

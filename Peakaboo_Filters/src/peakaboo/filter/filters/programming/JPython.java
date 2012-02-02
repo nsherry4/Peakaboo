@@ -58,12 +58,12 @@ public class JPython extends AbstractSimpleFilter {
 	}
 
 	@Override
-	public String getPluginName() {
+	public String getFilterName() {
 		return "JPython Code";
 	}
 
 	@Override
-	public String getPluginDescription() {
+	public String getFilterDescription() {
 		return "";
 	}
 

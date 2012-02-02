@@ -7,6 +7,7 @@ import bolt.plugin.Plugin;
 import fava.signatures.FnCondition;
 
 import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.FilterLoader;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scidraw.drawing.painters.PainterData;
@@ -25,7 +26,7 @@ public class SegmentFilter extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		List<AbstractFilter> filters = AbstractFilter.getAvailableFilters().filter( 
+		List<AbstractFilter> filters = FilterLoader.getAvailableFilters().filter( 
 				
 				new FnCondition<AbstractFilter>() {
 
@@ -73,13 +74,13 @@ public class SegmentFilter extends AbstractFilter
 	}
 
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
-		return "The " + getPluginName() + " filter allows the application of another filter to a portion of a spectrum.";
+		return "The " + getFilterName() + " filter allows the application of another filter to a portion of a spectrum.";
 	}
 
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 		return "Filter Partial Spectrum";
 	}

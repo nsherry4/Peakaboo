@@ -9,9 +9,9 @@ import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.EmptyDataSet;
-import peakaboo.datasource.DataFormat;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.internal.CopiedDataSource;
+import peakaboo.datasource.internal.CopiedDS;
+import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
@@ -55,17 +55,18 @@ public class DataController extends Eventful implements IDataController
 	// =============================================
 	
 	@Override
-	public List<DataFormat> getDataFormats()
+	public List<AbstractDSP> getDataSourcePlugins()
 	{
-		return DataSet.getDataFormats();
+		return DataSet.getDataSourcePlugins();
 	}
 	
-	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	
+	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final DataSet dataset = new DataSet();
-		final ExecutorSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(files);
+		final ExecutorSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(filenames, dsp);
 
 
 		
@@ -129,7 +130,7 @@ public class DataController extends Eventful implements IDataController
 
 	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return new CopiedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
+		return new CopiedDS(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
 	public String getDatasetName()

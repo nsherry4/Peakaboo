@@ -196,7 +196,7 @@ public class FilterSelectionViewer extends ClearPanel
 					AbstractFilter filter = (AbstractFilter) leaf;
 					//filter = AbstractFilter.createNewInstance(filter);
 					//filter.initialize();
-					controller.addFilter(filter.getPluginName());
+					controller.addFilter(filter.getFilterName());
 				}
 
 				owner.showEditPane();

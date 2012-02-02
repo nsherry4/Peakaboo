@@ -79,8 +79,8 @@ public class SingleFilterView extends JPanel implements Scrollable
 		
 
 		if (showTitle) {
-			TitleGradientPanel panel = new TitleGradientPanel(filter.getPluginName() + " Filter", true);
-			panel.setToolTipText(filter.getPluginDescription());
+			TitleGradientPanel panel = new TitleGradientPanel(filter.getFilterName() + " Filter", true);
+			panel.setToolTipText(filter.getFilterDescription());
 			this.add(panel, BorderLayout.NORTH);
 		}
 		
@@ -94,7 +94,7 @@ public class SingleFilterView extends JPanel implements Scrollable
 	@Override
 	public String toString()
 	{
-		return filter.getPluginName();
+		return filter.getFilterName();
 	}
 
 

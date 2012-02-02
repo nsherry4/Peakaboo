@@ -2,6 +2,10 @@ package peakaboo.datasource;
 
 import java.util.List;
 
+import peakaboo.datasource.interfaces.DSMetadata;
+import peakaboo.datasource.interfaces.DSRealDimensions;
+import peakaboo.datasource.interfaces.DSScanData;
+
 public interface DataSource extends DSScanData, DSRealDimensions, DSMetadata
 {
 	

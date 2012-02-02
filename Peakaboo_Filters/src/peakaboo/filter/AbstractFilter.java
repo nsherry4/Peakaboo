@@ -3,6 +3,7 @@ package peakaboo.filter;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -103,43 +104,17 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		this.enabled = true;
 	}
 
-	public static FList<AbstractFilter> getAvailableFilters()
-	{
-
-		try {
-			
-			FList<AbstractFilter> filters = new FList<AbstractFilter>(); 
-			
-			BoltPluginLoader<AbstractFilter> pluginLoader;
-			pluginLoader = new BoltPluginLoader<AbstractFilter>(AbstractFilter.class);
-			
-			Package p;
-			for (FilterType ft : FilterType.values()) {
-				
-				p = AbstractFilter.class.getPackage();				
-				pluginLoader.loadLocalPlugins(p.getName() + "." + ft.getSubPackage());
-				
-			}
-			
-			File appDataDir = Env.appDataDirectory(Version.program_name);
-			appDataDir.mkdirs();
-			
-			pluginLoader.loadPluginsFromJarsInDirectory(appDataDir);
-			if (Env.isClassInJar(AbstractFilter.class)) 
-			{
-				pluginLoader.loadPluginsFromJarsInDirectory(Env.getJarForClass(AbstractFilter.class).getParentFile());
-			}
-			
-			filters.addAll(pluginLoader.getNewInstancesForAllPlugins());
-			return filters;
-			
-		} catch (ClassInheritanceException e) {
-			e.printStackTrace();
-		}
-				
-		return null;
-		
-	}
+	/**
+	 * Returns a name for this plugin
+	 */
+	public abstract String getFilterName();
+	
+	/**
+	 * Returns a short description for this plugin
+	 */
+	public abstract String getFilterDescription();
+	
+	
 
 
 	
@@ -190,7 +165,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		}
 		catch(Throwable e)
 		{
-			System.out.println(getPluginName() + " Filter Failed");
+			System.out.println(getFilterName() + " Filter Failed");
 			if (!Version.release) e.printStackTrace();
 			return data;
 		}
@@ -204,6 +179,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	
 	public String toString()
 	{
-		return this.getPluginName();
+		return this.getFilterName();
 	}
+	
 }

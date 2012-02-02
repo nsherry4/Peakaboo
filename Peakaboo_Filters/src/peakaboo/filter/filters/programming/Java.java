@@ -100,13 +100,13 @@ public class Java extends AbstractSimpleFilter {
 	}
 
 	@Override
-	public String getPluginName() {
+	public String getFilterName() {
 		return "Java Code";
 
 	}
 
 	@Override
-	public String getPluginDescription() {
+	public String getFilterDescription() {
 		return "";
 	}
 

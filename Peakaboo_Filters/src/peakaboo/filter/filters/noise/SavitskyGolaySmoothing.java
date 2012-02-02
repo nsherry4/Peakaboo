@@ -51,7 +51,7 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	}
 	
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 
 		return "Savitsky-Golay";
@@ -94,10 +94,10 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 
 
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
 		return "The "
-				+ getPluginName()
+				+ getFilterName()
 				+ " filter attempts to remove noise by fitting a polynomial to each point p0 and its surrounding points p0-n..p0+n, and then taking the value of the polynomial at point p0. A moving average may be considered a special case of this filter with a polynomial of order 1.";
 	}
 

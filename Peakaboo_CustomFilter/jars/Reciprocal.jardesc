@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="/home/nathaniel/.config/Peakaboo/MyCustomFilter.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/Peakaboo_CustomFilter/jars/CustomFilter.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="/home/nathaniel/Dropbox/Public/ScienceStudio/Reciprocal-Filter.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Peakaboo_CustomFilter/jars/Reciprocal.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">

@@ -28,7 +28,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	{
 
 		filters = new ArrayList<AbstractFilter>();
-		availableFilters = AbstractFilter.getAvailableFilters();
+		availableFilters = FilterLoader.getAvailableFilters();
 
 	}
 
@@ -167,7 +167,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 
 	public synchronized String getFilterName(int index)
 	{
-		return filters.get(index).getPluginName();
+		return filters.get(index).getFilterName();
 	}
 
 

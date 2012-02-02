@@ -3,12 +3,10 @@ package peakaboo.dataset;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
-import commonenvironment.IOOperations;
 
 import fava.datatypes.Maybe;
 import fava.functionable.FList;
@@ -16,10 +14,9 @@ import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 
-import peakaboo.datasource.AbstractDataSourcePlugin;
-import peakaboo.datasource.DataFormat;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.DataSourcePluginLoader;
+import peakaboo.datasource.plugin.AbstractDSP;
+import peakaboo.datasource.plugin.DSPLoader;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Bounds;
@@ -204,12 +201,12 @@ public class DataSet extends AbstractDataSet
 	 * @param files the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when complated, returns a Boolean indicating success
 	 */
-	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<AbstractFile> files)
+	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<String> filenames, final AbstractDSP dataSource)
 	{
 
 		
 		// sort the filenames property
-		Collections.sort(files);
+		Collections.sort(filenames);
 		
 		// Create the tasklist for reading the files
 		final ExecutorSet<Maybe<Boolean>> tasklist;
@@ -232,7 +229,6 @@ public class DataSet extends AbstractDataSet
 			{
 				
 				final int fileCount;
-				final AbstractDataSourcePlugin dataSource;
 				
 				opening.advanceState();
 				
@@ -265,18 +261,15 @@ public class DataSet extends AbstractDataSet
 				};
 				
 				
-				//get the correct kind of DataSource
-				List<String> filenames = new ArrayList<String>();
-				for (AbstractFile file : files) {   filenames.add(file.getFileName());   }
+				//get the correct kind of DataSource				
 				
-				dataSource = findDataSourceForFiles(filenames);
 				
 				if (dataSource != null)
 				{
 					try
 					{
 						dataSource.setCallbacks(gotScanCount, readScans, isAborted);
-						if (files.size() == 1)
+						if (filenames.size() == 1)
 						{
 							dataSource.read(filenames.get(0));
 						}
@@ -316,7 +309,7 @@ public class DataSet extends AbstractDataSet
 				
 				
 				//now that we have the datasource, read it
-				readDataSource(  dataSource, applying, isAborted, new File(files.get(0).getFileName()).getParent()  );
+				readDataSource(  dataSource, applying, isAborted, new File(filenames.get(0)).getParent()  );
 				
 				
 				if (isAborted.f())
@@ -345,63 +338,6 @@ public class DataSet extends AbstractDataSet
 	}
 
 
-	private AbstractDataSourcePlugin findDataSourceForFiles(List<String> filenames)
-	{
-
-		
-		List<AbstractDataSourcePlugin> datasources = DataSourcePluginLoader.getDataSourcePlugins();
-		
-		if (filenames.size() == 1)
-		{
-			String filename = filenames.get(0);
-			
-			for (AbstractDataSourcePlugin datasource : datasources)
-			{
-			
-				if ( !matchFileExtension(filename, datasource.getFileExtensions()) ) continue;
-				if ( !datasource.canRead(filename) ) continue;
-				return datasource;
-
-				
-			}//for datasources
-		}
-		else
-		{
-		
-			//loop over every datasource
-			for (AbstractDataSourcePlugin datasource : datasources)
-			{
-				
-				if ( !matchFileExtensions(filenames, datasource.getFileExtensions()) ) continue;
-				if ( !datasource.canRead(filenames) ) continue;
-				return datasource;
-				
-			}
-			
-		}
-		
-		return null;
-		
-	}
-	
-	private boolean matchFileExtension(String filename, Collection<String> dsexts)
-	{
-		for (String dsext : dsexts)
-		{
-			
-			if (IOOperations.getFileExt(filename).compareToIgnoreCase(dsext) == 0) return true;
-		}
-		return false;
-	}
-	
-	private boolean matchFileExtensions(Collection<String> filenames, Collection<String> dsexts)
-	{
-		for (String filename : filenames)
-		{
-			if (!matchFileExtension(filename, dsexts)) return false;
-		}
-		return true;
-	}
 	
 	
 	@Override
@@ -731,9 +667,9 @@ public class DataSet extends AbstractDataSet
 	 */
 	
 
-	public static List<DataFormat> getDataFormats()
+	public static List<AbstractDSP> getDataSourcePlugins()
 	{
-		return DataSourcePluginLoader.getDataFormats();
+		return DSPLoader.getDSPs();
 	}
 	
 }

@@ -44,13 +44,13 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	}
 
 	@Override
-	public String getPluginDescription()
+	public String getFilterDescription()
 	{
-		return "The " + getPluginName() + " scales each spectrum so that the intensity at a given channel is always the same.";
+		return "The " + getFilterName() + " scales each spectrum so that the intensity at a given channel is always the same.";
 	}
 
 	@Override
-	public String getPluginName()
+	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
 		return "Normalizer";
