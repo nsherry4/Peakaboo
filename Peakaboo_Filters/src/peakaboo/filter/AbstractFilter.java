@@ -1,18 +1,11 @@
 package peakaboo.filter;
 
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import commonenvironment.Env;
-import fava.functionable.FList;
-
 import bolt.plugin.BoltPlugin;
-import bolt.plugin.BoltPluginLoader;
-import bolt.plugin.ClassInheritanceException;
 
 
 import peakaboo.common.Version;

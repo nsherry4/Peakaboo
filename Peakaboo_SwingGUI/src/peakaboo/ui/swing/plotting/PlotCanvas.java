@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.swing.Scrollable;
 
-import commonenvironment.AbstractFile;
 import commonenvironment.Env;
 
 import eventful.EventfulTypeListener;

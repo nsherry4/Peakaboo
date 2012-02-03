@@ -2,7 +2,6 @@ package peakaboo.controller.plotter.data;
 
 import java.util.List;
 
-import commonenvironment.AbstractFile;
 import eventful.IEventful;
 import fava.datatypes.Maybe;
 

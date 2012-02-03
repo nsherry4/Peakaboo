@@ -22,8 +22,6 @@ import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
 
-import commonenvironment.AbstractFile;
-
 import eventful.Eventful;
 import eventful.EventfulListener;
 import fava.datatypes.Maybe;

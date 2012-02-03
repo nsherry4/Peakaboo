@@ -66,7 +66,6 @@ import eventful.EventfulTypeListener;
 import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnCondition;
 import fava.signatures.FnMap;
 
 import peakaboo.common.Version;

@@ -6,10 +6,7 @@ import java.util.List;
 
 import peakaboo.datasource.plugin.AbstractDSP;
 
-import commonenvironment.AbstractFile;
 import commonenvironment.IOOperations;
-import fava.functionable.FList;
-import fava.signatures.FnMap;
 
 public class DataSourceLookup
 {
