@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package peakaboo.ui.swing.plotting.filters.list;
 
 
 import java.awt.Component;

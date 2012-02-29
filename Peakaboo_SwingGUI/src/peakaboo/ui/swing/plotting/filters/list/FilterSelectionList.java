@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package peakaboo.ui.swing.plotting.filters.list;
 
 
 import java.awt.BorderLayout;
@@ -21,7 +21,7 @@ import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
 
 
-public class FilterSelectionViewer extends ClearPanel
+public class FilterSelectionList extends ClearPanel
 {
 
 	protected IFilteringController	controller;
@@ -32,7 +32,7 @@ public class FilterSelectionViewer extends ClearPanel
 	private SelectionListControls 	controls;
 
 
-	public FilterSelectionViewer(IFilteringController _controller, FiltersetViewer _owner)
+	public FilterSelectionList(IFilteringController _controller, FiltersetViewer _owner)
 	{
 
 		this.controller = _controller;

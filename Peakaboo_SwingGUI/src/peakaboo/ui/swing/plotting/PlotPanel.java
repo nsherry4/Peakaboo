@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +84,7 @@ import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.PlotterFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceLookup;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
-import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
+import peakaboo.ui.swing.plotting.filters.list.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
@@ -708,7 +708,7 @@ public class PlotPanel extends ClearPanel
 
 		menuBar = new JMenuBar();
 
-
+		
 
 		// FILE Menu
 		menu = new JMenu("File");
@@ -1392,7 +1392,7 @@ public class PlotPanel extends ClearPanel
 	}
 	
 	private void actionOpenSampleData()
-	{
+	{	
 		loadFiles(  new FList<String>(IOOperations.getFileFromJar("/peakaboo/datasource/SampleData.xml").getFileName())  );
 	}
 
@@ -1608,23 +1608,23 @@ public class PlotPanel extends ClearPanel
 	public void actionShowInfo()
 	{
 		
-		Map<String, String> properties = new HashMap<String, String>();
+		Map<String, String> properties = new LinkedHashMap<String, String>();
 
-		properties.put("Date of Creation:", dataController.getScanCreationTime());
-		properties.put("Created By:", dataController.getScanCreator());
+		properties.put("Date of Creation", dataController.getScanCreationTime());
+		properties.put("Created By", dataController.getScanCreator());
 		
-		properties.put("Project Name: ", dataController.getScanProjectName());
-		properties.put("Session Name: ", dataController.getScanSessionName());
-		properties.put("Experiment Name: ", dataController.getScanExperimentName());
-		properties.put("Sample Name: ", dataController.getScanSampleName());
-		properties.put("Scan Name: ", dataController.getScanScanName());
+		properties.put("Project Name", dataController.getScanProjectName());
+		properties.put("Session Name", dataController.getScanSessionName());
+		properties.put("Experiment Name", dataController.getScanExperimentName());
+		properties.put("Sample Name", dataController.getScanSampleName());
+		properties.put("Scan Name", dataController.getScanScanName());
 		
-		properties.put("Facility: ", dataController.getScanFacilityName());
-		properties.put("Laboratory: ", dataController.getScanLaboratoryName());
-		properties.put("Instrument: ", dataController.getScanInstrumentName());
-		properties.put("Technique: ", dataController.getScanTechniqueName());
+		properties.put("Facility", dataController.getScanFacilityName());
+		properties.put("Laboratory", dataController.getScanLaboratoryName());
+		properties.put("Instrument", dataController.getScanInstrumentName());
+		properties.put("Technique", dataController.getScanTechniqueName());
 		
-		new PropertyDialogue("Dataset Information", container, properties);
+		new PropertyDialogue("Dataset Information", "Extended Information", container, properties);
 
 	}
 

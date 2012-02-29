@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package peakaboo.ui.swing.plotting.filters.list;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -34,8 +34,8 @@ public class FiltersetViewer extends ClearPanel {
 		layout = new CardLayout();
 		this.setLayout(layout);
 		
-		this.add(new FilterEditViewer(controller, owner, this), EDIT);
-		this.add(new FilterSelectionViewer(controller, this), SELECT);
+		this.add(new FilterList(controller, owner, this), EDIT);
+		this.add(new FilterSelectionList(controller, this), SELECT);
 		
 	}
 	

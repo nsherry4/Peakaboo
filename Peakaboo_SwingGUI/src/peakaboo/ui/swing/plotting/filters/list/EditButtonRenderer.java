@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package peakaboo.ui.swing.plotting.filters.list;
 
 
 import java.awt.Component;
@@ -16,14 +16,14 @@ import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;
 
 
-public class FilterEditButtonRenderer implements TableCellRenderer
+public class EditButtonRenderer implements TableCellRenderer
 {
 
 	private ImageButton	edit;
 	private JPanel container;
 
 
-	public FilterEditButtonRenderer()
+	public EditButtonRenderer()
 	{
 
 		edit = new ImageButton(StockIcon.MISC_PREFERENCES, "…", "Edit Filter", Layout.IMAGE, IconSize.TOOLBAR_SMALL);

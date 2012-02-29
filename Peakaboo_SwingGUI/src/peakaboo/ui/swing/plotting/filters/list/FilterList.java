@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package peakaboo.ui.swing.plotting.filters.list;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,7 +23,7 @@ import swidget.widgets.ClearPanel;
 import swidget.widgets.listcontrols.ListControls;
 
 
-public class FilterEditViewer extends ClearPanel{
+public class FilterList extends ClearPanel{
 
 	
 	protected IFilteringController controller;
@@ -34,7 +34,7 @@ public class FilterEditViewer extends ClearPanel{
 	
 	protected ListControls controls;
 	
-	public FilterEditViewer(IFilteringController _controller, JFrame windowOwner, FiltersetViewer _owner){
+	public FilterList(IFilteringController _controller, JFrame windowOwner, FiltersetViewer _owner){
 		
 		super();
 		
@@ -144,8 +144,8 @@ public class FilterEditViewer extends ClearPanel{
 		t = new JTable(m);
 		
 		
-		t.getColumnModel().getColumn(1).setCellRenderer(new FilterEditButtonRenderer());
-		t.getColumnModel().getColumn(1).setCellEditor(new FilterEditButtonEditor(controller, owner));
+		t.getColumnModel().getColumn(1).setCellRenderer(new EditButtonRenderer());
+		t.getColumnModel().getColumn(1).setCellEditor(new EditButtonEditor(controller, owner));
 		
 		t.getColumnModel().getColumn(2).setCellRenderer(new FilterRenderer());
 		//t.setRowHeight(10);

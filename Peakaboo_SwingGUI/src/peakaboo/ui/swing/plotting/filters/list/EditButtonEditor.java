@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package peakaboo.ui.swing.plotting.filters.list;
 
 
 
@@ -14,6 +14,7 @@ import javax.swing.JTable;
 
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
+import peakaboo.ui.swing.plotting.filters.settings.SettingsDialogue;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -22,7 +23,7 @@ import swidget.widgets.ImageButton.Layout;
 
 
 
-class FilterEditButtonEditor extends DefaultCellEditor
+public class EditButtonEditor extends DefaultCellEditor
 {
 
 	protected ImageButton		button;
@@ -37,7 +38,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 	private boolean				isPushed;
 
 
-	public FilterEditButtonEditor(IFilteringController controller, JFrame owner)
+	public EditButtonEditor(IFilteringController controller, JFrame owner)
 	{
 		super(new JCheckBox());
 
@@ -93,7 +94,7 @@ class FilterEditButtonEditor extends DefaultCellEditor
 		if (isPushed)
 		{
 
-			new FilterEditDialogue(filter, controller, owner);
+			new SettingsDialogue(filter, controller, owner);
 
 		}
 		isPushed = false;

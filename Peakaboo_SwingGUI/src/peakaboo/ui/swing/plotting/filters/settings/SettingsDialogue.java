@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package peakaboo.ui.swing.plotting.filters.settings;
 
 
 import java.awt.BorderLayout;
@@ -25,7 +25,7 @@ import swidget.widgets.WrappingLabel;
 import swidget.widgets.ImageButton.Layout;
 
 
-public class FilterEditDialogue extends JDialog
+public class SettingsDialogue extends JDialog
 {
 
 	protected IFilteringController	controller;
@@ -33,7 +33,7 @@ public class FilterEditDialogue extends JDialog
 	private JScrollPane scroller;
 	
 
-	public FilterEditDialogue(AbstractFilter _filter, IFilteringController _controller, JFrame owner)
+	public SettingsDialogue(AbstractFilter _filter, IFilteringController _controller, JFrame owner)
 	{
 
 		super(owner, _filter.getFilterName(), false);
@@ -76,7 +76,7 @@ public class FilterEditDialogue extends JDialog
 		});
 
 		setLocationRelativeTo(owner);
-		setTitle("Filter Settings");
+		setTitle(_filter.getFilterName() + " Filter Settings");
 		setResizable(false);
 		pack();
 		setVisible(true);
@@ -91,8 +91,8 @@ public class FilterEditDialogue extends JDialog
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				FilterEditDialogue.this.setVisible(false);
-				FilterEditDialogue.this.dispose();
+				SettingsDialogue.this.setVisible(false);
+				SettingsDialogue.this.dispose();
 			}
 		});
 		
@@ -102,12 +102,12 @@ public class FilterEditDialogue extends JDialog
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				JDialog infodialog = new JDialog(FilterEditDialogue.this, true);
+				JDialog infodialog = new JDialog(SettingsDialogue.this, true);
 				WrappingLabel infotext = new WrappingLabel(f.getFilterDescription(), 400);
 				infotext.setBorder(Spacing.bMedium());
 				infodialog.getContentPane().add(infotext);
 				infodialog.pack();
-				infodialog.setLocationRelativeTo(FilterEditDialogue.this);
+				infodialog.setLocationRelativeTo(SettingsDialogue.this);
 				infodialog.setVisible(true);
 			}
 		});
