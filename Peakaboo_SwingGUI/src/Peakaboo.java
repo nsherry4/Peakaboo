@@ -1,5 +1,15 @@
 
+import java.awt.Dimension;
+import java.awt.Window;
+
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import com.ezware.common.Strings;
+import com.ezware.dialog.task.CommandLink;
+import com.ezware.dialog.task.TaskDialog;
+import com.ezware.dialog.task.TaskDialog.StandardCommand;
 
 import commonenvironment.Env;
 
@@ -20,7 +30,7 @@ public class Peakaboo
 	/**
 	 * Performs one-time only start-up tasks like reading the peak table
 	 */
-	public static void initialize()
+	private static void initialize()
 	{
 		
 		
@@ -36,10 +46,67 @@ public class Peakaboo
 		
 	}
 	
-	public static void main(String[] args)
+
+	private static boolean showError(Window parent, Throwable e)
 	{
+		TaskDialog errorDialog = new TaskDialog(parent, "Peakaboo");
+		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+		errorDialog.setInstruction("Peakaboo has encountered a problem and must exit");
 		
+		String text = "";
+		if (Strings.isEmpty(text)) text = "The problem is of type " + e.getClass().getSimpleName();
+		errorDialog.setText(text);
+			
+		JTextArea stacktrace = new JTextArea();
+		stacktrace.setEditable(false);
+		stacktrace.setText(Strings.stackStraceAsString(e));
+		
+		JScrollPane scroller = new JScrollPane(stacktrace);
+		scroller.setPreferredSize(new Dimension(500, 200));
+		errorDialog.getDetails().setExpandableComponent(scroller);
+		errorDialog.getDetails().setExpanded(false);
+		
+		return (errorDialog.show().getTag().ordinal() != 0);
+	}
+	
+	private static void runPeakaboo()
+	{
+
 		initialize();
+
+		if (Env.heapSize() < 120){
+			JOptionPane.showMessageDialog(
+				null,
+				"This system's Java VM is only allocated " + Env.heapSize()
+				+ "MB of memory: processing large data sets may be quite slow, if not impossible.",
+				"Low on Memory",
+				JOptionPane.INFORMATION_MESSAGE,
+				StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+		}
+			
+		
+		//Any errors that don't get handled anywhere else come here and get shown
+		//to the user and printed to standard out.
+		PlotterFrame peakaboo = null;
+		try {
+				
+			peakaboo = new PlotterFrame();
+
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+			//if the user chooses to close rather than restart, break out of the loop
+			showError(peakaboo, e);
+			System.exit(1);
+			
+		}
+		
+	}
+	
+	public static void main(String[] args)
+	{	
+
 
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
@@ -47,41 +114,12 @@ public class Peakaboo
 
 			public void run()
 			{
-
-				if (Env.heapSize() < 120){
-					JOptionPane.showMessageDialog(
-						null,
-						"This system's Java VM is only allocated " + Env.heapSize()
-						+ "MB of memory: processing large data sets may be quite slow, if not impossible.",
-						"Low on Memory",
-						JOptionPane.INFORMATION_MESSAGE,
-						StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-				}
-					
 				
-				//Any errors that don't get handled anywhere else come here and get shown
-				//to the user and printed to standard out.
-				try {
-						
-					new PlotterFrame();
-					
-				} catch (Exception e) {
-					
-					e.printStackTrace();
-					StringBuilder sb = new StringBuilder();
-					
-					sb.append("A general error has occured in " + Version.program_name + ":\n\n");
-					
-					for (StackTraceElement ste : e.getStackTrace()) {
-						sb.append( ste.toString() + "\n" );
-					}
-					
-					JOptionPane.showMessageDialog(null, sb.toString(), "General Error in " + Version.program_name, JOptionPane.ERROR_MESSAGE, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-					
-				}
+				runPeakaboo();
 
 			}
 		});
+
 
 	}
 
