@@ -71,10 +71,4 @@ public class Multiply extends AbstractSimpleFilter
 		return true;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
-	
 }

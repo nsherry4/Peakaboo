@@ -71,9 +71,5 @@ public class Integrate extends AbstractSimpleFilter
 	}
 
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
+
 }

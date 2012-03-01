@@ -93,10 +93,5 @@ public final class MovingAverage extends AbstractSimpleFilter
 		return true;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
 
 }

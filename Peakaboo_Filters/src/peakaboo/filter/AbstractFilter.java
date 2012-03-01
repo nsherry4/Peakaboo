@@ -1,17 +1,10 @@
 package peakaboo.filter;
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import bolt.plugin.BoltPlugin;
-
 
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
@@ -153,7 +146,6 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	public abstract boolean validateParameters();
 	protected abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
 	public abstract boolean canFilterSubset();
-	public abstract boolean showSaveLoad();
 	
 	
 	public Spectrum filter(Spectrum data, boolean cache)

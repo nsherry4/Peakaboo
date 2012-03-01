@@ -28,9 +28,9 @@ public class IntegerEditor extends JSpinner implements Editor
 	}
 	
 	@Override
-	public float getVerticalWeight()
+	public boolean expandVertical()
 	{
-		return 0;
+		return false;
 	}
 
 	@Override

@@ -2,10 +2,13 @@ package peakaboo.ui.swing.plotting.filters.settings;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +17,7 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.Scrollable;
 
 import fava.functionable.FList;
 
@@ -24,7 +28,6 @@ import peakaboo.ui.swing.plotting.filters.settings.editors.EditorFactory;
 import peakaboo.ui.swing.plotting.filters.settings.editors.Editor;
 import peakaboo.ui.swing.plotting.filters.settings.editors.Editor.Style;
 import swidget.widgets.Spacing;
-import swidget.widgets.gradientpanel.TitleGradientPanel;
 
 
 public class SingleFilterView extends JPanel
@@ -33,45 +36,25 @@ public class SingleFilterView extends JPanel
 	private AbstractFilter			filter;
 	private IFilteringController	controller;
 
-	private JPanel					settingsPanel;
-
 	private List<Editor>			editors;
 	private List<Parameter> 		paramslist;
 
 	public SingleFilterView(AbstractFilter filter, IFilteringController controller)
 	{
-		this(filter, controller, true, true);
+		this(filter, controller, true);
 	}
 	
-	public SingleFilterView(AbstractFilter filter, IFilteringController controller, boolean showTitle, boolean bigBorder)
+	public SingleFilterView(AbstractFilter filter, IFilteringController controller, boolean bigBorder)
 	{
 
 		super(new BorderLayout());
 		
-
 		this.filter = filter;
 		this.controller = controller;
 
-		settingsPanel = createSettingsPanel(bigBorder);
-		settingsPanel.setOpaque(false);
+		createSettingsPanel(bigBorder);
+		setOpaque(false);
 		
-		JScrollPane scroller = new JScrollPane(settingsPanel);
-		scroller.setBorder(Spacing.bNone());
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
-
-		if (showTitle) 
-		{
-			TitleGradientPanel panel = new TitleGradientPanel(filter.getFilterName() + " Filter", true);			
-			panel.setToolTipText(filter.getFilterDescription());
-			this.add(panel, BorderLayout.NORTH);	
-		}
-		
-		
-		this.add(scroller, BorderLayout.CENTER);
-
-
 	}
 
 
@@ -84,7 +67,7 @@ public class SingleFilterView extends JPanel
 
 	public void showSettings(boolean show)
 	{
-		settingsPanel.setVisible(show);
+		setVisible(show);
 	}
 	
 	public void updateWidgetsEnabled()
@@ -103,7 +86,7 @@ public class SingleFilterView extends JPanel
 		}
 	}
 
-	private JPanel createSettingsPanel(boolean bigBorder)
+	private void createSettingsPanel(boolean bigBorder)
 	{
 
 		//get a list of parameters
@@ -112,12 +95,10 @@ public class SingleFilterView extends JPanel
 		
 		Iterator<Parameter> params = paramslist.iterator();
 		
-
-		JPanel panel = new ParametersPanel();
-		
+	
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
-		panel.setLayout(layout);
+		setLayout(layout);
 
 		
 
@@ -130,8 +111,10 @@ public class SingleFilterView extends JPanel
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 1f;
-		panel.add(Box.createHorizontalGlue(), c);
+		add(Box.createHorizontalGlue(), c);
 		c.insets = Spacing.iSmall();
+		
+		boolean needsVerticalGlue = true;
 		
 		while (params.hasNext()) {
 
@@ -143,7 +126,9 @@ public class SingleFilterView extends JPanel
 			
 			editor = EditorFactory.createEditor(param, filter, controller, this);
 			
-			c.weighty = editor.getVerticalWeight();
+			needsVerticalGlue &= (!editor.expandVertical());
+			
+			c.weighty = editor.expandVertical() ? 1f : 0f;
 			c.weightx = editor.expandHorizontal() ? 1f : 0f;
 			c.gridy += 1;
 			c.gridx = 0;
@@ -154,14 +139,14 @@ public class SingleFilterView extends JPanel
 			if (editor.getStyle() == Style.LABEL_ON_SIDE)
 			{
 				c.weightx = 0;
-				panel.add(paramLabel, c);
+				add(paramLabel, c);
 				
 				c.weightx = editor.expandHorizontal() ? 1f : 0f;
 				c.gridx++;
 				c.fill = GridBagConstraints.NONE;
 				c.anchor = GridBagConstraints.LINE_END;
 				
-				panel.add(editor.getComponent(), c);
+				add(editor.getComponent(), c);
 				
 			}
 			else if (editor.getStyle() == Style.LABEL_ON_TOP)
@@ -169,40 +154,44 @@ public class SingleFilterView extends JPanel
 				c.gridwidth = 2;
 				
 				c.weighty = 0f;
-				panel.add(paramLabel, c);
+				add(paramLabel, c);
 
 				c.gridy++;
 				
-				c.weighty = editor.getVerticalWeight();
-				panel.add(editor.getComponent(), c);
+				c.weighty = editor.expandVertical() ? 1f : 0f;
+				add(editor.getComponent(), c);
 				
 				c.gridwidth = 1;
 			}
 			else if(editor.getStyle() == Style.LABEL_HIDDEN)
 			{
 				c.gridwidth = 2;				
-				panel.add(editor.getComponent(), c);
+				add(editor.getComponent(), c);
 				c.gridwidth = 1;
 			}
 
 		}
 		
-		c.gridy++;
-		c.weighty = 1f;
-		//panel.add(Box.createVerticalGlue(), c);
+		if (needsVerticalGlue)
+		{
+			c.gridy++;
+			c.weighty = 1f;
+			add(Box.createVerticalGlue(), c);
+		}
 		
-		
-		panel.doLayout();
+		doLayout();
 
 		if (bigBorder) {
-			panel.setBorder(Spacing.bHuge());
+			setBorder(Spacing.bHuge());
 		} else {
-			panel.setBorder(Spacing.bNone());
+			setBorder(Spacing.bNone());
 		}
-
-		return panel;
+		
 
 	}
+	
+	
+	
 
 }
 

@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -30,10 +29,9 @@ import peakaboo.filter.Parameter;
 import peakaboo.ui.swing.plotting.filters.settings.ParamListener;
 import peakaboo.ui.swing.plotting.filters.settings.SingleFilterView;
 
-import sun.misc.IOUtils;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 
 public class CodeEditor extends JPanel implements Editor
@@ -50,6 +48,7 @@ public class CodeEditor extends JPanel implements Editor
 		DefaultSyntaxKit.initKit();
 		
 		codeEditor = new JXEditorPane();
+		codeEditor.setMinimumSize(new Dimension(400, 200));
         JScrollPane scrPane = new JScrollPane(codeEditor);
         
         if (param.getProperty("Language") != null) codeEditor.setContentType("text/" + param.getProperty("Language"));
@@ -59,6 +58,9 @@ public class CodeEditor extends JPanel implements Editor
         
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
+        toolbar.setOpaque(false);
+        toolbar.setBorder(Spacing.bNone());
+        
         ToolbarImageButton open = new ToolbarImageButton(StockIcon.DOCUMENT_OPEN, "Open");
         ToolbarImageButton save = new ToolbarImageButton(StockIcon.DOCUMENT_SAVE_AS, "Save");
         ToolbarImageButton apply = new ToolbarImageButton(StockIcon.CHOOSE_OK, "Apply", "Apply any code changes to the filter", true);
@@ -149,16 +151,9 @@ public class CodeEditor extends JPanel implements Editor
 
 	}
 	
-	public float getVerticalWeight()
+	public boolean expandVertical()
 	{
-		try
-		{
-			return Float.parseFloat(param.getProperty("EditorVWeight"));
-		}
-		catch (NumberFormatException e)
-		{
-			return 1f;
-		}
+		return true;
 	}
 
 	@Override

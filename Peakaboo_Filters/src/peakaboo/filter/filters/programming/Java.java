@@ -87,7 +87,7 @@ public class Java extends AbstractSimpleFilter {
 
 	@Override
 	public String getFilterDescription() {
-		return "";
+		return "Allows you to create your own filter in the Java programming language";
 	}
 
 	@Override
@@ -95,12 +95,5 @@ public class Java extends AbstractSimpleFilter {
 		return !Version.release;
 
 	}
-
-	@Override
-	public boolean showSaveLoad()
-	{
-		return true;
-	}
-	
 	
 }

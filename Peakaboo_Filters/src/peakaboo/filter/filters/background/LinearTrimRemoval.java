@@ -94,10 +94,4 @@ public final class LinearTrimRemoval extends AbstractBackgroundFilter
 		return true;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
-
 }

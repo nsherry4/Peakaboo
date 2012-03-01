@@ -101,10 +101,5 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 		return false;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
 
 }

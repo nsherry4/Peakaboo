@@ -99,12 +99,5 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 		return false;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
-
-
 
 }

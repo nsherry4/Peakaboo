@@ -19,17 +19,11 @@ public class JPython extends AbstractSimpleFilter {
 	
 	private static final String header = "" + 
 	"from java.util import * \n" +
-	"from scitypes import Spectrum \n" +
-	"from peakaboo.calculations import * \n" +
-	"from JSci.maths import Complex \n" +
 	"import array\n" +
 	"\n" +
+	"# The input spectrum is located in a variable named spectrumIn\n" +
+	"# Place the result of the filter in a variable named spectrumOut\n" +
 	"# spectrumIn and spectrumOut are of Java type float[]. \n" +
-	"# \n" +
-	"# Calling functions in Peakaboo (eg. peakaboo.calculations) \n" +
-	"# will usually require wrapping the float[] in a Spectrum class. \n" +
-	"# For Example: \n" +
-	"# complexArray = Noise.DataToFFT(Spectrum(spectrumIn)) \n" +
 	"\n\n";
 	
 	
@@ -53,7 +47,7 @@ public class JPython extends AbstractSimpleFilter {
 	@Override
 	public void initialize() 
 	{
-		addParameter(CODE, new Parameter(ValueType.CODE, "Custom Code", header + "spectrumOut = spectrumIn"));
+		addParameter(CODE, new Parameter(ValueType.CODE, "JPython Code", header + "spectrumOut = spectrumIn"));
 		getParameter(CODE).setProperty("Language", "python");
 	}
 
@@ -64,7 +58,7 @@ public class JPython extends AbstractSimpleFilter {
 
 	@Override
 	public String getFilterDescription() {
-		return "";
+		return "Allows you to create your own filter in the Python programming language using JPython";
 	}
 
 	@Override
@@ -113,12 +107,6 @@ public class JPython extends AbstractSimpleFilter {
 	@Override
 	public boolean canFilterSubset() {
 		return true;
-	}
-
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
 	}
 
 }

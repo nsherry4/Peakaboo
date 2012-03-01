@@ -7,13 +7,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.ezware.common.Strings;
-import com.ezware.dialog.task.CommandLink;
 import com.ezware.dialog.task.TaskDialog;
-import com.ezware.dialog.task.TaskDialog.StandardCommand;
 
 import commonenvironment.Env;
 
-import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.ui.swing.PlotterFrame;
 
@@ -36,7 +33,6 @@ public class Peakaboo
 		
 		PeakTableReader.readPeakTable();
 		
-		//System.setProperty("sun.java2d.pmoffscreen", "false");
 		Swidget.initialize();
 		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";

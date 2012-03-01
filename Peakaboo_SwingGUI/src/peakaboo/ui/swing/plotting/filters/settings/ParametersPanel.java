@@ -17,7 +17,7 @@ public class ParametersPanel extends JPanel implements Scrollable
 	@Override
 	public Dimension getPreferredScrollableViewportSize()
 	{
-		return new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 500));
+		return getPreferredSize();
 	}
 
 	@Override

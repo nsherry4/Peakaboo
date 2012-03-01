@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.plotting.filters.settings.editors;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.plotter.filtering.IFilteringController;
@@ -15,6 +17,7 @@ import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.ui.swing.plotting.filters.settings.ParamListener;
 import peakaboo.ui.swing.plotting.filters.settings.SingleFilterView;
+import swidget.widgets.Spacing;
 import eventful.swing.EventfulTypePanel;
 import fava.functionable.FArray;
 import fava.signatures.FnMap;
@@ -62,7 +65,6 @@ public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor> implemen
 		
 		
 		
-		
 		add(subfilterPanel, BorderLayout.CENTER);
 		
 		filter = selectedFilter;
@@ -107,16 +109,26 @@ public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor> implemen
 		
 		if (subfilterView != null) subfilterPanel.removeAll();
 		subfilter = f;
-		subfilterView = new SingleFilterView(subfilter, controller, false, false);
-		subfilterPanel.add(subfilterView, BorderLayout.CENTER);
+		subfilterView = new SingleFilterView(subfilter, controller, false);
+		
+		
+		JScrollPane scroller = new JScrollPane(subfilterView);
+		scroller.setBorder(Spacing.bNone());
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		subfilterPanel.add(scroller, BorderLayout.CENTER);
+		
+		validate();
+		repaint();
 	}
 	
 
 	
 	@Override
-	public float getVerticalWeight()
+	public boolean expandVertical()
 	{
-		return 1f;
+		return true;
 	}
 
 	@Override

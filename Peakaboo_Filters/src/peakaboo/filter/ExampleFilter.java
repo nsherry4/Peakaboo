@@ -87,12 +87,5 @@ public class ExampleFilter extends AbstractFilter {
 	}
 
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
 
 }

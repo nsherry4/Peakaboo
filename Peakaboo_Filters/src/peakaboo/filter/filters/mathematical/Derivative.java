@@ -68,10 +68,4 @@ public class Derivative extends AbstractSimpleFilter
 		return true;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
-	
 }

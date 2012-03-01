@@ -78,12 +78,5 @@ public class DataToWavelet extends AbstractSimpleFilter
 		return false;
 	}
 
-
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
-
 	
 }

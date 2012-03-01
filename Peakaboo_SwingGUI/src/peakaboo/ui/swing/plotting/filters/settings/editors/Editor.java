@@ -11,7 +11,7 @@ public interface Editor
 		LABEL_HIDDEN
 	}
 	
-	public float getVerticalWeight();
+	public boolean expandVertical();
 	public boolean expandHorizontal();
 	public Style getStyle();
 	

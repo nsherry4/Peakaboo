@@ -142,11 +142,5 @@ public class SegmentFilter extends AbstractFilter
 	{
 		return false;
 	}
-
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
-
+	
 }

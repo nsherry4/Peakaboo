@@ -98,10 +98,5 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 		return true;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
 
 }

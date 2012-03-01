@@ -10,7 +10,6 @@ import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.ui.swing.plotting.filters.settings.ParamListener;
 import peakaboo.ui.swing.plotting.filters.settings.SingleFilterView;
-import peakaboo.ui.swing.plotting.filters.settings.editors.Editor.Style;
 
 public class BooleanEditor extends JCheckBox implements Editor
 {
@@ -29,9 +28,9 @@ public class BooleanEditor extends JCheckBox implements Editor
 	}
 	
 	@Override
-	public float getVerticalWeight()
+	public boolean expandVertical()
 	{
-		return 0;
+		return false;
 	}
 
 	@Override

@@ -124,9 +124,4 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 		return true;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
 }

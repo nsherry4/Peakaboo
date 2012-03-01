@@ -29,9 +29,9 @@ public class EnumEditor extends JComboBox implements Editor
 	}
 
 	@Override
-	public float getVerticalWeight()
+	public boolean expandVertical()
 	{
-		return 0;
+		return false;
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class EnumEditor extends JComboBox implements Editor
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void setFromParameter()
 	{

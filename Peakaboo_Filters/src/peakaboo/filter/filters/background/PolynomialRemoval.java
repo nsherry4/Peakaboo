@@ -96,10 +96,4 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 		return true;
 	}
 
-	@Override
-	public boolean showSaveLoad()
-	{
-		return false;
-	}
-
 }
