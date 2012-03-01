@@ -11,30 +11,34 @@ import scitypes.SpectrumCalculations;
 public abstract class AbstractBackgroundFilter extends AbstractFilter
 {
 
-	protected enum backgroundParams
-	{
-		PERCENT, PREVIEW, STARTINDEX, STOPINDEX, PARTIALFILTER, SEP1, SEP2
-	}
+	private final int PERCENT 		= getNextParameterIndex();
+	private final int PREVIEW 		= getNextParameterIndex();
+	private final int STARTINDEX 	= getNextParameterIndex();
+	private final int STOPINDEX		= getNextParameterIndex();
+	private final int PARTIALFILTER = getNextParameterIndex();
+	private final int SEP1 			= getNextParameterIndex();
+	private final int SEP2 			= getNextParameterIndex();
+
 	
 	public AbstractBackgroundFilter()
 	{
 		
 		
 		
-		addParameter(backgroundParams.PERCENT, new Parameter(ValueType.INTEGER, "Percent to Remove", 90));
-		addParameter(backgroundParams.PREVIEW, new Parameter(ValueType.BOOLEAN, "Preview Only", false));
+		addParameter(PERCENT, new Parameter(ValueType.INTEGER, "Percent to Remove", 90));
+		addParameter(PREVIEW, new Parameter(ValueType.BOOLEAN, "Preview Only", false));
 		
-		addParameter(backgroundParams.SEP1, new Parameter(ValueType.SEPARATOR, null, null));
+		addParameter(SEP1, new Parameter(ValueType.SEPARATOR, null, null));
 		
-		addParameter(backgroundParams.STOPINDEX, new Parameter(ValueType.INTEGER, "Stop Index", 0));
-		addParameter(backgroundParams.STARTINDEX, new Parameter(ValueType.INTEGER, "Start Index", 0));
-		addParameter(backgroundParams.PARTIALFILTER, new Parameter(ValueType.BOOLEAN, "Apply to Subset", false));
+		addParameter(STOPINDEX, new Parameter(ValueType.INTEGER, "Stop Index", 0));
+		addParameter(STARTINDEX, new Parameter(ValueType.INTEGER, "Start Index", 0));
+		addParameter(PARTIALFILTER, new Parameter(ValueType.BOOLEAN, "Apply to Subset", false));
 		
-		addParameter(backgroundParams.SEP2, new Parameter(ValueType.SEPARATOR, null, null));
+		addParameter(SEP2, new Parameter(ValueType.SEPARATOR, null, null));
 		
 		
-		getParameter(backgroundParams.STARTINDEX).enabled = false;
-		getParameter(backgroundParams.STOPINDEX).enabled = false;
+		getParameter(STARTINDEX).enabled = false;
+		getParameter(STOPINDEX).enabled = false;
 		
 	}
 	
@@ -52,17 +56,17 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
-		percent = getParameter(backgroundParams.PERCENT).intValue();
+		percent = getParameter(PERCENT).intValue();
 		if (percent > 100 || percent < 0) return false;
 		
-		start = getParameter(backgroundParams.STARTINDEX).intValue();
-		stop = getParameter(backgroundParams.STOPINDEX).intValue();
+		start = getParameter(STARTINDEX).intValue();
+		stop = getParameter(STOPINDEX).intValue();
 		if (start < 0) return false;
 		if (stop < start) return false;
 
 		
-		getParameter(backgroundParams.STARTINDEX).enabled = getParameter(backgroundParams.PARTIALFILTER).boolValue();
-		getParameter(backgroundParams.STOPINDEX).enabled = getParameter(backgroundParams.PARTIALFILTER).boolValue();
+		getParameter(STARTINDEX).enabled = getParameter(PARTIALFILTER).boolValue();
+		getParameter(STOPINDEX).enabled = getParameter(PARTIALFILTER).boolValue();
 		
 		return validateCustomParameters();
 		
@@ -74,13 +78,13 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	
 	private final Spectrum getBackground(Spectrum data)
 	{
-		int percent = getParameter(backgroundParams.PERCENT).intValue();
-		int start = getParameter(backgroundParams.STARTINDEX).intValue();
-		int stop = getParameter(backgroundParams.STOPINDEX).intValue();
+		int percent = getParameter(PERCENT).intValue();
+		int start = getParameter(STARTINDEX).intValue();
+		int stop = getParameter(STOPINDEX).intValue();
 		if (stop >= data.size()) stop = data.size() - 1;
 		if (start >= data.size()) start = data.size() - 1;
 		
-		boolean usePartial = getParameter(backgroundParams.PARTIALFILTER).boolValue();
+		boolean usePartial = getParameter(PARTIALFILTER).boolValue();
 		
 		if (usePartial) {
 			
@@ -104,7 +108,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	@Override
 	protected final Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		if (!getParameter(backgroundParams.PREVIEW).boolValue() == true) {
+		if (!getParameter(PREVIEW).boolValue() == true) {
 
 			Spectrum background = getBackground(data);
 			return SpectrumCalculations.subtractLists(data, background);
@@ -117,7 +121,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	@Override
 	public final PlotPainter getPainter()
 	{
-		if (!getParameter(backgroundParams.PREVIEW).boolValue() == true) return null;
+		if (!getParameter(PREVIEW).boolValue() == true) return null;
 
 		return new SpectrumPainter(getBackground(previewCache)) {
 

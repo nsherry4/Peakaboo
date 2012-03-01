@@ -70,4 +70,10 @@ public class Integrate extends AbstractSimpleFilter
 		return true;
 	}
 
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
+	}
 }

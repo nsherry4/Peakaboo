@@ -1,10 +1,12 @@
 package peakaboo.ui.swing.plotting.filters.settings.editors;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -21,13 +23,17 @@ import peakaboo.ui.swing.plotting.filters.settings.SingleFilterView;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 
-public class CodeEditor extends JPanel
+public class CodeEditor extends JPanel implements Editor
 {
 
 	public JXEditorPane codeEditor;
+	private Parameter param;
 	
 	public CodeEditor(Parameter param, AbstractFilter filter, IFilteringController controller, SingleFilterView view)
 	{
+		
+		this.param = param;
+		
 		DefaultSyntaxKit.initKit();
 		
 		codeEditor = new JXEditorPane();
@@ -37,11 +43,6 @@ public class CodeEditor extends JPanel
         
         codeEditor.setText(param.codeValue());
         
-        int height = 400;
-        if (param.getProperty("CodeHeight") != null) height = Integer.parseInt(param.getProperty("CodeHeight"));
-        
-        scrPane.setPreferredSize(new Dimension(600, height));
-        	        
         
 		final ParamListener pl = new ParamListener(param, filter, controller, view);
 		
@@ -55,9 +56,62 @@ public class CodeEditor extends JPanel
 		});
 		
 		
-		setLayout(new BorderLayout());
-		add(scrPane, BorderLayout.CENTER);
-		add(okbutton, BorderLayout.SOUTH);
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.weightx = 1.0;
+		c.weighty = 1.0;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.BOTH;
+		add(scrPane, c);
+		
+		c.weightx = 1.0;
+		c.weighty = 0.0;
+		c.gridy = 1;
+		c.fill = GridBagConstraints.NONE;
+		add(okbutton, c);
+	}
+	
+	public float getVerticalWeight()
+	{
+		try
+		{
+			return Float.parseFloat(param.getProperty("EditorVWeight"));
+		}
+		catch (NumberFormatException e)
+		{
+			return 1f;
+		}
+	}
+
+	@Override
+	public boolean expandHorizontal()
+	{
+		return true;
+	}
+
+	@Override
+	public Style getStyle()
+	{
+		return Style.LABEL_ON_TOP;
+	}
+
+	@Override
+	public JComponent getComponent()
+	{
+		return this;
+	}
+
+	@Override
+	public void setFromParameter()
+	{
+		codeEditor.setText(param.codeValue());
+	}
+
+	@Override
+	public Object getEditorValue()
+	{
+		return codeEditor.getText();
 	}
 	
 }

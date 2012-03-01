@@ -14,7 +14,7 @@ import scitypes.Spectrum;
 @Plugin
 public class JPython extends AbstractSimpleFilter {
 
-	private static int CODE = 0;
+	private final int CODE = getNextParameterIndex();
 	private boolean pythonSupported = true;
 	
 	private static final String header = "" + 
@@ -51,9 +51,9 @@ public class JPython extends AbstractSimpleFilter {
 	}
 	
 	@Override
-	public void initialize() {
+	public void initialize() 
+	{
 		addParameter(CODE, new Parameter(ValueType.CODE, "Custom Code", header + "spectrumOut = spectrumIn"));
-		
 		getParameter(CODE).setProperty("Language", "python");
 	}
 
@@ -113,6 +113,12 @@ public class JPython extends AbstractSimpleFilter {
 	@Override
 	public boolean canFilterSubset() {
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 
 }

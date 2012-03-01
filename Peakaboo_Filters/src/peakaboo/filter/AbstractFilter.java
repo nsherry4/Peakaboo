@@ -1,6 +1,11 @@
 package peakaboo.filter;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -82,18 +87,18 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		}
 	}
 	
-	private Map<Object, Parameter>			parameters;
+	private Map<Integer, Parameter>			parameters;
 	public boolean							enabled;
 	
 	protected Spectrum	previewCache;
 	protected Spectrum	calculatedData;
 
-	
+	private int nextParameterIndex = 0;
 	
 	
 	public AbstractFilter()
 	{
-		this.parameters = new LinkedHashMap<Object, Parameter>();
+		this.parameters = new LinkedHashMap<Integer, Parameter>();
 		this.enabled = true;
 	}
 
@@ -118,16 +123,16 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	public abstract FilterType getFilterType();
 
 
-	public final Map<Object, Parameter> getParameters()
+	public final Map<Integer, Parameter> getParameters()
 	{
 		return this.parameters;
 	}
-	public final void setParameters(Map<Object, Parameter> params)
+	public final void setParameters(Map<Integer, Parameter> params)
 	{
 		parameters = params;
 	}
 	
-	protected void addParameter(Object key, Parameter value)
+	protected void addParameter(Integer key, Parameter value)
 	{
 		parameters.put(key, value);
 	}
@@ -148,6 +153,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	public abstract boolean validateParameters();
 	protected abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
 	public abstract boolean canFilterSubset();
+	public abstract boolean showSaveLoad();
 	
 	
 	public Spectrum filter(Spectrum data, boolean cache)
@@ -168,11 +174,15 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		
 	
 
-	
+	protected int getNextParameterIndex()
+	{
+		return nextParameterIndex++;
+	}
 	
 	public String toString()
 	{
 		return this.getFilterName();
 	}
+	
 	
 }

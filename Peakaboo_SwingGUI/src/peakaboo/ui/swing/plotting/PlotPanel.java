@@ -56,6 +56,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.ezware.dialog.task.TaskDialogs;
+
 import commonenvironment.AbstractFile;
 import commonenvironment.Apps;
 import commonenvironment.IOOperations;

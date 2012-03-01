@@ -12,7 +12,7 @@ import scitypes.SpectrumCalculations;
 public class Subtraction extends AbstractSimpleFilter
 {
 
-	private static final int AMOUNT = 0;
+	private final int AMOUNT = getNextParameterIndex();
 
 	
 	@Override
@@ -68,6 +68,12 @@ public class Subtraction extends AbstractSimpleFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 	
 }

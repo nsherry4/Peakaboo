@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
@@ -19,17 +20,18 @@ import fava.functionable.FArray;
 import fava.signatures.FnMap;
 
 
-public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor>
+public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor> implements Editor
 {
 	
 	List<AbstractFilter> 	filters;
-	SingleFilterView		filterView;
-	AbstractFilter 			filter;
+	SingleFilterView		subfilterView;
+	AbstractFilter 			subfilter;
+	Parameter				param;
 	IFilteringController	controller;
 	
 	JComboBox				filterCombo;
 	
-	JPanel					filterPanel;
+	JPanel					subfilterPanel;
 	
 	public SubfilterEditor(Parameter param, AbstractFilter filter, final IFilteringController controller, SingleFilterView view)
 	{
@@ -37,6 +39,7 @@ public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor>
 		Object[] options = param.possibleValues;
 		AbstractFilter selectedFilter = param.filterValue();
 		
+		this.param = param;
 		this.controller = controller;
 		
 		//create one new filter of each kind which can be used to filter a subset
@@ -53,13 +56,14 @@ public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor>
 		add(filterCombo, BorderLayout.NORTH);
 		
 		
-		filterPanel = new JPanel();	
-		filterPanel.setBorder(new TitledBorder(""));
+		subfilterPanel = new JPanel();	
+		subfilterPanel.setLayout(new BorderLayout());
+		subfilterPanel.setBorder(new TitledBorder(""));
 		
 		
 		
 		
-		add(filterPanel, BorderLayout.CENTER);
+		add(subfilterPanel, BorderLayout.CENTER);
 		
 		filter = selectedFilter;
 		changeFilter(selectedFilter);
@@ -82,7 +86,7 @@ public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor>
 	
 	public AbstractFilter getFilter()
 	{
-		return filter;
+		return subfilter;
 	}
 	
 	
@@ -98,15 +102,53 @@ public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor>
 		
 		if (! filterCombo.getSelectedItem().equals(f)) filterCombo.setSelectedItem(f);
 		
-		filterPanel.setVisible(f.getParameters().size() != 0);
+		subfilterPanel.setVisible(f.getParameters().size() != 0);
 		
 		
-		if (filterView != null) filterPanel.removeAll();
-		filter = f;
-		filterView = new SingleFilterView(filter, controller, false, false);
-		filterPanel.add(filterView);
+		if (subfilterView != null) subfilterPanel.removeAll();
+		subfilter = f;
+		subfilterView = new SingleFilterView(subfilter, controller, false, false);
+		subfilterPanel.add(subfilterView, BorderLayout.CENTER);
 	}
 	
+
+	
+	@Override
+	public float getVerticalWeight()
+	{
+		return 1f;
+	}
+
+	@Override
+	public boolean expandHorizontal()
+	{
+		return false;
+	}
+
+	@Override
+	public Style getStyle()
+	{
+		return Style.LABEL_ON_TOP;
+	}
+
+	@Override
+	public JComponent getComponent()
+	{
+		return this;
+	}
+
+
+	@Override
+	public void setFromParameter()
+	{
+		changeFilter(param.filterValue());
+	}
+	
+	@Override
+	public Object getEditorValue()
+	{
+		return getFilter();
+	}
 	
 	
 }

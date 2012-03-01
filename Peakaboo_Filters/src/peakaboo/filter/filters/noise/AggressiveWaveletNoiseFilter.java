@@ -21,7 +21,7 @@ import scitypes.Spectrum;
 public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 {
 
-	private final int	PASSES	= 0;
+	private final int	PASSES	= getNextParameterIndex();
 
 	public AggressiveWaveletNoiseFilter()
 	{
@@ -97,6 +97,12 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	
 	@Override
 	public boolean canFilterSubset()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean showSaveLoad()
 	{
 		return false;
 	}

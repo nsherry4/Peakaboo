@@ -21,9 +21,9 @@ import scitypes.Spectrum;
 public final class FourierLowPass extends AbstractSimpleFilter
 {
 
-	private final int	ROLLOFF	= 0;
-	private final int	START	= 1;
-	private final int	END		= 2;
+	private final int	ROLLOFF	= getNextParameterIndex();
+	private final int	START	= getNextParameterIndex();
+	private final int	END		= getNextParameterIndex();
 
 
 	public FourierLowPass()
@@ -34,9 +34,9 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(END, new Parameter(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
-		addParameter(START, new Parameter(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
 		addParameter(ROLLOFF, new Parameter(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
+		addParameter(START, new Parameter(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
+		addParameter(END, new Parameter(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
 	}
 	
 
@@ -112,5 +112,10 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	{
 		return false;
 	}
-	
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
+	}
 }

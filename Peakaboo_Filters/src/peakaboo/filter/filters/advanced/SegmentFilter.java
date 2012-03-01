@@ -18,9 +18,9 @@ import scitypes.Spectrum;
 public class SegmentFilter extends AbstractFilter
 {
 
-	public static final int FILTER = 0;
-	private static final int START = 1;
-	private static final int END = 2;
+	private final int FILTER = getNextParameterIndex();
+	private final int START = getNextParameterIndex();
+	private final int END = getNextParameterIndex();
 	
 	
 	@Override
@@ -44,9 +44,11 @@ public class SegmentFilter extends AbstractFilter
 		}
 		
 		
-		addParameter(END, new Parameter(ValueType.INTEGER, "Stop Index", 10));
 		addParameter(START, new Parameter(ValueType.INTEGER, "Start Index", 0));
+		addParameter(END, new Parameter(ValueType.INTEGER, "Stop Index", 10));
 		addParameter(FILTER, new Parameter(ValueType.FILTER, "Filter", filters.get(0), filters.toArray()));
+		
+		
 	}
 	
 	
@@ -137,6 +139,12 @@ public class SegmentFilter extends AbstractFilter
 	
 	@Override
 	public boolean canFilterSubset()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean showSaveLoad()
 	{
 		return false;
 	}

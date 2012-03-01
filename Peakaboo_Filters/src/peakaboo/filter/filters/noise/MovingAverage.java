@@ -19,7 +19,7 @@ import scitypes.Spectrum;
 public final class MovingAverage extends AbstractSimpleFilter
 {
 
-	private final int	REACH	= 0;
+	private final int	REACH	= getNextParameterIndex();
 
 
 	public MovingAverage()
@@ -91,6 +91,12 @@ public final class MovingAverage extends AbstractSimpleFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 
 }

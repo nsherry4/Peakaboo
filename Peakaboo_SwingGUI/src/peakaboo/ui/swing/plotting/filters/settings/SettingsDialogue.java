@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 
 import eventful.EventfulListener;
@@ -30,7 +29,6 @@ public class SettingsDialogue extends JDialog
 
 	protected IFilteringController	controller;
 	protected AbstractFilter	filter;
-	private JScrollPane scroller;
 	
 
 	public SettingsDialogue(AbstractFilter _filter, IFilteringController _controller, JFrame owner)
@@ -53,12 +51,8 @@ public class SettingsDialogue extends JDialog
 		c.setLayout(new BorderLayout());
 		SingleFilterView view = new SingleFilterView(filter, controller);
 		
-		scroller = new JScrollPane(view);
-		scroller.setBorder(Spacing.bNone());
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
-		c.add(scroller, BorderLayout.CENTER);
+		c.add(view, BorderLayout.CENTER);
 
 
 		c.add(createButtonBox(filter), BorderLayout.SOUTH);
@@ -77,7 +71,7 @@ public class SettingsDialogue extends JDialog
 
 		setLocationRelativeTo(owner);
 		setTitle(_filter.getFilterName() + " Filter Settings");
-		setResizable(false);
+		
 		pack();
 		setVisible(true);
 	}

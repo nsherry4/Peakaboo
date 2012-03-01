@@ -12,7 +12,7 @@ import scitypes.Spectrum;
 public class WaveletToData extends AbstractSimpleFilter
 {
 
-	private static final int AMOUNT = 0;
+	private final int AMOUNT = getNextParameterIndex();
 	
 	public WaveletToData()
 	{
@@ -80,6 +80,10 @@ public class WaveletToData extends AbstractSimpleFilter
 		return false;
 	}
 
-
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
+	}
 	
 }

@@ -15,9 +15,9 @@ public class Java extends AbstractSimpleFilter {
 
 	BoltJavaMap<float[], float[]> boltJavaMap;
 	
-	private static final int INCLUDES = 0;
-	private static final int FUNCTION = 1;
-	private static final int OTHERCODE = 2;
+	private final int INCLUDES 	= getNextParameterIndex();
+	private final int FUNCTION 	= getNextParameterIndex();
+	private final int OTHERCODE = getNextParameterIndex();
 	
 	private static final String defaultIncludes = "" + 
 		"import java.util.*;\n" +
@@ -46,14 +46,14 @@ public class Java extends AbstractSimpleFilter {
 	
 	@Override
 	public void initialize() {
-		addParameter(OTHERCODE, new Parameter(ValueType.CODE, "Other Code", defaultOther));
-		addParameter(FUNCTION, new Parameter(ValueType.CODE, "Filter Function: float[] transform(float[] spectrumIn)", defaultFunction));
+		
 		addParameter(INCLUDES, new Parameter(ValueType.CODE, "Imports", defaultIncludes));
+		addParameter(FUNCTION, new Parameter(ValueType.CODE, "Filter Function: float[] transform(float[] spectrumIn)", defaultFunction));
+		addParameter(OTHERCODE, new Parameter(ValueType.CODE, "Other Code", defaultOther));
 		
-		
-		getParameter(INCLUDES).setProperty("CodeHeight", "100");
-		getParameter(FUNCTION).setProperty("CodeHeight", "250");
-		getParameter(OTHERCODE).setProperty("CodeHeight", "250");
+		getParameter(INCLUDES).setProperty("EditorVWeight", "0.4");
+		getParameter(FUNCTION).setProperty("EditorVWeight", "1.0");
+		getParameter(OTHERCODE).setProperty("EditorVWeight", "0.8");
 		
 		getParameter(INCLUDES).setProperty("Language", "java");
 		getParameter(FUNCTION).setProperty("Language", "java");
@@ -114,6 +114,12 @@ public class Java extends AbstractSimpleFilter {
 	public boolean pluginEnabled() {
 		return !Version.release;
 
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return true;
 	}
 	
 	

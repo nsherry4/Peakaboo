@@ -20,11 +20,11 @@ import scitypes.Spectrum;
 public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 {
 
-	private final int	REACH	= 0;
-	private final int	ORDER	= 1;
-	private final int	IGNORE	= 2;
-	private final int	MAX	= 3;
-	private final int	SEP = 4;
+	private final int	REACH	= getNextParameterIndex();
+	private final int	ORDER	= getNextParameterIndex();
+	private final int	IGNORE	= getNextParameterIndex();
+	private final int	MAX		= getNextParameterIndex();
+	private final int	SEP 	= getNextParameterIndex();
 
 
 	public SavitskyGolaySmoothing()
@@ -38,14 +38,11 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		
-		
-		
-		addParameter(MAX, new Parameter(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
-		addParameter(IGNORE, new Parameter(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
-		addParameter(SEP, new Parameter(ValueType.SEPARATOR, null, null));
-		addParameter(ORDER, new Parameter(ValueType.INTEGER, "Polynomial Order", 5));
 		addParameter(REACH, new Parameter(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
+		addParameter(ORDER, new Parameter(ValueType.INTEGER, "Polynomial Order", 5));
+		addParameter(SEP, new Parameter(ValueType.SEPARATOR, null, null));
+		addParameter(IGNORE, new Parameter(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
+		addParameter(MAX, new Parameter(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
 		
 		getParameter(MAX).enabled = false;		
 	}
@@ -127,4 +124,9 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 		return true;
 	}
 
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
+	}
 }

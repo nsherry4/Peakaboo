@@ -19,9 +19,9 @@ import scitypes.Spectrum;
 public final class SpringSmoothing extends AbstractSimpleFilter
 {
 
-	private final int	MULTIPLIER		= 0;
-	private final int	ITERATIONS		= 1;
-	private final int	FALLOFF			= 2;
+	private final int	MULTIPLIER		= getNextParameterIndex();
+	private final int	ITERATIONS		= getNextParameterIndex();
+	private final int	FALLOFF			= getNextParameterIndex();
 
 
 	public SpringSmoothing()
@@ -32,9 +32,9 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(FALLOFF, new Parameter(ValueType.REAL, "Exponential Force Falloff Rate", 2.0d));
-		addParameter(MULTIPLIER, new Parameter(ValueType.REAL, "Linear Force Multiplier", 20.0d));
 		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 20));
+		addParameter(MULTIPLIER, new Parameter(ValueType.REAL, "Linear Force Multiplier", 20.0d));
+		addParameter(FALLOFF, new Parameter(ValueType.REAL, "Exponential Force Falloff Rate", 2.0d));
 	}
 
 
@@ -108,6 +108,12 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 	
 }

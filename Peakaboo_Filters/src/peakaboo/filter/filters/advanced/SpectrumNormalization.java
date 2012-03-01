@@ -11,15 +11,14 @@ import scitypes.SpectrumCalculations;
 public class SpectrumNormalization extends AbstractSimpleFilter
 {
 	
-	public static int	CHANNEL = 0;
-	public static int	HEIGHT = 1;
+	public final int	CHANNEL = getNextParameterIndex();
+	public final int	HEIGHT = getNextParameterIndex();
 
 	@Override
 	public void initialize()
 	{
-		addParameter(HEIGHT, new Parameter(ValueType.REAL, "Intensity", 10d));
 		addParameter(CHANNEL, new Parameter(ValueType.INTEGER, "Channel", 1));
-		
+		addParameter(HEIGHT, new Parameter(ValueType.REAL, "Intensity", 10d));	
 	}
 	
 	@Override
@@ -83,6 +82,12 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 		if (height > 1000000) return false;
 		
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 
 }

@@ -21,8 +21,8 @@ import scitypes.SpectrumCalculations;
 public final class LinearTrimRemoval extends AbstractBackgroundFilter
 {
 
-	private final int	WIDTH = 1;
-	private final int	ITERATIONS = 0;
+	private final int	WIDTH 		= getNextParameterIndex();
+	private final int	ITERATIONS 	= getNextParameterIndex();
 
 
 	public LinearTrimRemoval()
@@ -33,9 +33,8 @@ public final class LinearTrimRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
 		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 2));
-		
+		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
 	}
 
 	@Override
@@ -93,6 +92,12 @@ public final class LinearTrimRemoval extends AbstractBackgroundFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 
 }

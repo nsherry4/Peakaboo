@@ -21,8 +21,8 @@ import scitypes.SpectrumCalculations;
 public final class BruknerRemoval extends AbstractBackgroundFilter
 {
 
-	private final int	WIDTH	= 0;
-	private final int	ITERATIONS = 1;
+	private final int	WIDTH		= getNextParameterIndex();
+	private final int	ITERATIONS 	= getNextParameterIndex();
 
 
 	public BruknerRemoval()
@@ -34,9 +34,8 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 10));
 		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
-		
+		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 10));
 	}
 
 
@@ -97,6 +96,12 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 
 }

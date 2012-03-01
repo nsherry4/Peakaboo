@@ -19,8 +19,8 @@ import scitypes.Spectrum;
 public final class PolynomialRemoval extends AbstractBackgroundFilter
 {
 
-	private final int	WIDTH	= 0;
-	private final int	POWER	= 1;
+	private final int	WIDTH	= getNextParameterIndex();
+	private final int	POWER	= getNextParameterIndex();
 
 
 	public PolynomialRemoval()
@@ -31,9 +31,8 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(POWER, new Parameter(ValueType.INTEGER, "Power of Polynomial", 3));
 		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Polynomial", 300));
-		
+		addParameter(POWER, new Parameter(ValueType.INTEGER, "Power of Polynomial", 3));
 	}
 
 
@@ -95,6 +94,12 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
 	}
 
 }

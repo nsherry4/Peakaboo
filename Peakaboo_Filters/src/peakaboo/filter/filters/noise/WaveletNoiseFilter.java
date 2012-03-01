@@ -21,7 +21,7 @@ import scitypes.Spectrum;
 public final class WaveletNoiseFilter extends AbstractSimpleFilter
 {
 
-	private final int	PASSES	= 0;
+	private final int	PASSES	= getNextParameterIndex();
 
 
 	public WaveletNoiseFilter()
@@ -99,6 +99,11 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 		return false;
 	}
 
+	@Override
+	public boolean showSaveLoad()
+	{
+		return false;
+	}
 
 
 
