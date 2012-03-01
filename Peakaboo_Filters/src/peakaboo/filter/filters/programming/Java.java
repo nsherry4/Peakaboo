@@ -15,30 +15,19 @@ public class Java extends AbstractSimpleFilter {
 
 	BoltJavaMap<float[], float[]> boltJavaMap;
 	
-	private final int INCLUDES 	= getNextParameterIndex();
-	private final int FUNCTION 	= getNextParameterIndex();
-	private final int OTHERCODE = getNextParameterIndex();
+	private final int CODE 		= getNextParameterIndex();
 	
-	private static final String defaultIncludes = "" + 
-		"import java.util.*;\n" +
-		"import peakaboo.calculations.*;\n" +
-		"import JSci.maths.Complex;\n" +
-		"import scitypes.*;";
 	
-	private static final String defaultFunction = "" + 
-		"//Identity Function \n" +
-		"return spectrumIn;";
+	private static final String defaultBoltFunction = "" + 
+		"return JavaFilter.filter(spectrumIn);";
 	
-	private static final String defaultOther = "" + 
-	"class Helper{ \n" +
-	"	public int help(){ \n" +
-	"		return 0; \n" +
+	private static final String defaultCode = "" + 
+	"class JavaFilter { \n" +
+	"	public static float[] filter(float[] spectrum){ \n" +
+	"		return spectrum; \n" +
 	"	} \n" +
-	"} \n" +
-	"\n" +
-	"int help(){ \n" +
-	"	return 0; \n" +
-	"}";
+	"} \n";
+
 	
 	public Java() {
 		boltJavaMap = new BoltJavaMap<float[], float[]>("spectrumIn", float[].class, float[].class);
@@ -47,17 +36,9 @@ public class Java extends AbstractSimpleFilter {
 	@Override
 	public void initialize() {
 		
-		addParameter(INCLUDES, new Parameter(ValueType.CODE, "Imports", defaultIncludes));
-		addParameter(FUNCTION, new Parameter(ValueType.CODE, "Filter Function: float[] transform(float[] spectrumIn)", defaultFunction));
-		addParameter(OTHERCODE, new Parameter(ValueType.CODE, "Other Code", defaultOther));
-		
-		getParameter(INCLUDES).setProperty("EditorVWeight", "0.4");
-		getParameter(FUNCTION).setProperty("EditorVWeight", "1.0");
-		getParameter(OTHERCODE).setProperty("EditorVWeight", "0.8");
-		
-		getParameter(INCLUDES).setProperty("Language", "java");
-		getParameter(FUNCTION).setProperty("Language", "java");
-		getParameter(OTHERCODE).setProperty("Language", "java");
+		addParameter(CODE, new Parameter(ValueType.CODE, "Java Code", defaultCode));
+		getParameter(CODE).setProperty("EditorVWeight", "1.0");
+		getParameter(CODE).setProperty("Language", "java");
 	}
 	
 	@Override
@@ -70,15 +51,14 @@ public class Java extends AbstractSimpleFilter {
 	public boolean validateParameters() {
 		
 		try {
-			boltJavaMap.setIncludeText(getParameter(INCLUDES).codeValue());
-			boltJavaMap.setFunctionText(getParameter(FUNCTION).codeValue());
-			boltJavaMap.setOtherText(getParameter(OTHERCODE).codeValue());
+			boltJavaMap.setFunctionText(defaultBoltFunction);
+			boltJavaMap.setOtherText("");
+			boltJavaMap.setIncludeText(getParameter(CODE).codeValue());
+			
 			boltJavaMap.f(new float[]{1, 2, 3, 4});
 			return true;
 		} catch (Exception e) {
-			getParameter(FUNCTION).setProperty("ErrorMessage", e.getMessage());
-			getParameter(INCLUDES).setProperty("ErrorMessage", e.getMessage());
-			getParameter(OTHERCODE).setProperty("ErrorMessage", e.getMessage());
+			getParameter(CODE).setProperty("ErrorMessage", e.getMessage());
 			return false;
 		}
 		

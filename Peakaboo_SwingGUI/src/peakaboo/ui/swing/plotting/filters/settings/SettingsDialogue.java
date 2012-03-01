@@ -61,11 +61,9 @@ public class SettingsDialogue extends JDialog
 
 			public void change()
 			{
-				// TODO Auto-generated method stub
 				if (!controller.filterSetContains(filter)) {
 					setVisible(false);
 				}
-				pack();
 			}
 		});
 
