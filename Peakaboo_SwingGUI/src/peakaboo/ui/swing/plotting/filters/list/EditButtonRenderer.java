@@ -62,6 +62,9 @@ public class EditButtonRenderer implements TableCellRenderer
 			return container;
 		}
 		container.add(edit);
+		
+		container.setToolTipText("Edit settings for this " + filter.getFilterName() + " Filter");
+		
 		return container;
 	}
 }

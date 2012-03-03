@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
@@ -165,6 +166,8 @@ public class FilterList extends ClearPanel{
 		column.setMaxWidth(100);
 		
 		t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		ToolTipManager.sharedInstance().registerComponent(t);
 		
 		return t;
 		

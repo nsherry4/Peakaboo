@@ -9,6 +9,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.AbstractFilter.FilterType;
 import swidget.widgets.Spacing;
+import swidget.widgets.TextWrapping;
 
 public class FilterSelectionRenderer extends DefaultTreeCellRenderer
 {
@@ -25,6 +26,8 @@ public class FilterSelectionRenderer extends DefaultTreeCellRenderer
 			boolean leaf, int row, boolean hasFocus)
 	{
 
+		
+		
 		super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
 
@@ -32,11 +35,15 @@ public class FilterSelectionRenderer extends DefaultTreeCellRenderer
 
 			AbstractFilter f = (AbstractFilter) value;
 			setText(f.getFilterName());
+			
+			setToolTipText(TextWrapping.wrapTextForMultiline(f.getFilterDescription()));
 
 		} else if (value instanceof FilterType) {
 
 			FilterType ft = (FilterType) value;
 			setText(ft.toString());
+			
+			setToolTipText(ft.getFilterTypeDescription());
 
 		}
 

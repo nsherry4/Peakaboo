@@ -78,10 +78,9 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	@Override
 	public String getFilterDescription()
 	{
-		// TODO Auto-generated method stub
 		return "The "
 				+ getFilterName()
-				+ " filter transforms the spectral data with a Fourier Transformation into a frequency domain. Data from a high frequency range (noise) is filtered out, while lower frequencies (peaks, background) are passed through.";
+				+ " filter applies a Fourier transformation to the spectral data, converting it into the frequency domain. Data from a high frequency range (noise) is filtered out, while lower frequencies (peaks, background) are passed through.";
 	}
 
 

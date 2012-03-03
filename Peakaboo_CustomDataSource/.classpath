@@ -2,10 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry exported="true" kind="lib" path="jars/Peakaboo-DataSource.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Peakaboo_CustomDataSource/jars/Peakaboo-DataSource.jar!/doc"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_DataSource"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

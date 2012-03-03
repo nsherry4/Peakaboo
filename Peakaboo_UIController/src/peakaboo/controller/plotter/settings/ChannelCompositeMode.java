@@ -22,7 +22,7 @@ public enum ChannelCompositeMode
 		@Override
 		public String show()
 		{
-			return "Average of Spectra";
+			return "Mean Average of Spectra";
 		}
 	},
 	MAXIMUM {

@@ -55,6 +55,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 			{
 				return "Mathematical";
 			}
+
 		},
 		ADVANCED {
 
@@ -62,7 +63,8 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 			public String toString()
 			{
 				return "Advanced";
-			}	
+			}
+
 		},
 		PROGRAMMING {
 		
@@ -71,12 +73,17 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 			{
 				return "Programming";
 			}
-			
+						
 		};
 		
 		public String getSubPackage()
 		{
 			return "filters." + name().toLowerCase();
+		}
+		
+		public String getFilterTypeDescription()
+		{
+			return toString() + " Filters";
 		}
 	}
 	

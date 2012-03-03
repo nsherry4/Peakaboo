@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -17,11 +18,12 @@ import eventful.EventfulListener;
 
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
+import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
-import swidget.widgets.WrappingLabel;
+import swidget.widgets.TextWrapping;
 import swidget.widgets.ImageButton.Layout;
 
 
@@ -98,14 +100,15 @@ public class SettingsDialogue extends JDialog
 		info.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
-			{
-				JDialog infodialog = new JDialog(SettingsDialogue.this, true);
-				WrappingLabel infotext = new WrappingLabel(f.getFilterDescription(), 400);
-				infotext.setBorder(Spacing.bMedium());
-				infodialog.getContentPane().add(infotext);
-				infodialog.pack();
-				infodialog.setLocationRelativeTo(SettingsDialogue.this);
-				infodialog.setVisible(true);
+			{	
+				JOptionPane.showMessageDialog(
+						SettingsDialogue.this, 
+						TextWrapping.wrapTextForMultiline(f.getFilterDescription()),
+						f.getFilterName() + " Filter Information", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON)
+					);
+
 			}
 		});
 

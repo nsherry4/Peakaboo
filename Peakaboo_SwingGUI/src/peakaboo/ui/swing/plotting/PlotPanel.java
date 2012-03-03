@@ -1363,8 +1363,7 @@ public class PlotPanel extends ClearPanel
 
 		List<AbstractFile> files;
 		List<AbstractDSP> formats =  new ArrayList<AbstractDSP>(dataController.getDataSourcePlugins());
-		
-		
+				
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
 		for (int i = 0; i < formats.size(); i++)

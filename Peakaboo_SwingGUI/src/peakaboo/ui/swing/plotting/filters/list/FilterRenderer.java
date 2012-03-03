@@ -12,6 +12,7 @@ import javax.swing.table.TableCellRenderer;
 
 import peakaboo.filter.AbstractFilter;
 import swidget.widgets.Spacing;
+import swidget.widgets.TextWrapping;
 
 public class FilterRenderer extends JPanel implements TableCellRenderer
 {
@@ -43,7 +44,9 @@ public class FilterRenderer extends JPanel implements TableCellRenderer
 	{
 
 		AbstractFilter f = (AbstractFilter) filter;
-
+		
+		setToolTipText(TextWrapping.wrapTextForMultiline(f.getFilterDescription()));
+		
 		if (isSelected) {
 			setBackground(table.getSelectionBackground());
 

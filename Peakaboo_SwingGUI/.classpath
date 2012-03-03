@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-6-sun-1.6.0.24"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_UIController"/>
 	<classpathentry kind="lib" path="/Swidget/jars/swingx-core-1.6.2.jar"/>
 	<classpathentry kind="lib" path="jars/jsyntaxpane-0.9.5-b29.jar"/>

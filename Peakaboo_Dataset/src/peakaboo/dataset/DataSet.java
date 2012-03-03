@@ -259,10 +259,7 @@ public class DataSet extends AbstractDataSet
 						reading.workUnitCompleted(count);
 					}
 				};
-				
-				
-				//get the correct kind of DataSource				
-				
+
 				
 				if (dataSource != null)
 				{
@@ -275,7 +272,7 @@ public class DataSet extends AbstractDataSet
 						}
 						else
 						{
-							dataSource.read(filenames);
+							dataSource.read(new ArrayList<String>(filenames));
 						}
 					
 					}

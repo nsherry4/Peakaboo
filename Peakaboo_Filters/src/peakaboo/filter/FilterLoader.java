@@ -28,6 +28,7 @@ import peakaboo.filter.filters.programming.JPython;
 import peakaboo.filter.filters.programming.Java;
 import bolt.plugin.BoltPluginLoader;
 import bolt.plugin.ClassInheritanceException;
+import bolt.plugin.ClassInstantiationException;
 
 import commonenvironment.Env;
 
@@ -106,6 +107,8 @@ public class FilterLoader
 			return filters;
 			
 		} catch (ClassInheritanceException e) {
+			e.printStackTrace();
+		} catch (ClassInstantiationException e) {
 			e.printStackTrace();
 		}
 				

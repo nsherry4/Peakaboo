@@ -92,7 +92,7 @@ public class Java extends AbstractSimpleFilter {
 
 	@Override
 	public boolean pluginEnabled() {
-		return !Version.release;
+		return true;
 
 	}
 	

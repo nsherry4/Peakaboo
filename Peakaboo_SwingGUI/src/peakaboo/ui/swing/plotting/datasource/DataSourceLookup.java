@@ -36,9 +36,8 @@ public class DataSourceLookup
 			//loop over every datasource
 			for (AbstractDSP datasource : dsps)
 			{
-				
 				if ( !matchFileExtensions(filenames, datasource.getFileExtensions()) ) continue;
-				if ( !datasource.canRead(filenames) ) continue;
+				if ( !datasource.canRead(new ArrayList<String>(filenames)) ) continue;
 				datasources.add(datasource);
 				
 			}

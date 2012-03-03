@@ -101,7 +101,7 @@ public class JPython extends AbstractSimpleFilter {
 	
 	@Override
 	public boolean pluginEnabled() {
-		return !Version.release && pythonSupported;
+		return pythonSupported;
 	}
 
 	@Override
