@@ -284,22 +284,29 @@ public class CDFMLSaxDSP extends AbstractDSP
 
 	public String getDatasetName()
 	{
-		String Project = reader.getAttr(CDFMLStrings.ATTR_PROJECT_NAME, 0);
-		String DatasetName = reader.getAttr(CDFMLStrings.ATTR_DATASET_NAME, 0);
-		String SampleName = reader.getAttr(CDFMLStrings.ATTR_SAMPLE_NAME, 0);
+		String project = reader.getAttr(CDFMLStrings.ATTR_PROJECT_NAME, 0);
+		String dataset = reader.getAttr(CDFMLStrings.ATTR_DATASET_NAME, 0);
+		String sample = reader.getAttr(CDFMLStrings.ATTR_SAMPLE_NAME, 0);
 
-		String name = "";
-
-		if (Project == null) return name;
-		name += Project;
-
-		if (DatasetName == null) return name;
-		name += ": " + DatasetName;
-
-		if (SampleName == null) return name;
-		name += " on " + SampleName;
-
-		return name;
+		String unknown = "Unknown";
+		
+		boolean hasProject = project != null && !project.equalsIgnoreCase(unknown);
+		boolean hasDataset = dataset != null && !dataset.equalsIgnoreCase(unknown);
+		boolean hasSample = sample != null && !sample.equalsIgnoreCase(unknown);
+		
+		
+		if (hasProject && hasDataset && hasSample) return project + ": " + dataset + " on " + sample;
+		
+		if (hasProject && hasDataset) return project + ": " + dataset;
+		if (hasProject && hasSample) return project + " on " + sample;
+		if (hasDataset && hasSample) return dataset + " on " + sample;
+		
+		if (hasProject) return project;
+		if (hasDataset) return dataset;
+		if (hasSample) return sample;
+		
+		if (reader.sourceFile != null) return reader.sourceFile;
+		return "Unknown Dataset";
 
 	}
 

@@ -63,7 +63,6 @@ import commonenvironment.IOOperations;
 import eventful.EventfulEnumListener;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
-import fava.datatypes.Maybe;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.signatures.FnMap;
@@ -77,6 +76,8 @@ import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.dataset.DatasetReadResult;
+import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -464,24 +465,18 @@ public class PlotPanel extends ClearPanel
 	private String getTitleBarString()
 	{
 		StringBuffer titleString;
-		titleString = new StringBuffer(Version.title);
+		titleString = new StringBuffer();
+		
 		if (dataController.hasDataSet())
 		{
 
-			String dataSetName = dataController.getDatasetName();
-			titleString.append(" (" + dataSetName + ")");
-
-			if (settingsController.getChannelCompositeType() == ChannelCompositeMode.NONE)
-			{
-				titleString.append(" - " + dataController.getCurrentScanName());
-			}
-			else
-			{
-				titleString.append(" - " + settingsController.getChannelCompositeType().show());
-			}
+			titleString.append(dataController.getDatasetName());
+			titleString.append(" - ");
 
 		}
 
+		titleString.append(Version.title);
+		
 		return titleString.toString();
 	}
 
@@ -1430,15 +1425,17 @@ public class PlotPanel extends ClearPanel
 		if (files != null)
 		{
 
-			ExecutorSet<Maybe<Boolean>> reading = dataController.TASK_readFileListAsDataset(files, dsp);
+			ExecutorSet<DatasetReadResult> reading = dataController.TASK_readFileListAsDataset(files, dsp);
 			ExecutorSetView view = new ExecutorSetView(container, reading);
 			
 			//handle some race condition where the window gets told to close too early on failure
 			//I don't think its in my code, but I don't know for sure
 			view.setVisible(false);
-
-			if (! reading.getResult().is()) {
-				JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.", "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+			
+			DatasetReadResult result = reading.getResult();
+			if (result.status == ReadStatus.FAILED)
+			{
+				JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 			}
 
 			// set some controls based on the fact that we have just loaded a

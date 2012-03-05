@@ -5,7 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Calculations"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_CurveFit"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_Filters"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Dataset"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_Dataset"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_Mapping"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_Common"/>
 	<classpathentry kind="lib" path="snakeyaml-1.6.jar"/>

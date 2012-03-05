@@ -18,21 +18,6 @@ import scitypes.Spectrum;
 public class DataTypeFactory {
 
 
-    /**
-     * Creates a new list of type T and initialises it with data from the given list
-	 * @param <T> type of data this list should hold
-     * @param copyFrom the list of data to initialise this list with.
-     * @return a new list of type T containing the same values as copyFrom
-     */
-    public static <T> FList<T> listInit(List<T> copyFrom) {
-    	FList<T> copy = new FList<T>();
-    	if (copyFrom == null) return copy;
-    	for (int i = 0; i < copyFrom.size(); i++){
-    		copy.add(i, copyFrom.get(i));
-    	}
-    	return copy;
-    }
-    
 
     
     /**

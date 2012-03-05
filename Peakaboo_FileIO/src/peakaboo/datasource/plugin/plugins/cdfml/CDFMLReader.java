@@ -37,6 +37,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	
 	
 	private static final String ABORT_MESSAGE = "Aborted by User"; 
+	public String sourceFile;
 	
 	private XMLReader									xr;
 
@@ -93,6 +94,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	{
 		
 		this.isAborted = isAborted;
+		this.sourceFile = file;
 		
 		attrEntries = new HashMap<String, List<String>>();
 		variableEntries = new HashMap<String, List<?>>();
@@ -110,7 +112,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 			xr.setContentHandler(this);
 			xr.setErrorHandler(this);
 
-			xr.parse(new InputSource(new FileInputStream(file)));
+			xr.parse(new InputSource(new FileInputStream(sourceFile)));
 
 		}
 		catch (SAXException e)

@@ -3,10 +3,10 @@ package peakaboo.controller.plotter.data;
 import java.util.List;
 
 import eventful.IEventful;
-import fava.datatypes.Maybe;
 
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
+import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.filter.FilterSet;
@@ -27,7 +27,7 @@ public interface IDataController extends IEventful
 	public void setDataSource(DataSource ds);
 	public void setDataSetProvider(AbstractDataSet dsp);
 	public List<AbstractDSP> getDataSourcePlugins();
-	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp);
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp);
 	
 	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	

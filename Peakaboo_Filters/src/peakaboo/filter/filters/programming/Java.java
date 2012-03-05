@@ -3,7 +3,6 @@ package peakaboo.filter.filters.programming;
 
 import bolt.compiler.BoltJavaMap;
 import bolt.plugin.Plugin;
-import peakaboo.common.Version;
 
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;

@@ -3,11 +3,11 @@ package peakaboo.controller.plotter.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DataSet;
+import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.internal.CopiedDS;
@@ -24,7 +24,6 @@ import scitypes.Spectrum;
 
 import eventful.Eventful;
 import eventful.EventfulListener;
-import fava.datatypes.Maybe;
 
 
 public class DataController extends Eventful implements IDataController
@@ -59,12 +58,12 @@ public class DataController extends Eventful implements IDataController
 	}
 	
 	
-	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final DataSet dataset = new DataSet();
-		final ExecutorSet<Maybe<Boolean>> readTasks = dataset.TASK_readFileListAsDataset(filenames, dsp);
+		final ExecutorSet<DatasetReadResult> readTasks = dataset.TASK_readFileListAsDataset(filenames, dsp);
 
 
 		
@@ -314,7 +313,7 @@ public class DataController extends Eventful implements IDataController
 
 	public List<Integer> getDiscardedScanList()
 	{
-		return DataTypeFactory.<Integer> listInit(badScans);
+		return new ArrayList<Integer>(badScans);
 	}	
 	
 	public void clearDiscardedScanList()

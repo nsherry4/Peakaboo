@@ -8,12 +8,12 @@ import java.util.List;
 
 import commonenvironment.AbstractFile;
 
-import fava.datatypes.Maybe;
 import fava.functionable.FList;
 import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 
+import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.datasource.plugin.DSPLoader;
@@ -53,6 +53,8 @@ public class DataSet extends AbstractDataSet
 	protected String				dataSourcePath;
 
 	protected float					maxEnergy;
+
+	
 
 	
 
@@ -199,9 +201,9 @@ public class DataSet extends AbstractDataSet
 	/**
 	 * Reads the list of {@link AbstractFile}s as a {@link DataSource}
 	 * @param files the files to read as a {@link DataSource}
-	 * @return {@link ExecutorSet} which, when complated, returns a Boolean indicating success
+	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<Maybe<Boolean>> TASK_readFileListAsDataset(final List<String> filenames, final AbstractDSP dataSource)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, final AbstractDSP dataSource)
 	{
 
 		
@@ -209,7 +211,7 @@ public class DataSet extends AbstractDataSet
 		Collections.sort(filenames);
 		
 		// Create the tasklist for reading the files
-		final ExecutorSet<Maybe<Boolean>> tasklist;
+		final ExecutorSet<DatasetReadResult> tasklist;
 		
 		/*
 		final EmptyMap opening = new EmptyMap("Opening Data Set");
@@ -222,13 +224,13 @@ public class DataSet extends AbstractDataSet
 		final DummyExecutor applying = new DummyExecutor();//"Calculating Values");
 		
 		
-		tasklist = new ExecutorSet<Maybe<Boolean>>("Opening Data Set") {
+		tasklist = new ExecutorSet<DatasetReadResult>("Opening Data Set") {
 
 			@Override
-			protected Maybe<Boolean> doMaps()
+			protected DatasetReadResult doMaps()
 			{
 				
-				final int fileCount;
+				final int scanCount;
 				
 				opening.advanceState();
 				
@@ -259,46 +261,41 @@ public class DataSet extends AbstractDataSet
 						reading.workUnitCompleted(count);
 					}
 				};
-
 				
-				if (dataSource != null)
+
+				try
 				{
-					try
+					dataSource.setCallbacks(gotScanCount, readScans, isAborted);
+					if (filenames.size() == 1)
 					{
-						dataSource.setCallbacks(gotScanCount, readScans, isAborted);
-						if (filenames.size() == 1)
-						{
-							dataSource.read(filenames.get(0));
-						}
-						else
-						{
-							dataSource.read(new ArrayList<String>(filenames));
-						}
-					
+						dataSource.read(filenames.get(0));
 					}
-					catch (Exception e)
+					else
 					{
-						e.printStackTrace();
-						aborted();
-						return new Maybe<Boolean>();
+						dataSource.read(new ArrayList<String>(filenames));
 					}
-					
+				
 				}
-				else 
+				catch (Exception e)
 				{
+					e.printStackTrace();
 					aborted();
-					return new Maybe<Boolean>();
+					return new DatasetReadResult(ReadStatus.FAILED, "Failed to read from the selected file(s)");
 				}
+				
+
 				
 				if (isAborted.f())
 				{
 					aborted();
-					return new Maybe<Boolean>(false);
+					return new DatasetReadResult(ReadStatus.CANCELLED);
 				}
 				
 				
-				fileCount = dataSource.getScanCount();
-				gotScanCount.f(fileCount);
+				scanCount = dataSource.getScanCount();
+				if (scanCount == 0) return new DatasetReadResult(ReadStatus.FAILED, "Did not find any data in file(s)");
+				System.out.println(scanCount);
+				gotScanCount.f(scanCount);
 				reading.advanceState();
 				
 				applying.setWorkUnits(dataSource.getScanCount());
@@ -312,7 +309,7 @@ public class DataSet extends AbstractDataSet
 				if (isAborted.f())
 				{
 					aborted();
-					return new Maybe<Boolean>(false);
+					return new DatasetReadResult(ReadStatus.CANCELLED);
 				}
 				
 				
@@ -320,7 +317,7 @@ public class DataSet extends AbstractDataSet
 				applying.workUnitCompleted();
 				applying.advanceState();
 				
-				return new Maybe<Boolean>(true);
+				return new DatasetReadResult(ReadStatus.SUCCESS);
 				
 			}
 			
@@ -670,3 +667,4 @@ public class DataSet extends AbstractDataSet
 	}
 	
 }
+

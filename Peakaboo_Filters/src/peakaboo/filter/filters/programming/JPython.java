@@ -5,7 +5,6 @@ import bolt.plugin.Plugin;
 import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.Language;
-import peakaboo.common.Version;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
