@@ -1,0 +1,466 @@
+\documentclass[article,11pt]{report}
+
+%Images
+\usepackage[pdftex]{graphicx}
+
+%In-document links
+\usepackage[linktoc=all, colorlinks=true, linkcolor=blue]{hyperref}
+
+%text representing commands or in-program text
+\newcommand{\command}[1]{\texttt{#1}}
+%Place an icon inline with the text
+\newcommand{\icon}[1]{\includegraphics[height=1em]{icons/#1.png}}
+%Place and icon and command text together to represent a button
+\newcommand{\button}[2]{\ \command{\mbox{\icon{#1} #2}}}
+%Keyboard shortcut combining a modifier key and another key
+\newcommand{\shortcut}[2]{\command{#1 + #2}}
+%Menu chain
+\newcommand{\menu}[0]{$\rightarrow$}
+
+%placing a screenshot as a figure
+\newcommand{\screenshot}[2]{%
+\begin{figure}[h!]
+\centering\includegraphics[width=0.85\textwidth]{figures/#1.png}
+\caption{#2}
+\end{figure}
+}
+
+
+%Table of Contents macros
+\newcommand{\tocchapter}[1]{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\tocsection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\tocsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
+\newcommand{\tocsubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
+
+\begin{document}
+
+\tableofcontents
+
+\tocchapter{Getting Started}
+
+
+\tocsection{Opening Data}
+Select \button{document-open}{Open} from the toolbar or 
+\command{File \menu \button{document-open}{Open}} from the menu to locate your XRF scan files. 
+You can browse your directories to find your data files. If all scanpoint data are 
+contained in a single file, select it to open the file in the data directory. If 
+there are many individual ``scanpoint'' files, locate them in the directory and 
+use \shortcut{Control}{A} to select all of them to open.
+
+\screenshot{open-files}{Peakaboo's File Selection Dialog}
+
+
+\tocsection{Examining the Data}
+
+The \icon{zoom-in} \icon{zoom-out} control bar on the bottom right of the window 
+allows you to expand the x-axis (energy scale). You can use the scroll bar above
+this area, click and drag on the spectrum itself, to pan back and forth to view 
+different energy regions.
+
+\screenshot{zoom-scroll}{Zoom Controls and Horizontal Scroll Bar}
+
+
+\tocsection{Individual Scans}
+
+The \command{Scan \#} field on the left side, under the spectrum view, allows you 
+to view individual spectra in a map. Click on the arrows to move in the desired 
+direction or enter a value and press \command{Enter}. This option will be disabled 
+if you are viewing the mean average or strongest per channel composites rather than 
+individual scans.
+
+\screenshot{scan-number}{Scan Number Selector}
+
+
+\tocsection{Energy Levels}
+
+The \command{Max Energy} setting on the upper right provides energy calibration. 
+If your dataset contains this value, the maximum energy value will be set 
+automatically. If not, you will have to enter it manually. This value can be 
+tweaked or adjusted by selecting a major element known or suspected to be present 
+in the sample, and adjusting the energy range until the associated peak fits properly. 
+First add your axes to the spectrum by selecting \command{View \menu\ Axes} from 
+the menu. The Y Axis -- \command{Relative Intensity} and X Axis -- \command{Energy (keV)} should now be 
+labeled for you.
+
+\screenshot{max-energy}{The Maximum Energy Selector}
+
+On the left side of the screen, under the \command{Peak Fitting} tab, click on the 
+drop-down arrow beside the \button{edit-add}{Add Fittings} button and select 
+\command{Elemental Lookup}, and a list of elements will become visible, 
+listed in increasing atomic number. Find the element you wish to use as a reference, 
+and click on the checkbox on the box next to it. A set of peaks will appear in shaded 
+red within the spectrum. Adjust the Max Energy (keV) setting to move the red shaded 
+peaks to fit these intense peaks in the spectrum. The Max Energy setting should now
+be calibrated to your data.
+
+You should double-check this Max Energy calibration by adding another element. Although
+\command{Ar} may not be present in your sample, it typically appears in XRF spectra.
+Select \command{Ar} from the peak list and the \command{Ar} K-$\alpha$ peak. It should appear 
+at 2.95 keV with the accompanying K-$\beta$ peak. If you start adding element lines and the fits
+appear off, check your calibration again.
+
+\tocsection{Customizing the View}
+
+The \command{View} menu contains many settings to help you to visualise the 
+spectrum: \command{Logarithmic Scale} (usually best), \command{Axes} (shows energy 
+and intensity scales), \command{Mean Average of Spectra} is the average of all scans 
+(averages each energy channel across all spectra within a map to give you a much 
+improved composite spectrum).
+
+You can also add curve fitting markings to your spectrum: 
+\command{View \menu\ Curve Fit \menu\ Element Names} to label each curve with the 
+name of the element it represents,
+\command{View \menu\ Curve Fit \menu\ Markings} showing transition markings (K-, L-lines), 
+and \command{View \menu\ Curve Fit \menu\ Heights} for fitting heights (max counts).
+
+Your spectrum, as it appears in the window, can also be saved by selecting 
+\button{device-camera}{Export Plot as Image} from the toolbar, 
+\command{File \menu\ Export Plot as Image}, or \shortcut{Control}{P}.  
+Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can 
+also save the fittings results as a txt file by selecting 
+\command{File \menu \button{document-export}{Export Fittings as Text}}.
+
+\tocsection{Saving and Loading Sessions}
+
+You can save your session information, so that next time you want to look at your XRF 
+data, you can just load this information (session) and not have to start from the 
+beginning! These options are found under \command{File \menu\ \button{document-save}{Save Session}} 
+and \command{File \menu\ Load Session}.
+
+
+
+\tocchapter{Peak Fitting}
+
+\tocsection{Escape Peaks}
+
+Before doing any peak fitting, you should consider the type of
+detector you used to collect the XRF spectra. Features may be present in your
+spectra that are due to incoming X-rays interacting with the detector material. For
+example, for a Si detector, there is a probability that some of the incoming X-rays
+will interact with the Si and kick out Si K-shell electrons, thereby reducing the
+incoming X-ray’s measured energy by 1.74 keV. This escape peak is present for the
+major elements in the sample.
+
+To include escape peaks in fitting the peaks in your spectra, click on View and then
+‘Escape Peaks’ and choose either Silicon or Germanium, depending on the type of
+detector you used. If you do not need to fit escape peaks, choose ‘none’.
+
+\tocsection{Selecting Fittings}
+
+There are three different tools which can be used to fit your data. To access these 
+options, click on the drop-down arrow next to the \button{edit-add}{Add Fittings} button at 
+the top of the peak fitting tab.
+
+\tocsubsection{Element Lookup}
+
+Begin by adding elements from the lowest atomic number end first and working
+your way up. It is recommended that you fit the K lines first. L lines for elements
+for tungsten and higher should be fit separately from the K lines for lower atomic
+number elements, as the K lines will interfere with the L line fittings.
+
+Once you are happy with the fittings, click \button{choose-ok}{OK}, and the
+list of fitted elements will appear, with all the elements checked off in the boxes to
+the right of the element name. You can still look at the fit by unchecking an
+element, and its associated peaks will be removed from the spectrum fitting.
+Rechecking the box will put the fitted element peaks back in.
+
+\tocsubsection{Guided Fitting}
+
+If you are unsure of a particular peak, you may want to use the ‘Guided Fitting’
+option. There are 2 ways to access the ‘Guided Fitting’. The default option for 
+\button{edit-add}{Add Fittings} is ‘Guided Fitting’. Click on \button{edit-add}{Add Fittings} and then click on the
+peak you wish to fit and the program will fit the peak with a possible option. Click
+\button{choose-ok}{OK} to add the lines to your list. Other possible element lines will also be
+displayed in the drop down list. The second way is to choose the ‘Guided Fitting’
+option from the drop down list. Then click on the unknown peak and a list of
+possible line fittings will appear in the previously empty drop down list. Highlight
+the element line you wish to use for the fitting. To edit a fitting, click \button{edit-edit}{Edit} (see the following figure). To add another fitting, click \button{edit-add}{Add Fittings} and
+then click on the peak you wish to identify. Once you are happy with the fittings
+click on OK to add the element lines to your list.
+
+In the following example, 2 Pb (lead) L lines were fitted at approximately 10.55 and
+12.59 keV. Using the ‘guided fitting’ option to search for an element line to fit the
+peak at 12.59 keV, also fit the peak at 10.55 keV with a Pb L Line, when Pb L was
+chosen from the list. If a peak at 10.55 keV did not exist, then the presence of Pb
+would not be likely. Alternatively, As K alpha line overlaps with the Pb L line at
+10.55 keV, however, the presence of the Pb L line at 12.59 keV indicates that Pb is
+likely present and not As.
+
+\tocsubsection{Summation Peaks}
+
+If you are having trouble finding element lines to fit some peaks in your spectrum,
+you may have what are called ‘pile-up peaks’ (referred to as ‘summation’ peaks in
+Peakaboo). This is a detector phenomenon. If your sample has a lot of one element
+present, then some of the emitted x-rays due to the presence of this element will
+impinge on the detector virtually simultaneously and the pulse created and
+measured would be the sum of the two x-ray energies.
+
+The XRF spectrum from a tooth is shown below. The spectrum is partially fitted to
+show that the peak structure between 7-8 keV is not fully explained by the
+presence of Ni. The tooth contains a large amount of Ca therefore one should
+investigate the presence of Ca pile-up peaks.
+
+The figure below shows a truncated XRF spectrum from a tooth containing a large
+amount of Calcium. Three Ca pile-up peaks would be expected, one from the
+doubling of the Ca Kα lines, a second from the addition of the Ca Kα and β lines,
+and a third from the doubling of the Ca Kβ peak energies. These Ca pile-up peaks
+are indicated in the figure below.
+
+In order to access the summation fitting option, left click on arrow next to the
+\button{edit-add}{Add Fittings} button at the top of the peak fitting tab. Remember 
+to click on \button{choose-ok}{OK} to add the summation fits to your spectrum. 
+Please note that for element lines to appear in the drop down lists, they must 
+have already been included in the spectral fit.
+
+The fully fitted spectrum is shown below. Ni K and Cu K lines have been added and
+overlap with the Ca pile-up peaks.
+
+
+
+\tocchapter{Mapping}
+
+To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. 
+Click on the dropdown arrpw to the right of \button{map}{Map Fittings} to choose either the
+fitting area or fitting height for mapping. Only those checked elements in your
+``Fitted Elements'' list will be mapped. It is recommended that you check all
+elements for mapping as all maps will be included in the mapping results. If your
+map is quite large, then it may be better to map one element at a time as the
+processing on your desk-top or laptop will take considerable time.
+
+Click on \button{map}{Map Fittings}, a window will pop into view and indicate the
+progress of mapping the fitted elements.
+
+Once the mapping is complete, a window will appear with a coloured map and scale
+and list of mapped element lines. Scan xml files containing all individual scans will
+have the associated meta data so that map widths and heights are automatically
+considered. Otherwise, the user must adjust the width and height. All elements will
+be checked and represented in the initial map. To get the individual element maps,
+uncheck listed elements, leaving the element line map you wish to view. If your
+maps have a pixilated appearance, you may want to try interpolating the data and
+also adding in some contouring. These features are accessed in the mapping
+window as well.
+
+The Zn K map shown in the above figure was scaled to the highest intensity of the
+Zn K line fittings from all the individual spectra in the map data set (‘Visible Fittings’
+oprion). If you choose the ‘All fittings’ option under the ‘Scale Intensities by:’
+heading, then the maps will be scaled to the highest intensity from all element line
+fittings from all the individual spectra in the map data set. Thus, a minor element
+would show very a low intensity distribution in its map.
+
+Element line maps may be saved by clicking on the \button{document-save}{Save} button under the
+element line list in the mapping window. Various formats are available for saving
+your element line maps, Pixel Image (png), Vector Image (svg) and PDF format.
+Once you have clicked on the \button{document-save}{Save} button, a directory window will appear and
+you can browse to select the desired directory and then enter a suitable file name.
+
+\tocsection{Overlays}
+
+The ‘overlay’ option for mapping is chosen from the drop down list within the Map
+window, under ‘Mapped Fittings’ (composite, overlay and ratio).
+
+Below: ‘As a group’ option example. The highest intensity from the group of
+elements displayed is used to scale the colors for the group. Zn is much less in
+intensity than the Ca, thus the presence of Zn is not apparent in the distribution
+map.
+
+\tocsection{Ratios}
+
+Mapping of element ratios is also available within Peakaboo. Select Ratio from the
+‘Mapped/Fittings’ dropdown list. Select the elements (or element sets) you wish to
+ratio and choose the desired colours from the dropdown lists next to the element
+line fitting. In the example below, the Zn to Fe ratio is mapped. Areas where the Fe
+is strong and there is very little Zn show up as blue.
+
+\tocsection{Errant Data}
+
+Missing or skewed spectra within a map can be removed from the map. An example
+is shown below in which one such data point is evident within the map. This
+occurred after injection at the synchrotron and the first data point after injection
+was not recorded for some reason.
+
+To view the errant data point, make sure you are in ‘Individual Spectrum’ view.
+Enter the Index\# you have determined, in the Scan field as shown below. No
+spectrum is displayed in the scan window, thus it is immediately evident that the
+spectrum is missing for this scan point. Click on the \button{choose-cancel}{Exclude} button as shown below to
+flag the scan as bad to exclude it from the data set.
+
+The data point has now been excluded from the map. The errant data point or scan
+has been replaced with an averaged one from the surrounding scans.
+
+
+\tocsection{Plotting Subsections}
+
+The distribution of elements will likely vary across your sample and hence your
+maps. Peakaboo allows you to view spectra from selected regions within your map.
+Left click and drag the mouse in order to draw a rectangle surrounding the region
+you wish to select. Click on the down arrow to plot the selected region.
+
+Another Peakaboo window will open up to display the spectra from the selected
+region or subset. The spectra from the selected region or ‘subset’ can then be
+processed with Peakaboo.
+
+
+\tocchapter{Filters}
+
+Filters can be accessed by clicking on the Filters tab and then clicking on 
+\button{edit-add}{Add Filters} to display the typed of filters. The filter type heading can be expanded by
+clicking on the box to the left of the filter type. Click on the boxes to the left of the filter
+type headings in order to list the choices available. Highlight the type of filter you
+wish to use and then click on the OK (green check mark) to add the filter. If you want to modify or
+check the parameters associated with your filter, click on the \button{misc-preferences}{Settings} button next to the
+filter name to bring up the filter settings window. As you change the parameters,
+you will see the reflected changes in the spectrum background fitting. Once you are
+satisfied with the filter settings, close the window.
+
+The use of filters will obviously alter the spectrum. If you wish to see the raw data
+outline, choose this option under the view menu. Individual line fittings can also be
+viewed as an option under the view menu.
+
+\tocsection{Example Filter Use}
+
+This example uses the normalize filter to correct for high deadtime artifacts in maps. 
+When deadtime is very high, the detector cannot keep up with the incoming x-rays.
+For example, low energy x-rays such as those coming from Ar may not get counted
+and mapping the distribution of Ar will reveal areas of next to no intensity. The
+‘Normalizer Filer’ scales each spectrum so that the intensity at a given channel is
+always the same. The ‘Normalizer Filter’ can be used in this case to correct the
+spectra to make the counts from the Ar channel to be consistent in all spectra and
+scale the other element lines in the spectra appropriately.
+
+Go to the ‘Filter’ tab and add the ‘Normalizer Filter’ found under the ‘Advanced’
+filter types. Click on the edit box to bring up the window for editing the settings.
+Place the cursor on the Ar peak and read the channel number and value (counts)
+from the information found below the spectrum window, and enter them into the
+appropriate settings fields. Make sure you are viewing the ‘Mean’ spectrum to get
+the average counts (Value) for the Ar. Close the edit window.
+
+
+
+\tocsection{Filter Descriptions}
+
+\tocsubsection{Background}
+
+\tocsubsubsection{Polynomial}
+
+This filter attempts to fit a series of parabolic (or higher order single-term) curves 
+under the data, with a curve centred at each channel, and attempting to make each curve 
+as tall as possible while still staying completely under the spectrum. The union of 
+these curves is calculated and subtracted from the original data.
+
+\tocsubsubsection{Brukner}
+
+This filter removes background over several iterations by smoothing the data and 
+taking the minimum of the unsmoothed and smoothed data for each channel on each pass.
+
+\tocsubsubsection{Linear Trim}
+
+This filter examins all pairs of points which are n channels apart (ie (1, 10), 
+(2, 11) where n = 10). For each pair of points, any signal which exceeds a straight 
+line connecting the two points is truncated.
+
+\tocsubsection{Noise}
+
+\tocsubsubsection{Savitsky-Golay}
+
+This filter attempts to remove noise by fitting a polynomial to each
+point p0 and its surrounding points p0-n..p0+n, and then taking the value of the
+polynomial at point p0. A moving average may be considered a special case of this
+filter with a polynomial of order 1.
+
+\tocsubsubsection{Wavelet Low-Pass}
+
+This filter attempts to reduce high-frequency noise by
+performing a Wavelet transformation on the spectrum. This breaks the data down
+into sections each representing a different frequency range. The high-frequency
+regions are then smoothed, and a reverse transform is applied.
+
+\tocsubsubsection{Aggressive Wavelet Low-Pass}
+
+This filter attempts to reduce high-frequency noise by performing a Wavelet 
+transformation on the spectrum. This breaks the data down into sections each 
+representing a different frequency range. The high-frequency regions are then 
+completely removed, and a reverse transform is applied.
+
+\tocsubsubsection{Fourier Low-Pass}
+
+This filter transforms the spectral data with a Fourier
+Transformation into a frequency domain. Data from a high frequency range (noise)
+is filtered out, while lower frequencies (peaks, background) are passed through.
+
+\tocsubsubsection{Moving Average}
+
+This filter refines the values of each point in a scan by sampling
+it and the points around it, and replacing it with an average of the sampled points.
+
+\tocsubsubsection{Spring Smoothing}
+
+This filter operates on the assumption that weak signal should
+be smoothed more than strong signal. It treats each pair of points as if they were
+connected by a spring. With each iteration, a tension force draws neighbouring
+points closer together. The Force Multiplier controls how strongly a pair of elements
+are pulled together, and the Force Falloff Rate controls how aggressively stronger
+signal is anchored in place, unmoved by spring forces. This prevents peak shapes
+from being distorted by the smoothing algorithm.
+
+\tocsubsection{Mathematical}
+
+\tocsubsubsection{Add}
+
+This filter adds a constant value to all points on a spectrum.
+
+\tocsubsubsection{Subtract}
+
+This filter subtracts a constant value to all points on a spectrum.
+
+\tocsubsubsection{Multiply}
+
+This filter multiplies all points on a spectrum by a constant value.
+
+\tocsubsubsection{Derivative}
+
+This filter transforms the data such that each channel represents the
+difference between itself and the channel before it.
+
+\tocsubsubsection{Integral}
+
+This filter transforms the data such that each channel represents the sum of
+itself and all channels prior to it.
+
+
+\tocsubsection{Advanced}
+
+\tocsubsubsection{Signal -> Wavelet}
+
+This filter converts spectrum data into a wavelet
+representation. This is intended to be used in conjunction with other filters
+(especially the 'Filter Partial Spectrum' filter) to perform custom wavelet operations.
+
+\tocsubsubsection{Wavelet -> Signal}
+
+This filter converts a wavelet representation of data back into
+spectrum data. This is intended to be used in conjunction with other filters
+(especially the 'Filter Partial Spectrum' filter) to perform custom wavelet operations.
+
+\tocsubsubsection{Normalizer}
+
+This scales each spectrum so that the intensity at a specified channel is
+always the same across all spectra.
+
+\tocsubsubsection{Filter Partial Spectrum}
+
+This filter allows the application of another filter to a
+portion of a spectrum.
+
+
+\tocsubsection{Programming}
+
+\tocsubsubsection{Java Code}
+
+This filter allows you to create your own filter in the Java programming language.
+
+\tocsubsubsection{JPython Code}
+
+This filter allows you to create your own filter in the Python programming language using JPython.
+
+\end{document}
+
