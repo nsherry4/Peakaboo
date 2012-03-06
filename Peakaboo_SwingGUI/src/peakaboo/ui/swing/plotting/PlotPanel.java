@@ -967,7 +967,7 @@ public class PlotPanel extends ClearPanel
 
 		
 		etitles = createMenuCheckItem(
-				"Names", null, "Label fittings with their names",
+				"Element Names", null, "Label fittings with the names of their elements",
 				new ActionListener() {
 					
 					public void actionPerformed(ActionEvent e)
@@ -1213,7 +1213,7 @@ public class PlotPanel extends ClearPanel
 		scanLabel.setBorder(Spacing.bSmall());
 		scanBlock = new ComplexToggle(
 			StockIcon.CHOOSE_CANCEL,
-			"Flag this scan as bad to exclude it from the data set", "");
+			"Flag this scan to exclude it and extrapolate it from neighbouring points in maps", "");
 
 		scanSelector.add(scanLabel);
 		scanSelector.add(Box.createHorizontalStrut(2));
