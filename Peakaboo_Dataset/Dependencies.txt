@@ -1,6 +1,2 @@
-Peakaboo_DataTypes
-Peakaboo_Calculations
-Peakaboo_Filters
-Peakaboo_CurveFit
-Peakaboo_FileIO
-Peakaboo_Mapping
+Peakaboo_Common
+Peakaboo_DataSource
