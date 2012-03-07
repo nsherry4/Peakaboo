@@ -69,8 +69,9 @@ public class SmartFittingPanel extends JPanel
 		smartWidget = new SmartFittingWidget(controller, canvas);
 		smartWidget.setBorder(Spacing.bMedium());
 		JScrollPane scroll = new JScrollPane(smartWidget);
+		scroll.setBorder(Spacing.bNone());
 		scroll.setPreferredSize(new Dimension(200, 0));
-		scroll.getViewport().setOpaque(false);
+		
 		
 
 		this.add(scroll, BorderLayout.CENTER);
@@ -117,7 +118,7 @@ public class SmartFittingPanel extends JPanel
 	
 	public void resetSelectors()
 	{
-		smartWidget.resetSelectors();
+		smartWidget.resetSelectors(true);
 	}
 
 }

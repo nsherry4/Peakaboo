@@ -296,17 +296,19 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			0.0f,
 			maxIntensity)));
 
-		// draw the original data in the background
+
+		// draw the filtered data
+		plotPainters.add(new PrimaryPlotPainter(drawingData, controller.settingsController.getMonochrome()));
+
+		
+		// draw the original data
 		if (controller.settingsController.getShowRawData())
 		{
 			Spectrum originalData = dataForPlot.second;
 			plotPainters.add(new OriginalDataPainter(originalData, controller.settingsController.getMonochrome()));
 		}
-
-		// draw the filtered data
 		
-		plotPainters.add(new PrimaryPlotPainter(drawingData, controller.settingsController.getMonochrome()));
-
+		
 		// get any painters that the filters might want to add to the mix
 		PlotPainter extension;
 		for (AbstractFilter f : controller.filteringController.getActiveFilters())

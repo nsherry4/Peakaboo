@@ -15,6 +15,7 @@ import peakaboo.curvefit.peaktable.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
+import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;
 import eventful.EventfulListener;
 import fava.functionable.FList;
@@ -43,7 +44,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 
 			public void actionPerformed(ActionEvent e)
 			{
-				addTSSelector();
+				addTSSelector(true);
 				addButton.requestFocusInWindow();
 			}
 		});
@@ -62,12 +63,12 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	protected void removeTSSelector(TSSelector tssel)
 	{
 		selectors.remove(tssel);
-		if (selectors.size() < minSelectors) addTSSelector();
+		if (selectors.size() < minSelectors) addTSSelector(true);
 		refreshGUI();
 	}
 
 	
-	protected TSSelector addTSSelector()
+	protected TSSelector addTSSelector(final boolean active)
 	{
 		
 		TSSelector sel = new TSSelector(controller);
@@ -76,7 +77,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 			
 			public void change()
 			{
-				TSSelectorUpdated();
+				TSSelectorUpdated(active);
 			}
 		});
 		
@@ -105,19 +106,19 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	}
 	
 	
-	public final void resetSelectors()
+	public final void resetSelectors(boolean active)
 	{
 		selectors.clear();
 		
 		for (int i = 0; i < minSelectors; i++)
 		{
-			addTSSelector();	
+			addTSSelector(active);	
 		}
 		
 
 	}
 	
-	protected final void TSSelectorUpdated()
+	protected final void TSSelectorUpdated(final boolean active)
 	{
 		controller.clearProposedTransitionSeries();
 		FList<TransitionSeries> tss = getTransitionSeries();
@@ -128,7 +129,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 
 			public void f(TransitionSeries ts)
 			{
-				if (ts != null) controller.addProposedTransitionSeries(ts);
+				if (ts != null && active) controller.addProposedTransitionSeries(ts);
 			}
 		});
 		

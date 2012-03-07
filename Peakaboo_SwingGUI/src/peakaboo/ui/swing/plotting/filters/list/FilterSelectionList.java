@@ -18,6 +18,7 @@ import peakaboo.filter.AbstractFilter.FilterType;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
 
@@ -42,6 +43,7 @@ public class FilterSelectionList extends ClearPanel
 		this.setLayout(new BorderLayout());
 
 		JScrollPane scroller = new JScrollPane(createFilterTree(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setBorder(Spacing.bNone());
 		
 		this.add(scroller, BorderLayout.CENTER);
 		add(new TitleGradientPanel("Add Filter", true, createControls()), BorderLayout.NORTH);

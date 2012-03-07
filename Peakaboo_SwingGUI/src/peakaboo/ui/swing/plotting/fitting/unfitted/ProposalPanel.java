@@ -20,6 +20,7 @@ import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTreeModel;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
 
@@ -232,6 +233,7 @@ public class ProposalPanel extends ClearPanel implements Changeable
 		JScrollPane scroll = new JScrollPane(unfitTree);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));
+		scroll.setBorder(Spacing.bNone());
 
 		return scroll;
 	}

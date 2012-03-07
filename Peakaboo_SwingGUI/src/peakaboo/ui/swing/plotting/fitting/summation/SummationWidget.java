@@ -24,12 +24,14 @@ import swidget.widgets.ClearPanel;
 class SummationWidget extends TSSelectorGroup
 {
 
-
-	public SummationWidget(IFittingController controller)
+	private SummationPanel parent;
+	
+	public SummationWidget(IFittingController controller, SummationPanel parent)
 	{
 
 		super(controller, 2);
-		resetSelectors();
+		this.parent = parent;
+		resetSelectors(true);
 		refreshGUI();
 		
 	}
@@ -112,7 +114,7 @@ class SummationWidget extends TSSelectorGroup
 
 		revalidate();
 
-		TSSelectorUpdated();
+		if (parent.active) TSSelectorUpdated(parent.active);
 
 
 	}
@@ -120,9 +122,9 @@ class SummationWidget extends TSSelectorGroup
 	
 	
 	@Override
-	protected TSSelector addTSSelector()
+	protected TSSelector addTSSelector(boolean active)
 	{	
-		TSSelector sel = super.addTSSelector();
+		TSSelector sel = super.addTSSelector(active);
 		
 		sel.setTransitionSeries(
 		

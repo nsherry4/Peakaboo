@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JSeparator;
+
 
 import fava.functionable.FList;
 import fava.signatures.FnMap;
@@ -39,7 +41,7 @@ class SmartFittingWidget extends TSSelectorGroup
 		
 		editButtons = new ArrayList<ImageButton>();
 		
-		resetSelectors();
+		resetSelectors(true);
 		activeIndex = 0;
 
 		refreshGUI();
@@ -130,16 +132,16 @@ class SmartFittingWidget extends TSSelectorGroup
 		revalidate();
 		
 		
-		TSSelectorUpdated();
+		TSSelectorUpdated(true);
 
 
 	}
 
 	@Override
-	protected TSSelector addTSSelector()
+	protected TSSelector addTSSelector(boolean active)
 	{	
 		activeIndex = selectors.size();
-		return super.addTSSelector();
+		return super.addTSSelector(active);
 	}
 	
 	@Override

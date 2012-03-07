@@ -29,6 +29,7 @@ import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControlButton;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ListControls.ElementCount;
@@ -371,6 +372,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));
 		scroll.getViewport().setBackground(Color.white);
+		scroll.setBorder(Spacing.bNone());
 		
 		return scroll;
 	}

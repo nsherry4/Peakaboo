@@ -21,6 +21,7 @@ import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControls;
 
 
@@ -46,6 +47,7 @@ public class FilterList extends ClearPanel{
 		
 		JScrollPane scroller = new JScrollPane(createFilterTable(windowOwner), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.getViewport().setBackground(Color.white);
+		scroller.setBorder(Spacing.bNone());
 		
 		add(scroller, BorderLayout.CENTER);
 		//add(createControlPanel(), BorderLayout.SOUTH);

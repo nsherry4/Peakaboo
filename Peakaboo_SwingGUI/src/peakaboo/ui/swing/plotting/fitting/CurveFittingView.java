@@ -100,6 +100,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	public void summationAdd()
 	{
+		summationPanel.setActive(true);
 		summationPanel.resetSelectors();
 		card.show(cardPanel, SUMMATION);
 		changed();
@@ -118,6 +119,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	{
 		card.show(cardPanel, FITTED);
 		smartPanel.setSelectionMode(false);
+		summationPanel.setActive(false);
 		changed();
 	}
 	

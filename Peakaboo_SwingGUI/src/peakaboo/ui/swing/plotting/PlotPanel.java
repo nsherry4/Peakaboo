@@ -437,6 +437,7 @@ public class PlotPanel extends ClearPanel
 		tabs.add(new CurveFittingView(controller.fittingController, canvas), 0);
 		tabs.add(new FiltersetViewer(controller.filteringController, container), 1);
 
+		
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;

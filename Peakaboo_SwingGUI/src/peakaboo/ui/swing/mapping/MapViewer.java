@@ -13,7 +13,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 
 import eventful.EventfulTypeListener;
@@ -68,12 +68,13 @@ public class MapViewer extends JPanel
 	private void init(PeakabooMapperSwing owner)
 	{
 
-		
 		setLayout(new BorderLayout());
-		add(new SidePanel(controller, owner), BorderLayout.WEST);
-		add(createMapView(), BorderLayout.CENTER);
 		
-		
+		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new SidePanel(controller, owner), createCanvasPanel());
+		split.setResizeWeight(0);
+		split.setOneTouchExpandable(true);
+		split.setBorder(Spacing.bNone());
+		add(split, BorderLayout.CENTER);	
 		
 		
 		class CompleteMouseListener implements MouseMotionListener, MouseListener
@@ -144,20 +145,6 @@ public class MapViewer extends JPanel
 		return tabController;
 	}
 
-
-	private JPanel createMapView()
-	{
-
-		JPanel pane = new JPanel();
-
-		pane.setLayout(new BorderLayout());
-
-		pane.add(createCanvasPanel(), BorderLayout.CENTER);
-		pane.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.WEST);
-		
-		return pane;
-
-	}
 
 
 	private JPanel createCanvasPanel()

@@ -23,7 +23,7 @@ public class SummationPanel extends JPanel
 {
 
 	protected SummationWidget	summationWidget;
-
+	boolean active = true;
 
 	public SummationPanel(final IFittingController controller, final CurveFittingView owner)
 	{
@@ -33,7 +33,8 @@ public class SummationPanel extends JPanel
 			@Override
 			protected void cancel()
 			{
-				summationWidget.resetSelectors();
+				SummationPanel.this.active = false;
+				summationWidget.resetSelectors(active);
 
 				controller.clearProposedTransitionSeries();
 				controller.fittingProposalsInvalidated();
@@ -67,11 +68,12 @@ public class SummationPanel extends JPanel
 		
 		this.setLayout(new BorderLayout());
 
-		summationWidget = new SummationWidget(controller);
+		summationWidget = new SummationWidget(controller, this);
 		summationWidget.setBorder(Spacing.bMedium());
 		JScrollPane scroll = new JScrollPane(summationWidget);
+		scroll.setBorder(Spacing.bNone());
 		scroll.setPreferredSize(new Dimension(200, 0));
-		scroll.getViewport().setOpaque(false);
+		
 		
 		this.add(scroll, BorderLayout.CENTER);
 
@@ -82,10 +84,15 @@ public class SummationPanel extends JPanel
 
 	}
 
+	public void setActive(boolean active)
+	{
+		this.active = active;
+	}
+	
 
 	public void resetSelectors()
 	{
-		summationWidget.resetSelectors();
+		summationWidget.resetSelectors(active);
 	}
 
 
