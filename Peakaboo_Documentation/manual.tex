@@ -1,4 +1,4 @@
-\documentclass[article,11pt]{report}
+\documentclass[article,twoside,11pt]{report}
 
 
 
@@ -6,7 +6,7 @@
 \usepackage[pdftex]{graphicx}
 
 %In-document links
-\usepackage[linktoc=all, colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage[linktoc=all, colorlinks=true, linkcolor=black]{hyperref}
 
 %headers and footers
 \usepackage{fancyhdr}
@@ -43,7 +43,7 @@
 
 
 %Table of Contents macros
-\newcommand{\tocchapter}[1]{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\tocchapter}[1]{\cleardoublepage\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
 \newcommand{\tocsection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
 \newcommand{\tocsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
 \newcommand{\tocsubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
@@ -74,10 +74,7 @@
 	\vspace*{\fill}
 \end{titlepage}
 
-\newpage
-\thispagestyle{empty}
-\mbox{}
-\setcounter{page}{0}
+\cleardoublepage
 
 \tableofcontents
 
@@ -88,11 +85,11 @@
 
 \tocsection{Opening Data}
 Select \button{document-open}{Open} from the toolbar or 
-\command{File \menu \button{document-open}{Open}} from the menu to locate your XRF scan files. 
-You can browse your directories to find your data files. If all scanpoint data are 
-contained in a single file, select it to open the file in the data directory. If 
-there are many individual ``scanpoint'' files, locate them in the directory and 
-use \shortcut{Control}{A} to select all of them to open.
+\command{File \menu \button{document-open}{Open}} from the menu to locate your 
+XRF data. If all scanpoint data are contained in a single file, select it to 
+open the file in the data directory. If there are many individual ``scanpoint'' 
+files, locate them in the directory and use \shortcut{Control}{A} to select all 
+of them.
 
 \screenshot{open-files}{Peakaboo's File Selection Dialog}
 
@@ -246,16 +243,18 @@ spectral fit.
 \tocchapter{Mapping}
 
 To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. 
-Click on the dropdown arrpw to the right of \button{map}{Map Fittings} to choose either the
-fitting area (default) or fitting height for mapping. Only those checked fittings in your
-\command{Fitted Elements} list will be mapped. It is recommended that you check all
-fittings for mapping as each fitting results in an individual map which can be removed 
-later. If your map is quite large, or you are using time-intensive filters, then it 
-may be better to map fewer fittings at a time as the processing on your desktop or 
-laptop will take considerable time.
+Click on the dropdown arrow to the right of the \button{map}{Map Fittings} button to 
+choose either the fitting area (default) or fitting height for mapping. Only those 
+fittings which are enabled in your \command{Fitted Elements} list will be mapped. It 
+is recommended that you enable all fittings for mapping as each fitting results in 
+an individual map which can be disabled later. If your map is quite large, or you 
+are using time-intensive filters, then it may be better to map fewer fittings at a 
+time as the processing on your desktop or laptop will take considerable time.
 
 Once you have clicked on \button{map}{Map Fittings}, a window will pop up indicating the
 progress of mapping the fitted elements.
+
+\screenshot{map-window}{Peakaboo's Mapping Window}
 
 Once the mapping is complete, a window will appear with a coloured map, scale, and 
 list of mapped element lines. For datasets which contain dimension information, map 
@@ -301,13 +300,15 @@ fitting.
 
 \tocsection{Errant Data}
 
-Missing or skewed spectra within a data set can be removed from the map. To view the 
-errant data point, make sure you are in ‘Individual Spectrum’ view in the main 
-plotting window. Enter the \command{Index \#} you have determined the invalid 
-data to be located at in the \command{Scan} field as shown. Click on the 
-\button{choose-cancel}{Exclude} button as shown to flag the scan as bad to 
-exclude it from the data set. In all future maps, this data point will be interpolated
-from neighbouring data.
+Missing or skewed spectra within a data set can be removed from the map. Hover the mouse
+over the bad data point in the mapping window, and the index of that data point will 
+appear in the status bar at the bottom of the window. To view the errant data point, 
+return to the plotting window, making sure you are in \command{Individual Spectrum} mode, and 
+enter the \command{Index \#} of the invalid data in the \command{Scan} field at the bottom 
+of the window. 
+
+Click on the \button{choose-cancel}{Exclude} button to flag the scan as bad, and to  exclude it from 
+the data set. In all future maps, this data point will be interpolated from neighbouring data.
 
 
 \tocsection{Plotting Subsections}
@@ -431,13 +432,13 @@ itself and all channels prior to it.
 
 \tocsection{Advanced Filters}
 
-\tocsubsection{Signal -> Wavelet}
+\tocsubsection{Signal $\rightarrow$ Wavelet}
 
 This filter converts spectrum data into a wavelet representation. This is intended
 to be used in conjunction with other filters (especially the \command{Filter Partial Spectrum}
 filter) to perform custom wavelet operations.
 
-\tocsubsection{Wavelet -> Signal}
+\tocsubsection{Wavelet $\rightarrow$ Signal}
 
 This filter converts a wavelet representation of data back into
 spectrum data. This is intended to be used in conjunction with other filters
