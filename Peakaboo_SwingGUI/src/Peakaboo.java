@@ -30,8 +30,16 @@ public class Peakaboo
 	private static void initialize()
 	{
 		
+
+		//required to work around:
+		//Exception in thread "AWT-EventQueue-0" java.lang.InternalError: not implemented yet
+		//at sun.java2d.x11.X11SurfaceData.getRaster(X11SurfaceData.java:193)
+		//on Linux
+		//It must be set before Swing starts up.
+		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
 		PeakTableReader.readPeakTable();
+		
 		
 		Swidget.initialize();
 		
@@ -68,8 +76,6 @@ public class Peakaboo
 	private static void runPeakaboo()
 	{
 
-		initialize();
-
 		if (Env.heapSize() < 120){
 			JOptionPane.showMessageDialog(
 				null,
@@ -104,6 +110,8 @@ public class Peakaboo
 	{	
 
 
+		initialize();
+		
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
