@@ -9,20 +9,16 @@ import bolt.plugin.BoltPlugin;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 /**
  * 
- * This abstract class defines a filter for a {@link Spectrum} of data. Also contains messy logic for enumerating
- * all classes in this package which inherit from this class, and are thus considered filters. This is
- * primarily intended for use in UIs, as it focuses on classifying the type and name of the filter, and the
+ * This abstract class defines a filter for a {@link Spectrum} of data. A large part of this abstract
+ * class is for use in UIs, as it focuses on classifying the type and name of the filter, and the
  * types of parameters. This provides a way for UIs to display the filter and let the user change the
- * settings. When applying filters programmatically, it would probably be more desirable to simple use the
- * functions in the {@link Calculations}, {@link SpectrumCalculations}, {@link Background}, and {@link Noise}
- * classes which are the backend for these filters.
+ * settings.
  * 
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2012
  * 
  */
 
@@ -112,32 +108,40 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	 */
 	public abstract String getFilterDescription();
 	
-	
 
-
-	
-	
-	
-	
-	
+	/**
+	 * Returns the type of the filter.
+	 */
 	public abstract FilterType getFilterType();
 
 
+	/**
+	 * Returns the parameters
+	 */
 	public final Map<Integer, Parameter> getParameters()
 	{
 		return this.parameters;
 	}
+	
+	/**
+	 * Sets the parameters
+	 */
 	public final void setParameters(Map<Integer, Parameter> params)
 	{
 		parameters = params;
 	}
 	
-	protected void addParameter(Integer key, Parameter value)
+	protected int addParameter(Parameter value)
 	{
+		int key = getNextParameterIndex();
 		parameters.put(key, value);
+		return key;
 	}
 
-	public final Parameter getParameter(Object key)
+	/**
+	 * Retrieves the parameter with the assocuated index
+	 */
+	public final Parameter getParameter(Integer key)
 	{
 		return parameters.get(key);
 	}
@@ -148,13 +152,33 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	}
 
 
+	/**
+	 * This method is called once before the filter is used.  
+	 */
 	public abstract void initialize();
+	
 	public abstract PlotPainter getPainter();
+	
+	/**
+	 * Called whenever a parameter value is changed.
+	 * @return true if the new values are valid, false otherwise
+	 */
 	public abstract boolean validateParameters();
 	protected abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
+	
+	/**
+	 * Returns true if this filter can filter an arbitrarily-sized subset of the current data, false otherwise
+	 */
 	public abstract boolean canFilterSubset();
 	
 	
+	/**
+	 * Call's the subclass's {@link AbstractFilter#filterApplyTo(Spectrum, boolean)} method,
+	 * catching exceptions that occur so as to prevent a filter from crashing the program.
+	 * @param data the data to process
+	 * @param cache whether or not this data should be cached for the purposes of drawing on the spectrum
+	 * @return the result of applying the filter to data
+	 */
 	public Spectrum filter(Spectrum data, boolean cache)
 	{
 		
@@ -173,7 +197,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		
 	
 
-	protected int getNextParameterIndex()
+	private int getNextParameterIndex()
 	{
 		return nextParameterIndex++;
 	}

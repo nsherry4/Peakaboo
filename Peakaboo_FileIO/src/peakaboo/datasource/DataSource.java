@@ -3,10 +3,10 @@ package peakaboo.datasource;
 import java.util.List;
 
 import peakaboo.datasource.interfaces.DSMetadata;
-import peakaboo.datasource.interfaces.DSRealDimensions;
+import peakaboo.datasource.interfaces.DSDimensions;
 import peakaboo.datasource.interfaces.DSScanData;
 
-public interface DataSource extends DSScanData, DSRealDimensions, DSMetadata
+public interface DataSource extends DSScanData, DSDimensions, DSMetadata
 {
 	
 	
@@ -17,9 +17,9 @@ public interface DataSource extends DSScanData, DSRealDimensions, DSMetadata
 	
 	
 	/**
-	 * Returns true if this data source supports information on real dimensions
+	 * Returns true if this data source supports information on dimensions
 	 */
-	public boolean hasRealDimensions();
+	public boolean hasScanDimensions();
 	
 	
 	/**

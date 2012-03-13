@@ -1,24 +1,23 @@
 package peakaboo.filter.filters.advanced;
 
-import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
-@Plugin
+
 public class SpectrumNormalization extends AbstractSimpleFilter
 {
 	
-	public final int	CHANNEL = getNextParameterIndex();
-	public final int	HEIGHT = getNextParameterIndex();
+	public int	CHANNEL;
+	public int	HEIGHT;
 
 	@Override
 	public void initialize()
 	{
-		addParameter(CHANNEL, new Parameter(ValueType.INTEGER, "Channel", 1));
-		addParameter(HEIGHT, new Parameter(ValueType.REAL, "Intensity", 10d));	
+		CHANNEL = addParameter(new Parameter("Channel", ValueType.INTEGER, 1));
+		HEIGHT = addParameter(new Parameter("Intensity", ValueType.REAL, 10d));	
 	}
 	
 	@Override

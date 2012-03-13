@@ -724,17 +724,19 @@ public class PlotPanel extends ClearPanel
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
 		
-		menu.add(createMenuItem(
-				"Open Sample Data", null, "Open a sample data set for learning or demonstrating Peakaboo",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionOpenSampleData();
-					}
-				},
-				null, null
-		));
+		if (!Version.release && !Version.rc) {
+			menu.add(createMenuItem(
+					"Open Sample Data", null, "Open a sample data set for learning or demonstrating Peakaboo",
+					new ActionListener() {
+						
+						public void actionPerformed(ActionEvent e)
+						{
+							actionOpenSampleData();
+						}
+					},
+					null, null
+			));
+		}
 		
 		
 		menu.addSeparator();
@@ -1339,12 +1341,13 @@ public class PlotPanel extends ClearPanel
 				Version.program_name,
 				"XRF Analysis Software",
 				"www.sciencestudioproject.com",
-				"Copyright &copy; 2009-2010 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
+				"Copyright &copy; 2009-2012 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
 				IOOperations.readTextFromJar("/peakaboo/licence.txt"),
 				IOOperations.readTextFromJar("/peakaboo/credits.txt"),
 				Version.logo,
 				Integer.toString(Version.versionNo),
 				Version.longVersionNo,
+				Version.releaseDescription,
 				Version.buildDate,
 				Version.release);
 	}

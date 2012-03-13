@@ -22,7 +22,7 @@ import scratch.ScratchList;
  * concerns in a typical JVM.
  * <br /><br /> 
  * Storing elements on disk means that get operations will return copies 
- * of the objects in the list rather than the origionally stored objects. 
+ * of the objects in the list rather than the originally stored objects. 
  * If an element is retrieved from the list, modified, and then 
  * retrieved a second time, the second copy retrieved will lack the 
  * modifications made to the first copy.
@@ -97,18 +97,12 @@ public final class SpectrumList extends ScratchList<Spectrum>{
 		return sublist;
 	}
 	
-	
-	public void register(Class<?> c)
+	private void register(Class<?> c)
 	{
 		getKryo().register(c);
 	}
 	
-	public void register(Class<?> c, Serializer s)
-	{
-		getKryo().register(c, s);
-	}
-	
-	public Kryo getKryo()
+	private Kryo getKryo()
 	{
 		
 		if (kryo != null) return kryo;

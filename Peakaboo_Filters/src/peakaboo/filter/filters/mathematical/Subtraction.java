@@ -1,24 +1,23 @@
 package peakaboo.filter.filters.mathematical;
 
 
-import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
-@Plugin
+
 public class Subtraction extends AbstractSimpleFilter
 {
 
-	private final int AMOUNT = getNextParameterIndex();
+	private int AMOUNT;
 
 	
 	@Override
 	public void initialize()
 	{
-		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Subtract", 1.0));
+		AMOUNT = addParameter(new Parameter("Amount to Subtract", ValueType.REAL, 1.0));
 	}
 	
 	@Override

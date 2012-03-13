@@ -11,13 +11,11 @@ import scitypes.SpectrumCalculations;
 public abstract class AbstractBackgroundFilter extends AbstractFilter
 {
 
-	private final int PERCENT 		= getNextParameterIndex();
-	private final int PREVIEW 		= getNextParameterIndex();
-	private final int STARTINDEX 	= getNextParameterIndex();
-	private final int STOPINDEX		= getNextParameterIndex();
-	private final int PARTIALFILTER = getNextParameterIndex();
-	private final int SEP1 			= getNextParameterIndex();
-	private final int SEP2 			= getNextParameterIndex();
+	private int PERCENT;
+	private int PREVIEW;
+	private int STARTINDEX;
+	private int STOPINDEX;
+	private int PARTIALFILTER;
 
 	
 	public AbstractBackgroundFilter()
@@ -25,16 +23,16 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 		
 		
 		
-		addParameter(PERCENT, new Parameter(ValueType.INTEGER, "Percent to Remove", 90));
-		addParameter(PREVIEW, new Parameter(ValueType.BOOLEAN, "Preview Only", false));
+		PERCENT = addParameter(new Parameter("Percent to Remove", ValueType.INTEGER, 90));
+		PREVIEW = addParameter(new Parameter("Preview Only", ValueType.BOOLEAN, false));
 		
-		addParameter(SEP1, new Parameter(ValueType.SEPARATOR, null, null));
+		addParameter(new Parameter(null, ValueType.SEPARATOR, null));
 		
-		addParameter(STOPINDEX, new Parameter(ValueType.INTEGER, "Stop Index", 0));
-		addParameter(STARTINDEX, new Parameter(ValueType.INTEGER, "Start Index", 0));
-		addParameter(PARTIALFILTER, new Parameter(ValueType.BOOLEAN, "Apply to Subset", false));
+		STOPINDEX = addParameter(new Parameter("Stop Index", ValueType.INTEGER, 0));
+		STARTINDEX = addParameter(new Parameter("Start Index", ValueType.INTEGER, 0));
+		PARTIALFILTER = addParameter(new Parameter("Apply to Subset", ValueType.BOOLEAN, false));
 		
-		addParameter(SEP2, new Parameter(ValueType.SEPARATOR, null, null));
+		addParameter(new Parameter(null, ValueType.SEPARATOR, null));
 		
 		
 		getParameter(STARTINDEX).enabled = false;

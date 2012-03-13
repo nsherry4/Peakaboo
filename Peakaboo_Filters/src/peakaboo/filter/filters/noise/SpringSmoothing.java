@@ -1,7 +1,6 @@
 package peakaboo.filter.filters.noise;
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
@@ -15,13 +14,13 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-@Plugin
+
 public final class SpringSmoothing extends AbstractSimpleFilter
 {
 
-	private final int	MULTIPLIER		= getNextParameterIndex();
-	private final int	ITERATIONS		= getNextParameterIndex();
-	private final int	FALLOFF			= getNextParameterIndex();
+	private int	MULTIPLIER;
+	private int	ITERATIONS;
+	private int	FALLOFF;
 
 
 	public SpringSmoothing()
@@ -32,9 +31,9 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 20));
-		addParameter(MULTIPLIER, new Parameter(ValueType.REAL, "Linear Force Multiplier", 20.0d));
-		addParameter(FALLOFF, new Parameter(ValueType.REAL, "Exponential Force Falloff Rate", 2.0d));
+		ITERATIONS = addParameter(new Parameter("Iterations", ValueType.INTEGER, 20));
+		MULTIPLIER = addParameter(new Parameter("Linear Force Multiplier", ValueType.REAL, 20.0d));
+		FALLOFF = addParameter(new Parameter("Exponential Force Falloff Rate", ValueType.REAL, 2.0d));
 	}
 
 

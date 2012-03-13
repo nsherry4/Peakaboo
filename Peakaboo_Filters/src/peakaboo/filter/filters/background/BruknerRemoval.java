@@ -2,7 +2,6 @@ package peakaboo.filter.filters.background;
 
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Background;
 import peakaboo.filter.AbstractBackgroundFilter;
 import peakaboo.filter.Parameter;
@@ -17,12 +16,11 @@ import scitypes.SpectrumCalculations;
  * @author Nathaniel Sherry, 2009
  */
 
-@Plugin
 public final class BruknerRemoval extends AbstractBackgroundFilter
 {
 
-	private final int	WIDTH		= getNextParameterIndex();
-	private final int	ITERATIONS 	= getNextParameterIndex();
+	private int	WIDTH;
+	private int	ITERATIONS;
 
 
 	public BruknerRemoval()
@@ -34,8 +32,8 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Fitting", 100));
-		addParameter(ITERATIONS, new Parameter(ValueType.INTEGER, "Iterations", 10));
+		WIDTH = addParameter(new Parameter("Width of Fitting", ValueType.INTEGER, 100));
+		ITERATIONS = addParameter(new Parameter("Iterations", ValueType.INTEGER, 10));
 	}
 
 

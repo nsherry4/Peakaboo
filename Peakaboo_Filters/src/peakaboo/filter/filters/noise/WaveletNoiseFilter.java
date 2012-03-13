@@ -2,7 +2,6 @@ package peakaboo.filter.filters.noise;
 
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
@@ -17,11 +16,11 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-@Plugin
+
 public final class WaveletNoiseFilter extends AbstractSimpleFilter
 {
 
-	private final int	PASSES	= getNextParameterIndex();
+	private int	PASSES;
 
 
 	public WaveletNoiseFilter()
@@ -33,7 +32,7 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(PASSES, new Parameter(ValueType.INTEGER, "Passes to Transform", 1));
+		PASSES = addParameter(new Parameter("Passes to Transform", ValueType.INTEGER, 1));
 	}
 
 	@Override

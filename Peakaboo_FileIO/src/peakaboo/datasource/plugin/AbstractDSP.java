@@ -34,12 +34,12 @@ public abstract class AbstractDSP implements DataSource, BoltPlugin
 		return fn_isAborted.f();
 	}
 	
-	protected void readScanCallback(int numRead)
+	protected void newScansRead(int numRead)
 	{
 		fn_readScanCallback.f(numRead);
 	}
 	
-	protected void getScanCountCallback(int scanCount)
+	protected void haveScanCount(int scanCount)
 	{
 		fn_getScanCountCallback.f(scanCount);
 	}

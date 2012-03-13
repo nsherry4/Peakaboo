@@ -23,7 +23,7 @@ public class EmptyDS implements DataSource {
 	}
 
 	@Override
-	public boolean hasRealDimensions() {
+	public boolean hasScanDimensions() {
 		return false;
 	}
 
@@ -53,7 +53,7 @@ public class EmptyDS implements DataSource {
 	}
 
 	@Override
-	public Spectrum getScanAtIndex(int index) {
+	public Spectrum get(int index) {
 		throw new IndexOutOfBoundsException(); 
 	}
 	
@@ -61,22 +61,22 @@ public class EmptyDS implements DataSource {
 	
 
 	@Override
-	public int getScanCount() {
+	public int scanCount() {
 		return 0;
 	}
 
 	@Override
-	public List<String> getScanNames() {
+	public List<String> scanNames() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public float getMaxEnergy() {
+	public float maxEnergy() {
 		return 0;
 	}
 
 	@Override
-	public String getDatasetName() {
+	public String datasetName() {
 		return "";
 	}
 

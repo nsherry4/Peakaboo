@@ -671,7 +671,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public boolean hasRealDimensions() {
+	public boolean hasScanDimensions() {
 		return (hasStartX && hasStartY && hasEndX && hasEndY);
 	}
 
@@ -703,31 +703,31 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	// DSScanData //
 	
 	@Override
-	public Spectrum getScanAtIndex(int index) {
+	public Spectrum get(int index) {
 		return scans.get(index);
 	}
 
 	@Override
-	public int getScanCount() {
+	public int scanCount() {
 		return scans.size();
 	}
 
 	@Override
-	public List<String> getScanNames() {
+	public List<String> scanNames() {
 		List<String> scanNames = new ArrayList<String>();		
-		for (int i = 0; i < getScanCount(); i++) {
+		for (int i = 0; i < scanCount(); i++) {
 		    scanNames.add("Scan #" + (i + 1));
 		}
 		return scanNames;
 	}
 
 	@Override
-	public float getMaxEnergy() {
+	public float maxEnergy() {
 		return maxEnergy;
 	}
 
 	@Override
-	public String getDatasetName() {
+	public String datasetName() {
 		return datasetName;
 	}
 

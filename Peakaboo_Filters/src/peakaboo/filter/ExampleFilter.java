@@ -10,7 +10,7 @@ import scitypes.Spectrum;
 public class ExampleFilter extends AbstractFilter {
 
 	//integer index for parameters
-	private final int PARAM1 = 1;
+	private int PARAM1;
 	
 	public ExampleFilter() {
 		super();
@@ -20,7 +20,7 @@ public class ExampleFilter extends AbstractFilter {
 	@Override
 	public void initialize()
 	{
-		addParameter(PARAM1, new Parameter(ValueType.INTEGER, "Example Parameter", 1));
+		PARAM1 = addParameter(new Parameter("Example Parameter", ValueType.INTEGER, 1));
 	}
 	
 	@Override

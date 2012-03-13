@@ -9,7 +9,7 @@ import java.util.Map;
  * 
  * This class defines a parameter for a filter.
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2012
  */
 
 public class Parameter implements Serializable
@@ -30,12 +30,8 @@ public class Parameter implements Serializable
 	
 	private Map<String, String>		properties;
 
-	public Parameter()
-	{
-		this(null, "", null);
-	}
 	
-	public Parameter(ValueType type, String name, Object value)
+	public Parameter(String name, ValueType type, Object value)
 	{
 		this.type = type;
 		this.name = name;
@@ -47,9 +43,9 @@ public class Parameter implements Serializable
 	}
 	
 
-	public Parameter(ValueType type, String name, Object value, Object[] possibleValues)
+	public Parameter(String name, ValueType type, Object value, Object[] possibleValues)
 	{
-		this(type, name, value);
+		this(name, type, value);
 		this.possibleValues = possibleValues;
 	}
 	

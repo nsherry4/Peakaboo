@@ -1,7 +1,6 @@
 package peakaboo.filter.filters.background;
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Background;
 import peakaboo.filter.AbstractBackgroundFilter;
 import peakaboo.filter.Parameter;
@@ -15,12 +14,12 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-@Plugin
+
 public final class PolynomialRemoval extends AbstractBackgroundFilter
 {
 
-	private final int	WIDTH	= getNextParameterIndex();
-	private final int	POWER	= getNextParameterIndex();
+	private int	WIDTH;
+	private int	POWER;
 
 
 	public PolynomialRemoval()
@@ -31,8 +30,8 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(WIDTH, new Parameter(ValueType.INTEGER, "Width of Polynomial", 300));
-		addParameter(POWER, new Parameter(ValueType.INTEGER, "Power of Polynomial", 3));
+		WIDTH = addParameter(new Parameter("Width of Polynomial", ValueType.INTEGER, 300));
+		POWER = addParameter(new Parameter("Power of Polynomial", ValueType.INTEGER, 3));
 	}
 
 

@@ -2,7 +2,6 @@ package peakaboo.filter.filters.noise;
 
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
@@ -16,15 +15,15 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-@Plugin
+
 public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 {
 
-	private final int	REACH	= getNextParameterIndex();
-	private final int	ORDER	= getNextParameterIndex();
-	private final int	IGNORE	= getNextParameterIndex();
-	private final int	MAX		= getNextParameterIndex();
-	private final int	SEP 	= getNextParameterIndex();
+	private int	REACH;
+	private int	ORDER;
+	private int	IGNORE;
+	private int	MAX;
+	private int	SEP;
 
 
 	public SavitskyGolaySmoothing()
@@ -38,11 +37,11 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(REACH, new Parameter(ValueType.INTEGER, "Reach of Polynomial (2n+1)", 7));
-		addParameter(ORDER, new Parameter(ValueType.INTEGER, "Polynomial Order", 5));
-		addParameter(SEP, new Parameter(ValueType.SEPARATOR, null, null));
-		addParameter(IGNORE, new Parameter(ValueType.BOOLEAN, "Only Smooth Weak Signal", false));
-		addParameter(MAX, new Parameter(ValueType.REAL, "Smoothing Cutoff: (counts)", 4.0));
+		REACH = addParameter(new Parameter("Reach of Polynomial (2n+1)", ValueType.INTEGER, 7));
+		ORDER = addParameter(new Parameter("Polynomial Order", ValueType.INTEGER, 5));
+		SEP = addParameter(new Parameter(null, ValueType.SEPARATOR, null));
+		IGNORE = addParameter(new Parameter("Only Smooth Weak Signal", ValueType.BOOLEAN, false));
+		MAX = addParameter(new Parameter("Smoothing Cutoff: (counts)", ValueType.REAL, 4.0));
 		
 		getParameter(MAX).enabled = false;		
 	}

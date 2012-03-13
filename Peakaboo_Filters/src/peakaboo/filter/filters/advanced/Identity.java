@@ -1,10 +1,8 @@
 package peakaboo.filter.filters.advanced;
 
-import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
-@Plugin
 public class Identity extends AbstractSimpleFilter
 {
 

@@ -45,8 +45,8 @@ public abstract class DelegatingDSP extends AbstractDSP {
 	}
 
 	@Override
-	public boolean hasRealDimensions() {
-		return dataSource.hasRealDimensions();
+	public boolean hasScanDimensions() {
+		return dataSource.hasScanDimensions();
 	}
 
 	@Override
@@ -77,28 +77,28 @@ public abstract class DelegatingDSP extends AbstractDSP {
 	// DSScanData //
 	
 	@Override
-	public Spectrum getScanAtIndex(int index) {
-		return dataSource.getScanAtIndex(index);
+	public Spectrum get(int index) {
+		return dataSource.get(index);
 	}
 
 	@Override
-	public int getScanCount() {
-		return dataSource.getScanCount();
+	public int scanCount() {
+		return dataSource.scanCount();
 	}
 
 	@Override
-	public List<String> getScanNames() {
-		return dataSource.getScanNames();
+	public List<String> scanNames() {
+		return dataSource.scanNames();
 	}
 
 	@Override
-	public float getMaxEnergy() {
-		return dataSource.getMaxEnergy();
+	public float maxEnergy() {
+		return dataSource.maxEnergy();
 	}
 
 	@Override
-	public String getDatasetName() {
-		return dataSource.getDatasetName();
+	public String datasetName() {
+		return dataSource.datasetName();
 	}
 
 	// DSRealDimensions //

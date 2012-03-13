@@ -1,6 +1,5 @@
 package peakaboo.filter.filters.advanced;
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
@@ -8,11 +7,11 @@ import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 
-@Plugin
+
 public class WaveletToData extends AbstractSimpleFilter
 {
 
-	private final int AMOUNT = getNextParameterIndex();
+	private int AMOUNT;
 	
 	public WaveletToData()
 	{
@@ -24,7 +23,7 @@ public class WaveletToData extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(AMOUNT, new Parameter(ValueType.INTEGER, "Passes", 1));		
+		AMOUNT = addParameter(new Parameter("Passes", ValueType.INTEGER, 1));		
 	}
 	
 	@Override

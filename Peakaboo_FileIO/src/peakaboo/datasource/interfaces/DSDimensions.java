@@ -4,7 +4,7 @@ import scitypes.Bounds;
 import scitypes.Coord;
 
 
-public interface DSRealDimensions
+public interface DSDimensions
 {
 
 	/**

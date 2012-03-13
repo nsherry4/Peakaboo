@@ -6,7 +6,7 @@ import java.util.List;
 
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.interfaces.DSMetadata;
-import peakaboo.datasource.interfaces.DSRealDimensions;
+import peakaboo.datasource.interfaces.DSDimensions;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -83,9 +83,9 @@ public abstract class AbstractDataSet
 	 */
 	public static int firstNonNullScanIndex(DataSource ds, int start)
 	{
-		for (int i = start; i < ds.getScanCount(); i++)
+		for (int i = start; i < ds.scanCount(); i++)
 		{
-			if (ds.getScanAtIndex(i) != null)
+			if (ds.get(i) != null)
 			{
 				return i;
 			}
@@ -118,11 +118,11 @@ public abstract class AbstractDataSet
 	 */
 	public static int lastNonNullScanIndex(DataSource ds, int upto)
 	{
-		upto = Math.min(upto, ds.getScanCount()-1);
+		upto = Math.min(upto, ds.scanCount()-1);
 		
 		for (int i = upto; i >= 0; i--)
 		{
-			if (ds.getScanAtIndex(i) != null)
+			if (ds.get(i) != null)
 			{
 				return i;
 			}
@@ -200,7 +200,7 @@ public abstract class AbstractDataSet
 
 	/**
 	 * Does this implementation of the DataSetContainer contain dimensional information? This will depend on if the
-	 * {@link DataSource} implements {@link DSRealDimensions}
+	 * {@link DataSource} implements {@link DSDimensions}
 	 * 
 	 * @return true if this dataset has dimensional information, false otherwise
 	 */
@@ -252,22 +252,22 @@ public abstract class AbstractDataSet
 
 	
 	/**
-	 * See {@link DSRealDimensions}
+	 * See {@link DSDimensions}
 	 */
 	public abstract Coord<Bounds<Number>> getRealDimensions();
 
 	/**
-	 * See {@link DSRealDimensions}
+	 * See {@link DSDimensions}
 	 */
 	public abstract SISize getRealDimensionsUnits();
 
 	/**
-	 * See {@link DSRealDimensions}
+	 * See {@link DSDimensions}
 	 */
 	public abstract Coord<Integer> getDataDimensions();
 
 	/**
-	 * See {@link DSRealDimensions}
+	 * See {@link DSDimensions}
 	 */
 	public abstract List<Coord<Number>> getCoordinateList();
 

@@ -19,6 +19,10 @@ public abstract class AbstractSimpleFilter extends AbstractFilter
 		return filterApplyTo(data);
 	}
 
+	/**
+	 * Filter the given {@link Spectrum} and return the modified result
+	 * @param data the Spectrum to filter
+	 */
 	protected abstract Spectrum filterApplyTo(Spectrum data);
 	
 }

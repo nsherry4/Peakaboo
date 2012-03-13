@@ -1,7 +1,6 @@
 package peakaboo.filter.filters.noise;
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
@@ -15,11 +14,11 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-@Plugin
+
 public final class MovingAverage extends AbstractSimpleFilter
 {
 
-	private final int	REACH	= getNextParameterIndex();
+	private int	REACH;
 
 
 	public MovingAverage()
@@ -31,7 +30,7 @@ public final class MovingAverage extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(REACH, new Parameter(ValueType.INTEGER, "Averaging Reach (2n+1)", 4));
+		REACH = addParameter(new Parameter("Averaging Reach (2n+1)", ValueType.INTEGER, 4));
 	}
 	
 	@Override

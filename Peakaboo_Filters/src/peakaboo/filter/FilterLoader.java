@@ -7,7 +7,7 @@ import java.util.Comparator;
 import peakaboo.common.Version;
 import peakaboo.filter.filters.advanced.DataToWavelet;
 import peakaboo.filter.filters.advanced.Identity;
-import peakaboo.filter.filters.advanced.SegmentFilter;
+import peakaboo.filter.filters.advanced.FilterPartialSpectrum;
 import peakaboo.filter.filters.advanced.SpectrumNormalization;
 import peakaboo.filter.filters.advanced.WaveletToData;
 import peakaboo.filter.filters.background.BruknerRemoval;
@@ -56,7 +56,7 @@ public class FilterLoader
 				//register built-in plugins
 				pluginLoader.registerPlugin(DataToWavelet.class);
 				pluginLoader.registerPlugin(Identity.class);
-				pluginLoader.registerPlugin(SegmentFilter.class);
+				pluginLoader.registerPlugin(FilterPartialSpectrum.class);
 				pluginLoader.registerPlugin(SpectrumNormalization.class);
 				pluginLoader.registerPlugin(WaveletToData.class);
 				

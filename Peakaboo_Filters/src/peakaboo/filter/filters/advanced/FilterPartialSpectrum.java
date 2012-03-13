@@ -2,8 +2,6 @@ package peakaboo.filter.filters.advanced;
 
 import java.util.List;
 
-import bolt.plugin.Plugin;
-
 import fava.signatures.FnCondition;
 
 import peakaboo.filter.AbstractFilter;
@@ -14,13 +12,12 @@ import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
-@Plugin
-public class SegmentFilter extends AbstractFilter
+public class FilterPartialSpectrum extends AbstractFilter
 {
 
-	private final int FILTER = getNextParameterIndex();
-	private final int START = getNextParameterIndex();
-	private final int END = getNextParameterIndex();
+	private int FILTER;
+	private int START;
+	private int END;
 	
 	
 	@Override
@@ -44,9 +41,9 @@ public class SegmentFilter extends AbstractFilter
 		}
 		
 		
-		addParameter(START, new Parameter(ValueType.INTEGER, "Start Index", 0));
-		addParameter(END, new Parameter(ValueType.INTEGER, "Stop Index", 10));
-		addParameter(FILTER, new Parameter(ValueType.FILTER, "Filter", filters.get(0), filters.toArray()));
+		START = addParameter(new Parameter("Start Index", ValueType.INTEGER, 0));
+		END = addParameter(new Parameter("Stop Index", ValueType.INTEGER, 10));
+		FILTER = addParameter(new Parameter("Filter", ValueType.FILTER, filters.get(0), filters.toArray()));
 		
 		
 	}

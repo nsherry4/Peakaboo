@@ -34,7 +34,7 @@ public class CopiedDS implements DataSource
 		this.rangeY = new Range(cstart.y, cend.y);
 		
 		scannames = new FList<String>();
-		for (Integer c : new Range(0, getScanCount()))
+		for (Integer c : new Range(0, scanCount()))
 		{
 			scannames.add("Scan " + c);			
 		}
@@ -42,9 +42,9 @@ public class CopiedDS implements DataSource
 	}
 	
 
-	public String getDatasetName()
+	public String datasetName()
 	{
-		return originalDataSource.getDatasetName() + " Subset";
+		return originalDataSource.datasetName() + " Subset";
 	}
 
 
@@ -54,13 +54,13 @@ public class CopiedDS implements DataSource
 	}
 
 
-	public float getMaxEnergy()
+	public float maxEnergy()
 	{
-		return originalDataSource.getMaxEnergy();
+		return originalDataSource.maxEnergy();
 	}
 
 
-	public Spectrum getScanAtIndex(int index)
+	public Spectrum get(int index)
 	{
 		
 		
@@ -75,7 +75,7 @@ public class CopiedDS implements DataSource
 				
 		int realIndex = origgrid.getIndexFromXY(x, y);
 				
-		return originalDataSource.getScanAtIndex(realIndex);
+		return originalDataSource.get(realIndex);
 	}
 
 
@@ -97,13 +97,13 @@ public class CopiedDS implements DataSource
 	}
 	
 	
-	public int getScanCount()
+	public int scanCount()
 	{
 		return rangeX.size() * rangeY.size();
 	}
 
 
-	public List<String> getScanNames()
+	public List<String> scanNames()
 	{
 		return scannames.toSink();
 	}
@@ -160,9 +160,9 @@ public class CopiedDS implements DataSource
 	}
 
 
-	public boolean hasRealDimensions()
+	public boolean hasScanDimensions()
 	{
-		return originalDataSource.hasRealDimensions();
+		return originalDataSource.hasScanDimensions();
 	}
 
 

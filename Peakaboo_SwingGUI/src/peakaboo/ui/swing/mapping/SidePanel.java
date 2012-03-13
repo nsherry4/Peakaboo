@@ -90,8 +90,9 @@ public class SidePanel extends JPanel
 			public void change(String s)
 			{
 
-				width.setEnabled(!controller.mapsController.isDimensionsProvided());
-				height.setEnabled(!controller.mapsController.isDimensionsProvided());
+				//sometimes the dimensions in the file could be wrong
+				//width.setEnabled(!controller.mapsController.isDimensionsProvided());
+				//height.setEnabled(!controller.mapsController.isDimensionsProvided());
 
 				shadesSpinner.setValue(controller.mapsController.getSpectrumSteps());
 				shadesSpinner.setEnabled(controller.mapsController.getContours());

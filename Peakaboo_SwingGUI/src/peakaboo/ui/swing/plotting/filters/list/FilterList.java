@@ -200,7 +200,6 @@ public class FilterList extends ClearPanel{
 				AbstractFilter selection = controller.getActiveFilter(t.getSelectedRow());
 				controller.moveFilterDown(t.getSelectedRow());
 				int selRow = controller.filterIndex(selection);
-				System.out.println(selRow);
 				t.addRowSelectionInterval(selRow, selRow);
 			}
 			

@@ -1,7 +1,6 @@
 package peakaboo.filter.filters.noise;
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.common.Version;
 import peakaboo.filter.AbstractSimpleFilter;
@@ -17,11 +16,11 @@ import scitypes.Spectrum;
  * 
  */
 
-@Plugin
+
 public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 {
 
-	private final int	PASSES	= getNextParameterIndex();
+	private int	PASSES;
 
 	public AggressiveWaveletNoiseFilter()
 	{
@@ -34,7 +33,7 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(PASSES, new Parameter(ValueType.INTEGER, "Passes to Remove", 1));
+		PASSES = addParameter(new Parameter("Passes to Remove", ValueType.INTEGER, 1));
 	}
 
 	@Override

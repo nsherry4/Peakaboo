@@ -2,7 +2,6 @@ package peakaboo.filter.filters.noise;
 
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.AbstractSimpleFilter;
@@ -17,13 +16,13 @@ import scitypes.Spectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-@Plugin
+
 public final class FourierLowPass extends AbstractSimpleFilter
 {
 
-	private final int	ROLLOFF	= getNextParameterIndex();
-	private final int	START	= getNextParameterIndex();
-	private final int	END		= getNextParameterIndex();
+	private int	ROLLOFF;
+	private int	START;
+	private int	END;
 
 
 	public FourierLowPass()
@@ -34,9 +33,9 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		addParameter(ROLLOFF, new Parameter(ValueType.SET_ELEMENT, "Roll-Off Type", FFTStyle.LINEAR, FFTStyle.values()));
-		addParameter(START, new Parameter(ValueType.INTEGER, "Starting Wavelength (keV)", 8));
-		addParameter(END, new Parameter(ValueType.INTEGER, "Ending Wavelength (keV)", 6));
+		ROLLOFF = addParameter(new Parameter("Roll-Off Type", ValueType.SET_ELEMENT, FFTStyle.LINEAR, FFTStyle.values()));
+		START = addParameter(new Parameter("Starting Wavelength (keV)", ValueType.INTEGER, 8));
+		END = addParameter(new Parameter("Ending Wavelength (keV)", ValueType.INTEGER, 6));
 	}
 	
 

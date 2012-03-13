@@ -93,7 +93,7 @@ public class DataSet extends AbstractDataSet
 
 			public Spectrum f(Integer index)
 			{
-				return dataSource.getScanAtIndex(index);
+				return dataSource.get(index);
 			}
 		});
 
@@ -114,7 +114,7 @@ public class DataSet extends AbstractDataSet
 
 		Ae = SpectrumCalculations.getDatasetAverage(badScans);
 		At = averagedSpectrum;
-		Nt = dataSource.getScanCount();
+		Nt = dataSource.scanCount();
 		Ne = badScans.size();
 
 		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
@@ -147,7 +147,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public float maximumIntensity()
 	{
-		if (dataSource.getScanCount() == 0) return 0;
+		if (dataSource.scanCount() == 0) return 0;
 				
 		return maxValue;
 	}
@@ -156,7 +156,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public Spectrum getScan(int index)
 	{
-		Spectrum original = dataSource.getScanAtIndex(index);
+		Spectrum original = dataSource.get(index);
 		if (original == null) return null;
 		return new Spectrum(original);
 
@@ -166,22 +166,22 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getScanName(int index)
 	{
-		if (dataSource == null || index >= dataSource.getScanCount()) return "";
-		return dataSource.getScanNames().get(index);
+		if (dataSource == null || index >= dataSource.scanCount()) return "";
+		return dataSource.scanNames().get(index);
 	}
 
 
 	@Override
 	public int scanCount()
 	{
-		return dataSource.getScanCount();
+		return dataSource.scanCount();
 	}
 
 	@Override
 	public int expectedScanCount()
 	{
 		
-		if (dataSource.hasRealDimensions()) 
+		if (dataSource.hasScanDimensions()) 
 		{
 			Coord<Integer> dataDimension = dataSource.getDataDimensions();
 			return dataDimension.x * dataDimension.y;
@@ -292,13 +292,12 @@ public class DataSet extends AbstractDataSet
 				}
 				
 				
-				scanCount = dataSource.getScanCount();
+				scanCount = dataSource.scanCount();
 				if (scanCount == 0) return new DatasetReadResult(ReadStatus.FAILED, "Did not find any data in file(s)");
-				System.out.println(scanCount);
 				gotScanCount.f(scanCount);
 				reading.advanceState();
 				
-				applying.setWorkUnits(dataSource.getScanCount());
+				applying.setWorkUnits(dataSource.scanCount());
 				applying.advanceState();
 				
 				
@@ -349,7 +348,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public int lastNonNullScanIndex()
 	{
-		return AbstractDataSet.lastNonNullScanIndex(dataSource, dataSource.getScanCount()-1);
+		return AbstractDataSet.lastNonNullScanIndex(dataSource, dataSource.scanCount()-1);
 	}
 	
 	@Override
@@ -362,13 +361,13 @@ public class DataSet extends AbstractDataSet
 	private void readDataSource(DataSource ds, DummyExecutor applying, FnGet<Boolean> isAborted, String path)
 	{
 		
-		if (ds == null || ds.getScanCount() == 0) return;
+		if (ds == null || ds.scanCount() == 0) return;
 				
 
 		
 		int nonNullScanIndex = AbstractDataSet.firstNonNullScanIndex(ds, 0);
 		if (nonNullScanIndex == -1) return;
-		Spectrum nonNullScan = ds.getScanAtIndex(nonNullScanIndex);
+		Spectrum nonNullScan = ds.get(nonNullScanIndex);
 		if (nonNullScan == null) return;
 		
 		spectrumLength = nonNullScan.size();
@@ -376,7 +375,7 @@ public class DataSet extends AbstractDataSet
 		
 		
 		//if this data source has dimensions, make space to store them all in a list
-		if (ds.hasRealDimensions())
+		if (ds.hasScanDimensions())
 		{
 			realCoords = new ArrayList<Coord<Number>>();
 		}
@@ -390,9 +389,9 @@ public class DataSet extends AbstractDataSet
 		max10 = new Spectrum(spectrumLength);
 		
 		
-		for (int i = 0; i < ds.getScanCount(); i++)
+		for (int i = 0; i < ds.scanCount(); i++)
 		{
-			current = ds.getScanAtIndex(i);
+			current = ds.get(i);
 			
 			if (current == null) continue;
 			
@@ -402,7 +401,7 @@ public class DataSet extends AbstractDataSet
 			max = Math.max(max, SpectrumCalculations.max(current));
 			
 			//read the real coordinates for this scan
-			if (ds.hasRealDimensions()) realCoords.add(ds.getRealCoordinatesAtIndex(i));
+			if (ds.hasScanDimensions()) realCoords.add(ds.getRealCoordinatesAtIndex(i));
 			
 			
 			if (applying != null) applying.workUnitCompleted();
@@ -410,7 +409,7 @@ public class DataSet extends AbstractDataSet
 			
 		}
 		
-		SpectrumCalculations.divideBy_inplace(avg, ds.getScanCount());
+		SpectrumCalculations.divideBy_inplace(avg, ds.scanCount());
 		
 		averagedSpectrum = avg;
 		maximumSpectrum = max10;
@@ -447,25 +446,25 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getDatasetName()
 	{
-		return dataSource.getDatasetName();
+		return dataSource.datasetName();
 	}
 
 
 	@Override
 	public Coord<Integer> getDataDimensions()
 	{
-		if (dataSource.hasRealDimensions())
+		if (dataSource.hasScanDimensions())
 		{
 			return dataSource.getDataDimensions();
 		}
-		return new Coord<Integer>(dataSource.getScanCount(), 1);
+		return new Coord<Integer>(dataSource.scanCount(), 1);
 	}
 
 
 	@Override
 	public List<Coord<Number>> getCoordinateList()
 	{
-		if (dataSource.hasRealDimensions())
+		if (dataSource.hasScanDimensions())
 		{
 			return realCoords;
 		}
@@ -476,7 +475,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public Coord<Bounds<Number>> getRealDimensions()
 	{
-		if (dataSource.hasRealDimensions())
+		if (dataSource.hasScanDimensions())
 		{
 			return dataSource.getRealDimensions();
 		}
@@ -487,7 +486,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public SISize getRealDimensionsUnits()
 	{
-		if (dataSource.hasRealDimensions())
+		if (dataSource.hasScanDimensions())
 		{
 			return getSISizeFromUnitName(dataSource.getRealDimensionsUnit());
 		}
@@ -498,14 +497,14 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public boolean hasData()
 	{
-		return dataSource.getScanCount() > 0;
+		return dataSource.scanCount() > 0;
 	}
 
 
 	@Override
 	public boolean hasDimensions()
 	{
-		return dataSource.hasRealDimensions();
+		return dataSource.hasScanDimensions();
 	}
 
 

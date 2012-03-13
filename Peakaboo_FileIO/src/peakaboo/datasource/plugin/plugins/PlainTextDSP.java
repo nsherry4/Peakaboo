@@ -6,9 +6,6 @@ import java.util.List;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.plugin.AbstractDSP;
 
-import bolt.plugin.Plugin;
-
-
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import fava.functionable.Range;
@@ -19,7 +16,6 @@ import scitypes.Coord;
 import scitypes.Spectrum;
 
 
-@Plugin
 public class PlainTextDSP extends AbstractDSP
 {
 
@@ -35,27 +31,27 @@ public class PlainTextDSP extends AbstractDSP
 		scans = SpectrumList.create(getDataFormat());
 	}
 	
-	public String getDatasetName()
+	public String datasetName()
 	{
 		return datasetName;
 	}
 
-	public float getMaxEnergy()
+	public float maxEnergy()
 	{
 		return 0;
 	}
 
-	public Spectrum getScanAtIndex(int index)
+	public Spectrum get(int index)
 	{
 		return scans.get(index);
 	}
 
-	public int getScanCount()
+	public int scanCount()
 	{
 		return size;
 	}
 
-	public List<String> getScanNames()
+	public List<String> scanNames()
 	{
 		return new Range(0, size-1).map(new FnMap<Integer, String>(){
 
@@ -106,7 +102,7 @@ public class PlainTextDSP extends AbstractDSP
 		//reading marginally, but not by a lot, since the slowest part is
 		//human readable to machine readable conversion.
 		FList<String> lines = FStringInput.lines(new File(filename)).toSink();
-		getScanCountCallback(lines.size());
+		haveScanCount(lines.size());
 		
 		
 		for (String line : lines) {
@@ -139,7 +135,7 @@ public class PlainTextDSP extends AbstractDSP
 			scans.add(scan);
 			size++;
 			
-			readScanCallback(1);
+			newScansRead(1);
 			
 		}
 	}
@@ -208,7 +204,7 @@ public class PlainTextDSP extends AbstractDSP
 	}
 
 	@Override
-	public boolean hasRealDimensions()
+	public boolean hasScanDimensions()
 	{
 		return false;
 	}

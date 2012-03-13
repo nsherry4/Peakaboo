@@ -28,7 +28,7 @@ public class LiveDS implements DSScanData
 	/////////////////////////////////////////////////
 	
 
-	public String getDatasetName()
+	public String datasetName()
 	{
 		return "Live Dataset";
 	}
@@ -40,28 +40,28 @@ public class LiveDS implements DSScanData
 	}
 
 
-	public float getMaxEnergy()
+	public float maxEnergy()
 	{
 		return maxEnergy;
 	}
 
 
-	public Spectrum getScanAtIndex(int index)
+	public Spectrum get(int index)
 	{
 		return scans.get(index);
 	}
 
 
-	public int getScanCount()
+	public int scanCount()
 	{
 		return scans.size();
 	}
 
 
-	public List<String> getScanNames()
+	public List<String> scanNames()
 	{
 		List<String> names = new ArrayList<String>();
-		for (int i = 0; i < getScanCount(); i++)
+		for (int i = 0; i < scanCount(); i++)
 		{
 			names.add("Scan " + i);
 		}

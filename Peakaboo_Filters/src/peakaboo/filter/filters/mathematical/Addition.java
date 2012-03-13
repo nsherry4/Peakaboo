@@ -1,6 +1,5 @@
 package peakaboo.filter.filters.mathematical;
 
-import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
@@ -8,16 +7,16 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-@Plugin
+
 public class Addition extends AbstractSimpleFilter
 {
 
-	private final int AMOUNT = getNextParameterIndex();
+	private int AMOUNT;
 
 	@Override
 	public void initialize()
 	{
-		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Amount to Add", 1.0));
+		AMOUNT = addParameter(new Parameter("Amount to Add", ValueType.REAL, 1.0));
 	}
 	
 	@Override

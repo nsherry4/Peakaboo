@@ -16,27 +16,27 @@ public interface DSScanData
 	 * @param index
 	 *            the scan number to retrieve
 	 */
-	public Spectrum getScanAtIndex(int index) throws IndexOutOfBoundsException;
+	public Spectrum get(int index) throws IndexOutOfBoundsException;
 
 	
 	
 	/**
-	 * Returns the number of scans in this data set, including any which have been marked as bad
+	 * Returns the number of scans in this data set.
 	 */
-	public int getScanCount();
+	public int scanCount();
 
 	
 
 	/**
 	 * Returns the names of all scans, eg ["Scan 1", "Scan 2", ...]
 	 */
-	public List<String> getScanNames();
+	public List<String> scanNames();
 
 
 	/**
 	 * Returns the maximum energy value for any channel for the scans in this set.
 	 */
-	public float getMaxEnergy();
+	public float maxEnergy();
 
 
 
@@ -46,7 +46,7 @@ public interface DSScanData
 	 * file, the folder the set of files were found it, a name specified 
 	 * within the file itself, etc...
 	 */
-	public String getDatasetName();
+	public String datasetName();
 	
 
 }

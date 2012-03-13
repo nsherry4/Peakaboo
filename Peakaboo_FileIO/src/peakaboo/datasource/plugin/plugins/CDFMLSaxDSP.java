@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import bolt.plugin.Plugin;
-
 import commonenvironment.AbstractFile;
 
 import fava.functionable.FList;
@@ -25,7 +23,6 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-@Plugin
 public class CDFMLSaxDSP extends AbstractDSP
 {
 
@@ -169,7 +166,7 @@ public class CDFMLSaxDSP extends AbstractDSP
 
 
 	@Override
-	public Spectrum getScanAtIndex(int index)
+	public Spectrum get(int index)
 	{
 
 		Spectrum s, s2;
@@ -248,7 +245,7 @@ public class CDFMLSaxDSP extends AbstractDSP
 	}
 
 	
-	public int getScanCount()
+	public int scanCount()
 	{
 		return numScans();
 	}
@@ -282,7 +279,7 @@ public class CDFMLSaxDSP extends AbstractDSP
 
 
 
-	public String getDatasetName()
+	public String datasetName()
 	{
 		String project = reader.getAttr(CDFMLStrings.ATTR_PROJECT_NAME, 0);
 		String dataset = reader.getAttr(CDFMLStrings.ATTR_DATASET_NAME, 0);
@@ -312,7 +309,7 @@ public class CDFMLSaxDSP extends AbstractDSP
 
 
 	
-	public float getMaxEnergy()
+	public float maxEnergy()
 	{
 		
 		String maxEnergyValue;
@@ -331,11 +328,11 @@ public class CDFMLSaxDSP extends AbstractDSP
 
 
 	
-	public List<String> getScanNames()
+	public List<String> scanNames()
 	{
 		List<String> scannames = new ArrayList<String>();
 
-		for (int i = 0; i < getScanCount(); i++)
+		for (int i = 0; i < scanCount(); i++)
 		{
 			scannames.add("Scan #" + (i + 1));
 		}
@@ -479,7 +476,7 @@ public class CDFMLSaxDSP extends AbstractDSP
 	}
 
 
-	public boolean hasRealDimensions()
+	public boolean hasScanDimensions()
 	{
 		if (hasCategory.contains(CDFMLStrings.CAT_MapXY_1)) return true;
 		return false;
@@ -517,13 +514,13 @@ public class CDFMLSaxDSP extends AbstractDSP
 				
 			}
 			
-			getScanCountCallback(totalScanCount);
+			haveScanCount(totalScanCount);
 			
 			
 		}
 		
 		scanReadCount++;
-		readScanCallback(1);
+		newScansRead(1);
 		
 	}
 	

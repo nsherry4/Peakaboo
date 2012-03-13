@@ -2,19 +2,18 @@ package peakaboo.filter.filters.programming;
 
 
 import bolt.compiler.BoltJavaMap;
-import bolt.plugin.Plugin;
 
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
-@Plugin
+
 public class Java extends AbstractSimpleFilter {
 
 	BoltJavaMap<float[], float[]> boltJavaMap;
 	
-	private final int CODE 		= getNextParameterIndex();
+	private int CODE;
 	
 	
 	private static final String defaultBoltFunction = "" + 
@@ -35,9 +34,9 @@ public class Java extends AbstractSimpleFilter {
 	@Override
 	public void initialize() {
 		
-		addParameter(CODE, new Parameter(ValueType.CODE, "Java Code", defaultCode));
-		getParameter(CODE).setProperty("EditorVWeight", "1.0");
-		getParameter(CODE).setProperty("Language", "java");
+		Parameter code = new Parameter("Java Code", ValueType.CODE, defaultCode);
+		code.setProperty("Language", "java");
+		CODE = addParameter(code);
 	}
 	
 	@Override

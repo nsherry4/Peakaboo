@@ -1,19 +1,19 @@
 package peakaboo.filter.filters.programming;
 
 
-import bolt.plugin.Plugin;
 import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.Language;
+import bolt.scripting.languages.PythonLanguage;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
-@Plugin
+
 public class JPython extends AbstractSimpleFilter {
 
-	private final int CODE = getNextParameterIndex();
+	private int CODE;
 	private boolean pythonSupported = true;
 	
 	private static final String header = "" + 
@@ -33,7 +33,7 @@ public class JPython extends AbstractSimpleFilter {
 		
 		try 
 		{
-			boltmap = new BoltMap<float[], float[]>(Language.python(), "spectrumIn", "spectrumOut", "");
+			boltmap = new BoltMap<float[], float[]>(new PythonLanguage(), "spectrumIn", "spectrumOut", "");
 			boltmap.setMultithreaded(true);	
 		}
 		catch (Throwable t)
@@ -46,8 +46,9 @@ public class JPython extends AbstractSimpleFilter {
 	@Override
 	public void initialize() 
 	{
-		addParameter(CODE, new Parameter(ValueType.CODE, "JPython Code", header + "spectrumOut = spectrumIn"));
-		getParameter(CODE).setProperty("Language", "python");
+		Parameter code = new Parameter("JPython Code", ValueType.CODE, header + "spectrumOut = spectrumIn");
+		code.setProperty("Language", "python");
+		CODE = addParameter(code);
 	}
 
 	@Override

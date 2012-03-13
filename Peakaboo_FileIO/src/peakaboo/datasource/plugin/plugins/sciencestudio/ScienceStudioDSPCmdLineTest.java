@@ -33,21 +33,21 @@ public class ScienceStudioDSPCmdLineTest {
 			System.out.println("Cannot Read: " + filenames);
 		}
 		
-		System.out.println("DatasetName: " +  dataSource.getDatasetName());
+		System.out.println("DatasetName: " +  dataSource.datasetName());
 		System.out.println("Creator: " + dataSource.getCreator());
 		System.out.println("CreationTime: " + dataSource.getCreationTime());
 		System.out.println("StartTime: " + dataSource.getStartTime());
 		System.out.println("EndTime: " + dataSource.getEndTime());
 		
-		System.out.println("Scan Count: " + dataSource.getScanCount());
+		System.out.println("Scan Count: " + dataSource.scanCount());
 		System.out.println("Data Dimensions: " + dataSource.getDataDimensions());
 		System.out.println("Real Dimensions: " + dataSource.getRealDimensions());
 	
-		for(int idx=0; (idx<dataSource.getScanCount()) && (idx<100); idx++) {
-			System.out.print(dataSource.getScanNames().get(idx) + ": ");
+		for(int idx=0; (idx<dataSource.scanCount()) && (idx<100); idx++) {
+			System.out.print(dataSource.scanNames().get(idx) + ": ");
 			System.out.print(dataSource.getDataCoordinatesAtIndex(idx) + ": ");
 			System.out.print(dataSource.getRealCoordinatesAtIndex(idx) + ": ");
-			System.out.print(spectrumToString(dataSource.getScanAtIndex(idx), 20));
+			System.out.print(spectrumToString(dataSource.get(idx), 20));
 			System.out.println();
 		}
 	}

@@ -1,12 +1,11 @@
 package peakaboo.filter.filters.mathematical;
 
 
-import bolt.plugin.Plugin;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
-@Plugin
+
 public class Integrate extends AbstractSimpleFilter
 {
 

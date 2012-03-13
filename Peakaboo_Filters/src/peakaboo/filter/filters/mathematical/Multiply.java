@@ -2,23 +2,22 @@ package peakaboo.filter.filters.mathematical;
 
 
 
-import bolt.plugin.Plugin;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;
 import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
-@Plugin
+
 public class Multiply extends AbstractSimpleFilter
 {
 
-	private final int AMOUNT = getNextParameterIndex();
+	private int AMOUNT;
 	
 	@Override
 	public void initialize()
 	{
-		addParameter(AMOUNT, new Parameter(ValueType.REAL, "Multiply By", 1.0));
+		AMOUNT = addParameter(new Parameter("Multiply By", ValueType.REAL, 1.0));
 	}
 	
 	@Override

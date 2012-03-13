@@ -9,8 +9,6 @@ import java.util.List;
 
 import peakaboo.datasource.plugin.AbstractDSP;
 
-import bolt.plugin.Plugin;
-
 import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
@@ -20,7 +18,7 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
-@Plugin
+
 public class MCA_DSP extends AbstractDSP {
 
 	private Spectrum spectrum;
@@ -52,28 +50,28 @@ public class MCA_DSP extends AbstractDSP {
 	}
 	
 	@Override
-	public Spectrum getScanAtIndex(int index) {
+	public Spectrum get(int index) {
 		if (index != 0) return null;
 		return spectrum;
 	}
 
 	@Override
-	public int getScanCount() {
+	public int scanCount() {
 		return 1;
 	}
 
 	@Override
-	public List<String> getScanNames() {
+	public List<String> scanNames() {
 		return new FList<String>("Scan");
 	}
 
 	@Override
-	public float getMaxEnergy() {
+	public float maxEnergy() {
 		return 0;
 	}
 
 	@Override
-	public String getDatasetName() {
+	public String datasetName() {
 		return scanName;
 	}
 
@@ -200,7 +198,7 @@ public class MCA_DSP extends AbstractDSP {
 	}
 
 	@Override
-	public boolean hasRealDimensions()
+	public boolean hasScanDimensions()
 	{
 		return false;
 	}
