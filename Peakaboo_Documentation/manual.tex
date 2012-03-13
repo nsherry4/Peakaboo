@@ -5,14 +5,17 @@
 %Images
 \usepackage[pdftex]{graphicx}
 
+\usepackage[usenames,dvipsnames]{xcolor}
+
 %In-document links
-\usepackage[linktoc=all, colorlinks=true, linkcolor=black]{hyperref}
+\usepackage[linktoc=all, colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
 
 %headers and footers
 \usepackage{fancyhdr}
-\usepackage{lastpage}
 
 \usepackage[margin=1.4in]{geometry}
+
+
 
 
 
@@ -26,6 +29,33 @@
 \newcommand{\shortcut}[2]{\command{#1 + #2}}
 %Menu chain
 \newcommand{\menu}[0]{$\rightarrow$}
+
+%filesystem path
+\newcommand{\file}[1]{\command{#1}}
+
+%code snippets
+\newcommand{\code}[1]{\command{#1}}
+\newcommand{\class}[1]{{\color{violet} \code{#1}}}
+
+\definecolor{commentcolour}{rgb}{0.1, 0.5, 0.2}
+\newcommand{\comment}[1]{{\color{commentcolour} \code{#1} }}
+
+\definecolor{codeblockbackground}{rgb}{0.9, 0.9, 0.9}
+\newcommand{\codeblock}[1]{{%
+	\vspace{1em}%
+	\centering%
+	\fcolorbox{white}{codeblockbackground}{%
+		\parbox[l]{\textwidth}{%
+			
+			\code{#1}%
+		}%
+	}%
+	\vspace{1em}%
+}}
+
+\newcommand{\tab}{\hspace*{2em}}
+
+
 
 %element
 \newcommand{\element}[1]{$#1$}
@@ -48,7 +78,6 @@
 \newcommand{\tocsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
 \newcommand{\tocsubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
 
-
 \title{Peakaboo 4}
 \date{March 6, 2012}
 \author{Nathaniel Sherry, Marina Suominen Fuller}
@@ -57,11 +86,14 @@
 \begin{document}
 
 \renewcommand{\headrulewidth}{0pt}
-\pagestyle{fancyplain}
 \lhead[]{}
 \rhead[]{}
 %\rhead[\includegraphics[height=1em]{title/peakaboo.pdf}]{\includegraphics[height=1em]{title/peakaboo.pdf}}
 \fancyhead[C]{\includegraphics[height=1em]{title/peakaboo.pdf}\ \includegraphics[height=1em]{title/usersguide.pdf}}
+
+
+\pagestyle{empty}
+
 
 
 \begin{titlepage}
@@ -76,9 +108,13 @@
 
 \cleardoublepage
 
+\pagestyle{empty}
+\setcounter{tocdepth}{2}
 \tableofcontents
-
-
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+\cleardoublepage
+\setcounter{page}{1}
+\pagestyle{fancyplain}
 
 \tocchapter{Getting Started}
 
@@ -86,13 +122,23 @@
 \tocsection{Opening Data}
 Select \button{document-open}{Open} from the toolbar or 
 \command{File \menu \button{document-open}{Open}} from the menu to locate your 
-XRF data. If all scanpoint data are contained in a single file, select it to 
-open the file in the data directory. If there are many individual ``scanpoint'' 
-files, locate them in the directory and use \shortcut{Control}{A} to select all 
-of them.
+XRF data. If all scan point data is contained in a single file, simply select
+that file and open it. If there are many individual scan point files, 
+(eg one scan per file), then locate them in their directory and use 
+\shortcut{Control}{A} to select all of them.
 
-\screenshot{open-files}{Peakaboo's File Selection Dialog}
+\screenshot{open-files}{Peakaboo's file selection dialog}
 
+\tocsection{File Format Conflicts}
+
+While rare, it is possible that more than one of the modules that Peakaboo uses to read XRF data
+will believe that it can open a particular data set. This is usually the result of many
+different file formats having some of the same properties, such as similar file 
+extensions (eg \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo cannot automatically 
+determine which XRF reader module to use, it will ask you to indicate which format your
+data is in. Select the entry the description of which best matches your data.
+
+\screenshot{select-datasource}{Peakaboo's file format conflict dialog}
 
 \tocsection{Examining the Data}
 
@@ -101,7 +147,7 @@ allows you to expand the x-axis (energy scale). You can use the scroll bar above
 this area, click and drag on the spectrum itself, to pan back and forth to view 
 different energy regions.
 
-\screenshot{zoom-scroll}{Zoom Controls and Horizontal Scroll Bar}
+\screenshot{zoom-scroll}{Zoom controls and horizontal scrollbar}
 
 
 \tocsection{Individual Scans}
@@ -112,7 +158,7 @@ direction or enter a value and press \command{Enter}. This option will be disabl
 if you are viewing the mean average or strongest per channel composites rather than 
 individual scans.
 
-\screenshot{scan-number}{Scan Number Selector}
+\screenshot{scan-number}{Scan number selector}
 
 
 \tocsection{Energy Levels}
@@ -124,9 +170,9 @@ tweaked or adjusted by selecting a major element known or suspected to be presen
 in the sample, and adjusting the energy range until the associated peak fits properly. 
 First add your axes to the spectrum by selecting \command{View \menu\ Axes} from 
 the menu. The Y Axis -- \command{Relative Intensity} and X Axis -- \command{Energy (keV)} should now be 
-labeled for you.
+labelled for you.
 
-\screenshot{max-energy}{The Maximum Energy Selector}
+\screenshot{max-energy}{The maximum energy selector}
 
 On the left side of the screen, under the \command{Peak Fitting} tab, click on the 
 drop-down arrow beside the \button{edit-add}{Add Fittings} button and select 
@@ -145,7 +191,7 @@ appear off, check your calibration again.
 
 \tocsection{Customizing the View}
 
-The \command{View} menu contains many settings to help you to visualise the 
+The \command{View} menu contains many settings to help you to visualize the 
 spectrum: \command{Logarithmic Scale} (usually best), \command{Axes} (shows energy 
 and intensity scales), \command{Mean Average of Spectra} is the average of all scans 
 (averages each energy channel across all spectra within a map to give you a much 
@@ -157,24 +203,28 @@ name of the element it represents,
 \command{View \menu\ Curve Fit \menu\ Markings} showing transition markings (K-, L-lines), 
 and \command{View \menu\ Curve Fit \menu\ Heights} for fitting heights (max counts).
 
+\screenshot{view-example}{Peakaboo with mean averaged data, axes and fitting labels}
+
 Your spectrum, as it appears in the window, can also be saved by selecting 
 \button{device-camera}{Export Plot as Image} from the toolbar, 
 \command{File \menu\ Export Plot as Image}, or \shortcut{Control}{P}.  
 Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can 
-also save the fittings results as a txt file by selecting 
+also save the fittings results as a text file by selecting 
 \command{File \menu \button{document-export}{Export Fittings as Text}}.
+
 
 \tocsection{Saving and Loading Sessions}
 
 You can save your session information, so that next time you want to look at your XRF 
 data, you can just load this information (session) and not have to start from the 
-beginning! These options are found under \command{File \menu \button{document-save}{Save Session}} 
+beginning. These options are found under \command{File \menu \button{document-save}{Save Session}} 
 and \command{File \menu\ Load Session}.
 
 
 
 
 \tocchapter{Peak Fitting}
+
 
 \tocsection{Escape Peaks}
 
@@ -183,7 +233,7 @@ detector you used to collect the XRF spectra. Features may be present in your
 spectra that are due to incoming X-rays interacting with the detector material. For
 example, for a \element{Si} detector, there is a probability that some of the incoming X-rays
 will interact with the \element{Si} and kick out \element{Si} K-shell electrons, thereby reducing the
-incoming X-ray’s measured energy by 1.74 keV. This escape peak is present for the
+incoming X-ray's measured energy by 1.74 keV. This escape peak is present for the
 major elements in the sample.
 
 To include escape peaks in fitting the peaks in your spectra, select 
@@ -197,47 +247,93 @@ There are three different tools which can be used to fit your data. To access th
 options, click on the drop-down arrow next to the \button{edit-add}{Add Fittings} button at 
 the top of the \command{Peak Fitting} tab.
 
+\screenshot{fitting-lines}{Detail of all fitting lines for Iron K}
 
 \tocsubsection{Guided Fitting}
 
-This is the default option when clicking on \button{edit-add}{Add Fitting}. Click on the
-peak you wish to fit and the program will fit the peak with a possible option. Click
-\button{choose-ok}{OK} to add the lines to your list. Other possible element lines will also be
-displayed in the drop down list. To add another fitting, click on the \button{edit-add}{Add} 
-button below the current entry and click on another peak. To edit a previous fitting, 
-click \button{edit-edit}{Edit}. Once you are happy with the fittings click
-\button{choose-ok}{OK} to add the element lines to your list.
+This is the default option for \button{edit-add}{Add Fitting}. Click on the
+peak you wish to fit and the program will fit the peak with a possible option. Other 
+possible element lines will also be displayed in the drop down list. To add another 
+fitting, click on the \button{edit-add}{Add}  button below the current entry and 
+click on another peak. To edit a previous fitting, click \button{edit-edit}{Edit}. 
+Once you are happy with the fittings click \button{choose-ok}{OK} to add the 
+fittings to your list.
 
-\screenshot{guided-fitting}{The Guided Fitting Controls}
+\screenshot{guided-fitting}{The guided gitting controls}
 
 
 \tocsubsection{Element Lookup}
 
-Begin by adding elements from the lowest atomic number end first and working
-your way up. It is recommended that you fit the K lines first. L lines for elements
-for tungsten and higher should be fit separately from the K lines for lower atomic
-number elements, as the K lines will interfere with the L line fittings. As you
-select elements, their fittings will appear in red on the spectrum.
+Best results are usually obtained by adding elements with the lowest atomic numbers 
+first and working your way up. It is recommended that you fit the K lines first. 
+L lines for elements for tungsten and higher should be fit separately from the K 
+lines for lower atomic number elements, as the K lines will interfere with the L 
+line fittings. As you select elements, their fittings will appear in red on the 
+spectrum. Once you are happy with the fittings, click \button{choose-ok}{OK}, and the
+list of newly-fitted elements will be added to your fitted element list, and will 
+appear in black on the spectrum.
 
-Once you are happy with the fittings, click \button{choose-ok}{OK}, and the
-list of fitted elements will appear in black, with all the elements checked 
-off in the boxes to the right of the element name. Toggling the check box to the
-left of an element in the \command{Peak Fitting} panel will allow you to 
-temporarily remove an elemental fitting from the fitting. Rechecking the box 
-will put restore the fitting as it was.
-
-\screenshot{lookup-fitting}{Elemental Fitting}
+\screenshot{lookup-fitting}{The elemental fitting controls}
 
 \tocsubsection{Summation Peaks}
 
 If you are having trouble finding element lines to fit some peaks in your spectrum,
-you may have what are called ‘pile-up peaks’ (referred to as ‘summation’ peaks in
+you may have what are called `pile-up peaks' (referred to as `summation' peaks in
 Peakaboo). This is a detector phenomenon. If your sample has a lot of one element
 present, then some of the emitted x-rays due to the presence of this element will
 impinge on the detector virtually simultaneously and the pulse created and
 measured would be the sum of the two x-ray energies. Please note that for element 
 lines to appear in the drop down lists, they must have already been included in the 
 spectral fit.
+
+\screenshot{fitting-summation}{The summation fitting controls}
+
+\tocsection{Working with Multiple Fittings}
+
+Each fitting has a checkbox under the \command{Fit} column in the \command{Peak Fitting}
+panel. This checkbox controls whether this fitting is enabled or not. Toggling the 
+checkbox will allow you to temporarily remove a specific fitting from the fitting process. 
+Rechecking the box will restore the fitting as it was.
+
+Ordering of fittings is also important, as fittings listed first are the first 
+to be fit to the data. While there are usually multiple peaks per fitting which all constrain 
+the height of a fitting, in the case of peak overlap, a fitting will occasionally 
+be calculated to be larger than it ought to be. In this case, other fittings may be 
+underrepresented because there is no more signal left for those fittings to be fit to.
+
+Changing the order of fittings can reveal and correct these problems. Select a fitting 
+(\shortcut{Control}{P} to select several) that you wish to change the ordering of, and
+click \button{go-up}{Move Up} or \button{go-down}{Move Down} to adjust the ordering
+of their fitting.
+
+\tocsection{Details of Peak Fitting}
+
+A fitting is a model composed of several ``transitions'' from one of the K, L, or M groups of 
+electron transitions. The positions and relative intensities for each transition series
+were taken from several tabulated sources. Fittings take account of details such as 
+separations and relative intensities of transitions such as the K$\alpha$ 1 and 2,  
+K$\beta$ 1, 2, and 3, L$\alpha$, L$\beta$ 1 and 2, and the L$\gamma$ 1, 2, and 3 transitions.
+
+For most of the K series elements from \element{Ca} to \element{Mo}, the relative 
+intensities of alpha and beta composite transitions were checked and adjusted for our 
+lookup table using metals or compounds. As well, a number of metals with strong L 
+series spectra were analysed and the relative intensities adjusted accordingly; 
+most (but not all) ratios were found to agree well with the tabulated sources. 
+For fitting of the spectral peaks, a Gaussian fitting function was used with a width which
+expands slightly as the energy level increases, to agree with observed variation.
+
+The identification of a particular element requires a close fit of multiple transitions. 
+When the presence of a particular element is to be tested in the presence of overlapping 
+fittings, the unknown element’s predicted spectrum is fitted to that portion of the 
+measured spectrum which is not already accounted for by the fittings from the other 
+elements. The fitting algorithm developed does not allow all sets of elemental peaks to 
+be freely variable to fill the available peak intensity envelope. A criterion for 
+introducing a new elemental fitting is that the amount of fitted signal will be limited 
+by the least-represented line to prevent misattribution of overlapping transitions. Thus, the 
+fitting algorithm is ``greedy'' (fits against as much signal as it can) on an 
+element-by-element basis, but not on a peak-by-peak basis. Several fitting sequences 
+need to be tested to ensure that the 
+solution is consistent. 
 
 
 \tocchapter{Mapping}
@@ -254,14 +350,14 @@ time as the processing on your desktop or laptop will take considerable time.
 Once you have clicked on \button{map}{Map Fittings}, a window will pop up indicating the
 progress of mapping the fitted elements.
 
-\screenshot{map-window}{Peakaboo's Mapping Window}
+\screenshot{map-window}{Peakaboo's mapping window}
 
 Once the mapping is complete, a window will appear with a coloured map, scale, and 
 list of mapped element lines. For datasets which contain dimension information, map 
 widths and heights are automatically set to appropriate values. Otherwise, the user 
 must adjust the width and height. All fittings will be represented in the initial map. 
 To get the individual element maps, uncheck all other fittings, leaving the element 
-fitting you wish to view. If your maps have a pixilated appearance, you may want to 
+fitting you wish to view. If your maps have a pixelated appearance, you may want to 
 try interpolating the data and using contouring.
 
 if you wish to scale a fitting to its own highest intensity, select \command{Visible Fittings}
@@ -283,12 +379,14 @@ The \command{Overlay} option for mapping is chosen from the drop down list under
 \command{Red}, \command{Blue}, \command{Green}. These groups are overlaid, with the
 presence of each colour indicating the intensities of their fitting groups.
 
-The \command{Scal Colours} options control the way that the fitting group's colours are scaled.
+\screenshot{map-overlay}{Overlay of Iron and Zinc concentration}
+
+The \command{Scale Colours} options control the way that the fitting group's colours are scaled.
 With the \command{As a Group} option, the highest intensity from \emphasis{all} 
 groups of fittings is used to scale the intensities for \emphasis{every} group. With the 
 \command{Separately} option, the highest intensity from \emphasis{within each} 
 group of fittings is used to scale the intensities for that group. The \command{Separately}
-option procuces maps which may be qualitatively interesting, but are quantitativly 
+option produces maps which may be qualitatively interesting, but are quantitatively 
 incorrect.
 
 \tocsection{Ratios}
@@ -297,6 +395,8 @@ Mapping of element ratios is also available within Peakaboo. Select \command{Rat
 \command{Mapped Fittings} dropdown list. Select the fittings (or fitting sets) you wish to
 view in ratio and choose the desired colours from the dropdown lists next to each
 fitting.
+
+\screenshot{map-ratio}{Ratio of Iron and Zinc}
 
 \tocsection{Errant Data}
 
@@ -311,35 +411,307 @@ Click on the \button{choose-cancel}{Exclude} button to flag the scan as bad, and
 the data set. In all future maps, this data point will be interpolated from neighbouring data.
 
 
-\tocsection{Plotting Subsections}
+\tocsection{Examining Subsections}
 
 The distribution of elements will likely vary across your sample and hence your
-maps. Peakaboo allows you to view spectra from selected regions within your map.
+maps. For samples that have a composition that consists primarily of low atomic 
+number (low $Z$) elements, it is possible to make a rough estimate of the composition. 
+This estimate is based on the relative intensities of many elements (from $Z=20\ldots 44$) 
+measured in a glass matrix. The relative intensities of these elements have been entered 
+into Peakaboo as conversion coefficients. Using these coefficients the concentration of 
+elements within a low $Z$ matrix can be estimated.
+
+\screenshot{select-subset}{Selecting a subset of a data set}
+
 Left click and drag the mouse in order to draw a rectangle surrounding the region
-you wish to select. Click on the down arrow to plot the selected region.
+you wish to select. To view the relative intensity information, click on 
+\button{badge-info}{Get Intensities} in the mapping window toolbar.
 
-Another Peakaboo window will open up to display the spectra from the selected
-region or subset. The spectra from the selected region or ‘subset’ can then be
-processed with Peakaboo.
+\screenshot{intensity-estimate}{Rough estimate of elemental intensity in the selected region}
 
+Peakaboo also allows you to view spectra from selected regions within your map. Using the 
+same technique as described above to select a subsection of your data, click 
+\button{view-subset}{Plot Region} to view the spectra for the selected region. Another 
+Peakaboo window will open up to display the spectra from the selected region or subset. 
+The spectra from the selected region or `subset' can then be processed with Peakaboo.
+
+\screenshot{plot-subset}{Plotting window showing data for a subset of the original data set}
 
 \tocchapter{Filters}
+
+\tocsection{Using Filters}
 
 Filters can be accessed by clicking on the \command{Filters} tab and then clicking on 
 \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into
 types. Each type heading can be expanded by clicking on the expander to the left of the filter 
 type. Select the filter you wish to use and then click \button{choose-ok}{OK} 
-to add the filter. Once you have added the filter, if you want to modify or check the 
+to add the filter. 
+
+Once you have added the filter, if you want to modify or check the 
 parameters associated with your filter, click on the \button{misc-preferences}{Settings} 
 button next to the filter name to bring up the filter settings window. As you change 
 the parameters, you will see the changes reflected in the spectrum being displayed. Once 
 you are satisfied with the filter settings, you may close the window.
 
-The use of filters will obviously alter the spectrum. If you wish to see the raw data
-outline, select \command{View \menu\ Raw Data Outline}.
+To view a full listing of built-in filters and their descriptions, see the appendix.
+
+\screenshot{brukner-filter}{The Brukner filter's settings window}
+
+The use of filters will obviously alter the spectrum. If you wish to see the original spectrum
+in addition to the filtered data, select \command{View \menu\ Raw Data Outline}.
+
+\screenshot{raw-outline}{Background-subtracted data with the original data drawn in red.}
+
+\tocsection{Filtering Example with Normalizer Filter}
+
+When detector deadtime is very high, the detector cannot keep up with the incoming x-rays.
+For example, low energy x-rays such as those coming from \element{Ar} may not get counted
+and mapping the distribution of \element{Ar} will reveal areas of next to no intensity. 
+
+The \command{Normalizer Filer} scales each spectrum so that the intensity at a given channel is
+always the same. This filter can be used in this case to correct the spectra. By normalizing 
+against a channel from within the \element{Ar} peak, we can mitigate the distortion caused by 
+detector saturation.
+
+Go to the \command{Filters} tab and add the \command{Normalizer Filter} found under the 
+\command{Advanced} filter types. Click on the \button{misc-preferences}{Settings} button 
+to bring up the settings window for the filter. Place the cursor on the \element{Ar} peak in the 
+spectrum and read the channel number and value (counts) from the information found 
+below the spectrum window, and enter them into the appropriate settings fields. Make sure 
+you are viewing the \command{Mean Average} spectrum to get the average value (counts) for 
+the \element{Ar}. Close the edit window.
+
+\clearpage
+\screenshot{normalize-uncorrected-ar}{Uncorrected \element{Ar} with weak signal where \element{Ti} is strongest}
+\screenshot{normalize-uncorrected-ti}{Uncorrected \element{Ti}}
+\screenshot{normalize-corrected-ar}{Corrected \element{Ar}}
+\screenshot{normalize-corrected-ti}{Corrected \element{Ti} with greater maximum intensity}
+
+\tocchapter{Extending Peakaboo}
+
+Peakaboo allows users who are familiar with Java programming to extend its functionality by
+creating custom filters and adding support for new file formats. Users who are interested in
+developing extensions for Peakaboo will need to make sure they have the Java Development Kit (JDK)
+installed in their computer (available from \href{http://java.com}{Java.com}). A good code editor,
+such as Eclipse, is also recommended. 
+
+Plugins in Peababoo are classes which extend a specific superclass. The superclass in question 
+depends on the kind of plugin being created. These classes should be bundled in \file{.jar} files
+and placed in the user's application data directory. For example, on Linux, this path is 
+\file{\textasciitilde/.config/Peakaboo}.
+
+In order to know which classes to load without scanning each class in every jar file, a jar 
+containing a plugin must include a manifest file, located at \file{META-INF/services/} under
+the root of the jar file. The file name must be the qualified name of the superclass that this type
+of plugin extends, and the contents of the file must be the qualified names of each class to be 
+loaded as a plugin, one per line.
+
+Example plugins for both filters and file formats are available online at 
+\href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file 
+containing Peakaboo for building against, as part of a Peakaboo Development Kit.
+
+\tocsection{Filters}
+
+Custom filters should extend the \class{AbstractSimpleFilter} or \class{AbstractBackgroundFilter} 
+classes, and should either not define a constructor, or define a \code{public} no-argument constructor
+which calls \code{super}, the superclass's constructor.
+
+\tocsubsection{Parameters}
+
+Filters define a series of \class{Parameter}s, each with an associated data type. These parameters are 
+displayed in the filter's settings panel, using the associated data types to determine what kind of 
+widgets should be used. These parameters should be created and initialized in the filter's \code{initialize} 
+method. \class{Parameter}s can be created using the following constructor:
+
+\codeblock{%
+\class{Parameter}(\\
+\tab \class{String} name,\\
+\tab \class{ValueType} type,\\
+\tab \class{Object} value\\
+)
+}
+
+\class{ValueType} is an enumeration containing a listing of the different possible types of data that this 
+\class{Parameter} can hold.
+
+\codeblock{%
+public static enum \class{ValueType}\\
+\{\\
+\tab INTEGER, \comment{//Integer}\\
+\tab REAL, \comment{//Float or Double}\\
+\tab BOOLEAN, \comment{//Boolean}\\
+\tab SET\_ELEMENT , \comment{//Object}\\ 
+\tab FILTER, \comment{//AbstractFilter}\\
+\tab SEPARATOR, \comment{//null}\\
+\tab CODE \comment{//String}\\
+\}
+}
+
+Once constructed, the parameter should be passed to the \code{addParameter} method of the superclass. This 
+method returns an integer value which you can use to retrieve the parameter later using 
+\code{getParameter(int index)}. The alternative is to simply keep local references to all your \class{Parameter}s.
+Here is an example of the \code{initialize} method of the \class{Addition} filter using the integer value to 
+track the parameter:
+
+\codeblock{%
+@Override\\
+public void initialize()\\
+\{\\
+\tab AMOUNT = addParameter(\\
+\tab\tab new \class{Parameter}("Amount to Add", \class{ValueType}.REAL, 1.0)\\
+\tab );\\
+\}
+}
+
+This creates a new \class{Parameter} called ``Amount to Add'' with a value type of \code{REAL} and a 
+default value of 1.0, and adds it to this filter's set of parameters.
+
+For choosing from one of several preset values, the \code{SET\_ELEMENT} value type can be used in conjunction with
+an alternate constructor for the \class{Parameter} class.
+
+\codeblock{\\
+\class{Parameter}(\\
+\tab \class{String} name,\\
+\tab \class{ValueType} type,\\
+\tab \class{Object} value,\\
+\tab \class{Object}[] possibleValues\\
+)
+}
+
+For more complex \class{Parameter} value types, a parameter may have properties associated with them. 
+For example, the interface widget used to display \code{CODE} parameters looks for properties named 
+\code{``Language''} and \code{``ErrorMessage''}; the former used to control syntax highlighting, and 
+latter used during the \class{Parameter} validation process to report compilation/execution errors to 
+the user. Currently, the code editor is the only one to make use of properties.
 
 
+\tocsubsection{Validation}
 
+Whenever the user makes changes to the filter's parameter values in the \button{misc-preferences}{Settings} dialog, 
+the new combination of parameter values is validated in a call to the filter's \code{validateParameters}
+method. This method returns \code{true} if the new combination of parameter values is acceptable, and \code{false}
+otherwise.
+
+If the parameter values do not validate, then the values of the input fields are reset to their old values. 
+The only exception to this is the \command{CODE} data type, the editor for which displays an error message
+rather than reverting someone's code changes.
+
+
+\tocsubsection{Processing Spectra}
+
+An active filter's \code{filterApplyTo(\class{Spectrum} data)} method is called repeatedly. This method should 
+return a modified \class{Spectrum} containing the results of filtering the input \class{Spectrum}
+
+The \class{Spectrum} class has \class{List}-like interface, but uses a fixed-size \class{float} array to 
+store the actual data.  If you prefer to work with the \class{float[]} data directly, the \code{backingArray}
+method provides direct access to it.
+
+\tocsection{File Formats (Data Sources)}
+
+Adding support for new file formats in Peakaboo is accomplished by creating a new data source. When creating a 
+new data source, the \class{AbstractDSP} (DSP being short for Data Source Plugin) should be extended. This subclass 
+should either not define a constructor, or define a \code{public} no-argument constructor which calles 
+\code{super}, the superclass's constructor.
+
+
+\tocsubsection{Defining File Extensions}
+
+Providing a list of file extensions which your data will typically have allows users to browse for your data format
+more easily, and is the first step in filtering out data that your data source does not support. This is done with
+the \code{List<String> getFileExtensions()} method that you must implement. Note that the file extensions you 
+provide are not binding, and the user may select any file with any file extension.
+
+\tocsubsection{Checking the Format of a File}
+
+Once the user has selected a file or files to open, Peakaboo determines which (if any) data sources are able to 
+read the selected data. The data source must implement the \code{boolean canRead(\class{String} filename)} and 
+\code{boolean canRead(\class{List}<\class{String}> filenames)} methods, returning \code{true} if the data source believes 
+that it is able to read the given file(s). While this method should avoid performing time consuming checks like 
+reading in the whole data set to see if it can, it should still perform enough of a check to differentiate it 
+from other file formats which may share the same file extension.
+
+\tocsubsection{Reading the Data}
+
+Once your data source has been selected for reading the data, one of the \code{void read(\class{String} filename)} and 
+\code{void read(\class{List}<\class{String}> filenames)} methods will be called. The file names given here will be 
+the same as the file names given to the \code{canRead} method earlier, so there is no need to recheck the files.
+
+When reading the data, there are several methods defined by \class{AbstractDSP} which help to provide a smoother 
+user experience.
+
+\codeblock{%
+boolean isAborted()\\
+void haveScanCount(\class{int} scanCount)\\
+void newScansRead(\class{int} number)\\
+}
+
+The \code{isAborted} method checks to see if the user has decided to abort the read operation. This method 
+should be checked periodically, and if it returns \code{true}, the read operation should be halted. The data source
+will not be used after the user has requested the read be aborted, so there is no need to worry about any 
+inconsistent state caused by aborting the read.
+
+The \code{haveScanCount} method reports the number of scans in the data set. The \code{newScansRead} method 
+reports that a certain number of new scans have been read. These two methods used together allows Peakaboo to
+show the progress of the read operation to the user. In some file formats, it is not feasible to determine the 
+number of scans in advance of reading them. In this case, simply do not call either of these methods, and the
+interface will show a ``busy'' indicator instead.
+
+
+\tocsubsection{Accessing the Data}
+
+Once the \code{read} method has been called, your data source will need to provide access to the data it 
+has been asked to read. the \code{\class{Spectrum} get(\class{int} index)} method should provide the spectral data at the
+given index.
+
+The \class{Spectrum} class has \class{List}-like interface, but uses a fixed-size \class{float} array to 
+store the actual data. A new \class{Spectrum} can be created using one of 
+\code{Spectrum(\class{float[]} data)} which copies the array, or 
+\code{Spectrum(\class{float[]} data, \class{boolean} copy)} which optionally does not.
+
+\tocsubsection{Memory Issues with Large Data Sets}
+
+When working with large data sets, memory can sometimes become an issue, especially with older machines or 
+when the JVM's heap size is small. The \class{SpectrumList} class provides a \class{List} interface for storing 
+\class{Spectrum} objects by writing the data to disk and reading it back in using a very fast serialization library 
+called Kryo. This allows your data source to read large data sets without having to worry about memory 
+constraints. The only caveat is that modification of data read out of this list will not be present when
+the data is read from the list again, unless the list is explicitly updated with the modified data.
+
+The \class{SpectrumList} class implements the \class{List} interface, with the exception that it can act as a sparse
+list. With \class{SpectrumList} lists, the following is valid, and will not throw an \class{IndexOutOfBoundsException}
+
+\codeblock{%
+\class{List}<\class{Spectrum}> spectrumlist = \class{SpectrumList}.create("My Data Set");\\
+spectrumlist.set(4, new Spectrum(10));\\
+\class{Spectrum} newspectrum = spectrumlist.get(4);
+}
+
+The static method \code{\class{List}<\class{Spectrum}> \class{SpectrumList}.create(String name)} will return 
+a new \class{SpectrumList} object. In the event of an \class{IOException} from using the temporary file, another (in-memory)
+\class{List} implementation which also acts as a sparse list will be returned instead.
+
+
+\tocsubsection{Providing Extended Information}
+
+Each data source reads from different kinds of files, which contain different kinds of information about the scan. 
+Each data source indicates what kinds of information are available through the 
+\code{\class{boolean} hasMetadata()} and \code{\class{boolean} hasScanDimensions()} methods. 
+
+The \code{hasMetadata} method returns \code{true} if it has information such as the name of the scan, the time it was 
+collected, the name of the facility it was collected at, and so forth. If this method returns \code{true}, then this 
+data source must return values for the methods defined in the \class{DSMetadata} interface. If it returns \code{false}, it
+should throw \class{UnsupportedOperationException}s when these methods are called.
+
+The \code{hasScanDimensions} method returns \code{true} if it has information such as the data dimensions, the physical 
+dimensions, and so forth. If this method returns \code{true}, then this data source must return values for the methods 
+defined in the \class{DSScanDimensions} interface. If it returns \code{false}, it should throw 
+\class{UnsupportedOperationException}s when these methods are called.
+
+\cleardoublepage
+\appendix
+
+
+\chapter{Filter Descriptions}
 \tocsection{Background Filters}
 
 \tocsubsection{Polynomial}
@@ -356,7 +728,7 @@ taking the minimum of the unsmoothed and smoothed data for each channel on each 
 
 \tocsubsection{Linear Trim}
 
-This filter examins all pairs of points which are $n$ channels apart (ie (1, 10), 
+This filter examines all pairs of points which are $n$ channels apart (ie (1, 10), 
 (2, 11), \ldots\ where $n = 10$). For each pair of points, any signal which exceeds a straight 
 line connecting the two points is truncated.
 
@@ -399,7 +771,9 @@ $n$ points to either side of it, and replacing it with an average of the sampled
 This filter operates on the assumption that weak signal should be smoothed more 
 than strong signal. It treats each pair of adjacent points as if they were
 connected by a spring. With each iteration, a tension force draws neighbouring
-points closer together. The \command{Force Multiplier} controls how strongly a 
+points closer together.
+
+The \command{Force Multiplier} controls how strongly a 
 pair of points are pulled together, and the \command{Force Falloff Rate} controls 
 how aggressively stronger signal is anchored in place, unmoved by tension forces. 
 This prevents stronger intensity such as peak shapes from being distorted by the smoothing 
@@ -461,9 +835,31 @@ This filter allows the application of another filter to a portion of a spectrum.
 
 This filter allows you to create your own filter in the Java programming language.
 
-\tocsubsection{JPython Code}
+\tocsubsection{Python Code}
 
-This filter allows you to create your own filter in the Python programming language using JPython.
+This filter allows you to create your own filter in the Python programming language using Jython.
+
+
+
+
+\chapter{File Format Descriptions}
+
+\tocsection{CDFML Files}
+
+CDFML XRF files are a format defined by the Canadian Light Source using NASA's CDF/CDFML container.
+
+\tocsection{Peakaboo Plain Text Files}
+
+Peakaboo Plain Text format is a simple XRF format comprised of rows of space-separated numbers. Each row 
+represents a single spectrum.
+
+\tocsection{CLS Data Acquisition Format}
+
+Data format used by the Canadian Light Source for XRF collection on the VESPERS beamline
+
+\tocsection{MCA Files}
+
+Experimental support for the MCA XRF data format.
 
 \end{document}
 
