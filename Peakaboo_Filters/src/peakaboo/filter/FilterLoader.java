@@ -8,6 +8,7 @@ import peakaboo.common.Version;
 import peakaboo.filter.filters.advanced.DataToWavelet;
 import peakaboo.filter.filters.advanced.Identity;
 import peakaboo.filter.filters.advanced.FilterPartialSpectrum;
+import peakaboo.filter.filters.advanced.Interpolation;
 import peakaboo.filter.filters.advanced.SpectrumNormalization;
 import peakaboo.filter.filters.advanced.WaveletToData;
 import peakaboo.filter.filters.background.BruknerRemoval;
@@ -76,6 +77,7 @@ public class FilterLoader
 				pluginLoader.registerPlugin(SavitskyGolaySmoothing.class);
 				pluginLoader.registerPlugin(SpringSmoothing.class);
 				pluginLoader.registerPlugin(WaveletNoiseFilter.class);
+				pluginLoader.registerPlugin(Interpolation.class);
 				
 				pluginLoader.registerPlugin(Java.class);
 				pluginLoader.registerPlugin(JPython.class);

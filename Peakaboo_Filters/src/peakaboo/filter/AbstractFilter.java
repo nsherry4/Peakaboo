@@ -183,7 +183,9 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	{
 		
 		try{
-			return filterApplyTo(data, cache);
+			Spectrum newdata = filterApplyTo(data, cache);
+			if (newdata != null) return newdata;
+			return data;
 		}
 		catch(Throwable e)
 		{

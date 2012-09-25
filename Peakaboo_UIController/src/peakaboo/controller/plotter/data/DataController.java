@@ -1,6 +1,7 @@
 package peakaboo.controller.plotter.data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import peakaboo.controller.plotter.PlotController;
@@ -75,7 +76,7 @@ public class DataController extends Eventful implements IDataController
 			{
 				if (readTasks.getCompleted())
 				{
-					if (dataset.scanSize() > 0 && !loadedNewDataSet)
+					if (dataset.channelsPerScan() > 0 && !loadedNewDataSet)
 					{
 												
 						setDataSetProvider(dataset);
@@ -93,18 +94,20 @@ public class DataController extends Eventful implements IDataController
 
 	}
 
-	public int datasetScanCount()
+	
+	public int size()
 	{
 		if (!dataModel.hasData()) return 0;
-		return dataModel.scanCount();
+		return dataModel.size();
 	}
-
-	public int datasetScanSize()
+	
+	public int channelsPerScan()
 	{
 		if (!dataModel.hasData()) return 0;
-		return dataModel.scanSize();
+		return dataModel.channelsPerScan();
 	}
 
+	
 	public Coord<Integer> getDataDimensions()
 	{
 		return dataModel.getDataDimensions();
@@ -165,7 +168,7 @@ public class DataController extends Eventful implements IDataController
 		
 		plot.settingsController.setScanNumber( dsp.firstNonNullScanIndex() );
 		
-		setDataWidth(dataModel.scanSize());
+		setDataWidth(dataModel.channelsPerScan());
 		setDataHeight(1);
 		
 		plot.fittingController.setFittingParameters(dataModel.energyPerChannel());
@@ -369,6 +372,42 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.lastNonNullScanIndex();
 	}
 	
+	
+	public Iterator<Spectrum> getScanIterator()
+	{
+		
+		return new Iterator<Spectrum>() {
+
+			int nextIndex = firstNonNullScanIndex();
+			Spectrum next = getScanAtIndex(nextIndex);
+			
+			
+			@Override
+			public boolean hasNext()
+			{
+				return next != null;
+			}
+
+			@Override
+			public Spectrum next()
+			{
+				Spectrum current = next;
+				nextIndex = firstNonNullScanIndex(nextIndex+1);
+				if (nextIndex == -1) {
+					next = null;
+				} else {
+					next = getScanAtIndex(nextIndex);
+				}
+				return current;
+			}
+
+			@Override
+			public void remove()
+			{
+				throw new UnsupportedOperationException();
+			}};
+		
+	}
 	
 	
 	

@@ -3,7 +3,7 @@ SetCompressor /FINAL /SOLID lzma
 !include "MUI.nsh"
 
 !define APPLICATION_NAME "Peakaboo"
-!define VERSION_NUMBER "3"
+!define VERSION_NUMBER "4"
 !define SOURCE_RELPATH "..\..\Peakaboo"
 
 Name "${APPLICATION_NAME}"
@@ -28,12 +28,6 @@ InstallDir "$PROGRAMFILES\${APPLICATION_NAME}\"
 !define MUI_UNABORTWARNING_TEXT "Are you sure you want to quit ${APPLICATION_NAME} uninstallation?"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "InstallerSide.bmp"
 !define MUI_HEADERIMAGE_UNBITMAP "InstallerHeader.bmp"
-
-;--------------------------------
-; Java Check Settings. Check for 1.5, Install 1.6
-!define JRE_5_VERSION "1.5"
-!define JRE_6_VERSION "1.6"
-!define JRE_URL "http://javadl-alt.sun.com/u/ESD7/JSCDL/jdk/6u15-b80/jre/jre-6u15-windows-i586-iftw.exe"
 
 ;--------------------------------
 ; Install Pages
@@ -137,8 +131,6 @@ FunctionEnd
 ; Peakaboo files
 
 Section "Peakaboo Program Files" SecPeakaboo
-
-		Call DetectJRE
 
         SetDetailsPrint textonly
         DetailPrint "Installing ${APPLICATION_NAME} program files..."
@@ -305,28 +297,4 @@ functionend
 
 
 
-
-Function GetJRE
-        MessageBox MB_OK "${APPLICATION_NAME} ${VERSION_NUMBER} requires Java 5 or later, it will now \
-                         be downloaded and installed"
  
-        StrCpy $2 "$TEMP\Java Runtime Environment.exe"
-        nsisdl::download /TIMEOUT=30000 ${JRE_URL} $2
-        Pop $R0 ;Get the return value
-                StrCmp $R0 "success" +3
-                MessageBox MB_OK "Download failed: $R0"
-                Quit
-        ExecWait $2
-        Delete $2
-FunctionEnd
- 
- 
-Function DetectJRE
-  ReadRegStr $2 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
-  StrCmp $2 ${JRE_5_VERSION} done
-  StrCmp $2 ${JRE_6_VERSION} done
- 
-  Call GetJRE
- 
-  done:
-FunctionEnd

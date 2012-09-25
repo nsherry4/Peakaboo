@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.ObjectBuffer;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.serialize.SimpleSerializer;
 
 import fava.functionable.FList;

@@ -3,7 +3,6 @@ package peakaboo.ui.swing.plotting.filters.settings;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -34,15 +33,18 @@ public class SettingsDialogue extends JDialog
 	protected AbstractFilter	filter;
 	
 
-	public SettingsDialogue(AbstractFilter _filter, IFilteringController _controller, JFrame owner)
+	public SettingsDialogue(AbstractFilter _filter, IFilteringController _controller, Container owner)
 	{
-
-		super(owner, _filter.getFilterName(), false);
+		super(
+				(owner instanceof JFrame) ? (JFrame)owner : null, 
+				_filter.getFilterName(), 
+				false
+			);
 		init(_filter, _controller, owner);
 
 	}
 
-	private void init(AbstractFilter _filter, IFilteringController _controller, Window owner){
+	private void init(AbstractFilter _filter, IFilteringController _controller, Container owner){
 		
 		this.controller = _controller;
 		this.filter = _filter;

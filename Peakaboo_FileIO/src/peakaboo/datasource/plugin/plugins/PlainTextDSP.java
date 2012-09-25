@@ -98,14 +98,13 @@ public class PlainTextDSP extends AbstractDSP
 		datasetName = new File(filename).getName();
 		
 	
-		//we count the number of linebreaks in the file. This will slow down
-		//reading marginally, but not by a lot, since the slowest part is
-		//human readable to machine readable conversion.
-		FList<String> lines = FStringInput.lines(new File(filename)).toSink();
-		haveScanCount(lines.size());
+		//Split the input up by line
+		FStringInput lines = FStringInput.lines(new File(filename));
 		
-		
-		for (String line : lines) {
+
+		while (lines.hasNext())
+		{
+			String line = lines.next();
 			
 			if (line == null || isAborted()) break;
 			

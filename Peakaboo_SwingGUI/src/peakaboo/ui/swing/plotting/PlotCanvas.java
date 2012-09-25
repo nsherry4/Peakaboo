@@ -206,7 +206,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 		if (x < 0 || !controller.dataController.hasDataSet()) return -1;
 
-		channel = (int) ((x / plotWidth) * controller.dataController.datasetScanSize());
+		channel = (int) ((x / plotWidth) * controller.dataController.channelsPerScan());
 		return channel;
 
 	}
@@ -288,7 +288,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
 		Spectrum drawingData = dataForPlot.first;
 		float maxIntensity = Math.max(controller.dataController.maximumIntensity(), SpectrumCalculations.max(drawingData));
-		int datasetSize = Math.min(controller.dataController.datasetScanSize(), drawingData.size());
+		int datasetSize = Math.min(controller.dataController.channelsPerScan(), drawingData.size());
 		
 		// if axes are shown, also draw horizontal grid lines
 		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
@@ -310,14 +310,14 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		
 		
 		// get any painters that the filters might want to add to the mix
-		PlotPainter extension;
+		PlotPainter filterPainter;
 		for (AbstractFilter f : controller.filteringController.getActiveFilters())
 		{
-			extension = f.getPainter();
+			filterPainter = f.getPainter();
 			
-			if (extension != null && f.enabled) {
-				extension.setSourceName(f.getFilterName());
-				plotPainters.add(extension);
+			if (filterPainter != null && f.enabled) {
+				filterPainter.setSourceName(f.getFilterName());
+				plotPainters.add(filterPainter);
 			}
 		}
 

@@ -38,6 +38,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingModel = new FittingModel();
 	}
 	
+	@Override
 	public FittingModel getFittingModel()
 	{
 		return fittingModel;
@@ -49,7 +50,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	}
 	
 	
-	
+	@Override
 	public void addTransitionSeries(TransitionSeries e)
 	{
 		if (e == null) return;
@@ -58,6 +59,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public void addAllTransitionSeries(List<TransitionSeries> tss)
 	{
 		for (TransitionSeries ts : tss)
@@ -68,6 +70,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public void clearTransitionSeries()
 	{
 		
@@ -76,6 +79,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public void removeTransitionSeries(TransitionSeries e)
 	{
 		
@@ -84,11 +88,13 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public FList<TransitionSeries> getFittedTransitionSeries()
 	{
 		return FList.wrap(fittingModel.selections.getFittedTransitionSeries());
 	}
 
+	@Override
 	public FList<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
 	{
 
@@ -106,6 +112,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 
 	}
 
+	@Override
 	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show)
 	{
 		fittingModel.selections.setTransitionSeriesVisibility(e, show);
@@ -113,11 +120,13 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public boolean getTransitionSeriesVisibility(TransitionSeries e)
 	{
 		return e.visible;
 	}
 
+	@Override
 	public FList<TransitionSeries> getVisibleTransitionSeries()
 	{
 
@@ -132,6 +141,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 
 	}
 
+	@Override
 	public float getTransitionSeriesIntensity(TransitionSeries ts)
 	{
 		plot.regenerateCahcedData();
@@ -150,6 +160,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 
 	}
 
+	@Override
 	public void moveTransitionSeriesUp(TransitionSeries e)
 	{
 		fittingModel.selections.moveTransitionSeriesUp(e);
@@ -157,13 +168,15 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public void moveTransitionSeriesUp(List<TransitionSeries> tss)
 	{
 		fittingModel.selections.moveTransitionSeriesUp(tss);
 		setUndoPoint("Move Fitting Up");
 		fittingDataInvalidated();
 	}
-		
+	
+	@Override
 	public void moveTransitionSeriesDown(TransitionSeries e)
 	{
 		fittingModel.selections.moveTransitionSeriesDown(e);
@@ -171,6 +184,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public void moveTransitionSeriesDown(List<TransitionSeries> tss)
 	{
 		fittingModel.selections.moveTransitionSeriesDown(tss);
@@ -178,6 +192,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public void fittingDataInvalidated()
 	{
 		// Clear cached values, since they now have to be recalculated
@@ -189,30 +204,34 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	}
 
 	
-	
+	@Override
 	public void addProposedTransitionSeries(TransitionSeries e)
 	{
 		fittingModel.proposals.addTransitionSeries(e);
 		fittingProposalsInvalidated();
 	}
 
+	@Override
 	public void removeProposedTransitionSeries(TransitionSeries e)
 	{
 		fittingModel.proposals.remove(e);
 		fittingProposalsInvalidated();
 	}
 
+	@Override
 	public void clearProposedTransitionSeries()
 	{
 		fittingModel.proposals.clear();
 		fittingProposalsInvalidated();
 	}
 
+	@Override
 	public List<TransitionSeries> getProposedTransitionSeries()
 	{
 		return fittingModel.proposals.getFittedTransitionSeries();
 	}
 
+	@Override
 	public void commitProposedTransitionSeries()
 	{
 		addAllTransitionSeries(fittingModel.proposals.getFittedTransitionSeries());
@@ -220,6 +239,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		fittingDataInvalidated();
 	}
 
+	@Override
 	public void fittingProposalsInvalidated()
 	{
 		// Clear cached values, since they now have to be recalculated
@@ -227,6 +247,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		updateListeners(false);
 	}
 
+	@Override
 	public void setEscapeType(EscapePeakType type)
 	{
 		fittingModel.selections.setEscapeType(type);
@@ -237,12 +258,14 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		setUndoPoint("Escape Peaks");
 		updateListeners(false);
 	}
-		
+
+	@Override
 	public EscapePeakType getEscapeType()
 	{
 		return plot.settingsController.getEscapePeakType();
 	}
-		
+
+	@Override
 	public void optimizeTransitionSeriesOrdering()
 	{
 		
@@ -343,15 +366,15 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		);
 	}
 
+	@Override
 	public boolean canMap()
 	{
-		return ! (getFittedTransitionSeries().size() == 0 || plot.dataController.datasetScanCount() == 0);
+		return ! (getFittedTransitionSeries().size() == 0 || plot.dataController.size() == 0);
 	}
 
 	// =============================================
 	// Helper Functions for IFittingController
 	// =============================================
-
 	private FList<TransitionSeries> optimizeTSOrderingHelper(FList<TransitionSeries> unfitted, FList<TransitionSeries> fitted)
 	{
 		
@@ -413,6 +436,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 				
 	}
 
+	@Override
 	public void setFittingParameters(float energyPerChannel)
 	{
 
@@ -427,37 +451,44 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	}
 
 	
-	
+
+	@Override
 	public void calculateProposalFittings()
 	{
 		fittingModel.proposalResults = fittingModel.proposals.calculateFittings(fittingModel.selectionResults.residual);
 	}
 
+	@Override
 	public void calculateSelectionFittings(Spectrum data)
 	{
 		fittingModel.selectionResults = fittingModel.selections.calculateFittings(data);
 	}
 
+	@Override
 	public boolean hasProposalFitting()
 	{
 		return fittingModel.proposalResults != null;
 	}
 
+	@Override
 	public boolean hasSelectionFitting()
 	{
 		return fittingModel.selectionResults != null;
 	}
 
+	@Override
 	public FittingSet getFittingSelections()
 	{
 		return fittingModel.selections;
 	}
 
+	@Override
 	public FittingResultSet getFittingProposalResults()
 	{
 		return fittingModel.proposalResults;
 	}
 
+	@Override
 	public FittingResultSet getFittingSelectionResults()
 	{
 		return fittingModel.selectionResults;

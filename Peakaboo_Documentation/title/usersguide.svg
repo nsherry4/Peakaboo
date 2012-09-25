@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="usersguide.pdf">
+   sodipodi:docname="usersguide.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,19 +25,19 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="118.88497"
+     inkscape:cx="76.742113"
      inkscape:cy="-21.22719"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1680"
-     inkscape:window-height="921"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-width="1440"
+     inkscape:window-height="874"
+     inkscape:window-x="1680"
+     inkscape:window-y="103"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -47,15 +47,16 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
+     inkscape:label="Text"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(935.41118,-378.43362)">
+     transform="translate(935.41118,-378.43362)"
+     style="display:none">
     <text
        xml:space="preserve"
        style="font-size:30px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Nimbus Sans L;-inkscape-font-specification:Springsteel Bold"
@@ -68,5 +69,60 @@
          x="-862.85712"
          y="400.93362"
          style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-family:Springsteel;-inkscape-font-specification:Springsteel Light">User's Guide</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Paths"
+     style="display:inline">
+    <g
+       transform="translate(935.41118,-378.43362)"
+       style="font-size:30px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Nimbus Sans L;-inkscape-font-specification:Springsteel Bold"
+       id="text2986">
+      <path
+         d="m -922.21118,390.43362 c 0,4.95 -0.15,9.6 -5.85,9.6 -5.69999,0 -5.85,-5.52 -5.85,-9.6 l 0,-10.5 -1.2,0 c 0,0 -0.3,5.79001 -0.3,10.5 0,4.5 0.15001,10.8 7.35,10.8 7.19999,0 7.35,-6.33 7.35,-10.8 0,-4.70999 -0.3,-10.5 -0.3,-10.5 l -1.2,0 0,10.5"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path2993" />
+      <path
+         d="m -912.27274,394.09362 c 2.97,0.18 4.05,0.81001 4.05,2.94 0,1.95 -1.2,3 -4.05,3 -2.85,0 -5.25,-0.9 -5.25,-0.9 l 0,1.05 c 0,0 2.4,1.05 5.25,1.05 3.89999,0 5.55,-1.95 5.55,-4.2 0,-2.45999 -1.44001,-3.99 -5.55,-4.26 -2.94,-0.18 -4.05,-0.9 -4.05,-3.03 0,-1.94999 1.5,-2.91 4.05,-2.91 2.85,0 4.65,0.6 4.65,0.6 l 0,-1.05 c 0,0 -1.8,-0.75 -4.65,-0.75 -4.05,0 -5.55,1.95001 -5.55,4.11 0,2.46 1.47,4.08 5.55,4.35"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path2995" />
+      <path
+         d="m -898.42634,385.63362 c -5.54999,0 -6.15,4.20001 -6.15,7.8 0,3 0.60001,7.8 6.15,7.8 2.85,0 4.65,-0.75 4.65,-0.75 l 0,-1.05 c 0,0 -2.1,0.6 -4.65,0.6 -4.04999,0 -4.65,-3.3 -4.65,-6 0,0 3.24001,0.3 4.65,0.3 4.95,0 5.55,-2.55 5.55,-4.05 0,-1.49999 -0.6,-4.65 -5.55,-4.65 m 0,1.2 c 3.45,0 4.05,2.25001 4.05,3.45 0,1.2 -0.6,2.85 -4.05,2.85 l -4.65,0 c 0,-2.99999 0.45001,-6.3 4.65,-6.3"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path2997" />
+      <path
+         d="m -890.02962,385.93362 c 0,0 -0.09,1.02001 -0.09,4.2 0,4.8 0.3,10.8 0.3,10.8 l 1.2,0 0,-8.1 c 0,-2.99999 1.05001,-6 4.65,-6 2.25,0 3.45,0.3 3.45,0.3 l 0,-1.02 c 0,0 -1.5,-0.48 -3.45,-0.48 -2.54999,0 -3.75,1.20001 -4.65,2.7 -0.24,-1.79999 -0.45,-2.4 -0.45,-2.4 l -0.96,0"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path2999" />
+      <path
+         d="m -878.31087,379.93362 c 0,0 -0.3,3.30001 -0.3,5.7 l 1.5,0 c 0,-2.39999 0.15,-5.7 0.15,-5.7 l -1.35,0"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path3001" />
+      <path
+         d="m -869.38212,394.09362 c 2.97,0.18 4.05,0.81001 4.05,2.94 0,1.95 -1.2,3 -4.05,3 -2.84999,0 -5.25,-0.9 -5.25,-0.9 l 0,1.05 c 0,0 2.40001,1.05 5.25,1.05 3.9,0 5.55,-1.95 5.55,-4.2 0,-2.45999 -1.44,-3.99 -5.55,-4.26 -2.93999,-0.18 -4.05,-0.9 -4.05,-3.03 0,-1.94999 1.50001,-2.91 4.05,-2.91 2.85,0 4.65,0.6 4.65,0.6 l 0,-1.05 c 0,0 -1.8,-0.75 -4.65,-0.75 -4.04999,0 -5.55,1.95001 -5.55,4.11 0,2.46 1.47001,4.08 5.55,4.35"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path3003" />
+      <path
+         d="m -845.63571,391.03362 4.8,0 c 0,6.9 0,8.4 0,8.4 0,0 -2.7,0.6 -5.4,0.6 -5.69999,0 -6.3,-4.62 -6.3,-9.6 0,-4.97999 0.60001,-9.6 6.3,-9.6 3.6,0 6.3,1.35 6.3,1.35 l 0,-1.05 c 0,0 -2.4,-1.5 -6.3,-1.5 -7.49999,0 -7.8,6.27001 -7.8,10.8 0,4.5 0.30001,10.8 7.8,10.8 3.9,0 6.6,-1.2 6.6,-1.2 0,0 0.3,-4.8 0.3,-10.2 l -6.3,0 0,1.2"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path3005" />
+      <path
+         d="m -825.53618,385.93362 0,8.1 c 0,3 -1.05,6 -4.65,6 -4.05,0 -4.65,-3.15 -4.65,-6.6 l 0,-7.5 -1.2,0 c 0,0 -0.3,5.25001 -0.3,7.5 0,3 0.60001,7.8 6.15,7.8 2.55,0 3.75,-1.2 4.65,-2.7 0.24,1.8 0.45,2.4 0.45,2.4 l 0.96,0 c 0,0 0.09,-1.02 0.09,-4.2 0,-4.79999 -0.3,-10.8 -0.3,-10.8 l -1.2,0"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path3007" />
+      <path
+         d="m -818.95165,400.93362 0,-15 -1.41,0 c 0,0 -0.09,1.02001 -0.09,4.2 0,4.8 0.3,10.8 0.3,10.8 l 1.2,0 m -1.65,-18.75 c 0,0.6 0.45,1.05 1.05,1.05 0.6,0 1.05,-0.45 1.05,-1.05 0,-0.6 -0.45,-1.05 -1.05,-1.05 -0.6,0 -1.05,0.45 -1.05,1.05"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path3009" />
+      <path
+         d="m -809.6868,385.63362 c -5.55,0 -6.15,4.80001 -6.15,7.8 0,3 0.6,7.8 6.15,7.8 2.84999,0 5.25,-0.3 5.25,-0.3 0,0 0.3,-6 0.3,-10.8 0,-4.79999 -0.3,-11.7 -0.3,-11.7 l -1.35,0 c 0,0 0.15,3.90001 0.15,7.77 -0.87,-0.27 -2.19001,-0.57 -4.05,-0.57 m 4.05,14.4 -4.05,0 c -4.05,0 -4.65,-3.15 -4.65,-6.6 0,-3.44999 0.6,-6.6 4.65,-6.6 1.79999,0 3.12,0.15 4.05,0.3 l 0,12.9"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path3011" />
+      <path
+         d="m -794.94977,385.63362 c -5.55,0 -6.15,4.20001 -6.15,7.8 0,3 0.6,7.8 6.15,7.8 2.84999,0 4.65,-0.75 4.65,-0.75 l 0,-1.05 c 0,0 -2.10001,0.6 -4.65,0.6 -4.05,0 -4.65,-3.3 -4.65,-6 0,0 3.24,0.3 4.65,0.3 4.94999,0 5.55,-2.55 5.55,-4.05 0,-1.49999 -0.60001,-4.65 -5.55,-4.65 m 0,1.2 c 3.44999,0 4.05,2.25001 4.05,3.45 0,1.2 -0.60001,2.85 -4.05,2.85 l -4.65,0 c 0,-2.99999 0.45,-6.3 4.65,-6.3"
+         style="font-weight:300;font-family:Springsteel;-inkscape-font-specification:Springsteel Light"
+         id="path3013" />
+    </g>
   </g>
 </svg>

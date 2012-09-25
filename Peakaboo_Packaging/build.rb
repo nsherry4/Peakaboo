@@ -34,8 +34,8 @@ def setup
 	 jarfile = "Peakaboo.jar"
 
 	#Deb Package
-	dapppath = "./deb/3.0/usr/share/Peakaboo/"
-	dbinpath = "./deb/3.0/usr/bin/"
+	dapppath = "./deb/4.0/usr/share/Peakaboo/"
+	dbinpath = "./deb/4.0/usr/bin/"
 	
 	resources = [["shared/icon.png", dapppath], ["shared/logo.png", dapppath], ["linux/peakaboo", dbinpath]]
 
@@ -47,9 +47,10 @@ def setup
 	#Win32 Package
 	winpath = "./windows/Peakaboo/"
 	
-	resources = [["windows/Logo.ico", winpath], ["windows/peakaboo.vbs", winpath]]
+	resources = [["windows/Logo.ico", winpath], ["windows/peakaboo.vbs", winpath], ["windows/Peakaboo.exe", winpath]]
 	
-	doSetup(jarfile, winpath, resources)
+	#doSetup(jarfile, winpath, resources)
+	doSetup(jarfile, winpath, resources, false)
 	
 	
 	
@@ -85,5 +86,5 @@ puts "Building Windows Package..."
 puts "DONE\n\n"
 
 puts "Building Mac Package..."
-`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo3.dmg Peakaboo3`
-`cp -rf ./mac/Peakaboo3.dmg ./build/`
+`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo4.dmg Peakaboo4`
+`cp -rf ./mac/Peakaboo4.dmg ./build/`

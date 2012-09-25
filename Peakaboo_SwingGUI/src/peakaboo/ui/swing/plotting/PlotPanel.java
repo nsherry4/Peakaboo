@@ -19,10 +19,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +61,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.ezware.dialog.task.TaskDialogs;
+
 import commonenvironment.AbstractFile;
 import commonenvironment.Apps;
 import commonenvironment.IOOperations;
@@ -70,27 +77,30 @@ import fava.signatures.FnMap;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.data.DataController;
+import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
-import peakaboo.controller.plotter.settings.SettingsController;
-import peakaboo.controller.plotter.undo.UndoController;
+import peakaboo.controller.plotter.settings.ISettingsController;
+import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.plugin.AbstractDSP;
+import peakaboo.filter.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
-import peakaboo.ui.swing.PlotterFrame;
+import peakaboo.ui.swing.container.PeakabooContainer;
 import peakaboo.ui.swing.plotting.datasource.DataSourceLookup;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.list.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
+import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
 import scidraw.swing.SavePicture;
 import scitypes.SigDigits;
+import scitypes.Spectrum;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
@@ -109,20 +119,21 @@ import swidget.widgets.toggle.ComplexToggle;
 public class PlotPanel extends ClearPanel
 {
 
-	private PlotterFrame		container;
+	private PeakabooContainer	container;
 
 
 
 	PlotController				controller;
-	SettingsController			settingsController;
-	DataController				dataController;
-	UndoController				undoController;
+	ISettingsController			settingsController;
+	IDataController				dataController;
+	IUndoController				undoController;
 	
 	PlotCanvas					canvas;
 
 	//FILE
 	JMenuItem					snapshotMenuItem;
-	JMenuItem					exportTextMenuItem;
+	JMenuItem					exportFittingsMenuItem;
+	JMenuItem					exportFilteredDataMenuItem;
 	JMenuItem					saveSession;
 	
 
@@ -150,11 +161,11 @@ public class PlotPanel extends ClearPanel
 	JPanel						scanSelector;
 	JScrollPane					scrolledCanvas;
 
-	String						savePictureFolder;
+	String						saveFilesFolder;
 	String						savedSessionFileName;
 
 
-	public PlotPanel(PlotterFrame container)
+	public PlotPanel(PeakabooContainer container)
 	{
 		this.container = container;
 
@@ -194,7 +205,8 @@ public class PlotPanel extends ClearPanel
 	{
 
 		snapshotMenuItem.setEnabled(false);
-		exportTextMenuItem.setEnabled(false);
+		exportFittingsMenuItem.setEnabled(false);
+		exportFilteredDataMenuItem.setEnabled(false);
 		toolbarSnapshot.setEnabled(false);
 
 		if (dataController.hasDataSet())
@@ -202,7 +214,8 @@ public class PlotPanel extends ClearPanel
 
 			bottomPanel.setEnabled(true);
 			snapshotMenuItem.setEnabled(true);
-			exportTextMenuItem.setEnabled(true);
+			exportFittingsMenuItem.setEnabled(true);
+			exportFilteredDataMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
 
 
@@ -248,8 +261,8 @@ public class PlotPanel extends ClearPanel
 		zoomSlider.setValueEventless((int)(settingsController.getZoom()*100));
 		setTitleBar();
 
-		container.validate();
-		container.repaint();
+		container.getContainer().validate();
+		container.getContainer().repaint();
 
 	}
 
@@ -435,7 +448,7 @@ public class PlotPanel extends ClearPanel
 		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.add(new CurveFittingView(controller.fittingController, canvas), 0);
-		tabs.add(new FiltersetViewer(controller.filteringController, container), 1);
+		tabs.add(new FiltersetViewer(controller.filteringController, container.getContainer()), 1);
 
 		
 		c.gridx = 0;
@@ -783,10 +796,23 @@ public class PlotPanel extends ClearPanel
 				KeyStroke.getKeyStroke(KeyEvent.VK_P, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_P
 		);
 		menu.add(snapshotMenuItem);
-
 		
-		exportTextMenuItem = createMenuItem(
-				"Export Fittings as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the current fitting data to a text file",
+		
+		exportFilteredDataMenuItem = createMenuItem(
+				"Export Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
+				new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e)
+					{
+						actionSaveFittedDataInformation();
+					}
+				}, 
+				null, null
+		);
+		menu.add(exportFilteredDataMenuItem);
+		
+		exportFittingsMenuItem = createMenuItem(
+				"Export Fittings as Text", null, "Saves the current fitting data to a text file",
 				new ActionListener() {
 					
 					public void actionPerformed(ActionEvent e)
@@ -796,7 +822,7 @@ public class PlotPanel extends ClearPanel
 				}, 
 				null, null
 		);
-		menu.add(exportTextMenuItem);
+		menu.add(exportFittingsMenuItem);
 
 
 		menu.addSeparator();
@@ -1269,7 +1295,7 @@ public class PlotPanel extends ClearPanel
 	// data set, and returns it to the caller
 	public List<AbstractFile> openNewDataset(String[][] exts, String[] desc)
 	{
-		return SwidgetIO.openFiles(container, "Select Data Files to Open", exts, desc, dataController.getDataSourceFolder());
+		return SwidgetIO.openFiles(container.getContainer(), "Select Data Files to Open", exts, desc, dataController.getDataSourceFolder());
 	}
 
 
@@ -1337,7 +1363,7 @@ public class PlotPanel extends ClearPanel
 	private void actionAbout()
 	{
 		new swidget.dialogues.AboutDialogue(
-				container,
+				container.getWindow(),
 				Version.program_name,
 				"XRF Analysis Software",
 				"www.sciencestudioproject.com",
@@ -1404,7 +1430,7 @@ public class PlotPanel extends ClearPanel
 		if (formats.size() > 1)
 		{
 			DataSourceSelection selection = new DataSourceSelection();
-			AbstractDSP dsp = selection.pickDSP(container, formats);
+			AbstractDSP dsp = selection.pickDSP(container.getContainer(), formats);
 			if (dsp != null) loadFiles(filenames, dsp);
 		}
 		else if (formats.size() == 0)
@@ -1430,7 +1456,7 @@ public class PlotPanel extends ClearPanel
 		{
 
 			ExecutorSet<DatasetReadResult> reading = dataController.TASK_readFileListAsDataset(files, dsp);
-			ExecutorSetView view = new ExecutorSetView(container, reading);
+			ExecutorSetView view = new ExecutorSetView(container.getWindow(), reading);
 			
 			//handle some race condition where the window gets told to close too early on failure
 			//I don't think its in my code, but I don't know for sure
@@ -1459,7 +1485,7 @@ public class PlotPanel extends ClearPanel
 		final ExecutorSet<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
 		if (tasks == null) return;
 
-		new ExecutorSetView(container, tasks);
+		new ExecutorSetView(container.getWindow(), tasks);
 
 
 		if (tasks.getCompleted())
@@ -1496,7 +1522,7 @@ public class PlotPanel extends ClearPanel
 			mapController.mapsController.setInterpolation(0);
 
 			
-			mapperWindow = new PeakabooMapperSwing(container, mapController, controller);
+			mapperWindow = new PeakabooMapperSwing(container.getContainer(), mapController, controller);
 
 			mapperWindow.showDialog();
 
@@ -1513,7 +1539,7 @@ public class PlotPanel extends ClearPanel
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			controller.savePreferences(baos);
 			savedSessionFileName = SwidgetIO.saveFile(
-					container,
+					container.getWindow(),
 					"Save Session Data",
 					"peakaboo",
 					"Peakaboo Session File",
@@ -1523,6 +1549,7 @@ public class PlotPanel extends ClearPanel
 		}
 		catch (IOException e)
 		{
+			TaskDialogs.showException(e);
 			e.printStackTrace();
 		}
 
@@ -1531,16 +1558,98 @@ public class PlotPanel extends ClearPanel
 
 	private void actionSavePicture()
 	{
-		if (savePictureFolder == null) savePictureFolder = dataController.getDataSourceFolder();
-		SavePicture sp = new SavePicture(container, canvas, savePictureFolder);
-		savePictureFolder = sp.getStartingFolder(); 
+		if (saveFilesFolder == null) saveFilesFolder = dataController.getDataSourceFolder();
+		SavePicture sp = new SavePicture(container.getWindow(), canvas, saveFilesFolder);
+		saveFilesFolder = sp.getStartingFolder(); 
 	}
 
 
+	private void actionSaveFittedDataInformation()
+	{
+		if (saveFilesFolder == null) saveFilesFolder = dataController.getDataSourceFolder();
+		
+		
+		
+		//Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
+		final FilterSet filters = controller.filteringController.getActiveFilters();
+		
+
+		try
+		{
+
+			final File tempfile = File.createTempFile("Peakaboo - ", " export");
+			tempfile.deleteOnExit();
+			
+			// get an output stream to write the data to
+			final DummyExecutor exec = new DummyExecutor(controller.dataController.size());
+			ExecutorSet<Exception> execset = new ExecutorSet<Exception>("Exporting Data") {
+				
+				@Override
+				protected Exception doMaps()
+				{
+					try {
+						
+						exec.advanceState();
+						
+						OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(tempfile));
+						Iterator<Spectrum> iter = controller.dataController.getScanIterator();
+						while (iter.hasNext())
+						{
+							Spectrum s = iter.next();
+							s = filters.filterDataUnsynchronized(new Spectrum(s), false);
+							osw.write(s.toString() + "\n");
+							exec.workUnitCompleted();
+						}
+						osw.close();
+						
+						exec.advanceState();
+						
+						return null;
+					} catch (Exception e) { return e; }
+				}
+			};
+			execset.addExecutor(exec, "Applying Filters");
+			
+			
+			new ExecutorSetView(container.getWindow(), execset);
+			
+			Exception e = execset.getResult();
+			if (e != null)
+			{
+				e.printStackTrace();
+				TaskDialogs.showException(e);
+				tempfile.delete();
+				return;
+			}
+			
+			InputStream fis = new FileInputStream(tempfile);
+
+			// save the contents of the output stream to a file.
+			saveFilesFolder = SwidgetIO.saveFile(
+					container.getContainer(),
+					"Save Fitted Data to Text File",
+					"txt",
+					"Text File",
+					saveFilesFolder,
+					fis);
+
+			fis.close();
+			tempfile.delete();
+
+
+		}
+		catch (IOException e)
+		{
+			TaskDialogs.showException(e);
+			e.printStackTrace();
+		}
+		
+	}
+	
 	private void actionSaveFittingInformation()
 	{
 
-		if (savePictureFolder == null) savePictureFolder = dataController.getDataSourceFolder();
+		if (saveFilesFolder == null) saveFilesFolder = dataController.getDataSourceFolder();
 
 		List<TransitionSeries> tss = controller.fittingController.getFittedTransitionSeries();
 		float intensity;
@@ -1565,12 +1674,12 @@ public class PlotPanel extends ClearPanel
 			osw.close();
 
 			// save the contents of the output stream to a file.
-			savePictureFolder = SwidgetIO.saveFile(
-					container,
-					"Save Fitting Data to Text File",
+			saveFilesFolder = SwidgetIO.saveFile(
+					container.getContainer(),
+					"Save Fitting Information to Text File",
 					"txt",
 					"Text File",
-					savePictureFolder,
+					saveFilesFolder,
 					baos);
 
 
@@ -1578,6 +1687,7 @@ public class PlotPanel extends ClearPanel
 		}
 		catch (IOException e)
 		{
+			TaskDialogs.showException(e);
 			e.printStackTrace();
 		}
 
@@ -1590,7 +1700,7 @@ public class PlotPanel extends ClearPanel
 		try
 		{
 			AbstractFile af = SwidgetIO.openFile(
-					container,
+					container.getContainer(),
 					"Load Session Data",
 					new String[][] {{"peakaboo"}},
 					new String[] {"Peakaboo Session Data"},
@@ -1599,6 +1709,7 @@ public class PlotPanel extends ClearPanel
 		}
 		catch (IOException e)
 		{
+			TaskDialogs.showException(e);
 			e.printStackTrace();
 		}
 
@@ -1624,7 +1735,7 @@ public class PlotPanel extends ClearPanel
 		properties.put("Instrument", dataController.getScanInstrumentName());
 		properties.put("Technique", dataController.getScanTechniqueName());
 		
-		new PropertyDialogue("Dataset Information", "Extended Information", container, properties);
+		new PropertyDialogue("Dataset Information", "Extended Information", container.getWindow(), properties);
 
 	}
 

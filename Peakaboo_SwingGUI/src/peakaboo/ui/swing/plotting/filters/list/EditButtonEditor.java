@@ -3,12 +3,12 @@ package peakaboo.ui.swing.plotting.filters.list;
 
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -29,7 +29,7 @@ public class EditButtonEditor extends DefaultCellEditor
 	protected ImageButton		button;
 	private JPanel 				container;
 	
-	private JFrame				owner;
+	private Container			owner;
 
 	private AbstractFilter		filter;
 	private IFilteringController	controller;
@@ -38,7 +38,7 @@ public class EditButtonEditor extends DefaultCellEditor
 	private boolean				isPushed;
 
 
-	public EditButtonEditor(IFilteringController controller, JFrame owner)
+	public EditButtonEditor(IFilteringController controller, Container owner)
 	{
 		super(new JCheckBox());
 

@@ -8,10 +8,15 @@ import java.util.List;
 
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.data.DataController;
+import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
+import peakaboo.controller.plotter.settings.ISettingsController;
 import peakaboo.controller.plotter.settings.SettingsController;
+import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.controller.settings.Settings;
 import peakaboo.mapping.FittingTransform;
@@ -42,12 +47,12 @@ public class PlotController extends EventfulType<String>
 	public DrawingRequest					dr;
 
 	
-	public UndoController					undoController;
+	public IUndoController					undoController;
 	public MappingController				mapController;
-	public DataController					dataController;
-	public FilteringController				filteringController;
-	public FittingController				fittingController;
-	public SettingsController				settingsController;
+	public IDataController					dataController;
+	public IFilteringController				filteringController;
+	public IFittingController				fittingController;
+	public ISettingsController				settingsController;
 
 
 	public static enum UpdateType

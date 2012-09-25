@@ -138,6 +138,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 			if (f != null && f.enabled) {
 
 				data = f.filter(data, filtersShouldCache);
+				
 			}
 		}
 

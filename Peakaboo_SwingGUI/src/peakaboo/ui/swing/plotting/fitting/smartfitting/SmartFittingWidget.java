@@ -8,9 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JSeparator;
-
-
 import fava.functionable.FList;
 import fava.signatures.FnMap;
 

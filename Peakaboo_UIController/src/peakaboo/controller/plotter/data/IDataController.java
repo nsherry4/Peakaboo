@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter.data;
 
+import java.util.Iterator;
 import java.util.List;
 
 import eventful.IEventful;
@@ -43,6 +44,8 @@ public interface IDataController extends IEventful
 	public int lastNonNullScanIndex(int upto);
 	public int lastNonNullScanIndex();
 	
+	public Iterator<Spectrum> getScanIterator();
+	
 	public void invalidateFilteredData();
 	
 
@@ -50,8 +53,8 @@ public interface IDataController extends IEventful
 	public String getDataSourceFolder();
 	public boolean hasDataSet();
 	public boolean hasDimensions();
-	public int datasetScanCount();
-	public int datasetScanSize();
+	public int size();
+	public int channelsPerScan();
 	public Coord<Bounds<Number>> getRealDimensions();
 	public SISize getRealDimensionsUnits();
 	public Coord<Integer> getDataDimensions();

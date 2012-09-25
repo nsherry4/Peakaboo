@@ -3,17 +3,18 @@ SetCompressor /FINAL lzma
 !include "MUI.nsh"
 
 !define APPLICATION_NAME "Peakaboo"
+!define VERSION_NUMBER "4"
 !define SOURCE_RELPATH "..\.."
 
 Name "${APPLICATION_NAME}"
-OutFile "${APPLICATION_NAME} Setup.exe"
+OutFile "${APPLICATION_NAME} ${VERSION_NUMBER} Setup.exe"
 InstallDir "$PROGRAMFILES\${APPLICATION_NAME}\"
 
 ;--------------------------------
 ; Interface Settings
 
 !define MUI_ABORTWARNING
-!define MUI_WELCOMEPAGE_TEXT "The wizard will guide you through the installation of ${APPLICATION_NAME}.\r\n\
+!define MUI_WELCOMEPAGE_TEXT "The wizard will guide you through the installation of ${APPLICATION_NAME} ${VERSION_NUMBER}.\r\n\
                               \r\n\
                               Click Next co continue."
 !define MUI_WELCOMEFINISHPAGE_BITMAP "InstallerSide.bmp"

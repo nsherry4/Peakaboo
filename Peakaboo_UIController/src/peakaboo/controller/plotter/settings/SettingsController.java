@@ -20,29 +20,33 @@ public class SettingsController extends Eventful implements ISettingsController
 		this.plot = plotController;
 		settingsModel = new SettingsModel();
 	}
-	
+
+	@Override
 	public SettingsModel getSettingsModel()
 	{
 		return settingsModel;
 	}
-	
+
 	private void setUndoPoint(String change)
 	{
 		plot.undoController.setUndoPoint(change);
 	}
 	
-	
+
+	@Override
 	public float getZoom()
 	{
 		return settingsModel.zoom;
 	}
 
+	@Override
 	public void setZoom(float zoom)
 	{
 		settingsModel.zoom = zoom;
 		updateListeners();
 	}
 
+	@Override
 	public void setShowIndividualSelections(boolean showIndividualSelections)
 	{
 		settingsModel.showIndividualFittings = showIndividualSelections;
@@ -50,14 +54,16 @@ public class SettingsController extends Eventful implements ISettingsController
 		plot.fittingController.fittingDataInvalidated();
 	}
 
+	@Override
 	public boolean getShowIndividualSelections()
 	{
 		return settingsModel.showIndividualFittings;
 	}
 
+	@Override
 	public void setEnergyPerChannel(float energy)
 	{
-		if (!plot.dataController.hasDataSet() || plot.dataController.datasetScanSize() == 0)
+		if (!plot.dataController.hasDataSet() || plot.dataController.channelsPerScan() == 0)
 		{
 			return;
 		}
@@ -66,31 +72,35 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public float getEnergyPerChannel()
 	{
 		return plot.dr.unitSize;
 	}
 
+	@Override
 	public void setMaxEnergy(float energy)
 	{
-		if (!plot.dataController.hasDataSet() || plot.dataController.datasetScanSize() == 0)
+		if (!plot.dataController.hasDataSet() || plot.dataController.channelsPerScan() == 0)
 		{
 			return;
 		}
 		//dont set an undo point here -- setEnergyPerChannel does that already
-		setEnergyPerChannel(energy / (plot.dataController.datasetScanSize()));
+		setEnergyPerChannel(energy / (plot.dataController.channelsPerScan()));
 
 	}
 
+	@Override
 	public float getMaxEnergy()
 	{
-		if (!plot.dataController.hasDataSet() || plot.dataController.datasetScanSize() == 0)
+		if (!plot.dataController.hasDataSet() || plot.dataController.channelsPerScan() == 0)
 		{
 			return 20.48f;
 		}
-		return plot.dr.unitSize * (plot.dataController.datasetScanSize());
+		return plot.dr.unitSize * (plot.dataController.channelsPerScan());
 	}
 
+	@Override
 	public void setViewLog(boolean log)
 	{
 		if (log)
@@ -105,11 +115,13 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public boolean getViewLog()
 	{
 		return settingsModel.viewTransform == ViewTransform.LOG;
 	}
 
+	@Override
 	public void setShowChannelMode(ChannelCompositeMode mode)
 	{
 		settingsModel.channelComposite = mode;
@@ -118,11 +130,13 @@ public class SettingsController extends Eventful implements ISettingsController
 	}
 	
 
+	@Override
 	public ChannelCompositeMode getChannelCompositeType()
 	{
 		return settingsModel.channelComposite;
 	}
 
+	@Override
 	public void setScanNumber(int number)
 	{
 		//negative is downwards, positive is upwards
@@ -144,17 +158,19 @@ public class SettingsController extends Eventful implements ISettingsController
 		}
 
 		
-		if (number > plot.dataController.datasetScanCount() - 1) number = plot.dataController.datasetScanCount() - 1;
+		if (number > plot.dataController.size() - 1) number = plot.dataController.size() - 1;
 		if (number < 0) number = 0;
 		settingsModel.scanNumber = number;
 		plot.filteringController.filteredDataInvalidated();
 	}
 
+	@Override
 	public int getScanNumber()
 	{
 		return settingsModel.scanNumber;
 	}
 
+	@Override
 	public void setShowAxes(boolean axes)
 	{
 		settingsModel.showAxes = axes;
@@ -163,16 +179,19 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public boolean getShowAxes()
 	{
 		return settingsModel.showAxes;
 	}
 
+	@Override
 	public boolean getShowTitle()
 	{
 		return settingsModel.showPlotTitle;
 	}
 
+	@Override
 	public void setShowTitle(boolean show)
 	{
 		settingsModel.showPlotTitle = show;
@@ -181,6 +200,7 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public void setMonochrome(boolean mono)
 	{
 		settingsModel.monochrome = mono;
@@ -188,11 +208,13 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public boolean getMonochrome()
 	{
 		return settingsModel.monochrome;
 	}
 
+	@Override
 	public void setShowElementTitles(boolean show)
 	{
 		settingsModel.showElementFitTitles = show;
@@ -200,6 +222,7 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public void setShowElementMarkers(boolean show)
 	{
 		settingsModel.showElementFitMarkers = show;
@@ -207,6 +230,7 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public void setShowElementIntensities(boolean show)
 	{
 		settingsModel.showElementFitIntensities = show;
@@ -214,21 +238,25 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public boolean getShowElementTitles()
 	{
 		return settingsModel.showElementFitTitles;
 	}
 
+	@Override
 	public boolean getShowElementMarkers()
 	{
 		return settingsModel.showElementFitMarkers;
 	}
 
+	@Override
 	public boolean getShowElementIntensities()
 	{
 		return settingsModel.showElementFitIntensities;
 	}
 
+	@Override
 	public void setShowRawData(boolean show)
 	{
 		settingsModel.backgroundShowOriginal = show;
@@ -236,21 +264,24 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
+	@Override
 	public boolean getShowRawData()
 	{
 		return settingsModel.backgroundShowOriginal;
 	}
 
+	@Override
 	public float getEnergyForChannel(int channel)
 	{
 		if (!plot.dataController.hasDataSet()) return 0.0f;
 		return channel * plot.dr.unitSize;
 	}
 
+	@Override
 	public Pair<Float, Float> getValueForChannel(int channel)
 	{
 		if (channel == -1) return null;
-		if (channel >= plot.dataController.datasetScanSize()) return null;
+		if (channel >= plot.dataController.channelsPerScan()) return null;
 
 		Pair<Spectrum, Spectrum> scans = plot.getDataForPlot();
 		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
@@ -258,11 +289,14 @@ public class SettingsController extends Eventful implements ISettingsController
 		return new Pair<Float, Float>(scans.first.get(channel), scans.second.get(channel));
 	}
 
-	
+
+	@Override
 	public EscapePeakType getEscapePeakType()
 	{
 		return settingsModel.escape;
 	}
+	
+	@Override
 	public void setEscapePeakType(EscapePeakType type)
 	{
 		plot.fittingController.setEscapeType(type);

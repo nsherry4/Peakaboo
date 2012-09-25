@@ -23,7 +23,6 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	private int	ORDER;
 	private int	IGNORE;
 	private int	MAX;
-	private int	SEP;
 
 
 	public SavitskyGolaySmoothing()
@@ -39,7 +38,7 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	{
 		REACH = addParameter(new Parameter("Reach of Polynomial (2n+1)", ValueType.INTEGER, 7));
 		ORDER = addParameter(new Parameter("Polynomial Order", ValueType.INTEGER, 5));
-		SEP = addParameter(new Parameter(null, ValueType.SEPARATOR, null));
+		addParameter(new Parameter(null, ValueType.SEPARATOR, null));
 		IGNORE = addParameter(new Parameter("Only Smooth Weak Signal", ValueType.BOOLEAN, false));
 		MAX = addParameter(new Parameter("Smoothing Cutoff: (counts)", ValueType.REAL, 4.0));
 		

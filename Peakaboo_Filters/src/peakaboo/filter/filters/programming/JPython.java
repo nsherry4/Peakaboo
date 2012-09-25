@@ -3,7 +3,6 @@ package peakaboo.filter.filters.programming;
 
 import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
-import bolt.scripting.languages.Language;
 import bolt.scripting.languages.PythonLanguage;
 import peakaboo.filter.AbstractSimpleFilter;
 import peakaboo.filter.Parameter;

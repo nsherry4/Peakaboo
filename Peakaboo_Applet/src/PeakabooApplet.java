@@ -2,61 +2,65 @@
 
 
 
-import peakaboo.controller.LiveController;
-import peakaboo.dataset.provider.DataSetProvider;
-import peakaboo.fileio.implementations.LiveDataSource;
-import peakaboo.ui.swing.PlotterApplet;
-import peakaboo.ui.swing.PlotterFrame;
+import javax.swing.JApplet;
+
+import peakaboo.curvefit.peaktable.PeakTableReader;
+import peakaboo.ui.swing.container.AppletContainer;
+import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.Swidget;
+import swidget.icons.IconFactory;
 
 
-public class PeakabooApplet extends PlotterApplet
-{
-	
-	LiveController controller;
-	
-	LiveDataSource ds;
-	DataSetProvider dsp;
+public class PeakabooApplet extends JApplet
+{	
 	
 	public PeakabooApplet()
 	{
 		
 		super();
 		
+		Swidget.initialize();
+		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 
+		PeakTableReader.readPeakTable();
 		
-		PlotterFrame plotter = new PlotterFrame();
-		
-		controller = new LiveController(plotter.plotPanel.getController());
+		PlotPanel plotPanel = new PlotPanel(new AppletContainer(this));
+		add(plotPanel);
 		
 	}
 	
 	
 	
+
 	//called from applet magic on start-up
 	@Override
 	public void init()
 	{
-		//addScan(10, "1 2 3 4");
-		//addScan(11, "1 2 7 4");
-		//addScan(14, "1 9 3 4");
+		
+		/*
+		String datafile = getParameter("datafile");
+		if (datafile != null)
+		{
+			URL dataStream;
+			try
+			{
+				dataStream = new URL(datafile);
+				AbstractFile af = new AbstractFile(dataStream);
+				List<AbstractFile> files = new LinkedList<AbstractFile>();
+				files.add(af);
+				plotter.loadFiles(files);
+				
+			}
+			catch (MalformedURLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		*/
+		
 	}
-	
-	
-	
-	
-	
-	public void addScan(int index, String scan)
-	{
-		
-		controller.addScan(index, scan);
-		
-		return;
-		
-	}
-	
-	public static void main(String args[])
-	{
-		
-	}
+
 	
 }

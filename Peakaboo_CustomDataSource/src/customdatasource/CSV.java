@@ -7,13 +7,10 @@ import java.util.Scanner;
 
 import peakaboo.datasource.plugin.AbstractDSP;
 
-import bolt.plugin.Plugin;
-
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
-@Plugin
 public class CSV extends AbstractDSP
 {
 
@@ -63,7 +60,7 @@ public class CSV extends AbstractDSP
 	}
 
 	@Override
-	public boolean hasRealDimensions()
+	public boolean hasScanDimensions()
 	{
 		//this plugin does not support real dimensional data
 		//see the javadoc for the DSRealDimensions interface for more details
@@ -159,31 +156,31 @@ public class CSV extends AbstractDSP
 	////////////////////////////////////////////
 	
 	@Override
-	public String getDatasetName()
+	public String datasetName()
 	{
 		return filename;
 	}
 
 	@Override
-	public float getMaxEnergy()
+	public float maxEnergy()
 	{
 		return 0;
 	}
 
 	@Override
-	public Spectrum getScanAtIndex(int index) throws IndexOutOfBoundsException
+	public Spectrum get(int index) throws IndexOutOfBoundsException
 	{
 		return data.get(index);
 	}
 
 	@Override
-	public int getScanCount()
+	public int scanCount()
 	{
 		return data.size();
 	}
 
 	@Override
-	public List<String> getScanNames()
+	public List<String> scanNames()
 	{
 		//make up names for the scans, since they have no names or timestamps in this format
 		List<String> names = new ArrayList<String>();

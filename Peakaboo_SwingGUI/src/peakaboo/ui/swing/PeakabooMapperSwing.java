@@ -63,7 +63,7 @@ import swidget.widgets.properties.PropertyViewPanel;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PeakabooMapperSwing extends JDialog
+public class PeakabooMapperSwing extends JFrame
 {
 
 	protected MappingController		controller;
@@ -83,9 +83,9 @@ public class PeakabooMapperSwing extends JDialog
 
 	
 	
-	public PeakabooMapperSwing(JFrame owner, MappingController controller, PlotController plotcontroller)
+	public PeakabooMapperSwing(Container owner, MappingController controller, PlotController plotcontroller)
 	{
-		super(owner, "Map - " + controller.mapsController.getDatasetTitle());
+		super("Map - " + controller.mapsController.getDatasetTitle());
 		this.controller = controller;
 		this.plotController = plotcontroller;
 		

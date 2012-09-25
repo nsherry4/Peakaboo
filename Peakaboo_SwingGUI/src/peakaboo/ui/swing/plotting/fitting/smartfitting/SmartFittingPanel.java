@@ -71,7 +71,8 @@ public class SmartFittingPanel extends JPanel
 		JScrollPane scroll = new JScrollPane(smartWidget);
 		scroll.setBorder(Spacing.bNone());
 		scroll.setPreferredSize(new Dimension(200, 0));
-		
+		scroll.setBackground(getBackground());
+		scroll.getViewport().setBackground(getBackground());
 		
 
 		this.add(scroll, BorderLayout.CENTER);

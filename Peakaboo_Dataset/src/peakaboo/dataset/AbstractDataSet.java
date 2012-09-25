@@ -70,7 +70,7 @@ public abstract class AbstractDataSet
 	
 	/**
 	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
-	 * @return the index of the first non-null scan
+	 * @return the index of the first non-null scan, or -1 if no such scans exist
 	 */
 	public abstract int firstNonNullScanIndex();
 	
@@ -79,7 +79,7 @@ public abstract class AbstractDataSet
 	 * Given a {@link DataSource} finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
 	 * @param ds the {@link DataSource} to check
 	 * @param start the index from which to start searching
-	 * @return the index of the first non-null scan
+	 * @return the index of the first non-null scan, or -1 if no such scans exist
 	 */
 	public static int firstNonNullScanIndex(DataSource ds, int start)
 	{
@@ -105,7 +105,7 @@ public abstract class AbstractDataSet
 	
 	/**
 	 * Finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
-	 * @return the index of the last non-null scan
+	 * @return the index of the last non-null scan, or -1 if no such scans exist
 	 */
 	public abstract int lastNonNullScanIndex();
 	
@@ -114,7 +114,7 @@ public abstract class AbstractDataSet
 	 * Given a {@link DataSource} finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
 	 * @param ds the {@link DataSource} to check
 	 * @param upto the maximum index to consider
-	 * @return the index of the last non-null scan
+	 * @return the index of the last non-null scan, or -1 if no such scans exist
 	 */
 	public static int lastNonNullScanIndex(DataSource ds, int upto)
 	{
@@ -154,7 +154,7 @@ public abstract class AbstractDataSet
 	 * 
 	 * @return the number of scans
 	 */
-	public abstract int scanCount();
+	public abstract int size();
 	
 	/**
 	 * Gets the expected number of scans in the dataset
@@ -176,7 +176,7 @@ public abstract class AbstractDataSet
 	 * 
 	 * @return size of a scan
 	 */
-	public abstract int scanSize();
+	public abstract int channelsPerScan();
 	
 
 

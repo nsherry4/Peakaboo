@@ -2,10 +2,10 @@ package peakaboo.ui.swing.plotting.filters.list;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -36,7 +36,7 @@ public class FilterList extends ClearPanel{
 	
 	protected ListControls controls;
 	
-	public FilterList(IFilteringController _controller, JFrame windowOwner, FiltersetViewer _owner){
+	public FilterList(IFilteringController _controller, Container windowOwner, FiltersetViewer _owner){
 		
 		super();
 		
@@ -78,7 +78,7 @@ public class FilterList extends ClearPanel{
 		
 	}
 	
-	private JTable createFilterTable(JFrame owner){
+	private JTable createFilterTable(Container owner){
 		
 		m = new MutableTableModel() {
 		

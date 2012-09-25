@@ -23,12 +23,14 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		this.plot = plotController;
 		filteringModel = new FilteringModel();
 	}
-	
+
+	@Override
 	public FilteringModel getFilteringMode()
 	{
 		return filteringModel;
 	}
-	
+
+	@Override
 	public void clearFilters()
 	{
 		filteringModel.filters.clearFilters();
@@ -36,6 +38,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
+	@Override
 	public List<String> getAvailableFiltersByName()
 	{
 		List<String> filterNames = new ArrayList<String>();
@@ -50,11 +53,13 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		return filterNames;
 	}
 
+	@Override
 	public List<AbstractFilter> getAvailableFilters()
 	{
 		return filteringModel.filters.getAvailableFilters();
 	}
 
+	@Override
 	public void addFilter(String name)
 	{
 
@@ -86,6 +91,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 	}
 
+	@Override
 	public void addFilter(AbstractFilter f)
 	{
 		filteringModel.filters.addFilter(f);
@@ -93,6 +99,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
+	@Override
 	public void removeFilter(int index)
 	{
 		filteringModel.filters.removeFilter(index);
@@ -100,16 +107,19 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
+	@Override
 	public boolean filterSetContains(AbstractFilter f)
 	{
 		return filteringModel.filters.contains(f);
 	}
 
+	@Override
 	public int getFilterCount()
 	{
 		return filteringModel.filters.size();
 	}
 
+	@Override
 	public void setFilterEnabled(int index, boolean enabled)
 	{
 		filteringModel.filters.setFilterEnabled(index, enabled);
@@ -117,11 +127,13 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
+	@Override
 	public boolean getFilterEnabled(int index)
 	{
 		return filteringModel.filters.getFilterEnabled(index);
 	}
 
+	@Override
 	public void moveFilterUp(int index)
 	{
 		filteringModel.filters.moveFilterUp(index);
@@ -129,6 +141,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
+	@Override
 	public void moveFilterDown(int index)
 	{
 		filteringModel.filters.moveFilterDown(index);
@@ -136,23 +149,27 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
+	@Override
 	public AbstractFilter getActiveFilter(int index)
 	{
 		return filteringModel.filters.getFilter(index);
 	}
 
+	@Override
 	public int filterIndex(AbstractFilter f)
 	{
 		return filteringModel.filters.indexOf(f);
 	}
 
-	
+
+	@Override
 	public void calculateFilteredData(Spectrum data)
 	{
 		filteringModel.filteredPlot = filteringModel.filters.filterData(data, true);
 		updateListeners();
 	}
-	
+
+	@Override
 	public void filteredDataInvalidated()
 	{
 		// Clear cached values, since they now have to be recalculated
@@ -164,11 +181,13 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 	}
 
+	@Override
 	public FilterSet getActiveFilters()
 	{
 		return filteringModel.filters;
 	}
 
+	@Override
 	public Spectrum getFilteredPlot()
 	{
 		return filteringModel.filteredPlot;

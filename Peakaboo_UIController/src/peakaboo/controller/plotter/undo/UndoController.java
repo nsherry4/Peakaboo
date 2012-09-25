@@ -11,7 +11,7 @@ import fava.datatypes.Pair;
 
 
 
-public class UndoController extends Eventful
+public class UndoController extends Eventful implements IUndoController
 {
 
 	PlotController	plot;
@@ -24,7 +24,7 @@ public class UndoController extends Eventful
 		undoModel = new UndoModel();
 	}
 
-
+	@Override
 	public void setUndoPoint(String change)
 	{
 		//save the current state
@@ -68,7 +68,8 @@ public class UndoController extends Eventful
 
 	}
 
-
+	
+	@Override
 	public String getNextUndo()
 	{
 		if (undoModel.undoStack.size() < 2) return "";
@@ -77,6 +78,7 @@ public class UndoController extends Eventful
 	}
 
 
+	@Override
 	public String getNextRedo()
 	{
 		if (undoModel.redoStack.isEmpty()) return "";
@@ -86,6 +88,7 @@ public class UndoController extends Eventful
 	}
 
 
+	@Override
 	public void undo()
 	{
 		if (undoModel.undoStack.size() < 2) return;
@@ -99,6 +102,7 @@ public class UndoController extends Eventful
 	}
 
 
+	@Override
 	public void redo()
 	{
 
@@ -116,25 +120,26 @@ public class UndoController extends Eventful
 	}
 
 
+	@Override
 	public boolean canUndo()
 	{
 		return undoModel.undoStack.size() >= 2;
 	}
 
 
+	@Override
 	public boolean canRedo()
 	{
 		return !undoModel.redoStack.isEmpty();
 	}
 
 
+	@Override
 	public void clearUndos()
 	{
 		undoModel.undoStack.clear();
 		setUndoPoint("");
 	}
-
-
 
 
 }

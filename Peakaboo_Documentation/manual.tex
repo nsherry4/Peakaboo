@@ -8,7 +8,7 @@
 \usepackage[usenames,dvipsnames]{xcolor}
 
 %In-document links
-\usepackage[linktoc=all, colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
+\usepackage[linktoc=all, colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black]{hyperref}
 
 %headers and footers
 \usepackage{fancyhdr}
@@ -109,17 +109,55 @@
 \cleardoublepage
 
 \pagestyle{empty}
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{1}
 \tableofcontents
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 \cleardoublepage
 \setcounter{page}{1}
 \pagestyle{fancyplain}
 
+
+\tocchapter{Introduction}
+
+Peakaboo is a part of the Science Studio package that allows users to identify the 
+spectral origins of an XRF spectrum using a routine that fits all components of 
+the K, L, or M spectrum including escape peaks and pileup peaks, and then plots 
+their spatial intensity distributions as maps.
+
+\tocsection{Accepted File Formats}
+
+Peakaboo supports several file formats for XRF data, including: 
+
+\begin{enumerate}
+
+\item \command{CDFML}, an xml-based file format defined by the Canadian Light 
+Source using NASA's CDF/CDFML container.
+
+\item \command{Peakaboo Plaintext Format}, a simple XRF format comprised of 
+rows of space-separated numbers. Each row represents a single spectrum.
+
+\item \command{CLS Data Acquisition Format} used by the Canadian Light Source 
+for XRF collection on the VESPERS beamline.
+
+\end{enumerate}
+
+For a complete listing of supported file formats, see ``File Format Descriptions''
+in the appendix.
+
+Peakaboo also allows users who are familiar with the Java programming language to 
+add support for new file formats. See the section on ``Extending Peakaboo'' for more
+information.
+
+\tocsection{Getting Help}
+
+If you have any questions or concerns not addressed in this guide, please feel free
+to contact the developers at \command{nsherry4@uwo.ca}
+
+
 \tocchapter{Getting Started}
 
-
 \tocsection{Opening Data}
+
 Select \button{document-open}{Open} from the toolbar or 
 \command{File \menu \button{document-open}{Open}} from the menu to locate your 
 XRF data. If all scan point data is contained in a single file, simply select
@@ -288,23 +326,31 @@ spectral fit.
 
 \screenshot{fitting-summation}{The summation fitting controls}
 
-\tocsection{Working with Multiple Fittings}
+\tocsection{Working with Fittings}
 
 Each fitting has a checkbox under the \command{Fit} column in the \command{Peak Fitting}
 panel. This checkbox controls whether this fitting is enabled or not. Toggling the 
 checkbox will allow you to temporarily remove a specific fitting from the fitting process. 
 Rechecking the box will restore the fitting as it was.
 
+When using background filters, it is usually best to leave 10\%-15\% of the background in place
+(default is 10\%) in order to prevent the background filter from removing all signal under the
+edges of the peak. When too much signal around the edges of a peak is removed, it can prevent
+peaks from being fitted to the proper intensity, or being fitted at all.
+
 Ordering of fittings is also important, as fittings listed first are the first 
 to be fit to the data. While there are usually multiple peaks per fitting which all constrain 
 the height of a fitting, in the case of peak overlap, a fitting will occasionally 
 be calculated to be larger than it ought to be. In this case, other fittings may be 
 underrepresented because there is no more signal left for those fittings to be fit to.
-
 Changing the order of fittings can reveal and correct these problems. Select a fitting 
 (\shortcut{Control}{P} to select several) that you wish to change the ordering of, and
 click \button{go-up}{Move Up} or \button{go-down}{Move Down} to adjust the ordering
 of their fitting.
+
+Adjusting the \command{Max Energy} setting by $\pm$ 0.05 keV can also sometimes improve fitting
+if the energy value provided with the data is not exactly accurate. See the section on Energy 
+Levels under ``Getting Started'' for more details.
 
 \tocsection{Details of Peak Fitting}
 
@@ -318,7 +364,11 @@ For most of the K series elements from \element{Ca} to \element{Mo}, the relativ
 intensities of alpha and beta composite transitions were checked and adjusted for our 
 lookup table using metals or compounds. As well, a number of metals with strong L 
 series spectra were analysed and the relative intensities adjusted accordingly; 
-most (but not all) ratios were found to agree well with the tabulated sources. 
+most (but not all) ratios were found to agree well with the tabulated sources. The 
+intensity rations for the K transitions have been optimized for $\sim$20KV irradiation; relative 
+intensities for most L transitions have not been so optimized. The values provided by Krause 
+\cite{kraus} have been used. 
+
 For fitting of the spectral peaks, a Gaussian fitting function was used with a width which
 expands slightly as the energy level increases, to agree with observed variation.
 
@@ -332,8 +382,8 @@ introducing a new elemental fitting is that the amount of fitted signal will be 
 by the least-represented line to prevent misattribution of overlapping transitions. Thus, the 
 fitting algorithm is ``greedy'' (fits against as much signal as it can) on an 
 element-by-element basis, but not on a peak-by-peak basis. Several fitting sequences 
-need to be tested to ensure that the 
-solution is consistent. 
+need to be tested to ensure that the solution is consistent. Further discussion of these 
+points can be found in a paper discussing Peakaboo \cite{mcintyre}.
 
 
 \tocchapter{Mapping}
@@ -508,7 +558,7 @@ loaded as a plugin, one per line.
 
 Example plugins for both filters and file formats are available online at 
 \href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file 
-containing Peakaboo for building against, as part of a Peakaboo Development Kit.
+containing Peakaboo for building against, as part of the Peakaboo 4 Software Development Kit.
 
 \tocsection{Filters}
 
@@ -578,7 +628,7 @@ an alternate constructor for the \class{Parameter} class.
 )
 }
 
-For more complex \class{Parameter} value types, a parameter may have properties associated with them. 
+For more complex \class{Parameter} value types, a parameter may have properties associated with it. 
 For example, the interface widget used to display \code{CODE} parameters looks for properties named 
 \code{``Language''} and \code{``ErrorMessage''}; the former used to control syntax highlighting, and 
 latter used during the \class{Parameter} validation process to report compilation/execution errors to 
@@ -602,8 +652,8 @@ rather than reverting someone's code changes.
 An active filter's \code{filterApplyTo(\class{Spectrum} data)} method is called repeatedly. This method should 
 return a modified \class{Spectrum} containing the results of filtering the input \class{Spectrum}
 
-The \class{Spectrum} class has \class{List}-like interface, but uses a fixed-size \class{float} array to 
-store the actual data.  If you prefer to work with the \class{float[]} data directly, the \code{backingArray}
+The \class{Spectrum} class has a \class{List}-like interface, but uses a fixed-size \class{float} array to 
+store the actual data for memory and performance reasons.  If you prefer to work with the \class{float[]} data directly, the \code{backingArray}
 method provides direct access to it.
 
 \tocsection{File Formats (Data Sources)}
@@ -611,12 +661,14 @@ method provides direct access to it.
 Adding support for new file formats in Peakaboo is accomplished by creating a new data source. When creating a 
 new data source, the \class{AbstractDSP} (DSP being short for Data Source Plugin) should be extended. This subclass 
 should either not define a constructor, or define a \code{public} no-argument constructor which calles 
-\code{super}, the superclass's constructor.
+\code{super}, the superclass's constructor. If you are attempting to integrate existing code and cannot extend 
+\class{AbstractDSP}, the \class{DataSource} interface (which \class{AbstractDSP} implements) can be implemented 
+instead, and wrapped in a \class{DelegatingDSP}.
 
 
 \tocsubsection{Defining File Extensions}
 
-Providing a list of file extensions which your data will typically have allows users to browse for your data format
+Providing a list of file extensions that your data will typically have allows users to browse for your data format
 more easily, and is the first step in filtering out data that your data source does not support. This is done with
 the \code{List<String> getFileExtensions()} method that you must implement. Note that the file extensions you 
 provide are not binding, and the user may select any file with any file extension.
@@ -627,7 +679,7 @@ Once the user has selected a file or files to open, Peakaboo determines which (i
 read the selected data. The data source must implement the \code{boolean canRead(\class{String} filename)} and 
 \code{boolean canRead(\class{List}<\class{String}> filenames)} methods, returning \code{true} if the data source believes 
 that it is able to read the given file(s). While this method should avoid performing time consuming checks like 
-reading in the whole data set to see if it can, it should still perform enough of a check to differentiate it 
+reading in the whole data set just to see if it can, it should still perform enough of a check to differentiate it 
 from other file formats which may share the same file extension.
 
 \tocsubsection{Reading the Data}
@@ -642,7 +694,7 @@ user experience.
 \codeblock{%
 boolean isAborted()\\
 void haveScanCount(\class{int} scanCount)\\
-void newScansRead(\class{int} number)\\
+void newScansRead(\class{int} number)
 }
 
 The \code{isAborted} method checks to see if the user has decided to abort the read operation. This method 
@@ -651,7 +703,7 @@ will not be used after the user has requested the read be aborted, so there is n
 inconsistent state caused by aborting the read.
 
 The \code{haveScanCount} method reports the number of scans in the data set. The \code{newScansRead} method 
-reports that a certain number of new scans have been read. These two methods used together allows Peakaboo to
+reports that a certain number of new scans have been read. These two methods used together allow Peakaboo to
 show the progress of the read operation to the user. In some file formats, it is not feasible to determine the 
 number of scans in advance of reading them. In this case, simply do not call either of these methods, and the
 interface will show a ``busy'' indicator instead.
@@ -860,6 +912,9 @@ Data format used by the Canadian Light Source for XRF collection on the VESPERS 
 \tocsection{MCA Files}
 
 Experimental support for the MCA XRF data format.
+
+\bibliographystyle{plain}
+\bibliography{manual}
 
 \end{document}
 

@@ -46,7 +46,7 @@ public class MapTS
 		//final List<List<Double>> filteredData;
 
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.scanCount());
+		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.size());
 		
 		final FnEach<Integer> t_filter = new FnEach<Integer>() {
 
@@ -54,14 +54,10 @@ public class MapTS
 			{
 				
 				Spectrum original = datasetProvider.getScan(ordinal); 
-				
 				if (original == null) return;
 				
 				Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
-				//filteredDataSet.set(ordinal, data);
-				
 				FittingResultSet frs = fittings.calculateFittings(data);
-				// fittingResults.set(ordinal, frs);
 
 				for (FittingResult result : frs.fits)
 				{
@@ -79,38 +75,23 @@ public class MapTS
 		};
 
 
-		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.scanCount(), t_filter);;
-		
+		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.size(), t_filter);;
+
 		tasklist = new ExecutorSet<MapResultSet>("Generating Data for Map") {
 
 			@Override
 			public MapResultSet doMaps()
 			{
-
-				
-
-				// ================================
-				// PROCESS FILTERS, FITTINGS
-				// ================================
-				
-
-					
 				// process these scans in parallel
-				
 				executor.executeBlocking();
-				
-				if (isAborted()) return null;
-							
+				if (isAborted()) return null;	
 				return maps;
 			}
 
 		};
 		
 		tasklist.addExecutor(executor, "Apply Filters and Fittings");
-		//tasklist.addTask(executor.getPlural(), );
-		
 
-		// tasklist.addTask(t_scanToMaps);
 
 		return tasklist;
 	}

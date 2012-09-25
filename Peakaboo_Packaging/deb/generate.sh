@@ -1,3 +1,3 @@
 #!/bin/sh
 
-dpkg -b ./3.0/ Peakaboo.deb
+dpkg -b ./4.0/ Peakaboo.deb

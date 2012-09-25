@@ -172,7 +172,7 @@ public class DataSet extends AbstractDataSet
 
 
 	@Override
-	public int scanCount()
+	public int size()
 	{
 		return dataSource.scanCount();
 	}
@@ -186,7 +186,7 @@ public class DataSet extends AbstractDataSet
 			Coord<Integer> dataDimension = dataSource.getDataDimensions();
 			return dataDimension.x * dataDimension.y;
 		}
-		return scanCount();
+		return size();
 	}
 
 	@Override
@@ -628,7 +628,7 @@ public class DataSet extends AbstractDataSet
 
 
 	@Override
-	public int scanSize()
+	public int channelsPerScan()
 	{
 		// TODO Auto-generated method stub
 		return spectrumLength;
@@ -637,7 +637,7 @@ public class DataSet extends AbstractDataSet
 
 	public float energyPerChannel()
 	{
-		return maxEnergy / scanSize();
+		return maxEnergy / channelsPerScan();
 	}
 
 	@Override

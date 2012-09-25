@@ -55,7 +55,7 @@ public class EmptyDataSet extends AbstractDataSet
 	}
 
 	@Override
-	public int scanCount()
+	public int size()
 	{
 		// TODO Auto-generated method stub
 		return 0;
@@ -229,7 +229,7 @@ public class EmptyDataSet extends AbstractDataSet
 	}
 
 	@Override
-	public int scanSize()
+	public int channelsPerScan()
 	{
 		// TODO Auto-generated method stub
 		return 0;

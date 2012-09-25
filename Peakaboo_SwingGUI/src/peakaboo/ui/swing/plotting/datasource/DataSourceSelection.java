@@ -2,7 +2,6 @@ package peakaboo.ui.swing.plotting.datasource;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class DataSourceSelection extends JDialog
 		
 	}
 	
-	public AbstractDSP pickDSP(Window parent, List<AbstractDSP> dsps)
+	public AbstractDSP pickDSP(Container parent, List<AbstractDSP> dsps)
 	{	
 		
 		toggleMap = new HashMap<ComplexToggle, AbstractDSP>();

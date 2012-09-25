@@ -56,5 +56,6 @@ public interface ISettingsController extends IEventful
 	
 	public EscapePeakType getEscapePeakType();
 	public void setEscapePeakType(EscapePeakType type);
+	SettingsModel getSettingsModel();
 	
 }

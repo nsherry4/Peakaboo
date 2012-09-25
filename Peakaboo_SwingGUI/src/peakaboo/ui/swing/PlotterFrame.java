@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import peakaboo.common.Version;
 import peakaboo.datasource.DataSource;
+import peakaboo.ui.swing.container.FrameContainer;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconFactory;
 
@@ -38,7 +39,7 @@ public class PlotterFrame extends JFrame
 		
 		setTitle(Version.title);
 		
-		plotPanel = new PlotPanel(this);
+		plotPanel = new PlotPanel(new FrameContainer(this));
 		getContentPane().add(plotPanel);
 		
 		

@@ -68,4 +68,6 @@ public interface IFittingController extends IEventfulType<Boolean>
 	//Magic
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTransition);
 	public void optimizeTransitionSeriesOrdering();
+	void setFittingParameters(float energyPerChannel);
+	FittingModel getFittingModel();
 }

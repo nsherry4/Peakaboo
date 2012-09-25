@@ -73,7 +73,8 @@ public class SummationPanel extends JPanel
 		JScrollPane scroll = new JScrollPane(summationWidget);
 		scroll.setBorder(Spacing.bNone());
 		scroll.setPreferredSize(new Dimension(200, 0));
-		
+		scroll.setBackground(getBackground());
+		scroll.getViewport().setBackground(getBackground());
 		
 		this.add(scroll, BorderLayout.CENTER);
 

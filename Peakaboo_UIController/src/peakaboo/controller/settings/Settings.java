@@ -13,7 +13,7 @@ import fava.functionable.FStringInput;
 import fava.signatures.FnMap;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.data.DataController;
+import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.filtering.FilteringModel;
 import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
@@ -42,7 +42,7 @@ public class Settings
 	 */
 	public static void loadPreferences(
 			PlotController plotController,
-			DataController dataController,
+			IDataController dataController,
 			final SettingsModel settings,
 			final FittingModel fittings,
 			final FilteringModel filters,
@@ -76,7 +76,7 @@ public class Settings
 		
 		for (Integer i : data.badScans)
 		{
-			if (  (dataController.hasDataSet() && dataController.datasetScanCount() <= i)  ||  (!dataController.hasDataSet())  ) {
+			if (  (dataController.hasDataSet() && dataController.size() <= i)  ||  (!dataController.hasDataSet())  ) {
 				dataController.setScanDiscarded(i, true);
 			}
 		}
@@ -88,8 +88,8 @@ public class Settings
 		
 		
 		if (dataController.hasDataSet()) {
-			fittings.selections.setDataParameters(dataController.datasetScanSize(), plotController.dr.unitSize, settings.escape);
-			fittings.proposals.setDataParameters(dataController.datasetScanSize(), plotController.dr.unitSize, settings.escape);
+			fittings.selections.setDataParameters(dataController.channelsPerScan(), plotController.dr.unitSize, settings.escape);
+			fittings.proposals.setDataParameters(dataController.channelsPerScan(), plotController.dr.unitSize, settings.escape);
 		}
 
 
