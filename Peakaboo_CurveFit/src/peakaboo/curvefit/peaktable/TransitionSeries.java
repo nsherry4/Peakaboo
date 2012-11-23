@@ -46,7 +46,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	/**
 	 * If this is a compound TransitionSeries, this list contains the component TransitionSeries
 	 */
-	private FList<TransitionSeries>	componentSeries;
+	private FList<TransitionSeries>	 componentSeries;
 
 	/**
 	 * The {@link Element} that this TransitionSeries represents
@@ -515,6 +515,26 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
+	/**
+	 * Hash function returns the type's ordinal * the element's ordinal for non-composite
+	 * series. For composite series, it returns the sum of it's components hashes
+	 * @return
+	 */
+	@Override
+	public int hashCode()
+	{
+		if (type != TransitionSeriesType.COMPOSITE) 
+		{
+			return type.ordinal() * element.ordinal();
+		}
+		else
+		{
+			int sum = 0;
+			for (TransitionSeries ts: componentSeries) { sum += ts.hashCode(); }
+			return sum;
+		}
+	}
+	
 	@Override
 	public boolean equals(Object oother)
 	{

@@ -5,7 +5,7 @@ import static fava.Fn.filter;
 import java.util.Comparator;
 import java.util.List;
 
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.automation.TSOrdering;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -30,9 +30,9 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 {
 
 	FittingModel fittingModel;
-	PlotController plot;
+	IPlotController plot;
 	
-	public FittingController(PlotController plotController)
+	public FittingController(IPlotController plotController)
 	{
 		this.plot = plotController;
 		fittingModel = new FittingModel();
@@ -46,7 +46,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	
 	private void setUndoPoint(String change)
 	{
-		plot.undoController.setUndoPoint(change);
+		plot.history().setUndoPoint(change);
 	}
 	
 	
@@ -262,7 +262,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	@Override
 	public EscapePeakType getEscapeType()
 	{
-		return plot.settingsController.getEscapePeakType();
+		return plot.settings().getEscapePeakType();
 	}
 
 	@Override
@@ -290,7 +290,13 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 			public Boolean f(final TransitionSeries ts)
 			{
 				
-				return TSOrdering.getTSsOverlappingTS(ts, tss, plot.settingsController.getEnergyPerChannel(), plot.dataController.getDataWidth(), plot.settingsController.getEscapePeakType()).size() != 0;			
+				return TSOrdering.getTSsOverlappingTS(
+						ts, 
+						tss, 
+						plot.settings().getEnergyPerChannel(), 
+						plot.data().getDataWidth(),
+						plot.settings().getEscapePeakType()
+					).size() != 0;			
 				
 			}
 		});
@@ -312,7 +318,14 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 
 			public Pair<TransitionSeries, Float> f(TransitionSeries ts)
 			{
-				return new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(plot.settingsController.getEscapePeakType(), plot.settingsController.getEnergyPerChannel(), plot.filteringController.getFilteredPlot()).f(ts));
+				return new Pair<TransitionSeries, Float>(
+						ts, 
+						TSOrdering.fScoreTransitionSeries(
+								plot.settings().getEscapePeakType(), 
+								plot.settings().getEnergyPerChannel(), 
+								plot.filtering().getFilteredPlot()
+							).f(ts)
+					);
 			}
 		});
 		
@@ -353,12 +366,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
 	{
 		
-		if (! plot.dataController.hasDataSet() ) return null;
+		if (! plot.data().hasDataSet() ) return null;
 		
 		return TSOrdering.proposeTransitionSeriesFromChannel(
-				plot.settingsController.getEscapePeakType(),
-				plot.settingsController.getEnergyPerChannel(),
-				plot.filteringController.getFilteredPlot(),
+				plot.settings().getEscapePeakType(),
+				plot.settings().getEnergyPerChannel(),
+				plot.filtering().getFilteredPlot(),
 				fittingModel.selections,
 				fittingModel.proposals,
 				channel,
@@ -369,7 +382,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	@Override
 	public boolean canMap()
 	{
-		return ! (getFittedTransitionSeries().size() == 0 || plot.dataController.size() == 0);
+		return ! (getFittedTransitionSeries().size() == 0 || plot.data().size() == 0);
 	}
 
 	// =============================================
@@ -393,7 +406,11 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 			public Float f(List<TransitionSeries> tss)
 			{
 				
-				final FnMap<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(plot.settingsController.getEscapePeakType(), plot.settingsController.getEnergyPerChannel(), plot.filteringController.getFilteredPlot());
+				final FnMap<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(
+						plot.settings().getEscapePeakType(), 
+						plot.settings().getEnergyPerChannel(), 
+						plot.filtering().getFilteredPlot()
+					);
 				
 				Float score = 0f;
 				for (TransitionSeries ts : tss)
@@ -442,12 +459,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 
 		int scanSize = 0;
 		
-		plot.dr.unitSize = energyPerChannel;
-		fittingModel.selections.setDataParameters(scanSize, energyPerChannel, plot.settingsController.getEscapePeakType());
-		fittingModel.proposals.setDataParameters(scanSize, energyPerChannel, plot.settingsController.getEscapePeakType());
+		plot.getDR().unitSize = energyPerChannel;
+		fittingModel.selections.setDataParameters(scanSize, energyPerChannel, plot.settings().getEscapePeakType());
+		fittingModel.proposals.setDataParameters(scanSize, energyPerChannel, plot.settings().getEscapePeakType());
 
 		setUndoPoint("Calibration");
-		plot.filteringController.filteredDataInvalidated();
+		plot.filtering().filteredDataInvalidated();
 	}
 
 	

@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plotting;
 
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -76,11 +77,9 @@ import fava.signatures.FnMap;
 
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
-import peakaboo.controller.plotter.settings.ISettingsController;
-import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
@@ -122,37 +121,37 @@ public class PlotPanel extends ClearPanel
 	private PeakabooContainer	container;
 
 
-
-	PlotController				controller;
-	ISettingsController			settingsController;
-	IDataController				dataController;
-	IUndoController				undoController;
-	
+	//Non-UI
+	IPlotController				controller;
 	PlotCanvas					canvas;
+	String						saveFilesFolder;
+	String						savedSessionFileName;
+	String                      programTitle;
 
+	
+	
+	//===MAIN MENU WIDGETS===
+	
 	//FILE
 	JMenuItem					snapshotMenuItem;
 	JMenuItem					exportFittingsMenuItem;
 	JMenuItem					exportFilteredDataMenuItem;
 	JMenuItem					saveSession;
-	
 
-	
 	//EDIT
 	JMenuItem					undo, redo;
-	
-	
 	JComboBox					titleCombo;
-
 	JSpinner					scanNo;
 	JLabel						scanLabel;
 	JToggleButton				scanBlock;
 	JLabel						channelLabel;
 
-
+	//===TOOLBAR WIDGETS===
+	JToolBar                    toolBar;
+	
+	//===PLOTTING UI WIDGETS===
 	JSpinner					energy;
 	ChangeListener				energyListener;
-	
 	ImageButton					toolbarSnapshot;
 	DropdownImageButton			toolbarMap;
 	ImageButton					toolbarInfo;
@@ -160,23 +159,17 @@ public class PlotPanel extends ClearPanel
 	JPanel						bottomPanel;
 	JPanel						scanSelector;
 	JScrollPane					scrolledCanvas;
-
-	String						saveFilesFolder;
-	String						savedSessionFileName;
-
+	
 
 	public PlotPanel(PeakabooContainer container)
 	{
 		this.container = container;
-
+		this.programTitle = " - " + Version.title;
+		
 		savedSessionFileName = null;
 
 		controller = new PlotController();
-		dataController = controller.dataController;
-		settingsController = controller.settingsController;
-		undoController = controller.undoController;
-		
-		
+				
 
 		initGUI();
 
@@ -193,9 +186,23 @@ public class PlotPanel extends ClearPanel
 
 
 	}
+	
+	public String getProgramTitle()
+	{
+		return programTitle;
+	}
+	
+	public void setProgramTitle(String title)
+	{
+		programTitle = title;
+	}
 
+	public void addToolbarButton(int position, Component c)
+	{
+		toolBar.add(c, position);
+	}
 
-	public PlotController getController()
+	public IPlotController getController()
 	{
 		return controller;
 	}
@@ -209,7 +216,7 @@ public class PlotPanel extends ClearPanel
 		exportFilteredDataMenuItem.setEnabled(false);
 		toolbarSnapshot.setEnabled(false);
 
-		if (dataController.hasDataSet())
+		if (controller.data().hasDataSet())
 		{
 
 			bottomPanel.setEnabled(true);
@@ -219,10 +226,10 @@ public class PlotPanel extends ClearPanel
 			toolbarSnapshot.setEnabled(true);
 
 
-			toolbarMap.setEnabled(controller.fittingController.canMap());
+			toolbarMap.setEnabled(controller.fitting().canMap());
 
 
-			if (dataController.getScanHasExtendedInformation())
+			if (controller.data().getScanHasExtendedInformation())
 			{
 				toolbarInfo.setEnabled(true);
 			}
@@ -231,14 +238,14 @@ public class PlotPanel extends ClearPanel
 				toolbarInfo.setEnabled(false);
 			}
 
-			setEnergySpinner((double) settingsController.getMaxEnergy());
+			setEnergySpinner((double) controller.settings().getMaxEnergy());
 
 
-			if (settingsController.getChannelCompositeType() == ChannelCompositeMode.NONE)
+			if (controller.settings().getChannelCompositeType() == ChannelCompositeMode.NONE)
 			{
 
-				scanNo.setValue(settingsController.getScanNumber() + 1);
-				scanBlock.setSelected(dataController.getScanDiscarded());
+				scanNo.setValue(controller.settings().getScanNumber() + 1);
+				scanBlock.setSelected(controller.data().getScanDiscarded());
 				scanSelector.setEnabled(true);
 
 			}
@@ -253,12 +260,12 @@ public class PlotPanel extends ClearPanel
 			bottomPanel.setEnabled(false);
 		}
 
-		undo.setEnabled(undoController.canUndo());
-		redo.setEnabled(undoController.canRedo());
-		undo.setText("Undo " + undoController.getNextUndo());
-		redo.setText("Redo " + undoController.getNextRedo());
+		undo.setEnabled(controller.history().canUndo());
+		redo.setEnabled(controller.history().canRedo());
+		undo.setText("Undo " + controller.history().getNextUndo());
+		redo.setText("Redo " + controller.history().getNextRedo());
 
-		zoomSlider.setValueEventless((int)(settingsController.getZoom()*100));
+		zoomSlider.setValueEventless((int)(controller.settings().getZoom()*100));
 		setTitleBar();
 
 		container.getContainer().validate();
@@ -271,7 +278,7 @@ public class PlotPanel extends ClearPanel
 	{
 		//dont let the listeners get wind of this change		
 		energy.removeChangeListener(energyListener);
-		energy.setValue((double) settingsController.getMaxEnergy());
+		energy.setValue((double) controller.settings().getMaxEnergy());
 		energy.addChangeListener(energyListener);
 	}
 
@@ -314,7 +321,7 @@ public class PlotPanel extends ClearPanel
 		c.weightx = 1.0;
 		c.weighty = 0.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		JToolBar toolBar = new JToolBar();
+		toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		populateToolbar(toolBar);
 		pane.add(toolBar, c);
@@ -447,8 +454,8 @@ public class PlotPanel extends ClearPanel
 		});
 		
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.add(new CurveFittingView(controller.fittingController, canvas), 0);
-		tabs.add(new FiltersetViewer(controller.filteringController, container.getContainer()), 1);
+		tabs.add(new CurveFittingView(controller.fitting(), canvas), 0);
+		tabs.add(new FiltersetViewer(controller.filtering(), container.getContainer()), 1);
 
 		
 		c.gridx = 0;
@@ -481,15 +488,15 @@ public class PlotPanel extends ClearPanel
 		StringBuffer titleString;
 		titleString = new StringBuffer();
 		
-		if (dataController.hasDataSet())
+		if (controller.data().hasDataSet())
 		{
-
-			titleString.append(dataController.getDatasetName());
-			titleString.append(" - ");
-
+			titleString.append(controller.data().getDatasetName());
+			titleString.append(programTitle);
+		} else {
+			titleString.append("No Data");
+			titleString.append(programTitle);
 		}
 
-		titleString.append(Version.title);
 		
 		return titleString.toString();
 	}
@@ -604,7 +611,7 @@ public class PlotPanel extends ClearPanel
 			{
 
 				float value = ((Double) energy.getValue()).floatValue();
-				settingsController.setMaxEnergy(value);
+				controller.settings().setMaxEnergy(value);
 
 			}
 		};
@@ -662,8 +669,8 @@ public class PlotPanel extends ClearPanel
 
 			public void change(String message)
 			{
-				mapHeights.setEnabled(controller.fittingController.canMap());
-				mapArea.setEnabled(controller.fittingController.canMap());
+				mapHeights.setEnabled(controller.fitting().canMap());
+				mapArea.setEnabled(controller.fitting().canMap());
 			}});
 		
 	}
@@ -863,7 +870,7 @@ public class PlotPanel extends ClearPanel
 					
 					public void actionPerformed(ActionEvent e)
 					{
-						undoController.undo();
+						controller.history().undo();
 					}
 				}, 
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_U
@@ -876,7 +883,7 @@ public class PlotPanel extends ClearPanel
 					
 					public void actionPerformed(ActionEvent e)
 					{
-						undoController.redo();
+						controller.history().redo();
 					}
 				}, 
 				KeyStroke.getKeyStroke(KeyEvent.VK_Y, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_R
@@ -906,7 +913,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setViewLog(menuitem.isSelected());
+						controller.settings().setViewLog(menuitem.isSelected());
 					}
 				},
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_L
@@ -919,7 +926,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setShowAxes(menuitem.isSelected());
+						controller.settings().setShowAxes(menuitem.isSelected());
 					}
 				},
 				null, null
@@ -932,7 +939,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setShowTitle(menuitem.isSelected());
+						controller.settings().setShowTitle(menuitem.isSelected());
 					}
 				},
 				null, null
@@ -945,7 +952,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setMonochrome(menuitem.isSelected());
+						controller.settings().setMonochrome(menuitem.isSelected());
 					}
 				},
 				null, KeyEvent.VK_M
@@ -960,7 +967,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setShowRawData(menuitem.isSelected());
+						controller.settings().setShowRawData(menuitem.isSelected());
 					}
 				},
 				null, KeyEvent.VK_O
@@ -973,7 +980,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setShowIndividualSelections(menuitem.isSelected());
+						controller.settings().setShowIndividualSelections(menuitem.isSelected());
 					}
 				},
 				null, KeyEvent.VK_O
@@ -1002,7 +1009,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setShowElementTitles(menuitem.isSelected());
+						controller.settings().setShowElementTitles(menuitem.isSelected());
 					}
 				},
 				null, null
@@ -1017,7 +1024,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setShowElementMarkers(menuitem.isSelected());
+						controller.settings().setShowElementMarkers(menuitem.isSelected());
 					}
 				},
 				null, null
@@ -1032,7 +1039,7 @@ public class PlotPanel extends ClearPanel
 					public void actionPerformed(ActionEvent e)
 					{
 						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						settingsController.setShowElementIntensities(menuitem.isSelected());
+						controller.settings().setShowElementIntensities(menuitem.isSelected());
 					}
 				},
 				null, null
@@ -1065,7 +1072,7 @@ public class PlotPanel extends ClearPanel
 				public void actionPerformed(ActionEvent e)
 				{
 					escapeItem.setSelected(true);
-					settingsController.setEscapePeakType(finalt);
+					controller.settings().setEscapePeakType(finalt);
 				}
 			});
 			
@@ -1073,7 +1080,7 @@ public class PlotPanel extends ClearPanel
 
 				public void change(String message)
 				{
-					escapeItem.setSelected( settingsController.getEscapePeakType() == finalt );
+					escapeItem.setSelected( controller.settings().getEscapePeakType() == finalt );
 				}});
 
 		}
@@ -1097,7 +1104,7 @@ public class PlotPanel extends ClearPanel
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				settingsController.setShowChannelMode(ChannelCompositeMode.NONE);
+				controller.settings().setShowChannelMode(ChannelCompositeMode.NONE);
 			}});
 		viewGroup.add(individual);
 		menu.add(individual);
@@ -1109,7 +1116,7 @@ public class PlotPanel extends ClearPanel
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				settingsController.setShowChannelMode(ChannelCompositeMode.AVERAGE);
+				controller.settings().setShowChannelMode(ChannelCompositeMode.AVERAGE);
 			}});
 		viewGroup.add(average);
 		menu.add(average);
@@ -1121,7 +1128,7 @@ public class PlotPanel extends ClearPanel
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				settingsController.setShowChannelMode(ChannelCompositeMode.MAXIMUM);
+				controller.settings().setShowChannelMode(ChannelCompositeMode.MAXIMUM);
 			}});
 		viewGroup.add(maximum);
 		menu.add(maximum);
@@ -1188,16 +1195,16 @@ public class PlotPanel extends ClearPanel
 			public void change(String s)
 			{
 
-				logPlot.setSelected(settingsController.getViewLog());
-				axes.setSelected(settingsController.getShowAxes());
-				title.setSelected(settingsController.getShowTitle());
-				monochrome.setSelected(settingsController.getMonochrome());
+				logPlot.setSelected(controller.settings().getViewLog());
+				axes.setSelected(controller.settings().getShowAxes());
+				title.setSelected(controller.settings().getShowTitle());
+				monochrome.setSelected(controller.settings().getMonochrome());
 
-				etitles.setSelected(settingsController.getShowElementTitles());
-				emarkings.setSelected(settingsController.getShowElementMarkers());
-				eintensities.setSelected(settingsController.getShowElementIntensities());
+				etitles.setSelected(controller.settings().getShowElementTitles());
+				emarkings.setSelected(controller.settings().getShowElementMarkers());
+				eintensities.setSelected(controller.settings().getShowElementIntensities());
 
-				switch (settingsController.getChannelCompositeType())
+				switch (controller.settings().getChannelCompositeType())
 				{
 
 					case NONE:
@@ -1212,8 +1219,8 @@ public class PlotPanel extends ClearPanel
 
 				}
 
-				raw.setSelected(settingsController.getShowRawData());
-				fittings.setSelected(settingsController.getShowIndividualSelections());
+				raw.setSelected(controller.settings().getShowRawData());
+				fittings.setSelected(controller.settings().getShowIndividualSelections());
 
 			}
 		});
@@ -1257,7 +1264,7 @@ public class PlotPanel extends ClearPanel
 			{
 				JSpinner scan = (JSpinner) e.getSource();
 				int value = (Integer) ((scan).getValue());
-				settingsController.setScanNumber(value - 1);
+				controller.settings().setScanNumber(value - 1);
 			}
 		});
 		bottomPanel.add(scanSelector, BorderLayout.WEST);
@@ -1267,7 +1274,7 @@ public class PlotPanel extends ClearPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
-				dataController.setScanDiscarded(scanBlock.isSelected());
+				controller.data().setScanDiscarded(scanBlock.isSelected());
 			}
 		});
 
@@ -1283,7 +1290,7 @@ public class PlotPanel extends ClearPanel
 			
 			public void change()
 			{
-				settingsController.setZoom(slider.getValue() / 100f);
+				controller.settings().setZoom(slider.getValue() / 100f);
 			}
 		});
 		return slider;
@@ -1295,7 +1302,7 @@ public class PlotPanel extends ClearPanel
 	// data set, and returns it to the caller
 	public List<AbstractFile> openNewDataset(String[][] exts, String[] desc)
 	{
-		return SwidgetIO.openFiles(container.getContainer(), "Select Data Files to Open", exts, desc, dataController.getDataSourceFolder());
+		return SwidgetIO.openFiles(container.getContainer(), "Select Data Files to Open", exts, desc, controller.data().getDataSourceFolder());
 	}
 
 
@@ -1303,8 +1310,8 @@ public class PlotPanel extends ClearPanel
 	{
 
 		int channel = canvas.channelFromCoordinate(x);
-		float energy = settingsController.getEnergyForChannel(channel);
-		Pair<Float, Float> values = settingsController.getValueForChannel(channel);
+		float energy = controller.settings().getEnergyForChannel(channel);
+		Pair<Float, Float> values = controller.settings().getValueForChannel(channel);
 
 		StringBuilder sb = new StringBuilder();
 		String sep = ",  ";
@@ -1315,7 +1322,7 @@ public class PlotPanel extends ClearPanel
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 			
 			sb.append("View Type: ");
-			sb.append(settingsController.getChannelCompositeType().show());
+			sb.append(controller.settings().getChannelCompositeType().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append(String.valueOf(channel));
@@ -1336,7 +1343,7 @@ public class PlotPanel extends ClearPanel
 		{
 			
 			sb.append("View Type: ");
-			sb.append(settingsController.getChannelCompositeType().show());
+			sb.append(controller.settings().getChannelCompositeType().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append("-");
@@ -1387,7 +1394,7 @@ public class PlotPanel extends ClearPanel
 	{
 
 		List<AbstractFile> files;
-		List<AbstractDSP> formats =  new ArrayList<AbstractDSP>(dataController.getDataSourcePlugins());
+		List<AbstractDSP> formats =  new ArrayList<AbstractDSP>(controller.data().getDataSourcePlugins());
 				
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
@@ -1424,7 +1431,7 @@ public class PlotPanel extends ClearPanel
 	public void loadFiles(List<String> filenames)
 	{
 
-		List<AbstractDSP> formats =  new ArrayList<AbstractDSP>(dataController.getDataSourcePlugins());
+		List<AbstractDSP> formats =  new ArrayList<AbstractDSP>(controller.data().getDataSourcePlugins());
 		formats = DataSourceLookup.findDataSourcesForFiles(filenames, formats);
 		
 		if (formats.size() > 1)
@@ -1455,7 +1462,7 @@ public class PlotPanel extends ClearPanel
 		if (files != null)
 		{
 
-			ExecutorSet<DatasetReadResult> reading = dataController.TASK_readFileListAsDataset(files, dsp);
+			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(files, dsp);
 			ExecutorSetView view = new ExecutorSetView(container.getWindow(), reading);
 			
 			//handle some race condition where the window gets told to close too early on failure
@@ -1479,10 +1486,10 @@ public class PlotPanel extends ClearPanel
 	private void actionMap(FittingTransform type)
 	{
 
-		if (!dataController.hasDataSet()) return;
+		if (!controller.data().hasDataSet()) return;
 
 
-		final ExecutorSet<MapResultSet> tasks = controller.TASK_getDataForMapFromSelectedRegions(type);
+		final ExecutorSet<MapResultSet> tasks = controller.getMapCreationTask(type);
 		if (tasks == null) return;
 
 		new ExecutorSetView(container.getWindow(), tasks);
@@ -1497,24 +1504,24 @@ public class PlotPanel extends ClearPanel
 			MapResultSet results = tasks.getResult();
 
 
-			if (dataController.hasDimensions())
+			if (controller.data().hasDimensions())
 			{
 
 				mapController.mapsController.setMapData(
 						results,
-						dataController.getDatasetName(),
-						dataController.getDataDimensions(),
-						dataController.getRealDimensions(),
-						dataController.getRealDimensionsUnits(),
-						dataController.getDiscardedScanList()
+						controller.data().getDatasetName(),
+						controller.data().getDataDimensions(),
+						controller.data().getRealDimensions(),
+						controller.data().getRealDimensionsUnits(),
+						controller.data().getDiscardedScanList()
 					);
 				
 			} else {
 								
 				mapController.mapsController.setMapData(
 						results,
-						dataController.getDatasetName(),
-						dataController.getDiscardedScanList()
+						controller.data().getDatasetName(),
+						controller.data().getDiscardedScanList()
 					);
 				
 			}
@@ -1558,7 +1565,7 @@ public class PlotPanel extends ClearPanel
 
 	private void actionSavePicture()
 	{
-		if (saveFilesFolder == null) saveFilesFolder = dataController.getDataSourceFolder();
+		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSourceFolder();
 		SavePicture sp = new SavePicture(container.getWindow(), canvas, saveFilesFolder);
 		saveFilesFolder = sp.getStartingFolder(); 
 	}
@@ -1566,12 +1573,12 @@ public class PlotPanel extends ClearPanel
 
 	private void actionSaveFittedDataInformation()
 	{
-		if (saveFilesFolder == null) saveFilesFolder = dataController.getDataSourceFolder();
+		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSourceFolder();
 		
 		
 		
 		//Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
-		final FilterSet filters = controller.filteringController.getActiveFilters();
+		final FilterSet filters = controller.filtering().getActiveFilters();
 		
 
 		try
@@ -1581,18 +1588,18 @@ public class PlotPanel extends ClearPanel
 			tempfile.deleteOnExit();
 			
 			// get an output stream to write the data to
-			final DummyExecutor exec = new DummyExecutor(controller.dataController.size());
+			final DummyExecutor exec = new DummyExecutor(controller.data().size());
 			ExecutorSet<Exception> execset = new ExecutorSet<Exception>("Exporting Data") {
 				
 				@Override
-				protected Exception doMaps()
+				protected Exception execute()
 				{
 					try {
 						
 						exec.advanceState();
 						
 						OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(tempfile));
-						Iterator<Spectrum> iter = controller.dataController.getScanIterator();
+						Iterator<Spectrum> iter = controller.data().getScanIterator();
 						while (iter.hasNext())
 						{
 							Spectrum s = iter.next();
@@ -1649,9 +1656,9 @@ public class PlotPanel extends ClearPanel
 	private void actionSaveFittingInformation()
 	{
 
-		if (saveFilesFolder == null) saveFilesFolder = dataController.getDataSourceFolder();
+		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSourceFolder();
 
-		List<TransitionSeries> tss = controller.fittingController.getFittedTransitionSeries();
+		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
 		float intensity;
 
 		try
@@ -1667,7 +1674,7 @@ public class PlotPanel extends ClearPanel
 
 				if (ts.visible)
 				{
-					intensity = controller.fittingController.getTransitionSeriesIntensity(ts);
+					intensity = controller.fitting().getTransitionSeriesIntensity(ts);
 					osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
 				}
 			}
@@ -1721,19 +1728,19 @@ public class PlotPanel extends ClearPanel
 		
 		Map<String, String> properties = new LinkedHashMap<String, String>();
 
-		properties.put("Date of Creation", dataController.getScanCreationTime());
-		properties.put("Created By", dataController.getScanCreator());
+		properties.put("Date of Creation", controller.data().getScanCreationTime());
+		properties.put("Created By", controller.data().getScanCreator());
 		
-		properties.put("Project Name", dataController.getScanProjectName());
-		properties.put("Session Name", dataController.getScanSessionName());
-		properties.put("Experiment Name", dataController.getScanExperimentName());
-		properties.put("Sample Name", dataController.getScanSampleName());
-		properties.put("Scan Name", dataController.getScanScanName());
+		properties.put("Project Name", controller.data().getScanProjectName());
+		properties.put("Session Name", controller.data().getScanSessionName());
+		properties.put("Experiment Name", controller.data().getScanExperimentName());
+		properties.put("Sample Name", controller.data().getScanSampleName());
+		properties.put("Scan Name", controller.data().getScanScanName());
 		
-		properties.put("Facility", dataController.getScanFacilityName());
-		properties.put("Laboratory", dataController.getScanLaboratoryName());
-		properties.put("Instrument", dataController.getScanInstrumentName());
-		properties.put("Technique", dataController.getScanTechniqueName());
+		properties.put("Facility", controller.data().getScanFacilityName());
+		properties.put("Laboratory", controller.data().getScanLaboratoryName());
+		properties.put("Instrument", controller.data().getScanInstrumentName());
+		properties.put("Technique", controller.data().getScanTechniqueName());
 		
 		new PropertyDialogue("Dataset Information", "Extended Information", container.getWindow(), properties);
 

@@ -40,25 +40,22 @@ import fava.datatypes.Pair;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PlotController extends EventfulType<String>
+public class PlotController extends EventfulType<String> implements IPlotController
 {
 	
 	public List<AxisPainter>				axisPainters;
 	public DrawingRequest					dr;
 
 	
-	public IUndoController					undoController;
-	public MappingController				mapController;
-	public IDataController					dataController;
-	public IFilteringController				filteringController;
-	public IFittingController				fittingController;
-	public ISettingsController				settingsController;
+	private IUndoController					undoController;
+	private MappingController				mapController;
+	private IDataController					dataController;
+	private IFilteringController			filteringController;
+	private IFittingController				fittingController;
+	private ISettingsController				settingsController;
 
 
-	public static enum UpdateType
-	{
-		DATA, FITTING, FILTER, UNDO, UI
-	}
+
 	
 	public PlotController()
 	{
@@ -131,6 +128,7 @@ public class PlotController extends EventfulType<String>
 	 * their map controller, and that will be the one saved for future use
 	 * @return
 	 */
+	@Override
 	public MappingController checkoutMapController()
 	{
 		//TODO: copy the current controller, rather than creating a new one
@@ -143,23 +141,14 @@ public class PlotController extends EventfulType<String>
 	 * but before any other map controller is checked in, this will be 
 	 * the map controller used for that new window
 	 */
+	@Override
 	public void checkinMapController(MappingController controller)
 	{
 		this.mapController = controller;
 	}
 	
-	/*
-	public MapController getMapController()
-	{
-		return mapController;
-	}
-	*/
-
-	public void setMapController(MappingController mapController)
-	{
-		this.mapController = mapController;
-	}
 	
+	@Override
 	public InputStream getSerializedPlotSettings()
 	{
 		//save the current state
@@ -170,6 +159,7 @@ public class PlotController extends EventfulType<String>
 		return bais;	
 	}
 	
+	@Override
 	public void savePreferences(OutputStream outStream)
 	{
 		Settings.savePreferences(
@@ -181,6 +171,7 @@ public class PlotController extends EventfulType<String>
 			);
 	}
 
+	@Override
 	public void loadPreferences(InputStream inStream, boolean isUndoAction)
 	{
 		Settings.loadPreferences(this, dataController,
@@ -204,7 +195,9 @@ public class PlotController extends EventfulType<String>
 	}
 
 	/**
-	 * Get the scan that should currently be shown.
+	 * Get the scan that should currently be shown. Looks up appropriate information
+	 * in the settings controller, and uses it to calculate the current scan from the
+	 * raw data supplied by the data controller.
 	 * @return a Spectrum which contains a scan
 	 */
 	private Spectrum currentScan()
@@ -223,9 +216,8 @@ public class PlotController extends EventfulType<String>
 		
 	}
 	
-	/**
-	 * Returns a pair of spectra. The first one is the filtered data, the second is the original
-	 */
+
+	@Override
 	public Pair<Spectrum, Spectrum> getDataForPlot()
 	{
 
@@ -242,6 +234,8 @@ public class PlotController extends EventfulType<String>
 		return new Pair<Spectrum, Spectrum>(filteringController.getFilteredPlot(), originalData);
 	}
 
+
+	@Override
 	public void regenerateCahcedData()
 	{
 
@@ -271,11 +265,70 @@ public class PlotController extends EventfulType<String>
 
 	}
 	
-	public ExecutorSet<MapResultSet> TASK_getDataForMapFromSelectedRegions(FittingTransform type)
+	
+	@Override
+	public ExecutorSet<MapResultSet> getMapCreationTask(FittingTransform type)
 	{
 		return dataController.TASK_calculateMap(filteringController.getActiveFilters(), fittingController.getFittingSelections(), type);
 	}
-		
+
+	
+	
+	public IDataController data()
+	{
+		return dataController;
+	}
+
+	public IFilteringController filtering()
+	{
+		return filteringController;
+	}
+
+	public IFittingController fitting()
+	{
+		return fittingController;
+	}
+
+	public IUndoController history()
+	{
+		return undoController;
+	}
+
+	public ISettingsController settings()
+	{
+		return settingsController;
+	}
+
+	public List<AxisPainter> getAxisPainters()
+	{
+		return axisPainters;
+	}
+
+	public void setAxisPainters(List<AxisPainter> axisPainters)
+	{
+		this.axisPainters = axisPainters;
+	}
+	
+	public DrawingRequest getDR()
+	{
+		return dr;
+	}
+
+	public MappingController mapping()
+	{
+		return mapController;
+	}
+	
+	@Override
+	public void setMapController(MappingController mapController)
+	{
+		this.mapController = mapController;
+	}
+
+	public void setDR(DrawingRequest dr)
+	{
+		this.dr = dr;
+	}
 
 	
 }

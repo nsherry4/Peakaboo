@@ -30,6 +30,7 @@ import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
 import scidraw.drawing.map.painters.MapTechniqueFactory;
 import scidraw.drawing.map.painters.RasterSpectrumMapPainter;
+import scidraw.drawing.map.painters.SpectrumMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import scidraw.drawing.map.palettes.AbstractPalette;
@@ -52,10 +53,10 @@ public class MapCanvas extends GraphicsPanel
 
 	MappingController 		controller;
 	MapTabController		tabController;
-	DrawingRequest 		dr;
+	DrawingRequest 		    dr;
 	
-	private MapPainter 	contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue;
-	private MapDrawing	map;
+	private SpectrumMapPainter contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue;
+	private MapDrawing	       map;
 	
 	private static final int	SPECTRUM_HEIGHT = 15;
 	

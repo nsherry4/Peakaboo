@@ -1,6 +1,6 @@
 package peakaboo.controller.plotter.settings;
 
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.fitting.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.Spectrum;
@@ -13,9 +13,9 @@ public class SettingsController extends Eventful implements ISettingsController
 
 	
 	private SettingsModel settingsModel;
-	private PlotController plot;
+	private IPlotController plot;
 	
-	public SettingsController(PlotController plotController)
+	public SettingsController(IPlotController plotController)
 	{
 		this.plot = plotController;
 		settingsModel = new SettingsModel();
@@ -29,7 +29,7 @@ public class SettingsController extends Eventful implements ISettingsController
 
 	private void setUndoPoint(String change)
 	{
-		plot.undoController.setUndoPoint(change);
+		plot.history().setUndoPoint(change);
 	}
 	
 
@@ -51,7 +51,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	{
 		settingsModel.showIndividualFittings = showIndividualSelections;
 		setUndoPoint("Individual Fittings");
-		plot.fittingController.fittingDataInvalidated();
+		plot.fitting().fittingDataInvalidated();
 	}
 
 	@Override
@@ -63,41 +63,41 @@ public class SettingsController extends Eventful implements ISettingsController
 	@Override
 	public void setEnergyPerChannel(float energy)
 	{
-		if (!plot.dataController.hasDataSet() || plot.dataController.channelsPerScan() == 0)
+		if (!plot.data().hasDataSet() || plot.data().channelsPerScan() == 0)
 		{
 			return;
 		}
 		
-		plot.fittingController.setFittingParameters(energy);
+		plot.fitting().setFittingParameters(energy);
 		updateListeners();
 	}
 
 	@Override
 	public float getEnergyPerChannel()
 	{
-		return plot.dr.unitSize;
+		return plot.getDR().unitSize;
 	}
 
 	@Override
 	public void setMaxEnergy(float energy)
 	{
-		if (!plot.dataController.hasDataSet() || plot.dataController.channelsPerScan() == 0)
+		if (!plot.data().hasDataSet() || plot.data().channelsPerScan() == 0)
 		{
 			return;
 		}
 		//dont set an undo point here -- setEnergyPerChannel does that already
-		setEnergyPerChannel(energy / (plot.dataController.channelsPerScan()));
+		setEnergyPerChannel(energy / (plot.data().channelsPerScan()));
 
 	}
 
 	@Override
 	public float getMaxEnergy()
 	{
-		if (!plot.dataController.hasDataSet() || plot.dataController.channelsPerScan() == 0)
+		if (!plot.data().hasDataSet() || plot.data().channelsPerScan() == 0)
 		{
 			return 20.48f;
 		}
-		return plot.dr.unitSize * (plot.dataController.channelsPerScan());
+		return plot.getDR().unitSize * (plot.data().channelsPerScan());
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	{
 		settingsModel.channelComposite = mode;
 		setUndoPoint(mode.show());
-		plot.filteringController.filteredDataInvalidated();
+		plot.filtering().filteredDataInvalidated();
 	}
 	
 
@@ -144,11 +144,11 @@ public class SettingsController extends Eventful implements ISettingsController
 
 		if (direction > 0)
 		{
-			number = plot.dataController.firstNonNullScanIndex(number);
+			number = plot.data().firstNonNullScanIndex(number);
 		}
 		else
 		{
-			number = plot.dataController.lastNonNullScanIndex(number);
+			number = plot.data().lastNonNullScanIndex(number);
 		}
 
 		if (number == -1)
@@ -158,10 +158,10 @@ public class SettingsController extends Eventful implements ISettingsController
 		}
 
 		
-		if (number > plot.dataController.size() - 1) number = plot.dataController.size() - 1;
+		if (number > plot.data().size() - 1) number = plot.data().size() - 1;
 		if (number < 0) number = 0;
 		settingsModel.scanNumber = number;
-		plot.filteringController.filteredDataInvalidated();
+		plot.filtering().filteredDataInvalidated();
 	}
 
 	@Override
@@ -174,7 +174,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	public void setShowAxes(boolean axes)
 	{
 		settingsModel.showAxes = axes;
-		plot.axisPainters = null;
+		plot.setAxisPainters(null);
 		setUndoPoint("Axes");
 		updateListeners();
 	}
@@ -195,7 +195,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	public void setShowTitle(boolean show)
 	{
 		settingsModel.showPlotTitle = show;
-		plot.axisPainters = null;
+		plot.setAxisPainters(null);
 		setUndoPoint("Title");
 		updateListeners();
 	}
@@ -273,15 +273,15 @@ public class SettingsController extends Eventful implements ISettingsController
 	@Override
 	public float getEnergyForChannel(int channel)
 	{
-		if (!plot.dataController.hasDataSet()) return 0.0f;
-		return channel * plot.dr.unitSize;
+		if (!plot.data().hasDataSet()) return 0.0f;
+		return channel * plot.getDR().unitSize;
 	}
 
 	@Override
 	public Pair<Float, Float> getValueForChannel(int channel)
 	{
 		if (channel == -1) return null;
-		if (channel >= plot.dataController.channelsPerScan()) return null;
+		if (channel >= plot.data().channelsPerScan()) return null;
 
 		Pair<Spectrum, Spectrum> scans = plot.getDataForPlot();
 		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
@@ -299,7 +299,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	@Override
 	public void setEscapePeakType(EscapePeakType type)
 	{
-		plot.fittingController.setEscapeType(type);
+		plot.fitting().setEscapeType(type);
 		settingsModel.escape = type;
 	}
 	

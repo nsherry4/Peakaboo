@@ -21,7 +21,7 @@ import fava.functionable.FArray;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.painters.FittingMarkersPainter;
 import peakaboo.curvefit.painters.FittingPainter;
 import peakaboo.curvefit.painters.FittingSumPainter;
@@ -60,12 +60,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	public DrawingRequest			dr;
 	
 
-	private PlotController			controller;
+	private IPlotController			controller;
 
 	private FnEach<Integer>	grabChannelFromClickCallback;
 
 
-	public PlotCanvas(final PlotController controller, final PlotPanel parent)
+	public PlotCanvas(final IPlotController controller, final PlotPanel parent)
 	{
 
 		super();
@@ -82,11 +82,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			public void change(String s)
 			{
 				if (
-						s.equals(PlotController.UpdateType.UI.toString())
+						s.equals(IPlotController.UpdateType.UI.toString())
 						||
-						s.equals(PlotController.UpdateType.DATA.toString())
+						s.equals(IPlotController.UpdateType.DATA.toString())
 						||
-						s.equals(PlotController.UpdateType.UNDO.toString())
+						s.equals(IPlotController.UpdateType.UNDO.toString())
 					)
 				{
 					updateCanvasSize();
@@ -145,7 +145,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		
 			public void mouseClicked(MouseEvent e)
 			{
-				if (controller.dataController.hasDataSet() && grabChannelFromClickCallback != null){
+				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
 					grabChannelFromClickCallback.f(channelFromCoordinate(e.getX()));
 				}
 			}
@@ -173,7 +173,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			parentWidth = this.getParent().getWidth();
 		}
 
-		int newWidth = (int) (controller.dataController.getDataWidth() * controller.settingsController.getZoom());
+		int newWidth = (int) (controller.data().getDataWidth() * controller.settings().getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
 		this.setPreferredSize(new Dimension(newWidth, 1));
@@ -185,7 +185,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	private int channelWidth(int multiplier)
 	{
-		return (int) Math.max(1.0f, Math.round(controller.settingsController.getZoom() * multiplier));
+		return (int) Math.max(1.0f, Math.round(controller.settings().getZoom() * multiplier));
 	}
 
 
@@ -204,9 +204,9 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		// x -= axesSize.x;
 		x -= axesSize.x.start;
 
-		if (x < 0 || !controller.dataController.hasDataSet()) return -1;
+		if (x < 0 || !controller.data().hasDataSet()) return -1;
 
-		channel = (int) ((x / plotWidth) * controller.dataController.channelsPerScan());
+		channel = (int) ((x / plotWidth) * controller.data().channelsPerScan());
 		return channel;
 
 	}
@@ -236,8 +236,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		
 		dr.imageHeight = getHeight();
 		dr.imageWidth = getWidth();
-		dr.viewTransform = controller.settingsController.getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
-		dr.unitSize = controller.settingsController.getEnergyPerChannel();
+		dr.viewTransform = controller.settings().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
+		dr.unitSize = controller.settings().getEnergyPerChannel();
 		
 		
 		////////////////////////////////////////////////////////////////////
@@ -264,7 +264,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		fittingSum = new Color(0.0f, 0.0f, 0.0f, 0.8f);
 
 		// Colour/Monochrome colours for curve fittings
-		if (controller.settingsController.getMonochrome())
+		if (controller.settings().getMonochrome())
 		{
 			proposed = new Color(1.0f, 1.0f, 1.0f, 0.3f);
 			proposedStroke = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -287,31 +287,31 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
 		Spectrum drawingData = dataForPlot.first;
-		float maxIntensity = Math.max(controller.dataController.maximumIntensity(), SpectrumCalculations.max(drawingData));
-		int datasetSize = Math.min(controller.dataController.channelsPerScan(), drawingData.size());
+		float maxIntensity = Math.max(controller.data().maximumIntensity(), SpectrumCalculations.max(drawingData));
+		int datasetSize = Math.min(controller.data().channelsPerScan(), drawingData.size());
 		
 		// if axes are shown, also draw horizontal grid lines
 		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
-		if (controller.settingsController.getShowAxes()) plotPainters.add(new GridlinePainter(new Bounds<Float>(
+		if (controller.settings().getShowAxes()) plotPainters.add(new GridlinePainter(new Bounds<Float>(
 			0.0f,
 			maxIntensity)));
 
 
 		// draw the filtered data
-		plotPainters.add(new PrimaryPlotPainter(drawingData, controller.settingsController.getMonochrome()));
+		plotPainters.add(new PrimaryPlotPainter(drawingData, controller.settings().getMonochrome()));
 
 		
 		// draw the original data
-		if (controller.settingsController.getShowRawData())
+		if (controller.settings().getShowRawData())
 		{
 			Spectrum originalData = dataForPlot.second;
-			plotPainters.add(new OriginalDataPainter(originalData, controller.settingsController.getMonochrome()));
+			plotPainters.add(new OriginalDataPainter(originalData, controller.settings().getMonochrome()));
 		}
 		
 		
 		// get any painters that the filters might want to add to the mix
 		PlotPainter filterPainter;
-		for (AbstractFilter f : controller.filteringController.getActiveFilters())
+		for (AbstractFilter f : controller.filtering().getActiveFilters())
 		{
 			filterPainter = f.getPainter();
 			
@@ -322,58 +322,58 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		}
 
 		// draw curve fitting
-		if (controller.settingsController.getShowIndividualSelections())
+		if (controller.settings().getShowIndividualSelections())
 		{
-			plotPainters.add(new FittingPainter(controller.fittingController.getFittingSelectionResults(), fittingStroke, fitting));
-			plotPainters.add(new FittingSumPainter(controller.fittingController.getFittingSelectionResults().totalFit, fittingSum));
+			plotPainters.add(new FittingPainter(controller.fitting().getFittingSelectionResults(), fittingStroke, fitting));
+			plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().totalFit, fittingSum));
 		}
 		else
 		{			
-			plotPainters.add(new FittingSumPainter(controller.fittingController.getFittingSelectionResults().totalFit, fittingSum, fitting));
+			plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().totalFit, fittingSum, fitting));
 		}
 		
 		//draw curve fitting for proposed fittings
-		if (controller.fittingController.getProposedTransitionSeries().size() > 0)
+		if (controller.fitting().getProposedTransitionSeries().size() > 0)
 		{
-			if (controller.settingsController.getShowIndividualSelections())
+			if (controller.settings().getShowIndividualSelections())
 			{
-				plotPainters.add(new FittingPainter(controller.fittingController.getFittingProposalResults(), proposedStroke, proposed));
+				plotPainters.add(new FittingPainter(controller.fitting().getFittingProposalResults(), proposedStroke, proposed));
 			}
 			else
 			{
 				plotPainters
-					.add(new FittingSumPainter(controller.fittingController.getFittingProposalResults().totalFit, proposedStroke, proposed));
+					.add(new FittingSumPainter(controller.fitting().getFittingProposalResults().totalFit, proposedStroke, proposed));
 			}
 
 			plotPainters.add(
 
 				new FittingSumPainter(SpectrumCalculations.addLists(
-						controller.fittingController.getFittingProposalResults().totalFit,
-						controller.fittingController.getFittingSelectionResults().totalFit), proposedSum)
+						controller.fitting().getFittingProposalResults().totalFit,
+						controller.fitting().getFittingSelectionResults().totalFit), proposedSum)
 
 			);
 		}
 		
 
 		plotPainters.add(new FittingTitlePainter(
-				controller.fittingController.getFittingSelectionResults(),
-				controller.settingsController.getShowElementTitles(),
-				controller.settingsController.getShowElementIntensities(),
+				controller.fitting().getFittingSelectionResults(),
+				controller.settings().getShowElementTitles(),
+				controller.settings().getShowElementIntensities(),
 				fittingStroke
 			)
 		);
 		
 		plotPainters.add(new FittingTitlePainter(
-				controller.fittingController.getFittingProposalResults(),
-				controller.settingsController.getShowElementTitles(),
-				controller.settingsController.getShowElementIntensities(),
+				controller.fitting().getFittingProposalResults(),
+				controller.settings().getShowElementTitles(),
+				controller.settings().getShowElementIntensities(),
 				proposedStroke
 			)
 		);
 		
-		if (controller.settingsController.getShowElementMarkers()) {
-			plotPainters.add(new FittingMarkersPainter(controller.fittingController.getFittingSelectionResults(), controller.settingsController.getEscapePeakType(), fittingStroke));
-			plotPainters.add(new FittingMarkersPainter(controller.fittingController.getFittingProposalResults(), controller.settingsController.getEscapePeakType(), proposedStroke));
+		if (controller.settings().getShowElementMarkers()) {
+			plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingSelectionResults(), controller.settings().getEscapePeakType(), fittingStroke));
+			plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingProposalResults(), controller.settings().getEscapePeakType(), proposedStroke));
 		}
 				
 
@@ -387,12 +387,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		//{
 		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 
-		if (controller.settingsController.getShowTitle())
+		if (controller.settings().getShowTitle())
 		{
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.dataController.getDatasetName(), null));
+			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.data().getDatasetName(), null));
 		}
 
-		if (controller.settingsController.getShowAxes())
+		if (controller.settings().getShowAxes())
 		{
 
 			axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
@@ -403,7 +403,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 				new Bounds<Float>(0.0f, maxIntensity),
 				dr.viewTransform == ViewTransform.LOG,
 				dr.viewTransform == ViewTransform.LOG));
-			axisPainters.add(new LineAxisPainter(true, true, controller.settingsController.getShowTitle(), true));
+			axisPainters.add(new LineAxisPainter(true, true, controller.settings().getShowTitle(), true));
 
 		}
 

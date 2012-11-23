@@ -6,7 +6,7 @@ import java.util.List;
 
 import eventful.Eventful;
 
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.FilterSet;
 import scitypes.Spectrum;
@@ -15,10 +15,10 @@ import scitypes.Spectrum;
 public class FilteringController extends Eventful implements IFilteringController
 {
 
-	PlotController 	plot;
+	IPlotController	plot;
 	FilteringModel	filteringModel;
 	
-	public FilteringController(PlotController plotController)
+	public FilteringController(IPlotController plotController)
 	{
 		this.plot = plotController;
 		filteringModel = new FilteringModel();
@@ -34,7 +34,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void clearFilters()
 	{
 		filteringModel.filters.clearFilters();
-		plot.undoController.setUndoPoint("Clear Filters");
+		plot.history().setUndoPoint("Clear Filters");
 		filteredDataInvalidated();
 	}
 
@@ -95,7 +95,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void addFilter(AbstractFilter f)
 	{
 		filteringModel.filters.addFilter(f);
-		plot.undoController.setUndoPoint("Add Filter");
+		plot.history().setUndoPoint("Add Filter");
 		filteredDataInvalidated();
 	}
 
@@ -103,7 +103,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void removeFilter(int index)
 	{
 		filteringModel.filters.removeFilter(index);
-		plot.undoController.setUndoPoint("Remove Filter");
+		plot.history().setUndoPoint("Remove Filter");
 		filteredDataInvalidated();
 	}
 
@@ -123,7 +123,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void setFilterEnabled(int index, boolean enabled)
 	{
 		filteringModel.filters.setFilterEnabled(index, enabled);
-		plot.undoController.setUndoPoint("Enable Filter");
+		plot.history().setUndoPoint("Enable Filter");
 		filteredDataInvalidated();
 	}
 
@@ -137,7 +137,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void moveFilterUp(int index)
 	{
 		filteringModel.filters.moveFilterUp(index);
-		plot.undoController.setUndoPoint("Move Filter Up");
+		plot.history().setUndoPoint("Move Filter Up");
 		filteredDataInvalidated();
 	}
 
@@ -145,7 +145,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void moveFilterDown(int index)
 	{
 		filteringModel.filters.moveFilterDown(index);
-		plot.undoController.setUndoPoint("Move Filter Down");
+		plot.history().setUndoPoint("Move Filter Down");
 		filteredDataInvalidated();
 	}
 
@@ -174,9 +174,9 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	{
 		// Clear cached values, since they now have to be recalculated
 		filteringModel.filteredPlot = null;
-		plot.dataController.invalidateFilteredData();
+		plot.data().invalidateFilteredData();
 
-		plot.fittingController.fittingDataInvalidated();
+		plot.fitting().fittingDataInvalidated();
 		updateListeners();
 
 	}

@@ -227,7 +227,7 @@ public class DataSet extends AbstractDataSet
 		tasklist = new ExecutorSet<DatasetReadResult>("Opening Data Set") {
 
 			@Override
-			protected DatasetReadResult doMaps()
+			protected DatasetReadResult execute()
 			{
 				
 				final int scanCount;

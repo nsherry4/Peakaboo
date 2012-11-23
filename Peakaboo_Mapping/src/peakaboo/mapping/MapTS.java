@@ -80,7 +80,7 @@ public class MapTS
 		tasklist = new ExecutorSet<MapResultSet>("Generating Data for Map") {
 
 			@Override
-			public MapResultSet doMaps()
+			public MapResultSet execute()
 			{
 				// process these scans in parallel
 				executor.executeBlocking();

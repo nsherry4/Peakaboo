@@ -23,7 +23,7 @@ public class DSPLoader
 
 	private static BoltPluginLoader<AbstractDSP> loader;
 	
-	public static List<AbstractDSP> getDSPs()
+	public synchronized static List<AbstractDSP> getDSPs()
 	{
 
 		try
@@ -32,23 +32,24 @@ public class DSPLoader
 			if (loader == null)
 			{
 
-				loader = new BoltPluginLoader<AbstractDSP>(AbstractDSP.class);
+				BoltPluginLoader<AbstractDSP> newLoader = new BoltPluginLoader<AbstractDSP>(AbstractDSP.class);  
 				
 				//load local jars
-				loader.register();
+				newLoader.register();
 				
 				//load jars in the app data directory
 				File appDataDir = Env.appDataDirectory(Version.program_name);
 				appDataDir.mkdirs();
-				loader.register(appDataDir);
+				newLoader.register(appDataDir);
 					
 				
 				//register built-in plugins
-				loader.registerPlugin(CDFMLSaxDSP.class);
-				loader.registerPlugin(MCA_DSP.class);
-				loader.registerPlugin(PlainTextDSP.class);
-				loader.registerPlugin(ScienceStudioDSP.class);
-								
+				newLoader.registerPlugin(CDFMLSaxDSP.class);
+				newLoader.registerPlugin(MCA_DSP.class);
+				newLoader.registerPlugin(PlainTextDSP.class);
+				newLoader.registerPlugin(ScienceStudioDSP.class);
+				
+				loader = newLoader;
 			}
 			
 			List<AbstractDSP> filters = loader.getNewInstancesForAllPlugins();

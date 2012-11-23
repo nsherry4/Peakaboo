@@ -37,7 +37,7 @@ import fava.signatures.FnMap;
 
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapTabController;
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.peaktable.TransitionSeries;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
@@ -67,7 +67,7 @@ public class PeakabooMapperSwing extends JFrame
 {
 
 	protected MappingController		controller;
-	protected PlotController	plotController;
+	protected IPlotController	plotController;
 	
 
 	private JTabbedPane			tabs;
@@ -83,7 +83,7 @@ public class PeakabooMapperSwing extends JFrame
 
 	
 	
-	public PeakabooMapperSwing(Container owner, MappingController controller, PlotController plotcontroller)
+	public PeakabooMapperSwing(Container owner, MappingController controller, IPlotController plotcontroller)
 	{
 		super("Map - " + controller.mapsController.getDatasetTitle());
 		this.controller = controller;

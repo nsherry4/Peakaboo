@@ -40,7 +40,7 @@ public class FilterLoader
 
 	private static BoltPluginLoader<AbstractFilter> pluginLoader;
 	
-	public static FList<AbstractFilter> getAvailableFilters()
+	public static synchronized FList<AbstractFilter> getAvailableFilters()
 	{
 
 		try {
@@ -49,50 +49,49 @@ public class FilterLoader
 			
 			if (pluginLoader == null)
 			{
-			
-				
-				pluginLoader = new BoltPluginLoader<AbstractFilter>(AbstractFilter.class);
+
+				BoltPluginLoader<AbstractFilter> newPluginLoader = new BoltPluginLoader<AbstractFilter>(AbstractFilter.class);
 				
 
 				//register built-in plugins
-				pluginLoader.registerPlugin(DataToWavelet.class);
-				pluginLoader.registerPlugin(Identity.class);
-				pluginLoader.registerPlugin(FilterPartialSpectrum.class);
-				pluginLoader.registerPlugin(SpectrumNormalization.class);
-				pluginLoader.registerPlugin(WaveletToData.class);
+				newPluginLoader.registerPlugin(DataToWavelet.class);
+				newPluginLoader.registerPlugin(Identity.class);
+				newPluginLoader.registerPlugin(FilterPartialSpectrum.class);
+				newPluginLoader.registerPlugin(SpectrumNormalization.class);
+				newPluginLoader.registerPlugin(WaveletToData.class);
 				
-				pluginLoader.registerPlugin(BruknerRemoval.class);
-				pluginLoader.registerPlugin(LinearTrimRemoval.class);
-				pluginLoader.registerPlugin(PolynomialRemoval.class);
+				newPluginLoader.registerPlugin(BruknerRemoval.class);
+				newPluginLoader.registerPlugin(LinearTrimRemoval.class);
+				newPluginLoader.registerPlugin(PolynomialRemoval.class);
 				
-				pluginLoader.registerPlugin(Addition.class);
-				pluginLoader.registerPlugin(Derivative.class);
-				pluginLoader.registerPlugin(Integrate.class);
-				pluginLoader.registerPlugin(Multiply.class);
-				pluginLoader.registerPlugin(Subtraction.class);
+				newPluginLoader.registerPlugin(Addition.class);
+				newPluginLoader.registerPlugin(Derivative.class);
+				newPluginLoader.registerPlugin(Integrate.class);
+				newPluginLoader.registerPlugin(Multiply.class);
+				newPluginLoader.registerPlugin(Subtraction.class);
 				
-				pluginLoader.registerPlugin(AggressiveWaveletNoiseFilter.class);
-				pluginLoader.registerPlugin(FourierLowPass.class);
-				pluginLoader.registerPlugin(MovingAverage.class);
-				pluginLoader.registerPlugin(SavitskyGolaySmoothing.class);
-				pluginLoader.registerPlugin(SpringSmoothing.class);
-				pluginLoader.registerPlugin(WaveletNoiseFilter.class);
-				pluginLoader.registerPlugin(Interpolation.class);
+				newPluginLoader.registerPlugin(AggressiveWaveletNoiseFilter.class);
+				newPluginLoader.registerPlugin(FourierLowPass.class);
+				newPluginLoader.registerPlugin(MovingAverage.class);
+				newPluginLoader.registerPlugin(SavitskyGolaySmoothing.class);
+				newPluginLoader.registerPlugin(SpringSmoothing.class);
+				newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
+				newPluginLoader.registerPlugin(Interpolation.class);
 				
-				pluginLoader.registerPlugin(Java.class);
-				pluginLoader.registerPlugin(JPython.class);
+				newPluginLoader.registerPlugin(Java.class);
+				newPluginLoader.registerPlugin(JPython.class);
 				
 				
 				
 				//load plugins from local
-				pluginLoader.register();
+				newPluginLoader.register();
 				
 				//load plugins from the application data directory
 				File appDataDir = Env.appDataDirectory(Version.program_name);
 				appDataDir.mkdirs();
-				pluginLoader.register(appDataDir);
+				newPluginLoader.register(appDataDir);
 				
-				
+				pluginLoader = newPluginLoader;
 				
 			}
 			

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DataSet;
@@ -31,12 +31,12 @@ public class DataController extends Eventful implements IDataController
 {
 
 	private AbstractDataSet 	dataModel;
-	private PlotController 		plot;
+	private IPlotController		plot;
 	private List<Integer>		badScans;
 	private int 				dataHeight, dataWidth;
 	
 	
-	public DataController(PlotController plotController)
+	public DataController(IPlotController plotController)
 	{
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();
@@ -166,16 +166,16 @@ public class DataController extends Eventful implements IDataController
 		AbstractDataSet old = dataModel;
 		dataModel = dsp;
 		
-		plot.settingsController.setScanNumber( dsp.firstNonNullScanIndex() );
+		plot.settings().setScanNumber( dsp.firstNonNullScanIndex() );
 		
 		setDataWidth(dataModel.channelsPerScan());
 		setDataHeight(1);
 		
-		plot.fittingController.setFittingParameters(dataModel.energyPerChannel());
+		plot.fitting().setFittingParameters(dataModel.energyPerChannel());
 				
-		if (plot.mapController != null) plot.mapController.mapsController.setInterpolation(0);
+		if (plot.mapping() != null) plot.mapping().mapsController.setInterpolation(0);
 		
-		plot.undoController.clearUndos();
+		plot.history().clearUndos();
 			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected
@@ -194,7 +194,7 @@ public class DataController extends Eventful implements IDataController
 
 	public String getCurrentScanName()
 	{
-		return dataModel.getScanName(plot.settingsController.getScanNumber());
+		return dataModel.getScanName(plot.settings().getScanNumber());
 	}
 
 	public boolean getScanHasExtendedInformation()
@@ -288,7 +288,7 @@ public class DataController extends Eventful implements IDataController
 
 	public boolean getScanDiscarded()
 	{
-		return getScanDiscarded(plot.settingsController.getScanNumber());
+		return getScanDiscarded(plot.settings().getScanNumber());
 	}
 
 	public void setScanDiscarded(int scanNo, boolean discarded)
@@ -297,21 +297,21 @@ public class DataController extends Eventful implements IDataController
 		if (discarded)
 		{
 			if (!getScanDiscarded(scanNo)) badScans.add(scanNo);
-			plot.filteringController.filteredDataInvalidated();
+			plot.filtering().filteredDataInvalidated();
 		}
 		else
 		{
 			if (getScanDiscarded(scanNo)) badScans.remove(badScans.indexOf(scanNo));
-			plot.filteringController.filteredDataInvalidated();
+			plot.filtering().filteredDataInvalidated();
 		}
 
-		plot.undoController.setUndoPoint("Marking Bad");
+		plot.history().setUndoPoint("Marking Bad");
 
 	}
 
 	public void setScanDiscarded(boolean discarded)
 	{
-		setScanDiscarded(plot.settingsController.getScanNumber(), discarded);
+		setScanDiscarded(plot.settings().getScanNumber(), discarded);
 	}
 
 	public List<Integer> getDiscardedScanList()
