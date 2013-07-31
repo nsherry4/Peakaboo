@@ -21,7 +21,7 @@ import swidget.widgets.Spacing;
 
 
 
-public class ComboTableCellRenderer implements ListCellRenderer, TableCellRenderer
+public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCellRenderer
 {
 
 	DefaultListCellRenderer		listRenderer	= new DefaultListCellRenderer();

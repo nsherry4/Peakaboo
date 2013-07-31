@@ -11,7 +11,7 @@ import peakaboo.filter.Parameter;
 import peakaboo.ui.swing.plotting.filters.settings.ParamListener;
 import peakaboo.ui.swing.plotting.filters.settings.SingleFilterView;
 
-public class EnumEditor extends JComboBox implements Editor
+public class EnumEditor extends JComboBox<Object> implements Editor
 {
 
 	private Parameter param;

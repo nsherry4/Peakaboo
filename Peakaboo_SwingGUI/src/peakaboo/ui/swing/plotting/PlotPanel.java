@@ -37,7 +37,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -142,7 +141,7 @@ public class PlotPanel extends ClearPanel
 	JMenuItem					undo, redo;
 	
 	
-	JComboBox					titleCombo;
+	//JComboBox					titleCombo;
 
 	JSpinner					scanNo;
 	JLabel						scanLabel;
@@ -1585,7 +1584,7 @@ public class PlotPanel extends ClearPanel
 			ExecutorSet<Exception> execset = new ExecutorSet<Exception>("Exporting Data") {
 				
 				@Override
-				protected Exception doMaps()
+				protected Exception execute()
 				{
 					try {
 						

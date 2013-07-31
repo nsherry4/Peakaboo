@@ -50,7 +50,7 @@ public class ViewsContainer extends ClearPanel
 		
 		
 		//create combobox
-		final JComboBox modeSelect = new JComboBox(MapDisplayMode.values());
+		final JComboBox<MapDisplayMode> modeSelect = new JComboBox<>(MapDisplayMode.values());
 		modeSelect.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 		modeSelect.addActionListener(new ActionListener() {
 			

@@ -25,15 +25,15 @@ import fava.signatures.FnMap;
 public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor> implements Editor
 {
 	
-	List<AbstractFilter> 	filters;
-	SingleFilterView		subfilterView;
-	AbstractFilter 			subfilter;
-	Parameter				param;
-	IFilteringController	controller;
+	List<AbstractFilter> 		filters;
+	SingleFilterView			subfilterView;
+	AbstractFilter 				subfilter;
+	Parameter					param;
+	IFilteringController		controller;
 	
-	JComboBox				filterCombo;
+	JComboBox<AbstractFilter>	filterCombo;
 	
-	JPanel					subfilterPanel;
+	JPanel						subfilterPanel;
 	
 	public SubfilterEditor(Parameter param, AbstractFilter filter, final IFilteringController controller, SingleFilterView view)
 	{
@@ -54,7 +54,7 @@ public class SubfilterEditor extends EventfulTypePanel<SubfilterEditor> implemen
 		
 		setLayout(new BorderLayout());
 		
-		filterCombo = new JComboBox(filters.toArray());
+		filterCombo = new JComboBox<AbstractFilter>(filters.toArray(new AbstractFilter[0]));
 		add(filterCombo, BorderLayout.NORTH);
 		
 		

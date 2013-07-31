@@ -17,7 +17,7 @@ import eventful.swing.EventfulPanel;
 public class TSSelector extends EventfulPanel
 {
 	
-	JComboBox	tsCombo;
+	JComboBox<TransitionSeries>	tsCombo;
 	JLabel		tsLabel;
 	
 	ActionListener tsComboListener;
@@ -27,7 +27,7 @@ public class TSSelector extends EventfulPanel
 
 		setLayout(new BorderLayout());
 
-		tsCombo = new JComboBox();
+		tsCombo = new JComboBox<TransitionSeries>();
 		
 		tsLabel = new JLabel();
 		tsLabel.setPreferredSize(tsCombo.getPreferredSize());

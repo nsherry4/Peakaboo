@@ -242,8 +242,8 @@ public class Ratio extends JPanel {
 		
 		
 		Integer choices[] = {1,2};
-		ComboTableCellRenderer renderer = new ComboTableCellRenderer();
-		JComboBox comboBox = new JComboBox(choices);
+		ComboTableCellRenderer<Integer> renderer = new ComboTableCellRenderer<>();
+		JComboBox<Integer> comboBox = new JComboBox<>(choices);
 		comboBox.setRenderer(renderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
 		column = table.getColumnModel().getColumn(2);
