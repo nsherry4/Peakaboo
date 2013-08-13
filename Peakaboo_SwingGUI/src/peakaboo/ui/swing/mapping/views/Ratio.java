@@ -22,10 +22,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
-
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

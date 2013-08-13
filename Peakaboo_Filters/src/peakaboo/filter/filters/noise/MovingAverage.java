@@ -1,10 +1,10 @@
 package peakaboo.filter.filters.noise;
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 /**
@@ -18,7 +18,7 @@ import scitypes.Spectrum;
 public final class MovingAverage extends AbstractSimpleFilter
 {
 
-	private int	REACH;
+	private Parameter<Integer> reach;
 
 
 	public MovingAverage()
@@ -30,7 +30,8 @@ public final class MovingAverage extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		REACH = addParameter(new Parameter("Averaging Reach (2n+1)", ValueType.INTEGER, 4));
+		reach = new Parameter<>("Averaging Reach (2n+1)", new IntegerEditor(), 4);
+		addParameter(reach);
 	}
 	
 	@Override
@@ -53,11 +54,9 @@ public final class MovingAverage extends AbstractSimpleFilter
 	public boolean validateParameters()
 	{
 
-		int reach;
 
 		// has to at least have a 3-point, but cannot exceed a 10*2+1=21-point moving average
-		reach = getParameter(REACH).intValue();
-		if (reach > 10 || reach < 1) return false;
+		if (reach.getValue() > 10 || reach.getValue() < 1) return false;
 
 		return true;
 	}
@@ -76,7 +75,7 @@ public final class MovingAverage extends AbstractSimpleFilter
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data)
 	{
-		data = Noise.MovingAverage(data, getParameter(REACH).intValue());
+		data = Noise.MovingAverage(data, reach.getValue());
 		return data;
 	}
 

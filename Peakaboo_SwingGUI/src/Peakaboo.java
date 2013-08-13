@@ -36,7 +36,7 @@ public class Peakaboo
 		//at sun.java2d.x11.X11SurfaceData.getRaster(X11SurfaceData.java:193)
 		//on Linux
 		//It must be set before Swing starts up.
-		System.setProperty("sun.java2d.pmoffscreen", "false");
+		//System.setProperty("sun.java2d.pmoffscreen", "false");
 		
 		PeakTableReader.readPeakTable();
 		

@@ -8,11 +8,12 @@ import java.util.List;
 
 
 
+
+
 import fava.functionable.FList;
 import fava.functionable.Functionable;
 import fava.signatures.FnMap;
-
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 

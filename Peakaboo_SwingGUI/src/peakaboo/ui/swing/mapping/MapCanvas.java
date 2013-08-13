@@ -14,12 +14,8 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
-import fava.datatypes.Pair;
-import fava.signatures.FnCondition;
-import fava.signatures.FnFold;
-import fava.signatures.FnMap;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.Surface.CompositeModes;
@@ -46,6 +42,10 @@ import scitypes.Coord;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import fava.datatypes.Pair;
+import fava.signatures.FnCondition;
+import fava.signatures.FnFold;
+import fava.signatures.FnMap;
 
 
 public class MapCanvas extends GraphicsPanel

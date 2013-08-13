@@ -10,11 +10,10 @@ import fava.functionable.FList;
 import fava.signatures.FnCondition;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
-
 import peakaboo.common.DataTypeFactory;
-import peakaboo.controller.plotter.fitting.IFittingController;
-import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.curvefit.peaktable.TransitionSeriesMode;
+import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.widgets.ClearPanel;

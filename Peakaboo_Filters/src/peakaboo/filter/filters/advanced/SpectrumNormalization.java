@@ -1,8 +1,9 @@
 package peakaboo.filter.filters.advanced;
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
+import autodialog.view.editors.DoubleEditor;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -10,14 +11,14 @@ import scitypes.SpectrumCalculations;
 public class SpectrumNormalization extends AbstractSimpleFilter
 {
 	
-	public int	CHANNEL;
-	public int	HEIGHT;
+	private Parameter<Integer> pChannel;
+	private Parameter<Double> pHeight;
 
 	@Override
 	public void initialize()
 	{
-		CHANNEL = addParameter(new Parameter("Channel", ValueType.INTEGER, 1));
-		HEIGHT = addParameter(new Parameter("Intensity", ValueType.REAL, 10d));	
+		pChannel = new Parameter<>("Channel", new IntegerEditor(), 1);
+		pHeight = new Parameter<>("Intensity", new DoubleEditor(), 10d);	
 	}
 	
 	@Override
@@ -30,8 +31,8 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	protected Spectrum filterApplyTo(Spectrum data)
 	{
 
-		int channel = getParameter(CHANNEL).intValue()+1;
-		float height = getParameter(HEIGHT).realValue();
+		int channel = pChannel.getValue()+1;
+		float height = pHeight.getValue().floatValue();
 		
 		if (channel >= data.size()) return data;
 		
@@ -73,8 +74,8 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	public boolean validateParameters()
 	{
 		
-		int channel = getParameter(CHANNEL).intValue();
-		float height = getParameter(HEIGHT).realValue();
+		int channel = pChannel.getValue();
+		float height = pHeight.getValue().floatValue();
 		
 		if (channel < 1) return false;
 		if (height < 1) return false;

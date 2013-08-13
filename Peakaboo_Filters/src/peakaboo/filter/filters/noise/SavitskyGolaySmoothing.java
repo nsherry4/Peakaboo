@@ -2,10 +2,15 @@ package peakaboo.filter.filters.noise;
 
 
 
+import javax.swing.JSeparator;
+
+import autodialog.model.Parameter;
+import autodialog.view.editors.BooleanEditor;
+import autodialog.view.editors.DummyEditor;
+import autodialog.view.editors.IntegerEditor;
+import autodialog.view.editors.DoubleEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 /**
@@ -19,10 +24,11 @@ import scitypes.Spectrum;
 public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 {
 
-	private int	REACH;
-	private int	ORDER;
-	private int	IGNORE;
-	private int	MAX;
+
+	private Parameter<Integer> reach;
+	private Parameter<Integer> order;
+	private Parameter<Boolean> ignore;
+	private Parameter<Double> max;
 
 
 	public SavitskyGolaySmoothing()
@@ -36,13 +42,15 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		REACH = addParameter(new Parameter("Reach of Polynomial (2n+1)", ValueType.INTEGER, 7));
-		ORDER = addParameter(new Parameter("Polynomial Order", ValueType.INTEGER, 5));
-		addParameter(new Parameter(null, ValueType.SEPARATOR, null));
-		IGNORE = addParameter(new Parameter("Only Smooth Weak Signal", ValueType.BOOLEAN, false));
-		MAX = addParameter(new Parameter("Smoothing Cutoff: (counts)", ValueType.REAL, 4.0));
+		reach = new Parameter<>("Reach of Polynomial (2n+1)", new IntegerEditor(), 7);
+		order = new Parameter<>("Polynomial Order", new IntegerEditor(), 5);
+		Parameter<?> sep = new Parameter<>(null, new DummyEditor(new JSeparator()), null);
+		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanEditor(), false);
+		max = new Parameter<>("Smoothing Cutoff: (counts)", new DoubleEditor(), 4.0);
+		max.setEnabled(false);
 		
-		getParameter(MAX).enabled = false;		
+		addParameter(reach, order, sep, ignore, max);
+				
 	}
 	
 	@Override
@@ -66,23 +74,19 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	public boolean validateParameters()
 	{
 
-		int reach, order;
 		
 		// reach shouldn't be any larger than about 30, or else we start to distort the data more than we
 		// would like
-		reach = getParameter(REACH).intValue();
-		if (reach > 30 || reach < 1) return false;
+		if (reach.getValue() > 30 || reach.getValue() < 1) return false;
 
 		// a 0th order polynomial isn't going to be terribly useful, and this algorithm starts to get a little
-		// wonky
-		// when it goes over 10
-		order = getParameter(ORDER).intValue();
-		if (order > 10 || order < 1) return false;
+		// wonky when it goes over 10
+		if (order.getValue() > 10 || order.getValue() < 1) return false;
 
 		// polynomial of order k needs at least k+1 data points in set.
-		if (order >= reach * 2 + 1) return false;
+		if (order.getValue() >= reach.getValue() * 2 + 1) return false;
 
-		getParameter(MAX).enabled = getParameter(IGNORE).boolValue();
+		max.setEnabled(ignore.getValue());
 		
 		return true;
 	}
@@ -102,10 +106,10 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	{
 		return Noise.SavitskyGolayFilter(
 			data, 
-			getParameter(ORDER).intValue(), 
-			getParameter(REACH).intValue(),
+			order.getValue(), 
+			reach.getValue(),
 			0.0f,
-			(getParameter(IGNORE).boolValue()) ? getParameter(MAX).realValue() : Float.MAX_VALUE
+			(ignore.getValue()) ? max.getValue().floatValue() : Float.MAX_VALUE
 			
 		);
 	}

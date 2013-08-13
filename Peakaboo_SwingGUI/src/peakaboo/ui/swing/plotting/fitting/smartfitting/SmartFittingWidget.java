@@ -10,9 +10,8 @@ import java.util.List;
 
 import fava.functionable.FList;
 import fava.signatures.FnMap;
-
-import peakaboo.controller.plotter.fitting.IFittingController;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;

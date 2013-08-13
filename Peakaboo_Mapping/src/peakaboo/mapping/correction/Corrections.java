@@ -7,11 +7,10 @@ import commonenvironment.AbstractFile;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.signatures.FnCondition;
-
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.curvefit.peaktable.TransitionSeriesMode;
-import peakaboo.curvefit.peaktable.TransitionSeriesType;
 
 
 public class Corrections

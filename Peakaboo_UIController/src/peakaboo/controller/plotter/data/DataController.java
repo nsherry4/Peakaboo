@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
@@ -13,7 +13,7 @@ import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.internal.CopiedDS;
 import peakaboo.datasource.plugin.AbstractDSP;
-import peakaboo.filter.FilterSet;
+import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
 import peakaboo.mapping.results.MapResultSet;
@@ -22,7 +22,6 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
-
 import eventful.Eventful;
 import eventful.EventfulListener;
 

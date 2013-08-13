@@ -15,12 +15,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import eventful.EventfulTypeListener;
-
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
 import swidget.widgets.Spacing;
+import eventful.EventfulTypeListener;
 
 
 

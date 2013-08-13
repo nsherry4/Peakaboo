@@ -1,37 +1,37 @@
 package peakaboo.filter.filters.advanced;
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.common.Version;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 public class Interpolation extends AbstractSimpleFilter
 {
 	
 	
-	Parameter size;
+	private Parameter<Integer> size;
 	
 	@Override
 	public void initialize()
 	{
-		size = new Parameter("New Size", ValueType.INTEGER, 2048);
+		size = new Parameter<>("New Size", new IntegerEditor(), 2048);
 		addParameter(size);
 	}
 
 	@Override
 	public boolean validateParameters()
 	{
-		return size.intValue() > 10;
+		return size.getValue() > 10;
 	}
 
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data)
 	{
-		Spectrum scaled = new Spectrum(size.intValue());
-		for (int i = 0; i < size.intValue(); i++)
+		Spectrum scaled = new Spectrum(size.getValue());
+		for (int i = 0; i < size.getValue(); i++)
 		{
-			scaled.set(i, (float)calcNewPoint(data, size.intValue(), i));
+			scaled.set(i, (float)calcNewPoint(data, size.getValue(), i));
 		}
 		
 		return scaled;

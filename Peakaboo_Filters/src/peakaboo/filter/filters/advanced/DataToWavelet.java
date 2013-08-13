@@ -1,17 +1,17 @@
 package peakaboo.filter.filters.advanced;
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 
 public class DataToWavelet extends AbstractSimpleFilter
 {
 
-	private int AMOUNT;
+	private Parameter<Integer> amount;
 	
 	public DataToWavelet()
 	{
@@ -24,13 +24,14 @@ public class DataToWavelet extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		AMOUNT = addParameter(new Parameter("Passes", ValueType.INTEGER, 1));
+		amount = new Parameter<>("Passes", new IntegerEditor(), 1);
+		addParameter(amount);
 	}
 	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data)
 	{
-		return Noise.DataToWavelet(data, getParameter(AMOUNT).intValue());
+		return Noise.DataToWavelet(data, amount.getValue());
 	}
 
 
@@ -59,8 +60,8 @@ public class DataToWavelet extends AbstractSimpleFilter
 	public boolean validateParameters()
 	{
 		
-		if (getParameter(AMOUNT).intValue() < 1) return false;
-		if (getParameter(AMOUNT).intValue() > 5) return false;
+		if (amount.getValue() < 1) return false;
+		if (amount.getValue() > 5) return false;
 		
 		return true;
 	}

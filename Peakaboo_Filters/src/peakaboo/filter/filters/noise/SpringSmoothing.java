@@ -1,10 +1,11 @@
 package peakaboo.filter.filters.noise;
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
+import autodialog.view.editors.DoubleEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 /**
@@ -18,10 +19,9 @@ import scitypes.Spectrum;
 public final class SpringSmoothing extends AbstractSimpleFilter
 {
 
-	private int	MULTIPLIER;
-	private int	ITERATIONS;
-	private int	FALLOFF;
-
+	private Parameter<Integer> iterations;
+	private Parameter<Double> multiplier;
+	private Parameter<Double> falloff;
 
 	public SpringSmoothing()
 	{
@@ -31,9 +31,12 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		ITERATIONS = addParameter(new Parameter("Iterations", ValueType.INTEGER, 20));
-		MULTIPLIER = addParameter(new Parameter("Linear Force Multiplier", ValueType.REAL, 20.0d));
-		FALLOFF = addParameter(new Parameter("Exponential Force Falloff Rate", ValueType.REAL, 2.0d));
+		iterations = new Parameter<>("Iterations", new IntegerEditor(), 20);
+		multiplier = new Parameter<>("Linear Force Multiplier", new DoubleEditor(), 20.0d);
+		falloff = new Parameter<>("Exponential Force Falloff Rate", new DoubleEditor(), 2.0d);
+		
+		addParameter(iterations, multiplier, falloff);
+		
 	}
 
 
@@ -57,18 +60,18 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	public boolean validateParameters()
 	{
 
-		float mult, power;
-		int iterations;
+		double mult, power;
+		int iters;
 
 		
-		mult = getParameter(MULTIPLIER).realValue();
+		mult = multiplier.getValue();
 		if (mult > 100 || mult < 0.1) return false;
 		
-		power = getParameter(FALLOFF).realValue();
+		power = falloff.getValue();
 		if (power > 10 || power <= 0.0) return false;
 		
-		iterations = getParameter(ITERATIONS).intValue();
-		if (iterations > 50 || iterations < 1) return false;
+		iters = iterations.getValue();
+		if (iters > 50 || iters < 1) return false;
 		
 
 		return true;
@@ -90,9 +93,9 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	{
 		data = Noise.SpringFilter(
 				data, 
-				getParameter(MULTIPLIER).realValue(), 
-				getParameter(FALLOFF).realValue(), 
-				getParameter(ITERATIONS).intValue()
+				multiplier.getValue().floatValue(), 
+				falloff.getValue().floatValue(), 
+				iterations.getValue()
 			);
 		return data;
 	}

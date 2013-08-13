@@ -8,11 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fava.signatures.FnEach;
-
-import peakaboo.controller.plotter.fitting.IFittingController;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
-
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;

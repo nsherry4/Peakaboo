@@ -1,7 +1,7 @@
 package peakaboo.controller.plotter.settings;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.fitting.EscapePeakType;
+import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.Spectrum;
 import eventful.Eventful;

@@ -2,9 +2,9 @@ package peakaboo.filter.filters.mathematical;
 
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.DoubleEditor;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -12,18 +12,20 @@ import scitypes.SpectrumCalculations;
 public class Multiply extends AbstractSimpleFilter
 {
 
-	private int AMOUNT;
+	private Parameter<Double> amount;
 	
 	@Override
 	public void initialize()
 	{
-		AMOUNT = addParameter(new Parameter("Multiply By", ValueType.REAL, 1.0));
+		amount = new Parameter<>("Multiply By", new DoubleEditor(), 1.0);
+		addParameter(amount);
+		
 	}
 	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data)
 	{
-		return SpectrumCalculations.multiplyBy(data, getParameter(AMOUNT).realValue());
+		return SpectrumCalculations.multiplyBy(data, amount.getValue().floatValue());
 	}
 
 

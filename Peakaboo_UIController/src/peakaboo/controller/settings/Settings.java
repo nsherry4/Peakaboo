@@ -11,14 +11,13 @@ import fava.Fn;
 import fava.Functions;
 import fava.functionable.FStringInput;
 import fava.signatures.FnMap;
-
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.IDataController;
-import peakaboo.controller.plotter.filtering.FilteringModel;
-import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.model.FittingModel;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.model.FilteringModel;
 
 
 

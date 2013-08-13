@@ -1,11 +1,11 @@
 package peakaboo.filter.filters.noise;
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.common.Version;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 /**
@@ -20,8 +20,8 @@ import scitypes.Spectrum;
 public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 {
 
-	private int	PASSES;
-
+	private Parameter<Integer> passes;
+	
 	public AggressiveWaveletNoiseFilter()
 	{
 
@@ -33,7 +33,8 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		PASSES = addParameter(new Parameter("Passes to Remove", ValueType.INTEGER, 1));
+		passes = new Parameter<>("Passes to Remove", new IntegerEditor(), 1);
+		addParameter(passes);
 	}
 
 	@Override
@@ -55,12 +56,9 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	@Override
 	public boolean validateParameters()
 	{
-		int passes;
-
 		// remove largest, least significant passes from the wavelet transform data
 		// probably a bad idea to do more than 3 passes, but less than 1 is senseless
-		passes = getParameter(PASSES).intValue();
-		if (passes > 3 || passes < 1) return false;
+		if (passes.getValue() > 3 || passes.getValue() < 1) return false;
 
 		return true;
 	}
@@ -81,9 +79,8 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	protected Spectrum filterApplyTo(Spectrum data)
 	{		
 		Spectrum result;
-		int passes = getParameter(PASSES).intValue();
 
-		result = Noise.FWTAgressiveLowPassFilter(data, passes);
+		result = Noise.FWTAgressiveLowPassFilter(data, passes.getValue());
 
 		return result;
 	}

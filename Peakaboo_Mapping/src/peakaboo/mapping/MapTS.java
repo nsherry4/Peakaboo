@@ -3,13 +3,12 @@ package peakaboo.mapping;
 import java.util.List;
 
 import fava.signatures.FnEach;
-
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.curvefit.results.FittingResult;
-import peakaboo.curvefit.results.FittingResultSet;
+import peakaboo.curvefit.model.FittingResult;
+import peakaboo.curvefit.model.FittingResultSet;
+import peakaboo.curvefit.model.FittingSet;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.AbstractDataSet;
-import peakaboo.filter.FilterSet;
+import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import plural.executor.eachindex.EachIndexExecutor;

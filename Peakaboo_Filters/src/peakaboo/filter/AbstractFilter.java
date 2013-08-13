@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import autodialog.model.Parameter;
 import bolt.plugin.BoltPlugin;
-
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
@@ -83,7 +83,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		}
 	}
 	
-	private Map<Integer, Parameter>			parameters;
+	private Map<Integer, Parameter<?>>			parameters;
 	public boolean							enabled;
 	
 	protected Spectrum	previewCache;
@@ -94,7 +94,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	
 	public AbstractFilter()
 	{
-		this.parameters = new LinkedHashMap<Integer, Parameter>();
+		this.parameters = new LinkedHashMap<>();
 		this.enabled = true;
 	}
 
@@ -118,7 +118,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	/**
 	 * Returns the parameters
 	 */
-	public final Map<Integer, Parameter> getParameters()
+	public final Map<Integer, Parameter<?>> getParameters()
 	{
 		return this.parameters;
 	}
@@ -126,22 +126,27 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	/**
 	 * Sets the parameters
 	 */
-	public final void setParameters(Map<Integer, Parameter> params)
+	public final void setParameters(Map<Integer, Parameter<?>> params)
 	{
 		parameters = params;
 	}
 	
-	protected int addParameter(Parameter value)
+	protected void addParameter(Parameter<?> param)
 	{
 		int key = getNextParameterIndex();
-		parameters.put(key, value);
-		return key;
+		parameters.put(key, param);
 	}
+	
+	protected void addParameter(Parameter<?>... params)
+	{
+		for (Parameter<?> param : params) { addParameter(param); }
+	}
+	
 
 	/**
 	 * Retrieves the parameter with the assocuated index
 	 */
-	public final Parameter getParameter(Integer key)
+	public final Parameter<?> getParameter(Integer key)
 	{
 		return parameters.get(key);
 	}

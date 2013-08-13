@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import scitypes.Coord;
 import scitypes.Spectrum;

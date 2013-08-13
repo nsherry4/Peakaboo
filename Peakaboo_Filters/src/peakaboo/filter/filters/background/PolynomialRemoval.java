@@ -1,10 +1,10 @@
 package peakaboo.filter.filters.background;
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Background;
 import peakaboo.filter.AbstractBackgroundFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 /**
@@ -18,8 +18,8 @@ import scitypes.Spectrum;
 public final class PolynomialRemoval extends AbstractBackgroundFilter
 {
 
-	private int	WIDTH;
-	private int	POWER;
+	private Parameter<Integer> width;
+	private Parameter<Integer> power;
 
 
 	public PolynomialRemoval()
@@ -30,8 +30,10 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		WIDTH = addParameter(new Parameter("Width of Polynomial", ValueType.INTEGER, 300));
-		POWER = addParameter(new Parameter("Power of Polynomial", ValueType.INTEGER, 3));
+		width = new Parameter<>("Width of Polynomial", new IntegerEditor(), 300);
+		power = new Parameter<>("Power of Polynomial", new IntegerEditor(), 3);
+		
+		addParameter(width, power);
 	}
 
 
@@ -45,11 +47,7 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	@Override
 	protected Spectrum getBackground(Spectrum data, int percent)
 	{
-		return Background.calcBackgroundParabolic(
-				data,
-				getParameter(WIDTH).intValue(),
-				getParameter(POWER).intValue(),
-				percent / 100.0f);
+		return Background.calcBackgroundParabolic(data, width.getValue(), power.getValue(), percent / 100.0f);
 	}
 
 
@@ -57,16 +55,11 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	@Override
 	public boolean validateCustomParameters()
 	{
-
-		int width, power;
-
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
-		width = getParameter(WIDTH).intValue();
-		power = getParameter(POWER).intValue();
 		
-		if (width > 800 || width < 50) return false;
-		if (power > 128 || power < 0) return false;
+		if (width.getValue() > 800 || width.getValue() < 50) return false;
+		if (power.getValue() > 128 || power.getValue() < 0) return false;
 
 		return true;
 	}

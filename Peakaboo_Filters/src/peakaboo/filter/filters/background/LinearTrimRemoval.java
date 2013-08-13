@@ -2,10 +2,10 @@ package peakaboo.filter.filters.background;
 
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Background;
 import peakaboo.filter.AbstractBackgroundFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -20,8 +20,8 @@ import scitypes.SpectrumCalculations;
 public final class LinearTrimRemoval extends AbstractBackgroundFilter
 {
 
-	private int	WIDTH;
-	private int	ITERATIONS;
+	private Parameter<Integer> width;
+	private Parameter<Integer> iterations;
 
 
 	public LinearTrimRemoval()
@@ -32,8 +32,10 @@ public final class LinearTrimRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		ITERATIONS = addParameter(new Parameter("Iterations", ValueType.INTEGER, 2));
-		WIDTH = addParameter(new Parameter("Width of Fitting", ValueType.INTEGER, 100));
+		iterations = new Parameter<>("Iterations", new IntegerEditor(), 2);
+		width = new Parameter<>("Width of Fitting", new IntegerEditor(), 100);
+		
+		addParameter(iterations, width);
 	}
 
 	@Override
@@ -46,26 +48,21 @@ public final class LinearTrimRemoval extends AbstractBackgroundFilter
 	@Override
 	protected Spectrum getBackground(Spectrum data, int percent)
 	{
-		int width = getParameter(WIDTH).intValue();
-		int iterations = getParameter(ITERATIONS).intValue();
-		
-		return SpectrumCalculations.multiplyBy(  Background.calcBackgroundLinearTrim(data, width, iterations), (percent/100.0f));		
+
+		return SpectrumCalculations.multiplyBy(
+				Background.calcBackgroundLinearTrim(data, width.getValue(), iterations.getValue()), (percent/100.0f)
+			);		
 	}
 	
 
 	@Override
 	public boolean validateCustomParameters()
 	{
-		int width, iterations;
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
-		width = getParameter(WIDTH).intValue();
-		iterations = getParameter(ITERATIONS).intValue();
-		
-		
-		if (width > 400 || width < 10) return false;
-		if (iterations > 20 || iterations <= 0) return false;
+		if (width.getValue() > 400 || width.getValue() < 10) return false;
+		if (iterations.getValue() > 20 || iterations.getValue() <= 0) return false;
 
 		return true;
 	}

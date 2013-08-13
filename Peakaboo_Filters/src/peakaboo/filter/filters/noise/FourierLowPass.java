@@ -2,11 +2,12 @@ package peakaboo.filter.filters.noise;
 
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
+import autodialog.view.editors.ListEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 
 /**
@@ -19,10 +20,10 @@ import scitypes.Spectrum;
 
 public final class FourierLowPass extends AbstractSimpleFilter
 {
-
-	private int	ROLLOFF;
-	private int	START;
-	private int	END;
+	
+	private Parameter<Integer> startWavelength;
+	private Parameter<Integer> endWavelength;
+	private Parameter<FFTStyle> rolloff;
 
 
 	public FourierLowPass()
@@ -33,9 +34,11 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		ROLLOFF = addParameter(new Parameter("Roll-Off Type", ValueType.SET_ELEMENT, FFTStyle.LINEAR, FFTStyle.values()));
-		START = addParameter(new Parameter("Starting Wavelength (keV)", ValueType.INTEGER, 8));
-		END = addParameter(new Parameter("Ending Wavelength (keV)", ValueType.INTEGER, 6));
+		rolloff = new Parameter<>("Roll-Off Type", new ListEditor<>(FFTStyle.values()), FFTStyle.LINEAR);
+		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerEditor(), 8);
+		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerEditor(), 6);
+		
+		addParameter(rolloff, startWavelength, endWavelength);
 	}
 	
 
@@ -44,13 +47,13 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	{
 
 		int start, end;
-		boolean isCutoff = getParameter(ROLLOFF).<FFTStyle>enumValue() == FFTStyle.CUTOFF;
-		getParameter(END).enabled = (!isCutoff);
+		boolean isCutoff = rolloff.getValue() == FFTStyle.CUTOFF;
+		endWavelength.setEnabled(!isCutoff);
 
-		start = getParameter(START).intValue();
+		start = startWavelength.getValue();
 		if (start > 15 || start < 1) return false;
 
-		end = getParameter(END).intValue();
+		end = endWavelength.getValue();
 		if (end > 15 || end < 0) return false;
 
 		if (!isCutoff && start < end) return false;
@@ -90,9 +93,9 @@ public final class FourierLowPass extends AbstractSimpleFilter
 		
 		data = Noise.FFTLowPassFilter(
 			data,
-			getParameter(ROLLOFF).<FFTStyle>enumValue(),
-			getParameter(START).intValue(),
-			getParameter(END).intValue()
+			rolloff.getValue(),
+			startWavelength.getValue(),
+			endWavelength.getValue()
 		);
 
 		return data;

@@ -2,12 +2,12 @@ package peakaboo.filter.filters.advanced;
 
 import java.util.List;
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import fava.signatures.FnCondition;
-
 import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.FilterLoader;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
+import peakaboo.filter.editors.SubfilterEditor;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
@@ -15,9 +15,9 @@ import scitypes.Spectrum;
 public class FilterPartialSpectrum extends AbstractFilter
 {
 
-	private int FILTER;
-	private int START;
-	private int END;
+	private Parameter<Integer> begin;
+	private Parameter<Integer> end;
+	private Parameter<AbstractFilter> filter;
 	
 	
 	@Override
@@ -41,10 +41,11 @@ public class FilterPartialSpectrum extends AbstractFilter
 		}
 		
 		
-		START = addParameter(new Parameter("Start Index", ValueType.INTEGER, 0));
-		END = addParameter(new Parameter("Stop Index", ValueType.INTEGER, 10));
-		FILTER = addParameter(new Parameter("Filter", ValueType.FILTER, filters.get(0), filters.toArray()));
+		begin = new Parameter<>("Start Index", new IntegerEditor(), 0);
+		end = new Parameter<>("Stop Index", new IntegerEditor(), 10);
+		filter = new Parameter<>("Filter", new SubfilterEditor(filters), filters.get(0));
 		
+		addParameter(begin, end, filter);
 		
 	}
 	
@@ -53,8 +54,8 @@ public class FilterPartialSpectrum extends AbstractFilter
 	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
 		
-		int start = getParameter(START).intValue();
-		int stop = getParameter(END).intValue();
+		int start = begin.getValue();
+		int stop = end.getValue();
 		
 		if (start >= data.size()) start = data.size()-1;
 		if (stop >= data.size()) stop = data.size()-1;
@@ -62,7 +63,7 @@ public class FilterPartialSpectrum extends AbstractFilter
 		Spectrum result = new Spectrum(data);
 		Spectrum subspectrum = data.subSpectrum(start, stop);
 		
-		subspectrum = getParameter(FILTER).filterValue().filter(subspectrum, cache);
+		subspectrum = filter.getValue().filter(subspectrum, cache);
 		
 		for (int i = start; i <= stop; i++)
 		{
@@ -93,8 +94,8 @@ public class FilterPartialSpectrum extends AbstractFilter
 	@Override
 	public PlotPainter getPainter()
 	{
-
-		if (getParameter(FILTER).filterValue().getPainter() == null) return null;
+		
+		if (filter.getValue().getPainter() == null) return null;
 		
 		return new PlotPainter() {
 
@@ -104,8 +105,8 @@ public class FilterPartialSpectrum extends AbstractFilter
 				p.context.save();
 				
 					float pointWidth = p.plotSize.x / p.dr.dataWidth;
-					p.context.translate(pointWidth*getParameter(START).intValue(), 0f);
-					getParameter(FILTER).filterValue().getPainter().draw(p);
+					p.context.translate(pointWidth*begin.getValue(), 0f);
+					filter.getValue().getPainter().draw(p);
 					
 				p.context.restore();
 			}
@@ -123,14 +124,14 @@ public class FilterPartialSpectrum extends AbstractFilter
 	public boolean validateParameters()
 	{
 		
-		int start = getParameter(START).intValue();
-		int stop = getParameter(END).intValue();
+		int start = begin.getValue();
+		int stop = end.getValue();
 		
 		if (start < 0) return false;
 		if (stop < 0) return false;
 		if (stop < start) return false;
 		
-		return true;
+		return filter.getValue().validateParameters();
 	}
 	
 	

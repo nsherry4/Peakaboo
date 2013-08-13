@@ -9,8 +9,8 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import eventful.swing.EventfulPanel;
 
 

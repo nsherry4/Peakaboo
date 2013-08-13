@@ -1,6 +1,11 @@
 package peakaboo.filter;
 
-import peakaboo.filter.Parameter.ValueType;
+import javax.swing.JSeparator;
+
+import autodialog.model.Parameter;
+import autodialog.view.editors.BooleanEditor;
+import autodialog.view.editors.DummyEditor;
+import autodialog.view.editors.IntegerEditor;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -11,32 +16,36 @@ import scitypes.SpectrumCalculations;
 public abstract class AbstractBackgroundFilter extends AbstractFilter
 {
 
-	private int PERCENT;
-	private int PREVIEW;
-	private int STARTINDEX;
-	private int STOPINDEX;
-	private int PARTIALFILTER;
+	private Parameter<Integer> percent;
+	private Parameter<Boolean> preview;
+	private Parameter<Integer> stopindex;
+	private Parameter<Integer> startindex;
+	private Parameter<Boolean> partial;
 
 	
 	public AbstractBackgroundFilter()
 	{
 		
 		
+		String g1 = "Subset Filtering";
 		
-		PERCENT = addParameter(new Parameter("Percent to Remove", ValueType.INTEGER, 90));
-		PREVIEW = addParameter(new Parameter("Preview Only", ValueType.BOOLEAN, false));
+		percent = new Parameter<>("Percent to Remove", new IntegerEditor(), 90);
+		preview = new Parameter<>("Preview Only", new BooleanEditor(), Boolean.FALSE);
 		
-		addParameter(new Parameter(null, ValueType.SEPARATOR, null));
+		Parameter<?> sep1 = new Parameter<>(null, new DummyEditor(new JSeparator()), null);
 		
-		STOPINDEX = addParameter(new Parameter("Stop Index", ValueType.INTEGER, 0));
-		STARTINDEX = addParameter(new Parameter("Start Index", ValueType.INTEGER, 0));
-		PARTIALFILTER = addParameter(new Parameter("Apply to Subset", ValueType.BOOLEAN, false));
-		
-		addParameter(new Parameter(null, ValueType.SEPARATOR, null));
+		partial = new Parameter<>("Apply to Subset", new BooleanEditor(), Boolean.FALSE);
+		stopindex = new Parameter<>("Stop Index", new IntegerEditor(), 0);
+		startindex = new Parameter<>("Start Index", new IntegerEditor(), 0);
 		
 		
-		getParameter(STARTINDEX).enabled = false;
-		getParameter(STOPINDEX).enabled = false;
+		Parameter<?> sep2 = new Parameter<>(null, new DummyEditor(new JSeparator()), null);
+		
+		
+		startindex.setEnabled(false);
+		stopindex.setEnabled(false);
+		
+		addParameter(percent, preview, sep1, partial, stopindex, startindex, sep2);
 		
 	}
 	
@@ -50,21 +59,17 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	public final boolean validateParameters()
 	{
 
-		int percent, start, stop;
-
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
-		percent = getParameter(PERCENT).intValue();
-		if (percent > 100 || percent < 0) return false;
+		if (percent.getValue() > 100 || percent.getValue() < 0) return false;
 		
-		start = getParameter(STARTINDEX).intValue();
-		stop = getParameter(STOPINDEX).intValue();
-		if (start < 0) return false;
-		if (stop < start) return false;
+
+		if (startindex.getValue() < 0) return false;
+		if (stopindex.getValue() < startindex.getValue()) return false;
 
 		
-		getParameter(STARTINDEX).enabled = getParameter(PARTIALFILTER).boolValue();
-		getParameter(STOPINDEX).enabled = getParameter(PARTIALFILTER).boolValue();
+		startindex.setEnabled(partial.getValue());
+		stopindex.setEnabled(partial.getValue());
 		
 		return validateCustomParameters();
 		
@@ -76,19 +81,18 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	
 	private final Spectrum getBackground(Spectrum data)
 	{
-		int percent = getParameter(PERCENT).intValue();
-		int start = getParameter(STARTINDEX).intValue();
-		int stop = getParameter(STOPINDEX).intValue();
+		int start = startindex.getValue();
+		int stop = stopindex.getValue();
 		if (stop >= data.size()) stop = data.size() - 1;
 		if (start >= data.size()) start = data.size() - 1;
 		
-		boolean usePartial = getParameter(PARTIALFILTER).boolValue();
+		boolean usePartial = partial.getValue();
 		
 		if (usePartial) {
 			
 			Spectrum partial = data.subSpectrum(start, stop);
 			Spectrum result = new Spectrum(data.size(), 0f);
-			partial = getBackground(partial, percent);
+			partial = getBackground(partial, percent.getValue());
 			
 			for (int i = 0; i < partial.size(); i++)
 			{
@@ -98,7 +102,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 			return result;
 			
 		} else {
-			return getBackground(data, percent);
+			return getBackground(data, percent.getValue());
 		}
 		
 	}
@@ -106,7 +110,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	@Override
 	protected final Spectrum filterApplyTo(Spectrum data, boolean cache)
 	{
-		if (!getParameter(PREVIEW).boolValue() == true) {
+		if (!preview.getValue() == true) {
 
 			Spectrum background = getBackground(data);
 			return SpectrumCalculations.subtractLists(data, background);
@@ -119,7 +123,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	@Override
 	public final PlotPainter getPainter()
 	{
-		if (!getParameter(PREVIEW).boolValue() == true) return null;
+		if (!preview.getValue() == true) return null;
 
 		return new SpectrumPainter(getBackground(previewCache)) {
 

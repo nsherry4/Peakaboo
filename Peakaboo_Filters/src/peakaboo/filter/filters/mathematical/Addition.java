@@ -1,8 +1,8 @@
 package peakaboo.filter.filters.mathematical;
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.DoubleEditor;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -11,18 +11,18 @@ import scitypes.SpectrumCalculations;
 public class Addition extends AbstractSimpleFilter
 {
 
-	private int AMOUNT;
+	private Parameter<Double> amount;
 
 	@Override
 	public void initialize()
 	{
-		AMOUNT = addParameter(new Parameter("Amount to Add", ValueType.REAL, 1.0));
+		amount = new Parameter<>("Amount to Add", new DoubleEditor(), 1.0);
 	}
 	
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data)
 	{
-		return SpectrumCalculations.subtractFromList(data, 0.0f-getParameter(AMOUNT).realValue());
+		return SpectrumCalculations.subtractFromList(data, 0.0f-amount.getValue().floatValue());
 	}
 
 

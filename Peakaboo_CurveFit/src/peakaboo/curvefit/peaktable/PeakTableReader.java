@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
+import peakaboo.curvefit.model.transition.Transition;
+import peakaboo.curvefit.model.transition.TransitionType;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
+
 
 
 

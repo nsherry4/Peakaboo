@@ -1,6 +1,6 @@
 package peakaboo.controller.plotter.settings;
 
-import peakaboo.curvefit.fitting.EscapePeakType;
+import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import eventful.IEventful;
 import fava.datatypes.Pair;
 

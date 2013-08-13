@@ -21,9 +21,8 @@ import javax.swing.table.TableColumn;
 
 import fava.functionable.FArray;
 import fava.signatures.FnMap;
-
-import peakaboo.controller.plotter.fitting.IFittingController;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;

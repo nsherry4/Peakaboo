@@ -14,18 +14,16 @@ import java.util.List;
 import javax.swing.Scrollable;
 
 import commonenvironment.Env;
-
 import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
 import fava.functionable.FArray;
 import fava.signatures.FnEach;
 import fava.signatures.FnMap;
-
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.painters.FittingMarkersPainter;
-import peakaboo.curvefit.painters.FittingPainter;
-import peakaboo.curvefit.painters.FittingSumPainter;
-import peakaboo.curvefit.painters.FittingTitlePainter;
+import peakaboo.curvefit.view.FittingMarkersPainter;
+import peakaboo.curvefit.view.FittingPainter;
+import peakaboo.curvefit.view.FittingSumPainter;
+import peakaboo.curvefit.view.FittingTitlePainter;
 import peakaboo.filter.AbstractFilter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;

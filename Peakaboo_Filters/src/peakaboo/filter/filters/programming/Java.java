@@ -1,11 +1,10 @@
 package peakaboo.filter.filters.programming;
 
 
+import autodialog.model.Parameter;
 import bolt.compiler.BoltJavaMap;
-
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
+import peakaboo.filter.editors.CodeEditor;
 import scitypes.Spectrum;
 
 
@@ -13,8 +12,8 @@ public class Java extends AbstractSimpleFilter {
 
 	BoltJavaMap<float[], float[]> boltJavaMap;
 	
-	private int CODE;
-	
+	private Parameter<String> code;
+	private CodeEditor editor;
 	
 	private static final String defaultBoltFunction = "" + 
 		"return JavaFilter.filter(spectrumIn);";
@@ -34,9 +33,8 @@ public class Java extends AbstractSimpleFilter {
 	@Override
 	public void initialize() {
 		
-		Parameter code = new Parameter("Java Code", ValueType.CODE, defaultCode);
-		code.setProperty("Language", "java");
-		CODE = addParameter(code);
+		Parameter<String> code = new Parameter<>("Java Code", new CodeEditor("java"), defaultCode);
+		addParameter(code);
 	}
 	
 	@Override
@@ -51,12 +49,12 @@ public class Java extends AbstractSimpleFilter {
 		try {
 			boltJavaMap.setFunctionText(defaultBoltFunction);
 			boltJavaMap.setOtherText("");
-			boltJavaMap.setIncludeText(getParameter(CODE).codeValue());
+			boltJavaMap.setIncludeText(code.getValue());
 			
 			boltJavaMap.f(new float[]{1, 2, 3, 4});
 			return true;
 		} catch (Exception e) {
-			getParameter(CODE).setProperty("ErrorMessage", e.getMessage());
+			editor.errorMessage = e.getMessage();
 			return false;
 		}
 		

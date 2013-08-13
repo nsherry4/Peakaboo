@@ -7,10 +7,10 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.peaktable.TransitionSeries;
-import peakaboo.curvefit.peaktable.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import scitypes.SigDigits;
 

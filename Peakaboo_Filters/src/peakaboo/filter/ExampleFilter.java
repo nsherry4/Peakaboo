@@ -1,7 +1,8 @@
 package peakaboo.filter;
 
 
-import peakaboo.filter.Parameter.ValueType;
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -9,8 +10,7 @@ import scitypes.Spectrum;
 
 public class ExampleFilter extends AbstractFilter {
 
-	//integer index for parameters
-	private int PARAM1;
+	Parameter<Integer> param;
 	
 	public ExampleFilter() {
 		super();
@@ -20,7 +20,8 @@ public class ExampleFilter extends AbstractFilter {
 	@Override
 	public void initialize()
 	{
-		PARAM1 = addParameter(new Parameter("Example Parameter", ValueType.INTEGER, 1));
+		param = new Parameter<>("Example Parameter", new IntegerEditor(), 1);
+		addParameter(param);
 	}
 	
 	@Override
@@ -69,7 +70,7 @@ public class ExampleFilter extends AbstractFilter {
 
 	@Override
 	public boolean validateParameters() {
-		return (getParameter(PARAM1).intValue() > 0);
+		return (param.getValue() > 0);
 	}
 
 	@Override

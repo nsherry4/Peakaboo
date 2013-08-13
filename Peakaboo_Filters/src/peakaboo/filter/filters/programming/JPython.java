@@ -1,18 +1,19 @@
 package peakaboo.filter.filters.programming;
 
 
+import autodialog.model.Parameter;
 import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.PythonLanguage;
 import peakaboo.filter.AbstractSimpleFilter;
-import peakaboo.filter.Parameter;
-import peakaboo.filter.Parameter.ValueType;
+import peakaboo.filter.editors.CodeEditor;
 import scitypes.Spectrum;
 
 
 public class JPython extends AbstractSimpleFilter {
 
-	private int CODE;
+	Parameter<String> code;
+	private CodeEditor editor;	
 	private boolean pythonSupported = true;
 	
 	private static final String header = "" + 
@@ -45,9 +46,9 @@ public class JPython extends AbstractSimpleFilter {
 	@Override
 	public void initialize() 
 	{
-		Parameter code = new Parameter("JPython Code", ValueType.CODE, header + "spectrumOut = spectrumIn");
-		code.setProperty("Language", "python");
-		CODE = addParameter(code);
+		editor = new CodeEditor("python");
+		code = new Parameter<>("JPython Code", editor, header + "spectrumOut = spectrumIn");
+		addParameter(code);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class JPython extends AbstractSimpleFilter {
 				throw new BoltScriptExecutionException("Type mismatch for spectrumOut");
 			}
 		} catch (Exception e) {
-			getParameter(CODE).setProperty("ErrorMessage", e.getMessage());
+			editor.errorMessage = e.getMessage();
 			return false;
 		}
 		
@@ -95,7 +96,7 @@ public class JPython extends AbstractSimpleFilter {
 
 	private String getCode()
 	{
-		return getParameter(CODE).codeValue();
+		return code.getValue();
 	}
 	
 	@Override

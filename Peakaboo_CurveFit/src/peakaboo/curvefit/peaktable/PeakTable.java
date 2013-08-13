@@ -7,7 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Collections;
 
-
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import fava.*;
 import fava.datatypes.Pair;
 import fava.functionable.FList;

@@ -24,7 +24,7 @@ import fava.signatures.FnMap;
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.curvefit.peaktable.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import scitypes.Coord;
 import scitypes.GridPerspective;

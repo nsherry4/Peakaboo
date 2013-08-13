@@ -556,6 +556,7 @@ public class CDFMLSaxDSP extends AbstractDSP
 				lineCount++;
 			}
 			
+			reader.close();
 			return start.toLowerCase().contains("http://cdf.gsfc.nasa.gov");
 		}
 		catch (Exception e){}
