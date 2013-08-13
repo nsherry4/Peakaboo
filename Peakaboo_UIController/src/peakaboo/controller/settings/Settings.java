@@ -11,7 +11,7 @@ import fava.Fn;
 import fava.Functions;
 import fava.functionable.FStringInput;
 import fava.signatures.FnMap;
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.model.FittingModel;
@@ -40,7 +40,7 @@ public class Settings
 	 *            name of the preferences file
 	 */
 	public static void loadPreferences(
-			PlotController plotController,
+			IPlotController plotController,
 			IDataController dataController,
 			final SettingsModel settings,
 			final FittingModel fittings,
@@ -82,13 +82,13 @@ public class Settings
 		
 		
 		// read in the drawing request
-		plotController.dr = data.drawingRequest;
+		plotController.setDR(data.drawingRequest);
 		settings.copy( data.settings );
 		
 		
 		if (dataController.hasDataSet()) {
-			fittings.selections.setDataParameters(dataController.channelsPerScan(), plotController.dr.unitSize, settings.escape);
-			fittings.proposals.setDataParameters(dataController.channelsPerScan(), plotController.dr.unitSize, settings.escape);
+			fittings.selections.setDataParameters(dataController.channelsPerScan(), plotController.getDR().unitSize, settings.escape);
+			fittings.proposals.setDataParameters(dataController.channelsPerScan(), plotController.getDR().unitSize, settings.escape);
 		}
 
 
@@ -105,7 +105,7 @@ public class Settings
 	 *            name of the preferences file
 	 */
 	public static void savePreferences(
-			final PlotController plotController,
+			final IPlotController plotController,
 			final SettingsModel settings,
 			final FittingModel fittings,
 			final FilteringModel filters,
@@ -132,10 +132,10 @@ public class Settings
 		
 		
 		//other structs
-		data.drawingRequest = plotController.dr;
+		data.drawingRequest = plotController.getDR();
 		data.settings = settings;
 
-		data.badScans = plotController.dataController.getDiscardedScanList();
+		data.badScans = plotController.data().getDiscardedScanList();
 
 		//try writing the serialized data
 		try

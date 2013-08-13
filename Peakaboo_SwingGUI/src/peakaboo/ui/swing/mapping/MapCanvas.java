@@ -53,11 +53,11 @@ public class MapCanvas extends GraphicsPanel
 
 	MappingController 		controller;
 	MapTabController		tabController;
-	DrawingRequest 		dr;
+	DrawingRequest 		    dr;
 	
+	private MapDrawing		map;
 	private SpectrumMapPainter contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue;
-	private MapDrawing	map;
-	
+
 	private static final int	SPECTRUM_HEIGHT = 15;
 	
 	public MapCanvas(MappingController controller, MapTabController tabController)

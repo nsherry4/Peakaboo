@@ -5,7 +5,7 @@ package peakaboo.controller.plotter.undo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import eventful.Eventful;
 import fava.datatypes.Pair;
 
@@ -14,11 +14,11 @@ import fava.datatypes.Pair;
 public class UndoController extends Eventful implements IUndoController
 {
 
-	PlotController	plot;
+	IPlotController	plot;
 	UndoModel		undoModel;
 
 
-	public UndoController(PlotController plotController)
+	public UndoController(IPlotController plotController)
 	{
 		this.plot = plotController;
 		undoModel = new UndoModel();
@@ -113,9 +113,9 @@ public class UndoController extends Eventful implements IUndoController
 		plot.loadPreferences(new ByteArrayInputStream(undoModel.undoStack.peek().second.toByteArray()), true);
 
 		updateListeners();
-		plot.settingsController.updateListeners();
-		plot.filteringController.updateListeners();
-		plot.fittingController.updateListeners(true);
+		plot.settings().updateListeners();
+		plot.filtering().updateListeners();
+		plot.fitting().updateListeners(true);
 
 	}
 

@@ -9,7 +9,7 @@ import eventful.EventfulTypeListener;
 
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.maptab.MapTabController;
-import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.datasource.DataSource;
 
 import scitypes.Coord;
@@ -29,10 +29,10 @@ public class MappingController extends EventfulType<String>
 	
 	private EventfulTypeListener<String> controllerListener;
 	
-	private PlotController		plotcontroller;
+	private IPlotController		plotcontroller;
 	
 	
-	public MappingController(PlotController plotcontroller)
+	public MappingController(IPlotController plotcontroller)
 	{
 		
 		mapsController = new MapSetController();
@@ -47,7 +47,7 @@ public class MappingController extends EventfulType<String>
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(MappingController copy, PlotController plotcontroller)
+	public MappingController(MappingController copy, IPlotController plotcontroller)
 	{
 		mapsController = new MapSetController(copy.mapsController);
 		
@@ -56,7 +56,7 @@ public class MappingController extends EventfulType<String>
 	}
 	
 	
-	private void initialize(PlotController plotcontroller)
+	private void initialize(IPlotController plotcontroller)
 	{
 		tabController = null;
 		
@@ -96,7 +96,7 @@ public class MappingController extends EventfulType<String>
 
 	public DataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return plotcontroller.dataController.getDataSourceForSubset(mapsController.getDataWidth(), mapsController.getDataHeight(), cstart, cend);
+		return plotcontroller.data().getDataSourceForSubset(mapsController.getDataWidth(), mapsController.getDataHeight(), cstart, cend);
 	}
 	
 	public InputStream getSerializedPlotSettings()
