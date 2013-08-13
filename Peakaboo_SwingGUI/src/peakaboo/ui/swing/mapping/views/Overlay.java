@@ -224,8 +224,8 @@ public class Overlay extends JPanel {
 		
 
 				
-		ComboTableCellRenderer renderer = new ComboTableCellRenderer();
-		JComboBox comboBox = new JComboBox(OverlayColour.values());
+		ComboTableCellRenderer<OverlayColour> renderer = new ComboTableCellRenderer<>();
+		JComboBox<OverlayColour> comboBox = new JComboBox<>(OverlayColour.values());
 		comboBox.setRenderer(renderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
 		

@@ -70,13 +70,12 @@ public class CSV extends AbstractDSP
 	@Override
 	public void read(String filename) throws Exception
 	{
-		Scanner s = null;
-		this.filename = filename;
+				this.filename = filename;
 				
-		try {
+		try (Scanner s = new Scanner(new File(filename))){
 			
-			//create a scanner to read lines from the given file
-			s = new Scanner(new File(filename)).useDelimiter("\n");
+			s.useDelimiter("\n");
+			
 			String line;
 			String[] numbers; 
 			Spectrum spectrum;
@@ -112,10 +111,7 @@ public class CSV extends AbstractDSP
 			//rethrow the exception after the finally block closes the scanner
 			throw e;
 		}
-		finally
-		{
-			if (s != null) s.close();
-		}
+
 		
 	}
 

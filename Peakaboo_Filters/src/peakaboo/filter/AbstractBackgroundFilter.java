@@ -26,9 +26,6 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	public AbstractBackgroundFilter()
 	{
 		
-		
-		String g1 = "Subset Filtering";
-		
 		percent = new Parameter<>("Percent to Remove", new IntegerEditor(), 90);
 		preview = new Parameter<>("Preview Only", new BooleanEditor(), Boolean.FALSE);
 		
