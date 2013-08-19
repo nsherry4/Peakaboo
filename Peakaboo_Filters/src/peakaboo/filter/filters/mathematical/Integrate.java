@@ -2,7 +2,7 @@ package peakaboo.filter.filters.mathematical;
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.filter.AbstractSimpleFilter;
+import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 

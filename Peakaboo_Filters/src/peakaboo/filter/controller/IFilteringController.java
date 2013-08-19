@@ -3,7 +3,7 @@ package peakaboo.filter.controller;
 import java.util.List;
 
 import eventful.IEventful;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
 import scitypes.Spectrum;

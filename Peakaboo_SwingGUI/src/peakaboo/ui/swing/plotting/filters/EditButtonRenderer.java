@@ -7,8 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import peakaboo.filter.AbstractFilter;
-
+import peakaboo.filter.model.AbstractFilter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;

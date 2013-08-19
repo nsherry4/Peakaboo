@@ -27,12 +27,11 @@ import peakaboo.filter.filters.noise.SpringSmoothing;
 import peakaboo.filter.filters.noise.WaveletNoiseFilter;
 import peakaboo.filter.filters.programming.JPython;
 import peakaboo.filter.filters.programming.Java;
+import peakaboo.filter.model.AbstractFilter;
 import bolt.plugin.BoltPluginLoader;
 import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
-
 import commonenvironment.Env;
-
 import fava.functionable.FList;
 
 public class FilterLoader

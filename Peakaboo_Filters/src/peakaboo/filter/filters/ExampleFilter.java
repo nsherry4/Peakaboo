@@ -1,6 +1,7 @@
-package peakaboo.filter;
+package peakaboo.filter.filters;
 
 
+import peakaboo.filter.model.AbstractFilter;
 import autodialog.model.Parameter;
 import autodialog.view.editors.IntegerEditor;
 import scidraw.drawing.painters.PainterData;

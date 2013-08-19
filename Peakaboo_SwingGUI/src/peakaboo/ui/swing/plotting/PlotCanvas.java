@@ -24,7 +24,7 @@ import peakaboo.curvefit.view.FittingMarkersPainter;
 import peakaboo.curvefit.view.FittingPainter;
 import peakaboo.curvefit.view.FittingSumPainter;
 import peakaboo.curvefit.view.FittingTitlePainter;
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.model.AbstractFilter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;

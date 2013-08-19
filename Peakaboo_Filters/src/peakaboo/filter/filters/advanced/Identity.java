@@ -1,6 +1,6 @@
 package peakaboo.filter.filters.advanced;
 
-import peakaboo.filter.AbstractSimpleFilter;
+import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 public class Identity extends AbstractSimpleFilter

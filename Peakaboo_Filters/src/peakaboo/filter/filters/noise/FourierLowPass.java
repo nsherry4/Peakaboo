@@ -7,7 +7,7 @@ import autodialog.view.editors.IntegerEditor;
 import autodialog.view.editors.ListEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
-import peakaboo.filter.AbstractSimpleFilter;
+import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 /**

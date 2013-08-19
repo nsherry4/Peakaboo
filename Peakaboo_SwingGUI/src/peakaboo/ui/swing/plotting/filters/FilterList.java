@@ -16,8 +16,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import eventful.EventfulListener;
-import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.controller.IFilteringController;
+import peakaboo.filter.model.AbstractFilter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;

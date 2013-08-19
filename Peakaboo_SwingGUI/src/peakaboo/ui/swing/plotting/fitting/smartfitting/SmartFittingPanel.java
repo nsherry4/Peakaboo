@@ -41,7 +41,7 @@ public class SmartFittingPanel extends JPanel
 		this.controller = controller;
 		this.canvas = canvas;
 
-		potentials =new ArrayList<TransitionSeries>();
+		potentials = new ArrayList<TransitionSeries>();
 
 		selControls = new SelectionListControls("Fittings") {
 

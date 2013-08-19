@@ -1,7 +1,8 @@
-package peakaboo.filter;
+package peakaboo.filter.filters;
 
 import javax.swing.JSeparator;
 
+import peakaboo.filter.model.AbstractFilter;
 import autodialog.model.Parameter;
 import autodialog.view.editors.BooleanEditor;
 import autodialog.view.editors.DummyEditor;

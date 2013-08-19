@@ -1,4 +1,4 @@
-package peakaboo.filter;
+package peakaboo.filter.model;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -83,7 +83,7 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		}
 	}
 	
-	private Map<Integer, Parameter<?>>			parameters;
+	private Map<Integer, Parameter<?>>		parameters;
 	public boolean							enabled;
 	
 	protected Spectrum	previewCache;

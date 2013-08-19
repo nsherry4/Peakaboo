@@ -4,7 +4,7 @@ package peakaboo.filter.filters.noise;
 import autodialog.model.Parameter;
 import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Noise;
-import peakaboo.filter.AbstractSimpleFilter;
+import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 /**

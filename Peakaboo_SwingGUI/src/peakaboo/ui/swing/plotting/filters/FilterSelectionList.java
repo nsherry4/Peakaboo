@@ -12,9 +12,9 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import peakaboo.filter.AbstractFilter;
-import peakaboo.filter.AbstractFilter.FilterType;
 import peakaboo.filter.controller.IFilteringController;
+import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.AbstractFilter.FilterType;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

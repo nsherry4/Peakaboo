@@ -15,11 +15,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
+import autodialog.model.Parameter;
 import autodialog.view.AutoDialog;
 import autodialog.view.AutoDialog.AutoDialogButtons;
-import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.editors.FilterDialogController;
+import peakaboo.filter.model.AbstractFilter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -101,16 +102,16 @@ public class EditButtonEditor extends DefaultCellEditor
 	{
 		if (isPushed)
 		{
-			AutoDialog dialog;
-			
+			FilterDialog dialog;
+
 			if (!settingsDialogs.containsKey(filter)) {
+				
 				if (owner instanceof Window) {
-					dialog = new AutoDialog(new FilterDialogController(filter, controller), AutoDialogButtons.CLOSE, (Window)owner);	
+					dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, (Window)owner);	
 				} else {
-					dialog = new AutoDialog(new FilterDialogController(filter, controller), AutoDialogButtons.CLOSE);
+					dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, null);
 				}
 				
-				dialog.setTitle(filter.getFilterName());
 				settingsDialogs.put(filter, dialog);
 				dialog.initialize();
 			} else {

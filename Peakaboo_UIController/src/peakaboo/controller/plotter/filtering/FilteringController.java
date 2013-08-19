@@ -6,8 +6,8 @@ import java.util.List;
 
 import eventful.Eventful;
 import peakaboo.controller.plotter.IPlotController;
-import peakaboo.filter.AbstractFilter;
 import peakaboo.filter.controller.IFilteringController;
+import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
 import scitypes.Spectrum;

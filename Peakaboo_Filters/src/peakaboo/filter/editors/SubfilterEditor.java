@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-import peakaboo.filter.AbstractFilter;
+import peakaboo.filter.model.AbstractFilter;
 import swidget.widgets.Spacing;
 import autodialog.model.Parameter;
 import autodialog.view.AutoPanel;
@@ -109,16 +109,14 @@ public class SubfilterEditor extends Eventful implements IEditor<AbstractFilter>
 		
 		
 		//subfilterView = new SingleFilterView(subfilter, controller, false);
-		FilterDialogController filerDialogController = new FilterDialogController(f, new IFilterChangeListener() {
-			
+		FilterDialogController filerDialogController = new FilterDialogController(f){
+
 			@Override
-			public void change() {
+			public void parameterUpdated(Parameter<?> param) {
 				SubfilterEditor.this.updateListeners();
-			}
-		});
-		subfilterView = AutoPanel.panel(filerDialogController);
-		
-		
+			}};
+		subfilterView = new AutoPanel(filerDialogController.getParameters());
+	
 		
 		JScrollPane scroller = new JScrollPane(subfilterView);
 		scroller.setBorder(Spacing.bNone());
