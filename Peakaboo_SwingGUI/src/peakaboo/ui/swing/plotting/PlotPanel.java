@@ -10,14 +10,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,7 +51,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
@@ -102,6 +99,7 @@ import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DropdownImageButton;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -334,103 +332,7 @@ public class PlotPanel extends ClearPanel
 		
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		
-		class MouseHandler implements MouseMotionListener, MouseListener
-		{
-
-			private Point	p0;
-			private boolean	dragging;
-
-			JViewport		viewPort		= scrolledCanvas.getViewport();
-			Point			scrollPosition	= viewPort.getViewPosition();
-
-			Cursor oldCursor;
-
-			private Point getPoint(MouseEvent e)
-			{
-				Point p = e.getPoint();
-				p.x += canvas.getLocationOnScreen().x;
-
-				return p;
-			}
-
-
-			private void update(MouseEvent e)
-			{
-
-				if (p0 == null) return;
-				
-				Point p1 = getPoint(e);
-				int dx = p1.x - p0.x;
-				p0 = getPoint(e);
-				scrollPosition.x -= dx;
-
-				if (scrollPosition.x < 0) scrollPosition.x = 0;
-				if (scrollPosition.x > canvas.getWidth() - viewPort.getWidth()) scrollPosition.x = canvas.getWidth()
-						- viewPort.getWidth();
-
-				viewPort.setViewPosition(scrollPosition);
-
-			}
-
-
-			public void mouseDragged(MouseEvent e)
-			{
-				if (dragging)
-				{
-					update(e);
-				}
-			}
-
-
-			public void mouseMoved(MouseEvent e)
-			{
-				if (dragging)
-				{
-					update(e);
-				}
-			}
-
-
-			public void mouseClicked(MouseEvent e){}
-
-
-			public void mouseEntered(MouseEvent e){}
-
-
-			public void mouseExited(MouseEvent e){}
-
-
-			public void mousePressed(MouseEvent e)
-			{
-				if (e.getButton() != MouseEvent.BUTTON1) return;
-				if (dragging) return;
-				
-				p0 = getPoint(e);
-				scrollPosition = viewPort.getViewPosition();
-				dragging = true;
-				oldCursor = canvas.getCursor();
-				canvas.setCursor(new Cursor(Cursor.MOVE_CURSOR));
-			}
-
-
-			public void mouseReleased(MouseEvent e)
-			{
-				
-				if (e.getButton() != MouseEvent.BUTTON1) return;
-				
-				update(e);
-				dragging = false;
-				p0 = null;
-				canvas.setCursor(oldCursor);
-			}
-
-		}
-		MouseHandler mh = new MouseHandler();
-
-		canvas.addMouseMotionListener(mh);
-		canvas.addMouseListener(mh);
-
+		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas);
 
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);

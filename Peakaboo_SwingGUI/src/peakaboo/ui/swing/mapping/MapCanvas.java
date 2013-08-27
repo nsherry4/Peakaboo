@@ -78,15 +78,24 @@ public class MapCanvas extends GraphicsPanel
 	@Override
 	public float getUsedHeight()
 	{
-		return map.calcTotalSize().y;
+		return getUsedHeight(1f);
 	}
 
 	@Override
 	public float getUsedWidth()
 	{
-		return map.calcTotalSize().x;
+		return getUsedWidth(1f);
 	}
 
+	@Override
+	public float getUsedWidth(float zoom) {
+		return map.calcTotalSize().x * zoom;
+	}
+
+	@Override
+	public float getUsedHeight(float zoom) {
+		return map.calcTotalSize().y * zoom;
+	}
 	
 	
 	
@@ -680,5 +689,7 @@ public class MapCanvas extends GraphicsPanel
 		if (overlayMapPainterGreen != null)	overlayMapPainterGreen.clearBuffer();
 		if (overlayMapPainterRed != null) 	overlayMapPainterRed.clearBuffer();
 	}
+
+
 	
 }
