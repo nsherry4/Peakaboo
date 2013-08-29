@@ -1,12 +1,12 @@
 package peakaboo.filter.filters.noise;
 
 
-import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
-import autodialog.view.editors.DoubleEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
+import autodialog.model.Parameter;
+import autodialog.view.editors.DoubleEditor;
+import autodialog.view.editors.IntegerEditor;
 
 /**
  * 

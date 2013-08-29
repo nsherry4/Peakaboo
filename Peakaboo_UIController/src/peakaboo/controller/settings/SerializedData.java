@@ -5,8 +5,8 @@ package peakaboo.controller.settings;
 import java.util.List;
 
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.Yaml;
 
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.filter.model.AbstractFilter;

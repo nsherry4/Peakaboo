@@ -11,12 +11,11 @@ import peakaboo.datasource.plugin.plugins.CDFMLSaxDSP;
 import peakaboo.datasource.plugin.plugins.MCA_DSP;
 import peakaboo.datasource.plugin.plugins.PlainTextDSP;
 import peakaboo.datasource.plugin.plugins.ScienceStudioDSP;
-
-import commonenvironment.Env;
-
 import bolt.plugin.BoltPluginLoader;
 import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
+
+import commonenvironment.Env;
 
 public class DSPLoader
 {

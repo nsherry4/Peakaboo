@@ -19,8 +19,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
-import fava.functionable.FArray;
-import fava.signatures.FnMap;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
@@ -32,6 +30,8 @@ import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControlButton;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ListControls.ElementCount;
+import fava.functionable.FArray;
+import fava.signatures.FnMap;
 
 
 

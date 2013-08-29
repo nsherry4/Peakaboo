@@ -2,15 +2,15 @@ package peakaboo.filter.filters.advanced;
 
 import java.util.List;
 
-import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
-import fava.signatures.FnCondition;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.editors.SubfilterEditor;
 import peakaboo.filter.model.AbstractFilter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
+import fava.signatures.FnCondition;
 
 public class FilterPartialSpectrum extends AbstractFilter
 {

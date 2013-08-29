@@ -13,8 +13,8 @@ import peakaboo.datasource.plugin.plugins.sciencestudio.ConverterFactoryDelegati
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
-import ca.sciencestudio.data.daf.DAFRecord;
 import ca.sciencestudio.data.daf.DAFDataParser;
+import ca.sciencestudio.data.daf.DAFRecord;
 import ca.sciencestudio.data.daf.DAFSpectrumParser;
 import ca.sciencestudio.data.standard.StdConverter;
 import ca.sciencestudio.data.standard.StdUnits;

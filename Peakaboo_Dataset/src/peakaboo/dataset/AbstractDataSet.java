@@ -5,8 +5,8 @@ package peakaboo.dataset;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.interfaces.DSMetadata;
 import peakaboo.datasource.interfaces.DSDimensions;
+import peakaboo.datasource.interfaces.DSMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;

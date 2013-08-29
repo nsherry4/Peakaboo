@@ -1,12 +1,11 @@
 package peakaboo.controller.mapper.mapset;
 
 
-import fava.functionable.FList;
-
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
+import fava.functionable.FList;
 
 
 

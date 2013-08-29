@@ -6,16 +6,16 @@ import eventful.IEventful;
 public interface IUndoController extends IEventful
 {
 
-	public void undo();
-	public void redo();
+	void undo();
+	void redo();
 	
-	public boolean canUndo();
-	public boolean canRedo();
+	boolean canUndo();
+	boolean canRedo();
 
-	public String getNextUndo();
-	public String getNextRedo();
+	String getNextUndo();
+	String getNextRedo();
 	
-	public void setUndoPoint(String s);
-	public void clearUndos();
+	void setUndoPoint(String s);
+	void clearUndos();
 	
 }

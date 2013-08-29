@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;

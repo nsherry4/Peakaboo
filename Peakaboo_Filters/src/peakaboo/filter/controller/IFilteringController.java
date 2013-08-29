@@ -2,39 +2,39 @@ package peakaboo.filter.controller;
 
 import java.util.List;
 
-import eventful.IEventful;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
 import scitypes.Spectrum;
+import eventful.IEventful;
 
 
 public interface IFilteringController extends IEventful
 {
 
-	public List<String> getAvailableFiltersByName();
-	public int getFilterCount();
-	public boolean filterSetContains(AbstractFilter f);
-	public int filterIndex(AbstractFilter f);
-	public List<AbstractFilter> getAvailableFilters();
+	List<String> getAvailableFiltersByName();
+	int getFilterCount();
+	boolean filterSetContains(AbstractFilter f);
+	int filterIndex(AbstractFilter f);
+	List<AbstractFilter> getAvailableFilters();
 	
-	public void addFilter(String name);
-	public void addFilter(AbstractFilter f);
-	public void clearFilters();
-	public void moveFilterDown(int index);
-	public void moveFilterUp(int index);
-	public void removeFilter(int index);
+	void addFilter(String name);
+	void addFilter(AbstractFilter f);
+	void clearFilters();
+	void moveFilterDown(int index);
+	void moveFilterUp(int index);
+	void removeFilter(int index);
 	
-	public boolean getFilterEnabled(int index);
-	public void setFilterEnabled(int index, boolean enabled);
+	boolean getFilterEnabled(int index);
+	void setFilterEnabled(int index, boolean enabled);
 
-	public void filteredDataInvalidated();
-	public void calculateFilteredData(Spectrum data);
+	void filteredDataInvalidated();
+	void calculateFilteredData(Spectrum data);
 	
-	public AbstractFilter getActiveFilter(int index);
-	public FilterSet getActiveFilters();
+	AbstractFilter getActiveFilter(int index);
+	FilterSet getActiveFilters();
 	
-	public Spectrum getFilteredPlot();
+	Spectrum getFilteredPlot();
 	FilteringModel getFilteringMode();
 
 

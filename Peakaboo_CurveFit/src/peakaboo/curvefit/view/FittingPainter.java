@@ -6,6 +6,7 @@ import java.awt.Color;
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
 import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;
 
 

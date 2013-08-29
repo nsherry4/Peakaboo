@@ -5,6 +5,7 @@ import java.awt.Color;
 
 import peakaboo.curvefit.model.FittingResult;
 import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 

@@ -3,9 +3,8 @@ package peakaboo.common;
 
 import java.util.List;
 
-import fava.functionable.FList;
-
 import scitypes.Spectrum;
+import fava.functionable.FList;
 
 
 /**

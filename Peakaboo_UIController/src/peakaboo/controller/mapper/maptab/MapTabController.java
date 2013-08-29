@@ -1,7 +1,11 @@
 package peakaboo.controller.mapper.maptab;
 
-import static fava.Fn.*;
-import static fava.Functions.*;
+import static fava.Fn.filter;
+import static fava.Fn.fold;
+import static fava.Fn.foldl;
+import static fava.Fn.map;
+import static fava.Fn.unique;
+import static fava.Functions.strcat;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,13 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import eventful.EventfulType;
-import fava.Functions;
-import fava.datatypes.Pair;
-import fava.functionable.FList;
-import fava.signatures.FnCondition;
-import fava.signatures.FnFold;
-import fava.signatures.FnMap;
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
@@ -32,6 +29,13 @@ import scitypes.Ratios;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import eventful.EventfulType;
+import fava.Functions;
+import fava.datatypes.Pair;
+import fava.functionable.FList;
+import fava.signatures.FnCondition;
+import fava.signatures.FnFold;
+import fava.signatures.FnMap;
 
 
 public class MapTabController extends EventfulType<String> implements IMapTabController

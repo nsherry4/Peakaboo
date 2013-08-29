@@ -3,13 +3,13 @@ package peakaboo.curvefit.peaktable;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Collections;
 
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
-import fava.*;
+import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.signatures.FnCondition;

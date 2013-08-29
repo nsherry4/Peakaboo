@@ -2,6 +2,20 @@ package peakaboo.curvefit.model.transitionseries;
 
 
 
+import static fava.Fn.all;
+import static fava.Fn.concat;
+import static fava.Fn.concatMap;
+import static fava.Fn.each;
+import static fava.Fn.filter;
+import static fava.Fn.foldr;
+import static fava.Fn.group;
+import static fava.Fn.map;
+import static fava.Fn.zipEquiv;
+import static fava.Fn.zipWith;
+import static fava.Functions.addd;
+import static fava.Functions.notEquiv;
+import static fava.Functions.strcat;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,15 +25,13 @@ import java.util.List;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.peaktable.Element;
-import fava.*;
+import fava.Functions;
 import fava.functionable.FList;
 import fava.signatures.FnCombine;
 import fava.signatures.FnCondition;
-import fava.signatures.FnFold;
 import fava.signatures.FnEach;
+import fava.signatures.FnFold;
 import fava.signatures.FnMap;
-import static fava.Fn.*;
-import static fava.Functions.*;
 
 
 
@@ -544,10 +556,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		if (!(oother instanceof TransitionSeries)) return false;
 		TransitionSeries other = (TransitionSeries) oother;
 		
-		if (type != TransitionSeriesType.COMPOSITE)
-		{
-			if (other.element != this.element) return false;
-		}
+		if (type != TransitionSeriesType.COMPOSITE && other.element != this.element) return false;
 		
 		if (other.type != this.type) return false;	
 		if (other.mode != this.mode) return false;

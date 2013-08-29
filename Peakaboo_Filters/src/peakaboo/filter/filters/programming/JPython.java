@@ -1,13 +1,13 @@
 package peakaboo.filter.filters.programming;
 
 
+import peakaboo.filter.editors.CodeEditor;
+import peakaboo.filter.filters.AbstractSimpleFilter;
+import scitypes.Spectrum;
 import autodialog.model.Parameter;
 import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.PythonLanguage;
-import peakaboo.filter.editors.CodeEditor;
-import peakaboo.filter.filters.AbstractSimpleFilter;
-import scitypes.Spectrum;
 
 
 public class JPython extends AbstractSimpleFilter {

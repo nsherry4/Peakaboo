@@ -18,11 +18,10 @@ import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
 import scitypes.Spectrum;
-
 import fava.Functions;
 import fava.datatypes.Pair;
-import fava.functionable.Range;
 import fava.functionable.FList;
+import fava.functionable.Range;
 import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 

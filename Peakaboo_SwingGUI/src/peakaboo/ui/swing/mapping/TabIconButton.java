@@ -80,15 +80,16 @@ public class TabIconButton extends Eventful implements Icon
 
 				public void mouseClicked(MouseEvent e)
 				{
+					
+					if ( !mPosition.contains( e.getX(), e.getY() ) ) return;
+					
 					// asking for isConsumed is *very* important, otherwise more than one tab might get closed!
-					if ( mPosition.contains( e.getX(), e.getY() ) )
-					{
-						if (  (! e.isConsumed()) && pressed  ) {
-							e.consume();
-							updateListeners();
-							pressed = false;
-						}
+					if (  (! e.isConsumed()) && pressed  ) {
+						e.consume();
+						updateListeners();
+						pressed = false;
 					}
+				
 				}
 				
 				public void mouseReleased( MouseEvent e )

@@ -2,6 +2,8 @@ package peakaboo.curvefit.model;
 
 
 
+import static fava.Fn.include;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,6 @@ import java.util.List;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
-import static fava.Fn.*;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -32,15 +33,6 @@ public class FittingSet implements Serializable
 	private EscapePeakType					escapeType;
 	
 	
-
-	public FittingSet(float energyPerChannel, EscapePeakType escapeType)
-	{
-		fittings = new ArrayList<TransitionSeriesFitting>();
-		fitTransitionSeries = new ArrayList<TransitionSeries>();
-
-		this.energyPerChannel = energyPerChannel;
-	}
-
 
 	public FittingSet()
 	{

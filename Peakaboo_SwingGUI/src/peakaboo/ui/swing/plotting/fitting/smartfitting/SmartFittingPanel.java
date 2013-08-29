@@ -11,7 +11,6 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fava.signatures.FnEach;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
@@ -19,6 +18,7 @@ import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
+import fava.signatures.FnEach;
 
 
 
@@ -64,7 +64,7 @@ public class SmartFittingPanel extends JPanel
 
 		this.setLayout(new BorderLayout());
 
-		smartWidget = new SmartFittingWidget(controller, canvas);
+		smartWidget = new SmartFittingWidget(controller);
 		smartWidget.setBorder(Spacing.bMedium());
 		JScrollPane scroll = new JScrollPane(smartWidget);
 		scroll.setBorder(Spacing.bNone());

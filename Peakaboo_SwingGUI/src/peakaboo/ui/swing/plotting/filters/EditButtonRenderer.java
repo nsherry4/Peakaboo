@@ -11,8 +11,8 @@ import peakaboo.filter.model.AbstractFilter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
-import swidget.widgets.Spacing;
 import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.Spacing;
 
 
 public class EditButtonRenderer implements TableCellRenderer

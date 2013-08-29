@@ -3,14 +3,12 @@ package peakaboo.datasource.internal;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-
-import fava.functionable.FList;
-import fava.functionable.Range;
-
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.Spectrum;
+import fava.functionable.FList;
+import fava.functionable.Range;
 
 
 public class CopiedDS implements DataSource

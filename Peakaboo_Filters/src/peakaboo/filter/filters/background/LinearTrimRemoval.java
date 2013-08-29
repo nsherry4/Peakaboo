@@ -2,12 +2,12 @@ package peakaboo.filter.filters.background;
 
 
 
-import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Background;
 import peakaboo.filter.filters.AbstractBackgroundFilter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 
 /**
  * 

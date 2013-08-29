@@ -6,8 +6,8 @@ import java.util.Comparator;
 
 import peakaboo.common.Version;
 import peakaboo.filter.filters.advanced.DataToWavelet;
-import peakaboo.filter.filters.advanced.Identity;
 import peakaboo.filter.filters.advanced.FilterPartialSpectrum;
+import peakaboo.filter.filters.advanced.Identity;
 import peakaboo.filter.filters.advanced.Interpolation;
 import peakaboo.filter.filters.advanced.SpectrumNormalization;
 import peakaboo.filter.filters.advanced.WaveletToData;
@@ -31,7 +31,9 @@ import peakaboo.filter.model.AbstractFilter;
 import bolt.plugin.BoltPluginLoader;
 import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
+
 import commonenvironment.Env;
+
 import fava.functionable.FList;
 
 public class FilterLoader

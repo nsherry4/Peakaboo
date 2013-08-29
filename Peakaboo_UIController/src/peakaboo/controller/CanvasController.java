@@ -4,12 +4,11 @@ package peakaboo.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import eventful.EventfulType;
-
 import scidraw.drawing.backends.DrawingSurfaceFactory;
 import scidraw.drawing.backends.SaveableSurface;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.SurfaceType;
+import eventful.EventfulType;
 
 /**
  * 

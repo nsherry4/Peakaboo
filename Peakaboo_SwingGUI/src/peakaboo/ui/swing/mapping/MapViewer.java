@@ -59,17 +59,17 @@ public class MapViewer extends JPanel
 
 
 		this.owner = owner;
-		init(owner);
+		init();
 
 	}
 
 
-	private void init(PeakabooMapperSwing owner)
+	private void init()
 	{
 
 		setLayout(new BorderLayout());
 		
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new SidePanel(controller, owner), createCanvasPanel());
+		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new SidePanel(controller), createCanvasPanel());
 		split.setResizeWeight(0);
 		split.setOneTouchExpandable(true);
 		split.setBorder(Spacing.bNone());

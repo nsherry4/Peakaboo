@@ -7,10 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import fava.Fn;
-import fava.Functions;
-import fava.functionable.FStringInput;
-import fava.signatures.FnMap;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.settings.SettingsModel;
@@ -18,6 +14,10 @@ import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.FilteringModel;
+import fava.Fn;
+import fava.Functions;
+import fava.functionable.FStringInput;
+import fava.signatures.FnMap;
 
 
 

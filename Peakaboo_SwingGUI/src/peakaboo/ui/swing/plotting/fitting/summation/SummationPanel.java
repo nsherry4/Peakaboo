@@ -7,13 +7,13 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fava.signatures.FnEach;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
+import fava.signatures.FnEach;
 
 
 

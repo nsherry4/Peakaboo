@@ -7,22 +7,22 @@ public interface DSMetadata
 	
 	
 	//SS Namespace
-	public String getCreationTime();
-	public String getCreator();
+	String getCreationTime();
+	String getCreator();
 
 	//SSModel Namespace
-	public String getProjectName();
-	public String getSessionName();
-	public String getFacilityName();
-	public String getLaboratoryName();
-	public String getExperimentName();
-	public String getInstrumentName();
-	public String getTechniqueName();
-	public String getSampleName();
-	public String getScanName();
+	String getProjectName();
+	String getSessionName();
+	String getFacilityName();
+	String getLaboratoryName();
+	String getExperimentName();
+	String getInstrumentName();
+	String getTechniqueName();
+	String getSampleName();
+	String getScanName();
 	
 	//Scan Namespace
-	public String getStartTime();
-	public String getEndTime();
+	String getStartTime();
+	String getEndTime();
 	
 }

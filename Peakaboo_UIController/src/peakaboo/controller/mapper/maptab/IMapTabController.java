@@ -19,23 +19,23 @@ import fava.datatypes.Pair;
 public interface IMapTabController
 {
 
-	public MapScaleMode getMapScaleMode();
-	public void setMapScaleMode(MapScaleMode mode);
+	MapScaleMode getMapScaleMode();
+	void setMapScaleMode(MapScaleMode mode);
 
 
-	public MapDisplayMode getMapDisplayMode();
-	public void setMapDisplayMode(MapDisplayMode mode);
+	MapDisplayMode getMapDisplayMode();
+	void setMapDisplayMode(MapDisplayMode mode);
 
 
-	public void invalidateInterpolation();
+	void invalidateInterpolation();
 
 
-	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord);
+	String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord);
 
 
-	public Spectrum getCompositeMapData();
-	public Map<OverlayColour, Spectrum> getOverlayMapData();
-	public Pair<Spectrum, Spectrum> getRatioMapData();
+	Spectrum getCompositeMapData();
+	Map<OverlayColour, Spectrum> getOverlayMapData();
+	Pair<Spectrum, Spectrum> getRatioMapData();
 
 
 	/**
@@ -43,45 +43,45 @@ public interface IMapTabController
 	 * with each coordinate on the map out to the provided outputstream
 	 * @param os outputstream to write to
 	 */
-	public void mapAsCSV(OutputStream os);
+	void mapAsCSV(OutputStream os);
 
 
-	public Coord<Integer> getDragStart();
-	public void setDragStart(Coord<Integer> dragStart);
-	public Coord<Integer> getDragEnd();
-	public void setDragEnd(Coord<Integer> dragEnd);
+	Coord<Integer> getDragStart();
+	void setDragStart(Coord<Integer> dragStart);
+	Coord<Integer> getDragEnd();
+	void setDragEnd(Coord<Integer> dragEnd);
 
 
-	public boolean hasBoundingRegion();
-	public void setHasBoundingRegion(boolean hasBoundingRegion);
+	boolean hasBoundingRegion();
+	void setHasBoundingRegion(boolean hasBoundingRegion);
 
 
-	public String mapShortTitle(List<TransitionSeries> list);
-	public String mapLongTitle(List<TransitionSeries> list);
-	public String mapShortTitle();
-	public String mapLongTitle();
+	String mapShortTitle(List<TransitionSeries> list);
+	String mapLongTitle(List<TransitionSeries> list);
+	String mapShortTitle();
+	String mapLongTitle();
 
 
-	public List<TransitionSeries> getAllTransitionSeries();
-	public List<TransitionSeries> getVisibleTransitionSeries();
-	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side);
+	List<TransitionSeries> getAllTransitionSeries();
+	List<TransitionSeries> getVisibleTransitionSeries();
+	List<TransitionSeries> getTransitionSeriesForRatioSide(final int side);
 	
-	public Spectrum sumGivenTransitionSeriesMaps(List<TransitionSeries> list);
-	public Spectrum getMapForTransitionSeries(TransitionSeries ts);
-	public Spectrum sumVisibleTransitionSeriesMaps();
-	public Spectrum sumAllTransitionSeriesMaps();
+	Spectrum sumGivenTransitionSeriesMaps(List<TransitionSeries> list);
+	Spectrum getMapForTransitionSeries(TransitionSeries ts);
+	Spectrum sumVisibleTransitionSeriesMaps();
+	Spectrum sumAllTransitionSeriesMaps();
 
 	
-	public OverlayColour getOverlayColour(TransitionSeries ts);
-	public void setOverlayColour(TransitionSeries ts, OverlayColour c);
-	public Collection<OverlayColour> getOverlayColourValues();
-	public Set<TransitionSeries> getOverlayColourKeys();
+	OverlayColour getOverlayColour(TransitionSeries ts);
+	void setOverlayColour(TransitionSeries ts, OverlayColour c);
+	Collection<OverlayColour> getOverlayColourValues();
+	Set<TransitionSeries> getOverlayColourKeys();
 	
-	public int getRatioSide(TransitionSeries ts);
-	public void setRatioSide(TransitionSeries ts, int side);
+	int getRatioSide(TransitionSeries ts);
+	void setRatioSide(TransitionSeries ts, int side);
 	
-	public boolean getTransitionSeriesVisibility(TransitionSeries ts);
-	public void setTransitionSeriesVisibility(TransitionSeries ts, boolean visible);
+	boolean getTransitionSeriesVisibility(TransitionSeries ts);
+	void setTransitionSeriesVisibility(TransitionSeries ts, boolean visible);
 
 	
 	

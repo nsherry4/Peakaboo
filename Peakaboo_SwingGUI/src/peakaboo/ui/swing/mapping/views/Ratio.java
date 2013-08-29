@@ -21,7 +21,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -30,6 +29,7 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
+import eventful.EventfulTypeListener;
 
 
 public class Ratio extends JPanel {

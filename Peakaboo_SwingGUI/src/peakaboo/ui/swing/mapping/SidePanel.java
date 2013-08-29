@@ -16,7 +16,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
 import swidget.widgets.Spacing;
 import eventful.EventfulTypeListener;
@@ -39,17 +38,17 @@ public class SidePanel extends JPanel
 	public final static boolean	SHOW_UI_FRAME_BORDERS	= true;
 
 
-	public SidePanel(MappingController controller, PeakabooMapperSwing owner)
+	public SidePanel(MappingController controller)
 	{
 
 		this.controller = controller;
 
-		createControls(owner);
+		createControls();
 
 	}
 
 
-	private void createControls(final PeakabooMapperSwing owner)
+	private void createControls()
 	{
 
 		setBorder(Spacing.bSmall());

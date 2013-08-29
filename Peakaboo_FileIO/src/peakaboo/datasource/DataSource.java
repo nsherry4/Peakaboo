@@ -2,8 +2,8 @@ package peakaboo.datasource;
 
 import java.util.List;
 
-import peakaboo.datasource.interfaces.DSMetadata;
 import peakaboo.datasource.interfaces.DSDimensions;
+import peakaboo.datasource.interfaces.DSMetadata;
 import peakaboo.datasource.interfaces.DSScanData;
 
 public interface DataSource extends DSScanData, DSDimensions, DSMetadata
@@ -13,33 +13,33 @@ public interface DataSource extends DSScanData, DSDimensions, DSMetadata
 	/**
 	 * Returns true if this data source supports metadata
 	 */
-	public boolean hasMetadata();
+	boolean hasMetadata();
 	
 	
 	/**
 	 * Returns true if this data source supports information on dimensions
 	 */
-	public boolean hasScanDimensions();
+	boolean hasScanDimensions();
 	
 	
 	/**
 	 * Returns a list of strings representing the file extensions that
 	 * this DataSource is capable of reading
 	 */
-	public abstract List<String> getFileExtensions();
+	List<String> getFileExtensions();
 	
 	
 	/**
 	 * Returns true if this DataSource can read the given file as a whole 
 	 * dataset, false otherwise.
 	 */
-	public abstract boolean canRead(String filename);
+	boolean canRead(String filename);
 
 	/**
 	 * Returns true if this DataSource can read the given files as a whole 
 	 * dataset, false otherwise
 	 */
-	public abstract boolean canRead(List<String> filenames);
+	boolean canRead(List<String> filenames);
 	
 
 	/**
@@ -48,7 +48,7 @@ public interface DataSource extends DSScanData, DSDimensions, DSMetadata
 	 * throughout the lifetime of this DataSource object.
 	 * @throws Exception
 	 */
-	public abstract void read(String filename) throws Exception;
+	void read(String filename) throws Exception;
 	
 	/**
 	 * Reads the given files as a whole dataset. This method, collectively with 
@@ -56,5 +56,5 @@ public interface DataSource extends DSScanData, DSDimensions, DSMetadata
 	 * throughout the lifetime of this DataSource object.
 	 * @throws Exception
 	 */
-	public abstract void read(List<String> filenames) throws Exception;
+	void read(List<String> filenames) throws Exception;
 }

@@ -8,11 +8,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import fava.functionable.FList;
-import fava.signatures.FnMap;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.icons.IconSize;
@@ -20,6 +17,8 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
+import fava.functionable.FList;
+import fava.signatures.FnMap;
 
 
 
@@ -31,7 +30,7 @@ class SmartFittingWidget extends TSSelectorGroup
 	private List<ImageButton> editButtons;
 
 
-	public SmartFittingWidget(IFittingController controller, PlotCanvas canvas)
+	public SmartFittingWidget(IFittingController controller)
 	{
 		super(controller, 1);
 		

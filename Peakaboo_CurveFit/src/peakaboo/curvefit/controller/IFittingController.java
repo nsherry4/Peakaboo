@@ -2,8 +2,6 @@ package peakaboo.curvefit.controller;
 
 import java.util.List;
 
-import eventful.IEventfulType;
-import fava.functionable.FList;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
@@ -11,63 +9,65 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import scitypes.Spectrum;
+import eventful.IEventfulType;
+import fava.functionable.FList;
 
 
 public interface IFittingController extends IEventfulType<Boolean>
 {
 
 	//For Committed Fittings
-	public void addTransitionSeries(TransitionSeries e);
-	public void addAllTransitionSeries(List<TransitionSeries> e);
-	public void removeTransitionSeries(TransitionSeries e);
-	public void clearTransitionSeries();
+	void addTransitionSeries(TransitionSeries e);
+	void addAllTransitionSeries(List<TransitionSeries> e);
+	void removeTransitionSeries(TransitionSeries e);
+	void clearTransitionSeries();
 	
-	public FList<TransitionSeries> getFittedTransitionSeries();
-	public FList<TransitionSeries> getUnfittedTransitionSeries(TransitionSeriesType tst);
+	FList<TransitionSeries> getFittedTransitionSeries();
+	FList<TransitionSeries> getUnfittedTransitionSeries(TransitionSeriesType tst);
 	
-	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show);
-	public boolean getTransitionSeriesVisibility(TransitionSeries e);
-	public FList<TransitionSeries> getVisibleTransitionSeries();
+	void setTransitionSeriesVisibility(TransitionSeries e, boolean show);
+	boolean getTransitionSeriesVisibility(TransitionSeries e);
+	FList<TransitionSeries> getVisibleTransitionSeries();
 	
-	public float getTransitionSeriesIntensity(TransitionSeries ts);
-	public void moveTransitionSeriesUp(TransitionSeries e);
-	public void moveTransitionSeriesDown(TransitionSeries e);
-	public void moveTransitionSeriesUp(List<TransitionSeries> e);
-	public void moveTransitionSeriesDown(List<TransitionSeries> e);
+	float getTransitionSeriesIntensity(TransitionSeries ts);
+	void moveTransitionSeriesUp(TransitionSeries e);
+	void moveTransitionSeriesDown(TransitionSeries e);
+	void moveTransitionSeriesUp(List<TransitionSeries> e);
+	void moveTransitionSeriesDown(List<TransitionSeries> e);
 	
-	public FittingSet getFittingSelections();
-	public void calculateSelectionFittings(Spectrum data);
-	public void fittingDataInvalidated();
-	public boolean hasSelectionFitting();
-	public FittingResultSet	getFittingSelectionResults();
+	FittingSet getFittingSelections();
+	void calculateSelectionFittings(Spectrum data);
+	void fittingDataInvalidated();
+	boolean hasSelectionFitting();
+	FittingResultSet	getFittingSelectionResults();
 	
-	public boolean canMap();
+	boolean canMap();
 	
 	
 	
 	//For Proposed Fittings
-	public void addProposedTransitionSeries(TransitionSeries e);
-	public void removeProposedTransitionSeries(TransitionSeries e);
-	public void clearProposedTransitionSeries();
+	void addProposedTransitionSeries(TransitionSeries e);
+	void removeProposedTransitionSeries(TransitionSeries e);
+	void clearProposedTransitionSeries();
 	
-	public List<TransitionSeries> getProposedTransitionSeries();
-	public void commitProposedTransitionSeries();
+	List<TransitionSeries> getProposedTransitionSeries();
+	void commitProposedTransitionSeries();
 	
-	public void calculateProposalFittings();
-	public void fittingProposalsInvalidated();
-	public boolean hasProposalFitting();
-	public FittingResultSet	getFittingProposalResults();
+	void calculateProposalFittings();
+	void fittingProposalsInvalidated();
+	boolean hasProposalFitting();
+	FittingResultSet getFittingProposalResults();
 	
 	
 	//Escape Peaks
-	public void setEscapeType(EscapePeakType type);
-	public EscapePeakType getEscapeType();
+	void setEscapeType(EscapePeakType type);
+	EscapePeakType getEscapeType();
 	
 	
 	
 	//Magic
-	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTransition);
-	public void optimizeTransitionSeriesOrdering();
+	List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTransition);
+	void optimizeTransitionSeriesOrdering();
 	void setFittingParameters(float energyPerChannel);
 	FittingModel getFittingModel();
 }

@@ -5,11 +5,6 @@ package peakaboo.ui.swing.plotting.fitting.summation;
 import java.awt.GridBagConstraints;
 import java.util.List;
 
-import fava.*;
-import fava.functionable.FList;
-import fava.signatures.FnCondition;
-import fava.signatures.FnEach;
-import fava.signatures.FnMap;
 import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -17,6 +12,11 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.widgets.ClearPanel;
+import fava.Functions;
+import fava.functionable.FList;
+import fava.signatures.FnCondition;
+import fava.signatures.FnEach;
+import fava.signatures.FnMap;
 
 
 

@@ -10,6 +10,7 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
+import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 

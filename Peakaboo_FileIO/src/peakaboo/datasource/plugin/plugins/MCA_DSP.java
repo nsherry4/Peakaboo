@@ -8,15 +8,15 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import peakaboo.datasource.plugin.AbstractDSP;
-
-import commonenvironment.AbstractFile;
-import fava.functionable.FList;
-import fava.functionable.FStringInput;
-import fava.signatures.FnMap;
-
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
+
+import commonenvironment.AbstractFile;
+
+import fava.functionable.FList;
+import fava.functionable.FStringInput;
+import fava.signatures.FnMap;
 
 
 public class MCA_DSP extends AbstractDSP {

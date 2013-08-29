@@ -8,54 +8,54 @@ import fava.datatypes.Pair;
 public interface ISettingsController extends IEventful
 {
 
-	public void setZoom(float zoom);
-	public float getZoom();
+	void setZoom(float zoom);
+	float getZoom();
 	
-	public void setShowIndividualSelections(boolean showIndividualSelections);
-	public boolean getShowIndividualSelections();
+	void setShowIndividualSelections(boolean showIndividualSelections);
+	boolean getShowIndividualSelections();
 
-	public void setEnergyPerChannel(float energy);
-	public float getEnergyPerChannel();
-	public void setMaxEnergy(float energy);
-	public float getMaxEnergy();
+	void setEnergyPerChannel(float energy);
+	float getEnergyPerChannel();
+	void setMaxEnergy(float energy);
+	float getMaxEnergy();
 
-	public void setViewLog(boolean log);
-	public boolean getViewLog();
+	void setViewLog(boolean log);
+	boolean getViewLog();
 
-	public void setShowChannelMode(ChannelCompositeMode mode);
-	public ChannelCompositeMode getChannelCompositeType();
+	void setShowChannelMode(ChannelCompositeMode mode);
+	ChannelCompositeMode getChannelCompositeType();
 	
-	public void setScanNumber(int number);
-	public int getScanNumber();
+	void setScanNumber(int number);
+	int getScanNumber();
 
-	public void setShowAxes(boolean axes);
-	public boolean getShowAxes();
+	void setShowAxes(boolean axes);
+	boolean getShowAxes();
 
-	public boolean getShowTitle();
-	public void setShowTitle(boolean show);
+	boolean getShowTitle();
+	void setShowTitle(boolean show);
 
-	public void setMonochrome(boolean mono);
-	public boolean getMonochrome();
+	void setMonochrome(boolean mono);
+	boolean getMonochrome();
 
-	public void setShowElementTitles(boolean show);
-	public boolean getShowElementTitles();
+	void setShowElementTitles(boolean show);
+	boolean getShowElementTitles();
 
-	public void setShowElementMarkers(boolean show);
-	public boolean getShowElementMarkers();
+	void setShowElementMarkers(boolean show);
+	boolean getShowElementMarkers();
 
-	public void setShowElementIntensities(boolean show);
-	public boolean getShowElementIntensities();
+	void setShowElementIntensities(boolean show);
+	boolean getShowElementIntensities();
 
-	public void setShowRawData(boolean show);
-	public boolean getShowRawData();
+	void setShowRawData(boolean show);
+	boolean getShowRawData();
 	
 	
-	public float getEnergyForChannel(int channel);
-	public Pair<Float, Float> getValueForChannel(int channel);
+	float getEnergyForChannel(int channel);
+	Pair<Float, Float> getValueForChannel(int channel);
 
 	
-	public EscapePeakType getEscapePeakType();
-	public void setEscapePeakType(EscapePeakType type);
+	EscapePeakType getEscapePeakType();
+	void setEscapePeakType(EscapePeakType type);
 	SettingsModel getSettingsModel();
 	
 }

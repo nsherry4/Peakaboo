@@ -70,7 +70,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	protected TSSelector addTSSelector(final boolean active)
 	{
 		
-		TSSelector sel = new TSSelector(controller);
+		TSSelector sel = new TSSelector();
 		
 		sel.addListener(new EventfulListener() {
 			

@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import scitypes.Spectrum;
+import scratch.ScratchList;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.ObjectBuffer;
 import com.esotericsoftware.kryo.serialize.SimpleSerializer;
 
 import fava.functionable.FList;
-
-import scitypes.Spectrum;
-import scratch.ScratchList;
 
 /**
  * SpectrumList is an implementation of the List interface which writes 

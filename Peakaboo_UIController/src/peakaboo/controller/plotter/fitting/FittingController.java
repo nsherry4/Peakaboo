@@ -277,7 +277,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), Functions.<TransitionSeries>id());
 				
 		//all invisible TSs
-		FList<TransitionSeries> invisibles = Fn.filter(getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {
+		FList<TransitionSeries> invisibles = filter(getFittedTransitionSeries(), new FnCondition<TransitionSeries>() {
 
 			public Boolean f(TransitionSeries element)
 			{

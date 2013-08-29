@@ -6,13 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import commonenvironment.AbstractFile;
-
-import fava.functionable.FList;
-import fava.signatures.FnEach;
-import fava.signatures.FnGet;
-import fava.signatures.FnMap;
-
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.plugin.AbstractDSP;
@@ -24,6 +17,13 @@ import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+
+import commonenvironment.AbstractFile;
+
+import fava.functionable.FList;
+import fava.signatures.FnEach;
+import fava.signatures.FnGet;
+import fava.signatures.FnMap;
 
 
 

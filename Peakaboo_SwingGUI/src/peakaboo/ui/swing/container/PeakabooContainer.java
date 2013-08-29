@@ -20,24 +20,24 @@ public interface PeakabooContainer
 	 * Returns the base {@link Container}, eg a JFrame, JApplet, etc
 	 * @return
 	 */
-	public Container getContainer();
+	Container getContainer();
 	
 	/**
 	 * Returns the Container as a {@link Window}, if it is one. 
 	 * Returns null, otherwise. 
 	 * @return
 	 */
-	public Window getWindow();
+	Window getWindow();
 	
 	/**
 	 * Sets the title for the base container, if titles are supported
 	 * @param title
 	 */
-	public void setTitle(String title);
+	void setTitle(String title);
 	
 	/**
 	 * Sets the menu bar for the base container
 	 * @param menubar
 	 */
-	public void setJMenuBar(JMenuBar menubar);
+	void setJMenuBar(JMenuBar menubar);
 }

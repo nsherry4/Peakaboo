@@ -1,11 +1,11 @@
 package peakaboo.datasource.plugin.plugins.sciencestudio;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
-import scitypes.Spectrum;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.plugin.plugins.ScienceStudioDSP;
+import scitypes.Spectrum;
 
 /**
  * @author maxweld

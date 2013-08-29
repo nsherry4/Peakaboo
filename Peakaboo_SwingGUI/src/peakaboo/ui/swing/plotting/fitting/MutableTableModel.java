@@ -6,6 +6,6 @@ import javax.swing.table.TableModel;
 public interface MutableTableModel extends TableModel
 {
 
-	public void fireChangeEvent();
+	void fireChangeEvent();
 	
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import peakaboo.datasource.plugin.AbstractDSP;
-
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;

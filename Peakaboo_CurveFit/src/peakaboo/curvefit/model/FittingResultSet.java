@@ -4,7 +4,6 @@ package peakaboo.curvefit.model;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import scitypes.Spectrum;
 
 /**

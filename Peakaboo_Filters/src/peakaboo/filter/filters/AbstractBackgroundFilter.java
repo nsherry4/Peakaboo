@@ -3,15 +3,15 @@ package peakaboo.filter.filters;
 import javax.swing.JSeparator;
 
 import peakaboo.filter.model.AbstractFilter;
-import autodialog.model.Parameter;
-import autodialog.view.editors.BooleanEditor;
-import autodialog.view.editors.DummyEditor;
-import autodialog.view.editors.IntegerEditor;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import autodialog.model.Parameter;
+import autodialog.view.editors.BooleanEditor;
+import autodialog.view.editors.DummyEditor;
+import autodialog.view.editors.IntegerEditor;
 
 
 public abstract class AbstractBackgroundFilter extends AbstractFilter

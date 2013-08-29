@@ -1,11 +1,11 @@
 package peakaboo.filter.filters.advanced;
 
-import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
-import autodialog.view.editors.DoubleEditor;
 import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import autodialog.model.Parameter;
+import autodialog.view.editors.DoubleEditor;
+import autodialog.view.editors.IntegerEditor;
 
 
 public class SpectrumNormalization extends AbstractSimpleFilter

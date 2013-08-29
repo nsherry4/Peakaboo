@@ -15,13 +15,13 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
-import eventful.EventfulListener;
 import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControls;
+import eventful.EventfulListener;
 
 
 public class FilterList extends ClearPanel {

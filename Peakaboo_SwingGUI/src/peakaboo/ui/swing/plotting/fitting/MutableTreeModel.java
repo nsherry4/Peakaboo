@@ -6,6 +6,6 @@ import javax.swing.tree.TreeModel;
 public interface MutableTreeModel extends TreeModel
 {
 
-	public void fireChangeEvent();
+	void fireChangeEvent();
 	
 }

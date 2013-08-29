@@ -58,17 +58,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.ezware.dialog.task.TaskDialogs;
-
-import commonenvironment.AbstractFile;
-import commonenvironment.Apps;
-import commonenvironment.IOOperations;
-import eventful.EventfulEnumListener;
-import eventful.EventfulListener;
-import eventful.EventfulTypeListener;
-import fava.datatypes.Pair;
-import fava.functionable.FList;
-import fava.signatures.FnMap;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.IPlotController;
@@ -101,12 +90,24 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DropdownImageButton;
+import swidget.widgets.DropdownImageButton.Actions;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.ZoomSlider;
-import swidget.widgets.DropdownImageButton.Actions;
 import swidget.widgets.toggle.ComplexToggle;
+
+import com.ezware.dialog.task.TaskDialogs;
+import commonenvironment.AbstractFile;
+import commonenvironment.Apps;
+import commonenvironment.IOOperations;
+
+import eventful.EventfulEnumListener;
+import eventful.EventfulListener;
+import eventful.EventfulTypeListener;
+import fava.datatypes.Pair;
+import fava.functionable.FList;
+import fava.signatures.FnMap;
 
 
 
@@ -234,7 +235,7 @@ public class PlotPanel extends ClearPanel
 				toolbarInfo.setEnabled(false);
 			}
 
-			setEnergySpinner((double) controller.settings().getMaxEnergy());
+			setEnergySpinner();
 
 
 			if (controller.settings().getChannelCompositeType() == ChannelCompositeMode.NONE)
@@ -270,7 +271,7 @@ public class PlotPanel extends ClearPanel
 	}
 
 
-	private void setEnergySpinner(double value)
+	private void setEnergySpinner()
 	{
 		//dont let the listeners get wind of this change		
 		energy.removeChangeListener(energyListener);
@@ -586,7 +587,7 @@ public class PlotPanel extends ClearPanel
 			menuItem = new JCheckBoxMenuItem(title);
 		}
 		
-		configureMenuItem(menuItem, title, icon, description, listener, key, mnemonic);
+		configureMenuItem(menuItem, description, listener, key, mnemonic);
 		
 		return menuItem;
 		
@@ -601,13 +602,13 @@ public class PlotPanel extends ClearPanel
 			menuItem = new JMenuItem(title);
 		}
 		
-		configureMenuItem(menuItem, title, icon, description, listener, key, mnemonic);
+		configureMenuItem(menuItem, description, listener, key, mnemonic);
 		
 		return menuItem;
 		
 	}
 	
-	private void configureMenuItem(JMenuItem menuItem, String title, ImageIcon icon, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
+	private void configureMenuItem(JMenuItem menuItem, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
 	{
 		if (key != null) menuItem.setAccelerator(key);
 		if (mnemonic != null) menuItem.setMnemonic(mnemonic);
@@ -641,7 +642,7 @@ public class PlotPanel extends ClearPanel
 						actionOpenData();
 					}
 				},
-				KeyStroke.getKeyStroke(KeyEvent.VK_O, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_O
+				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
 		
 		if (!Version.release && !Version.rc) {
@@ -700,7 +701,7 @@ public class PlotPanel extends ClearPanel
 						actionSavePicture();
 					}
 				}, 
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_P
+				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
 		);
 		menu.add(snapshotMenuItem);
 		
@@ -773,7 +774,7 @@ public class PlotPanel extends ClearPanel
 						controller.history().undo();
 					}
 				}, 
-				KeyStroke.getKeyStroke(KeyEvent.VK_Z, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_U
+				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK), KeyEvent.VK_U
 		);
 		menu.add(undo);
 
@@ -786,7 +787,7 @@ public class PlotPanel extends ClearPanel
 						controller.history().redo();
 					}
 				}, 
-				KeyStroke.getKeyStroke(KeyEvent.VK_Y, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_R
+				KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), KeyEvent.VK_R
 		);
 		menu.add(redo);
 
@@ -816,7 +817,7 @@ public class PlotPanel extends ClearPanel
 						controller.settings().setViewLog(menuitem.isSelected());
 					}
 				},
-				KeyStroke.getKeyStroke(KeyEvent.VK_L, java.awt.event.ActionEvent.CTRL_MASK), KeyEvent.VK_L
+				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), KeyEvent.VK_L
 		);
 		
 		axes = createMenuCheckItem(
@@ -999,7 +1000,7 @@ public class PlotPanel extends ClearPanel
 		individual = new JRadioButtonMenuItem(ChannelCompositeMode.NONE.show());
 		individual.setSelected(true);
 		individual.setMnemonic(KeyEvent.VK_I);
-		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, java.awt.event.ActionEvent.CTRL_MASK));
+		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
 		individual.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
@@ -1011,7 +1012,7 @@ public class PlotPanel extends ClearPanel
 
 		average = new JRadioButtonMenuItem(ChannelCompositeMode.AVERAGE.show());
 		average.setMnemonic(KeyEvent.VK_M);
-		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, java.awt.event.ActionEvent.CTRL_MASK));
+		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
 		average.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
@@ -1023,7 +1024,7 @@ public class PlotPanel extends ClearPanel
 
 		maximum = new JRadioButtonMenuItem(ChannelCompositeMode.MAXIMUM.show());
 		maximum.setMnemonic(KeyEvent.VK_T);
-		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, java.awt.event.ActionEvent.CTRL_MASK));
+		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 		maximum.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
@@ -1281,8 +1282,7 @@ public class PlotPanel extends ClearPanel
 				Integer.toString(Version.versionNo),
 				Version.longVersionNo,
 				Version.releaseDescription,
-				Version.buildDate,
-				Version.release);
+				Version.buildDate);
 	}
 	
 	private void actionHelp()

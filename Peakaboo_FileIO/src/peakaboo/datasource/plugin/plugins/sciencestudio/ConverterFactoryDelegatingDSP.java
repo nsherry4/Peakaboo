@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.plugin.DelegatingDSP;
 import peakaboo.datasource.plugin.plugins.sciencestudio.vespers.data.converter.factory.MapXYVespersToPDSConverterFactory;
-
 import ca.sciencestudio.data.converter.Converter;
 import ca.sciencestudio.data.converter.ConverterMap;
 import ca.sciencestudio.data.converter.LinkedHashConverterMap;

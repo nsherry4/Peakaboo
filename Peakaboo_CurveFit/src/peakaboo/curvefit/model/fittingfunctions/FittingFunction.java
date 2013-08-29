@@ -16,6 +16,6 @@ public interface FittingFunction {
 	 * @param point the point to evauluate this function at
 	 * @return the result of evaluating this function at the given point
 	 */
-	public float getHeightAtPoint(float point);
+	float getHeightAtPoint(float point);
 	
 }

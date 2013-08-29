@@ -3,7 +3,6 @@ package peakaboo.controller.plotter.data;
 import java.util.Iterator;
 import java.util.List;
 
-import eventful.IEventful;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DatasetReadResult;
@@ -17,75 +16,76 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
+import eventful.IEventful;
 
 
 public interface IDataController extends IEventful 
 {
 
-	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend);
+	DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend);
 	
-	public void setDataSource(DataSource ds);
-	public void setDataSetProvider(AbstractDataSet dsp);
-	public List<AbstractDSP> getDataSourcePlugins();
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp);
+	void setDataSource(DataSource ds);
+	void setDataSetProvider(AbstractDataSet dsp);
+	List<AbstractDSP> getDataSourcePlugins();
+	ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp);
 	
-	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
-	
-
-	public Spectrum getAveragePlot();
-	public Spectrum getMaximumPlot();
-	public Spectrum getScanAtIndex(int index);
-	public float maximumIntensity();
-	
-	
-	public int firstNonNullScanIndex(int start);
-	public int firstNonNullScanIndex();
-	public int lastNonNullScanIndex(int upto);
-	public int lastNonNullScanIndex();
-	
-	public Iterator<Spectrum> getScanIterator();
-	
-	public void invalidateFilteredData();
+	ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	
 
-	public String getDatasetName();
-	public String getDataSourceFolder();
-	public boolean hasDataSet();
-	public boolean hasDimensions();
-	public int size();
-	public int channelsPerScan();
-	public Coord<Bounds<Number>> getRealDimensions();
-	public SISize getRealDimensionsUnits();
-	public Coord<Integer> getDataDimensions();
-	public int getDataHeight();
-	public int getDataWidth();
+	Spectrum getAveragePlot();
+	Spectrum getMaximumPlot();
+	Spectrum getScanAtIndex(int index);
+	float maximumIntensity();
+	
+	
+	int firstNonNullScanIndex(int start);
+	int firstNonNullScanIndex();
+	int lastNonNullScanIndex(int upto);
+	int lastNonNullScanIndex();
+	
+	Iterator<Spectrum> getScanIterator();
+	
+	void invalidateFilteredData();
+	
+
+	String getDatasetName();
+	String getDataSourceFolder();
+	boolean hasDataSet();
+	boolean hasDimensions();
+	int size();
+	int channelsPerScan();
+	Coord<Bounds<Number>> getRealDimensions();
+	SISize getRealDimensionsUnits();
+	Coord<Integer> getDataDimensions();
+	int getDataHeight();
+	int getDataWidth();
 	
 	
 
-	public boolean getScanHasExtendedInformation();
-	public String getScanCreationTime();
-	public String getScanCreator();
-	public String getScanEndTime();
-	public String getScanExperimentName();
-	public String getScanFacilityName();
-	public String getScanInstrumentName();
-	public String getScanLaboratoryName();
-	public String getScanProjectName();
-	public String getScanSampleName();
-	public String getScanScanName();
-	public String getScanSessionName();
-	public String getScanStartTime();
-	public String getScanTechniqueName();
+	boolean getScanHasExtendedInformation();
+	String getScanCreationTime();
+	String getScanCreator();
+	String getScanEndTime();
+	String getScanExperimentName();
+	String getScanFacilityName();
+	String getScanInstrumentName();
+	String getScanLaboratoryName();
+	String getScanProjectName();
+	String getScanSampleName();
+	String getScanScanName();
+	String getScanSessionName();
+	String getScanStartTime();
+	String getScanTechniqueName();
 	
 	
-	public String getCurrentScanName();
+	String getCurrentScanName();
 
 	
-	public boolean getScanDiscarded(int scanNo);
-	public boolean getScanDiscarded();
-	public void setScanDiscarded(int scanNo, boolean discarded);
-	public void setScanDiscarded(boolean discarded);
-	public List<Integer> getDiscardedScanList();
-	public void clearDiscardedScanList();
+	boolean getScanDiscarded(int scanNo);
+	boolean getScanDiscarded();
+	void setScanDiscarded(int scanNo, boolean discarded);
+	void setScanDiscarded(boolean discarded);
+	List<Integer> getDiscardedScanList();
+	void clearDiscardedScanList();
 	
 }

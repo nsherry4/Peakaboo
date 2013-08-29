@@ -73,15 +73,11 @@ public class DataController extends Eventful implements IDataController
 			
 			public void change()
 			{
-				if (readTasks.getCompleted())
-				{
-					if (dataset.channelsPerScan() > 0 && !loadedNewDataSet)
-					{
+				if (readTasks.getCompleted() && dataset.channelsPerScan() > 0 && !loadedNewDataSet) {
 												
-						setDataSetProvider(dataset);
-						loadedNewDataSet = true;
+					setDataSetProvider(dataset);
+					loadedNewDataSet = true;
 
-					}
 				}
 			}
 

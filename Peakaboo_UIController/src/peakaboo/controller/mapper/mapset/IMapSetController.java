@@ -5,7 +5,6 @@ package peakaboo.controller.mapper.mapset;
 import java.util.List;
 
 import peakaboo.mapping.results.MapResultSet;
-
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -15,7 +14,7 @@ import scitypes.SISize;
 public interface IMapSetController
 {
 
-	public void setMapData(
+	void setMapData(
 			MapResultSet data,
 			String datasetName,
 			Coord<Integer> dataDimensions,
@@ -23,69 +22,69 @@ public interface IMapSetController
 			SISize realDimensionsUnits,
 			List<Integer> badPoints
 	);
-	public void setMapData(
+	void setMapData(
 			MapResultSet data,
 			String datasetName,
 			List<Integer> badPoints
 	);
 	
-	public MapResultSet getMapResultSet();
-	public int getMapSize();
+	MapResultSet getMapResultSet();
+	int getMapSize();
 
-	public void setInterpolation(int passes);
-	public int getInterpolation();
+	void setInterpolation(int passes);
+	int getInterpolation();
 
-	public void setDataHeight(int height);
-	public int getDataHeight();
-	public void setDataWidth(int width);
-	public int getDataWidth();
+	void setDataHeight(int height);
+	int getDataHeight();
+	void setDataWidth(int width);
+	int getDataWidth();
 	
-	public abstract int getInterpolatedHeight();
-	public abstract int getInterpolatedWidth();
+	int getInterpolatedHeight();
+	int getInterpolatedWidth();
 
-	public abstract void setContours(boolean contours);
-	public abstract boolean getContours();
+	void setContours(boolean contours);
+	boolean getContours();
 
-	public void setSpectrumSteps(int steps);
-	public int getSpectrumSteps();
+	void setSpectrumSteps(int steps);
+	int getSpectrumSteps();
 
-	public void setMonochrome(boolean mono);
-	public boolean getMonochrome();
+	void setMonochrome(boolean mono);
+	boolean getMonochrome();
 
-	public void setShowSpectrum(boolean show);
-	public boolean getShowSpectrum();
+	void setShowSpectrum(boolean show);
+	boolean getShowSpectrum();
 
-	public void setShowTitle(boolean show);
-	public boolean getShowTitle();
+	void setShowTitle(boolean show);
+	boolean getShowTitle();
 
-	public void setShowDatasetTitle(boolean show);
-	public boolean getShowDatasetTitle();
+	void setShowDatasetTitle(boolean show);
+	boolean getShowDatasetTitle();
 
-	public void setShowCoords(boolean show);
-	public boolean getShowCoords();
+	void setShowCoords(boolean show);
+	boolean getShowCoords();
 
-	public String getDatasetTitle();
-	public void setDatasetTitle(String name);
+	String getDatasetTitle();
+	void setDatasetTitle(String name);
 
 
-	
-	
-	public List<Integer> getBadPoints();
 	
 	
-	public boolean isValidPoint(Coord<Integer> mapCoord);
+	List<Integer> getBadPoints();
+	
+	
+	boolean isValidPoint(Coord<Integer> mapCoord);
 
 	
-	public Coord<Number> getTopLeftCoord();
-	public Coord<Number> getTopRightCoord();
-	public Coord<Number> getBottomLeftCoord();
-	public Coord<Number> getBottomRightCoord();
-	public void setMapCoords(Coord<Number> tl, Coord<Number> tr, Coord<Number> bl, Coord<Number> br);
-	public boolean getDrawCoords();
-	public void setDrawCoords(boolean draw);
+	Coord<Number> getTopLeftCoord();
+	Coord<Number> getTopRightCoord();
+	Coord<Number> getBottomLeftCoord();
+	Coord<Number> getBottomRightCoord();
+	void setMapCoords(Coord<Number> tl, Coord<Number> tr, Coord<Number> bl, Coord<Number> br);
+	boolean getDrawCoords();
+	void setDrawCoords(boolean draw);
 	
-	public boolean isDimensionsProvided();
-	public Coord<Bounds<Number>> getRealDimensions();
-	public SISize getRealDimensionUnits();
+	boolean isDimensionsProvided();
+	Coord<Bounds<Number>> getRealDimensions();
+	SISize getRealDimensionUnits();
 	
 }

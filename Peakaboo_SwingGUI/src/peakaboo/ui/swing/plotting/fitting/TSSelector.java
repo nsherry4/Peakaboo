@@ -9,7 +9,6 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import eventful.swing.EventfulPanel;
 
@@ -22,7 +21,7 @@ public class TSSelector extends EventfulPanel
 	
 	ActionListener tsComboListener;
 	
-	public TSSelector(IFittingController controller)
+	public TSSelector()
 	{
 
 		setLayout(new BorderLayout());
