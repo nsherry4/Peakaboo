@@ -434,13 +434,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 	@Override
 	public float getUsedWidth(float zoom) {
-		return getHeight() * zoom;
+		return getWidth() * zoom;
 	}
 
 
 	@Override
 	public float getUsedHeight(float zoom) {
-		return getWidth() * zoom;
+		return getHeight() * zoom;
 	}
 
 	
