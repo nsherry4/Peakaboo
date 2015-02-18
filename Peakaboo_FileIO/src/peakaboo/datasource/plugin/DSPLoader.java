@@ -8,13 +8,13 @@ import java.util.List;
 
 import peakaboo.common.Version;
 import peakaboo.datasource.plugin.plugins.CDFMLSaxDSP;
+import peakaboo.datasource.plugin.plugins.EmsaDSP;
 import peakaboo.datasource.plugin.plugins.MCA_DSP;
 import peakaboo.datasource.plugin.plugins.PlainTextDSP;
 import peakaboo.datasource.plugin.plugins.ScienceStudioDSP;
 import bolt.plugin.BoltPluginLoader;
 import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
-
 import commonenvironment.Env;
 
 public class DSPLoader
@@ -47,6 +47,7 @@ public class DSPLoader
 				newLoader.registerPlugin(MCA_DSP.class);
 				newLoader.registerPlugin(PlainTextDSP.class);
 				newLoader.registerPlugin(ScienceStudioDSP.class);
+				newLoader.registerPlugin(EmsaDSP.class);
 				
 				loader = newLoader;
 			}
