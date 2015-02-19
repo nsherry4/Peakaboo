@@ -1279,7 +1279,7 @@ public class PlotPanel extends ClearPanel
 				IOOperations.readTextFromJar("/peakaboo/licence.txt"),
 				IOOperations.readTextFromJar("/peakaboo/credits.txt"),
 				Version.logo,
-				Integer.toString(Version.versionNo),
+				Integer.toString(Version.versionNoMajor),
 				Version.longVersionNo,
 				Version.releaseDescription,
 				Version.buildDate);
