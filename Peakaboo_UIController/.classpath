@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_Mapping"/>
 	<classpathentry kind="lib" path="snakeyaml-1.6.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_DataSource"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

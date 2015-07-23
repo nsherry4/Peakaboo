@@ -1,6 +1,7 @@
 package peakaboo.mapping;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
@@ -15,7 +16,6 @@ import plural.executor.eachindex.EachIndexExecutor;
 import plural.executor.eachindex.implementations.PluralEachIndexExecutor;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import fava.signatures.FnEach;
 
 /**
  * This class contains logic for generating maps for a {@link AbstractDataSet}, so that functionality does not have to be duplicated across various implementations
@@ -48,34 +48,28 @@ public class MapTS
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.size());
 		
-		final FnEach<Integer> t_filter = new FnEach<Integer>() {
+		final Consumer<Integer> t_filter = ordinal -> {
+			
+			Spectrum original = datasetProvider.getScan(ordinal); 
+			if (original == null) return;
+			
+			Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
+			FittingResultSet frs = fittings.calculateFittings(data);
 
-			public void f(Integer ordinal)
+			for (FittingResult result : frs.fits)
 			{
-				
-				Spectrum original = datasetProvider.getScan(ordinal); 
-				if (original == null) return;
-				
-				Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
-				FittingResultSet frs = fittings.calculateFittings(data);
-
-				for (FittingResult result : frs.fits)
-				{
-					maps.putIntensityInMapAtPoint(
-						type == FittingTransform.AREA ? SpectrumCalculations.sumValuesInList(result.fit) : SpectrumCalculations.max(result.fit),
-						result.transitionSeries,
-						ordinal);
-				}
-
-				return;
-				
-
+				maps.putIntensityInMapAtPoint(
+					type == FittingTransform.AREA ? SpectrumCalculations.sumValuesInList(result.fit) : SpectrumCalculations.max(result.fit),
+					result.transitionSeries,
+					ordinal);
 			}
+
+			return;
 
 		};
 
 
-		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.size(), t_filter);;
+		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.size(), t_filter);
 
 		tasklist = new ExecutorSet<MapResultSet>("Generating Data for Map") {
 

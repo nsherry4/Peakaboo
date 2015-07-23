@@ -29,7 +29,6 @@ import fava.Functions;
 import fava.functionable.FList;
 import fava.signatures.FnCombine;
 import fava.signatures.FnCondition;
-import fava.signatures.FnEach;
 import fava.signatures.FnFold;
 import fava.signatures.FnMap;
 
@@ -465,15 +464,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 		List<Transition> allPileups = concat(allPileupLists);
 
-		each(allPileups, new FnEach<Transition>() {
-
-			public void f(Transition t)
-			{
-				newTransitionSeries.setTransition(t);
-			}
-		}
-
-		);
+		each(allPileups, t -> newTransitionSeries.setTransition(t));
 
 		newTransitionSeries.componentSeries.add(this);
 		newTransitionSeries.componentSeries.add(other);

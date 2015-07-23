@@ -5,7 +5,9 @@ import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
-import fava.functionable.FList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -23,7 +25,7 @@ public class MapSetMapData
 	public String					datasetTitle		= "";
 	public Coord<Number>			topRightCoord, topLeftCoord, bottomRightCoord, bottomLeftCoord;
 	
-	public FList<Integer>			badPoints			= new FList<Integer>();
+	public List<Integer>			badPoints			= new ArrayList<Integer>();
 	
 
 	public int mapSize()

@@ -214,26 +214,18 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> greenSpectrums = filter(
 			dataset, 
-			new FnCondition<Pair<TransitionSeries, Spectrum>>() {
-
-				public Boolean f(Pair<TransitionSeries, Spectrum> element)
-				{
-					return (tabModel.overlayColour.get(element.first) == OverlayColour.GREEN);
-				}
+			(Pair<TransitionSeries, Spectrum> element) -> {
+				return (tabModel.overlayColour.get(element.first) == OverlayColour.GREEN);
 			}
+			
 		).map(Functions.<TransitionSeries, Spectrum>second());
 		
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
 			greenSpectrum = fold(
 					greenSpectrums,
-					new FnFold<Spectrum, Spectrum>() {
-
-						public Spectrum f(Spectrum mapdata, Spectrum sum)
-						{
-							return SpectrumCalculations.addLists(mapdata, sum);
-						}
-					}
-			);
+					(Spectrum mapdata, Spectrum sum) -> {
+						return SpectrumCalculations.addLists(mapdata, sum);
+					});
 			
 			uninterpolatedColours.put(OverlayColour.GREEN, greenSpectrum);
 			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, map.mapsController.getInterpolation());
@@ -250,26 +242,16 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> blueSpectrums = filter(
 			dataset, 
-			new FnCondition<Pair<TransitionSeries, Spectrum>>() {
-
-				public Boolean f(Pair<TransitionSeries, Spectrum> element)
-				{
-					return (tabModel.overlayColour.get(element.first) == OverlayColour.BLUE);
-				}
-			}
-		).map(Functions.<TransitionSeries, Spectrum>second());
+			(Pair<TransitionSeries, Spectrum> element) -> {
+				return (tabModel.overlayColour.get(element.first) == OverlayColour.BLUE);
+			}).map(Functions.<TransitionSeries, Spectrum>second());
 		
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
 			blueSpectrum = fold(
 					blueSpectrums,
-					new FnFold<Spectrum, Spectrum>() {
-
-						public Spectrum f(Spectrum mapdata, Spectrum sum)
-						{
-							return SpectrumCalculations.addLists(mapdata, sum);
-						}
-					}
-			);
+					(Spectrum mapdata, Spectrum sum) -> {
+						return SpectrumCalculations.addLists(mapdata, sum);
+					});
 			
 			uninterpolatedColours.put(OverlayColour.BLUE, blueSpectrum);
 			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, map.mapsController.getInterpolation());

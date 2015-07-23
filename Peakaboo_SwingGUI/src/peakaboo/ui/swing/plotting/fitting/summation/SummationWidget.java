@@ -15,7 +15,6 @@ import swidget.widgets.ClearPanel;
 import fava.Functions;
 import fava.functionable.FList;
 import fava.signatures.FnCondition;
-import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 
 
@@ -62,12 +61,8 @@ class SummationWidget extends TSSelectorGroup
 	@Override
 	public void setTransitionSeriesOptions(final List<TransitionSeries> tss)
 	{
-		selectors.each(new FnEach<TSSelector>() {
-
-			public void f(TSSelector selector)
-			{
-				selector.setTransitionSeries(tss);
-			}
+		selectors.each((TSSelector selector) -> {
+			selector.setTransitionSeries(tss);
 		});
 	}
 	

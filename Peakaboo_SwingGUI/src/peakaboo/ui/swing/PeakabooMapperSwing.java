@@ -450,28 +450,22 @@ public class PeakabooMapperSwing extends JFrame
 				
 				
 				//generate a list of pairings of TransitionSeries and their intensity values
-				Functionable<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().map(new FnMap<MapResult, Pair<TransitionSeries, Float>>() {
-
-					public Pair<TransitionSeries, Float> f(MapResult r)
-					{
-						float sum = 0;
-						for (int x : new Range(xstart, xend)) {
-							for (int y : new Range(ystart, yend)){
-								sum += r.data.get(grid.getIndexFromXY(x, y));
-							}
+				Functionable<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().map((MapResult r) -> {
+					float sum = 0;
+					for (int x : new Range(xstart, xend)) {
+						for (int y : new Range(ystart, yend)){
+							sum += r.data.get(grid.getIndexFromXY(x, y));
 						}
-						return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / size);
-					}});
+					}
+					return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / size);
+				});
 				
 				
 				//get the total of all of the corrected values
-				float total = averages.map(new FnMap<Pair<TransitionSeries,Float>, Float>() {
-
-					public Float f(Pair<TransitionSeries, Float> p)
-					{
-						Float corrFactor = corr.getCorrection(p.first);
-						return (corrFactor == null) ? 0f : p.second * corrFactor;
-					}}).fold(Functions.addf());
+				float total = averages.map((Pair<TransitionSeries, Float> p) -> {
+					Float corrFactor = corr.getCorrection(p.first);
+					return (corrFactor == null) ? 0f : p.second * corrFactor;
+				}).fold(Functions.addf());
 				
 				for (Pair<TransitionSeries, Float> p : averages)
 				{

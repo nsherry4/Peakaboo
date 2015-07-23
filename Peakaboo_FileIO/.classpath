@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="jars/SS_Core_Model.jar"/>
 	<classpathentry kind="lib" path="jars/SS_Data_Core.jar"/>
 	<classpathentry kind="lib" path="jars/SS_Utilities.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

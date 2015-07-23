@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="JSci/jsci-core.jar"/>
 	<classpathentry kind="lib" path="JSci/jsci-wavelet.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

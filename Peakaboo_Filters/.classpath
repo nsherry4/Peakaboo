@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_Calculations"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/AutoDialog"/>
 	<classpathentry kind="lib" path="/Peakaboo_SwingGUI/jars/jsyntaxpane-0.9.5-b29.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

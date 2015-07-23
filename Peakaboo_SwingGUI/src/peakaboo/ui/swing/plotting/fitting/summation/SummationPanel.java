@@ -13,7 +13,6 @@ import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
-import fava.signatures.FnEach;
 
 
 
@@ -46,12 +45,8 @@ public class SummationPanel extends JPanel
 			protected void approve()
 			{
 				//add all of the transition series that come back from the summation widget
-				summationWidget.getTransitionSeries().each(new FnEach<TransitionSeries>() {
-
-					public void f(TransitionSeries ts)
-					{
-						controller.addTransitionSeries(ts);
-					}
+				summationWidget.getTransitionSeries().each((TransitionSeries ts) -> {
+					controller.addTransitionSeries(ts);
 				});
 
 

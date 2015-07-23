@@ -1,16 +1,18 @@
 package peakaboo.datasource.plugin;
 
 import peakaboo.datasource.DataSource;
+
+import java.util.function.Consumer;
+
 import bolt.plugin.BoltPlugin;
-import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 
 public abstract class AbstractDSP implements DataSource, BoltPlugin
 {
 
 	protected FnGet<Boolean>	fn_isAborted;
-	protected FnEach<Integer>	fn_readScanCallback;
-	protected FnEach<Integer> 	fn_getScanCountCallback;
+	protected Consumer<Integer>	fn_readScanCallback;
+	protected Consumer<Integer> fn_getScanCountCallback;
 		
 	@Override
 	public boolean pluginEnabled()
@@ -19,8 +21,8 @@ public abstract class AbstractDSP implements DataSource, BoltPlugin
 	}
 	
 	public void setCallbacks(
-			FnEach<Integer> getScanCountCallback, 
-			FnEach<Integer> readScanCallback,
+			Consumer<Integer> getScanCountCallback, 
+			Consumer<Integer> readScanCallback,
 			FnGet<Boolean> isAborted
 		)
 	{
@@ -36,12 +38,12 @@ public abstract class AbstractDSP implements DataSource, BoltPlugin
 	
 	protected void newScansRead(int numRead)
 	{
-		fn_readScanCallback.f(numRead);
+		fn_readScanCallback.accept(numRead);
 	}
 	
 	protected void haveScanCount(int scanCount)
 	{
-		fn_getScanCountCallback.f(scanCount);
+		fn_getScanCountCallback.accept(scanCount);
 	}
 	
 	

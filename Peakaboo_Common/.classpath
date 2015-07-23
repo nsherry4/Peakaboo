@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Plural"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/CommonEnvironment"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Eventful"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

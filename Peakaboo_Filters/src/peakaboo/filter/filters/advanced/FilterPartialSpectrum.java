@@ -1,6 +1,7 @@
 package peakaboo.filter.filters.advanced;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.editors.SubfilterEditor;
@@ -10,7 +11,6 @@ import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 import autodialog.model.Parameter;
 import autodialog.view.editors.IntegerEditor;
-import fava.signatures.FnCondition;
 
 public class FilterPartialSpectrum extends AbstractFilter
 {
@@ -23,16 +23,7 @@ public class FilterPartialSpectrum extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		List<AbstractFilter> filters = FilterLoader.getAvailableFilters().filter( 
-				
-				new FnCondition<AbstractFilter>() {
-
-					public Boolean f(AbstractFilter f)
-					{
-						return f.pluginEnabled() && f.canFilterSubset();
-					}}
-
-		);
+		List<AbstractFilter> filters = FilterLoader.getAvailableFilters().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
 		filters.add(0, new Identity());
 		
 		for (AbstractFilter f : filters)

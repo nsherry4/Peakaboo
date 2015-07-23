@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.Scrollable;
 
@@ -42,7 +43,6 @@ import commonenvironment.Env;
 import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
 import fava.functionable.FArray;
-import fava.signatures.FnEach;
 import fava.signatures.FnMap;
 
 
@@ -62,7 +62,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	private IPlotController			controller;
 
-	private FnEach<Integer>	grabChannelFromClickCallback;
+	private Consumer<Integer>		grabChannelFromClickCallback;
 
 
 	public PlotCanvas(final IPlotController controller, final PlotPanel parent)
@@ -146,7 +146,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			public void mouseClicked(MouseEvent e)
 			{
 				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
-					grabChannelFromClickCallback.f(channelFromCoordinate(e.getX()));
+					grabChannelFromClickCallback.accept(channelFromCoordinate(e.getX()));
 				}
 			}
 		});
@@ -154,7 +154,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	}
 
 
-	public void grabChannelFromClick(FnEach<Integer> callback)
+	public void grabChannelFromClick(Consumer<Integer> callback)
 	{
 		grabChannelFromClickCallback = callback;
 	}

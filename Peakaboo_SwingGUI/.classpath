@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/Swidget/jars/swingx-core-1.6.2.jar"/>
 	<classpathentry kind="lib" path="jars/jsyntaxpane-0.9.5-b29.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/AutoDialog"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

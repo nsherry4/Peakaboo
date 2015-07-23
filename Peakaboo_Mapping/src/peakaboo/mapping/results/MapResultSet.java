@@ -121,7 +121,7 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	/**
 	 * Generates a list of all of the TransitionSeries included in this MapResultSet
 	 */
-	public FList<TransitionSeries> getAllTransitionSeries()
+	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		return maps.map(new FnMap<MapResult, TransitionSeries>() {
 			

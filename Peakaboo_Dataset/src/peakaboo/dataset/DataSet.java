@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
@@ -21,7 +22,6 @@ import scitypes.SpectrumCalculations;
 import commonenvironment.AbstractFile;
 
 import fava.functionable.FList;
-import fava.signatures.FnEach;
 import fava.signatures.FnGet;
 import fava.signatures.FnMap;
 
@@ -235,14 +235,10 @@ public class DataSet extends AbstractDataSet
 				opening.advanceState();
 				
 				//anon function to call when we get the number of scans
-				FnEach<Integer> gotScanCount = new FnEach<Integer>() {
-					
-					public void f(Integer count)
-					{
-						reading.setWorkUnits(count);
-						opening.advanceState();
-						reading.advanceState();
-					}
+				Consumer<Integer> gotScanCount = (Integer count) ->	{
+					reading.setWorkUnits(count);
+					opening.advanceState();
+					reading.advanceState();
 				};
 				
 				//anon function to call to check if the user has requested the operation be aborted
@@ -254,13 +250,7 @@ public class DataSet extends AbstractDataSet
 					}};
 				
 				//anon function to call when the loader reads a scan from the input data
-				FnEach<Integer> readScans = new FnEach<Integer>(){
-
-					public void f(Integer count)
-					{
-						reading.workUnitCompleted(count);
-					}
-				};
+				Consumer<Integer> readScans = (Integer count) -> reading.workUnitCompleted(count);
 				
 
 				try
@@ -294,7 +284,7 @@ public class DataSet extends AbstractDataSet
 				
 				scanCount = dataSource.scanCount();
 				if (scanCount == 0) return new DatasetReadResult(ReadStatus.FAILED, "Did not find any data in file(s)");
-				gotScanCount.f(scanCount);
+				gotScanCount.accept(scanCount);
 				reading.advanceState();
 				
 				applying.setWorkUnits(dataSource.scanCount());

@@ -18,7 +18,6 @@ import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
-import fava.signatures.FnEach;
 
 
 
@@ -85,21 +84,17 @@ public class SmartFittingPanel extends JPanel
 		if (mode)
 		{
 			smartWidget.setTransitionSeriesOptions(null);
-			canvas.grabChannelFromClick(new FnEach<Integer>() {
+			canvas.grabChannelFromClick((Integer channel) -> {
+				canvas.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				
+				potentials = controller.proposeTransitionSeriesFromChannel(
+						channel, 
+						smartWidget.getActiveTransitionSeries()
+					);
+				smartWidget.setTransitionSeriesOptions(potentials);
+				
+				canvas.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-				public void f(Integer channel)
-				{
-					canvas.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					
-					potentials = controller.proposeTransitionSeriesFromChannel(
-							channel, 
-							smartWidget.getActiveTransitionSeries()
-						);
-					smartWidget.setTransitionSeriesOptions(potentials);
-					
-					canvas.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-				}
 			});
 
 			canvasCursor = canvas.getCursor();

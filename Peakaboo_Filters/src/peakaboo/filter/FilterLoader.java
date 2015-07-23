@@ -1,8 +1,10 @@
 package peakaboo.filter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import peakaboo.common.Version;
 import peakaboo.filter.filters.advanced.DataToWavelet;
@@ -34,19 +36,18 @@ import bolt.plugin.ClassInstantiationException;
 
 import commonenvironment.Env;
 
-import fava.functionable.FList;
 
 public class FilterLoader
 {
 
 	private static BoltPluginLoader<AbstractFilter> pluginLoader;
 	
-	public static synchronized FList<AbstractFilter> getAvailableFilters()
+	public static synchronized List<AbstractFilter> getAvailableFilters()
 	{
 
 		try {
 			
-			FList<AbstractFilter> filters = new FList<AbstractFilter>(); 
+			List<AbstractFilter> filters = new ArrayList<AbstractFilter>(); 
 			
 			if (pluginLoader == null)
 			{
