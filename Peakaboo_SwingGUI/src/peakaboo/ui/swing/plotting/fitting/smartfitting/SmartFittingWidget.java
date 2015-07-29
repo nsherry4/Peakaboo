@@ -47,13 +47,7 @@ class SmartFittingWidget extends TSSelectorGroup
 	@Override
 	public FList<TransitionSeries> getTransitionSeries()
 	{
-		return selectors.map(new Function<TSSelector, TransitionSeries>() {
-
-			public TransitionSeries apply(TSSelector selector)
-			{
-				return selector.getTransitionSeries();
-			}
-		});
+		return selectors.map(selector -> selector.getTransitionSeries());
 	}
 
 	public TransitionSeries getActiveTransitionSeries()

@@ -89,13 +89,7 @@ public class DataSet extends AbstractDataSet
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		FList<Spectrum> badScans = FList.wrap(excludedIndcies).map(new Function<Integer, Spectrum>() {
-
-			public Spectrum apply(Integer index)
-			{
-				return dataSource.get(index);
-			}
-		});
+		FList<Spectrum> badScans = FList.wrap(excludedIndcies).map(index -> dataSource.get(index));
 
 		Spectrum Ae;
 		Spectrum At;
@@ -242,12 +236,7 @@ public class DataSet extends AbstractDataSet
 				};
 				
 				//anon function to call to check if the user has requested the operation be aborted
-				Supplier<Boolean> isAborted = new Supplier<Boolean>(){
-
-					public Boolean get()
-					{
-						return isAborted() || isAbortRequested();
-					}};
+				Supplier<Boolean> isAborted = () -> isAborted() || isAbortRequested();
 				
 				//anon function to call when the loader reads a scan from the input data
 				Consumer<Integer> readScans = (Integer count) -> reading.workUnitCompleted(count);

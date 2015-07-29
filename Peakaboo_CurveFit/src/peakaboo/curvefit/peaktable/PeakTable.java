@@ -89,7 +89,7 @@ public class PeakTable
 	
 	public static List<TransitionSeries> getAllTransitionSeries()
 	{
-		return elementTransitions.map(Functions.<TransitionSeries>id());
+		return elementTransitions.map(a -> a);
 	}
 	
 	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)

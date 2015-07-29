@@ -274,13 +274,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
-		List<Integer> ratioSideValues = unique(map(tabController.getVisibleTransitionSeries(), new Function<TransitionSeries, Integer>() {
-
-			public Integer apply(TransitionSeries ts)
-			{
-				return tabController.getRatioSide(ts);
-			}
-		}));
+		List<Integer> ratioSideValues = unique(map(tabController.getVisibleTransitionSeries(), ts -> tabController.getRatioSide(ts)));
 		
 		
 		//this is a valid ratio if there is at least 1 visible TS for each side
@@ -385,13 +379,10 @@ public class MapCanvas extends GraphicsPanel
 		final float datamax = dr.maxYIntensity;
 		
 		
-		invalidPoints.map_i(new Function<Float, Float>() {
-
-			public Float apply(Float value)
-			{
-				if (value == 1f) return datamax;
-				return 0f;
-			}});
+		invalidPoints.map_i((Float value) -> {
+			if (value == 1f) return datamax;
+			return 0f;
+		});
 		
 
 		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints, false, 0);

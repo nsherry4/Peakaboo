@@ -36,12 +36,7 @@ public class MCA_DSP extends AbstractDSP {
 		int startIndex = lines.indexOf("<<DATA>>") + 1;
 		int endIndex = lines.indexOf("<<END>>");
 		
-		Spectrum s = new Spectrum(lines.subList(startIndex, endIndex).map(new Function<String, Float>(){
-
-			@Override
-			public Float apply(String line) {
-				return Float.parseFloat(line);
-			}}));
+		Spectrum s = new Spectrum(lines.subList(startIndex, endIndex).map(line -> Float.parseFloat(line)));
 		
 		r.close();
 		

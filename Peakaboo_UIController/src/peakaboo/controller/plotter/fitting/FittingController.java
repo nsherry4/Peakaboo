@@ -261,7 +261,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//all visible TSs
-		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), Functions.<TransitionSeries>id());
+		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), a -> a);
 				
 		//all invisible TSs
 		FList<TransitionSeries> invisibles = filter(getFittedTransitionSeries(), e -> !tss.include(e));
@@ -285,19 +285,15 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 
 		//score each of the overlappers w/o competition
-		FList<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.map(new Function<TransitionSeries, Pair<TransitionSeries, Float>>() {
-
-			public Pair<TransitionSeries, Float> apply(TransitionSeries ts)
-			{
-				return new Pair<TransitionSeries, Float>(
-						ts, 
-						TSOrdering.fScoreTransitionSeries(
-								plot.settings().getEscapePeakType(), 
-								plot.settings().getEnergyPerChannel(), 
-								plot.filtering().getFilteredPlot()
-							).apply(ts)
-					);
-			}
+		FList<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.map((TransitionSeries ts) -> {
+			return new Pair<TransitionSeries, Float>(
+				ts, 
+				TSOrdering.fScoreTransitionSeries(
+						plot.settings().getEscapePeakType(), 
+						plot.settings().getEnergyPerChannel(), 
+						plot.filtering().getFilteredPlot()
+					).apply(ts)
+			);
 		});
 		
 		//sort all the overlappig visible elements according to how strongly they would fit on their own (ie no competition)
@@ -308,12 +304,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 				return (f2.compareTo(f1));
 				
 			}
-		}, Functions.<TransitionSeries, Float>second());
+		}, e -> e.second);
 		
 		
 		
 		//find the optimal ordering of the visible overlapping TSs based on how they fit with competition
-		FList<TransitionSeries> bestfit = optimizeTSOrderingHelper(scoredOverlappers.map(Functions.<TransitionSeries, Float>first()), new FList<TransitionSeries>());
+		FList<TransitionSeries> bestfit = optimizeTSOrderingHelper(scoredOverlappers.map(e -> e.first), new FList<TransitionSeries>());
 		
 
 		
@@ -372,26 +368,20 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		FList<List<TransitionSeries>> perms = Fn.permutations(topn);
 				
 		//function to score an ordering of Transition Series
-		final Function<List<TransitionSeries>, Float> scoreTSs = new Function<List<TransitionSeries>, Float>() {
-
-			public Float apply(List<TransitionSeries> tss)
+		final Function<List<TransitionSeries>, Float> scoreTSs = tss -> {
+				
+			final Function<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(
+					plot.settings().getEscapePeakType(), 
+					plot.settings().getEnergyPerChannel(), 
+					plot.filtering().getFilteredPlot()
+				);
+			
+			Float score = 0f;
+			for (TransitionSeries ts : tss)
 			{
-				
-				final Function<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(
-						plot.settings().getEscapePeakType(), 
-						plot.settings().getEnergyPerChannel(), 
-						plot.filtering().getFilteredPlot()
-					);
-				
-				Float score = 0f;
-				for (TransitionSeries ts : tss)
-				{
-					score = scoreTS.apply(ts);
-				}
-				return score;
-				
-
+				score = scoreTS.apply(ts);
 			}
+			return score;
 		};
 	
 		

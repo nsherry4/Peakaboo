@@ -1306,20 +1306,9 @@ public class PlotPanel extends ClearPanel
 
 		files = openNewDataset(exts, descs);
 		if (files == null) return;
-		
-		FList<String> filenames = FList.wrap(files).map(new Function<AbstractFile, String>() {
-
-			@Override
-			public String apply(AbstractFile v)
-			{
-				return v.getFileName();
-			}});
-		
-		
+		FList<String> filenames = FList.wrap(files).map(v -> v.getFileName());
 		loadFiles(filenames);
 		
-		
-
 	}
 	
 	private void actionOpenSampleData()

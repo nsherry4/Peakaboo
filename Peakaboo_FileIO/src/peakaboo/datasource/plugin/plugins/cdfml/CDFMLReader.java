@@ -511,22 +511,11 @@ public abstract class CDFMLReader extends DefaultHandler2
 				return (List<Float>)getEntriesForVar(var);
 				
 			case INTEGER:
-				return FList.<Integer>wrap(  (List<Integer>)getEntriesForVar(var)  ).map(new Function<Integer, Float>() {
-
-					public Float apply(Integer v)
-					{
-						return new Float(v);
-					}});
+				return FList.<Integer>wrap(  (List<Integer>)getEntriesForVar(var)  ).map(i -> i.floatValue());
 				
 			case SPECTRUM:
-				
-				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new Function<Spectrum, Float>() {
-
-					public Float apply(Spectrum v)
-					{
-						return v.fold((a, b) -> a + b);
-					}});
-				
+				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(v -> v.fold((a, b) -> a + b));
+			
 		}
 		
 		return null;
@@ -541,19 +530,12 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 		
 			case REAL:
-				return FList.<Float>wrap(  (List<Float>)getEntriesForVar(var)  ).map(new Function<Float, Integer>() {
-
-					public Integer apply(Float v)
-					{
-						return v.intValue();
-					}});
+				return FList.<Float>wrap(  (List<Float>)getEntriesForVar(var)  ).map(v -> v.intValue());
 				
 			case INTEGER:
-				
 				return (List<Integer>)getEntriesForVar(var);
 				
 			case SPECTRUM:
-				
 				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(v -> v.fold((a, b) -> a + b).intValue());
 				
 		}
@@ -568,21 +550,10 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 			
 			case REAL:
-				return FList.<Float>wrap((List<Float>)getEntriesForVar(var)).map(new Function<Float, Spectrum>() {
-
-					public Spectrum apply(Float v)
-					{
-						return new Spectrum(1, v.floatValue());
-					}});
+				return FList.<Float>wrap((List<Float>)getEntriesForVar(var)).map(v -> new Spectrum(1, v.floatValue()));
 				
 			case INTEGER:
-
-				return FList.<Integer>wrap((List<Integer>)getEntriesForVar(var)).map(new Function<Integer, Spectrum>() {
-
-					public Spectrum apply(Integer v)
-					{
-						return new Spectrum(1, v.floatValue());
-					}});
+				return FList.<Integer>wrap((List<Integer>)getEntriesForVar(var)).map(v -> new Spectrum(1, v.floatValue()));
 				
 			case SPECTRUM:
 				return (List<Spectrum>)getEntriesForVar(var);

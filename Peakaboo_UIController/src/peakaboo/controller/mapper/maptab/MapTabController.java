@@ -5,7 +5,6 @@ import static fava.Fn.fold;
 import static fava.Fn.foldl;
 import static fava.Fn.map;
 import static fava.Fn.unique;
-import static fava.Functions.strcat;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -162,15 +161,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		
 		List<Pair<TransitionSeries, Spectrum>> dataset = map(
 				getVisibleTransitionSeries(),
-				new Function<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
-
-
-					public Pair<TransitionSeries, Spectrum> apply(TransitionSeries ts)
-					{
-						return new Pair<TransitionSeries, Spectrum>(ts, getMapForTransitionSeries(ts));
-
-					}
-				});
+				ts -> new Pair<TransitionSeries, Spectrum>(ts, getMapForTransitionSeries(ts))
+			);
 				
 
 		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null;
@@ -179,14 +171,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = filter(
 			dataset, 
-			new Predicate<Pair<TransitionSeries, Spectrum>>() {
-
-				public boolean test(Pair<TransitionSeries, Spectrum> element)
-				{
-					return (tabModel.overlayColour.get(element.first) == OverlayColour.RED);
-				}
-			}
-		).map(Functions.<TransitionSeries, Spectrum>second());
+			element -> (tabModel.overlayColour.get(element.first) == OverlayColour.RED)
+		).map(e -> e.second);
 
 		if (redSpectrums != null && redSpectrums.size() > 0) {
 			redSpectrum = fold(
@@ -213,7 +199,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				return (tabModel.overlayColour.get(element.first) == OverlayColour.GREEN);
 			}
 			
-		).map(Functions.<TransitionSeries, Spectrum>second());
+		).map(e -> e.second);
 		
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
 			greenSpectrum = fold(
@@ -239,7 +225,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			dataset, 
 			(Pair<TransitionSeries, Spectrum> element) -> {
 				return (tabModel.overlayColour.get(element.first) == OverlayColour.BLUE);
-			}).map(Functions.<TransitionSeries, Spectrum>second());
+			}).map(e -> e.second);
 		
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
 			blueSpectrum = fold(
@@ -384,23 +370,17 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	private void putValueFunctionForOverlay(final Map<OverlayColour, Spectrum> overlayData)
 	{
-		valueAtCoord = new Function<Coord<Integer>, String>() {
-
-			public String apply(Coord<Integer> coord)
+		valueAtCoord = coord -> {
+			
+			if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
+			
+			int index = map.mapsController.getDataWidth() * coord.y + coord.x;
+			FList<String> results = new FList<String>();
+			for (OverlayColour c : OverlayColour.values())
 			{
-				
-				if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
-				
-				int index = map.mapsController.getDataWidth() * coord.y + coord.x;
-				
-				FList<String> results = new FList<String>();
-				
-				for (OverlayColour c : OverlayColour.values())
-				{
-					if (overlayData.get(c) != null) results.add(  c.toString() + ": " + SigDigits.roundFloatTo(overlayData.get(c).get(index), 2)  );
-				}
-				return results.foldl(strcat(", "));
+				if (overlayData.get(c) != null) results.add(  c.toString() + ": " + SigDigits.roundFloatTo(overlayData.get(c).get(index), 2)  );
 			}
+			return results.foldl((a, b) -> a + ", " + b);
 		};
 	}
 	
@@ -413,17 +393,12 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	private void putValueFunctionForRatio(final Pair<Spectrum, Spectrum> ratioData)
 	{
-		valueAtCoord = new Function<Coord<Integer>, String>() {
-
-			public String apply(Coord<Integer> coord)
-			{
-				
-				if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
-				
-				int index = map.mapsController.getDataWidth() * coord.y + coord.x;
-				if (ratioData.second.get(index) != 0) return "Invalid";
-				return Ratios.fromFloat(  ratioData.first.get(index)  );
-			}
+		valueAtCoord = coord -> {
+			if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
+			
+			int index = map.mapsController.getDataWidth() * coord.y + coord.x;
+			if (ratioData.second.get(index) != 0) return "Invalid";
+			return Ratios.fromFloat(  ratioData.first.get(index)  );
 		};
 	}
 	
@@ -436,16 +411,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	private void putValueFunctionForComposite(final Spectrum data)
 	{
-		
-		
-		
-		valueAtCoord = new Function<Coord<Integer>, String>() {
-
-			public String apply(Coord<Integer> coord)
-			{
-				int index = map.mapsController.getDataWidth() * coord.y + coord.x;
-				return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
-			}
+		valueAtCoord = coord -> {
+			int index = map.mapsController.getDataWidth() * coord.y + coord.x;
+			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
 		};
 	}
 	
@@ -661,15 +629,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private String getDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, new Function<TransitionSeries, String>() {
-			
-			public String apply(TransitionSeries ts) {
-				return ts.toElementString();
-			}
-		});
-
-		String title = foldl(elementNames, strcat(", "));
-		
+		List<String> elementNames = map(list, ts -> ts.toElementString());
+		String title = foldl(elementNames, (a, b) -> a + ", " + b);
 		if (title == null) return "-";
 		return title;
 		
@@ -679,17 +640,12 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private String getShortDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, new Function<TransitionSeries, String>() {
-			
-			public String apply(TransitionSeries ts) {
-				return ts.element.toString();
-			}
-		});
+		List<String> elementNames = map(list, ts -> ts.element.toString());
 		
 		//trim out the duplicated
 		elementNames = unique(elementNames);
 
-		String title = foldl(elementNames, strcat(", "));
+		String title = foldl(elementNames, (a, b) -> a + ", " + b);
 		
 		if (title == null) return "-";
 		return title;
@@ -705,10 +661,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<TransitionSeries> tsList = filter(tabModel.visible.keySet(), Functions.<TransitionSeries>bTrue());
-		
+		List<TransitionSeries> tsList = filter(tabModel.visible.keySet(), a -> true);
 		Collections.sort(tsList);
-		
 		return tsList;
 	}
 	

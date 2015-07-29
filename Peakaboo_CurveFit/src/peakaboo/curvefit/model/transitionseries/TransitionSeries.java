@@ -11,7 +11,6 @@ import static fava.Fn.foldr;
 import static fava.Fn.group;
 import static fava.Fn.map;
 import static fava.Fn.zipWith;
-import static fava.Functions.strcat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -150,7 +149,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public List<Transition> getAllTransitions()
 	{
-		return transitions.map(Functions.<Transition>id());
+		return transitions.map(a -> a);
 	}
 	
 	/**
@@ -260,12 +259,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			minDistance = minEnergyDistance;
 		}
 		
-		FList<Double> scores = transitions.map(new Function<Transition, Double>() {
-
-			public Double apply(Transition t)
-			{
-				return  t.relativeIntensity / (Math.max( Math.abs(t.energyValue - energy), minDistance ));
-			}});
+		FList<Double> scores = transitions.map(t -> {
+			return  t.relativeIntensity / (Math.max( Math.abs(t.energyValue - energy), minDistance ));
+		});
 		
 		
 		return 1 / scores.fold((a, b) -> a + b);
@@ -302,13 +298,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				Collections.sort(componentSeries);
 
-				return componentSeries.map(new Function<TransitionSeries, String>() {
-
-					public String apply(TransitionSeries ts)
-					{
-						return ts.getDescription();
-					}
-				}).foldr(strcat(" + "));
+				return componentSeries.map(TransitionSeries::getDescription).foldr((a, b) -> a + " + " + b);
 
 			default:
 
@@ -414,29 +404,13 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		
 		if (transitions.size() == 0) return newTransitionSeries;
 
-		List<List<Transition>> allPileupLists = map(
-				transitions,
-				new Function<Transition, List<Transition>>() {
-
-					// map each of the transitions
-
-					public List<Transition> apply(final Transition t1)
-					{
-
-						//
-						//
-						// For each transition in the outer map, map the list transitionList to a list of
-						// pileup values
-						return map(other.transitions, new Function<Transition, Transition>() {
-
-							public Transition apply(Transition t2)
-							{
-								return t1.summation(t2);
-							}
-						});
-
-					}
-				});
+		List<List<Transition>> allPileupLists = map(transitions,
+			// map each of the transitions
+			t1 -> {
+				// For each transition in the outer map, map the list transitionList to a list of pileup values
+				return map(other.transitions, t2 ->t1.summation(t2));
+			}
+		);
 
 		List<Transition> allPileups = concat(allPileupLists);
 
@@ -584,16 +558,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		switch (type)
 		{
 			case COMPOSITE:
-
-				list = concatMap(componentSeries, new Function<TransitionSeries, List<TransitionSeries>>() {
-
-					public List<TransitionSeries> apply(TransitionSeries ts)
-					{
-						return ts.getBaseTransitionSeries();
-					}
-				});
-
-				return list;
+				return concatMap(componentSeries, TransitionSeries::getBaseTransitionSeries);
 
 			default:
 				list = new ArrayList<TransitionSeries>();

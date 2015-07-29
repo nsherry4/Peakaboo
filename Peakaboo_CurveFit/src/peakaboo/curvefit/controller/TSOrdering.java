@@ -273,7 +273,7 @@ public class TSOrdering
 
 
 		//get a list of all transition series to start with
-		FList<TransitionSeries> tss = Fn.map(PeakTable.getAllTransitionSeries(), Functions.<TransitionSeries>id());
+		FList<TransitionSeries> tss = Fn.map(PeakTable.getAllTransitionSeries(), a -> a);
 
 		
 		//add in any 2x summations from the list of previously fitted AND proposed peaks.
@@ -321,7 +321,7 @@ public class TSOrdering
 				return prox1.compareTo(prox2);
 
 			}
-		}, Functions.<TransitionSeries>id());
+		}, a -> a);
 		
 		//take the top n based on position alone
 		tss = tss.take(15);

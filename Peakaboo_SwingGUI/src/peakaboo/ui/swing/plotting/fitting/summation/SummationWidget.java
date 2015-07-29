@@ -42,19 +42,9 @@ class SummationWidget extends TSSelectorGroup
 	@Override
 	public FList<TransitionSeries> getTransitionSeries()
 	{
-
 		//get a list of all TransitionSeries to be summed
-		FList<TransitionSeries> tss = selectors.map(new Function<TSSelector, TransitionSeries>() {
-
-			public TransitionSeries apply(TSSelector element)
-			{
-				return element.getTransitionSeries();
-			}
-		}).filter(ts -> ts != null);
-		
-		
+		FList<TransitionSeries> tss = selectors.map(element -> element.getTransitionSeries()).filter(ts -> ts != null);
 		return DataTypeFactory.<TransitionSeries>listInit(TransitionSeries.summation(tss));
-
 	}
 	
 

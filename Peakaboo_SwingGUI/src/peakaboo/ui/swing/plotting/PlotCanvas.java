@@ -99,29 +99,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		//there are security restrictions
 		if (!Env.isWebStart())
 		{
-
 			new FileDrop(this, new FileDrop.Listener() {
 
 				public void filesDropped(File[] files)
 				{
-
-
-
-					parent.loadFiles(
-						FArray.wrap(files).map(new Function<File, String>() {
-
-							public String apply(File element)
-							{
-								return element.getAbsolutePath();
-							}
-						}).toSink()
-						);
-
-
-
+					parent.loadFiles(FArray.wrap(files).map(element -> element.getAbsolutePath()).toSink());
 				}
 			});
-
 		}
 
 		

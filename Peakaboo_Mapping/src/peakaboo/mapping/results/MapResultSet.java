@@ -123,12 +123,7 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	 */
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return maps.map(new Function<MapResult, TransitionSeries>() {
-			
-			public TransitionSeries apply(MapResult mr) {
-				return mr.transitionSeries;
-			}
-		});
+		return maps.map(mr -> mr.transitionSeries);
 	}
 	
 	/**

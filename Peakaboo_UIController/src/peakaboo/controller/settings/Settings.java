@@ -119,16 +119,11 @@ public class Settings
 		//yaml library to build TransitionSeries
 		data.fittings = Fn.map(
 				fittings.selections.getFittedTransitionSeries(), 
-				new Function<TransitionSeries, SerializedTransitionSeries>() {
-
-					public SerializedTransitionSeries apply(TransitionSeries ts)
-					{
-						return new SerializedTransitionSeries(ts);
-					}
-				});
+				ts -> new SerializedTransitionSeries(ts)
+			);
 		
 		//map the filters from a FilterSet to a list
-		data.filters = Fn.map(filters.filters, Functions.<AbstractFilter>id());
+		data.filters = Fn.map(filters.filters, a -> a);
 		
 		
 		//other structs

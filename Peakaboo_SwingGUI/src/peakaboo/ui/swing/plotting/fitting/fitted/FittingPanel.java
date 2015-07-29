@@ -74,13 +74,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(new Function<Integer, TransitionSeries>(){
-
-
-					public TransitionSeries apply(Integer i)
-					{
-						return controller.getFittedTransitionSeries().get(i);
-					}});
+				List<TransitionSeries> tss = FArray.boxi(rows).map(i -> controller.getFittedTransitionSeries().get(i));
 					
 				if (tss.size() == 0) return;
 				
@@ -98,13 +92,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 				
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(new Function<Integer, TransitionSeries>(){
-
-
-					public TransitionSeries apply(Integer i)
-					{
-						return controller.getFittedTransitionSeries().get(i);
-					}});
+				List<TransitionSeries> tss = FArray.boxi(rows).map(i -> controller.getFittedTransitionSeries().get(i));
 					
 				if (tss.size() == 0) return;
 				for (TransitionSeries ts : tss)
@@ -120,13 +108,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			public void down()
 			{
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(new Function<Integer, TransitionSeries>(){
-
-
-					public TransitionSeries apply(Integer i)
-					{
-						return controller.getFittedTransitionSeries().get(i);
-					}});
+				List<TransitionSeries> tss = FArray.boxi(rows).map(i -> controller.getFittedTransitionSeries().get(i));
 					
 				if (tss.size() == 0) return;
 				
