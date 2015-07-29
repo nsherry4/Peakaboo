@@ -10,9 +10,7 @@ import static fava.Fn.filter;
 import static fava.Fn.foldr;
 import static fava.Fn.group;
 import static fava.Fn.map;
-import static fava.Fn.zipEquiv;
 import static fava.Fn.zipWith;
-import static fava.Functions.notEquiv;
 import static fava.Functions.strcat;
 
 import java.io.Serializable;
@@ -26,7 +24,6 @@ import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.peaktable.Element;
 import fava.Functions;
 import fava.functionable.FList;
-import fava.signatures.FnCombine;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -477,18 +474,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				Collections.sort(componentSeries);
 				Collections.sort(otherTS.componentSeries);
 
-				List<Integer> differences =
-						filter(zipWith(
-								componentSeries,
-								otherTS.componentSeries,
-								new FnCombine<TransitionSeries, Integer>() {
-
-									public Integer apply(TransitionSeries ts1, TransitionSeries ts2)
-									{
-										return ts1.compareTo(ts2);
-									}
-								}),
-								notEquiv(0));
+				List<Integer> differences = filter(zipWith(componentSeries, otherTS.componentSeries, (ts1, ts2) -> ts1.compareTo(ts2)), a -> a.equals(0));
 
 				if (differences.size() == 0) return 0;
 				return differences.get(0);
@@ -536,7 +522,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			Collections.sort(componentSeries);
 			Collections.sort(other.componentSeries);
 
-			if ( !all(zipEquiv(componentSeries, other.componentSeries)) ) return false;
+			if ( !all(zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b))) ) return false;
 		}
 		
 		return true;

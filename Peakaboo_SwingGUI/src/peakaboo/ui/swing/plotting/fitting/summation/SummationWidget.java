@@ -50,7 +50,7 @@ class SummationWidget extends TSSelectorGroup
 			{
 				return element.getTransitionSeries();
 			}
-		}).filter(Functions.<TransitionSeries>notNull());
+		}).filter(ts -> ts != null);
 		
 		
 		return DataTypeFactory.<TransitionSeries>listInit(TransitionSeries.summation(tss));
