@@ -76,7 +76,10 @@ public class PlainTextDSP extends AbstractDSP
 	@Override
 	public boolean canRead(String filename)
 	{
-		return filename.toLowerCase().endsWith(".txt");
+		return 	filename.toLowerCase().endsWith(".txt") ||
+				filename.toLowerCase().endsWith(".dat") ||
+				filename.toLowerCase().endsWith(".csv") ||
+				filename.toLowerCase().endsWith(".tsv");
 	}
 
 	@Override
@@ -164,7 +167,7 @@ public class PlainTextDSP extends AbstractDSP
 	@Override
 	public List<String> getFileExtensions()
 	{
-		return new FList<String>("txt");
+		return new FList<String>("txt", "dat", "csv", "tsv");
 	}
 	
 	
