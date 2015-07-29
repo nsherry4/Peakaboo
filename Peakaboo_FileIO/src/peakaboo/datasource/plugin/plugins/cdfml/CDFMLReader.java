@@ -524,7 +524,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 
 					public Float apply(Spectrum v)
 					{
-						return v.fold(Functions.addf());
+						return v.fold((a, b) -> a + b);
 					}});
 				
 		}
@@ -554,12 +554,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				
 			case SPECTRUM:
 				
-				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new Function<Spectrum, Integer>() {
-
-					public Integer apply(Spectrum v)
-					{
-						return v.fold(Functions.addf()).intValue();
-					}});
+				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(v -> v.fold((a, b) -> a + b).intValue());
 				
 		}
 		

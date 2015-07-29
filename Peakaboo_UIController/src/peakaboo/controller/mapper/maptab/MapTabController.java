@@ -33,7 +33,8 @@ import eventful.EventfulType;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnFold;
+
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -186,17 +187,11 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				}
 			}
 		).map(Functions.<TransitionSeries, Spectrum>second());
-		
+
 		if (redSpectrums != null && redSpectrums.size() > 0) {
 			redSpectrum = fold(
-					redSpectrums,
-					new FnFold<Spectrum, Spectrum>() {
-
-						public Spectrum apply(Spectrum mapdata, Spectrum sum)
-						{
-							return SpectrumCalculations.addLists(mapdata, sum);
-						}
-					}
+				redSpectrums,
+				(mapdata, sum) -> SpectrumCalculations.addLists(mapdata, sum)		
 			);
 			
 			uninterpolatedColours.put(OverlayColour.RED, redSpectrum);

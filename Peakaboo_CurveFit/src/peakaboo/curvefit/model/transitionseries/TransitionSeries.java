@@ -12,7 +12,6 @@ import static fava.Fn.group;
 import static fava.Fn.map;
 import static fava.Fn.zipEquiv;
 import static fava.Fn.zipWith;
-import static fava.Functions.addd;
 import static fava.Functions.notEquiv;
 import static fava.Functions.strcat;
 
@@ -28,7 +27,8 @@ import peakaboo.curvefit.peaktable.Element;
 import fava.Functions;
 import fava.functionable.FList;
 import fava.signatures.FnCombine;
-import fava.signatures.FnFold;
+
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -163,13 +163,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public Transition getStrongestTransition()
 	{
 
-		return transitions.foldr(new FnFold<Transition, Transition>() {
-
-			public Transition apply(Transition t1, Transition t2)
-			{
-				if (t1.relativeIntensity > t2.relativeIntensity) return t1;
-				return t2;
-			}
+		return transitions.foldr((Transition t1, Transition t2) -> {
+			if (t1.relativeIntensity > t2.relativeIntensity) return t1;
+			return t2;
 		});
 
 	}
@@ -275,7 +271,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			}});
 		
 		
-		return 1 / scores.fold(addd());
+		return 1 / scores.fold((a, b) -> a + b);
 
 	}
 
@@ -380,25 +376,15 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 		//function for summing two TransitionSeries
-		final FnFold<TransitionSeries, TransitionSeries> tsSum = new FnFold<TransitionSeries, TransitionSeries>() {
-
-			public TransitionSeries apply(TransitionSeries ts1, TransitionSeries ts2)
-			{
-				return ts1.summation(ts2);
-			}
-		};
+		final BiFunction<TransitionSeries, TransitionSeries, TransitionSeries> tsSum = (ts1, ts2) -> ts1.summation(ts2);
 
 
 		//turn the groups of primary transitionseries into a list of pile-up transitionseries
-		List<TransitionSeries> pileups = map(
-				tsGroups,
-				new Function<List<TransitionSeries>, TransitionSeries>() {
-
-					public TransitionSeries apply(List<TransitionSeries> tsList)
-					{
-						return foldr(tsList, tsSum);
-					}
-				});
+		List<TransitionSeries> pileups = map(tsGroups,
+			tsList -> {
+				return foldr(tsList, tsSum);
+			}
+		);
 
 		//sum the pileups
 		TransitionSeries result = foldr(pileups, tsSum);

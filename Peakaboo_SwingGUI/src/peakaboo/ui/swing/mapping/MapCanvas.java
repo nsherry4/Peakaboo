@@ -43,7 +43,6 @@ import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 import fava.datatypes.Pair;
-import fava.signatures.FnFold;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -464,52 +463,33 @@ public class MapCanvas extends GraphicsPanel
 
 			// create a list of color,string pairs for the legend by mapping the list of transitionseries per
 			// colour and filter for empty strings
-			filter(
-					map(
+			filter(map(
 
-					// input list - get a unique list of colours in use
+				// input list - get a unique list of colours in use
 
-							unique(tabController.getOverlayColourValues()),
+					unique(tabController.getOverlayColourValues()),
 
-							// mapping function - convert the color objects into color,string pairs (ie
-							// color/element
-							// list)
-							new Function<OverlayColour, Pair<Color, String>>() {
+					// mapping function - convert the color objects into color,string pairs (ie
+					// color/element list)
+					(final OverlayColour ocolour) ->
+					{
+						// create a color,string pair
+						return new Pair<Color, String>(ocolour.toColor(),
 
-								
-								public Pair<Color, String> apply(final OverlayColour ocolour)
-								{
-									// create a color,string pair
-									return new Pair<Color, String>(
+							// fold the list of transition series using the concat operator
+							foldr(
+								//grab a list of all TSs from the TS->Colour map and filter for the right colour
+								filter(tabController.getOverlayColourKeys(), ts -> tabController.getOverlayColour(ts) == ocolour)//filter transitionseries
+								,
+								"",
+								(TransitionSeries ts, String title) -> title + (title.equals("") ? "" : ", ") + ts.toElementString()										
+							) //foldr [TransitionSeries] -> String (title)
+						);
+					}),
 
-									ocolour.toColor(),
-
-									// fold the list of transition series using the concat operator
-										foldr(
-
-												//grab a list of all TSs from the TS->Colour map and filter for the right colour
-												filter(tabController.getOverlayColourKeys(), ts -> tabController.getOverlayColour(ts) == ocolour)//filter transitionseries
-												,
-												"",
-												new FnFold<TransitionSeries, String>() {
-
-													
-													public String apply(TransitionSeries ts, String title)
-													{
-														return title + (title.equals("") ? "" : ", ")
-																+ ts.toElementString();
-													}
-												}
-										) //foldr [TransitionSeries] -> String (title)
-
-									);
-								}
-							}),
-
-					// filter for empty strings
-					element -> !(element.second.length() == 0)							
-				)
-
+				// filter for empty strings
+				element -> !(element.second.length() == 0)							
+			)
 		);
 
 			

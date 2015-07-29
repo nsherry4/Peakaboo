@@ -23,7 +23,6 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnFold;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -397,18 +396,13 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	
 		
 		//find the best fitting for the currently selected fittings
-		FList<TransitionSeries> bestfit = FList.<TransitionSeries>wrap(perms.fold(new FnFold<List<TransitionSeries>, List<TransitionSeries>>() {
+		FList<TransitionSeries> bestfit = FList.<TransitionSeries>wrap(perms.fold((l1, l2) -> {
+			Float s1, s2; //scores
+			s1 = scoreTSs.apply(l1);
+			s2 = scoreTSs.apply(l2);				
 			
-			public List<TransitionSeries> apply(List<TransitionSeries> l1, List<TransitionSeries> l2)
-			{
-				Float s1, s2; //scores
-				s1 = scoreTSs.apply(l1);
-				s2 = scoreTSs.apply(l2);				
-				
-				if (s1 < s2) return l1;
-				return l2;
-				
-			}
+			if (s1 < s2) return l1;
+			return l2;	
 		}));
 
 		

@@ -465,7 +465,7 @@ public class PeakabooMapperSwing extends JFrame
 				float total = averages.map((Pair<TransitionSeries, Float> p) -> {
 					Float corrFactor = corr.getCorrection(p.first);
 					return (corrFactor == null) ? 0f : p.second * corrFactor;
-				}).fold(Functions.addf());
+				}).fold((a, b) -> a + b);
 				
 				for (Pair<TransitionSeries, Float> p : averages)
 				{
