@@ -43,7 +43,7 @@ import commonenvironment.Env;
 import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
 import fava.functionable.FArray;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 
@@ -108,9 +108,9 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 
 					parent.loadFiles(
-						FArray.wrap(files).map(new FnMap<File, String>() {
+						FArray.wrap(files).map(new Function<File, String>() {
 
-							public String f(File element)
+							public String apply(File element)
 							{
 								return element.getAbsolutePath();
 							}

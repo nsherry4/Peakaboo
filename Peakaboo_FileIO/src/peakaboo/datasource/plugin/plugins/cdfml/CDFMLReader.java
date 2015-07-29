@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.function.Supplier;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -22,8 +23,7 @@ import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.functionable.Range;
-import fava.signatures.FnGet;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 public abstract class CDFMLReader extends DefaultHandler2
@@ -63,7 +63,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	private List<Pair<String, Map<String, String>>>		tagStackMapsList;
 	
 	
-	private FnGet<Boolean> 								isAborted;
+	private Supplier<Boolean> 							isAborted;
 	
 	private boolean										isEntry, isRecord;
 	private String										currentVarName;
@@ -89,7 +89,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		super();
 	}
 	
-	public void read(String file, FnGet<Boolean> isAborted) throws Exception
+	public void read(String file, Supplier<Boolean> isAborted) throws Exception
 	{
 		
 		this.isAborted = isAborted;
@@ -211,7 +211,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		}
 			
 
-		if (isAborted != null && isAborted.f())
+		if (isAborted != null && isAborted.get())
 		{
 			throw new SAXException(ABORT_MESSAGE);
 		}
@@ -511,18 +511,18 @@ public abstract class CDFMLReader extends DefaultHandler2
 				return (List<Float>)getEntriesForVar(var);
 				
 			case INTEGER:
-				return FList.<Integer>wrap(  (List<Integer>)getEntriesForVar(var)  ).map(new FnMap<Integer, Float>() {
+				return FList.<Integer>wrap(  (List<Integer>)getEntriesForVar(var)  ).map(new Function<Integer, Float>() {
 
-					public Float f(Integer v)
+					public Float apply(Integer v)
 					{
 						return new Float(v);
 					}});
 				
 			case SPECTRUM:
 				
-				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new FnMap<Spectrum, Float>() {
+				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new Function<Spectrum, Float>() {
 
-					public Float f(Spectrum v)
+					public Float apply(Spectrum v)
 					{
 						return v.fold(Functions.addf());
 					}});
@@ -541,9 +541,9 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 		
 			case REAL:
-				return FList.<Float>wrap(  (List<Float>)getEntriesForVar(var)  ).map(new FnMap<Float, Integer>() {
+				return FList.<Float>wrap(  (List<Float>)getEntriesForVar(var)  ).map(new Function<Float, Integer>() {
 
-					public Integer f(Float v)
+					public Integer apply(Float v)
 					{
 						return v.intValue();
 					}});
@@ -554,9 +554,9 @@ public abstract class CDFMLReader extends DefaultHandler2
 				
 			case SPECTRUM:
 				
-				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new FnMap<Spectrum, Integer>() {
+				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(new Function<Spectrum, Integer>() {
 
-					public Integer f(Spectrum v)
+					public Integer apply(Spectrum v)
 					{
 						return v.fold(Functions.addf()).intValue();
 					}});
@@ -573,18 +573,18 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 			
 			case REAL:
-				return FList.<Float>wrap((List<Float>)getEntriesForVar(var)).map(new FnMap<Float, Spectrum>() {
+				return FList.<Float>wrap((List<Float>)getEntriesForVar(var)).map(new Function<Float, Spectrum>() {
 
-					public Spectrum f(Float v)
+					public Spectrum apply(Float v)
 					{
 						return new Spectrum(1, v.floatValue());
 					}});
 				
 			case INTEGER:
 
-				return FList.<Integer>wrap((List<Integer>)getEntriesForVar(var)).map(new FnMap<Integer, Spectrum>() {
+				return FList.<Integer>wrap((List<Integer>)getEntriesForVar(var)).map(new Function<Integer, Spectrum>() {
 
-					public Spectrum f(Integer v)
+					public Spectrum apply(Integer v)
 					{
 						return new Spectrum(1, v.floatValue());
 					}});

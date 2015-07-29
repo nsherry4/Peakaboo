@@ -16,7 +16,7 @@ import commonenvironment.AbstractFile;
 
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 public class MCA_DSP extends AbstractDSP {
@@ -36,10 +36,10 @@ public class MCA_DSP extends AbstractDSP {
 		int startIndex = lines.indexOf("<<DATA>>") + 1;
 		int endIndex = lines.indexOf("<<END>>");
 		
-		Spectrum s = new Spectrum(lines.subList(startIndex, endIndex).map(new FnMap<String, Float>(){
+		Spectrum s = new Spectrum(lines.subList(startIndex, endIndex).map(new Function<String, Float>(){
 
 			@Override
-			public Float f(String line) {
+			public Float apply(String line) {
 				return Float.parseFloat(line);
 			}}));
 		

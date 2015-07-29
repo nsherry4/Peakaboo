@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import fava.functionable.Range;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.plugin.AbstractDSP;
 import scitypes.Bounds;

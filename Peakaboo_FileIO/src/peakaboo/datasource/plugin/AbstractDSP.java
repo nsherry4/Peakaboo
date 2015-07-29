@@ -3,14 +3,14 @@ package peakaboo.datasource.plugin;
 import peakaboo.datasource.DataSource;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import bolt.plugin.BoltPlugin;
-import fava.signatures.FnGet;
 
 public abstract class AbstractDSP implements DataSource, BoltPlugin
 {
 
-	protected FnGet<Boolean>	fn_isAborted;
+	protected Supplier<Boolean>	fn_isAborted;
 	protected Consumer<Integer>	fn_readScanCallback;
 	protected Consumer<Integer> fn_getScanCountCallback;
 		
@@ -23,7 +23,7 @@ public abstract class AbstractDSP implements DataSource, BoltPlugin
 	public void setCallbacks(
 			Consumer<Integer> getScanCountCallback, 
 			Consumer<Integer> readScanCallback,
-			FnGet<Boolean> isAborted
+			Supplier<Boolean> isAborted
 		)
 	{
 		this.fn_readScanCallback = readScanCallback;
@@ -33,7 +33,7 @@ public abstract class AbstractDSP implements DataSource, BoltPlugin
 	
 	protected boolean isAborted()
 	{
-		return fn_isAborted.f();
+		return fn_isAborted.get();
 	}
 	
 	protected void newScansRead(int numRead)

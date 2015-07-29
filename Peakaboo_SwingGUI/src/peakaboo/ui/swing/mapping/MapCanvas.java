@@ -43,9 +43,9 @@ import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 import fava.datatypes.Pair;
-import fava.signatures.FnCondition;
 import fava.signatures.FnFold;
-import fava.signatures.FnMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 public class MapCanvas extends GraphicsPanel
@@ -275,9 +275,9 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
-		List<Integer> ratioSideValues = unique(map(tabController.getVisibleTransitionSeries(), new FnMap<TransitionSeries, Integer>() {
+		List<Integer> ratioSideValues = unique(map(tabController.getVisibleTransitionSeries(), new Function<TransitionSeries, Integer>() {
 
-			public Integer f(TransitionSeries ts)
+			public Integer apply(TransitionSeries ts)
 			{
 				return tabController.getRatioSide(ts);
 			}
@@ -386,9 +386,9 @@ public class MapCanvas extends GraphicsPanel
 		final float datamax = dr.maxYIntensity;
 		
 		
-		invalidPoints.map_i(new FnMap<Float, Float>() {
+		invalidPoints.map_i(new Function<Float, Float>() {
 
-			public Float f(Float value)
+			public Float apply(Float value)
 			{
 				if (value == 1f) return datamax;
 				return 0f;
@@ -474,10 +474,10 @@ public class MapCanvas extends GraphicsPanel
 							// mapping function - convert the color objects into color,string pairs (ie
 							// color/element
 							// list)
-							new FnMap<OverlayColour, Pair<Color, String>>() {
+							new Function<OverlayColour, Pair<Color, String>>() {
 
 								
-								public Pair<Color, String> f(final OverlayColour ocolour)
+								public Pair<Color, String> apply(final OverlayColour ocolour)
 								{
 									// create a color,string pair
 									return new Pair<Color, String>(
@@ -488,24 +488,13 @@ public class MapCanvas extends GraphicsPanel
 										foldr(
 
 												//grab a list of all TSs from the TS->Colour map and filter for the right colour
-												filter(
-														
-													tabController.getOverlayColourKeys(), 
-													
-													new FnCondition<TransitionSeries>() {
-														public Boolean f(TransitionSeries ts)
-														{
-															return tabController.getOverlayColour(ts) == ocolour;
-														}
-													}
-													
-												)//filter transitionseries
+												filter(tabController.getOverlayColourKeys(), ts -> tabController.getOverlayColour(ts) == ocolour)//filter transitionseries
 												,
 												"",
 												new FnFold<TransitionSeries, String>() {
 
 													
-													public String f(TransitionSeries ts, String title)
+													public String apply(TransitionSeries ts, String title)
 													{
 														return title + (title.equals("") ? "" : ", ")
 																+ ts.toElementString();
@@ -518,14 +507,8 @@ public class MapCanvas extends GraphicsPanel
 							}),
 
 					// filter for empty strings
-					new FnCondition<Pair<Color, String>>() {
-
-						
-						public Boolean f(Pair<Color, String> element)
-							{
-								return !(element.second.length() == 0);
-							}
-					})
+					element -> !(element.second.length() == 0)							
+				)
 
 		);
 

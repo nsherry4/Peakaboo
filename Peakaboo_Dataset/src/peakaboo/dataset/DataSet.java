@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
@@ -22,8 +23,7 @@ import scitypes.SpectrumCalculations;
 import commonenvironment.AbstractFile;
 
 import fava.functionable.FList;
-import fava.signatures.FnGet;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 
@@ -89,9 +89,9 @@ public class DataSet extends AbstractDataSet
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		FList<Spectrum> badScans = FList.wrap(excludedIndcies).map(new FnMap<Integer, Spectrum>() {
+		FList<Spectrum> badScans = FList.wrap(excludedIndcies).map(new Function<Integer, Spectrum>() {
 
-			public Spectrum f(Integer index)
+			public Spectrum apply(Integer index)
 			{
 				return dataSource.get(index);
 			}
@@ -242,9 +242,9 @@ public class DataSet extends AbstractDataSet
 				};
 				
 				//anon function to call to check if the user has requested the operation be aborted
-				FnGet<Boolean> isAborted = new FnGet<Boolean>(){
+				Supplier<Boolean> isAborted = new Supplier<Boolean>(){
 
-					public Boolean f()
+					public Boolean get()
 					{
 						return isAborted() || isAbortRequested();
 					}};
@@ -275,7 +275,7 @@ public class DataSet extends AbstractDataSet
 				
 
 				
-				if (isAborted.f())
+				if (isAborted.get())
 				{
 					aborted();
 					return new DatasetReadResult(ReadStatus.CANCELLED);
@@ -295,7 +295,7 @@ public class DataSet extends AbstractDataSet
 				readDataSource(  dataSource, applying, isAborted, new File(filenames.get(0)).getParent()  );
 				
 				
-				if (isAborted.f())
+				if (isAborted.get())
 				{
 					aborted();
 					return new DatasetReadResult(ReadStatus.CANCELLED);
@@ -348,7 +348,7 @@ public class DataSet extends AbstractDataSet
 	}
 	
 	
-	private void readDataSource(DataSource ds, DummyExecutor applying, FnGet<Boolean> isAborted, String path)
+	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted, String path)
 	{
 		
 		if (ds == null || ds.scanCount() == 0) return;
@@ -395,7 +395,7 @@ public class DataSet extends AbstractDataSet
 			
 			
 			if (applying != null) applying.workUnitCompleted();
-			if (isAborted != null && isAborted.f()) return;
+			if (isAborted != null && isAborted.get()) return;
 			
 		}
 		

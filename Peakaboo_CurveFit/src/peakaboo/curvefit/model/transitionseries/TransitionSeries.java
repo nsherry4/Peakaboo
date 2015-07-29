@@ -28,9 +28,9 @@ import peakaboo.curvefit.peaktable.Element;
 import fava.Functions;
 import fava.functionable.FList;
 import fava.signatures.FnCombine;
-import fava.signatures.FnCondition;
 import fava.signatures.FnFold;
-import fava.signatures.FnMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 
@@ -141,14 +141,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public Transition getTransition(final TransitionType transitionType)
 	{
-		List<Transition> matches = transitions.filter(new FnCondition<Transition>() {
-
-			public Boolean f(Transition t)
-			{
-				return t.type == transitionType;
-			}
-		});
-
+		List<Transition> matches = transitions.filter(t -> t.type == transitionType);
 		if (matches.size() > 0) return matches.get(0);
 		return null;
 	}
@@ -172,7 +165,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 		return transitions.foldr(new FnFold<Transition, Transition>() {
 
-			public Transition f(Transition t1, Transition t2)
+			public Transition apply(Transition t1, Transition t2)
 			{
 				if (t1.relativeIntensity > t2.relativeIntensity) return t1;
 				return t2;
@@ -274,9 +267,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			minDistance = minEnergyDistance;
 		}
 		
-		FList<Double> scores = transitions.map(new FnMap<Transition, Double>() {
+		FList<Double> scores = transitions.map(new Function<Transition, Double>() {
 
-			public Double f(Transition t)
+			public Double apply(Transition t)
 			{
 				return  t.relativeIntensity / (Math.max( Math.abs(t.energyValue - energy), minDistance ));
 			}});
@@ -316,9 +309,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				Collections.sort(componentSeries);
 
-				return componentSeries.map(new FnMap<TransitionSeries, String>() {
+				return componentSeries.map(new Function<TransitionSeries, String>() {
 
-					public String f(TransitionSeries ts)
+					public String apply(TransitionSeries ts)
 					{
 						return ts.getDescription();
 					}
@@ -389,7 +382,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		//function for summing two TransitionSeries
 		final FnFold<TransitionSeries, TransitionSeries> tsSum = new FnFold<TransitionSeries, TransitionSeries>() {
 
-			public TransitionSeries f(TransitionSeries ts1, TransitionSeries ts2)
+			public TransitionSeries apply(TransitionSeries ts1, TransitionSeries ts2)
 			{
 				return ts1.summation(ts2);
 			}
@@ -399,9 +392,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		//turn the groups of primary transitionseries into a list of pile-up transitionseries
 		List<TransitionSeries> pileups = map(
 				tsGroups,
-				new FnMap<List<TransitionSeries>, TransitionSeries>() {
+				new Function<List<TransitionSeries>, TransitionSeries>() {
 
-					public TransitionSeries f(List<TransitionSeries> tsList)
+					public TransitionSeries apply(List<TransitionSeries> tsList)
 					{
 						return foldr(tsList, tsSum);
 					}
@@ -440,20 +433,20 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 		List<List<Transition>> allPileupLists = map(
 				transitions,
-				new FnMap<Transition, List<Transition>>() {
+				new Function<Transition, List<Transition>>() {
 
 					// map each of the transitions
 
-					public List<Transition> f(final Transition t1)
+					public List<Transition> apply(final Transition t1)
 					{
 
 						//
 						//
 						// For each transition in the outer map, map the list transitionList to a list of
 						// pileup values
-						return map(other.transitions, new FnMap<Transition, Transition>() {
+						return map(other.transitions, new Function<Transition, Transition>() {
 
-							public Transition f(Transition t2)
+							public Transition apply(Transition t2)
 							{
 								return t1.summation(t2);
 							}
@@ -504,7 +497,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 								otherTS.componentSeries,
 								new FnCombine<TransitionSeries, Integer>() {
 
-									public Integer f(TransitionSeries ts1, TransitionSeries ts2)
+									public Integer apply(TransitionSeries ts1, TransitionSeries ts2)
 									{
 										return ts1.compareTo(ts2);
 									}
@@ -620,9 +613,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		{
 			case COMPOSITE:
 
-				list = concatMap(componentSeries, new FnMap<TransitionSeries, List<TransitionSeries>>() {
+				list = concatMap(componentSeries, new Function<TransitionSeries, List<TransitionSeries>>() {
 
-					public List<TransitionSeries> f(TransitionSeries ts)
+					public List<TransitionSeries> apply(TransitionSeries ts)
 					{
 						return ts.getBaseTransitionSeries();
 					}

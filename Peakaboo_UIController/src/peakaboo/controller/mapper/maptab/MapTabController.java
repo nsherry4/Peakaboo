@@ -33,9 +33,9 @@ import eventful.EventfulType;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnCondition;
 import fava.signatures.FnFold;
-import fava.signatures.FnMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 public class MapTabController extends EventfulType<String> implements IMapTabController
@@ -44,7 +44,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	
 	private MapTabModel 	tabModel;
 	private MappingController 	map;
-	private FnMap<Coord<Integer>, String> valueAtCoord;
+	private Function<Coord<Integer>, String> valueAtCoord;
 	
 	private Coord<Integer> dragStart, dragEnd;
 	private boolean hasBoundingRegion = false;
@@ -112,7 +112,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
 	{
 		if (valueAtCoord == null) return "";
-		return valueAtCoord.f(mapCoord);
+		return valueAtCoord.apply(mapCoord);
 	}
 	
 	
@@ -161,10 +161,10 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		
 		List<Pair<TransitionSeries, Spectrum>> dataset = map(
 				getVisibleTransitionSeries(),
-				new FnMap<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
+				new Function<TransitionSeries, Pair<TransitionSeries, Spectrum>>() {
 
 
-					public Pair<TransitionSeries, Spectrum> f(TransitionSeries ts)
+					public Pair<TransitionSeries, Spectrum> apply(TransitionSeries ts)
 					{
 						return new Pair<TransitionSeries, Spectrum>(ts, getMapForTransitionSeries(ts));
 
@@ -178,9 +178,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = filter(
 			dataset, 
-			new FnCondition<Pair<TransitionSeries, Spectrum>>() {
+			new Predicate<Pair<TransitionSeries, Spectrum>>() {
 
-				public Boolean f(Pair<TransitionSeries, Spectrum> element)
+				public boolean test(Pair<TransitionSeries, Spectrum> element)
 				{
 					return (tabModel.overlayColour.get(element.first) == OverlayColour.RED);
 				}
@@ -192,7 +192,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 					redSpectrums,
 					new FnFold<Spectrum, Spectrum>() {
 
-						public Spectrum f(Spectrum mapdata, Spectrum sum)
+						public Spectrum apply(Spectrum mapdata, Spectrum sum)
 						{
 							return SpectrumCalculations.addLists(mapdata, sum);
 						}
@@ -389,9 +389,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	private void putValueFunctionForOverlay(final Map<OverlayColour, Spectrum> overlayData)
 	{
-		valueAtCoord = new FnMap<Coord<Integer>, String>() {
+		valueAtCoord = new Function<Coord<Integer>, String>() {
 
-			public String f(Coord<Integer> coord)
+			public String apply(Coord<Integer> coord)
 			{
 				
 				if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
@@ -418,9 +418,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	private void putValueFunctionForRatio(final Pair<Spectrum, Spectrum> ratioData)
 	{
-		valueAtCoord = new FnMap<Coord<Integer>, String>() {
+		valueAtCoord = new Function<Coord<Integer>, String>() {
 
-			public String f(Coord<Integer> coord)
+			public String apply(Coord<Integer> coord)
 			{
 				
 				if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
@@ -444,9 +444,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		
 		
 		
-		valueAtCoord = new FnMap<Coord<Integer>, String>() {
+		valueAtCoord = new Function<Coord<Integer>, String>() {
 
-			public String f(Coord<Integer> coord)
+			public String apply(Coord<Integer> coord)
 			{
 				int index = map.mapsController.getDataWidth() * coord.y + coord.x;
 				return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
@@ -517,7 +517,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				for (int x = 0; x < map.mapsController.getDataWidth(); x++) {
 					
 					if (x != 0) osw.write(", ");
-					osw.write(valueAtCoord.f(new Coord<Integer>(x, y)));
+					osw.write(valueAtCoord.apply(new Coord<Integer>(x, y)));
 					
 				}
 			}
@@ -666,9 +666,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private String getDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, new FnMap<TransitionSeries, String>() {
+		List<String> elementNames = map(list, new Function<TransitionSeries, String>() {
 			
-			public String f(TransitionSeries ts) {
+			public String apply(TransitionSeries ts) {
 				return ts.toElementString();
 			}
 		});
@@ -684,9 +684,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private String getShortDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, new FnMap<TransitionSeries, String>() {
+		List<String> elementNames = map(list, new Function<TransitionSeries, String>() {
 			
-			public String f(TransitionSeries ts) {
+			public String apply(TransitionSeries ts) {
 				return ts.element.toString();
 			}
 		});
@@ -722,13 +722,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return filter(getAllTransitionSeries(), new FnCondition<TransitionSeries>() {
-			
-			
-			public Boolean f(TransitionSeries element) {
-				return tabModel.visible.get(element);
-			}
-		});
+		return filter(getAllTransitionSeries(), e -> tabModel.visible.get(e));
 	}
 	
 	/* (non-Javadoc)
@@ -774,17 +768,10 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
-		return filter(
-				getVisibleTransitionSeries(),
-				new  FnCondition<TransitionSeries>() {
-
-					
-					public Boolean f(TransitionSeries element)
-					{
-						Integer thisSide = tabModel.ratioSide.get(element);
-						return thisSide == side;
-					}
-				});
+		return filter(getVisibleTransitionSeries(), e -> {
+			Integer thisSide = tabModel.ratioSide.get(e);
+			return thisSide == side;
+		});
 	}
 
 

@@ -17,7 +17,7 @@ import peakaboo.filter.model.FilteringModel;
 import fava.Fn;
 import fava.Functions;
 import fava.functionable.FStringInput;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 
@@ -119,9 +119,9 @@ public class Settings
 		//yaml library to build TransitionSeries
 		data.fittings = Fn.map(
 				fittings.selections.getFittedTransitionSeries(), 
-				new FnMap<TransitionSeries, SerializedTransitionSeries>() {
+				new Function<TransitionSeries, SerializedTransitionSeries>() {
 
-					public SerializedTransitionSeries f(TransitionSeries ts)
+					public SerializedTransitionSeries apply(TransitionSeries ts)
 					{
 						return new SerializedTransitionSeries(ts);
 					}

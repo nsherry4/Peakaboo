@@ -11,7 +11,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 import fava.functionable.FList;
 import fava.functionable.Functionable;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 /**
  * 
@@ -123,9 +123,9 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	 */
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return maps.map(new FnMap<MapResult, TransitionSeries>() {
+		return maps.map(new Function<MapResult, TransitionSeries>() {
 			
-			public TransitionSeries f(MapResult mr) {
+			public TransitionSeries apply(MapResult mr) {
 				return mr.transitionSeries;
 			}
 		});

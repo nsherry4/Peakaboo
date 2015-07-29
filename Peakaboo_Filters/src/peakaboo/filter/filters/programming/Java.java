@@ -51,7 +51,7 @@ public class Java extends AbstractSimpleFilter {
 			boltJavaMap.setOtherText("");
 			boltJavaMap.setIncludeText(code.getValue());
 			
-			boltJavaMap.f(new float[]{1, 2, 3, 4});
+			boltJavaMap.apply(new float[]{1, 2, 3, 4});
 			return true;
 		} catch (Exception e) {
 			editor.errorMessage = e.getMessage();
@@ -66,7 +66,7 @@ public class Java extends AbstractSimpleFilter {
 		//in this plugin, validate also puts the user code into the mapper 
 		validateParameters();
 		
-		return new Spectrum(boltJavaMap.f(data.backingArray()));
+		return new Spectrum(boltJavaMap.apply(data.backingArray()));
 	}
 
 	@Override

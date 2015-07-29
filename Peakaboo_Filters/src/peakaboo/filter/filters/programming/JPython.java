@@ -70,7 +70,7 @@ public class JPython extends AbstractSimpleFilter {
 	public boolean validateParameters() {
 		try {
 			boltmap.setScript(getCode());
-			if (  boltmap.f(new float[]{1, 2, 3, 4}) instanceof float[]  ){
+			if (  boltmap.apply(new float[]{1, 2, 3, 4}) instanceof float[]  ){
 				return true;
 			} else {
 				throw new BoltScriptExecutionException("Type mismatch for spectrumOut");
@@ -88,7 +88,7 @@ public class JPython extends AbstractSimpleFilter {
 		boltmap.setScript(getCode());
 		
 		float[] source = data.backingArray();
-		float[] result = boltmap.f(source);
+		float[] result = boltmap.apply(source);
 				
 		return new Spectrum(result);	
 		

@@ -17,8 +17,9 @@ import fava.Fn;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnCondition;
-import fava.signatures.FnMap;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 /**
@@ -62,7 +63,7 @@ public class TSOrdering
 	 * @param spectrum the data to use to score this {@link TransitionSeries}
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static FnMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, true);
 	}
@@ -75,7 +76,7 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static FnMap<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, boolean useBaseSize)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, boolean useBaseSize)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, useBaseSize);
 	}
@@ -89,16 +90,16 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static FnMap<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize)
 	{
 	
 		//scoring function to evaluate each TransitionSeries
-		return new FnMap<TransitionSeries, Float>() {
+		return new Function<TransitionSeries, Float>() {
 
 			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, spectrum.size(), energyPerChannel, escape);
 			Spectrum s = new Spectrum(spectrum);
 			
-			public Float f(TransitionSeries ts)
+			public Float apply(TransitionSeries ts)
 			{
 				double prox;
 				if (energy == null)
@@ -157,17 +158,10 @@ public class TSOrdering
 		tsf1.setTransitionSeries(ts, true);
 		
 		//map all other TSs to booleans to check if this overlaps
-		return tss.filter(new FnCondition<TransitionSeries>() {
-
-			public Boolean f(TransitionSeries otherts)
-			{
-										
-				if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
-				
-				tsf2.setTransitionSeries(otherts, true);						
-				return (tsf1.isOverlapping(tsf2));
-				
-			}
+		return tss.filter((TransitionSeries otherts) -> {
+			if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
+			tsf2.setTransitionSeries(otherts, true);						
+			return (tsf1.isOverlapping(tsf2));
 		});
 	}
 	
@@ -180,15 +174,15 @@ public class TSOrdering
 		Pair<TransitionSeries, TransitionSeries> order = new Pair<TransitionSeries, TransitionSeries>();
 		
 		Float ordering1, ordering2;
-		FnMap<TransitionSeries, Float> scorer;
+		Function<TransitionSeries, Float> scorer;
 		
 		scorer = fScoreTransitionSeries(escape, energyPerChannel, s, false);
-		scorer.f(ts1);
-		ordering1 = scorer.f(ts2);
+		scorer.apply(ts1);
+		ordering1 = scorer.apply(ts2);
 		
 		scorer = fScoreTransitionSeries(escape, energyPerChannel, s, false);
-		scorer.f(ts2);
-		ordering2 = scorer.f(ts1);		
+		scorer.apply(ts2);
+		ordering2 = scorer.apply(ts1);		
 		
 		if (ordering1 < ordering2)
 		{
@@ -339,8 +333,8 @@ public class TSOrdering
 			{
 				Float prox1, prox2;
 				
-				prox1 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).f(ts1);
-				prox2 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).f(ts2);
+				prox1 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts1);
+				prox2 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts2);
 				
 				
 				return prox1.compareTo(prox2);

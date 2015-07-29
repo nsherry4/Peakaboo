@@ -14,8 +14,9 @@ import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.widgets.ClearPanel;
 import fava.Functions;
 import fava.functionable.FList;
-import fava.signatures.FnCondition;
-import fava.signatures.FnMap;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 
@@ -43,9 +44,9 @@ class SummationWidget extends TSSelectorGroup
 	{
 
 		//get a list of all TransitionSeries to be summed
-		FList<TransitionSeries> tss = selectors.map(new FnMap<TSSelector, TransitionSeries>() {
+		FList<TransitionSeries> tss = selectors.map(new Function<TSSelector, TransitionSeries>() {
 
-			public TransitionSeries f(TSSelector element)
+			public TransitionSeries apply(TSSelector element)
 			{
 				return element.getTransitionSeries();
 			}
@@ -121,15 +122,7 @@ class SummationWidget extends TSSelectorGroup
 		TSSelector sel = super.addTSSelector(active);
 		
 		sel.setTransitionSeries(
-		
-				controller.getFittedTransitionSeries().filter(new FnCondition<TransitionSeries>() {
-
-					public Boolean f(TransitionSeries element)
-					{
-						return element.mode == TransitionSeriesMode.PRIMARY;
-					}
-				})
-				
+			controller.getFittedTransitionSeries().filter(element ->element.mode == TransitionSeriesMode.PRIMARY)			
 		);
 		
 		

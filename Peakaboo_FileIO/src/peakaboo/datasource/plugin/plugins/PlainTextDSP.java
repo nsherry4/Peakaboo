@@ -11,7 +11,7 @@ import scitypes.Spectrum;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import fava.functionable.Range;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 public class PlainTextDSP extends AbstractDSP
@@ -51,9 +51,9 @@ public class PlainTextDSP extends AbstractDSP
 
 	public List<String> scanNames()
 	{
-		return new Range(0, size-1).map(new FnMap<Integer, String>(){
+		return new Range(0, size-1).map(new Function<Integer, String>(){
 
-			public String f(Integer element)
+			public String apply(Integer element)
 			{
 				return "Scan #" + (element+1);
 			}}).toSink();
@@ -109,9 +109,9 @@ public class PlainTextDSP extends AbstractDSP
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(new FList<String>(line.trim().split("[, \\t]+")).map(new FnMap<String, Float>(){
+			Spectrum scan = new Spectrum(new FList<String>(line.trim().split("[, \\t]+")).map(new Function<String, Float>(){
 				
-				public Float f(String s)
+				public Float apply(String s)
 				{
 					try { return Float.parseFloat(s); } 
 					catch (Exception e) { return 0f; }

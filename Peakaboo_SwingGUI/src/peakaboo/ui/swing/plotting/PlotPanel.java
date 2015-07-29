@@ -107,7 +107,7 @@ import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 
@@ -1307,10 +1307,10 @@ public class PlotPanel extends ClearPanel
 		files = openNewDataset(exts, descs);
 		if (files == null) return;
 		
-		FList<String> filenames = FList.wrap(files).map(new FnMap<AbstractFile, String>() {
+		FList<String> filenames = FList.wrap(files).map(new Function<AbstractFile, String>() {
 
 			@Override
-			public String f(AbstractFile v)
+			public String apply(AbstractFile v)
 			{
 				return v.getFileName();
 			}});

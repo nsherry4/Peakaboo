@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnCondition;
 
 
 
@@ -84,15 +84,7 @@ public class PeakTable
 	 */
 	public static List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
-
-		return elementTransitions.filter(new FnCondition<TransitionSeries>() {
-
-			public Boolean f(TransitionSeries ts)
-			{
-				return (ts.element == e);
-			}
-		});
-
+		return elementTransitions.filter(ts -> (ts.element == e));
 	}
 	
 	public static List<TransitionSeries> getAllTransitionSeries()
@@ -102,14 +94,7 @@ public class PeakTable
 	
 	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
-		List<TransitionSeries> tss = elementTransitions.filter(new FnCondition<TransitionSeries>() {
-
-			public Boolean f(TransitionSeries ts)
-			{
-				return (ts.element == e) && (ts.type == t);
-			}
-		});
-		
+		List<TransitionSeries> tss = elementTransitions.filter(ts -> (ts.element == e) && (ts.type == t));
 		if (tss.size() == 0) return null;
 		return tss.get(0);
 	}

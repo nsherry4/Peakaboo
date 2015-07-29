@@ -2,6 +2,7 @@ package peakaboo.mapping.correction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.function.Predicate;
 
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
@@ -12,7 +13,6 @@ import commonenvironment.AbstractFile;
 
 import fava.datatypes.Pair;
 import fava.functionable.FList;
-import fava.signatures.FnCondition;
 
 
 public class Corrections
@@ -50,14 +50,7 @@ public class Corrections
 	
 	public Float getCorrection(final TransitionSeries ts)
 	{		
-		FList<Pair<TransitionSeries, Float>> matches = correctionPairs.filter(new FnCondition<Pair<TransitionSeries, Float>>() {
-			
-			public Boolean f(Pair<TransitionSeries, Float> p)
-			{
-				return p.first.equals(ts);
-			}
-		});
-		
+		FList<Pair<TransitionSeries, Float>> matches = correctionPairs.filter(p -> p.first.equals(ts));
 		if (matches .size() == 0) return null;
 		return matches.head().second;
 		

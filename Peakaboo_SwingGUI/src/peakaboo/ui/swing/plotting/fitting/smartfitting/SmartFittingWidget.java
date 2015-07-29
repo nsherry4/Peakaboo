@@ -18,7 +18,7 @@ import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
 import fava.functionable.FList;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 
@@ -47,9 +47,9 @@ class SmartFittingWidget extends TSSelectorGroup
 	@Override
 	public FList<TransitionSeries> getTransitionSeries()
 	{
-		return selectors.map(new FnMap<TSSelector, TransitionSeries>() {
+		return selectors.map(new Function<TSSelector, TransitionSeries>() {
 
-			public TransitionSeries f(TSSelector selector)
+			public TransitionSeries apply(TSSelector selector)
 			{
 				return selector.getTransitionSeries();
 			}

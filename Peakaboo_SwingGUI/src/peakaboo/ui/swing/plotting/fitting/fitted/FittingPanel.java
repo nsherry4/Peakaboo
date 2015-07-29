@@ -31,7 +31,7 @@ import swidget.widgets.listcontrols.ListControlButton;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ListControls.ElementCount;
 import fava.functionable.FArray;
-import fava.signatures.FnMap;
+import java.util.function.Function;
 
 
 
@@ -74,10 +74,10 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(new FnMap<Integer, TransitionSeries>(){
+				List<TransitionSeries> tss = FArray.boxi(rows).map(new Function<Integer, TransitionSeries>(){
 
 
-					public TransitionSeries f(Integer i)
+					public TransitionSeries apply(Integer i)
 					{
 						return controller.getFittedTransitionSeries().get(i);
 					}});
@@ -98,10 +98,10 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 				
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(new FnMap<Integer, TransitionSeries>(){
+				List<TransitionSeries> tss = FArray.boxi(rows).map(new Function<Integer, TransitionSeries>(){
 
 
-					public TransitionSeries f(Integer i)
+					public TransitionSeries apply(Integer i)
 					{
 						return controller.getFittedTransitionSeries().get(i);
 					}});
@@ -120,10 +120,10 @@ public class FittingPanel extends ClearPanel implements Changeable
 			public void down()
 			{
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(new FnMap<Integer, TransitionSeries>(){
+				List<TransitionSeries> tss = FArray.boxi(rows).map(new Function<Integer, TransitionSeries>(){
 
 
-					public TransitionSeries f(Integer i)
+					public TransitionSeries apply(Integer i)
 					{
 						return controller.getFittedTransitionSeries().get(i);
 					}});
