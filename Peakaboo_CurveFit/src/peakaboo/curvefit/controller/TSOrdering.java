@@ -20,6 +20,7 @@ import fava.functionable.FList;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 /**
@@ -158,11 +159,11 @@ public class TSOrdering
 		tsf1.setTransitionSeries(ts, true);
 		
 		//map all other TSs to booleans to check if this overlaps
-		return tss.filter((TransitionSeries otherts) -> {
+		return FList.wrap(tss.stream().filter((TransitionSeries otherts) -> {
 			if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
 			tsf2.setTransitionSeries(otherts, true);						
 			return (tsf1.isOverlapping(tsf2));
-		});
+		}).collect(Collectors.toList()));
 	}
 	
 	

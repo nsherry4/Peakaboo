@@ -2,7 +2,10 @@ package peakaboo.mapping.correction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
@@ -49,11 +52,8 @@ public class Corrections
 	}
 	
 	public Float getCorrection(final TransitionSeries ts)
-	{		
-		FList<Pair<TransitionSeries, Float>> matches = correctionPairs.filter(p -> p.first.equals(ts));
-		if (matches .size() == 0) return null;
-		return matches.head().second;
-		
+	{	
+		return correctionPairs.stream().filter(p -> p.first.equals(ts)).findFirst().orElse(new Pair<>()).second;
 	}
 	
 	public String getName()

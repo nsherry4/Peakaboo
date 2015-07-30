@@ -25,6 +25,7 @@ import fava.datatypes.Pair;
 import fava.functionable.FList;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 public class FittingController extends EventfulType<Boolean> implements IFittingController
@@ -268,7 +269,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 				
 		
 		//find all the TSs which overlap with other TSs
-		final FList<TransitionSeries> overlappers = tss.filter(ts -> {
+		final List<TransitionSeries> overlappers = tss.stream().filter(ts -> {
 			return TSOrdering.getTSsOverlappingTS(
 					ts, 
 					tss, 
@@ -276,16 +277,16 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 					plot.data().getDataWidth(),
 					plot.settings().getEscapePeakType()
 				).size() != 0;
-		});
+		}).collect(Collectors.toList());
 		
 		
 		//then get all the TSs which don't overlap
-		FList<TransitionSeries> nonOverlappers = tss.filter(e -> !overlappers.include(e));
+		List<TransitionSeries> nonOverlappers = tss.stream().filter(e -> !overlappers.contains(e)).collect(Collectors.toList());
 	
 		
 
 		//score each of the overlappers w/o competition
-		FList<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.map((TransitionSeries ts) -> {
+		List<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.stream().map((TransitionSeries ts) -> {
 			return new Pair<TransitionSeries, Float>(
 				ts, 
 				TSOrdering.fScoreTransitionSeries(
@@ -294,7 +295,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 						plot.filtering().getFilteredPlot()
 					).apply(ts)
 			);
-		});
+		}).collect(Collectors.toList());
 		
 		//sort all the overlappig visible elements according to how strongly they would fit on their own (ie no competition)
 		Fn.sortBy(scoredOverlappers, new Comparator<Float>() {
@@ -309,7 +310,10 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//find the optimal ordering of the visible overlapping TSs based on how they fit with competition
-		FList<TransitionSeries> bestfit = optimizeTSOrderingHelper(scoredOverlappers.map(e -> e.first), new FList<TransitionSeries>());
+		FList<TransitionSeries> bestfit = optimizeTSOrderingHelper(
+				FList.wrap(scoredOverlappers.stream().map(e -> e.first).collect(Collectors.toList())), 
+				new FList<TransitionSeries>()
+			);
 		
 
 		

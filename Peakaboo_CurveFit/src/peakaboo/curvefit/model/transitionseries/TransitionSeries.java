@@ -27,6 +27,7 @@ import fava.functionable.FList;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 
@@ -137,7 +138,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public Transition getTransition(final TransitionType transitionType)
 	{
-		List<Transition> matches = transitions.filter(t -> t.type == transitionType);
+		List<Transition> matches = transitions.stream().filter(t -> t.type == transitionType).collect(Collectors.toList());
 		if (matches.size() > 0) return matches.get(0);
 		return null;
 	}

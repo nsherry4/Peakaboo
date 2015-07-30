@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
@@ -84,7 +85,7 @@ public class PeakTable
 	 */
 	public static List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
-		return elementTransitions.filter(ts -> (ts.element == e));
+		return elementTransitions.stream().filter(ts -> (ts.element == e)).collect(Collectors.toList());
 	}
 	
 	public static List<TransitionSeries> getAllTransitionSeries()
@@ -94,7 +95,7 @@ public class PeakTable
 	
 	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
-		List<TransitionSeries> tss = elementTransitions.filter(ts -> (ts.element == e) && (ts.type == t));
+		List<TransitionSeries> tss = elementTransitions.stream().filter(ts -> (ts.element == e) && (ts.type == t)).collect(Collectors.toList());
 		if (tss.size() == 0) return null;
 		return tss.get(0);
 	}

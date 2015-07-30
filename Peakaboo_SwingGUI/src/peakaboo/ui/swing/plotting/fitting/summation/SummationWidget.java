@@ -17,6 +17,7 @@ import fava.functionable.FList;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 
@@ -43,7 +44,7 @@ class SummationWidget extends TSSelectorGroup
 	public FList<TransitionSeries> getTransitionSeries()
 	{
 		//get a list of all TransitionSeries to be summed
-		FList<TransitionSeries> tss = selectors.map(element -> element.getTransitionSeries()).filter(ts -> ts != null);
+		List<TransitionSeries> tss = selectors.map(element -> element.getTransitionSeries()).stream().filter(ts -> ts != null).collect(Collectors.toList());
 		return DataTypeFactory.<TransitionSeries>listInit(TransitionSeries.summation(tss));
 	}
 	
@@ -112,7 +113,7 @@ class SummationWidget extends TSSelectorGroup
 		TSSelector sel = super.addTSSelector(active);
 		
 		sel.setTransitionSeries(
-			controller.getFittedTransitionSeries().filter(element ->element.mode == TransitionSeriesMode.PRIMARY)			
+			controller.getFittedTransitionSeries().stream().filter(element ->element.mode == TransitionSeriesMode.PRIMARY).collect(Collectors.toList())		
 		);
 		
 		
