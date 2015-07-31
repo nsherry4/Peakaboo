@@ -2,6 +2,8 @@ package peakaboo.ui.swing.plotting;
 
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -103,7 +105,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 				public void filesDropped(File[] files)
 				{
-					parent.loadFiles(FArray.wrap(files).map(element -> element.getAbsolutePath()).toSink());
+					parent.loadFiles(FArray.wrap(files).stream().map(element -> element.getAbsolutePath()).collect(toList()));
 				}
 			});
 		}

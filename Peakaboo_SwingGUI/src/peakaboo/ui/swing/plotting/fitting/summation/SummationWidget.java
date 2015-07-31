@@ -44,7 +44,7 @@ class SummationWidget extends TSSelectorGroup
 	public FList<TransitionSeries> getTransitionSeries()
 	{
 		//get a list of all TransitionSeries to be summed
-		List<TransitionSeries> tss = selectors.map(element -> element.getTransitionSeries()).stream().filter(ts -> ts != null).collect(Collectors.toList());
+		List<TransitionSeries> tss = selectors.stream().map(e -> e.getTransitionSeries()).filter(ts -> ts != null).collect(Collectors.toList());
 		return DataTypeFactory.<TransitionSeries>listInit(TransitionSeries.summation(tss));
 	}
 	

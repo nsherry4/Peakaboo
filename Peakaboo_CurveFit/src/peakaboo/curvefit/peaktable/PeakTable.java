@@ -2,6 +2,8 @@ package peakaboo.curvefit.peaktable;
 
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -90,7 +92,7 @@ public class PeakTable
 	
 	public static List<TransitionSeries> getAllTransitionSeries()
 	{
-		return elementTransitions.map(a -> a);
+		return elementTransitions.stream().map(a -> a).collect(toList());
 	}
 	
 	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)

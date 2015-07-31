@@ -2,6 +2,8 @@ package peakaboo.ui.swing.plotting.fitting.fitted;
 
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -74,7 +76,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(i -> controller.getFittedTransitionSeries().get(i));
+				List<TransitionSeries> tss = FArray.boxi(rows).stream().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 					
 				if (tss.size() == 0) return;
 				
@@ -92,7 +94,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 				
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(i -> controller.getFittedTransitionSeries().get(i));
+				List<TransitionSeries> tss = FArray.boxi(rows).stream().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 					
 				if (tss.size() == 0) return;
 				for (TransitionSeries ts : tss)
@@ -108,7 +110,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			public void down()
 			{
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).map(i -> controller.getFittedTransitionSeries().get(i));
+				List<TransitionSeries> tss = FArray.boxi(rows).stream().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 					
 				if (tss.size() == 0) return;
 				

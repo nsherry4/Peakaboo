@@ -1,5 +1,7 @@
 package peakaboo.datasource.plugin.plugins;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class PlainTextDSP extends AbstractDSP
 
 	public List<String> scanNames()
 	{
-		return new Range(0, size-1).map(element -> "Scan #" + (element+1)).toSink();
+		return new Range(0, size-1).stream().map(e -> "Scan #" + (e)).collect(toList());
 	}
 
 	
@@ -107,10 +109,10 @@ public class PlainTextDSP extends AbstractDSP
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(new FList<String>(line.trim().split("[, \\t]+")).map(s -> {
+			Spectrum scan = new Spectrum(new FList<String>(line.trim().split("[, \\t]+")).stream().map(s -> {
 				try { return Float.parseFloat(s); } 
 				catch (Exception e) { return 0f; }
-			}));
+			}).collect(toList()));
 			
 			
 			if (size > 0 && scan.size() != scanSize) 

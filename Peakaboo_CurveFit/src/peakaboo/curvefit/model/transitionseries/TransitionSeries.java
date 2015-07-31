@@ -11,6 +11,8 @@ import static fava.Fn.foldr;
 import static fava.Fn.group;
 import static fava.Fn.map;
 import static fava.Fn.zipWith;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -150,7 +152,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public List<Transition> getAllTransitions()
 	{
-		return transitions.map(a -> a);
+		return transitions.stream().map(a -> a).collect(toList());
 	}
 	
 	/**
@@ -260,12 +262,12 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			minDistance = minEnergyDistance;
 		}
 		
-		FList<Double> scores = transitions.map(t -> {
-			return  t.relativeIntensity / (Math.max( Math.abs(t.energyValue - energy), minDistance ));
-		});
+		List<Double> scores = transitions.stream()
+				.map(t -> t.relativeIntensity / (Math.max( Math.abs(t.energyValue - energy), minDistance )))
+				.collect(toList());
 		
 		
-		return 1 / scores.fold((a, b) -> a + b);
+		return 1 / scores.stream().reduce(0d, (a, b) -> a + b);
 
 	}
 
@@ -299,7 +301,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				Collections.sort(componentSeries);
 
-				return componentSeries.map(TransitionSeries::getDescription).foldr((a, b) -> a + " + " + b);
+				return componentSeries.stream().map(TransitionSeries::getDescription).collect(joining(" + "));
 
 			default:
 

@@ -1,5 +1,7 @@
 package peakaboo.datasource.plugin.plugins.cdfml;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -511,10 +513,10 @@ public abstract class CDFMLReader extends DefaultHandler2
 				return (List<Float>)getEntriesForVar(var);
 				
 			case INTEGER:
-				return FList.<Integer>wrap(  (List<Integer>)getEntriesForVar(var)  ).map(i -> i.floatValue());
+				return ((List<Integer>)getEntriesForVar(var)).stream().map(i -> i.floatValue()).collect(toList());
 				
 			case SPECTRUM:
-				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(v -> v.fold((a, b) -> a + b));
+				return ((List<Spectrum>)getEntriesForVar(var)).stream().map(v -> v.fold((a, b) -> a + b)).collect(toList());
 			
 		}
 		
@@ -530,13 +532,13 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 		
 			case REAL:
-				return FList.<Float>wrap(  (List<Float>)getEntriesForVar(var)  ).map(v -> v.intValue());
+				return ((List<Float>)getEntriesForVar(var)).stream().map(v -> v.intValue()).collect(toList());
 				
 			case INTEGER:
 				return (List<Integer>)getEntriesForVar(var);
 				
 			case SPECTRUM:
-				return FList.<Spectrum>wrap(  (List<Spectrum>)getEntriesForVar(var)  ).map(v -> v.fold((a, b) -> a + b).intValue());
+				return ((List<Spectrum>)getEntriesForVar(var)).stream().map(v -> v.fold((a, b) -> a + b).intValue()).collect(toList());
 				
 		}
 		
@@ -550,10 +552,10 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 			
 			case REAL:
-				return FList.<Float>wrap((List<Float>)getEntriesForVar(var)).map(v -> new Spectrum(1, v.floatValue()));
+				return ((List<Float>)getEntriesForVar(var)).stream().map(v -> new Spectrum(1, v.floatValue())).collect(toList());
 				
 			case INTEGER:
-				return FList.<Integer>wrap((List<Integer>)getEntriesForVar(var)).map(v -> new Spectrum(1, v.floatValue()));
+				return ((List<Integer>)getEntriesForVar(var)).stream().map(v -> new Spectrum(1, v.floatValue())).collect(toList());
 				
 			case SPECTRUM:
 				return (List<Spectrum>)getEntriesForVar(var);

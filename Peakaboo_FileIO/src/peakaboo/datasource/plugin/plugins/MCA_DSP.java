@@ -1,5 +1,7 @@
 package peakaboo.datasource.plugin.plugins;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +38,7 @@ public class MCA_DSP extends AbstractDSP {
 		int startIndex = lines.indexOf("<<DATA>>") + 1;
 		int endIndex = lines.indexOf("<<END>>");
 		
-		Spectrum s = new Spectrum(lines.subList(startIndex, endIndex).map(line -> Float.parseFloat(line)));
+		Spectrum s = new Spectrum(lines.subList(startIndex, endIndex).stream().map(line -> Float.parseFloat(line)).collect(toList()));
 		
 		r.close();
 		

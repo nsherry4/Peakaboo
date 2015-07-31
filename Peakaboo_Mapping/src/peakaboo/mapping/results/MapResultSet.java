@@ -1,6 +1,8 @@
 package peakaboo.mapping.results;
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -123,7 +125,7 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	 */
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
-		return maps.map(mr -> mr.transitionSeries);
+		return maps.stream().map(mr -> mr.transitionSeries).collect(toList());
 	}
 	
 	/**

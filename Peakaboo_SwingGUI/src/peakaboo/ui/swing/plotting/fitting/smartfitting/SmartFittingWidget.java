@@ -2,6 +2,8 @@ package peakaboo.ui.swing.plotting.fitting.smartfitting;
 
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,9 +47,9 @@ class SmartFittingWidget extends TSSelectorGroup
 	
 
 	@Override
-	public FList<TransitionSeries> getTransitionSeries()
+	public List<TransitionSeries> getTransitionSeries()
 	{
-		return selectors.map(selector -> selector.getTransitionSeries());
+		return selectors.stream().map(s -> s.getTransitionSeries()).collect(toList());
 	}
 
 	public TransitionSeries getActiveTransitionSeries()

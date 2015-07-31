@@ -1,6 +1,8 @@
 package peakaboo.dataset;
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +91,7 @@ public class DataSet extends AbstractDataSet
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		FList<Spectrum> badScans = FList.wrap(excludedIndcies).map(index -> dataSource.get(index));
+		List<Spectrum> badScans = excludedIndcies.stream().map(index -> dataSource.get(index)).collect(toList());
 
 		Spectrum Ae;
 		Spectrum At;

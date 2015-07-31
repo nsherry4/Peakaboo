@@ -5,6 +5,7 @@ import static fava.Fn.fold;
 import static fava.Fn.foldl;
 import static fava.Fn.map;
 import static fava.Fn.unique;
+import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,6 +37,7 @@ import fava.functionable.FList;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 public class MapTabController extends EventfulType<String> implements IMapTabController
@@ -169,10 +171,10 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		Map<OverlayColour, Spectrum> uninterpolatedColours = new HashMap<OverlayColour, Spectrum>();
 		
 		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> redSpectrums = filter(
-			dataset, 
-			element -> (tabModel.overlayColour.get(element.first) == OverlayColour.RED)
-		).map(e -> e.second);
+		List<Spectrum> redSpectrums = dataset.stream()
+				.filter(e -> (tabModel.overlayColour.get(e.first) == OverlayColour.RED))
+				.map(e -> e.second)
+				.collect(toList());
 
 		if (redSpectrums != null && redSpectrums.size() > 0) {
 			redSpectrum = fold(
@@ -193,13 +195,10 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			
 		
 		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> greenSpectrums = filter(
-			dataset, 
-			(Pair<TransitionSeries, Spectrum> element) -> {
-				return (tabModel.overlayColour.get(element.first) == OverlayColour.GREEN);
-			}
-			
-		).map(e -> e.second);
+		List<Spectrum> greenSpectrums = dataset.stream()
+				.filter(e -> (tabModel.overlayColour.get(e.first) == OverlayColour.GREEN))
+				.map(e -> e.second)
+				.collect(toList());
 		
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
 			greenSpectrum = fold(
@@ -221,11 +220,10 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 
 			
 		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> blueSpectrums = filter(
-			dataset, 
-			(Pair<TransitionSeries, Spectrum> element) -> {
-				return (tabModel.overlayColour.get(element.first) == OverlayColour.BLUE);
-			}).map(e -> e.second);
+		List<Spectrum> blueSpectrums = dataset.stream()
+				.filter(e -> tabModel.overlayColour.get(e.first) == OverlayColour.BLUE)
+				.map(e -> e.second)
+				.collect(toList());
 		
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
 			blueSpectrum = fold(

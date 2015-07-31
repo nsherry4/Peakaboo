@@ -56,7 +56,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	protected abstract void refreshGUI();
 	public abstract void setTransitionSeriesOptions(final List<TransitionSeries> tss);
-	public abstract FList<TransitionSeries> getTransitionSeries();
+	public abstract List<TransitionSeries> getTransitionSeries();
 	
 	protected void removeTSSelector(TSSelector tssel)
 	{
@@ -119,11 +119,11 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	protected final void TSSelectorUpdated(final boolean active)
 	{
 		controller.clearProposedTransitionSeries();
-		FList<TransitionSeries> tss = getTransitionSeries();
+		List<TransitionSeries> tss = getTransitionSeries();
 		if (tss == null) return;
 		
 		//add all of the transition series that come back from the summation widget
-		tss.each(ts -> {
+		tss.stream().forEach(ts -> {
 			if (ts != null && active) controller.addProposedTransitionSeries(ts);
 		});
 		

@@ -1,6 +1,8 @@
 package peakaboo.ui.swing;
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -12,6 +14,7 @@ import java.awt.event.WindowListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -450,7 +453,7 @@ public class PeakabooMapperSwing extends JFrame
 				
 				
 				//generate a list of pairings of TransitionSeries and their intensity values
-				Functionable<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().map((MapResult r) -> {
+				List<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().stream().map((MapResult r) -> {
 					float sum = 0;
 					for (int x : new Range(xstart, xend)) {
 						for (int y : new Range(ystart, yend)){
@@ -458,14 +461,14 @@ public class PeakabooMapperSwing extends JFrame
 						}
 					}
 					return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / size);
-				});
+				}).collect(toList());
 				
 				
 				//get the total of all of the corrected values
-				float total = averages.map((Pair<TransitionSeries, Float> p) -> {
+				float total = averages.stream().map((Pair<TransitionSeries, Float> p) -> {
 					Float corrFactor = corr.getCorrection(p.first);
 					return (corrFactor == null) ? 0f : p.second * corrFactor;
-				}).fold((a, b) -> a + b);
+				}).reduce(0f, (a, b) -> a + b);
 				
 				for (Pair<TransitionSeries, Float> p : averages)
 				{

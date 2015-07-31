@@ -2,6 +2,8 @@ package peakaboo.ui.swing.plotting;
 
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -1306,7 +1308,7 @@ public class PlotPanel extends ClearPanel
 
 		files = openNewDataset(exts, descs);
 		if (files == null) return;
-		FList<String> filenames = FList.wrap(files).map(v -> v.getFileName());
+		List<String> filenames = FList.wrap(files).stream().map(v -> v.getFileName()).collect(toList());
 		loadFiles(filenames);
 		
 	}

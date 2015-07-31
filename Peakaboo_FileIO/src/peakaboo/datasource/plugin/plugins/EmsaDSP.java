@@ -1,5 +1,7 @@
 package peakaboo.datasource.plugin.plugins;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -174,7 +176,7 @@ public class EmsaDSP extends AbstractDSP {
 	@Override
 	public List<String> scanNames()
 	{
-		return new Range(0, scanCount()-1).map(element -> "Scan #" + (element+1)).toSink();
+		return new Range(0, scanCount()-1).stream().map(element -> "Scan #" + (element+1)).collect(toList());
 	}
 
 	@Override
