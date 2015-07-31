@@ -10,7 +10,6 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import scitypes.Spectrum;
 import eventful.IEventfulType;
-import fava.functionable.FList;
 
 
 public interface IFittingController extends IEventfulType<Boolean>
@@ -22,12 +21,12 @@ public interface IFittingController extends IEventfulType<Boolean>
 	void removeTransitionSeries(TransitionSeries e);
 	void clearTransitionSeries();
 	
-	FList<TransitionSeries> getFittedTransitionSeries();
-	FList<TransitionSeries> getUnfittedTransitionSeries(TransitionSeriesType tst);
+	List<TransitionSeries> getFittedTransitionSeries();
+	List<TransitionSeries> getUnfittedTransitionSeries(TransitionSeriesType tst);
 	
 	void setTransitionSeriesVisibility(TransitionSeries e, boolean show);
 	boolean getTransitionSeriesVisibility(TransitionSeries e);
-	FList<TransitionSeries> getVisibleTransitionSeries();
+	List<TransitionSeries> getVisibleTransitionSeries();
 	
 	float getTransitionSeriesIntensity(TransitionSeries ts);
 	void moveTransitionSeriesUp(TransitionSeries e);

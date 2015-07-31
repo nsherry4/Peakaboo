@@ -171,6 +171,9 @@ public class FilterSet implements Iterable<AbstractFilter>
 		return filters.get(index).getFilterName();
 	}
 
+	public synchronized List<AbstractFilter> getFilters() {
+		return new ArrayList<>(filters);
+	}
 
 
 }

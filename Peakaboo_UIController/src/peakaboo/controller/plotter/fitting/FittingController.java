@@ -1,7 +1,8 @@
 package peakaboo.controller.plotter.fitting;
 
-import static fava.Fn.filter;
+import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -91,22 +92,16 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	}
 
 	@Override
-	public FList<TransitionSeries> getFittedTransitionSeries()
+	public List<TransitionSeries> getFittedTransitionSeries()
 	{
-		return FList.wrap(fittingModel.selections.getFittedTransitionSeries());
+		return fittingModel.selections.getFittedTransitionSeries();
 	}
 
 	@Override
-	public FList<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
+	public List<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
 	{
-
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
-
-
-		return filter(PeakTable.getAllTransitionSeries(), ts -> {
-			return (!fitted.contains(ts)) && tst.equals(ts.type);
-		});
-
+		return PeakTable.getAllTransitionSeries().stream().filter(ts -> (!fitted.contains(ts)) && tst.equals(ts.type)).collect(toList());
 	}
 
 	@Override
@@ -124,11 +119,9 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	}
 
 	@Override
-	public FList<TransitionSeries> getVisibleTransitionSeries()
+	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return filter(getFittedTransitionSeries(), ts -> {
-			return ts.visible;
-		});
+		return getFittedTransitionSeries().stream().filter(ts -> ts.visible).collect(toList());
 	}
 
 	@Override
@@ -262,10 +255,10 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//all visible TSs
-		final FList<TransitionSeries> tss = Fn.map(getVisibleTransitionSeries(), a -> a);
+		final List<TransitionSeries> tss = new ArrayList<>(getVisibleTransitionSeries());
 				
 		//all invisible TSs
-		FList<TransitionSeries> invisibles = filter(getFittedTransitionSeries(), e -> !tss.include(e));
+		List<TransitionSeries> invisibles = getFittedTransitionSeries().stream().filter(e -> !tss.contains(e)).collect(toList());
 				
 		
 		//find all the TSs which overlap with other TSs
@@ -310,8 +303,8 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		
 		//find the optimal ordering of the visible overlapping TSs based on how they fit with competition
-		FList<TransitionSeries> bestfit = optimizeTSOrderingHelper(
-				FList.wrap(scoredOverlappers.stream().map(e -> e.first).collect(Collectors.toList())), 
+		List<TransitionSeries> bestfit = optimizeTSOrderingHelper(
+				scoredOverlappers.stream().map(e -> e.first).collect(Collectors.toList()), 
 				new FList<TransitionSeries>()
 			);
 		
@@ -359,7 +352,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	// =============================================
 	// Helper Functions for IFittingController
 	// =============================================
-	private FList<TransitionSeries> optimizeTSOrderingHelper(FList<TransitionSeries> unfitted, FList<TransitionSeries> fitted)
+	private FList<TransitionSeries> optimizeTSOrderingHelper(List<TransitionSeries> unfitted, FList<TransitionSeries> fitted)
 	{
 		
 		//assumption: unfitted will be in sorted order based on how well each TS fits independently
@@ -367,9 +360,9 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		
 		int n = 4;
 		
-		FList<TransitionSeries> topn = unfitted.take(n);
+		List<TransitionSeries> topn = unfitted.subList(0, n);
 		unfitted.removeAll(topn);
-		FList<List<TransitionSeries>> perms = Fn.permutations(topn);
+		List<List<TransitionSeries>> perms = Fn.permutations(topn);
 				
 		//function to score an ordering of Transition Series
 		final Function<List<TransitionSeries>, Float> scoreTSs = tss -> {
@@ -390,19 +383,19 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	
 		
 		//find the best fitting for the currently selected fittings
-		FList<TransitionSeries> bestfit = FList.<TransitionSeries>wrap(perms.fold((l1, l2) -> {
+		List<TransitionSeries> bestfit = perms.stream().reduce((l1, l2) -> {
 			Float s1, s2; //scores
 			s1 = scoreTSs.apply(l1);
 			s2 = scoreTSs.apply(l2);				
 			
 			if (s1 < s2) return l1;
 			return l2;	
-		}));
+		}).get();
 
 		
 		//add the best half of the fitted elements to the fititngs list
 		//and the rest back into the start of the unfitted elements list
-		fitted.addAll(bestfit.take(n/2));
+		fitted.addAll(bestfit.subList(0, n/2));
 		bestfit.removeAll(fitted);
 		unfitted.addAll(0, bestfit);
 		

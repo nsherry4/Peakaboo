@@ -2,6 +2,8 @@ package peakaboo.controller.settings;
 
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +20,7 @@ import fava.Fn;
 import fava.Functions;
 import fava.functionable.FStringInput;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
 
 
@@ -117,13 +120,10 @@ public class Settings
 
 		//map our list of TransitionSeries to SerializedTransitionSeries since we can't use the
 		//yaml library to build TransitionSeries
-		data.fittings = Fn.map(
-				fittings.selections.getFittedTransitionSeries(), 
-				ts -> new SerializedTransitionSeries(ts)
-			);
+		data.fittings = fittings.selections.getFittedTransitionSeries().stream().map(ts -> new SerializedTransitionSeries(ts)).collect(toList());
 		
-		//map the filters from a FilterSet to a list
-		data.filters = Fn.map(filters.filters, a -> a);
+		//get a copy of the in-use/created filters
+		data.filters = filters.filters.getFilters();
 		
 		
 		//other structs

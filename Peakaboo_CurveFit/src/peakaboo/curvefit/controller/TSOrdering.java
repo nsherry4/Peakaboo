@@ -1,6 +1,7 @@
 package peakaboo.curvefit.controller;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -150,7 +151,7 @@ public class TSOrdering
 	 * @param escape the kind of {@link EscapePeakType} that should
 	 * @return a list of all {@link TransitionSeries} which overlap with the given one
 	 */
-	public static FList<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final FList<TransitionSeries> tss, float energyPerChannel, int spectrumSize, final EscapePeakType escape)
+	public static FList<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, float energyPerChannel, int spectrumSize, final EscapePeakType escape)
 	{
 		final TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, spectrumSize, energyPerChannel, escape);
 		final TransitionSeriesFitting tsf2 = new TransitionSeriesFitting(null, spectrumSize, energyPerChannel, escape);
@@ -274,7 +275,7 @@ public class TSOrdering
 
 
 		//get a list of all transition series to start with
-		FList<TransitionSeries> tss = Fn.map(PeakTable.getAllTransitionSeries(), a -> a);
+		List<TransitionSeries> tss = new ArrayList<>(PeakTable.getAllTransitionSeries());
 
 		
 		//add in any 2x summations from the list of previously fitted AND proposed peaks.
@@ -325,7 +326,7 @@ public class TSOrdering
 		}, a -> a);
 		
 		//take the top n based on position alone
-		tss = tss.take(15);
+		tss = tss.subList(0, 15);
 		
 		//now sort by score
 		Collections.sort(tss, new Comparator<TransitionSeries>() {
@@ -344,7 +345,7 @@ public class TSOrdering
 		});
 				
 		//take the 5 best in sorted order based on score
-		return tss.take(5);
+		return tss.subList(0, 5);
 	}
 
 	

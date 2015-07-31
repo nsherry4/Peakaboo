@@ -2,14 +2,11 @@ package peakaboo.curvefit.model.transitionseries;
 
 
 
-import static fava.Fn.all;
 import static fava.Fn.concat;
 import static fava.Fn.concatMap;
 import static fava.Fn.each;
-import static fava.Fn.filter;
 import static fava.Fn.foldr;
 import static fava.Fn.group;
-import static fava.Fn.map;
 import static fava.Fn.zipWith;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -27,6 +24,7 @@ import fava.Functions;
 import fava.functionable.FList;
 
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -366,18 +364,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 		//function for summing two TransitionSeries
-		final BiFunction<TransitionSeries, TransitionSeries, TransitionSeries> tsSum = (ts1, ts2) -> ts1.summation(ts2);
+		final BinaryOperator<TransitionSeries> tsSum = (ts1, ts2) -> ts1.summation(ts2);
 
 
 		//turn the groups of primary transitionseries into a list of pile-up transitionseries
-		List<TransitionSeries> pileups = map(tsGroups,
-			tsList -> {
-				return foldr(tsList, tsSum);
-			}
-		);
+		List<TransitionSeries> pileups = tsGroups.stream().map(tsList -> tsList.stream().reduce((ts1, ts2) -> ts1.summation(ts2)).get()).collect(toList());
 
 		//sum the pileups
-		TransitionSeries result = foldr(pileups, tsSum);
+		TransitionSeries result = pileups.stream().reduce(tsSum).get();
 		return result;
 
 	}
@@ -407,13 +401,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		
 		if (transitions.size() == 0) return newTransitionSeries;
 
-		List<List<Transition>> allPileupLists = map(transitions,
-			// map each of the transitions
-			t1 -> {
-				// For each transition in the outer map, map the list transitionList to a list of pileup values
-				return map(other.transitions, t2 ->t1.summation(t2));
-			}
-		);
+		//For each transition in the outer map, map the list transitionList to a list of pileup values
+		List<List<Transition>> allPileupLists = transitions.stream()
+				.map(t1 -> other.transitions.stream().map(t2 ->t1.summation(t2)).collect(toList()))
+				.collect(toList());
 
 		List<Transition> allPileups = concat(allPileupLists);
 
@@ -450,8 +441,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 				Collections.sort(componentSeries);
 				Collections.sort(otherTS.componentSeries);
-
-				List<Integer> differences = filter(zipWith(componentSeries, otherTS.componentSeries, (ts1, ts2) -> ts1.compareTo(ts2)), a -> a.equals(0));
+				
+				List<Integer> differences = zipWith(componentSeries, otherTS.componentSeries, (ts1, ts2) -> ts1.compareTo(ts2)).stream()
+												.filter(a -> a.equals(0))
+												.collect(toList());
 
 				if (differences.size() == 0) return 0;
 				return differences.get(0);
@@ -499,7 +492,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			Collections.sort(componentSeries);
 			Collections.sort(other.componentSeries);
 
-			if ( !all(zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b))) ) return false;
+			return zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b)).stream().reduce(true, Boolean::logicalAnd);
+			//if ( !all(zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b))) ) return false;
 		}
 		
 		return true;

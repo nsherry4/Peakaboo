@@ -1,9 +1,9 @@
 package peakaboo.ui.swing.mapping;
 
-import static fava.Fn.filter;
 import static fava.Fn.foldr;
-import static fava.Fn.map;
 import static fava.Fn.unique;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -274,7 +274,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
-		List<Integer> ratioSideValues = unique(map(tabController.getVisibleTransitionSeries(), ts -> tabController.getRatioSide(ts)));
+		List<Integer> ratioSideValues = tabController.getVisibleTransitionSeries().stream().map(ts -> tabController.getRatioSide(ts)).distinct().collect(toList());
 		
 		
 		//this is a valid ratio if there is at least 1 visible TS for each side
@@ -454,33 +454,23 @@ public class MapCanvas extends GraphicsPanel
 
 			// create a list of color,string pairs for the legend by mapping the list of transitionseries per
 			// colour and filter for empty strings
-			filter(map(
 
-				// input list - get a unique list of colours in use
+			// input list - get a unique list of colours in use
 
-					unique(tabController.getOverlayColourValues()),
-
-					// mapping function - convert the color objects into color,string pairs (ie
-					// color/element list)
-					(final OverlayColour ocolour) ->
-					{
-						// create a color,string pair
-						return new Pair<Color, String>(ocolour.toColor(),
-
-							// fold the list of transition series using the concat operator
-							foldr(
-								//grab a list of all TSs from the TS->Colour map and filter for the right colour
-								filter(tabController.getOverlayColourKeys(), ts -> tabController.getOverlayColour(ts) == ocolour)//filter transitionseries
-								,
-								"",
-								(TransitionSeries ts, String title) -> title + (title.equals("") ? "" : ", ") + ts.toElementString()										
-							) //foldr [TransitionSeries] -> String (title)
-						);
-					}),
-
-				// filter for empty strings
-				element -> !(element.second.length() == 0)							
-			)
+			tabController.getOverlayColourValues().stream()
+				.distinct()
+				.map(ocolour -> new Pair<Color, String>(ocolour.toColor(),					//convert the color objects into color,string pairs (ie color/element list)	
+						tabController.getOverlayColourKeys().stream()						//grab a list of all TSs from the TS->Colour	
+							.filter(ts -> tabController.getOverlayColour(ts) == ocolour)	//filter for the right color
+							.map(ts -> ts.toElementString())								//get element string
+							.collect(joining(", "))											//comma separated list
+						)
+				)
+				.filter(
+						//filter for empty strings
+						element -> !(element.second.length() == 0)
+				).collect(toList())
+			
 		);
 
 			

@@ -2,8 +2,6 @@ package peakaboo.curvefit.model;
 
 
 
-import static fava.Fn.include;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +92,7 @@ public class FittingSet implements Serializable
 	public synchronized void addTransitionSeries(TransitionSeries ts)
 	{
 
-		if (include(fitTransitionSeries, ts)) return;
+		if (fitTransitionSeries.contains(ts)) return;
 		
 		addTransitionSeriesToFittings(ts);
 		fitTransitionSeries.add(ts);

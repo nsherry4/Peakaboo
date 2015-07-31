@@ -1,10 +1,7 @@
 package peakaboo.controller.mapper.maptab;
 
-import static fava.Fn.filter;
-import static fava.Fn.fold;
-import static fava.Fn.foldl;
-import static fava.Fn.map;
 import static fava.Fn.unique;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
@@ -161,10 +158,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				0.0f);
 		
 		
-		List<Pair<TransitionSeries, Spectrum>> dataset = map(
-				getVisibleTransitionSeries(),
-				ts -> new Pair<TransitionSeries, Spectrum>(ts, getMapForTransitionSeries(ts))
-			);
+		List<Pair<TransitionSeries, Spectrum>> dataset = getVisibleTransitionSeries().stream()
+				.map(ts -> new Pair<>(ts, getMapForTransitionSeries(ts)))
+				.collect(toList());
 				
 
 		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null;
@@ -177,10 +173,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				.collect(toList());
 
 		if (redSpectrums != null && redSpectrums.size() > 0) {
-			redSpectrum = fold(
-				redSpectrums,
-				(mapdata, sum) -> SpectrumCalculations.addLists(mapdata, sum)		
-			);
+			redSpectrum = redSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.RED, redSpectrum);
 			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(redSpectrum, grid, map.mapsController.getInterpolation());
@@ -201,11 +194,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				.collect(toList());
 		
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
-			greenSpectrum = fold(
-					greenSpectrums,
-					(Spectrum mapdata, Spectrum sum) -> {
-						return SpectrumCalculations.addLists(mapdata, sum);
-					});
+			greenSpectrum = greenSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.GREEN, greenSpectrum);
 			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, map.mapsController.getInterpolation());
@@ -226,11 +215,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				.collect(toList());
 		
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
-			blueSpectrum = fold(
-					blueSpectrums,
-					(Spectrum mapdata, Spectrum sum) -> {
-						return SpectrumCalculations.addLists(mapdata, sum);
-					});
+			blueSpectrum = blueSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.BLUE, blueSpectrum);
 			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, map.mapsController.getInterpolation());
@@ -378,7 +363,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			{
 				if (overlayData.get(c) != null) results.add(  c.toString() + ": " + SigDigits.roundFloatTo(overlayData.get(c).get(index), 2)  );
 			}
-			return results.foldl((a, b) -> a + ", " + b);
+			return results.stream().collect(joining(", "));
 		};
 	}
 	
@@ -627,8 +612,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private String getDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, ts -> ts.toElementString());
-		String title = foldl(elementNames, (a, b) -> a + ", " + b);
+		List<String> elementNames = list.stream().map(ts -> ts.toElementString()).collect(toList());
+		String title = elementNames.stream().collect(joining(", "));
 		if (title == null) return "-";
 		return title;
 		
@@ -638,12 +623,12 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private String getShortDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = map(list, ts -> ts.element.toString());
+		List<String> elementNames = list.stream().map(ts -> ts.element.toString()).collect(toList());
 		
 		//trim out the duplicated
 		elementNames = unique(elementNames);
 
-		String title = foldl(elementNames, (a, b) -> a + ", " + b);
+		String title = elementNames.stream().collect(joining(", "));
 		
 		if (title == null) return "-";
 		return title;
@@ -659,7 +644,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<TransitionSeries> tsList = filter(tabModel.visible.keySet(), a -> true);
+		List<TransitionSeries> tsList = tabModel.visible.keySet().stream().filter(a -> true).collect(toList());
 		Collections.sort(tsList);
 		return tsList;
 	}
@@ -669,7 +654,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return filter(getAllTransitionSeries(), e -> tabModel.visible.get(e));
+		return getAllTransitionSeries().stream().filter(e -> tabModel.visible.get(e)).collect(toList());
 	}
 	
 	/* (non-Javadoc)
@@ -715,10 +700,10 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	 */
 	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
-		return filter(getVisibleTransitionSeries(), e -> {
+		return getVisibleTransitionSeries().stream().filter(e -> {
 			Integer thisSide = tabModel.ratioSide.get(e);
 			return thisSide == side;
-		});
+		}).collect(toList());
 	}
 
 
