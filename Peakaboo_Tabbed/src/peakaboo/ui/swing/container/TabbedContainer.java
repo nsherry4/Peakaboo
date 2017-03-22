@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
 import peakaboo.ui.swing.plotting.PlotPanel;
-
 import swidget.widgets.tabbedinterface.TabbedInterface;
 
 public class TabbedContainer implements PeakabooContainer

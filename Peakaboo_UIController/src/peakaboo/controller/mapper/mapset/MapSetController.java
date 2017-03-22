@@ -3,12 +3,12 @@ package peakaboo.controller.mapper.mapset;
 import java.util.ArrayList;
 import java.util.List;
 
+import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
-import eventful.EventfulType;
 
 
 public class MapSetController extends EventfulType<String> implements IMapSetController

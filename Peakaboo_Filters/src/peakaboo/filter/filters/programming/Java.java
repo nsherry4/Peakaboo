@@ -1,11 +1,11 @@
 package peakaboo.filter.filters.programming;
 
 
+import autodialog.model.Parameter;
+import bolt.compiler.BoltJavaMap;
 import peakaboo.filter.editors.CodeEditor;
 import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
-import autodialog.model.Parameter;
-import bolt.compiler.BoltJavaMap;
 
 
 public class Java extends AbstractSimpleFilter {

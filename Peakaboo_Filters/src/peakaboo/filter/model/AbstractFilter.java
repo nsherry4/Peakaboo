@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import autodialog.model.Parameter;
+import bolt.plugin.BoltPlugin;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
-import autodialog.model.Parameter;
-import bolt.plugin.BoltPlugin;
 
 /**
  * 

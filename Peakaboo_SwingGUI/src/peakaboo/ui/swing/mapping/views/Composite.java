@@ -16,12 +16,12 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.results.MapResult;
 import swidget.widgets.Spacing;
-import eventful.EventfulTypeListener;
 
 public class Composite extends JPanel {
 	

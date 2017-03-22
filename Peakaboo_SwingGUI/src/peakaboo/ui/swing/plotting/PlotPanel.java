@@ -60,6 +60,16 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.ezware.dialog.task.TaskDialogs;
+
+import commonenvironment.AbstractFile;
+import commonenvironment.Apps;
+import commonenvironment.IOOperations;
+import eventful.EventfulEnumListener;
+import eventful.EventfulListener;
+import eventful.EventfulTypeListener;
+import fava.datatypes.Pair;
+import fava.functionable.FList;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.IPlotController;
@@ -98,18 +108,6 @@ import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.ZoomSlider;
 import swidget.widgets.toggle.ComplexToggle;
-
-import com.ezware.dialog.task.TaskDialogs;
-import commonenvironment.AbstractFile;
-import commonenvironment.Apps;
-import commonenvironment.IOOperations;
-
-import eventful.EventfulEnumListener;
-import eventful.EventfulListener;
-import eventful.EventfulTypeListener;
-import fava.datatypes.Pair;
-import fava.functionable.FList;
-import java.util.function.Function;
 
 
 

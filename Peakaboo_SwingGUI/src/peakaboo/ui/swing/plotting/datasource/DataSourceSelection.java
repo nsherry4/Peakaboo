@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import fava.functionable.FList;
 import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.datasource.plugin.plugins.CDFMLSaxDSP;
 import peakaboo.datasource.plugin.plugins.ScienceStudioDSP;
@@ -25,7 +26,6 @@ import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitleGradientPanel;
 import swidget.widgets.toggle.ComplexToggle;
 import swidget.widgets.toggle.ComplexToggleGroup;
-import fava.functionable.FList;
 
 
 public class DataSourceSelection extends JDialog

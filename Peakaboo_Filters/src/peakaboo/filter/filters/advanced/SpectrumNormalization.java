@@ -1,11 +1,11 @@
 package peakaboo.filter.filters.advanced;
 
-import peakaboo.filter.filters.AbstractSimpleFilter;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 import autodialog.model.Parameter;
 import autodialog.view.editors.DoubleEditor;
 import autodialog.view.editors.IntegerEditor;
+import peakaboo.filter.filters.AbstractSimpleFilter;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 public class SpectrumNormalization extends AbstractSimpleFilter
@@ -18,7 +18,9 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	public void initialize()
 	{
 		pChannel = new Parameter<>("Channel", new IntegerEditor(), 1);
-		pHeight = new Parameter<>("Intensity", new DoubleEditor(), 10d);	
+		addParameter(pChannel);
+		pHeight = new Parameter<>("Intensity", new DoubleEditor(), 10d);
+		addParameter(pHeight);
 	}
 	
 	@Override

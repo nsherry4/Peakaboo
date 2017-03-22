@@ -1,7 +1,5 @@
 package peakaboo.ui.swing.mapping;
 
-import static fava.Fn.foldr;
-import static fava.Fn.unique;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -10,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fava.datatypes.Pair;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
 import peakaboo.controller.mapper.maptab.MapTabController;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.backends.Surface;
@@ -42,9 +40,6 @@ import scitypes.Coord;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import fava.datatypes.Pair;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 
 public class MapCanvas extends GraphicsPanel

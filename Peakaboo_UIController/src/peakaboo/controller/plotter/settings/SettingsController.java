@@ -1,11 +1,11 @@
 package peakaboo.controller.plotter.settings;
 
+import eventful.Eventful;
+import fava.datatypes.Pair;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.Spectrum;
-import eventful.Eventful;
-import fava.datatypes.Pair;
 
 
 public class SettingsController extends Eventful implements ISettingsController

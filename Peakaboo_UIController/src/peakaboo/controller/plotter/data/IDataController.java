@@ -3,6 +3,7 @@ package peakaboo.controller.plotter.data;
 import java.util.Iterator;
 import java.util.List;
 
+import eventful.IEventful;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DatasetReadResult;
@@ -16,7 +17,6 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
-import eventful.IEventful;
 
 
 public interface IDataController extends IEventful 

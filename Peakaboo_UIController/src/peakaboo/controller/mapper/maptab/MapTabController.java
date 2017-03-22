@@ -14,7 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
+import eventful.EventfulType;
+import fava.datatypes.Pair;
+import fava.functionable.FList;
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
@@ -26,15 +30,6 @@ import scitypes.Ratios;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import eventful.EventfulType;
-import fava.Functions;
-import fava.datatypes.Pair;
-import fava.functionable.FList;
-
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 
 public class MapTabController extends EventfulType<String> implements IMapTabController

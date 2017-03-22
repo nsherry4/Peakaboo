@@ -5,9 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import peakaboo.curvefit.peaktable.PeakTableReader;
-
 import commonenvironment.AbstractFile;
+import peakaboo.curvefit.peaktable.PeakTableReader;
 
 
 public class CorrectionsManager

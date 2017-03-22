@@ -17,15 +17,13 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import fava.datatypes.Pair;
+import fava.functionable.FList;
+import fava.functionable.Range;
 import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
 import scitypes.Spectrum;
-import fava.Functions;
-import fava.datatypes.Pair;
-import fava.functionable.FList;
-import fava.functionable.Range;
-import java.util.function.Function;
 
 
 public abstract class CDFMLReader extends DefaultHandler2

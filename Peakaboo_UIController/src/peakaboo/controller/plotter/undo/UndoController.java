@@ -5,9 +5,9 @@ package peakaboo.controller.plotter.undo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import peakaboo.controller.plotter.IPlotController;
 import eventful.Eventful;
 import fava.datatypes.Pair;
+import peakaboo.controller.plotter.IPlotController;
 
 
 

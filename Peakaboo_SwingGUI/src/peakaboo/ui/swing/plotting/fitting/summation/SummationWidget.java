@@ -4,7 +4,9 @@ package peakaboo.ui.swing.plotting.fitting.summation;
 
 import java.awt.GridBagConstraints;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import fava.functionable.FList;
 import peakaboo.common.DataTypeFactory;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -12,12 +14,6 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.widgets.ClearPanel;
-import fava.Functions;
-import fava.functionable.FList;
-
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 
 

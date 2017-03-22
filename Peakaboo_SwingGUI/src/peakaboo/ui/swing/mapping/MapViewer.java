@@ -16,13 +16,13 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 
+import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import swidget.widgets.Spacing;
-import eventful.EventfulTypeListener;
 
 
 

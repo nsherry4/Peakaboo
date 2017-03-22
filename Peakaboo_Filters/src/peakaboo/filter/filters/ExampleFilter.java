@@ -1,13 +1,13 @@
 package peakaboo.filter.filters;
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.filter.model.AbstractFilter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
 import scitypes.Spectrum;
-import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
 
 public class ExampleFilter extends AbstractFilter {
 

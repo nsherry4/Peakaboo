@@ -1,13 +1,13 @@
 package peakaboo.controller.mapper.mapset;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 

@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import fava.Fn;
+import fava.datatypes.Pair;
+import fava.functionable.FList;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
@@ -14,14 +19,6 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
 import peakaboo.curvefit.peaktable.PeakTable;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import fava.Fn;
-import fava.Functions;
-import fava.datatypes.Pair;
-import fava.functionable.FList;
-
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 
 /**

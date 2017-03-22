@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import eventful.EventfulTypeListener;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
@@ -15,7 +16,6 @@ import peakaboo.ui.swing.plotting.fitting.smartfitting.SmartFittingPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalPanel;
 import swidget.widgets.ClearPanel;
-import eventful.EventfulTypeListener;
 
 
 

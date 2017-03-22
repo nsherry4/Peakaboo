@@ -15,6 +15,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
+import autodialog.view.AutoDialog;
+import autodialog.view.AutoDialog.AutoDialogButtons;
 import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.AbstractFilter;
 import swidget.icons.IconSize;
@@ -22,8 +24,6 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
-import autodialog.view.AutoDialog;
-import autodialog.view.AutoDialog.AutoDialogButtons;
 
 
 

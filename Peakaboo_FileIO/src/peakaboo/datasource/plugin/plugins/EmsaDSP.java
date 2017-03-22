@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 import fava.functionable.Range;
-import java.util.function.Function;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.plugin.AbstractDSP;
 import scitypes.Bounds;

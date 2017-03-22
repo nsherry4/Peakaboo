@@ -1,10 +1,10 @@
 package peakaboo.datasource.plugin.plugins.sciencestudio.vespers.data.converter.factory;
 
-import peakaboo.datasource.plugin.plugins.sciencestudio.vespers.data.converter.MapXYVespersToPDSConverter;
 import ca.sciencestudio.data.converter.Converter;
 import ca.sciencestudio.data.converter.ConverterMap;
 import ca.sciencestudio.data.support.ConverterFactoryException;
 import ca.sciencestudio.vespers.data.converter.factory.AbstractMapXYVespersConverterFactory;
+import peakaboo.datasource.plugin.plugins.sciencestudio.vespers.data.converter.MapXYVespersToPDSConverter;
 
 /**
  * @author maxweld

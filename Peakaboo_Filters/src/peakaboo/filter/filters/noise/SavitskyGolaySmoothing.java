@@ -4,14 +4,14 @@ package peakaboo.filter.filters.noise;
 
 import javax.swing.JSeparator;
 
-import peakaboo.calculations.Noise;
-import peakaboo.filter.filters.AbstractSimpleFilter;
-import scitypes.Spectrum;
 import autodialog.model.Parameter;
 import autodialog.view.editors.BooleanEditor;
 import autodialog.view.editors.DoubleEditor;
 import autodialog.view.editors.DummyEditor;
 import autodialog.view.editors.IntegerEditor;
+import peakaboo.calculations.Noise;
+import peakaboo.filter.filters.AbstractSimpleFilter;
+import scitypes.Spectrum;
 
 /**
  * 

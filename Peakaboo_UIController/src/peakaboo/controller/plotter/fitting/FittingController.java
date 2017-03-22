@@ -5,7 +5,13 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import eventful.EventfulType;
+import fava.Fn;
+import fava.datatypes.Pair;
+import fava.functionable.FList;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.controller.TSOrdering;
@@ -19,14 +25,6 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.PeakTable;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import eventful.EventfulType;
-import fava.Fn;
-import fava.Functions;
-import fava.datatypes.Pair;
-import fava.functionable.FList;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 
 public class FittingController extends EventfulType<Boolean> implements IFittingController

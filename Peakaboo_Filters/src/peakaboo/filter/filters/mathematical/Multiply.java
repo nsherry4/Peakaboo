@@ -2,11 +2,11 @@ package peakaboo.filter.filters.mathematical;
 
 
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.DoubleEditor;
 import peakaboo.filter.filters.AbstractSimpleFilter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import autodialog.model.Parameter;
-import autodialog.view.editors.DoubleEditor;
 
 
 public class Multiply extends AbstractSimpleFilter

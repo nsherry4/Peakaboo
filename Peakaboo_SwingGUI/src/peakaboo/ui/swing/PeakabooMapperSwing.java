@@ -30,6 +30,10 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import eventful.EventfulListener;
+import eventful.EventfulTypeListener;
+import fava.datatypes.Pair;
+import fava.functionable.Range;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.controller.plotter.IPlotController;
@@ -49,13 +53,6 @@ import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.properties.PropertyViewPanel;
-import eventful.EventfulListener;
-import eventful.EventfulTypeListener;
-import fava.Functions;
-import fava.datatypes.Pair;
-import fava.functionable.Functionable;
-import fava.functionable.Range;
-import java.util.function.Function;
 
 
 /**

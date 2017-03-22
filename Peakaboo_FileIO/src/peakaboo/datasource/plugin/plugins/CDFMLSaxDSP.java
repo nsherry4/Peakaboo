@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import commonenvironment.AbstractFile;
+import fava.functionable.FList;
+import fava.functionable.Range;
 import peakaboo.datasource.plugin.AbstractDSP;
 import peakaboo.datasource.plugin.plugins.cdfml.CDFMLReader;
 import peakaboo.datasource.plugin.plugins.cdfml.CDFMLStrings;
@@ -16,11 +19,6 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-
-import commonenvironment.AbstractFile;
-
-import fava.functionable.FList;
-import fava.functionable.Range;
 
 
 public class CDFMLSaxDSP extends AbstractDSP

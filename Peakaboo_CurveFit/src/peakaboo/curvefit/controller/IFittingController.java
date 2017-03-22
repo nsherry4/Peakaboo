@@ -2,6 +2,7 @@ package peakaboo.curvefit.controller;
 
 import java.util.List;
 
+import eventful.IEventfulType;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
@@ -9,7 +10,6 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import scitypes.Spectrum;
-import eventful.IEventfulType;
 
 
 public interface IFittingController extends IEventfulType<Boolean>

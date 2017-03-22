@@ -19,8 +19,6 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
-import fava.functionable.FList;
-import java.util.function.Function;
 
 
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import eventful.Eventful;
+import eventful.EventfulListener;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
@@ -22,8 +24,6 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
-import eventful.Eventful;
-import eventful.EventfulListener;
 
 
 public class DataController extends Eventful implements IDataController

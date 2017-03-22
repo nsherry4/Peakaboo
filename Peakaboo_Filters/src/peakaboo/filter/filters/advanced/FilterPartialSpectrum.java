@@ -3,14 +3,14 @@ package peakaboo.filter.filters.advanced;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import autodialog.model.Parameter;
+import autodialog.view.editors.IntegerEditor;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.editors.SubfilterEditor;
 import peakaboo.filter.model.AbstractFilter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
-import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
 
 public class FilterPartialSpectrum extends AbstractFilter
 {

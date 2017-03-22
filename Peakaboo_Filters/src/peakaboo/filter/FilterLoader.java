@@ -6,6 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import bolt.plugin.BoltPluginLoader;
+import bolt.plugin.ClassInheritanceException;
+import bolt.plugin.ClassInstantiationException;
+import commonenvironment.Env;
 import peakaboo.common.Version;
 import peakaboo.filter.filters.advanced.DataToWavelet;
 import peakaboo.filter.filters.advanced.FilterPartialSpectrum;
@@ -30,11 +34,6 @@ import peakaboo.filter.filters.noise.WaveletNoiseFilter;
 import peakaboo.filter.filters.programming.JPython;
 import peakaboo.filter.filters.programming.Java;
 import peakaboo.filter.model.AbstractFilter;
-import bolt.plugin.BoltPluginLoader;
-import bolt.plugin.ClassInheritanceException;
-import bolt.plugin.ClassInstantiationException;
-
-import commonenvironment.Env;
 
 
 public class FilterLoader

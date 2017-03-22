@@ -10,14 +10,14 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
+import eventful.EventfulListener;
+import fava.functionable.FList;
 import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
-import eventful.EventfulListener;
-import fava.functionable.FList;
 
 
 public abstract class TSSelectorGroup extends JPanel implements Scrollable

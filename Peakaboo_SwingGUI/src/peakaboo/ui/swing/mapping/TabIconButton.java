@@ -13,10 +13,10 @@ import java.awt.event.MouseListener;
 import javax.swing.Icon;
 import javax.swing.JTabbedPane;
 
+import eventful.Eventful;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import eventful.Eventful;
 
 /**
  * Taken from http://weblogs.java.net/blog/herkules/archive/2005/10/close_icons_on_1.html

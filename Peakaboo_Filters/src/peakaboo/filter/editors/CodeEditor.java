@@ -15,23 +15,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
-import jsyntaxpane.DefaultSyntaxKit;
-
 import org.jdesktop.swingx.JXEditorPane;
 
+import com.ezware.dialog.task.TaskDialogs;
+
+import autodialog.model.Parameter;
+import autodialog.view.editors.IEditor;
+import commonenvironment.AbstractFile;
+import eventful.Eventful;
+import fava.functionable.FStringInput;
+import jsyntaxpane.DefaultSyntaxKit;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
-import autodialog.model.Parameter;
-import autodialog.view.editors.IEditor;
-
-import com.ezware.dialog.task.TaskDialogs;
-import commonenvironment.AbstractFile;
-
-import eventful.Eventful;
-import fava.functionable.FStringInput;
 
 public class CodeEditor extends Eventful implements IEditor<String>
 {

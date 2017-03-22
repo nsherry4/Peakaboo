@@ -9,16 +9,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import commonenvironment.AbstractFile;
+import fava.functionable.FList;
+import fava.functionable.FStringInput;
 import peakaboo.datasource.plugin.AbstractDSP;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
-
-import commonenvironment.AbstractFile;
-
-import fava.functionable.FList;
-import fava.functionable.FStringInput;
-import java.util.function.Function;
 
 
 public class MCA_DSP extends AbstractDSP {

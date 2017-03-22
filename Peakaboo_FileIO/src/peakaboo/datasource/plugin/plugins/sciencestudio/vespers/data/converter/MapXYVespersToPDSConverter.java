@@ -8,11 +8,6 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
-import peakaboo.datasource.DataSource;
-import peakaboo.datasource.plugin.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.Spectrum;
 import ca.sciencestudio.data.daf.DAFDataParser;
 import ca.sciencestudio.data.daf.DAFRecord;
 import ca.sciencestudio.data.daf.DAFSpectrumParser;
@@ -20,6 +15,11 @@ import ca.sciencestudio.data.standard.StdConverter;
 import ca.sciencestudio.data.standard.StdUnits;
 import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
+import peakaboo.datasource.DataSource;
+import peakaboo.datasource.plugin.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
+import scitypes.Bounds;
+import scitypes.Coord;
+import scitypes.Spectrum;
 
 /**
  * 

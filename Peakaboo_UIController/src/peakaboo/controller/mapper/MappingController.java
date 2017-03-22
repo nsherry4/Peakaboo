@@ -4,13 +4,13 @@ package peakaboo.controller.mapper;
 
 import java.io.InputStream;
 
+import eventful.EventfulType;
+import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.datasource.DataSource;
 import scitypes.Coord;
-import eventful.EventfulType;
-import eventful.EventfulTypeListener;
 
 
 public class MappingController extends EventfulType<String>

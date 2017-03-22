@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
-import fava.Functions;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 
 
 

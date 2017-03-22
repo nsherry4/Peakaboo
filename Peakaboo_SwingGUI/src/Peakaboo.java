@@ -6,16 +6,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.ezware.common.Strings;
+import com.ezware.dialog.task.TaskDialog;
+
+import commonenvironment.Env;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.ui.swing.PlotterFrame;
 import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-
-import com.ezware.common.Strings;
-import com.ezware.dialog.task.TaskDialog;
-import commonenvironment.Env;
 
 
 

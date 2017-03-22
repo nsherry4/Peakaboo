@@ -2,20 +2,14 @@ package peakaboo.mapping.correction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
+import commonenvironment.AbstractFile;
+import fava.datatypes.Pair;
+import fava.functionable.FList;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.Element;
-
-import commonenvironment.AbstractFile;
-
-import fava.datatypes.Pair;
-import fava.functionable.FList;
 
 
 public class Corrections

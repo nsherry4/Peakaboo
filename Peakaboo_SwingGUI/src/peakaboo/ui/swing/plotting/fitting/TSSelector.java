@@ -9,8 +9,8 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import eventful.swing.EventfulPanel;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 
 
 public class TSSelector extends EventfulPanel

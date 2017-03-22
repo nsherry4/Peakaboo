@@ -10,8 +10,6 @@ import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.ui.swing.container.TabbedContainer;
 import peakaboo.ui.swing.plotting.PlotPanel;
-
-
 import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.StockIcon;

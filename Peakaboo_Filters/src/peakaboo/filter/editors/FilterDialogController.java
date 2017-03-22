@@ -1,7 +1,7 @@
 package peakaboo.filter.editors;
 
-import peakaboo.filter.model.AbstractFilter;
 import autodialog.controller.AbstractADController;
+import peakaboo.filter.model.AbstractFilter;
 
 
 public abstract class FilterDialogController extends AbstractADController {

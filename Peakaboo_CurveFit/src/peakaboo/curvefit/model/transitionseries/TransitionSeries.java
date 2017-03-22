@@ -5,7 +5,6 @@ package peakaboo.curvefit.model.transitionseries;
 import static fava.Fn.concat;
 import static fava.Fn.concatMap;
 import static fava.Fn.each;
-import static fava.Fn.foldr;
 import static fava.Fn.group;
 import static fava.Fn.zipWith;
 import static java.util.stream.Collectors.joining;
@@ -16,18 +15,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 
+import fava.functionable.FList;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.peaktable.Element;
-import fava.Functions;
-import fava.functionable.FList;
-
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 
 

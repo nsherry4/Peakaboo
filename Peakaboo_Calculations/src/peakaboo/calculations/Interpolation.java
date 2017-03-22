@@ -3,9 +3,9 @@ package peakaboo.calculations;
 import java.util.ArrayList;
 import java.util.List;
 
+import fava.datatypes.Pair;
 import scitypes.GridPerspective;
 import scitypes.Spectrum;
-import fava.datatypes.Pair;
 
 /**
  * 

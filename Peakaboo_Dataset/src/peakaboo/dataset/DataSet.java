@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.plugin.AbstractDSP;
@@ -21,11 +22,6 @@ import scitypes.Coord;
 import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-
-import commonenvironment.AbstractFile;
-
-import fava.functionable.FList;
-import java.util.function.Function;
 
 
 

@@ -5,15 +5,14 @@ import static java.util.stream.Collectors.toList;
 import java.io.File;
 import java.util.List;
 
+import fava.functionable.FList;
+import fava.functionable.FStringInput;
+import fava.functionable.Range;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.plugin.AbstractDSP;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
-import fava.functionable.FList;
-import fava.functionable.FStringInput;
-import fava.functionable.Range;
-import java.util.function.Function;
 
 
 public class PlainTextDSP extends AbstractDSP

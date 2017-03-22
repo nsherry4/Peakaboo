@@ -16,6 +16,10 @@ import java.util.function.Consumer;
 
 import javax.swing.Scrollable;
 
+import commonenvironment.Env;
+import eventful.EventfulTypeListener;
+import fava.datatypes.Pair;
+import fava.functionable.FArray;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.view.FittingMarkersPainter;
 import peakaboo.curvefit.view.FittingPainter;
@@ -39,13 +43,6 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-
-import commonenvironment.Env;
-
-import eventful.EventfulTypeListener;
-import fava.datatypes.Pair;
-import fava.functionable.FArray;
-import java.util.function.Function;
 
 
 

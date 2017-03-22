@@ -6,6 +6,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import eventful.EventfulListener;
+import eventful.EventfulType;
+import eventful.EventfulTypeListener;
+import fava.datatypes.Pair;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.data.IDataController;
@@ -25,10 +29,6 @@ import plural.executor.ExecutorSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scitypes.Spectrum;
-import eventful.EventfulListener;
-import eventful.EventfulType;
-import eventful.EventfulTypeListener;
-import fava.datatypes.Pair;
 
 
 
