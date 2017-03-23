@@ -226,7 +226,7 @@ public class PlotPanel extends ClearPanel
 			toolbarMap.setEnabled(controller.fitting().canMap());
 
 
-			if (controller.data().getScanHasExtendedInformation())
+			if (controller.data().hasMetadata())
 			{
 				toolbarInfo.setEnabled(true);
 			}
@@ -1617,19 +1617,19 @@ public class PlotPanel extends ClearPanel
 		
 		Map<String, String> properties = new LinkedHashMap<String, String>();
 
-		properties.put("Date of Creation", controller.data().getScanCreationTime());
-		properties.put("Created By", controller.data().getScanCreator());
+		properties.put("Date of Creation", controller.data().getMetadata().getCreationTime());
+		properties.put("Created By", controller.data().getMetadata().getCreator());
 		
-		properties.put("Project Name", controller.data().getScanProjectName());
-		properties.put("Session Name", controller.data().getScanSessionName());
-		properties.put("Experiment Name", controller.data().getScanExperimentName());
-		properties.put("Sample Name", controller.data().getScanSampleName());
-		properties.put("Scan Name", controller.data().getScanScanName());
+		properties.put("Project Name", controller.data().getMetadata().getProjectName());
+		properties.put("Session Name", controller.data().getMetadata().getSessionName());
+		properties.put("Experiment Name", controller.data().getMetadata().getExperimentName());
+		properties.put("Sample Name", controller.data().getMetadata().getSampleName());
+		properties.put("Scan Name", controller.data().getMetadata().getScanName());
 		
-		properties.put("Facility", controller.data().getScanFacilityName());
-		properties.put("Laboratory", controller.data().getScanLaboratoryName());
-		properties.put("Instrument", controller.data().getScanInstrumentName());
-		properties.put("Technique", controller.data().getScanTechniqueName());
+		properties.put("Facility", controller.data().getMetadata().getFacilityName());
+		properties.put("Laboratory", controller.data().getMetadata().getLaboratoryName());
+		properties.put("Instrument", controller.data().getMetadata().getInstrumentName());
+		properties.put("Technique", controller.data().getMetadata().getTechniqueName());
 		
 		new PropertyDialogue("Dataset Information", "Extended Information", container.getWindow(), properties);
 

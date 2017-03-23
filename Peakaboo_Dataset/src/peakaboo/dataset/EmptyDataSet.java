@@ -125,12 +125,6 @@ public class EmptyDataSet extends AbstractDataSet
 		return false;
 	}
 
-	@Override
-	public boolean hasExtendedInformation()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void discard()

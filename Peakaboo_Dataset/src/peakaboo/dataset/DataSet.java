@@ -497,12 +497,6 @@ public class DataSet extends AbstractDataSet
 	}
 
 
-	@Override
-	public boolean hasExtendedInformation()
-	{
-		return dataSource.hasMetadata();
-	}
-
 
 
 	@Override

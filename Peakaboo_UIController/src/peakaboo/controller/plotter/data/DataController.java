@@ -13,6 +13,7 @@ import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.components.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import peakaboo.datasource.internal.CopiedDataSource;
 import peakaboo.filter.model.FilterSet;
@@ -192,103 +193,25 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.getScanName(plot.settings().getScanNumber());
 	}
 
-	public boolean getScanHasExtendedInformation()
-	{
-		if (dataModel == null) return false;
-		return dataModel.hasExtendedInformation();
-	}
 
-	public String getScanCreationTime()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getCreationTime();
+	
+	
+	
+	
+	public boolean hasMetadata() {
+		if (dataModel == null) { return false; }
+		return dataModel.hasMetadata();
 	}
-
-	public String getScanCreator()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getCreator();
+	
+	public DataSourceMetadata getMetadata() {
+		if (dataModel == null) { return null; }
+		return dataModel.getMetadata();
 	}
+	
 
-	public String getScanEndTime()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getEndTime();
-	}
-
-	public String getScanExperimentName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getExperimentName();
-	}
-
-	public String getScanFacilityName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getFacilityName();
-	}
-
-	public String getScanInstrumentName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getInstrumentName();
-	}
-
-	public String getScanLaboratoryName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getLaboratoryName();
-	}
-
-	public String getScanProjectName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getProjectName();
-	}
-
-	public String getScanSampleName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getSampleName();
-	}
-
-	public String getScanScanName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getScanName();
-	}
-
-	public String getScanSessionName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getSessionName();
-	}
-
-	public String getScanStartTime()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getStartTime();
-	}
-
-	public String getScanTechniqueName()
-	{
-		if (dataModel == null) return null;
-		if (!dataModel.hasMetadata()) return "";
-		return dataModel.getMetadata().getTechniqueName();
-	}
-
+	
+	
+	
 	public boolean getScanDiscarded(int scanNo)
 	{
 		return (badScans.indexOf(scanNo) != -1);

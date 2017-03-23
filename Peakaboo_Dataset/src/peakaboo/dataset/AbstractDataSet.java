@@ -208,15 +208,6 @@ public abstract class AbstractDataSet
 
 
 	/**
-	 * Does this implementation of the DataSetContainer contain extended information such as where the scan was taken?
-	 * This will depend on if the {@link DataSource} implements {@link DataSourceMetadata}
-	 * 
-	 * @return true if this dataset has extended information, false otherwise
-	 */
-	public abstract boolean hasExtendedInformation();
-
-
-	/**
 	 * Invalidates any filters which have been applied to the dataset
 	 */
 	public abstract void invalidateFilteredData();

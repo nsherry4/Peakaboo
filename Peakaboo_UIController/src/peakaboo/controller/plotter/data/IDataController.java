@@ -8,6 +8,7 @@ import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.components.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -61,21 +62,8 @@ public interface IDataController extends IEventful
 	int getDataWidth();
 	
 	
-
-	boolean getScanHasExtendedInformation();
-	String getScanCreationTime();
-	String getScanCreator();
-	String getScanEndTime();
-	String getScanExperimentName();
-	String getScanFacilityName();
-	String getScanInstrumentName();
-	String getScanLaboratoryName();
-	String getScanProjectName();
-	String getScanSampleName();
-	String getScanScanName();
-	String getScanSessionName();
-	String getScanStartTime();
-	String getScanTechniqueName();
+	boolean hasMetadata();
+	DataSourceMetadata getMetadata();
 	
 	
 	String getCurrentScanName();
