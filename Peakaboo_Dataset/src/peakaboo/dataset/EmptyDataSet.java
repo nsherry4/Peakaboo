@@ -3,6 +3,7 @@ package peakaboo.dataset;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.components.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -132,97 +133,6 @@ public class EmptyDataSet extends AbstractDataSet
 	}
 
 	@Override
-	public String getCreationTime()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getCreator()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getEndTime()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getExperimentName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getFacilityName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getInstrumentName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getLaboratoryName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getProjectName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getSampleName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getScanName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getSessionName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public String getStartTime()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getTechniqueName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void discard()
 	{
 		
@@ -288,6 +198,18 @@ public class EmptyDataSet extends AbstractDataSet
 	{
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public DataSourceMetadata getMetadata() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasMetadata() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

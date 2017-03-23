@@ -14,6 +14,7 @@ import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
+import peakaboo.datasource.components.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -421,6 +422,17 @@ public class DataSet extends AbstractDataSet
 
 
 	@Override
+	public DataSourceMetadata getMetadata() {
+		return dataSource.getMetadata();
+	}
+	
+	@Override
+	public boolean hasMetadata() {
+		return dataSource.hasMetadata();
+	}
+	
+	
+	@Override
 	public String getDatasetName()
 	{
 		return dataSource.datasetName();
@@ -492,109 +504,6 @@ public class DataSet extends AbstractDataSet
 	}
 
 
-	@Override
-	public String getCreationTime()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getCreationTime();
-		return "";
-	}
-
-
-	@Override
-	public String getCreator()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getCreator();
-		return "";
-	}
-
-
-	@Override
-	public String getEndTime()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getEndTime();
-		return "";
-	}
-
-
-	@Override
-	public String getExperimentName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getExperimentName();
-		return "";
-	}
-
-
-	@Override
-	public String getFacilityName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getFacilityName();
-		return "";
-	}
-
-
-	@Override
-	public String getInstrumentName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getInstrumentName();
-		return "";
-	}
-
-
-	@Override
-	public String getLaboratoryName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getLaboratoryName();
-		return "";
-	}
-
-
-	@Override
-	public String getProjectName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getProjectName();
-		return "";
-	}
-
-
-	@Override
-	public String getSampleName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getSampleName();
-		return "";
-	}
-
-
-	@Override
-	public String getScanName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getScanName();
-		return "";
-	}
-
-
-	@Override
-	public String getSessionName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getSessionName();
-		return "";
-	}
-
-
-	@Override
-	public String getStartTime()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getStartTime();
-		return "";
-	}
-
-
-	@Override
-	public String getTechniqueName()
-	{
-		if (dataSource.hasMetadata()) return dataSource.getMetadata().getTechniqueName();
-		return "";
-	}
-
 
 	@Override
 	public void discard()
@@ -641,6 +550,12 @@ public class DataSet extends AbstractDataSet
 	{
 		return DataSourceLoader.getDSPs();
 	}
+
+
+
+
+
+
 	
 }
 

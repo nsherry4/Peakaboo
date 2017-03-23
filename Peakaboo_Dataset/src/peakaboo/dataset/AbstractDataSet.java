@@ -272,78 +272,11 @@ public abstract class AbstractDataSet
 	public abstract List<Coord<Number>> getCoordinateList();
 
 
-	// SS Namespace
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getCreationTime();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getCreator();
-
-
-	// SSModel Namespace
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getProjectName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getSessionName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getFacilityName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getLaboratoryName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getExperimentName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getInstrumentName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getTechniqueName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getSampleName();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getScanName();
-
-
-	// Scan Namespace
 	
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getStartTime();
-
-	/**
-	 * See {@link DataSourceMetadata}
-	 */
-	public abstract String getEndTime();
-
-		
+	public abstract DataSourceMetadata getMetadata();
+	public abstract boolean hasMetadata();
+	
+	
 	public abstract void discard();
 	
 	
