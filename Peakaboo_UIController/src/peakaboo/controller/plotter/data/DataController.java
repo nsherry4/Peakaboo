@@ -13,8 +13,8 @@ import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.internal.CopiedDS;
-import peakaboo.datasource.plugin.AbstractDSP;
+import peakaboo.datasource.internal.AbstractDataSource;
+import peakaboo.datasource.internal.CopiedDataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
@@ -52,13 +52,13 @@ public class DataController extends Eventful implements IDataController
 	// =============================================
 	
 	@Override
-	public List<AbstractDSP> getDataSourcePlugins()
+	public List<AbstractDataSource> getDataSourcePlugins()
 	{
 		return DataSet.getDataSourcePlugins();
 	}
 	
 	
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDSP dsp)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDataSource dsp)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
@@ -125,7 +125,7 @@ public class DataController extends Eventful implements IDataController
 
 	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return new CopiedDS(dataModel.getDataSource(), x, y, cstart, cend);
+		return new CopiedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
 	public String getDatasetName()

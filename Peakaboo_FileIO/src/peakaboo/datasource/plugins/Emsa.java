@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugin.plugins;
+package peakaboo.datasource.plugins;
 
 import static java.util.stream.Collectors.toList;
 
@@ -13,12 +13,13 @@ import java.util.Scanner;
 
 import fava.functionable.Range;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.plugin.AbstractDSP;
+import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.internal.AbstractDataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
-public class EmsaDSP extends AbstractDSP {
+public class Emsa extends AbstractDataSource {
 
 	private List<Spectrum> scans;
 	private float maxEnergy = 0;
@@ -26,7 +27,7 @@ public class EmsaDSP extends AbstractDSP {
 	private Map<String, String> tags;
 	
 	
-	public EmsaDSP() {
+	public Emsa() {
 		scans = SpectrumList.create(getDataFormat());
 	}
 	
@@ -213,89 +214,12 @@ public class EmsaDSP extends AbstractDSP {
 	// UNSUPPORTED METHODS
 	//==============================================
 	
-	@Override
-	public boolean hasMetadata()
-	{
-		return false;
-	}
 
 	@Override
-	public String getCreationTime()
-	{
-		throw new UnsupportedOperationException();
+	public DataSourceMetadata getMetadata() {
+		return null;
 	}
-
-	@Override
-	public String getCreator()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getProjectName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getSessionName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getFacilityName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getLaboratoryName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getExperimentName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getInstrumentName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getTechniqueName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getSampleName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getScanName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getStartTime()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getEndTime()
-	{
-		throw new UnsupportedOperationException();
-	}
+	
 
 	@Override
 	public Coord<Number> getRealCoordinatesAtIndex(int index)

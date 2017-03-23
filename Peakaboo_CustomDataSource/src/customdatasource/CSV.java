@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import peakaboo.datasource.plugin.AbstractDSP;
+import peakaboo.datasource.internal.AbstractDataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
-public class CSV extends AbstractDSP
+public class CSV extends AbstractDataSource
 {
 
 	List<Spectrum> 	data;

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.components.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
@@ -12,13 +13,13 @@ import scitypes.Spectrum;
  * @author maxweld
  * 
  */
-public class EmptyDS implements DataSource {
+public class EmptyDataSource implements DataSource {
 
 	// Data Source //
 	
 	@Override
-	public boolean hasMetadata() {
-		return false;
+	public DataSourceMetadata getMetadata() {
+		return null;
 	}
 
 	@Override
@@ -106,70 +107,4 @@ public class EmptyDS implements DataSource {
 		throw new UnsupportedOperationException();
 	}
 	
-	// DSMetaData //
-	
-	@Override
-	public String getCreationTime() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getCreator() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getProjectName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getSessionName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getFacilityName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getLaboratoryName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getExperimentName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getInstrumentName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getTechniqueName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getSampleName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getScanName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getStartTime() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getEndTime() {
-		throw new UnsupportedOperationException();
-	}
 }

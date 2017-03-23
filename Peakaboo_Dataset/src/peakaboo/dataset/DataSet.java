@@ -13,8 +13,8 @@ import java.util.function.Supplier;
 import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.plugin.AbstractDSP;
-import peakaboo.datasource.plugin.DSPLoader;
+import peakaboo.datasource.DataSourceLoader;
+import peakaboo.datasource.internal.AbstractDataSource;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Bounds;
@@ -195,7 +195,7 @@ public class DataSet extends AbstractDataSet
 	 * @param files the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, final AbstractDSP dataSource)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, final AbstractDataSource dataSource)
 	{
 
 		
@@ -495,7 +495,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getCreationTime()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getCreationTime();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getCreationTime();
 		return "";
 	}
 
@@ -503,7 +503,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getCreator()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getCreator();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getCreator();
 		return "";
 	}
 
@@ -511,7 +511,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getEndTime()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getEndTime();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getEndTime();
 		return "";
 	}
 
@@ -519,7 +519,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getExperimentName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getExperimentName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getExperimentName();
 		return "";
 	}
 
@@ -527,7 +527,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getFacilityName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getFacilityName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getFacilityName();
 		return "";
 	}
 
@@ -535,7 +535,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getInstrumentName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getInstrumentName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getInstrumentName();
 		return "";
 	}
 
@@ -543,7 +543,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getLaboratoryName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getLaboratoryName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getLaboratoryName();
 		return "";
 	}
 
@@ -551,7 +551,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getProjectName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getProjectName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getProjectName();
 		return "";
 	}
 
@@ -559,7 +559,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getSampleName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getSampleName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getSampleName();
 		return "";
 	}
 
@@ -567,7 +567,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getScanName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getScanName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getScanName();
 		return "";
 	}
 
@@ -575,7 +575,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getSessionName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getSessionName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getSessionName();
 		return "";
 	}
 
@@ -583,7 +583,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getStartTime()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getStartTime();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getStartTime();
 		return "";
 	}
 
@@ -591,7 +591,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getTechniqueName()
 	{
-		if (dataSource.hasMetadata()) return dataSource.getTechniqueName();
+		if (dataSource.hasMetadata()) return dataSource.getMetadata().getTechniqueName();
 		return "";
 	}
 
@@ -637,9 +637,9 @@ public class DataSet extends AbstractDataSet
 	 */
 	
 
-	public static List<AbstractDSP> getDataSourcePlugins()
+	public static List<AbstractDataSource> getDataSourcePlugins()
 	{
-		return DSPLoader.getDSPs();
+		return DataSourceLoader.getDSPs();
 	}
 	
 }

@@ -1,7 +1,7 @@
-package peakaboo.datasource.interfaces;
+package peakaboo.datasource.components;
 
 
-public interface DSMetadata
+public interface DataSourceMetadata
 {
 
 	

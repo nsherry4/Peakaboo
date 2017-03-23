@@ -5,8 +5,8 @@ package peakaboo.dataset;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.interfaces.DSDimensions;
-import peakaboo.datasource.interfaces.DSMetadata;
+import peakaboo.datasource.components.DataSourceDimensions;
+import peakaboo.datasource.components.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -200,7 +200,7 @@ public abstract class AbstractDataSet
 
 	/**
 	 * Does this implementation of the DataSetContainer contain dimensional information? This will depend on if the
-	 * {@link DataSource} implements {@link DSDimensions}
+	 * {@link DataSource} implements {@link DataSourceDimensions}
 	 * 
 	 * @return true if this dataset has dimensional information, false otherwise
 	 */
@@ -209,7 +209,7 @@ public abstract class AbstractDataSet
 
 	/**
 	 * Does this implementation of the DataSetContainer contain extended information such as where the scan was taken?
-	 * This will depend on if the {@link DataSource} implements {@link DSMetadata}
+	 * This will depend on if the {@link DataSource} implements {@link DataSourceMetadata}
 	 * 
 	 * @return true if this dataset has extended information, false otherwise
 	 */
@@ -252,81 +252,81 @@ public abstract class AbstractDataSet
 
 	
 	/**
-	 * See {@link DSDimensions}
+	 * See {@link DataSourceDimensions}
 	 */
 	public abstract Coord<Bounds<Number>> getRealDimensions();
 
 	/**
-	 * See {@link DSDimensions}
+	 * See {@link DataSourceDimensions}
 	 */
 	public abstract SISize getRealDimensionsUnits();
 
 	/**
-	 * See {@link DSDimensions}
+	 * See {@link DataSourceDimensions}
 	 */
 	public abstract Coord<Integer> getDataDimensions();
 
 	/**
-	 * See {@link DSDimensions}
+	 * See {@link DataSourceDimensions}
 	 */
 	public abstract List<Coord<Number>> getCoordinateList();
 
 
 	// SS Namespace
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getCreationTime();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getCreator();
 
 
 	// SSModel Namespace
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getProjectName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getSessionName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getFacilityName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getLaboratoryName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getExperimentName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getInstrumentName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getTechniqueName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getSampleName();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getScanName();
 
@@ -334,12 +334,12 @@ public abstract class AbstractDataSet
 	// Scan Namespace
 	
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getStartTime();
 
 	/**
-	 * See {@link DSMetadata}
+	 * See {@link DataSourceMetadata}
 	 */
 	public abstract String getEndTime();
 

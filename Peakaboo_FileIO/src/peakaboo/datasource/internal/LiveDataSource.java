@@ -5,11 +5,11 @@ import java.util.List;
 
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.interfaces.DSScanData;
+import peakaboo.datasource.components.DataSourceScanData;
 import scitypes.Spectrum;
 
 
-public class LiveDS implements DSScanData
+public class LiveDataSource implements DataSourceScanData
 {
 
 	float maxEnergy;
@@ -18,7 +18,7 @@ public class LiveDS implements DSScanData
 	List<Spectrum> scans;
 	
 	
-	public LiveDS()
+	public LiveDataSource()
 	{
 		scans = SpectrumList.create(Version.program_name + " Live Dataset");
 	}

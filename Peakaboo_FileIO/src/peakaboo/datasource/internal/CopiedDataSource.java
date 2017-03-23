@@ -5,13 +5,14 @@ import java.util.List;
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.components.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.Spectrum;
 
 
-public class CopiedDS implements DataSource
+public class CopiedDataSource implements DataSource
 {
 
 	private FList<String>				scannames = new FList<String>();
@@ -20,7 +21,7 @@ public class CopiedDS implements DataSource
 	private int							sizeX, sizeY;
 	private Range						rangeX, rangeY;
 	
-	public CopiedDS(DataSource ds, int sizeX, int sizeY, Coord<Integer> cstart, Coord<Integer> cend)
+	public CopiedDataSource(DataSource ds, int sizeX, int sizeY, Coord<Integer> cstart, Coord<Integer> cend)
 	{
 		
 		originalDataSource = ds;
@@ -164,100 +165,6 @@ public class CopiedDS implements DataSource
 	}
 
 
-	public String getCreationTime()
-	{
-		return originalDataSource.getCreationTime();
-	}
-
-
-	public String getCreator()
-	{
-		return originalDataSource.getCreator();
-	}
-
-
-	public String getEndTime()
-	{
-		
-		return originalDataSource.getEndTime();
-	}
-
-
-	public String getExperimentName()
-	{
-		
-		return originalDataSource.getExperimentName();
-	}
-
-
-	public String getFacilityName()
-	{
-		
-		return originalDataSource.getFacilityName();
-	}
-
-
-	public String getInstrumentName()
-	{
-		
-		return originalDataSource.getInstrumentName();
-	}
-
-
-	public String getLaboratoryName()
-	{
-		
-		return originalDataSource.getLaboratoryName();
-	}
-
-
-	public String getProjectName()
-	{
-		
-		return originalDataSource.getProjectName();
-	}
-
-
-	public String getSampleName()
-	{
-		
-		return originalDataSource.getSampleName();
-	}
-
-
-	public String getScanName()
-	{
-		
-		return originalDataSource.getScanName();
-	}
-
-
-	public String getSessionName()
-	{
-		
-		return originalDataSource.getSessionName();
-	}
-
-
-	public String getStartTime()
-	{
-		
-		return originalDataSource.getStartTime();
-	}
-
-
-	public String getTechniqueName()
-	{
-		return originalDataSource.getTechniqueName();
-	}
-
-
-	public boolean hasMetadata()
-	{
-		return originalDataSource.hasMetadata();
-	}
-
-
 	@Override
 	public boolean canRead(String filename)
 	{
@@ -294,6 +201,12 @@ public class CopiedDS implements DataSource
 		//This should never be called, since the data source this one copies from
 		//should already have been initialized
 		throw new UnsupportedOperationException();
+	}
+
+
+	@Override
+	public DataSourceMetadata getMetadata() {
+		return originalDataSource.getMetadata();
 	}
 
 

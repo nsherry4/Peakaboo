@@ -1,10 +1,10 @@
-package peakaboo.datasource.interfaces;
+package peakaboo.datasource.components;
 
 import scitypes.Bounds;
 import scitypes.Coord;
 
 
-public interface DSDimensions
+public interface DataSourceDimensions
 {
 
 	/**

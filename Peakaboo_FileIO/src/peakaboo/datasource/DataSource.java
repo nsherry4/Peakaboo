@@ -2,18 +2,26 @@ package peakaboo.datasource;
 
 import java.util.List;
 
-import peakaboo.datasource.interfaces.DSDimensions;
-import peakaboo.datasource.interfaces.DSMetadata;
-import peakaboo.datasource.interfaces.DSScanData;
+import peakaboo.datasource.components.DataSourceDimensions;
+import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.DataSourceScanData;
 
-public interface DataSource extends DSScanData, DSDimensions, DSMetadata
+public interface DataSource extends DataSourceScanData, DataSourceDimensions
 {
 	
 	
 	/**
-	 * Returns true if this data source supports metadata
+	 * Returns a DataSourceMetadata, or null
 	 */
-	boolean hasMetadata();
+	DataSourceMetadata getMetadata();
+	
+	/**
+	 * Tests if a DataSource has metadata defined in {@link DataSourceMetadata}
+	 * @return true if the data is provided, false otherwise
+	 */
+	default boolean hasMetadata() {
+		return (getMetadata() != null);
+	}
 	
 	
 	/**

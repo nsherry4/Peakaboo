@@ -1,9 +1,9 @@
-package peakaboo.datasource.plugin;
+package peakaboo.datasource.internal;
 
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.internal.EmptyDS;
+import peakaboo.datasource.components.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
@@ -13,15 +13,15 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public abstract class DelegatingDSP extends AbstractDSP {
+public abstract class DelegatingDataSource extends AbstractDataSource {
 
 	private DataSource dataSource;
 	
-	public DelegatingDSP() {
-		this(new EmptyDS());
+	public DelegatingDataSource() {
+		this(new EmptyDataSource());
 	}
 	
-	public DelegatingDSP(DataSource dataSource) {
+	public DelegatingDataSource(DataSource dataSource) {
 		setDataSource(dataSource);
 	}
 	
@@ -39,8 +39,8 @@ public abstract class DelegatingDSP extends AbstractDSP {
 	// DataSource //
 	
 	@Override
-	public boolean hasMetadata() {
-		return dataSource.hasMetadata();
+	public DataSourceMetadata getMetadata() {
+		return dataSource.getMetadata();
 	}
 
 	@Override
@@ -127,70 +127,4 @@ public abstract class DelegatingDSP extends AbstractDSP {
 		return dataSource.getDataCoordinatesAtIndex(index);
 	}
 	
-	// DSMetaData //
-
-	@Override
-	public String getCreationTime() {
-		return dataSource.getCreationTime();
-	}
-
-	@Override
-	public String getCreator() {
-		return dataSource.getCreator();
-	}
-
-	@Override
-	public String getProjectName() {
-		return dataSource.getProjectName();
-	}
-
-	@Override
-	public String getSessionName() {
-		return dataSource.getSessionName();
-	}
-
-	@Override
-	public String getFacilityName() {
-		return dataSource.getFacilityName();
-	}
-
-	@Override
-	public String getLaboratoryName() {
-		return dataSource.getLaboratoryName();
-	}
-
-	@Override
-	public String getExperimentName() {
-		return dataSource.getLaboratoryName();
-	}
-
-	@Override
-	public String getInstrumentName() {
-		return dataSource.getInstrumentName();
-	}
-
-	@Override
-	public String getTechniqueName() {
-		return dataSource.getTechniqueName();
-	}
-
-	@Override
-	public String getSampleName() {
-		return dataSource.getSampleName();
-	}
-
-	@Override
-	public String getScanName() {
-		return dataSource.getScanName();
-	}
-
-	@Override
-	public String getStartTime() {
-		return dataSource.getStartTime();
-	}
-
-	@Override
-	public String getEndTime() {
-		return dataSource.getEndTime();
-	}
 }

@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugin.plugins.sciencestudio.vespers.data.converter;
+package peakaboo.datasource.plugins.sciencestudio.vespers.data.converter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +16,8 @@ import ca.sciencestudio.data.standard.StdUnits;
 import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.plugin.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
+import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
@@ -26,7 +27,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, StdConverter {
+public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, StdConverter {
 
 	private static final String DEFAULT_DATASET_NAME = "XRF_Data_Set";
 	
@@ -666,9 +667,10 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	// DataSource //
 	
 	@Override
-	public boolean hasMetadata() {
-		return true;
+	public DataSourceMetadata getMetadata() {
+		return this;
 	}
+	
 
 	@Override
 	public boolean hasScanDimensions() {
@@ -800,7 +802,8 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	public String getEndTime() {
 		return endTime;
 	}
-	
+
+
 	// Others DSMetadata methods implemented by super-class //
 	
 }

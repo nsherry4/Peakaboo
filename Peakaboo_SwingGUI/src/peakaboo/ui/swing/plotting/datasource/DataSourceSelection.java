@@ -15,9 +15,9 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import fava.functionable.FList;
-import peakaboo.datasource.plugin.AbstractDSP;
-import peakaboo.datasource.plugin.plugins.CDFMLSaxDSP;
-import peakaboo.datasource.plugin.plugins.ScienceStudioDSP;
+import peakaboo.datasource.internal.AbstractDataSource;
+import peakaboo.datasource.plugins.cdfml.CDFMLSax;
+import peakaboo.datasource.plugins.sciencestudio.ScienceStudio;
 import swidget.Swidget;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
@@ -31,18 +31,18 @@ import swidget.widgets.toggle.ComplexToggleGroup;
 public class DataSourceSelection extends JDialog
 {
 	
-	private Map<ComplexToggle, AbstractDSP> toggleMap;
-	private AbstractDSP selected;
+	private Map<ComplexToggle, AbstractDataSource> toggleMap;
+	private AbstractDataSource selected;
 	
 	public DataSourceSelection()
 	{
 		
 	}
 	
-	public AbstractDSP pickDSP(Container parent, List<AbstractDSP> dsps)
+	public AbstractDataSource pickDSP(Container parent, List<AbstractDataSource> dsps)
 	{	
 		
-		toggleMap = new HashMap<ComplexToggle, AbstractDSP>();
+		toggleMap = new HashMap<ComplexToggle, AbstractDataSource>();
 		
 		setTitle("Please Select Data Format");
 		Container c = getContentPane();
@@ -66,7 +66,7 @@ public class DataSourceSelection extends JDialog
 		final List<ComplexToggle> toggleButtons = new ArrayList<ComplexToggle>();
 		ComplexToggle toggle;
 		final ComplexToggleGroup group = new ComplexToggleGroup();
-		for (AbstractDSP dsp : dsps)
+		for (AbstractDataSource dsp : dsps)
 		{
 			toggle = new ComplexToggle("", dsp.getDataFormat(), dsp.getDataFormatDescription());
 			toggleMap.put(toggle, dsp);
@@ -124,7 +124,7 @@ public class DataSourceSelection extends JDialog
 	{
 		Swidget.initialize();
 		DataSourceSelection dss = new DataSourceSelection();
-		AbstractDSP dsp = dss.pickDSP(null, new FList<AbstractDSP>(new ScienceStudioDSP(), new CDFMLSaxDSP()));
+		AbstractDataSource dsp = dss.pickDSP(null, new FList<AbstractDataSource>(new ScienceStudio(), new CDFMLSax()));
 		System.out.println(dsp.getDataFormat());
 	}
 	

@@ -1,10 +1,9 @@
-package peakaboo.datasource.plugin.plugins.sciencestudio;
+package peakaboo.datasource.plugins.sciencestudio;
 
 import java.util.Arrays;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.plugin.plugins.ScienceStudioDSP;
 import scitypes.Spectrum;
 
 /**
@@ -20,7 +19,7 @@ public class ScienceStudioDSPCmdLineTest {
 			return;
 		}
 		
-		DataSource dataSource = new ScienceStudioDSP();
+		DataSource dataSource = new ScienceStudio();
 		
 		List<String> filenames = Arrays.asList(args);
 		
@@ -34,10 +33,10 @@ public class ScienceStudioDSPCmdLineTest {
 		}
 		
 		System.out.println("DatasetName: " +  dataSource.datasetName());
-		System.out.println("Creator: " + dataSource.getCreator());
-		System.out.println("CreationTime: " + dataSource.getCreationTime());
-		System.out.println("StartTime: " + dataSource.getStartTime());
-		System.out.println("EndTime: " + dataSource.getEndTime());
+		System.out.println("Creator: " + dataSource.getMetadata().getCreator());
+		System.out.println("CreationTime: " + dataSource.getMetadata().getCreationTime());
+		System.out.println("StartTime: " + dataSource.getMetadata().getStartTime());
+		System.out.println("EndTime: " + dataSource.getMetadata().getEndTime());
 		
 		System.out.println("Scan Count: " + dataSource.scanCount());
 		System.out.println("Data Dimensions: " + dataSource.getDataDimensions());

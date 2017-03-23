@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugin.plugins;
+package peakaboo.datasource.plugins.cdfml;
 
 
 import java.io.BufferedReader;
@@ -12,16 +12,15 @@ import java.util.Set;
 import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.Range;
-import peakaboo.datasource.plugin.AbstractDSP;
-import peakaboo.datasource.plugin.plugins.cdfml.CDFMLReader;
-import peakaboo.datasource.plugin.plugins.cdfml.CDFMLStrings;
+import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.internal.AbstractDataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class CDFMLSaxDSP extends AbstractDSP
+public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
 {
 
 	int											scanReadCount;
@@ -34,7 +33,7 @@ public class CDFMLSaxDSP extends AbstractDSP
 	
 	CDFMLReader									reader;
 
-	public CDFMLSaxDSP()
+	public CDFMLSax()
 	{
 		
 		reader = new CDFMLReader() {
@@ -386,6 +385,14 @@ public class CDFMLSaxDSP extends AbstractDSP
 	}
 
 
+	
+	
+
+	@Override
+	public DataSourceMetadata getMetadata() {
+		return this;
+	}
+
 
 	
 	public String getCreationTime()
@@ -468,11 +475,6 @@ public class CDFMLSaxDSP extends AbstractDSP
 
 
 	
-	public boolean hasMetadata()
-	{
-		return true;
-	}
-
 
 	public boolean hasScanDimensions()
 	{
@@ -619,8 +621,6 @@ public class CDFMLSaxDSP extends AbstractDSP
 		int x = index % dims.y;
 		return new Coord<Integer>(x, y);
 	}
-
-
 
 
 	

@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugin;
+package peakaboo.datasource.internal;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import bolt.plugin.BoltPlugin;
 import peakaboo.datasource.DataSource;
 
-public abstract class AbstractDSP implements DataSource, BoltPlugin
+public abstract class AbstractDataSource implements DataSource, BoltPlugin
 {
 
 	protected Supplier<Boolean>	fn_isAborted;

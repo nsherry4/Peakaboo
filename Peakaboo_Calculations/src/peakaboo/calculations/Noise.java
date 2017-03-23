@@ -294,7 +294,7 @@ public class Noise
 
 		Spectrum result = new Spectrum(data.size());
 
-		float[] resultAsArray = data.toArray();
+		float[] resultAsArray = data.backingArrayCopy();
 
 		FastDaubechies2 fwt = new FastDaubechies2();
 
@@ -336,7 +336,7 @@ public class Noise
 		Spectrum result = new Spectrum(data.size());
 
 		
-		float[] dataAsArray = data.toArray();
+		float[] dataAsArray = data.backingArrayCopy();
 
 		int lastSize = data.size();
 		for (int i = 0; i < steps; i++) {
@@ -366,7 +366,7 @@ public class Noise
 		Spectrum result = new Spectrum(data.size());
 
 
-		float[] dataAsArray = data.toArray();
+		float[] dataAsArray = data.backingArrayCopy();
 
 		int lastSize = data.size();
 		for (int i = 0; i < steps; i++) {
@@ -400,7 +400,7 @@ public class Noise
 		Spectrum result = new Spectrum(data.size());
 
 
-		float[] dataAsArray = data.toArray();
+		float[] dataAsArray = data.backingArrayCopy();
 		int lastSize = data.size();
 
 		// transform

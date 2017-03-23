@@ -1,12 +1,10 @@
-package peakaboo.datasource.plugin.plugins;
-
-import peakaboo.datasource.plugin.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
+package peakaboo.datasource.plugins.sciencestudio;
 
 /**
  * @author maxweld
  *
  */
-public class ScienceStudioDSP extends ConverterFactoryDelegatingDSP
+public class ScienceStudio extends ConverterFactoryDelegatingDSP
 {
 
 	@Override

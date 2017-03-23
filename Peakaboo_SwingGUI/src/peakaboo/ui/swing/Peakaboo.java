@@ -1,3 +1,4 @@
+package peakaboo.ui.swing;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -11,7 +12,6 @@ import com.ezware.dialog.task.TaskDialog;
 
 import commonenvironment.Env;
 import peakaboo.curvefit.peaktable.PeakTableReader;
-import peakaboo.ui.swing.PlotterFrame;
 import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -104,10 +104,8 @@ public class Peakaboo
 		
 	}
 	
-	public static void main(String[] args)
-	{	
-
-
+	public static void run() {
+		
 		initialize();
 		
 		// Schedule a job for the event-dispatching thread:
@@ -122,7 +120,12 @@ public class Peakaboo
 			}
 		});
 
-
+		
+	}
+	
+	public static void main(String[] args)
+	{	
+		run();
 	}
 
 
