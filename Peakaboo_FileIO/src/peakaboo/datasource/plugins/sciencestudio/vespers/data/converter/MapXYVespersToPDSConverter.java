@@ -16,10 +16,12 @@ import ca.sciencestudio.data.standard.StdUnits;
 import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.SISize;
 import scitypes.Spectrum;
 
 /**
@@ -27,7 +29,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, StdConverter {
+public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, DataSourceDimensions, StdConverter {
 
 	private static final String DEFAULT_DATASET_NAME = "XRF_Data_Set";
 	
@@ -673,10 +675,17 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	
 
 	@Override
-	public boolean hasScanDimensions() {
+	public boolean hasDimensions() {
 		return (hasStartX && hasStartY && hasEndX && hasEndY);
 	}
 
+	@Override
+	public DataSourceDimensions getDimensions() {
+		return this;
+	}
+
+	
+	
 	@Override
 	public List<String> getFileExtensions() {
 		return Collections.emptyList();
@@ -755,8 +764,8 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public String getRealDimensionsUnit() {
-		return StdUnits.MILLI_METER;
+	public SISize getRealDimensionsUnit() {
+		return SISize.mm;
 	}
 
 	@Override
@@ -802,6 +811,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	public String getEndTime() {
 		return endTime;
 	}
+
 
 
 	// Others DSMetadata methods implemented by super-class //

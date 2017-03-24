@@ -14,7 +14,9 @@ import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.dimensions.DummyDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -174,9 +176,9 @@ public class DataSet extends AbstractDataSet
 	public int expectedScanCount()
 	{
 		
-		if (dataSource.hasScanDimensions()) 
+		if (dataSource.hasDimensions()) 
 		{
-			Coord<Integer> dataDimension = dataSource.getDataDimensions();
+			Coord<Integer> dataDimension = dataSource.getDimensions().getDataDimensions();
 			return dataDimension.x * dataDimension.y;
 		}
 		return size();
@@ -353,7 +355,7 @@ public class DataSet extends AbstractDataSet
 		
 		
 		//if this data source has dimensions, make space to store them all in a list
-		if (ds.hasScanDimensions())
+		if (ds.hasDimensions())
 		{
 			realCoords = new ArrayList<Coord<Number>>();
 		}
@@ -379,7 +381,7 @@ public class DataSet extends AbstractDataSet
 			max = Math.max(max, SpectrumCalculations.max(current));
 			
 			//read the real coordinates for this scan
-			if (ds.hasScanDimensions()) realCoords.add(ds.getRealCoordinatesAtIndex(i));
+			if (ds.hasDimensions()) realCoords.add(ds.getDimensions().getRealCoordinatesAtIndex(i));
 			
 			
 			if (applying != null) applying.workUnitCompleted();
@@ -406,20 +408,6 @@ public class DataSet extends AbstractDataSet
 	}
 
 	
-	private SISize getSISizeFromUnitName(String unitName)
-	{
-
-		unitName = unitName.toLowerCase();
-
-		for (SISize s : SISize.values())
-		{
-			if (unitName.equals(s.toString())) return s;
-		}
-
-		return SISize.mm;
-
-	}
-
 
 	@Override
 	public DataSourceMetadata getMetadata() {
@@ -439,49 +427,6 @@ public class DataSet extends AbstractDataSet
 	}
 
 
-	@Override
-	public Coord<Integer> getDataDimensions()
-	{
-		if (dataSource.hasScanDimensions())
-		{
-			return dataSource.getDataDimensions();
-		}
-		return new Coord<Integer>(dataSource.scanCount(), 1);
-	}
-
-
-	@Override
-	public List<Coord<Number>> getCoordinateList()
-	{
-		if (dataSource.hasScanDimensions())
-		{
-			return realCoords;
-		}
-		return null;
-	}
-
-
-	@Override
-	public Coord<Bounds<Number>> getRealDimensions()
-	{
-		if (dataSource.hasScanDimensions())
-		{
-			return dataSource.getRealDimensions();
-		}
-		return null;
-	}
-
-
-	@Override
-	public SISize getRealDimensionsUnits()
-	{
-		if (dataSource.hasScanDimensions())
-		{
-			return getSISizeFromUnitName(dataSource.getRealDimensionsUnit());
-		}
-		return null;
-	}
-
 
 	@Override
 	public boolean hasData()
@@ -493,7 +438,16 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public boolean hasDimensions()
 	{
-		return dataSource.hasScanDimensions();
+		return dataSource.hasDimensions();
+	}
+	
+	@Override
+	public DataSourceDimensions getDimensions() {
+		if (dataSource.hasDimensions()) {
+			return dataSource.getDimensions();
+		} else {
+			return new DummyDimensions(dataSource);
+		}
 	}
 
 
@@ -544,7 +498,6 @@ public class DataSet extends AbstractDataSet
 	{
 		return DataSourceLoader.getDSPs();
 	}
-
 
 
 

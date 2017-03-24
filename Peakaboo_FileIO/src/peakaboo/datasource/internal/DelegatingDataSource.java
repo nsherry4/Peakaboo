@@ -3,9 +3,11 @@ package peakaboo.datasource.internal;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.SISize;
 import scitypes.Spectrum;
 
 /**
@@ -13,7 +15,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public abstract class DelegatingDataSource extends AbstractDataSource {
+public abstract class DelegatingDataSource extends AbstractDataSource implements DataSourceDimensions {
 
 	private DataSource dataSource;
 	
@@ -41,11 +43,6 @@ public abstract class DelegatingDataSource extends AbstractDataSource {
 	@Override
 	public DataSourceMetadata getMetadata() {
 		return dataSource.getMetadata();
-	}
-
-	@Override
-	public boolean hasScanDimensions() {
-		return dataSource.hasScanDimensions();
 	}
 
 	@Override
@@ -104,27 +101,39 @@ public abstract class DelegatingDataSource extends AbstractDataSource {
 	
 	@Override
 	public Coord<Number> getRealCoordinatesAtIndex(int index) {
-		return dataSource.getRealCoordinatesAtIndex(index);
+		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		return dataSource.getDimensions().getRealCoordinatesAtIndex(index);
 	}
 
 	@Override
 	public Coord<Bounds<Number>> getRealDimensions() {
-		return dataSource.getRealDimensions();
+		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		return dataSource.getDimensions().getRealDimensions();
 	}
 
 	@Override
-	public String getRealDimensionsUnit() {
-		return dataSource.getRealDimensionsUnit();
+	public SISize getRealDimensionsUnit() {
+		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		return dataSource.getDimensions().getRealDimensionsUnit();
 	}
 
 	@Override
 	public Coord<Integer> getDataDimensions() {
-		return dataSource.getDataDimensions();
+		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		return dataSource.getDimensions().getDataDimensions();
 	}
 
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index) {
-		return dataSource.getDataCoordinatesAtIndex(index);
+		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		return dataSource.getDimensions().getDataCoordinatesAtIndex(index);
+	}
+	
+
+	@Override
+	public DataSourceDimensions getDimensions() {
+		if (!dataSource.hasDimensions()) { return null; }
+		return this;
 	}
 	
 }

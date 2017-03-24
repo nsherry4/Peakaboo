@@ -13,7 +13,8 @@ import java.util.Scanner;
 
 import fava.functionable.Range;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -189,11 +190,6 @@ public class Emsa extends AbstractDataSource {
 		return "EMSA Dataset";
 	}
 
-	@Override
-	public Coord<Integer> getDataCoordinatesAtIndex(int index)
-			throws IndexOutOfBoundsException {
-		throw new UnsupportedOperationException();
-	}
 
 	@Override
 	public String getDataFormat() {
@@ -211,7 +207,7 @@ public class Emsa extends AbstractDataSource {
 	
 
 	//==============================================
-	// UNSUPPORTED METHODS
+	// UNSUPPORTED FEATURES
 	//==============================================
 	
 
@@ -220,36 +216,11 @@ public class Emsa extends AbstractDataSource {
 		return null;
 	}
 	
-
 	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index)
-	{
-		throw new UnsupportedOperationException();
+	public DataSourceDimensions getDimensions() {
+		return null;
 	}
 
-	@Override
-	public Coord<Bounds<Number>> getRealDimensions()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getRealDimensionsUnit()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Coord<Integer> getDataDimensions()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean hasScanDimensions()
-	{
-		return false;
-	}
 
 
 }

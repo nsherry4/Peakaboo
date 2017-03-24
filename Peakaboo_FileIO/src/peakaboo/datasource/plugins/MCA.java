@@ -12,7 +12,8 @@ import java.util.List;
 import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -81,45 +82,21 @@ public class MCA extends AbstractDataSource {
 	
 	
 	//==============================================
-	// UNSUPPORTED METHODS
+	// UNSUPPORTED FEATURES
 	//==============================================
 	
 
+	@Override
+	public DataSourceDimensions getDimensions() {
+		return null;
+	}
+
+	
 	@Override
 	public DataSourceMetadata getMetadata() {
 		return null;
 	}
 	
-	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Coord<Bounds<Number>> getRealDimensions()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getRealDimensionsUnit()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Coord<Integer> getDataDimensions()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean hasScanDimensions()
-	{
-		return false;
-	}
-
 	
 	
 	
@@ -173,12 +150,6 @@ public class MCA extends AbstractDataSource {
 		return new FList<String>("mca");
 	}
 
-	@Override
-	public Coord<Integer> getDataCoordinatesAtIndex(int index)
-	{
-		if (index != 0) throw new IndexOutOfBoundsException();
-		return new Coord<Integer>(1, 1);
-	}
 
 	
 }

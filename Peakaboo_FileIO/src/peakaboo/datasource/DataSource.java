@@ -2,11 +2,11 @@ package peakaboo.datasource;
 
 import java.util.List;
 
-import peakaboo.datasource.components.DataSourceDimensions;
-import peakaboo.datasource.components.DataSourceMetadata;
 import peakaboo.datasource.components.DataSourceScanData;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 
-public interface DataSource extends DataSourceScanData, DataSourceDimensions
+public interface DataSource extends DataSourceScanData
 {
 	
 	
@@ -24,11 +24,15 @@ public interface DataSource extends DataSourceScanData, DataSourceDimensions
 	}
 	
 	
-	/**
-	 * Returns true if this data source supports information on dimensions
-	 */
-	boolean hasScanDimensions();
 	
+	
+	DataSourceDimensions getDimensions();
+	
+	default boolean hasDimensions() {
+		return (getDimensions() != null);		
+	}
+	
+
 	
 	/**
 	 * Returns a list of strings representing the file extensions that

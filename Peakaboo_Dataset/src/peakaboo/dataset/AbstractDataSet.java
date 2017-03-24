@@ -5,8 +5,8 @@ package peakaboo.dataset;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.DataSourceDimensions;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -206,6 +206,8 @@ public abstract class AbstractDataSet
 	 */
 	public abstract boolean hasDimensions();
 
+	public abstract DataSourceDimensions getDimensions();
+	
 
 	/**
 	 * Invalidates any filters which have been applied to the dataset
@@ -239,28 +241,6 @@ public abstract class AbstractDataSet
 	 * @return the name of the data set
 	 */
 	public abstract String getDatasetName();
-
-
-	
-	/**
-	 * See {@link DataSourceDimensions}
-	 */
-	public abstract Coord<Bounds<Number>> getRealDimensions();
-
-	/**
-	 * See {@link DataSourceDimensions}
-	 */
-	public abstract SISize getRealDimensionsUnits();
-
-	/**
-	 * See {@link DataSourceDimensions}
-	 */
-	public abstract Coord<Integer> getDataDimensions();
-
-	/**
-	 * See {@link DataSourceDimensions}
-	 */
-	public abstract List<Coord<Number>> getCoordinateList();
 
 
 	

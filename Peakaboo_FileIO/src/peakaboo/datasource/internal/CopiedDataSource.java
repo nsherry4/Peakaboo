@@ -2,17 +2,21 @@ package peakaboo.datasource.internal;
 
 import java.util.List;
 
+import com.sun.xml.internal.ws.server.UnsupportedMediaException;
+
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.GridPerspective;
+import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class CopiedDataSource implements DataSource
+public class CopiedDataSource implements DataSource, DataSourceDimensions
 {
 
 	private FList<String>				scannames = new FList<String>();
@@ -81,6 +85,9 @@ public class CopiedDataSource implements DataSource
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index)
 	{
+		
+		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
 		GridPerspective<Spectrum> origgrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
 		
@@ -92,7 +99,7 @@ public class CopiedDataSource implements DataSource
 		
 		int realIndex = origgrid.getIndexFromXY(x, y);
 				
-		return originalDataSource.getDataCoordinatesAtIndex(realIndex);
+		return originalDataSource.getDimensions().getDataCoordinatesAtIndex(realIndex);
 	}
 	
 	
@@ -116,7 +123,9 @@ public class CopiedDataSource implements DataSource
 
 	public Coord<Number> getRealCoordinatesAtIndex(int index)
 	{
-				
+		
+		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
 		GridPerspective<Spectrum> origgrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
 		
@@ -128,7 +137,7 @@ public class CopiedDataSource implements DataSource
 		
 		int realIndex = origgrid.getIndexFromXY(x, y);
 				
-		return originalDataSource.getRealCoordinatesAtIndex(realIndex);
+		return originalDataSource.getDimensions().getRealCoordinatesAtIndex(realIndex);
 	
 	}
 
@@ -153,15 +162,10 @@ public class CopiedDataSource implements DataSource
 	}
 
 
-	public String getRealDimensionsUnit()
+	public SISize getRealDimensionsUnit()
 	{
-		return originalDataSource.getRealDimensionsUnit();
-	}
-
-
-	public boolean hasScanDimensions()
-	{
-		return originalDataSource.hasScanDimensions();
+		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		return originalDataSource.getDimensions().getRealDimensionsUnit();
 	}
 
 
@@ -207,6 +211,13 @@ public class CopiedDataSource implements DataSource
 	@Override
 	public DataSourceMetadata getMetadata() {
 		return originalDataSource.getMetadata();
+	}
+
+
+	@Override
+	public DataSourceDimensions getDimensions() {
+		if (!originalDataSource.hasDimensions()) { return null; }
+		return this;
 	}
 
 

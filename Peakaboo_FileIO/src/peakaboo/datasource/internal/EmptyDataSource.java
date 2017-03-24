@@ -4,7 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
@@ -20,11 +21,6 @@ public class EmptyDataSource implements DataSource {
 	@Override
 	public DataSourceMetadata getMetadata() {
 		return null;
-	}
-
-	@Override
-	public boolean hasScanDimensions() {
-		return false;
 	}
 
 	@Override
@@ -80,31 +76,11 @@ public class EmptyDataSource implements DataSource {
 		return "";
 	}
 
-	// DSRealDimensions //
-	
 	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index) {
-		throw new UnsupportedOperationException();
+	public DataSourceDimensions getDimensions() {
+		return null;
 	}
 
-	@Override
-	public Coord<Bounds<Number>> getRealDimensions() {
-		throw new UnsupportedOperationException();
-	}
 
-	@Override
-	public String getRealDimensionsUnit() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Coord<Integer> getDataDimensions() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Coord<Integer> getDataCoordinatesAtIndex(int index) {
-		throw new UnsupportedOperationException();
-	}
 	
 }

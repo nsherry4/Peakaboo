@@ -1,7 +1,8 @@
-package peakaboo.datasource.components;
+package peakaboo.datasource.components.dimensions;
 
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.SISize;
 
 
 public interface DataSourceDimensions
@@ -24,7 +25,7 @@ public interface DataSourceDimensions
 	 * Returns a string representation of the units used in measurement
 	 * @return the units used for measurement
 	 */
-	String getRealDimensionsUnit();
+	SISize getRealDimensionsUnit();
 
 	/**
 	 * Returns the dimensions of the data in this map

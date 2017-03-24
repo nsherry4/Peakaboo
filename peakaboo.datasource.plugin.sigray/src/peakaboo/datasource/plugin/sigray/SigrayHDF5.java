@@ -2,62 +2,47 @@ package peakaboo.datasource.plugin.sigray;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
-import ncsa.hdf.hdf5lib.H5;
-import ncsa.hdf.hdf5lib.HDF5Constants;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import peakaboo.ui.swing.Peakaboo;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.SISize;
 import scitypes.Spectrum;
 
 public class SigrayHDF5 extends AbstractDataSource {
 
 	private List<Spectrum> scans;
 	private String datasetName;
-	
-	private String scanTimestamp;
-	
-	private Coord<Number> coords[][];
-	private String units;
-	
-	private int dx, dy, dz;
-	
 	private float maxEnergy;
-	
-	
-	public static void main(String[] args) throws Exception {
-		
-		//SigrayHDF5 sigray = new SigrayHDF5();
-		//sigray.read("/home/nathaniel/Downloads/9-16-16-QuartzonGla0018.h5");
-		DataSourceLoader.getDSPs(); //initialize
-		DataSourceLoader.loader.registerPlugin(SigrayHDF5.class);
-		
-		Peakaboo.run();
-		
-	}
-	
-	
-	private int index3(int x, int y, int z, int dx, int dy) {
-		return x + y*dx + z*dx*dy;
-	}
-	
-	//private Integer file_id = null;
-	
 
-	@Override
-	public boolean hasScanDimensions() {
-		return true;
+	private SigrayHDF5Dimensions dimensions;
+
+	public static void main(String[] args) throws Exception {
+
+		// SigrayHDF5 sigray = new SigrayHDF5();
+		// sigray.read("/home/nathaniel/Downloads/9-16-16-QuartzonGla0018.h5");
+		DataSourceLoader.getDSPs(); // initialize
+		DataSourceLoader.loader.registerPlugin(SigrayHDF5.class);
+
+		Peakaboo.run();
+
 	}
+
+	private int index3(int x, int y, int z, int dx, int dy) {
+		return x + y * dx + z * dx * dy;
+	}
+
+	// private Integer file_id = null;
 
 	@Override
 	public List<String> getFileExtensions() {
@@ -71,7 +56,9 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 	@Override
 	public boolean canRead(List<String> filenames) {
-		if (filenames.size() == 1) { return true; }
+		if (filenames.size() == 1) {
+			return true;
+		}
 		return false;
 	}
 
@@ -79,91 +66,75 @@ public class SigrayHDF5 extends AbstractDataSource {
 	public void read(String filename) throws Exception {
 
 		datasetName = new File(filename).getName();
-		
+
 		IHDF5SimpleReader reader = HDF5Factory.openForReading(filename);
-		
-		
-		scanTimestamp = reader.readString("/MAPS/scan_time_stamp");
-		
-		
+
 		HDF5DataSetInformation info = reader.getDataSetInformation("/MAPS/mca_arr");
 		long size[] = info.getDimensions();
-		dz = (int)size[0];
-		dy = (int)size[1];
-		dx = (int)size[2];
-		
-		fn_getScanCountCallback.accept(dx*dy);
-				
+		dimensions.dz = (int) size[0];
+		dimensions.dy = (int) size[1];
+		dimensions.dx = (int) size[2];
+
+		fn_getScanCountCallback.accept(dimensions.dx * dimensions.dy);
+
 		float[] mca_arr = reader.readFloatArray("/MAPS/mca_arr");
 		float[] scalers = reader.readFloatArray("/MAPS/scalers");
-		
-			
-		
-		//real scan dimensions;
-		coords = new Coord[dx][dy];
-		for (int y = 0; y < dy; y++) { //y-axis
-			for (int x = 0; x < dx; x++) { //x-axis
-				
-				int x_index = index3(x, y, 17, dx, dy);
-				int y_index = index3(x, y, 18, dx, dy);
-				
+
+		// real scan dimensions;
+		dimensions.coords = new Coord[dimensions.dx][dimensions.dy];
+		for (int y = 0; y < dimensions.dy; y++) { // y-axis
+			for (int x = 0; x < dimensions.dx; x++) { // x-axis
+
+				int x_index = index3(x, y, 17, dimensions.dx, dimensions.dy);
+				int y_index = index3(x, y, 18, dimensions.dx, dimensions.dy);
+
 				Coord<Number> coord = new Coord<>(scalers[x_index], scalers[y_index]);
-				coords[x][y] = coord;
+				dimensions.coords[x][y] = coord;
 			}
 		}
-		//TODO: no such method exceptio in jni?
-		units = "mm"; //reader.readStringArray("/MAPS/scalar_units")[17];
-		
-		
-		
-		//max energy
+		// TODO: no such method exception in jni?
+		dimensions.units = SISize.mm;
+		// SISize.valueOf(reader.readStringArray("/MAPS/scalar_units")[17]);
+
+		// max energy
 		float[] energy = reader.readFloatArray("/MAPS/energy");
-		maxEnergy = energy[dz-1];
-		
-		
-		
-		
-		
-		
-		//real scan data
+		maxEnergy = energy[dimensions.dz - 1];
+
+		// real scan data
 		scans = SpectrumList.create("sigray " + filename);
 
-
-		/* data is stored im mca_arr in x, y, z order, but we're going through one 
-		 * spectrum at a time for speed. Because we don't want to store everything 
-		 * in memory, we're using a special kind of list which writes everything to 
-		 * disk. This means that if we `get` a spectrum from the list and write to
-		 * it, this won't be reflected in the list of spectra, we have to 
-		 * explicitly write it back. Therefore, we do all the modifications to a 
-		 * spectrum at once, even though it probably means more cache misses in the 
-		 * source array.
+		/*
+		 * data is stored im mca_arr in x, y, z order, but we're going through
+		 * one spectrum at a time for speed. Because we don't want to store
+		 * everything in memory, we're using a special kind of list which writes
+		 * everything to disk. This means that if we `get` a spectrum from the
+		 * list and write to it, this won't be reflected in the list of spectra,
+		 * we have to explicitly write it back. Therefore, we do all the
+		 * modifications to a spectrum at once, even though it probably means
+		 * more cache misses in the source array.
 		 */
-		for (int y = 0; y < dy; y++) { //y-axis
-			for (int x = 0; x < dx; x++) { //x-axis
-				
-				int scan_index = (x + y*dx);
-				Spectrum s = new Spectrum(dz);
-				
-				for (int z = 0; z < dz; z++) { //(z-axis, channels)
+		for (int y = 0; y < dimensions.dy; y++) { // y-axis
+			for (int x = 0; x < dimensions.dx; x++) { // x-axis
 
-					int mca_index = index3(x, y, z, dx, dy);
-					
-					s.set((int)z, mca_arr[mca_index]);
+				int scan_index = (x + y * dimensions.dx);
+				Spectrum s = new Spectrum(dimensions.dz);
+
+				for (int z = 0; z < dimensions.dz; z++) { // (z-axis, channels)
+
+					int mca_index = index3(x, y, z, dimensions.dx, dimensions.dy);
+
+					s.set((int) z, mca_arr[mca_index]);
 				}
 				scans.set(scan_index, s);
 			}
-			fn_readScanCallback.accept(dx);
+			fn_readScanCallback.accept(dimensions.dx);
 		}
-		
 
-
-		
 		reader.close();
 		System.gc();
-		
+
 	}
-	
-	
+
 	@Override
 	public void read(List<String> filenames) throws Exception {
 		read(filenames.get(0));
@@ -201,6 +172,40 @@ public class SigrayHDF5 extends AbstractDataSource {
 	}
 
 	@Override
+	public String getDataFormat() {
+		return "Sigray HDF5";
+	}
+
+	@Override
+	public String getDataFormatDescription() {
+		return "Sigray XRF scans in an HDF5 container";
+	}
+
+	@Override
+	public DataSourceMetadata getMetadata() {
+		return null;
+	}
+
+	@Override
+	public DataSourceDimensions getDimensions() {
+		return dimensions;
+
+	}
+
+}
+
+class SigrayHDF5Dimensions implements DataSourceDimensions {
+
+	protected int dx, dy, dz;
+	protected Coord<Number> coords[][];
+	protected SISize units;
+	private SigrayHDF5 datasource;
+
+	public SigrayHDF5Dimensions(SigrayHDF5 scan) {
+		datasource = scan;
+	}
+
+	@Override
 	public Coord<Number> getRealCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
 		Coord<Integer> xy = getDataCoordinatesAtIndex(index);
 		return coords[xy.x][xy.y];
@@ -208,21 +213,20 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 	@Override
 	public Coord<Bounds<Number>> getRealDimensions() {
-		
+
 		Number x1 = getRealCoordinatesAtIndex(0).x;
 		Number y1 = getRealCoordinatesAtIndex(0).y;
-		Number x2 = getRealCoordinatesAtIndex(scanCount()-1).x;
-		Number y2 = getRealCoordinatesAtIndex(scanCount()-1).y;
-		
-		
+		Number x2 = getRealCoordinatesAtIndex(datasource.scanCount() - 1).x;
+		Number y2 = getRealCoordinatesAtIndex(datasource.scanCount() - 1).y;
+
 		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
 		Bounds<Number> yDim = new Bounds<Number>(y1, y2);
 		return new Coord<Bounds<Number>>(xDim, yDim);
-		
+
 	}
 
 	@Override
-	public String getRealDimensionsUnit() {
+	public SISize getRealDimensionsUnit() {
 		return units;
 	}
 
@@ -238,22 +242,4 @@ public class SigrayHDF5 extends AbstractDataSource {
 		return new Coord<>(cx, cy);
 	}
 
-	@Override
-	public String getDataFormat() {
-		return "Sigray HDF5";
-	}
-
-	@Override
-	public String getDataFormatDescription() {
-		return "Sigray XRF scans in an HDF5 container";
-	}
-
-
-	@Override
-	public DataSourceMetadata getMetadata() {
-		return null;
-	}
-
-	
-	
 }

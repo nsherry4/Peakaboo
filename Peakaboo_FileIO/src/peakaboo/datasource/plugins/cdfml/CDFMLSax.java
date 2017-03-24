@@ -12,15 +12,17 @@ import java.util.Set;
 import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.Range;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
+public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, DataSourceDimensions
 {
 
 	int											scanReadCount;
@@ -248,6 +250,7 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
 	}
 
 	
+	@Override
 	public Coord<Number> getRealCoordinatesAtIndex(int index)
 	{
 		Coord<Number> dims = new Coord<Number>(0, 0);
@@ -337,13 +340,11 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
 		return scannames;
 	}
 
-
 	private int getDataWidth()
 	{
 		int width = Integer.parseInt(reader.getAttr(CDFMLStrings.ATTR_DATA_X, 0));
 		return width;
 	}
-
 
 	private int getDataHeight()
 	{
@@ -352,7 +353,7 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
 	}
 
 
-	
+	@Override
 	public Coord<Integer> getDataDimensions()
 	{
 		int width = getDataWidth();
@@ -361,7 +362,7 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
 	}
 
 
-	
+	@Override
 	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		float x1, x2, y1, y2;
@@ -378,10 +379,10 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
 	}
 
 
-	
-	public String getRealDimensionsUnit()
+	@Override
+	public SISize getRealDimensionsUnit()
 	{
-		return reader.getAttr(CDFMLStrings.ATTR_DIM_X_START, 1);
+		return SISize.valueOf(  reader.getAttr(CDFMLStrings.ATTR_DIM_X_START, 1)  );
 	}
 
 
@@ -620,6 +621,13 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata
 		int y = index / dims.y;
 		int x = index % dims.y;
 		return new Coord<Integer>(x, y);
+	}
+
+
+
+	@Override
+	public DataSourceDimensions getDimensions() {
+		return this;
 	}
 
 

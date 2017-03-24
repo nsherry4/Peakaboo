@@ -3,7 +3,8 @@ package peakaboo.dataset;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -82,41 +83,6 @@ public class EmptyDataSet extends AbstractDataSet
 		return "";
 	}
 
-	@Override
-	public Coord<Integer> getDataDimensions()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	/*@Override
-	public Corners getRealDimensions()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
-	@Override
-	public List<Coord<Number>> getCoordinateList()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Coord<Bounds<Number>> getRealDimensions()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SISize getRealDimensionsUnits()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public boolean hasDimensions()
@@ -204,6 +170,12 @@ public class EmptyDataSet extends AbstractDataSet
 	public boolean hasMetadata() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public DataSourceDimensions getDimensions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

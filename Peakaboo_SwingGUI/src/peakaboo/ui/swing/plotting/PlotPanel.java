@@ -1399,9 +1399,9 @@ public class PlotPanel extends ClearPanel
 				mapController.mapsController.setMapData(
 						results,
 						controller.data().getDatasetName(),
-						controller.data().getDataDimensions(),
-						controller.data().getRealDimensions(),
-						controller.data().getRealDimensionsUnits(),
+						controller.data().getDimensions().getDataDimensions(),
+						controller.data().getDimensions().getRealDimensions(),
+						controller.data().getDimensions().getRealDimensionsUnit(),
 						controller.data().getDiscardedScanList()
 					);
 				

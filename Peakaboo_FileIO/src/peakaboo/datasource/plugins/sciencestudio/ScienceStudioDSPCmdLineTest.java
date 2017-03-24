@@ -39,13 +39,13 @@ public class ScienceStudioDSPCmdLineTest {
 		System.out.println("EndTime: " + dataSource.getMetadata().getEndTime());
 		
 		System.out.println("Scan Count: " + dataSource.scanCount());
-		System.out.println("Data Dimensions: " + dataSource.getDataDimensions());
-		System.out.println("Real Dimensions: " + dataSource.getRealDimensions());
+		System.out.println("Data Dimensions: " + dataSource.getDimensions().getDataDimensions());
+		System.out.println("Real Dimensions: " + dataSource.getDimensions().getRealDimensions());
 	
 		for(int idx=0; (idx<dataSource.scanCount()) && (idx<100); idx++) {
 			System.out.print(dataSource.scanNames().get(idx) + ": ");
-			System.out.print(dataSource.getDataCoordinatesAtIndex(idx) + ": ");
-			System.out.print(dataSource.getRealCoordinatesAtIndex(idx) + ": ");
+			System.out.print(dataSource.getDimensions().getDataCoordinatesAtIndex(idx) + ": ");
+			System.out.print(dataSource.getDimensions().getRealCoordinatesAtIndex(idx) + ": ");
 			System.out.print(spectrumToString(dataSource.get(idx), 20));
 			System.out.println();
 		}

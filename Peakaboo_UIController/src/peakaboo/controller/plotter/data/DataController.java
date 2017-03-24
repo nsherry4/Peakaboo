@@ -13,7 +13,8 @@ import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.internal.AbstractDataSource;
 import peakaboo.datasource.internal.CopiedDataSource;
 import peakaboo.filter.model.FilterSet;
@@ -104,10 +105,6 @@ public class DataController extends Eventful implements IDataController
 	}
 
 	
-	public Coord<Integer> getDataDimensions()
-	{
-		return dataModel.getDataDimensions();
-	}
 
 	public int getDataHeight()
 	{
@@ -134,16 +131,6 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.getDatasetName();
 	}
 
-	public Coord<Bounds<Number>> getRealDimensions()
-	{
-		return dataModel.getRealDimensions();
-	}
-
-	public SISize getRealDimensionsUnits()
-	{
-		return dataModel.getRealDimensionsUnits();
-	}
-
 	public boolean hasDataSet()
 	{
 		return dataModel.hasData();
@@ -153,6 +140,12 @@ public class DataController extends Eventful implements IDataController
 	{
 		return dataModel.hasDimensions();
 	}
+	
+	@Override
+	public DataSourceDimensions getDimensions() {
+		return dataModel.getDimensions();
+	}
+
 
 	public void setDataSetProvider(AbstractDataSet dsp)
 	{
@@ -365,6 +358,7 @@ public class DataController extends Eventful implements IDataController
 		dataWidth = width;
 		updateListeners();
 	}
+
 
 
 

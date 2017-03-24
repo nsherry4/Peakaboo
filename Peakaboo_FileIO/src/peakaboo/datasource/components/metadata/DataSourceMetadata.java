@@ -1,4 +1,4 @@
-package peakaboo.datasource.components;
+package peakaboo.datasource.components.metadata;
 
 
 public interface DataSourceMetadata
