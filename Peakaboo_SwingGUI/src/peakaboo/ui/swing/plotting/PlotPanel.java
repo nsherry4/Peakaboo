@@ -635,13 +635,7 @@ public class PlotPanel extends ClearPanel
 		
 		menu.add(createMenuItem(
 				"Open Data\u2026", StockIcon.DOCUMENT_OPEN.toMenuIcon(), "Opens new data sets.",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionOpenData();
-					}
-				},
+				e -> actionOpenData(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
 		
@@ -653,25 +647,13 @@ public class PlotPanel extends ClearPanel
 		
 		menu.add(createMenuItem(
 				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionSaveSession();
-					}
-				}, 
+				e -> actionSaveSession(),
 				null, null
 		));
 		
 		menu.add(createMenuItem(
 				"Load Session", null, null,
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionLoadSession();
-					}
-				}, 
+				e -> actionLoadSession(),
 				null, null
 		));
 		
@@ -682,13 +664,7 @@ public class PlotPanel extends ClearPanel
 		
 		snapshotMenuItem = createMenuItem(
 				"Export Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionSavePicture();
-					}
-				}, 
+				e -> actionSavePicture(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
 		);
 		menu.add(snapshotMenuItem);
@@ -696,26 +672,14 @@ public class PlotPanel extends ClearPanel
 		
 		exportFilteredDataMenuItem = createMenuItem(
 				"Export Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionSaveFittedDataInformation();
-					}
-				}, 
+				e -> actionSaveFittedDataInformation(),
 				null, null
 		);
 		menu.add(exportFilteredDataMenuItem);
 		
 		exportFittingsMenuItem = createMenuItem(
 				"Export Fittings as Text", null, "Saves the current fitting data to a text file",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionSaveFittingInformation();
-					}
-				}, 
+				e -> actionSaveFittingInformation(),
 				null, null
 		);
 		menu.add(exportFittingsMenuItem);
@@ -726,13 +690,7 @@ public class PlotPanel extends ClearPanel
 		
 		menu.add(createMenuItem(
 				"Exit", StockIcon.WINDOW_CLOSE.toMenuIcon(), "Exits the Program",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						System.exit(0);
-					}
-				}, 
+				e -> System.exit(0),
 				null, KeyEvent.VK_X
 		));
 
@@ -755,26 +713,14 @@ public class PlotPanel extends ClearPanel
 		
 		undo = createMenuItem(
 				"Undo", StockIcon.EDIT_UNDO.toMenuIcon(), "Undoes a previous action",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						controller.history().undo();
-					}
-				}, 
+				e -> controller.history().undo(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK), KeyEvent.VK_U
 		);
 		menu.add(undo);
 
 		redo = createMenuItem(
 				"Redo", StockIcon.EDIT_REDO.toMenuIcon(), "Redoes a previously undone action",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						controller.history().redo();
-					}
-				}, 
+				e -> controller.history().redo(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), KeyEvent.VK_R
 		);
 		menu.add(redo);
@@ -797,52 +743,36 @@ public class PlotPanel extends ClearPanel
 		
 		logPlot = createMenuCheckItem(
 				"Logarithmic Scale", null, "Toggles the plot between a linear and logarithmic scale",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setViewLog(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setViewLog(menuitem.isSelected());
 				},
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), KeyEvent.VK_L
 		);
 		
 		axes = createMenuCheckItem(
 				"Axes", null, "Toggles display of axes and grid lines",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setShowAxes(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setShowAxes(menuitem.isSelected());
 				},
 				null, null
 		);
 
 		title = createMenuCheckItem(
 				"Title", null, "Toggles display of the current data set's title",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setShowTitle(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setShowTitle(menuitem.isSelected());
 				},
 				null, null
 		);
 
 		monochrome = createMenuCheckItem(
 				"Monochrome", null, "Toggles the monochrome colour palette",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setMonochrome(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setMonochrome(menuitem.isSelected());
 				},
 				null, KeyEvent.VK_M
 		);
@@ -851,26 +781,18 @@ public class PlotPanel extends ClearPanel
 
 		raw = createMenuCheckItem(
 				"Raw Data Outline", null, "Toggles an outline of the original raw data",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setShowRawData(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setShowRawData(menuitem.isSelected());
 				},
 				null, KeyEvent.VK_O
 		);
 		
 		fittings = createMenuCheckItem(
 				"Individual Fittings", null, "Switches between showing all fittings as a single curve and showing all fittings individually",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setShowIndividualSelections(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setShowIndividualSelections(menuitem.isSelected());
 				},
 				null, KeyEvent.VK_O
 		);	
@@ -893,13 +815,9 @@ public class PlotPanel extends ClearPanel
 		
 		etitles = createMenuCheckItem(
 				"Element Names", null, "Label fittings with the names of their elements",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setShowElementTitles(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setShowElementTitles(menuitem.isSelected());
 				},
 				null, null
 		);
@@ -908,13 +826,9 @@ public class PlotPanel extends ClearPanel
 		
 		emarkings = createMenuCheckItem(
 				"Markings", null, "Label fittings with lines denoting their energies",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setShowElementMarkers(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setShowElementMarkers(menuitem.isSelected());
 				},
 				null, null
 		);
@@ -923,13 +837,9 @@ public class PlotPanel extends ClearPanel
 		
 		eintensities = createMenuCheckItem(
 				"Heights", null, "Label fittings with their heights",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-						controller.settings().setShowElementIntensities(menuitem.isSelected());
-					}
+				e -> {
+					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
+					controller.settings().setShowElementIntensities(menuitem.isSelected());
 				},
 				null, null
 		);
