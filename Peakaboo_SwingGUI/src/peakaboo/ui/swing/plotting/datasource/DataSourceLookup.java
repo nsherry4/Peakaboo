@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import commonenvironment.IOOperations;
-import peakaboo.datasource.internal.AbstractDataSource;
+import peakaboo.datasource.AbstractDataSource;
 
 public class DataSourceLookup
 {

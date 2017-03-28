@@ -4,16 +4,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
+import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
-import peakaboo.datasource.internal.AbstractDataSource;
-import peakaboo.ui.swing.Peakaboo;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -27,14 +27,19 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 	private SigrayHDF5Dimensions dimensions;
 
+	static {
+        System.load("/usr/lib/jni/libsis-jhdf5.so");
+	}
+	
 	public static void main(String[] args) throws Exception {
 
+		
 		// SigrayHDF5 sigray = new SigrayHDF5();
 		// sigray.read("/home/nathaniel/Downloads/9-16-16-QuartzonGla0018.h5");
 		DataSourceLoader.getDSPs(); // initialize
 		DataSourceLoader.loader.registerPlugin(SigrayHDF5.class);
 
-		Peakaboo.run();
+		//Peakaboo.run();
 
 	}
 
@@ -66,11 +71,13 @@ public class SigrayHDF5 extends AbstractDataSource {
 	public void read(String filename) throws Exception {
 
 		datasetName = new File(filename).getName();
-
+		
+		
 		IHDF5SimpleReader reader = HDF5Factory.openForReading(filename);
 
 		HDF5DataSetInformation info = reader.getDataSetInformation("/MAPS/mca_arr");
 		long size[] = info.getDimensions();
+		dimensions = new SigrayHDF5Dimensions(this);
 		dimensions.dz = (int) size[0];
 		dimensions.dy = (int) size[1];
 		dimensions.dx = (int) size[2];

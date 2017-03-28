@@ -1,10 +1,9 @@
-package peakaboo.datasource.internal;
+package peakaboo.datasource;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import bolt.plugin.BoltPlugin;
-import peakaboo.datasource.DataSource;
 
 public abstract class AbstractDataSource implements DataSource, BoltPlugin
 {

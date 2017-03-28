@@ -11,7 +11,6 @@ import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
 import commonenvironment.Env;
 import peakaboo.common.Version;
-import peakaboo.datasource.internal.AbstractDataSource;
 import peakaboo.datasource.plugins.Emsa;
 import peakaboo.datasource.plugins.MCA;
 import peakaboo.datasource.plugins.PlainText;

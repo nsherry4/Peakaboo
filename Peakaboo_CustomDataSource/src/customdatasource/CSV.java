@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import peakaboo.datasource.internal.AbstractDataSource;
-import scitypes.Bounds;
-import scitypes.Coord;
+import peakaboo.datasource.AbstractDataSource;
+import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Spectrum;
 
 public class CSV extends AbstractDataSource
@@ -50,21 +50,6 @@ public class CSV extends AbstractDataSource
 		return extensions;
 	}
 
-	@Override
-	public boolean hasMetadata()
-	{
-		//this plugin does not support metadata
-		//see the javadoc for the DSMetadata interface for more details
-		return false;
-	}
-
-	@Override
-	public boolean hasScanDimensions()
-	{
-		//this plugin does not support real dimensional data
-		//see the javadoc for the DSRealDimensions interface for more details
-		return false;
-	}
 
 	@Override
 	public void read(String filename) throws Exception
@@ -188,135 +173,24 @@ public class CSV extends AbstractDataSource
 
 	
 	
+	@Override
+	public DataSourceMetadata getMetadata() {
+		return null;
+	}
+
+
+	@Override
+	public DataSourceDimensions getDimensions() {
+		return null;
+	}
+
+
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	@Override
-	public Coord<Integer> getDataDimensions()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int arg0)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Coord<Bounds<Number>> getRealDimensions()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getRealDimensionsUnit()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getCreationTime()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getCreator()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getEndTime()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getExperimentName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getFacilityName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getInstrumentName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getLaboratoryName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getProjectName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getSampleName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getScanName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getSessionName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getStartTime()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getTechniqueName()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-
-	@Override
-	public Coord<Integer> getDataCoordinatesAtIndex(int arg0) throws IndexOutOfBoundsException
-	{
-		throw new UnsupportedOperationException();
-	}
-
-
 	public static void main(String[] args)
 	{
 		
 	}
-
 
 
 

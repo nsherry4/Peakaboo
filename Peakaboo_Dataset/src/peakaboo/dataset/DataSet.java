@@ -12,12 +12,12 @@ import java.util.function.Supplier;
 
 import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
+import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.dimensions.DummyDimensions;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
-import peakaboo.datasource.internal.AbstractDataSource;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Bounds;

@@ -2,6 +2,7 @@ package peakaboo.datasource.internal;
 
 import java.util.List;
 
+import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;

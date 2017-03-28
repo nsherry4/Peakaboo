@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 import fava.functionable.Range;
+import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
-import peakaboo.datasource.internal.AbstractDataSource;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;

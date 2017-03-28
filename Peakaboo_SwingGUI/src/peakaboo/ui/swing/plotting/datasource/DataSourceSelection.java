@@ -15,7 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import fava.functionable.FList;
-import peakaboo.datasource.internal.AbstractDataSource;
+import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.plugins.cdfml.CDFMLSax;
 import peakaboo.datasource.plugins.sciencestudio.ScienceStudio;
 import swidget.Swidget;
