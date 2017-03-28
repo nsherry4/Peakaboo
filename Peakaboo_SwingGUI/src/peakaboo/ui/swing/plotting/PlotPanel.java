@@ -645,19 +645,7 @@ public class PlotPanel extends ClearPanel
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
 		
-		if (!Version.release && !Version.rc) {
-			menu.add(createMenuItem(
-					"Open Sample Data", null, "Open a sample data set for learning or demonstrating Peakaboo",
-					new ActionListener() {
-						
-						public void actionPerformed(ActionEvent e)
-						{
-							actionOpenSampleData();
-						}
-					},
-					null, null
-			));
-		}
+
 		
 		
 		menu.addSeparator();
@@ -1311,11 +1299,6 @@ public class PlotPanel extends ClearPanel
 		
 	}
 	
-	private void actionOpenSampleData()
-	{	
-		loadFiles(  new FList<String>(IOOperations.getFileFromJar("/peakaboo/datasource/SampleData.xml").getFileName())  );
-	}
-
 
 	public void loadFiles(List<String> filenames)
 	{

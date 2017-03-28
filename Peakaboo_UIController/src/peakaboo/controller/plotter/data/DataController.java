@@ -16,7 +16,7 @@ import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
-import peakaboo.datasource.internal.CopiedDataSource;
+import peakaboo.datasource.internal.CroppedDataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
@@ -123,7 +123,7 @@ public class DataController extends Eventful implements IDataController
 
 	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return new CopiedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
+		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
 	public String getDatasetName()

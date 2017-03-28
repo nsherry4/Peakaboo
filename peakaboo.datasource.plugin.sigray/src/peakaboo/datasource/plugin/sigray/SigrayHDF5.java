@@ -2,6 +2,7 @@ package peakaboo.datasource.plugin.sigray;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -49,23 +52,6 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 	// private Integer file_id = null;
 
-	@Override
-	public List<String> getFileExtensions() {
-		return Collections.singletonList("h5");
-	}
-
-	@Override
-	public boolean canRead(String filename) {
-		return filename.endsWith("h5");
-	}
-
-	@Override
-	public boolean canRead(List<String> filenames) {
-		if (filenames.size() == 1) {
-			return true;
-		}
-		return false;
-	}
 
 	@Override
 	public void read(String filename) throws Exception {
@@ -178,15 +164,6 @@ public class SigrayHDF5 extends AbstractDataSource {
 		return datasetName;
 	}
 
-	@Override
-	public String getDataFormat() {
-		return "Sigray HDF5";
-	}
-
-	@Override
-	public String getDataFormatDescription() {
-		return "Sigray XRF scans in an HDF5 container";
-	}
 
 	@Override
 	public DataSourceMetadata getMetadata() {
@@ -197,6 +174,16 @@ public class SigrayHDF5 extends AbstractDataSource {
 	public DataSourceDimensions getDimensions() {
 		return dimensions;
 
+	}
+
+
+	@Override
+	public DataSourceFileFormat getFileFormat() {
+		return new SimpleFileFormat(
+				true, 
+				"Sigray HDF5", 
+				"Sigray XRF scans in an HDF5 container", 
+				Arrays.asList("h5"));
 	}
 
 }
