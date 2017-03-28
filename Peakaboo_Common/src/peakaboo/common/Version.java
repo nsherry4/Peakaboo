@@ -19,7 +19,7 @@ public class Version {
 	public final static int rcNo = 0;
 	public final static int betaNo = 0;
 	
-	public final static String buildDate = "2015-02-19";
+	public final static String buildDate = "2017-03-28";
 	public final static String longVersionNo =  
 			release ? versionNoMajor + "." + versionNoMinor + "." + versionNoPoint : 
 			rc 		? versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + " RC" + rcNo : 
