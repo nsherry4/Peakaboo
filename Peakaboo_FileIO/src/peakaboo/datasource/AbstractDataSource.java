@@ -43,17 +43,5 @@ public abstract class AbstractDataSource implements DataSource, BoltPlugin
 	{
 		fn_getScanCountCallback.accept(scanCount);
 	}
-	
-	
-	/**
-	 * Returns a name for this DataSource Plugin
-	 */
-	public abstract String getDataFormat();
-	
-	
-	/**
-	 * Returns a description for this DataSource Plugin
-	 */
-	public abstract String getDataFormatDescription();
-	
+		
 }

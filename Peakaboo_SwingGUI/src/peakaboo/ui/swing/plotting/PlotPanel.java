@@ -1300,8 +1300,8 @@ public class PlotPanel extends ClearPanel
 		String[] descs = new String[formats.size()];
 		for (int i = 0; i < formats.size(); i++)
 		{
-			exts[i] = formats.get(i).getFileExtensions().toArray(new String[]{});
-			descs[i] = formats.get(i).getDataFormat();
+			exts[i] = formats.get(i).getFileFormat().getFileExtensions().toArray(new String[]{});
+			descs[i] = formats.get(i).getFileFormat().getFormatName();
 		}
 
 		files = openNewDataset(exts, descs);

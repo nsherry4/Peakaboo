@@ -22,8 +22,8 @@ public class DataSourceLookup
 			for (AbstractDataSource datasource : dsps)
 			{
 			
-				if ( !matchFileExtension(filename, datasource.getFileExtensions()) ) continue;
-				if ( !datasource.canRead(filename) ) continue;
+				if ( !matchFileExtension(filename, datasource.getFileFormat().getFileExtensions()) ) continue;
+				if ( !datasource.getFileFormat().canRead(filename) ) continue;
 				datasources.add(datasource);
 
 				
@@ -35,8 +35,8 @@ public class DataSourceLookup
 			//loop over every datasource
 			for (AbstractDataSource datasource : dsps)
 			{
-				if ( !matchFileExtensions(filenames, datasource.getFileExtensions()) ) continue;
-				if ( !datasource.canRead(new ArrayList<String>(filenames)) ) continue;
+				if ( !matchFileExtensions(filenames, datasource.getFileFormat().getFileExtensions()) ) continue;
+				if ( !datasource.getFileFormat().canRead(new ArrayList<String>(filenames)) ) continue;
 				datasources.add(datasource);
 				
 			}

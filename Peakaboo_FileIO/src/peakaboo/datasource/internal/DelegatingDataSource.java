@@ -2,139 +2,78 @@ package peakaboo.datasource.internal;
 
 import java.util.List;
 
-import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.SISize;
 import scitypes.Spectrum;
 
-/**
- * 
- * @author maxweld
- *
- */
-public abstract class DelegatingDataSource extends AbstractDataSource implements DataSourceDimensions {
+public class DelegatingDataSource implements DataSource {
 
-	private DataSource dataSource;
+	private DataSource backer;
 	
 	public DelegatingDataSource() {
 		this(new EmptyDataSource());
 	}
 	
-	public DelegatingDataSource(DataSource dataSource) {
-		setDataSource(dataSource);
+	public DelegatingDataSource(DataSource backer) {
+		this.backer = backer;
 	}
 	
-	public DataSource getDataSource() {
-		return dataSource;
+	public void setDataSource(DataSource backer) {
+		this.backer = backer;
 	}
 	
-	protected void setDataSource(DataSource dataSource) {
-		if(dataSource == null) {
-			throw new NullPointerException();
-		}
-		this.dataSource = dataSource;
-	}
 	
-	// DataSource //
-	
-	@Override
-	public DataSourceMetadata getMetadata() {
-		return dataSource.getMetadata();
+
+	public Spectrum get(int index) throws IndexOutOfBoundsException {
+		return backer.get(index);
 	}
 
-	@Override
-	public boolean canRead(String filename) {
-		return dataSource.canRead(filename);
-	}
-
-	@Override
-	public boolean canRead(List<String> filenames) {
-		return dataSource.canRead(filenames);
-	}
-
-	@Override
-	public List<String> getFileExtensions() {
-		return dataSource.getFileExtensions();
-	}
-
-	@Override
-	public void read(String filename) throws Exception {
-		dataSource.read(filename);
-	}
-
-	@Override
-	public void read(List<String> filenames) throws Exception {
-		dataSource.read(filenames);
-	}
-	
-	// DSScanData //
-	
-	@Override
-	public Spectrum get(int index) {
-		return dataSource.get(index);
-	}
-
-	@Override
 	public int scanCount() {
-		return dataSource.scanCount();
+		return backer.scanCount();
 	}
 
-	@Override
+	public DataSourceMetadata getMetadata() {
+		return backer.getMetadata();
+	}
+
 	public List<String> scanNames() {
-		return dataSource.scanNames();
+		return backer.scanNames();
 	}
 
-	@Override
+	public boolean hasMetadata() {
+		return backer.hasMetadata();
+	}
+
 	public float maxEnergy() {
-		return dataSource.maxEnergy();
+		return backer.maxEnergy();
 	}
 
-	@Override
 	public String datasetName() {
-		return dataSource.datasetName();
+		return backer.datasetName();
 	}
 
-	// DSRealDimensions //
-	
-	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index) {
-		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
-		return dataSource.getDimensions().getRealCoordinatesAtIndex(index);
-	}
-
-	@Override
-	public Coord<Bounds<Number>> getRealDimensions() {
-		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
-		return dataSource.getDimensions().getRealDimensions();
-	}
-
-	@Override
-	public SISize getRealDimensionsUnit() {
-		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
-		return dataSource.getDimensions().getRealDimensionsUnit();
-	}
-
-	@Override
-	public Coord<Integer> getDataDimensions() {
-		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
-		return dataSource.getDimensions().getDataDimensions();
-	}
-
-	@Override
-	public Coord<Integer> getDataCoordinatesAtIndex(int index) {
-		if (!dataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
-		return dataSource.getDimensions().getDataCoordinatesAtIndex(index);
-	}
-	
-
-	@Override
 	public DataSourceDimensions getDimensions() {
-		if (!dataSource.hasDimensions()) { return null; }
-		return this;
+		return backer.getDimensions();
 	}
+
+	public boolean hasDimensions() {
+		return backer.hasDimensions();
+	}
+
+	public DataSourceFileFormat getFileFormat() {
+		return backer.getFileFormat();
+	}
+
+	public void read(String filename) throws Exception {
+		backer.read(filename);
+	}
+
+	public void read(List<String> filenames) throws Exception {
+		backer.read(filenames);
+	}
+	
+	
 	
 }

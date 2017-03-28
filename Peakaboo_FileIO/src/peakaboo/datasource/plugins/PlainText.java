@@ -3,6 +3,7 @@ package peakaboo.datasource.plugins;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import fava.functionable.FList;
@@ -11,6 +12,8 @@ import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -25,11 +28,11 @@ public class PlainText extends AbstractDataSource
 	int		scanSize = -1;
 
 	List<Spectrum> scans;
-	
+		
 	
 	public PlainText()
 	{
-		scans = SpectrumList.create(getDataFormat());
+		scans = SpectrumList.create(getFileFormat().getFormatName());
 	}
 	
 	public String datasetName()
@@ -69,26 +72,6 @@ public class PlainText extends AbstractDataSource
 	//==============================================
 	// PLUGIN METHODS
 	//==============================================
-
-
-	@Override
-	public boolean canRead(String filename)
-	{
-		return 	filename.toLowerCase().endsWith(".txt") ||
-				filename.toLowerCase().endsWith(".dat") ||
-				filename.toLowerCase().endsWith(".csv") ||
-				filename.toLowerCase().endsWith(".tsv");
-	}
-
-	@Override
-	public boolean canRead(List<String> filenames)
-	{
-		if (filenames == null) return false;
-		if (filenames.size() == 0) return false;
-		if (filenames.size() > 1) return false;
-		
-		return canRead(filenames.get(0));
-	}
 
 	@Override
 	public void read(String filename) throws Exception
@@ -145,25 +128,17 @@ public class PlainText extends AbstractDataSource
 		read(filenames.get(0));
 	}
 
+
 	@Override
-	public String getDataFormat()
-	{
-		return "Peakaboo Plain Text";
-	}
-	
-	@Override
-	public String getDataFormatDescription()
-	{
-		return "Peakaboo Plain Text format is a simple XRF format comprised of rows of space-separated numbers.";
+	public DataSourceFileFormat getFileFormat() {
+		return new SimpleFileFormat(
+				true, 
+				"Peakaboo Plain Text", 
+				"Peakaboo Plain Text format is a simple XRF format comprised of rows of space-separated numbers.", 
+				Arrays.asList("txt", "dat", "csv", "tsv"));
 	}
 
 
-	@Override
-	public List<String> getFileExtensions()
-	{
-		return new FList<String>("txt", "dat", "csv", "tsv");
-	}
-	
 	
 	
 	
@@ -182,7 +157,6 @@ public class PlainText extends AbstractDataSource
 	public DataSourceMetadata getMetadata() {
 		return null;
 	}
-
 
 	
 

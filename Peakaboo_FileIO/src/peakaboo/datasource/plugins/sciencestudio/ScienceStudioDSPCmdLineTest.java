@@ -23,7 +23,7 @@ public class ScienceStudioDSPCmdLineTest {
 		
 		List<String> filenames = Arrays.asList(args);
 		
-		if(dataSource.canRead(filenames)) {
+		if(dataSource.getFileFormat().canRead(filenames)) {
 			System.out.println("Reading: " + filenames);
 			dataSource.read(filenames);
 			System.out.println("DONE!");

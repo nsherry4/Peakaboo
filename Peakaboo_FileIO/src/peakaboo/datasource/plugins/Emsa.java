@@ -15,12 +15,13 @@ import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
-public class Emsa extends AbstractDataSource {
+public class Emsa extends AbstractDataSource implements DataSourceFileFormat {
 
 	private List<Spectrum> scans;
 	private float maxEnergy = 0;
@@ -29,10 +30,14 @@ public class Emsa extends AbstractDataSource {
 	
 	
 	public Emsa() {
-		scans = SpectrumList.create(getDataFormat());
+		scans = SpectrumList.create(getFormatName());
 	}
 	
 	
+	
+	/******************************
+	 * DataSourceFileFormat
+	 ******************************/
 	@Override
 	public List<String> getFileExtensions() {
 		return Collections.singletonList("txt");
@@ -63,6 +68,17 @@ public class Emsa extends AbstractDataSource {
 		return canRead(filenames.get(0));
 	}
 
+	
+	@Override
+	public DataSourceFileFormat getFileFormat() {
+		return this;
+	}
+	
+	
+	
+	
+	
+	
 	private void readTags(String filename) throws Exception {
 		
 		if (tags != null) { return; }
@@ -192,12 +208,12 @@ public class Emsa extends AbstractDataSource {
 
 
 	@Override
-	public String getDataFormat() {
+	public String getFormatName() {
 		return "Inca EMSA";
 	}
 
 	@Override
-	public String getDataFormatDescription() {
+	public String getFormatDescription() {
 		return "Inca EMSA X-ray Spectra";
 	}
 	
@@ -220,6 +236,10 @@ public class Emsa extends AbstractDataSource {
 	public DataSourceDimensions getDimensions() {
 		return null;
 	}
+
+
+
+
 
 
 

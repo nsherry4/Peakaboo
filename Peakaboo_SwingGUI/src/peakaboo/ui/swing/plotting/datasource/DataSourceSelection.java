@@ -68,7 +68,7 @@ public class DataSourceSelection extends JDialog
 		final ComplexToggleGroup group = new ComplexToggleGroup();
 		for (AbstractDataSource dsp : dsps)
 		{
-			toggle = new ComplexToggle("", dsp.getDataFormat(), dsp.getDataFormatDescription());
+			toggle = new ComplexToggle("", dsp.getFileFormat().getFormatName(), dsp.getFileFormat().getFormatDescription());
 			toggleMap.put(toggle, dsp);
 			group.registerButton(toggle);	
 			toggleButtons.add(toggle);
@@ -120,12 +120,12 @@ public class DataSourceSelection extends JDialog
 	}
 	
 	
-	public static void main(String[] args)
-	{
-		Swidget.initialize();
-		DataSourceSelection dss = new DataSourceSelection();
-		AbstractDataSource dsp = dss.pickDSP(null, new FList<AbstractDataSource>(new ScienceStudio(), new CDFMLSax()));
-		System.out.println(dsp.getDataFormat());
-	}
+//	public static void main(String[] args)
+//	{
+//		Swidget.initialize();
+//		DataSourceSelection dss = new DataSourceSelection();
+//		AbstractDataSource dsp = dss.pickDSP(null, new FList<AbstractDataSource>(new ScienceStudio(), new CDFMLSax()));
+//		System.out.println(dsp.getDataFormat());
+//	}
 	
 }

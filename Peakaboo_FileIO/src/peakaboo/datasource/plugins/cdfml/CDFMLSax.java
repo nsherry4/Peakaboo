@@ -14,6 +14,7 @@ import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -22,7 +23,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, DataSourceDimensions
+public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, DataSourceDimensions, DataSourceFileFormat
 {
 
 	int											scanReadCount;
@@ -594,13 +595,13 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, 
 	}
 
 	@Override
-	public String getDataFormat()
+	public String getFormatName()
 	{
 		return "CDFML";
 	}
 	
 	@Override
-	public String getDataFormatDescription()
+	public String getFormatDescription()
 	{
 		return "CDFML XRF files are a format defined by the Canadian Light Source using NASA's CDF/CDFML container."; 
 	}
@@ -627,6 +628,12 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, 
 
 	@Override
 	public DataSourceDimensions getDimensions() {
+		return this;
+	}
+
+
+	@Override
+	public DataSourceFileFormat getFileFormat() {
 		return this;
 	}
 

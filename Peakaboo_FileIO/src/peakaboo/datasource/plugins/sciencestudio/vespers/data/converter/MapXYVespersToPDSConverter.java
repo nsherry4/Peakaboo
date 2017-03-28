@@ -17,6 +17,7 @@ import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
@@ -29,7 +30,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, DataSourceDimensions, StdConverter {
+public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, DataSourceDimensions, DataSourceFileFormat, StdConverter {
 
 	private static final String DEFAULT_DATASET_NAME = "XRF_Data_Set";
 	
@@ -810,6 +811,21 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	@Override
 	public String getEndTime() {
 		return endTime;
+	}
+
+	@Override
+	public DataSourceFileFormat getFileFormat() {
+		return this;
+	}
+
+	@Override
+	public String getFormatName() {
+		return "";
+	}
+
+	@Override
+	public String getFormatDescription() {
+		return "";
 	}
 
 

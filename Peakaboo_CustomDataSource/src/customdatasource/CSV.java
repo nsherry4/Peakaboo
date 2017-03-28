@@ -2,11 +2,14 @@ package customdatasource;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Spectrum;
 
@@ -24,33 +27,6 @@ public class CSV extends AbstractDataSource
 	}
 		
 	
-	@Override
-	public boolean canRead(String filename)
-	{
-		filename = filename.toLowerCase();
-		return filename.endsWith(".csv") || filename.endsWith(".txt");
-	}
-
-	@Override
-	public boolean canRead(List<String> filenames)
-	{
-		if (filenames == null) return false;
-		if (filenames.size() == 0) return false;
-		if (filenames.size() > 1) return false;
-		
-		return canRead(filenames.get(0));
-	}
-
-	@Override
-	public List<String> getFileExtensions()
-	{
-		List<String> extensions = new ArrayList<String>();
-		extensions.add("csv");
-		extensions.add("txt");
-		return extensions;
-	}
-
-
 	@Override
 	public void read(String filename) throws Exception
 	{
@@ -109,31 +85,15 @@ public class CSV extends AbstractDataSource
 		read(filenames.get(0));
 	}
 
-	@Override
-	public String getDataFormat()
-	{
-		return "Comma Separated Values";
-	}
 	
-	@Override
-	public String getDataFormatDescription()
-	{
-		return "The Comma Separated Value format is a simple XRF format comprised of rows of comma-separated numbers.";
-	}
+	
+	
+	
+	
+	
+	
+	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	////////////////////////////////////////////
-	// Unsupported Operations -- See JavaDoc
-	////////////////////////////////////////////
 	
 	@Override
 	public String datasetName()
@@ -171,6 +131,19 @@ public class CSV extends AbstractDataSource
 		return names;
 	}
 
+
+
+	
+	
+
+	@Override
+	public DataSourceFileFormat getFileFormat() {
+		return new SimpleFileFormat(
+				true,
+				"CSV (Comma Separated Values)",
+				"The Comma Separated Value format is a simple XRF format comprised of rows of comma-separated numbers.",
+				Arrays.asList("csv", "tsv"));
+	}
 	
 	
 	@Override
@@ -191,6 +164,7 @@ public class CSV extends AbstractDataSource
 	{
 		
 	}
+
 
 
 

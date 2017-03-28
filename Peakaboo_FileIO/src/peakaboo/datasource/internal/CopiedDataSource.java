@@ -8,6 +8,7 @@ import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -169,26 +170,6 @@ public class CopiedDataSource implements DataSource, DataSourceDimensions
 	}
 
 
-	@Override
-	public boolean canRead(String filename)
-	{
-		return originalDataSource.canRead(filename);
-	}
-
-
-	@Override
-	public boolean canRead(List<String> filenames)
-	{
-		return originalDataSource.canRead(filenames);
-	}
-
-
-	@Override
-	public List<String> getFileExtensions()
-	{
-		return originalDataSource.getFileExtensions();
-	}
-
 
 	@Override
 	public void read(String filename) throws Exception
@@ -218,6 +199,12 @@ public class CopiedDataSource implements DataSource, DataSourceDimensions
 	public DataSourceDimensions getDimensions() {
 		if (!originalDataSource.hasDimensions()) { return null; }
 		return this;
+	}
+
+
+	@Override
+	public DataSourceFileFormat getFileFormat() {
+		return originalDataSource.getFileFormat();
 	}
 
 

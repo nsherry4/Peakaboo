@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import commonenvironment.AbstractFile;
@@ -14,6 +16,8 @@ import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -77,9 +81,28 @@ public class MCA extends AbstractDataSource {
 		return (file.getFileName().toLowerCase().endsWith(".mca"));		
 	}
 
+
+	@Override
+	public DataSourceFileFormat getFileFormat() {
+		return new SimpleFileFormat(true, "MCA", "MCA XRF data format", Arrays.asList("mca"));
+	}
 	
 	
-	
+
+	@Override
+	public void read(String filename) throws Exception
+	{
+		spectrum = readMCA(filename);
+		scanName = new File(filename).getName();
+	}
+
+	@Override
+	public void read(List<String> filenames) throws Exception
+	{
+		throw new UnsupportedOperationException();
+	}
+
+
 	
 	//==============================================
 	// UNSUPPORTED FEATURES
@@ -97,59 +120,9 @@ public class MCA extends AbstractDataSource {
 		return null;
 	}
 	
-	
-	
-	
-	
-	
-	
-	//==============================================
-	// PLUGIN METHODS
-	//==============================================
 
-	@Override
-	public boolean canRead(String filename)
-	{
-		return filename.toLowerCase().endsWith(".mca");
-	}
 
-	@Override
-	public boolean canRead(List<String> filenames)
-	{
-		return false;
-	}
-
-	@Override
-	public void read(String filename) throws Exception
-	{
-		spectrum = readMCA(filename);
-		scanName = new File(filename).getName();
-	}
-
-	@Override
-	public void read(List<String> filenames) throws Exception
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getDataFormat()
-	{
-		return "MCA";
-	}
-
-	@Override
-	public String getDataFormatDescription()
-	{
-		return "MCA XRF data format";
-	}
 	
-	@Override
-	public List<String> getFileExtensions()
-	{
-		return new FList<String>("mca");
-	}
-
 
 	
 }

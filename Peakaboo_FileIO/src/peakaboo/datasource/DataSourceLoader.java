@@ -59,7 +59,7 @@ public class DataSourceLoader
 				@Override
 				public int compare(AbstractDataSource f1, AbstractDataSource f2)
 				{
-					return f1.getDataFormat().compareTo(f1.getDataFormat());
+					return f1.getFileFormat().getFormatName().compareTo(f1.getFileFormat().getFormatName());
 				}});
 			
 			return filters;
