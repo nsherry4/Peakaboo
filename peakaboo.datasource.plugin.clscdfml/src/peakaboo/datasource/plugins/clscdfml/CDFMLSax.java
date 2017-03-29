@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugins.cdfml;
+package peakaboo.datasource.plugins.clscdfml;
 
 
 import java.io.BufferedReader;
@@ -516,13 +516,13 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, 
 				
 			}
 			
-			haveScanCount(totalScanCount);
+			getInteraction().notifyScanCount(totalScanCount);
 			
 			
 		}
 		
 		scanReadCount++;
-		newScansRead(1);
+		getInteraction().notifyScanRead(1);
 		
 	}
 	
@@ -577,7 +577,7 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, 
 	public void read(String filename) throws Exception
 	{
 		
-		reader.read(filename, fn_isAborted);
+		reader.read(filename, this.getInteraction()::checkReadAborted);
 
 		
 		//get a listing of all of the categories that this supports
@@ -597,13 +597,13 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, 
 	@Override
 	public String getFormatName()
 	{
-		return "CDFML";
+		return "CLS CDFML";
 	}
 	
 	@Override
 	public String getFormatDescription()
 	{
-		return "CDFML XRF files are a format defined by the Canadian Light Source using NASA's CDF/CDFML container."; 
+		return "CLS CDFML XRF files are a format defined by the Canadian Light Source using NASA's CDF/CDFML container."; 
 	}
 
 	

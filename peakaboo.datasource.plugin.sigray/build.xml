@@ -2,11 +2,10 @@
 <project default="build_plugin" name="Build Peakaboo Sigray Plugin">
 
     <property name="dir.buildfile" value="."/>
-    <property name="dir.workspace" value="/home/nathaniel/Workspaces/workspace-ss"/>
 	
     <target name="build_plugin">
-        <jar destfile="${dir.buildfile}/build/SigrayPeakaboo.jar" filesetmanifest="mergewithoutmain">
-        	<service type="peakaboo.datasource.AbstractDataSource" provider="peakaboo.datasource.plugin.sigray.SigrayHDF5"/>
+        <jar destfile="${dir.buildfile}/build/Sigray-Peakaboo.jar" filesetmanifest="mergewithoutmain">
+        	<service type="peakaboo.datasource.PluginDataSource" provider="peakaboo.datasource.plugin.sigray.SigrayHDF5"/>
         	
         	<fileset dir="${dir.buildfile}/bin"/>
         	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/jars/sis-jhdf5-batteries_included.jar"/>

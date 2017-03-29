@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugins;
+package peakaboo.datasource.plugins.amptek;
 
 import static java.util.stream.Collectors.toList;
 
@@ -24,12 +24,12 @@ import scitypes.Coord;
 import scitypes.Spectrum;
 
 
-public class MCA extends AbstractDataSource {
+public class AmptekMCA extends AbstractDataSource {
 
 	private Spectrum spectrum;
 	private String scanName; 
 	
-	public MCA() {
+	public AmptekMCA() {
 
 	}
 	
@@ -84,7 +84,7 @@ public class MCA extends AbstractDataSource {
 
 	@Override
 	public DataSourceFileFormat getFileFormat() {
-		return new SimpleFileFormat(true, "MCA", "MCA XRF data format", Arrays.asList("mca"));
+		return new SimpleFileFormat(true, "Amptek MCA", "Amptek MCA XRF data format", Arrays.asList("mca"));
 	}
 	
 	

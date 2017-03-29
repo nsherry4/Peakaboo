@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugins.sciencestudio.vespers.data.converter;
+package peakaboo.datasource.plugins.vespers.vespers.data.converter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,8 +18,10 @@ import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.interaction.DataSourceInteraction;
+import peakaboo.datasource.components.interaction.SimpleDataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
-import peakaboo.datasource.plugins.sciencestudio.ConverterFactoryDelegatingDSP;
+import peakaboo.datasource.plugins.vespers.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -826,6 +828,22 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	@Override
 	public String getFormatDescription() {
 		return "";
+	}
+
+	
+	
+	
+	
+	private DataSourceInteraction interaction = new SimpleDataSourceInteraction();
+	
+	@Override
+	public void setInteraction(DataSourceInteraction interaction) {
+		this.interaction = interaction;
+	}
+
+	@Override
+	public DataSourceInteraction getInteraction() {
+		return interaction;
 	}
 
 

@@ -5,6 +5,7 @@ import java.util.List;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Spectrum;
 
@@ -24,6 +25,15 @@ public class DelegatingDataSource implements DataSource {
 		this.backer = backer;
 	}
 	
+	@Override
+	public void setInteraction(DataSourceInteraction interaction) {
+		this.backer.setInteraction(interaction);
+	}
+	@Override
+	public DataSourceInteraction getInteraction() {
+		return this.backer.getInteraction();
+	}
+
 	
 
 	public Spectrum get(int index) throws IndexOutOfBoundsException {

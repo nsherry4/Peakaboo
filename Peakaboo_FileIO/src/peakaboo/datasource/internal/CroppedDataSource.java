@@ -9,6 +9,7 @@ import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -207,6 +208,16 @@ public class CroppedDataSource implements DataSource, DataSourceDimensions
 		return originalDataSource.getFileFormat();
 	}
 
+
+	@Override
+	public void setInteraction(DataSourceInteraction interaction) {
+		originalDataSource.setInteraction(interaction);
+	}
+
+	@Override
+	public DataSourceInteraction getInteraction() {
+		return originalDataSource.getInteraction();
+	}
 
 
 	

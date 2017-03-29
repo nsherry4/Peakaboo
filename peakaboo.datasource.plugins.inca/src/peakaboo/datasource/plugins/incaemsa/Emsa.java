@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugins;
+package peakaboo.datasource.plugins.incaemsa;
 
 import static java.util.stream.Collectors.toList;
 
@@ -73,6 +73,18 @@ public class Emsa extends AbstractDataSource implements DataSourceFileFormat {
 	public DataSourceFileFormat getFileFormat() {
 		return this;
 	}
+	
+
+	@Override
+	public String getFormatName() {
+		return "Inca EMSA";
+	}
+
+	@Override
+	public String getFormatDescription() {
+		return "Inca EMSA X-ray Spectra";
+	}
+	
 	
 	
 	
@@ -207,18 +219,6 @@ public class Emsa extends AbstractDataSource implements DataSourceFileFormat {
 	}
 
 
-	@Override
-	public String getFormatName() {
-		return "Inca EMSA";
-	}
-
-	@Override
-	public String getFormatDescription() {
-		return "Inca EMSA X-ray Spectra";
-	}
-	
-	
-	
 	
 	
 

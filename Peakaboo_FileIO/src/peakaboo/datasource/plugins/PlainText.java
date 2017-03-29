@@ -14,6 +14,8 @@ import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
+import peakaboo.datasource.components.interaction.CallbackDataSourceInteraction;
+import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -88,7 +90,7 @@ public class PlainText extends AbstractDataSource
 		{
 			String line = lines.next();
 			
-			if (line == null || isAborted()) break;
+			if (line == null || getInteraction().checkReadAborted()) break;
 			
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
@@ -112,7 +114,7 @@ public class PlainText extends AbstractDataSource
 			scans.add(scan);
 			size++;
 			
-			newScansRead(1);
+			getInteraction().notifyScanRead(1);
 			
 		}
 	}

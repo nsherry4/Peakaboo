@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugins.cdfml;
+package peakaboo.datasource.plugins.clscdfml;
 
 import static java.util.stream.Collectors.toList;
 

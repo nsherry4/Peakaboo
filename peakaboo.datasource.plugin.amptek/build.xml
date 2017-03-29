@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build_plugin" name="Build Peakaboo Amptek Plugin">
+
+    <property name="dir.buildfile" value="."/>
+	
+    <target name="build_plugin">
+        <jar destfile="${dir.buildfile}/build/Amptek-Peakaboo.jar" filesetmanifest="mergewithoutmain">
+        	<service type="peakaboo.datasource.PluginDataSource" provider="peakaboo.datasource.plugins.amptek.AmptekMCA"/>
+        	
+        	<fileset dir="${dir.buildfile}/bin"/>
+        	        	
+        </jar>
+    </target>
+	
+</project>

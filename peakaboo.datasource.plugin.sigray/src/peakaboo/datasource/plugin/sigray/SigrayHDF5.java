@@ -68,8 +68,8 @@ public class SigrayHDF5 extends AbstractDataSource {
 		dimensions.dy = (int) size[1];
 		dimensions.dx = (int) size[2];
 
-		fn_getScanCountCallback.accept(dimensions.dx * dimensions.dy);
-
+		getInteraction().notifyScanCount(dimensions.dx * dimensions.dy);
+		
 		float[] mca_arr = reader.readFloatArray("/MAPS/mca_arr");
 		float[] scalers = reader.readFloatArray("/MAPS/scalers");
 
@@ -120,7 +120,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 				}
 				scans.set(scan_index, s);
 			}
-			fn_readScanCallback.accept(dimensions.dx);
+			getInteraction().notifyScanRead(dimensions.dx);
 		}
 
 		reader.close();

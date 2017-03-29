@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugins.sciencestudio;
+package peakaboo.datasource.plugins.vespers;
 
 import java.util.Arrays;
 import java.util.List;

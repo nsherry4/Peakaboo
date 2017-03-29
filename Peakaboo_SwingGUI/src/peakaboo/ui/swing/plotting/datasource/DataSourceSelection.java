@@ -14,11 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import fava.functionable.FList;
-import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.plugins.cdfml.CDFMLSax;
-import peakaboo.datasource.plugins.sciencestudio.ScienceStudio;
-import swidget.Swidget;
+import peakaboo.datasource.DataSource;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
@@ -31,18 +27,18 @@ import swidget.widgets.toggle.ComplexToggleGroup;
 public class DataSourceSelection extends JDialog
 {
 	
-	private Map<ComplexToggle, AbstractDataSource> toggleMap;
-	private AbstractDataSource selected;
+	private Map<ComplexToggle, DataSource> toggleMap;
+	private DataSource selected;
 	
 	public DataSourceSelection()
 	{
 		
 	}
 	
-	public AbstractDataSource pickDSP(Container parent, List<AbstractDataSource> dsps)
+	public DataSource pickDSP(Container parent, List<DataSource> dsps)
 	{	
 		
-		toggleMap = new HashMap<ComplexToggle, AbstractDataSource>();
+		toggleMap = new HashMap<ComplexToggle, DataSource>();
 		
 		setTitle("Please Select Data Format");
 		Container c = getContentPane();
@@ -66,7 +62,7 @@ public class DataSourceSelection extends JDialog
 		final List<ComplexToggle> toggleButtons = new ArrayList<ComplexToggle>();
 		ComplexToggle toggle;
 		final ComplexToggleGroup group = new ComplexToggleGroup();
-		for (AbstractDataSource dsp : dsps)
+		for (DataSource dsp : dsps)
 		{
 			toggle = new ComplexToggle("", dsp.getFileFormat().getFormatName(), dsp.getFileFormat().getFormatDescription());
 			toggleMap.put(toggle, dsp);

@@ -79,7 +79,7 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
-import peakaboo.datasource.AbstractDataSource;
+import peakaboo.datasource.DataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -1192,7 +1192,7 @@ public class PlotPanel extends ClearPanel
 	{
 
 		List<AbstractFile> files;
-		List<AbstractDataSource> formats =  new ArrayList<AbstractDataSource>(controller.data().getDataSourcePlugins());
+		List<DataSource> formats =  new ArrayList<DataSource>(controller.data().getDataSourcePlugins());
 				
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
@@ -1213,13 +1213,13 @@ public class PlotPanel extends ClearPanel
 	public void loadFiles(List<String> filenames)
 	{
 
-		List<AbstractDataSource> formats =  new ArrayList<AbstractDataSource>(controller.data().getDataSourcePlugins());
+		List<DataSource> formats =  new ArrayList<DataSource>(controller.data().getDataSourcePlugins());
 		formats = DataSourceLookup.findDataSourcesForFiles(filenames, formats);
 		
 		if (formats.size() > 1)
 		{
 			DataSourceSelection selection = new DataSourceSelection();
-			AbstractDataSource dsp = selection.pickDSP(container.getContainer(), formats);
+			DataSource dsp = selection.pickDSP(container.getContainer(), formats);
 			if (dsp != null) loadFiles(filenames, dsp);
 		}
 		else if (formats.size() == 0)
@@ -1239,7 +1239,7 @@ public class PlotPanel extends ClearPanel
 		
 	}
 	
-	public void loadFiles(List<String> files, AbstractDataSource dsp)
+	public void loadFiles(List<String> files, DataSource dsp)
 	{
 		if (files != null)
 		{

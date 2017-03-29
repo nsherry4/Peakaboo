@@ -5,21 +5,21 @@ import java.util.Collection;
 import java.util.List;
 
 import commonenvironment.IOOperations;
-import peakaboo.datasource.AbstractDataSource;
+import peakaboo.datasource.DataSource;
 
 public class DataSourceLookup
 {
 
-	public static List<AbstractDataSource> findDataSourcesForFiles(List<String> filenames, List<AbstractDataSource> dsps)
+	public static List<DataSource> findDataSourcesForFiles(List<String> filenames, List<DataSource> dsps)
 	{	
 		
-		List<AbstractDataSource> datasources = new ArrayList<AbstractDataSource>();
+		List<DataSource> datasources = new ArrayList<DataSource>();
 		
 		if (filenames.size() == 1)
 		{
 			String filename = filenames.get(0);
 			
-			for (AbstractDataSource datasource : dsps)
+			for (DataSource datasource : dsps)
 			{
 			
 				if ( !matchFileExtension(filename, datasource.getFileFormat().getFileExtensions()) ) continue;
@@ -33,7 +33,7 @@ public class DataSourceLookup
 		{
 		
 			//loop over every datasource
-			for (AbstractDataSource datasource : dsps)
+			for (DataSource datasource : dsps)
 			{
 				if ( !matchFileExtensions(filenames, datasource.getFileFormat().getFileExtensions()) ) continue;
 				if ( !datasource.getFileFormat().canRead(new ArrayList<String>(filenames)) ) continue;

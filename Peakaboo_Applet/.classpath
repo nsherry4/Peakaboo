@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Peakaboo_SwingGUI"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_DataSource"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Peakaboo_UIController"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/peakaboo.ui.swing"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/peakaboo.datasource"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/peakaboo.controller"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

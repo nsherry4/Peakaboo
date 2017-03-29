@@ -5,6 +5,7 @@ import java.util.List;
 import peakaboo.datasource.components.DataSourceScanData;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 
 public interface DataSource extends DataSourceScanData
@@ -37,8 +38,13 @@ public interface DataSource extends DataSourceScanData
 	
 
 	DataSourceFileFormat getFileFormat();
-		
 	
+	void setInteraction(DataSourceInteraction interaction);
+	DataSourceInteraction getInteraction();
+	
+	default boolean hasInteraction() {
+		return (getInteraction() != null);
+	}
 
 	/**
 	 * Reads the given file as a whole dataset. This method, collectively with 

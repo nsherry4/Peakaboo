@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build_plugin" name="Build Peakaboo Vespers Plugin">
+
+    <property name="dir.buildfile" value="."/>
+	
+    <target name="build_plugin">
+        <jar destfile="${dir.buildfile}/build/Vespers-Peakaboo.jar" filesetmanifest="mergewithoutmain">
+        	<service type="peakaboo.datasource.PluginDataSource" provider="peakaboo.datasource.plugins.vespers.ScienceStudio"/>
+        	
+        	<fileset dir="${dir.buildfile}/bin"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/jars/CLS_Vespers_Data.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/jars/SS_Core_Model.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/jars/SS_Data_Core.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/jars/SS_Utilities.jar"/>
+        	        	
+        </jar>
+    </target>
+	
+</project>

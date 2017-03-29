@@ -7,7 +7,6 @@ import eventful.IEventful;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DatasetReadResult;
-import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
@@ -28,8 +27,8 @@ public interface IDataController extends IEventful
 	
 	void setDataSource(DataSource ds);
 	void setDataSetProvider(AbstractDataSet dsp);
-	List<AbstractDataSource> getDataSourcePlugins();
-	ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDataSource dsp);
+	List<DataSource> getDataSourcePlugins();
+	ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, DataSource dsp);
 	
 	ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	

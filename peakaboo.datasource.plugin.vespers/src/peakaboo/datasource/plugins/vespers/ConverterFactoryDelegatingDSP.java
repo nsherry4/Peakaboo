@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugins.sciencestudio;
+package peakaboo.datasource.plugins.vespers;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,15 +23,16 @@ import ca.sciencestudio.data.standard.StdConverter;
 import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.data.support.ConverterFactoryException;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.internal.DelegatingDataSource;
-import peakaboo.datasource.plugins.sciencestudio.vespers.data.converter.factory.MapXYVespersToPDSConverterFactory;
+import peakaboo.datasource.plugins.vespers.vespers.data.converter.factory.MapXYVespersToPDSConverterFactory;
 
 /**
  * @author maxweld
  *
  */
-public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource implements StdConverter, DataSourceFileFormat {
+public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource implements StdConverter, PluginDataSource, DataSourceFileFormat {
 
 	private static final String DATA_FILE_FIRST_LINE = "# CLS Data Acquisition";
 

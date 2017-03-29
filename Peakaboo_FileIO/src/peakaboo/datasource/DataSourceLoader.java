@@ -11,18 +11,14 @@ import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
 import commonenvironment.Env;
 import peakaboo.common.Version;
-import peakaboo.datasource.plugins.Emsa;
-import peakaboo.datasource.plugins.MCA;
 import peakaboo.datasource.plugins.PlainText;
-import peakaboo.datasource.plugins.cdfml.CDFMLSax;
-import peakaboo.datasource.plugins.sciencestudio.ScienceStudio;
 
 public class DataSourceLoader
 {
 
-	public static BoltPluginLoader<AbstractDataSource> loader;
+	public static BoltPluginLoader<PluginDataSource> loader;
 	
-	public synchronized static List<AbstractDataSource> getDSPs()
+	public synchronized static List<DataSource> getDSPs()
 	{
 
 		try
@@ -31,7 +27,7 @@ public class DataSourceLoader
 			if (loader == null)
 			{
 
-				BoltPluginLoader<AbstractDataSource> newLoader = new BoltPluginLoader<AbstractDataSource>(AbstractDataSource.class);  
+				BoltPluginLoader<PluginDataSource> newLoader = new BoltPluginLoader<PluginDataSource>(PluginDataSource.class);  
 				
 				//load local jars
 				newLoader.register();
@@ -43,26 +39,22 @@ public class DataSourceLoader
 					
 				
 				//register built-in plugins
-				newLoader.registerPlugin(CDFMLSax.class);
-				newLoader.registerPlugin(MCA.class);
 				newLoader.registerPlugin(PlainText.class);
-				newLoader.registerPlugin(ScienceStudio.class);
-				newLoader.registerPlugin(Emsa.class);
 							
 				loader = newLoader;
 			}
 			
-			List<AbstractDataSource> filters = loader.getNewInstancesForAllPlugins();
+			List<PluginDataSource> filters = loader.getNewInstancesForAllPlugins();
 			
-			Collections.sort(filters, new Comparator<AbstractDataSource>() {
+			Collections.sort(filters, new Comparator<PluginDataSource>() {
 
 				@Override
-				public int compare(AbstractDataSource f1, AbstractDataSource f2)
+				public int compare(PluginDataSource f1, PluginDataSource f2)
 				{
 					return f1.getFileFormat().getFormatName().compareTo(f1.getFileFormat().getFormatName());
 				}});
 			
-			return filters;
+			return new ArrayList<>(filters);
 			
 		}
 		catch (ClassInheritanceException e)
@@ -75,7 +67,7 @@ public class DataSourceLoader
 		}
 		
 		//failure -- return empty list
-		List<AbstractDataSource> plugins = new ArrayList<AbstractDataSource>();
+		List<DataSource> plugins = new ArrayList<DataSource>();
 		return plugins;
 	}
 

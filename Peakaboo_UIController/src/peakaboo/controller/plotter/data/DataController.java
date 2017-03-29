@@ -12,8 +12,8 @@ import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
-import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import peakaboo.datasource.internal.CroppedDataSource;
@@ -54,13 +54,13 @@ public class DataController extends Eventful implements IDataController
 	// =============================================
 	
 	@Override
-	public List<AbstractDataSource> getDataSourcePlugins()
+	public List<DataSource> getDataSourcePlugins()
 	{
 		return DataSet.getDataSourcePlugins();
 	}
 	
 	
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, AbstractDataSource dsp)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, DataSource dsp)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();

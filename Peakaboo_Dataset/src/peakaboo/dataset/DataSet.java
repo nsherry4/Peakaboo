@@ -12,11 +12,13 @@ import java.util.function.Supplier;
 
 import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
-import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
+import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.dimensions.DummyDimensions;
+import peakaboo.datasource.components.interaction.CallbackDataSourceInteraction;
+import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -198,7 +200,7 @@ public class DataSet extends AbstractDataSet
 	 * @param files the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, final AbstractDataSource dataSource)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, final DataSource dataSource)
 	{
 
 		
@@ -245,7 +247,7 @@ public class DataSet extends AbstractDataSet
 
 				try
 				{
-					dataSource.setCallbacks(gotScanCount, readScans, isAborted);
+					dataSource.setInteraction(new CallbackDataSourceInteraction(gotScanCount, readScans, isAborted));
 					if (filenames.size() == 1)
 					{
 						dataSource.read(filenames.get(0));
@@ -494,7 +496,7 @@ public class DataSet extends AbstractDataSet
 	 */
 	
 
-	public static List<AbstractDataSource> getDataSourcePlugins()
+	public static List<DataSource> getDataSourcePlugins()
 	{
 		return DataSourceLoader.getDSPs();
 	}
