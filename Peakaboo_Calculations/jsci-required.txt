@@ -1,2 +1,0 @@
-jsci-core
-jsci-wavelet
