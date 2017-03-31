@@ -92,7 +92,7 @@ public class DataSet extends AbstractDataSet
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = excludedIndcies.stream().map(index -> dataSource.get(index)).collect(toList());
+		List<Spectrum> badScans = excludedIndcies.stream().map(index -> dataSource.getScanData().get(index)).collect(toList());
 
 		Spectrum Ae;
 		Spectrum At;
@@ -111,7 +111,7 @@ public class DataSet extends AbstractDataSet
 
 		Ae = SpectrumCalculations.getDatasetAverage(badScans);
 		At = averagedSpectrum;
-		Nt = dataSource.scanCount();
+		Nt = dataSource.getScanData().scanCount();
 		Ne = badScans.size();
 
 		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
@@ -144,7 +144,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public float maximumIntensity()
 	{
-		if (dataSource.scanCount() == 0) return 0;
+		if (dataSource.getScanData().scanCount() == 0) return 0;
 				
 		return maxValue;
 	}
@@ -153,7 +153,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public Spectrum getScan(int index)
 	{
-		Spectrum original = dataSource.get(index);
+		Spectrum original = dataSource.getScanData().get(index);
 		if (original == null) return null;
 		return new Spectrum(original);
 
@@ -163,15 +163,15 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getScanName(int index)
 	{
-		if (dataSource == null || index >= dataSource.scanCount()) return "";
-		return dataSource.scanNames().get(index);
+		if (dataSource == null || index >= dataSource.getScanData().scanCount()) return "";
+		return dataSource.getScanData().scanNames().get(index);
 	}
 
 
 	@Override
 	public int size()
 	{
-		return dataSource.scanCount();
+		return dataSource.getScanData().scanCount();
 	}
 
 	@Override
@@ -274,12 +274,12 @@ public class DataSet extends AbstractDataSet
 				}
 				
 				
-				scanCount = dataSource.scanCount();
+				scanCount = dataSource.getScanData().scanCount();
 				if (scanCount == 0) return new DatasetReadResult(ReadStatus.FAILED, "Did not find any data in file(s)");
 				gotScanCount.accept(scanCount);
 				reading.advanceState();
 				
-				applying.setWorkUnits(dataSource.scanCount());
+				applying.setWorkUnits(dataSource.getScanData().scanCount());
 				applying.advanceState();
 				
 				
@@ -330,7 +330,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public int lastNonNullScanIndex()
 	{
-		return AbstractDataSet.lastNonNullScanIndex(dataSource, dataSource.scanCount()-1);
+		return AbstractDataSet.lastNonNullScanIndex(dataSource, dataSource.getScanData().scanCount()-1);
 	}
 	
 	@Override
@@ -343,13 +343,13 @@ public class DataSet extends AbstractDataSet
 	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted, String path)
 	{
 		
-		if (ds == null || ds.scanCount() == 0) return;
+		if (ds == null || ds.getScanData().scanCount() == 0) return;
 				
 
 		
 		int nonNullScanIndex = AbstractDataSet.firstNonNullScanIndex(ds, 0);
 		if (nonNullScanIndex == -1) return;
-		Spectrum nonNullScan = ds.get(nonNullScanIndex);
+		Spectrum nonNullScan = ds.getScanData().get(nonNullScanIndex);
 		if (nonNullScan == null) return;
 		
 		spectrumLength = nonNullScan.size();
@@ -371,9 +371,9 @@ public class DataSet extends AbstractDataSet
 		max10 = new Spectrum(spectrumLength);
 		
 		
-		for (int i = 0; i < ds.scanCount(); i++)
+		for (int i = 0; i < ds.getScanData().scanCount(); i++)
 		{
-			current = ds.get(i);
+			current = ds.getScanData().get(i);
 			
 			if (current == null) continue;
 			
@@ -391,7 +391,7 @@ public class DataSet extends AbstractDataSet
 			
 		}
 		
-		SpectrumCalculations.divideBy_inplace(avg, ds.scanCount());
+		SpectrumCalculations.divideBy_inplace(avg, ds.getScanData().scanCount());
 		
 		averagedSpectrum = avg;
 		maximumSpectrum = max10;
@@ -425,7 +425,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public String getDatasetName()
 	{
-		return dataSource.datasetName();
+		return dataSource.getScanData().datasetName();
 	}
 
 
@@ -433,7 +433,7 @@ public class DataSet extends AbstractDataSet
 	@Override
 	public boolean hasData()
 	{
-		return dataSource.scanCount() > 0;
+		return dataSource.getScanData().scanCount() > 0;
 	}
 
 

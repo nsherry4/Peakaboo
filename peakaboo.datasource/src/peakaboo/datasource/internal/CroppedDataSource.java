@@ -11,6 +11,7 @@ import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.GridPerspective;
@@ -18,7 +19,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class CroppedDataSource implements DataSource, DataSourceDimensions
+public class CroppedDataSource implements DataSource, DataSourceDimensions, ScanData
 {
 
 	private FList<String>				scannames = new FList<String>();
@@ -49,7 +50,7 @@ public class CroppedDataSource implements DataSource, DataSourceDimensions
 
 	public String datasetName()
 	{
-		return originalDataSource.datasetName() + " Subset";
+		return originalDataSource.getScanData().datasetName() + " Subset";
 	}
 
 
@@ -61,7 +62,7 @@ public class CroppedDataSource implements DataSource, DataSourceDimensions
 
 	public float maxEnergy()
 	{
-		return originalDataSource.maxEnergy();
+		return originalDataSource.getScanData().maxEnergy();
 	}
 
 
@@ -80,7 +81,7 @@ public class CroppedDataSource implements DataSource, DataSourceDimensions
 				
 		int realIndex = origgrid.getIndexFromXY(x, y);
 				
-		return originalDataSource.get(realIndex);
+		return originalDataSource.getScanData().get(realIndex);
 	}
 
 
@@ -217,6 +218,12 @@ public class CroppedDataSource implements DataSource, DataSourceDimensions
 	@Override
 	public DataSourceInteraction getInteraction() {
 		return originalDataSource.getInteraction();
+	}
+
+
+	@Override
+	public ScanData getScanData() {
+		return this;
 	}
 
 

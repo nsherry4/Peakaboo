@@ -17,11 +17,12 @@ import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
-public class Emsa extends AbstractDataSource implements DataSourceFileFormat {
+public class Emsa extends AbstractDataSource implements DataSourceFileFormat, ScanData {
 
 	private List<Spectrum> scans;
 	private float maxEnergy = 0;
@@ -219,6 +220,11 @@ public class Emsa extends AbstractDataSource implements DataSourceFileFormat {
 	}
 
 
+
+	@Override
+	public ScanData getScanData() {
+		return this;
+	}
 	
 	
 
@@ -236,6 +242,8 @@ public class Emsa extends AbstractDataSource implements DataSourceFileFormat {
 	public DataSourceDimensions getDimensions() {
 		return null;
 	}
+
+
 
 
 

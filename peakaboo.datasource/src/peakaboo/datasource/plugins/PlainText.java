@@ -8,66 +8,27 @@ import java.util.List;
 
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
-import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
-import peakaboo.datasource.components.interaction.CallbackDataSourceInteraction;
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
-import scitypes.Bounds;
-import scitypes.Coord;
+import peakaboo.datasource.components.scandata.ScanData;
+import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Spectrum;
 
 
 public class PlainText extends AbstractDataSource
 {
 
-	String	datasetName;
 	int 	size = 0;
 	int		scanSize = -1;
 
-	List<Spectrum> scans;
-		
+	private SimpleScanData scandata;
 	
 	public PlainText()
 	{
-		scans = SpectrumList.create(getFileFormat().getFormatName());
 	}
-	
-	public String datasetName()
-	{
-		return datasetName;
-	}
-
-	public float maxEnergy()
-	{
-		return 0;
-	}
-
-	public Spectrum get(int index)
-	{
-		return scans.get(index);
-	}
-
-	public int scanCount()
-	{
-		return size;
-	}
-
-	public List<String> scanNames()
-	{
-		return new Range(0, size-1).stream().map(e -> "Scan #" + (e)).collect(toList());
-	}
-
-	
-
-	
-	
-	
-	
 	
 	
 	
@@ -79,7 +40,7 @@ public class PlainText extends AbstractDataSource
 	public void read(String filename) throws Exception
 	{
 
-		datasetName = new File(filename).getName();
+		scandata = new SimpleScanData(new File(filename).getName());
 		
 	
 		//Split the input up by line
@@ -111,7 +72,7 @@ public class PlainText extends AbstractDataSource
 			}
 			
 			
-			scans.add(scan);
+			scandata.add(scan);
 			size++;
 			
 			getInteraction().notifyScanRead(1);
@@ -141,7 +102,11 @@ public class PlainText extends AbstractDataSource
 	}
 
 
-	
+	@Override
+	public ScanData getScanData() {
+		return scandata;
+	}
+
 	
 	
 	
@@ -159,6 +124,7 @@ public class PlainText extends AbstractDataSource
 	public DataSourceMetadata getMetadata() {
 		return null;
 	}
+
 
 	
 

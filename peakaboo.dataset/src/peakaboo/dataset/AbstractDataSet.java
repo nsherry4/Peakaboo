@@ -83,9 +83,9 @@ public abstract class AbstractDataSet
 	 */
 	public static int firstNonNullScanIndex(DataSource ds, int start)
 	{
-		for (int i = start; i < ds.scanCount(); i++)
+		for (int i = start; i < ds.getScanData().scanCount(); i++)
 		{
-			if (ds.get(i) != null)
+			if (ds.getScanData().get(i) != null)
 			{
 				return i;
 			}
@@ -118,11 +118,11 @@ public abstract class AbstractDataSet
 	 */
 	public static int lastNonNullScanIndex(DataSource ds, int upto)
 	{
-		upto = Math.min(upto, ds.scanCount()-1);
+		upto = Math.min(upto, ds.getScanData().scanCount()-1);
 		
 		for (int i = upto; i >= 0; i--)
 		{
-			if (ds.get(i) != null)
+			if (ds.getScanData().get(i) != null)
 			{
 				return i;
 			}

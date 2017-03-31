@@ -11,9 +11,10 @@ import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Spectrum;
 
-public class CSV extends AbstractDataSource
+public class CSV extends AbstractDataSource implements ScanData
 {
 
 	List<Spectrum> 	data;
@@ -158,12 +159,17 @@ public class CSV extends AbstractDataSource
 	}
 
 
-	
+	@Override
+	public ScanData getScanData() {
+		return this;
+	}
+
 	
 	public static void main(String[] args)
 	{
 		
 	}
+
 
 
 

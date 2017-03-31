@@ -5,11 +5,11 @@ import java.util.List;
 
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.components.DataSourceScanData;
+import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Spectrum;
 
 
-public class LiveDataSource implements DataSourceScanData
+public class LiveDataSource implements ScanData
 {
 
 	float maxEnergy;

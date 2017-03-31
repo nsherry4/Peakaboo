@@ -21,6 +21,7 @@ import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.interaction.SimpleDataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.plugins.vespers.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -32,7 +33,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, DataSourceDimensions, DataSourceFileFormat, StdConverter {
+public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, DataSourceDimensions, DataSourceFileFormat, ScanData, StdConverter {
 
 	private static final String DEFAULT_DATASET_NAME = "XRF_Data_Set";
 	
@@ -844,6 +845,11 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	@Override
 	public DataSourceInteraction getInteraction() {
 		return interaction;
+	}
+
+	@Override
+	public ScanData getScanData() {
+		return this;
 	}
 
 

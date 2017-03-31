@@ -1,4 +1,4 @@
-package peakaboo.datasource.components;
+package peakaboo.datasource.components.scandata;
 
 
 import java.util.List;
@@ -7,7 +7,7 @@ import scitypes.Spectrum;
 
 
 
-public interface DataSourceScanData
+public interface ScanData
 {
 
 	/**

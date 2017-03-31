@@ -19,7 +19,7 @@ public class DummyDimensions implements DataSourceDimensions {
 	@Override
 	public Coord<Integer> getDataDimensions()
 	{
-		return new Coord<Integer>(datasource.scanCount(), 1);
+		return new Coord<Integer>(datasource.getScanData().scanCount(), 1);
 	}
 
 

@@ -19,15 +19,18 @@ import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.scandata.ScanData;
+import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
 
-public class AmptekMCA extends AbstractDataSource {
+public class AmptekMCA extends AbstractDataSource implements ScanData {
 
 	private Spectrum spectrum;
 	private String scanName; 
+	
 	
 	public AmptekMCA() {
 
@@ -87,6 +90,12 @@ public class AmptekMCA extends AbstractDataSource {
 		return new SimpleFileFormat(true, "Amptek MCA", "Amptek MCA XRF data format", Arrays.asList("mca"));
 	}
 	
+	@Override
+	public ScanData getScanData() {
+		return this;
+	}
+
+	
 	
 
 	@Override
@@ -102,6 +111,7 @@ public class AmptekMCA extends AbstractDataSource {
 		throw new UnsupportedOperationException();
 	}
 
+	
 
 	
 	//==============================================
@@ -119,6 +129,7 @@ public class AmptekMCA extends AbstractDataSource {
 	public DataSourceMetadata getMetadata() {
 		return null;
 	}
+
 	
 
 

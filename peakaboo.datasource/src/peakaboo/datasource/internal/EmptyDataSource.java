@@ -8,6 +8,8 @@ import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.interaction.DataSourceInteraction;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.scandata.ScanData;
+import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
@@ -50,33 +52,11 @@ public class EmptyDataSource implements DataSource, DataSourceFileFormat {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Spectrum get(int index) {
-		throw new IndexOutOfBoundsException(); 
-	}
+
 	
 	// DSScanData //
 	
 
-	@Override
-	public int scanCount() {
-		return 0;
-	}
-
-	@Override
-	public List<String> scanNames() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public float maxEnergy() {
-		return 0;
-	}
-
-	@Override
-	public String datasetName() {
-		return "";
-	}
 
 	@Override
 	public String getFormatName() {
@@ -107,6 +87,11 @@ public class EmptyDataSource implements DataSource, DataSourceFileFormat {
 	@Override
 	public DataSourceInteraction getInteraction() {
 		return null;
+	}
+
+	@Override
+	public ScanData getScanData() {
+		return new SimpleScanData("");
 	}
 
 

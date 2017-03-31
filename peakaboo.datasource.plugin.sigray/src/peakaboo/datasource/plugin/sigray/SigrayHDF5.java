@@ -17,6 +17,8 @@ import peakaboo.datasource.components.dimensions.DataSourceDimensions;
 import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.scandata.ScanData;
+import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -24,9 +26,7 @@ import scitypes.Spectrum;
 
 public class SigrayHDF5 extends AbstractDataSource {
 
-	private List<Spectrum> scans;
-	private String datasetName;
-	private float maxEnergy;
+	private SimpleScanData scandata;
 
 	private SigrayHDF5Dimensions dimensions;
 
@@ -56,7 +56,8 @@ public class SigrayHDF5 extends AbstractDataSource {
 	@Override
 	public void read(String filename) throws Exception {
 
-		datasetName = new File(filename).getName();
+		scandata = new SimpleScanData(new File(filename).getName());
+
 		
 		
 		IHDF5SimpleReader reader = HDF5Factory.openForReading(filename);
@@ -91,10 +92,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 		// max energy
 		float[] energy = reader.readFloatArray("/MAPS/energy");
-		maxEnergy = energy[dimensions.dz - 1];
-
-		// real scan data
-		scans = SpectrumList.create("sigray " + filename);
+		scandata.setMaxEnergy(energy[dimensions.dz - 1]);
 
 		/*
 		 * data is stored im mca_arr in x, y, z order, but we're going through
@@ -118,7 +116,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 					s.set((int) z, mca_arr[mca_index]);
 				}
-				scans.set(scan_index, s);
+				scandata.set(scan_index, s);
 			}
 			getInteraction().notifyScanRead(dimensions.dx);
 		}
@@ -133,36 +131,6 @@ public class SigrayHDF5 extends AbstractDataSource {
 		read(filenames.get(0));
 	}
 
-	@Override
-	public Spectrum get(int index) throws IndexOutOfBoundsException {
-		return scans.get(index);
-	}
-
-	@Override
-	public int scanCount() {
-		return scans.size();
-	}
-
-	@Override
-	public List<String> scanNames() {
-		List<String> names = new ArrayList<>();
-		int count = 0;
-		for (Spectrum scan : scans) {
-			names.add("Scan #" + count);
-			count++;
-		}
-		return names;
-	}
-
-	@Override
-	public float maxEnergy() {
-		return maxEnergy;
-	}
-
-	@Override
-	public String datasetName() {
-		return datasetName;
-	}
 
 
 	@Override
@@ -184,6 +152,11 @@ public class SigrayHDF5 extends AbstractDataSource {
 				"Sigray HDF5", 
 				"Sigray XRF scans in an HDF5 container", 
 				Arrays.asList("h5"));
+	}
+
+	@Override
+	public ScanData getScanData() {
+		return scandata;
 	}
 
 }
@@ -210,8 +183,8 @@ class SigrayHDF5Dimensions implements DataSourceDimensions {
 
 		Number x1 = getRealCoordinatesAtIndex(0).x;
 		Number y1 = getRealCoordinatesAtIndex(0).y;
-		Number x2 = getRealCoordinatesAtIndex(datasource.scanCount() - 1).x;
-		Number y2 = getRealCoordinatesAtIndex(datasource.scanCount() - 1).y;
+		Number x2 = getRealCoordinatesAtIndex(datasource.getScanData().scanCount() - 1).x;
+		Number y2 = getRealCoordinatesAtIndex(datasource.getScanData().scanCount() - 1).y;
 
 		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
 		Bounds<Number> yDim = new Bounds<Number>(y1, y2);
