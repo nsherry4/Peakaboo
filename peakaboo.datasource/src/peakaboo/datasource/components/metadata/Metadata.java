@@ -1,7 +1,7 @@
 package peakaboo.datasource.components.metadata;
 
 
-public interface DataSourceMetadata
+public interface Metadata
 {
 
 	

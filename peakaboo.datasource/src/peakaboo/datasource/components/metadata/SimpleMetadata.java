@@ -1,6 +1,6 @@
 package peakaboo.datasource.components.metadata;
 
-public class StoredDataSourceMetadata implements DataSourceMetadata {
+public class SimpleMetadata implements Metadata {
 
 	public String creationTime;
 	public String creator;

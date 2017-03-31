@@ -24,7 +24,7 @@ import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.data.support.ConverterFactoryException;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.PluginDataSource;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.internal.DelegatingDataSource;
 import peakaboo.datasource.plugins.vespers.vespers.data.converter.factory.MapXYVespersToPDSConverterFactory;
 
@@ -32,7 +32,7 @@ import peakaboo.datasource.plugins.vespers.vespers.data.converter.factory.MapXYV
  * @author maxweld
  *
  */
-public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource implements StdConverter, PluginDataSource, DataSourceFileFormat {
+public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource implements StdConverter, PluginDataSource, FileFormat {
 
 	private static final String DATA_FILE_FIRST_LINE = "# CLS Data Acquisition";
 

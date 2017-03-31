@@ -1,6 +1,6 @@
 package peakaboo.datasource.components.interaction;
 
-public class SimpleDataSourceInteraction implements DataSourceInteraction {
+public class SimpleInteraction implements Interaction {
 
 	public int scanCount, scansRead;
 	public boolean aborted;

@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Spectrum;
 
@@ -138,7 +138,7 @@ public class CSV extends AbstractDataSource implements ScanData
 	
 
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return new SimpleFileFormat(
 				true,
 				"CSV (Comma Separated Values)",
@@ -148,13 +148,13 @@ public class CSV extends AbstractDataSource implements ScanData
 	
 	
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return null;
 	}
 
 
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return null;
 	}
 

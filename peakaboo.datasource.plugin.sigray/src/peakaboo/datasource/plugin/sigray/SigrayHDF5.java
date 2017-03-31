@@ -13,10 +13,10 @@ import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
@@ -134,19 +134,19 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return null;
 	}
 
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return dimensions;
 
 	}
 
 
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return new SimpleFileFormat(
 				true, 
 				"Sigray HDF5", 
@@ -161,7 +161,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 }
 
-class SigrayHDF5Dimensions implements DataSourceDimensions {
+class SigrayHDF5Dimensions implements Dimensions {
 
 	protected int dx, dy, dz;
 	protected Coord<Number> coords[][];

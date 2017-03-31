@@ -13,9 +13,9 @@ import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -24,7 +24,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, DataSourceDimensions, DataSourceFileFormat, ScanData
+public class CDFMLSax extends AbstractDataSource implements Metadata, Dimensions, FileFormat, ScanData
 {
 
 	int											scanReadCount;
@@ -398,7 +398,7 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, 
 	
 
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return this;
 	}
 
@@ -634,13 +634,13 @@ public class CDFMLSax extends AbstractDataSource implements DataSourceMetadata, 
 
 
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return this;
 	}
 
 
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return this;
 	}
 

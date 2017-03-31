@@ -2,7 +2,7 @@ package peakaboo.datasource.plugins.vespers;
 
 import java.util.Arrays;
 
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 
 /**
@@ -30,7 +30,7 @@ public class ScienceStudio extends ConverterFactoryDelegatingDSP
 	
 	
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return new SimpleFileFormat(
 				true, 
 				"Vespers XRF", 

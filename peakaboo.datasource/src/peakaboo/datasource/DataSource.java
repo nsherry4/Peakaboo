@@ -2,10 +2,10 @@ package peakaboo.datasource;
 
 import java.util.List;
 
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.interaction.Interaction;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 
 public interface DataSource
@@ -15,10 +15,10 @@ public interface DataSource
 	/**
 	 * Returns a DataSourceMetadata, or null
 	 */
-	DataSourceMetadata getMetadata();
+	Metadata getMetadata();
 	
 	/**
-	 * Tests if a DataSource has metadata defined in {@link DataSourceMetadata}
+	 * Tests if a DataSource has metadata defined in {@link Metadata}
 	 * @return true if the data is provided, false otherwise
 	 */
 	default boolean hasMetadata() {
@@ -28,7 +28,7 @@ public interface DataSource
 	
 	
 	
-	DataSourceDimensions getDimensions();
+	Dimensions getDimensions();
 	
 	default boolean hasDimensions() {
 		return (getDimensions() != null);		
@@ -37,10 +37,10 @@ public interface DataSource
 
 	
 
-	DataSourceFileFormat getFileFormat();
+	FileFormat getFileFormat();
 	
-	void setInteraction(DataSourceInteraction interaction);
-	DataSourceInteraction getInteraction();
+	void setInteraction(Interaction interaction);
+	Interaction getInteraction();
 	
 	default boolean hasInteraction() {
 		return (getInteraction() != null);

@@ -3,14 +3,14 @@ package peakaboo.datasource.components.interaction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class CallbackDataSourceInteraction implements DataSourceInteraction {
+public class CallbackInteraction implements Interaction {
 
 	private Supplier<Boolean>	fn_isAborted;
 	private Consumer<Integer>	fn_readScanCallback;
 	private Consumer<Integer>	fn_getScanCountCallback;
 	
 
-	public CallbackDataSourceInteraction(
+	public CallbackInteraction(
 			Consumer<Integer> getScanCountCallback, 
 			Consumer<Integer> readScanCallback,
 			Supplier<Boolean> isAborted

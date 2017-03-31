@@ -5,7 +5,7 @@ import scitypes.Coord;
 import scitypes.SISize;
 
 
-public interface DataSourceDimensions
+public interface Dimensions
 {
 
 	/**

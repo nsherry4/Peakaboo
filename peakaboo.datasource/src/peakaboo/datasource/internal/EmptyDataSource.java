@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.interaction.Interaction;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
@@ -18,12 +18,12 @@ import scitypes.Spectrum;
  * @author maxweld
  * 
  */
-public class EmptyDataSource implements DataSource, DataSourceFileFormat {
+public class EmptyDataSource implements DataSource, FileFormat {
 
 	// Data Source //
 	
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return null;
 	}
 
@@ -70,22 +70,22 @@ public class EmptyDataSource implements DataSource, DataSourceFileFormat {
 
 	
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return null;
 	}
 
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return this;
 	}
 
 	@Override
-	public void setInteraction(DataSourceInteraction interaction) {
+	public void setInteraction(Interaction interaction) {
 		
 	}
 	
 	@Override
-	public DataSourceInteraction getInteraction() {
+	public Interaction getInteraction() {
 		return null;
 	}
 

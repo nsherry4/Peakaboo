@@ -16,11 +16,11 @@ import ca.sciencestudio.data.standard.StdUnits;
 import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
-import peakaboo.datasource.components.interaction.SimpleDataSourceInteraction;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.interaction.Interaction;
+import peakaboo.datasource.components.interaction.SimpleInteraction;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.plugins.vespers.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
@@ -33,7 +33,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, DataSourceMetadata, DataSourceDimensions, DataSourceFileFormat, ScanData, StdConverter {
+public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, Metadata, Dimensions, FileFormat, ScanData, StdConverter {
 
 	private static final String DEFAULT_DATASET_NAME = "XRF_Data_Set";
 	
@@ -673,7 +673,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	// DataSource //
 	
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return this;
 	}
 	
@@ -684,7 +684,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return this;
 	}
 
@@ -817,7 +817,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return this;
 	}
 
@@ -835,15 +835,15 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	
 	
 	
-	private DataSourceInteraction interaction = new SimpleDataSourceInteraction();
+	private Interaction interaction = new SimpleInteraction();
 	
 	@Override
-	public void setInteraction(DataSourceInteraction interaction) {
+	public void setInteraction(Interaction interaction) {
 		this.interaction = interaction;
 	}
 
 	@Override
-	public DataSourceInteraction getInteraction() {
+	public Interaction getInteraction() {
 		return interaction;
 	}
 

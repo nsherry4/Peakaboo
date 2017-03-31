@@ -14,15 +14,15 @@ import java.util.Scanner;
 import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Spectrum;
 
-public class Emsa extends AbstractDataSource implements DataSourceFileFormat, ScanData {
+public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 
 	private List<Spectrum> scans;
 	private float maxEnergy = 0;
@@ -71,7 +71,7 @@ public class Emsa extends AbstractDataSource implements DataSourceFileFormat, Sc
 
 	
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return this;
 	}
 	
@@ -234,12 +234,12 @@ public class Emsa extends AbstractDataSource implements DataSourceFileFormat, Sc
 	
 
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return null;
 	}
 	
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return null;
 	}
 

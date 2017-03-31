@@ -14,8 +14,8 @@ import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.PluginDataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.internal.CroppedDataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -142,7 +142,7 @@ public class DataController extends Eventful implements IDataController
 	}
 	
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return dataModel.getDimensions();
 	}
 
@@ -196,7 +196,7 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.hasMetadata();
 	}
 	
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		if (dataModel == null) { return null; }
 		return dataModel.getMetadata();
 	}

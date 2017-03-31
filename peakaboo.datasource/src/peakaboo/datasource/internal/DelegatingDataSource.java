@@ -3,10 +3,10 @@ package peakaboo.datasource.internal;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.interaction.Interaction;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Spectrum;
 
@@ -27,16 +27,16 @@ public class DelegatingDataSource implements DataSource {
 	}
 	
 	@Override
-	public void setInteraction(DataSourceInteraction interaction) {
+	public void setInteraction(Interaction interaction) {
 		this.backer.setInteraction(interaction);
 	}
 	@Override
-	public DataSourceInteraction getInteraction() {
+	public Interaction getInteraction() {
 		return this.backer.getInteraction();
 	}
 
 	
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return backer.getMetadata();
 	}
 
@@ -44,7 +44,7 @@ public class DelegatingDataSource implements DataSource {
 		return backer.hasMetadata();
 	}
 
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return backer.getDimensions();
 	}
 
@@ -52,7 +52,7 @@ public class DelegatingDataSource implements DataSource {
 		return backer.hasDimensions();
 	}
 
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return backer.getFileFormat();
 	}
 

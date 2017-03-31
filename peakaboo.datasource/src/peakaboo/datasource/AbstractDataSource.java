@@ -1,12 +1,12 @@
 package peakaboo.datasource;
 
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
-import peakaboo.datasource.components.interaction.SimpleDataSourceInteraction;
+import peakaboo.datasource.components.interaction.Interaction;
+import peakaboo.datasource.components.interaction.SimpleInteraction;
 
 public abstract class AbstractDataSource implements PluginDataSource
 {
 
-	private DataSourceInteraction interaction = new SimpleDataSourceInteraction();
+	private Interaction interaction = new SimpleInteraction();
 	
 	@Override
 	public boolean pluginEnabled()
@@ -16,11 +16,11 @@ public abstract class AbstractDataSource implements PluginDataSource
 	
 	
 	@Override
-	public void setInteraction(DataSourceInteraction interaction) {
+	public void setInteraction(Interaction interaction) {
 		this.interaction = interaction;
 	}
 	
-	public DataSourceInteraction getInteraction() {
+	public Interaction getInteraction() {
 		return interaction;
 	}
 

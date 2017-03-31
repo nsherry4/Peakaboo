@@ -15,10 +15,10 @@ import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
@@ -86,7 +86,7 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 
 
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return new SimpleFileFormat(true, "Amptek MCA", "Amptek MCA XRF data format", Arrays.asList("mca"));
 	}
 	
@@ -120,13 +120,13 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 	
 
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		return null;
 	}
 
 	
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return null;
 	}
 

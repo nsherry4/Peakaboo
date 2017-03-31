@@ -2,7 +2,7 @@ package peakaboo.datasource.components.fileformat;
 
 import java.util.List;
 
-public interface DataSourceFileFormat {
+public interface FileFormat {
 
 	/**
 	 * Returns a list of strings representing the file extensions that

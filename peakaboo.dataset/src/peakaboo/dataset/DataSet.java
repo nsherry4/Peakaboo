@@ -15,11 +15,11 @@ import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.PluginDataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
+import peakaboo.datasource.components.dimensions.Dimensions;
 import peakaboo.datasource.components.dimensions.DummyDimensions;
-import peakaboo.datasource.components.interaction.CallbackDataSourceInteraction;
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.interaction.CallbackInteraction;
+import peakaboo.datasource.components.interaction.Interaction;
+import peakaboo.datasource.components.metadata.Metadata;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Bounds;
@@ -247,7 +247,7 @@ public class DataSet extends AbstractDataSet
 
 				try
 				{
-					dataSource.setInteraction(new CallbackDataSourceInteraction(gotScanCount, readScans, isAborted));
+					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
 					if (filenames.size() == 1)
 					{
 						dataSource.read(filenames.get(0));
@@ -412,7 +412,7 @@ public class DataSet extends AbstractDataSet
 	
 
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return dataSource.getMetadata();
 	}
 	
@@ -444,7 +444,7 @@ public class DataSet extends AbstractDataSet
 	}
 	
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		if (dataSource.hasDimensions()) {
 			return dataSource.getDimensions();
 		} else {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SimpleFileFormat implements DataSourceFileFormat {
+public class SimpleFileFormat implements FileFormat {
 
 	private List<String> extensions;
 	private String name, desc;

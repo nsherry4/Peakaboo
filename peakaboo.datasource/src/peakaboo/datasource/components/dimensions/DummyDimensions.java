@@ -7,7 +7,7 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 
-public class DummyDimensions implements DataSourceDimensions {
+public class DummyDimensions implements Dimensions {
 
 	DataSource datasource;
 	

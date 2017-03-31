@@ -7,10 +7,10 @@ import com.sun.xml.internal.ws.server.UnsupportedMediaException;
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.DataSourceDimensions;
-import peakaboo.datasource.components.fileformat.DataSourceFileFormat;
-import peakaboo.datasource.components.interaction.DataSourceInteraction;
-import peakaboo.datasource.components.metadata.DataSourceMetadata;
+import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.interaction.Interaction;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -19,7 +19,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class CroppedDataSource implements DataSource, DataSourceDimensions, ScanData
+public class CroppedDataSource implements DataSource, Dimensions, ScanData
 {
 
 	private FList<String>				scannames = new FList<String>();
@@ -192,31 +192,31 @@ public class CroppedDataSource implements DataSource, DataSourceDimensions, Scan
 
 
 	@Override
-	public DataSourceMetadata getMetadata() {
+	public Metadata getMetadata() {
 		return originalDataSource.getMetadata();
 	}
 
 
 	@Override
-	public DataSourceDimensions getDimensions() {
+	public Dimensions getDimensions() {
 		if (!originalDataSource.hasDimensions()) { return null; }
 		return this;
 	}
 
 
 	@Override
-	public DataSourceFileFormat getFileFormat() {
+	public FileFormat getFileFormat() {
 		return originalDataSource.getFileFormat();
 	}
 
 
 	@Override
-	public void setInteraction(DataSourceInteraction interaction) {
+	public void setInteraction(Interaction interaction) {
 		originalDataSource.setInteraction(interaction);
 	}
 
 	@Override
-	public DataSourceInteraction getInteraction() {
+	public Interaction getInteraction() {
 		return originalDataSource.getInteraction();
 	}
 
