@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -64,6 +65,7 @@ import com.ezware.dialog.task.TaskDialogs;
 
 import commonenvironment.AbstractFile;
 import commonenvironment.Apps;
+import commonenvironment.Env;
 import commonenvironment.IOOperations;
 import eventful.EventfulEnumListener;
 import eventful.EventfulListener;
@@ -687,6 +689,24 @@ public class PlotPanel extends ClearPanel
 
 		menu.addSeparator();
 
+		menu.add(createMenuItem(
+				"Open Plugins Folder", null, "Opens the Plugins Folder to Add or Remove Plugin Files",
+				e -> {
+					File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
+					appDataDir.mkdirs();
+					Desktop desktop = Desktop.getDesktop();
+					try {
+						desktop.open(appDataDir);
+					} catch (IOException e1) {
+						TaskDialogs.showException(e1);
+						e1.printStackTrace();
+					}
+				},
+				null, KeyEvent.VK_X
+		));		
+		
+		menu.addSeparator();
+		
 		
 		menu.add(createMenuItem(
 				"Exit", StockIcon.WINDOW_CLOSE.toMenuIcon(), "Exits the Program",

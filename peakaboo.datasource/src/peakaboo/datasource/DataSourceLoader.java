@@ -33,7 +33,7 @@ public class DataSourceLoader
 				newLoader.register();
 				
 				//load jars in the app data directory
-				File appDataDir = Env.appDataDirectory(Version.program_name);
+				File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
 				appDataDir.mkdirs();
 				newLoader.register(appDataDir);
 					
