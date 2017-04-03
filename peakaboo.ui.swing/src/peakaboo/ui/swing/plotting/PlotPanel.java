@@ -1313,8 +1313,8 @@ public class PlotPanel extends ClearPanel
 						results,
 						controller.data().getDatasetName(),
 						controller.data().getDimensions().getDataDimensions(),
-						controller.data().getDimensions().getRealDimensions(),
-						controller.data().getDimensions().getRealDimensionsUnit(),
+						controller.data().getDimensions().getPhysicalDimensions(),
+						controller.data().getDimensions().getPhysicalUnit(),
 						controller.data().getDiscardedScanList()
 					);
 				

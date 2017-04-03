@@ -15,8 +15,8 @@ import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.PluginDataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
-import peakaboo.datasource.components.dimensions.DummyDimensions;
+import peakaboo.datasource.components.datasize.DataSize;
+import peakaboo.datasource.components.datasize.DummyDimensions;
 import peakaboo.datasource.components.interaction.CallbackInteraction;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -383,7 +383,7 @@ public class DataSet extends AbstractDataSet
 			max = Math.max(max, SpectrumCalculations.max(current));
 			
 			//read the real coordinates for this scan
-			if (ds.hasDimensions()) realCoords.add(ds.getDimensions().getRealCoordinatesAtIndex(i));
+			if (ds.hasDimensions()) realCoords.add(ds.getDimensions().getPhysicalCoordinatesAtIndex(i));
 			
 			
 			if (applying != null) applying.workUnitCompleted();
@@ -444,7 +444,7 @@ public class DataSet extends AbstractDataSet
 	}
 	
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		if (dataSource.hasDimensions()) {
 			return dataSource.getDimensions();
 		} else {

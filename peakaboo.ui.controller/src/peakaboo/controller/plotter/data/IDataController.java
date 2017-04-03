@@ -8,7 +8,7 @@ import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -62,7 +62,7 @@ public interface IDataController extends IEventful
 	Metadata getMetadata();
 	
 	boolean hasDimensions();
-	Dimensions getDimensions();
+	DataSize getDimensions();
 	
 	String getCurrentScanName();
 

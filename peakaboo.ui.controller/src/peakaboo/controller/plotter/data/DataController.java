@@ -14,7 +14,7 @@ import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.PluginDataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.internal.CroppedDataSource;
 import peakaboo.filter.model.FilterSet;
@@ -142,7 +142,7 @@ public class DataController extends Eventful implements IDataController
 	}
 	
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return dataModel.getDimensions();
 	}
 

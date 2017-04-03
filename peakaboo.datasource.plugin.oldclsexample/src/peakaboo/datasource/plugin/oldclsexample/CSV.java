@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -154,7 +154,7 @@ public class CSV extends AbstractDataSource implements ScanData
 
 
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return null;
 	}
 

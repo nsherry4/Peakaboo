@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -70,7 +70,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 	
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return null;
 	}
 

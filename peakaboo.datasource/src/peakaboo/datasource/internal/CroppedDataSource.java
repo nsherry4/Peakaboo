@@ -7,7 +7,7 @@ import com.sun.xml.internal.ws.server.UnsupportedMediaException;
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -19,7 +19,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class CroppedDataSource implements DataSource, Dimensions, ScanData
+public class CroppedDataSource implements DataSource, DataSize, ScanData
 {
 
 	private FList<String>				scannames = new FList<String>();
@@ -124,7 +124,7 @@ public class CroppedDataSource implements DataSource, Dimensions, ScanData
 	}
 
 
-	public Coord<Number> getRealCoordinatesAtIndex(int index)
+	public Coord<Number> getPhysicalCoordinatesAtIndex(int index)
 	{
 		
 		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
@@ -140,20 +140,20 @@ public class CroppedDataSource implements DataSource, Dimensions, ScanData
 		
 		int realIndex = origgrid.getIndexFromXY(x, y);
 				
-		return originalDataSource.getDimensions().getRealCoordinatesAtIndex(realIndex);
+		return originalDataSource.getDimensions().getPhysicalCoordinatesAtIndex(realIndex);
 	
 	}
 
 
-	public Coord<Bounds<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getPhysicalDimensions()
 	{		
 		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
 		Coord<Number> bottomLeft, bottomRight, topLeft;
 		
-		bottomLeft 	= getRealCoordinatesAtIndex(0);
-		topLeft 	= getRealCoordinatesAtIndex(grid.getIndexFromXY( 0, 				rangeY.size()-1	));
-		bottomRight = getRealCoordinatesAtIndex(grid.getIndexFromXY( rangeX.size()-1, 	0				));
+		bottomLeft 	= getPhysicalCoordinatesAtIndex(0);
+		topLeft 	= getPhysicalCoordinatesAtIndex(grid.getIndexFromXY( 0, 				rangeY.size()-1	));
+		bottomRight = getPhysicalCoordinatesAtIndex(grid.getIndexFromXY( rangeX.size()-1, 	0				));
 		//topRight	= getRealCoordinatesAtIndex(grid.getIndexFromXY( rangeX.size()-1, 	rangeY.size()-1	));
 				
 		Bounds<Number> bx = new Bounds<Number>(bottomLeft.x, bottomRight.x);
@@ -165,10 +165,10 @@ public class CroppedDataSource implements DataSource, Dimensions, ScanData
 	}
 
 
-	public SISize getRealDimensionsUnit()
+	public SISize getPhysicalUnit()
 	{
 		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
-		return originalDataSource.getDimensions().getRealDimensionsUnit();
+		return originalDataSource.getDimensions().getPhysicalUnit();
 	}
 
 
@@ -198,7 +198,7 @@ public class CroppedDataSource implements DataSource, Dimensions, ScanData
 
 
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		if (!originalDataSource.hasDimensions()) { return null; }
 		return this;
 	}

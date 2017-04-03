@@ -2,7 +2,7 @@ package peakaboo.datasource;
 
 import java.util.List;
 
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -28,7 +28,7 @@ public interface DataSource
 	
 	
 	
-	Dimensions getDimensions();
+	DataSize getDimensions();
 	
 	default boolean hasDimensions() {
 		return (getDimensions() != null);		

@@ -13,7 +13,7 @@ import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
@@ -24,7 +24,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class CDFMLSax extends AbstractDataSource implements Metadata, Dimensions, FileFormat, ScanData
+public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, FileFormat, ScanData
 {
 
 	int											scanReadCount;
@@ -259,7 +259,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, Dimensions
 
 	
 	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index)
+	public Coord<Number> getPhysicalCoordinatesAtIndex(int index)
 	{
 		Coord<Number> dims = new Coord<Number>(0, 0);
 
@@ -371,7 +371,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, Dimensions
 
 
 	@Override
-	public Coord<Bounds<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getPhysicalDimensions()
 	{
 		float x1, x2, y1, y2;
 
@@ -388,7 +388,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, Dimensions
 
 
 	@Override
-	public SISize getRealDimensionsUnit()
+	public SISize getPhysicalUnit()
 	{
 		return SISize.valueOf(  reader.getAttr(CDFMLStrings.ATTR_DIM_X_START, 1)  );
 	}
@@ -634,7 +634,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, Dimensions
 
 
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return this;
 	}
 

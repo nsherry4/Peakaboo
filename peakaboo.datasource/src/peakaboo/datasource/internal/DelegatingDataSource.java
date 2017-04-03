@@ -3,7 +3,7 @@ package peakaboo.datasource.internal;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -44,7 +44,7 @@ public class DelegatingDataSource implements DataSource {
 		return backer.hasMetadata();
 	}
 
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return backer.getDimensions();
 	}
 

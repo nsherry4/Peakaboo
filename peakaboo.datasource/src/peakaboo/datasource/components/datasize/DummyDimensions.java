@@ -1,4 +1,4 @@
-package peakaboo.datasource.components.dimensions;
+package peakaboo.datasource.components.datasize;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 
-public class DummyDimensions implements Dimensions {
+public class DummyDimensions implements DataSize {
 
 	DataSource datasource;
 	
@@ -24,7 +24,7 @@ public class DummyDimensions implements Dimensions {
 
 
 	@Override
-	public Coord<Bounds<Number>> getRealDimensions()
+	public Coord<Bounds<Number>> getPhysicalDimensions()
 	{
 		return null;
 	}
@@ -35,13 +35,13 @@ public class DummyDimensions implements Dimensions {
 	
 
 	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
+	public Coord<Number> getPhysicalCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
 		return null;
 	}
 
 
 	@Override
-	public SISize getRealDimensionsUnit() {
+	public SISize getPhysicalUnit() {
 		return null;
 	}
 

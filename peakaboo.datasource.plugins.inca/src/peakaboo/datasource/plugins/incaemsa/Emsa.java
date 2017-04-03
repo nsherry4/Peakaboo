@@ -14,7 +14,7 @@ import java.util.Scanner;
 import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.scandata.ScanData;
@@ -239,7 +239,7 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 	
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return null;
 	}
 

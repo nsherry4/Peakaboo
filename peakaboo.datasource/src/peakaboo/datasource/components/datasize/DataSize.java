@@ -1,11 +1,11 @@
-package peakaboo.datasource.components.dimensions;
+package peakaboo.datasource.components.datasize;
 
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
 
 
-public interface Dimensions
+public interface DataSize
 {
 
 	/**
@@ -13,19 +13,19 @@ public interface Dimensions
 	 * @param index the index of the scan to get coordinates for
 	 * @return the real (spatial) coordinates for the requested scan
 	 */
-	Coord<Number> getRealCoordinatesAtIndex(int index) throws IndexOutOfBoundsException;
+	Coord<Number> getPhysicalCoordinatesAtIndex(int index) throws IndexOutOfBoundsException;
 
 	/**
 	 * Get the real (spatial) dimensions of this map.
 	 * @return x,y pair of start,end pairs of spatial dimensions
 	 */
-	Coord<Bounds<Number>> getRealDimensions();
+	Coord<Bounds<Number>> getPhysicalDimensions();
 
 	/**
 	 * Returns a string representation of the units used in measurement
 	 * @return the units used for measurement
 	 */
-	SISize getRealDimensionsUnit();
+	SISize getPhysicalUnit();
 
 	/**
 	 * Returns the dimensions of the data in this map

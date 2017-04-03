@@ -3,7 +3,7 @@ package peakaboo.dataset;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -173,7 +173,7 @@ public class EmptyDataSet extends AbstractDataSet
 	}
 
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		// TODO Auto-generated method stub
 		return null;
 	}

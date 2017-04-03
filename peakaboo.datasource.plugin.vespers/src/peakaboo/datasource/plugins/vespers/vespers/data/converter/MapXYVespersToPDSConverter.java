@@ -16,7 +16,7 @@ import ca.sciencestudio.data.standard.StdUnits;
 import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.interaction.SimpleInteraction;
@@ -33,7 +33,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, Metadata, Dimensions, FileFormat, ScanData, StdConverter {
+public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, Metadata, DataSize, FileFormat, ScanData, StdConverter {
 
 	private static final String DEFAULT_DATASET_NAME = "XRF_Data_Set";
 	
@@ -684,7 +684,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return this;
 	}
 
@@ -749,12 +749,12 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	// DSRealDimensions //
 	
 	@Override
-	public Coord<Bounds<Number>> getRealDimensions() {
+	public Coord<Bounds<Number>> getPhysicalDimensions() {
 		return new Coord<Bounds<Number>>(new Bounds<Number>(startX, endX), new Bounds<Number>(startY, endY));
 	}
 	
 	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index) {
+	public Coord<Number> getPhysicalCoordinatesAtIndex(int index) {
 		Coord<Integer> dataCoords = getDataCoordinatesAtIndex(index);
 		double realCoordX = startX;
 		if(sizeX > 1) {
@@ -768,7 +768,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public SISize getRealDimensionsUnit() {
+	public SISize getPhysicalUnit() {
 		return SISize.mm;
 	}
 

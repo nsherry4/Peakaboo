@@ -15,7 +15,7 @@ import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -120,7 +120,7 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 	
 
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return null;
 	}
 

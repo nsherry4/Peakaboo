@@ -13,7 +13,7 @@ import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.SpectrumList;
-import peakaboo.datasource.components.dimensions.Dimensions;
+import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -139,7 +139,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 	}
 
 	@Override
-	public Dimensions getDimensions() {
+	public DataSize getDimensions() {
 		return dimensions;
 
 	}
@@ -161,7 +161,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 }
 
-class SigrayHDF5Dimensions implements Dimensions {
+class SigrayHDF5Dimensions implements DataSize {
 
 	protected int dx, dy, dz;
 	protected Coord<Number> coords[][];
@@ -173,18 +173,18 @@ class SigrayHDF5Dimensions implements Dimensions {
 	}
 
 	@Override
-	public Coord<Number> getRealCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
+	public Coord<Number> getPhysicalCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
 		Coord<Integer> xy = getDataCoordinatesAtIndex(index);
 		return coords[xy.x][xy.y];
 	}
 
 	@Override
-	public Coord<Bounds<Number>> getRealDimensions() {
+	public Coord<Bounds<Number>> getPhysicalDimensions() {
 
-		Number x1 = getRealCoordinatesAtIndex(0).x;
-		Number y1 = getRealCoordinatesAtIndex(0).y;
-		Number x2 = getRealCoordinatesAtIndex(datasource.getScanData().scanCount() - 1).x;
-		Number y2 = getRealCoordinatesAtIndex(datasource.getScanData().scanCount() - 1).y;
+		Number x1 = getPhysicalCoordinatesAtIndex(0).x;
+		Number y1 = getPhysicalCoordinatesAtIndex(0).y;
+		Number x2 = getPhysicalCoordinatesAtIndex(datasource.getScanData().scanCount() - 1).x;
+		Number y2 = getPhysicalCoordinatesAtIndex(datasource.getScanData().scanCount() - 1).y;
 
 		Bounds<Number> xDim = new Bounds<Number>(x1, x2);
 		Bounds<Number> yDim = new Bounds<Number>(y1, y2);
@@ -193,7 +193,7 @@ class SigrayHDF5Dimensions implements Dimensions {
 	}
 
 	@Override
-	public SISize getRealDimensionsUnit() {
+	public SISize getPhysicalUnit() {
 		return units;
 	}
 
