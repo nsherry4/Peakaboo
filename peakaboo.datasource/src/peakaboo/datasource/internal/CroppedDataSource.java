@@ -11,6 +11,7 @@ import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -19,7 +20,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class CroppedDataSource implements DataSource, DataSize, ScanData
+public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, ScanData
 {
 
 	private FList<String>				scannames = new FList<String>();
@@ -89,7 +90,7 @@ public class CroppedDataSource implements DataSource, DataSize, ScanData
 	public Coord<Integer> getDataCoordinatesAtIndex(int index)
 	{
 		
-		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		if (!originalDataSource.hasDataSize()) { throw new UnsupportedOperationException(); }
 		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
 		GridPerspective<Spectrum> origgrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
@@ -102,7 +103,7 @@ public class CroppedDataSource implements DataSource, DataSize, ScanData
 		
 		int realIndex = origgrid.getIndexFromXY(x, y);
 				
-		return originalDataSource.getDimensions().getDataCoordinatesAtIndex(realIndex);
+		return originalDataSource.getDataSize().getDataCoordinatesAtIndex(realIndex);
 	}
 	
 	
@@ -127,7 +128,7 @@ public class CroppedDataSource implements DataSource, DataSize, ScanData
 	public Coord<Number> getPhysicalCoordinatesAtIndex(int index)
 	{
 		
-		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
+		if (!originalDataSource.hasDataSize()) { throw new UnsupportedOperationException(); }
 		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
 		GridPerspective<Spectrum> origgrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
@@ -140,7 +141,7 @@ public class CroppedDataSource implements DataSource, DataSize, ScanData
 		
 		int realIndex = origgrid.getIndexFromXY(x, y);
 				
-		return originalDataSource.getDimensions().getPhysicalCoordinatesAtIndex(realIndex);
+		return originalDataSource.getPhysicalSize().getPhysicalCoordinatesAtIndex(realIndex);
 	
 	}
 
@@ -167,8 +168,8 @@ public class CroppedDataSource implements DataSource, DataSize, ScanData
 
 	public SISize getPhysicalUnit()
 	{
-		if (!originalDataSource.hasDimensions()) { throw new UnsupportedOperationException(); }
-		return originalDataSource.getDimensions().getPhysicalUnit();
+		if (!originalDataSource.hasDataSize()) { throw new UnsupportedOperationException(); }
+		return originalDataSource.getPhysicalSize().getPhysicalUnit();
 	}
 
 
@@ -198,8 +199,8 @@ public class CroppedDataSource implements DataSource, DataSize, ScanData
 
 
 	@Override
-	public DataSize getDimensions() {
-		if (!originalDataSource.hasDimensions()) { return null; }
+	public DataSize getDataSize() {
+		if (!originalDataSource.hasDataSize()) { return null; }
 		return this;
 	}
 
@@ -223,6 +224,12 @@ public class CroppedDataSource implements DataSource, DataSize, ScanData
 
 	@Override
 	public ScanData getScanData() {
+		return this;
+	}
+
+
+	@Override
+	public PhysicalSize getPhysicalSize() {
 		return this;
 	}
 

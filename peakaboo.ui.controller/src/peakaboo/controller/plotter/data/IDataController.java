@@ -10,6 +10,7 @@ import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -61,8 +62,6 @@ public interface IDataController extends IEventful
 	boolean hasMetadata();
 	Metadata getMetadata();
 	
-	boolean hasDimensions();
-	DataSize getDimensions();
 	
 	String getCurrentScanName();
 
@@ -73,5 +72,9 @@ public interface IDataController extends IEventful
 	void setScanDiscarded(boolean discarded);
 	List<Integer> getDiscardedScanList();
 	void clearDiscardedScanList();
+
+	boolean hasPhysicalSize();
+	PhysicalSize getPhysicalSize();
+	DataSize getDataSize();
 	
 }

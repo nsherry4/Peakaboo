@@ -14,9 +14,11 @@ import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.datasize.DataSize;
+import peakaboo.datasource.components.datasize.SimpleDataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
@@ -28,7 +30,8 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 	private SimpleScanData scandata;
 
-	private SigrayHDF5Dimensions dimensions;
+	private SimpleDataSize dataSize;
+	private SigrayHDF5Dimensions physicalSize;
 
 	static {
         System.load("/usr/lib/jni/libsis-jhdf5.so");
@@ -64,35 +67,40 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 		HDF5DataSetInformation info = reader.getDataSetInformation("/MAPS/mca_arr");
 		long size[] = info.getDimensions();
-		dimensions = new SigrayHDF5Dimensions(this);
-		dimensions.dz = (int) size[0];
-		dimensions.dy = (int) size[1];
-		dimensions.dx = (int) size[2];
+		int dz = (int) size[0];
+		int dy = (int) size[1];
+		int dx = (int) size[2];
 
-		getInteraction().notifyScanCount(dimensions.dx * dimensions.dy);
+		physicalSize = new SigrayHDF5Dimensions(this);
+		dataSize = new SimpleDataSize();
+		dataSize.setDataWidth(dx);
+		dataSize.setDataHeight(dy);
+		
+		
+		getInteraction().notifyScanCount(dx * dy);
 		
 		float[] mca_arr = reader.readFloatArray("/MAPS/mca_arr");
 		float[] scalers = reader.readFloatArray("/MAPS/scalers");
 
 		// real scan dimensions;
-		dimensions.coords = new Coord[dimensions.dx][dimensions.dy];
-		for (int y = 0; y < dimensions.dy; y++) { // y-axis
-			for (int x = 0; x < dimensions.dx; x++) { // x-axis
+		physicalSize.coords = new Coord[dx][dy];
+		for (int y = 0; y < dy; y++) { // y-axis
+			for (int x = 0; x < dx; x++) { // x-axis
 
-				int x_index = index3(x, y, 17, dimensions.dx, dimensions.dy);
-				int y_index = index3(x, y, 18, dimensions.dx, dimensions.dy);
+				int x_index = index3(x, y, 17, dx, dy);
+				int y_index = index3(x, y, 18, dx, dy);
 
 				Coord<Number> coord = new Coord<>(scalers[x_index], scalers[y_index]);
-				dimensions.coords[x][y] = coord;
+				physicalSize.coords[x][y] = coord;
 			}
 		}
 		// TODO: no such method exception in jni?
-		dimensions.units = SISize.mm;
+		physicalSize.units = SISize.mm;
 		// SISize.valueOf(reader.readStringArray("/MAPS/scalar_units")[17]);
 
 		// max energy
 		float[] energy = reader.readFloatArray("/MAPS/energy");
-		scandata.setMaxEnergy(energy[dimensions.dz - 1]);
+		scandata.setMaxEnergy(energy[dz - 1]);
 
 		/*
 		 * data is stored im mca_arr in x, y, z order, but we're going through
@@ -104,21 +112,21 @@ public class SigrayHDF5 extends AbstractDataSource {
 		 * modifications to a spectrum at once, even though it probably means
 		 * more cache misses in the source array.
 		 */
-		for (int y = 0; y < dimensions.dy; y++) { // y-axis
-			for (int x = 0; x < dimensions.dx; x++) { // x-axis
+		for (int y = 0; y < dy; y++) { // y-axis
+			for (int x = 0; x < dx; x++) { // x-axis
 
-				int scan_index = (x + y * dimensions.dx);
-				Spectrum s = new Spectrum(dimensions.dz);
+				int scan_index = (x + y * dx);
+				Spectrum s = new Spectrum(dz);
 
-				for (int z = 0; z < dimensions.dz; z++) { // (z-axis, channels)
+				for (int z = 0; z < dz; z++) { // (z-axis, channels)
 
-					int mca_index = index3(x, y, z, dimensions.dx, dimensions.dy);
+					int mca_index = index3(x, y, z, dx, dy);
 
 					s.set((int) z, mca_arr[mca_index]);
 				}
 				scandata.set(scan_index, s);
 			}
-			getInteraction().notifyScanRead(dimensions.dx);
+			getInteraction().notifyScanRead(dx);
 		}
 
 		reader.close();
@@ -139,8 +147,8 @@ public class SigrayHDF5 extends AbstractDataSource {
 	}
 
 	@Override
-	public DataSize getDimensions() {
-		return dimensions;
+	public DataSize getDataSize() {
+		return dataSize;
 
 	}
 
@@ -159,11 +167,15 @@ public class SigrayHDF5 extends AbstractDataSource {
 		return scandata;
 	}
 
+	@Override
+	public PhysicalSize getPhysicalSize() {
+		return physicalSize;
+	}
+
 }
 
-class SigrayHDF5Dimensions implements DataSize {
+class SigrayHDF5Dimensions implements PhysicalSize {
 
-	protected int dx, dy, dz;
 	protected Coord<Number> coords[][];
 	protected SISize units;
 	private SigrayHDF5 datasource;
@@ -174,7 +186,7 @@ class SigrayHDF5Dimensions implements DataSize {
 
 	@Override
 	public Coord<Number> getPhysicalCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
-		Coord<Integer> xy = getDataCoordinatesAtIndex(index);
+		Coord<Integer> xy = datasource.getDataSize().getDataCoordinatesAtIndex(index);
 		return coords[xy.x][xy.y];
 	}
 
@@ -197,16 +209,6 @@ class SigrayHDF5Dimensions implements DataSize {
 		return units;
 	}
 
-	@Override
-	public Coord<Integer> getDataDimensions() {
-		return new Coord<Integer>(dx, dy);
-	}
 
-	@Override
-	public Coord<Integer> getDataCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
-		int cx = index % dx;
-		int cy = (index - cx) / dy;
-		return new Coord<>(cx, cy);
-	}
 
 }

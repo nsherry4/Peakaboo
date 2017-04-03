@@ -16,10 +16,11 @@ import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
-import peakaboo.datasource.components.datasize.DummyDimensions;
+import peakaboo.datasource.components.datasize.DummyDataSize;
 import peakaboo.datasource.components.interaction.CallbackInteraction;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Bounds;
@@ -178,9 +179,9 @@ public class DataSet extends AbstractDataSet
 	public int expectedScanCount()
 	{
 		
-		if (dataSource.hasDimensions()) 
+		if (dataSource.hasDataSize()) 
 		{
-			Coord<Integer> dataDimension = dataSource.getDimensions().getDataDimensions();
+			Coord<Integer> dataDimension = dataSource.getDataSize().getDataDimensions();
 			return dataDimension.x * dataDimension.y;
 		}
 		return size();
@@ -357,7 +358,7 @@ public class DataSet extends AbstractDataSet
 		
 		
 		//if this data source has dimensions, make space to store them all in a list
-		if (ds.hasDimensions())
+		if (ds.hasPhysicalSize())
 		{
 			realCoords = new ArrayList<Coord<Number>>();
 		}
@@ -383,7 +384,7 @@ public class DataSet extends AbstractDataSet
 			max = Math.max(max, SpectrumCalculations.max(current));
 			
 			//read the real coordinates for this scan
-			if (ds.hasDimensions()) realCoords.add(ds.getDimensions().getPhysicalCoordinatesAtIndex(i));
+			if (ds.hasPhysicalSize()) realCoords.add(ds.getPhysicalSize().getPhysicalCoordinatesAtIndex(i));
 			
 			
 			if (applying != null) applying.workUnitCompleted();
@@ -438,20 +439,28 @@ public class DataSet extends AbstractDataSet
 
 
 	@Override
-	public boolean hasDimensions()
+	public boolean hasPhysicalSize()
 	{
-		return dataSource.hasDimensions();
+		return dataSource.hasPhysicalSize();
 	}
 	
+	
 	@Override
-	public DataSize getDimensions() {
-		if (dataSource.hasDimensions()) {
-			return dataSource.getDimensions();
+	public PhysicalSize getPhysicalSize() {
+		return dataSource.getPhysicalSize();
+	}
+
+	
+	@Override
+	public DataSize getDataSize() {
+		if (dataSource.hasDataSize()) {
+			return dataSource.getDataSize();
 		} else {
-			return new DummyDimensions(dataSource);
+			return new DummyDataSize(dataSource);
 		}
 	}
 
+	
 
 
 

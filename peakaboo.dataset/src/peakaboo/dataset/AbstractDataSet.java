@@ -7,6 +7,7 @@ import java.util.List;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -198,15 +199,6 @@ public abstract class AbstractDataSet
 	public abstract boolean hasData();
 
 
-	/**
-	 * Does this implementation of the DataSetContainer contain dimensional information? This will depend on if the
-	 * {@link DataSource} implements {@link DataSize}
-	 * 
-	 * @return true if this dataset has dimensional information, false otherwise
-	 */
-	public abstract boolean hasDimensions();
-
-	public abstract DataSize getDimensions();
 	
 
 	/**
@@ -252,6 +244,13 @@ public abstract class AbstractDataSet
 	
 	
 	public abstract DataSource getDataSource();
+
+
+	public abstract boolean hasPhysicalSize();
+
+	public abstract PhysicalSize getPhysicalSize();
+
+	public abstract DataSize getDataSize();
 	
 	
 }

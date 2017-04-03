@@ -16,6 +16,7 @@ import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -24,7 +25,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, FileFormat, ScanData
+public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, PhysicalSize, FileFormat, ScanData
 {
 
 	int											scanReadCount;
@@ -634,15 +635,23 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 
 
 	@Override
-	public DataSize getDimensions() {
+	public DataSize getDataSize() {
 		return this;
 	}
 
+	@Override
+	public PhysicalSize getPhysicalSize() {
+		return this;
+	}
 
 	@Override
 	public FileFormat getFileFormat() {
 		return this;
 	}
+
+
+
+	
 
 
 	

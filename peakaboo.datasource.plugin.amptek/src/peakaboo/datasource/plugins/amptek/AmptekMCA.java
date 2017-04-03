@@ -19,6 +19,7 @@ import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
@@ -120,13 +121,18 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 	
 
 	@Override
-	public DataSize getDimensions() {
+	public DataSize getDataSize() {
 		return null;
 	}
 
 	
 	@Override
 	public Metadata getMetadata() {
+		return null;
+	}
+
+	@Override
+	public PhysicalSize getPhysicalSize() {
 		return null;
 	}
 

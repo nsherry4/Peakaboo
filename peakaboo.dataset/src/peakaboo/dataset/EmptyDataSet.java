@@ -5,6 +5,7 @@ import java.util.List;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -83,13 +84,6 @@ public class EmptyDataSet extends AbstractDataSet
 		return "";
 	}
 
-
-	@Override
-	public boolean hasDimensions()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 
 	@Override
@@ -173,10 +167,23 @@ public class EmptyDataSet extends AbstractDataSet
 	}
 
 	@Override
-	public DataSize getDimensions() {
+	public boolean hasPhysicalSize() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public PhysicalSize getPhysicalSize() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public DataSize getDataSize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 

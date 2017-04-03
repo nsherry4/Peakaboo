@@ -7,6 +7,7 @@ import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Spectrum;
 
@@ -44,12 +45,12 @@ public class DelegatingDataSource implements DataSource {
 		return backer.hasMetadata();
 	}
 
-	public DataSize getDimensions() {
-		return backer.getDimensions();
+	public DataSize getDataSize() {
+		return backer.getDataSize();
 	}
 
-	public boolean hasDimensions() {
-		return backer.hasDimensions();
+	public boolean hasDataSize() {
+		return backer.hasDataSize();
 	}
 
 	public FileFormat getFileFormat() {
@@ -67,6 +68,11 @@ public class DelegatingDataSource implements DataSource {
 	@Override
 	public ScanData getScanData() {
 		return backer.getScanData();
+	}
+
+	@Override
+	public PhysicalSize getPhysicalSize() {
+		return backer.getPhysicalSize();
 	}
 	
 	

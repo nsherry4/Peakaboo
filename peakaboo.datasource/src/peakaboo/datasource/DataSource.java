@@ -6,6 +6,7 @@ import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 
 public interface DataSource
@@ -28,10 +29,17 @@ public interface DataSource
 	
 	
 	
-	DataSize getDimensions();
+	DataSize getDataSize();
 	
-	default boolean hasDimensions() {
-		return (getDimensions() != null);		
+	default boolean hasDataSize() {
+		return (getDataSize() != null);		
+	}
+	
+	
+	PhysicalSize getPhysicalSize();
+	
+	default boolean hasPhysicalSize() {
+		return (getDataSize() != null);		
 	}
 	
 

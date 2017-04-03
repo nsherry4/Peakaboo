@@ -21,6 +21,7 @@ import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.interaction.SimpleInteraction;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.plugins.vespers.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
@@ -33,7 +34,7 @@ import scitypes.Spectrum;
  * @author maxweld
  *
  */
-public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, Metadata, DataSize, FileFormat, ScanData, StdConverter {
+public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter implements DataSource, Metadata, DataSize, PhysicalSize, FileFormat, ScanData, StdConverter {
 
 	private static final String DEFAULT_DATASET_NAME = "XRF_Data_Set";
 	
@@ -679,12 +680,12 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	
 
 	@Override
-	public boolean hasDimensions() {
+	public boolean hasDataSize() {
 		return (hasStartX && hasStartY && hasEndX && hasEndY);
 	}
 
 	@Override
-	public DataSize getDimensions() {
+	public DataSize getDataSize() {
 		return this;
 	}
 
@@ -849,6 +850,11 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 
 	@Override
 	public ScanData getScanData() {
+		return this;
+	}
+
+	@Override
+	public PhysicalSize getPhysicalSize() {
 		return this;
 	}
 

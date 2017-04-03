@@ -1306,15 +1306,15 @@ public class PlotPanel extends ClearPanel
 			MapResultSet results = tasks.getResult();
 
 
-			if (controller.data().hasDimensions())
+			if (controller.data().hasPhysicalSize())
 			{
 
 				mapController.mapsController.setMapData(
 						results,
 						controller.data().getDatasetName(),
-						controller.data().getDimensions().getDataDimensions(),
-						controller.data().getDimensions().getPhysicalDimensions(),
-						controller.data().getDimensions().getPhysicalUnit(),
+						controller.data().getDataSize().getDataDimensions(),
+						controller.data().getPhysicalSize().getPhysicalDimensions(),
+						controller.data().getPhysicalSize().getPhysicalUnit(),
 						controller.data().getDiscardedScanList()
 					);
 				
