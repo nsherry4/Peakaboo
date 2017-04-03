@@ -11,29 +11,27 @@ import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
 import commonenvironment.Env;
 import peakaboo.common.Version;
-import peakaboo.filter.filters.advanced.DataToWavelet;
-import peakaboo.filter.filters.advanced.FilterPartialSpectrum;
-import peakaboo.filter.filters.advanced.Identity;
-import peakaboo.filter.filters.advanced.Interpolation;
-import peakaboo.filter.filters.advanced.SpectrumNormalization;
-import peakaboo.filter.filters.advanced.WaveletToData;
-import peakaboo.filter.filters.background.BruknerRemoval;
-import peakaboo.filter.filters.background.LinearTrimRemoval;
-import peakaboo.filter.filters.background.PolynomialRemoval;
-import peakaboo.filter.filters.mathematical.Addition;
-import peakaboo.filter.filters.mathematical.Derivative;
-import peakaboo.filter.filters.mathematical.Integrate;
-import peakaboo.filter.filters.mathematical.Multiply;
-import peakaboo.filter.filters.mathematical.Subtraction;
-import peakaboo.filter.filters.noise.AggressiveWaveletNoiseFilter;
-import peakaboo.filter.filters.noise.FourierLowPass;
-import peakaboo.filter.filters.noise.MovingAverage;
-import peakaboo.filter.filters.noise.SavitskyGolaySmoothing;
-import peakaboo.filter.filters.noise.SpringSmoothing;
-import peakaboo.filter.filters.noise.WaveletNoiseFilter;
-import peakaboo.filter.filters.programming.JPython;
-import peakaboo.filter.filters.programming.Java;
 import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.plugins.advanced.DataToWavelet;
+import peakaboo.filter.plugins.advanced.FilterPartialSpectrum;
+import peakaboo.filter.plugins.advanced.Identity;
+import peakaboo.filter.plugins.advanced.Interpolation;
+import peakaboo.filter.plugins.advanced.SpectrumNormalization;
+import peakaboo.filter.plugins.advanced.WaveletToData;
+import peakaboo.filter.plugins.background.BruknerRemoval;
+import peakaboo.filter.plugins.background.LinearTrimRemoval;
+import peakaboo.filter.plugins.background.PolynomialRemoval;
+import peakaboo.filter.plugins.mathematical.Addition;
+import peakaboo.filter.plugins.mathematical.Derivative;
+import peakaboo.filter.plugins.mathematical.Integrate;
+import peakaboo.filter.plugins.mathematical.Multiply;
+import peakaboo.filter.plugins.mathematical.Subtraction;
+import peakaboo.filter.plugins.noise.AggressiveWaveletNoiseFilter;
+import peakaboo.filter.plugins.noise.FourierLowPass;
+import peakaboo.filter.plugins.noise.MovingAverage;
+import peakaboo.filter.plugins.noise.SavitskyGolaySmoothing;
+import peakaboo.filter.plugins.noise.SpringSmoothing;
+import peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 
 
 public class FilterLoader
@@ -78,9 +76,6 @@ public class FilterLoader
 				newPluginLoader.registerPlugin(SpringSmoothing.class);
 				newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
 				newPluginLoader.registerPlugin(Interpolation.class);
-				
-				newPluginLoader.registerPlugin(Java.class);
-				newPluginLoader.registerPlugin(JPython.class);
 				
 				
 				

@@ -1,18 +1,14 @@
 package peakaboo.datasource.plugin.sigray;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.DataSourceLoader;
-import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.datasize.SimpleDataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
