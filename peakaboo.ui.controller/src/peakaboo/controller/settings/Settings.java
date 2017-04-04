@@ -64,9 +64,9 @@ public class Settings
 		
 		// load filters
 		filters.filters.clearFilters();
-		for (Filter f : data.filters)
+		for (SerializedFilter f : data.filters)
 		{
-			filters.filters.addFilter(f);
+			filters.filters.addFilter(f.getFilter());
 		}
 
 		
@@ -118,7 +118,7 @@ public class Settings
 		data.fittings = fittings.selections.getFittedTransitionSeries().stream().map(ts -> new SerializedTransitionSeries(ts)).collect(toList());
 		
 		//get a copy of the in-use/created filters
-		data.filters = filters.filters.getFilters();
+		data.storeFilters(filters.filters.getFilters());
 		
 		
 		//other structs

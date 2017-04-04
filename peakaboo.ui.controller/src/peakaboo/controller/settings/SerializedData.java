@@ -34,9 +34,20 @@ public class SerializedData
 
 	public DrawingRequest					drawingRequest;
 	public SettingsModel					settings;
-	public List<Filter>						filters;
+	
 	public List<Integer>					badScans;
 
+	
+	public List<SerializedFilter>			filters = new ArrayList<>();
+	public void storeFilters(List<Filter> filters) {
+		this.filters.clear();
+		for (Filter filter : filters) {
+			this.filters.add(new SerializedFilter(filter));
+		}
+	}
+	
+	
+	
 	
 	//Outer List - list of fitting
 	//Middle List - list of TS in a fitting
@@ -77,6 +88,8 @@ public class SerializedData
 		y.dump(serial);
 		y.dump(filter);
 	}
+
+
 
 	
 }

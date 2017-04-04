@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build_plugin" name="Build Peakaboo Programming Filters Plugin">
+
+    <property name="dir.buildfile" value="."/>
+	
+    <target name="build_plugin">
+        <jar destfile="${dir.buildfile}/build/Peakaboo-Filters-Programming.jar" filesetmanifest="mergewithoutmain">
+        	<service type="peakaboo.filter.model.FilterPlugin">
+        		<provider classname="peakaboo.filter.plugins.programming.Java"/>
+        		<provider classname="peakaboo.filter.plugins.programming.JPython"/>
+        	</service>
+
+        	
+        	<fileset dir="${dir.buildfile}/bin"/>
+        	<fileset dir="${dir.buildfile}/../../Libraries/BoltCode/bin"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../../Libraries/BoltCode/jars/jruby.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../../Libraries/BoltCode/jars/jython.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../../Libraries/BoltCode/jars/org.eclipse.jdt.core_3.6.2.v_A76_R36x.jar"/>
+
+        	
+        </jar>
+    </target>
+	
+</project>

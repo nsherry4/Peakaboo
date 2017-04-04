@@ -70,9 +70,9 @@ public interface Filter {
 	Spectrum filter(Spectrum data, boolean cache);
 	
 	
-	String save();
+	Map<Integer, Object> save();
 	
-	void load(String settings);
+	void load(Map<Integer, Object> settings);
 	
 
 }

@@ -7,6 +7,5 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AutoDialog"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="lib" path="/peakaboo.ui.swing/jars/jsyntaxpane-0.9.5-b29.jar"/>
-	<classpathentry kind="lib" path="/peakaboo.common/jars/snakeyaml-1.18.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

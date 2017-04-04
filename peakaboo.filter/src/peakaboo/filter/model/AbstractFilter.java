@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.yaml.snakeyaml.Yaml;
-
 import autodialog.model.Parameter;
 import bolt.plugin.BoltPlugin;
 import peakaboo.common.Version;
@@ -238,26 +236,24 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	
 	
 	
-	public String save() {
+	public Map<Integer, Object> save() {
 		Map<Integer, Object> valuemap = new HashMap<>();
 		for (Integer key : getParameters().keySet()) {
 			valuemap.put(key, getParameter(key).getValue());
 		}
-		Yaml dumper = new Yaml();
-		return dumper.dump(valuemap);
+		return valuemap;
 	}
 	
-	public void load(String settings) {
-		Map<Integer, Object> valuemap;
-		Yaml loader = new Yaml();
-		valuemap = (Map<Integer, Object>) loader.load(settings);
+	public void load(Map<Integer, Object> settings) {
 		for (Integer key : getParameters().keySet()) {
-			setParameter(getParameter(key), valuemap.get(key));
+			setParameter(getParameter(key), settings.get(key));
 		}
 	}
 	
 	private <T> void setParameter(Parameter<T> param, Object value) {
+		System.out.println("Settings param " + param.name + " to " + value);
 		param.setValue((T)value);
+		param.getEditor().setFromParameter();
 	}
 	
 

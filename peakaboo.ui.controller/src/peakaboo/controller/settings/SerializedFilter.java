@@ -1,55 +1,62 @@
 package peakaboo.controller.settings;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import autodialog.model.Parameter;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
 
 public class SerializedFilter {
 
-	String settings;
-	String clazz;
+
+	private Filter filter;
+	
+	//These values exist only to initialize the filter, not to be read from.
+	private String clazz;
+	private Map<Integer, Object> settings;
+	
+	
 	
 	public SerializedFilter() {	}
 	
 	public SerializedFilter(Filter filter) {
 		
-		settings = filter.save();
-		System.out.println(settings);
-		clazz = filter.getClass().getName();
+		this.filter = filter;
 		
-	}
-	
-	public Filter create() {
-		FilterSet filterset = new FilterSet();
-		for (Filter f : filterset.getAvailableFilters()) {
-			if (f.getClass().getName() == clazz) {
-				System.out.println(settings);
-				f.load(settings);
-				return f;
-			}
-		}
-		return null;
 	}
 
 
 
 	public String getClazz() {
-		return clazz;
+		return filter.getClass().getName();
 	}
 
 	public void setClazz(String clazz) {
 		this.clazz = clazz;
 	}
 
-	public String getSettings() {
-		return settings;
+	public Map<Integer, Object> getSettings() {
+		System.out.println(filter.save());
+		return filter.save();
 	}
 
-	public void setSettings(String settings) {
+	public void setSettings(Map<Integer, Object> settings) {
 		this.settings = settings;
+	}
+
+	public Filter getFilter() {
+		if (filter != null) { return filter; }
+			
+		FilterSet filterset = new FilterSet();
+		for (Filter f : filterset.getAvailableFilters()) {
+			if (f.getClass().getName().equals(clazz)) {
+				filter = f;
+				filter.initialize();
+				System.out.println(settings);
+				filter.load(settings);
+				return filter;
+			}
+		}
+		throw new RuntimeException("Cannot find plugin " + clazz);
 	}
 
 	
