@@ -25,7 +25,7 @@ import peakaboo.curvefit.view.FittingMarkersPainter;
 import peakaboo.curvefit.view.FittingPainter;
 import peakaboo.curvefit.view.FittingSumPainter;
 import peakaboo.curvefit.view.FittingTitlePainter;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
@@ -294,11 +294,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		
 		// get any painters that the filters might want to add to the mix
 		PlotPainter filterPainter;
-		for (AbstractFilter f : controller.filtering().getActiveFilters())
+		for (Filter f : controller.filtering().getActiveFilters())
 		{
 			filterPainter = f.getPainter();
 			
-			if (filterPainter != null && f.enabled) {
+			if (filterPainter != null && f.isEnabled()) {
 				filterPainter.setSourceName(f.getFilterName());
 				plotPainters.add(filterPainter);
 			}

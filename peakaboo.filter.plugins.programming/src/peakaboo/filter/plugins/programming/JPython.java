@@ -4,6 +4,7 @@ package peakaboo.filter.plugins.programming;
 import autodialog.model.Parameter;
 import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
+import bolt.scripting.languages.Language;
 import bolt.scripting.languages.PythonLanguage;
 import peakaboo.filter.editors.CodeEditor;
 import peakaboo.filter.plugins.AbstractSimpleFilter;
@@ -31,15 +32,20 @@ public class JPython extends AbstractSimpleFilter {
 	public JPython() {
 		super();
 		
+	
 		try 
 		{
-			boltmap = new BoltMap<float[], float[]>(new PythonLanguage(), "spectrumIn", "spectrumOut", "");
+			Language language = new PythonLanguage();
+			language.setClassLoader(this.getClass().getClassLoader());
+			boltmap = new BoltMap<float[], float[]>(language, "spectrumIn", "spectrumOut", "");
 			boltmap.setMultithreaded(true);	
 		}
 		catch (Throwable t)
 		{
+			t.printStackTrace(System.out);
 			pythonSupported = false;
 		}
+		
 		
 	}
 	

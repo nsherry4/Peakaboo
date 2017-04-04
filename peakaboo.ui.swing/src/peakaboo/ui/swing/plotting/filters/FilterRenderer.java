@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 
@@ -43,7 +43,7 @@ public class FilterRenderer extends JPanel implements TableCellRenderer
 			int row, int column)
 	{
 
-		AbstractFilter f = (AbstractFilter) filter;
+		Filter f = (Filter) filter;
 		
 		setToolTipText(TextWrapping.wrapTextForMultiline(f.getFilterDescription()));
 		

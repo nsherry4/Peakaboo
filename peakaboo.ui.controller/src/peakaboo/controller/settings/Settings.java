@@ -14,7 +14,7 @@ import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.model.FittingModel;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
 
 
@@ -64,7 +64,7 @@ public class Settings
 		
 		// load filters
 		filters.filters.clearFilters();
-		for (AbstractFilter f : data.filters)
+		for (Filter f : data.filters)
 		{
 			filters.filters.addFilter(f);
 		}

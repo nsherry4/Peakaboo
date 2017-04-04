@@ -17,7 +17,7 @@ import javax.swing.table.TableColumn;
 
 import eventful.EventfulListener;
 import peakaboo.filter.controller.IFilteringController;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
@@ -124,7 +124,7 @@ public class FilterList extends ClearPanel {
 		
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 0) return Boolean.class;
-				return AbstractFilter.class;
+				return Filter.class;
 			}
 		
 			public void addTableModelListener(TableModelListener l)
@@ -184,7 +184,7 @@ public class FilterList extends ClearPanel {
 			{
 				if (t.getSelectedRow() == -1) return;
 				
-				AbstractFilter selection = controller.getActiveFilter(t.getSelectedRow());
+				Filter selection = controller.getActiveFilter(t.getSelectedRow());
 				controller.moveFilterUp(t.getSelectedRow());
 				int selRow = controller.filterIndex(selection);
 				t.addRowSelectionInterval(selRow, selRow);
@@ -196,7 +196,7 @@ public class FilterList extends ClearPanel {
 			{
 				if (t.getSelectedRow() == -1) return;
 				
-				AbstractFilter selection = controller.getActiveFilter(t.getSelectedRow());
+				Filter selection = controller.getActiveFilter(t.getSelectedRow());
 				controller.moveFilterDown(t.getSelectedRow());
 				int selRow = controller.filterIndex(selection);
 				t.addRowSelectionInterval(selRow, selRow);

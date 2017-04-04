@@ -1,14 +1,14 @@
 package peakaboo.filter.editors;
 
 import autodialog.controller.AbstractADController;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 
 
 public abstract class FilterDialogController extends AbstractADController {
 
-	private AbstractFilter filter;
+	private Filter filter;
 	
-	public FilterDialogController(AbstractFilter filter) {
+	public FilterDialogController(Filter filter) {
 		super(filter.getParameters().values());
 		this.filter = filter;	
 	}

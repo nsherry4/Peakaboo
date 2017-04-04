@@ -3,7 +3,6 @@ package peakaboo.filter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import bolt.plugin.BoltPluginLoader;
@@ -11,7 +10,8 @@ import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
 import commonenvironment.Env;
 import peakaboo.common.Version;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterPlugin;
 import peakaboo.filter.plugins.advanced.DataToWavelet;
 import peakaboo.filter.plugins.advanced.FilterPartialSpectrum;
 import peakaboo.filter.plugins.advanced.Identity;
@@ -37,19 +37,19 @@ import peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 public class FilterLoader
 {
 
-	private static BoltPluginLoader<AbstractFilter> pluginLoader;
+	private static BoltPluginLoader<FilterPlugin> pluginLoader;
 	
-	public static synchronized List<AbstractFilter> getAvailableFilters()
+	public static synchronized List<FilterPlugin> getAvailableFilters()
 	{
 
 		try {
 			
-			List<AbstractFilter> filters = new ArrayList<AbstractFilter>(); 
+			List<FilterPlugin> filters = new ArrayList<>(); 
 			
 			if (pluginLoader == null)
 			{
 
-				BoltPluginLoader<AbstractFilter> newPluginLoader = new BoltPluginLoader<AbstractFilter>(AbstractFilter.class);
+				BoltPluginLoader<FilterPlugin> newPluginLoader = new BoltPluginLoader<>(FilterPlugin.class);
 				
 
 				//register built-in plugins
@@ -86,20 +86,13 @@ public class FilterLoader
 				File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
 				appDataDir.mkdirs();
 				newPluginLoader.register(appDataDir);
-				
 				pluginLoader = newPluginLoader;
 				
 			}
 			
 			filters.addAll(pluginLoader.getNewInstancesForAllPlugins());
 			
-			Collections.sort(filters, new Comparator<AbstractFilter>() {
-
-				@Override
-				public int compare(AbstractFilter f1, AbstractFilter f2)
-				{
-					return f1.getFilterName().compareTo(f1.getFilterName());
-				}});
+			Collections.sort(filters, (f1, f2) -> f1.getFilterName().compareTo(f1.getFilterName()));
 			
 			return filters;
 			

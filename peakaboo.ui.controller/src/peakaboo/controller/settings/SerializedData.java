@@ -2,15 +2,23 @@ package peakaboo.controller.settings;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
+import autodialog.model.Parameter;
 import peakaboo.controller.plotter.settings.SettingsModel;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.AbstractFilter.FilterType;
+import peakaboo.filter.model.Filter;
+import peakaboo.filter.plugins.background.BruknerRemoval;
+import peakaboo.filter.plugins.noise.SpringSmoothing;
 import scidraw.drawing.DrawingRequest;
+import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.Spectrum;
 
 
 
@@ -26,7 +34,7 @@ public class SerializedData
 
 	public DrawingRequest					drawingRequest;
 	public SettingsModel					settings;
-	public List<AbstractFilter>				filters;
+	public List<Filter>						filters;
 	public List<Integer>					badScans;
 
 	
@@ -39,14 +47,12 @@ public class SerializedData
 
 	
 	
-	
-	
-	
 	public static SerializedData deserialize(String yaml)
 	{
 		
 		Yaml y = new Yaml();
-		return (SerializedData)y.load(yaml);
+		SerializedData data = (SerializedData)y.load(yaml);
+		return data;
 		
 	}
 	
@@ -57,10 +63,20 @@ public class SerializedData
 		
 		Yaml y = new Yaml(options);
 		
-		
-		
+				
 		return y.dump(this);
 		
 	}
+	
+	public static void main(String[] args) {
+		
+		Yaml y = new Yaml();
+		Filter filter = new SpringSmoothing();
+		SerializedFilter serial = new SerializedFilter(filter);
+			
+		y.dump(serial);
+		y.dump(filter);
+	}
+
 	
 }

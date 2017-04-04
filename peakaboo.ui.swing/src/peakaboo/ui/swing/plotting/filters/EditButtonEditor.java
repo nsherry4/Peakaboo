@@ -18,7 +18,7 @@ import javax.swing.JTable;
 import autodialog.view.AutoDialog;
 import autodialog.view.AutoDialog.AutoDialogButtons;
 import peakaboo.filter.controller.IFilteringController;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -35,13 +35,13 @@ public class EditButtonEditor extends DefaultCellEditor
 	
 	private Container				owner;
 
-	private AbstractFilter			filter;
+	private Filter					filter;
 	private IFilteringController	controller;
 
 	private String					label;
 	private boolean					isPushed;
 	
-	private Map<AbstractFilter, AutoDialog> settingsDialogs;
+	private Map<Filter, AutoDialog> settingsDialogs;
 
 
 	public EditButtonEditor(IFilteringController controller, Container owner)
@@ -74,7 +74,7 @@ public class EditButtonEditor extends DefaultCellEditor
 	public Component getTableCellEditorComponent(JTable table, Object _filter, boolean isSelected, int row, int column)
 	{
 
-		filter = (AbstractFilter) _filter;
+		filter = (Filter) _filter;
 		int numParameters = (_filter == null) ? 0 : filter.getParameters().size();
 		
 		label = (_filter == null) ? "" : _filter.toString();

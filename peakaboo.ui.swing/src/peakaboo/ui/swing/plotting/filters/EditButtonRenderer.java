@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -38,7 +38,7 @@ public class EditButtonRenderer implements TableCellRenderer
 			int row, int column)
 	{
 		
-		AbstractFilter filter = (AbstractFilter)_filter;
+		Filter filter = (Filter)_filter;
 		
 		int numParameters = filter.getParameters().size();
 

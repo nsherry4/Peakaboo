@@ -11,29 +11,29 @@ import scitypes.Spectrum;
 /**
  * 
  * This class provides a method of managing filters applied to a data set. Also provides the logic for
- * applying the filter set to a data set. is Iterable over AbstractFilters for access to filters in use
+ * applying the filter set to a data set. is Iterable over Filters for access to filters in use
  * 
  * 
  * @author Nathaniel Sherry, 2009
  */
 
-public class FilterSet implements Iterable<AbstractFilter>
+public class FilterSet implements Iterable<Filter>
 {
 
-	private List<AbstractFilter>	availableFilters;
-	private List<AbstractFilter>	filters;
+	private List<Filter>	availableFilters;
+	private List<Filter>	filters;
 
 
 	public FilterSet()
 	{
 
-		filters = new ArrayList<AbstractFilter>();
-		availableFilters = FilterLoader.getAvailableFilters();
+		filters = new ArrayList<>();
+		availableFilters = new ArrayList<>(FilterLoader.getAvailableFilters());
 
 	}
 
 
-	public List<AbstractFilter> getAvailableFilters()
+	public List<Filter> getAvailableFilters()
 	{
 
 		return availableFilters;
@@ -41,19 +41,19 @@ public class FilterSet implements Iterable<AbstractFilter>
 	}
 
 
-	public synchronized void addFilter(AbstractFilter filter)
+	public synchronized void addFilter(Filter filter)
 	{
 		filters.add(filter);
 	}
 
 
-	public synchronized void addFilter(AbstractFilter filter, int index)
+	public synchronized void addFilter(Filter filter, int index)
 	{
 		filters.add(index, filter);
 	}
 
 
-	public synchronized AbstractFilter getFilter(int index)
+	public synchronized Filter getFilter(int index)
 	{
 		return filters.get(index);
 	}
@@ -67,7 +67,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	}
 
 
-	public synchronized void removeFilter(AbstractFilter filter)
+	public synchronized void removeFilter(Filter filter)
 	{
 		filters.remove(filter);
 	}
@@ -85,13 +85,13 @@ public class FilterSet implements Iterable<AbstractFilter>
 	}
 
 
-	public synchronized boolean contains(AbstractFilter f)
+	public synchronized boolean contains(Filter f)
 	{
 		return filters.contains(f);
 	}
 
 
-	public synchronized int indexOf(AbstractFilter f)
+	public synchronized int indexOf(Filter f)
 	{
 		return filters.indexOf(f);
 	}
@@ -100,7 +100,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	public synchronized void moveFilterUp(int index)
 	{
 
-		AbstractFilter filter = filters.get(index);
+		Filter filter = filters.get(index);
 		index -= 1;
 		if (index < 0) index = 0;
 
@@ -114,7 +114,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	public synchronized void moveFilterDown(int index)
 	{
 
-		AbstractFilter filter = filters.get(index);
+		Filter filter = filters.get(index);
 		index += 1;
 		if (index >= filters.size()) index = filters.size() - 1;
 
@@ -134,8 +134,8 @@ public class FilterSet implements Iterable<AbstractFilter>
 	public Spectrum filterDataUnsynchronized(Spectrum data, boolean filtersShouldCache)
 	{
 
-		for (AbstractFilter f : filters) {
-			if (f != null && f.enabled) {
+		for (Filter f : filters) {
+			if (f != null && f.isEnabled()) {
 
 				data = f.filter(data, filtersShouldCache);
 				
@@ -146,7 +146,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 	}
 	
 
-	public Iterator<AbstractFilter> iterator()
+	public Iterator<Filter> iterator()
 	{
 		// TODO Auto-generated method stub
 		return filters.iterator();
@@ -156,13 +156,13 @@ public class FilterSet implements Iterable<AbstractFilter>
 
 	public synchronized void setFilterEnabled(int index, boolean enabled)
 	{
-		filters.get(index).enabled = enabled;
+		filters.get(index).setEnabled(enabled);
 	}
 
 
 	public synchronized boolean getFilterEnabled(int index)
 	{
-		return filters.get(index).enabled;
+		return filters.get(index).isEnabled();
 	}
 
 
@@ -171,7 +171,7 @@ public class FilterSet implements Iterable<AbstractFilter>
 		return filters.get(index).getFilterName();
 	}
 
-	public synchronized List<AbstractFilter> getFilters() {
+	public synchronized List<Filter> getFilters() {
 		return new ArrayList<>(filters);
 	}
 

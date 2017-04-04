@@ -1,8 +1,11 @@
 package peakaboo.filter.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.yaml.snakeyaml.Yaml;
 
 import autodialog.model.Parameter;
 import bolt.plugin.BoltPlugin;
@@ -22,7 +25,7 @@ import scitypes.Spectrum;
  * 
  */
 
-public abstract class AbstractFilter implements BoltPlugin, Serializable
+public abstract class AbstractFilter implements Serializable, FilterPlugin
 {
 	
 	public static enum FilterType
@@ -98,34 +101,39 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 		this.enabled = true;
 	}
 
-	/**
-	 * Returns a name for this plugin
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#getFilterName()
 	 */
+	@Override
 	public abstract String getFilterName();
 	
-	/**
-	 * Returns a short description for this plugin
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#getFilterDescription()
 	 */
+	@Override
 	public abstract String getFilterDescription();
 	
 
-	/**
-	 * Returns the type of the filter.
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#getFilterType()
 	 */
+	@Override
 	public abstract FilterType getFilterType();
 
 
-	/**
-	 * Returns the parameters
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#getParameters()
 	 */
+	@Override
 	public final Map<Integer, Parameter<?>> getParameters()
 	{
 		return this.parameters;
 	}
 	
-	/**
-	 * Sets the parameters
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#setParameters(java.util.Map)
 	 */
+	@Override
 	public final void setParameters(Map<Integer, Parameter<?>> params)
 	{
 		parameters = params;
@@ -143,9 +151,10 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	}
 	
 
-	/**
-	 * Retrieves the parameter with the assocuated index
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#getParameter(java.lang.Integer)
 	 */
+	@Override
 	public final Parameter<?> getParameter(Integer key)
 	{
 		return parameters.get(key);
@@ -157,33 +166,36 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	}
 
 
-	/**
-	 * This method is called once before the filter is used.  
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#initialize()
 	 */
+	@Override
 	public abstract void initialize();
 	
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#getPainter()
+	 */
+	@Override
 	public abstract PlotPainter getPainter();
 	
-	/**
-	 * Called whenever a parameter value is changed.
-	 * @return true if the new values are valid, false otherwise
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#validateParameters()
 	 */
+	@Override
 	public abstract boolean validateParameters();
 	protected abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
 	
-	/**
-	 * Returns true if this filter can filter an arbitrarily-sized subset of the current data, false otherwise
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#canFilterSubset()
 	 */
+	@Override
 	public abstract boolean canFilterSubset();
 	
 	
-	/**
-	 * Call's the subclass's {@link AbstractFilter#filterApplyTo(Spectrum, boolean)} method,
-	 * catching exceptions that occur so as to prevent a filter from crashing the program.
-	 * @param data the data to process
-	 * @param cache whether or not this data should be cached for the purposes of drawing on the spectrum
-	 * @return the result of applying the filter to data
+	/* (non-Javadoc)
+	 * @see peakaboo.filter.model.Filter#filter(scitypes.Spectrum, boolean)
 	 */
+	@Override
 	public Spectrum filter(Spectrum data, boolean cache)
 	{
 		
@@ -213,6 +225,42 @@ public abstract class AbstractFilter implements BoltPlugin, Serializable
 	{
 		return this.getFilterName();
 	}
+	
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	
+	
+	
+	public String save() {
+		Map<Integer, Object> valuemap = new HashMap<>();
+		for (Integer key : getParameters().keySet()) {
+			valuemap.put(key, getParameter(key).getValue());
+		}
+		Yaml dumper = new Yaml();
+		return dumper.dump(valuemap);
+	}
+	
+	public void load(String settings) {
+		Map<Integer, Object> valuemap;
+		Yaml loader = new Yaml();
+		valuemap = (Map<Integer, Object>) loader.load(settings);
+		for (Integer key : getParameters().keySet()) {
+			setParameter(getParameter(key), valuemap.get(key));
+		}
+	}
+	
+	private <T> void setParameter(Parameter<T> param, Object value) {
+		param.setValue((T)value);
+	}
+	
+
 	
 	
 }

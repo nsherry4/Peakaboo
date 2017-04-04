@@ -7,7 +7,7 @@ import java.util.List;
 import eventful.Eventful;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.filter.controller.IFilteringController;
-import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
 import scitypes.Spectrum;
@@ -44,7 +44,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	{
 		List<String> filterNames = new ArrayList<String>();
 
-		for (AbstractFilter filter : filteringModel.filters.getAvailableFilters())
+		for (Filter filter : filteringModel.filters.getAvailableFilters())
 		{
 			filterNames.add(filter.getFilterName());
 		}
@@ -55,7 +55,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	}
 
 	@Override
-	public List<AbstractFilter> getAvailableFilters()
+	public List<Filter> getAvailableFilters()
 	{
 		return filteringModel.filters.getAvailableFilters();
 	}
@@ -64,7 +64,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	public void addFilter(String name)
 	{
 
-		for (AbstractFilter f : filteringModel.filters.getAvailableFilters())
+		for (Filter f : filteringModel.filters.getAvailableFilters())
 		{
 			if (f.getFilterName().equals(name))
 			{
@@ -73,7 +73,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 				{
 					// this will call filterschanged, so we don't need to
 					// manually update the listeners
-					AbstractFilter filter = f.getClass().newInstance();
+					Filter filter = f.getClass().newInstance();
 					filter.initialize();
 					addFilter(filter);
 					break;
@@ -93,7 +93,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	}
 
 	@Override
-	public void addFilter(AbstractFilter f)
+	public void addFilter(Filter f)
 	{
 		filteringModel.filters.addFilter(f);
 		plot.history().setUndoPoint("Add Filter");
@@ -109,7 +109,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	}
 
 	@Override
-	public boolean filterSetContains(AbstractFilter f)
+	public boolean filterSetContains(Filter f)
 	{
 		return filteringModel.filters.contains(f);
 	}
@@ -151,13 +151,13 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	}
 
 	@Override
-	public AbstractFilter getActiveFilter(int index)
+	public Filter getActiveFilter(int index)
 	{
 		return filteringModel.filters.getFilter(index);
 	}
 
 	@Override
-	public int filterIndex(AbstractFilter f)
+	public int filterIndex(Filter f)
 	{
 		return filteringModel.filters.indexOf(f);
 	}

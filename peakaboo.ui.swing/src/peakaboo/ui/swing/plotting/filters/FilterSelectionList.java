@@ -13,8 +13,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import peakaboo.filter.controller.IFilteringController;
-import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.AbstractFilter.FilterType;
+import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -70,7 +70,7 @@ public class FilterSelectionList extends ClearPanel
 
 			public boolean isLeaf(Object node)
 			{
-				if (node instanceof AbstractFilter) {
+				if (node instanceof Filter) {
 					return true;
 				}
 				return false;
@@ -91,7 +91,7 @@ public class FilterSelectionList extends ClearPanel
 				if (parent instanceof FilterType) {
 
 					ft = (FilterType) parent;
-					AbstractFilter filter = (AbstractFilter) child;
+					Filter filter = (Filter) child;
 					
 					return controller.getAvailableFilters().indexOf(filter);
 					
@@ -114,7 +114,7 @@ public class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (AbstractFilter f : controller.getAvailableFilters()) {
+					for (Filter f : controller.getAvailableFilters()) {
 						if (f.getFilterType() == ft) typeCount++;
 					}
 					return typeCount;
@@ -136,7 +136,7 @@ public class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (AbstractFilter f : controller.getAvailableFilters()) {
+					for (Filter f : controller.getAvailableFilters()) {
 						if (f.getFilterType() == ft) typeCount++;
 						if (typeCount == index) return f;
 					}
@@ -197,10 +197,8 @@ public class FilterSelectionList extends ClearPanel
 				
 				Object leaf = path.getLastPathComponent();
 
-				if (leaf instanceof AbstractFilter) {
-					AbstractFilter filter = (AbstractFilter) leaf;
-					//filter = AbstractFilter.createNewInstance(filter);
-					//filter.initialize();
+				if (leaf instanceof Filter) {
+					Filter filter = (Filter) leaf;
 					controller.addFilter(filter.getFilterName());
 				}
 

@@ -8,6 +8,7 @@ import autodialog.view.editors.IntegerEditor;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.editors.SubfilterEditor;
 import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
@@ -17,16 +18,16 @@ public class FilterPartialSpectrum extends AbstractFilter
 
 	private Parameter<Integer> begin;
 	private Parameter<Integer> end;
-	private Parameter<AbstractFilter> filter;
+	private Parameter<Filter> filter;
 	
 	
 	@Override
 	public void initialize()
 	{
-		List<AbstractFilter> filters = FilterLoader.getAvailableFilters().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
+		List<Filter> filters = FilterLoader.getAvailableFilters().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
 		filters.add(0, new Identity());
 		
-		for (AbstractFilter f : filters)
+		for (Filter f : filters)
 		{
 			f.initialize();
 		}

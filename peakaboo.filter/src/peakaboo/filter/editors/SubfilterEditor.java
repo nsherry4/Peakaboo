@@ -16,42 +16,43 @@ import autodialog.view.AutoPanel;
 import autodialog.view.editors.IEditor;
 import eventful.Eventful;
 import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import swidget.widgets.Spacing;
 
 
 
-public class SubfilterEditor extends Eventful implements IEditor<AbstractFilter>
+public class SubfilterEditor extends Eventful implements IEditor<Filter>
 {
 	
 	//Param containing the subfilter
-	Parameter<AbstractFilter>	param;
+	Parameter<Filter>	param;
 	
 	//GUI
 	JPanel						control;
 	AutoPanel					subfilterView;
 	JPanel						subfilterPanel;
-	JComboBox<AbstractFilter>	filterCombo;
+	JComboBox<Filter>			filterCombo;
 	
 	//Subfilter
-	List<AbstractFilter>		availableFilters;
-	AbstractFilter 				subfilter;
+	List<Filter>				availableFilters;
+	Filter 						subfilter;
 	
-	public SubfilterEditor(List<AbstractFilter> filters) {
+	public SubfilterEditor(List<Filter> filters) {
 		availableFilters = filters;
 	}
 	
 	@Override
-	public void initialize(Parameter<AbstractFilter> param)
+	public void initialize(Parameter<Filter> param)
 	{
 		
-		AbstractFilter selectedFilter = (AbstractFilter)param.getValue();
+		Filter selectedFilter = (Filter)param.getValue();
 		
 		this.param = param;
 		control = new JPanel();
 				
 		control.setLayout(new BorderLayout());
 		
-		filterCombo = new JComboBox<AbstractFilter>(availableFilters.toArray(new AbstractFilter[0]));
+		filterCombo = new JComboBox<Filter>(availableFilters.toArray(new AbstractFilter[0]));
 		control.add(filterCombo, BorderLayout.NORTH);
 		
 		
@@ -70,7 +71,7 @@ public class SubfilterEditor extends Eventful implements IEditor<AbstractFilter>
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				changeFilter((AbstractFilter)filterCombo.getSelectedItem());
+				changeFilter((Filter)filterCombo.getSelectedItem());
 				updateListeners();
 			}
 		});
@@ -81,18 +82,18 @@ public class SubfilterEditor extends Eventful implements IEditor<AbstractFilter>
 	}
 	
 	
-	public AbstractFilter getFilter()
+	public Filter getFilter()
 	{
 		return subfilter;
 	}
 	
 	
-	public void setFilter(AbstractFilter f)
+	public void setFilter(Filter f)
 	{
 		changeFilter(f);
 	}
 	
-	private void changeFilter(AbstractFilter f)
+	private void changeFilter(Filter f)
 	{
 		
 		if (f == null) return;
@@ -159,11 +160,11 @@ public class SubfilterEditor extends Eventful implements IEditor<AbstractFilter>
 	@Override
 	public void setFromParameter()
 	{
-		changeFilter((AbstractFilter)param.getValue());
+		changeFilter((Filter)param.getValue());
 	}
 	
 	@Override
-	public AbstractFilter getEditorValue()
+	public Filter getEditorValue()
 	{
 		return getFilter();
 	}
