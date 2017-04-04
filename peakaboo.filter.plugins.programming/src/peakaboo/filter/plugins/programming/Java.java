@@ -33,7 +33,8 @@ public class Java extends AbstractSimpleFilter {
 	@Override
 	public void initialize() {
 		
-		Parameter<String> code = new Parameter<>("Java Code", new CodeEditor("java"), defaultCode);
+		editor = new CodeEditor("java");
+		code = new Parameter<>("Java Code", editor, defaultCode);
 		addParameter(code);
 	}
 	
@@ -47,6 +48,7 @@ public class Java extends AbstractSimpleFilter {
 	public boolean validateParameters() {
 		
 		try {
+						
 			boltJavaMap.setFunctionText(defaultBoltFunction);
 			boltJavaMap.setOtherText("");
 			boltJavaMap.setIncludeText(code.getValue());
@@ -55,6 +57,7 @@ public class Java extends AbstractSimpleFilter {
 			return true;
 		} catch (Exception e) {
 			editor.errorMessage = e.getMessage();
+			e.printStackTrace();
 			return false;
 		}
 		

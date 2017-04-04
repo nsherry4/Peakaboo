@@ -15,7 +15,7 @@
         	<fileset dir="${dir.buildfile}/../../Libraries/BoltCode/bin"/>
         	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../../Libraries/BoltCode/jars/jruby.jar"/>
         	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../../Libraries/BoltCode/jars/jython.jar"/>
-        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../../Libraries/BoltCode/jars/org.eclipse.jdt.core_3.6.2.v_A76_R36x.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/../../Libraries/BoltCode/jars/ecj-4.6.1.jar"/>
 
         	
         </jar>
