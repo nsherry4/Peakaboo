@@ -7,24 +7,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-
-import org.jdesktop.swingx.JXEditorPane;
 
 import com.ezware.dialog.task.TaskDialogs;
 
 import autodialog.model.Parameter;
 import autodialog.view.editors.IEditor;
 import commonenvironment.AbstractFile;
+import de.sciss.syntaxpane.DefaultSyntaxKit;
+import de.sciss.syntaxpane.Lexer;
+import de.sciss.syntaxpane.syntaxkits.JavaSyntaxKit;
 import eventful.Eventful;
-import fava.functionable.FStringInput;
-import jsyntaxpane.DefaultSyntaxKit;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -34,17 +35,20 @@ import swidget.widgets.ToolbarImageButton;
 public class CodeEditor extends Eventful implements IEditor<String>
 {
 
-	public JXEditorPane codeEditor;
+	
+	public JEditorPane codeEditor;
 	private Parameter<String> param;
 	
 	private String language;
+	private DefaultSyntaxKit syntaxKit;
 	public String errorMessage;
 	
 	private JPanel panel;
 	
-	public CodeEditor(String language)
+	public CodeEditor(String language, DefaultSyntaxKit syntaxKit)
 	{
 		this.language = language;
+		this.syntaxKit = syntaxKit;
 	}
 	
 	@Override
@@ -56,11 +60,16 @@ public class CodeEditor extends Eventful implements IEditor<String>
 		
 		DefaultSyntaxKit.initKit();
 		
-		codeEditor = new JXEditorPane();
+		
+		codeEditor = new JEditorPane();
+		codeEditor.setEditorKit(syntaxKit);
 		codeEditor.setMinimumSize(new Dimension(400, 200));
         JScrollPane scrPane = new JScrollPane(codeEditor);
         
-        if (language != null) codeEditor.setContentType("text/" + language);
+        if (language != null) {
+        	System.out.println(language);
+        	codeEditor.setContentType("text/" + language);
+        }
         
         codeEditor.setText((String)param.getValue());
         
@@ -93,7 +102,9 @@ public class CodeEditor extends Eventful implements IEditor<String>
 					);
 				try
 				{
-					String code = FStringInput.contents(file.getInputStream());
+					Scanner s = new Scanner(file.getInputStream()).useDelimiter("\\A");
+					String code = s.next();
+					s.close();
 					codeEditor.setText(code);
 				}
 				catch (IOException e)

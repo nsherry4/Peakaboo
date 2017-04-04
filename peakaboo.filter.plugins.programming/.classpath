@@ -8,5 +8,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/SciTypes"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SciDraw"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Eventful"/>
+	<classpathentry kind="lib" path="jars/syntaxpane-1.1.5.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Swidget"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

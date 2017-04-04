@@ -6,6 +6,8 @@ import bolt.scripting.BoltMap;
 import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.Language;
 import bolt.scripting.languages.PythonLanguage;
+import de.sciss.syntaxpane.lexers.PythonLexer;
+import de.sciss.syntaxpane.syntaxkits.PythonSyntaxKit;
 import peakaboo.filter.editors.CodeEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import scitypes.Spectrum;
@@ -52,7 +54,7 @@ public class JPython extends AbstractSimpleFilter {
 	@Override
 	public void initialize() 
 	{
-		editor = new CodeEditor("python");
+		editor = new CodeEditor("python", new PythonSyntaxKit());
 		code = new Parameter<>("JPython Code", editor, header + "spectrumOut = spectrumIn");
 		addParameter(code);
 	}

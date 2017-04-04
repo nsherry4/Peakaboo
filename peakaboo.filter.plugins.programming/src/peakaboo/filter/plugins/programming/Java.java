@@ -3,6 +3,8 @@ package peakaboo.filter.plugins.programming;
 
 import autodialog.model.Parameter;
 import bolt.compiler.BoltJavaMap;
+import de.sciss.syntaxpane.lexers.JavaLexer;
+import de.sciss.syntaxpane.syntaxkits.JavaSyntaxKit;
 import peakaboo.filter.editors.CodeEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import scitypes.Spectrum;
@@ -33,7 +35,7 @@ public class Java extends AbstractSimpleFilter {
 	@Override
 	public void initialize() {
 		
-		editor = new CodeEditor("java");
+		editor = new CodeEditor("java", new JavaSyntaxKit());
 		code = new Parameter<>("Java Code", editor, defaultCode);
 		addParameter(code);
 	}
