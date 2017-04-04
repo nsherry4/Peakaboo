@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="500.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="peakaboo.ui.javafx.plot.window.PlotWindowController">
+   <top>
+				<MenuBar BorderPane.alignment="CENTER">
+					<menus>
+						<Menu mnemonicParsing="false" text="File">
+							<items>
+								<MenuItem mnemonicParsing="false" onAction="#onDatasetOpen" text="Open...">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/16/open.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+								<MenuItem mnemonicParsing="false" text="Open Sample Data" />
+								<SeparatorMenuItem mnemonicParsing="false" />
+								<MenuItem mnemonicParsing="false" text="Save Session...">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/16/save.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+								<MenuItem mnemonicParsing="false" text="Load Session..." />
+								<SeparatorMenuItem mnemonicParsing="false" />
+								<MenuItem mnemonicParsing="false" text="Save Plot...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+								<MenuItem mnemonicParsing="false" text="Export Filtered Data..." />
+								<MenuItem mnemonicParsing="false" text="Save Fittings..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Exit">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/16/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+							</items>
+						</Menu>
+						<Menu mnemonicParsing="false" text="Edit">
+							<items>
+								<MenuItem mnemonicParsing="false" text="Undo">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/16/undo.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+								<MenuItem mnemonicParsing="false" text="Redo">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/16/redo.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+							</items>
+						</Menu>
+						<Menu mnemonicParsing="false" text="View">
+							<items>
+								<Menu mnemonicParsing="false" text="Display">
+									<items>
+										<CheckMenuItem fx:id="menuLogScale" mnemonicParsing="false" onAction="#toggleLogScale" text="Logarithmic Scale">
+											<accelerator>
+												<KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+											</accelerator>
+										</CheckMenuItem>
+										<CheckMenuItem fx:id="menuAxes" mnemonicParsing="false" onAction="#toggleAxes" text="Axes" />
+										<CheckMenuItem fx:id="menuTitle" mnemonicParsing="false" onAction="#toggleTitle" text="Title" />
+										<CheckMenuItem fx:id="menuMono" mnemonicParsing="false" onAction="#toggleMono" text="Monochrome" />
+										<CheckMenuItem fx:id="menuRawData" mnemonicParsing="false" onAction="#toggleRawData" text="Raw Data Outline" />
+										<CheckMenuItem fx:id="menuIndividual" mnemonicParsing="false" onAction="#toggleIndividual" text="Individual Fittings" />
+									</items>
+								</Menu>
+								<Menu mnemonicParsing="false" text="Labeling">
+									<items>
+										<CheckMenuItem mnemonicParsing="false" text="Element Names" />
+										<CheckMenuItem mnemonicParsing="false" text="Markings" />
+										<CheckMenuItem mnemonicParsing="false" text="Heights" />
+									</items>
+								</Menu>
+								<Menu mnemonicParsing="false" text="Escape Peaks">
+									<items>
+										<RadioMenuItem mnemonicParsing="false" text="None">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="view_escape" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+										<RadioMenuItem mnemonicParsing="false" selected="true" text="Silicon" toggleGroup="$view_escape" />
+										<RadioMenuItem mnemonicParsing="false" text="Germanium" toggleGroup="$view_escape" />
+									</items>
+								</Menu>
+								<Menu mnemonicParsing="false" text="Signal">
+									<items>
+										<RadioMenuItem fx:id="menuSignalSingle" mnemonicParsing="false" onAction="#selectSignalSingle" selected="true" text="Individual Spectrum">
+											<toggleGroup>
+												<ToggleGroup fx:id="view_signal" />
+											</toggleGroup>
+											<accelerator>
+												<KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+											</accelerator>
+										</RadioMenuItem>
+										<RadioMenuItem fx:id="menuSignalAverage" mnemonicParsing="false" onAction="#selectSignalAverage" text="Mean Average per Channel" toggleGroup="$view_signal">
+											<accelerator>
+												<KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+											</accelerator>
+										</RadioMenuItem>
+										<RadioMenuItem fx:id="menuSignalMax" mnemonicParsing="false" onAction="#selectSignalMax" text="Strongest per Channel" toggleGroup="$view_signal">
+											<accelerator>
+												<KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+											</accelerator>
+										</RadioMenuItem>
+									</items>
+								</Menu>
+							</items>
+						</Menu>
+						<Menu mnemonicParsing="false" text="Mapping">
+							<items>
+								<MenuItem mnemonicParsing="false" text="Map Fitted Area" />
+								<MenuItem mnemonicParsing="false" text="Map Fitted Heights" />
+							</items>
+						</Menu>
+						<Menu mnemonicParsing="false" text="Help">
+							<items>
+								<MenuItem mnemonicParsing="false" text="Help">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/16/help.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+								<MenuItem mnemonicParsing="false" text="About">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/16/about.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+							</items>
+						</Menu>
+					</menus>
+				</MenuBar>
+   </top>
+   <center>
+		<VBox BorderPane.alignment="CENTER">
+			<children>
+				<HBox fx:id="toolbar" styleClass="tool-bar">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onDatasetOpen">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/24/open.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/24/camera.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Button>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/24/info.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Button>
+                  <MenuButton mnemonicParsing="false" onAction="#onMapFittings" styleClass="toolbar-menu-button" text="Map Fittings">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#onMapFittings" text="Map Fitting Area" />
+                      <MenuItem mnemonicParsing="false" onAction="#onMapFittingsHeight" text="Map Fitting Height" />
+                    </items>
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/24/map.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuButton>
+                  <Separator visible="false" HBox.hgrow="ALWAYS" />
+                  <Label text="Max Energy (keV):" />
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/24/about.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Button>
+               </children></HBox>
+				<SplitPane dividerPositions="0.25" VBox.vgrow="ALWAYS">
+					<items>
+						<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
+							<tabs>
+								<Tab fx:id="fittingTab" text="Peak Fitting" />
+								<Tab fx:id="filterTab" text="Filters" />
+							</tabs>
+						</TabPane>
+						<BorderPane fx:id="plotbox">
+                     <bottom>
+                        <VBox BorderPane.alignment="CENTER">
+                           <children>
+                              <Separator prefWidth="200.0" />
+                              <HBox fx:id="statusbar">
+                                 <children>
+                                    <BorderPane>
+                                       <right>
+                                          <Button mnemonicParsing="false" BorderPane.alignment="CENTER">
+                                             <graphic>
+                                                <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../icons/16/stop.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                             <BorderPane.margin>
+                                                <Insets />
+                                             </BorderPane.margin>
+                                             <padding>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </padding>
+                                          </Button>
+                                       </right>
+                                       <center>
+                                          <BorderPane fx:id="scanbox" BorderPane.alignment="CENTER" />
+                                       </center>
+                                       <left>
+                                          <Label text="Scan" BorderPane.alignment="CENTER">
+                                             <padding>
+                                                <Insets left="3.0" />
+                                             </padding>
+                                          </Label>
+                                       </left>
+                                    </BorderPane>
+                                    <Separator visible="false" HBox.hgrow="ALWAYS" />
+                                    <BorderPane>
+                                       <center>
+                                          <Label fx:id="statuslabel" text="View Type: Individual Spectrum, Channel: -" BorderPane.alignment="CENTER" />
+                                       </center>
+                                    </BorderPane>
+                                    <Separator visible="false" HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="1.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </bottom>
+						</BorderPane>
+					</items>
+				</SplitPane>
+			</children>
+		</VBox>
+   </center>
+   <stylesheets>
+      <URL value="@style.css" />
+      <URL value="@../../css/buttons.css" />
+   </stylesheets>
+</BorderPane>

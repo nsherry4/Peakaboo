@@ -221,7 +221,7 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	{
 
 		Spectrum originalData = null;
-
+	
 		if (!dataController.hasDataSet() || currentScan() == null) return null;
 
 		

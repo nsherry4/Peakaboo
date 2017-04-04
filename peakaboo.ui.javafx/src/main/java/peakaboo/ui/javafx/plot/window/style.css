@@ -1,0 +1,11 @@
+.fittings {
+	
+    -fx-background-insets: 0 0 0 0, 0 0 0 1;
+    -fx-padding: 0 0 0 1;
+}
+
+.fittings:focused {
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0 0 0 0, 0 0 0 1;
+    -fx-padding: 0 0 0 1;
+}

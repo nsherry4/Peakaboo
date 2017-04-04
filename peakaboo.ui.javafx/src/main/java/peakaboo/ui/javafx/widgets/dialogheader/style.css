@@ -1,0 +1,24 @@
+.button {
+	-fx-background-color: none;
+	-fx-background-insets: 2;
+	-fx-background-radius: 3;
+	-fx-padding: 0.333333em 0.333333em 0.333333em 0.333333em; /* 4 8 5 8 */
+	-fx-text-fill: -fx-text-base-color;
+}
+
+.button:hover, .button:armed {
+	-fx-color: -fx-hover-base;
+	-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 5 5 5 5, 4 4 4 4, 3 3 3 3;
+	-fx-padding: 0.333333em 0.333333em 0.333333em 0.333333em; /* 4 8 5 8 */
+	-fx-text-fill: -fx-text-base-color;
+}
+
+.button:focused {
+	-fx-background-color: -fx-faint-focus-color, -fx-focus-color,
+		-fx-inner-border, -fx-body-color;
+	-fx-background-insets: -2, -0.3, 1, 2;
+	-fx-background-radius: 7, 6, 4, 3;
+}
+

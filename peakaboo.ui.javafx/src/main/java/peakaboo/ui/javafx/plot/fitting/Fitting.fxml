@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- <?import javafx.geometry.*?> -->
+<!-- <?import javafx.scene.image.*?> -->
+<!-- <?import javafx.scene.input.*?> -->
+<!-- <?import javafx.scene.control.*?> -->
+<!-- <?import javafx.scene.chart.*?> -->
+<!-- <?import java.lang.*?> -->
+<!-- <?import javafx.scene.layout.*?> -->
+<!-- <?import javafx.scene.layout.BorderPane?> -->
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="peakaboo.ui.javafx.plot.fitting.FittingUIController">
+	<children>
+		<BorderPane fx:id="fittingsPane">
+			<top>
+				<HBox styleClass="tool-bar" BorderPane.alignment="CENTER">
+					<children>
+						<SplitMenuButton mnemonicParsing="false" onAction="#fittingsAddGuided" styleClass="toolbar-menu-button">
+							<graphic>
+								<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../icons/16/add.png" />
+									</image>
+								</ImageView>
+							</graphic>
+							<items>
+								<MenuItem mnemonicParsing="false" onAction="#fittingsAddGuided" text="Guided Fitting" />
+								<MenuItem mnemonicParsing="false" onAction="#fittingsAddElement" text="Element Lookup" />
+								<MenuItem mnemonicParsing="false" onAction="#fittingsAddSummation" text="Summation Fitting" />
+							</items>
+						</SplitMenuButton>
+						<Button mnemonicParsing="false" onAction="#fittingsRemove">
+							<graphic>
+								<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../icons/16/remove.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Button mnemonicParsing="false" onAction="#fittingsClear">
+							<graphic>
+								<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../icons/16/edit-clear.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Separator minWidth="0.0" visible="false" HBox.hgrow="ALWAYS" />
+						<Button mnemonicParsing="false" onAction="#fittingsSort">
+							<graphic>
+								<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../icons/16/edit-sort-des.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Button mnemonicParsing="false" onAction="#fittingsUp">
+							<graphic>
+								<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../icons/16/go-up.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Button mnemonicParsing="false" onAction="#fittingsDown">
+							<graphic>
+								<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../icons/16/go-down.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+					</children>
+				</HBox>
+			</top>
+			<center>
+				<TableView id="fittings" fx:id="fittingsTable" editable="true" BorderPane.alignment="CENTER">
+					<columns>
+						<TableColumn fx:id="fittingsFit" minWidth="24.0" prefWidth="75.0" sortable="false" text="Fit" />
+						<TableColumn fx:id="fittingsTS" editable="false" minWidth="150.0" prefWidth="75.0" sortable="false" text="Transition Series" />
+					</columns>
+					<columnResizePolicy>
+						<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+					</columnResizePolicy>
+				</TableView>
+			</center>
+		</BorderPane>
+		<BorderPane fx:id="lookupPane" visible="false">
+         <center>
+            <Accordion fx:id="lookupAccordion" BorderPane.alignment="CENTER">
+              <panes>
+                <TitledPane animated="false" text="K Series">
+                     <content>
+                        <ListView fx:id="lookupListK" />
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="L Series">
+                     <content>
+                        <ListView fx:id="lookupListL" />
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="M Series">
+                     <content>
+                        <ListView fx:id="lookupListM" />
+                     </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </center>
+
+		</BorderPane>
+		<BorderPane fx:id="autofitPane" prefHeight="200.0" prefWidth="200.0" visible="false" />
+		<BorderPane fx:id="summationPane" prefHeight="200.0" prefWidth="200.0" visible="false" />
+
+	</children>
+   <stylesheets>
+      <URL value="@../../css/buttons.css" />
+      <URL value="@style.css" />
+   </stylesheets>
+</StackPane>

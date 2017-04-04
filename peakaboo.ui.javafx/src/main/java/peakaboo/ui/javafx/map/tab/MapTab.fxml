@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="peakaboo.ui.javafx.map.tab.MapTabController">
+   <top>
+      <HBox styleClass="tool-bar" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
+            </Button>
+            <Button mnemonicParsing="false">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
+            </Button>
+            <Separator orientation="VERTICAL" />
+            <Button mnemonicParsing="false">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
+            </Button>
+            <Button mnemonicParsing="false">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
+            </Button>
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <VBox prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TitledPane text="Map Settings" />
+            <TitledPane animated="false" text="Mapped Fittings" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <BorderPane fx:id="chartpane" BorderPane.alignment="CENTER">
+         <bottom>
+            <Label text="Label" BorderPane.alignment="CENTER" />
+         </bottom>
+      </BorderPane>
+   </center>
+   <stylesheets>
+      <URL value="@../../css/buttons.css" />
+      <URL value="@style.css" />
+   </stylesheets>
+</BorderPane>

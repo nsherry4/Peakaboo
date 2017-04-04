@@ -32,5 +32,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/peakaboo.mapping"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/peakaboo.ui.swing.tabbed"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/peakaboo.ui.controller"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Fava"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

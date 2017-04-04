@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import java.net.*?>
+
+
+
+<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="peakaboo.ui.javafx.plot.filter.FilterUIController">
+   <children>
+   <BorderPane fx:id="overviewPane" visible="false">
+   	<top>
+   		<HBox styleClass="tool-bar" BorderPane.alignment="CENTER">
+   			<children>
+   				<Button mnemonicParsing="false" onAction="#onAdd">
+   					<graphic>
+   						<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+   							<image>
+   								<Image url="@../../icons/16/add.png" />
+   							</image>
+   						</ImageView>
+   					</graphic>
+   				</Button>
+   				<Button mnemonicParsing="false" onAction="#onRemove">
+   					<graphic>
+   						<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+   							<image>
+   								<Image url="@../../icons/16/remove.png" />
+   							</image>
+   						</ImageView>
+   					</graphic>
+   				</Button>
+   				<Button mnemonicParsing="false" onAction="#onClear">
+   					<graphic>
+   						<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+   							<image>
+   								<Image url="@../../icons/16/edit-clear.png" />
+   							</image>
+   						</ImageView>
+   					</graphic>
+   				</Button>
+   				<Separator minWidth="0.0" visible="false" HBox.hgrow="ALWAYS" />
+   				<Button mnemonicParsing="false" onAction="#onUp">
+   					<graphic>
+   						<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+   							<image>
+   								<Image url="@../../icons/16/go-up.png" />
+   							</image>
+   						</ImageView>
+   					</graphic>
+   				</Button>
+   				<Button mnemonicParsing="false" onAction="#onDown">
+   					<graphic>
+   						<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+   							<image>
+   								<Image url="@../../icons/16/go-down.png" />
+   							</image>
+   						</ImageView>
+   					</graphic>
+   				</Button>
+   			</children>
+   		</HBox>
+   	</top>
+   	<center>
+   		<ListView fx:id="filterList" BorderPane.alignment="CENTER" />
+   	</center>
+   </BorderPane>
+      <BorderPane fx:id="addPane" prefHeight="200.0" prefWidth="200.0">
+         <center>
+            <Accordion fx:id="availableFilters" BorderPane.alignment="CENTER">
+              <panes>
+                <TitledPane animated="false" text="Background">
+                     <content>
+                        <ListView fx:id="listBackground" prefHeight="200.0" prefWidth="200.0" styleClass="add-list" />
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Noise">
+                     <content>
+                        <ListView fx:id="listNoise" prefHeight="200.0" prefWidth="200.0" styleClass="add-list" />
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Mathematical">
+                     <content>
+                        <ListView fx:id="listMath" prefHeight="200.0" prefWidth="200.0" styleClass="add-list" />
+                     </content>
+                </TitledPane>
+                  <TitledPane animated="false" text="Programming">
+                     <content>
+                        <ListView fx:id="listProgramming" prefHeight="200.0" prefWidth="200.0" styleClass="add-list" />
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" text="Advanced">
+                     <content>
+                        <ListView fx:id="listAdvanced" prefHeight="200.0" prefWidth="200.0" styleClass="add-list" />
+                     </content>
+                  </TitledPane>
+              </panes>
+            </Accordion>
+         </center>
+      </BorderPane>
+   </children>
+   <stylesheets>
+      <URL value="@style.css" />
+      <URL value="@../../css/buttons.css" />
+   </stylesheets>
+</StackPane>
