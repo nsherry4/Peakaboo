@@ -3,7 +3,8 @@ package peakaboo.filter.plugins.advanced;
 import autodialog.model.Parameter;
 import autodialog.view.editors.DoubleEditor;
 import autodialog.view.editors.IntegerEditor;
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
+import peakaboo.filter.model.Filter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -58,10 +59,10 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	}
 
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.ADVANCED;
+		return Filter.FilterType.ADVANCED;
 	}
 
 

@@ -2,7 +2,8 @@ package peakaboo.filter.plugins.mathematical;
 
 
 import peakaboo.calculations.Noise;
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
+import peakaboo.filter.model.Filter;
 import scitypes.Spectrum;
 
 
@@ -40,10 +41,10 @@ public class Derivative extends AbstractSimpleFilter
 
 
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.MATHEMATICAL;
+		return Filter.FilterType.MATHEMATICAL;
 	}
 
 

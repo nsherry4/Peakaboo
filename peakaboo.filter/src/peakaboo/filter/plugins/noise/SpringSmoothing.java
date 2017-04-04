@@ -5,7 +5,8 @@ import autodialog.model.Parameter;
 import autodialog.view.editors.DoubleEditor;
 import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Noise;
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
+import peakaboo.filter.model.Filter;
 import scitypes.Spectrum;
 
 /**
@@ -49,10 +50,10 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 
 
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
 
-		return FilterType.NOISE;
+		return Filter.FilterType.NOISE;
 	}
 
 

@@ -26,64 +26,6 @@ import scitypes.Spectrum;
 public abstract class AbstractFilter implements Serializable, FilterPlugin
 {
 	
-	public static enum FilterType
-	{
-		
-		BACKGROUND {
-
-			@Override
-			public String toString()
-			{
-				return "Background Removal";
-			}			
-		},
-		NOISE {
-
-			@Override
-			public String toString()
-			{
-				return "Noise Removal";
-			}
-		},
-		MATHEMATICAL {
-
-			@Override
-			public String toString()
-			{
-				return "Mathematical";
-			}
-
-		},
-		ADVANCED {
-
-			@Override
-			public String toString()
-			{
-				return "Advanced";
-			}
-
-		},
-		PROGRAMMING {
-		
-			@Override
-			public String toString()
-			{
-				return "Programming";
-			}
-						
-		};
-		
-		public String getSubPackage()
-		{
-			return "filters." + name().toLowerCase();
-		}
-		
-		public String getFilterTypeDescription()
-		{
-			return toString() + " Filters";
-		}
-	}
-	
 	private Map<Integer, Parameter<?>>		parameters;
 	public boolean							enabled;
 	
@@ -116,7 +58,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 * @see peakaboo.filter.model.Filter#getFilterType()
 	 */
 	@Override
-	public abstract FilterType getFilterType();
+	public abstract Filter.FilterType getFilterType();
 
 
 	/* (non-Javadoc)
@@ -239,19 +181,26 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	public Map<Integer, Object> save() {
 		Map<Integer, Object> valuemap = new HashMap<>();
 		for (Integer key : getParameters().keySet()) {
-			valuemap.put(key, getParameter(key).getValue());
+			Object value = getParameter(key).getValue();
+			if (value instanceof Filter) {
+				value = new SerializedFilter((Filter)value);
+			}
+			valuemap.put(key, value);
 		}
 		return valuemap;
 	}
 	
 	public void load(Map<Integer, Object> settings) {
 		for (Integer key : getParameters().keySet()) {
-			setParameter(getParameter(key), settings.get(key));
+			Object value = settings.get(key);
+			if (value instanceof SerializedFilter) {
+				value = ((SerializedFilter) value).getFilter();
+			}
+			setParameter(getParameter(key), value);
 		}
 	}
 	
 	private <T> void setParameter(Parameter<T> param, Object value) {
-		System.out.println("Settings param " + param.name + " to " + value);
 		param.setValue((T)value);
 		param.getEditor().setFromParameter();
 	}

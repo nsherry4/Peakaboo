@@ -1,9 +1,6 @@
-package peakaboo.controller.settings;
+package peakaboo.filter.model;
 
 import java.util.Map;
-
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterSet;
 
 public class SerializedFilter {
 
@@ -35,7 +32,6 @@ public class SerializedFilter {
 	}
 
 	public Map<Integer, Object> getSettings() {
-		System.out.println(filter.save());
 		return filter.save();
 	}
 
@@ -51,7 +47,6 @@ public class SerializedFilter {
 			if (f.getClass().getName().equals(clazz)) {
 				filter = f;
 				filter.initialize();
-				System.out.println(settings);
 				filter.load(settings);
 				return filter;
 			}

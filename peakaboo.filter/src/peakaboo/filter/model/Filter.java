@@ -3,11 +3,69 @@ package peakaboo.filter.model;
 import java.util.Map;
 
 import autodialog.model.Parameter;
-import peakaboo.filter.model.AbstractFilter.FilterType;
+import peakaboo.filter.model.Filter.FilterType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
 public interface Filter {
+
+	enum FilterType
+	{
+		
+		BACKGROUND {
+	
+			@Override
+			public String toString()
+			{
+				return "Background Removal";
+			}			
+		},
+		NOISE {
+	
+			@Override
+			public String toString()
+			{
+				return "Noise Removal";
+			}
+		},
+		MATHEMATICAL {
+	
+			@Override
+			public String toString()
+			{
+				return "Mathematical";
+			}
+	
+		},
+		ADVANCED {
+	
+			@Override
+			public String toString()
+			{
+				return "Advanced";
+			}
+	
+		},
+		PROGRAMMING {
+		
+			@Override
+			public String toString()
+			{
+				return "Programming";
+			}
+						
+		};
+		
+		public String getSubPackage()
+		{
+			return "filters." + name().toLowerCase();
+		}
+		
+		public String getFilterTypeDescription()
+		{
+			return toString() + " Filters";
+		}
+	}
 
 	boolean isEnabled();
 	void setEnabled(boolean enabled);
@@ -25,7 +83,7 @@ public interface Filter {
 	/**
 	 * Returns the type of the filter.
 	 */
-	FilterType getFilterType();
+	Filter.FilterType getFilterType();
 
 	/**
 	 * Returns the parameters

@@ -1,6 +1,7 @@
 package peakaboo.filter.plugins.advanced;
 
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
+import peakaboo.filter.model.Filter;
 import scitypes.Spectrum;
 
 public class Identity extends AbstractSimpleFilter
@@ -35,9 +36,9 @@ public class Identity extends AbstractSimpleFilter
 
 
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
-		return FilterType.ADVANCED;
+		return Filter.FilterType.ADVANCED;
 	}
 
 

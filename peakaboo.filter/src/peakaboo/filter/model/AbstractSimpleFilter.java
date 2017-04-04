@@ -1,6 +1,5 @@
-package peakaboo.filter.plugins;
+package peakaboo.filter.model;
 
-import peakaboo.filter.model.AbstractFilter;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 

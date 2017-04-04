@@ -1,4 +1,4 @@
-package peakaboo.filter.plugins;
+package peakaboo.filter.model;
 
 import javax.swing.JSeparator;
 
@@ -6,7 +6,6 @@ import autodialog.model.Parameter;
 import autodialog.view.editors.BooleanEditor;
 import autodialog.view.editors.DummyEditor;
 import autodialog.view.editors.IntegerEditor;
-import peakaboo.filter.model.AbstractFilter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -48,9 +47,9 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
-		return FilterType.BACKGROUND;
+		return Filter.FilterType.BACKGROUND;
 	}
 	
 	@Override

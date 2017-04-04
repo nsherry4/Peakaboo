@@ -78,9 +78,9 @@ public class FilterPartialSpectrum extends AbstractFilter
 	}
 
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
-		return FilterType.ADVANCED;
+		return Filter.FilterType.ADVANCED;
 	}
 
 	@Override

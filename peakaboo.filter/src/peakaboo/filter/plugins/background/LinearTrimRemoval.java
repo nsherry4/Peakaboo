@@ -5,7 +5,7 @@ package peakaboo.filter.plugins.background;
 import autodialog.model.Parameter;
 import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Background;
-import peakaboo.filter.plugins.AbstractBackgroundFilter;
+import peakaboo.filter.model.AbstractBackgroundFilter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 

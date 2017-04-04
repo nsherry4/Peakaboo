@@ -160,6 +160,24 @@ public class SubfilterEditor extends Eventful implements IEditor<Filter>
 	@Override
 	public void setFromParameter()
 	{
+		
+		//in cases where the model has changed the selected filter, we must find 
+		//the filter object of the same class name in the combobox list and replace 
+		//it with the new filter.
+		String filterName = param.getValue().getClass().getName();
+		for (int i = 0; i < filterCombo.getItemCount(); i++) {
+			if (filterCombo.getItemAt(i).getClass().getName().equals(filterName)) {
+				filterCombo.removeItemAt(i);
+				filterCombo.insertItemAt(param.getValue(), i);
+				filterCombo.setSelectedItem(param.getValue());
+				break;
+			}
+		}
+			
+			
+		
+		
+		
 		changeFilter((Filter)param.getValue());
 	}
 	

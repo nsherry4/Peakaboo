@@ -4,7 +4,7 @@ package peakaboo.filter.plugins.programming;
 import autodialog.model.Parameter;
 import bolt.compiler.BoltJavaMap;
 import peakaboo.filter.editors.CodeEditor;
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 

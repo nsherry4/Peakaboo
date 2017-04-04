@@ -4,6 +4,7 @@ package peakaboo.filter.plugins;
 import autodialog.model.Parameter;
 import autodialog.view.editors.IntegerEditor;
 import peakaboo.filter.model.AbstractFilter;
+import peakaboo.filter.model.Filter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -41,12 +42,12 @@ public class ExampleFilter extends AbstractFilter {
 	}
 
 	@Override
-	public FilterType getFilterType() {
+	public Filter.FilterType getFilterType() {
 		
-		FilterType type;
+		Filter.FilterType type;
 		
-		type = FilterType.BACKGROUND;
-		type = FilterType.NOISE;
+		type = Filter.FilterType.BACKGROUND;
+		type = Filter.FilterType.NOISE;
 		
 		return type;
 	}

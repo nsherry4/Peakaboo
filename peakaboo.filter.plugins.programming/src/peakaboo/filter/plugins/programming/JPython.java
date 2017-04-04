@@ -7,7 +7,7 @@ import bolt.scripting.BoltScriptExecutionException;
 import bolt.scripting.languages.Language;
 import bolt.scripting.languages.PythonLanguage;
 import peakaboo.filter.editors.CodeEditor;
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
 import scitypes.Spectrum;
 
 

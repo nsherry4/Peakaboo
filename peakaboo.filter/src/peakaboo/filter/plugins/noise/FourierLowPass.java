@@ -7,7 +7,8 @@ import autodialog.view.editors.IntegerEditor;
 import autodialog.view.editors.ListEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
+import peakaboo.filter.model.Filter;
 import scitypes.Spectrum;
 
 /**
@@ -71,9 +72,9 @@ public final class FourierLowPass extends AbstractSimpleFilter
 
 
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
-		return FilterType.NOISE;
+		return Filter.FilterType.NOISE;
 	}
 
 

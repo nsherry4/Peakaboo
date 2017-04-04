@@ -3,7 +3,8 @@ package peakaboo.filter.plugins.mathematical;
 
 import autodialog.model.Parameter;
 import autodialog.view.editors.DoubleEditor;
-import peakaboo.filter.plugins.AbstractSimpleFilter;
+import peakaboo.filter.model.AbstractSimpleFilter;
+import peakaboo.filter.model.Filter;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -43,10 +44,10 @@ public class Subtraction extends AbstractSimpleFilter
 
 
 	@Override
-	public FilterType getFilterType()
+	public Filter.FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return FilterType.MATHEMATICAL;
+		return Filter.FilterType.MATHEMATICAL;
 	}
 
 	@Override
