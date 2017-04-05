@@ -5,7 +5,7 @@ import java.util.List;
 
 import eventful.IEventful;
 import peakaboo.curvefit.model.FittingSet;
-import peakaboo.dataset.AbstractDataSet;
+import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
@@ -27,7 +27,7 @@ public interface IDataController extends IEventful
 	DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend);
 	
 	void setDataSource(DataSource ds);
-	void setDataSetProvider(AbstractDataSet dsp);
+	void setDataSetProvider(DataSet dsp);
 	List<DataSource> getDataSourcePlugins();
 	ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, DataSource dsp);
 	

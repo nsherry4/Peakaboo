@@ -9,6 +9,7 @@ import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DataSet;
+import peakaboo.dataset.StandardDataSet;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
@@ -28,13 +29,13 @@ public class MapTS
 
 	/**
 	 * Generates a map based on the given inputs. Returns a {@link ExecutorSet} which can execute this task asynchronously and return the result
-	 * @param datasetProvider the {@link DataSet} providing access to data
+	 * @param datasetProvider the {@link StandardDataSet} providing access to data
 	 * @param filters the {@link FilterSet} containing all filters needing to be applied to this data
 	 * @param fittings the {@link FittingSet} containing all fittings needing to be turned into maps
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
 	 * @return a {@link ExecutorSet} which will return a {@link MapResultSet}
 	 */
-	public static ExecutorSet<MapResultSet> calculateMap(final AbstractDataSet datasetProvider, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
+	public static ExecutorSet<MapResultSet> calculateMap(final DataSet datasetProvider, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
 	{
 
 		final ExecutorSet<MapResultSet> tasklist;

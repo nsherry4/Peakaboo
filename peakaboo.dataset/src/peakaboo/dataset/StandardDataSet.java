@@ -14,18 +14,14 @@ import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
-import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.datasize.DummyDataSize;
 import peakaboo.datasource.components.interaction.CallbackInteraction;
-import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
-import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -35,12 +31,14 @@ import scitypes.SpectrumCalculations;
  * Given a DataSource, this class calculates the average and max spectra,
  * along with a few other values. This allows the data to be calculated 
  * once and accessed many times without adding cache logic elsewhere 
- * in the program.
+ * in the program. This is intended to layer features on top of a 
+ * DataSource in order to keep the DataSource implementation simple. It
+ * is not intended to store user settings/overrides.
  * 
- * @author Nathaniel Sherry, 2009,2012
+ * @author Nathaniel Sherry, 2009-2017
  */
 
-public class DataSet extends AbstractDataSet
+public class StandardDataSet extends AbstractDataSet
 {
 
 	protected Spectrum				averagedSpectrum;
@@ -62,13 +60,13 @@ public class DataSet extends AbstractDataSet
 
 	
 
-	public DataSet()
+	public StandardDataSet()
 	{
 		super();
 	}
 	
 	
-	public DataSet(DataSource ds)
+	public StandardDataSet(DataSource ds)
 	{
 		super();
 		

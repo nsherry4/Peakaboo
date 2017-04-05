@@ -8,12 +8,11 @@ import eventful.Eventful;
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.model.FittingSet;
-import peakaboo.dataset.AbstractDataSet;
+import peakaboo.dataset.StandardDataSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
@@ -23,16 +22,14 @@ import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
-import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.SISize;
 import scitypes.Spectrum;
 
 
 public class DataController extends Eventful implements IDataController
 {
 
-	private AbstractDataSet 	dataModel;
+	private DataSet 	dataModel;
 	private IPlotController		plot;
 	private List<Integer>		badScans;
 	private int 				dataHeight, dataWidth;
@@ -45,7 +42,7 @@ public class DataController extends Eventful implements IDataController
 		badScans = new ArrayList<Integer>();
 	}
 	
-	public AbstractDataSet getDataModel()
+	public DataSet getDataModel()
 	{
 		return dataModel;
 	}
@@ -57,7 +54,7 @@ public class DataController extends Eventful implements IDataController
 	@Override
 	public List<DataSource> getDataSourcePlugins()
 	{
-		return DataSet.getDataSourcePlugins();
+		return StandardDataSet.getDataSourcePlugins();
 	}
 	
 	
@@ -65,7 +62,7 @@ public class DataController extends Eventful implements IDataController
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
-		final DataSet dataset = new DataSet();
+		final StandardDataSet dataset = new StandardDataSet();
 		final ExecutorSet<DatasetReadResult> readTasks = dataset.TASK_readFileListAsDataset(filenames, dsp);
 
 
@@ -154,12 +151,12 @@ public class DataController extends Eventful implements IDataController
 	}
 
 
-	public void setDataSetProvider(AbstractDataSet dsp)
+	public void setDataSetProvider(DataSet dsp)
 	{
 	
 		if (dsp == null) return;
 		
-		AbstractDataSet old = dataModel;
+		DataSet old = dataModel;
 		dataModel = dsp;
 		
 		plot.settings().setScanNumber( dsp.firstNonNullScanIndex() );
@@ -185,7 +182,7 @@ public class DataController extends Eventful implements IDataController
 
 	public void setDataSource(DataSource ds)
 	{
-		setDataSetProvider(new DataSet(ds));
+		setDataSetProvider(new StandardDataSet(ds));
 	}
 
 	public String getCurrentScanName()

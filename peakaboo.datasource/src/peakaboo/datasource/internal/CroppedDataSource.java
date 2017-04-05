@@ -2,8 +2,6 @@ package peakaboo.datasource.internal;
 
 import java.util.List;
 
-import com.sun.xml.internal.ws.server.UnsupportedMediaException;
-
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
