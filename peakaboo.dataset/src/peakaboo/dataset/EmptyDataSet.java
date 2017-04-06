@@ -60,12 +60,6 @@ public class EmptyDataSet extends AbstractDataSet
 		return false;
 	}
 
-	@Override
-	public String getDatasetName()
-	{
-		// TODO Auto-generated method stub
-		return "";
-	}
 
 
 	@Override

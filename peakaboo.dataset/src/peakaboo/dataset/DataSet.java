@@ -137,14 +137,7 @@ public interface DataSet {
 	boolean hasPhysicalSize();
 	PhysicalSize getPhysicalSize();
 	DataSize getDataSize();
-	
-	
-	/**
-	 * Gets the name of the data set
-	 * 
-	 * @return the name of the data set
-	 */
-	String getDatasetName();
+
 	
 	int size();
 

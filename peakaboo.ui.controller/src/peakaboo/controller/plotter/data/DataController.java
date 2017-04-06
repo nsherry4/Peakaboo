@@ -126,7 +126,7 @@ public class DataController extends Eventful implements IDataController
 
 	public String getDatasetName()
 	{
-		return dataModel.getDatasetName();
+		return dataModel.getScanData().datasetName();
 	}
 
 	public boolean hasDataSet()

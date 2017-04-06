@@ -387,13 +387,6 @@ public class StandardDataSet extends AbstractDataSet
 		return dataSource.hasMetadata();
 	}
 	
-	
-	@Override
-	public String getDatasetName()
-	{
-		return dataSource.getScanData().datasetName();
-	}
-
 
 
 	@Override
