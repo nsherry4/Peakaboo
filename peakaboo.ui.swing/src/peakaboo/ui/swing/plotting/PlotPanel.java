@@ -82,6 +82,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -1218,7 +1219,7 @@ public class PlotPanel extends ClearPanel
 	{
 
 		List<AbstractFile> files;
-		List<DataSource> formats =  new ArrayList<DataSource>(controller.data().getDataSourcePlugins());
+		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
 				
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
@@ -1239,7 +1240,7 @@ public class PlotPanel extends ClearPanel
 	public void loadFiles(List<String> filenames)
 	{
 
-		List<DataSource> formats =  new ArrayList<DataSource>(controller.data().getDataSourcePlugins());
+		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
 		formats = DataSourceLookup.findDataSourcesForFiles(filenames, formats);
 		
 		if (formats.size() > 1)

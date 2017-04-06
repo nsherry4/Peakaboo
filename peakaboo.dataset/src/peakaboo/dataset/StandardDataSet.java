@@ -452,28 +452,6 @@ public class StandardDataSet implements DataSet
 		}
 	}
 
-	
-	
-	
-	
-	/*
-	 * 
-	 * STATIC METHODS
-	 * 
-	 */
-	
-
-	public static List<DataSource> getDataSourcePlugins()
-	{
-		return DataSourceLoader.getDSPs();
-	}
-
-
-	
-
-
-
-
 
 	
 }

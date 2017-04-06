@@ -24,7 +24,6 @@ public interface IDataController extends IEventful
 	
 	void setDataSource(DataSource ds);
 	void setDataSetProvider(DataSet dsp);
-	List<DataSource> getDataSourcePlugins();
 	
 	ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, DataSource dsp);
 	ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);

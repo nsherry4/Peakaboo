@@ -31,6 +31,7 @@ import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.DataSourceLoader;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.javafx.change.IChangeController;
@@ -206,7 +207,7 @@ public class PlotWindowController extends IActofUIController {
     public void onDatasetOpen() {
 
         List<File> files;
-        List<DataSource> formats = new ArrayList<DataSource>(plotController.data().getDataSourcePlugins());
+        List<DataSource> formats = new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
 
         String[][] exts = new String[formats.size()][];
         String[] descs = new String[formats.size()];
@@ -258,7 +259,7 @@ public class PlotWindowController extends IActofUIController {
 
         List<String> filenames = files.stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList());
 
-        List<DataSource> formats = new ArrayList<DataSource>(plotController.data().getDataSourcePlugins());
+        List<DataSource> formats = new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
         formats = DataSourceLookup.findDataSourcesForFiles(filenames, formats);
 
         if (formats.size() > 1) {

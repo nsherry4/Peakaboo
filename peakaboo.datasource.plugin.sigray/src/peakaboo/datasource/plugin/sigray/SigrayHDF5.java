@@ -38,7 +38,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 		
 		// SigrayHDF5 sigray = new SigrayHDF5();
 		// sigray.read("/home/nathaniel/Downloads/9-16-16-QuartzonGla0018.h5");
-		DataSourceLoader.getDSPs(); // initialize
+		DataSourceLoader.getDataSourcePlugins(); // initialize
 		DataSourceLoader.loader.registerPlugin(SigrayHDF5.class);
 
 		//Peakaboo.run();

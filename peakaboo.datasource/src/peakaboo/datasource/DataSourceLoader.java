@@ -18,7 +18,7 @@ public class DataSourceLoader
 
 	public static BoltPluginLoader<PluginDataSource> loader;
 	
-	public synchronized static List<DataSource> getDSPs()
+	public synchronized static List<DataSource> getDataSourcePlugins()
 	{
 
 		try
@@ -75,7 +75,7 @@ public class DataSourceLoader
 	
 	public static void main(String[] args)
 	{
-		getDSPs();
+		getDataSourcePlugins();
 	}
 	
 }
