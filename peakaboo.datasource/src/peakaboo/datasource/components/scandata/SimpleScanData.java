@@ -1,10 +1,7 @@
 package peakaboo.datasource.components.scandata;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.List;
 
-import fava.functionable.Range;
 import peakaboo.datasource.SpectrumList;
 import scitypes.Spectrum;
 
@@ -21,7 +18,7 @@ public class SimpleScanData implements ScanData {
 
 	@Override
 	public Spectrum get(int index) throws IndexOutOfBoundsException {
-		return spectra.get(index);
+		return new Spectrum(spectra.get(index)); //return read-only
 	}
 	
 	public void add(Spectrum spectrum) {
@@ -38,8 +35,8 @@ public class SimpleScanData implements ScanData {
 	}
 
 	@Override
-	public List<String> scanNames() {
-		return new Range(0, scanCount()-1).stream().map(e -> "Scan #" + (e+1)).collect(toList());
+	public String scanName(int index) {
+		return "Scan #" + (index+1);
 	}
 
 	@Override

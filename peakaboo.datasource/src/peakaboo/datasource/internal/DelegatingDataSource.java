@@ -27,6 +27,10 @@ public class DelegatingDataSource implements DataSource {
 		this.backer = backer;
 	}
 	
+	public DataSource getDataSource() {
+		return backer;
+	}
+	
 	@Override
 	public void setInteraction(Interaction interaction) {
 		this.backer.setInteraction(interaction);

@@ -729,12 +729,8 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public List<String> scanNames() {
-		List<String> scanNames = new ArrayList<String>();		
-		for (int i = 0; i < scanCount(); i++) {
-		    scanNames.add("Scan #" + (i + 1));
-		}
-		return scanNames;
+	public String scanName(int index) {
+		return "Scan #" + (index+1);
 	}
 
 	@Override

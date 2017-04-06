@@ -122,15 +122,8 @@ public class CSV extends AbstractDataSource implements ScanData
 	}
 
 	@Override
-	public List<String> scanNames()
-	{
-		//make up names for the scans, since they have no names or timestamps in this format
-		List<String> names = new ArrayList<String>();
-		for (int i = 0; i < data.size(); i++)
-		{
-			names.add("Scan #" + i);
-		}
-		return names;
+	public String scanName(int index) {
+		return "Scan #" + (index+1);
 	}
 
 

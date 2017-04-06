@@ -43,7 +43,7 @@ public class ScienceStudioDSPCmdLineTest {
 		System.out.println("Real Dimensions: " + dataSource.getPhysicalSize().getPhysicalDimensions());
 	
 		for(int idx=0; (idx<dataSource.getScanData().scanCount()) && (idx<100); idx++) {
-			System.out.print(dataSource.getScanData().scanNames().get(idx) + ": ");
+			System.out.print(dataSource.getScanData().scanName(idx) + ": ");
 			System.out.print(dataSource.getDataSize().getDataCoordinatesAtIndex(idx) + ": ");
 			System.out.print(dataSource.getPhysicalSize().getPhysicalCoordinatesAtIndex(idx) + ": ");
 			System.out.print(spectrumToString(dataSource.getScanData().get(idx), 20));

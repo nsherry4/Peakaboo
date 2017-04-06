@@ -30,7 +30,7 @@ public interface ScanData
 	/**
 	 * Returns the names of all scans, eg ["Scan 1", "Scan 2", ...]
 	 */
-	List<String> scanNames();
+	String scanName(int index);
 
 
 	/**
@@ -47,6 +47,9 @@ public interface ScanData
 	 * within the file itself, etc...
 	 */
 	String datasetName();
+	
+	
+
 	
 
 }

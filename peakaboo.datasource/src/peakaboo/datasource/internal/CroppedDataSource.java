@@ -21,7 +21,6 @@ import scitypes.Spectrum;
 public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, ScanData
 {
 
-	private FList<String>				scannames = new FList<String>();
 	private DataSource					originalDataSource;
 	
 	private int							sizeX, sizeY;
@@ -37,13 +36,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 		
 		this.rangeX = new Range(cstart.x, cend.x);
 		this.rangeY = new Range(cstart.y, cend.y);
-		
-		scannames = new FList<String>();
-		for (Integer c : new Range(0, scanCount()))
-		{
-			scannames.add("Scan " + c);			
-		}
-		
+				
 	}
 	
 
@@ -52,11 +45,6 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 		return originalDataSource.getScanData().datasetName() + " Subset";
 	}
 
-
-	public int getExpectedScanCount()
-	{
-		return rangeX.size() * rangeY.size();
-	}
 
 
 	public float maxEnergy()
@@ -87,8 +75,14 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index)
 	{
-		
 		if (!originalDataSource.hasDataSize()) { throw new UnsupportedOperationException(); }
+				
+		return originalDataSource.getDataSize().getDataCoordinatesAtIndex(realIndex(index));
+	}
+	
+	
+	private int realIndex(int index) {
+		
 		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
 		GridPerspective<Spectrum> origgrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
@@ -99,11 +93,8 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 		x += rangeX.getStart();
 		y += rangeY.getStart();
 		
-		int realIndex = origgrid.getIndexFromXY(x, y);
-				
-		return originalDataSource.getDataSize().getDataCoordinatesAtIndex(realIndex);
+		return  origgrid.getIndexFromXY(x, y);
 	}
-	
 	
 	public int scanCount()
 	{
@@ -111,9 +102,8 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	}
 
 
-	public List<String> scanNames()
-	{
-		return scannames.toSink();
+	public String scanName(int index) {
+		return originalDataSource.getScanData().scanName(realIndex(index));
 	}
 
 
@@ -230,7 +220,6 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	public PhysicalSize getPhysicalSize() {
 		return this;
 	}
-
 
 	
 	

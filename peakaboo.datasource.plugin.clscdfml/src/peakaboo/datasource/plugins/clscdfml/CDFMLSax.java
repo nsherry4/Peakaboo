@@ -336,18 +336,11 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 	}
 
 
-	
-	public List<String> scanNames()
-	{
-		List<String> scannames = new ArrayList<String>();
-
-		for (int i = 0; i < scanCount(); i++)
-		{
-			scannames.add("Scan #" + (i + 1));
-		}
-
-		return scannames;
+	@Override
+	public String scanName(int index) {
+		return "Scan #" + (index+1);
 	}
+
 
 	private int getDataWidth()
 	{

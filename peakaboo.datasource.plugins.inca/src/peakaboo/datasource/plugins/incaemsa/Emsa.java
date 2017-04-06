@@ -205,9 +205,8 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 
 	@Override
-	public List<String> scanNames()
-	{
-		return new Range(0, scanCount()-1).stream().map(element -> "Scan #" + (element+1)).collect(toList());
+	public String scanName(int index) {
+		return "Scan #" + (index+1);
 	}
 
 	@Override

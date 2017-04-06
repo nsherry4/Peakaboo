@@ -65,9 +65,10 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 	}
 
 	@Override
-	public List<String> scanNames() {
-		return new FList<String>("Scan");
+	public String scanName(int index) {
+		return "Scan #" + (index+1);
 	}
+
 
 	@Override
 	public float maxEnergy() {

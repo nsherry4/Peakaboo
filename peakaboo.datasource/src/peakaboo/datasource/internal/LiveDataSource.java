@@ -34,12 +34,6 @@ public class LiveDataSource implements ScanData
 	}
 
 
-	public int getExpectedScanCount()
-	{
-		return scans.size();
-	}
-
-
 	public float maxEnergy()
 	{
 		return maxEnergy;
@@ -58,15 +52,8 @@ public class LiveDataSource implements ScanData
 	}
 
 
-	public List<String> scanNames()
-	{
-		List<String> names = new ArrayList<String>();
-		for (int i = 0; i < scanCount(); i++)
-		{
-			names.add("Scan " + i);
-		}
-		
-		return names;
+	public String scanName(int index) {
+		return "Scan #" + (index+1);
 	}
 
 
