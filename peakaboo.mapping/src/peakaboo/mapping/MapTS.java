@@ -7,7 +7,6 @@ import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.dataset.AbstractDataSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.StandardDataSet;
 import peakaboo.filter.model.FilterSet;

@@ -21,6 +21,8 @@ import scitypes.Spectrum;
  */
 public interface DataSet {
 
+	
+	
 	/**
 	 * Produces a single scan/list containing the average value for each channel
 	 * 
@@ -75,7 +77,7 @@ public interface DataSet {
 
 
 	/**
-	 * Calculates the maximum intensity across all scans
+	 * Calculates the maximum single-channel intensity across all scans
 	 * 
 	 * @return the maximum intensity
 	 */
@@ -106,7 +108,8 @@ public interface DataSet {
 
 	/**
 	 * Does this implementation of the DataSetContainer actually contain data? {@link EmptyDataSet} purposefully
-	 * doesn't
+	 * doesn't. This is different than the hasScanData method for a DataSource, since hasData() will return false 
+	 * if a ScanData object exists, but has 0 scans.
 	 * 
 	 * @return true if this dataset has data, false otherwise
 	 */
@@ -138,6 +141,53 @@ public interface DataSet {
 	PhysicalSize getPhysicalSize();
 	DataSize getDataSize();
 
+	
+	
+
+	/**
+	 * Given a {@link DataSource} finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
+	 * @param ds the {@link DataSource} to check
+	 * @param start the index from which to start searching
+	 * @return the index of the first non-null scan, or -1 if no such scans exist
+	 */
+	//This method is here, rather than in DataSet because DataSet uses these methods while initializing itself from a DataSource, therefore the DataSource must be passed explicitly
+	public static int firstNonNullScanIndex(DataSource ds, int start)
+	{
+		for (int i = start; i < ds.getScanData().scanCount(); i++)
+		{
+			if (ds.getScanData().get(i) != null)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	
+
+
+	
+	/**
+	 * Given a {@link DataSource} finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
+	 * @param ds the {@link DataSource} to check
+	 * @param upto the maximum index to consider
+	 * @return the index of the last non-null scan, or -1 if no such scans exist
+	 */
+	public static int lastNonNullScanIndex(DataSource ds, int upto)
+	{
+		upto = Math.min(upto, ds.getScanData().scanCount()-1);
+		
+		for (int i = upto; i >= 0; i--)
+		{
+			if (ds.getScanData().get(i) != null)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
 
 
 }

@@ -8,13 +8,10 @@ import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.DummyScanData;
 import peakaboo.datasource.components.scandata.ScanData;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class EmptyDataSet extends AbstractDataSet
+public class EmptyDataSet implements DataSet
 {
 
 	@Override

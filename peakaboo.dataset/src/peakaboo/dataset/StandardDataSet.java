@@ -40,7 +40,7 @@ import scitypes.SpectrumCalculations;
  * @author Nathaniel Sherry, 2009-2017
  */
 
-public class StandardDataSet extends AbstractDataSet
+public class StandardDataSet implements DataSet
 {
 
 	protected Spectrum				averagedSpectrum;
@@ -276,25 +276,25 @@ public class StandardDataSet extends AbstractDataSet
 	@Override
 	public int firstNonNullScanIndex()
 	{
-		return AbstractDataSet.firstNonNullScanIndex(dataSource, 0);
+		return DataSet.firstNonNullScanIndex(dataSource, 0);
 	}
 	
 	@Override
 	public int firstNonNullScanIndex(int start)
 	{
-		return AbstractDataSet.firstNonNullScanIndex(dataSource, start);
+		return DataSet.firstNonNullScanIndex(dataSource, start);
 	}
 	
 	@Override
 	public int lastNonNullScanIndex()
 	{
-		return AbstractDataSet.lastNonNullScanIndex(dataSource, dataSource.getScanData().scanCount()-1);
+		return DataSet.lastNonNullScanIndex(dataSource, dataSource.getScanData().scanCount()-1);
 	}
 	
 	@Override
 	public int lastNonNullScanIndex(int upto)
 	{
-		return AbstractDataSet.lastNonNullScanIndex(dataSource, upto);
+		return DataSet.lastNonNullScanIndex(dataSource, upto);
 	}
 	
 	
@@ -305,7 +305,7 @@ public class StandardDataSet extends AbstractDataSet
 				
 
 		
-		int nonNullScanIndex = AbstractDataSet.firstNonNullScanIndex(ds, 0);
+		int nonNullScanIndex = DataSet.firstNonNullScanIndex(ds, 0);
 		if (nonNullScanIndex == -1) return;
 		Spectrum nonNullScan = ds.getScanData().get(nonNullScanIndex);
 		if (nonNullScan == null) return;
