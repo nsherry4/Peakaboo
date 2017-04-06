@@ -19,6 +19,7 @@ import peakaboo.datasource.components.datasize.DummyDataSize;
 import peakaboo.datasource.components.interaction.CallbackInteraction;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
+import peakaboo.datasource.components.scandata.ScanData;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
@@ -163,7 +164,7 @@ public class StandardDataSet extends AbstractDataSet
 	public String getScanName(int index)
 	{
 		if (dataSource == null || index >= dataSource.getScanData().scanCount()) return "";
-		return dataSource.getScanData().scanNames().get(index);
+		return dataSource.getScanData().scanName(index);
 	}
 
 
@@ -173,17 +174,6 @@ public class StandardDataSet extends AbstractDataSet
 		return dataSource.getScanData().scanCount();
 	}
 
-	@Override
-	public int expectedScanCount()
-	{
-		
-		if (dataSource.hasDataSize()) 
-		{
-			Coord<Integer> dataDimension = dataSource.getDataSize().getDataDimensions();
-			return dataDimension.x * dataDimension.y;
-		}
-		return size();
-	}
 
 	@Override
 	public void invalidateFilteredData()
@@ -489,8 +479,18 @@ public class StandardDataSet extends AbstractDataSet
 		return dataSource;
 	}
 	
+
+
+	@Override
+	public ScanData getScanData() {
+		return dataSource.getScanData();
+	}
+
 	
-	
+	@Override
+	public boolean hasScanData() {
+		return dataSource.hasScanData();
+	}
 	
 	
 	
@@ -507,6 +507,9 @@ public class StandardDataSet extends AbstractDataSet
 	{
 		return DataSourceLoader.getDSPs();
 	}
+
+
+	
 
 
 

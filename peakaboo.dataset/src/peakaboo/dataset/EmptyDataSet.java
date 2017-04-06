@@ -6,6 +6,7 @@ import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
+import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -99,12 +100,6 @@ public class EmptyDataSet extends AbstractDataSet
 		return 0;
 	}
 
-	@Override
-	public int expectedScanCount()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public int firstNonNullScanIndex()
@@ -182,6 +177,18 @@ public class EmptyDataSet extends AbstractDataSet
 	public DataSize getDataSize() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ScanData getScanData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasScanData() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
