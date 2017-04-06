@@ -187,7 +187,7 @@ public class DataController extends Eventful implements IDataController
 
 	public String getCurrentScanName()
 	{
-		return dataModel.getScanName(plot.settings().getScanNumber());
+		return dataModel.getScanData().scanName(plot.settings().getScanNumber());
 	}
 
 

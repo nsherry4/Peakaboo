@@ -8,7 +8,7 @@ public class DummyScanData implements ScanData {
 	
 	@Override
 	public Spectrum get(int index) throws IndexOutOfBoundsException {
-		return new Spectrum(2048, 0f);
+		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
@@ -18,7 +18,7 @@ public class DummyScanData implements ScanData {
 
 	@Override
 	public String scanName(int index) {
-		return "<Empty Scan>";
+		return "<No Data>";
 	}
 
 	@Override

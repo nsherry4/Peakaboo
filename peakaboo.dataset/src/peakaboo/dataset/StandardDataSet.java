@@ -151,15 +151,6 @@ public class StandardDataSet extends AbstractDataSet
 	}
 
 
-
-	@Override
-	public String getScanName(int index)
-	{
-		if (dataSource == null || index >= dataSource.getScanData().scanCount()) return "";
-		return dataSource.getScanData().scanName(index);
-	}
-
-
 	@Override
 	public int size()
 	{

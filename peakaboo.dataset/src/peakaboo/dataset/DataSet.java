@@ -73,14 +73,6 @@ public interface DataSet {
 	 */
 	int lastNonNullScanIndex();
 
-	/**
-	 * Gets the name of a single scan. This could be a file name, a scan number, or something else inplementation
-	 * specific
-	 * 
-	 * @param index
-	 * @return the name of a scan
-	 */
-	String getScanName(int index);
 
 	/**
 	 * Calculates the maximum intensity across all scans

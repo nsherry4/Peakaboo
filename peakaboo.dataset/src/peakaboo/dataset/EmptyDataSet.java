@@ -67,14 +67,6 @@ public class EmptyDataSet extends AbstractDataSet
 		return "";
 	}
 
-	@Override
-	public String getScanName(int index)
-	{
-		// TODO Auto-generated method stub
-		return "";
-	}
-
-
 
 	@Override
 	public void discard()
