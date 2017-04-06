@@ -265,7 +265,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 					ts, 
 					tss, 
 					plot.settings().getEnergyPerChannel(), 
-					plot.data().getDataWidth(),
+					plot.data().getDataSet().channelsPerScan(),
 					plot.settings().getEscapePeakType()
 				).size() != 0;
 		}).collect(Collectors.toList());

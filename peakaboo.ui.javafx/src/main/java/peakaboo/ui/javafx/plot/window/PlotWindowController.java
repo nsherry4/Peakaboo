@@ -169,20 +169,20 @@ public class PlotWindowController extends IActofUIController {
     	
     	MappingController mapController = plotController.checkoutMapController();
     	
-		if (plotController.data().hasPhysicalSize()) {
+		if (plotController.data().getDataSet().hasPhysicalSize()) {
 			mapController.mapsController.setMapData(
 					results,
 					plotController.data().getDatasetName(),
-					plotController.data().getDataSize().getDataDimensions(),
-					plotController.data().getPhysicalSize().getPhysicalDimensions(),
-					plotController.data().getPhysicalSize().getPhysicalUnit(),
-					plotController.data().getDiscardedScanList()
+					plotController.data().getDataSet().getDataSize().getDataDimensions(),
+					plotController.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
+					plotController.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
+					plotController.data().getDiscards().list()
 				);
 		} else {
 			mapController.mapsController.setMapData(
 					results,
 					plotController.data().getDatasetName(),
-					plotController.data().getDiscardedScanList()
+					plotController.data().getDiscards().list()
 				);
 		}
 		mapController.mapsController.setInterpolation(0);

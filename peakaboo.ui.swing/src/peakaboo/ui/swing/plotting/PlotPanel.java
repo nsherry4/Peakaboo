@@ -244,7 +244,8 @@ public class PlotPanel extends ClearPanel
 			{
 
 				scanNo.setValue(controller.settings().getScanNumber() + 1);
-				scanBlock.setSelected(controller.data().getScanDiscarded());
+				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.settings().getScanNumber()));
+				
 				scanSelector.setEnabled(true);
 
 			}
@@ -1093,7 +1094,11 @@ public class PlotPanel extends ClearPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.data().setScanDiscarded(scanBlock.isSelected());
+				if (scanBlock.isSelected()) {
+					controller.data().getDiscards().discard(controller.settings().getScanNumber());
+				} else {
+					controller.data().getDiscards().undiscard(controller.settings().getScanNumber());
+				}
 			}
 		});
 
@@ -1306,16 +1311,16 @@ public class PlotPanel extends ClearPanel
 			MapResultSet results = tasks.getResult();
 
 
-			if (controller.data().hasPhysicalSize())
+			if (controller.data().getDataSet().hasPhysicalSize())
 			{
 
 				mapController.mapsController.setMapData(
 						results,
 						controller.data().getDatasetName(),
-						controller.data().getDataSize().getDataDimensions(),
-						controller.data().getPhysicalSize().getPhysicalDimensions(),
-						controller.data().getPhysicalSize().getPhysicalUnit(),
-						controller.data().getDiscardedScanList()
+						controller.data().getDataSet().getDataSize().getDataDimensions(),
+						controller.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
+						controller.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
+						controller.data().getDiscards().list()
 					);
 				
 			} else {
@@ -1323,7 +1328,7 @@ public class PlotPanel extends ClearPanel
 				mapController.mapsController.setMapData(
 						results,
 						controller.data().getDatasetName(),
-						controller.data().getDiscardedScanList()
+						controller.data().getDiscards().list()
 					);
 				
 			}

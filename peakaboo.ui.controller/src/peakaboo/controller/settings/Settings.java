@@ -71,11 +71,12 @@ public class Settings
 		}
 
 		
-		
+		System.out.println("bad scans restore");
+		dataController.getDiscards().clear();
 		for (Integer i : data.badScans)
 		{
-			if (  (dataController.hasDataSet() && dataController.size() <= i)  ||  (!dataController.hasDataSet())  ) {
-				dataController.setScanDiscarded(i, true);
+			if (  (dataController.hasDataSet() && dataController.size() > i)  ) {
+				dataController.getDiscards().discard(i);
 			}
 		}
 		
@@ -126,7 +127,7 @@ public class Settings
 		data.drawingRequest = plotController.getDR();
 		data.settings = settings;
 
-		data.badScans = plotController.data().getDiscardedScanList();
+		data.badScans = plotController.data().getDiscards().list();
 
 		//try writing the serialized data
 		try

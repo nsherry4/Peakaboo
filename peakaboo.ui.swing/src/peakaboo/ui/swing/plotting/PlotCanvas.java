@@ -156,7 +156,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			parentWidth = this.getParent().getWidth();
 		}
 
-		int newWidth = (int) (controller.data().getDataWidth() * controller.settings().getZoom());
+		int newWidth = (int) (controller.data().getDataSet().channelsPerScan() * controller.settings().getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
 		this.setPreferredSize(new Dimension(newWidth, 1));

@@ -1,21 +1,20 @@
 package peakaboo.controller.plotter.data;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import eventful.Eventful;
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.data.discards.Discards;
+import peakaboo.controller.plotter.data.discards.DiscardsList;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.StandardDataSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
-import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.internal.CroppedDataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
@@ -26,26 +25,34 @@ import scitypes.Coord;
 import scitypes.Spectrum;
 
 
+/**
+ * DataController wraps a DataSet in a UI-aware layer which integrates with the {@link IPlotController}
+ * 
+ */
 public class DataController extends Eventful implements IDataController
 {
 
-	private DataSet 	dataModel;
+	private DataSet 			dataModel;
 	private IPlotController		plot;
-	private List<Integer>		badScans;
-	private int 				dataHeight, dataWidth;
+	private Discards			discards;
 	
 	
 	public DataController(IPlotController plotController)
 	{
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();
-		badScans = new ArrayList<Integer>();
+		discards = new DiscardsList(plot);
 	}
 	
 	public DataSet getDataModel()
 	{
 		return dataModel;
 	}
+	
+	public DataSet getDataSet() {
+		return dataModel;
+	}
+	
 	
 	// =============================================
 	// Functions to implement IDataController
@@ -101,17 +108,6 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.channelsPerScan();
 	}
 
-	
-
-	public int getDataHeight()
-	{
-		return dataHeight;
-	}
-	
-	public int getDataWidth()
-	{
-		return dataWidth;
-	}
 
 	public String getDataSourceFolder()
 	{
@@ -133,22 +129,6 @@ public class DataController extends Eventful implements IDataController
 		return dataModel.hasData();
 	}
 
-	@Override
-	public boolean hasPhysicalSize()
-	{
-		return dataModel.hasPhysicalSize();
-	}
-
-	@Override
-	public PhysicalSize getPhysicalSize() {
-		return dataModel.getPhysicalSize();
-	}
-	
-	@Override
-	public DataSize getDataSize() {
-		return dataModel.getDataSize();
-	}
-
 
 	public void setDataSetProvider(DataSet dsp)
 	{
@@ -160,8 +140,6 @@ public class DataController extends Eventful implements IDataController
 		
 		plot.settings().setScanNumber( dsp.firstNonNullScanIndex() );
 		
-		setDataWidth(dataModel.channelsPerScan());
-		setDataHeight(1);
 		
 		plot.fitting().setFittingParameters(dataModel.energyPerChannel());
 				
@@ -205,56 +183,16 @@ public class DataController extends Eventful implements IDataController
 	}
 	
 
-	
-	
-	
-	public boolean getScanDiscarded(int scanNo)
-	{
-		return (badScans.indexOf(scanNo) != -1);
-	}
-
-	public boolean getScanDiscarded()
-	{
-		return getScanDiscarded(plot.settings().getScanNumber());
-	}
-
-	public void setScanDiscarded(int scanNo, boolean discarded)
-	{
-
-		if (discarded)
-		{
-			if (!getScanDiscarded(scanNo)) badScans.add(scanNo);
-			plot.filtering().filteredDataInvalidated();
-		}
-		else
-		{
-			if (getScanDiscarded(scanNo)) badScans.remove(badScans.indexOf(scanNo));
-			plot.filtering().filteredDataInvalidated();
-		}
-
-		plot.history().setUndoPoint("Marking Bad");
-
-	}
-
-	public void setScanDiscarded(boolean discarded)
-	{
-		setScanDiscarded(plot.settings().getScanNumber(), discarded);
-	}
-
-	public List<Integer> getDiscardedScanList()
-	{
-		return new ArrayList<Integer>(badScans);
-	}	
-	
-	public void clearDiscardedScanList()
-	{
-		badScans.clear();
+	public Discards getDiscards() {
+		return discards;
 	}
 	
+	
+
 	
 	public Spectrum getAveragePlot()
 	{
-		return dataModel.averagePlot(badScans);
+		return dataModel.averagePlot(discards.list());
 	}
 
 	public Spectrum getMaximumPlot()
@@ -336,27 +274,6 @@ public class DataController extends Eventful implements IDataController
 		
 	}
 	
-	
-	
-
-	
-	
-	
-	// =============================================
-	// Helper Functions
-	// =============================================
-	private void setDataHeight(int height)
-	{
-		dataHeight = height;
-		updateListeners();
-	}
-	
-	private void setDataWidth(int width)
-	{
-		dataWidth = width;
-		updateListeners();
-	}
-
 
 
 

@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import eventful.IEventful;
+import peakaboo.controller.plotter.data.discards.Discards;
+import peakaboo.controller.plotter.data.discards.DiscardsList;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
@@ -11,6 +13,7 @@ import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
+import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -52,9 +55,7 @@ public interface IDataController extends IEventful
 	boolean hasDataSet();
 	int size();
 	int channelsPerScan();
-	int getDataHeight();
-	int getDataWidth();
-	
+
 	
 	boolean hasMetadata();
 	Metadata getMetadata();
@@ -63,15 +64,8 @@ public interface IDataController extends IEventful
 	String getCurrentScanName();
 
 	
-	boolean getScanDiscarded(int scanNo);
-	boolean getScanDiscarded();
-	void setScanDiscarded(int scanNo, boolean discarded);
-	void setScanDiscarded(boolean discarded);
-	List<Integer> getDiscardedScanList();
-	void clearDiscardedScanList();
-
-	boolean hasPhysicalSize();
-	PhysicalSize getPhysicalSize();
-	DataSize getDataSize();
+	Discards getDiscards();
+	
+	DataSet getDataSet();
 	
 }
