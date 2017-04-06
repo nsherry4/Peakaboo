@@ -87,8 +87,8 @@ public class Settings
 		
 		
 		if (dataController.hasDataSet()) {
-			fittings.selections.setDataParameters(dataController.channelsPerScan(), plotController.getDR().unitSize, settings.escape);
-			fittings.proposals.setDataParameters(dataController.channelsPerScan(), plotController.getDR().unitSize, settings.escape);
+			fittings.selections.setDataParameters(dataController.getDataSet().channelsPerScan(), plotController.getDR().unitSize, settings.escape);
+			fittings.proposals.setDataParameters(dataController.getDataSet().channelsPerScan(), plotController.getDR().unitSize, settings.escape);
 		}
 
 

@@ -30,12 +30,8 @@ public interface IDataController extends IEventful
 	ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	
 
-	
 	Iterator<Spectrum> getScanIterator();
 	boolean hasDataSet();
-	int channelsPerScan();
-	
-	String getCurrentScanName();
 	
 	Discards getDiscards();
 	DataSet getDataSet();

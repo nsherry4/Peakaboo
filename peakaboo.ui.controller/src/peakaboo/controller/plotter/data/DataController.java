@@ -94,13 +94,6 @@ public class DataController extends Eventful implements IDataController
 	}
 
 
-	@Override
-	public int channelsPerScan()
-	{
-		if (!dataModel.hasData()) return 0;
-		return dataModel.channelsPerScan();
-	}
-
 
 	@Override
 	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
@@ -148,14 +141,8 @@ public class DataController extends Eventful implements IDataController
 	{
 		setDataSetProvider(new StandardDataSet(ds));
 	}
-	@Override
-	public String getCurrentScanName()
-	{
-		return dataModel.getScanData().scanName(plot.settings().getScanNumber());
-	}
 
 
-	
 	
 
 	

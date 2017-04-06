@@ -63,7 +63,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	@Override
 	public void setEnergyPerChannel(float energy)
 	{
-		if (!plot.data().hasDataSet() || plot.data().channelsPerScan() == 0)
+		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
 		{
 			return;
 		}
@@ -81,23 +81,23 @@ public class SettingsController extends Eventful implements ISettingsController
 	@Override
 	public void setMaxEnergy(float energy)
 	{
-		if (!plot.data().hasDataSet() || plot.data().channelsPerScan() == 0)
+		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
 		{
 			return;
 		}
 		//dont set an undo point here -- setEnergyPerChannel does that already
-		setEnergyPerChannel(energy / (plot.data().channelsPerScan()));
+		setEnergyPerChannel(energy / (plot.data().getDataSet().channelsPerScan()));
 
 	}
 
 	@Override
 	public float getMaxEnergy()
 	{
-		if (!plot.data().hasDataSet() || plot.data().channelsPerScan() == 0)
+		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
 		{
 			return 20.48f;
 		}
-		return plot.getDR().unitSize * (plot.data().channelsPerScan());
+		return plot.getDR().unitSize * (plot.data().getDataSet().channelsPerScan());
 	}
 
 	@Override
@@ -283,7 +283,7 @@ public class SettingsController extends Eventful implements ISettingsController
 	public Pair<Float, Float> getValueForChannel(int channel)
 	{
 		if (channel == -1) return null;
-		if (channel >= plot.data().channelsPerScan()) return null;
+		if (channel >= plot.data().getDataSet().channelsPerScan()) return null;
 
 		Pair<Spectrum, Spectrum> scans = plot.getDataForPlot();
 		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
