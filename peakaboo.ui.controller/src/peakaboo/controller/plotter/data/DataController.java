@@ -265,7 +265,7 @@ public class DataController extends Eventful implements IDataController
 
 	public Spectrum getScanAtIndex(int index)
 	{
-		return dataModel.getScan(index);
+		return dataModel.getScanData().get(index);
 	}
 	
 	
@@ -339,12 +339,7 @@ public class DataController extends Eventful implements IDataController
 	
 	
 	
-	
-	public void invalidateFilteredData()
-	{
-		dataModel.invalidateFilteredData();
-	}
-	
+
 	
 	
 	

@@ -6,6 +6,7 @@ import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
+import peakaboo.datasource.components.scandata.DummyScanData;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -30,19 +31,7 @@ public class EmptyDataSet extends AbstractDataSet
 		return null;
 	}
 
-	@Override
-	public Spectrum getScan(int index)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void invalidateFilteredData()
-	{
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public float maximumIntensity()
@@ -182,13 +171,7 @@ public class EmptyDataSet extends AbstractDataSet
 	@Override
 	public ScanData getScanData() {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean hasScanData() {
-		// TODO Auto-generated method stub
-		return false;
+		return new DummyScanData();
 	}
 
 

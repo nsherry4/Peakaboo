@@ -175,7 +175,6 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	{
 		// Clear cached values, since they now have to be recalculated
 		filteringModel.filteredPlot = null;
-		plot.data().invalidateFilteredData();
 
 		plot.fitting().fittingDataInvalidated();
 		updateListeners();

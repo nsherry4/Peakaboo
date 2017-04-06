@@ -45,13 +45,7 @@ public interface DataSet {
 	Spectrum maximumPlot();
 
 	
-	/**
-	 * Retrieves a single scan from the data set
-	 * 
-	 * @param index
-	 * @return a single scan
-	 */
-	Spectrum getScan(int index);
+
 
 	/**
 	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
@@ -124,11 +118,9 @@ public interface DataSet {
 	 * 
 	 * @return true if this dataset has data, false otherwise
 	 */
+	//Note: This is different than a hasScanData method for a DataSource, since a DataSet will 
+	//always have ScanData, even if it's a DummyScanData object.
 	boolean hasData();
-
-	
-	//TODO: Appears to do nothing
-	void invalidateFilteredData();
 
 
 
@@ -145,7 +137,7 @@ public interface DataSet {
 	Metadata getMetadata();
 	boolean hasMetadata();
 	
-	boolean hasScanData();
+	//boolean hasScanData();
 	ScanData getScanData();
 
 	DataSource getDataSource();

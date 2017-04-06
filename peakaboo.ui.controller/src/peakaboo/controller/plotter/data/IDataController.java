@@ -47,9 +47,6 @@ public interface IDataController extends IEventful
 	
 	Iterator<Spectrum> getScanIterator();
 	
-	void invalidateFilteredData();
-	
-
 	String getDatasetName();
 	String getDataSourceFolder();
 	boolean hasDataSet();

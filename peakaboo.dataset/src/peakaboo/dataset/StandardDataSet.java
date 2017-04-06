@@ -19,6 +19,7 @@ import peakaboo.datasource.components.datasize.DummyDataSize;
 import peakaboo.datasource.components.interaction.CallbackInteraction;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
+import peakaboo.datasource.components.scandata.DummyScanData;
 import peakaboo.datasource.components.scandata.ScanData;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -150,15 +151,6 @@ public class StandardDataSet extends AbstractDataSet
 	}
 
 
-	@Override
-	public Spectrum getScan(int index)
-	{
-		Spectrum original = dataSource.getScanData().get(index);
-		if (original == null) return null;
-		return new Spectrum(original);
-
-	}
-
 
 	@Override
 	public String getScanName(int index)
@@ -174,12 +166,6 @@ public class StandardDataSet extends AbstractDataSet
 		return dataSource.getScanData().scanCount();
 	}
 
-
-	@Override
-	public void invalidateFilteredData()
-	{
-		
-	}
 
 
 
@@ -483,15 +469,13 @@ public class StandardDataSet extends AbstractDataSet
 
 	@Override
 	public ScanData getScanData() {
-		return dataSource.getScanData();
+		if (dataSource.hasScanData()) {
+			return dataSource.getScanData();
+		} else {
+			return new DummyScanData();
+		}
 	}
 
-	
-	@Override
-	public boolean hasScanData() {
-		return dataSource.hasScanData();
-	}
-	
 	
 	
 	

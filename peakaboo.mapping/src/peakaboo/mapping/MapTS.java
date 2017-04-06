@@ -51,10 +51,10 @@ public class MapTS
 		
 		final Consumer<Integer> t_filter = ordinal -> {
 			
-			Spectrum original = datasetProvider.getScan(ordinal); 
+			Spectrum original = datasetProvider.getScanData().get(ordinal); 
 			if (original == null) return;
 			
-			Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
+			Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScanData().get(ordinal)), false);
 			FittingResultSet frs = fittings.calculateFittings(data);
 
 			for (FittingResult result : frs.fits)
