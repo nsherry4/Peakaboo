@@ -113,7 +113,7 @@ public class SpectrumUIController extends IActofUIController {
 		}
 
 		if (settings.getShowTitle()) {
-			spectrum.setTitle(data == null ? "Title" : data.getDatasetName());
+			spectrum.setTitle(data == null ? "Title" : data.getDataSet().getScanData().datasetName());
 		}
 
 		spectrum.setStyle("-fx-background-color: #ffffff;");
@@ -248,7 +248,7 @@ public class SpectrumUIController extends IActofUIController {
 	private ValueAxis<Number> getYAxis() {
 		double ymax = 100;
 		if (data != null) {
-			ymax = data.maximumIntensity();
+			ymax = data.getDataSet().maximumIntensity();
 		}
 
 		if (plotController.settings().getViewLog()) {

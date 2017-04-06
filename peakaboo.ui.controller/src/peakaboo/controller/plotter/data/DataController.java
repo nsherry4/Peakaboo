@@ -43,12 +43,9 @@ public class DataController extends Eventful implements IDataController
 		dataModel = new EmptyDataSet();
 		discards = new DiscardsList(plot);
 	}
+
 	
-	public DataSet getDataModel()
-	{
-		return dataModel;
-	}
-	
+	@Override
 	public DataSet getDataSet() {
 		return dataModel;
 	}
@@ -96,12 +93,8 @@ public class DataController extends Eventful implements IDataController
 
 	}
 
-	
-	public int size()
-	{
-		return dataModel.getScanData().scanCount();
-	}
-	
+
+	@Override
 	public int channelsPerScan()
 	{
 		if (!dataModel.hasData()) return 0;
@@ -109,21 +102,14 @@ public class DataController extends Eventful implements IDataController
 	}
 
 
-	public String getDataSourceFolder()
-	{
-		return dataModel.getDataSourcePath();
-	}
-
+	@Override
 	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
 	{
 		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
-	public String getDatasetName()
-	{
-		return dataModel.getScanData().datasetName();
-	}
 
+	@Override
 	public boolean hasDataSet()
 	{
 		return dataModel.hasData();
@@ -156,12 +142,13 @@ public class DataController extends Eventful implements IDataController
 		
 
 	}
-
+	
+	@Override
 	public void setDataSource(DataSource ds)
 	{
 		setDataSetProvider(new StandardDataSet(ds));
 	}
-
+	@Override
 	public String getCurrentScanName()
 	{
 		return dataModel.getScanData().scanName(plot.settings().getScanNumber());
@@ -170,81 +157,36 @@ public class DataController extends Eventful implements IDataController
 
 	
 	
-	
-	
-	public boolean hasMetadata() {
-		if (dataModel == null) { return false; }
-		return dataModel.hasMetadata();
-	}
-	
-	public Metadata getMetadata() {
-		if (dataModel == null) { return null; }
-		return dataModel.getMetadata();
-	}
-	
 
+	
+	@Override
 	public Discards getDiscards() {
 		return discards;
 	}
 	
 	
 
-	
-	public Spectrum getAveragePlot()
-	{
-		return dataModel.averagePlot(discards.list());
-	}
 
-	public Spectrum getMaximumPlot()
-	{
-		return dataModel.maximumPlot();
-	}
-
-	public Spectrum getScanAtIndex(int index)
-	{
-		return dataModel.getScanData().get(index);
-	}
-	
 	
 	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
 	{
 		return MapTS.calculateMap(dataModel, filters, fittings, type);
 	}
 	
-	public float maximumIntensity()
-	{
-		return dataModel.maximumIntensity();
-	}
+
 	
 	
+
 	
 	
-	
-	public int firstNonNullScanIndex(int start)
-	{
-		return dataModel.firstNonNullScanIndex(start);
-	}
-	public int firstNonNullScanIndex()
-	{
-		return dataModel.firstNonNullScanIndex();
-	}
-	public int lastNonNullScanIndex(int upto)
-	{
-		return dataModel.lastNonNullScanIndex(upto);
-	}
-	public int lastNonNullScanIndex()
-	{
-		return dataModel.lastNonNullScanIndex();
-	}
-	
-	
+	@Override
 	public Iterator<Spectrum> getScanIterator()
 	{
 		
 		return new Iterator<Spectrum>() {
 
-			int nextIndex = firstNonNullScanIndex();
-			Spectrum next = getScanAtIndex(nextIndex);
+			int nextIndex = dataModel.firstNonNullScanIndex();
+			Spectrum next = dataModel.getScanData().get(nextIndex);
 			
 			
 			@Override
@@ -257,11 +199,11 @@ public class DataController extends Eventful implements IDataController
 			public Spectrum next()
 			{
 				Spectrum current = next;
-				nextIndex = firstNonNullScanIndex(nextIndex+1);
+				nextIndex = dataModel.firstNonNullScanIndex(nextIndex+1);
 				if (nextIndex == -1) {
 					next = null;
 				} else {
-					next = getScanAtIndex(nextIndex);
+					next = dataModel.getScanData().get(nextIndex);
 				}
 				return current;
 			}

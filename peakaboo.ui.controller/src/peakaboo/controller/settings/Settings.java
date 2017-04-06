@@ -75,7 +75,7 @@ public class Settings
 		dataController.getDiscards().clear();
 		for (Integer i : data.badScans)
 		{
-			if (  (dataController.hasDataSet() && dataController.size() > i)  ) {
+			if (  (dataController.hasDataSet() && dataController.getDataSet().getScanData().scanCount() > i)  ) {
 				dataController.getDiscards().discard(i);
 			}
 		}

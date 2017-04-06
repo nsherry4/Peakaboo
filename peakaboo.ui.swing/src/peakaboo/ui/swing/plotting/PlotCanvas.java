@@ -270,7 +270,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
 		Spectrum drawingData = dataForPlot.first;
-		float maxIntensity = Math.max(controller.data().maximumIntensity(), SpectrumCalculations.max(drawingData));
+		float maxIntensity = Math.max(controller.data().getDataSet().maximumIntensity(), SpectrumCalculations.max(drawingData));
 		int datasetSize = Math.min(controller.data().channelsPerScan(), drawingData.size());
 		
 		// if axes are shown, also draw horizontal grid lines
@@ -372,7 +372,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 		if (controller.settings().getShowTitle())
 		{
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.data().getDatasetName(), null));
+			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.data().getDataSet().getScanData().datasetName(), null));
 		}
 
 		if (controller.settings().getShowAxes())

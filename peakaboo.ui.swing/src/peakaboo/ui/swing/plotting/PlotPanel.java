@@ -82,6 +82,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -228,7 +229,7 @@ public class PlotPanel extends ClearPanel
 			toolbarMap.setEnabled(controller.fitting().canMap());
 
 
-			if (controller.data().hasMetadata())
+			if (controller.data().getDataSet().hasMetadata())
 			{
 				toolbarInfo.setEnabled(true);
 			}
@@ -394,7 +395,7 @@ public class PlotPanel extends ClearPanel
 		
 		if (controller.data().hasDataSet())
 		{
-			titleString.append(controller.data().getDatasetName());
+			titleString.append(controller.data().getDataSet().getScanData().datasetName());
 			titleString.append(programTitle);
 		} else {
 			titleString.append("No Data");
@@ -1126,7 +1127,7 @@ public class PlotPanel extends ClearPanel
 	// data set, and returns it to the caller
 	public List<AbstractFile> openNewDataset(String[][] exts, String[] desc)
 	{
-		return SwidgetIO.openFiles(container.getContainer(), "Select Data Files to Open", exts, desc, controller.data().getDataSourceFolder());
+		return SwidgetIO.openFiles(container.getContainer(), "Select Data Files to Open", exts, desc, controller.data().getDataSet().getDataSourcePath());
 	}
 
 
@@ -1316,7 +1317,7 @@ public class PlotPanel extends ClearPanel
 
 				mapController.mapsController.setMapData(
 						results,
-						controller.data().getDatasetName(),
+						controller.data().getDataSet().getScanData().datasetName(),
 						controller.data().getDataSet().getDataSize().getDataDimensions(),
 						controller.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
 						controller.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
@@ -1327,7 +1328,7 @@ public class PlotPanel extends ClearPanel
 								
 				mapController.mapsController.setMapData(
 						results,
-						controller.data().getDatasetName(),
+						controller.data().getDataSet().getScanData().datasetName(),
 						controller.data().getDiscards().list()
 					);
 				
@@ -1372,7 +1373,7 @@ public class PlotPanel extends ClearPanel
 
 	private void actionSavePicture()
 	{
-		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSourceFolder();
+		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
 		SavePicture sp = new SavePicture(container.getWindow(), canvas, saveFilesFolder);
 		saveFilesFolder = sp.getStartingFolder(); 
 	}
@@ -1380,7 +1381,7 @@ public class PlotPanel extends ClearPanel
 
 	private void actionSaveFittedDataInformation()
 	{
-		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSourceFolder();
+		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
 		
 		
 		
@@ -1395,7 +1396,7 @@ public class PlotPanel extends ClearPanel
 			tempfile.deleteOnExit();
 			
 			// get an output stream to write the data to
-			final DummyExecutor exec = new DummyExecutor(controller.data().size());
+			final DummyExecutor exec = new DummyExecutor(controller.data().getDataSet().getScanData().scanCount());
 			ExecutorSet<Exception> execset = new ExecutorSet<Exception>("Exporting Data") {
 				
 				@Override
@@ -1463,7 +1464,7 @@ public class PlotPanel extends ClearPanel
 	private void actionSaveFittingInformation()
 	{
 
-		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSourceFolder();
+		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
 
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
 		float intensity;
@@ -1535,19 +1536,21 @@ public class PlotPanel extends ClearPanel
 		
 		Map<String, String> properties = new LinkedHashMap<String, String>();
 
-		properties.put("Date of Creation", controller.data().getMetadata().getCreationTime());
-		properties.put("Created By", controller.data().getMetadata().getCreator());
+		Metadata metadata = controller.data().getDataSet().getMetadata();
 		
-		properties.put("Project Name", controller.data().getMetadata().getProjectName());
-		properties.put("Session Name", controller.data().getMetadata().getSessionName());
-		properties.put("Experiment Name", controller.data().getMetadata().getExperimentName());
-		properties.put("Sample Name", controller.data().getMetadata().getSampleName());
-		properties.put("Scan Name", controller.data().getMetadata().getScanName());
+		properties.put("Date of Creation", metadata.getCreationTime());
+		properties.put("Created By", metadata.getCreator());
 		
-		properties.put("Facility", controller.data().getMetadata().getFacilityName());
-		properties.put("Laboratory", controller.data().getMetadata().getLaboratoryName());
-		properties.put("Instrument", controller.data().getMetadata().getInstrumentName());
-		properties.put("Technique", controller.data().getMetadata().getTechniqueName());
+		properties.put("Project Name", metadata.getProjectName());
+		properties.put("Session Name", metadata.getSessionName());
+		properties.put("Experiment Name", metadata.getExperimentName());
+		properties.put("Sample Name", metadata.getSampleName());
+		properties.put("Scan Name", metadata.getScanName());
+		
+		properties.put("Facility", metadata.getFacilityName());
+		properties.put("Laboratory", metadata.getLaboratoryName());
+		properties.put("Instrument", metadata.getInstrumentName());
+		properties.put("Technique", metadata.getTechniqueName());
 		
 		new PropertyDialogue("Dataset Information", "Extended Information", container.getWindow(), properties);
 

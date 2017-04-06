@@ -204,11 +204,11 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 		Spectrum originalData = null;
 		
 		if (settingsController.getChannelCompositeType() == ChannelCompositeMode.AVERAGE) {
-			originalData = dataController.getAveragePlot();
+			originalData = dataController.getDataSet().averagePlot();
 		} else if (settingsController.getChannelCompositeType()  == ChannelCompositeMode.MAXIMUM) {
-			originalData = dataController.getMaximumPlot();
+			originalData = dataController.getDataSet().maximumPlot();
 		} else {
-			originalData = dataController.getScanAtIndex(settingsController.getScanNumber());
+			originalData = dataController.getDataSet().getScanData().get(settingsController.getScanNumber());
 		}
 		
 		return originalData;

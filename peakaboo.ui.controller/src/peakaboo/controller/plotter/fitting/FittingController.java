@@ -344,7 +344,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	@Override
 	public boolean canMap()
 	{
-		return ! (getFittedTransitionSeries().size() == 0 || plot.data().size() == 0);
+		return ! (getFittedTransitionSeries().size() == 0 || plot.data().getDataSet().getScanData().scanCount() == 0);
 	}
 
 	// =============================================

@@ -172,7 +172,7 @@ public class PlotWindowController extends IActofUIController {
 		if (plotController.data().getDataSet().hasPhysicalSize()) {
 			mapController.mapsController.setMapData(
 					results,
-					plotController.data().getDatasetName(),
+					plotController.data().getDataSet().getScanData().datasetName(),
 					plotController.data().getDataSet().getDataSize().getDataDimensions(),
 					plotController.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
 					plotController.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
@@ -181,7 +181,7 @@ public class PlotWindowController extends IActofUIController {
 		} else {
 			mapController.mapsController.setMapData(
 					results,
-					plotController.data().getDatasetName(),
+					plotController.data().getDataSet().getScanData().datasetName(),
 					plotController.data().getDiscards().list()
 				);
 		}
@@ -244,7 +244,7 @@ public class PlotWindowController extends IActofUIController {
         chooser.setTitle("Select Data Files to Open");
         List<File> files = chooser.showOpenMultipleDialog(getNode().getScene().getWindow());
         if (files == null) { return null; }
-        File lastDir = new File(plotController.data().getDataSourceFolder());
+        File lastDir = new File(plotController.data().getDataSet().getDataSourcePath());
         chooser.setInitialDirectory(lastDir);
 
         return files;

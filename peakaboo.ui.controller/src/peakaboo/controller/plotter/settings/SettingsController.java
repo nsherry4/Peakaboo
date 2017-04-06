@@ -144,11 +144,11 @@ public class SettingsController extends Eventful implements ISettingsController
 
 		if (direction > 0)
 		{
-			number = plot.data().firstNonNullScanIndex(number);
+			number = plot.data().getDataSet().firstNonNullScanIndex(number);
 		}
 		else
 		{
-			number = plot.data().lastNonNullScanIndex(number);
+			number = plot.data().getDataSet().lastNonNullScanIndex(number);
 		}
 
 		if (number == -1)
@@ -158,7 +158,9 @@ public class SettingsController extends Eventful implements ISettingsController
 		}
 
 		
-		if (number > plot.data().size() - 1) number = plot.data().size() - 1;
+		if (number > plot.data().getDataSet().getScanData().scanCount() - 1) {
+			number = plot.data().getDataSet().getScanData().scanCount() - 1;
+		}
 		if (number < 0) number = 0;
 		settingsModel.scanNumber = number;
 		plot.filtering().filteredDataInvalidated();
