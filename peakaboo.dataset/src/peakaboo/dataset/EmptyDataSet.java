@@ -47,12 +47,6 @@ public class EmptyDataSet extends AbstractDataSet
 		return null;
 	}
 
-	@Override
-	public int size()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	
 	@Override

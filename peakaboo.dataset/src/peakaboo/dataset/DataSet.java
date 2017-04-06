@@ -138,8 +138,6 @@ public interface DataSet {
 	PhysicalSize getPhysicalSize();
 	DataSize getDataSize();
 
-	
-	int size();
 
 
 }

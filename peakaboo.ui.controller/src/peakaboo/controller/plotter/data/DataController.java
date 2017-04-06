@@ -92,8 +92,7 @@ public class DataController extends Eventful implements IDataController
 	
 	public int size()
 	{
-		if (!dataModel.hasData()) return 0;
-		return dataModel.size();
+		return dataModel.getScanData().scanCount();
 	}
 	
 	public int channelsPerScan()

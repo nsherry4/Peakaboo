@@ -47,7 +47,7 @@ public class MapTS
 		//final List<List<Double>> filteredData;
 
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.size());
+		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.getScanData().scanCount());
 		
 		final Consumer<Integer> t_filter = ordinal -> {
 			
@@ -70,7 +70,7 @@ public class MapTS
 		};
 
 
-		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.size(), t_filter);
+		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.getScanData().scanCount(), t_filter);
 
 		tasklist = new ExecutorSet<MapResultSet>("Generating Data for Map") {
 

@@ -151,14 +151,6 @@ public class StandardDataSet extends AbstractDataSet
 	}
 
 
-	@Override
-	public int size()
-	{
-		return dataSource.getScanData().scanCount();
-	}
-
-
-
 
 
 	/**
