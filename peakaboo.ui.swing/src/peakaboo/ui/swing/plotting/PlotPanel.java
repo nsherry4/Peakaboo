@@ -1412,7 +1412,7 @@ public class PlotPanel extends ClearPanel
 						while (iter.hasNext())
 						{
 							Spectrum s = iter.next();
-							s = filters.filterDataUnsynchronized(new Spectrum(s), false);
+							s = filters.applyFiltersUnsynchronized(new Spectrum(s), false);
 							osw.write(s.toString() + "\n");
 							exec.workUnitCompleted();
 						}

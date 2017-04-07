@@ -41,25 +41,25 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized void addFilter(Filter filter)
+	public synchronized void add(Filter filter)
 	{
 		filters.add(filter);
 	}
 
 
-	public synchronized void addFilter(Filter filter, int index)
+	public synchronized void add(Filter filter, int index)
 	{
 		filters.add(index, filter);
 	}
 
 
-	public synchronized Filter getFilter(int index)
+	public synchronized Filter get(int index)
 	{
 		return filters.get(index);
 	}
 
 
-	public synchronized void removeFilter(int index)
+	public synchronized void remove(int index)
 	{
 		if (index >= filters.size()) return;
 		if (index < 0) return;
@@ -67,13 +67,13 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized void removeFilter(Filter filter)
+	public synchronized void remove(Filter filter)
 	{
 		filters.remove(filter);
 	}
 
 
-	public synchronized void clearFilters()
+	public synchronized void clear()
 	{
 		filters.clear();
 	}
@@ -124,14 +124,14 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized Spectrum filterData(Spectrum data, boolean filtersShouldCache)
+	public synchronized Spectrum applyFilters(Spectrum data, boolean filtersShouldCache)
 	{
 
-		return filterDataUnsynchronized(data, filtersShouldCache);
+		return applyFiltersUnsynchronized(data, filtersShouldCache);
 	}
 
 
-	public Spectrum filterDataUnsynchronized(Spectrum data, boolean filtersShouldCache)
+	public Spectrum applyFiltersUnsynchronized(Spectrum data, boolean filtersShouldCache)
 	{
 
 		for (Filter f : filters) {
@@ -153,23 +153,6 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-
-	public synchronized void setFilterEnabled(int index, boolean enabled)
-	{
-		filters.get(index).setEnabled(enabled);
-	}
-
-
-	public synchronized boolean getFilterEnabled(int index)
-	{
-		return filters.get(index).isEnabled();
-	}
-
-
-	public synchronized String getFilterName(int index)
-	{
-		return filters.get(index).getFilterName();
-	}
 
 	public synchronized List<Filter> getFilters() {
 		return new ArrayList<>(filters);

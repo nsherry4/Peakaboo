@@ -64,10 +64,10 @@ public class Settings
 
 		
 		// load filters
-		filters.filters.clearFilters();
+		filters.filters.clear();
 		for (SerializedFilter f : data.filters)
 		{
-			filters.filters.addFilter(f.getFilter());
+			filters.filters.add(f.getFilter());
 		}
 
 		

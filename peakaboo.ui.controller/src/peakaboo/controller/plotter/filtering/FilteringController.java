@@ -34,7 +34,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	@Override
 	public void clearFilters()
 	{
-		filteringModel.filters.clearFilters();
+		filteringModel.filters.clear();
 		plot.history().setUndoPoint("Clear Filters");
 		filteredDataInvalidated();
 	}
@@ -95,7 +95,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	@Override
 	public void addFilter(Filter f)
 	{
-		filteringModel.filters.addFilter(f);
+		filteringModel.filters.add(f);
 		plot.history().setUndoPoint("Add Filter");
 		filteredDataInvalidated();
 	}
@@ -103,7 +103,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	@Override
 	public void removeFilter(int index)
 	{
-		filteringModel.filters.removeFilter(index);
+		filteringModel.filters.remove(index);
 		plot.history().setUndoPoint("Remove Filter");
 		filteredDataInvalidated();
 	}
@@ -123,7 +123,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	@Override
 	public void setFilterEnabled(int index, boolean enabled)
 	{
-		filteringModel.filters.setFilterEnabled(index, enabled);
+		filteringModel.filters.get(index).setEnabled(enabled);
 		plot.history().setUndoPoint("Enable Filter");
 		filteredDataInvalidated();
 	}
@@ -131,7 +131,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	@Override
 	public boolean getFilterEnabled(int index)
 	{
-		return filteringModel.filters.getFilterEnabled(index);
+		return filteringModel.filters.get(index).isEnabled();
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	@Override
 	public Filter getActiveFilter(int index)
 	{
-		return filteringModel.filters.getFilter(index);
+		return filteringModel.filters.get(index);
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	@Override
 	public void calculateFilteredData(Spectrum data)
 	{
-		filteringModel.filteredPlot = filteringModel.filters.filterData(data, true);
+		filteringModel.filteredPlot = filteringModel.filters.applyFilters(data, true);
 		updateListeners();
 	}
 
