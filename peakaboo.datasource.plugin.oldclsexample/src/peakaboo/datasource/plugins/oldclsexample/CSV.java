@@ -20,7 +20,7 @@ public class CSV extends AbstractDataSource implements ScanData
 
 	List<Spectrum> 	data;
 	int				spectrumSize;
-	String			filename;
+	File			filename;
 	
 	public CSV()
 	{
@@ -30,11 +30,11 @@ public class CSV extends AbstractDataSource implements ScanData
 		
 	
 	@Override
-	public void read(String filename) throws Exception
+	public void read(File file) throws Exception
 	{
-				this.filename = filename;
+		this.filename = file;
 				
-		try (Scanner s = new Scanner(new File(filename))){
+		try (Scanner s = new Scanner(file)){
 			
 			s.useDelimiter("\n");
 			
@@ -78,13 +78,13 @@ public class CSV extends AbstractDataSource implements ScanData
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception
+	public void read(List<File> files) throws Exception
 	{
-		if (filenames == null) throw new UnsupportedOperationException();
-		if (filenames.size() == 0) throw new UnsupportedOperationException();
-		if (filenames.size() > 1) throw new UnsupportedOperationException();
+		if (files == null) throw new UnsupportedOperationException();
+		if (files.size() == 0) throw new UnsupportedOperationException();
+		if (files.size() > 1) throw new UnsupportedOperationException();
 		
-		read(filenames.get(0));
+		read(files.get(0));
 	}
 
 	
@@ -100,7 +100,7 @@ public class CSV extends AbstractDataSource implements ScanData
 	@Override
 	public String datasetName()
 	{
-		return filename;
+		return filename.getName();
 	}
 
 	@Override

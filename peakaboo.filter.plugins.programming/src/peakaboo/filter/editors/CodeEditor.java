@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -21,10 +23,8 @@ import com.ezware.dialog.task.TaskDialogs;
 
 import autodialog.model.Parameter;
 import autodialog.view.editors.IEditor;
-import commonenvironment.AbstractFile;
+import commonenvironment.Env;
 import de.sciss.syntaxpane.DefaultSyntaxKit;
-import de.sciss.syntaxpane.Lexer;
-import de.sciss.syntaxpane.syntaxkits.JavaSyntaxKit;
 import eventful.Eventful;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
@@ -93,16 +93,16 @@ public class CodeEditor extends Eventful implements IEditor<String>
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				AbstractFile file = SwidgetIO.openFile(
+				File file = SwidgetIO.openFile(
 						null, 
 						"Open Java Source File", 
 						new String[][]{{".java"}}, 
 						new String[]{"Java Source Files"}, 
-						"~"
+						Env.homeDirectory()
 					);
 				try
 				{
-					Scanner s = new Scanner(file.getInputStream()).useDelimiter("\\A");
+					Scanner s = new Scanner(new FileInputStream(file)).useDelimiter("\\A");
 					String code = s.next();
 					s.close();
 					codeEditor.setText(code);
@@ -125,7 +125,7 @@ public class CodeEditor extends Eventful implements IEditor<String>
 				{
 					baos.write(codeEditor.getText().getBytes());
 					baos.close();
-					SwidgetIO.saveFile(null, "Save Java Source File", "java", "Java Source File", "~", baos);
+					SwidgetIO.saveFile(null, "Save Java Source File", "java", "Java Source File", Env.homeDirectory(), baos);
 				}
 				catch (IOException e1)
 				{

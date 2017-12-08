@@ -1,5 +1,6 @@
 package peakaboo.datasource.internal;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,12 +31,12 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(String filename) {
+	public FileFormatCompatibility compatibility(File filename) {
 		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(List<String> filenames) {
+	public FileFormatCompatibility compatibility(List<File> filenames) {
 		return FileFormatCompatibility.NO;
 	}
 
@@ -45,12 +46,12 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	}
 
 	@Override
-	public void read(String filename) throws Exception {
+	public void read(File file) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception {
+	public void read(List<File> files) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 

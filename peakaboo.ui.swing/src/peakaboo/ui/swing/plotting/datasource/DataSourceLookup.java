@@ -1,5 +1,6 @@
 package peakaboo.ui.swing.plotting.datasource;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 public class DataSourceLookup
 {
 
-	public static List<DataSource> findDataSourcesForFiles(List<String> filenames, List<DataSource> dsps)
+	public static List<DataSource> findDataSourcesForFiles(List<File> filenames, List<DataSource> dsps)
 	{	
 		
 		List<DataSource> maybe_by_filename = new ArrayList<DataSource>();
@@ -18,11 +19,11 @@ public class DataSourceLookup
 		
 		if (filenames.size() == 1)
 		{
-			String filename = filenames.get(0);
+			File file = filenames.get(0);
 			for (DataSource datasource : dsps)
 			{
 				try {
-					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(filename);
+					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(file);
 					if ( compat == FileFormatCompatibility.NO ) continue;
 					if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
 					if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }
@@ -38,7 +39,7 @@ public class DataSourceLookup
 			for (DataSource datasource : dsps)
 			{
 				try {
-					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<String>(filenames));
+					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<File>(filenames));
 					if ( compat == FileFormatCompatibility.NO ) continue;
 					if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
 					if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }

@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -133,7 +134,7 @@ public class MapViewer extends JPanel
 
 	}
 	
-	public String savePicture(String folder)
+	public File savePicture(File folder)
 	{
 		return new SavePicture(owner, canvas, folder).getStartingFolder();
 	}

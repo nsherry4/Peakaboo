@@ -63,7 +63,6 @@ import javax.swing.event.ChangeListener;
 
 import com.ezware.dialog.task.TaskDialogs;
 
-import commonenvironment.AbstractFile;
 import commonenvironment.Apps;
 import commonenvironment.Env;
 import commonenvironment.IOOperations;
@@ -124,8 +123,8 @@ public class PlotPanel extends ClearPanel
 	//Non-UI
 	IPlotController				controller;
 	PlotCanvas					canvas;
-	String						saveFilesFolder;
-	String						savedSessionFileName;
+	File						saveFilesFolder;
+	File						savedSessionFileName;
 	String                      programTitle;
 
 	
@@ -1126,7 +1125,7 @@ public class PlotPanel extends ClearPanel
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
 	// data set, and returns it to the caller
-	public List<AbstractFile> openNewDataset(String[][] exts, String[] desc)
+	public List<File> openNewDataset(String[][] exts, String[] desc)
 	{
 		return SwidgetIO.openFiles(container.getContainer(), "Select Data Files to Open", exts, desc, controller.data().getDataSet().getDataSourcePath());
 	}
@@ -1216,12 +1215,9 @@ public class PlotPanel extends ClearPanel
 	}
 	
 	private void actionOpenData()
-	{
-
-		List<AbstractFile> files;
-		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
-		
+	{		
 		/*
+		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
 		for (int i = 0; i < formats.size(); i++)
@@ -1233,15 +1229,14 @@ public class PlotPanel extends ClearPanel
 		String[][] exts = {};
 		String[] descs = {};
 
-		files = openNewDataset(exts, descs);
+		List<File> files = openNewDataset(exts, descs);
 		if (files == null) return;
-		List<String> filenames = FList.wrap(files).stream().map(v -> v.getFileName()).collect(toList());
-		loadFiles(filenames);
+		loadFiles(files);
 		
 	}
 	
 
-	public void loadFiles(List<String> filenames)
+	public void loadFiles(List<File> filenames)
 	{
 
 		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
@@ -1270,7 +1265,7 @@ public class PlotPanel extends ClearPanel
 		
 	}
 	
-	public void loadFiles(List<String> files, DataSource dsp)
+	public void loadFiles(List<File> files, DataSource dsp)
 	{
 		if (files != null)
 		{
@@ -1378,7 +1373,9 @@ public class PlotPanel extends ClearPanel
 
 	private void actionSavePicture()
 	{
-		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+		if (saveFilesFolder == null) {
+			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+		}
 		SavePicture sp = new SavePicture(container.getWindow(), canvas, saveFilesFolder);
 		saveFilesFolder = sp.getStartingFolder(); 
 	}
@@ -1386,8 +1383,9 @@ public class PlotPanel extends ClearPanel
 
 	private void actionSaveFittedDataInformation()
 	{
-		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
-		
+		if (saveFilesFolder == null) {
+			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+		}
 		
 		
 		//Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
@@ -1469,7 +1467,9 @@ public class PlotPanel extends ClearPanel
 	private void actionSaveFittingInformation()
 	{
 
-		if (saveFilesFolder == null) saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+		if (saveFilesFolder == null) {
+			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+		}
 
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
 		float intensity;
@@ -1519,13 +1519,16 @@ public class PlotPanel extends ClearPanel
 
 		try
 		{
-			AbstractFile af = SwidgetIO.openFile(
+			File f = SwidgetIO.openFile(
 					container.getContainer(),
 					"Load Session Data",
 					new String[][] {{"peakaboo"}},
 					new String[] {"Peakaboo Session Data"},
 					savedSessionFileName);
-			if (af != null) controller.loadPreferences(af.getInputStream(), false);
+			
+			if (f != null) {
+				controller.loadPreferences(new FileInputStream(f), false);
+			}
 		}
 		catch (IOException e)
 		{

@@ -2,8 +2,9 @@ package peakaboo.mapping.correction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
-import commonenvironment.AbstractFile;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -18,12 +19,12 @@ public class Corrections
 	private String name;
 	private FList<Pair<TransitionSeries, Float>> correctionPairs;
 	
-	public Corrections(AbstractFile file) throws IOException
+	public Corrections(URL file) throws IOException
 	{
 	
 		correctionPairs = new FList<Pair<TransitionSeries, Float>>();
 		
-		BufferedReader reader = file.getReader();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(file.openStream()));
 		name = reader.readLine();
 		
 		while (true)

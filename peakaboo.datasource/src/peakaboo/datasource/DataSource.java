@@ -1,5 +1,6 @@
 package peakaboo.datasource;
 
+import java.io.File;
 import java.util.List;
 
 import peakaboo.datasource.components.datasize.DataSize;
@@ -74,7 +75,7 @@ public interface DataSource
 	 * throughout the lifetime of this DataSource object.
 	 * @throws Exception
 	 */
-	void read(String filename) throws Exception;
+	void read(File file) throws Exception;
 	
 	/**
 	 * Reads the given files as a whole dataset. This method, collectively with 
@@ -82,5 +83,5 @@ public interface DataSource
 	 * throughout the lifetime of this DataSource object.
 	 * @throws Exception
 	 */
-	void read(List<String> filenames) throws Exception;
+	void read(List<File> files) throws Exception;
 }

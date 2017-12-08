@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter.data;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -55,13 +56,13 @@ public class DataController extends Eventful implements IDataController
 	// =============================================
 	
 
-	
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, DataSource dsp)
+	@Override
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<File> files, DataSource dsp)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final StandardDataSet dataset = new StandardDataSet();
-		final ExecutorSet<DatasetReadResult> readTasks = dataset.TASK_readFileListAsDataset(filenames, dsp);
+		final ExecutorSet<DatasetReadResult> readTasks = dataset.TASK_readFileListAsDataset(files, dsp);
 
 
 		

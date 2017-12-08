@@ -47,11 +47,11 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(String filename) {
-		if (!filename.endsWith(".txt")) return FileFormatCompatibility.NO;
+	public FileFormatCompatibility compatibility(File file) {
+		if (!file.getAbsolutePath().endsWith(".txt")) return FileFormatCompatibility.NO;
 		
 		try {
-			Scanner scanner = new Scanner(new File(filename));
+			Scanner scanner = new Scanner(file);
 			scanner.useDelimiter("\n");
 			if (!scanner.hasNext()) return FileFormatCompatibility.NO;
 			String line = scanner.next();
@@ -64,9 +64,9 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(List<String> filenames) {
-		if (filenames.size() == 0) return FileFormatCompatibility.NO;
-		return compatibility(filenames.get(0));
+	public FileFormatCompatibility compatibility(List<File> files) {
+		if (files.size() == 0) return FileFormatCompatibility.NO;
+		return compatibility(files.get(0));
 	}
 
 	
@@ -116,12 +116,12 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 	
 	@Override
-	public void read(String filename) throws Exception {
+	public void read(File file) throws Exception {
 		
-		readTags(filename);
+		readTags(file.getAbsolutePath());
 		
 		Map<Float, Float> energies = new HashMap<>();
-		Scanner scanner = new Scanner(new File(filename));
+		Scanner scanner = new Scanner(file);
 		scanner.useDelimiter("\n");
 		
 		while (scanner.hasNext()) {
@@ -187,9 +187,9 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception {
-		for (String filename : filenames) {
-			read(filename);
+	public void read(List<File> files) throws Exception {
+		for (File file : files) {
+			read(file);
 		}
 	}
 

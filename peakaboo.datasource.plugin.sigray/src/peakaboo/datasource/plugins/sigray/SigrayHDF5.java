@@ -53,13 +53,13 @@ public class SigrayHDF5 extends AbstractDataSource {
 
 
 	@Override
-	public void read(String filename) throws Exception {
+	public void read(File file) throws Exception {
 
-		scandata = new SimpleScanData(new File(filename).getName());
+		scandata = new SimpleScanData(file.getName());
 
 		
 		
-		IHDF5SimpleReader reader = HDF5Factory.openForReading(filename);
+		IHDF5SimpleReader reader = HDF5Factory.openForReading(file);
 
 		HDF5DataSetInformation info = reader.getDataSetInformation("/MAPS/mca_arr");
 		long size[] = info.getDimensions();
@@ -131,8 +131,8 @@ public class SigrayHDF5 extends AbstractDataSource {
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception {
-		read(filenames.get(0));
+	public void read(List<File> files) throws Exception {
+		read(files.get(0));
 	}
 
 

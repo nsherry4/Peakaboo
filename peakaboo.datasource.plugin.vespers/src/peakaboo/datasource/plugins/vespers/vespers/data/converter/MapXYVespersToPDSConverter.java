@@ -698,22 +698,22 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(String filename) {
+	public FileFormatCompatibility compatibility(File file) {
 		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(List<String> filenames) {
+	public FileFormatCompatibility compatibility(List<File> files) {
 		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public void read(String filename) throws Exception {
+	public void read(File file) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception {
+	public void read(List<File> files) throws Exception {
 		throw new OperationNotSupportedException();
 	}
 	

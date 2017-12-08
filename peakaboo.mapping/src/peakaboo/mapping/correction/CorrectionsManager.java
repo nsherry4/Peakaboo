@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import commonenvironment.AbstractFile;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 
 
@@ -21,7 +20,7 @@ public class CorrectionsManager
 		correctionSets = new HashMap<String, Corrections>();
 		try
 		{
-			correctionSets.put("WL", new Corrections(new AbstractFile(PeakTableReader.class.getResource("/peakaboo/mapping/correction/wl.csv")))); 
+			correctionSets.put("WL", new Corrections(PeakTableReader.class.getResource("/peakaboo/mapping/correction/wl.csv"))); 
 		}
 		catch (IOException e)
 		{

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import ca.sciencestudio.data.converter.Converter;
 import ca.sciencestudio.data.converter.ConverterMap;
@@ -449,14 +450,14 @@ public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource
 	}
 	
 	@Override
-	public FileFormatCompatibility compatibility(String filename) {
-		return compatibility(Collections.singletonList(filename));
+	public FileFormatCompatibility compatibility(File file) {
+		return compatibility(Collections.singletonList(file));
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(List<String> filenames) {
+	public FileFormatCompatibility compatibility(List<File> files) {
 		try {
-			doCanRead(filenames);
+			doCanRead(files);
 			return FileFormatCompatibility.MAYBE_BY_FILENAME;
 		}
 		catch(Exception e) {
@@ -465,13 +466,13 @@ public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource
 	}
 	
 	@Override
-	public void read(String filename) throws Exception {
-		read(Collections.singletonList(filename));
+	public void read(File file) throws Exception {
+		read(Collections.singletonList(file));
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception { 
-		Converter converter = CONVERTER_FACTORY.getConverter(doCanRead(filenames));
+	public void read(List<File> files) throws Exception { 
+		Converter converter = CONVERTER_FACTORY.getConverter(doCanRead(files));
 		Object dataSource =	converter.convert().get(RESPONSE_KEY_PEAKABOO_DATA_SOURCE);
 		if(dataSource instanceof DataSource) {
 			setDataSource((DataSource)dataSource);
@@ -480,7 +481,9 @@ public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource
 		}
 	}
 	
-	private ConverterMap doCanRead(List<String> filenames) throws Exception {
+	private ConverterMap doCanRead(List<File> files) throws Exception {
+		
+		List<String> filenames = files.stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList());
 		
 		String specFilename = null;
 		String dataFilename = null;

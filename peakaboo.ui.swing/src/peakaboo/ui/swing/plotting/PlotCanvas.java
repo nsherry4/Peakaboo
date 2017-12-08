@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -94,18 +95,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		});
 		
 		
-		//can't accept drag'n'drop if we're in a webstart session, since
-		//there are security restrictions
-		if (!Env.isWebStart())
-		{
-			new FileDrop(this, new FileDrop.Listener() {
+		new FileDrop(this, new FileDrop.Listener() {
 
-				public void filesDropped(File[] files)
-				{
-					parent.loadFiles(FArray.wrap(files).stream().map(element -> element.getAbsolutePath()).collect(toList()));
-				}
-			});
-		}
+			public void filesDropped(File[] files)
+			{
+				parent.loadFiles(Arrays.asList(files));
+			}
+		});
 
 		
 		addMouseListener(new MouseListener() {

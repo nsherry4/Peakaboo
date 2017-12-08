@@ -1,5 +1,6 @@
 package peakaboo.datasource.internal;
 
+import java.io.File;
 import java.util.List;
 
 import fava.functionable.FList;
@@ -163,7 +164,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 
 
 	@Override
-	public void read(String filename) throws Exception
+	public void read(File file) throws Exception
 	{
 		//This should never be called, since the data source this one copies from
 		//should already have been initialized
@@ -172,7 +173,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 
 
 	@Override
-	public void read(List<String> filenames) throws Exception
+	public void read(List<File> files) throws Exception
 	{
 		//This should never be called, since the data source this one copies from
 		//should already have been initialized

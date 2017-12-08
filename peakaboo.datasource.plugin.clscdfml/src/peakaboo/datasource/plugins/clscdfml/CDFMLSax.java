@@ -2,13 +2,13 @@ package peakaboo.datasource.plugins.clscdfml;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
@@ -486,15 +486,6 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 	}
 
 	
-	public static boolean filesMatchCriteria(List<AbstractFile> files)
-	{
-		if (files.size() != 1) return false;
-		String ext = files.get(0).getFileName().toLowerCase();
-		if (!   (ext.endsWith(".xml") || ext.endsWith(".cdfml"))  ) return false;
-		return true;
-	}
-
-
 	protected void handleProcessedSpectrum(String varname, int entryNo, Spectrum spectrum)
 	{
 		
@@ -540,14 +531,14 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 
 
 	@Override
-	public FileFormatCompatibility compatibility(String filename)
+	public FileFormatCompatibility compatibility(File file)
 	{	
-		String ext = filename.toLowerCase();
+		String ext = file.getAbsolutePath().toLowerCase();
 		if (!   (ext.endsWith(".xml") || ext.endsWith(".cdfml"))  ) return FileFormatCompatibility.NO;
 		
 		try
 		{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 			
 			int lineCount = 0;
 			String start = "", line;
@@ -573,17 +564,17 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(List<String> filenames)
+	public FileFormatCompatibility compatibility(List<File> files)
 	{
-		if (filenames.size() == 1) return compatibility(filenames.get(0));
+		if (files.size() == 1) return compatibility(files.get(0));
 		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public void read(String filename) throws Exception
+	public void read(File file) throws Exception
 	{
 		
-		reader.read(filename, this.getInteraction()::checkReadAborted);
+		reader.read(file.getAbsolutePath(), this.getInteraction()::checkReadAborted);
 
 		
 		//get a listing of all of the categories that this supports
@@ -595,7 +586,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception
+	public void read(List<File> files) throws Exception
 	{
 		throw new UnsupportedOperationException();
 	}

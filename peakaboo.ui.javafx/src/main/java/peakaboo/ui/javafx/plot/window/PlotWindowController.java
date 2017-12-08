@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -46,7 +45,6 @@ import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;
 import peakaboo.ui.javafx.widgets.NumberSpinner;
 import peakaboo.ui.swing.plotting.datasource.DataSourceLookup;
-import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import plural.executor.ExecutorSet;
 
 
@@ -245,7 +243,7 @@ public class PlotWindowController extends IActofUIController {
         chooser.setTitle("Select Data Files to Open");
         List<File> files = chooser.showOpenMultipleDialog(getNode().getScene().getWindow());
         if (files == null) { return null; }
-        File lastDir = new File(plotController.data().getDataSet().getDataSourcePath());
+        File lastDir = plotController.data().getDataSet().getDataSourcePath();
         chooser.setInitialDirectory(lastDir);
 
         return files;
@@ -257,20 +255,17 @@ public class PlotWindowController extends IActofUIController {
 
     private void loadFiles(List<File> files) {
 
-        List<String> filenames = files.stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList());
-
         List<DataSource> formats = new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
-        formats = DataSourceLookup.findDataSourcesForFiles(filenames, formats);
+        formats = DataSourceLookup.findDataSourcesForFiles(files, formats);
 
         if (formats.size() > 1) {
-            DataSourceSelection selection = new DataSourceSelection();
             DataSource dsp = pickDSP(formats, getNode());
-            if (dsp != null) loadFiles(filenames, dsp);
+            if (dsp != null) loadFiles(files, dsp);
         } else if (formats.size() == 0) {
             Dialogs.create().title("Open Failed")
                     .message("Could not determine the data format of the selected file(s)").showError();
         } else {
-            loadFiles(filenames, formats.get(0));
+            loadFiles(files, formats.get(0));
         }
 
     }
@@ -300,7 +295,7 @@ public class PlotWindowController extends IActofUIController {
 
     }
 
-    private void loadFiles(List<String> files, DataSource dsp) {
+    private void loadFiles(List<File> files, DataSource dsp) {
         if (files != null) {
 
             ExecutorSet<DatasetReadResult> reading = plotController.data().TASK_readFileListAsDataset(files, dsp);

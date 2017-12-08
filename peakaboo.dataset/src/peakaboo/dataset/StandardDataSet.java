@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import commonenvironment.AbstractFile;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
-import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.datasize.DummyDataSize;
 import peakaboo.datasource.components.interaction.CallbackInteraction;
@@ -54,7 +52,7 @@ public class StandardDataSet implements DataSet
 	//list of real coordinates for each scan
 	protected List<Coord<Number>>	realCoords;
 	
-	protected String				dataSourcePath;
+	protected File					dataSourcePath;
 
 	protected float					maxEnergy;
 
@@ -72,7 +70,7 @@ public class StandardDataSet implements DataSet
 	{
 		super();
 		
-		readDataSource(ds, null, null, "");
+		readDataSource(ds, null, null, new File(""));
 		dataSource = ds;
 		
 	}
@@ -154,16 +152,16 @@ public class StandardDataSet implements DataSet
 
 
 	/**
-	 * Reads the list of {@link AbstractFile}s as a {@link DataSource}
+	 * Reads the list of filenames as a {@link DataSource}
 	 * @param files the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, final DataSource dataSource)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<File> files, final DataSource dataSource)
 	{
 
 		
 		// sort the filenames property
-		Collections.sort(filenames);
+		Collections.sort(files);
 		
 		// Create the tasklist for reading the files
 		final ExecutorSet<DatasetReadResult> tasklist;
@@ -206,13 +204,13 @@ public class StandardDataSet implements DataSet
 				try
 				{
 					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
-					if (filenames.size() == 1)
+					if (files.size() == 1)
 					{
-						dataSource.read(filenames.get(0));
+						dataSource.read(files.get(0));
 					}
 					else
 					{
-						dataSource.read(new ArrayList<String>(filenames));
+						dataSource.read(new ArrayList<File>(files));
 					}
 				
 				}
@@ -242,7 +240,7 @@ public class StandardDataSet implements DataSet
 				
 				
 				//now that we have the datasource, read it
-				readDataSource(  dataSource, applying, isAborted, new File(filenames.get(0)).getParent()  );
+				readDataSource(  dataSource, applying, isAborted, files.get(0).getParentFile()  );
 				
 				
 				if (isAborted.get())
@@ -298,7 +296,7 @@ public class StandardDataSet implements DataSet
 	}
 	
 	
-	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted, String path)
+	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted, File path)
 	{
 		
 		if (ds == null || ds.getScanData().scanCount() == 0) return;
@@ -362,7 +360,7 @@ public class StandardDataSet implements DataSet
 
 	}
 	
-	public String getDataSourcePath()
+	public File getDataSourcePath()
 	{
 		return dataSourcePath;
 	}

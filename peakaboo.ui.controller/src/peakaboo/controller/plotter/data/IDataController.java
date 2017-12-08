@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter.data;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface IDataController extends IEventful
 	void setDataSource(DataSource ds);
 	void setDataSetProvider(DataSet dsp);
 	
-	ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<String> filenames, DataSource dsp);
+	ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<File> files, DataSource dsp);
 	ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	
 

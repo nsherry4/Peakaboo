@@ -1,5 +1,6 @@
 package peakaboo.dataset;
 
+import java.io.File;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
@@ -103,9 +104,9 @@ public class EmptyDataSet implements DataSet
 	}
 
 	@Override
-	public String getDataSourcePath()
+	public File getDataSourcePath()
 	{
-		return "";
+		return new File("");
 	}
 
 	@Override

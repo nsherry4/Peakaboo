@@ -8,10 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import commonenvironment.AbstractFile;
 import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import peakaboo.datasource.AbstractDataSource;
@@ -21,9 +19,6 @@ import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
-import peakaboo.datasource.components.scandata.SimpleScanData;
-import scitypes.Bounds;
-import scitypes.Coord;
 import scitypes.Spectrum;
 
 
@@ -81,12 +76,6 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 	}
 
 	
-	public static boolean filesMatchCriteria(AbstractFile file)
-	{
-		return (file.getFileName().toLowerCase().endsWith(".mca"));		
-	}
-
-
 	@Override
 	public FileFormat getFileFormat() {
 		return new SimpleFileFormat(true, "Amptek MCA", "Amptek MCA XRF data format", Arrays.asList("mca"));
@@ -101,14 +90,14 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 	
 
 	@Override
-	public void read(String filename) throws Exception
+	public void read(File file) throws Exception
 	{
-		spectrum = readMCA(filename);
-		scanName = new File(filename).getName();
+		spectrum = readMCA(file.getAbsolutePath());
+		scanName = file.getName();
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception
+	public void read(List<File> files) throws Exception
 	{
 		throw new UnsupportedOperationException();
 	}

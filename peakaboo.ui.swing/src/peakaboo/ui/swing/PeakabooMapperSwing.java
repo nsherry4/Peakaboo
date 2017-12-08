@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -75,8 +76,8 @@ public class PeakabooMapperSwing extends JFrame
 	private JMenuItem			title, spectrum, coords, dstitle;
 	private ToolbarImageButton	readIntensities, examineSubset;
 	
-	public String				savePictureFolder;
-	public String				dataSourceFolder;
+	public File					savePictureFolder;
+	public File					dataSourceFolder;
 	
 	EventfulTypeListener<String> controllerListener;
 
@@ -536,8 +537,6 @@ public class PeakabooMapperSwing extends JFrame
 	
 	public void actionSavePicture()
 	{
-
-
 		MapViewer viewer = ((MapViewer)tabs.getSelectedComponent());
 		
 		if (savePictureFolder == null) savePictureFolder = dataSourceFolder;

@@ -1,7 +1,9 @@
 package peakaboo.datasource.plugins.vespers;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
@@ -23,10 +25,11 @@ public class ScienceStudioDSPCmdLineTest {
 		DataSource dataSource = new ScienceStudio();
 		
 		List<String> filenames = Arrays.asList(args);
+		List<File> files = filenames.stream().map(File::new).collect(Collectors.toList());
 		
-		if(dataSource.getFileFormat().compatibility(filenames) != FileFormatCompatibility.NO) {
+		if(dataSource.getFileFormat().compatibility(files) != FileFormatCompatibility.NO) {
 			System.out.println("Reading: " + filenames);
-			dataSource.read(filenames);
+			dataSource.read(files);
 			System.out.println("DONE!");
 		}		
 		else {

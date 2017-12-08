@@ -1,5 +1,6 @@
 package peakaboo.dataset;
 
+import java.io.File;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
@@ -100,12 +101,12 @@ public interface DataSet {
 	int channelsPerScan();
 
 	/**
-	 * Gets the string representation of the data source. Could be a file path, a network address, or anything else
+	 * Gets the {@link File} representation of the data source. Could be a file path, a network address, or anything else
 	 * implementation specific
 	 * 
 	 * @return data source string
 	 */
-	String getDataSourcePath();
+	File getDataSourcePath();
 
 	/**
 	 * Does this implementation of the DataSetContainer actually contain data? {@link EmptyDataSet} purposefully

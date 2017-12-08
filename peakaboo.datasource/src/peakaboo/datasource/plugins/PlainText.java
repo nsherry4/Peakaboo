@@ -38,14 +38,14 @@ public class PlainText extends AbstractDataSource
 	//==============================================
 
 	@Override
-	public void read(String filename) throws Exception
+	public void read(File file) throws Exception
 	{
 
-		scandata = new SimpleScanData(new File(filename).getName());
+		scandata = new SimpleScanData(file.getName());
 		
 	
 		//Split the input up by line
-		FStringInput lines = FStringInput.lines(new File(filename));
+		FStringInput lines = FStringInput.lines(file);
 		
 
 		while (lines.hasNext())
@@ -82,14 +82,14 @@ public class PlainText extends AbstractDataSource
 	}
 
 	@Override
-	public void read(List<String> filenames) throws Exception
+	public void read(List<File> files) throws Exception
 	{
 		
-		if (filenames == null) throw new UnsupportedOperationException();
-		if (filenames.size() == 0) throw new UnsupportedOperationException();
-		if (filenames.size() > 1) throw new UnsupportedOperationException();
+		if (files == null) throw new UnsupportedOperationException();
+		if (files.size() == 0) throw new UnsupportedOperationException();
+		if (files.size() > 1) throw new UnsupportedOperationException();
 		
-		read(filenames.get(0));
+		read(files.get(0));
 	}
 
 
