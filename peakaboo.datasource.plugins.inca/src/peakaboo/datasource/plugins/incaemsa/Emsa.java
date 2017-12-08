@@ -16,6 +16,7 @@ import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
@@ -46,28 +47,26 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 
 	@Override
-	public boolean canRead(String filename) {
-		if (!filename.endsWith(".txt")) return false;
+	public FileFormatCompatibility compatibility(String filename) {
+		if (!filename.endsWith(".txt")) return FileFormatCompatibility.NO;
 		
 		try {
 			Scanner scanner = new Scanner(new File(filename));
 			scanner.useDelimiter("\n");
-			if (!scanner.hasNext()) return false;
+			if (!scanner.hasNext()) return FileFormatCompatibility.NO;
 			String line = scanner.next();
-			System.out.println(line);
-			if (!line.trim().equals("#FORMAT      : EMSA/MAS Spectral Data File")) return false;
-			System.out.println(line);
-			return true;
+			if (!line.trim().equals("#FORMAT      : EMSA/MAS Spectral Data File")) return FileFormatCompatibility.NO;
+			return FileFormatCompatibility.YES_BY_CONTENTS;
 		} catch (FileNotFoundException e) {
-			return false;
+			return FileFormatCompatibility.NO;
 		}
 			
 	}
 
 	@Override
-	public boolean canRead(List<String> filenames) {
-		if (filenames.size() == 0) return false;
-		return canRead(filenames.get(0));
+	public FileFormatCompatibility compatibility(List<String> filenames) {
+		if (filenames.size() == 0) return FileFormatCompatibility.NO;
+		return compatibility(filenames.get(0));
 	}
 
 	

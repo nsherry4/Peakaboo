@@ -4,7 +4,6 @@ package peakaboo.datasource.plugins.clscdfml;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +14,7 @@ import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
@@ -540,10 +540,10 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 
 
 	@Override
-	public boolean canRead(String filename)
+	public FileFormatCompatibility compatibility(String filename)
 	{	
 		String ext = filename.toLowerCase();
-		if (!   (ext.endsWith(".xml") || ext.endsWith(".cdfml"))  ) return false;
+		if (!   (ext.endsWith(".xml") || ext.endsWith(".cdfml"))  ) return FileFormatCompatibility.NO;
 		
 		try
 		{
@@ -560,18 +560,23 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 			}
 			
 			reader.close();
-			return start.toLowerCase().contains("http://cdf.gsfc.nasa.gov");
+			if (start.toLowerCase().contains("http://cdf.gsfc.nasa.gov")) {
+				return FileFormatCompatibility.YES_BY_CONTENTS;		
+			} else {
+				return FileFormatCompatibility.NO;
+			}
+			
 		}
 		catch (Exception e){}
 		
-		return false;
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public boolean canRead(List<String> filenames)
+	public FileFormatCompatibility compatibility(List<String> filenames)
 	{
-		if (filenames.size() == 1) return canRead(filenames.get(0));
-		return false;
+		if (filenames.size() == 1) return compatibility(filenames.get(0));
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override

@@ -23,17 +23,21 @@ public class SimpleFileFormat implements FileFormat {
 	}
 
 	@Override
-	public boolean canRead(String filename) {
-		return extensions.stream()
+	public FileFormatCompatibility compatibility(String filename) {
+		boolean match = extensions.stream()
 					.map(ext -> filename.toLowerCase().endsWith(ext.toLowerCase()))
 					.reduce(false, (a, b) -> a || b);
+		if (match) { return FileFormatCompatibility.MAYBE_BY_FILENAME; }
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public boolean canRead(List<String> filenames) {
-		if (singleFile && filenames.size() > 1) { return false; }
-		if (filenames.size() == 0) { return false; }
-		return filenames.stream().map(this::canRead).reduce(true, (a, b) -> a && b);
+	public FileFormatCompatibility compatibility(List<String> filenames) {
+		if (singleFile && filenames.size() > 1) { return FileFormatCompatibility.NO; }
+		if (filenames.size() == 0) { return FileFormatCompatibility.NO; }
+		boolean match = filenames.stream().map(f -> this.compatibility(f) != FileFormatCompatibility.NO).reduce(true, (a, b) -> a && b);
+		if (match) { return FileFormatCompatibility.MAYBE_BY_FILENAME; }
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override

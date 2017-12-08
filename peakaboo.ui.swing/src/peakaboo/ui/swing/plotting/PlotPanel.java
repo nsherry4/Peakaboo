@@ -1220,7 +1220,8 @@ public class PlotPanel extends ClearPanel
 
 		List<AbstractFile> files;
 		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
-				
+		
+		/*
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
 		for (int i = 0; i < formats.size(); i++)
@@ -1228,6 +1229,9 @@ public class PlotPanel extends ClearPanel
 			exts[i] = formats.get(i).getFileFormat().getFileExtensions().toArray(new String[]{});
 			descs[i] = formats.get(i).getFileFormat().getFormatName();
 		}
+		*/
+		String[][] exts = {};
+		String[] descs = {};
 
 		files = openNewDataset(exts, descs);
 		if (files == null) return;

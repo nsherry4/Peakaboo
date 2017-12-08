@@ -6,6 +6,7 @@ import java.util.List;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
@@ -29,13 +30,13 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	}
 
 	@Override
-	public boolean canRead(String filename) {
-		return false;
+	public FileFormatCompatibility compatibility(String filename) {
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public boolean canRead(List<String> filenames) {
-		return false;
+	public FileFormatCompatibility compatibility(List<String> filenames) {
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override

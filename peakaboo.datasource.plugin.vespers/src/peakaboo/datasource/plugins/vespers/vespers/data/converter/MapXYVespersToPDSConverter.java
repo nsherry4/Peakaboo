@@ -18,6 +18,7 @@ import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.interaction.SimpleInteraction;
 import peakaboo.datasource.components.metadata.Metadata;
@@ -697,13 +698,13 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 	}
 
 	@Override
-	public boolean canRead(String filename) {
-		return false;
+	public FileFormatCompatibility compatibility(String filename) {
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public boolean canRead(List<String> filenames) {
-		return false;
+	public FileFormatCompatibility compatibility(List<String> filenames) {
+		return FileFormatCompatibility.NO;
 	}
 
 	@Override

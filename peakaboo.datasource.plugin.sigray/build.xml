@@ -5,7 +5,7 @@
 	
     <target name="build_plugin">
         <jar destfile="${dir.buildfile}/build/Sigray-Peakaboo.jar" filesetmanifest="mergewithoutmain">
-        	<service type="peakaboo.datasource.PluginDataSource" provider="peakaboo.datasource.plugin.sigray.SigrayHDF5"/>
+        	<service type="peakaboo.datasource.PluginDataSource" provider="peakaboo.datasource.plugins.sigray.SigrayHDF5"/>
         	
         	<fileset dir="${dir.buildfile}/bin"/>
         	<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/jars/sis-jhdf5-batteries_included.jar"/>

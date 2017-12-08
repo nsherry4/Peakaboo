@@ -25,6 +25,7 @@ import ca.sciencestudio.data.support.ConverterFactoryException;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.fileformat.FileFormat;
+import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import peakaboo.datasource.internal.DelegatingDataSource;
 import peakaboo.datasource.plugins.vespers.vespers.data.converter.factory.MapXYVespersToPDSConverterFactory;
 
@@ -448,18 +449,18 @@ public abstract class ConverterFactoryDelegatingDSP extends DelegatingDataSource
 	}
 	
 	@Override
-	public boolean canRead(String filename) {
-		return canRead(Collections.singletonList(filename));
+	public FileFormatCompatibility compatibility(String filename) {
+		return compatibility(Collections.singletonList(filename));
 	}
 
 	@Override
-	public boolean canRead(List<String> filenames) {
+	public FileFormatCompatibility compatibility(List<String> filenames) {
 		try {
 			doCanRead(filenames);
-			return true;
+			return FileFormatCompatibility.MAYBE_BY_FILENAME;
 		}
 		catch(Exception e) {
-			return false;
+			return FileFormatCompatibility.NO;
 		}
 	}
 	

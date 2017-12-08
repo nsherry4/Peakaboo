@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import peakaboo.datasource.DataSource;
+import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import scitypes.Spectrum;
 
 /**
@@ -23,7 +24,7 @@ public class ScienceStudioDSPCmdLineTest {
 		
 		List<String> filenames = Arrays.asList(args);
 		
-		if(dataSource.getFileFormat().canRead(filenames)) {
+		if(dataSource.getFileFormat().compatibility(filenames) != FileFormatCompatibility.NO) {
 			System.out.println("Reading: " + filenames);
 			dataSource.read(filenames);
 			System.out.println("DONE!");

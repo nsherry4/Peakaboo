@@ -47,6 +47,8 @@ public interface DataSource
 
 	FileFormat getFileFormat();
 	
+	
+	
 	void setInteraction(Interaction interaction);
 	Interaction getInteraction();
 	
