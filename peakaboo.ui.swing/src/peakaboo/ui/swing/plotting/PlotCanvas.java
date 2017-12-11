@@ -99,7 +99,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 			public void filesDropped(File[] files)
 			{
-				parent.loadFiles(Arrays.asList(files));
+				parent.loadFiles(new ArrayList<>(Arrays.asList(files)));
 			}
 		});
 

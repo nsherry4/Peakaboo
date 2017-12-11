@@ -1,4 +1,4 @@
-package peakaboo.curvefit.controller;
+package peakaboo.controller.plotter.fitting;
 
 import java.util.List;
 

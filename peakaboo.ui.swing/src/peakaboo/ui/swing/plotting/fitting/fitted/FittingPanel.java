@@ -22,7 +22,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import fava.functionable.FArray;
-import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;

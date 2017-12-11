@@ -13,7 +13,6 @@ import fava.Fn;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import peakaboo.controller.plotter.IPlotController;
-import peakaboo.curvefit.controller.IFittingController;
 import peakaboo.curvefit.controller.TSOrdering;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.FittingResult;

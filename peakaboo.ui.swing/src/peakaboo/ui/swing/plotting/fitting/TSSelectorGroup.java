@@ -12,7 +12,7 @@ import javax.swing.Scrollable;
 
 import eventful.EventfulListener;
 import fava.functionable.FList;
-import peakaboo.curvefit.controller.IFittingController;
+import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

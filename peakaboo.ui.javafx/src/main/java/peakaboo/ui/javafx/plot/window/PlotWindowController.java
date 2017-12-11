@@ -227,7 +227,9 @@ public class PlotWindowController extends IActofUIController {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Schema File");
 
-
+        exts = new String[][]{{"*"}};
+        desc = new String[]{"All Files"};
+        
         ExtensionFilter filter;
         for (int i = 0; i < desc.length; i++) {
             List<String> extensions = new ArrayList<String>();
@@ -243,6 +245,8 @@ public class PlotWindowController extends IActofUIController {
         chooser.setTitle("Select Data Files to Open");
         List<File> files = chooser.showOpenMultipleDialog(getNode().getScene().getWindow());
         if (files == null) { return null; }
+        //array returned from dialog is unmodifiable
+        files = new ArrayList<>(files);
         File lastDir = plotController.data().getDataSet().getDataSourcePath();
         chooser.setInitialDirectory(lastDir);
 
