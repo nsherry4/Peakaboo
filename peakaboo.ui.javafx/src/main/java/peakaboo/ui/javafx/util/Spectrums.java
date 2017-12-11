@@ -3,7 +3,6 @@ package peakaboo.ui.javafx.util;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 public class Spectrums {

@@ -1,7 +1,5 @@
 package peakaboo.datasource.plugins.incaemsa;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -11,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.datasize.DataSize;
@@ -20,8 +17,6 @@ import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
-import scitypes.Bounds;
-import scitypes.Coord;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 

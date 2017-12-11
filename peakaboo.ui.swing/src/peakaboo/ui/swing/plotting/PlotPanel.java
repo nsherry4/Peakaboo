@@ -96,7 +96,6 @@ import scidraw.swing.SavePicture;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
-import scitypes.Spectrum;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;

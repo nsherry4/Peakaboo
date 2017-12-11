@@ -2,7 +2,6 @@ package peakaboo.datasource.components.scandata;
 
 
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 

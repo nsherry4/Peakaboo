@@ -23,7 +23,6 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 /**

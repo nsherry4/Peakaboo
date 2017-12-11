@@ -3,7 +3,6 @@ package peakaboo.filter.plugins.programming;
 
 import autodialog.model.Parameter;
 import bolt.compiler.BoltJavaMap;
-import de.sciss.syntaxpane.lexers.JavaLexer;
 import de.sciss.syntaxpane.syntaxkits.JavaSyntaxKit;
 import peakaboo.filter.editors.CodeEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;

@@ -9,7 +9,6 @@ import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 /**

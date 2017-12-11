@@ -12,7 +12,6 @@ import ca.sciencestudio.data.daf.DAFDataParser;
 import ca.sciencestudio.data.daf.DAFRecord;
 import ca.sciencestudio.data.daf.DAFSpectrumParser;
 import ca.sciencestudio.data.standard.StdConverter;
-import ca.sciencestudio.data.standard.StdUnits;
 import ca.sciencestudio.data.support.ConverterException;
 import ca.sciencestudio.vespers.data.converter.AbstractMapXYVespersConverter;
 import peakaboo.datasource.DataSource;

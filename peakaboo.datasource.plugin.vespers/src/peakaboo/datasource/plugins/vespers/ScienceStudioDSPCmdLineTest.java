@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * @author maxweld
