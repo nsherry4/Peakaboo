@@ -10,6 +10,7 @@ import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -164,7 +165,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 
 	@Override
-	public void calculateFilteredData(Spectrum data)
+	public void calculateFilteredData(ReadOnlySpectrum data)
 	{
 		filteringModel.filteredPlot = filteringModel.filters.applyFilters(data, true);
 		updateListeners();

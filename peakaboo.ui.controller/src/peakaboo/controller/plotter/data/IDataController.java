@@ -15,7 +15,7 @@ import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
-import scitypes.Spectrum;
+import scitypes.ReadOnlySpectrum;
 
 
 public interface IDataController extends IEventful 
@@ -30,7 +30,7 @@ public interface IDataController extends IEventful
 	ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type);
 	
 
-	Iterator<Spectrum> getScanIterator();
+	Iterator<ReadOnlySpectrum> getScanIterator();
 	boolean hasDataSet();
 	
 	Discards getDiscards();

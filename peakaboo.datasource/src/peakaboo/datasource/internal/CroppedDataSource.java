@@ -14,6 +14,7 @@ import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.GridPerspective;
+import scitypes.ReadOnlySpectrum;
 import scitypes.SISize;
 import scitypes.Spectrum;
 
@@ -53,7 +54,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	}
 
 
-	public Spectrum get(int index)
+	public ReadOnlySpectrum get(int index)
 	{
 		
 		

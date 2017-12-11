@@ -94,6 +94,7 @@ import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
 import scidraw.swing.SavePicture;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
 import swidget.dialogues.PropertyDialogue;
@@ -1408,10 +1409,10 @@ public class PlotPanel extends ClearPanel
 						exec.advanceState();
 						
 						OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(tempfile));
-						Iterator<Spectrum> iter = controller.data().getScanIterator();
+						Iterator<ReadOnlySpectrum> iter = controller.data().getScanIterator();
 						while (iter.hasNext())
 						{
-							Spectrum s = iter.next();
+							ReadOnlySpectrum s = iter.next();
 							s = filters.applyFiltersUnsynchronized(new ISpectrum(s), false);
 							osw.write(s.toString() + "\n");
 							exec.workUnitCompleted();

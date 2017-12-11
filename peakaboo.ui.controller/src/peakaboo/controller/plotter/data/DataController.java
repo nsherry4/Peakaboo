@@ -22,6 +22,7 @@ import peakaboo.mapping.MapTS;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -162,13 +163,13 @@ public class DataController extends Eventful implements IDataController
 	
 	
 	@Override
-	public Iterator<Spectrum> getScanIterator()
+	public Iterator<ReadOnlySpectrum> getScanIterator()
 	{
 		
-		return new Iterator<Spectrum>() {
+		return new Iterator<ReadOnlySpectrum>() {
 
 			int nextIndex = dataModel.firstNonNullScanIndex();
-			Spectrum next = dataModel.getScanData().get(nextIndex);
+			ReadOnlySpectrum next = dataModel.getScanData().get(nextIndex);
 			
 			
 			@Override
@@ -178,9 +179,9 @@ public class DataController extends Eventful implements IDataController
 			}
 
 			@Override
-			public Spectrum next()
+			public ReadOnlySpectrum next()
 			{
-				Spectrum current = next;
+				ReadOnlySpectrum current = next;
 				nextIndex = dataModel.firstNonNullScanIndex(nextIndex+1);
 				if (nextIndex == -1) {
 					next = null;

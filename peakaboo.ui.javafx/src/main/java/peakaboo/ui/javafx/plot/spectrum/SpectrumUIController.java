@@ -32,6 +32,7 @@ import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;
 import peakaboo.ui.javafx.util.Spectrums;
 import scidraw.drawing.DrawingRequest;
+import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
 
@@ -132,7 +133,7 @@ public class SpectrumUIController extends IActofUIController {
 		String colour;
 		boolean monochrome = plotController.settings().getMonochrome();
 
-		Pair<Spectrum, Spectrum> plotdata = plotController.getDataForPlot();
+		Pair<Spectrum, ReadOnlySpectrum> plotdata = plotController.getDataForPlot();
 
 		// main data series
 		seriesFinalData = Spectrums.asSeries(plotdata.first);
@@ -187,7 +188,7 @@ public class SpectrumUIController extends IActofUIController {
 		if (!plotController.data().hasDataSet()) { return; }
 		
 		//final and raw data
-		Pair<Spectrum, Spectrum> plotdata = plotController.getDataForPlot();
+		Pair<Spectrum, ReadOnlySpectrum> plotdata = plotController.getDataForPlot();
 				
 		updateSeriesFromSpectrum(seriesFinalData, plotdata.first);
 		updateSeriesFromSpectrum(seriesRawData, plotdata.second);
@@ -206,7 +207,7 @@ public class SpectrumUIController extends IActofUIController {
 		
 	}
 	
-	private void updateSeriesFromSpectrum(Series<Number, Number> series, Spectrum spectrum) {
+	private void updateSeriesFromSpectrum(Series<Number, Number> series, ReadOnlySpectrum spectrum) {
 		for (Data<Number, Number> data : series.getData()) {
 			data.setYValue(spectrum.get(data.getXValue().intValue()));
 		}

@@ -6,6 +6,7 @@ import eventful.IEventful;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -29,7 +30,7 @@ public interface IFilteringController extends IEventful
 	void setFilterEnabled(int index, boolean enabled);
 
 	void filteredDataInvalidated();
-	void calculateFilteredData(Spectrum data);
+	void calculateFilteredData(ReadOnlySpectrum data);
 	
 	Filter getActiveFilter(int index);
 	FilterSet getActiveFilters();

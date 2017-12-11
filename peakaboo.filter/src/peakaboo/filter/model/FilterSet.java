@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import peakaboo.filter.FilterLoader;
+import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -124,25 +126,26 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized Spectrum applyFilters(Spectrum data, boolean filtersShouldCache)
+	public synchronized Spectrum applyFilters(ReadOnlySpectrum data, boolean filtersShouldCache)
 	{
 
 		return applyFiltersUnsynchronized(data, filtersShouldCache);
 	}
 
 
-	public Spectrum applyFiltersUnsynchronized(Spectrum data, boolean filtersShouldCache)
+	public Spectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, boolean filtersShouldCache)
 	{
 
+		Spectrum output = new ISpectrum(data);
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled()) {
 
-				data = f.filter(data, filtersShouldCache);
+				output = f.filter(output, filtersShouldCache);
 				
 			}
 		}
 
-		return data;
+		return output;
 	}
 	
 

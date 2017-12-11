@@ -28,6 +28,7 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -199,9 +200,9 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	 * raw data supplied by the data controller.
 	 * @return a Spectrum which contains a scan
 	 */
-	private Spectrum currentScan()
+	private ReadOnlySpectrum currentScan()
 	{
-		Spectrum originalData = null;
+		ReadOnlySpectrum originalData = null;
 		
 		if (settingsController.getChannelCompositeType() == ChannelCompositeMode.AVERAGE) {
 			originalData = dataController.getDataSet().averagePlot();
@@ -217,10 +218,10 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	
 
 	@Override
-	public Pair<Spectrum, Spectrum> getDataForPlot()
+	public Pair<Spectrum, ReadOnlySpectrum> getDataForPlot()
 	{
 
-		Spectrum originalData = null;
+		ReadOnlySpectrum originalData = null;
 	
 		if (!dataController.hasDataSet() || currentScan() == null) return null;
 
@@ -230,7 +231,7 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 
 		regenerateCahcedData();
 		
-		return new Pair<Spectrum, Spectrum>(filteringController.getFilteredPlot(), originalData);
+		return new Pair<Spectrum, ReadOnlySpectrum>(filteringController.getFilteredPlot(), originalData);
 	}
 
 

@@ -8,6 +8,7 @@ import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -29,7 +30,7 @@ public interface DataSet {
 	 * 
 	 * @return average scan
 	 */
-	Spectrum averagePlot();
+	ReadOnlySpectrum averagePlot();
 
 	/**
 	 * Produces a single scan/list containing the average value for each channel
@@ -38,14 +39,14 @@ public interface DataSet {
 	 *            is a list of indices to exclude from the average
 	 * @return average scan
 	 */
-	Spectrum averagePlot(List<Integer> excludedIndices);
+	ReadOnlySpectrum averagePlot(List<Integer> excludedIndices);
 
 	/**
 	 * Produces a single scan/list containing the most intense values for each channel
 	 * 
 	 * @return the top signal-per-channel scan
 	 */
-	Spectrum maximumPlot();
+	ReadOnlySpectrum maximumPlot();
 
 	
 

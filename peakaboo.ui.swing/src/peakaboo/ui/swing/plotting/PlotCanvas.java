@@ -38,6 +38,7 @@ import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -220,7 +221,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		////////////////////////////////////////////////////////////////////
 
 		// calculates filters and fittings if needed
-		Pair<Spectrum, Spectrum> dataForPlot = controller.getDataForPlot();
+		Pair<Spectrum, ReadOnlySpectrum> dataForPlot = controller.getDataForPlot();
 		if (dataForPlot == null) return;
 		
 		//white background
@@ -279,7 +280,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		// draw the original data
 		if (controller.settings().getShowRawData())
 		{
-			Spectrum originalData = dataForPlot.second;
+			ReadOnlySpectrum originalData = dataForPlot.second;
 			plotPainters.add(new OriginalDataPainter(originalData, controller.settings().getMonochrome()));
 		}
 		

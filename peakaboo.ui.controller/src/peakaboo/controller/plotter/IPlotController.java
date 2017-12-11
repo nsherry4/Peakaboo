@@ -17,6 +17,7 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -102,7 +103,7 @@ public interface IPlotController extends IEventfulType<String>
 	/**
 	 * Returns a pair of spectra. The first one is the filtered data, the second is the original
 	 */
-	Pair<Spectrum, Spectrum> getDataForPlot();
+	Pair<Spectrum, ReadOnlySpectrum> getDataForPlot();
 
 	
 	/**

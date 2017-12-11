@@ -1,13 +1,13 @@
 package peakaboo.datasource.components.scandata;
 
 
-import scitypes.Spectrum;
+import scitypes.ReadOnlySpectrum;
 
 public class DummyScanData implements ScanData {
 
 	
 	@Override
-	public Spectrum get(int index) throws IndexOutOfBoundsException {
+	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
 		throw new IndexOutOfBoundsException();
 	}
 

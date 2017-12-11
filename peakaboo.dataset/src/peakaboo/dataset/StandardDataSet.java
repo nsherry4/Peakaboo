@@ -23,6 +23,7 @@ import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -92,7 +93,7 @@ public class StandardDataSet implements DataSet
 
 		
 		//Filter for *JUST* the scans which have been marked as bad
-		List<Spectrum> badScans = excludedIndcies.stream().map(index -> dataSource.getScanData().get(index)).collect(toList());
+		List<ReadOnlySpectrum> badScans = excludedIndcies.stream().map(index -> dataSource.getScanData().get(index)).collect(toList());
 
 		Spectrum Ae;
 		Spectrum At;
@@ -306,7 +307,7 @@ public class StandardDataSet implements DataSet
 		
 		int nonNullScanIndex = DataSet.firstNonNullScanIndex(ds, 0);
 		if (nonNullScanIndex == -1) return;
-		Spectrum nonNullScan = ds.getScanData().get(nonNullScanIndex);
+		ReadOnlySpectrum nonNullScan = ds.getScanData().get(nonNullScanIndex);
 		if (nonNullScan == null) return;
 		
 		spectrumLength = nonNullScan.size();
@@ -322,7 +323,8 @@ public class StandardDataSet implements DataSet
 		
 		//go over each scan, calculating the average, max10th and max value
 		float max = Float.MIN_VALUE;
-		Spectrum avg, max10, current;
+		ReadOnlySpectrum current;
+		Spectrum avg, max10;
 		
 		avg = new ISpectrum(spectrumLength);
 		max10 = new ISpectrum(spectrumLength);

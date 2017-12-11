@@ -1,6 +1,7 @@
 package peakaboo.datasource.components.scandata;
 
 
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -14,7 +15,7 @@ public interface ScanData
 	 * @param index
 	 *            the scan number to retrieve
 	 */
-	Spectrum get(int index) throws IndexOutOfBoundsException;
+	ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException;
 
 	
 	

@@ -5,6 +5,7 @@ import fava.datatypes.Pair;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -285,7 +286,7 @@ public class SettingsController extends Eventful implements ISettingsController
 		if (channel == -1) return null;
 		if (channel >= plot.data().getDataSet().channelsPerScan()) return null;
 
-		Pair<Spectrum, Spectrum> scans = plot.getDataForPlot();
+		Pair<Spectrum, ReadOnlySpectrum> scans = plot.getDataForPlot();
 		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
 
 		return new Pair<Float, Float>(scans.first.get(channel), scans.second.get(channel));

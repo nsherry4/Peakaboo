@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -55,7 +56,7 @@ public class ScienceStudioDSPCmdLineTest {
 		}
 	}
 
-	protected static String spectrumToString(Spectrum spectrum, int limit) {
+	protected static String spectrumToString(ReadOnlySpectrum spectrum, int limit) {
 		boolean first = true;
 		StringBuffer buffer = new StringBuffer("[");
 		for(int i=0; i<spectrum.size(); i++) {
