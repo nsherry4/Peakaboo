@@ -3,6 +3,8 @@ package peakaboo.ui.javafx.widgets;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
+import javax.swing.JSpinner;
+
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,8 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-
-import javax.swing.JSpinner;
 
 //Lifted directly from http://java.dzone.com/articles/javafx-numbertextfield-and
 

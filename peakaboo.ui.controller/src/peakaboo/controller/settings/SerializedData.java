@@ -4,22 +4,16 @@ package peakaboo.controller.settings;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
-import autodialog.model.Parameter;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.SerializedFilter;
-import peakaboo.filter.model.Filter.FilterType;
-import peakaboo.filter.plugins.background.BruknerRemoval;
 import peakaboo.filter.plugins.noise.SpringSmoothing;
 import scidraw.drawing.DrawingRequest;
-import scidraw.drawing.plot.painters.PlotPainter;
-import scitypes.Spectrum;
 
 
 

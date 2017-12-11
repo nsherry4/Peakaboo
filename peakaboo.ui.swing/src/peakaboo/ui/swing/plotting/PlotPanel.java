@@ -2,8 +2,6 @@ package peakaboo.ui.swing.plotting;
 
 
 
-import static java.util.stream.Collectors.toList;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;

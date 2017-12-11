@@ -7,7 +7,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.Filter.FilterType;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 

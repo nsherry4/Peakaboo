@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
-import fava.functionable.FList;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.peaktable.Element;

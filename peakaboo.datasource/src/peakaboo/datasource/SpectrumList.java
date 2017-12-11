@@ -3,13 +3,13 @@ package peakaboo.datasource;
 import java.awt.Color;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.ObjectBuffer;
 import com.esotericsoftware.kryo.serialize.SimpleSerializer;
 
+import fava.functionable.FList;
 import scitypes.Spectrum;
 import scratch.ScratchList;
 
@@ -47,9 +47,10 @@ public final class SpectrumList extends ScratchList<Spectrum>{
 		}
 		catch (Exception e)
 		{
-			//FList can also behave sparsely
 			e.printStackTrace();
-			return new ArrayList<Spectrum>();
+			//We need to use a list implementation here which can be sparse/
+			//TODO: Do we actually?
+			return new FList<Spectrum>();
 		}
 	}
 	

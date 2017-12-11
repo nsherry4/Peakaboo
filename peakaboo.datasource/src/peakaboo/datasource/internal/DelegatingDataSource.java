@@ -10,7 +10,6 @@ import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
-import scitypes.Spectrum;
 
 public class DelegatingDataSource implements DataSource {
 

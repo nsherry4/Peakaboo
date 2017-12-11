@@ -14,7 +14,6 @@ import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.model.FittingModel;
-import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;
 

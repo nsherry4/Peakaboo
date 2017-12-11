@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
@@ -57,7 +56,7 @@ public class PlainText extends AbstractDataSource
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(new FList<String>(line.trim().split("[, \\t]+")).stream().map(s -> {
+			Spectrum scan = new Spectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
 				try { return Float.parseFloat(s); } 
 				catch (Exception e) { return 0f; }
 			}).collect(toList()));

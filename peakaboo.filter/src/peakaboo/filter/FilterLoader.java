@@ -10,7 +10,6 @@ import bolt.plugin.ClassInheritanceException;
 import bolt.plugin.ClassInstantiationException;
 import commonenvironment.Env;
 import peakaboo.common.Version;
-import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterPlugin;
 import peakaboo.filter.plugins.advanced.DataToWavelet;
 import peakaboo.filter.plugins.advanced.FilterPartialSpectrum;

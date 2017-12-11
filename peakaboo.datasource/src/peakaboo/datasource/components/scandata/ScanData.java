@@ -1,8 +1,6 @@
 package peakaboo.datasource.components.scandata;
 
 
-import java.util.List;
-
 import scitypes.Spectrum;
 
 

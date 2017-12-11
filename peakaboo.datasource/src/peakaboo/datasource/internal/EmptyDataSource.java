@@ -13,9 +13,6 @@ import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.Spectrum;
 
 /**
  * @author maxweld

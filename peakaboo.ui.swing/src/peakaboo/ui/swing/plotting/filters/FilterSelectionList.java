@@ -14,7 +14,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.Filter.FilterType;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

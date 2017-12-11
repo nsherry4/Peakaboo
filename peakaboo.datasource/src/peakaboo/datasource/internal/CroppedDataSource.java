@@ -3,7 +3,6 @@ package peakaboo.datasource.internal;
 import java.io.File;
 import java.util.List;
 
-import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;

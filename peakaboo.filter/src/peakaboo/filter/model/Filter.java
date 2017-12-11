@@ -3,7 +3,6 @@ package peakaboo.filter.model;
 import java.util.Map;
 
 import autodialog.model.Parameter;
-import peakaboo.filter.model.Filter.FilterType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
 
