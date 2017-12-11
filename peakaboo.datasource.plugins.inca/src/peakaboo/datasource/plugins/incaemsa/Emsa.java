@@ -10,26 +10,24 @@ import java.util.Map;
 import java.util.Scanner;
 
 import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.SpectrumList;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
+import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
-public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
+public class Emsa extends AbstractDataSource implements FileFormat {
 
-	private List<Spectrum> scans;
-	private float maxEnergy = 0;
-	private float channelOffset = 0;
+	private SimpleScanData scanData;
 	private Map<String, String> tags;
 	
 	
 	public Emsa() {
-		scans = SpectrumList.create(getFormatName());
+		scanData = new SimpleScanData(getFormatName());
 	}
 	
 	
@@ -175,10 +173,10 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 			}
 			
 			spectrum.add(energies.get(energy));
-			maxEnergy = energy;
+			scanData.setMaxEnergy(energy);
 			
 		}
-		scans.add(spectrum);
+		scanData.add(spectrum);
 		
 	}
 
@@ -190,39 +188,11 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 	}
 
 	@Override
-	public Spectrum get(int index) throws IndexOutOfBoundsException {
-		return scans.get(index);
-	}
-
-	@Override
-	public int scanCount() {
-		return scans.size();
-	}
-
-	@Override
-	public String scanName(int index) {
-		return "Scan #" + (index+1);
-	}
-
-	@Override
-	public float maxEnergy() {
-		return maxEnergy;
-	}
-
-	@Override
-	public String datasetName() {
-		return "EMSA Dataset";
-	}
-
-
-
-	@Override
 	public ScanData getScanData() {
-		return this;
+		return scanData;
 	}
 	
 	
-
 	//==============================================
 	// UNSUPPORTED FEATURES
 	//==============================================
