@@ -5,13 +5,13 @@ import java.awt.GridBagLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
 import eventful.EventfulListener;
-import fava.functionable.FList;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import swidget.icons.IconSize;
@@ -25,7 +25,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 
 	protected IFittingController controller;
 
-	protected FList<TSSelector>	selectors;
+	protected List<TSSelector>	selectors;
 	protected ImageButton		addButton;
 	
 	private int					minSelectors;
@@ -48,7 +48,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		});
 		
 				
-		selectors = new FList<TSSelector>();
+		selectors = new ArrayList<TSSelector>();
 		
 		
 	}

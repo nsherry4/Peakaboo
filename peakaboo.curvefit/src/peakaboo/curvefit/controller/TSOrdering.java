@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import fava.Fn;
 import fava.datatypes.Pair;
-import fava.functionable.FList;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
@@ -39,9 +38,9 @@ public class TSOrdering
 	 * @param escape the kind of {@link EscapePeakType} these fittings should use
 	 * @return an ordered list of {@link TransitionSeries}
 	 */
-	public static FList<TransitionSeries> optimizeTSOrdering(final float energyPerChannel, final FList<TransitionSeries> unfitted, final Spectrum s, final EscapePeakType escape)
+	public static List<TransitionSeries> optimizeTSOrdering(final float energyPerChannel, final List<TransitionSeries> unfitted, final Spectrum s, final EscapePeakType escape)
 	{
-		FList<TransitionSeries> ordered = unfitted.toSink();
+		List<TransitionSeries> ordered = new ArrayList<>(unfitted);
 
 		Collections.sort(ordered, new Comparator<TransitionSeries>() {
 
@@ -148,7 +147,7 @@ public class TSOrdering
 	 * @param escape the kind of {@link EscapePeakType} that should
 	 * @return a list of all {@link TransitionSeries} which overlap with the given one
 	 */
-	public static FList<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, float energyPerChannel, int spectrumSize, final EscapePeakType escape)
+	public static List<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, float energyPerChannel, int spectrumSize, final EscapePeakType escape)
 	{
 		final TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, spectrumSize, energyPerChannel, escape);
 		final TransitionSeriesFitting tsf2 = new TransitionSeriesFitting(null, spectrumSize, energyPerChannel, escape);
@@ -157,11 +156,11 @@ public class TSOrdering
 		tsf1.setTransitionSeries(ts, true);
 		
 		//map all other TSs to booleans to check if this overlaps
-		return FList.wrap(tss.stream().filter((TransitionSeries otherts) -> {
+		return tss.stream().filter((TransitionSeries otherts) -> {
 			if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
 			tsf2.setTransitionSeries(otherts, true);						
 			return (tsf1.isOverlapping(tsf2));
-		}).collect(Collectors.toList()));
+		}).collect(Collectors.toList());
 	}
 	
 	

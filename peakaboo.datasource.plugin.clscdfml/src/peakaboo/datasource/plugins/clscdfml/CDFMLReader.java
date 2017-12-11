@@ -20,7 +20,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import fava.datatypes.Pair;
 import fava.functionable.FList;
 import fava.functionable.Range;
-import peakaboo.common.DataTypeFactory;
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
 import scitypes.Spectrum;
@@ -339,13 +338,13 @@ public abstract class CDFMLReader extends DefaultHandler2
 			
 			case REAL:
 				List<Float> fvalues = (List<Float>)variableEntries.get(variableName);
-				if (fvalues == null) variableEntries.put(variableName, DataTypeFactory.<Float>listInit(varRecordCount(variableName)));
+				if (fvalues == null) variableEntries.put(variableName, new ArrayList<>(varRecordCount(variableName)));
 				fvalues = (List<Float>)variableEntries.get(variableName);
 				fvalues.set(entryNo, Float.parseFloat(sb.toString()));
 				break;
 			case INTEGER:
 				List<Integer> ivalues = (List<Integer>)variableEntries.get(variableName);
-				if (ivalues == null) variableEntries.put(variableName, DataTypeFactory.<Integer>listInit(varRecordCount(variableName)));
+				if (ivalues == null) variableEntries.put(variableName, new ArrayList<>(varRecordCount(variableName)));
 				ivalues = (List<Integer>)variableEntries.get(variableName);
 				ivalues.set(entryNo, Integer.parseInt(sb.toString()));
 				break;

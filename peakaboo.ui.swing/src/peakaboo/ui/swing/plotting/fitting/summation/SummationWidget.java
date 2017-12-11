@@ -3,11 +3,11 @@ package peakaboo.ui.swing.plotting.fitting.summation;
 
 
 import java.awt.GridBagConstraints;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import fava.functionable.FList;
-import peakaboo.common.DataTypeFactory;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
@@ -37,11 +37,13 @@ class SummationWidget extends TSSelectorGroup
 	
 	
 	@Override
-	public FList<TransitionSeries> getTransitionSeries()
+	public List<TransitionSeries> getTransitionSeries()
 	{
 		//get a list of all TransitionSeries to be summed
 		List<TransitionSeries> tss = selectors.stream().map(e -> e.getTransitionSeries()).filter(ts -> ts != null).collect(Collectors.toList());
-		return DataTypeFactory.<TransitionSeries>listInit(TransitionSeries.summation(tss));
+		List<TransitionSeries> sum = new ArrayList<>();
+		sum.add(TransitionSeries.summation(tss));
+		return sum;
 	}
 	
 
@@ -49,7 +51,7 @@ class SummationWidget extends TSSelectorGroup
 	@Override
 	public void setTransitionSeriesOptions(final List<TransitionSeries> tss)
 	{
-		selectors.each((TSSelector selector) -> {
+		selectors.stream().forEach((TSSelector selector) -> {
 			selector.setTransitionSeries(tss);
 		});
 	}

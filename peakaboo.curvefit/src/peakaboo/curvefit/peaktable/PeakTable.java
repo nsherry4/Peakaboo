@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fava.datatypes.Pair;
-import fava.functionable.FList;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 
@@ -29,7 +28,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 public class PeakTable
 {
 
-	private static FList<TransitionSeries> elementTransitions = new FList<TransitionSeries>();
+	private static ArrayList<TransitionSeries> elementTransitions = new ArrayList<TransitionSeries>();
 
 
 

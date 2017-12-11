@@ -4,7 +4,6 @@ package peakaboo.curvefit.model.transitionseries;
 
 import static fava.Fn.concat;
 import static fava.Fn.concatMap;
-import static fava.Fn.each;
 import static fava.Fn.group;
 import static fava.Fn.zipWith;
 import static java.util.stream.Collectors.joining;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
@@ -50,14 +50,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	/**
 	 * If this is a compound TransitionSeries, this list contains the component TransitionSeries
 	 */
-	private FList<TransitionSeries>	 componentSeries;
+	private List<TransitionSeries>	 componentSeries;
 
 	/**
 	 * The {@link Element} that this TransitionSeries represents
 	 */
 	public Element					element;
 
-	private FList<Transition>		transitions;
+	private List<Transition>		transitions;
 
 	/**
 	 * The general intensity of this TransitionSeries
@@ -107,8 +107,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		intensity = 1.0;
 		visible = true;
 
-		transitions = new FList<Transition>();
-		componentSeries = new FList<TransitionSeries>();
+		transitions = new ArrayList<Transition>();
+		componentSeries = new ArrayList<TransitionSeries>();
 	}
 	
 	/**
@@ -154,10 +154,12 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public Transition getStrongestTransition()
 	{
 
-		return transitions.foldr((Transition t1, Transition t2) -> {
+		Optional<Transition> strongest = transitions.stream().reduce((Transition t1, Transition t2) -> {
 			if (t1.relativeIntensity > t2.relativeIntensity) return t1;
 			return t2;
 		});
+		
+		return strongest.orElse(null);
 
 	}
 
@@ -401,8 +403,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				.collect(toList());
 
 		List<Transition> allPileups = concat(allPileupLists);
-
-		each(allPileups, t -> newTransitionSeries.setTransition(t));
+		allPileups.forEach(newTransitionSeries::setTransition);
 
 		newTransitionSeries.componentSeries.add(this);
 		newTransitionSeries.componentSeries.add(other);
@@ -566,7 +567,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public List<String> toSerializableList()
 	{
 		if (type == TransitionSeriesType.COMPOSITE) return null;
-		return new FList<String>(element.name(), type.name());
+		List<String> data = new ArrayList<>();
+		data.add(element.name());
+		data.add(type.name());
+		return data;
 	}
 
 

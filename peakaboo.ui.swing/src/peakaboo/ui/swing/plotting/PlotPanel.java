@@ -70,7 +70,6 @@ import eventful.EventfulEnumListener;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 import fava.datatypes.Pair;
-import fava.functionable.FList;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.IPlotController;
