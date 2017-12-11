@@ -513,7 +513,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				return ((List<Integer>)getEntriesForVar(var)).stream().map(i -> i.floatValue()).collect(toList());
 				
 			case SPECTRUM:
-				return ((List<Spectrum>)getEntriesForVar(var)).stream().map(v -> v.fold((a, b) -> a + b)).collect(toList());
+				return ((List<Spectrum>)getEntriesForVar(var)).stream().map(v -> v.stream().reduce(0f, (a, b) -> a + b)).collect(toList());
 			
 		}
 		
@@ -535,7 +535,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 				return (List<Integer>)getEntriesForVar(var);
 				
 			case SPECTRUM:
-				return ((List<Spectrum>)getEntriesForVar(var)).stream().map(v -> v.fold((a, b) -> a + b).intValue()).collect(toList());
+				return ((List<Spectrum>)getEntriesForVar(var)).stream().map(v -> v.stream().reduce(0f, (a, b) -> a + b).intValue()).collect(toList());
 				
 		}
 		
