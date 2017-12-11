@@ -18,7 +18,6 @@ import java.util.function.Function;
 
 import eventful.EventfulType;
 import fava.datatypes.Pair;
-import fava.functionable.FList;
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
@@ -353,7 +352,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
 			int index = map.mapsController.getDataWidth() * coord.y + coord.x;
-			FList<String> results = new FList<String>();
+			List<String> results = new ArrayList<String>();
 			for (OverlayColour c : OverlayColour.values())
 			{
 				if (overlayData.get(c) != null) results.add(  c.toString() + ": " + SigDigits.roundFloatTo(overlayData.get(c).get(index), 2)  );

@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import fava.functionable.FList;
 import fava.functionable.Functionable;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import scitypes.Spectrum;
@@ -26,8 +25,8 @@ import scitypes.SpectrumCalculations;
 public class MapResultSet extends Functionable<MapResult> implements Cloneable
 {
 
-	private FList<MapResult>	maps;
-	private int					mapSize;
+	private List<MapResult>	maps;
+	private int				mapSize;
 
 
 	/**
@@ -40,7 +39,7 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
 	{
 		
-		maps = new FList<MapResult>();
+		maps = new ArrayList<MapResult>();
 		for (TransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));
 		}
@@ -50,7 +49,7 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	
 	public MapResultSet(List<MapResult> maps, int mapSize, boolean flagToMakeSignatureDifferent)
 	{
-		this.maps = FList.wrap(maps);
+		this.maps = maps;
 		this.mapSize = mapSize;
 	}
 	

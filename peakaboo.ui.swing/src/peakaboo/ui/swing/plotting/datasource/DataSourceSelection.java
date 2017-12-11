@@ -120,7 +120,7 @@ public class DataSourceSelection extends JDialog
 //	{
 //		Swidget.initialize();
 //		DataSourceSelection dss = new DataSourceSelection();
-//		AbstractDataSource dsp = dss.pickDSP(null, new FList<AbstractDataSource>(new ScienceStudio(), new CDFMLSax()));
+//		AbstractDataSource dsp = dss.pickDSP(null, new ArrayList<AbstractDataSource>(new ScienceStudio(), new CDFMLSax()));
 //		System.out.println(dsp.getDataFormat());
 //	}
 	

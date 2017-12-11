@@ -18,7 +18,6 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import fava.datatypes.Pair;
-import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
@@ -286,7 +285,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 		List<String> entryList = attrEntries.get(tagAttrName);
 		if (entryList == null)
 		{
-			entryList = new FList<String>();
+			entryList = new ArrayList<String>();
 			attrEntries.put(tagAttrName, entryList);
 		}
 
@@ -452,7 +451,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	}
 	protected List<String> getVars()
 	{
-		return new FList<String>(variableEntries.keySet());
+		return new ArrayList<String>(variableEntries.keySet());
 	}
 	
 	public boolean hasAttr(String attr)
@@ -461,7 +460,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	}
 	protected List<String> getAttrs()
 	{
-		return new FList<String>(attrEntries.keySet());
+		return new ArrayList<String>(attrEntries.keySet());
 	}
 	
 	

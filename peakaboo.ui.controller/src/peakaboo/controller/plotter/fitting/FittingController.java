@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import eventful.EventfulType;
 import fava.Fn;
 import fava.datatypes.Pair;
-import fava.functionable.FList;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.controller.TSOrdering;
 import peakaboo.curvefit.model.FittingModel;
@@ -302,12 +301,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		//find the optimal ordering of the visible overlapping TSs based on how they fit with competition
 		List<TransitionSeries> bestfit = optimizeTSOrderingHelper(
 				scoredOverlappers.stream().map(e -> e.first).collect(Collectors.toList()), 
-				new FList<TransitionSeries>()
+				new ArrayList<TransitionSeries>()
 			);
 		
 
 		
-		//FList<TransitionSeries> bestfit = TSOrdering.optimizeTSOrdering(getEnergyPerChannel(), tss, filteringController.getFilteredPlot());
+		//List<TransitionSeries> bestfit = TSOrdering.optimizeTSOrdering(getEnergyPerChannel(), tss, filteringController.getFilteredPlot());
 
 		//re-add all of the overlappers
 		bestfit.addAll(nonOverlappers);
@@ -349,7 +348,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	// =============================================
 	// Helper Functions for IFittingController
 	// =============================================
-	private FList<TransitionSeries> optimizeTSOrderingHelper(List<TransitionSeries> unfitted, FList<TransitionSeries> fitted)
+	private List<TransitionSeries> optimizeTSOrderingHelper(List<TransitionSeries> unfitted, List<TransitionSeries> fitted)
 	{
 		
 		//assumption: unfitted will be in sorted order based on how well each TS fits independently

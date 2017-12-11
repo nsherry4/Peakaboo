@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-import fava.functionable.FList;
 import fava.functionable.FStringInput;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
@@ -35,7 +34,7 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 	private Spectrum readMCA(String filename) throws IOException
 	{
 		BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-		FList<String> lines = FStringInput.lines(r).toSink();
+		List<String> lines = FStringInput.lines(r).toSink();
 		
 		int startIndex = lines.indexOf("<<DATA>>") + 1;
 		int endIndex = lines.indexOf("<<END>>");

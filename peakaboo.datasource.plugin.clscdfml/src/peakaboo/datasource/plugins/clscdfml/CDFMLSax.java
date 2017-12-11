@@ -5,11 +5,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fava.functionable.FList;
 import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
@@ -607,7 +608,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 	@Override
 	public List<String> getFileExtensions()
 	{
-		return new FList<String>("xml", "cdfml");
+		return new ArrayList<String>(Arrays.asList(new String[]{"xml", "cdfml"}));
 	}
 
 
