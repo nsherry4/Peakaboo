@@ -14,6 +14,7 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import plural.executor.eachindex.EachIndexExecutor;
 import plural.executor.eachindex.implementations.PluralEachIndexExecutor;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -53,7 +54,7 @@ public class MapTS
 			Spectrum original = datasetProvider.getScanData().get(ordinal); 
 			if (original == null) return;
 			
-			Spectrum data = filters.applyFiltersUnsynchronized(new Spectrum(datasetProvider.getScanData().get(ordinal)), false);
+			Spectrum data = filters.applyFiltersUnsynchronized(new ISpectrum(datasetProvider.getScanData().get(ordinal)), false);
 			FittingResultSet frs = fittings.calculateFittings(data);
 
 			for (FittingResult result : frs.fits)

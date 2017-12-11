@@ -18,6 +18,7 @@ import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 
@@ -39,7 +40,7 @@ public class AmptekMCA extends AbstractDataSource implements ScanData {
 		int startIndex = lines.indexOf("<<DATA>>") + 1;
 		int endIndex = lines.indexOf("<<END>>");
 		
-		Spectrum s = new Spectrum(lines.subList(startIndex, endIndex).stream().map(line -> Float.parseFloat(line)).collect(toList()));
+		Spectrum s = new ISpectrum(lines.subList(startIndex, endIndex).stream().map(line -> Float.parseFloat(line)).collect(toList()));
 		
 		r.close();
 		

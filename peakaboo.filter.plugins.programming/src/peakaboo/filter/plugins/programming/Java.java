@@ -7,6 +7,7 @@ import de.sciss.syntaxpane.lexers.JavaLexer;
 import de.sciss.syntaxpane.syntaxkits.JavaSyntaxKit;
 import peakaboo.filter.editors.CodeEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 
@@ -71,7 +72,7 @@ public class Java extends AbstractSimpleFilter {
 		//in this plugin, validate also puts the user code into the mapper 
 		validateParameters();
 		
-		return new Spectrum(boltJavaMap.apply(data.backingArray()));
+		return new ISpectrum(boltJavaMap.apply(data.backingArray()));
 	}
 
 	@Override

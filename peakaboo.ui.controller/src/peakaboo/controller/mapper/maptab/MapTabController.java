@@ -25,6 +25,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import scitypes.Coord;
 import scitypes.GridPerspective;
+import scitypes.ISpectrum;
 import scitypes.Ratios;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
@@ -264,7 +265,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			SpectrumCalculations.normalize_inplace(side2Data);
 		}
 				
-		Spectrum ratioData = new Spectrum(side1Data.size());
+		Spectrum ratioData = new ISpectrum(side1Data.size());
 		
 		
 		for (int i = 0; i < ratioData.size(); i++)
@@ -310,7 +311,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		//mapModel.interpolatedSize.x = interpolationResult.first.width;
 		//mapModel.interpolatedSize.y = interpolationResult.first.height;
 		
-		Spectrum invalidPoints = new Spectrum(ratioData.size(), 0f);
+		Spectrum invalidPoints = new ISpectrum(ratioData.size(), 0f);
 		for (int i = 0; i < ratioData.size(); i++)
 		{
 			if (  Float.isNaN(ratioData.get(i))  )
@@ -320,7 +321,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			}
 		}
 		
-		Spectrum invalidPointsInterpolated = new Spectrum(mapdata.size(), 0f);
+		Spectrum invalidPointsInterpolated = new ISpectrum(mapdata.size(), 0f);
 		for (int i = 0; i < mapdata.size(); i++)
 		{
 			if (  Float.isNaN(mapdata.get(i))  )
@@ -401,7 +402,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		
 		GridPerspective<Float> interpGrid = grid;
 		
-		Spectrum mapdata = new Spectrum(data);
+		Spectrum mapdata = new ISpectrum(data);
 		
 		Pair<GridPerspective<Float>, Spectrum> interpolationResult;
 		int count = 0;

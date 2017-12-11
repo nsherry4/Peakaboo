@@ -10,7 +10,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.ObjectBuffer;
 import com.esotericsoftware.kryo.serialize.SimpleSerializer;
 
-import fava.functionable.FList;
+import scitypes.ISpectrum;
 import scitypes.SparsedList;
 import scitypes.Spectrum;
 import scratch.ScratchList;
@@ -30,6 +30,9 @@ import scratch.ScratchList;
  * To create a new SpectrumList, call {@link SpectrumList#create(String)}.
  * If the SpectrumList cannot be created for whatever reason, a memory-based
  * list will be created instead.
+ * <br/><br/>
+ * Note that this class depends on the specific implementation of Spectrum
+ * being {@link ISpectrum} 
  * @author Nathaniel Sherry, 2011-2012
  *
  */
@@ -89,7 +92,7 @@ public final class SpectrumList extends ScratchList<Spectrum>{
 	protected Spectrum decodeObject(byte[] byteArray) throws IOException
 	{
 		ObjectBuffer buffer = getKryoBuffer();
-		return buffer.readObject(byteArray, Spectrum.class);
+		return buffer.readObject(byteArray, ISpectrum.class);
 	}
 
 	@Override

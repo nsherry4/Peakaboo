@@ -21,6 +21,7 @@ import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.ISpectrum;
 import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -131,7 +132,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 		if (!reader.hasVar(CDFMLStrings.VAR_NORMALISE)) return 1f;
 		
 		if (iNaughtNormalized == null) {
-			iNaughtNormalized = SpectrumCalculations.normalize(new Spectrum(reader.getVarFloats(CDFMLStrings.VAR_NORMALISE)));
+			iNaughtNormalized = SpectrumCalculations.normalize(new ISpectrum(reader.getVarFloats(CDFMLStrings.VAR_NORMALISE)));
 		}
 		
 		return iNaughtNormalized.get(index);
@@ -189,7 +190,7 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 		{
 			
 			
-			s = new Spectrum(getScan(0, 0).size(), 0f);
+			s = new ISpectrum(getScan(0, 0).size(), 0f);
 			for (Integer i : new Range(0, numElements()-1))
 			{
 				
@@ -226,9 +227,9 @@ public class CDFMLSax extends AbstractDataSource implements Metadata, DataSize, 
 			Spectrum raw = getScan(index);
 			
 			if (raw == null) {
-				s = new Spectrum(getScan(0, 0).size(), 0f);
+				s = new ISpectrum(getScan(0, 0).size(), 0f);
 			} else {
-				s = new Spectrum(getScan(index));
+				s = new ISpectrum(getScan(index));
 			}
 			
 			//adjust for deadtime

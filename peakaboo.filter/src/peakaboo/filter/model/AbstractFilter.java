@@ -8,6 +8,7 @@ import java.util.Map;
 import autodialog.model.Parameter;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -101,7 +102,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 
 	protected final void setPreviewCache(Spectrum data)
 	{
-		this.previewCache = new Spectrum(data);
+		this.previewCache = new ISpectrum(data);
 	}
 
 

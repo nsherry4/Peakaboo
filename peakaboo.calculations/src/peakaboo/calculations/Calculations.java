@@ -4,6 +4,7 @@ package peakaboo.calculations;
 import java.util.List;
 
 import scitypes.GridPerspective;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -49,7 +50,7 @@ public class Calculations
 	public static Spectrum gridYReverse(Spectrum data, GridPerspective<Float> grid)
 	{
 
-		Spectrum result = new Spectrum(grid.height * grid.width, 0.0f);
+		Spectrum result = new ISpectrum(grid.height * grid.width, 0.0f);
 		int y_reverse;
 
 		for (int x = 0; x < grid.width; x++) {

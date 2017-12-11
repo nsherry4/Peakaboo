@@ -15,6 +15,7 @@ import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 
@@ -56,7 +57,7 @@ public class PlainText extends AbstractDataSource
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new Spectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
+			Spectrum scan = new ISpectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
 				try { return Float.parseFloat(s); } 
 				catch (Exception e) { return 0f; }
 			}).collect(toList()));

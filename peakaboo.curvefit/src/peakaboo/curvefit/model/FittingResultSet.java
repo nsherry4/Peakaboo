@@ -4,6 +4,7 @@ package peakaboo.curvefit.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -26,8 +27,8 @@ public class FittingResultSet
 	public FittingResultSet(int size)
 	{
 		fits = new ArrayList<FittingResult>();
-		totalFit = new Spectrum(size);
-		residual = new Spectrum(size);
+		totalFit = new ISpectrum(size);
+		residual = new ISpectrum(size);
 	}
 	
 }

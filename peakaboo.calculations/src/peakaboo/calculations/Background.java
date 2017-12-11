@@ -3,6 +3,7 @@ package peakaboo.calculations;
 
 
 
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -46,7 +47,7 @@ public class Background
 		int raise = 1;
 		if (power == 0) raise = 2;
 
-		Spectrum function = new Spectrum(width);
+		Spectrum function = new ISpectrum(width);
 		for (int i = 0; i < width; i++)
 		{
 			x = i - centre;
@@ -77,7 +78,7 @@ public class Background
 
 		float value, minRatio, ratio;
 
-		Spectrum result = new Spectrum(data.size(), 0.0f);
+		Spectrum result = new ISpectrum(data.size(), 0.0f);
 
 		// start with the function *centred* at the 0 index, and go until it is at the last index
 		for (int i = -(function.size() - 1); i < data.size(); i++)
@@ -143,7 +144,7 @@ public class Background
 		float diff = Iavg - Imin;
 		final float cutoff = Iavg + 2 * diff;
 
-		Spectrum result = new Spectrum(data); 
+		Spectrum result = new ISpectrum(data); 
 
 		//initially cap the data at the given cutoff
 		for (int i = 0; i < result.size(); i++)
@@ -151,7 +152,7 @@ public class Background
 			if (result.get(i) > cutoff) result.set(i, cutoff);
 		}
 		
-		Spectrum result2 = new Spectrum(result.size());
+		Spectrum result2 = new ISpectrum(result.size());
 
 		int i = 0;
 		while (repetitions > 0)
@@ -215,10 +216,10 @@ public class Background
 	{
 		
 		
-		Spectrum result1 = new Spectrum(scan);
-		Spectrum result2 = new Spectrum(scan.size());
+		Spectrum result1 = new ISpectrum(scan);
+		Spectrum result2 = new ISpectrum(scan.size());
 		Spectrum temp;
-		Spectrum lineSegment = new Spectrum(scan.size());
+		Spectrum lineSegment = new ISpectrum(scan.size());
 		
 		for (int i = 0; i < iterations; i++)
 		{

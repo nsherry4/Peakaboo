@@ -21,6 +21,7 @@ import fava.datatypes.Pair;
 import fava.functionable.Range;
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 
@@ -404,7 +405,7 @@ public abstract class CDFMLReader extends DefaultHandler2
 	private Spectrum getSpectrumFromString(int size, String scanString)
 	{
 		
-		Spectrum s = new Spectrum(size);
+		Spectrum s = new ISpectrum(size);
 		
 		
 		int startIndex = 0;
@@ -548,10 +549,10 @@ public abstract class CDFMLReader extends DefaultHandler2
 		switch (getVarType(var)) {
 			
 			case REAL:
-				return ((List<Float>)getEntriesForVar(var)).stream().map(v -> new Spectrum(1, v.floatValue())).collect(toList());
+				return ((List<Float>)getEntriesForVar(var)).stream().map(v -> new ISpectrum(1, v.floatValue())).collect(toList());
 				
 			case INTEGER:
-				return ((List<Integer>)getEntriesForVar(var)).stream().map(v -> new Spectrum(1, v.floatValue())).collect(toList());
+				return ((List<Integer>)getEntriesForVar(var)).stream().map(v -> new ISpectrum(1, v.floatValue())).collect(toList());
 				
 			case SPECTRUM:
 				return (List<Spectrum>)getEntriesForVar(var);

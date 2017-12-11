@@ -3,6 +3,7 @@ package peakaboo.mapping.results;
 
 
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -25,7 +26,7 @@ public class MapResult implements Cloneable
 
 	public MapResult(TransitionSeries ts, int mapSize)
 	{
-		this.data = new Spectrum(mapSize, 0.0f);
+		this.data = new ISpectrum(mapSize, 0.0f);
 		transitionSeries = ts;
 	}
 	

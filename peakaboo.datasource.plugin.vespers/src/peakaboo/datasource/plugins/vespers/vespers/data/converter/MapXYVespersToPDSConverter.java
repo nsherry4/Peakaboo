@@ -27,6 +27,7 @@ import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.plugins.vespers.ConverterFactoryDelegatingDSP;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.ISpectrum;
 import scitypes.SISize;
 import scitypes.Spectrum;
 
@@ -333,7 +334,7 @@ public class MapXYVespersToPDSConverter extends AbstractMapXYVespersConverter im
 		// Fill scans with spectrums //
 		
 		for(float[] spectrum : spectrums) {
-			scans.add(new Spectrum(spectrum, false));
+			scans.add(new ISpectrum(spectrum, false));
 		}
 		
 		// Clear the unused spectrums //

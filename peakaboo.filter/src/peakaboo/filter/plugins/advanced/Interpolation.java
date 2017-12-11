@@ -5,6 +5,7 @@ import autodialog.view.editors.IntegerEditor;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 public class Interpolation extends AbstractSimpleFilter
@@ -29,7 +30,7 @@ public class Interpolation extends AbstractSimpleFilter
 	@Override
 	protected Spectrum filterApplyTo(Spectrum data)
 	{
-		Spectrum scaled = new Spectrum(size.getValue());
+		Spectrum scaled = new ISpectrum(size.getValue());
 		for (int i = 0; i < size.getValue(); i++)
 		{
 			scaled.set(i, (float)calcNewPoint(data, size.getValue(), i));

@@ -22,6 +22,7 @@ import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
@@ -165,7 +166,7 @@ public class Emsa extends AbstractDataSource implements FileFormat, ScanData {
 			tag_npoints = (int)Float.parseFloat(tags.get("NPOINTS"));
 		}
 			
-		Spectrum spectrum = new Spectrum(tag_npoints );
+		Spectrum spectrum = new ISpectrum(tag_npoints );
 		
 		List<Float> keys = new ArrayList<>(energies.keySet());
 		keys.sort((a, b) -> Float.compare(a, b));

@@ -3,6 +3,7 @@ package peakaboo.datasource.components.scandata;
 import java.util.List;
 
 import peakaboo.datasource.SpectrumList;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 public class SimpleScanData implements ScanData {
@@ -18,7 +19,7 @@ public class SimpleScanData implements ScanData {
 
 	@Override
 	public Spectrum get(int index) throws IndexOutOfBoundsException {
-		return new Spectrum(spectra.get(index)); //return read-only
+		return new ISpectrum(spectra.get(index)); //return read-only
 	}
 	
 	public void add(Spectrum spectrum) {

@@ -13,6 +13,7 @@ import peakaboo.datasource.components.fileformat.SimpleFileFormat;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 public class CSV extends AbstractDataSource implements ScanData
@@ -57,7 +58,7 @@ public class CSV extends AbstractDataSource implements ScanData
 				if (data.size() == 0) spectrumSize = numbers.length;
 				
 				//create a new spectrum object, and add all the values from the number[] array to it
-				spectrum = new Spectrum(spectrumSize);
+				spectrum = new ISpectrum(spectrumSize);
 				for (String number : numbers)
 				{
 					spectrum.add(Float.parseFloat(number));

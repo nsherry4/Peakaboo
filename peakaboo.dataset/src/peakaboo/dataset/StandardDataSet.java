@@ -22,6 +22,7 @@ import peakaboo.datasource.components.scandata.ScanData;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -79,7 +80,7 @@ public class StandardDataSet implements DataSet
 	@Override
 	public Spectrum averagePlot()
 	{
-		return new Spectrum(averagedSpectrum);
+		return new ISpectrum(averagedSpectrum);
 	}
 
 
@@ -116,19 +117,19 @@ public class StandardDataSet implements DataSet
 		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
 		if (Nt == Ne)
 		{
-			return new Spectrum(new Spectrum(averagedSpectrum.size(), 0.0f));
+			return new ISpectrum(new ISpectrum(averagedSpectrum.size(), 0.0f));
 		}
 
 		float Net = (float) Ne / (float) Nt;
 		float Ntte = Nt / ((float) Nt - (float) Ne);
 
-		Spectrum goodAverage = new Spectrum(averagedSpectrum.size());
+		Spectrum goodAverage = new ISpectrum(averagedSpectrum.size());
 		for (int i = 0; i < averagedSpectrum.size(); i++)
 		{
 			goodAverage.set(i, (At.get(i) - Ae.get(i) * Net) * Ntte);
 		}
 
-		return new Spectrum(goodAverage);
+		return new ISpectrum(goodAverage);
 
 	}
 
@@ -136,7 +137,7 @@ public class StandardDataSet implements DataSet
 	@Override
 	public Spectrum maximumPlot()
 	{
-		return new Spectrum(maximumSpectrum);
+		return new ISpectrum(maximumSpectrum);
 	}
 
 
@@ -323,8 +324,8 @@ public class StandardDataSet implements DataSet
 		float max = Float.MIN_VALUE;
 		Spectrum avg, max10, current;
 		
-		avg = new Spectrum(spectrumLength);
-		max10 = new Spectrum(spectrumLength);
+		avg = new ISpectrum(spectrumLength);
+		max10 = new ISpectrum(spectrumLength);
 		
 		
 		for (int i = 0; i < ds.getScanData().scanCount(); i++)

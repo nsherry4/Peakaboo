@@ -10,6 +10,7 @@ import java.util.List;
 
 import fava.functionable.Functionable;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -166,7 +167,7 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 	public Spectrum sumGivenTransitionSeriesMaps(Collection<TransitionSeries> list)
 	{
 		
-		Spectrum sums = new Spectrum(maps.get(0).data.size(), 0.0f);
+		Spectrum sums = new ISpectrum(maps.get(0).data.size(), 0.0f);
 
 		for (MapResult map : maps) {
 			if (list.contains(map.transitionSeries)) SpectrumCalculations.addLists_inplace(sums, map.data);

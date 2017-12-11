@@ -9,6 +9,7 @@ import autodialog.view.editors.IntegerEditor;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -88,7 +89,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 		if (usePartial) {
 			
 			Spectrum partial = data.subSpectrum(start, stop);
-			Spectrum result = new Spectrum(data.size(), 0f);
+			Spectrum result = new ISpectrum(data.size(), 0f);
 			partial = getBackground(partial, percent.getValue());
 			
 			for (int i = 0; i < partial.size(); i++)

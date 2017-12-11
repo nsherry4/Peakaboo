@@ -5,6 +5,7 @@ import JSci.maths.Complex;
 import JSci.maths.FourierMath;
 import JSci.maths.polynomials.RealPolynomial;
 import JSci.maths.wavelet.daubechies2.FastDaubechies2;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -73,7 +74,7 @@ public class Noise
 	public static Spectrum MovingAverage(Spectrum data, int windowSpan)
 	{
 
-		Spectrum smoothed = new Spectrum(data.size());
+		Spectrum smoothed = new ISpectrum(data.size());
 
 		int start, stop;
 		float sum;
@@ -123,7 +124,7 @@ public class Noise
 
 
 		// get the data into a list of doubles for returning
-		Spectrum result = new Spectrum(fft.length);
+		Spectrum result = new ISpectrum(fft.length);
 		for (int i = 0; i < fft.length; i++) {
 			result.set(  i, Math.max(  0f, (float)(fft[i].real())  )  );
 		}
@@ -192,7 +193,7 @@ public class Noise
 
 
 		// get the data into a list of doubles for returning
-		Spectrum result = new Spectrum(data.size());
+		Spectrum result = new ISpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			result.set(  i, Math.max(0f, (float)transformedData[i].real())  );
 		}
@@ -292,7 +293,7 @@ public class Noise
 	public static Spectrum FWTAgressiveLowPassFilter(Spectrum data, int passesToRemove)
 	{
 
-		Spectrum result = new Spectrum(data.size());
+		Spectrum result = new ISpectrum(data.size());
 
 		float[] resultAsArray = data.backingArrayCopy();
 
@@ -333,7 +334,7 @@ public class Noise
 	 */
 	public static Spectrum DataToWavelet(Spectrum data, int steps)
 	{
-		Spectrum result = new Spectrum(data.size());
+		Spectrum result = new ISpectrum(data.size());
 
 		
 		float[] dataAsArray = data.backingArrayCopy();
@@ -363,7 +364,7 @@ public class Noise
 	 */
 	public static Spectrum WaveletToData(Spectrum data, int steps)
 	{
-		Spectrum result = new Spectrum(data.size());
+		Spectrum result = new ISpectrum(data.size());
 
 
 		float[] dataAsArray = data.backingArrayCopy();
@@ -397,7 +398,7 @@ public class Noise
 	{
 
 		Spectrum filter;
-		Spectrum result = new Spectrum(data.size());
+		Spectrum result = new ISpectrum(data.size());
 
 
 		float[] dataAsArray = data.backingArrayCopy();
@@ -470,7 +471,7 @@ public class Noise
 	{
 
 		
-		Spectrum result = new Spectrum(data.size());
+		Spectrum result = new ISpectrum(data.size());
 
 		RealPolynomial soln;
 
@@ -560,7 +561,7 @@ public class Noise
 	 */
 	public static Spectrum SpringFilter(Spectrum data, float forceMultiplier, float falloffExp, int iterations)
 	{
-		Spectrum result = new Spectrum(data);
+		Spectrum result = new ISpectrum(data);
 		
 		for (int i = 0; i < iterations; i++)
 		{
@@ -577,7 +578,7 @@ public class Noise
 	
 		Spectrum deltas = deriv(data);
 		
-		Spectrum forces = new Spectrum(data.size());
+		Spectrum forces = new ISpectrum(data.size());
 		
 		//calculate the forces for each point
 		//forces represent how much pull a points neighbours are exerting on it.
@@ -622,7 +623,7 @@ public class Noise
 	public static Spectrum deriv(Spectrum list)
 	{
 	
-		Spectrum result = new Spectrum(list.size());
+		Spectrum result = new ISpectrum(list.size());
 		
 		result.add(list.get(0));
 		for (int i = 0; i < list.size()-1; i++)
@@ -642,7 +643,7 @@ public class Noise
 	public static Spectrum integ(Spectrum list)
 	{
 		
-		Spectrum result = new Spectrum(list.size());
+		Spectrum result = new ISpectrum(list.size());
 		float val = 0;
 		
 		

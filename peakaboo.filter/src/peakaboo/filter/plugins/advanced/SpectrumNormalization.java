@@ -5,6 +5,7 @@ import autodialog.view.editors.DoubleEditor;
 import autodialog.view.editors.IntegerEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -40,7 +41,7 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 		if (channel >= data.size()) return data;
 		
 		float ratio = data.get(channel) / height;
-		if (ratio == 0f) return new Spectrum(data.size());
+		if (ratio == 0f) return new ISpectrum(data.size());
 		return SpectrumCalculations.divideBy(data, ratio);
 		
 	}

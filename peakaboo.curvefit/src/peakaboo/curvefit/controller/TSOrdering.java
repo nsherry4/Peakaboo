@@ -16,6 +16,7 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
 import peakaboo.curvefit.peaktable.PeakTable;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -95,7 +96,7 @@ public class TSOrdering
 		return new Function<TransitionSeries, Float>() {
 
 			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, spectrum.size(), energyPerChannel, escape);
-			Spectrum s = new Spectrum(spectrum);
+			Spectrum s = new ISpectrum(spectrum);
 			
 			public Float apply(TransitionSeries ts)
 			{

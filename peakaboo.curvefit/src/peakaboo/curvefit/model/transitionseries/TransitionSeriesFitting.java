@@ -12,6 +12,7 @@ import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
 import peakaboo.curvefit.model.fittingfunctions.GaussianFittingFunction;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.peaktable.Element;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -305,7 +306,7 @@ public class TransitionSeriesFitting implements Serializable
 	private void calcUnscaledFit(TransitionSeries ts, float energyPerChannel, boolean fitEscape)
 	{
 
-		Spectrum fit = new Spectrum(dataWidth);
+		Spectrum fit = new ISpectrum(dataWidth);
 		List<FittingFunction> functions = new ArrayList<FittingFunction>();
 		
 		for (Transition t : ts)

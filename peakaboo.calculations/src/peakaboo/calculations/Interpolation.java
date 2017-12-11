@@ -5,6 +5,7 @@ import java.util.List;
 
 import fava.datatypes.Pair;
 import scitypes.GridPerspective;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -26,7 +27,7 @@ public class Interpolation {
 	public static Pair<GridPerspective<Float>, Spectrum> interpolateGridLinear(GridPerspective<Float> grid, Spectrum list){
 		
 		GridPerspective<Float> upGrid = new GridPerspective<Float>(grid.width * 2 - 1, grid.height * 2 - 1, 0.0f);
-		Spectrum upList = new Spectrum(upGrid.width * upGrid.height, 0.0f);
+		Spectrum upList = new ISpectrum(upGrid.width * upGrid.height, 0.0f);
 		
 		
 		//copy over the original data into a spaced out pattern

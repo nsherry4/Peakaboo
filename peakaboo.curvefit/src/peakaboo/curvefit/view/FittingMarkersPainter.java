@@ -12,6 +12,7 @@ import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
 
@@ -49,7 +50,7 @@ public class FittingMarkersPainter extends PlotPainter
 	{
 		DrawingRequest dr = p.dr;
 		float channel, markerHeight;
-		Spectrum markerHeights = new Spectrum(dr.dataWidth);
+		Spectrum markerHeights = new ISpectrum(dr.dataWidth);
 
 		p.context.save();
 		p.context.setLineWidth(1.0f);

@@ -19,6 +19,7 @@ import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.ISpectrum;
 import scitypes.SISize;
 import scitypes.Spectrum;
 
@@ -112,7 +113,7 @@ public class SigrayHDF5 extends AbstractDataSource {
 			for (int x = 0; x < dx; x++) { // x-axis
 
 				int scan_index = (x + y * dx);
-				Spectrum s = new Spectrum(dz);
+				Spectrum s = new ISpectrum(dz);
 
 				for (int z = 0; z < dz; z++) { // (z-axis, channels)
 

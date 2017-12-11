@@ -93,6 +93,7 @@ import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
 import scidraw.swing.SavePicture;
+import scitypes.ISpectrum;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
 import swidget.dialogues.PropertyDialogue;
@@ -1385,7 +1386,7 @@ public class PlotPanel extends ClearPanel
 		}
 		
 		
-		//Spectrum data = filters.filterDataUnsynchronized(new Spectrum(datasetProvider.getScan(ordinal)), false);
+		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
 		final FilterSet filters = controller.filtering().getActiveFilters();
 		
 
@@ -1411,7 +1412,7 @@ public class PlotPanel extends ClearPanel
 						while (iter.hasNext())
 						{
 							Spectrum s = iter.next();
-							s = filters.applyFiltersUnsynchronized(new Spectrum(s), false);
+							s = filters.applyFiltersUnsynchronized(new ISpectrum(s), false);
 							osw.write(s.toString() + "\n");
 							exec.workUnitCompleted();
 						}
