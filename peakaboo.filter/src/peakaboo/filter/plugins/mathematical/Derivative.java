@@ -4,6 +4,7 @@ package peakaboo.filter.plugins.mathematical;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -18,7 +19,7 @@ public class Derivative extends AbstractSimpleFilter
 	}
 	
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		return Noise.deriv(data);
 	}

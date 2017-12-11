@@ -12,6 +12,7 @@ import peakaboo.filter.model.Filter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 public class FilterPartialSpectrum extends AbstractFilter
@@ -44,7 +45,7 @@ public class FilterPartialSpectrum extends AbstractFilter
 	
 	
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache)
 	{
 		
 		int start = begin.getValue();
@@ -54,7 +55,7 @@ public class FilterPartialSpectrum extends AbstractFilter
 		if (stop >= data.size()) stop = data.size()-1;
 		
 		Spectrum result = new ISpectrum(data);
-		Spectrum subspectrum = data.subSpectrum(start, stop);
+		ReadOnlySpectrum subspectrum = data.subSpectrum(start, stop);
 		
 		subspectrum = filter.getValue().filter(subspectrum, cache);
 		

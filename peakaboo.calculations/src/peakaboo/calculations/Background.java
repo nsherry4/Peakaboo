@@ -4,6 +4,7 @@ package peakaboo.calculations;
 
 
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -34,7 +35,7 @@ public class Background
 	 *            0.0 - 1.0: the percent of the background which this algorithm should try to remove
 	 * @return a background-subtracted list of values
 	 */
-	public static Spectrum calcBackgroundParabolic(Spectrum data, int width, int power, float percentToRemove)
+	public static Spectrum calcBackgroundParabolic(ReadOnlySpectrum data, int width, int power, float percentToRemove)
 	{
 
 		// y = -(x * s)^power + m upside down parabola horizontally stretched by s and shifted upwards by m
@@ -73,7 +74,7 @@ public class Background
 	 *            0.0 - 1.0: the percent of the background which this algorithm should try to remove
 	 * @return a background-subtracted list of values
 	 */
-	public static Spectrum calcBackgroundFunctionFit(Spectrum data, Spectrum function, float percentToRemove)
+	public static Spectrum calcBackgroundFunctionFit(ReadOnlySpectrum data, Spectrum function, float percentToRemove)
 	{
 
 		float value, minRatio, ratio;
@@ -135,7 +136,7 @@ public class Background
 	 * @param repetitions the number of iterations of the smoothing/minvalue step to perform
 	 * @return the calculated background
 	 */
-	public static Spectrum calcBackgroundBrukner(Spectrum data, int windowSize, int repetitions)
+	public static Spectrum calcBackgroundBrukner(ReadOnlySpectrum data, int windowSize, int repetitions)
 	{
 
 		// FIRST STEP
@@ -212,7 +213,7 @@ public class Background
 	 * @param iterations the number of iterations of this algorithm to run.
 	 * @return
 	 */
-	public static Spectrum calcBackgroundLinearTrim(final Spectrum scan, int lineSize, int iterations)
+	public static Spectrum calcBackgroundLinearTrim(final ReadOnlySpectrum scan, int lineSize, int iterations)
 	{
 		
 		

@@ -6,6 +6,7 @@ import autodialog.view.editors.IntegerEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -32,7 +33,7 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	}
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 
 		int channel = pChannel.getValue()+1;

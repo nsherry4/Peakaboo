@@ -8,6 +8,7 @@ import peakaboo.filter.model.Filter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 public class ExampleFilter extends AbstractFilter {
@@ -27,7 +28,7 @@ public class ExampleFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public Spectrum filterApplyTo(Spectrum data, boolean cache) {
+	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache) {
 		return data;
 	}
 

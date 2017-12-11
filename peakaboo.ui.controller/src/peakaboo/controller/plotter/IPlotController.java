@@ -103,7 +103,7 @@ public interface IPlotController extends IEventfulType<String>
 	/**
 	 * Returns a pair of spectra. The first one is the filtered data, the second is the original
 	 */
-	Pair<Spectrum, ReadOnlySpectrum> getDataForPlot();
+	Pair<ReadOnlySpectrum, ReadOnlySpectrum> getDataForPlot();
 
 	
 	/**

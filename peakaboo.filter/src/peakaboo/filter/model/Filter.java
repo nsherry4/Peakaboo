@@ -4,6 +4,7 @@ import java.util.Map;
 
 import autodialog.model.Parameter;
 import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 public interface Filter {
@@ -124,7 +125,7 @@ public interface Filter {
 	 * @param cache whether or not this data should be cached for the purposes of drawing on the spectrum
 	 * @return the result of applying the filter to data
 	 */
-	Spectrum filter(Spectrum data, boolean cache);
+	ReadOnlySpectrum filter(ReadOnlySpectrum data, boolean cache);
 	
 	
 	Map<Integer, Object> save();

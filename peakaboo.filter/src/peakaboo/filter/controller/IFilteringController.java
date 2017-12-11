@@ -35,7 +35,7 @@ public interface IFilteringController extends IEventful
 	Filter getActiveFilter(int index);
 	FilterSet getActiveFilters();
 	
-	Spectrum getFilteredPlot();
+	ReadOnlySpectrum getFilteredPlot();
 	FilteringModel getFilteringMode();
 
 

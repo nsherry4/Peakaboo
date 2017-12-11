@@ -218,7 +218,7 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	
 
 	@Override
-	public Pair<Spectrum, ReadOnlySpectrum> getDataForPlot()
+	public Pair<ReadOnlySpectrum, ReadOnlySpectrum> getDataForPlot()
 	{
 
 		ReadOnlySpectrum originalData = null;
@@ -231,7 +231,7 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 
 		regenerateCahcedData();
 		
-		return new Pair<Spectrum, ReadOnlySpectrum>(filteringController.getFilteredPlot(), originalData);
+		return new Pair<ReadOnlySpectrum, ReadOnlySpectrum>(filteringController.getFilteredPlot(), originalData);
 	}
 
 

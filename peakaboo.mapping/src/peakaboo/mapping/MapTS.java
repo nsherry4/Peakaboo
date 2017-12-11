@@ -54,7 +54,7 @@ public class MapTS
 			ReadOnlySpectrum original = datasetProvider.getScanData().get(ordinal);
 			if (original == null) return;
 			
-			Spectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(ordinal), false);
+			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(ordinal), false);
 			FittingResultSet frs = fittings.calculateFittings(data);
 
 			for (FittingResult result : frs.fits)

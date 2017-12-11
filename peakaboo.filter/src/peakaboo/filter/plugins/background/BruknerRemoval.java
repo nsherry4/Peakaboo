@@ -6,6 +6,7 @@ import autodialog.model.Parameter;
 import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -47,7 +48,7 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 
 
 	@Override
-	protected Spectrum getBackground(Spectrum data, int percent)
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent)
 	{		
 		return SpectrumCalculations.multiplyBy(
 				Background.calcBackgroundBrukner(data, width.getValue(), iterations.getValue()), (percent/100.0f)

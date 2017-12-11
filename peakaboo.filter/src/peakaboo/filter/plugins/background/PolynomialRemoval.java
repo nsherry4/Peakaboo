@@ -5,6 +5,7 @@ import autodialog.model.Parameter;
 import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -45,7 +46,7 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 
 
 	@Override
-	protected Spectrum getBackground(Spectrum data, int percent)
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent)
 	{
 		return Background.calcBackgroundParabolic(data, width.getValue(), power.getValue(), percent / 100.0f);
 	}

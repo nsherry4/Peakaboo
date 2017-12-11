@@ -126,26 +126,23 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized Spectrum applyFilters(ReadOnlySpectrum data, boolean filtersShouldCache)
+	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data, boolean filtersShouldCache)
 	{
 
 		return applyFiltersUnsynchronized(data, filtersShouldCache);
 	}
 
 
-	public Spectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, boolean filtersShouldCache)
+	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, boolean filtersShouldCache)
 	{
 
-		Spectrum output = new ISpectrum(data);
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled()) {
-
-				output = f.filter(output, filtersShouldCache);
-				
+				data = f.filter(data, filtersShouldCache);
 			}
 		}
 
-		return output;
+		return data;
 	}
 	
 

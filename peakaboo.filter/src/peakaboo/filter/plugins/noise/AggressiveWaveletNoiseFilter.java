@@ -7,6 +7,7 @@ import peakaboo.calculations.Noise;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -77,13 +78,9 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{		
-		Spectrum result;
-
-		result = Noise.FWTAgressiveLowPassFilter(data, passes.getValue());
-
-		return result;
+		return Noise.FWTAgressiveLowPassFilter(data, passes.getValue());
 	}
 
 	@Override

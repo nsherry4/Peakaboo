@@ -189,7 +189,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	}
 
 	@Override
-	public Spectrum getFilteredPlot()
+	public ReadOnlySpectrum getFilteredPlot()
 	{
 		return filteringModel.filteredPlot;
 	}

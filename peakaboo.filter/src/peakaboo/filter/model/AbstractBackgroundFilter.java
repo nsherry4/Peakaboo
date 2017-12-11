@@ -10,6 +10,7 @@ import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -75,9 +76,9 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	
 	public abstract boolean validateCustomParameters();
 	
-	protected abstract Spectrum getBackground(Spectrum data, int percent);
+	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent);
 	
-	private final Spectrum getBackground(Spectrum data)
+	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data)
 	{
 		int start = startindex.getValue();
 		int stop = stopindex.getValue();
@@ -88,7 +89,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 		
 		if (usePartial) {
 			
-			Spectrum partial = data.subSpectrum(start, stop);
+			ReadOnlySpectrum partial = data.subSpectrum(start, stop);
 			Spectrum result = new ISpectrum(data.size(), 0f);
 			partial = getBackground(partial, percent.getValue());
 			
@@ -106,11 +107,11 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	@Override
-	protected final Spectrum filterApplyTo(Spectrum data, boolean cache)
+	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache)
 	{
 		if (!preview.getValue() == true) {
 
-			Spectrum background = getBackground(data);
+			ReadOnlySpectrum background = getBackground(data);
 			return SpectrumCalculations.subtractLists(data, background);
 		}
 

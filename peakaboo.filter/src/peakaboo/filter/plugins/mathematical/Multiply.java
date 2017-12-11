@@ -6,6 +6,7 @@ import autodialog.model.Parameter;
 import autodialog.view.editors.DoubleEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -24,7 +25,7 @@ public class Multiply extends AbstractSimpleFilter
 	}
 	
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		return SpectrumCalculations.multiplyBy(data, amount.getValue().floatValue());
 	}

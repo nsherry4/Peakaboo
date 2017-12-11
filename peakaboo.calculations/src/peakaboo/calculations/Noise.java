@@ -6,6 +6,7 @@ import JSci.maths.FourierMath;
 import JSci.maths.polynomials.RealPolynomial;
 import JSci.maths.wavelet.daubechies2.FastDaubechies2;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -71,7 +72,7 @@ public class Noise
 	 *            the distance from the centrepoint to an edge of the set of numbers being averaged
 	 * @return a moving-average smoothed data set
 	 */
-	public static Spectrum MovingAverage(Spectrum data, int windowSpan)
+	public static Spectrum MovingAverage(ReadOnlySpectrum data, int windowSpan)
 	{
 
 		Spectrum smoothed = new ISpectrum(data.size());
@@ -99,7 +100,7 @@ public class Noise
 	}
 
 	
-	public static Complex[] DataToFFT(Spectrum data)
+	public static Complex[] DataToFFT(ReadOnlySpectrum data)
 	{
 		
 		// Fast Fourier Transform
@@ -148,7 +149,7 @@ public class Noise
 	 *            high-frequency noise
 	 * @return a Fast Fourier Transformation Low-Pass filtered data set
 	 */
-	public static Spectrum FFTLowPassFilter(Spectrum data, FFTStyle style, int beginFilterAtWavelength,
+	public static Spectrum FFTLowPassFilter(ReadOnlySpectrum data, FFTStyle style, int beginFilterAtWavelength,
 			int endGradualFilterAtWavelength)
 	{
 
@@ -171,7 +172,7 @@ public class Noise
 	}
 
 
-	private static Spectrum doFFTFilter(Spectrum data, FFTStyle style, int start, int stop)
+	private static Spectrum doFFTFilter(ReadOnlySpectrum data, FFTStyle style, int start, int stop)
 	{
 
 		// FFT
@@ -290,7 +291,7 @@ public class Noise
 	 * @param passesToRemove the number of sections to be removed, starting with the largest, highest-frequency section
 	 * @return a Wavelet Low-Pass filtered dataset
 	 */
-	public static Spectrum FWTAgressiveLowPassFilter(Spectrum data, int passesToRemove)
+	public static Spectrum FWTAgressiveLowPassFilter(ReadOnlySpectrum data, int passesToRemove)
 	{
 
 		Spectrum result = new ISpectrum(data.size());
@@ -327,12 +328,12 @@ public class Noise
 	}
 
 	/**
-	 * Transforms  the given data to wavelet form
+	 * Transforms the given data to wavelet form
 	 * @param data the data to transform
 	 * @param steps the number of iterations to transform
 	 * @return wavelet form data
 	 */
-	public static Spectrum DataToWavelet(Spectrum data, int steps)
+	public static Spectrum DataToWavelet(ReadOnlySpectrum data, int steps)
 	{
 		Spectrum result = new ISpectrum(data.size());
 
@@ -362,7 +363,7 @@ public class Noise
 	 * @param steps the number of iterations to untransform
 	 * @return the untransformed data
 	 */
-	public static Spectrum WaveletToData(Spectrum data, int steps)
+	public static Spectrum WaveletToData(ReadOnlySpectrum data, int steps)
 	{
 		Spectrum result = new ISpectrum(data.size());
 
@@ -394,7 +395,7 @@ public class Noise
 	 * @param stop the number of sections to be attenuated before the algoritm stops, starting with the largest, highest-frequency section
 	 * @return a Wavelet Low-Pass filtered dataset
 	 */
-	public static Spectrum FWTLowPassFilter(Spectrum data, int stop)
+	public static Spectrum FWTLowPassFilter(ReadOnlySpectrum data, int stop)
 	{
 
 		Spectrum filter;
@@ -467,7 +468,7 @@ public class Noise
 	 * @param reach the distance from the centrepoint to the edge of the data being considered in a fitting
 	 * @return a Savitsky-Golay smoothed data set.
 	 */
-	public static Spectrum SavitskyGolayFilter(Spectrum data, int order, int reach, float min, float max)
+	public static Spectrum SavitskyGolayFilter(ReadOnlySpectrum data, int order, int reach, float min, float max)
 	{
 
 		
@@ -559,7 +560,7 @@ public class Noise
 	 * @param iterations the number of iterations to perform the smoothing
 	 * @return the smoothed data
 	 */
-	public static Spectrum SpringFilter(Spectrum data, float forceMultiplier, float falloffExp, int iterations)
+	public static Spectrum SpringFilter(ReadOnlySpectrum data, float forceMultiplier, float falloffExp, int iterations)
 	{
 		Spectrum result = new ISpectrum(data);
 		
@@ -620,7 +621,7 @@ public class Noise
 	 * @param list the data to find the deltas for
 	 * @return a list of deltas
 	 */
-	public static Spectrum deriv(Spectrum list)
+	public static Spectrum deriv(ReadOnlySpectrum list)
 	{
 	
 		Spectrum result = new ISpectrum(list.size());
@@ -640,7 +641,7 @@ public class Noise
 	 * @param list the data to find the integral for
 	 * @return a list of sums
 	 */
-	public static Spectrum integ(Spectrum list)
+	public static Spectrum integ(ReadOnlySpectrum list)
 	{
 		
 		Spectrum result = new ISpectrum(list.size());

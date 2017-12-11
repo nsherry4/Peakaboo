@@ -133,7 +133,7 @@ public class SpectrumUIController extends IActofUIController {
 		String colour;
 		boolean monochrome = plotController.settings().getMonochrome();
 
-		Pair<Spectrum, ReadOnlySpectrum> plotdata = plotController.getDataForPlot();
+		Pair<ReadOnlySpectrum, ReadOnlySpectrum> plotdata = plotController.getDataForPlot();
 
 		// main data series
 		seriesFinalData = Spectrums.asSeries(plotdata.first);
@@ -188,7 +188,7 @@ public class SpectrumUIController extends IActofUIController {
 		if (!plotController.data().hasDataSet()) { return; }
 		
 		//final and raw data
-		Pair<Spectrum, ReadOnlySpectrum> plotdata = plotController.getDataForPlot();
+		Pair<ReadOnlySpectrum, ReadOnlySpectrum> plotdata = plotController.getDataForPlot();
 				
 		updateSeriesFromSpectrum(seriesFinalData, plotdata.first);
 		updateSeriesFromSpectrum(seriesRawData, plotdata.second);

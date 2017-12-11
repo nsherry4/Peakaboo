@@ -9,6 +9,7 @@ import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -35,7 +36,7 @@ public interface IFittingController extends IEventfulType<Boolean>
 	void moveTransitionSeriesDown(List<TransitionSeries> e);
 	
 	FittingSet getFittingSelections();
-	void calculateSelectionFittings(Spectrum data);
+	void calculateSelectionFittings(ReadOnlySpectrum data);
 	void fittingDataInvalidated();
 	boolean hasSelectionFitting();
 	FittingResultSet	getFittingSelectionResults();

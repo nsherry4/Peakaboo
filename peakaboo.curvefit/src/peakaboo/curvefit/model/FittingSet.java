@@ -9,6 +9,7 @@ import java.util.List;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -273,7 +274,7 @@ public class FittingSet implements Serializable
 
 
 	// calculates fittings, residual, total curve
-	public synchronized FittingResultSet calculateFittings(Spectrum data)
+	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data)
 	{
 
 		if (data.size() != dataWidth) setDataWidth(data.size());

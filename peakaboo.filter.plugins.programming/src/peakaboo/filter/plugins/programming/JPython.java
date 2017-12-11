@@ -10,6 +10,7 @@ import de.sciss.syntaxpane.syntaxkits.PythonSyntaxKit;
 import peakaboo.filter.editors.CodeEditor;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
@@ -91,11 +92,11 @@ public class JPython extends AbstractSimpleFilter {
 	}
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data) {
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {
 		
 		boltmap.setScript(getCode());
 		
-		float[] source = data.backingArray();
+		float[] source = data.backingArrayCopy();
 		float[] result = boltmap.apply(source);
 				
 		return new ISpectrum(result);	

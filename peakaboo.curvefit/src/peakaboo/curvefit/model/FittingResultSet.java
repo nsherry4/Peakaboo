@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -19,8 +20,8 @@ import scitypes.Spectrum;
 public class FittingResultSet
 {
 
-	public Spectrum			totalFit;
-	public Spectrum			residual;
+	public Spectrum				totalFit;
+	public ReadOnlySpectrum		residual;
 	public List<FittingResult>	fits;
 
 	

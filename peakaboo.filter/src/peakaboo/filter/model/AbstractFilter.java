@@ -9,6 +9,7 @@ import autodialog.model.Parameter;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -29,8 +30,8 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	private Map<Integer, Parameter<?>>		parameters;
 	public boolean							enabled;
 	
-	protected Spectrum	previewCache;
-	protected Spectrum	calculatedData;
+	protected ReadOnlySpectrum	previewCache;
+	protected ReadOnlySpectrum	calculatedData;
 
 	private int nextParameterIndex = 0;
 	
@@ -100,7 +101,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 		return parameters.get(key);
 	}
 
-	protected final void setPreviewCache(Spectrum data)
+	protected final void setPreviewCache(ReadOnlySpectrum data)
 	{
 		this.previewCache = new ISpectrum(data);
 	}
@@ -123,7 +124,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 */
 	@Override
 	public abstract boolean validateParameters();
-	protected abstract Spectrum filterApplyTo(Spectrum data, boolean cache);
+	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache);
 	
 	/* (non-Javadoc)
 	 * @see peakaboo.filter.model.Filter#canFilterSubset()
@@ -136,11 +137,11 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 * @see peakaboo.filter.model.Filter#filter(scitypes.Spectrum, boolean)
 	 */
 	@Override
-	public Spectrum filter(Spectrum data, boolean cache)
+	public ReadOnlySpectrum filter(ReadOnlySpectrum data, boolean cache)
 	{
 		
 		try{
-			Spectrum newdata = filterApplyTo(data, cache);
+			ReadOnlySpectrum newdata = filterApplyTo(data, cache);
 			if (newdata != null) return newdata;
 			return data;
 		}

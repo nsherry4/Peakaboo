@@ -221,7 +221,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		////////////////////////////////////////////////////////////////////
 
 		// calculates filters and fittings if needed
-		Pair<Spectrum, ReadOnlySpectrum> dataForPlot = controller.getDataForPlot();
+		Pair<ReadOnlySpectrum, ReadOnlySpectrum> dataForPlot = controller.getDataForPlot();
 		if (dataForPlot == null) return;
 		
 		//white background
@@ -262,7 +262,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
-		Spectrum drawingData = dataForPlot.first;
+		ReadOnlySpectrum drawingData = dataForPlot.first;
 		float maxIntensity = Math.max(controller.data().getDataSet().maximumIntensity(), SpectrumCalculations.max(drawingData));
 		int datasetSize = Math.min(controller.data().getDataSet().channelsPerScan(), drawingData.size());
 		

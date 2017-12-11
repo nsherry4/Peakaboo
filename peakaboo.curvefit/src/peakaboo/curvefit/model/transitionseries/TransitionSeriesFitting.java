@@ -13,6 +13,7 @@ import peakaboo.curvefit.model.fittingfunctions.GaussianFittingFunction;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.peaktable.Element;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -117,7 +118,7 @@ public class TransitionSeriesFitting implements Serializable
 	 *            the data to scale the fit to match
 	 * @return a scale value
 	 */
-	public float getRatioForCurveUnderData(Spectrum data)
+	public float getRatioForCurveUnderData(ReadOnlySpectrum data)
 	{
 			
 		float topIntensity = Float.MIN_VALUE;

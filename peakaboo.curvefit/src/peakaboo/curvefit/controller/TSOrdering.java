@@ -17,6 +17,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
 import peakaboo.curvefit.peaktable.PeakTable;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -62,7 +63,7 @@ public class TSOrdering
 	 * @param spectrum the data to use to score this {@link TransitionSeries}
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final ReadOnlySpectrum spectrum)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, true);
 	}
@@ -75,7 +76,7 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, boolean useBaseSize)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final ReadOnlySpectrum spectrum, boolean useBaseSize)
 	{
 		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, useBaseSize);
 	}
@@ -89,7 +90,7 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final Spectrum spectrum, final Float energy, final boolean useBaseSize)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final ReadOnlySpectrum spectrum, final Float energy, final boolean useBaseSize)
 	{
 	
 		//scoring function to evaluate each TransitionSeries
@@ -222,7 +223,7 @@ public class TSOrdering
 	public static List<TransitionSeries> proposeTransitionSeriesFromChannel(
 			final EscapePeakType escape,
 			final float energyPerChannel, 
-			final Spectrum data, 
+			final ReadOnlySpectrum data, 
 			final FittingSet fits,
 			final FittingSet proposed,
 			final int channel, 
@@ -263,7 +264,7 @@ public class TSOrdering
 		FittingResultSet proposedResults = proposed.calculateFittings(fitResults.residual);
 		
 		
-		final Spectrum s = proposedResults.residual;
+		final ReadOnlySpectrum s = proposedResults.residual;
 		
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		

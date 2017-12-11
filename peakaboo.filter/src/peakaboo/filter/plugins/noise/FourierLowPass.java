@@ -9,6 +9,7 @@ import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -89,7 +90,7 @@ public final class FourierLowPass extends AbstractSimpleFilter
 
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		
 		data = Noise.FFTLowPassFilter(

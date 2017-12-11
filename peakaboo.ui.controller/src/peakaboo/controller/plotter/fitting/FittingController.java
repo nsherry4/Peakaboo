@@ -21,6 +21,7 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.PeakTable;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
@@ -425,7 +426,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 	}
 
 	@Override
-	public void calculateSelectionFittings(Spectrum data)
+	public void calculateSelectionFittings(ReadOnlySpectrum data)
 	{
 		fittingModel.selectionResults = fittingModel.selections.calculateFittings(data);
 	}

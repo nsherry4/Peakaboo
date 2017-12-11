@@ -6,6 +6,7 @@ import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 public class Interpolation extends AbstractSimpleFilter
@@ -28,7 +29,7 @@ public class Interpolation extends AbstractSimpleFilter
 	}
 
 	@Override
-	protected Spectrum filterApplyTo(Spectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		Spectrum scaled = new ISpectrum(size.getValue());
 		for (int i = 0; i < size.getValue(); i++)
@@ -39,7 +40,7 @@ public class Interpolation extends AbstractSimpleFilter
 		return scaled;
 	}
 
-	private double calcNewPoint(Spectrum original, int newsize, int newindex)
+	private double calcNewPoint(ReadOnlySpectrum original, int newsize, int newindex)
 	{
 
 		//p = point, real-valued location in original spectrum

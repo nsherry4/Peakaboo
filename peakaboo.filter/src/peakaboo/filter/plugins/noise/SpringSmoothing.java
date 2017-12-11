@@ -7,6 +7,7 @@ import autodialog.view.editors.IntegerEditor;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -90,7 +91,7 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 
 
 	@Override
-	public Spectrum filterApplyTo(Spectrum data)
+	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		data = Noise.SpringFilter(
 				data, 
