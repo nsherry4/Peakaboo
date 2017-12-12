@@ -18,10 +18,10 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import fava.datatypes.Pair;
-import fava.functionable.Range;
 import peakaboo.common.Version;
 import peakaboo.datasource.SpectrumList;
 import scitypes.ISpectrum;
+import scitypes.Range;
 import scitypes.Spectrum;
 
 

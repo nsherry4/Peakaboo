@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fava.functionable.Range;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
@@ -22,6 +21,7 @@ import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.ISpectrum;
+import scitypes.Range;
 import scitypes.SISize;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

@@ -3,7 +3,6 @@ package peakaboo.datasource.internal;
 import java.io.File;
 import java.util.List;
 
-import fava.functionable.Range;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
@@ -14,6 +13,7 @@ import peakaboo.datasource.components.scandata.ScanData;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.GridPerspective;
+import scitypes.Range;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SISize;
 import scitypes.Spectrum;

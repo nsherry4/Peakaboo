@@ -6,13 +6,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import fava.functionable.Range;
-import fava.functionable.RangeSet;
+
 import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
 import peakaboo.curvefit.model.fittingfunctions.GaussianFittingFunction;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.peaktable.Element;
 import scitypes.ISpectrum;
+import scitypes.Range;
+import scitypes.RangeSet;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
