@@ -49,12 +49,14 @@ public class MapTS
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.getScanData().scanCount());
 		
-		final Consumer<Integer> t_filter = ordinal -> {
+		final Consumer<Integer> t_filter = index -> {
 			
-			ReadOnlySpectrum original = datasetProvider.getScanData().get(ordinal);
+			ReadOnlySpectrum original = datasetProvider.getScanData().get(index);
 			if (original == null) return;
 			
-			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(ordinal), false);
+			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(index), false);
+			
+			//TODO: this call is synchronized. Can we do better?
 			FittingResultSet frs = fittings.calculateFittings(data);
 
 			for (FittingResult result : frs.fits)
@@ -62,7 +64,7 @@ public class MapTS
 				maps.putIntensityInMapAtPoint(
 					type == FittingTransform.AREA ? SpectrumCalculations.sumValuesInList(result.fit) : SpectrumCalculations.max(result.fit),
 					result.transitionSeries,
-					ordinal);
+					index);
 			}
 
 			return;

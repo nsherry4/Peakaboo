@@ -27,7 +27,7 @@ public class Emsa extends AbstractDataSource implements FileFormat {
 	
 	
 	public Emsa() {
-		scanData = new SimpleScanData(getFormatName());
+		
 	}
 	
 	
@@ -111,6 +111,8 @@ public class Emsa extends AbstractDataSource implements FileFormat {
 	
 	@Override
 	public void read(File file) throws Exception {
+		
+		scanData = new SimpleScanData(getFormatName());
 		
 		readTags(file.getAbsolutePath());
 		
