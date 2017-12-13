@@ -738,7 +738,7 @@ public class PlotPanel extends ClearPanel
 					dialog.setContentPane(tabs);
 					
 					dialog.setResizable(false);
-					dialog.setPreferredSize(new Dimension(525, 500));
+					dialog.setPreferredSize(new Dimension(535, 500));
 					dialog.setMinimumSize(dialog.getPreferredSize());
 					dialog.setTitle("Peakaboo Plugins");
 					dialog.setModal(false);
@@ -750,7 +750,7 @@ public class PlotPanel extends ClearPanel
 		));	
 		
 		menu.add(createMenuItem(
-				"Open Plugins Folder", null, "Opens the Plugins Folder to Add or Remove Plugin Files",
+				"Open Plugins Folder", null, "Opens the plugins folder to add or remove plugin files",
 				e -> {
 					File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
 					appDataDir.mkdirs();
