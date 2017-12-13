@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.sciencestudio.libs</groupId>
-  <artifactId>libs</artifactId>
-  <name>libs</name>
-  <version>1.0</version>
+  <groupId>net.sciencestudio.peakaboo</groupId>
+  <artifactId>peakaboo</artifactId>
+  <name>peakaboo</name>
+  <version>4.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>http://maven.apache.org</url>
   

@@ -4,13 +4,17 @@ package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -31,6 +35,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -38,6 +43,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -61,6 +67,8 @@ import javax.swing.event.ChangeListener;
 
 import com.ezware.dialog.task.TaskDialogs;
 
+import bolt.plugin.BoltPluginController;
+import bolt.plugin.BoltPluginLoader;
 import commonenvironment.Apps;
 import commonenvironment.Env;
 import commonenvironment.IOOperations;
@@ -80,12 +88,16 @@ import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.DataSourceLookup;
+import peakaboo.datasource.PluginDataSource;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.filter.FilterLoader;
+import peakaboo.filter.model.FilterPlugin;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.container.PeakabooContainer;
+import peakaboo.ui.swing.misc.PluginData;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -101,6 +113,7 @@ import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.ComponentListPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DropdownImageButton;
 import swidget.widgets.DropdownImageButton.Actions;
@@ -690,6 +703,53 @@ public class PlotPanel extends ClearPanel
 		menu.addSeparator();
 
 		menu.add(createMenuItem(
+				"Plugin Status", null, "Shows information about loaded plugins",
+				e -> {
+					
+					JTabbedPane tabs = new JTabbedPane();
+					
+
+					ComponentListPanel dsPanel = new ComponentListPanel(
+						DataSourceLoader
+						.getPluginLoader()
+						.getAvailablePlugins()
+						.stream()
+						.map(PluginData::new)
+						.collect(Collectors.toList())
+					);
+					
+					
+					ComponentListPanel filterPanel = new ComponentListPanel(
+						FilterLoader
+						.getPluginLoader()
+						.getAvailablePlugins()
+						.stream()
+						.map(PluginData::new)
+						.collect(Collectors.toList())
+					);
+					
+					
+					tabs.add("Data Sources", dsPanel);
+					tabs.add("Filters", filterPanel);
+
+
+					
+					JDialog dialog = new JDialog(container.getWindow()); //TODO: owner
+					dialog.setContentPane(tabs);
+					
+					dialog.setResizable(false);
+					dialog.setPreferredSize(new Dimension(525, 500));
+					dialog.setMinimumSize(dialog.getPreferredSize());
+					dialog.setTitle("Peakaboo Plugins");
+					dialog.setModal(false);
+					dialog.setLocationRelativeTo(container.getWindow());
+					dialog.setVisible(true);
+					
+				},
+				null, null
+		));	
+		
+		menu.add(createMenuItem(
 				"Open Plugins Folder", null, "Opens the Plugins Folder to Add or Remove Plugin Files",
 				e -> {
 					File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
@@ -702,8 +762,10 @@ public class PlotPanel extends ClearPanel
 						e1.printStackTrace();
 					}
 				},
-				null, KeyEvent.VK_X
-		));		
+				null, null
+		));
+		
+	
 		
 		menu.addSeparator();
 		

@@ -16,7 +16,37 @@ import peakaboo.datasource.plugins.PlainText;
 public class DataSourceLoader
 {
 
-	public static BoltPluginLoader<PluginDataSource> loader;
+	private static BoltPluginLoader<PluginDataSource> loader;
+	
+	public synchronized static BoltPluginLoader<PluginDataSource> getPluginLoader() {
+		if (loader == null) {
+			try {
+				initLoader();
+			} catch (ClassInheritanceException | ClassInstantiationException e) {
+				e.printStackTrace();
+			}
+		}
+		return loader;
+	}
+	
+	private synchronized static void initLoader() throws ClassInheritanceException, ClassInstantiationException {
+		
+		BoltPluginLoader<PluginDataSource> newLoader = new BoltPluginLoader<PluginDataSource>(PluginDataSource.class);  
+		
+		//load local jars
+		newLoader.register();
+		
+		//load jars in the app data directory
+		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
+		appDataDir.mkdirs();
+		newLoader.register(appDataDir);
+			
+		
+		//register built-in plugins
+		newLoader.registerPlugin(PlainText.class);
+					
+		loader = newLoader;
+	}
 	
 	public synchronized static List<DataSource> getDataSourcePlugins()
 	{
@@ -26,22 +56,7 @@ public class DataSourceLoader
 			
 			if (loader == null)
 			{
-
-				BoltPluginLoader<PluginDataSource> newLoader = new BoltPluginLoader<PluginDataSource>(PluginDataSource.class);  
-				
-				//load local jars
-				newLoader.register();
-				
-				//load jars in the app data directory
-				File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
-				appDataDir.mkdirs();
-				newLoader.register(appDataDir);
-					
-				
-				//register built-in plugins
-				newLoader.registerPlugin(PlainText.class);
-							
-				loader = newLoader;
+				initLoader();
 			}
 			
 			List<PluginDataSource> filters = loader.getNewInstancesForAllPlugins();
@@ -56,13 +71,7 @@ public class DataSourceLoader
 			
 			return new ArrayList<>(filters);
 			
-		}
-		catch (ClassInheritanceException e)
-		{
-			e.printStackTrace();
-		}
-		catch (ClassInstantiationException e)
-		{
+		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			e.printStackTrace();
 		}
 		

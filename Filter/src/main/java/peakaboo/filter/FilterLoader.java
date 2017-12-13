@@ -38,6 +38,59 @@ public class FilterLoader
 
 	private static BoltPluginLoader<FilterPlugin> pluginLoader;
 	
+	private static void initLoader() throws ClassInheritanceException, ClassInstantiationException {
+		BoltPluginLoader<FilterPlugin> newPluginLoader = new BoltPluginLoader<>(FilterPlugin.class);
+		
+
+		//register built-in plugins
+		newPluginLoader.registerPlugin(DataToWavelet.class);
+		newPluginLoader.registerPlugin(Identity.class);
+		newPluginLoader.registerPlugin(FilterPartialSpectrum.class);
+		newPluginLoader.registerPlugin(SpectrumNormalization.class);
+		newPluginLoader.registerPlugin(WaveletToData.class);
+		
+		newPluginLoader.registerPlugin(BruknerRemoval.class);
+		newPluginLoader.registerPlugin(LinearTrimRemoval.class);
+		newPluginLoader.registerPlugin(PolynomialRemoval.class);
+		
+		newPluginLoader.registerPlugin(Addition.class);
+		newPluginLoader.registerPlugin(Derivative.class);
+		newPluginLoader.registerPlugin(Integrate.class);
+		newPluginLoader.registerPlugin(Multiply.class);
+		newPluginLoader.registerPlugin(Subtraction.class);
+		
+		newPluginLoader.registerPlugin(AggressiveWaveletNoiseFilter.class);
+		newPluginLoader.registerPlugin(FourierLowPass.class);
+		newPluginLoader.registerPlugin(MovingAverage.class);
+		newPluginLoader.registerPlugin(SavitskyGolaySmoothing.class);
+		newPluginLoader.registerPlugin(SpringSmoothing.class);
+		newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
+		newPluginLoader.registerPlugin(Interpolation.class);
+		
+		
+		
+		//load plugins from local
+		newPluginLoader.register();
+		
+		//load plugins from the application data directory
+		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
+		appDataDir.mkdirs();
+		newPluginLoader.register(appDataDir);
+		pluginLoader = newPluginLoader;
+	}
+	
+	public static BoltPluginLoader<FilterPlugin> getPluginLoader() {
+		if (pluginLoader == null) {
+			try {
+				initLoader();
+			} catch (ClassInheritanceException | ClassInstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return pluginLoader;
+	}
+	
 	public static synchronized List<FilterPlugin> getAvailableFilters()
 	{
 
@@ -47,46 +100,7 @@ public class FilterLoader
 			
 			if (pluginLoader == null)
 			{
-
-				BoltPluginLoader<FilterPlugin> newPluginLoader = new BoltPluginLoader<>(FilterPlugin.class);
-				
-
-				//register built-in plugins
-				newPluginLoader.registerPlugin(DataToWavelet.class);
-				newPluginLoader.registerPlugin(Identity.class);
-				newPluginLoader.registerPlugin(FilterPartialSpectrum.class);
-				newPluginLoader.registerPlugin(SpectrumNormalization.class);
-				newPluginLoader.registerPlugin(WaveletToData.class);
-				
-				newPluginLoader.registerPlugin(BruknerRemoval.class);
-				newPluginLoader.registerPlugin(LinearTrimRemoval.class);
-				newPluginLoader.registerPlugin(PolynomialRemoval.class);
-				
-				newPluginLoader.registerPlugin(Addition.class);
-				newPluginLoader.registerPlugin(Derivative.class);
-				newPluginLoader.registerPlugin(Integrate.class);
-				newPluginLoader.registerPlugin(Multiply.class);
-				newPluginLoader.registerPlugin(Subtraction.class);
-				
-				newPluginLoader.registerPlugin(AggressiveWaveletNoiseFilter.class);
-				newPluginLoader.registerPlugin(FourierLowPass.class);
-				newPluginLoader.registerPlugin(MovingAverage.class);
-				newPluginLoader.registerPlugin(SavitskyGolaySmoothing.class);
-				newPluginLoader.registerPlugin(SpringSmoothing.class);
-				newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
-				newPluginLoader.registerPlugin(Interpolation.class);
-				
-				
-				
-				//load plugins from local
-				newPluginLoader.register();
-				
-				//load plugins from the application data directory
-				File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
-				appDataDir.mkdirs();
-				newPluginLoader.register(appDataDir);
-				pluginLoader = newPluginLoader;
-				
+				initLoader();
 			}
 			
 			filters.addAll(pluginLoader.getNewInstancesForAllPlugins());
