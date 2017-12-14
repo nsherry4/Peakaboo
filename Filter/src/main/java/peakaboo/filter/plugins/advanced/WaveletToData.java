@@ -1,12 +1,11 @@
 package peakaboo.filter.plugins.advanced;
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 
@@ -28,7 +27,7 @@ public class WaveletToData extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		amount = new Parameter<>("Passes", new IntegerEditor(), 1);
+		amount = new Parameter<>("Passes", new IntegerStyle(), 1);
 		addParameter(amount);
 	}
 	

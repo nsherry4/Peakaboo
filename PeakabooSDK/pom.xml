@@ -56,6 +56,11 @@
     	<artifactId>Mapping</artifactId>
     	<version>4.3-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>net.sciencestudio.libs</groupId>
+    	<artifactId>AutoDialogSwing</artifactId>
+    	<version>1.0</version>
+    </dependency>
   </dependencies>
   
 	<build>

@@ -2,12 +2,11 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 
@@ -37,7 +36,7 @@ public final class MovingAverage extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		reach = new Parameter<>("Averaging Reach (2n+1)", new IntegerEditor(), 4);
+		reach = new Parameter<>("Averaging Reach (2n+1)", new IntegerStyle(), 4);
 		addParameter(reach);
 	}
 	

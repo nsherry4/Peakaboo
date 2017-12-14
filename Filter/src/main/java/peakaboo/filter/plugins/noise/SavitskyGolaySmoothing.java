@@ -2,18 +2,15 @@ package peakaboo.filter.plugins.noise;
 
 
 
-import javax.swing.JSeparator;
-
 import autodialog.model.Parameter;
-import autodialog.view.editors.BooleanEditor;
-import autodialog.view.editors.DoubleEditor;
-import autodialog.view.editors.DummyEditor;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.BooleanStyle;
+import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.styles.RealStyle;
+import autodialog.model.style.styles.SeparatorStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 
@@ -30,7 +27,7 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	private Parameter<Integer> reach;
 	private Parameter<Integer> order;
 	private Parameter<Boolean> ignore;
-	private Parameter<Double> max;
+	private Parameter<Float> max;
 
 
 	public SavitskyGolaySmoothing()
@@ -47,11 +44,11 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		reach = new Parameter<>("Reach of Polynomial (2n+1)", new IntegerEditor(), 7);
-		order = new Parameter<>("Polynomial Order", new IntegerEditor(), 5);
-		Parameter<?> sep = new Parameter<>(null, new DummyEditor(new JSeparator()), null);
-		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanEditor(), false);
-		max = new Parameter<>("Smoothing Cutoff: (counts)", new DoubleEditor(), 4.0);
+		reach = new Parameter<>("Reach of Polynomial (2n+1)", new IntegerStyle(), 7);
+		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 5);
+		Parameter<?> sep = new Parameter<>(null, new SeparatorStyle(), null);
+		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false);
+		max = new Parameter<>("Smoothing Cutoff: (counts)", new RealStyle(), 4.0f);
 		max.setEnabled(false);
 		
 		addParameter(reach, order, sep, ignore, max);

@@ -6,9 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import peakaboo.filter.FilterLoader;
-import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 

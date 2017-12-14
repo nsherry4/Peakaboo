@@ -2,14 +2,13 @@ package peakaboo.filter.plugins;
 
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerSpinnerStyle;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 public class ExampleFilter extends AbstractFilter {
 
@@ -28,7 +27,7 @@ public class ExampleFilter extends AbstractFilter {
 	@Override
 	public void initialize()
 	{
-		param = new Parameter<>("Example Parameter", new IntegerEditor(), 1);
+		param = new Parameter<>("Example Parameter", new IntegerSpinnerStyle(), 1);
 		addParameter(param);
 	}
 	

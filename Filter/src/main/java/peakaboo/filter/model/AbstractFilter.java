@@ -218,7 +218,11 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	
 	private <T> void setParameter(Parameter<T> param, Object value) {
 		param.setValue((T)value);
-		param.getEditor().setFromParameter();
+
+		//Editors will be listening for notifications about imposed 
+		//changes on a Parameter's value. This hook doesn't fire
+		//events for every change, only when instructed to.
+		param.getValueHook().updateListeners((T)value);
 	}
 	
 

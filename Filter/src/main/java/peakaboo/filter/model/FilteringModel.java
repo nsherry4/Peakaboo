@@ -1,7 +1,6 @@
 package peakaboo.filter.model;
 
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 public class FilteringModel

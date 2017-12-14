@@ -2,13 +2,12 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 
@@ -38,7 +37,7 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		passes = new Parameter<>("Passes to Remove", new IntegerEditor(), 1);
+		passes = new Parameter<>("Passes to Remove", new IntegerStyle(), 1);
 		addParameter(passes);
 	}
 

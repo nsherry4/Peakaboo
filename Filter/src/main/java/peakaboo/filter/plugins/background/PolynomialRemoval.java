@@ -2,11 +2,10 @@ package peakaboo.filter.plugins.background;
 
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 
@@ -36,8 +35,8 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		width = new Parameter<>("Width of Polynomial", new IntegerEditor(), 300);
-		power = new Parameter<>("Power of Polynomial", new IntegerEditor(), 3);
+		width = new Parameter<>("Width of Polynomial", new IntegerStyle(), 300);
+		power = new Parameter<>("Power of Polynomial", new IntegerStyle(), 3);
 		
 		addParameter(width, power);
 	}

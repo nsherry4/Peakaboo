@@ -1,4 +1,4 @@
-package peakaboo.filter.editors;
+package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -12,8 +12,11 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import autodialog.model.Parameter;
-import autodialog.view.AutoPanel;
-import autodialog.view.editors.IEditor;
+import autodialog.model.SelectionParameter;
+import autodialog.view.editors.Editor;
+import autodialog.view.swing.AutoPanel;
+import autodialog.view.swing.editors.AbstractSwingEditor;
+import autodialog.view.swing.editors.SwingEditorFactory;
 import eventful.Eventful;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
@@ -21,11 +24,11 @@ import swidget.widgets.Spacing;
 
 
 
-public class SubfilterEditor extends Eventful implements IEditor<Filter>
+public class SubfilterEditor extends AbstractSwingEditor<Filter> 
 {
 	
 	//Param containing the subfilter
-	Parameter<Filter>	param;
+	SelectionParameter<Filter>	param;
 	
 	//GUI
 	JPanel						control;
@@ -34,37 +37,26 @@ public class SubfilterEditor extends Eventful implements IEditor<Filter>
 	JComboBox<Filter>			filterCombo;
 	
 	//Subfilter
-	List<Filter>				availableFilters;
 	Filter 						subfilter;
 	
-	public SubfilterEditor(List<Filter> filters) {
-		availableFilters = filters;
-	}
+	public SubfilterEditor() {}
 	
 	@Override
-	public void initialize(Parameter<Filter> param)
+	public void initialize(Parameter<Filter> p)
 	{
+		this.param = (SelectionParameter<Filter>) p;
 		
-		Filter selectedFilter = (Filter)param.getValue();
-		
-		this.param = param;
+		filterCombo = new JComboBox<Filter>(param.getPossibleValues().toArray(new AbstractFilter[0]));
 		control = new JPanel();
-				
 		control.setLayout(new BorderLayout());
-		
-		filterCombo = new JComboBox<Filter>(availableFilters.toArray(new AbstractFilter[0]));
 		control.add(filterCombo, BorderLayout.NORTH);
-		
-		
 		subfilterPanel = new JPanel();	
 		subfilterPanel.setLayout(new BorderLayout());
 		subfilterPanel.setBorder(new TitledBorder(""));
-		
-		
-		
 		control.add(subfilterPanel, BorderLayout.CENTER);
 		
-		changeFilter(selectedFilter);
+		setFromParameter();
+		param.getValueHook().addListener(v -> this.setFromParameter());
 		
 		
 		filterCombo.addActionListener(new ActionListener() {
@@ -72,7 +64,7 @@ public class SubfilterEditor extends Eventful implements IEditor<Filter>
 			public void actionPerformed(ActionEvent e)
 			{
 				changeFilter((Filter)filterCombo.getSelectedItem());
-				updateListeners();
+				getValueHook().updateListeners(getEditorValue());
 			}
 		});
 
@@ -114,9 +106,9 @@ public class SubfilterEditor extends Eventful implements IEditor<Filter>
 
 			@Override
 			public void parameterUpdated(Parameter<?> param) {
-				SubfilterEditor.this.updateListeners();
+				SubfilterEditor.this.getValueHook().updateListeners(f);
 			}};
-		subfilterView = new AutoPanel(filerDialogController.getParameters());
+		subfilterView = new AutoPanel(filerDialogController.getEditors());
 	
 		
 		JScrollPane scroller = new JScrollPane(subfilterView);
@@ -173,11 +165,7 @@ public class SubfilterEditor extends Eventful implements IEditor<Filter>
 				break;
 			}
 		}
-			
-			
-		
-		
-		
+
 		changeFilter((Filter)param.getValue());
 	}
 	
@@ -190,6 +178,11 @@ public class SubfilterEditor extends Eventful implements IEditor<Filter>
 	@Override
 	public void validateFailed() {
 		setFromParameter();
+	}
+
+	@Override
+	public Parameter<Filter> getParameter() {
+		return param;
 	}
 	
 	

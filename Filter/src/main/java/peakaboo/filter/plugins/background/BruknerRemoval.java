@@ -3,11 +3,10 @@ package peakaboo.filter.plugins.background;
 
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 /**
@@ -37,8 +36,8 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		width = new Parameter<>("Width of Fitting", new IntegerEditor(), 100);
-		iterations = new Parameter<>("Iterations", new IntegerEditor(), 10);
+		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100);
+		iterations = new Parameter<>("Iterations", new IntegerStyle(), 10);
 		
 		addParameter(width, iterations);
 	}

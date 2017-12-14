@@ -1,7 +1,7 @@
 package peakaboo.filter.plugins.advanced;
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
@@ -18,7 +18,7 @@ public class Interpolation extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		size = new Parameter<>("New Size", new IntegerEditor(), 2048);
+		size = new Parameter<>("New Size", new IntegerStyle(), 2048);
 		addParameter(size);
 	}
 	

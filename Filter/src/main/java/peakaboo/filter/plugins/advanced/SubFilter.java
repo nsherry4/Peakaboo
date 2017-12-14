@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.SelectionParameter;
+import autodialog.model.style.CoreStyle;
+import autodialog.model.style.SimpleStyle;
+import autodialog.model.style.Style;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.filter.FilterLoader;
-import peakaboo.filter.editors.SubfilterEditor;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.painters.PainterData;
@@ -15,14 +18,13 @@ import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
-public class FilterPartialSpectrum extends AbstractFilter
+public class SubFilter extends AbstractFilter
 {
 
 	private Parameter<Integer> begin;
 	private Parameter<Integer> end;
-	private Parameter<Filter> filter;
-	
-	
+	private SelectionParameter<Filter> filter;
+		
 	@Override
 	public void initialize()
 	{
@@ -35,9 +37,10 @@ public class FilterPartialSpectrum extends AbstractFilter
 		}
 		
 		
-		begin = new Parameter<>("Start Index", new IntegerEditor(), 0);
-		end = new Parameter<>("Stop Index", new IntegerEditor(), 10);
-		filter = new Parameter<>("Filter", new SubfilterEditor(filters), filters.get(0));
+		begin = new Parameter<>("Start Index", new IntegerStyle(), 0);
+		end = new Parameter<>("Stop Index", new IntegerStyle(), 10);
+		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0));
+		filter.setPossibleValues(filters);
 		
 		addParameter(begin, end, filter);
 		

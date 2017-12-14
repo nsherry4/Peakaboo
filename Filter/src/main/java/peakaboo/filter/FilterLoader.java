@@ -12,7 +12,7 @@ import commonenvironment.Env;
 import peakaboo.common.Version;
 import peakaboo.filter.model.FilterPlugin;
 import peakaboo.filter.plugins.advanced.DataToWavelet;
-import peakaboo.filter.plugins.advanced.FilterPartialSpectrum;
+import peakaboo.filter.plugins.advanced.SubFilter;
 import peakaboo.filter.plugins.advanced.Identity;
 import peakaboo.filter.plugins.advanced.Interpolation;
 import peakaboo.filter.plugins.advanced.SpectrumNormalization;
@@ -45,7 +45,7 @@ public class FilterLoader
 		//register built-in plugins
 		newPluginLoader.registerPlugin(DataToWavelet.class);
 		newPluginLoader.registerPlugin(Identity.class);
-		newPluginLoader.registerPlugin(FilterPartialSpectrum.class);
+		newPluginLoader.registerPlugin(SubFilter.class);
 		newPluginLoader.registerPlugin(SpectrumNormalization.class);
 		newPluginLoader.registerPlugin(WaveletToData.class);
 		

@@ -1,11 +1,9 @@
 package peakaboo.filter.model;
 
-import javax.swing.JSeparator;
-
 import autodialog.model.Parameter;
-import autodialog.view.editors.BooleanEditor;
-import autodialog.view.editors.DummyEditor;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.BooleanStyle;
+import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.styles.SeparatorStyle;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -28,23 +26,23 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	public AbstractBackgroundFilter()
 	{
 		
-		percent = new Parameter<>("Percent to Remove", new IntegerEditor(), 90);
-		preview = new Parameter<>("Preview Only", new BooleanEditor(), Boolean.FALSE);
+		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90);
+		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE);
 		
-		Parameter<?> sep1 = new Parameter<>(null, new DummyEditor(new JSeparator()), null);
+		Parameter<?> sep1 = new Parameter<>(null, new SeparatorStyle(), null);
 		
-		partial = new Parameter<>("Apply to Subset", new BooleanEditor(), Boolean.FALSE);
-		stopindex = new Parameter<>("Stop Index", new IntegerEditor(), 0);
-		startindex = new Parameter<>("Start Index", new IntegerEditor(), 0);
+		partial = new Parameter<>("Apply to Subset", new BooleanStyle(), Boolean.FALSE);
+		startindex = new Parameter<>("Start Index", new IntegerStyle(), 0);
+		stopindex = new Parameter<>("Stop Index", new IntegerStyle(), 0);
 		
 		
-		Parameter<?> sep2 = new Parameter<>(null, new DummyEditor(new JSeparator()), null);
+		Parameter<?> sep2 = new Parameter<>(null, new SeparatorStyle(), null);
 		
 		
 		startindex.setEnabled(false);
 		stopindex.setEnabled(false);
 		
-		addParameter(percent, preview, sep1, partial, stopindex, startindex, sep2);
+		addParameter(percent, preview, sep1, partial, startindex, stopindex, sep2);
 		
 	}
 	

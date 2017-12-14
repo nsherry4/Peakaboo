@@ -7,7 +7,6 @@ import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 public interface IFilteringController extends IEventful

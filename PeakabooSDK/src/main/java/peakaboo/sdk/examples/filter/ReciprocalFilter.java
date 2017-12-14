@@ -3,7 +3,7 @@ package peakaboo.sdk.examples.filter;
 
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.BooleanEditor;
+import autodialog.model.style.styles.BooleanStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
@@ -18,7 +18,7 @@ public class ReciprocalFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		enabled = new Parameter<>("Enabled", new BooleanEditor(), Boolean.TRUE);
+		enabled = new Parameter<>("Enabled", new BooleanStyle(), Boolean.TRUE);
 		addParameter(enabled);
 	}
 	

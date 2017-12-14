@@ -2,13 +2,12 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.view.editors.DoubleEditor;
-import autodialog.view.editors.IntegerEditor;
+import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.styles.RealStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 
@@ -22,8 +21,8 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 {
 
 	private Parameter<Integer> iterations;
-	private Parameter<Double> multiplier;
-	private Parameter<Double> falloff;
+	private Parameter<Float> multiplier;
+	private Parameter<Float> falloff;
 
 	public SpringSmoothing()
 	{
@@ -38,9 +37,9 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		iterations = new Parameter<>("Iterations", new IntegerEditor(), 20);
-		multiplier = new Parameter<>("Linear Force Multiplier", new DoubleEditor(), 20.0d);
-		falloff = new Parameter<>("Exponential Force Falloff Rate", new DoubleEditor(), 2.0d);
+		iterations = new Parameter<>("Iterations", new IntegerStyle(), 20);
+		multiplier = new Parameter<>("Linear Force Multiplier", new RealStyle(), 20.0f);
+		falloff = new Parameter<>("Exponential Force Falloff Rate", new RealStyle(), 2.0f);
 		
 		addParameter(iterations, multiplier, falloff);
 		

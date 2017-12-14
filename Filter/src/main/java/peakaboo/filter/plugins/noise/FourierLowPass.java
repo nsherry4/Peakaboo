@@ -2,15 +2,17 @@ package peakaboo.filter.plugins.noise;
 
 
 
+import java.util.Arrays;
+
 import autodialog.model.Parameter;
-import autodialog.view.editors.IntegerEditor;
-import autodialog.view.editors.ListEditor;
+import autodialog.model.SelectionParameter;
+import autodialog.model.style.styles.DropDownStyle;
+import autodialog.model.style.styles.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 
@@ -25,7 +27,7 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	
 	private Parameter<Integer> startWavelength;
 	private Parameter<Integer> endWavelength;
-	private Parameter<FFTStyle> rolloff;
+	private SelectionParameter<FFTStyle> rolloff;
 
 
 	public FourierLowPass()
@@ -41,9 +43,10 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		rolloff = new Parameter<>("Roll-Off Type", new ListEditor<>(FFTStyle.values()), FFTStyle.LINEAR);
-		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerEditor(), 8);
-		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerEditor(), 6);
+		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFTStyle.LINEAR);
+		rolloff.setPossibleValues(Arrays.asList(FFTStyle.values()));
+		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerStyle(), 8);
+		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerStyle(), 6);
 		
 		addParameter(rolloff, startWavelength, endWavelength);
 	}
