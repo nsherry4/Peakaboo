@@ -3,6 +3,7 @@ package peakaboo.datasource.components.scandata;
 import java.util.List;
 
 import peakaboo.datasource.SpectrumList;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
@@ -25,9 +26,26 @@ public class SimpleScanData implements ScanData {
 	public void add(Spectrum spectrum) {
 		spectra.add(spectrum);
 	}
-
+	
+	/**
+	 * Convenience method for adding a {@link Spectrum}
+	 * @param spectrum a float array to add
+	 */
+	public void add(float[] spectrum) {
+		add(new ISpectrum(spectrum));
+	}
+	
 	public void set(int index, Spectrum spectrum) {
 		spectra.set(index, spectrum);
+	}
+	
+	/**
+	 * Convenience method for setting a {@link Spectrum}
+	 * @param index index to set at
+	 * @param spectrum a float array to set as
+	 */
+	public void set(int index, float[] spectrum) {
+		set(index, new ISpectrum(spectrum));
 	}
 	
 	@Override

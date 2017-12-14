@@ -62,6 +62,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -707,7 +708,6 @@ public class PlotPanel extends ClearPanel
 				e -> {
 					
 					JTabbedPane tabs = new JTabbedPane();
-					
 
 					ComponentListPanel dsPanel = new ComponentListPanel(
 						DataSourceLoader
@@ -1271,7 +1271,7 @@ public class PlotPanel extends ClearPanel
 	
 	private void actionHelp()
 	{
-		Apps.browser("http://sciencestudioproject.com/Peakaboo/help.php");
+		Apps.browser("http://sciencestudio.net/downloads/Peakaboo4/Peakaboo%204%20Users%20Guide.pdf");
 	}
 	
 	private void actionOpenData()

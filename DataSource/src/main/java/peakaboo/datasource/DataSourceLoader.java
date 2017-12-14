@@ -1,6 +1,7 @@
 package peakaboo.datasource;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -54,30 +55,18 @@ public class DataSourceLoader
 		try
 		{
 			
-			if (loader == null)
-			{
+			if (loader == null)	{
 				initLoader();
 			}
 			
-			List<PluginDataSource> filters = loader.getNewInstancesForAllPlugins();
-			
-			Collections.sort(filters, new Comparator<PluginDataSource>() {
-
-				@Override
-				public int compare(PluginDataSource f1, PluginDataSource f2)
-				{
-					return f1.getFileFormat().getFormatName().compareTo(f1.getFileFormat().getFormatName());
-				}});
-			
-			return new ArrayList<>(filters);
-			
+			return new ArrayList<>(loader.getNewInstancesForAllPlugins());
+					
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			e.printStackTrace();
 		}
 		
 		//failure -- return empty list
-		List<DataSource> plugins = new ArrayList<DataSource>();
-		return plugins;
+		return new ArrayList<DataSource>();
 	}
 
 	

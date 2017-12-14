@@ -39,12 +39,16 @@ public class PluginData extends ClearPanel {
 		setBackground(Color.WHITE);
 		setBorder(new LineBorder(Color.GRAY));
 		
+		String source = "Unknown";
+		if (plugin.getSource() != null) {
+			source = plugin.getSource().toString();
+		}
 		
 		name = new JLabel(plugin.getName());
 		version = new JLabel(plugin.getVersion());
-		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription(), 375));
+		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription() + "<br/>Location: " + source, 375));
 		enabled = new JLabel(new ImageIcon(IconFactory.getImageIcon(plugin.isEnabled() ? "choose-ok" : "choose-cancel", IconSize.BUTTON).getImage()));
-		type = new JLabel(plugin.getPluginClass().getSimpleName());
+		type = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getPluginClass().getSimpleName(), 375));
 		
 		
 		name.setBorder(new EmptyBorder(10, 10, 20, 10));

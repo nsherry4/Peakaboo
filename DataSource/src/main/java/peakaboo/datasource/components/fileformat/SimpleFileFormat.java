@@ -2,6 +2,7 @@ package peakaboo.datasource.components.fileformat;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,6 +11,10 @@ public class SimpleFileFormat implements FileFormat {
 	private List<String> extensions;
 	private String name, desc;
 	private boolean singleFile;
+	
+	public SimpleFileFormat(boolean singleFile, String name, String desc, String... extensions) {
+		this(singleFile, name, desc, Arrays.asList(extensions));
+	}
 	
 	public SimpleFileFormat(boolean singleFile, String name, String desc, List<String> extensions) {
 		this.extensions = new ArrayList<>(extensions);
