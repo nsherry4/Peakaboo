@@ -24,8 +24,8 @@ public class Version {
 			release ? versionNoMajor + "." + versionNoMinor + "." + versionNoPoint : 
 			rc 		? versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + " RC" + rcNo : 
 			versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "dev";
-	public final static String logo = (release) ? "logo" : rc ? "rclogo" : "devlogo";
-	public final static String icon = (release) ? "icon" : rc ? "rcicon" : "devicon";
+	public final static String logo = (release) ? "icon" : rc ? "devicon" : "devicon";
+	public final static String icon = (release) ? "icon" : rc ? "devicon" : "devicon";
 	public final static String program_name = "Peakaboo";
 	public final static String title = program_name + " " + (release ? versionNoMajor : longVersionNo) + titleReleaseDescription;
 	

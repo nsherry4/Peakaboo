@@ -3,16 +3,21 @@ package peakaboo.ui.swing;
 import java.awt.Dimension;
 import java.awt.Window;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
 import commonenvironment.Env;
 import peakaboo.curvefit.peaktable.PeakTableReader;
+import peakaboo.datasource.DataSourceLoader;
+import peakaboo.filter.FilterLoader;
 import swidget.Swidget;
+import swidget.dialogues.SplashScreen;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -22,30 +27,15 @@ import swidget.icons.StockIcon;
 public class Peakaboo
 {
 
+	private static SplashScreen splash;
+	
 	/**
 	 * Performs one-time only start-up tasks like reading the peak table
 	 */
 	private static void initialize()
 	{
-		
-
-		//required to work around:
-		//Exception in thread "AWT-EventQueue-0" java.lang.InternalError: not implemented yet
-		//at sun.java2d.x11.X11SurfaceData.getRaster(X11SurfaceData.java:193)
-		//on Linux
-		//It must be set before Swing starts up.
-		//System.setProperty("sun.java2d.pmoffscreen", "false");
-		
 		PeakTableReader.readPeakTable();
-		
-		
 		Swidget.initialize();
-		
-		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
-		
-		
-		
-		
 	}
 	
 
@@ -71,9 +61,16 @@ public class Peakaboo
 		return (errorDialog.show().getTag().ordinal() != 0);
 	}
 	
+	private static void showSplash() {
+		splash = new SplashScreen(IconFactory.getImageIcon("splash"));
+	}
+	
 	private static void runPeakaboo()
 	{
-
+		
+		
+	
+		
 		if (Env.heapSize() < 120){
 			JOptionPane.showMessageDialog(
 				null,
@@ -91,6 +88,7 @@ public class Peakaboo
 		try {
 				
 			peakaboo = new PlotterFrame();
+			splash.setVisible(false);
 
 		} catch (Exception e) {
 			
@@ -106,19 +104,28 @@ public class Peakaboo
 	
 	public static void run() {
 		
-		initialize();
 		
-		// Schedule a job for the event-dispatching thread:
-		// creating and showing this application's GUI.
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-
-			public void run()
-			{
-				
-				runPeakaboo();
-
-			}
-		});
+		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
+		
+		SwingUtilities.invokeLater(() -> showSplash());
+		
+		//Sleep here just long enough to make sure that the swing event queue 
+		//can draw the splash screen before we load more work into it. From
+		//observation, 500ms isn't long enough???
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		
+		SwingUtilities.invokeLater(() -> initialize());
+		
+		//Load Plugins
+		SwingUtilities.invokeLater(() -> DataSourceLoader.load() );
+		SwingUtilities.invokeLater(() -> FilterLoader.load() );
+		
+		SwingUtilities.invokeLater(() -> runPeakaboo());
 
 		
 	}

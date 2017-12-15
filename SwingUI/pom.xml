@@ -54,6 +54,11 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<outputDirectory>
+						${project.basedir}/../
+					</outputDirectory>
+					<finalName>Peakaboo-${version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<mainClass>peakaboo.ui.swing.Peakaboo</mainClass>
@@ -62,6 +67,7 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+
 				</configuration>
 				<executions>
 					<execution>
@@ -73,6 +79,17 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Move jar up -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<outputDirectory>../</outputDirectory>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 

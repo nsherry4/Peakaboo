@@ -38,6 +38,14 @@ public class FilterLoader
 
 	private static BoltPluginLoader<FilterPlugin> pluginLoader;
 	
+	public static void load() {
+		try {
+			initLoader();
+		} catch (ClassInheritanceException | ClassInstantiationException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private static void initLoader() throws ClassInheritanceException, ClassInstantiationException {
 		BoltPluginLoader<FilterPlugin> newPluginLoader = new BoltPluginLoader<>(FilterPlugin.class);
 		

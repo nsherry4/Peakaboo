@@ -1,10 +1,7 @@
 package peakaboo.datasource;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import bolt.plugin.BoltPluginLoader;
@@ -18,6 +15,14 @@ public class DataSourceLoader
 {
 
 	private static BoltPluginLoader<PluginDataSource> loader;
+	
+	public static void load() {
+		try {
+			initLoader();
+		} catch (ClassInheritanceException | ClassInstantiationException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public synchronized static BoltPluginLoader<PluginDataSource> getPluginLoader() {
 		if (loader == null) {
