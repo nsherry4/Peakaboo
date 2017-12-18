@@ -112,7 +112,7 @@ public class FilterLoader
 				initLoader();
 			}
 			
-			filters.addAll(plugins.getNewInstancesForAllPlugins());
+			filters.addAll(plugins.newInstances());
 			
 			return filters;
 			

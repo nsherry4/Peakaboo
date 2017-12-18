@@ -31,6 +31,7 @@ import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.DataSourceLookup;
+import peakaboo.datasource.framework.PluginDataSource;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.javafx.change.IChangeController;
@@ -204,7 +205,7 @@ public class PlotWindowController extends IActofUIController {
     public void onDatasetOpen() {
 
         List<File> files;
-        List<DataSource> formats = new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
+        List<DataSource> formats = new ArrayList<DataSource>(DataSourceLoader.getPluginSet().newInstances());
 
         String[][] exts = new String[formats.size()][];
         String[] descs = new String[formats.size()];
@@ -258,8 +259,8 @@ public class PlotWindowController extends IActofUIController {
 
     private void loadFiles(List<File> files) {
 
-        List<DataSource> formats = new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
-        formats = DataSourceLookup.findDataSourcesForFiles(files, formats);
+		List<PluginDataSource> candidates =  DataSourceLoader.getPluginSet().newInstances();
+		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(files, candidates);
 
         if (formats.size() > 1) {
             DataSource dsp = pickDSP(formats, getNode());

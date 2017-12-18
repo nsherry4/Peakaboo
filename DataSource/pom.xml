@@ -4,7 +4,7 @@
 
 	<groupId>net.sciencestudio.peakaboo</groupId>
 	<artifactId>DataSource</artifactId>
-	<version>4.3-SNAPSHOT</version>
+	<version>5.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>DataSource</name>
@@ -46,7 +46,12 @@
 		<dependency>
 			<groupId>net.sciencestudio.peakaboo</groupId>
 			<artifactId>Common</artifactId>
-			<version>4.3-SNAPSHOT</version>
+			<version>5.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sciencestudio.libs</groupId>
+			<artifactId>BoltCode</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 

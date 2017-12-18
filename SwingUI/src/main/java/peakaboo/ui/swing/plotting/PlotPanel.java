@@ -89,8 +89,9 @@ import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.DataSourceLookup;
-import peakaboo.datasource.JavaPluginDataSource;
 import peakaboo.datasource.components.metadata.Metadata;
+import peakaboo.datasource.framework.JavaPluginDataSource;
+import peakaboo.datasource.framework.PluginDataSource;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.model.FilterPlugin;
 import peakaboo.filter.model.FilterSet;
@@ -712,7 +713,7 @@ public class PlotPanel extends ClearPanel
 					ComponentListPanel dsPanel = new ComponentListPanel(
 						DataSourceLoader
 						.getPluginSet()
-						.getAvailablePlugins()
+						.getAll()
 						.stream()
 						.map(PluginData::new)
 						.collect(Collectors.toList())
@@ -722,7 +723,7 @@ public class PlotPanel extends ClearPanel
 					ComponentListPanel filterPanel = new ComponentListPanel(
 						FilterLoader
 						.getPluginSet()
-						.getAvailablePlugins()
+						.getAll()
 						.stream()
 						.map(PluginData::new)
 						.collect(Collectors.toList())
@@ -1299,8 +1300,8 @@ public class PlotPanel extends ClearPanel
 	public void loadFiles(List<File> filenames)
 	{
 
-		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
-		formats = DataSourceLookup.findDataSourcesForFiles(filenames, formats);
+		List<PluginDataSource> candidates =  DataSourceLoader.getPluginSet().newInstances();
+		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(filenames, candidates);
 		
 		if (formats.size() > 1)
 		{

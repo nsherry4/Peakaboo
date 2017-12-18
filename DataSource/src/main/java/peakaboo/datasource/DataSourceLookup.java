@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.datasource.components.fileformat.FileFormatCompatibility;
+import peakaboo.datasource.framework.PluginDataSource;
 
 public class DataSourceLookup
 {
 
-	public static List<DataSource> findDataSourcesForFiles(List<File> filenames, List<DataSource> dsps)
+	public static List<DataSource> findDataSourcesForFiles(List<File> filenames, List<PluginDataSource> dsps)
 	{	
 		
 		List<DataSource> maybe_by_filename = new ArrayList<DataSource>();

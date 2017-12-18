@@ -1,4 +1,4 @@
-package peakaboo.datasource;
+package peakaboo.datasource.framework;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,10 +45,7 @@ public class JavaScriptPluginDataSource implements PluginDataSource, BoltScriptP
 	}
 	
 	private <T> T lookup(String var, T fallback) {
-		System.out.println(var);
-		System.out.println(js);
 		Object o = js.get(var);
-		System.out.println(o);
 		if (o != null) System.out.println(o.getClass());
 		T val = (T)o;
 		if (val != null) {

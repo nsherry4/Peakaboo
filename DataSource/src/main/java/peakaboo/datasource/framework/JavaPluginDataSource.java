@@ -1,4 +1,4 @@
-package peakaboo.datasource;
+package peakaboo.datasource.framework;
 
 import bolt.plugin.java.BoltPlugin;
 
