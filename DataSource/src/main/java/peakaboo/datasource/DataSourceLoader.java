@@ -4,9 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import bolt.plugin.BoltPluginLoader;
-import bolt.plugin.ClassInheritanceException;
-import bolt.plugin.ClassInstantiationException;
+import bolt.plugin.core.BoltPluginSet;
+import bolt.plugin.core.IBoltPluginSet;
+import bolt.plugin.java.BoltPluginLoader;
+import bolt.plugin.java.ClassInheritanceException;
+import bolt.plugin.java.ClassInstantiationException;
+import bolt.scripting.plugin.IBoltScriptPluginController;
 import commonenvironment.Env;
 import peakaboo.common.Version;
 import peakaboo.datasource.plugins.PlainText;
@@ -14,7 +17,8 @@ import peakaboo.datasource.plugins.PlainText;
 public class DataSourceLoader
 {
 
-	private static BoltPluginLoader<PluginDataSource> loader;
+	private static BoltPluginLoader<JavaPluginDataSource> loader;
+	private static BoltPluginSet<PluginDataSource> plugins = new IBoltPluginSet<>();
 	
 	public static void load() {
 		try {
@@ -24,7 +28,7 @@ public class DataSourceLoader
 		}
 	}
 	
-	public synchronized static BoltPluginLoader<PluginDataSource> getPluginLoader() {
+	public synchronized static BoltPluginSet<PluginDataSource> getPluginSet() {
 		if (loader == null) {
 			try {
 				initLoader();
@@ -32,24 +36,30 @@ public class DataSourceLoader
 				e.printStackTrace();
 			}
 		}
-		return loader;
+		return plugins;
 	}
 	
 	private synchronized static void initLoader() throws ClassInheritanceException, ClassInstantiationException {
 		
-		BoltPluginLoader<PluginDataSource> newLoader = new BoltPluginLoader<PluginDataSource>(PluginDataSource.class);  
+		BoltPluginLoader<JavaPluginDataSource> newLoader = new BoltPluginLoader<JavaPluginDataSource>(plugins, JavaPluginDataSource.class);  
 		
 		//load local jars
 		newLoader.register();
 		
 		//load jars in the app data directory
-		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
+		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins/DataSource");
 		appDataDir.mkdirs();
 		newLoader.register(appDataDir);
 			
 		
 		//register built-in plugins
 		newLoader.registerPlugin(PlainText.class);
+		
+		for (File file : appDataDir.listFiles()) {
+			if (! file.getName().endsWith(".js")) continue;
+			IBoltScriptPluginController<JavaScriptPluginDataSource> plugin = new IBoltScriptPluginController<>(file, JavaScriptPluginDataSource.class, JavaScriptPluginDataSource.class);
+			plugins.addPlugin(plugin);
+		}
 					
 		loader = newLoader;
 	}
@@ -64,7 +74,7 @@ public class DataSourceLoader
 				initLoader();
 			}
 			
-			return new ArrayList<>(loader.getNewInstancesForAllPlugins());
+			return new ArrayList<>(plugins.getNewInstancesForAllPlugins());
 					
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			e.printStackTrace();

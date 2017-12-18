@@ -1,7 +1,7 @@
 package peakaboo.datasource;
 
-import bolt.plugin.BoltPlugin;
+import bolt.plugin.core.BoltPluginCore;
 
-public interface PluginDataSource extends DataSource, BoltPlugin {
+public interface PluginDataSource extends DataSource, BoltPluginCore {
 
 }

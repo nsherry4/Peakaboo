@@ -3,7 +3,7 @@ package peakaboo.datasource;
 import peakaboo.datasource.components.interaction.Interaction;
 import peakaboo.datasource.components.interaction.SimpleInteraction;
 
-public abstract class AbstractDataSource implements PluginDataSource
+public abstract class AbstractDataSource implements JavaPluginDataSource
 {
 
 	private Interaction interaction = new SimpleInteraction();

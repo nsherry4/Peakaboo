@@ -68,8 +68,8 @@ import javax.swing.event.ChangeListener;
 
 import com.ezware.dialog.task.TaskDialogs;
 
-import bolt.plugin.BoltPluginController;
-import bolt.plugin.BoltPluginLoader;
+import bolt.plugin.java.BoltPluginLoader;
+import bolt.plugin.java.IBoltPluginController;
 import commonenvironment.Apps;
 import commonenvironment.Env;
 import commonenvironment.IOOperations;
@@ -89,7 +89,7 @@ import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.DataSource;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.datasource.DataSourceLookup;
-import peakaboo.datasource.PluginDataSource;
+import peakaboo.datasource.JavaPluginDataSource;
 import peakaboo.datasource.components.metadata.Metadata;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.model.FilterPlugin;
@@ -711,7 +711,7 @@ public class PlotPanel extends ClearPanel
 
 					ComponentListPanel dsPanel = new ComponentListPanel(
 						DataSourceLoader
-						.getPluginLoader()
+						.getPluginSet()
 						.getAvailablePlugins()
 						.stream()
 						.map(PluginData::new)
@@ -721,7 +721,7 @@ public class PlotPanel extends ClearPanel
 					
 					ComponentListPanel filterPanel = new ComponentListPanel(
 						FilterLoader
-						.getPluginLoader()
+						.getPluginSet()
 						.getAvailablePlugins()
 						.stream()
 						.map(PluginData::new)

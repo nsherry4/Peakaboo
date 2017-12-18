@@ -2,12 +2,13 @@ package peakaboo.filter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import bolt.plugin.BoltPluginLoader;
-import bolt.plugin.ClassInheritanceException;
-import bolt.plugin.ClassInstantiationException;
+import bolt.plugin.core.BoltPluginSet;
+import bolt.plugin.core.IBoltPluginSet;
+import bolt.plugin.java.BoltPluginLoader;
+import bolt.plugin.java.ClassInheritanceException;
+import bolt.plugin.java.ClassInstantiationException;
 import commonenvironment.Env;
 import peakaboo.common.Version;
 import peakaboo.filter.model.FilterPlugin;
@@ -37,6 +38,7 @@ public class FilterLoader
 {
 
 	private static BoltPluginLoader<FilterPlugin> pluginLoader;
+	private static BoltPluginSet<FilterPlugin> plugins = new IBoltPluginSet<>();
 	
 	public static void load() {
 		try {
@@ -47,7 +49,7 @@ public class FilterLoader
 	}
 	
 	private static void initLoader() throws ClassInheritanceException, ClassInstantiationException {
-		BoltPluginLoader<FilterPlugin> newPluginLoader = new BoltPluginLoader<>(FilterPlugin.class);
+		BoltPluginLoader<FilterPlugin> newPluginLoader = new BoltPluginLoader<>(plugins, FilterPlugin.class);
 		
 
 		//register built-in plugins
@@ -81,22 +83,21 @@ public class FilterLoader
 		newPluginLoader.register();
 		
 		//load plugins from the application data directory
-		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
+		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins/Filter");
 		appDataDir.mkdirs();
 		newPluginLoader.register(appDataDir);
 		pluginLoader = newPluginLoader;
 	}
 	
-	public static BoltPluginLoader<FilterPlugin> getPluginLoader() {
+	public static BoltPluginSet<FilterPlugin> getPluginSet() {
 		if (pluginLoader == null) {
 			try {
 				initLoader();
 			} catch (ClassInheritanceException | ClassInstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return pluginLoader;
+		return plugins;
 	}
 	
 	public static synchronized List<FilterPlugin> getAvailableFilters()
@@ -111,9 +112,7 @@ public class FilterLoader
 				initLoader();
 			}
 			
-			filters.addAll(pluginLoader.getNewInstancesForAllPlugins());
-			
-			Collections.sort(filters, (f1, f2) -> f1.getFilterName().compareTo(f1.getFilterName()));
+			filters.addAll(plugins.getNewInstancesForAllPlugins());
 			
 			return filters;
 			
