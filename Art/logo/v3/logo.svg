@@ -18,23 +18,11 @@
    version="1.0"
    sodipodi:docname="logo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/nathaniel/Projects/SS/Git/Peakaboo/Art/logo/v3/devbanner.png"
-   inkscape:export-xdpi="171.74707"
-   inkscape:export-ydpi="171.74707">
+   inkscape:export-filename="/home/nathaniel/Projects/SS/Git/Peakaboo/Art/logo/v3/logo.png"
+   inkscape:export-xdpi="204.8"
+   inkscape:export-ydpi="204.8">
   <defs
      id="defs4">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4299">
-      <stop
-         style="stop-color:#838383;stop-opacity:1;"
-         offset="0"
-         id="stop4301" />
-      <stop
-         style="stop-color:#606060;stop-opacity:1"
-         offset="1"
-         id="stop4303" />
-    </linearGradient>
     <linearGradient
        id="linearGradient4251">
       <stop
@@ -421,28 +409,6 @@
        y2="82.026207" />
     <radialGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient4299"
-       id="radialGradient4305"
-       cx="256.3262"
-       cy="322.65836"
-       fx="256.3262"
-       fy="322.65836"
-       r="209.03999"
-       gradientTransform="matrix(0.99625743,4.2024459e-4,0,0.74079449,-160.93939,175.11476)"
-       gradientUnits="userSpaceOnUse" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4299"
-       id="radialGradient4307"
-       cx="270.94354"
-       cy="600.27808"
-       fx="270.94354"
-       fy="600.27808"
-       r="192.39833"
-       gradientTransform="matrix(-2.6353983e-7,-0.17251463,1.0672821,1.0702546e-6,-518.73247,466.11931)"
-       gradientUnits="userSpaceOnUse" />
-    <radialGradient
-       inkscape:collect="always"
        xlink:href="#linearGradient3242-52-665-2"
        id="radialGradient4349"
        gradientUnits="userSpaceOnUse"
@@ -463,17 +429,6 @@
        fx="454.92926"
        fy="109.87472"
        r="179.99628" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4299"
-       id="radialGradient4399"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(-2.6353983e-7,-0.17251463,1.0672821,1.0702546e-6,-518.73247,466.11931)"
-       cx="270.94354"
-       cy="600.27808"
-       fx="270.94354"
-       fy="600.27808"
-       r="192.39833" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -486,10 +441,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710682"
-     inkscape:cx="469.87097"
-     inkscape:cy="431.64149"
+     inkscape:cx="622.60602"
+     inkscape:cy="420.32778"
      inkscape:document-units="px"
-     inkscape:current-layer="layer9"
+     inkscape:current-layer="layer2"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
@@ -508,7 +463,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -577,7 +532,7 @@
          y="607.40936"
          x="252.8307"
          id="tspan2843"
-         sodipodi:role="line">Peakaboo 4</tspan></text>
+         sodipodi:role="line">Peakaboo 5</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -595,38 +550,7 @@
          id="tspan3703"
          x="488.8873"
          y="372.04352"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:313.63000488px;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">Peakaboo 4</tspan></text>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer6"
-     inkscape:label="Base Shadow"
-     style="display:none"
-     transform="translate(161.89871,10.426315)" />
-  <g
-     inkscape:label="Base"
-     inkscape:groupmode="layer"
-     id="layer1"
-     style="display:none"
-     transform="translate(161.89871,10.426315)">
-    <g
-       id="g3673"
-       transform="matrix(1.0864956,0,0,1.0864956,-22.142877,-41.406588)"
-       style="fill:url(#radialGradient4307);fill-opacity:1;stroke:none">
-      <path
-         inkscape:connector-curvature="0"
-         style="fill:url(#radialGradient4399);fill-opacity:1;stroke:none;stroke-width:25.71855545;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
-         d="m 105.67108,400.19597 300.65783,0 c 0.23191,0 0,0.0467 0,0.10462 l 42.06942,29.10026 c 0,0 0,0 0,0 0,0.0579 -0.18669,0.10462 -0.4186,0.10462 l -383.95946,0 c -0.231906,0 -0.418604,-0.0467 -0.418604,-0.10462 l 42.069414,-29.10026 c 0,-0.058 -0.2319,-0.10462 0,-0.10462 z"
-         id="rect3235"
-         sodipodi:nodetypes="ccccsccccc" />
-    </g>
-    <rect
-       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#radialGradient4305);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10.66699982;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
-       id="rect4261"
-       width="418.07999"
-       height="19.798988"
-       x="46.959999"
-       y="425.24921" />
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:313.63000488px;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">Peakaboo 5</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
