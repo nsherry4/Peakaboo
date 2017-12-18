@@ -78,8 +78,8 @@
 \newcommand{\tocsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
 \newcommand{\tocsubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
 
-\title{Peakaboo 4}
-\date{March 6, 2012}
+\title{Peakaboo 5}
+\date{December 15, 2017}
 \author{Nathaniel Sherry, Marina Suominen Fuller}
         
 
@@ -89,7 +89,10 @@
 \lhead[]{}
 \rhead[]{}
 %\rhead[\includegraphics[height=1em]{title/peakaboo.pdf}]{\includegraphics[height=1em]{title/peakaboo.pdf}}
-\fancyhead[C]{\includegraphics[height=1em]{title/peakaboo.pdf}\ \includegraphics[height=1em]{title/usersguide.pdf}}
+\fancyhead[C]{
+	\includegraphics[height=1em]{title/peakaboo.pdf}
+	\includegraphics[height=1em]{title/usersguide.pdf}
+}
 
 
 \pagestyle{empty}
@@ -99,6 +102,8 @@
 \begin{titlepage}
 	\vspace*{\fill}
 	\centering
+	\includegraphics[height=20em]{title/logo.pdf}\\
+	\vspace*{1em}
 	\includegraphics[height=4em]{title/peakaboo.pdf}\\
 	\vspace*{1em}
 	\includegraphics[height=1.5em]{title/usersguide.pdf}\\
@@ -119,30 +124,20 @@
 
 \tocchapter{Introduction}
 
-Peakaboo is a part of the Science Studio package that allows users to identify the 
-spectral origins of an XRF spectrum using a routine that fits all components of 
-the K, L, or M spectrum including escape peaks and pileup peaks, and then plots 
-their spatial intensity distributions as maps.
+Peakaboo allows users to identify the spectral origins of an XRF spectrum using a 
+routine that fits all components of the K, L, or M spectrum including escape peaks 
+and pileup peaks, and then plots their spatial intensity distributions as maps. It 
+was developed as part of the Science Studio project
 
 \tocsection{Accepted File Formats}
 
-Peakaboo supports several file formats for XRF data, including: 
+Out of the box, Peakaboo provides support for XRF data in a plain-text format. 
+Peakaboo PlainText is a simple XRF format comprised of rows of space-separated 
+numbers. Each row represents a single spectrum.
 
-\begin{enumerate}
-
-\item \command{CDFML}, an xml-based file format defined by the Canadian Light 
-Source using NASA's CDF/CDFML container.
-
-\item \command{Peakaboo Plaintext Format}, a simple XRF format comprised of 
-rows of space-separated numbers. Each row represents a single spectrum.
-
-\item \command{CLS Data Acquisition Format} used by the Canadian Light Source 
-for XRF collection on the VESPERS beamline.
-
-\end{enumerate}
-
-For a complete listing of supported file formats, see ``File Format Descriptions''
-in the appendix.
+Because of the wide variety of data formats, Peakaboo also makes it easy to create
+plug-ins for supporting additional data formats. Some examples of file formats 
+supported by plug-ins include Amktek, Sigray, and Inca Emsa.
 
 Peakaboo also allows users who are familiar with the Java programming language to 
 add support for new file formats. See the section on ``Extending Peakaboo'' for more
@@ -151,7 +146,7 @@ information.
 \tocsection{Getting Help}
 
 If you have any questions or concerns not addressed in this guide, please feel free
-to contact the developers at \command{nsherry4@uwo.ca}
+to contact the developer at \command{nsherry4@uwo.ca}
 
 
 \tocchapter{Getting Started}
@@ -169,12 +164,12 @@ that file and open it. If there are many individual scan point files,
 
 \tocsection{File Format Conflicts}
 
-While rare, it is possible that more than one of the modules that Peakaboo uses to read XRF data
-will believe that it can open a particular data set. This is usually the result of many
-different file formats having some of the same properties, such as similar file 
-extensions (eg \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo cannot automatically 
-determine which XRF reader module to use, it will ask you to indicate which format your
-data is in. Select the entry the description of which best matches your data.
+While rare, it is possible that more than one of the plug-ins that Peakaboo uses to read 
+XRF data will believe that it can open a particular data set. This is usually the result 
+of many different file formats having some of the same properties, such as similar file 
+extensions (eg \file{.txt}, \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo 
+cannot automatically determine which XRF reader plug-in to use, it will ask you to indicate 
+which format your data is in. Select the entry which best matches your data.
 
 \screenshot{select-datasource}{Peakaboo's file format conflict dialog}
 
@@ -539,7 +534,7 @@ the \element{Ar}. Close the edit window.
 
 \tocchapter{Extending Peakaboo}
 
-Peakaboo allows users who are familiar with Java programming to extend its functionality by
+Peakaboo allows users who are familiar with the Java programming language to extend its functionality by
 creating custom filters and adding support for new file formats. Users who are interested in
 developing extensions for Peakaboo will need to make sure they have the Java Development Kit (JDK)
 installed in their computer (available from \href{http://java.com}{Java.com}). A good code editor,
@@ -558,7 +553,7 @@ loaded as a plugin, one per line.
 
 Example plugins for both filters and file formats are available online at 
 \href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file 
-containing Peakaboo for building against, as part of the Peakaboo 4 Software Development Kit.
+containing Peakaboo for building against, as part of the Peakaboo 5 Software Development Kit.
 
 \tocsection{Filters}
 
