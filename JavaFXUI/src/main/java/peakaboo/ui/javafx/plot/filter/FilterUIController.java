@@ -28,6 +28,9 @@ public class FilterUIController extends IActofUIController {
 
 	@Override
 	public void ready() throws IOException {
+		
+		filterList.setCellFactory(view -> new FilterCellView(this));
+		
 		// TODO Auto-generated method stub
 		showFilters();
 		

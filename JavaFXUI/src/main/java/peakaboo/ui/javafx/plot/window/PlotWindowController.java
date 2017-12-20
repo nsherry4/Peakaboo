@@ -283,8 +283,12 @@ public class PlotWindowController extends IActofUIController {
             links.add(link);
         }
 
-        Action action = Dialogs.create().title("Please Select Data Format").owner(owner)
-                .masthead("Peakaboo can't decide what format this data is in").message("").showCommandLinks(links);
+        Action action = Dialogs.create()
+        		.title("Please Select Data Format")
+        		.owner(owner)
+                .masthead("Peakaboo can't decide what format this data is in")
+                .message("")
+                .showCommandLinks(links);
 
         if (action == Dialog.Actions.CANCEL) { return null; }
 

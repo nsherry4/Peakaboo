@@ -13,6 +13,7 @@ import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
 import commonenvironment.Env;
+import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.datasource.DataSourceLoader;
 import peakaboo.filter.FilterLoader;
@@ -62,7 +63,7 @@ public class Peakaboo
 	}
 	
 	private static void showSplash() {
-		splash = new SplashScreen(IconFactory.getImageIcon("splash"));
+		splash = new SplashScreen(IconFactory.getImageIcon(Version.splash));
 	}
 	
 	private static void runPeakaboo()
