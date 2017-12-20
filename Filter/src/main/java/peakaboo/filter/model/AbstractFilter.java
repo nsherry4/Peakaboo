@@ -1,8 +1,10 @@
 package peakaboo.filter.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import autodialog.model.Parameter;
@@ -10,6 +12,7 @@ import autodialog.model.Value;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
+import scitypes.Range;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
@@ -28,13 +31,11 @@ import scitypes.Spectrum;
 public abstract class AbstractFilter implements Serializable, FilterPlugin
 {
 	
-	private Map<Integer, Value<?>>			parameters;
-	public boolean							enabled;
+	private List<Value<?>>		parameters;
+	public boolean				enabled;
 	
 	protected ReadOnlySpectrum	previewCache;
 	protected ReadOnlySpectrum	calculatedData;
-
-	private int nextParameterIndex = 0;
 	
 	
 	//==============================================
@@ -54,7 +55,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	
 	public AbstractFilter()
 	{
-		this.parameters = new LinkedHashMap<>();
+		this.parameters = new ArrayList<>();
 		this.enabled = true;
 	}
 
@@ -75,14 +76,14 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 * @see peakaboo.filter.model.Filter#getFilterType()
 	 */
 	@Override
-	public abstract Filter.FilterType getFilterType();
+	public abstract FilterType getFilterType();
 
 
 	/* (non-Javadoc)
 	 * @see peakaboo.filter.model.Filter#getParameters()
 	 */
 	@Override
-	public final Map<Integer, Value<?>> getParameters()
+	public final List<Value<?>> getParameters()
 	{
 		return this.parameters;
 	}
@@ -91,15 +92,14 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 * @see peakaboo.filter.model.Filter#setParameters(java.util.Map)
 	 */
 	@Override
-	public final void setParameters(Map<Integer, Value<?>> params)
+	public final void setParameters(List<Value<?>> params)
 	{
 		parameters = params;
 	}
 	
 	protected void addParameter(Parameter<?> param)
 	{
-		int key = getNextParameterIndex();
-		parameters.put(key, param);
+		parameters.add(param);
 	}
 	
 	protected void addParameter(Parameter<?>... params)
@@ -169,11 +169,6 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 		
 	
 
-	private int getNextParameterIndex()
-	{
-		return nextParameterIndex++;
-	}
-	
 	public String toString()
 	{
 		return this.getFilterName();
@@ -190,37 +185,32 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	
 	
 	
-	
-	public Map<Integer, Object> save() {
-		Map<Integer, Object> valuemap = new HashMap<>();
-		for (Integer key : getParameters().keySet()) {
-			Object value = getParameter(key).getValue();
+	@Override
+	public List<Object> save() {
+		List<Object> valuemap = new ArrayList<>();
+		for (Value<?> param : getParameters()) {
+			Object value = param.getValue();
 			if (value instanceof Filter) {
 				value = new SerializedFilter((Filter)value);
 			}
-			valuemap.put(key, value);
+			valuemap.add(value);
 		}
 		return valuemap;
 	}
 	
-	public void load(Map<Integer, Object> settings) {
-		for (Integer key : getParameters().keySet()) {
-			Object value = settings.get(key);
-			if (value instanceof SerializedFilter) {
-				value = ((SerializedFilter) value).getFilter();
+	@Override
+	public void load(List<Object> settings) {
+		for (Integer i : new Range(0, settings.size()-1)) {
+			Value<Object> param = (Value<Object>) getParameters().get(i);
+			Object loaded = settings.get(i);
+			if (loaded instanceof SerializedFilter) {
+				loaded = ((SerializedFilter) loaded).getFilter();
 			}
-			setParameter(getParameter(key), value);
+			param.setValue(loaded);
 		}
 	}
 	
-	private <T> void setParameter(Value<T> param, Object value) {
-		param.setValue((T)value);
 
-		//Editors will be listening for notifications about imposed 
-		//changes on a Parameter's value. This hook doesn't fire
-		//events for every change, only when instructed to.
-		param.getValueHook().updateListeners((T)value);
-	}
 	
 
 	

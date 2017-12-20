@@ -7,6 +7,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 
@@ -37,9 +38,9 @@ public class FilterSelectionRenderer extends DefaultTreeCellRenderer
 			
 			setToolTipText(TextWrapping.wrapTextForMultiline(f.getFilterDescription()));
 
-		} else if (value instanceof Filter.FilterType) {
+		} else if (value instanceof FilterType) {
 
-			Filter.FilterType ft = (Filter.FilterType) value;
+			FilterType ft = (FilterType) value;
 			setText(ft.toString());
 			
 			setToolTipText(ft.getFilterTypeDescription());

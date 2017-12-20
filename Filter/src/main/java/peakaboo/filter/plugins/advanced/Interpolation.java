@@ -4,7 +4,7 @@ import autodialog.model.Parameter;
 import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -142,9 +142,9 @@ public class Interpolation extends AbstractSimpleFilter
 	}
 
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
-		return Filter.FilterType.ADVANCED;
+		return FilterType.ADVANCED;
 	}
 
 

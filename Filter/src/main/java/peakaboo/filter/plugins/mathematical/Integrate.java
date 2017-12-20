@@ -3,7 +3,7 @@ package peakaboo.filter.plugins.mathematical;
 
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import scitypes.ReadOnlySpectrum;
 
 
@@ -46,10 +46,10 @@ public class Integrate extends AbstractSimpleFilter
 
 
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return Filter.FilterType.MATHEMATICAL;
+		return FilterType.MATHEMATICAL;
 	}
 
 	

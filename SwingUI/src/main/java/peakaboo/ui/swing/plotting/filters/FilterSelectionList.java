@@ -14,6 +14,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -85,11 +86,11 @@ public class FilterSelectionList extends ClearPanel
 			public int getIndexOfChild(Object parent, Object child)
 			{
 
-				Filter.FilterType ft;
+				FilterType ft;
 
-				if (parent instanceof Filter.FilterType) {
+				if (parent instanceof FilterType) {
 
-					ft = (Filter.FilterType) parent;
+					ft = (FilterType) parent;
 					Filter filter = (Filter) child;
 					
 					return controller.getAvailableFilters().indexOf(filter);
@@ -97,7 +98,7 @@ public class FilterSelectionList extends ClearPanel
 
 				} else if (parent instanceof String) {
 
-					ft = (Filter.FilterType) child;
+					ft = (FilterType) child;
 					return ft.ordinal();
 
 				}
@@ -108,9 +109,9 @@ public class FilterSelectionList extends ClearPanel
 			public int getChildCount(Object parent)
 			{
 
-				if (parent instanceof Filter.FilterType) {
+				if (parent instanceof FilterType) {
 
-					Filter.FilterType ft = (Filter.FilterType) parent;
+					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
 					for (Filter f : controller.getAvailableFilters()) {
@@ -119,7 +120,7 @@ public class FilterSelectionList extends ClearPanel
 					return typeCount;
 
 				} else if (parent instanceof String) {
-					return Filter.FilterType.values().length;
+					return FilterType.values().length;
 				}
 				return 0;
 			}
@@ -128,11 +129,11 @@ public class FilterSelectionList extends ClearPanel
 			public Object getChild(Object parent, int index)
 			{
 
-				if (parent instanceof Filter.FilterType) {
+				if (parent instanceof FilterType) {
 
 					index++;
 
-					Filter.FilterType ft = (Filter.FilterType) parent;
+					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
 					for (Filter f : controller.getAvailableFilters()) {
@@ -142,7 +143,7 @@ public class FilterSelectionList extends ClearPanel
 
 				} else if (parent instanceof String) {
 
-					return Filter.FilterType.values()[index];
+					return FilterType.values()[index];
 
 				}
 

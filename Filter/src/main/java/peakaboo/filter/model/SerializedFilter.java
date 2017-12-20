@@ -1,6 +1,6 @@
 package peakaboo.filter.model;
 
-import java.util.Map;
+import java.util.List;
 
 public class SerializedFilter {
 
@@ -9,7 +9,7 @@ public class SerializedFilter {
 	
 	//These values exist only to initialize the filter, not to be read from.
 	private String clazz;
-	private Map<Integer, Object> settings;
+	private List<Object> settings;
 	
 	
 	
@@ -31,11 +31,11 @@ public class SerializedFilter {
 		this.clazz = clazz;
 	}
 
-	public Map<Integer, Object> getSettings() {
+	public List<Object> getSettings() {
 		return filter.save();
 	}
 
-	public void setSettings(Map<Integer, Object> settings) {
+	public void setSettings(List<Object> settings) {
 		this.settings = settings;
 	}
 

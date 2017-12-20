@@ -5,7 +5,7 @@ import autodialog.model.Parameter;
 import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import scitypes.ReadOnlySpectrum;
 
 
@@ -54,9 +54,9 @@ public class DataToWavelet extends AbstractSimpleFilter
 
 
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
-		return Filter.FilterType.ADVANCED;
+		return FilterType.ADVANCED;
 	}
 
 

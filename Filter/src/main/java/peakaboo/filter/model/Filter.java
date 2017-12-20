@@ -1,5 +1,6 @@
 package peakaboo.filter.model;
 
+import java.util.List;
 import java.util.Map;
 
 import autodialog.model.Group;
@@ -10,64 +11,6 @@ import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 public interface Filter {
-
-	enum FilterType
-	{
-		
-		BACKGROUND {
-	
-			@Override
-			public String toString()
-			{
-				return "Background Removal";
-			}			
-		},
-		NOISE {
-	
-			@Override
-			public String toString()
-			{
-				return "Noise Removal";
-			}
-		},
-		MATHEMATICAL {
-	
-			@Override
-			public String toString()
-			{
-				return "Mathematical";
-			}
-	
-		},
-		ADVANCED {
-	
-			@Override
-			public String toString()
-			{
-				return "Advanced";
-			}
-	
-		},
-		PROGRAMMING {
-		
-			@Override
-			public String toString()
-			{
-				return "Programming";
-			}
-						
-		};
-		
-		public String getSubPackage()
-		{
-			return "filters." + name().toLowerCase();
-		}
-		
-		public String getFilterTypeDescription()
-		{
-			return toString() + " Filters";
-		}
-	}
 
 	boolean isEnabled();
 	void setEnabled(boolean enabled);
@@ -85,17 +28,17 @@ public interface Filter {
 	/**
 	 * Returns the type of the filter.
 	 */
-	Filter.FilterType getFilterType();
+	FilterType getFilterType();
 
 	/**
 	 * Returns the parameters
 	 */
-	Map<Integer, Value<?>> getParameters();
+	List<Value<?>> getParameters();
 
 	/**
 	 * Sets the parameters
 	 */
-	void setParameters(Map<Integer, Value<?>> params);
+	void setParameters(List<Value<?>> params);
 
 	/**
 	 * Retrieves the parameter with the assocuated index
@@ -103,7 +46,7 @@ public interface Filter {
 	Value<?> getParameter(Integer key);
 
 	default Group getParameterGroup() {
-		return new Group(getFilterName(), getParameters().values()); 
+		return new Group(getFilterName(), getParameters()); 
 	}
 	
 	/**
@@ -134,9 +77,9 @@ public interface Filter {
 	ReadOnlySpectrum filter(ReadOnlySpectrum data, boolean cache);
 	
 	
-	Map<Integer, Object> save();
+	List<Object> save();
 	
-	void load(Map<Integer, Object> settings);
+	void load(List<Object> settings);
 	
 
 }

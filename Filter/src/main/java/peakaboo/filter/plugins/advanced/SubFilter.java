@@ -12,6 +12,7 @@ import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
@@ -88,9 +89,9 @@ public class SubFilter extends AbstractFilter
 	}
 
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
-		return Filter.FilterType.ADVANCED;
+		return FilterType.ADVANCED;
 	}
 
 	@Override

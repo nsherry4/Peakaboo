@@ -6,7 +6,7 @@ import autodialog.model.Parameter;
 import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
@@ -50,9 +50,9 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 
 
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
-		return Filter.FilterType.NOISE;
+		return FilterType.NOISE;
 	}
 
 

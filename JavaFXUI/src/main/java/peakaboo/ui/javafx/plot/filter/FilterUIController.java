@@ -10,6 +10,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import peakaboo.ui.javafx.change.ChangeController;
 import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;
@@ -120,7 +121,7 @@ public class FilterUIController extends IActofUIController {
 
 	private void populateAdd() {
 
-		for (Filter.FilterType type : Filter.FilterType.values()) {
+		for (FilterType type : FilterType.values()) {
 			getAddListViewByFilterType(type).getItems().clear();
 		}
 		
@@ -133,7 +134,7 @@ public class FilterUIController extends IActofUIController {
 		
 	}
 
-	private ListView<Filter> getAddListViewByFilterType(Filter.FilterType type) {
+	private ListView<Filter> getAddListViewByFilterType(FilterType type) {
 		switch (type) {
 		case ADVANCED:
 			return listAdvanced;

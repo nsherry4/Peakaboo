@@ -2,7 +2,7 @@ package peakaboo.filter.plugins.advanced;
 
 import autodialog.model.Parameter;
 import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import scitypes.ReadOnlySpectrum;
 
 public class Identity extends AbstractSimpleFilter
@@ -41,9 +41,9 @@ public class Identity extends AbstractSimpleFilter
 
 
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
-		return Filter.FilterType.ADVANCED;
+		return FilterType.ADVANCED;
 	}
 
 

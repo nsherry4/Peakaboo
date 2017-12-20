@@ -51,9 +51,9 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
-		return Filter.FilterType.BACKGROUND;
+		return FilterType.BACKGROUND;
 	}
 	
 	private boolean validate(Parameter<?> p)

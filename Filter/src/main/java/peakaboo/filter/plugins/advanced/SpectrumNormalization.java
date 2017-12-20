@@ -4,7 +4,7 @@ import autodialog.model.Parameter;
 import autodialog.model.style.editors.IntegerStyle;
 import autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterType;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
@@ -65,10 +65,10 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	}
 
 	@Override
-	public Filter.FilterType getFilterType()
+	public FilterType getFilterType()
 	{
 		// TODO Auto-generated method stub
-		return Filter.FilterType.ADVANCED;
+		return FilterType.ADVANCED;
 	}
 
 
