@@ -1,10 +1,8 @@
 package peakaboo.filter.model;
 
 import java.util.List;
-import java.util.Map;
 
 import autodialog.model.Group;
-import autodialog.model.Parameter;
 import autodialog.model.Value;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ReadOnlySpectrum;

@@ -10,7 +10,6 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 public interface IFittingController extends IEventfulType<Boolean>

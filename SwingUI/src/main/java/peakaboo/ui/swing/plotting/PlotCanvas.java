@@ -39,7 +39,6 @@ import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 

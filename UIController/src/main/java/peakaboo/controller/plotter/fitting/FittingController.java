@@ -22,7 +22,6 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.PeakTable;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 

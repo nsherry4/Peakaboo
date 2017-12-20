@@ -34,7 +34,6 @@ import peakaboo.ui.javafx.util.Spectrums;
 import scidraw.drawing.DrawingRequest;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
-import scitypes.Spectrum;
 
 
 public class SpectrumUIController extends IActofUIController {

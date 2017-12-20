@@ -1,8 +1,6 @@
 package peakaboo.datasource;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import bolt.plugin.core.BoltPluginSet;
 import bolt.plugin.core.IBoltPluginSet;

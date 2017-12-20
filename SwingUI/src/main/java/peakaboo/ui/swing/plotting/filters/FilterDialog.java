@@ -2,8 +2,6 @@ package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.Window;
 
-import autodialog.model.Group;
-import autodialog.model.Parameter;
 import autodialog.view.editors.AutoDialogButtons;
 import autodialog.view.swing.SwingAutoDialog;
 import autodialog.view.swing.editors.SwingEditorFactory;

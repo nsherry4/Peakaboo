@@ -3,7 +3,6 @@ package peakaboo.ui.swing.plotting.filters;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -13,11 +12,8 @@ import javax.swing.border.TitledBorder;
 
 import autodialog.model.Parameter;
 import autodialog.model.SelectionParameter;
-import autodialog.view.editors.Editor;
 import autodialog.view.swing.SwingAutoPanel;
 import autodialog.view.swing.editors.AbstractSwingEditor;
-import autodialog.view.swing.editors.SwingEditorFactory;
-import eventful.Eventful;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
 import swidget.widgets.Spacing;

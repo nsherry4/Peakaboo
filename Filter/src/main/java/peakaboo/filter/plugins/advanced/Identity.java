@@ -1,6 +1,5 @@
 package peakaboo.filter.plugins.advanced;
 
-import autodialog.model.Parameter;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
 import scitypes.ReadOnlySpectrum;

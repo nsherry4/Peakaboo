@@ -6,7 +6,6 @@ import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 public class SettingsController extends Eventful implements ISettingsController

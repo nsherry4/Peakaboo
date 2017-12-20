@@ -3,7 +3,6 @@ package peakaboo.ui.swing;
 import java.awt.Dimension;
 import java.awt.Window;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;

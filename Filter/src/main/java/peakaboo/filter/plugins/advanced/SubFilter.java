@@ -7,7 +7,6 @@ import autodialog.model.Parameter;
 import autodialog.model.SelectionParameter;
 import autodialog.model.style.CoreStyle;
 import autodialog.model.style.SimpleStyle;
-import autodialog.model.style.Style;
 import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.model.AbstractFilter;

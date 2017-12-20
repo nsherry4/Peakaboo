@@ -29,7 +29,6 @@ import plural.executor.ExecutorSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 
