@@ -83,7 +83,7 @@ public class FilterLoader
 		newPluginLoader.register();
 		
 		//load plugins from the application data directory
-		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins/Filter");
+		File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins/Filter");
 		appDataDir.mkdirs();
 		newPluginLoader.register(appDataDir);
 		pluginLoader = newPluginLoader;

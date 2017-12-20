@@ -742,7 +742,7 @@ public class PlotPanel extends ClearPanel
 		menu.add(createMenuItem(
 				"Open Plugins Folder", null, "Opens the plugins folder to add or remove plugin files",
 				e -> {
-					File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins");
+					File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins");
 					appDataDir.mkdirs();
 					Desktop desktop = Desktop.getDesktop();
 					try {

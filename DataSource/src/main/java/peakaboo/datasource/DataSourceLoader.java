@@ -45,7 +45,7 @@ public class DataSourceLoader
 		javaLoader.register();
 		
 		//load jars in the app data directory
-		File appDataDir = Env.appDataDirectory(Version.program_name, "Plugins/DataSource");
+		File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins/DataSource");
 		appDataDir.mkdirs();
 		javaLoader.register(appDataDir);
 			
