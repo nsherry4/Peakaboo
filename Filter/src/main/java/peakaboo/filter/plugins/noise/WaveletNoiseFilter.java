@@ -3,7 +3,7 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
@@ -38,7 +38,7 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		passes = new Parameter<>("Passes to Transform", new IntegerStyle(), 1);
+		passes = new Parameter<>("Passes to Transform", new IntegerStyle(), 1, this::validate);
 		addParameter(passes);
 	}
 
@@ -56,8 +56,7 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 	}
 
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 		int passCount;
 

@@ -2,7 +2,7 @@ package peakaboo.filter.plugins;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerSpinnerStyle;
+import autodialog.model.style.editors.IntegerSpinnerStyle;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.painters.PainterData;
@@ -27,7 +27,7 @@ public class ExampleFilter extends AbstractFilter {
 	@Override
 	public void initialize()
 	{
-		param = new Parameter<>("Example Parameter", new IntegerSpinnerStyle(), 1);
+		param = new Parameter<>("Example Parameter", new IntegerSpinnerStyle(), 1, p -> p.getValue() > 0);
 		addParameter(param);
 	}
 	
@@ -75,10 +75,6 @@ public class ExampleFilter extends AbstractFilter {
 		
 	}
 
-	@Override
-	public boolean validateParameters() {
-		return (param.getValue() > 0);
-	}
 
 	@Override
 	public boolean pluginEnabled()

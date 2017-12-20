@@ -2,7 +2,7 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
@@ -37,7 +37,7 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		passes = new Parameter<>("Passes to Remove", new IntegerStyle(), 1);
+		passes = new Parameter<>("Passes to Remove", new IntegerStyle(), 1, this::validate);
 		addParameter(passes);
 	}
 
@@ -57,8 +57,7 @@ public final class AggressiveWaveletNoiseFilter extends AbstractSimpleFilter
 	}
 
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 		// remove largest, least significant passes from the wavelet transform data
 		// probably a bad idea to do more than 3 passes, but less than 1 is senseless

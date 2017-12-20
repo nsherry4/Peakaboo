@@ -3,10 +3,10 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.BooleanStyle;
-import autodialog.model.style.styles.IntegerStyle;
-import autodialog.model.style.styles.RealStyle;
-import autodialog.model.style.styles.SeparatorStyle;
+import autodialog.model.style.editors.BooleanStyle;
+import autodialog.model.style.editors.IntegerStyle;
+import autodialog.model.style.editors.RealStyle;
+import autodialog.model.style.editors.SeparatorStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
@@ -44,12 +44,15 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		reach = new Parameter<>("Reach of Polynomial (2n+1)", new IntegerStyle(), 7);
-		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 5);
+		reach = new Parameter<>("Reach of Polynomial (2n+1)", new IntegerStyle(), 7, this::validate);
+		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 5, this::validate);
 		Parameter<?> sep = new Parameter<>(null, new SeparatorStyle(), null);
-		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false);
-		max = new Parameter<>("Smoothing Cutoff: (counts)", new RealStyle(), 4.0f);
+		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false, this::validate);
+		max = new Parameter<>("Smoothing Cutoff: (counts)", new RealStyle(), 4.0f, this::validate);
 		max.setEnabled(false);
+		ignore.getValueHook().addListener(b -> {
+			max.setEnabled(b);
+		});
 		
 		addParameter(reach, order, sep, ignore, max);
 				
@@ -72,11 +75,8 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 
 
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
-
-		
 		// reach shouldn't be any larger than about 30, or else we start to distort the data more than we
 		// would like
 		if (reach.getValue() > 30 || reach.getValue() < 1) return false;
@@ -88,7 +88,6 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 		// polynomial of order k needs at least k+1 data points in set.
 		if (order.getValue() >= reach.getValue() * 2 + 1) return false;
 
-		max.setEnabled(ignore.getValue());
 		
 		return true;
 	}

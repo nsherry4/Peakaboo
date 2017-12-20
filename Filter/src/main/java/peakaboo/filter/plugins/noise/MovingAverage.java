@@ -2,7 +2,7 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
@@ -36,7 +36,7 @@ public final class MovingAverage extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		reach = new Parameter<>("Averaging Reach (2n+1)", new IntegerStyle(), 4);
+		reach = new Parameter<>("Averaging Reach (2n+1)", new IntegerStyle(), 4, this::validate);
 		addParameter(reach);
 	}
 	
@@ -56,11 +56,8 @@ public final class MovingAverage extends AbstractSimpleFilter
 	}
 
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
-
-
 		// has to at least have a 3-point, but cannot exceed a 10*2+1=21-point moving average
 		if (reach.getValue() > 10 || reach.getValue() < 1) return false;
 

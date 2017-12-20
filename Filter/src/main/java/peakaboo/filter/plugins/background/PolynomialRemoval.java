@@ -2,7 +2,7 @@ package peakaboo.filter.plugins.background;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
 import scitypes.ReadOnlySpectrum;
@@ -35,8 +35,8 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		width = new Parameter<>("Width of Polynomial", new IntegerStyle(), 300);
-		power = new Parameter<>("Power of Polynomial", new IntegerStyle(), 3);
+		width = new Parameter<>("Width of Polynomial", new IntegerStyle(), 300, this::validate);
+		power = new Parameter<>("Power of Polynomial", new IntegerStyle(), 3, this::validate);
 		
 		addParameter(width, power);
 	}
@@ -57,8 +57,7 @@ public final class PolynomialRemoval extends AbstractBackgroundFilter
 
 
 
-	@Override
-	public boolean validateCustomParameters()
+	private boolean validate(Parameter<?> p)
 	{
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data

@@ -1,9 +1,9 @@
 package peakaboo.filter.model;
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.BooleanStyle;
-import autodialog.model.style.styles.IntegerStyle;
-import autodialog.model.style.styles.SeparatorStyle;
+import autodialog.model.style.editors.BooleanStyle;
+import autodialog.model.style.editors.IntegerStyle;
+import autodialog.model.style.editors.SeparatorStyle;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;
@@ -26,14 +26,18 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	public AbstractBackgroundFilter()
 	{
 		
-		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90);
-		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE);
+		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90, this::validate);
+		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE, this::validate);
 		
 		Parameter<?> sep1 = new Parameter<>(null, new SeparatorStyle(), null);
 		
-		partial = new Parameter<>("Apply to Subset", new BooleanStyle(), Boolean.FALSE);
-		startindex = new Parameter<>("Start Index", new IntegerStyle(), 0);
-		stopindex = new Parameter<>("Stop Index", new IntegerStyle(), 0);
+		partial = new Parameter<>("Apply to Subset", new BooleanStyle(), Boolean.FALSE, this::validate);
+		startindex = new Parameter<>("Start Index", new IntegerStyle(), 0, this::validate);
+		stopindex = new Parameter<>("Stop Index", new IntegerStyle(), 0, this::validate);
+		partial.getValueHook().addListener(enabled -> {
+			startindex.setEnabled(enabled);
+			stopindex.setEnabled(enabled);
+		});
 		
 		
 		Parameter<?> sep2 = new Parameter<>(null, new SeparatorStyle(), null);
@@ -52,27 +56,20 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 		return Filter.FilterType.BACKGROUND;
 	}
 	
-	@Override
-	public final boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
 		if (percent.getValue() > 100 || percent.getValue() < 0) return false;
 		
-
 		if (startindex.getValue() < 0) return false;
 		if (stopindex.getValue() < startindex.getValue()) return false;
-
 		
-		startindex.setEnabled(partial.getValue());
-		stopindex.setEnabled(partial.getValue());
-		
-		return validateCustomParameters();
+		return true;
 		
 	}
 	
-	public abstract boolean validateCustomParameters();
 	
 	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent);
 	

@@ -3,7 +3,7 @@ package peakaboo.filter.plugins.background;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
 import scitypes.ReadOnlySpectrum;
@@ -37,8 +37,8 @@ public final class LinearTrimRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		iterations = new Parameter<>("Iterations", new IntegerStyle(), 2);
-		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100);
+		iterations = new Parameter<>("Iterations", new IntegerStyle(), 2, this::validate);
+		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100, this::validate);
 		
 		addParameter(iterations, width);
 	}
@@ -60,10 +60,8 @@ public final class LinearTrimRemoval extends AbstractBackgroundFilter
 	}
 	
 
-	@Override
-	public boolean validateCustomParameters()
+	private boolean validate(Parameter<?> p)
 	{
-
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
 		if (width.getValue() > 400 || width.getValue() < 10) return false;

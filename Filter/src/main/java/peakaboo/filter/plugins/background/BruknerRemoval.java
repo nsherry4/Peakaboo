@@ -3,7 +3,7 @@ package peakaboo.filter.plugins.background;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
 import scitypes.ReadOnlySpectrum;
@@ -36,8 +36,8 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100);
-		iterations = new Parameter<>("Iterations", new IntegerStyle(), 10);
+		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100, this::validate);
+		iterations = new Parameter<>("Iterations", new IntegerStyle(), 10, this::validate);
 		
 		addParameter(width, iterations);
 	}
@@ -59,11 +59,8 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	}
 
 
-	@Override
-	public boolean validateCustomParameters()
+	private boolean validate(Parameter<?> p)
 	{
-
-
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
 		if (width.getValue() > 400 || width.getValue() < 10) return false;

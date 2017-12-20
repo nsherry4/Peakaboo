@@ -1,7 +1,7 @@
 package peakaboo.filter.plugins.advanced;
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
@@ -27,7 +27,7 @@ public class WaveletToData extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		amount = new Parameter<>("Passes", new IntegerStyle(), 1);
+		amount = new Parameter<>("Passes", new IntegerStyle(), 1, this::validate);
 		addParameter(amount);
 	}
 	
@@ -62,8 +62,7 @@ public class WaveletToData extends AbstractSimpleFilter
 	}
 
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 		
 		if (amount.getValue() < 1) return false;

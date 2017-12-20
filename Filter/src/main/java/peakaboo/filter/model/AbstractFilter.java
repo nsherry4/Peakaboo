@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import autodialog.model.Parameter;
+import autodialog.model.Value;
 import peakaboo.common.Version;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
@@ -27,7 +28,7 @@ import scitypes.Spectrum;
 public abstract class AbstractFilter implements Serializable, FilterPlugin
 {
 	
-	private Map<Integer, Parameter<?>>		parameters;
+	private Map<Integer, Value<?>>			parameters;
 	public boolean							enabled;
 	
 	protected ReadOnlySpectrum	previewCache;
@@ -81,7 +82,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 * @see peakaboo.filter.model.Filter#getParameters()
 	 */
 	@Override
-	public final Map<Integer, Parameter<?>> getParameters()
+	public final Map<Integer, Value<?>> getParameters()
 	{
 		return this.parameters;
 	}
@@ -90,7 +91,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 * @see peakaboo.filter.model.Filter#setParameters(java.util.Map)
 	 */
 	@Override
-	public final void setParameters(Map<Integer, Parameter<?>> params)
+	public final void setParameters(Map<Integer, Value<?>> params)
 	{
 		parameters = params;
 	}
@@ -111,7 +112,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	 * @see peakaboo.filter.model.Filter#getParameter(java.lang.Integer)
 	 */
 	@Override
-	public final Parameter<?> getParameter(Integer key)
+	public final Value<?> getParameter(Integer key)
 	{
 		return parameters.get(key);
 	}
@@ -134,11 +135,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 	@Override
 	public abstract PlotPainter getPainter();
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#validateParameters()
-	 */
-	@Override
-	public abstract boolean validateParameters();
+
 	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache);
 	
 	/* (non-Javadoc)
@@ -216,7 +213,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin
 		}
 	}
 	
-	private <T> void setParameter(Parameter<T> param, Object value) {
+	private <T> void setParameter(Value<T> param, Object value) {
 		param.setValue((T)value);
 
 		//Editors will be listening for notifications about imposed 

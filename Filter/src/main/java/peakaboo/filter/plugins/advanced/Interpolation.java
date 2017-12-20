@@ -1,7 +1,7 @@
 package peakaboo.filter.plugins.advanced;
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
@@ -18,7 +18,7 @@ public class Interpolation extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		size = new Parameter<>("New Size", new IntegerStyle(), 2048);
+		size = new Parameter<>("New Size", new IntegerStyle(), 2048, p-> p.getValue() > 10);
 		addParameter(size);
 	}
 	
@@ -27,11 +27,6 @@ public class Interpolation extends AbstractSimpleFilter
 		return "1.0";
 	}
 
-	@Override
-	public boolean validateParameters()
-	{
-		return size.getValue() > 10;
-	}
 
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)

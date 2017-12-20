@@ -14,7 +14,7 @@ import javax.swing.border.TitledBorder;
 import autodialog.model.Parameter;
 import autodialog.model.SelectionParameter;
 import autodialog.view.editors.Editor;
-import autodialog.view.swing.AutoPanel;
+import autodialog.view.swing.SwingAutoPanel;
 import autodialog.view.swing.editors.AbstractSwingEditor;
 import autodialog.view.swing.editors.SwingEditorFactory;
 import eventful.Eventful;
@@ -28,11 +28,11 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 {
 	
 	//Param containing the subfilter
-	SelectionParameter<Filter>	param;
+	SelectionParameter<Filter>	selparam;
 	
 	//GUI
 	JPanel						control;
-	AutoPanel					subfilterView;
+	JComponent					subfilterView;
 	JPanel						subfilterPanel;
 	JComboBox<Filter>			filterCombo;
 	
@@ -44,9 +44,10 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 	@Override
 	public void initialize(Parameter<Filter> p)
 	{
-		this.param = (SelectionParameter<Filter>) p;
+		this.param = p;
+		this.selparam = (SelectionParameter<Filter>) p;
 		
-		filterCombo = new JComboBox<Filter>(param.getPossibleValues().toArray(new AbstractFilter[0]));
+		filterCombo = new JComboBox<Filter>(selparam.getPossibleValues().toArray(new AbstractFilter[0]));
 		control = new JPanel();
 		control.setLayout(new BorderLayout());
 		control.add(filterCombo, BorderLayout.NORTH);
@@ -63,8 +64,12 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 			
 			public void actionPerformed(ActionEvent e)
 			{
+				getEditorValueHook().updateListeners(getEditorValue());
+				if (!param.setValue((Filter)filterCombo.getSelectedItem())) {
+					validateFailed();
+				}
 				changeFilter((Filter)filterCombo.getSelectedItem());
-				getValueHook().updateListeners(getEditorValue());
+				
 			}
 		});
 
@@ -97,18 +102,14 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 		subfilterPanel.setVisible(f.getParameters().size() != 0);
 		if (subfilterView != null) subfilterPanel.removeAll();
 		
-		//set the new filter
+		//set the new filter, and hook into the top level parameter group to invalidate the parent 
+		//filter when the subfilter changes
 		subfilter = f;
+		subfilter.getParameterGroup().getValueHook().addListener(o -> subfilterInvalidated());
 		
-		
-		//subfilterView = new SingleFilterView(subfilter, controller, false);
-		FilterDialogController filerDialogController = new FilterDialogController(f){
 
-			@Override
-			public void parameterUpdated(Parameter<?> param) {
-				SubfilterEditor.this.getValueHook().updateListeners(f);
-			}};
-		subfilterView = new AutoPanel(filerDialogController.getEditors());
+		subfilterView = new SwingAutoPanel(f.getParameterGroup());
+		
 	
 		
 		JScrollPane scroller = new JScrollPane(subfilterView);
@@ -150,13 +151,12 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 
 
 	@Override
-	public void setFromParameter()
+	public void setEditorValue(Filter value)
 	{
-		
 		//in cases where the model has changed the selected filter, we must find 
 		//the filter object of the same class name in the combobox list and replace 
 		//it with the new filter.
-		String filterName = param.getValue().getClass().getName();
+		String filterName = value.getClass().getName();
 		for (int i = 0; i < filterCombo.getItemCount(); i++) {
 			if (filterCombo.getItemAt(i).getClass().getName().equals(filterName)) {
 				filterCombo.removeItemAt(i);
@@ -166,7 +166,7 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 			}
 		}
 
-		changeFilter((Filter)param.getValue());
+		changeFilter(value);
 	}
 	
 	@Override
@@ -175,15 +175,14 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 		return getFilter();
 	}
 
-	@Override
 	public void validateFailed() {
 		setFromParameter();
 	}
-
-	@Override
-	public Parameter<Filter> getParameter() {
-		return param;
+	
+	private void subfilterInvalidated() {
+		param.getValueHook().updateListeners(subfilter);
 	}
+
 	
 	
 }

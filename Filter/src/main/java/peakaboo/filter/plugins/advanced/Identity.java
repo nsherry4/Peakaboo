@@ -1,5 +1,6 @@
 package peakaboo.filter.plugins.advanced;
 
+import autodialog.model.Parameter;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
@@ -59,11 +60,5 @@ public class Identity extends AbstractSimpleFilter
 		return false;
 	}
 
-
-	@Override
-	public boolean validateParameters()
-	{
-		return true;
-	}
 
 }

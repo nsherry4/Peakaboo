@@ -1,8 +1,8 @@
 package peakaboo.filter.plugins.advanced;
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
-import autodialog.model.style.styles.RealStyle;
+import autodialog.model.style.editors.IntegerStyle;
+import autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ISpectrum;
@@ -24,9 +24,9 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		pChannel = new Parameter<>("Channel", new IntegerStyle(), 1);
+		pChannel = new Parameter<>("Channel", new IntegerStyle(), 1, this::validate);
 		addParameter(pChannel);
-		pHeight = new Parameter<>("Intensity", new RealStyle(), 10f);
+		pHeight = new Parameter<>("Intensity", new RealStyle(), 10f, this::validate);
 		addParameter(pHeight);
 	}
 	
@@ -79,8 +79,7 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 		return true;
 	}
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 		
 		int channel = pChannel.getValue();

@@ -15,8 +15,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import autodialog.view.swing.AutoDialog;
-import autodialog.view.swing.AutoDialog.AutoDialogButtons;
+import autodialog.view.editors.AutoDialogButtons;
+import autodialog.view.swing.SwingAutoDialog;
 import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
@@ -41,7 +41,7 @@ public class EditButtonEditor extends DefaultCellEditor
 	private String					label;
 	private boolean					isPushed;
 	
-	private Map<Filter, AutoDialog> settingsDialogs;
+	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
 
 	public EditButtonEditor(IFilteringController controller, Container owner)

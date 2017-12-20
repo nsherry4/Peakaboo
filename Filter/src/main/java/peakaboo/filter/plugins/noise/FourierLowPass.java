@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 import autodialog.model.Parameter;
 import autodialog.model.SelectionParameter;
-import autodialog.model.style.styles.DropDownStyle;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.DropDownStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
@@ -45,15 +45,14 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	{
 		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFTStyle.LINEAR);
 		rolloff.setPossibleValues(Arrays.asList(FFTStyle.values()));
-		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerStyle(), 8);
-		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerStyle(), 6);
+		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerStyle(), 8, this::validate);
+		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerStyle(), 6, this::validate);
 		
 		addParameter(rolloff, startWavelength, endWavelength);
 	}
 	
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 
 		int start, end;

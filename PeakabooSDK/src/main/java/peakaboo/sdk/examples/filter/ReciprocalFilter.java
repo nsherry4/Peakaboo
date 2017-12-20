@@ -3,7 +3,7 @@ package peakaboo.sdk.examples.filter;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.BooleanStyle;
+import autodialog.model.style.editors.BooleanStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
@@ -53,13 +53,6 @@ public class ReciprocalFilter extends AbstractSimpleFilter
 	public FilterType getFilterType()
 	{
 		return FilterType.MATHEMATICAL;
-	}
-
-	@Override
-	public boolean validateParameters()
-	{
-		//no parameters requiring validate
-		return true;
 	}
 
 	@Override

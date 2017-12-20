@@ -2,8 +2,8 @@ package peakaboo.filter.plugins.noise;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.IntegerStyle;
-import autodialog.model.style.styles.RealStyle;
+import autodialog.model.style.editors.IntegerStyle;
+import autodialog.model.style.editors.RealStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
@@ -37,9 +37,9 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		iterations = new Parameter<>("Iterations", new IntegerStyle(), 20);
-		multiplier = new Parameter<>("Linear Force Multiplier", new RealStyle(), 20.0f);
-		falloff = new Parameter<>("Exponential Force Falloff Rate", new RealStyle(), 2.0f);
+		iterations = new Parameter<>("Iterations", new IntegerStyle(), 20, this::validate);
+		multiplier = new Parameter<>("Linear Force Multiplier", new RealStyle(), 20.0f, this::validate);
+		falloff = new Parameter<>("Exponential Force Falloff Rate", new RealStyle(), 2.0f, this::validate);
 		
 		addParameter(iterations, multiplier, falloff);
 		
@@ -62,8 +62,7 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	}
 
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 
 		double mult, power;

@@ -2,7 +2,9 @@ package peakaboo.filter.model;
 
 import java.util.Map;
 
+import autodialog.model.Group;
 import autodialog.model.Parameter;
+import autodialog.model.Value;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -88,18 +90,22 @@ public interface Filter {
 	/**
 	 * Returns the parameters
 	 */
-	Map<Integer, Parameter<?>> getParameters();
+	Map<Integer, Value<?>> getParameters();
 
 	/**
 	 * Sets the parameters
 	 */
-	void setParameters(Map<Integer, Parameter<?>> params);
+	void setParameters(Map<Integer, Value<?>> params);
 
 	/**
 	 * Retrieves the parameter with the assocuated index
 	 */
-	Parameter<?> getParameter(Integer key);
+	Value<?> getParameter(Integer key);
 
+	default Group getParameterGroup() {
+		return new Group(getFilterName(), getParameters().values()); 
+	}
+	
 	/**
 	 * This method is called once before the filter is used.  
 	 */
@@ -107,11 +113,11 @@ public interface Filter {
 
 	PlotPainter getPainter();
 
-	/**
-	 * Called whenever a parameter value is changed.
-	 * @return true if the new values are valid, false otherwise
-	 */
-	boolean validateParameters();
+//	/**
+//	 * Forces a check to ensure the Fitler's Parameters are valid.
+//	 * @return true if the new values are valid, false otherwise
+//	 */
+//	boolean validateParameters();
 
 	/**
 	 * Returns true if this filter can filter an arbitrarily-sized subset of the current data, false otherwise

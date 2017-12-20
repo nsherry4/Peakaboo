@@ -8,7 +8,7 @@ import autodialog.model.SelectionParameter;
 import autodialog.model.style.CoreStyle;
 import autodialog.model.style.SimpleStyle;
 import autodialog.model.style.Style;
-import autodialog.model.style.styles.IntegerStyle;
+import autodialog.model.style.editors.IntegerStyle;
 import peakaboo.filter.FilterLoader;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
@@ -37,8 +37,8 @@ public class SubFilter extends AbstractFilter
 		}
 		
 		
-		begin = new Parameter<>("Start Index", new IntegerStyle(), 0);
-		end = new Parameter<>("Stop Index", new IntegerStyle(), 10);
+		begin = new Parameter<>("Start Index", new IntegerStyle(), 0, this::validate);
+		end = new Parameter<>("Stop Index", new IntegerStyle(), 10, this::validate);
 		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0));
 		filter.setPossibleValues(filters);
 		
@@ -122,8 +122,7 @@ public class SubFilter extends AbstractFilter
 		return true;
 	}
 
-	@Override
-	public boolean validateParameters()
+	private boolean validate(Parameter<?> p)
 	{
 		
 		int start = begin.getValue();
@@ -133,7 +132,8 @@ public class SubFilter extends AbstractFilter
 		if (stop < 0) return false;
 		if (stop < start) return false;
 		
-		return filter.getValue().validateParameters();
+		return true;
+
 	}
 	
 	

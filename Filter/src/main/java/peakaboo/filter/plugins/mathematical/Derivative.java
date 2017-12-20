@@ -52,14 +52,6 @@ public class Derivative extends AbstractSimpleFilter
 		return Filter.FilterType.MATHEMATICAL;
 	}
 
-
-	@Override
-	public boolean validateParameters()
-	{
-		// TODO Auto-generated method stub
-		return true;
-	}
-
 	@Override
 	public boolean pluginEnabled()
 	{

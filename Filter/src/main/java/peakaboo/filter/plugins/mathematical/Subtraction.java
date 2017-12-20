@@ -2,7 +2,7 @@ package peakaboo.filter.plugins.mathematical;
 
 
 import autodialog.model.Parameter;
-import autodialog.model.style.styles.RealStyle;
+import autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.Filter;
 import scitypes.ReadOnlySpectrum;
@@ -56,11 +56,6 @@ public class Subtraction extends AbstractSimpleFilter
 		return Filter.FilterType.MATHEMATICAL;
 	}
 
-	@Override
-	public boolean validateParameters()
-	{
-		return true;
-	}
 
 	@Override
 	public boolean pluginEnabled()
