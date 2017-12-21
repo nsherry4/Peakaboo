@@ -401,7 +401,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				.map(t1 -> other.transitions.stream().map(t2 ->t1.summation(t2)).collect(toList()))
 				.collect(toList());
 
-		List<Transition> allPileups = concat(allPileupLists);
+		List<Transition> allPileups = new ArrayList<>();
+		for (List<Transition> l : allPileupLists) {
+			allPileups.addAll(l);
+		}
 		allPileups.forEach(newTransitionSeries::setTransition);
 
 		newTransitionSeries.componentSeries.add(this);

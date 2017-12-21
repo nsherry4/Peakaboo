@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import eventful.EventfulTypeListener;
+import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
@@ -23,7 +24,8 @@ import swidget.widgets.ClearPanel;
 public class CurveFittingView extends ClearPanel implements Changeable
 {
 
-	protected IFittingController		controller;
+	protected IFittingController	controller;
+	private IPlotController 		plotController;
 
 	private final String			FITTED		= "Fitted";
 	private final String			UNFITTED	= "Unfitted";
@@ -39,13 +41,16 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	protected JPanel				cardPanel;
 	protected CardLayout			card;
+
+	
 	
 
-	public CurveFittingView(IFittingController _controller, PlotCanvas canvas)
+	public CurveFittingView(IFittingController _controller, IPlotController plotController, PlotCanvas canvas)
 	{
 		super();
 
 		this.controller = _controller;
+		this.plotController = plotController;
 
 		setPreferredSize(new Dimension(200, getPreferredSize().height));
 
@@ -105,13 +110,22 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		changed();
 	}
 	
-	public void smartAdd()
+	public void guidedAdd()
 	{
 		smartPanel.resetSelectors();
 		smartPanel.setSelectionMode(true);
 		card.show(cardPanel, SMART);
 		changed();
 	}
+	
+	public void smartAdd() {
+		if (plotController.data().hasDataSet() && plotController.settings().getMaxEnergy() > 0f) {
+			guidedAdd();
+		} else {
+			elementalAdd();
+		}
+	}
+
 	
 	
 	public void dialogClose()

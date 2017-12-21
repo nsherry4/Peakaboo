@@ -73,6 +73,8 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
+import peakaboo.curvefit.model.FittingModel;
+import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
@@ -99,6 +101,8 @@ import scidraw.swing.SavePicture;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconSize;
@@ -361,7 +365,7 @@ public class PlotPanel extends ClearPanel
 		});
 		
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.add(new CurveFittingView(controller.fitting(), canvas), 0);
+		tabs.add(new CurveFittingView(controller.fitting(), controller, canvas), 0);
 		tabs.add(new FiltersetViewer(controller.filtering(), container.getContainer()), 1);
 
 		
@@ -423,13 +427,7 @@ public class PlotPanel extends ClearPanel
 		c.fill = GridBagConstraints.NONE;
 
 		ImageButton ibutton = new ToolbarImageButton("document-open", "Open", "Open a new data set");
-		ibutton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				actionOpenData();
-			}
-		});
+		ibutton.addActionListener(e -> actionOpenData());
 		toolbar.add(ibutton, c);
 
 		// controls.add(button);
@@ -438,13 +436,7 @@ public class PlotPanel extends ClearPanel
 			StockIcon.DEVICE_CAMERA,
 			"Save Image",
 			"Save a picture of the current plot");
-		toolbarSnapshot.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				actionSavePicture();
-			}
-		});
+		toolbarSnapshot.addActionListener(e -> actionSavePicture());
 		c.gridx += 1;
 		toolbar.add(toolbarSnapshot, c);
 
@@ -452,13 +444,7 @@ public class PlotPanel extends ClearPanel
 			StockIcon.BADGE_INFO,
 			"Scan Info",
 			"Displays extended information about this data set");
-		toolbarInfo.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				actionShowInfo();
-			}
-		});
+		toolbarInfo.addActionListener(e -> actionShowInfo());
 		c.gridx += 1;
 		toolbarInfo.setEnabled(false);
 		toolbar.add(toolbarInfo, c);
@@ -468,18 +454,14 @@ public class PlotPanel extends ClearPanel
 		
 		
 		toolbarMap = new DropdownImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", IconSize.TOOLBAR_SMALL, ToolbarImageButton.significantLayout, mapMenu);
-		toolbarMap.addListener(new EventfulEnumListener<Actions>() {
-			
-			public void change(Actions message)
+		toolbarMap.addListener(message -> {
+			switch (message)
 			{
-				switch (message)
-				{
-					case MAIN: 
-						actionMap(FittingTransform.AREA);
-						break;
-					case MENU:
-						break;
-				}
+				case MAIN: 
+					actionMap(FittingTransform.AREA);
+					break;
+				case MENU:
+					break;
 			}
 		});
 		
@@ -512,28 +494,20 @@ public class PlotPanel extends ClearPanel
 
 		c2.gridx += 1;
 		energyControls.add(energy, c2);
-		energyListener = new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e)
-			{
-
-				float value = ((Double) energy.getValue()).floatValue();
-				controller.settings().setMaxEnergy(value);
-
-			}
-		};
-		energy.addChangeListener(energyListener);
-		c.gridx += 1;
+		energy.addChangeListener(e -> controller.settings().setMaxEnergy(((Double) energy.getValue()).floatValue()));
+		c2.gridx += 1;
+		
+		ImageButton energyGuess = new ToolbarImageButton("energy-auto", "", "Try to detect the correct max energy value from the fitted elements");
+		energyControls.add(energyGuess, c2);
+		energyGuess.addActionListener(e -> {
+			actionGuessMaxEnergy();
+		});
+		
+		c.gridx += 1;		
 		toolbar.add(energyControls, c);
 
 		ibutton = new ToolbarImageButton(StockIcon.MISC_ABOUT, "About");
-		ibutton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				actionAbout();
-			}
-		});
+		ibutton.addActionListener(e -> actionAbout());
 		c.gridx += 1;
 		toolbar.add(ibutton, c);
 
@@ -544,13 +518,7 @@ public class PlotPanel extends ClearPanel
 	{
 		final JMenuItem mapArea = createMenuItem(
 				"Map Fitting Area", null, null, 
-				new ActionListener() {
-			
-					public void actionPerformed(ActionEvent e)
-					{
-						actionMap(FittingTransform.AREA);
-					}
-				},
+				e -> actionMap(FittingTransform.AREA),
 				null, null
 		);
 		mapArea.setEnabled(false);
@@ -559,26 +527,17 @@ public class PlotPanel extends ClearPanel
 		
 		final JMenuItem mapHeights = createMenuItem(
 				"Map Fitting Heights", null, null, 
-				new ActionListener() {
-			
-					public void actionPerformed(ActionEvent e)
-					{
-						actionMap(FittingTransform.HEIGHT);
-					}
-				},
+				e -> actionMap(FittingTransform.HEIGHT),
 				null, null
 		);
 		mapHeights.setEnabled(false);
 		menu.add(mapHeights);
 		
 		
-		controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String message)
-			{
-				mapHeights.setEnabled(controller.fitting().canMap());
-				mapArea.setEnabled(controller.fitting().canMap());
-			}});
+		controller.addListener(message -> {
+			mapHeights.setEnabled(controller.fitting().canMap());
+			mapArea.setEnabled(controller.fitting().canMap());
+		});
 		
 	}
 
@@ -1612,6 +1571,47 @@ public class PlotPanel extends ClearPanel
 		
 		new PropertyDialogue("Dataset Information", "Extended Information", container.getWindow(), properties);
 
+	}
+	
+	public void actionGuessMaxEnergy() {
+		
+		if (controller == null) return;
+		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
+			JOptionPane.showMessageDialog(this, "Detecting a max energy value requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without an energy level set.");
+			return;
+		}
+		
+		float bestEnergy = 0f;
+		float bestSum = 0f;
+		
+		//build a new model for experimenting with
+		FittingSet fits = new FittingSet();
+		for (TransitionSeries ts : controller.fitting().getVisibleTransitionSeries()) {
+			fits.addTransitionSeries(ts);
+		}
+		
+		ReadOnlySpectrum average = controller.data().getDataSet().averagePlot();
+		
+		for (float energy = 0.05f; energy <= 50f; energy += 0.05f) {
+			fits.setEnergyPerChannel(energy / average.size());
+			float sum = fits.calculateAreaUnderFit(average);
+			if (sum > bestSum) {
+				bestSum = sum;
+				bestEnergy = energy;
+			}
+		}
+		
+		for (float energy = bestEnergy - 0.05f; energy <= bestEnergy + 0.05f; energy += 0.01f) {
+			fits.setEnergyPerChannel(energy / average.size());
+			float sum = fits.calculateAreaUnderFit(average);
+			if (sum > bestSum) {
+				bestSum = sum;
+				bestEnergy = energy;
+			}
+		}
+		
+		controller.settings().setMaxEnergy(bestEnergy);
+		
 	}
 
 }

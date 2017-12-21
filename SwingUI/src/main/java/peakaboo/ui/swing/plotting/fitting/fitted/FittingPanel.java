@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JMenuItem;
@@ -21,7 +22,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
-import fava.functionable.FArray;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
@@ -75,7 +75,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).stream().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
+				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 					
 				if (tss.size() == 0) return;
 				
@@ -93,7 +93,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 				
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).stream().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
+				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 					
 				if (tss.size() == 0) return;
 				for (TransitionSeries ts : tss)
@@ -109,7 +109,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			public void down()
 			{
 				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = FArray.boxi(rows).stream().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
+				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 					
 				if (tss.size() == 0) return;
 				
@@ -141,24 +141,24 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 
 		
-		ListControlButton fitwizard = new ListControlButton(StockIcon.EDIT_SORT_DES, "Optimal Fitting", "Attempt to find the optimal fitting") {
-			
-			@Override
-			public void setEnableState(ElementCount ec)
-			{
-				this.setEnabled(ec == ElementCount.MANY);
-			}
-		};
-		
-		controls.addButton(fitwizard, 4);
-		fitwizard.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				
-				controller.optimizeTransitionSeriesOrdering();
-			}
-		});
+//		ListControlButton fitwizard = new ListControlButton(StockIcon.EDIT_SORT_DES, "Optimal Fitting", "Attempt to find the optimal fitting") {
+//			
+//			@Override
+//			public void setEnableState(ElementCount ec)
+//			{
+//				this.setEnabled(ec == ElementCount.MANY);
+//			}
+//		};
+//		
+//		controls.addButton(fitwizard, 4);
+//		fitwizard.addActionListener(new ActionListener() {
+//			
+//			public void actionPerformed(ActionEvent e)
+//			{
+//				
+//				controller.optimizeTransitionSeriesOrdering();
+//			}
+//		});
 		
 		
 		
@@ -215,7 +215,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 			public void actionPerformed(ActionEvent e)
 			{
-				owner.smartAdd();
+				owner.guidedAdd();
 			}
 		});
 

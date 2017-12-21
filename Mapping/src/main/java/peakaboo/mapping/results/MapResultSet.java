@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
-import fava.functionable.Functionable;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
@@ -23,7 +23,7 @@ import scitypes.SpectrumCalculations;
  * 
  */
 
-public class MapResultSet extends Functionable<MapResult> implements Cloneable
+public class MapResultSet implements Cloneable
 {
 
 	private List<MapResult>	maps;
@@ -69,6 +69,10 @@ public class MapResultSet extends Functionable<MapResult> implements Cloneable
 		
 	}
 	
+	
+	public Stream<MapResult> stream() {
+		return maps.stream();
+	}
 	
 	/**
 	 * Get the size of a map

@@ -1,6 +1,5 @@
 package peakaboo.controller.mapper.maptab;
 
-import static fava.Fn.unique;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import eventful.EventfulType;
 import peakaboo.calculations.Interpolation;
@@ -642,11 +642,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private String getShortDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = list.stream().map(ts -> ts.element.toString()).collect(toList());
-		
-		//trim out the duplicated
-		elementNames = unique(elementNames);
-
+		Set<String> elementNames = list.stream().map(ts -> ts.element.toString()).collect(Collectors.toSet());
 		String title = elementNames.stream().collect(joining(", "));
 		
 		if (title == null) return "-";

@@ -316,7 +316,7 @@ public class FittingSet implements Serializable
 	// don't need to synchronize this, since the only interaction
 	// it has with fitting data is in the calculateFittings() function
 	// which IS synchronized
-	public float calculateAreaUnderFit(Spectrum data)
+	public float calculateAreaUnderFit(ReadOnlySpectrum data)
 	{
 
 		float result;

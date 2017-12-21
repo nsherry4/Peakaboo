@@ -4,11 +4,11 @@ package peakaboo.curvefit.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import fava.Fn;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
@@ -305,23 +305,32 @@ public class TSOrdering
 		
 		
 		//remove any duplicates we might have created while adding the summations
-		tss = Fn.unique(tss);
+		tss = new ArrayList<>(new HashSet<>(tss));
 		
 
 		//sort first by how close they are to the channel in quesiton
-		Fn.sortBy(tss, new Comparator<TransitionSeries>() {
+		tss.sort((ts1, ts2) -> {
+			Double prox1, prox2;
 
-			public int compare(TransitionSeries ts1, TransitionSeries ts2)
-			{
-				Double prox1, prox2;
+			prox1 = Math.abs(ts1.getProximityToEnergy(energy));
+			prox2 = Math.abs(ts2.getProximityToEnergy(energy));
 
-				prox1 = Math.abs(ts1.getProximityToEnergy(energy));
-				prox2 = Math.abs(ts2.getProximityToEnergy(energy));
-
-				return prox1.compareTo(prox2);
-
-			}
-		}, a -> a);
+			return prox1.compareTo(prox2);
+		});
+		
+//		Fn.sortBy(tss, new Comparator<TransitionSeries>() {
+//
+//			public int compare(TransitionSeries ts1, TransitionSeries ts2)
+//			{
+//				Double prox1, prox2;
+//
+//				prox1 = Math.abs(ts1.getProximityToEnergy(energy));
+//				prox2 = Math.abs(ts2.getProximityToEnergy(energy));
+//
+//				return prox1.compareTo(prox2);
+//
+//			}
+//		}, a -> a);
 		
 		//take the top n based on position alone
 		tss = tss.subList(0, 15);
