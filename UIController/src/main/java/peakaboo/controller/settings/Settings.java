@@ -70,7 +70,7 @@ public class Settings
 		}
 
 		
-		System.out.println("bad scans restore");
+		//System.out.println("bad scans restore");
 		dataController.getDiscards().clear();
 		for (Integer i : data.badScans)
 		{

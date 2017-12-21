@@ -110,6 +110,8 @@ public class EditButtonEditor extends DefaultCellEditor
 					dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, null);
 				}
 				
+				dialog.setHelpMessage(filter.getFilterDescription());
+				dialog.setHelpTitle(filter.getFilterName());
 				settingsDialogs.put(filter, dialog);
 				dialog.initialize();
 			} else {

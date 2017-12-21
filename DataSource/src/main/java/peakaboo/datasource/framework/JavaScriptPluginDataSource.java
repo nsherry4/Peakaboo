@@ -46,7 +46,6 @@ public class JavaScriptPluginDataSource implements PluginDataSource, BoltScriptP
 	
 	private <T> T lookup(String var, T fallback) {
 		Object o = js.get(var);
-		if (o != null) System.out.println(o.getClass());
 		T val = (T)o;
 		if (val != null) {
 			return val;

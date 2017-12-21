@@ -6,15 +6,18 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
-import org.controlsfx.dialog.Dialogs.CommandLink;
+import org.controlsfx.dialog.CommandLinksDialog;
+import org.controlsfx.dialog.CommandLinksDialog.CommandLinksButtonType;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Tab;
@@ -198,7 +201,10 @@ public class PlotWindowController extends IActofUIController {
     
     public void onMapFittingsHeight() throws IOException {
     	//TODO:
-    	Dialogs.create().message("TODO").showInformation();
+    	Alert alert = new Alert(AlertType.INFORMATION);
+    	alert.setContentText("This feature not yet implemented");
+    	alert.setTitle("TODO");
+    	alert.showAndWait();
     }
     
 
@@ -266,8 +272,11 @@ public class PlotWindowController extends IActofUIController {
             DataSource dsp = pickDSP(formats, getNode());
             if (dsp != null) loadFiles(files, dsp);
         } else if (formats.size() == 0) {
-            Dialogs.create().title("Open Failed")
-                    .message("Could not determine the data format of the selected file(s)").showError();
+        	Alert openFailed = new Alert(AlertType.ERROR);
+        	openFailed.setTitle("Open Failed");
+        	openFailed.setHeaderText("Peakaboo could not open the selected files.");
+        	openFailed.setContentText("Could not determine the data format of the selected file(s).");
+        	openFailed.showAndWait();
         } else {
             loadFiles(files, formats.get(0));
         }
@@ -276,26 +285,27 @@ public class PlotWindowController extends IActofUIController {
 
     private static DataSource pickDSP(List<DataSource> formats, Node owner) {
 
-        List<CommandLink> links = new ArrayList<>();
-        CommandLink link;
+    	    	
+        List<CommandLinksButtonType> links = new ArrayList<>();
+    	CommandLinksButtonType link;
         for (DataSource format : formats) {
-            link = new CommandLink(format.getFileFormat().getFormatName(), format.getFileFormat().getFormatDescription());
+            link = new CommandLinksButtonType(format.getFileFormat().getFormatName(), format.getFileFormat().getFormatDescription(), false);
             links.add(link);
         }
 
-        Action action = Dialogs.create()
-        		.title("Please Select Data Format")
-        		.owner(owner)
-                .masthead("Peakaboo can't decide what format this data is in")
-                .message("")
-                .showCommandLinks(links);
-
-        if (action == Dialog.Actions.CANCEL) { return null; }
-
-        link = (CommandLink) action;
+        CommandLinksDialog dialog = new CommandLinksDialog(links);
+        dialog.setTitle("Please Select Data Format");
+        dialog.setHeaderText("Peakaboo can't determine the format of this data");
+        dialog.setContentText("");
+        Optional<ButtonType> optResult = dialog.showAndWait();
+        
+        if (!optResult.isPresent()) return null;
+                
+        ButtonType result = optResult.get();
+        System.out.println(result.getText());      
+        
         for (DataSource format : formats) {
-            if (format.getFileFormat().getFormatName().equals(link.getText())
-                    && format.getFileFormat().getFormatDescription().equals(link.getLongText())) { return format; }
+            if (format.getFileFormat().getFormatName().equals(result.getText())) { return format; }
         }
 
         return null;
@@ -321,8 +331,11 @@ public class PlotWindowController extends IActofUIController {
 
             DatasetReadResult result = reading.getResult();
             if (result.status == ReadStatus.FAILED) {
-                Dialogs.create().title("Open Failed")
-                        .message("Peakaboo could not open this dataset.\n" + result.message).showError();
+            	Alert openFailed = new Alert(AlertType.ERROR);
+            	openFailed.setTitle("Open Failed");
+            	openFailed.setHeaderText("Peakaboo could not open the data set.");
+            	openFailed.setContentText("Peakaboo could not open this dataset.\n" + result.message);
+            	openFailed.showAndWait();
             }
 
             getChangeBus().broadcast(new DataLoadedChange(this, plotController.data()));
