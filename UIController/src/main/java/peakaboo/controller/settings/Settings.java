@@ -9,13 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import fava.functionable.FStringInput;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;
+import scitypes.util.StringInput;
 
 
 
@@ -47,7 +47,7 @@ public class Settings
 	{
 
 		SerializedData data;
-		String yaml = FStringInput.contents(inStream); //IOOperations.readerToString(new BufferedReader(new InputStreamReader(inStream)));
+		String yaml = StringInput.contents(inStream); //IOOperations.readerToString(new BufferedReader(new InputStreamReader(inStream)));
 		data = SerializedData.deserialize(yaml);
 		
 		// load transition series

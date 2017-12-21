@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import fava.functionable.FStringInput;
 import peakaboo.datasource.AbstractDataSource;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
@@ -17,6 +16,7 @@ import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
+import scitypes.util.StringInput;
 
 
 public class PlainText extends AbstractDataSource
@@ -70,7 +70,7 @@ public class PlainText extends AbstractDataSource
 		
 	
 		//Split the input up by line
-		FStringInput lines = FStringInput.lines(file);
+		StringInput lines = StringInput.lines(file);
 		
 
 		while (lines.hasNext())

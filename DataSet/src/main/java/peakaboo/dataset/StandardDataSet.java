@@ -56,10 +56,6 @@ public class StandardDataSet implements DataSet
 	
 	protected File					dataSourcePath;
 
-	protected float					maxEnergy;
-
-	
-
 	
 
 	public StandardDataSet()
@@ -431,9 +427,10 @@ public class StandardDataSet implements DataSet
 	}
 
 
+	@Override
 	public float energyPerChannel()
 	{
-		return maxEnergy / channelsPerScan();
+		return getScanData().maxEnergy() / channelsPerScan();
 	}
 
 	@Override

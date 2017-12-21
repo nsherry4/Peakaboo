@@ -113,7 +113,7 @@ public class DataController extends Eventful implements IDataController
 		dataModel = dsp;
 		
 		plot.settings().setScanNumber( dsp.firstNonNullScanIndex() );
-		
+		plot.settings().setEnergyPerChannel(dsp.energyPerChannel());
 		
 		plot.fitting().setFittingParameters(dataModel.energyPerChannel());
 				

@@ -7,7 +7,6 @@ import java.util.List;
 import bolt.scripting.BoltInterface;
 import bolt.scripting.languages.JavascriptLanguage;
 import bolt.scripting.plugin.BoltScriptPlugin;
-import fava.functionable.FStringInput;
 import peakaboo.datasource.components.datasize.DataSize;
 import peakaboo.datasource.components.fileformat.FileFormat;
 import peakaboo.datasource.components.fileformat.SimpleFileFormat;
@@ -18,6 +17,7 @@ import peakaboo.datasource.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.components.scandata.ScanData;
 import peakaboo.datasource.components.scandata.SimpleScanData;
 import scitypes.ISpectrum;
+import scitypes.util.StringInput;
 
 
 public class JavaScriptPluginDataSource implements PluginDataSource, BoltScriptPlugin {
@@ -37,7 +37,7 @@ public class JavaScriptPluginDataSource implements PluginDataSource, BoltScriptP
 		js = new BoltInterface(new JavascriptLanguage(), "");
 		this.scriptFile = file;
 		try {
-			js.setScript(FStringInput.contents(this.scriptFile));
+			js.setScript(StringInput.contents(this.scriptFile));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +88,7 @@ public class JavaScriptPluginDataSource implements PluginDataSource, BoltScriptP
 	public void read(File file) throws Exception {
 		scanData = new SimpleScanData(file.getName());
 		
-		List<List<Double>> result = (List<List<Double>>) js.call("read", FStringInput.contents(file));
+		List<List<Double>> result = (List<List<Double>>) js.call("read", StringInput.contents(file));
 		
 		for (List<Double> scan : result) {
 			ISpectrum spectrum = new ISpectrum(scan.size());
