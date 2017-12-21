@@ -11,31 +11,20 @@ package peakaboo.controller.plotter.settings;
 public enum ChannelCompositeMode
 {
 
-	NONE {
-		@Override
-		public String show()
-		{
-			return "Individual Spectrum";
-		}
-	},
-	AVERAGE {
-		@Override
-		public String show()
-		{
-			return "Mean Average of Spectra";
-		}
-	},
-	MAXIMUM {
-		@Override
-		public String show()
-		{
-			return "Strongest Signal per Channel";
-		}
-	}
+	NONE,
+	AVERAGE,
+	MAXIMUM
 	
 	;
 	
-	public abstract String show();
+	public String show() {
+		switch (this) {
+		case NONE: return "Individual Spectrum";
+		case AVERAGE: return "Mean Average of Spectra";
+		case MAXIMUM: return "Strongest Signal per Channel";
+		}
+		return "Unknown Composite Mode";
+	}
 
 	
 	

@@ -57,7 +57,7 @@
 					<outputDirectory>
 						${project.basedir}/../
 					</outputDirectory>
-					<finalName>Peakaboo-${version}</finalName>
+					<finalName>Peakaboo-${project.version}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>

@@ -16,35 +16,9 @@ import peakaboo.curvefit.peaktable.PeakTable;
 
 public enum EscapePeakType
 {
-	NONE {
-		@Override
-		public boolean hasOffset() { return false; }
-		@Override
-		public String show() { return "None"; }
-	}
-	,
-	SILICON {
-		@Override
-		public List<Transition> offset() { 
-			
-			return PeakTable.getTransitionSeries(Element.Si, TransitionSeriesType.K).getAllTransitions();
-			
-		}
-		@Override
-		public String show() { return "Silicon"; }
-	}
-	,
-	GERMANIUM {
-		@Override
-		public List<Transition> offset() { 
-			
-			return PeakTable.getTransitionSeries(Element.Ge, TransitionSeriesType.K).getAllTransitions();
-			
-		}
-		@Override
-		public String show() { return "Germanium"; }
-	}		
-	,
+	NONE,
+	SILICON,
+	GERMANIUM,
 
 	
 	;
@@ -53,20 +27,40 @@ public enum EscapePeakType
 	 * returns true if this kind of {@link EscapePeakType} contains any {@link Transition}s
 	 * @return true if this {@link EscapePeakType} is non-empty
 	 */
-	public boolean hasOffset() 			{ return true; }
+	public boolean hasOffset() {
+		switch (this) {
+		case NONE: return false;
+		case SILICON: return true;
+		case GERMANIUM: return true;
+		}
+		return true;
+	}
 	
 	
 	/**
 	 * Returns a list of {@link Transition}s representing this escape peak
 	 * @return a list of {@link Transition}s
 	 */
-	public List<Transition> offset()	{ return new ArrayList<Transition>(); }
+	public List<Transition> offset(){
+		switch (this) {
+		case SILICON: return PeakTable.getTransitionSeries(Element.Si, TransitionSeriesType.K).getAllTransitions();
+		case GERMANIUM: return PeakTable.getTransitionSeries(Element.Ge, TransitionSeriesType.K).getAllTransitions();
+		}
+		return new ArrayList<Transition>(); 
+	}
 	
 	/**
 	 * Returns a pretty-printed description of this {@link EscapePeakType}
 	 * @return a {@link String} describing this {@link EscapePeakType}
 	 */
-	public String show()				{ return this.name().toLowerCase(); }
+	public String show() {
+		switch (this) {
+		case NONE: return "None";
+		case SILICON: return "Silicon";
+		case GERMANIUM: return "Germanium";
+		}
+		return this.name().toLowerCase(); 
+	}
 	
 
 	public static EscapePeakType getDefault()
