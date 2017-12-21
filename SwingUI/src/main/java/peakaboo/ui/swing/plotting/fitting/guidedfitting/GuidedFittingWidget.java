@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting.smartfitting;
+package peakaboo.ui.swing.plotting.fitting.guidedfitting;
 
 
 
@@ -22,7 +22,7 @@ import swidget.widgets.ImageButton.Layout;
 
 
 
-class SmartFittingWidget extends TSSelectorGroup
+class GuidedFittingWidget extends TSSelectorGroup
 {
 
 	private int	activeIndex;
@@ -30,7 +30,7 @@ class SmartFittingWidget extends TSSelectorGroup
 	private List<ImageButton> editButtons;
 
 
-	public SmartFittingWidget(IFittingController controller)
+	public GuidedFittingWidget(IFittingController controller)
 	{
 		super(controller, 1);
 		

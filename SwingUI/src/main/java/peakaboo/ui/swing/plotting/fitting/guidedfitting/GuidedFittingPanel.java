@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting.smartfitting;
+package peakaboo.ui.swing.plotting.fitting.guidedfitting;
 
 
 
@@ -21,7 +21,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 
 
 
-public class SmartFittingPanel extends JPanel
+public class GuidedFittingPanel extends JPanel
 {
 
 	private IFittingController		controller;
@@ -30,12 +30,12 @@ public class SmartFittingPanel extends JPanel
 	private Cursor					canvasCursor;
 
 	private SelectionListControls	selControls;
-	private SmartFittingWidget		smartWidget;
+	private GuidedFittingWidget		guidedWidget;
 
 	List<TransitionSeries>			potentials;
 
 
-	public SmartFittingPanel(final IFittingController controller, final CurveFittingView owner, PlotCanvas canvas)
+	public GuidedFittingPanel(final IFittingController controller, final CurveFittingView owner, PlotCanvas canvas)
 	{
 		this.controller = controller;
 		this.canvas = canvas;
@@ -63,9 +63,9 @@ public class SmartFittingPanel extends JPanel
 
 		this.setLayout(new BorderLayout());
 
-		smartWidget = new SmartFittingWidget(controller);
-		smartWidget.setBorder(Spacing.bMedium());
-		JScrollPane scroll = new JScrollPane(smartWidget);
+		guidedWidget = new GuidedFittingWidget(controller);
+		guidedWidget.setBorder(Spacing.bMedium());
+		JScrollPane scroll = new JScrollPane(guidedWidget);
 		scroll.setBorder(Spacing.bNone());
 		scroll.setPreferredSize(new Dimension(200, 0));
 		scroll.setBackground(getBackground());
@@ -76,6 +76,8 @@ public class SmartFittingPanel extends JPanel
 		this.add(new TitleGradientPanel("Click Plot to Fit", true, selControls), BorderLayout.NORTH);
 
 		
+
+		
 	}
 
 
@@ -83,15 +85,15 @@ public class SmartFittingPanel extends JPanel
 	{
 		if (mode)
 		{
-			smartWidget.setTransitionSeriesOptions(null);
+			guidedWidget.setTransitionSeriesOptions(null);
 			canvas.grabChannelFromClick((Integer channel) -> {
 				canvas.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				
 				potentials = controller.proposeTransitionSeriesFromChannel(
 						channel, 
-						smartWidget.getActiveTransitionSeries()
+						guidedWidget.getActiveTransitionSeries()
 					);
-				smartWidget.setTransitionSeriesOptions(potentials);
+				guidedWidget.setTransitionSeriesOptions(potentials);
 				
 				canvas.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -104,7 +106,7 @@ public class SmartFittingPanel extends JPanel
 		else
 		{
 			canvas.grabChannelFromClick(null);
-			smartWidget.setTransitionSeriesOptions(null);
+			guidedWidget.setTransitionSeriesOptions(null);
 			canvas.setCursor(canvasCursor);
 
 		}
@@ -112,7 +114,7 @@ public class SmartFittingPanel extends JPanel
 	
 	public void resetSelectors()
 	{
-		smartWidget.resetSelectors(true);
+		guidedWidget.resetSelectors(true);
 	}
 
 }

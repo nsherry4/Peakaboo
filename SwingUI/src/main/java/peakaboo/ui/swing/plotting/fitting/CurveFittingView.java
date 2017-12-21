@@ -13,7 +13,7 @@ import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
-import peakaboo.ui.swing.plotting.fitting.smartfitting.SmartFittingPanel;
+import peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalPanel;
 import swidget.widgets.ClearPanel;
@@ -36,7 +36,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	protected FittingPanel			fittedPanel;
 	protected ProposalPanel			proposalPanel;
 	protected SummationPanel		summationPanel;
-	protected SmartFittingPanel		smartPanel;
+	protected GuidedFittingPanel		smartPanel;
 	
 	
 	protected JPanel				cardPanel;
@@ -57,7 +57,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		fittedPanel = new FittingPanel(controller, this);
 		proposalPanel = new ProposalPanel(controller, this);
 		summationPanel = new SummationPanel(controller, this);
-		smartPanel = new SmartFittingPanel(controller, this, canvas);
+		smartPanel = new GuidedFittingPanel(controller, this, canvas);
 
 		cardPanel = createCardPanel();
 
