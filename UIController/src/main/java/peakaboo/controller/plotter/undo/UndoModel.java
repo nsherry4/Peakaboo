@@ -3,7 +3,7 @@ package peakaboo.controller.plotter.undo;
 import java.io.ByteArrayOutputStream;
 import java.util.Stack;
 
-import fava.datatypes.Pair;
+import scitypes.Pair;
 
 
 public class UndoModel

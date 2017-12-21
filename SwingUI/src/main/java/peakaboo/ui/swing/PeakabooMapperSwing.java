@@ -33,7 +33,6 @@ import javax.swing.event.ChangeListener;
 
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
-import fava.datatypes.Pair;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.controller.plotter.IPlotController;
@@ -44,6 +43,7 @@ import peakaboo.mapping.results.MapResult;
 import peakaboo.ui.swing.mapping.MapViewer;
 import peakaboo.ui.swing.mapping.TabIconButton;
 import scitypes.GridPerspective;
+import scitypes.Pair;
 import scitypes.Range;
 import scitypes.SigDigits;
 import swidget.dialogues.fileio.SwidgetIO;

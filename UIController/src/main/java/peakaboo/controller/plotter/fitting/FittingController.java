@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import eventful.EventfulType;
 import fava.Fn;
-import fava.datatypes.Pair;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.controller.TSOrdering;
 import peakaboo.curvefit.model.FittingModel;
@@ -21,6 +20,7 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.PeakTable;
+import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
 

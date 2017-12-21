@@ -104,6 +104,9 @@ public class Peakaboo
 	
 	public static void run() {
 		
+		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
+		System.setProperty("sun.java2d.xrender", "false");
+		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		

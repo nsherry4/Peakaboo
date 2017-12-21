@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fava.datatypes.Pair;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
@@ -32,6 +31,7 @@ import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;
 import peakaboo.ui.javafx.util.Spectrums;
 import scidraw.drawing.DrawingRequest;
+import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
 

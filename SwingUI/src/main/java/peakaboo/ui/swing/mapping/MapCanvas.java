@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fava.datatypes.Pair;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapDisplayMode;
 import peakaboo.controller.mapper.maptab.MapScaleMode;
@@ -37,6 +36,7 @@ import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.Pair;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -50,7 +50,7 @@ public class MapCanvas extends GraphicsPanel
 	DrawingRequest 		    dr;
 	
 	private MapDrawing		map;
-	private SpectrumMapPainter contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue;
+	private SpectrumMapPainter contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue, overlayMapPainterYellow;
 
 	private static final int	SPECTRUM_HEIGHT = 15;
 	
@@ -417,19 +417,21 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		
-		Float redMax = 0f, greenMax = 0f, blueMax = 0f;
+		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
 		
 		Spectrum redSpectrum = data.get(OverlayColour.RED);
 		Spectrum greenSpectrum = data.get(OverlayColour.GREEN);
 		Spectrum blueSpectrum = data.get(OverlayColour.BLUE);
+		Spectrum yellowSpectrum = data.get(OverlayColour.YELLOW);
 		
 		
 		if (redSpectrum != null ) redMax = SpectrumCalculations.max(redSpectrum);
 		if (greenSpectrum != null ) greenMax = SpectrumCalculations.max(greenSpectrum);
 		if (blueSpectrum != null ) blueMax = SpectrumCalculations.max(blueSpectrum);
+		if (yellowSpectrum != null ) yellowMax = SpectrumCalculations.max(yellowSpectrum);
 		
 		
-		dr.maxYIntensity = Math.max(redMax, Math.max(greenMax, blueMax));
+		dr.maxYIntensity = Math.max(Math.max(redMax, yellowMax), Math.max(greenMax, blueMax));
 
 
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
@@ -524,6 +526,16 @@ public class MapCanvas extends GraphicsPanel
 			overlayMapPainterBlue.setData(blueSpectrum);
 			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()));
 			painters.add(overlayMapPainterBlue);
+		}
+		
+		if (yellowSpectrum != null) {
+			if (overlayMapPainterYellow == null) {
+				overlayMapPainterYellow = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColor()), yellowSpectrum);
+				overlayMapPainterYellow.setCompositeMode(CompositeModes.ADD);
+			}
+			overlayMapPainterYellow.setData(yellowSpectrum);
+			overlayMapPainterYellow.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColor()));
+			painters.add(overlayMapPainterYellow);
 		}
 		
 		//need to paint the background black first
@@ -622,11 +634,12 @@ public class MapCanvas extends GraphicsPanel
 	{
 		map.needsMapRepaint();
 		
-		if (contourMapPainter != null)		contourMapPainter.clearBuffer();
-		if (ratioMapPainter != null) 		ratioMapPainter.clearBuffer();
-		if (overlayMapPainterBlue != null) 	overlayMapPainterBlue.clearBuffer();
-		if (overlayMapPainterGreen != null)	overlayMapPainterGreen.clearBuffer();
-		if (overlayMapPainterRed != null) 	overlayMapPainterRed.clearBuffer();
+		if (contourMapPainter != null)			contourMapPainter.clearBuffer();
+		if (ratioMapPainter != null) 			ratioMapPainter.clearBuffer();
+		if (overlayMapPainterBlue != null) 		overlayMapPainterBlue.clearBuffer();
+		if (overlayMapPainterGreen != null)		overlayMapPainterGreen.clearBuffer();
+		if (overlayMapPainterRed != null) 		overlayMapPainterRed.clearBuffer();
+		if (overlayMapPainterYellow != null) 	overlayMapPainterYellow.clearBuffer();
 	}
 
 

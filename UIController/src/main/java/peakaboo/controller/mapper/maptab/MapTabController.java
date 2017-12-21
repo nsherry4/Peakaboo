@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import eventful.EventfulType;
-import fava.datatypes.Pair;
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
@@ -26,6 +25,7 @@ import peakaboo.mapping.colours.OverlayColour;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.ISpectrum;
+import scitypes.Pair;
 import scitypes.Ratios;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
@@ -158,7 +158,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 				.collect(toList());
 				
 
-		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null;
+		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null, yellowSpectrum = null;
 		Map<OverlayColour, Spectrum> uninterpolatedColours = new HashMap<OverlayColour, Spectrum>();
 		
 		//get the TSs for this colour, and get their combined spectrum
@@ -221,6 +221,28 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		} else {
 			blueSpectrum = null;
 		}
+		
+		
+		
+		
+		//get the TSs for this colour, and get their combined spectrum
+		List<Spectrum> yellowSpectrums = dataset.stream()
+				.filter(e -> tabModel.overlayColour.get(e.first) == OverlayColour.YELLOW)
+				.map(e -> e.second)
+				.collect(toList());
+		
+		if (yellowSpectrums != null && yellowSpectrums.size() > 0) {
+			yellowSpectrum = yellowSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
+			
+			uninterpolatedColours.put(OverlayColour.YELLOW, yellowSpectrum);
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(yellowSpectrum, grid, map.mapsController.getInterpolation());
+			yellowSpectrum = interpolationResult.second;
+			//mapModel.interpolatedSize.x = interpolationResult.first.width;
+			//mapModel.interpolatedSize.y = interpolationResult.first.height;
+					
+		} else {
+			yellowSpectrum = null;
+		}
 			
 		
 		
@@ -229,6 +251,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			if (redSpectrum != null ) SpectrumCalculations.normalize_inplace(redSpectrum);
 			if (greenSpectrum != null ) SpectrumCalculations.normalize_inplace(greenSpectrum);
 			if (blueSpectrum != null ) SpectrumCalculations.normalize_inplace(blueSpectrum);
+			if (yellowSpectrum != null ) SpectrumCalculations.normalize_inplace(yellowSpectrum);
 		}
 		
 		Map<OverlayColour, Spectrum> colours = new HashMap<OverlayColour, Spectrum>();
@@ -236,6 +259,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		colours.put(OverlayColour.RED, redSpectrum);
 		colours.put(OverlayColour.GREEN, greenSpectrum);
 		colours.put(OverlayColour.BLUE, blueSpectrum);
+		colours.put(OverlayColour.YELLOW, yellowSpectrum);
 		
 		putValueFunctionForOverlay(uninterpolatedColours);
 		return colours;

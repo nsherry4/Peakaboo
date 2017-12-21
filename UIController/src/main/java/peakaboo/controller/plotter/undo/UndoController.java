@@ -6,8 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import eventful.Eventful;
-import fava.datatypes.Pair;
 import peakaboo.controller.plotter.IPlotController;
+import scitypes.Pair;
 
 
 

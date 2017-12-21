@@ -1,10 +1,10 @@
 package peakaboo.controller.plotter.settings;
 
 import eventful.Eventful;
-import fava.datatypes.Pair;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
+import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
 

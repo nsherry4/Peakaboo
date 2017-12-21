@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 import eventful.IEventfulType;
-import fava.datatypes.Pair;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.fitting.IFittingController;
@@ -17,6 +16,7 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
+import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
 

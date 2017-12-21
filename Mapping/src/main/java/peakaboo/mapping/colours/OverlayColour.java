@@ -6,21 +6,27 @@ import java.awt.Color;
 		
 		RED {
 			@Override
-			public Color toColor(){return new Color(0.64f, 0.00f, 0.00f);}
+			public Color toColor(){return Color.decode("#cc0000");}
 			@Override
 			public String toString(){return "Red";}
 		},
 		GREEN {
 			@Override
-			public Color toColor(){return new Color(0.35f, 0.69f, 0.03f);}
+			public Color toColor(){return Color.decode("#73d216");}
 			@Override
 			public String toString(){return "Green";}
 		},
 		BLUE {
 			@Override
-			public Color toColor(){return new Color(0.07f, 0.16f, 0.30f);}
+			public Color toColor(){return Color.decode("#3465a4");}
 			@Override
 			public String toString(){return "Blue";}
+		},
+		YELLOW {
+			@Override
+			public Color toColor(){return Color.decode("#edd400");}
+			@Override
+			public String toString(){return "Yellow";}
 		};
 		
 		

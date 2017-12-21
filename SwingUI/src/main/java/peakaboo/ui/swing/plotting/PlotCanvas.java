@@ -16,7 +16,6 @@ import java.util.function.Consumer;
 import javax.swing.Scrollable;
 
 import eventful.EventfulTypeListener;
-import fava.datatypes.Pair;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.view.FittingMarkersPainter;
 import peakaboo.curvefit.view.FittingPainter;
@@ -38,6 +37,7 @@ import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
 
