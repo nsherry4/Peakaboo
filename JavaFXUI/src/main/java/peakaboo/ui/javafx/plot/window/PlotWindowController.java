@@ -31,10 +31,10 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
-import peakaboo.datasource.DataSource;
-import peakaboo.datasource.DataSourceLoader;
-import peakaboo.datasource.DataSourceLookup;
-import peakaboo.datasource.framework.PluginDataSource;
+import peakaboo.datasource.model.DataSource;
+import peakaboo.datasource.plugin.DataSourceLoader;
+import peakaboo.datasource.plugin.DataSourceLookup;
+import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.javafx.change.IChangeController;
@@ -265,7 +265,7 @@ public class PlotWindowController extends IActofUIController {
 
     private void loadFiles(List<File> files) {
 
-		List<PluginDataSource> candidates =  DataSourceLoader.getPluginSet().newInstances();
+		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
 		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(files, candidates);
 
         if (formats.size() > 1) {

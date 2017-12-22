@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Scanner;
 
-import peakaboo.datasource.AbstractDataSource;
-import peakaboo.datasource.components.datasize.DataSize;
-import peakaboo.datasource.components.fileformat.FileFormat;
-import peakaboo.datasource.components.fileformat.SimpleFileFormat;
-import peakaboo.datasource.components.metadata.Metadata;
-import peakaboo.datasource.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.components.scandata.ScanData;
-import peakaboo.datasource.components.scandata.SimpleScanData;
+import peakaboo.datasource.model.AbstractDataSource;
+import peakaboo.datasource.model.components.datasize.DataSize;
+import peakaboo.datasource.model.components.fileformat.FileFormat;
+import peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
+import peakaboo.datasource.model.components.metadata.Metadata;
+import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import peakaboo.datasource.model.components.scandata.ScanData;
+import peakaboo.datasource.model.components.scandata.SimpleScanData;
 
 
 public class CSVDataSource extends AbstractDataSource

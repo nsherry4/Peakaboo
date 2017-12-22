@@ -61,6 +61,11 @@
 			<artifactId>SciDraw</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sciencestudio.libs</groupId>
+			<artifactId>BoltCode</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 
 

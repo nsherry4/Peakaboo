@@ -12,7 +12,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import peakaboo.filter.controller.IFilteringController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterType;
 import swidget.icons.IconSize;

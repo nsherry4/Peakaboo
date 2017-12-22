@@ -8,7 +8,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
-import peakaboo.filter.controller.IFilteringController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterType;
 import peakaboo.ui.javafx.change.ChangeController;

@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import bolt.plugin.core.BoltPluginController;
+import bolt.plugin.core.BoltPluginSet;
 import eventful.Eventful;
 import peakaboo.controller.plotter.IPlotController;
-import peakaboo.filter.controller.IFilteringController;
 import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
+import peakaboo.filter.plugin.FilterPlugin;
 import scitypes.ReadOnlySpectrum;
 
 
@@ -60,38 +63,19 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		return filteringModel.filters.getAvailableFilters();
 	}
 
+
+
 	@Override
-	public void addFilter(String name)
-	{
-
-		for (Filter f : filteringModel.filters.getAvailableFilters())
-		{
-			if (f.getFilterName().equals(name))
-			{
-
-				try
-				{
-					// this will call filterschanged, so we don't need to
-					// manually update the listeners
-					Filter filter = f.getClass().newInstance();
-					filter.initialize();
-					addFilter(filter);
-					break;
-				}
-				catch (InstantiationException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
-
+	public void addFilter(String filterName) {
+		//HAAAAAAAAAAAAAAAAAAAAACK
+		BoltPluginSet<FilterPlugin> plugins = FilterLoader.getPluginSet();
+		for (BoltPluginController<? extends FilterPlugin> plugin : plugins.getAll()) {
+			if (plugin.getName() == filterName) {
+				addFilter(plugin.create());
 			}
 		}
-
 	}
-
+	
 	@Override
 	public void addFilter(Filter f)
 	{
@@ -192,5 +176,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 	{
 		return filteringModel.filteredPlot;
 	}
+
+
 	
 }

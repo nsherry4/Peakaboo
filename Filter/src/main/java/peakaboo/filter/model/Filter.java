@@ -38,10 +38,6 @@ public interface Filter {
 	 */
 	void setParameters(List<Value<?>> params);
 
-	/**
-	 * Retrieves the parameter with the assocuated index
-	 */
-	Value<?> getParameter(Integer key);
 
 	default Group getParameterGroup() {
 		return new Group(getFilterName(), getParameters()); 

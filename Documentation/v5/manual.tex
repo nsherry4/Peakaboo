@@ -1,7 +1,6 @@
 \documentclass[article,twoside,11pt]{report}
 
 
-
 %Images
 \usepackage[pdftex]{graphicx}
 
@@ -9,6 +8,10 @@
 
 %In-document links
 \usepackage[linktoc=all, colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black]{hyperref}
+
+\usepackage[T1]{fontenc}
+\usepackage[default]{gillius2}
+
 
 %headers and footers
 \usepackage{fancyhdr}
@@ -122,6 +125,7 @@
 \pagestyle{fancyplain}
 
 
+
 \tocchapter{Introduction}
 
 Peakaboo allows users to identify the spectral origins of an XRF spectrum using a 
@@ -139,9 +143,9 @@ Because of the wide variety of data formats, Peakaboo also makes it easy to crea
 plug-ins for supporting additional data formats. Some examples of file formats 
 supported by plug-ins include Amktek, Sigray, and Inca Emsa.
 
-Peakaboo also allows users who are familiar with the Java programming language to 
-add support for new file formats. See the section on ``Extending Peakaboo'' for more
-information.
+Peakaboo also allows users who are familiar with the Java or JavaScript programming 
+languages to add support for new file formats. See the section on ``Extending Peakaboo'' 
+for more information.
 
 \tocsection{Getting Help}
 

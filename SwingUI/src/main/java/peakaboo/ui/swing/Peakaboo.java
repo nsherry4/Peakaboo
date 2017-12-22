@@ -14,8 +14,8 @@ import com.ezware.dialog.task.TaskDialog;
 import commonenvironment.Env;
 import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
-import peakaboo.datasource.DataSourceLoader;
-import peakaboo.filter.FilterLoader;
+import peakaboo.datasource.plugin.DataSourceLoader;
+import peakaboo.filter.model.FilterLoader;
 import swidget.Swidget;
 import swidget.dialogues.SplashScreen;
 import swidget.icons.IconFactory;
@@ -39,7 +39,7 @@ public class Peakaboo
 	}
 	
 
-	private static boolean showError(Window parent, Throwable e)
+	public static boolean showError(Window parent, Throwable e)
 	{
 		TaskDialog errorDialog = new TaskDialog("Peakaboo");
 		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));

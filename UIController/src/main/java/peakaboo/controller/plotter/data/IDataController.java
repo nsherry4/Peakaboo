@@ -9,7 +9,7 @@ import peakaboo.controller.plotter.data.discards.Discards;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
-import peakaboo.datasource.DataSource;
+import peakaboo.datasource.model.DataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;

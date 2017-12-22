@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import bolt.plugin.core.BoltPluginController;
-import bolt.plugin.core.BoltPluginCore;
+import bolt.plugin.core.BoltPlugin;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.widgets.ClearPanel;
@@ -18,7 +18,7 @@ import swidget.widgets.TextWrapping;
 
 public class PluginData extends ClearPanel {
 	
-	BoltPluginController<? extends BoltPluginCore> plugin;
+	BoltPluginController<? extends BoltPlugin> plugin;
 	
 	JLabel name;
 	JLabel version;
@@ -26,7 +26,7 @@ public class PluginData extends ClearPanel {
 	JLabel enabled;
 	JLabel type;
 	
-	public PluginData(BoltPluginController<? extends BoltPluginCore> plugin) {
+	public PluginData(BoltPluginController<? extends BoltPlugin> plugin) {
 		super(new BorderLayout());
 		this.plugin = plugin;
 		

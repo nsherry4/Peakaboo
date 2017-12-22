@@ -4,7 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 
-import peakaboo.filter.controller.IFilteringController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import swidget.widgets.ClearPanel;
 
 public class FiltersetViewer extends ClearPanel {

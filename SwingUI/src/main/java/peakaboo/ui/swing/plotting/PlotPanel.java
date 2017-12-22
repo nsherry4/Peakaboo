@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.Iterator;
@@ -57,11 +58,13 @@ import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.ezware.dialog.task.TaskDialogs;
 
+import bolt.plugin.core.BoltPluginController;
 import commonenvironment.Apps;
 import commonenvironment.Env;
 import commonenvironment.IOOperations;
@@ -79,15 +82,19 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
-import peakaboo.datasource.DataSource;
-import peakaboo.datasource.DataSourceLoader;
-import peakaboo.datasource.DataSourceLookup;
-import peakaboo.datasource.components.metadata.Metadata;
-import peakaboo.datasource.framework.PluginDataSource;
-import peakaboo.filter.FilterLoader;
+import peakaboo.datasink.model.DataSink;
+import peakaboo.datasink.plugin.DataSinkLoader;
+import peakaboo.datasink.plugin.DataSinkPlugin;
+import peakaboo.datasource.model.DataSource;
+import peakaboo.datasource.model.components.metadata.Metadata;
+import peakaboo.datasource.plugin.DataSourceLoader;
+import peakaboo.datasource.plugin.DataSourceLookup;
+import peakaboo.datasource.plugin.DataSourcePlugin;
+import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
+import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.container.PeakabooContainer;
 import peakaboo.ui.swing.misc.PluginData;
@@ -131,6 +138,7 @@ public class PlotPanel extends ClearPanel
 	PlotCanvas					canvas;
 	File						saveFilesFolder;
 	File						savedSessionFileName;
+	File						exportedDataFileName;
 	String                      programTitle;
 
 	
@@ -142,6 +150,7 @@ public class PlotPanel extends ClearPanel
 	JMenuItem					exportFittingsMenuItem;
 	JMenuItem					exportFilteredDataMenuItem;
 	JMenuItem					saveSession;
+	JMenu 						exportSinks;
 
 	//EDIT
 	JMenuItem					undo, redo;
@@ -173,6 +182,7 @@ public class PlotPanel extends ClearPanel
 		this.programTitle = " - " + Version.title;
 		
 		savedSessionFileName = null;
+		exportedDataFileName = null;
 
 		controller = new PlotController();
 				
@@ -221,6 +231,7 @@ public class PlotPanel extends ClearPanel
 		exportFittingsMenuItem.setEnabled(false);
 		exportFilteredDataMenuItem.setEnabled(false);
 		toolbarSnapshot.setEnabled(false);
+		exportSinks.setEnabled(false);
 
 		if (controller.data().hasDataSet())
 		{
@@ -230,6 +241,7 @@ public class PlotPanel extends ClearPanel
 			exportFittingsMenuItem.setEnabled(true);
 			exportFilteredDataMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
+			exportSinks.setEnabled(true);
 
 
 			toolbarMap.setEnabled(controller.fitting().canMap());
@@ -476,7 +488,7 @@ public class PlotPanel extends ClearPanel
 
 
 		JPanel energyControls = new ClearPanel();
-		energyControls.setBorder(Spacing.bMedium());
+		energyControls.setBorder(new EmptyBorder(0, 0, 0, Spacing.huge*2));
 		energyControls.setLayout(new GridBagLayout());
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.gridx = 0;
@@ -625,6 +637,22 @@ public class PlotPanel extends ClearPanel
 
 
 		menu.addSeparator();
+		
+		exportSinks = new JMenu("Export Data");
+		
+		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkLoader.getPluginSet().getAll()) {
+			exportSinks.add(createMenuItem(
+					plugin.getName(), null, null,
+					e -> actionExportData(plugin.create()),
+					null, null
+			));
+		}
+		
+		menu.add(exportSinks);
+
+		
+		menu.addSeparator();
+		
 
 		
 		snapshotMenuItem = createMenuItem(
@@ -1248,7 +1276,7 @@ public class PlotPanel extends ClearPanel
 	public void loadFiles(List<File> filenames)
 	{
 
-		List<PluginDataSource> candidates =  DataSourceLoader.getPluginSet().newInstances();
+		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
 		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(filenames, candidates);
 		
 		if (formats.size() > 1)
@@ -1299,6 +1327,33 @@ public class PlotPanel extends ClearPanel
 		}
 	}
 
+	private void actionExportData(DataSink sink) {
+		DataSource source = controller.data().getDataSet().getDataSource();
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+			sink.write(source, os);
+			
+			exportedDataFileName = SwidgetIO.saveFile(
+					container.getWindow(),
+					"Export Scan Data",
+					sink.getFormatExtension(),
+					sink.getFormatName(),
+					exportedDataFileName,
+					os);
+			
+			os.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Peakaboo.showError(container.getWindow(), e);			
+		}
+		
+
+		
+		
+	}
 
 	private void actionMap(FittingTransform type)
 	{

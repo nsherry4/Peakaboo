@@ -14,7 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import peakaboo.datasource.DataSource;
+import peakaboo.datasource.model.DataSource;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;

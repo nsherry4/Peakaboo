@@ -3,11 +3,11 @@ package peakaboo.dataset;
 import java.io.File;
 import java.util.List;
 
-import peakaboo.datasource.DataSource;
-import peakaboo.datasource.components.datasize.DataSize;
-import peakaboo.datasource.components.metadata.Metadata;
-import peakaboo.datasource.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.components.scandata.ScanData;
+import peakaboo.datasource.model.DataSource;
+import peakaboo.datasource.model.components.datasize.DataSize;
+import peakaboo.datasource.model.components.metadata.Metadata;
+import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import peakaboo.datasource.model.components.scandata.ScanData;
 import scitypes.ReadOnlySpectrum;
 
 

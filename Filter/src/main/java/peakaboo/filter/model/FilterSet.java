@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import peakaboo.filter.FilterLoader;
 import scitypes.ReadOnlySpectrum;
 
 /**
@@ -28,7 +27,7 @@ public class FilterSet implements Iterable<Filter>
 	{
 
 		filters = new ArrayList<>();
-		availableFilters = new ArrayList<>(FilterLoader.getAvailableFilters());
+		availableFilters = new ArrayList<>(FilterLoader.getPluginSet().newInstances());
 
 	}
 

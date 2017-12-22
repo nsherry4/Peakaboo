@@ -17,7 +17,7 @@ import javax.swing.JTable;
 
 import autodialog.view.editors.AutoDialogButtons;
 import autodialog.view.swing.SwingAutoDialog;
-import peakaboo.filter.controller.IFilteringController;
+import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

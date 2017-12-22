@@ -9,7 +9,7 @@ import java.io.InputStream;
 import javax.swing.JFrame;
 
 import peakaboo.common.Version;
-import peakaboo.datasource.DataSource;
+import peakaboo.datasource.model.DataSource;
 import peakaboo.ui.swing.container.FrameContainer;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconFactory;

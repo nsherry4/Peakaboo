@@ -9,7 +9,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.controller.plotter.IPlotController;
-import peakaboo.datasource.DataSource;
+import peakaboo.datasource.model.DataSource;
 import scitypes.Coord;
 
 
