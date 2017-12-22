@@ -42,39 +42,7 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
-	@Override
-	public List<String> getAvailableFiltersByName()
-	{
-		List<String> filterNames = new ArrayList<String>();
 
-		for (Filter filter : filteringModel.filters.getAvailableFilters())
-		{
-			filterNames.add(filter.getFilterName());
-		}
-
-		Collections.sort(filterNames);
-
-		return filterNames;
-	}
-
-	@Override
-	public List<Filter> getAvailableFilters()
-	{
-		return filteringModel.filters.getAvailableFilters();
-	}
-
-
-
-	@Override
-	public void addFilter(String filterName) {
-		//HAAAAAAAAAAAAAAAAAAAAACK
-		BoltPluginSet<FilterPlugin> plugins = FilterLoader.getPluginSet();
-		for (BoltPluginController<? extends FilterPlugin> plugin : plugins.getAll()) {
-			if (plugin.getName() == filterName) {
-				addFilter(plugin.create());
-			}
-		}
-	}
 	
 	@Override
 	public void addFilter(Filter f)

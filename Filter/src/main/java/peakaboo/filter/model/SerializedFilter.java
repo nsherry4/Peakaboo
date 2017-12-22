@@ -2,6 +2,9 @@ package peakaboo.filter.model;
 
 import java.util.List;
 
+import bolt.plugin.core.BoltPluginController;
+import peakaboo.filter.plugin.FilterPlugin;
+
 public class SerializedFilter {
 
 
@@ -42,10 +45,9 @@ public class SerializedFilter {
 	public Filter getFilter() {
 		if (filter != null) { return filter; }
 			
-		FilterSet filterset = new FilterSet();
-		for (Filter f : filterset.getAvailableFilters()) {
-			if (f.getClass().getName().equals(clazz)) {
-				filter = f;
+		for (BoltPluginController<? extends FilterPlugin> plugin : FilterLoader.getPluginSet().getAll()) {
+			if (plugin.getImplementationClass().getName().equals(clazz)) {
+				filter = plugin.create();
 				filter.initialize();
 				filter.load(settings);
 				return filter;

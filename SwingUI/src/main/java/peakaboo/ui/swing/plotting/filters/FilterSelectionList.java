@@ -2,6 +2,7 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 import java.awt.BorderLayout;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,9 +13,12 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import bolt.plugin.core.BoltPluginController;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
+import peakaboo.filter.plugin.FilterPlugin;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -33,13 +37,14 @@ public class FilterSelectionList extends ClearPanel
 	
 	private SelectionListControls 	controls;
 
-
+	
 	public FilterSelectionList(IFilteringController _controller, FiltersetViewer _owner)
 	{
 
 		this.controller = _controller;
 		this.owner = _owner;
-
+		
+		
 		this.setLayout(new BorderLayout());
 
 		JScrollPane scroller = new JScrollPane(createFilterTree(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -70,7 +75,7 @@ public class FilterSelectionList extends ClearPanel
 
 			public boolean isLeaf(Object node)
 			{
-				if (node instanceof Filter) {
+				if (node instanceof BoltPluginController<?>) {
 					return true;
 				}
 				return false;
@@ -91,9 +96,9 @@ public class FilterSelectionList extends ClearPanel
 				if (parent instanceof FilterType) {
 
 					ft = (FilterType) parent;
-					Filter filter = (Filter) child;
+					BoltPluginController<? extends FilterPlugin> plugin = (BoltPluginController<? extends FilterPlugin>) child;
 					
-					return controller.getAvailableFilters().indexOf(filter);
+					return FilterLoader.getPluginSet().getAll().indexOf(plugin);
 					
 
 				} else if (parent instanceof String) {
@@ -114,8 +119,8 @@ public class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (Filter f : controller.getAvailableFilters()) {
-						if (f.getFilterType() == ft) typeCount++;
+					for (BoltPluginController<? extends FilterPlugin> plugin : FilterLoader.getPluginSet().getAll()) {
+						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 					}
 					return typeCount;
 
@@ -136,9 +141,9 @@ public class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (Filter f : controller.getAvailableFilters()) {
-						if (f.getFilterType() == ft) typeCount++;
-						if (typeCount == index) return f;
+					for (BoltPluginController<? extends FilterPlugin> plugin : FilterLoader.getPluginSet().getAll()) {
+						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
+						if (typeCount == index) return plugin;
 					}
 
 				} else if (parent instanceof String) {
@@ -197,9 +202,11 @@ public class FilterSelectionList extends ClearPanel
 				
 				Object leaf = path.getLastPathComponent();
 
-				if (leaf instanceof Filter) {
-					Filter filter = (Filter) leaf;
-					controller.addFilter(filter.getFilterName());
+				if (leaf instanceof BoltPluginController<?>) {
+					BoltPluginController<? extends FilterPlugin> plugin = (BoltPluginController<? extends FilterPlugin>) leaf;
+					Filter filter = plugin.create();
+					filter.initialize();
+					controller.addFilter(filter);
 				}
 
 				owner.showEditPane();

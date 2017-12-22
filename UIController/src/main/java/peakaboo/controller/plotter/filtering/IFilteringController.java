@@ -12,13 +12,10 @@ import scitypes.ReadOnlySpectrum;
 public interface IFilteringController extends IEventful
 {
 
-	List<String> getAvailableFiltersByName();
 	int getFilterCount();
 	boolean filterSetContains(Filter f);
 	int filterIndex(Filter f);
-	List<Filter> getAvailableFilters();
 	
-	void addFilter(String filterName);
 	void addFilter(Filter f);
 	void clearFilters();
 	void moveFilterDown(int index);

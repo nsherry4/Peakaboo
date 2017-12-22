@@ -3,6 +3,7 @@ package peakaboo.ui.javafx.plot.filter;
 
 import java.io.IOException;
 
+import bolt.plugin.core.BoltPluginController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
@@ -10,7 +11,9 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
+import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
+import peakaboo.filter.plugin.FilterPlugin;
 import peakaboo.ui.javafx.change.ChangeController;
 import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;
@@ -22,7 +25,7 @@ public class FilterUIController extends IActofUIController {
 	IFilteringController filters;
 
 	@FXML private ListView<Filter> filterList;
-	@FXML ListView<Filter> listBackground, listNoise, listMath, listProgramming, listAdvanced;
+	@FXML ListView<BoltPluginController<? extends FilterPlugin>> listBackground, listNoise, listMath, listProgramming, listAdvanced;
 	@FXML Accordion availableFilters;
 	@FXML private BorderPane overviewPane, addPane;
 
@@ -93,9 +96,11 @@ public class FilterUIController extends IActofUIController {
 		
 		TitledPane pane = availableFilters.getExpandedPane();
 		if (pane != null) {
-			ListView<Filter> list = (ListView<Filter>) pane.getContent();
-			Filter filter = list.getSelectionModel().getSelectedItem();
-			filters.addFilter(filter.getFilterName());
+			ListView<BoltPluginController<? extends FilterPlugin>> list = (ListView<BoltPluginController<? extends FilterPlugin>>) pane.getContent();
+			BoltPluginController<? extends FilterPlugin> plugin = list.getSelectionModel().getSelectedItem();
+			Filter filter = plugin.create();
+			filter.initialize();
+			filters.addFilter(filter);
 		}
 		
 		populateFilters();
@@ -129,15 +134,15 @@ public class FilterUIController extends IActofUIController {
 		}
 		
 		//populate available filter lists
-		for (Filter filter : filters.getAvailableFilters()) {
-			ListView<Filter> list = getAddListViewByFilterType(filter.getFilterType());
-			list.getItems().add(filter);
+		for (BoltPluginController<? extends FilterPlugin> plugin : FilterLoader.getPluginSet().getAll()) {
+			ListView<BoltPluginController<? extends FilterPlugin>> list = getAddListViewByFilterType(plugin.getReferenceInstance().getFilterType());
+			list.getItems().add(plugin);
 		}
 		
 		
 	}
 
-	private ListView<Filter> getAddListViewByFilterType(FilterType type) {
+	private ListView<BoltPluginController<? extends FilterPlugin>> getAddListViewByFilterType(FilterType type) {
 		switch (type) {
 		case ADVANCED:
 			return listAdvanced;

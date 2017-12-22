@@ -19,7 +19,6 @@ import scitypes.ReadOnlySpectrum;
 public class FilterSet implements Iterable<Filter>
 {
 
-	private List<Filter>	availableFilters;
 	private List<Filter>	filters;
 
 
@@ -27,16 +26,6 @@ public class FilterSet implements Iterable<Filter>
 	{
 
 		filters = new ArrayList<>();
-		availableFilters = new ArrayList<>(FilterLoader.getPluginSet().newInstances());
-
-	}
-
-
-	public List<Filter> getAvailableFilters()
-	{
-
-		return availableFilters;
-
 	}
 
 
