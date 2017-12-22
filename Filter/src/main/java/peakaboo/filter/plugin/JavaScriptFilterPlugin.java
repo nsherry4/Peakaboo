@@ -181,6 +181,10 @@ public class JavaScriptFilterPlugin implements FilterPlugin, BoltScriptPlugin {
 		
 	}
 	
+	public String toString()
+	{
+		return this.getFilterName();
+	}
 	
 	
 	

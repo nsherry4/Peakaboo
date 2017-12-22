@@ -14,7 +14,6 @@ import autodialog.model.Parameter;
 import autodialog.model.SelectionParameter;
 import autodialog.view.swing.SwingAutoPanel;
 import autodialog.view.swing.editors.AbstractSwingEditor;
-import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
 import swidget.widgets.Spacing;
 
@@ -43,7 +42,7 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 		this.param = p;
 		this.selparam = (SelectionParameter<Filter>) p;
 		
-		filterCombo = new JComboBox<Filter>(selparam.getPossibleValues().toArray(new AbstractFilter[0]));
+		filterCombo = new JComboBox<Filter>(selparam.getPossibleValues().toArray(new Filter[0]));
 		control = new JPanel();
 		control.setLayout(new BorderLayout());
 		control.add(filterCombo, BorderLayout.NORTH);
