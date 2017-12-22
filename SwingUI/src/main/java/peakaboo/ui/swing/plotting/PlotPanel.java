@@ -1636,6 +1636,9 @@ public class PlotPanel extends ClearPanel
 			return;
 		}
 		
+		
+		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		
 		float bestEnergy = 0f;
 		float bestSum = 0f;
 		
@@ -1656,7 +1659,7 @@ public class PlotPanel extends ClearPanel
 			}
 		}
 		
-		for (float energy = bestEnergy - 0.05f; energy <= bestEnergy + 0.05f; energy += 0.01f) {
+		for (float energy = bestEnergy - 0.1f; energy <= bestEnergy + 0.1f; energy += 0.01f) {
 			fits.setEnergyPerChannel(energy / average.size());
 			float sum = fits.calculateAreaUnderFit(average);
 			if (sum > bestSum) {
@@ -1666,6 +1669,8 @@ public class PlotPanel extends ClearPanel
 		}
 		
 		controller.settings().setMaxEnergy(bestEnergy);
+		
+		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		
 	}
 
