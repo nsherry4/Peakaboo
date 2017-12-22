@@ -21,7 +21,7 @@ import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTreeModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
-import swidget.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
 
 
@@ -68,7 +68,7 @@ public class ProposalPanel extends ClearPanel implements Changeable
 		JScrollPane fitted = createUnfittedTable();
 		this.add(fitted, BorderLayout.CENTER);
 
-		this.add(new TitleGradientPanel("Element Lookup", true, selControls), BorderLayout.NORTH);
+		this.add(new TitlePaintedPanel("Element Lookup", false, selControls), BorderLayout.NORTH);
 
 
 	}

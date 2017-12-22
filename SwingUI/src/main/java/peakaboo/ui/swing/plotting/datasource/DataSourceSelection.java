@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.plotting.datasource;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,13 +14,15 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
 
 import peakaboo.datasource.model.DataSource;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
-import swidget.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.toggle.ComplexToggle;
 import swidget.widgets.toggle.ComplexToggleGroup;
 
@@ -47,11 +50,8 @@ public class DataSourceSelection extends JDialog
 		setResizable(false);
 		setModal(true);
 		
-		TitleGradientPanel title = new TitleGradientPanel("Peakaboo can't decide what format this data is in.", true);
-		title.setBorder(Spacing.bMedium());
-		//JLabel title = new JLabel("<html><b>Peakaboo can't decide what format this data is</b></html>", JLabel.CENTER);
-		//title.setFont(title.getFont().deriveFont(title.getFont().getSize() * 1.5f));
-		//title.setBorder(Spacing.bMedium());
+		TitlePaintedPanel title = new TitlePaintedPanel("Peakaboo can't decide what format this data is in.", true);
+		title.setBackgroundPaint(Color.decode("#FFE082"));
 		c.add(title, BorderLayout.NORTH);
 	
 		

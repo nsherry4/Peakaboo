@@ -11,7 +11,7 @@ import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
-import swidget.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
 
 
@@ -72,7 +72,7 @@ public class SummationPanel extends JPanel
 		this.add(scroll, BorderLayout.CENTER);
 
 
-		this.add(new TitleGradientPanel("Add Summation Fitting", true, selControls), BorderLayout.NORTH);
+		this.add(new TitlePaintedPanel("Add Summation Fitting", false, selControls), BorderLayout.NORTH);
 
 
 

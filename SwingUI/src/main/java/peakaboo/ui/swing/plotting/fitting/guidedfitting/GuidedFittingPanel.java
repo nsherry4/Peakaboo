@@ -16,7 +16,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
-import swidget.widgets.gradientpanel.TitleGradientPanel;
+import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
 
 
@@ -73,7 +73,7 @@ public class GuidedFittingPanel extends JPanel
 		
 
 		this.add(scroll, BorderLayout.CENTER);
-		this.add(new TitleGradientPanel("Click Plot to Fit", true, selControls), BorderLayout.NORTH);
+		this.add(new TitlePaintedPanel("Click Plot to Fit", false, selControls), BorderLayout.NORTH);
 
 		
 
