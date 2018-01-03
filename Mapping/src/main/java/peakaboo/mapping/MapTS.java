@@ -61,7 +61,7 @@ public class MapTS
 			for (FittingResult result : frs.fits)
 			{
 				maps.putIntensityInMapAtPoint(
-					type == FittingTransform.AREA ? SpectrumCalculations.sumValuesInList(result.fit) : SpectrumCalculations.max(result.fit),
+					type == FittingTransform.AREA ? result.fit.sum() : result.fit.max(),
 					result.transitionSeries,
 					index);
 			}

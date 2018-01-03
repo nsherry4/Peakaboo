@@ -335,7 +335,7 @@ public class StandardDataSet implements DataSet
 			SpectrumCalculations.addLists_inplace(avg, current);
 			SpectrumCalculations.maxlist_inplace(max10, current);
 			
-			max = Math.max(max, SpectrumCalculations.max(current));
+			max = Math.max(max, current.max());
 			
 			//read the real coordinates for this scan
 			if (ds.hasPhysicalSize()) realCoords.add(ds.getPhysicalSize().getPhysicalCoordinatesAtIndex(i));

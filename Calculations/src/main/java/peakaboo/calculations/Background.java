@@ -140,8 +140,8 @@ public class Background
 	{
 
 		// FIRST STEP
-		float Iavg = SpectrumCalculations.sumValuesInList(data) / data.size();
-		float Imin = SpectrumCalculations.min(data);
+		float Iavg = data.sum() / data.size();
+		float Imin = data.min();
 		float diff = Iavg - Imin;
 		final float cutoff = Iavg + 2 * diff;
 

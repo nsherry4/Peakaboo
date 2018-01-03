@@ -76,7 +76,10 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
+import peakaboo.curvefit.controller.TSOrdering;
 import peakaboo.curvefit.model.FittingModel;
+import peakaboo.curvefit.model.FittingResult;
+import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -509,7 +512,7 @@ public class PlotPanel extends ClearPanel
 		energy.addChangeListener(e -> controller.settings().setMaxEnergy(((Double) energy.getValue()).floatValue()));
 		c2.gridx += 1;
 		
-		ImageButton energyGuess = new ToolbarImageButton("energy-auto", "", "Try to detect the correct max energy value from the fitted elements");
+		ImageButton energyGuess = new ToolbarImageButton("energy-auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
 		energyControls.add(energyGuess, c2);
 		energyGuess.addActionListener(e -> {
 			actionGuessMaxEnergy();
@@ -1632,43 +1635,16 @@ public class PlotPanel extends ClearPanel
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
-			JOptionPane.showMessageDialog(this, "Detecting a max energy value requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without an energy level set.");
+			JOptionPane.showMessageDialog(this, "Attempting to detect a max energy value requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without an energy level set.");
 			return;
 		}
 		
 		
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		
-		float bestEnergy = 0f;
-		float bestSum = 0f;
+		float energy = TSOrdering.proposeEnergyLevel(controller.data().getDataSet().averagePlot(), controller.fitting().getVisibleTransitionSeries());
 		
-		//build a new model for experimenting with
-		FittingSet fits = new FittingSet();
-		for (TransitionSeries ts : controller.fitting().getVisibleTransitionSeries()) {
-			fits.addTransitionSeries(ts);
-		}
-		
-		ReadOnlySpectrum average = controller.data().getDataSet().averagePlot();
-		
-		for (float energy = 0.05f; energy <= 50f; energy += 0.05f) {
-			fits.setEnergyPerChannel(energy / average.size());
-			float sum = fits.calculateAreaUnderFit(average);
-			if (sum > bestSum) {
-				bestSum = sum;
-				bestEnergy = energy;
-			}
-		}
-		
-		for (float energy = bestEnergy - 0.1f; energy <= bestEnergy + 0.1f; energy += 0.01f) {
-			fits.setEnergyPerChannel(energy / average.size());
-			float sum = fits.calculateAreaUnderFit(average);
-			if (sum > bestSum) {
-				bestSum = sum;
-				bestEnergy = energy;
-			}
-		}
-		
-		controller.settings().setMaxEnergy(bestEnergy);
+		controller.settings().setMaxEnergy(energy);
 		
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		

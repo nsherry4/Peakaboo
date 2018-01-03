@@ -156,11 +156,11 @@ public class MapCanvas extends GraphicsPanel
 		
 		if (tabController.getMapScaleMode() == MapScaleMode.RELATIVE)
 		{
-			dr.maxYIntensity = SpectrumCalculations.max(data);
+			dr.maxYIntensity = data.max();
 		}
 		else
 		{
-			dr.maxYIntensity = SpectrumCalculations.max(tabController.sumAllTransitionSeriesMaps());
+			dr.maxYIntensity = tabController.sumAllTransitionSeriesMaps().max();
 		}
 
 		
@@ -277,7 +277,7 @@ public class MapCanvas extends GraphicsPanel
 
 		
 		//how many steps/markings will we display on the spectrum
-		float steps = (float) Math.ceil(SpectrumCalculations.max(SpectrumCalculations.abs(ratiodata.first)));
+		float steps = (float) Math.ceil(SpectrumCalculations.abs(ratiodata.first).max());
 		dr.maxYIntensity = steps;
 		
 		
@@ -425,10 +425,10 @@ public class MapCanvas extends GraphicsPanel
 		Spectrum yellowSpectrum = data.get(OverlayColour.YELLOW);
 		
 		
-		if (redSpectrum != null ) redMax = SpectrumCalculations.max(redSpectrum);
-		if (greenSpectrum != null ) greenMax = SpectrumCalculations.max(greenSpectrum);
-		if (blueSpectrum != null ) blueMax = SpectrumCalculations.max(blueSpectrum);
-		if (yellowSpectrum != null ) yellowMax = SpectrumCalculations.max(yellowSpectrum);
+		if (redSpectrum != null ) redMax = redSpectrum.max();
+		if (greenSpectrum != null ) greenMax = greenSpectrum.max();
+		if (blueSpectrum != null ) blueMax = blueSpectrum.max();
+		if (yellowSpectrum != null ) yellowMax = yellowSpectrum.max();
 		
 		
 		dr.maxYIntensity = Math.max(Math.max(redMax, yellowMax), Math.max(greenMax, blueMax));

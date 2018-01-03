@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
@@ -124,7 +125,7 @@ public class TSOrdering
 				//square the values left in s
 				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
 				
-				remainingArea = SpectrumCalculations.sumValuesInList(unfit) / s.size();
+				remainingArea = unfit.sum() / s.size();
 				
 				if (useBaseSize)
 				{
@@ -318,37 +319,18 @@ public class TSOrdering
 			return prox1.compareTo(prox2);
 		});
 		
-//		Fn.sortBy(tss, new Comparator<TransitionSeries>() {
-//
-//			public int compare(TransitionSeries ts1, TransitionSeries ts2)
-//			{
-//				Double prox1, prox2;
-//
-//				prox1 = Math.abs(ts1.getProximityToEnergy(energy));
-//				prox2 = Math.abs(ts2.getProximityToEnergy(energy));
-//
-//				return prox1.compareTo(prox2);
-//
-//			}
-//		}, a -> a);
 		
 		//take the top n based on position alone
 		tss = tss.subList(0, 15);
 		
 		//now sort by score
-		Collections.sort(tss, new Comparator<TransitionSeries>() {
-
-			public int compare(TransitionSeries ts1, TransitionSeries ts2)
-			{
-				Float prox1, prox2;
-				
-				prox1 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts1);
-				prox2 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts2);
-				
-				
-				return prox1.compareTo(prox2);
-
-			}
+		Collections.sort(tss, (ts1, ts2) -> {
+			Float prox1, prox2;
+			
+			prox1 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts1);
+			prox2 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts2);
+			
+			return prox1.compareTo(prox2);
 		});
 				
 		//take the 5 best in sorted order based on score
@@ -356,6 +338,55 @@ public class TSOrdering
 	}
 
 	
+	public static void test(ReadOnlySpectrum spectrum) {
+		
+	}
 
+	
+	public static float proposeEnergyLevel(ReadOnlySpectrum spectrum, List<TransitionSeries> tsList) {
+		float bestEnergy = 0f;
+		float bestScore = 0f;
+		
+		//build a new model for experimenting with
+		FittingSet fits = new FittingSet();
+		for (TransitionSeries ts : tsList) {
+			fits.addTransitionSeries(ts);
+		}
+		
+		
+		float score;
+		for (float energy = 0.05f; energy <= 50f; energy += 0.05f) {
+			fits.setEnergyPerChannel(energy / spectrum.size());
+			FittingResultSet results = fits.calculateFittings(spectrum);
+			
+			score = 0f;
+			for (FittingResult fit : results.fits) {
+				score += Math.sqrt(fit.fit.sum());
+			}
+			
+			if (score > bestScore) {
+				bestScore = score;
+				bestEnergy = energy;
+			}
+		}
+		
+		
+		for (float energy = bestEnergy - 0.1f; energy <= bestEnergy + 0.1f; energy += 0.01f) {
+			fits.setEnergyPerChannel(energy / spectrum.size());
+			FittingResultSet results = fits.calculateFittings(spectrum);
+			
+			score = 0f;
+			for (FittingResult fit : results.fits) {
+				score += Math.sqrt(fit.fit.sum());
+			}
+			
+			if (score > bestScore) {
+				bestScore = score;
+				bestEnergy = energy;
+			}
+		}
+		
+		return bestEnergy;
+	}
 	
 }

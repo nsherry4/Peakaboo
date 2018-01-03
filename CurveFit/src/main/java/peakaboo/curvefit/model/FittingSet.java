@@ -311,7 +311,7 @@ public class FittingSet implements Serializable
 		return results;
 
 	}
-
+	
 
 	// don't need to synchronize this, since the only interaction
 	// it has with fitting data is in the calculateFittings() function

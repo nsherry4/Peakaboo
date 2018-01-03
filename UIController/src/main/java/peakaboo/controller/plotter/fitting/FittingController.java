@@ -129,7 +129,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 		for (FittingResult result : fittingModel.selectionResults.fits)
 		{
 			if (result.transitionSeries == ts) {
-				float max = SpectrumCalculations.max(result.fit);
+				float max = result.fit.max();
 				if (Float.isNaN(max)) max = 0f;
 				return max;
 			}

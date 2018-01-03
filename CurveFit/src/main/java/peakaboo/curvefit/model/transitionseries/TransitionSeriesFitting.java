@@ -356,7 +356,7 @@ public class TransitionSeriesFitting implements Serializable
 		
 		if (dataWidth > 0)
 		{
-			normalizationScale = SpectrumCalculations.max(fit);
+			normalizationScale = fit.max();
 			if (normalizationScale == 0.0)
 			{
 				normalizedUnscaledFit = SpectrumCalculations.multiplyBy(fit, 0.0f);
