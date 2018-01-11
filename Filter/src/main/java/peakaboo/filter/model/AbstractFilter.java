@@ -7,7 +7,7 @@ import java.util.List;
 import autodialog.model.Parameter;
 import autodialog.model.Value;
 import peakaboo.common.Version;
-import peakaboo.filter.plugin.JavaFilterPlugin;
+import peakaboo.filter.model.plugin.JavaFilterPlugin;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
 import scitypes.Range;

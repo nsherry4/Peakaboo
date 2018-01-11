@@ -3,7 +3,7 @@ package peakaboo.filter.model;
 import java.util.List;
 
 import bolt.plugin.core.BoltPluginController;
-import peakaboo.filter.plugin.FilterPlugin;
+import peakaboo.filter.model.plugin.FilterPlugin;
 
 public class SerializedFilter {
 

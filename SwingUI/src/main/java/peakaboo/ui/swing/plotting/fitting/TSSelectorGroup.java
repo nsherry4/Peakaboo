@@ -90,7 +90,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	protected ImageButton createRemoveButton(final TSSelector tss)
 	{
-		ImageButton remove = new ImageButton(StockIcon.EDIT_DELETE, "Remove", Layout.IMAGE, IconSize.BUTTON);
+		ImageButton remove = new ImageButton(StockIcon.EDIT_REMOVE, "Remove", Layout.IMAGE, IconSize.BUTTON);
 
 		remove.addActionListener(new ActionListener() {
 

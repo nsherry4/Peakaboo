@@ -45,6 +45,15 @@ public enum FilterType
 			return "Programming";
 		}
 					
+	},
+	OTHER {
+
+		@Override
+		public String toString()
+		{
+			return "Other";
+		}
+
 	};
 	
 	public String getSubPackage()

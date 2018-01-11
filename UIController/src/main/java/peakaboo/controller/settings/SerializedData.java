@@ -12,7 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.SerializedFilter;
-import peakaboo.filter.plugin.plugins.noise.SpringSmoothing;
+import peakaboo.filter.plugins.noise.SpringSmoothing;
 import scidraw.drawing.DrawingRequest;
 
 

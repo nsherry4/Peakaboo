@@ -14,8 +14,8 @@ import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
+import peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
-import peakaboo.ui.swing.plotting.fitting.unfitted.ProposalPanel;
 import swidget.widgets.ClearPanel;
 
 
@@ -28,13 +28,13 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	private IPlotController 		plotController;
 
 	private final String			FITTED		= "Fitted";
-	private final String			UNFITTED	= "Unfitted";
+	private final String			LOOKUP		= "Lookup";
 	private final String			SUMMATION	= "Summation";
 	private final String			SMART		= "Smart";
 
 
 	protected FittingPanel			fittedPanel;
-	protected ProposalPanel			proposalPanel;
+	protected LookupPanel			proposalPanel;
 	protected SummationPanel		summationPanel;
 	protected GuidedFittingPanel		smartPanel;
 	
@@ -55,7 +55,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		setPreferredSize(new Dimension(200, getPreferredSize().height));
 
 		fittedPanel = new FittingPanel(controller, this);
-		proposalPanel = new ProposalPanel(controller, this);
+		proposalPanel = new LookupPanel(controller, this);
 		summationPanel = new SummationPanel(controller, this);
 		smartPanel = new GuidedFittingPanel(controller, this, canvas);
 
@@ -98,7 +98,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 
 	public void elementalAdd()
 	{
-		card.show(cardPanel, UNFITTED);
+		card.show(cardPanel, LOOKUP);
 		changed();
 	}
 	
@@ -145,7 +145,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		panel.setLayout(card);
 
 		panel.add(fittedPanel, FITTED);
-		panel.add(proposalPanel, UNFITTED);
+		panel.add(proposalPanel, LOOKUP);
 		panel.add(summationPanel, SUMMATION);
 		panel.add(smartPanel, SMART);
 

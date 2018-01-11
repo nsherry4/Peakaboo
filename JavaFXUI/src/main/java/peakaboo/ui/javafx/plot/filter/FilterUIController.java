@@ -13,7 +13,7 @@ import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
-import peakaboo.filter.plugin.FilterPlugin;
+import peakaboo.filter.model.plugin.FilterPlugin;
 import peakaboo.ui.javafx.change.ChangeController;
 import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;

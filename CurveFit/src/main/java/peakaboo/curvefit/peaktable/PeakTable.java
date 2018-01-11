@@ -99,4 +99,11 @@ public class PeakTable
 		return tss.get(0);
 	}
 	
+	public static void main(String[] args) {
+		PeakTableReader.readPeakTable();
+		for (TransitionSeries ts : PeakTable.getAllTransitionSeries()) {
+			System.out.println(ts);
+		}
+	}
+	
 }

@@ -18,7 +18,7 @@ import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
-import peakaboo.filter.plugin.FilterPlugin;
+import peakaboo.filter.model.plugin.FilterPlugin;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -170,8 +170,8 @@ public class FilterSelectionList extends ClearPanel
 		
 		FilterSelectionRenderer renderer = new FilterSelectionRenderer();
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
-		renderer.setClosedIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
-		renderer.setOpenIcon(StockIcon.PLACE_FOLDER_OPEN.toImageIcon(IconSize.BUTTON));
+		//renderer.setClosedIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
+		//renderer.setOpenIcon(StockIcon.PLACE_FOLDER_OPEN.toImageIcon(IconSize.BUTTON));
 		tree.setCellRenderer(renderer);
 
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

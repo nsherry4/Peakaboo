@@ -12,7 +12,7 @@ import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
-import peakaboo.filter.plugin.FilterPlugin;
+import peakaboo.filter.model.plugin.FilterPlugin;
 import scitypes.ReadOnlySpectrum;
 
 

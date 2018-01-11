@@ -55,9 +55,7 @@ public class PeakTableReader
 			e.printStackTrace();
 		}
 
-		/*
-		 * String types, relintens; types = elementsArray[0]; relintens = elementsArray[1];
-		 */
+		//remove headers
 		elements.remove(0);
 		elements.remove(0);
 
