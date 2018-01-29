@@ -1,7 +1,10 @@
 package peakaboo.filter.plugins.advanced;
 
 import autodialog.model.Parameter;
+import autodialog.model.SelectionParameter;
+import autodialog.model.style.editors.BooleanStyle;
 import autodialog.model.style.editors.IntegerStyle;
+import autodialog.model.style.editors.ListStyle;
 import autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
@@ -13,8 +16,14 @@ import scitypes.SpectrumCalculations;
 public class SpectrumNormalization extends AbstractSimpleFilter
 {
 	
-	private Parameter<Integer> pChannel;
+	private Parameter<Integer> pStartChannel;
+	private Parameter<Integer> pEndChannel;
 	private Parameter<Float> pHeight;
+	private SelectionParameter<String> pMode;
+	
+	private final String MODE_RANGE = "Channel Range";
+	private final String MODE_MAX = "Strongest Channel";
+	private final String MODE_SUM = "All Channels";
 
 	@Override
 	public String pluginVersion() {
@@ -24,9 +33,17 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		pChannel = new Parameter<>("Channel", new IntegerStyle(), 1, this::validate);
-		addParameter(pChannel);
-		pHeight = new Parameter<>("Intensity", new RealStyle(), 10f, this::validate);
+		pMode = new SelectionParameter<String>("Mode", new ListStyle<String>(), MODE_RANGE, this::validate);
+		pMode.setPossibleValues(MODE_RANGE, MODE_MAX, MODE_SUM);
+		addParameter(pMode);
+		
+		pStartChannel = new Parameter<>("Start Channel", new IntegerStyle(), 1, this::validate);
+		addParameter(pStartChannel);
+		
+		pEndChannel = new Parameter<>("End Channel", new IntegerStyle(), 10, this::validate);
+		addParameter(pEndChannel);
+		
+		pHeight = new Parameter<>("Normalized Intensity", new RealStyle(), 10f, this::validate);
 		addParameter(pHeight);
 	}
 	
@@ -40,34 +57,50 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 
-		int channel = pChannel.getValue()+1;
+		String mode = pMode.getValue();
+		int startChannel = pStartChannel.getValue()-1;
+		int endChannel = pEndChannel.getValue()-1;
 		float height = pHeight.getValue().floatValue();
 		
-		if (channel >= data.size()) return data;
-		
-		float ratio = data.get(channel) / height;
+		float value=0f;
+		switch (mode) {
+		case MODE_RANGE:
+			if (startChannel >= data.size()) return data;
+			if (endChannel <= 0) return data;
+			int range = (endChannel - startChannel) + 1;
+			value = data.subSpectrum(startChannel, endChannel).sum() / range;
+			break;
+		case MODE_MAX:
+			value = data.max();
+			break;
+		case MODE_SUM:
+			value = data.sum();
+			break;
+		}
+
+		float ratio = value / height;
 		if (ratio == 0f) return new ISpectrum(data.size());
 		return SpectrumCalculations.divideBy(data, ratio);
+		
+		
 		
 	}
 
 	@Override
 	public String getFilterDescription()
 	{
-		return "The " + getFilterName() + " scales each spectrum so that the intensity at a given channel is always the same.";
+		return "The " + getFilterName() + " scales each spectrum's intensity based on the options selected";
 	}
 
 	@Override
 	public String getFilterName()
 	{
-		// TODO Auto-generated method stub
 		return "Normalizer";
 	}
 
 	@Override
 	public FilterType getFilterType()
 	{
-		// TODO Auto-generated method stub
 		return FilterType.ADVANCED;
 	}
 
@@ -75,17 +108,25 @@ public class SpectrumNormalization extends AbstractSimpleFilter
 	@Override
 	public boolean pluginEnabled()
 	{
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	private boolean validate(Parameter<?> p)
 	{
-		
-		int channel = pChannel.getValue();
+		String mode = pMode.getValue();		
+		int startChannel = pStartChannel.getValue();
+		int endChannel = pEndChannel.getValue();
 		float height = pHeight.getValue().floatValue();
+				
+		pStartChannel.setEnabled(mode == MODE_RANGE);
+		pEndChannel.setEnabled(mode == MODE_RANGE);
 		
-		if (channel < 1) return false;
+		
+		if (startChannel < 1) return false;
+		if (endChannel < 1) return false;
+		
+		if (endChannel < startChannel) return false;
+		
 		if (height < 1) return false;
 		if (height > 1000000) return false;
 		

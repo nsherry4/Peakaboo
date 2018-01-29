@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plotting;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -11,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -59,6 +61,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -439,6 +442,7 @@ public class PlotPanel extends ClearPanel
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
+		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
 		ImageButton ibutton = new ToolbarImageButton("document-open", "Open", "Open a new data set");
