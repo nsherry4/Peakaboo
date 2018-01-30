@@ -104,9 +104,8 @@ public class Peakaboo
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
-		
+		Swidget.initialize();
 		
 		
 		SwingUtilities.invokeLater(() -> showSplash());
@@ -120,7 +119,6 @@ public class Peakaboo
 			e.printStackTrace();
 		}
 		
-		SwingUtilities.invokeLater(() -> Swidget.initialize());
 		SwingUtilities.invokeLater(() -> readPeakTable());
 		SwingUtilities.invokeLater(() -> DataSourceLoader.load() );
 		SwingUtilities.invokeLater(() -> FilterLoader.load() );
