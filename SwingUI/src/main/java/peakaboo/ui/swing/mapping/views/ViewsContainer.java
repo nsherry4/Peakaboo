@@ -67,7 +67,7 @@ public class ViewsContainer extends ClearPanel
 		setLayout(new BorderLayout());
 		add(cardPanel, BorderLayout.CENTER);
 		add(modeSelect, BorderLayout.NORTH);
-		if (SidePanel.SHOW_UI_FRAME_BORDERS) setBorder(new TitledBorder("Mapped Fittings"));
+		if (SidePanel.SHOW_UI_FRAME_BORDERS) setBorder(new TitledBorder("Fittings"));
 		
 		
 	}

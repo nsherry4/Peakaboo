@@ -44,7 +44,7 @@ public class TSWidget extends ClearPanel
 		
 		elementName.setOpaque(false);
 		elementDetail.setOpaque(false);
-		if (large) elementName.setFont(elementName.getFont().deriveFont(elementName.getFont().getSize() * 1.4f));
+		if (large) elementName.setFont(elementName.getFont().deriveFont(elementName.getFont().getSize() * 1.4f).deriveFont(Font.BOLD));
 		if (large) elementDetail.setFont(elementDetail.getFont().deriveFont(Font.PLAIN));
 	}
 	

@@ -16,6 +16,7 @@ import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.filter.model.FilterLoader;
+import peakaboo.ui.swing.plotting.PlotterFrame;
 import swidget.Swidget;
 import swidget.dialogues.SplashScreen;
 import swidget.icons.IconFactory;

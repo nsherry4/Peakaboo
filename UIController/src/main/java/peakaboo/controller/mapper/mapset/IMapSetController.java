@@ -39,6 +39,13 @@ public interface IMapSetController
 	void setDataWidth(int width);
 	int getDataWidth();
 	
+	boolean guessDataDimensions();
+	
+	//only return non-zero if isDimensionsProvided is true
+	int getOriginalDataHeight();
+	int getOriginalDataWidth();
+	
+	
 	int getInterpolatedHeight();
 	int getInterpolatedWidth();
 

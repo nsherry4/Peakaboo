@@ -18,6 +18,10 @@ import javax.swing.event.ChangeListener;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
+import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
+import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
 
 
@@ -68,8 +72,14 @@ public class SidePanel extends JPanel
 		maingbc.gridy = 0;
 		maingbc.weighty = 0.0;
 		maingbc.fill = GridBagConstraints.HORIZONTAL;
-		add(createMapOptions(), maingbc);
+		add(createMapDimensions(), maingbc);
 
+		// map settings
+		maingbc.gridy++;
+		maingbc.weighty = 0.0;
+		maingbc.fill = GridBagConstraints.HORIZONTAL;
+		add(createMapOptions(), maingbc);
+		
 		// map scale mode selector
 		maingbc.gridy += 1;
 		maingbc.weighty = 1.0;
@@ -110,7 +120,67 @@ public class SidePanel extends JPanel
 	{
 
 		JPanel mapProperties = new JPanel();
-		if (SHOW_UI_FRAME_BORDERS) mapProperties.setBorder(new TitledBorder("Map Settings"));
+		if (SHOW_UI_FRAME_BORDERS) mapProperties.setBorder(new TitledBorder("Appearance"));
+		
+		mapProperties.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = Spacing.iTiny();
+		c.ipadx = 0;
+		c.ipady = 0;
+
+		c.weightx = 0.0;
+		c.weighty = 0.0;
+		c.gridy = 0;
+		
+		interpolation = new JSpinner();
+		interpolation.setValue(controller.mapsController.getInterpolation());
+		interpolation.addChangeListener(e -> {
+			controller.mapsController.setInterpolation((Integer) ((JSpinner) e.getSource()).getValue());
+		});
+		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 1.0;
+		mapProperties.add(new JLabel("Interpolation Passes:"), c);
+		c.gridx = 1;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.0;
+		mapProperties.add(interpolation, c);
+
+		c.gridy += 1;
+		contours = new JCheckBox("Contours");
+		contours.setSelected(controller.mapsController.getContours());
+		contours.addActionListener(e -> {
+			controller.mapsController.setContours(((JCheckBox) e.getSource()).isSelected());
+		});
+
+		shadesSpinner = new JSpinner();
+		shadesSpinner.setValue(controller.mapsController.getSpectrumSteps());
+		shadesSpinner.setEnabled(controller.mapsController.getContours());
+		shadesSpinner.addChangeListener(e -> {
+			controller.mapsController.setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
+		});
+		
+		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.0;
+		mapProperties.add(contours, c);
+		c.gridx = 1;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 1.0;
+		mapProperties.add(shadesSpinner, c);
+
+		return mapProperties;
+
+	}
+	
+	
+
+	private JPanel createMapDimensions()
+	{
+
+		JPanel mapProperties = new JPanel();
+		if (SHOW_UI_FRAME_BORDERS) mapProperties.setBorder(new TitledBorder("Dimensions"));
 		
 		mapProperties.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -124,84 +194,63 @@ public class SidePanel extends JPanel
 		c.gridy = 0;
 		width = new JSpinner();
 		width.setValue(controller.mapsController.getDataWidth());
-		width.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e)
-			{
-				controller.mapsController.setDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
-			}
+		width.addChangeListener(e -> {
+			controller.mapsController.setDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
+		c.weightx = 1.0;
 		c.anchor = GridBagConstraints.LINE_START;
 		mapProperties.add(new JLabel("Width:"), c);
 		c.gridx = 1;
+		c.weightx = 0.0;
 		c.anchor = GridBagConstraints.LINE_END;
 		mapProperties.add(width, c);
 
 		c.gridy += 1;
 		height = new JSpinner();
 		height.setValue(controller.mapsController.getDataHeight());
-		height.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e)
-			{
-				controller.mapsController.setDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
-			}
+		height.addChangeListener(e -> {
+			controller.mapsController.setDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
+		c.weightx = 1.0;
 		c.anchor = GridBagConstraints.LINE_START;
 		mapProperties.add(new JLabel("Height:"), c);
 		c.gridx = 1;
+		c.weightx = 0.0;
 		c.anchor = GridBagConstraints.LINE_END;
 		mapProperties.add(height, c);
-
-		c.gridy += 1;
-		interpolation = new JSpinner();
-		interpolation.setValue(controller.mapsController.getInterpolation());
-		interpolation.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e)
-			{
-				controller.mapsController.setInterpolation((Integer) ((JSpinner) e.getSource()).getValue());
-			}
-		});
-		c.gridx = 0;
-		c.anchor = GridBagConstraints.LINE_START;
-		mapProperties.add(new JLabel("Interpolation Passes:"), c);
-		c.gridx = 1;
-		c.anchor = GridBagConstraints.LINE_END;
-		mapProperties.add(interpolation, c);
-
-		c.gridy += 1;
-		contours = new JCheckBox("Contours");
-		contours.setSelected(controller.mapsController.getContours());
-		contours.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.mapsController.setContours(((JCheckBox) e.getSource()).isSelected());
-			}
-		});
-
-		shadesSpinner = new JSpinner();
-		shadesSpinner.setValue(controller.mapsController.getSpectrumSteps());
-		shadesSpinner.setEnabled(controller.mapsController.getContours());
-		shadesSpinner.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e)
-			{
-				controller.mapsController.setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
-			}
-		});
 		
-		c.gridx = 0;
-		c.anchor = GridBagConstraints.LINE_START;
-		mapProperties.add(contours, c);
-		c.gridx = 1;
-		c.anchor = GridBagConstraints.LINE_END;
-		mapProperties.add(shadesSpinner, c);
+		
+		if (!controller.mapsController.isDimensionsProvided()) {
+			ImageButton magic = new ImageButton("auto", "", "Try to detect the map's dimensions.", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
+			c.gridx = 0;
+			c.gridwidth = 2;
+			c.gridy += 1;
+			c.weightx = 0.0;
+			c.anchor = GridBagConstraints.LINE_END;
+			magic.addActionListener(e -> {
+				controller.mapsController.guessDataDimensions();
+				height.setValue(controller.mapsController.getDataHeight());
+				width.setValue(controller.mapsController.getDataWidth());
+			});
+			mapProperties.add(magic, c);
+		} else {
+			ImageButton reset = new ImageButton(StockIcon.ACTION_REFRESH, "", "Reset the dimensions to those given in the data set.", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
+			c.gridx = 0;
+			c.gridwidth = 2;
+			c.gridy += 1;
+			c.weightx = 0.0;
+			c.anchor = GridBagConstraints.LINE_END;
+			reset.addActionListener(e -> {
+				height.setValue(controller.mapsController.getOriginalDataHeight());
+				width.setValue(controller.mapsController.getOriginalDataWidth());
+			});
+			mapProperties.add(reset, c);
+		}
+		c.gridwidth = 1;
 
 		return mapProperties;
 

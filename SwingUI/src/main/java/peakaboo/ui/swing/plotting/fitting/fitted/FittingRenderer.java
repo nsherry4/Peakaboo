@@ -74,7 +74,7 @@ public class FittingRenderer extends DefaultTableCellRenderer
 			{
 				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1);
 			} else {
-				desc = "Atomic # " + (e.atomicNumber()) + ", Intensity: " + SigDigits.roundFloatTo(intensity, 1);
+				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1) + ", Atomic #" + (e.atomicNumber());
 			}
 			tswidget.setDescription(desc);
 			

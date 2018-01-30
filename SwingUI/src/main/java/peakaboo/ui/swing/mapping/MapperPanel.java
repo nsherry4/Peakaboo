@@ -20,18 +20,17 @@ import javax.swing.SwingConstants;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapTabController;
-import peakaboo.ui.swing.PeakabooMapperSwing;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import swidget.widgets.Spacing;
 
 
 
-public class MapViewer extends JPanel
+public class MapperPanel extends JPanel
 {
 
 	private MapCanvas			canvas;
-
+	
 	protected MappingController	controller;
 
 	private JLabel			warnOnTooSmallDataset;
@@ -40,22 +39,33 @@ public class MapViewer extends JPanel
 	private MapTabController	tabController;
 	//private SingleMapModel	viewModel;
 	
-	PeakabooMapperSwing		owner;
+	MapperFrame					owner;
 
+	private MapperToolbar		toolbar;
 
-	public MapViewer(MapTabController _tabController, MappingController controller, PeakabooMapperSwing owner)
+	public MapperPanel(MapTabController _tabController, MappingController controller, MapperFrame owner)
 	{
 
 		this.controller = controller;
 		this.tabController = _tabController;
 
-		controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String s)
+		this.controller.addListener(s -> {
+			if (! s.equals(MappingController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
+			
+			toolbar.monochrome.setSelected(controller.mapsController.getMonochrome());
+			toolbar.spectrum.setSelected(controller.mapsController.getShowSpectrum());
+			toolbar.coords.setSelected(controller.mapsController.getShowCoords());
+			
+			if (tabController.hasBoundingRegion())
 			{
-				if (! s.equals(MappingController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
-				repaint();
+				toolbar.readIntensities.setEnabled(true);
+				toolbar.examineSubset.setEnabled(true);
+			} else {
+				toolbar.readIntensities.setEnabled(false);
+				toolbar.examineSubset.setEnabled(false);
 			}
+			
+			repaint();
 		});
 
 
@@ -75,6 +85,9 @@ public class MapViewer extends JPanel
 		split.setOneTouchExpandable(true);
 		split.setBorder(Spacing.bNone());
 		add(split, BorderLayout.CENTER);	
+		
+		toolbar = new MapperToolbar(this, controller);
+		add(toolbar, BorderLayout.NORTH);
 		
 		
 		class CompleteMouseListener implements MouseMotionListener, MouseListener
@@ -210,7 +223,7 @@ public class MapViewer extends JPanel
 			public void run()
 			{
 
-				MapViewer.this.validate();
+				MapperPanel.this.validate();
 				repaint();
 
 			}

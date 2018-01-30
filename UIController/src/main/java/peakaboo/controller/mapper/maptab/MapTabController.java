@@ -616,11 +616,11 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 
 				String side2Title = mapLongTitle(getTransitionSeriesForRatioSide(2));
 
-				return side1Title + " : " + side2Title;
+				return "Map of " + side1Title + " : " + side2Title;
 				
 			default:
 				
-				return getDatasetTitle(getVisibleTransitionSeries());
+				return "Map of " + getDatasetTitle(getVisibleTransitionSeries());
 				
 		}
 		

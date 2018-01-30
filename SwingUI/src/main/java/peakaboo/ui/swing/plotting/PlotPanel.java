@@ -101,8 +101,8 @@ import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.Peakaboo;
-import peakaboo.ui.swing.PeakabooMapperSwing;
 import peakaboo.ui.swing.container.PeakabooContainer;
+import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.misc.PluginData;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
@@ -516,7 +516,7 @@ public class PlotPanel extends ClearPanel
 		energy.addChangeListener(e -> controller.settings().setMaxEnergy(((Double) energy.getValue()).floatValue()));
 		c2.gridx += 1;
 		
-		ImageButton energyGuess = new ToolbarImageButton("energy-auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
+		ImageButton energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
 		energyControls.add(energyGuess, c2);
 		energyGuess.addActionListener(e -> {
 			actionGuessMaxEnergy();
@@ -1378,7 +1378,7 @@ public class PlotPanel extends ClearPanel
 		{
 
 			MappingController mapController = controller.checkoutMapController();
-			PeakabooMapperSwing mapperWindow;
+			MapperFrame mapperWindow;
 
 			MapResultSet results = tasks.getResult();
 
@@ -1408,7 +1408,7 @@ public class PlotPanel extends ClearPanel
 			mapController.mapsController.setInterpolation(0);
 
 			
-			mapperWindow = new PeakabooMapperSwing(container.getContainer(), mapController, controller);
+			mapperWindow = new MapperFrame(container.getContainer(), mapController, controller);
 
 			mapperWindow.showDialog();
 
