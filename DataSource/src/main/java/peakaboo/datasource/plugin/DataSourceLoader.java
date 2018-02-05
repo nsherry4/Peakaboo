@@ -59,6 +59,16 @@ public class DataSourceLoader
 		loaded = true;
 	}
 	
+	public synchronized static void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
+		try {
+			BoltPluginLoader<JavaDataSourcePlugin> javaLoader = new BoltPluginLoader<JavaDataSourcePlugin>(plugins, JavaDataSourcePlugin.class);
+			javaLoader.registerPlugin(clazz);
+		} catch (ClassInheritanceException | ClassInstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 
 		

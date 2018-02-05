@@ -10,6 +10,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.ObjectBuffer;
 import com.esotericsoftware.kryo.serialize.SimpleSerializer;
 
+import net.jpountz.lz4.LZ4Compressor;
+import net.jpountz.lz4.LZ4Decompressor;
+import net.jpountz.lz4.LZ4Factory;
+import net.jpountz.lz4.LZ4SafeDecompressor;
 import scitypes.ISpectrum;
 import scitypes.SparsedList;
 import scitypes.Spectrum;
@@ -85,14 +89,15 @@ public final class SpectrumList extends ScratchList<Spectrum>{
 	protected byte[] encodeObject(Spectrum element) throws IOException
 	{
 		ObjectBuffer buffer = getKryoBuffer();
-		return buffer.writeObject(element);
+		return compress(buffer.writeObject(element));
+		
 	}
 	
 	@Override
 	protected Spectrum decodeObject(byte[] byteArray) throws IOException
 	{
 		ObjectBuffer buffer = getKryoBuffer();
-		return buffer.readObject(byteArray, ISpectrum.class);
+		return buffer.readObject(decompress(byteArray), ISpectrum.class);
 	}
 
 	@Override
@@ -133,6 +138,17 @@ public final class SpectrumList extends ScratchList<Spectrum>{
 		if (kryoBuffer != null) return kryoBuffer;
 		kryoBuffer = new ObjectBuffer(getKryo(), 1000 << 16);
 		return kryoBuffer;
+	}
+
+	private LZ4Compressor compressor = LZ4Factory.fastestInstance().fastCompressor(); 
+	private byte[] compress(byte[] input) {
+		return compressor.compress(input);
+	}
+	
+	private LZ4SafeDecompressor decompressor = LZ4Factory.fastestInstance().safeDecompressor();
+	private byte[] decompress(byte[] input) {
+		//LZ4SafeDecompressor decompressor = LZ4Factory.fastestInstance().safeDecompressor();
+		return decompressor.decompress(input, 2<<18); //max 256K per spectrum should be more than enough.
 	}
 
 	

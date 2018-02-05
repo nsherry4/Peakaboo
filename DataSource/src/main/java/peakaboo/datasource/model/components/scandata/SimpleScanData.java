@@ -15,7 +15,12 @@ public class SimpleScanData implements ScanData {
 	
 	public SimpleScanData(String name) {
 		this.name = name;
-		spectra = SpectrumList.create(name);
+		this.spectra = SpectrumList.create(name);
+	}
+		
+	public SimpleScanData(String name, List<Spectrum> backingList) {
+		this.name = name; 
+		this.spectra = backingList;
 	}
 
 	@Override
