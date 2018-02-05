@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plotting;
 
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -29,12 +30,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -43,6 +48,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -101,15 +107,16 @@ import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.Peakaboo;
-import peakaboo.ui.swing.container.PeakabooContainer;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.misc.PluginData;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
+import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
+import plural.swing.ExecutorSetViewDialog;
 import scidraw.swing.SavePicture;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
@@ -129,14 +136,15 @@ import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.ZoomSlider;
+import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 import swidget.widgets.toggle.ComplexToggle;
 
 
 
-public class PlotPanel extends ClearPanel
+public class PlotPanel extends TabbedInterfacePanel
 {
 
-	private PeakabooContainer	container;
+	private TabbedPlotterManager 	container;
 
 
 	//Non-UI
@@ -180,9 +188,9 @@ public class PlotPanel extends ClearPanel
 	JPanel						bottomPanel;
 	JPanel						scanSelector;
 	JScrollPane					scrolledCanvas;
-	
 
-	public PlotPanel(PeakabooContainer container)
+
+	public PlotPanel(TabbedPlotterManager container)
 	{
 		this.container = container;
 		this.programTitle = " - " + Version.title;
@@ -217,11 +225,6 @@ public class PlotPanel extends ClearPanel
 	public void setProgramTitle(String title)
 	{
 		programTitle = title;
-	}
-
-	public void addToolbarButton(int position, Component c)
-	{
-		toolBar.add(c, position);
 	}
 
 	public IPlotController getController()
@@ -293,8 +296,8 @@ public class PlotPanel extends ClearPanel
 		zoomSlider.setValueEventless((int)(controller.settings().getZoom()*100));
 		setTitleBar();
 
-		container.getContainer().validate();
-		container.getContainer().repaint();
+		container.getWindow().validate();
+		container.getWindow().repaint();
 
 	}
 
@@ -333,7 +336,8 @@ public class PlotPanel extends ClearPanel
 
 
 
-		Container pane = this;
+		
+		Container pane = this.getContentLayer();
 
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -384,7 +388,7 @@ public class PlotPanel extends ClearPanel
 		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.add(new CurveFittingView(controller.fitting(), controller, canvas), 0);
-		tabs.add(new FiltersetViewer(controller.filtering(), container.getContainer()), 1);
+		tabs.add(new FiltersetViewer(controller.filtering(), container.getWindow()), 1);
 
 		
 		c.gridx = 0;
@@ -400,7 +404,7 @@ public class PlotPanel extends ClearPanel
 		pane.add(split, c);
 
 		
-		createMenu();
+		//createMenu();
 
 
 	}
@@ -408,7 +412,7 @@ public class PlotPanel extends ClearPanel
 
 	private void setTitleBar()
 	{
-		container.setTitle(getTitleBarString());
+		container.setTitle(this, getTitleBarString());
 	}
 
 
@@ -525,10 +529,15 @@ public class PlotPanel extends ClearPanel
 		c.gridx += 1;		
 		toolbar.add(energyControls, c);
 
-		ibutton = new ToolbarImageButton(StockIcon.MISC_ABOUT, "About");
-		ibutton.addActionListener(e -> actionAbout());
-		c.gridx += 1;
-		toolbar.add(ibutton, c);
+//		ibutton = new ToolbarImageButton(StockIcon.MISC_ABOUT, "About");
+//		ibutton.addActionListener(e -> actionAbout());
+//		c.gridx += 1;
+//		toolbar.add(ibutton, c);
+//		
+		
+		c.gridx++;
+		toolbar.add(createMenuButton(), c);
+		
 
 	}
 
@@ -561,7 +570,7 @@ public class PlotPanel extends ClearPanel
 	}
 
 	
-	private JCheckBoxMenuItem createMenuCheckItem(String title, ImageIcon icon, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
+	private JCheckBoxMenuItem createMenuCheckItem(String title, ImageIcon icon, String description, Consumer<Boolean> listener, KeyStroke key, Integer mnemonic)
 	{
 		
 		JCheckBoxMenuItem menuItem;
@@ -571,13 +580,43 @@ public class PlotPanel extends ClearPanel
 			menuItem = new JCheckBoxMenuItem(title);
 		}
 		
-		configureMenuItem(menuItem, description, listener, key, mnemonic);
+		Consumer<ActionEvent> checkListener = e -> {
+			boolean orig = menuItem.isSelected();
+			if (e.getSource() == menuItem) {
+				orig = !orig;
+			}
+			menuItem.setSelected(!orig);
+			listener.accept(!orig);
+		};
+		
+		configureMenuItem(menuItem, description, checkListener, key, mnemonic);
 		
 		return menuItem;
 		
 	}
 	
-	private JMenuItem createMenuItem(String title, ImageIcon icon, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
+	private JRadioButtonMenuItem createMenuRadioItem(String title, ImageIcon icon, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
+	{
+		
+		JRadioButtonMenuItem menuItem;
+		if (icon != null) {
+			menuItem = new JRadioButtonMenuItem(title, icon);
+		} else {
+			menuItem = new JRadioButtonMenuItem(title);
+		}
+		
+		Consumer<ActionEvent> checkListener = e -> {
+			menuItem.setSelected(true);
+			listener.accept(e);
+		};
+		
+		configureMenuItem(menuItem, description, checkListener, key, mnemonic);
+		
+		return menuItem;
+		
+	}
+	
+	private JMenuItem createMenuItem(String title, ImageIcon icon, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
 	{
 		JMenuItem menuItem;
 		if (icon != null) {
@@ -592,22 +631,45 @@ public class PlotPanel extends ClearPanel
 		
 	}
 	
-	private void configureMenuItem(JMenuItem menuItem, String description, ActionListener listener, KeyStroke key, Integer mnemonic)
+	private void configureMenuItem(JMenuItem menuItem, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
 	{
+		
+		
+			
+		Action action = new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.accept(e);
+			}
+		};
+
+			
+		//You'd think this would fail with tabs because they'd both try to handle the
+		//key event, but it actually works perfectly. Maybe the tab component itself 
+		//redirects input to only the focused tab?
+		if (key != null) {
+			this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(key, key.toString());
+			this.getActionMap().put(key.toString(), action);
+		}
+		
+		
+		
+		//Even though this isn't how actions are performed anymore, we still want it to show up
 		if (key != null) menuItem.setAccelerator(key);
+		
 		if (mnemonic != null) menuItem.setMnemonic(mnemonic);
 		if (description != null) menuItem.getAccessibleContext().setAccessibleDescription(description);
 		if (description != null) menuItem.setToolTipText(description);
-		if (listener != null) menuItem.addActionListener(listener);
+		if (listener != null) menuItem.addActionListener(e -> listener.accept(e));
 	}
 	
-	private void createMenu()
+	private List<JMenu> createMenus()
 	{
 
-		JMenuBar menuBar;
 		JMenu menu;
 
-		menuBar = new JMenuBar();
+		List<JMenu> menuBar = new ArrayList<>();
 
 		
 
@@ -623,11 +685,6 @@ public class PlotPanel extends ClearPanel
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
 		
-
-		
-		
-		menu.addSeparator();
-
 		
 		menu.add(createMenuItem(
 				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
@@ -642,10 +699,10 @@ public class PlotPanel extends ClearPanel
 		));
 		
 
-
-		menu.addSeparator();
 		
-		exportSinks = new JMenu("Export Data");
+		JMenu export = new JMenu("Export");
+		
+		exportSinks = new JMenu("Raw Data");
 		
 		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkLoader.getPluginSet().getAll()) {
 			exportSinks.add(createMenuItem(
@@ -655,40 +712,40 @@ public class PlotPanel extends ClearPanel
 			));
 		}
 		
-		menu.add(exportSinks);
-
-		
-		menu.addSeparator();
+		export.add(exportSinks);
 		
 
 		
 		snapshotMenuItem = createMenuItem(
-				"Export Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
+				"Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
 				e -> actionSavePicture(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
 		);
-		menu.add(snapshotMenuItem);
+		export.add(snapshotMenuItem);
 		
 		
 		exportFilteredDataMenuItem = createMenuItem(
-				"Export Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
+				"Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
 				e -> actionSaveFittedDataInformation(),
 				null, null
 		);
-		menu.add(exportFilteredDataMenuItem);
+		export.add(exportFilteredDataMenuItem);
 		
 		exportFittingsMenuItem = createMenuItem(
-				"Export Fittings as Text", null, "Saves the current fitting data to a text file",
+				"Fittings as Text", null, "Saves the current fitting data to a text file",
 				e -> actionSaveFittingInformation(),
 				null, null
 		);
-		menu.add(exportFittingsMenuItem);
+		export.add(exportFittingsMenuItem);
 
 
-		menu.addSeparator();
+		menu.add(export);
+		
+		
+		JMenu plugins = new JMenu("Plugins");
 
-		menu.add(createMenuItem(
-				"Plugin Status", null, "Shows information about loaded plugins",
+		plugins.add(createMenuItem(
+				"Status", null, "Shows information about loaded plugins",
 				e -> {
 					
 					JTabbedPane tabs = new JTabbedPane();
@@ -733,8 +790,8 @@ public class PlotPanel extends ClearPanel
 				null, null
 		));	
 		
-		menu.add(createMenuItem(
-				"Open Plugins Folder", null, "Opens the plugins folder to add or remove plugin files",
+		plugins.add(createMenuItem(
+				"Open Folder", null, "Opens the plugins folder to add or remove plugin files",
 				e -> {
 					File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins");
 					appDataDir.mkdirs();
@@ -751,14 +808,15 @@ public class PlotPanel extends ClearPanel
 		
 	
 		
-		menu.addSeparator();
+		menu.add(plugins);
 		
 		
-		menu.add(createMenuItem(
-				"Exit", StockIcon.WINDOW_CLOSE.toMenuIcon(), "Exits the Program",
-				e -> System.exit(0),
-				null, KeyEvent.VK_X
-		));
+		
+//		menu.add(createMenuItem(
+//				"Exit", StockIcon.WINDOW_CLOSE.toMenuIcon(), "Exits the Program",
+//				e -> System.exit(0),
+//				null, KeyEvent.VK_X
+//		));
 
 		menuBar.add(menu);
 
@@ -809,36 +867,32 @@ public class PlotPanel extends ClearPanel
 		
 		logPlot = createMenuCheckItem(
 				"Logarithmic Scale", null, "Toggles the plot between a linear and logarithmic scale",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setViewLog(menuitem.isSelected());
+				b -> {
+					controller.settings().setViewLog(b);
 				},
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), KeyEvent.VK_L
 		);
 		
 		axes = createMenuCheckItem(
 				"Axes", null, "Toggles display of axes and grid lines",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setShowAxes(menuitem.isSelected());
+				b -> {
+					controller.settings().setShowAxes(b);
 				},
 				null, null
 		);
 
 		title = createMenuCheckItem(
 				"Title", null, "Toggles display of the current data set's title",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setShowTitle(menuitem.isSelected());
+				b -> {
+					controller.settings().setShowTitle(b);
 				},
 				null, null
 		);
 
 		monochrome = createMenuCheckItem(
 				"Monochrome", null, "Toggles the monochrome colour palette",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setMonochrome(menuitem.isSelected());
+				b -> {
+					controller.settings().setMonochrome(b);
 				},
 				null, KeyEvent.VK_M
 		);
@@ -847,18 +901,16 @@ public class PlotPanel extends ClearPanel
 
 		raw = createMenuCheckItem(
 				"Raw Data Outline", null, "Toggles an outline of the original raw data",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setShowRawData(menuitem.isSelected());
+				b -> {
+					controller.settings().setShowRawData(b);
 				},
 				null, KeyEvent.VK_O
 		);
 		
 		fittings = createMenuCheckItem(
 				"Individual Fittings", null, "Switches between showing all fittings as a single curve and showing all fittings individually",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setShowIndividualSelections(menuitem.isSelected());
+				b -> {
+					controller.settings().setShowIndividualSelections(b);
 				},
 				null, KeyEvent.VK_O
 		);	
@@ -881,9 +933,8 @@ public class PlotPanel extends ClearPanel
 		
 		etitles = createMenuCheckItem(
 				"Element Names", null, "Label fittings with the names of their elements",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setShowElementTitles(menuitem.isSelected());
+				b -> {
+					controller.settings().setShowElementTitles(b);
 				},
 				null, null
 		);
@@ -892,9 +943,8 @@ public class PlotPanel extends ClearPanel
 		
 		emarkings = createMenuCheckItem(
 				"Markings", null, "Label fittings with lines denoting their energies",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setShowElementMarkers(menuitem.isSelected());
+				b -> {
+					controller.settings().setShowElementMarkers(b);
 				},
 				null, null
 		);
@@ -903,9 +953,8 @@ public class PlotPanel extends ClearPanel
 		
 		eintensities = createMenuCheckItem(
 				"Heights", null, "Label fittings with their heights",
-				e -> {
-					JCheckBoxMenuItem menuitem = (JCheckBoxMenuItem) e.getSource();
-					controller.settings().setShowElementIntensities(menuitem.isSelected());
+				b -> {
+					controller.settings().setShowElementIntensities(b);
 				},
 				null, null
 		);
@@ -932,21 +981,14 @@ public class PlotPanel extends ClearPanel
 			
 			final EscapePeakType finalt = t;
 			
-			escapeItem.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e)
-				{
-					escapeItem.setSelected(true);
-					controller.settings().setEscapePeakType(finalt);
-				}
+			escapeItem.addActionListener(e -> {
+				escapeItem.setSelected(true);
+				controller.settings().setEscapePeakType(finalt);
 			});
 			
-			controller.addListener(new EventfulTypeListener<String>() {
-
-				public void change(String message)
-				{
-					escapeItem.setSelected( controller.settings().getEscapePeakType() == finalt );
-				}});
+			controller.addListener(message -> {
+				escapeItem.setSelected( controller.settings().getEscapePeakType() == finalt );
+			});
 
 		}
 		
@@ -961,40 +1003,35 @@ public class PlotPanel extends ClearPanel
 
 		ButtonGroup viewGroup = new ButtonGroup();
 
-		individual = new JRadioButtonMenuItem(ChannelCompositeMode.NONE.show());
-		individual.setSelected(true);
-		individual.setMnemonic(KeyEvent.VK_I);
-		individual.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
-		individual.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.settings().setShowChannelMode(ChannelCompositeMode.NONE);
-			}});
+		individual = createMenuRadioItem(
+				ChannelCompositeMode.NONE.show(), 
+				null, null, 
+				o -> controller.settings().setShowChannelMode(ChannelCompositeMode.NONE), 
+				KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), 
+				KeyEvent.VK_I
+			);
 		viewGroup.add(individual);
 		menu.add(individual);
+		
 
-		average = new JRadioButtonMenuItem(ChannelCompositeMode.AVERAGE.show());
-		average.setMnemonic(KeyEvent.VK_M);
-		average.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
-		average.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.settings().setShowChannelMode(ChannelCompositeMode.AVERAGE);
-			}});
+		average = createMenuRadioItem(
+				ChannelCompositeMode.AVERAGE.show(), 
+				null, null, 
+				o -> controller.settings().setShowChannelMode(ChannelCompositeMode.AVERAGE), 
+				KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), 
+				KeyEvent.VK_M
+			);
 		viewGroup.add(average);
 		menu.add(average);
+		
 
-		maximum = new JRadioButtonMenuItem(ChannelCompositeMode.MAXIMUM.show());
-		maximum.setMnemonic(KeyEvent.VK_T);
-		maximum.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
-		maximum.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				controller.settings().setShowChannelMode(ChannelCompositeMode.MAXIMUM);
-			}});
+		maximum = createMenuRadioItem(
+				ChannelCompositeMode.MAXIMUM.show(), 
+				null, null, 
+				o -> controller.settings().setShowChannelMode(ChannelCompositeMode.MAXIMUM),
+				KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), 
+				KeyEvent.VK_T
+			);
 		viewGroup.add(maximum);
 		menu.add(maximum);
 		
@@ -1003,15 +1040,15 @@ public class PlotPanel extends ClearPanel
 
 		
 		
-		//Mapping Menu
-		menu = new JMenu("Mapping");
-		menu.setMnemonic(KeyEvent.VK_S);
-
-
-		populateFittingMenu(menu);
-
-		menuBar.add(menu);
-		
+//		//Mapping Menu
+//		menu = new JMenu("Mapping");
+//		menu.setMnemonic(KeyEvent.VK_S);
+//
+//
+//		populateFittingMenu(menu);
+//
+//		menuBar.add(menu);
+//		
 		
 		
 		
@@ -1022,38 +1059,22 @@ public class PlotPanel extends ClearPanel
 		menu.setMnemonic(KeyEvent.VK_H);
 		
 		JMenuItem contents = createMenuItem(
-				"Help", StockIcon.BADGE_HELP.toMenuIcon(), "",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionHelp();
-					}
-				},
-				KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
+			"Help", StockIcon.BADGE_HELP.toMenuIcon(), "",
+			e -> actionHelp(),
+			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
 		);
 		menu.add(contents);
 		
 		JMenuItem about = createMenuItem(
-				"About", StockIcon.MISC_ABOUT.toMenuIcon(), "",
-				new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						actionAbout();
-					}
-				},
-				null, null
+			"About", StockIcon.MISC_ABOUT.toMenuIcon(), "",
+			e -> actionAbout(),
+			null, null
 		);
 		menu.add(about);
 		
 		
 		menuBar.add(menu);
 		
-		
-		
-
-		container.setJMenuBar(menuBar);
 
 		controller.addListener(new EventfulTypeListener<String>() {
 
@@ -1089,7 +1110,35 @@ public class PlotPanel extends ClearPanel
 
 			}
 		});
+		
+		
+		return menuBar;
+	}
 
+	
+	private ToolbarImageButton createMenuButton() {
+		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.ACTION_MENU, "Main Menu");
+		JPopupMenu mainMenu = new JPopupMenu();
+
+		boolean first = true;
+		for (JMenu menu : createMenus()) {
+			
+			if (!first) { mainMenu.addSeparator(); }
+			first = false;
+			
+			if (menu.getText() == "View") {
+				mainMenu.add(menu);
+			} else {
+				for (Component item : menu.getMenuComponents()) {
+					mainMenu.add(item);
+				}
+			}
+			
+		}
+
+		
+		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
+		return menuButton;
 	}
 
 
@@ -1171,7 +1220,7 @@ public class PlotPanel extends ClearPanel
 	// data set, and returns it to the caller
 	public List<File> openNewDataset(String[][] exts, String[] desc)
 	{
-		return SwidgetIO.openFiles(container.getContainer(), "Select Data Files to Open", exts, desc, controller.data().getDataSet().getDataSourcePath());
+		return SwidgetIO.openFiles(container.getWindow(), "Select Data Files to Open", exts, desc, controller.data().getDataSet().getDataSourcePath());
 	}
 
 
@@ -1289,7 +1338,7 @@ public class PlotPanel extends ClearPanel
 		if (formats.size() > 1)
 		{
 			DataSourceSelection selection = new DataSourceSelection();
-			DataSource dsp = selection.pickDSP(container.getContainer(), formats);
+			DataSource dsp = selection.pickDSP(container.getWindow(), formats);
 			if (dsp != null) loadFiles(filenames, dsp);
 		}
 		else if (formats.size() == 0)
@@ -1315,24 +1364,44 @@ public class PlotPanel extends ClearPanel
 		{
 
 			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(files, dsp);
-			ExecutorSetView view = new ExecutorSetView(container.getWindow(), reading);
 			
-			//handle some race condition where the window gets told to close too early on failure
-			//I don't think its in my code, but I don't know for sure
-			view.setVisible(false);
 			
-			DatasetReadResult result = reading.getResult();
-			if (result.status == ReadStatus.FAILED)
-			{
-				JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-			}
+//			ExecutorSetViewDialog view = new ExecutorSetViewDialog(container.getWindow(), reading);
+//			//handle some race condition where the window gets told to close too early on failure
+//			//I don't think its in my code, but I don't know for sure
+//			view.setVisible(false);
+			
+			ExecutorSetView execPanel = new ExecutorSetView(reading); 
+			reading.addListener(() -> {
+				javax.swing.SwingUtilities.invokeLater(() -> {
+					if (reading.isAborted() || reading.getCompleted()){
 
-			// set some controls based on the fact that we have just loaded a
-			// new data set
-			savedSessionFileName = null;
+						DatasetReadResult result = reading.getResult();
+						if (result.status == ReadStatus.FAILED)
+						{
+							JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+						}
+
+						// set some controls based on the fact that we have just loaded a
+						// new data set
+						savedSessionFileName = null;
+						clearModal();
+						
+					}			
+				});
+			});
+			
+			showModal(execPanel);
+			reading.startWorking();
+			
+			
+			
+
 
 		}
 	}
+	
+
 
 	private void actionExportData(DataSink sink) {
 		DataSource source = controller.data().getDataSet().getDataSource();
@@ -1354,7 +1423,7 @@ public class PlotPanel extends ClearPanel
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Peakaboo.showError(container.getWindow(), e);			
+			Peakaboo.showError(e);			
 		}
 		
 
@@ -1371,48 +1440,60 @@ public class PlotPanel extends ClearPanel
 		final ExecutorSet<MapResultSet> tasks = controller.getMapCreationTask(type);
 		if (tasks == null) return;
 
-		new ExecutorSetView(container.getWindow(), tasks);
-
-
-		if (tasks.getCompleted())
-		{
-
-			MappingController mapController = controller.checkoutMapController();
-			MapperFrame mapperWindow;
-
-			MapResultSet results = tasks.getResult();
-
-
-			if (controller.data().getDataSet().hasPhysicalSize())
+		//new ExecutorSetViewDialog(container.getWindow(), tasks);
+		ExecutorSetView execPanel = new ExecutorSetView(tasks);
+		tasks.addListener(() -> {
+			if (tasks.getCompleted())
 			{
 
-				mapController.mapsController.setMapData(
-						results,
-						controller.data().getDataSet().getScanData().datasetName(),
-						controller.data().getDataSet().getDataSize().getDataDimensions(),
-						controller.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
-						controller.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
-						controller.data().getDiscards().list()
-					);
+				MappingController mapController = controller.checkoutMapController();
+				MapperFrame mapperWindow;
+
+				MapResultSet results = tasks.getResult();
+
+
+				if (controller.data().getDataSet().hasPhysicalSize())
+				{
+
+					mapController.mapsController.setMapData(
+							results,
+							controller.data().getDataSet().getScanData().datasetName(),
+							controller.data().getDataSet().getDataSize().getDataDimensions(),
+							controller.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
+							controller.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
+							controller.data().getDiscards().list()
+						);
+					
+				} else {
+									
+					mapController.mapsController.setMapData(
+							results,
+							controller.data().getDataSet().getScanData().datasetName(),
+							controller.data().getDiscards().list()
+						);
+					
+				}
 				
-			} else {
-								
-				mapController.mapsController.setMapData(
-						results,
-						controller.data().getDataSet().getScanData().datasetName(),
-						controller.data().getDiscards().list()
-					);
+				mapController.mapsController.setInterpolation(0);
+
 				
+				mapperWindow = new MapperFrame(container, mapController, controller);
+
+				mapperWindow.showDialog();
+
 			}
 			
-			mapController.mapsController.setInterpolation(0);
+			if (tasks.getCompleted() || tasks.isAborted()) {
+				clearModal();
+			}
+		});
+		
+		
+		showModal(execPanel);
+		tasks.startWorking();
 
-			
-			mapperWindow = new MapperFrame(container.getContainer(), mapController, controller);
 
-			mapperWindow.showDialog();
-
-		}
+		
 
 	}
 
@@ -1500,7 +1581,7 @@ public class PlotPanel extends ClearPanel
 			execset.addExecutor(exec, "Applying Filters");
 			
 			
-			new ExecutorSetView(container.getWindow(), execset);
+			new ExecutorSetViewDialog(container.getWindow(), execset);
 			
 			Exception e = execset.getResult();
 			if (e != null)
@@ -1515,7 +1596,7 @@ public class PlotPanel extends ClearPanel
 
 			// save the contents of the output stream to a file.
 			saveFilesFolder = SwidgetIO.saveFile(
-					container.getContainer(),
+					container.getWindow(),
 					"Save Fitted Data to Text File",
 					"txt",
 					"Text File",
@@ -1566,7 +1647,7 @@ public class PlotPanel extends ClearPanel
 
 			// save the contents of the output stream to a file.
 			saveFilesFolder = SwidgetIO.saveFile(
-					container.getContainer(),
+					container.getWindow(),
 					"Save Fitting Information to Text File",
 					"txt",
 					"Text File",
@@ -1591,7 +1672,7 @@ public class PlotPanel extends ClearPanel
 		try
 		{
 			File f = SwidgetIO.openFile(
-					container.getContainer(),
+					container.getWindow(),
 					"Load Session Data",
 					new String[][] {{"peakaboo"}},
 					new String[] {"Peakaboo Session Data"},

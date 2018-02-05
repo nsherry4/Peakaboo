@@ -29,7 +29,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
-import peakaboo.ui.swing.plotting.PlotterFrame;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import scitypes.GridPerspective;
 import scitypes.Pair;
 import scitypes.Range;
@@ -164,7 +164,8 @@ public class MapperToolbar extends JToolBar {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				new PlotterFrame(controller.getDataSourceForSubset(controller.getActiveTabController().getDragStart(), controller.getActiveTabController().getDragEnd()), controller.getSerializedPlotSettings());
+				panel.owner.getParentPlotter().newTab(controller.getDataSourceForSubset(controller.getActiveTabController().getDragStart(), controller.getActiveTabController().getDragEnd()), controller.getSerializedPlotSettings());
+				panel.owner.getParentPlotter().getWindow().toFront();
 			}
 		});
 		this.add(examineSubset, c);

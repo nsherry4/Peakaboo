@@ -16,7 +16,7 @@ import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.filter.model.FilterLoader;
-import peakaboo.ui.swing.plotting.PlotterFrame;
+import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import swidget.Swidget;
 import swidget.dialogues.SplashScreen;
 import swidget.icons.IconFactory;
@@ -30,13 +30,10 @@ public class Peakaboo
 
 	private static SplashScreen splash;
 	
-	private static void readPeakTable()
-	{
-		PeakTableReader.readPeakTable();
-	}
+
 	
 
-	public static boolean showError(Window parent, Throwable e)
+	public static boolean showError(Throwable e)
 	{
 		TaskDialog errorDialog = new TaskDialog("Peakaboo");
 		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
@@ -81,10 +78,10 @@ public class Peakaboo
 		
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
-		PlotterFrame peakaboo = null;
 		try {
 				
-			peakaboo = new PlotterFrame();
+			//PlotterFrame peakaboo = new PlotterFrame();
+			TabbedPlotterFrame peakaboo = new TabbedPlotterFrame();
 			splash.setVisible(false);
 
 		} catch (Exception e) {
@@ -92,7 +89,7 @@ public class Peakaboo
 			e.printStackTrace();
 			
 			//if the user chooses to close rather than restart, break out of the loop
-			showError(peakaboo, e);
+			showError(e);
 			System.exit(1);
 			
 		}
@@ -120,7 +117,7 @@ public class Peakaboo
 			e.printStackTrace();
 		}
 		
-		SwingUtilities.invokeLater(() -> readPeakTable());
+		SwingUtilities.invokeLater(() -> PeakTableReader.readPeakTable());
 		SwingUtilities.invokeLater(() -> DataSourceLoader.load() );
 		SwingUtilities.invokeLater(() -> FilterLoader.load() );
 		

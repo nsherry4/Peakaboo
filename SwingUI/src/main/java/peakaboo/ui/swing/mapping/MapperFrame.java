@@ -20,6 +20,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.maptab.MapTabController;
 import peakaboo.controller.plotter.IPlotController;
+import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -42,21 +43,32 @@ public class MapperFrame extends JFrame
 	protected IPlotController	plotController;
 		
 	EventfulTypeListener<String> controllerListener;
+	
+	private TabbedPlotterManager 	parentPlotter;
 
 	
 	
-	public MapperFrame(Container owner, MappingController controller, IPlotController plotcontroller)
+	public MapperFrame(TabbedPlotterManager plotter, MappingController controller, IPlotController plotcontroller)
 	{
 		super("Map - " + controller.mapsController.getDatasetTitle());
 		this.controller = controller;
 		this.plotController = plotcontroller;
+		this.parentPlotter = plotter;
 		
 		init();
 
-		setLocationRelativeTo(owner);
+		setLocationRelativeTo(plotter.getWindow());
 		
 	}
 	
+	
+	
+	public TabbedPlotterManager getParentPlotter() {
+		return parentPlotter;
+	}
+
+
+
 	public MappingController showDialog()
 	{
 		
@@ -86,7 +98,6 @@ public class MapperFrame extends JFrame
 		createMapperPanel();
 
 
-		//createMenuBar();
 		
 		
 		addWindowListener(new WindowListener() {
