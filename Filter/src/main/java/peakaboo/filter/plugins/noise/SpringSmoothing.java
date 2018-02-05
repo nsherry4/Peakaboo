@@ -65,7 +65,7 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	private boolean validate(Parameter<?> p)
 	{
 
-		double mult, power;
+		float mult, power;
 		int iters;
 
 		
