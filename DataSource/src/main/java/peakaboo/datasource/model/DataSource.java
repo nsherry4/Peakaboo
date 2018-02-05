@@ -40,7 +40,7 @@ public interface DataSource
 	PhysicalSize getPhysicalSize();
 	
 	default boolean hasPhysicalSize() {
-		return (getDataSize() != null);		
+		return (getPhysicalSize() != null);		
 	}
 	
 
