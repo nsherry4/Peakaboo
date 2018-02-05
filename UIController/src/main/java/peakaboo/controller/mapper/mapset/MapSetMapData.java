@@ -19,7 +19,7 @@ public class MapSetMapData
 	public Coord<Bounds<Number>>	realDimensions;
 	public SISize					realDimensionsUnits;
 	
-	public Coord<Integer>			dataDimensions		= new Coord<Integer>(1, 1);
+	
 	public Coord<Integer>			originalDimensions	= new Coord<Integer>(1, 1);
 	public boolean					dimensionsProvided	= false;
 

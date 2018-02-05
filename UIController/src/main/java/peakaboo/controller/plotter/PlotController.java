@@ -10,6 +10,7 @@ import eventful.EventfulListener;
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
@@ -47,12 +48,12 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 
 	
 	private IUndoController					undoController;
-	private MappingController				mapController;
 	private IDataController					dataController;
 	private IFilteringController			filteringController;
 	private IFittingController				fittingController;
 	private ISettingsController				settingsController;
 
+	private MapSettings						savedMapSettings;
 
 
 	
@@ -73,7 +74,7 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 		filteringController = new FilteringController(this);
 		fittingController = new FittingController(this);
 		settingsController = new SettingsController(this);
-		mapController = new MappingController(this);
+
 		
 		undoController.addListener(new EventfulListener() {
 			
@@ -119,31 +120,13 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 		undoController.setUndoPoint("");
 	}
 
-	/**
-	 * Attempts to retrieve the map controller from the plot controller.
-	 * If another mapping window is currently using the map controller,
-	 * a new map controller is created. When the mapping windows are closed,
-	 * whichever mapping window is closed last will be the last to check-in
-	 * their map controller, and that will be the one saved for future use
-	 * @return
-	 */
-	@Override
-	public MappingController checkoutMapController()
-	{
-		//TODO: copy the current controller, rather than creating a new one
-		return new MappingController(mapController, this);
+
+	public void setLastMapSettings(MapSettings settings) {
+		savedMapSettings = settings;
 	}
 	
-	/**
-	 * After using the map controller, return it to the plot controller.
-	 * If a new map window is opened after this controller is checked in,
-	 * but before any other map controller is checked in, this will be 
-	 * the map controller used for that new window
-	 */
-	@Override
-	public void checkinMapController(MappingController controller)
-	{
-		this.mapController = controller;
+	public MapSettings getLastMapSettings() {
+		return savedMapSettings;
 	}
 	
 	
@@ -311,17 +294,6 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	public DrawingRequest getDR()
 	{
 		return dr;
-	}
-
-	public MappingController mapping()
-	{
-		return mapController;
-	}
-	
-	@Override
-	public void setMapController(MappingController mapController)
-	{
-		this.mapController = mapController;
 	}
 
 	public void setDR(DrawingRequest dr)

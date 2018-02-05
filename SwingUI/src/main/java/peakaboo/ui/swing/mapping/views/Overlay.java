@@ -20,8 +20,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.maptab.MapScaleMode;
-import peakaboo.controller.mapper.maptab.MapTabController;
+import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
+import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
@@ -33,12 +33,12 @@ import swidget.widgets.Spacing;
 
 public class Overlay extends JPanel {
 
-	private MapTabController controller;
+	private MapDisplayController controller;
 
 	private JRadioButton 		relativeScale;
 	private JRadioButton 		absoluteScale;
 	
-	public Overlay(MapTabController _controller) {
+	public Overlay(MapDisplayController _controller) {
 
 		this.controller = _controller;
 		

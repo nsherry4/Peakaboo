@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.maptab;
+package peakaboo.controller.mapper.mapdisplay;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +8,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 
 
-public class MapTabModel {
+public class MapDisplaySettings {
 	
 	public Map<TransitionSeries, Integer> ratioSide;
 	public Map<TransitionSeries, OverlayColour> overlayColour;
@@ -19,7 +19,7 @@ public class MapTabModel {
 	public MapDisplayMode displayMode;
 	
 	
-	public MapTabModel(List<TransitionSeries> tss){
+	public MapDisplaySettings(List<TransitionSeries> tss){
 					
 		displayMode = MapDisplayMode.COMPOSITE;
 		mapScaleMode = MapScaleMode.ABSOLUTE;

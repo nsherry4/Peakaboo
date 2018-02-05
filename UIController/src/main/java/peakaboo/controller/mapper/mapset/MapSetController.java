@@ -5,6 +5,7 @@ import java.util.List;
 
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController.UpdateType;
+import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -16,30 +17,15 @@ import scitypes.Spectrum;
 public class MapSetController extends EventfulType<String> implements IMapSetController
 {
 
-	MapSetMapData 			mapModel;
-	MapSetPreferences		mapPreferences;
-
+	MapSetMapData mapModel;
+	
 	
 	public MapSetController()
 	{
 		mapModel = new MapSetMapData();
-		mapPreferences = new MapSetPreferences();
 	}
 	
-	
-	/**
-	 * Copy constructor does not copy the actual map data, but
-	 * only the user preferences such as interpolation. Each new 
-	 * MapSetController will have to be given a model or data with
-	 * which to construct a model.
-	 * @param copy
-	 */
-	public MapSetController(MapSetController copy)
-	{
-		mapModel = new MapSetMapData();
-		mapPreferences = new MapSetPreferences(copy.mapPreferences);
-	}
-	
+
 	
 	public void setMapData(
 			MapResultSet data,
@@ -53,7 +39,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 		mapModel.badPoints = badPoints;
 		
 		mapModel.dimensionsProvided = false;
-		mapModel.dataDimensions = new Coord<Integer>(data.getMap(0).data.size(), 1);
+		
 		mapModel.realDimensions = null;
 		mapModel.realDimensionsUnits = null;
 		
@@ -76,7 +62,6 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 		mapModel.datasetTitle = datasetName;
 		mapModel.badPoints = badPoints;
 		
-		mapModel.dataDimensions = new Coord<>(dataDimensions);
 		mapModel.originalDimensions = dataDimensions;
 		mapModel.dimensionsProvided = true;
 		mapModel.realDimensions = realDimensions;
@@ -94,77 +79,13 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 	
 	
 
-	// interpolation
-	public void setInterpolation(int passes)
-	{
-		int side, newside;
-		while (true) {
-			
-			side = (int)Math.sqrt( getDataHeight() * getDataWidth() );
-			
-			newside = (int)(side * Math.pow(2, passes));
-		
-			if (newside > 750) {
-				passes--;
-			} else {
-				break;
-			}
-		
-		}
 
-		
-		if (passes < 0) passes = 0;
-		mapPreferences.interpolation = passes;
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
-	}
+	
+
 	
 
 	
-	public int getInterpolation()
-	{
-		return mapPreferences.interpolation;
-	}
-	
 
-	// data height and width
-	public void setDataHeight(int height)
-	{
-
-		if (getDataWidth() * height > mapModel.mapSize()) height = mapModel.mapSize() / getDataWidth();
-		if (height < 1) height = 1;
-
-		mapModel.dataDimensions.y = height;
-		
-		setInterpolation(mapPreferences.interpolation);
-		
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
-	}
-
-
-	public int getDataHeight()
-	{
-		return mapModel.dataDimensions.y;
-	}
-
-
-	public void setDataWidth(int width)
-	{
-
-		if (getDataHeight() * width > mapModel.mapSize()) width = mapModel.mapSize() / getDataHeight();
-		if (width < 1) width = 1;
-
-		mapModel.dataDimensions.x = width;
-		
-		setInterpolation(mapPreferences.interpolation);
-		
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
-	}
-
-	public int getDataWidth()
-	{
-		return mapModel.dataDimensions.x;
-	}
-	
 	
 	public int getOriginalDataHeight() {
 		return mapModel.originalDimensions.y;
@@ -174,7 +95,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 	}
 	
 	
-	public boolean guessDataDimensions() {
+	public Coord<Integer> guessDataDimensions() {
 		Spectrum all = mapModel.mapResults.sumAllTransitionSeriesMaps();
 		Spectrum deltas = new ISpectrum(all);
 		
@@ -220,14 +141,9 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 		}
 		
 		if (bestX > 0 && bestY > 0) {
-			//set to 1 first to prevent bounds check failures for map-too-large
-			setDataWidth(1);
-			setDataHeight(1);
-			setDataWidth(bestX);
-			setDataHeight(bestY);
-			return true;
+			return new Coord<>(bestX, bestY);
 		} else {
-			return false;
+			return null;
 		}
 		
 	}
@@ -291,104 +207,6 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 	
 
 
-	// contours
-	public void setContours(boolean contours)
-	{
-		mapPreferences.contour = contours;
-				
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
-	public boolean getContours()
-	{
-		return mapPreferences.contour;
-	}
-
-
-	// spectrum
-	public void setSpectrumSteps(int steps)
-	{
-		if (steps > 25) steps = 25;
-		if (steps > 0)
-		{
-			mapPreferences.spectrumSteps = steps;
-		}
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
-	public int getSpectrumSteps()
-	{
-		return mapPreferences.spectrumSteps;
-	}
-
-
-	public void setMonochrome(boolean mono)
-	{
-		mapPreferences.monochrome = mono;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
-	public boolean getMonochrome()
-	{
-		return mapPreferences.monochrome;
-	}
-
-	
-
-	public void setShowSpectrum(boolean show)
-	{
-		mapPreferences.drawSpectrum = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
-	public boolean getShowSpectrum()
-	{
-		return mapPreferences.drawSpectrum;
-	}
-
-
-	public void setShowTitle(boolean show)
-	{
-		mapPreferences.drawTitle = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
-	public boolean getShowTitle()
-	{
-		return mapPreferences.drawTitle;
-	}
-
-
-	public void setShowDatasetTitle(boolean show)
-	{
-		mapPreferences.showDataSetTitle = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
-	public boolean getShowDatasetTitle()
-	{
-		return mapPreferences.showDataSetTitle;
-	}
-
-
-	public void setShowCoords(boolean show)
-	{
-		mapPreferences.drawCoordinates = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
-	public boolean getShowCoords()
-	{
-		return mapPreferences.drawCoordinates;
-	}
-	
 	public boolean isDimensionsProvided()
 	{
 		return mapModel.dimensionsProvided;
@@ -403,7 +221,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 
 	public boolean isValidPoint(Coord<Integer> mapCoord)
 	{
-		return (mapCoord.x >= 0 && mapCoord.x < getDataWidth() && mapCoord.y >= 0 && mapCoord.y < getDataHeight());
+		return (mapCoord.x >= 0 && mapCoord.x < mapModel.originalDimensions.x && mapCoord.y >= 0 && mapCoord.y < mapModel.originalDimensions.y);
 	}
 
 
@@ -432,38 +250,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 	{
 		return mapModel.realDimensions;
 	}
-	
-	
-	
-	public int getInterpolatedHeight()
-	{
-		
-		int height = getDataHeight();
-		
-		for (int i = 0; i < getInterpolation(); i++)
-		{
-			height = height * 2 - 1;
-		}
-		
-		return height;
-		
-	}
 
-
-	public int getInterpolatedWidth()
-	{
-		int width = getDataWidth();
-		
-		for (int i = 0; i < getInterpolation(); i++)
-		{
-			width = width * 2 - 1;
-		}
-		
-		return width;
-		
-	}
-	
-	
 	public Coord<Number> getTopLeftCoord()
 	{
 		return mapModel.topLeftCoord;
@@ -487,14 +274,7 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 		return mapModel.realDimensionsUnits;
 	}
 	
-	public boolean getDrawCoords()
-	{
-		return mapPreferences.drawCoordinates;
-	}
-	public void setDrawCoords(boolean draw)
-	{
-		mapPreferences.drawCoordinates = draw;
-	}
+
 
 
 	public MapResultSet getMapResultSet()

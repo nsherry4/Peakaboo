@@ -63,13 +63,13 @@ public class MapperToolbar extends JToolBar {
 		c.insets = new Insets(4, 4, 4, 4);
 		
 		ToolbarImageButton savePicture = new ToolbarImageButton(StockIcon.DEVICE_CAMERA, "Save Image", "Save the current map as an image");
-		savePicture.addActionListener(e -> panel.owner.actionSavePicture());
+		savePicture.addActionListener(e -> panel.actionSavePicture());
 		this.add(savePicture, c);
 		c.gridx++;
 		
 		
 		ToolbarImageButton saveText = new ToolbarImageButton(StockIcon.DOCUMENT_EXPORT, "Export as Text", "Export the current map as a comma separated value file");
-		saveText.addActionListener(e -> panel.owner.actionSaveCSV());
+		saveText.addActionListener(e -> panel.actionSaveCSV());
 		this.add(saveText, c);
 		c.gridx++;
 		
@@ -83,15 +83,15 @@ public class MapperToolbar extends JToolBar {
 			
 			final Corrections corr = CorrectionsManager.getCorrections("WL");
 			
-			final int xstart = controller.getActiveTabController().getDragStart().x;
-			final int ystart = controller.getActiveTabController().getDragStart().y;
+			final int xstart = controller.getDisplay().getDragStart().x;
+			final int ystart = controller.getDisplay().getDragStart().y;
 			
-			final int xend = controller.getActiveTabController().getDragEnd().x;
-			final int yend = controller.getActiveTabController().getDragEnd().y;
+			final int xend = controller.getDisplay().getDragEnd().x;
+			final int yend = controller.getDisplay().getDragEnd().y;
 			
 			final int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
 			
-			final GridPerspective<Float> grid = new GridPerspective<Float>(controller.mapsController.getDataWidth(), controller.mapsController.getDataHeight(), 0f);
+			final GridPerspective<Float> grid = new GridPerspective<Float>(controller.settings.getDataWidth(), controller.settings.getDataHeight(), 0f);
 			
 			
 			//generate a list of pairings of TransitionSeries and their intensity values
@@ -123,11 +123,9 @@ public class MapperToolbar extends JToolBar {
 			}
 			
 			PropertyViewPanel correctionsPanel = new PropertyViewPanel(fittings);
-			final JDialog correctionsDialog = new JDialog(panel.owner, corr.getName(), true);
 			
-			Container c0 = correctionsDialog.getContentPane();
+			
 			JPanel corrections = new JPanel(new BorderLayout());
-			c0.add(corrections);
 			JPanel contentPanel = new JPanel(new BorderLayout());
 			corrections.add(contentPanel, BorderLayout.CENTER);
 			
@@ -141,17 +139,14 @@ public class MapperToolbar extends JToolBar {
 				
 				public void actionPerformed(ActionEvent e)
 				{
-					correctionsDialog.setVisible(false);
-					correctionsDialog.dispose();
+					panel.clearModal();
 				}
 			});
 			bbox.addRight(close);
 			corrections.add(bbox, BorderLayout.SOUTH);
 			
 			
-			correctionsDialog.pack();
-			correctionsDialog.setLocationRelativeTo(panel.owner);
-			correctionsDialog.setVisible(true);
+			panel.showModal(corrections);
 				
 				
 		});
@@ -164,8 +159,8 @@ public class MapperToolbar extends JToolBar {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				panel.owner.getParentPlotter().newTab(controller.getDataSourceForSubset(controller.getActiveTabController().getDragStart(), controller.getActiveTabController().getDragEnd()), controller.getSerializedPlotSettings());
-				panel.owner.getParentPlotter().getWindow().toFront();
+				panel.parentPlotter.newTab(controller.getDataSourceForSubset(controller.getDisplay().getDragStart(), controller.getDisplay().getDragEnd()), controller.getSerializedPlotSettings());
+				panel.parentPlotter.getWindow().toFront();
 			}
 		});
 		this.add(examineSubset, c);
@@ -198,16 +193,16 @@ public class MapperToolbar extends JToolBar {
 		coords = new JCheckBoxMenuItem("Show Coordinates");
 		monochrome = new JCheckBoxMenuItem("Monochrome");
 
-		title.setSelected(controller.mapsController.getShowTitle());
-		spectrum.setSelected(controller.mapsController.getShowSpectrum());
-		coords.setSelected(controller.mapsController.getShowCoords());
-		dstitle.setSelected(controller.mapsController.getShowDatasetTitle());
+		title.setSelected(controller.settings.getShowTitle());
+		spectrum.setSelected(controller.settings.getShowSpectrum());
+		coords.setSelected(controller.settings.getShowCoords());
+		dstitle.setSelected(controller.settings.getShowDatasetTitle());
 
-		spectrum.addActionListener(e -> controller.mapsController.setShowSpectrum(spectrum.isSelected()));
-		coords.addActionListener(e -> controller.mapsController.setShowCoords(coords.isSelected()));
-		title.addActionListener(e -> controller.mapsController.setShowTitle(title.isSelected()));
-		dstitle.addActionListener(e -> controller.mapsController.setShowDatasetTitle(dstitle.isSelected()));
-		monochrome.addActionListener(e -> controller.mapsController.setMonochrome(monochrome.isSelected()));
+		spectrum.addActionListener(e -> controller.settings.setShowSpectrum(spectrum.isSelected()));
+		coords.addActionListener(e -> controller.settings.setShowCoords(coords.isSelected()));
+		title.addActionListener(e -> controller.settings.setShowTitle(title.isSelected()));
+		dstitle.addActionListener(e -> controller.settings.setShowDatasetTitle(dstitle.isSelected()));
+		monochrome.addActionListener(e -> controller.settings.setMonochrome(monochrome.isSelected()));
 		
 		menu.add(title);
 		menu.add(dstitle);

@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.datasource.model.DataSource;
-import peakaboo.ui.swing.mapping.TabIconButton;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.Swidget;
 import swidget.icons.IconFactory;
@@ -39,7 +38,7 @@ public class TabbedPlotterFrame extends JFrame
 		openWindows++;
 		//containers = new HashMap<PlotPanel, TabbedContainer>();
 		
-		tabControl = new TabbedInterface<PlotPanel>("No Data", 150) {
+		tabControl = new TabbedInterface<PlotPanel>(p -> "No Data", 150) {
 
 			@Override
 			protected PlotPanel createComponent()
@@ -47,7 +46,6 @@ public class TabbedPlotterFrame extends JFrame
 				TabbedPlotterManager container = new TabbedPlotterManager(TabbedPlotterFrame.this);
 				PlotPanel plot =  new PlotPanel(container);
 				plot.setProgramTitle("");
-				//containers.put(plot, container);
 				return plot;
 			}
 

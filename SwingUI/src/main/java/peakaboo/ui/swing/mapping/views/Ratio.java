@@ -22,8 +22,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.maptab.MapScaleMode;
-import peakaboo.controller.mapper.maptab.MapTabController;
+import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
+import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import swidget.icons.IconSize;
@@ -34,12 +34,12 @@ import swidget.widgets.Spacing;
 
 public class Ratio extends JPanel {
 
-	private MapTabController controller;
+	private MapDisplayController controller;
 
 	private JRadioButton 		relativeScale;
 	private JRadioButton 		absoluteScale;
 	
-	public Ratio(MapTabController _controller) {
+	public Ratio(MapDisplayController _controller) {
 
 		this.controller = _controller;
 

@@ -10,7 +10,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,44 +21,49 @@ import javax.swing.SwingConstants;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.maptab.MapTabController;
+import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
+import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
+import swidget.dialogues.fileio.SwidgetIO;
 import swidget.widgets.Spacing;
+import swidget.widgets.tabbedinterface.TabbedInterface;
+import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 
 
 
-public class MapperPanel extends JPanel
+public class MapperPanel extends TabbedInterfacePanel
 {
 
 	private MapCanvas			canvas;
 	
 	protected MappingController	controller;
-
+	protected TabbedPlotterManager parentPlotter;
+	
 	private JLabel			warnOnTooSmallDataset;
 	private JLabel			mapMouseMonitor;
-
-	private MapTabController	tabController;
-	//private SingleMapModel	viewModel;
 	
-	MapperFrame					owner;
+	TabbedInterface<MapperPanel>	owner;
+	MapperFrame						frame;
 
 	private MapperToolbar		toolbar;
 
-	public MapperPanel(MapTabController _tabController, MappingController controller, MapperFrame owner)
+	public MapperPanel(MappingController controller, TabbedPlotterManager parentPlotter, TabbedInterface<MapperPanel> owner, MapperFrame frame)
 	{
 
 		this.controller = controller;
-		this.tabController = _tabController;
+		this.parentPlotter = parentPlotter;
+		this.frame = frame;
+		this.owner = owner;
 
 		this.controller.addListener(s -> {
 			if (! s.equals(MappingController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
 			
-			toolbar.monochrome.setSelected(controller.mapsController.getMonochrome());
-			toolbar.spectrum.setSelected(controller.mapsController.getShowSpectrum());
-			toolbar.coords.setSelected(controller.mapsController.getShowCoords());
+			toolbar.monochrome.setSelected(controller.settings.getMonochrome());
+			toolbar.spectrum.setSelected(controller.settings.getShowSpectrum());
+			toolbar.coords.setSelected(controller.settings.getShowCoords());
 			
-			if (tabController.hasBoundingRegion())
+			if (controller.getDisplay().hasBoundingRegion())
 			{
 				toolbar.readIntensities.setEnabled(true);
 				toolbar.examineSubset.setEnabled(true);
@@ -65,13 +72,20 @@ public class MapperPanel extends JPanel
 				toolbar.examineSubset.setEnabled(false);
 			}
 			
+			
+			owner.setTabTitle(this, getTitle());
 			repaint();
 		});
 
+		owner.setTabTitle(this, getTitle());
+		
 
-		this.owner = owner;
 		init();
 
+	}
+	
+	public String getTitle() {
+		return controller.getDisplay().mapLongTitle();
 	}
 
 
@@ -95,8 +109,8 @@ public class MapperPanel extends JPanel
 			
 			public void mouseDragged(MouseEvent e)
 			{
-				tabController.setDragEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-				tabController.setHasBoundingRegion( true );
+				controller.getDisplay().setDragEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
+				controller.getDisplay().setHasBoundingRegion( true );
 			}
 
 			public void mouseMoved(MouseEvent e)
@@ -112,9 +126,9 @@ public class MapperPanel extends JPanel
 
 			public void mousePressed(MouseEvent e)
 			{			
-				tabController.setDragStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-				tabController.setDragEnd( null );
-				tabController.setHasBoundingRegion( false );
+				controller.getDisplay().setDragStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
+				controller.getDisplay().setDragEnd( null );
+				controller.getDisplay().setHasBoundingRegion( false );
 			}
 
 			public void mouseReleased(MouseEvent e){}
@@ -130,7 +144,7 @@ public class MapperPanel extends JPanel
 			public void change(String ss)
 			{
 
-				if (controller.mapsController.getDataHeight() * controller.mapsController.getDataWidth() == controller.mapsController.getMapSize())
+				if (controller.settings.getDataHeight() * controller.settings.getDataWidth() == controller.mapsController.getMapSize())
 				{
 					warnOnTooSmallDataset.setVisible(false);
 				}
@@ -139,7 +153,7 @@ public class MapperPanel extends JPanel
 					warnOnTooSmallDataset.setVisible(true);
 				}
 
-				if (controller.getActiveTabController() == tabController) fullRedraw();
+				fullRedraw();
 			}
 		});
 
@@ -147,22 +161,42 @@ public class MapperPanel extends JPanel
 
 	}
 	
-	public File savePicture(File folder)
+	
+	
+	public void actionSavePicture()
 	{
-		return new SavePicture(owner, canvas, folder).getStartingFolder();
+		if (controller.settings.savePictureFolder == null) controller.settings.savePictureFolder = controller.settings.dataSourceFolder;
+		File result = new SavePicture(frame, canvas, controller.settings.savePictureFolder).getStartingFolder();
+		if (result != null) {
+			controller.settings.savePictureFolder = result;
+		}
 	}
-
-
-	public MapTabController getTabController()
+	
+	public void actionSaveCSV()
 	{
-		return tabController;
-	}
+		if (controller.settings.savePictureFolder == null) controller.settings.savePictureFolder = controller.settings.dataSourceFolder;
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		controller.getDisplay().mapAsCSV(baos);
+		try
+		{
+			File result = SwidgetIO.saveFile(this, "Save Map(s) as Text", "txt", "Text File", controller.settings.savePictureFolder, baos);
+			if (result != null) {
+				controller.settings.savePictureFolder = result;
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
+	}
+	
 
 
 	private JPanel createCanvasPanel()
 	{
-		canvas = new MapCanvas(controller, tabController);
+		canvas = new MapCanvas(controller);
 
 		JPanel canvasContainer = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -182,7 +216,7 @@ public class MapperPanel extends JPanel
 		warnOnTooSmallDataset.setOpaque(true);
 		warnOnTooSmallDataset.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		if (controller.mapsController.getDataHeight() * controller.mapsController.getDataWidth() == controller.mapsController.getMapSize())
+		if (controller.settings.getDataHeight() * controller.settings.getDataWidth() == controller.mapsController.getMapSize())
 		{
 			warnOnTooSmallDataset.setVisible(false);
 		}
@@ -248,13 +282,13 @@ public class MapperPanel extends JPanel
 			return;
 		}
 
-		int index = mapCoord.y * controller.mapsController.getDataWidth() + mapCoord.x;
+		int index = mapCoord.y * controller.settings.getDataWidth() + mapCoord.x;
 		index++;
 		
 		if (controller.mapsController.isValidPoint(mapCoord))
 		{
-			String value = tabController.getIntensityMeasurementAtPoint(mapCoord);
-			if (controller.mapsController.getInterpolation() != 0) value += " (not interpolated)";
+			String value = controller.getDisplay().getIntensityMeasurementAtPoint(mapCoord);
+			if (controller.settings.getInterpolation() != 0) value += " (not interpolated)";
 			
 			mapMouseMonitor.setText("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
 					+ value);

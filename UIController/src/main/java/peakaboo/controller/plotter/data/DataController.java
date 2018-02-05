@@ -117,7 +117,9 @@ public class DataController extends Eventful implements IDataController
 		
 		plot.fitting().setFittingParameters(dataModel.energyPerChannel());
 				
-		if (plot.mapping() != null) plot.mapping().mapsController.setInterpolation(0);
+		if (plot.getLastMapSettings() != null) {
+			plot.getLastMapSettings().setInterpolation(0);
+		}
 		
 		plot.history().clearUndos();
 			

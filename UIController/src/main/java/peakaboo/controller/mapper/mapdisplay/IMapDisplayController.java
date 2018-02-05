@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.maptab;
+package peakaboo.controller.mapper.mapdisplay;
 
 
 
@@ -16,7 +16,7 @@ import scitypes.Spectrum;
 
 
 
-public interface IMapTabController
+public interface IMapDisplayController
 {
 
 	MapScaleMode getMapScaleMode();

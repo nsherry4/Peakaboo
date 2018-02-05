@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.maptab;
+package peakaboo.controller.mapper.mapdisplay;
 
 public enum MapDisplayMode {
 	COMPOSITE

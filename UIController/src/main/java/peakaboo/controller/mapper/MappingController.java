@@ -6,8 +6,9 @@ import java.io.InputStream;
 
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
+import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapset.MapSetController;
-import peakaboo.controller.mapper.maptab.MapTabController;
+import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.datasource.model.DataSource;
 import scitypes.Coord;
@@ -23,7 +24,8 @@ public class MappingController extends EventfulType<String>
 	
 	
 	public 	MapSetController		mapsController;
-	private MapTabController		tabController;
+	private MapDisplayController	display;
+	public  MapSettings				settings;
 	
 	private EventfulTypeListener<String> controllerListener;
 	
@@ -33,7 +35,8 @@ public class MappingController extends EventfulType<String>
 	public MappingController(IPlotController plotcontroller)
 	{
 		
-		mapsController = new MapSetController();
+		this.mapsController = new MapSetController();
+		this.settings = new MapSettings(this);
 
 		initialize(plotcontroller);
 		
@@ -47,7 +50,23 @@ public class MappingController extends EventfulType<String>
 	 */
 	public MappingController(MappingController copy, IPlotController plotcontroller)
 	{
-		mapsController = new MapSetController(copy.mapsController);
+		this.mapsController = copy.mapsController;
+		this.settings = new MapSettings(this, copy.settings);
+		
+		initialize(plotcontroller);
+		
+	}
+	
+	/**
+	 * This copy constructor copies the user preferences from the map,
+	 * and does directly references the map data
+	 * @param copy
+	 * @param plotcontroller
+	 */
+	public MappingController(MapSetController data, MapSettings settings, IPlotController plotcontroller)
+	{
+		this.mapsController = data;
+		this.settings = new MapSettings(this, settings);
 		
 		initialize(plotcontroller);
 		
@@ -56,7 +75,7 @@ public class MappingController extends EventfulType<String>
 	
 	private void initialize(IPlotController plotcontroller)
 	{
-		tabController = null;
+		display = new MapDisplayController(this);
 		
 		controllerListener = new EventfulTypeListener<String>() {
 
@@ -65,36 +84,25 @@ public class MappingController extends EventfulType<String>
 				updateListeners(message);
 			}};
 		
+			
 		mapsController.addListener(controllerListener);
+		display.addListener(controllerListener);
+		settings.addListener(controllerListener);
 		
 
 		this.plotcontroller = plotcontroller;
 	}
 	
 
-	public void setTabController(MapTabController s)
-	{
-		if (tabController != null)
-		{
-			tabController.removeListener(controllerListener);
-		}
-		
-		tabController = s;
-		
-		s.addListener(controllerListener);
-	}
-	
-	public MapTabController getActiveTabController()
-	{
-		return tabController;
-	}
-	
 	
 
+	public MapDisplayController getDisplay() {
+		return display;
+	}
 
 	public DataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return plotcontroller.data().getDataSourceForSubset(mapsController.getDataWidth(), mapsController.getDataHeight(), cstart, cend);
+		return plotcontroller.data().getDataSourceForSubset(settings.getDataWidth(), settings.getDataHeight(), cstart, cend);
 	}
 	
 	public InputStream getSerializedPlotSettings()

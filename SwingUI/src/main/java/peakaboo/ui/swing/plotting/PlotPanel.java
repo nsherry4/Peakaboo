@@ -82,6 +82,8 @@ import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.mapset.MapSetController;
+import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
@@ -1446,16 +1448,16 @@ public class PlotPanel extends TabbedInterfacePanel
 			if (tasks.getCompleted())
 			{
 
-				MappingController mapController = controller.checkoutMapController();
+				
 				MapperFrame mapperWindow;
-
 				MapResultSet results = tasks.getResult();
-
+				MapSetController mapData = new MapSetController();
+				
 
 				if (controller.data().getDataSet().hasPhysicalSize())
 				{
 
-					mapController.mapsController.setMapData(
+					mapData.setMapData(
 							results,
 							controller.data().getDataSet().getScanData().datasetName(),
 							controller.data().getDataSet().getDataSize().getDataDimensions(),
@@ -1466,7 +1468,7 @@ public class PlotPanel extends TabbedInterfacePanel
 					
 				} else {
 									
-					mapController.mapsController.setMapData(
+					mapData.setMapData(
 							results,
 							controller.data().getDataSet().getScanData().datasetName(),
 							controller.data().getDiscards().list()
@@ -1474,10 +1476,10 @@ public class PlotPanel extends TabbedInterfacePanel
 					
 				}
 				
-				mapController.mapsController.setInterpolation(0);
+				MapSettings mapSettings = controller.getLastMapSettings();
 
 				
-				mapperWindow = new MapperFrame(container, mapController, controller);
+				mapperWindow = new MapperFrame(container, mapData, mapSettings, controller);
 
 				mapperWindow.showDialog();
 

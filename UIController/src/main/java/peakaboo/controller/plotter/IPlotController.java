@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import eventful.IEventfulType;
-import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.controller.plotter.fitting.IFittingController;
@@ -54,10 +54,7 @@ public interface IPlotController extends IEventfulType<String>
 	 */
 	ISettingsController settings();
 	
-	/**
-	 * Get the mapping controller
-	 */
-	MappingController mapping();
+
 	
 	
 	
@@ -71,31 +68,13 @@ public interface IPlotController extends IEventfulType<String>
 	void setDR(DrawingRequest dr);
 	
 	
-	/**
-	 * Attempts to retrieve the map controller from the plot controller.
-	 * If another mapping window is currently using the map controller,
-	 * a new map controller is created. When the mapping windows are closed,
-	 * whichever mapping window is closed last will be the last to check-in
-	 * their map controller, and that will be the one saved for future use
-	 * @return
-	 */
-	MappingController checkoutMapController();
-
+	public void setLastMapSettings(MapSettings settings);
+	public MapSettings getLastMapSettings();
 	
-	/**
-	 * After using the map controller, return it to the plot controller.
-	 * If a new map window is opened after this controller is checked in,
-	 * but before any other map controller is checked in, this will be 
-	 * the map controller used for that new window
-	 */
-	void checkinMapController(MappingController controller);
-
-	void setMapController(MappingController mapController);
 
 	InputStream getSerializedPlotSettings();
 
 	void savePreferences(OutputStream outStream);
-
 	void loadPreferences(InputStream inStream, boolean isUndoAction);
 
 	

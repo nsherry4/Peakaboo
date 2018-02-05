@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.maptab;
+package peakaboo.controller.mapper.mapdisplay;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -32,11 +32,11 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class MapTabController extends EventfulType<String> implements IMapTabController
+public class MapDisplayController extends EventfulType<String> implements IMapDisplayController
 {
 	
 	
-	private MapTabModel 	tabModel;
+	private MapDisplaySettings 	tabModel;
 	private MappingController 	map;
 	private Function<Coord<Integer>, String> valueAtCoord;
 	
@@ -44,9 +44,9 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private boolean hasBoundingRegion = false;
 	
 	
-	public MapTabController(MappingController map, List<TransitionSeries> tss)
+	public MapDisplayController(MappingController map)
 	{
-		tabModel = new MapTabModel(tss);
+		tabModel = new MapDisplaySettings(map.mapsController.getMapResultSet().getAllTransitionSeries());
 		this.map = map;
 	}
 
@@ -119,15 +119,15 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		Spectrum data = sumVisibleTransitionSeriesMaps();
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.mapsController.getDataWidth(),
-				map.mapsController.getDataHeight(),
+				map.settings.getDataWidth(),
+				map.settings.getDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, data, map.mapsController.getBadPoints());
 		
 		// interpolation of data
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(data, grid, map.mapsController.getInterpolation());
+		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(data, grid, map.settings.getInterpolation());
 
 		
 		//map.mapsController.interpolatedSize.x = interpolationResult.first.width;
@@ -148,8 +148,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	{
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.mapsController.getDataWidth(),
-				map.mapsController.getDataHeight(),
+				map.settings.getDataWidth(),
+				map.settings.getDataHeight(),
 				0.0f);
 		
 		
@@ -171,7 +171,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			redSpectrum = redSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.RED, redSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(redSpectrum, grid, map.mapsController.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(redSpectrum, grid, map.settings.getInterpolation());
 			redSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -192,7 +192,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			greenSpectrum = greenSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.GREEN, greenSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, map.mapsController.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, map.settings.getInterpolation());
 			greenSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -213,7 +213,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			blueSpectrum = blueSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.BLUE, blueSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, map.mapsController.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, map.settings.getInterpolation());
 			blueSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -235,7 +235,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			yellowSpectrum = yellowSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.YELLOW, yellowSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(yellowSpectrum, grid, map.mapsController.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(yellowSpectrum, grid, map.settings.getInterpolation());
 			yellowSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -320,8 +320,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.mapsController.getDataWidth(),
-				map.mapsController.getDataHeight(),
+				map.settings.getDataWidth(),
+				map.settings.getDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
@@ -330,7 +330,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	
 		Spectrum mapdata;
 		
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(ratioData, grid, map.mapsController.getInterpolation());
+		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(ratioData, grid, map.settings.getInterpolation());
 		mapdata = interpolationResult.second;
 		//mapModel.interpolatedSize.x = interpolationResult.first.width;
 		//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -366,7 +366,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	
 
 	/**
-	 * sets the private object-scoped FunctionMap<Coord<Integer>, String> varialbe "valueAtCoord"
+	 * sets the private object-scoped FunctionMap<Coord<Integer>, String> variable "valueAtCoord"
 	 * to a function which reports values from the data passed in overlayData
 	 * @param overlayData the overlay data to report on
 	 */
@@ -376,7 +376,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 			
 			if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.mapsController.getDataWidth() * coord.y + coord.x;
+			int index = map.settings.getDataWidth() * coord.y + coord.x;
 			List<String> results = new ArrayList<String>();
 			for (OverlayColour c : OverlayColour.values())
 			{
@@ -398,7 +398,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		valueAtCoord = coord -> {
 			if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.mapsController.getDataWidth() * coord.y + coord.x;
+			int index = map.settings.getDataWidth() * coord.y + coord.x;
 			if (ratioData.second.get(index) != 0) return "Invalid";
 			return Ratios.fromFloat(  ratioData.first.get(index)  );
 		};
@@ -414,7 +414,7 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 	private void putValueFunctionForComposite(final Spectrum data)
 	{
 		valueAtCoord = coord -> {
-			int index = map.mapsController.getDataWidth() * coord.y + coord.x;
+			int index = map.settings.getDataWidth() * coord.y + coord.x;
 			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
 		};
 	}
@@ -475,11 +475,11 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		try {
 			
 		
-			for (int y = 0; y < map.mapsController.getDataHeight(); y++) {
+			for (int y = 0; y < map.settings.getDataHeight(); y++) {
 				
 				if (y != 0) osw.write("\n");
 				
-				for (int x = 0; x < map.mapsController.getDataWidth(); x++) {
+				for (int x = 0; x < map.settings.getDataWidth(); x++) {
 					
 					if (x != 0) osw.write(", ");
 					osw.write(valueAtCoord.apply(new Coord<Integer>(x, y)));
@@ -525,8 +525,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		{
 			if (dragStart.x < 0) dragStart.x = 0;
 			if (dragStart.y < 0) dragStart.y = 0;
-			if (dragStart.x >= map.mapsController.getDataWidth()) dragStart.x = map.mapsController.getDataWidth()-1;
-			if (dragStart.y >= map.mapsController.getDataHeight()) dragStart.y = map.mapsController.getDataHeight()-1;
+			if (dragStart.x >= map.settings.getDataWidth()) dragStart.x = map.settings.getDataWidth()-1;
+			if (dragStart.y >= map.settings.getDataHeight()) dragStart.y = map.settings.getDataHeight()-1;
 		}
 		
 		this.dragStart = dragStart;
@@ -555,8 +555,8 @@ public class MapTabController extends EventfulType<String> implements IMapTabCon
 		{
 			if (dragEnd.x < 0) dragEnd.x = 0;
 			if (dragEnd.y < 0) dragEnd.y = 0;
-			if (dragEnd.x >= map.mapsController.getDataWidth()) dragEnd.x = map.mapsController.getDataWidth()-1;
-			if (dragEnd.y >= map.mapsController.getDataHeight()) dragEnd.y = map.mapsController.getDataHeight()-1;
+			if (dragEnd.x >= map.settings.getDataWidth()) dragEnd.x = map.settings.getDataWidth()-1;
+			if (dragEnd.y >= map.settings.getDataHeight()) dragEnd.y = map.settings.getDataHeight()-1;
 		}
 		
 		this.dragEnd = dragEnd;
