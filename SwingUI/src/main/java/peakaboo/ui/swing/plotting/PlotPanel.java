@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -125,8 +126,11 @@ import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import scitypes.util.Mutable;
+import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SwidgetIO;
+import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -529,11 +533,6 @@ public class PlotPanel extends TabbedInterfacePanel
 		c.gridx += 1;		
 		toolbar.add(energyControls, c);
 
-//		ibutton = new ToolbarImageButton(StockIcon.MISC_ABOUT, "About");
-//		ibutton.addActionListener(e -> actionAbout());
-//		c.gridx += 1;
-//		toolbar.add(ibutton, c);
-//		
 		
 		c.gridx++;
 		toolbar.add(createMenuButton(), c);
@@ -1059,14 +1058,14 @@ public class PlotPanel extends TabbedInterfacePanel
 		menu.setMnemonic(KeyEvent.VK_H);
 		
 		JMenuItem contents = createMenuItem(
-			"Help", StockIcon.BADGE_HELP.toMenuIcon(), "",
+			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
 			e -> actionHelp(),
 			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
 		);
 		menu.add(contents);
 		
 		JMenuItem about = createMenuItem(
-			"About", StockIcon.MISC_ABOUT.toMenuIcon(), "",
+			"About", StockIcon.MISC_ABOUT.toMenuIcon(), null,
 			e -> actionAbout(),
 			null, null
 		);
@@ -1287,19 +1286,20 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	private void actionAbout()
 	{
-		new swidget.dialogues.AboutDialogue(
-				container.getWindow(),
-				Version.program_name,
-				"XRF Analysis Software",
-				"www.sciencestudio.net",
-				"Copyright &copy; 2009-2012 by The University of Western Ontario and The Canadian Light Source Inc.",
-				IOOperations.readTextFromJar("/peakaboo/licence.txt"),
-				IOOperations.readTextFromJar("/peakaboo/credits.txt"),
-				Version.logo,
-				Integer.toString(Version.versionNoMajor),
-				Version.longVersionNo,
-				Version.releaseDescription,
-				Version.buildDate);
+		AboutDialogue.Contents contents = new AboutDialogue.Contents();
+		contents.name = Version.program_name;
+		contents.description = "XRF Analysis Software";
+		contents.website = "www.sciencestudio.net";
+		contents.copyright = "Copyright &copy; 2009-2012 by The University of Western Ontario and The Canadian Light Source Inc.";
+		contents.licence = IOOperations.readTextFromJar("/peakaboo/licence.txt");
+		contents.credits = IOOperations.readTextFromJar("/peakaboo/credits.txt");
+		contents.logo = IconFactory.getImageIcon( Version.logo );
+		contents.version = Integer.toString(Version.versionNoMajor);
+		contents.longVersion = Version.longVersionNo;
+		contents.releaseDescription = Version.releaseDescription;
+		contents.date = Version.buildDate;
+		
+		new AboutDialogue(container.getWindow(), contents);
 	}
 	
 	private void actionHelp()
@@ -1434,6 +1434,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionMap(FittingTransform type)
 	{
 
+		Mutable<Boolean> mapShown = new Mutable(false);
 		if (!controller.data().hasDataSet()) return;
 
 
@@ -1446,6 +1447,11 @@ public class PlotPanel extends TabbedInterfacePanel
 			if (tasks.getCompleted())
 			{
 
+				//Additional events should not create additional map windows
+				if (mapShown.get() == true) {
+					return;
+				}
+				mapShown.set(true);
 				
 				MapperFrame mapperWindow;
 				MapResultSet results = tasks.getResult();

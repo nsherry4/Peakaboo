@@ -213,7 +213,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		dr.imageWidth = getWidth();
 		dr.viewTransform = controller.settings().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.unitSize = controller.settings().getEnergyPerChannel();
-		
+		dr.drawToVectorSurface = context.isVectorSurface();
 		
 		////////////////////////////////////////////////////////////////////
 		// Data Calculation

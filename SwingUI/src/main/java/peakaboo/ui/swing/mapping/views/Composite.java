@@ -186,8 +186,9 @@ public class Composite extends JPanel {
 
 		TableColumn column = null;
 		column = table.getColumnModel().getColumn(0);
-		column.setPreferredWidth(40);
-		column.setMaxWidth(100);
+		column.setResizable(false);
+		column.setPreferredWidth(45);
+		column.setMaxWidth(45);
 
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));

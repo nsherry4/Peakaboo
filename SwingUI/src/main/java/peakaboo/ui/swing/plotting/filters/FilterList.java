@@ -156,15 +156,19 @@ public class FilterList extends ClearPanel {
 		t.setShowHorizontalLines(false);
 		t.setShowGrid(false);
 		
+		//USE column
 		TableColumn column = t.getColumnModel().getColumn(0);
+		column.setResizable(false);
 		column.setMinWidth(40);
 		column.setPreferredWidth(40);
-		column.setMaxWidth(100);
+		column.setMaxWidth(40);
 		
+		//EDIT column
 		column = t.getColumnModel().getColumn(1);
-		column.setMinWidth(40);
-		column.setPreferredWidth(40);
-		column.setMaxWidth(100);
+		column.setResizable(false);
+		column.setMinWidth(45);
+		column.setPreferredWidth(45);
+		column.setMaxWidth(45);
 		
 		t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
