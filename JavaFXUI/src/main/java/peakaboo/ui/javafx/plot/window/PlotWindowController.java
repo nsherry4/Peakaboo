@@ -26,6 +26,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.mapset.MapSetController;
+import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
@@ -169,10 +171,11 @@ public class PlotWindowController extends IActofUIController {
     	//TODO: Show progress
     	MapResultSet results = plotController.getMapCreationTask(FittingTransform.AREA).startWorkingBlocking();
     	
-    	MappingController mapController = plotController.checkoutMapController();
+    	MapSettings mapSettings = plotController.getLastMapSettings();
     	
+    	MapSetController mapData = new MapSetController();
 		if (plotController.data().getDataSet().hasPhysicalSize()) {
-			mapController.mapsController.setMapData(
+			mapData.setMapData(
 					results,
 					plotController.data().getDataSet().getScanData().datasetName(),
 					plotController.data().getDataSet().getDataSize().getDataDimensions(),
@@ -181,14 +184,15 @@ public class PlotWindowController extends IActofUIController {
 					plotController.data().getDiscards().list()
 				);
 		} else {
-			mapController.mapsController.setMapData(
+			mapData.setMapData(
 					results,
 					plotController.data().getDataSet().getScanData().datasetName(),
 					plotController.data().getDiscards().list()
 				);
 		}
-		mapController.mapsController.setInterpolation(0);
-    	
+		
+		MappingController mapController = new MappingController(mapData, mapSettings, plotController);
+		    	
 		
 		//create a new change bus for the mapping window, it's results should be isolated from changes elsewhere
 		MapWindowController mapWindow = MapWindowController.load(new IChangeController());
