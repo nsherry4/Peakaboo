@@ -15,14 +15,12 @@ public class FilterDialog extends SwingAutoDialog{
 	}
 	
 	public FilterDialog(IFilteringController controller, Filter filter, AutoDialogButtons buttons, Window window) {
-		super(filter.getParameterGroup(), buttons);
+		super(window, filter.getParameterGroup(), buttons);
 		
 		getGroup().getValueHook().addListener(o -> {
 			controller.filteredDataInvalidated();
 		});
 		
-		
-		setParent(window);
 	}
 	
 	

@@ -53,7 +53,7 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		
+		param.getEnabledHook().addListener(e -> setEnabled(e));
 		
 		filterCombo.addActionListener(new ActionListener() {
 			
@@ -176,6 +176,11 @@ public class SubfilterEditor extends AbstractSwingEditor<Filter>
 	
 	private void subfilterInvalidated() {
 		param.getValueHook().updateListeners(subfilter);
+	}
+
+	@Override
+	protected void setEnabled(boolean enabled) {
+		subfilterView.setEnabled(enabled);
 	}
 
 	
