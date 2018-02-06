@@ -19,7 +19,7 @@ public class FiltersetViewer extends ClearPanel {
 	@Override
 	public String getName()
 	{
-		return "Filters";
+		return "Data Filters";
 	}
 	
 	public FiltersetViewer(IFilteringController _controller, Container owner){

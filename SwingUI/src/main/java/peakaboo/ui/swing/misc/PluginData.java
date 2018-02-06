@@ -43,7 +43,7 @@ public class PluginData extends ClearPanel {
 		
 		name = new JLabel(plugin.getName());
 		version = new JLabel(plugin.getVersion());
-		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription() + "<br/>Location: " + source, 375));
+		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription() + "<br/><small>From: " + source + "</small>", 375));
 		enabled = new JLabel(new ImageIcon(IconFactory.getImageIcon(plugin.isEnabled() ? "choose-ok" : "choose-cancel", IconSize.BUTTON).getImage()));
 		type = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getPluginClass().getSimpleName(), 375));
 		
