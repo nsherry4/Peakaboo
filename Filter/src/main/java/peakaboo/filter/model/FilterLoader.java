@@ -1,8 +1,6 @@
 package peakaboo.filter.model;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import bolt.plugin.core.BoltPluginSet;
 import bolt.plugin.core.IBoltPluginSet;
@@ -111,7 +109,16 @@ public class FilterLoader
 		
 	}
 	
-
+	
+	public synchronized static void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
+		try {
+			BoltPluginLoader<JavaFilterPlugin> javaLoader = new BoltPluginLoader<JavaFilterPlugin>(plugins, JavaFilterPlugin.class);
+			javaLoader.registerPlugin(clazz);
+		} catch (ClassInheritanceException | ClassInstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 }
