@@ -1,12 +1,10 @@
 package peakaboo.ui.swing;
 
 import java.awt.Dimension;
-import java.awt.Window;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
 import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
@@ -18,7 +16,6 @@ import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import swidget.Swidget;
-import swidget.dialogues.SplashScreen;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -27,11 +24,6 @@ import swidget.icons.StockIcon;
 
 public class Peakaboo
 {
-
-	private static SplashScreen splash;
-	
-
-	
 
 	public static boolean showError(Throwable e)
 	{
@@ -55,16 +47,11 @@ public class Peakaboo
 		return (errorDialog.show().getTag().ordinal() != 0);
 	}
 	
-	private static void showSplash() {
-		splash = new SplashScreen(IconFactory.getImageIcon(Version.splash));
-	}
+
 	
 	private static void runPeakaboo()
 	{
-		
-		
-	
-		
+
 		if (Env.heapSize() < 120){
 			JOptionPane.showMessageDialog(
 				null,
@@ -82,7 +69,6 @@ public class Peakaboo
 				
 			//PlotterFrame peakaboo = new PlotterFrame();
 			TabbedPlotterFrame peakaboo = new TabbedPlotterFrame();
-			splash.setVisible(false);
 
 		} catch (Exception e) {
 			
@@ -98,31 +84,15 @@ public class Peakaboo
 	
 	public static void run() {
 		
-		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
-		System.setProperty("sun.java2d.xrender", "false");
-		System.setProperty("sun.java2d.pmoffscreen", "false");
-		
-		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
-		Swidget.initialize();
-		
-		
-		SwingUtilities.invokeLater(() -> showSplash());
-		
-		//Sleep here just long enough to make sure that the swing event queue 
-		//can draw the splash screen before we load more work into it. From
-		//observation, 500ms isn't long enough???
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		SwingUtilities.invokeLater(() -> PeakTableReader.readPeakTable());
-		SwingUtilities.invokeLater(() -> DataSourceLoader.load() );
-		SwingUtilities.invokeLater(() -> FilterLoader.load() );
-		
-		SwingUtilities.invokeLater(() -> runPeakaboo());
 
+		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
+		Swidget.initialize(IconFactory.getImageIcon(Version.splash), () -> {
+			PeakTableReader.readPeakTable();
+			DataSourceLoader.load();
+			FilterLoader.load();
+			runPeakaboo();
+		});
+		
 		
 	}
 	
