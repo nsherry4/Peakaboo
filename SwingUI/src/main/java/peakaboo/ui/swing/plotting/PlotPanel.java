@@ -134,6 +134,7 @@ import swidget.widgets.ComponentListPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DropdownImageButton;
 import swidget.widgets.DropdownImageButton.Actions;
+import swidget.widgets.properties.PropertyViewPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
@@ -186,6 +187,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	ImageButton					toolbarSnapshot;
 	DropdownImageButton			toolbarMap;
 	ImageButton					toolbarInfo;
+	ImageButton					energyGuess;
 	ZoomSlider					zoomSlider;
 	JPanel						bottomPanel;
 	JPanel						scanSelector;
@@ -243,7 +245,9 @@ public class PlotPanel extends TabbedInterfacePanel
 		exportFilteredDataMenuItem.setEnabled(false);
 		toolbarSnapshot.setEnabled(false);
 		exportSinks.setEnabled(false);
-
+		energyGuess.setEnabled(false);
+		toolbarInfo.setEnabled(false);
+		
 		if (controller.data().hasDataSet())
 		{
 
@@ -253,19 +257,13 @@ public class PlotPanel extends TabbedInterfacePanel
 			exportFilteredDataMenuItem.setEnabled(true);
 			toolbarSnapshot.setEnabled(true);
 			exportSinks.setEnabled(true);
-
+			energyGuess.setEnabled(true);
+			toolbarInfo.setEnabled(true);
 
 			toolbarMap.setEnabled(controller.fitting().canMap());
 
+			
 
-			if (controller.data().getDataSet().hasMetadata())
-			{
-				toolbarInfo.setEnabled(true);
-			}
-			else
-			{
-				toolbarInfo.setEnabled(false);
-			}
 
 			setEnergySpinner();
 
@@ -522,7 +520,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		energy.addChangeListener(e -> controller.settings().setMaxEnergy(((Double) energy.getValue()).floatValue()));
 		c2.gridx += 1;
 		
-		ImageButton energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
+		energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
 		energyControls.add(energyGuess, c2);
 		energyGuess.addActionListener(e -> {
 			actionGuessMaxEnergy();
@@ -1293,8 +1291,8 @@ public class PlotPanel extends TabbedInterfacePanel
 				container.getWindow(),
 				Version.program_name,
 				"XRF Analysis Software",
-				"www.sciencestudioproject.com",
-				"Copyright &copy; 2009-2012 by <br> The University of Western Ontario and <br> The Canadian Light Source Inc.",
+				"www.sciencestudio.net",
+				"Copyright &copy; 2009-2012 by The University of Western Ontario and The Canadian Light Source Inc.",
 				IOOperations.readTextFromJar("/peakaboo/licence.txt"),
 				IOOperations.readTextFromJar("/peakaboo/credits.txt"),
 				Version.logo,
@@ -1696,25 +1694,42 @@ public class PlotPanel extends TabbedInterfacePanel
 	public void actionShowInfo()
 	{
 		
-		Map<String, String> properties = new LinkedHashMap<String, String>();
-
-		Metadata metadata = controller.data().getDataSet().getMetadata();
+		Map<String, String> properties;
+		List<PropertyViewPanel> panels = new ArrayList<>();
 		
-		properties.put("Date of Creation", metadata.getCreationTime());
-		properties.put("Created By", metadata.getCreator());
+		properties = new LinkedHashMap<String, String>();
+		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
+		properties.put("Channels per Scan", "" + controller.data().getDataSet().channelsPerScan());
+		properties.put("Maximum Intensity", "" + controller.data().getDataSet().maximumIntensity());
+		PropertyViewPanel basic = new PropertyViewPanel(properties, "Basic Information");
+		panels.add(basic);
 		
-		properties.put("Project Name", metadata.getProjectName());
-		properties.put("Session Name", metadata.getSessionName());
-		properties.put("Experiment Name", metadata.getExperimentName());
-		properties.put("Sample Name", metadata.getSampleName());
-		properties.put("Scan Name", metadata.getScanName());
 		
-		properties.put("Facility", metadata.getFacilityName());
-		properties.put("Laboratory", metadata.getLaboratoryName());
-		properties.put("Instrument", metadata.getInstrumentName());
-		properties.put("Technique", metadata.getTechniqueName());
+		//Extended attributes
+		if (controller.data().getDataSet().hasMetadata()) {
+			Metadata metadata = controller.data().getDataSet().getMetadata();
+			properties = new LinkedHashMap<String, String>();
+			
+			properties.put("Date of Creation", metadata.getCreationTime());
+			properties.put("Created By", metadata.getCreator());
+			
+			properties.put("Project Name", metadata.getProjectName());
+			properties.put("Session Name", metadata.getSessionName());
+			properties.put("Experiment Name", metadata.getExperimentName());
+			properties.put("Sample Name", metadata.getSampleName());
+			properties.put("Scan Name", metadata.getScanName());
+			
+			properties.put("Facility", metadata.getFacilityName());
+			properties.put("Laboratory", metadata.getLaboratoryName());
+			properties.put("Instrument", metadata.getInstrumentName());
+			properties.put("Technique", metadata.getTechniqueName());
+			
+			PropertyViewPanel extended = new PropertyViewPanel(properties, "Extended Information");
+			panels.add(extended);
+		}
 		
-		new PropertyDialogue("Dataset Information", "Extended Information", container.getWindow(), properties);
+		
+		new PropertyDialogue("Dataset Information", container.getWindow(), panels);
 
 	}
 	
