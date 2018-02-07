@@ -211,7 +211,8 @@ public class MapperToolbar extends JToolBar {
 		menu.addSeparator();
 		menu.add(monochrome);
 		
-		opts.addActionListener(e -> menu.show(opts, 0, opts.getHeight()));
+		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
+		
 		return opts;
 	}
 	
