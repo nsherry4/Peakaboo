@@ -5,7 +5,6 @@ import java.util.List;
 
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -14,7 +13,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class MapSetController extends EventfulType<String> implements IMapSetController
+public class MapSetController extends EventfulType<String>
 {
 
 	MapSetMapData mapModel;
@@ -216,12 +215,6 @@ public class MapSetController extends EventfulType<String> implements IMapSetCon
 	public List<Integer> getBadPoints()
 	{
 		return new ArrayList<>(mapModel.badPoints);
-	}
-
-
-	public boolean isValidPoint(Coord<Integer> mapCoord)
-	{
-		return (mapCoord.x >= 0 && mapCoord.x < mapModel.originalDimensions.x && mapCoord.y >= 0 && mapCoord.y < mapModel.originalDimensions.y);
 	}
 
 

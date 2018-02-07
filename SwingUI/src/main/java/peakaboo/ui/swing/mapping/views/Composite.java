@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -29,6 +30,7 @@ public class Composite extends JPanel {
 	
 	private JRadioButton 		relativeScale;
 	private JRadioButton 		absoluteScale;
+	private JCheckBox			logView;
 	
 	
 	public Composite(MapDisplayController _controller) {
@@ -44,7 +46,7 @@ public class Composite extends JPanel {
 				
 				absoluteScale.setSelected(controller.getMapScaleMode() == MapScaleMode.ABSOLUTE);
 				relativeScale.setSelected(controller.getMapScaleMode() == MapScaleMode.RELATIVE);			
-
+				logView.setSelected(controller.isLogView());
 			}
 		});
 		
@@ -63,8 +65,19 @@ public class Composite extends JPanel {
 	}
 	
 	
+	
+	
 	private JPanel createScaleOptions()
 	{
+		JPanel viewFrame = new JPanel(new BorderLayout());
+		
+		logView = new JCheckBox("Logarithmic Scale");
+		logView.setSelected(controller.isLogView());
+		logView.addActionListener(e -> {
+			controller.setLogView(logView.isSelected());
+		});
+		viewFrame.add(logView, BorderLayout.NORTH);
+		
 		
 		JPanel modeFrame = new JPanel();
 		
@@ -74,6 +87,9 @@ public class Composite extends JPanel {
 		modeFrame.setBorder(titleBorder);
 		modeFrame.setLayout(new BoxLayout(modeFrame, BoxLayout.Y_AXIS));
 		
+		
+		
+		
 		relativeScale = new JRadioButton("Visible Fittings");
 		absoluteScale = new JRadioButton("All Fittings");
 		ButtonGroup scaleGroup = new ButtonGroup();
@@ -81,24 +97,15 @@ public class Composite extends JPanel {
 		scaleGroup.add(absoluteScale);
 		absoluteScale.setSelected(true);
 		
-		relativeScale.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.RELATIVE);
-			}
-		});
-		absoluteScale.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.ABSOLUTE);
-			}
-		});
-		
+		relativeScale.addActionListener(e -> controller.setMapScaleMode(MapScaleMode.RELATIVE));
+		absoluteScale.addActionListener(e -> controller.setMapScaleMode(MapScaleMode.ABSOLUTE));
 		
 		modeFrame.add(relativeScale);
 		modeFrame.add(absoluteScale);
 		
-		return modeFrame;
+		viewFrame.add(modeFrame, BorderLayout.CENTER);
+		
+		return viewFrame;
 		
 	}
 	

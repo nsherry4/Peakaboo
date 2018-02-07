@@ -145,6 +145,12 @@ public class MapSettings extends EventfulType<String> //TODO remove extends
 		return viewDimensions.x;
 	}
 	
+	
+	public boolean isValidPoint(Coord<Integer> mapCoord)
+	{
+		return (mapCoord.x >= 0 && mapCoord.x < viewDimensions.x && mapCoord.y >= 0 && mapCoord.y < viewDimensions.y);
+	}
+	
 
 	// contours
 	public void setContours(boolean contours)

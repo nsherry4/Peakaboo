@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Function;
+
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
 import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
 import peakaboo.mapping.colours.OverlayColour;
 import scidraw.drawing.DrawingRequest;
+import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.Surface.CompositeModes;
 import scidraw.drawing.common.Spectrums;
@@ -151,6 +154,8 @@ public class MapCanvas extends GraphicsPanel
 		dr.uninterpolatedHeight = controller.settings.getDataHeight();
 		dr.dataWidth = controller.settings.getInterpolatedWidth();
 		dr.dataHeight = controller.settings.getInterpolatedHeight();
+		dr.viewTransform = controller.getDisplay().isLogView() ? ViewTransform.LOG : ViewTransform.LINEAR;
+
 		
 		if (controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE)
 		{
@@ -264,7 +269,8 @@ public class MapCanvas extends GraphicsPanel
 		dr.uninterpolatedHeight = controller.settings.getDataHeight();
 		dr.dataWidth = controller.settings.getInterpolatedWidth();
 		dr.dataHeight = controller.settings.getInterpolatedHeight();
-		
+		//LOG view not supported
+		dr.viewTransform = ViewTransform.LINEAR;
 		
 		//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
 		List<Integer> ratioSideValues = controller.getDisplay().getVisibleTransitionSeries().stream().map(ts -> controller.getDisplay().getRatioSide(ts)).distinct().collect(toList());
@@ -412,7 +418,8 @@ public class MapCanvas extends GraphicsPanel
 		dr.uninterpolatedHeight = controller.settings.getDataHeight();
 		dr.dataWidth = controller.settings.getInterpolatedWidth();
 		dr.dataHeight = controller.settings.getInterpolatedHeight();
-		
+		//LOG view not supported
+		dr.viewTransform = ViewTransform.LINEAR;
 		
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;

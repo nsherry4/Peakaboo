@@ -275,7 +275,7 @@ public class MapperPanel extends TabbedInterfacePanel
 	public void showValueAtCoord(Coord<Integer> mapCoord)
 	{
 		String noValue = "Index: -, X: -, Y: -, Value: -";
-		
+
 		if (mapCoord == null)
 		{
 			mapMouseMonitor.setText(noValue);
@@ -285,7 +285,7 @@ public class MapperPanel extends TabbedInterfacePanel
 		int index = mapCoord.y * controller.settings.getDataWidth() + mapCoord.x;
 		index++;
 		
-		if (controller.mapsController.isValidPoint(mapCoord))
+		if (controller.settings.isValidPoint(mapCoord))
 		{
 			String value = controller.getDisplay().getIntensityMeasurementAtPoint(mapCoord);
 			if (controller.settings.getInterpolation() != 0) value += " (not interpolated)";

@@ -17,6 +17,7 @@ public class MapDisplaySettings {
 	public MapScaleMode mapScaleMode;
 	
 	public MapDisplayMode displayMode;
+	public boolean logView;
 	
 	
 	public MapDisplaySettings(List<TransitionSeries> tss){

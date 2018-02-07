@@ -32,7 +32,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class MapDisplayController extends EventfulType<String> implements IMapDisplayController
+public class MapDisplayController extends EventfulType<String>
 {
 	
 	
@@ -53,37 +53,35 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	
 		
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getMapScaleMode()
-	 */
+
 	public MapScaleMode getMapScaleMode()
 	{
 		return tabModel.mapScaleMode;
 	}
 
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#setMapScaleMode(peakaboo.controller.mapper.singlemap.MapScaleMode)
-	 */
 	public void setMapScaleMode(MapScaleMode mode)
 	{
 		tabModel.mapScaleMode = mode;
 		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
 
+	public boolean isLogView() {
+		return tabModel.logView;
+	}
+	public void setLogView(boolean logView) {
+		tabModel.logView = logView;
+		updateListeners(UpdateType.UI_OPTIONS.toString());
+	}
+	
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getMapDisplayMode()
-	 */
 	public MapDisplayMode getMapDisplayMode()
 	{
 		return tabModel.displayMode;
 	}
 
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#setMapDisplayMode(peakaboo.controller.mapper.singlemap.MapDisplayMode)
-	 */
+
 	public void setMapDisplayMode(MapDisplayMode mode)
 	{		
 		tabModel.displayMode = mode;
@@ -91,18 +89,15 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#invalidateInterpolation()
-	 */
+	
+
 	public void invalidateInterpolation()
 	{
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getIntensityMeasurementAtPoint(scitypes.Coord)
-	 */
+
 	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
 	{
 		if (valueAtCoord == null) return "";
@@ -111,9 +106,6 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	
 	
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getCompositeMapData()
-	 */
 	public Spectrum getCompositeMapData()
 	{
 		Spectrum data = sumVisibleTransitionSeriesMaps();
@@ -141,9 +133,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getOverlayMapData()
-	 */
+
 	public Map<OverlayColour, Spectrum> getOverlayMapData()
 	{
 		
@@ -268,9 +258,6 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	
 	
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getRatioMapData()
-	 */
 	public Pair<Spectrum, Spectrum> getRatioMapData()
 	{
 
@@ -444,9 +431,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	
 	
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#mapAsCSV(java.io.OutputStream)
-	 */
+
 	public void mapAsCSV(OutputStream os)
 	{
 		final OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -508,17 +493,13 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getDragStart()
-	 */
+
 	public Coord<Integer> getDragStart()
 	{
 		return dragStart;
 	}
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#setDragStart(scitypes.Coord)
-	 */
+
 	public void setDragStart(Coord<Integer> dragStart)
 	{
 		if (dragStart != null) 
@@ -536,9 +517,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 
 
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getDragEnd()
-	 */
+
 	public Coord<Integer> getDragEnd()
 	{
 		return dragEnd;
@@ -546,9 +525,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 
 
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#setDragEnd(scitypes.Coord)
-	 */
+
 	public void setDragEnd(Coord<Integer> dragEnd)
 	{
 		if (dragEnd != null)
@@ -566,9 +543,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 
 
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#hasBoundingRegion()
-	 */
+
 	public boolean hasBoundingRegion()
 	{
 		return hasBoundingRegion;
@@ -577,9 +552,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 
 
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#setHasBoundingRegion(boolean)
-	 */
+
 	public void setHasBoundingRegion(boolean hasBoundingRegion)
 	{
 		this.hasBoundingRegion = hasBoundingRegion;
@@ -587,26 +560,18 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	}
 	
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#mapShortTitle(java.util.List)
-	 */
+
 	public String mapShortTitle(List<TransitionSeries> list){ return getShortDatasetTitle(list); }
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#mapLongTitle(java.util.List)
-	 */
+
 	public String mapLongTitle(List<TransitionSeries> list){ return getDatasetTitle(list); }
 	
 	
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#mapShortTitle()
-	 */
+
 	public String mapShortTitle(){ return getShortDatasetTitle(getVisibleTransitionSeries()); }
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#mapLongTitle()
-	 */
+
 	public String mapLongTitle(){ 
 	
 		switch (tabModel.displayMode)
@@ -653,9 +618,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 	
 	
 
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getAllTransitionSeries()
-	 */
+
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		
@@ -664,25 +627,19 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 		return tsList;
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getVisibleTransitionSeries()
-	 */
+
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
 		return getAllTransitionSeries().stream().filter(e -> tabModel.visible.get(e)).collect(toList());
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#sumGivenTransitionSeriesMaps(java.util.List)
-	 */
+
 	public Spectrum sumGivenTransitionSeriesMaps(List<TransitionSeries> list)
 	{
 		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list);
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getMapForTransitionSeries(peakaboo.curvefit.peaktable.TransitionSeries)
-	 */
+
 	public Spectrum getMapForTransitionSeries(TransitionSeries ts)
 	{
 		List<TransitionSeries> tss = new ArrayList<TransitionSeries>();
@@ -690,17 +647,13 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss);
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#sumVisibleTransitionSeriesMaps()
-	 */
+
 	public Spectrum sumVisibleTransitionSeriesMaps()
 	{	
 		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries());
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#sumAllTransitionSeriesMaps()
-	 */
+
 	public Spectrum sumAllTransitionSeriesMaps()
 	{		
 		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tabModel.visible.keySet());
@@ -709,10 +662,7 @@ public class MapDisplayController extends EventfulType<String> implements IMapDi
 
 
 	
-		
-	/* (non-Javadoc)
-	 * @see peakaboo.controller.mapper.singlemap.ITabController#getTransitionSeriesForRatioSide(int)
-	 */
+
 	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
 		return getVisibleTransitionSeries().stream().filter(e -> {
