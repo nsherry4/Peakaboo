@@ -86,7 +86,7 @@ public class Peakaboo
 		
 
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
-		Swidget.initialize(IconFactory.getImageIcon(Version.splash), () -> {
+		Swidget.initialize(Version.splash, () -> {
 			PeakTableReader.readPeakTable();
 			DataSourceLoader.load();
 			FilterLoader.load();
