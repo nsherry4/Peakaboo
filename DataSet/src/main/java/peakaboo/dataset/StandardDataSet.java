@@ -333,7 +333,7 @@ public class StandardDataSet implements DataSet
 			if (current == null) continue;
 			
 			SpectrumCalculations.addLists_inplace(avg, current);
-			SpectrumCalculations.maxlist_inplace(max10, current);
+			SpectrumCalculations.maxLists_inplace(max10, current);
 			
 			max = Math.max(max, current.max());
 			
