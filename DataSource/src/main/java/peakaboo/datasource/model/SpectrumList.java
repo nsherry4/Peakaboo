@@ -1,23 +1,16 @@
 package peakaboo.datasource.model;
 
-import java.awt.Color;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.ObjectBuffer;
-import com.esotericsoftware.kryo.serialize.SimpleSerializer;
-
-import net.jpountz.lz4.LZ4Compressor;
-import net.jpountz.lz4.LZ4Decompressor;
-import net.jpountz.lz4.LZ4Factory;
-import net.jpountz.lz4.LZ4SafeDecompressor;
 import scitypes.ISpectrum;
-import scitypes.SparsedList;
 import scitypes.Spectrum;
+import scratch.IScratchList;
+import scratch.ScratchDiskList;
 import scratch.ScratchList;
+import scratch.encoders.CompoundEncoder;
+import scratch.encoders.KryoSerializingEncoder;
+import scratch.encoders.LZ4CompressionEncoder;
 
 /**
  * SpectrumList is an implementation of the List interface which writes 
@@ -41,115 +34,21 @@ import scratch.ScratchList;
  *
  */
 
-public final class SpectrumList extends ScratchList<Spectrum>{
+public final class SpectrumList {
 
-	private Kryo kryo;
-	private ObjectBuffer kryoBuffer;
-	
 	
 	@SuppressWarnings("unchecked")
 	public static List<Spectrum> create(String name)
 	{
-		try
-		{
-			return new SpectrumList(name);
-		}
-		catch (Exception e)
-		{
+		IScratchList<Spectrum> backing;
+		try {
+			backing = new ScratchDiskList<Spectrum>();
+		} catch (IOException e) {
 			e.printStackTrace();
-			//We need to use a list implementation here which can be sparse, 
-			//since SpectrumList is, and we're looking to provide the same 
-			//functionality in fallback mode
-			return new SparsedList<>(new ArrayList<>());
+			backing = new ScratchList<Spectrum>();
 		}
+		backing.setEncoder(new CompoundEncoder<>(new KryoSerializingEncoder<>(ISpectrum.class, float[].class), new LZ4CompressionEncoder()));
+		return backing;
 	}
-	
-	/**
-	 * Create a new ScratchList
-	 * @param name the name prefix to give the temporary file
-	 * @throws IOException
-	 */
-	private SpectrumList(String name) throws IOException
-	{
-		super(name);
-		register(Spectrum.class);
-		register(float[].class);
-	}
-
-
-	
-	private SpectrumList()
-	{
-		register(Spectrum.class);
-		register(float[].class);
-	}
-	
-	
-	@Override
-	protected byte[] encodeObject(Spectrum element) throws IOException
-	{
-		ObjectBuffer buffer = getKryoBuffer();
-		return compress(buffer.writeObject(element));
-		
-	}
-	
-	@Override
-	protected Spectrum decodeObject(byte[] byteArray) throws IOException
-	{
-		ObjectBuffer buffer = getKryoBuffer();
-		return buffer.readObject(decompress(byteArray), ISpectrum.class);
-	}
-
-	@Override
-	public List<Spectrum> subList(int fromIndex, int toIndex) {
-		SpectrumList sublist = new SpectrumList();
-		makeSublist(sublist, fromIndex, toIndex);
-		return sublist;
-	}
-	
-	private void register(Class<?> c)
-	{
-		getKryo().register(c);
-	}
-	
-	private Kryo getKryo()
-	{
-		
-		if (kryo != null) return kryo;
-		
-		kryo = new Kryo();
-		kryo.setRegistrationOptional(true);
-		
-		kryo.register(Color.class, new SimpleSerializer<Color>() {
-	        public void write (ByteBuffer buffer, Color color) {
-	                buffer.putInt(color.getRGB());
-	        }
-	        public Color read (ByteBuffer buffer) {
-	                return new Color(buffer.getInt());
-	        }
-		});
-		
-		return kryo;
-	}
-	
-	
-	private ObjectBuffer getKryoBuffer()
-	{
-		if (kryoBuffer != null) return kryoBuffer;
-		kryoBuffer = new ObjectBuffer(getKryo(), 1000 << 16);
-		return kryoBuffer;
-	}
-
-	private LZ4Compressor compressor = LZ4Factory.fastestInstance().fastCompressor(); 
-	private byte[] compress(byte[] input) {
-		return compressor.compress(input);
-	}
-	
-	private LZ4SafeDecompressor decompressor = LZ4Factory.fastestInstance().safeDecompressor();
-	private byte[] decompress(byte[] input) {
-		//LZ4SafeDecompressor decompressor = LZ4Factory.fastestInstance().safeDecompressor();
-		return decompressor.decompress(input, 2<<18); //max 256K per spectrum should be more than enough.
-	}
-
 	
 }
