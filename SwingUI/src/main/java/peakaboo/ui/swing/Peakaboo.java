@@ -52,7 +52,7 @@ public class Peakaboo
 	private static void runPeakaboo()
 	{
 
-		if (Env.heapSize() < 120){
+		if (Env.heapSize() <= 128){
 			JOptionPane.showMessageDialog(
 				null,
 				"This system's Java VM is only allocated " + Env.heapSize()
