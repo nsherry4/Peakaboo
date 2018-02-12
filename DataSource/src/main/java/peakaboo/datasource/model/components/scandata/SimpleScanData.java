@@ -1,8 +1,6 @@
 package peakaboo.datasource.model.components.scandata;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import peakaboo.datasource.model.SpectrumList;
 import scitypes.ISpectrum;
@@ -11,42 +9,6 @@ import scitypes.Spectrum;
 
 public class SimpleScanData implements ScanData {
 
-	public static class LoaderQueue {
-		private LinkedBlockingQueue<Optional<Spectrum>> queue;
-		private Thread thread;
-		public LoaderQueue(SimpleScanData data) {
-			this(data, 1000);
-		}
-		public LoaderQueue(SimpleScanData data, int depth) {
-			queue = new LinkedBlockingQueue<>(depth);
-			thread = new Thread(() -> {
-				while(true) {
-					try {
-						Optional<Spectrum> option = queue.take();
-						if (option.isPresent()) {
-							data.add(option.get()); 
-						} else {
-							return;
-						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-						Thread.currentThread().interrupt();
-						return;
-					}
-				}
-			});
-			thread.start();
-		}
-		
-		public void submit(Spectrum s) throws InterruptedException {
-			queue.put(Optional.of(s));
-		}
-		
-		public void finish() throws InterruptedException {
-			queue.put(Optional.ofNullable(null));
-			thread.join();
-		}
-	}
 	
 	private List<Spectrum> spectra;
 	private float maxEnergy;
@@ -114,6 +76,14 @@ public class SimpleScanData implements ScanData {
 	@Override
 	public String datasetName() {
 		return name;
+	}
+	
+	public LoaderQueue createLoaderQueue(int capacity) {
+		if (Runtime.getRuntime().maxMemory() < 512 << 20) {
+			return new CompressedLoaderQueue(this, capacity);
+		} else {
+			return new SimpleLoaderQueue(this, capacity);
+		}
 	}
 	
 }
