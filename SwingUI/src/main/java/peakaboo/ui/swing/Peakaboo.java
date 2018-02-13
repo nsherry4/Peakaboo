@@ -1,6 +1,8 @@
 package peakaboo.ui.swing;
 
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -10,6 +12,7 @@ import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
 import commonenvironment.Env;
+import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.datasource.plugin.DataSourceLoader;
@@ -24,6 +27,7 @@ import swidget.icons.StockIcon;
 
 public class Peakaboo
 {
+	private static final Logger LOGGER = PeakabooLog.get();
 
 	public static boolean showError(Throwable e)
 	{
@@ -52,6 +56,8 @@ public class Peakaboo
 	private static void runPeakaboo()
 	{
 
+		LOGGER.log(Level.INFO, "Max heap size = " + Env.heapSize());
+		
 		if (Env.heapSize() <= 128){
 			JOptionPane.showMessageDialog(
 				null,
@@ -66,13 +72,10 @@ public class Peakaboo
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
-				
-			//PlotterFrame peakaboo = new PlotterFrame();
 			TabbedPlotterFrame peakaboo = new TabbedPlotterFrame();
-
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Critical Error in Peakaboo", e);
 			
 			//if the user chooses to close rather than restart, break out of the loop
 			showError(e);
@@ -84,9 +87,10 @@ public class Peakaboo
 	
 	public static void run() {
 		
-
+		LOGGER.log(Level.INFO, "Starting Peakaboo");
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
-		Swidget.initialize(Version.splash, () -> {
+		Swidget.initialize(Version.splash, Version.icon, () -> {
+			PeakabooLog.init();
 			PeakTableReader.readPeakTable();
 			DataSourceLoader.load();
 			FilterLoader.load();

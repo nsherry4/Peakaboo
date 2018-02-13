@@ -81,6 +81,7 @@ import commonenvironment.IOOperations;
 import eventful.EventfulEnumListener;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
+import peakaboo.common.Configuration;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapset.MapSetController;
@@ -792,7 +793,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		plugins.add(createMenuItem(
 				"Open Folder", null, "Opens the plugins folder to add or remove plugin files",
 				e -> {
-					File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins");
+					File appDataDir = Configuration.appDir("Plugins");
 					appDataDir.mkdirs();
 					Desktop desktop = Desktop.getDesktop();
 					try {
