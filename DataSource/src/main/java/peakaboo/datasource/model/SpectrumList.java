@@ -9,8 +9,10 @@ import scratch.IScratchList;
 import scratch.ScratchDiskList;
 import scratch.ScratchList;
 import scratch.encoders.CompoundEncoder;
-import scratch.encoders.KryoSerializingEncoder;
-import scratch.encoders.LZ4CompressionEncoder;
+import scratch.encoders.compressors.Compressors;
+import scratch.encoders.compressors.LZ4CompressionEncoder;
+import scratch.encoders.serializers.KryoSerializingEncoder;
+import scratch.encoders.serializers.Serializers;
 
 /**
  * SpectrumList is an implementation of the List interface which writes 
@@ -47,7 +49,7 @@ public final class SpectrumList {
 			e.printStackTrace();
 			backing = new ScratchList<Spectrum>();
 		}
-		backing.setEncoder(new CompoundEncoder<>(new KryoSerializingEncoder<>(ISpectrum.class, float[].class), new LZ4CompressionEncoder()));
+		backing.setEncoder(new CompoundEncoder<>(Serializers.kryo(ISpectrum.class), Compressors.lz4()));
 		return backing;
 	}
 	

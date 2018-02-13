@@ -7,8 +7,10 @@ import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scratch.ScratchEncoder;
 import scratch.encoders.CompoundEncoder;
-import scratch.encoders.KryoSerializingEncoder;
-import scratch.encoders.LZ4CompressionEncoder;
+import scratch.encoders.compressors.LZ4CompressionEncoder;
+import scratch.encoders.compressors.Compressors;
+import scratch.encoders.serializers.KryoSerializingEncoder;
+import scratch.encoders.serializers.Serializers;
 import scratch.single.Compressed;
 
 public class CompressedLoaderQueue implements LoaderQueue {
@@ -23,7 +25,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	}
 	public CompressedLoaderQueue(SimpleScanData data, int depth) {
 		this.data = data;
-		this.encoder = new CompoundEncoder<>(new KryoSerializingEncoder<>(ISpectrum.class, float[].class), new LZ4CompressionEncoder());
+		this.encoder = new CompoundEncoder<>(Serializers.kryo(ISpectrum.class), Compressors.lz4());
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {
