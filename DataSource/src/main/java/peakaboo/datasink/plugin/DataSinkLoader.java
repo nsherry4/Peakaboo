@@ -9,6 +9,7 @@ import bolt.plugin.java.ClassInheritanceException;
 import bolt.plugin.java.ClassInstantiationException;
 import bolt.scripting.plugin.IBoltScriptPluginLoader;
 import commonenvironment.Env;
+import peakaboo.common.Configuration;
 import peakaboo.common.Version;
 import peakaboo.datasink.plugin.plugins.CSV;
 
@@ -42,7 +43,7 @@ public class DataSinkLoader
 		javaLoader.register();
 		
 		//load jars in the app data directory
-		File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins/DataSink");
+		File appDataDir = Configuration.appDir("Plugins/DataSink");
 		appDataDir.mkdirs();
 		javaLoader.register(appDataDir);
 			

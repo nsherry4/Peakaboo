@@ -1,6 +1,7 @@
 package peakaboo.filter.model;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import bolt.plugin.core.BoltPluginSet;
 import bolt.plugin.core.IBoltPluginSet;
@@ -9,6 +10,8 @@ import bolt.plugin.java.ClassInheritanceException;
 import bolt.plugin.java.ClassInstantiationException;
 import bolt.scripting.plugin.IBoltScriptPluginLoader;
 import commonenvironment.Env;
+import peakaboo.common.Configuration;
+import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.filter.model.plugin.FilterPlugin;
 import peakaboo.filter.model.plugin.JavaFilterPlugin;
@@ -48,7 +51,7 @@ public class FilterLoader
 				initLoader();
 			}
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.WARNING, "Failed to load filter plugins", e);
 		}
 	}
 	
@@ -93,7 +96,7 @@ public class FilterLoader
 		newPluginLoader.register();
 		
 		//load plugins from the application data directory
-		File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins/Filter");
+		File appDataDir = Configuration.appDir("Plugins/Filter");
 		appDataDir.mkdirs();
 		newPluginLoader.register(appDataDir);
 
@@ -115,8 +118,7 @@ public class FilterLoader
 			BoltPluginLoader<JavaFilterPlugin> javaLoader = new BoltPluginLoader<JavaFilterPlugin>(plugins, JavaFilterPlugin.class);
 			javaLoader.registerPlugin(clazz);
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.WARNING, "Failed to register filter plugin " + clazz.getName(), e);
 		}
 	}
 	

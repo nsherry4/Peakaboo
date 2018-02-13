@@ -1,6 +1,7 @@
 package peakaboo.datasource.plugin;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import bolt.plugin.core.BoltPluginSet;
 import bolt.plugin.core.IBoltPluginSet;
@@ -9,6 +10,8 @@ import bolt.plugin.java.ClassInheritanceException;
 import bolt.plugin.java.ClassInstantiationException;
 import bolt.scripting.plugin.IBoltScriptPluginLoader;
 import commonenvironment.Env;
+import peakaboo.common.Configuration;
+import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.datasource.plugin.plugins.PlainText;
 
@@ -23,7 +26,7 @@ public class DataSourceLoader
 			try {
 				loadPlugins();
 			} catch (ClassInheritanceException | ClassInstantiationException e) {
-				e.printStackTrace();
+				PeakabooLog.get().log(Level.WARNING, "Error loading data source plugins", e);
 			}
 		}
 	}
@@ -42,7 +45,7 @@ public class DataSourceLoader
 		javaLoader.register();
 		
 		//load jars in the app data directory
-		File appDataDir = Env.appDataDirectory(Version.program_name + Version.versionNoMajor, "Plugins/DataSource");
+		File appDataDir = Configuration.appDir("Plugins/DataSource");
 		appDataDir.mkdirs();
 		javaLoader.register(appDataDir);
 			
@@ -64,8 +67,7 @@ public class DataSourceLoader
 			BoltPluginLoader<JavaDataSourcePlugin> javaLoader = new BoltPluginLoader<JavaDataSourcePlugin>(plugins, JavaDataSourcePlugin.class);
 			javaLoader.registerPlugin(clazz);
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.WARNING, "Error registering data source plugin " + clazz.getName(), e);
 		}
 	}
 	

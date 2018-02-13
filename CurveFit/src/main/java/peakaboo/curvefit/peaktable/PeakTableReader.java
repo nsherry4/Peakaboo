@@ -8,7 +8,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -51,8 +53,7 @@ public class PeakTableReader
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error reading Peak Table", e);
 		}
 
 		//remove headers
@@ -229,7 +230,7 @@ public class PeakTableReader
 			energy = Float.parseFloat(sections.get(column));
 			relIntensity = Float.parseFloat(sections.get(column + 1));
 		} catch (NumberFormatException e) {
-			return null;
+			//Empty spaces with no data end up here. It's normal.
 		}
 
 		if (energy == 0.0 || relIntensity == 0.0) return null;
