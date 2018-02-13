@@ -10,8 +10,12 @@
 	<name>Common</name>
 	<url>http://maven.apache.org</url>
 
+	<!--  workaround for bug with maven timestamp property -->
+	<!-- https://dzone.com/articles/stamping-version-number-and -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
 	</properties>
 
 	<dependencies>
@@ -21,10 +25,16 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.sciencestudio.libs</groupId>
+			<artifactId>CommonEnvironment</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 
 
 	<build>
+	
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -36,6 +46,19 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+			
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>			
+		</resources>
+
 	</build>
+	
+
 
 </project>
