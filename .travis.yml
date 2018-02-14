@@ -1,5 +1,6 @@
 install:
   - git clone https://github.com/nsherry4/Libraries.git /tmp/libraries && cd /tmp/libraries && mvn install
+  - git clone https://github.com/nsherry4/AutoDialog.git /tmp/autodialog && cd /tmp/autodialog && mvn install
   - cd -
 
 cache:
