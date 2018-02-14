@@ -15,6 +15,10 @@ cache:
     - /home/travis/.m2/repository/commons-parent
     - /home/travis/.m2/repository/net/sf
     - /home/travis/.m2/repository/com/ezware
+    - /home/travis/.m2/repository/classworlds
+    - /home/travis/.m2/repository/org/sonatype
+    - /home/travis/.m2/repository/org/slf4j
+    - /home/travis/.m2/repository/log4j
 
 language: java
 sudo: false
