@@ -1,7 +1,6 @@
 install:
   - git clone https://github.com/nsherry4/Libraries.git /tmp/libraries
-  - cd /tmp/libraries 
-  - mvn install
+  - cd /tmp/libraries && mvn install
 
 language: java
 sudo: false
