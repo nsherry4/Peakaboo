@@ -1,11 +1,11 @@
 package peakaboo.filter.plugins.advanced;
 
-import autodialog.model.Parameter;
-import autodialog.model.SelectionParameter;
-import autodialog.model.style.editors.BooleanStyle;
-import autodialog.model.style.editors.IntegerStyle;
-import autodialog.model.style.editors.ListStyle;
-import autodialog.model.style.editors.RealStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.SelectionParameter;
+import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
+import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.style.editors.ListStyle;
+import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
 import scitypes.ISpectrum;

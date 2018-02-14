@@ -2,10 +2,6 @@ package peakaboo.curvefit.model.transitionseries;
 
 
 
-import static fava.Fn.concat;
-import static fava.Fn.concatMap;
-import static fava.Fn.group;
-import static fava.Fn.zipWith;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -21,6 +17,7 @@ import java.util.stream.Collectors;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.peaktable.Element;
+import scitypes.util.ListOps;
 
 
 
@@ -355,7 +352,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		if (tss.size() == 1) return tss.get(0);
 		
 		//group the TransitionSeries by equality
-		List<List<TransitionSeries>> tsGroups = group(tss);
+		List<List<TransitionSeries>> tsGroups = ListOps.group(tss);
 
 
 		//function for summing two TransitionSeries
@@ -439,7 +436,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				Collections.sort(componentSeries);
 				Collections.sort(otherTS.componentSeries);
 				
-				List<Integer> differences = zipWith(componentSeries, otherTS.componentSeries, (ts1, ts2) -> ts1.compareTo(ts2)).stream()
+				List<Integer> differences = ListOps.zipWith(componentSeries, otherTS.componentSeries, (ts1, ts2) -> ts1.compareTo(ts2)).stream()
 												.filter(a -> a.equals(0))
 												.collect(toList());
 
@@ -489,7 +486,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			Collections.sort(componentSeries);
 			Collections.sort(other.componentSeries);
 
-			return zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b)).stream().reduce(true, Boolean::logicalAnd);
+			return ListOps.zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b)).stream().reduce(true, Boolean::logicalAnd);
 			//if ( !all(zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b))) ) return false;
 		}
 		
@@ -552,7 +549,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		switch (type)
 		{
 			case COMPOSITE:
-				return concatMap(componentSeries, TransitionSeries::getBaseTransitionSeries);
+				return ListOps.concatMap(componentSeries, TransitionSeries::getBaseTransitionSeries);
 
 			default:
 				list = new ArrayList<TransitionSeries>();

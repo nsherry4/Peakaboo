@@ -3,11 +3,11 @@ package peakaboo.filter.plugins.advanced;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import autodialog.model.Parameter;
-import autodialog.model.SelectionParameter;
-import autodialog.model.style.CoreStyle;
-import autodialog.model.style.SimpleStyle;
-import autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.SelectionParameter;
+import net.sciencestudio.autodialog.model.style.CoreStyle;
+import net.sciencestudio.autodialog.model.style.SimpleStyle;
+import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;

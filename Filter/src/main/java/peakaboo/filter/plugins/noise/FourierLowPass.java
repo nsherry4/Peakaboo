@@ -4,10 +4,10 @@ package peakaboo.filter.plugins.noise;
 
 import java.util.Arrays;
 
-import autodialog.model.Parameter;
-import autodialog.model.SelectionParameter;
-import autodialog.model.style.editors.DropDownStyle;
-import autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.SelectionParameter;
+import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
+import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;

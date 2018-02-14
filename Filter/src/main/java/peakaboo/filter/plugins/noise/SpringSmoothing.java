@@ -1,9 +1,9 @@
 package peakaboo.filter.plugins.noise;
 
 
-import autodialog.model.Parameter;
-import autodialog.model.style.editors.IntegerStyle;
-import autodialog.model.style.editors.RealStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;

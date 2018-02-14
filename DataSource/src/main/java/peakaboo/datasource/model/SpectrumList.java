@@ -15,7 +15,7 @@ import scratch.encoders.serializers.KryoSerializingEncoder;
 import scratch.encoders.serializers.Serializers;
 
 /**
- * SpectrumList is an implementation of the List interface which writes 
+ * SpectrumList is an implementation of the ListTests interface which writes 
  * out values to a temporary file, rather than storing elements in memory.
  * This is useful for lists which are sufficiently large to cause memory
  * concerns in a typical JVM.

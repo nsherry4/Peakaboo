@@ -128,6 +128,7 @@ import scitypes.SigDigits;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 import scitypes.util.Mutable;
+import scitypes.util.StringInput;
 import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SwidgetIO;
@@ -1292,8 +1293,8 @@ public class PlotPanel extends TabbedInterfacePanel
 		contents.description = "XRF Analysis Software";
 		contents.website = "www.sciencestudio.net";
 		contents.copyright = "Copyright &copy; 2009-2012 by The University of Western Ontario and The Canadian Light Source Inc.";
-		contents.licence = IOOperations.readTextFromJar("/peakaboo/licence.txt");
-		contents.credits = IOOperations.readTextFromJar("/peakaboo/credits.txt");
+		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
+		contents.credits = StringInput.contents(getClass().getResourceAsStream("/peakaboo/credits.txt"));
 		contents.logo = IconFactory.getImageIcon( Version.logo );
 		contents.version = Integer.toString(Version.versionNoMajor);
 		contents.longVersion = Version.longVersionNo;
@@ -1311,7 +1312,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionOpenData()
 	{		
 		/*
-		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
+		ListTests<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
 		for (int i = 0; i < formats.size(); i++)

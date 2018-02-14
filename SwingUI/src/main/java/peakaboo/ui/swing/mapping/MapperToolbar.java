@@ -187,7 +187,7 @@ public class MapperToolbar extends JToolBar {
 		
 		JPopupMenu menu = new JPopupMenu();
 		
-		title = new JCheckBoxMenuItem("Show Elements List");
+		title = new JCheckBoxMenuItem("Show Elements ListTests");
 		dstitle = new JCheckBoxMenuItem("Show Dataset Title");
 		spectrum = new JCheckBoxMenuItem("Show Spectrum");
 		coords = new JCheckBoxMenuItem("Show Coordinates");

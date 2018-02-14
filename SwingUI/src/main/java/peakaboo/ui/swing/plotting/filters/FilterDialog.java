@@ -2,9 +2,9 @@ package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.Window;
 
-import autodialog.view.editors.AutoDialogButtons;
-import autodialog.view.swing.SwingAutoDialog;
-import autodialog.view.swing.editors.SwingEditorFactory;
+import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
+import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
+import net.sciencestudio.autodialog.view.swing.editors.SwingEditorFactory;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 

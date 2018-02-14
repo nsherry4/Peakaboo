@@ -2,8 +2,8 @@ package peakaboo.filter.plugins.mathematical;
 
 
 
-import autodialog.model.Parameter;
-import autodialog.model.style.editors.RealStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
 import scitypes.ReadOnlySpectrum;

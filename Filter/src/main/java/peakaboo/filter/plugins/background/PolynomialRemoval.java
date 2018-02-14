@@ -1,8 +1,8 @@
 package peakaboo.filter.plugins.background;
 
 
-import autodialog.model.Parameter;
-import autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
 import scitypes.ReadOnlySpectrum;

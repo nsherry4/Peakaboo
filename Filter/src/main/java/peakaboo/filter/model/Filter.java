@@ -2,8 +2,8 @@ package peakaboo.filter.model;
 
 import java.util.List;
 
-import autodialog.model.Group;
-import autodialog.model.Value;
+import net.sciencestudio.autodialog.model.Group;
+import net.sciencestudio.autodialog.model.Value;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;

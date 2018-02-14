@@ -1,9 +1,9 @@
 package peakaboo.filter.model;
 
-import autodialog.model.Parameter;
-import autodialog.model.style.editors.BooleanStyle;
-import autodialog.model.style.editors.IntegerStyle;
-import autodialog.model.style.editors.SeparatorStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
+import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.style.editors.SeparatorStyle;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scidraw.drawing.plot.painters.SpectrumPainter;

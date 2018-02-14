@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import autodialog.model.Parameter;
-import autodialog.model.Value;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.Value;
 import peakaboo.common.Version;
 import peakaboo.filter.model.plugin.JavaFilterPlugin;
 import scidraw.drawing.plot.painters.PlotPainter;

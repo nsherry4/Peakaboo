@@ -43,7 +43,7 @@ public class MapTS
 		// LOGIC FOR FILTERS AND FITTING
 		// Original => Filtered => Fittings => Stored-In-Map
 		// ======================================================================
-		//final List<List<Double>> filteredData;
+		//final ListTests<ListTests<Double>> filteredData;
 
 		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.getScanData().scanCount());

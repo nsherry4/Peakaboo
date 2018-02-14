@@ -1,8 +1,8 @@
 package peakaboo.filter.plugins;
 
 
-import autodialog.model.Parameter;
-import autodialog.model.style.editors.IntegerSpinnerStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.editors.IntegerSpinnerStyle;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.FilterType;
 import scidraw.drawing.painters.PainterData;

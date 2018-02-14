@@ -44,11 +44,11 @@ public class SerializedData
 	
 	
 	
-	//Outer List - list of fitting
-	//Middle List - list of TS in a fitting
-	//Inner List - stand-in for a pair, since this YAML library seems to have trouble serializing pairs
+	//Outer ListTests - list of fitting
+	//Middle ListTests - list of TS in a fitting
+	//Inner ListTests - stand-in for a pair, since this YAML library seems to have trouble serializing pairs
 	// the pair contains Element and Transition. eg (Ni, K)
-	//public List<List<List<String>>>	fittings;
+	//public ListTests<ListTests<ListTests<String>>>	fittings;
 	public List<SerializedTransitionSeries> fittings;
 
 	

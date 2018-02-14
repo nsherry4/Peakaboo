@@ -2,8 +2,8 @@ package peakaboo.sdk.examples.filter;
 
 
 
-import autodialog.model.Parameter;
-import autodialog.model.style.editors.BooleanStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
 import scitypes.ISpectrum;

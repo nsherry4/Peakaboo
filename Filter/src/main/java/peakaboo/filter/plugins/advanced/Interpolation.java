@@ -1,7 +1,7 @@
 package peakaboo.filter.plugins.advanced;
 
-import autodialog.model.Parameter;
-import autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import peakaboo.common.Version;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
