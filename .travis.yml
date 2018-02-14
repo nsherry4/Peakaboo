@@ -1,6 +1,5 @@
 install:
-  - git clone https://github.com/nsherry4/Libraries.git /tmp/libraries
-  - cd /tmp/libraries && mvn install
+  - git clone https://github.com/nsherry4/Libraries.git /tmp/libraries && cd /tmp/libraries && mvn install
   - cd -
 
 cache:
@@ -9,6 +8,8 @@ cache:
     - /home/travis/.m2/repository/org/apache
     - /home/travis/.m2/repository/com/google
     - /home/travis/.m2/repository/org/jfxtras
+    - /home/travis/.m2/repository/net/sf
+    - /home/travis/.m2/repository/com/ezware
 
 language: java
 sudo: false
