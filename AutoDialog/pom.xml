@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>Swidget</artifactId>
+			<artifactId>Eventful</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>

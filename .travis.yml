@@ -1,3 +1,8 @@
+install:
+  - git clone https://github.com/nsherry4/Libraries.git /tmp/libraries && cd /tmp/libraries && mvn install
+  - cd -
+
+
 cache:
   directories:
     - /home/travis/.m2/repository/org/codehaus
