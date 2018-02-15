@@ -5,14 +5,14 @@ import java.util.List;
 
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
-import scratch.IScratchList;
-import scratch.ScratchDiskList;
-import scratch.ScratchList;
 import scratch.encoders.CompoundEncoder;
 import scratch.encoders.compressors.Compressors;
 import scratch.encoders.compressors.LZ4CompressionEncoder;
 import scratch.encoders.serializers.KryoSerializingEncoder;
 import scratch.encoders.serializers.Serializers;
+import scratch.list.IScratchList;
+import scratch.list.ScratchDiskList;
+import scratch.list.ScratchList;
 
 /**
  * SpectrumList is an implementation of the ListTests interface which writes 

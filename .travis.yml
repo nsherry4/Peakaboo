@@ -3,6 +3,9 @@ install:
   - cd -
   - git clone https://github.com/nsherry4/AutoDialog.git /tmp/autodialog && cd /tmp/autodialog && mvn install
   - cd -
+  - git clone https://github.com/nsherry4/Bolt.git /tmp/bolt && cd /tmp/bolt && mvn install
+  - cd -
+
 
 cache:
   directories:
