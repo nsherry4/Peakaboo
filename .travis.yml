@@ -5,6 +5,8 @@ install:
   - cd -
   - git clone https://github.com/nsherry4/Bolt.git /tmp/bolt && cd /tmp/bolt && mvn install
   - cd -
+  - git clone https://github.com/nsherry4/Scratch.git /tmp/scratch && cd /tmp/scratch && mvn install
+  - cd -
 
 
 cache:
