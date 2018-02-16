@@ -1,21 +1,16 @@
 package peakaboo.datasource.model;
 
-import java.io.IOException;
 import java.util.List;
 
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scratch.encoders.CompoundEncoder;
 import scratch.encoders.compressors.Compressors;
-import scratch.encoders.compressors.LZ4CompressionEncoder;
-import scratch.encoders.serializers.KryoSerializingEncoder;
 import scratch.encoders.serializers.Serializers;
-import scratch.list.IScratchList;
-import scratch.list.ScratchDiskList;
-import scratch.list.ScratchList;
+import scratch.list.ScratchLists;
 
 /**
- * SpectrumList is an implementation of the ListTests interface which writes 
+ * SpectrumList is an implementation of the List interface which writes 
  * out values to a temporary file, rather than storing elements in memory.
  * This is useful for lists which are sufficiently large to cause memory
  * concerns in a typical JVM.
@@ -42,15 +37,7 @@ public final class SpectrumList {
 	@SuppressWarnings("unchecked")
 	public static List<Spectrum> create(String name)
 	{
-		IScratchList<Spectrum> backing;
-		try {
-			backing = new ScratchDiskList<Spectrum>();
-		} catch (IOException e) {
-			e.printStackTrace();
-			backing = new ScratchList<Spectrum>();
-		}
-		backing.setEncoder(new CompoundEncoder<>(Serializers.kryo(ISpectrum.class), Compressors.lz4()));
-		return backing;
+		return ScratchLists.tryDiskBacked(new CompoundEncoder<>(Serializers.kryo(ISpectrum.class), Compressors.lz4()));
 	}
 	
 }
