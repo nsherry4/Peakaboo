@@ -1,4 +1,4 @@
-package net.sciencestudio.libs.AutoDialogSwing;
+package net.sciencestudio.autodialog.view.swing;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
