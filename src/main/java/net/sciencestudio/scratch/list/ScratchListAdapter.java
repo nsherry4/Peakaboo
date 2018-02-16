@@ -1,4 +1,4 @@
-package scratch.list;
+package net.sciencestudio.scratch.list;
 
 import java.util.AbstractList;
 import java.util.Collection;

@@ -1,9 +1,9 @@
-package scratch.list;
+package net.sciencestudio.scratch.list;
 
 import java.io.IOException;
 import java.util.List;
 
-import scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchEncoder;
 
 public class ScratchLists {
 

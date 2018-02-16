@@ -1,6 +1,6 @@
-package scratch.encoders.compressors;
+package net.sciencestudio.scratch.encoders.compressors;
 
-import scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchEncoder;
 
 public class Compressors {
 

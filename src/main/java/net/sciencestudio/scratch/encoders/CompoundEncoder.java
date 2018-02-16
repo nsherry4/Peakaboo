@@ -1,10 +1,10 @@
-package scratch.encoders;
+package net.sciencestudio.scratch.encoders;
 
 import java.util.Arrays;
 import java.util.List;
 
-import scratch.ScratchEncoder;
-import scratch.ScratchException;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
 
 public class CompoundEncoder<T> implements ScratchEncoder<T> {
 

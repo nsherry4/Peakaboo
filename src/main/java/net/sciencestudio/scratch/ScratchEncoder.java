@@ -1,6 +1,6 @@
-package scratch;
+package net.sciencestudio.scratch;
 
-import scratch.encoders.CompoundEncoder;
+import net.sciencestudio.scratch.encoders.CompoundEncoder;
 
 public interface ScratchEncoder<T> {
 

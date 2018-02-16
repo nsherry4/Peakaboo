@@ -1,9 +1,9 @@
-package scratch.encoders.compressors;
+package net.sciencestudio.scratch.encoders.compressors;
 
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
 import net.jpountz.lz4.LZ4SafeDecompressor;
-import scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchEncoder;
 
 
 public class LZ4CompressionEncoder implements ScratchEncoder<byte[]>{

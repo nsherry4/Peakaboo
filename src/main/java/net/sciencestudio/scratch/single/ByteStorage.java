@@ -1,6 +1,6 @@
-package scratch.single;
+package net.sciencestudio.scratch.single;
 
-import scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchEncoder;
 
 public interface ByteStorage<T> {
 

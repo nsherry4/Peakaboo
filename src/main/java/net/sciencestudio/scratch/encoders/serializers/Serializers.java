@@ -1,9 +1,9 @@
-package scratch.encoders.serializers;
+package net.sciencestudio.scratch.encoders.serializers;
 
 import java.io.Serializable;
 
-import scratch.ScratchEncoder;
-import scratch.encoders.serializers.SerializingEncoder;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.encoders.serializers.SerializingEncoder;
 
 public class Serializers {
 

@@ -1,4 +1,4 @@
-package scratch.encoders.serializers;
+package net.sciencestudio.scratch.encoders.serializers;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,8 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 
-import scratch.ScratchEncoder;
-import scratch.ScratchException;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
 
 public class SerializingEncoder<T extends Serializable> implements ScratchEncoder<T> {
 

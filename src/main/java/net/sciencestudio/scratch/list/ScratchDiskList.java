@@ -1,4 +1,4 @@
-package scratch.list;
+package net.sciencestudio.scratch.list;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
+import net.sciencestudio.scratch.encoders.serializers.SerializingEncoder;
 import scitypes.LongRange;
 import scitypes.LongRangeSet;
-import scratch.ScratchEncoder;
-import scratch.ScratchException;
-import scratch.encoders.serializers.SerializingEncoder;
 
 
 

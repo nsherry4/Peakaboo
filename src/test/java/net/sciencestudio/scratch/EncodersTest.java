@@ -1,19 +1,23 @@
-package scratch;
-
-import java.io.IOException;
+package net.sciencestudio.scratch;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import scratch.encoders.CompoundEncoder;
-import scratch.encoders.compressors.Compressors;
-import scratch.encoders.serializers.Serializers;
-import scratch.single.FileBacked;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.encoders.compressors.Compressors;
+import net.sciencestudio.scratch.encoders.serializers.Serializers;
+import net.sciencestudio.scratch.single.Compressed;
 
-public class FileBackedTest {
+public class EncodersTest {
 
 	@Test
-	public void string() throws IOException {
+	public void test() {
+		 testEncoder(Serializers.java());
+		 testEncoder(Serializers.<String>java().then(Compressors.deflate()));
+		 testEncoder(Serializers.kryo(String.class).then(Compressors.lz4()));
+	}
+	
+	private void testEncoder(ScratchEncoder<String> encoder) {
 		String s = "\n" + 
 				"\n" + 
 				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec sapien eu nulla egestas egestas ut nec arcu. Fusce sollicitudin nisl orci, eu scelerisque orci facilisis et. Donec efficitur tellus porta erat volutpat suscipit. Suspendisse vel tellus ullamcorper, tempor erat vel, rhoncus nulla. Proin id tellus odio. Donec in nulla id arcu imperdiet tempus. Donec et augue risus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\n" + 
@@ -26,8 +30,8 @@ public class FileBackedTest {
 				"\n" + 
 				"Donec erat libero, sagittis ut magna eget, mattis pharetra est. Quisque vitae accumsan sapien. Vestibulum sed consequat nulla. Morbi molestie sapien arcu, in varius ligula iaculis a. Vestibulum ex urna, convallis at hendrerit sit amet, porttitor pharetra metus. Nunc eget rutrum mauris, a luctus mi. Ut euismod leo arcu, non laoreet ante ullamcorper sit amet. In hac habitasse platea dictumst. Integer luctus ex elit, sit amet vestibulum mauris dignissim vitae. Nulla facilisi. Suspendisse eu tempor eros.";
 		
-		FileBacked<String> fb = FileBacked.create(s,new CompoundEncoder<>(Serializers.java(), Compressors.lz4()));
-		Assert.assertEquals(s, fb.get());
+		Compressed<String> c = Compressed.create(s, encoder);
+		Assert.assertEquals(s, c.get());
 	}
 	
 }

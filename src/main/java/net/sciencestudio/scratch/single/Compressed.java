@@ -1,13 +1,13 @@
-package scratch.single;
+package net.sciencestudio.scratch.single;
 
 import java.io.Serializable;
 
-import scratch.ScratchEncoder;
-import scratch.encoders.CompoundEncoder;
-import scratch.encoders.compressors.Compressors;
-import scratch.encoders.compressors.DeflateCompressionEncoder;
-import scratch.encoders.serializers.Serializers;
-import scratch.encoders.serializers.SerializingEncoder;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.encoders.CompoundEncoder;
+import net.sciencestudio.scratch.encoders.compressors.Compressors;
+import net.sciencestudio.scratch.encoders.compressors.DeflateCompressionEncoder;
+import net.sciencestudio.scratch.encoders.serializers.Serializers;
+import net.sciencestudio.scratch.encoders.serializers.SerializingEncoder;
 
 public class Compressed<T> implements ByteStorage<T> {
 

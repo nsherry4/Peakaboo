@@ -1,11 +1,11 @@
-package scratch.list;
+package net.sciencestudio.scratch.list;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import scratch.ScratchEncoder;
-import scratch.ScratchException;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
 
 final class ScratchArrayList<T> implements ScratchList<T> {
 

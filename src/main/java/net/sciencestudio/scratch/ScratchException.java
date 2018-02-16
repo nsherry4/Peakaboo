@@ -1,4 +1,4 @@
-package scratch;
+package net.sciencestudio.scratch;
 
 public class ScratchException extends RuntimeException {
 

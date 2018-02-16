@@ -1,4 +1,4 @@
-package scratch.single;
+package net.sciencestudio.scratch.single;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,8 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import scratch.ScratchEncoder;
-import scratch.ScratchException;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
 
 public class FileBacked<T> implements ByteStorage<T>{
 

@@ -1,8 +1,8 @@
-package scratch.list;
+package net.sciencestudio.scratch.list;
 
 import java.util.Collection;
 
-import scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchEncoder;
 
 interface ScratchList<T> extends Iterable<T>{
 

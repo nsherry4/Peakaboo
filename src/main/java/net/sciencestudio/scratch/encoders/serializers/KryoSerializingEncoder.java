@@ -1,4 +1,4 @@
-package scratch.encoders.serializers;
+package net.sciencestudio.scratch.encoders.serializers;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -12,8 +12,8 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.io.UnsafeMemoryInput;
 import com.esotericsoftware.kryo.io.UnsafeMemoryOutput;
 
-import scratch.ScratchEncoder;
-import scratch.ScratchException;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
 
 public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 

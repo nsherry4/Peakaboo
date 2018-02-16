@@ -1,4 +1,4 @@
-package scratch.encoders.compressors;
+package net.sciencestudio.scratch.encoders.compressors;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,8 +7,8 @@ import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
-import scratch.ScratchEncoder;
-import scratch.ScratchException;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
 
 public class DeflateCompressionEncoder implements ScratchEncoder<byte[]>{
 
