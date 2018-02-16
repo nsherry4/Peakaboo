@@ -11,7 +11,7 @@ public interface FileFormat {
 	 * related reasons (like showing a file selection dialog with 
 	 * specific file extensions). For everything else, the 
 	 * {@link FileFormat#compatibility(String)} and 
-	 * {@link FileFormat#compatibility(ListTests)} methods are used.
+	 * {@link FileFormat#compatibility(List)} methods are used.
 	 */
 	List<String> getFileExtensions();
 	

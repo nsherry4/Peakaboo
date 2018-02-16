@@ -1312,7 +1312,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionOpenData()
 	{		
 		/*
-		ListTests<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
+		List<DataSource> formats =  new ArrayList<DataSource>(DataSourceLoader.getDataSourcePlugins());
 		String[][] exts = new String[formats.size()][];
 		String[] descs = new String[formats.size()];
 		for (int i = 0; i < formats.size(); i++)

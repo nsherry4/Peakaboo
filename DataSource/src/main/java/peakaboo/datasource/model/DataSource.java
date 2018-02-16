@@ -71,7 +71,7 @@ public interface DataSource
 
 	/**
 	 * Reads the given file as a whole dataset. This method, collectively with 
-	 * {@link DataSource#read(ListTests)}, will be called either 0 or 1 times 
+	 * {@link DataSource#read(List)}, will be called either 0 or 1 times 
 	 * throughout the lifetime of this DataSource object.
 	 * @throws Exception
 	 */
