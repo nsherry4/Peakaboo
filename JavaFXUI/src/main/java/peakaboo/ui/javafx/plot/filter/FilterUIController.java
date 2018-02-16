@@ -3,12 +3,12 @@ package peakaboo.ui.javafx.plot.filter;
 
 import java.io.IOException;
 
-import bolt.plugin.core.BoltPluginController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
+import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;

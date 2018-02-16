@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import bolt.plugin.core.BoltPluginController;
-import bolt.plugin.core.BoltPluginSet;
 import eventful.Eventful;
+import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;

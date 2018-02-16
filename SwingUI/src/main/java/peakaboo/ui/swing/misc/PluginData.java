@@ -9,8 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import bolt.plugin.core.BoltPluginController;
-import bolt.plugin.core.BoltPlugin;
+import net.sciencestudio.bolt.plugin.core.BoltPlugin;
+import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.widgets.ClearPanel;

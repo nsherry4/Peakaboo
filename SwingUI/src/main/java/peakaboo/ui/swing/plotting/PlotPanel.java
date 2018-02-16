@@ -74,13 +74,13 @@ import javax.swing.event.ChangeListener;
 
 import com.ezware.dialog.task.TaskDialogs;
 
-import bolt.plugin.core.BoltPluginController;
 import commonenvironment.Apps;
 import commonenvironment.Env;
 import commonenvironment.IOOperations;
 import eventful.EventfulEnumListener;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
+import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.common.Configuration;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;

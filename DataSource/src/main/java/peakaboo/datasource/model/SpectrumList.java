@@ -2,12 +2,12 @@ package peakaboo.datasource.model;
 
 import java.util.List;
 
+import net.sciencestudio.scratch.encoders.CompoundEncoder;
+import net.sciencestudio.scratch.encoders.compressors.Compressors;
+import net.sciencestudio.scratch.encoders.serializers.Serializers;
+import net.sciencestudio.scratch.list.ScratchLists;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
-import scratch.encoders.CompoundEncoder;
-import scratch.encoders.compressors.Compressors;
-import scratch.encoders.serializers.Serializers;
-import scratch.list.ScratchLists;
 
 /**
  * SpectrumList is an implementation of the List interface which writes 

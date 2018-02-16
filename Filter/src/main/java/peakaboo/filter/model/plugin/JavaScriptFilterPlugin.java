@@ -7,10 +7,10 @@ import java.util.List;
 
 import javax.script.ScriptException;
 
-import bolt.scripting.BoltInterface;
-import bolt.scripting.languages.JavascriptLanguage;
-import bolt.scripting.plugin.BoltScriptPlugin;
 import net.sciencestudio.autodialog.model.Value;
+import net.sciencestudio.bolt.scripting.BoltInterface;
+import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
+import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
 import peakaboo.filter.model.FilterType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;

@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import bolt.scripting.BoltInterface;
-import bolt.scripting.languages.JavascriptLanguage;
-import bolt.scripting.plugin.BoltScriptPlugin;
+import net.sciencestudio.bolt.scripting.BoltInterface;
+import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
+import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.fileformat.SimpleFileFormat;

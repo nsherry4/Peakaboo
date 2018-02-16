@@ -13,7 +13,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
