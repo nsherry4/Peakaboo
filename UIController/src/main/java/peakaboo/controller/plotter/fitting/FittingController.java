@@ -250,14 +250,14 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 //		
 //		
 //		//all visible TSs
-//		final ListTest<TransitionSeries> tss = new ArrayList<>(getVisibleTransitionSeries());
+//		final List<TransitionSeries> tss = new ArrayList<>(getVisibleTransitionSeries());
 //				
 //		//all invisible TSs
-//		ListTest<TransitionSeries> invisibles = getFittedTransitionSeries().stream().filter(e -> !tss.contains(e)).collect(toList());
+//		List<TransitionSeries> invisibles = getFittedTransitionSeries().stream().filter(e -> !tss.contains(e)).collect(toList());
 //				
 //		
 //		//find all the TSs which overlap with other TSs
-//		final ListTest<TransitionSeries> overlappers = tss.stream().filter(ts -> {
+//		final List<TransitionSeries> overlappers = tss.stream().filter(ts -> {
 //			return TSOrdering.getTSsOverlappingTS(
 //					ts, 
 //					tss, 
@@ -269,12 +269,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 //		
 //		
 //		//then get all the TSs which don't overlap
-//		ListTest<TransitionSeries> nonOverlappers = tss.stream().filter(e -> !overlappers.contains(e)).collect(Collectors.toList());
+//		List<TransitionSeries> nonOverlappers = tss.stream().filter(e -> !overlappers.contains(e)).collect(Collectors.toList());
 //	
 //		
 //
 //		//score each of the overlappers w/o competition
-//		ListTest<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.stream().map((TransitionSeries ts) -> {
+//		List<Pair<TransitionSeries, Float>> scoredOverlappers = overlappers.stream().map((TransitionSeries ts) -> {
 //			return new Pair<TransitionSeries, Float>(
 //				ts, 
 //				TSOrdering.fScoreTransitionSeries(
@@ -300,14 +300,14 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 //		
 //		
 //		//find the optimal ordering of the visible overlapping TSs based on how they fit with competition
-//		ListTest<TransitionSeries> bestfit = optimizeTSOrderingHelper(
+//		List<TransitionSeries> bestfit = optimizeTSOrderingHelper(
 //				scoredOverlappers.stream().map(e -> e.first).collect(Collectors.toList()), 
 //				new ArrayList<TransitionSeries>()
 //			);
 //		
 //
 //		
-//		//ListTest<TransitionSeries> bestfit = TSOrdering.optimizeTSOrdering(getEnergyPerChannel(), tss, filteringController.getFilteredPlot());
+//		//List<TransitionSeries> bestfit = TSOrdering.optimizeTSOrdering(getEnergyPerChannel(), tss, filteringController.getFilteredPlot());
 //
 //		//re-add all of the overlappers
 //		bestfit.addAll(nonOverlappers);
@@ -349,7 +349,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 //	// =============================================
 //	// Helper Functions for IFittingController
 //	// =============================================
-//	private ListTest<TransitionSeries> optimizeTSOrderingHelper(ListTest<TransitionSeries> unfitted, ListTest<TransitionSeries> fitted)
+//	private List<TransitionSeries> optimizeTSOrderingHelper(List<TransitionSeries> unfitted, List<TransitionSeries> fitted)
 //	{
 //		
 //		//assumption: unfitted will be in sorted order based on how well each TS fits independently
@@ -357,12 +357,12 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 //		
 //		int n = 4;
 //		
-//		ListTest<TransitionSeries> topn = unfitted.subList(0, n);
+//		List<TransitionSeries> topn = unfitted.subList(0, n);
 //		unfitted.removeAll(topn);
-//		ListTest<ListTest<TransitionSeries>> perms = Fn.permutations(topn);
+//		List<List<TransitionSeries>> perms = Fn.permutations(topn);
 //				
 //		//function to score an ordering of Transition Series
-//		final Function<ListTest<TransitionSeries>, Float> scoreTSs = tss -> {
+//		final Function<List<TransitionSeries>, Float> scoreTSs = tss -> {
 //				
 //			final Function<TransitionSeries, Float> scoreTS = TSOrdering.fScoreTransitionSeries(
 //					plot.settings().getEscapePeakType(), 
@@ -380,7 +380,7 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 //	
 //		
 //		//find the best fitting for the currently selected fittings
-//		ListTest<TransitionSeries> bestfit = perms.stream().reduce((l1, l2) -> {
+//		List<TransitionSeries> bestfit = perms.stream().reduce((l1, l2) -> {
 //			Float s1, s2; //scores
 //			s1 = scoreTSs.apply(l1);
 //			s2 = scoreTSs.apply(l2);				
