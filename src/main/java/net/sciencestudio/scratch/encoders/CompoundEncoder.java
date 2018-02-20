@@ -39,6 +39,9 @@ public class CompoundEncoder<T> implements ScratchEncoder<T> {
 		return first.decode(data);
 	}
 	
+	public String toString() {
+		return encoders.stream().map(e -> e.toString()).reduce(first.toString(), (s1, s2) -> s1 + " -> " + s2);
+	}
 	
 	
 }

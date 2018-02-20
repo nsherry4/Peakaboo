@@ -95,6 +95,9 @@ public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 		return getKryo().readObject(kIn, clazz);
 	}
 
+	public String toString() {
+		return "Kryo Serializer";
+	}
 	
 	
 }

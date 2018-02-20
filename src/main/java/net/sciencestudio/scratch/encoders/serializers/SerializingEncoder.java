@@ -40,6 +40,10 @@ public class SerializingEncoder<T extends Serializable> implements ScratchEncode
 			throw new ScratchException(e);
 		}
 	}
+	
+	public String toString() {
+		return "Java Serializer";
+	}
 
 	
 }

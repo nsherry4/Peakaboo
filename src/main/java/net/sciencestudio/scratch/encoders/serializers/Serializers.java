@@ -14,4 +14,8 @@ public class Serializers {
 	public static <T> ScratchEncoder<T> kryo(Class<? extends T> clazz, Class<?>... others) {
 		return new KryoSerializingEncoder<>(clazz, others);
 	}
+	
+	public static <T> ScratchEncoder<T> fst(Class<? extends T> clazz, Class<?>... classes) {
+		return new FSTSerializingEncoder<>(clazz, classes);
+	}
 }

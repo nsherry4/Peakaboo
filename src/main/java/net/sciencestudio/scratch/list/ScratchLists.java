@@ -4,19 +4,17 @@ import java.io.IOException;
 import java.util.List;
 
 import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.list.array.ScratchArrayList;
+import net.sciencestudio.scratch.list.file.ScratchDiskList;
 
 public class ScratchLists {
 
 	public static <T> List<T> memoryBacked(ScratchEncoder<T> encoder) {
-		ScratchList<T> slist = new ScratchArrayList<T>();
-		slist.setEncoder(encoder);
-		return new ScratchListAdapter<T>(slist);
+		return new ScratchArrayList<T>(encoder);
 	}
 	
 	public static <T> List<T> diskBacked(ScratchEncoder<T> encoder) throws IOException {
-		ScratchList<T> slist = new ScratchDiskList<T>();
-		slist.setEncoder(encoder);
-		return new ScratchListAdapter<T>(slist);
+		return new ScratchDiskList<>(encoder);
 	}
 	
 	public static <T> List<T> tryDiskBacked(ScratchEncoder<T> encoder) {

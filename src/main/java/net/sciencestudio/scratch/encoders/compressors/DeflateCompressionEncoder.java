@@ -58,4 +58,8 @@ public class DeflateCompressionEncoder implements ScratchEncoder<byte[]>{
 		
 	}
 	
+	public String toString() {
+		return "Deflate Compressor";
+	}
+	
 }

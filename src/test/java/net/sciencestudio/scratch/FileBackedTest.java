@@ -26,7 +26,7 @@ public class FileBackedTest {
 				"\n" + 
 				"Donec erat libero, sagittis ut magna eget, mattis pharetra est. Quisque vitae accumsan sapien. Vestibulum sed consequat nulla. Morbi molestie sapien arcu, in varius ligula iaculis a. Vestibulum ex urna, convallis at hendrerit sit amet, porttitor pharetra metus. Nunc eget rutrum mauris, a luctus mi. Ut euismod leo arcu, non laoreet ante ullamcorper sit amet. In hac habitasse platea dictumst. Integer luctus ex elit, sit amet vestibulum mauris dignissim vitae. Nulla facilisi. Suspendisse eu tempor eros.";
 		
-		FileBacked<String> fb = FileBacked.create(s,new CompoundEncoder<>(Serializers.java(), Compressors.lz4()));
+		FileBacked<String> fb = FileBacked.create(s,new CompoundEncoder<>(Serializers.java(), Compressors.lz4fast()));
 		Assert.assertEquals(s, fb.get());
 	}
 	
