@@ -418,8 +418,7 @@ public class MapCanvas extends GraphicsPanel
 		dr.uninterpolatedHeight = controller.settings.getDataHeight();
 		dr.dataWidth = controller.settings.getInterpolatedWidth();
 		dr.dataHeight = controller.settings.getInterpolatedHeight();
-		//LOG view not supported
-		dr.viewTransform = ViewTransform.LINEAR;
+		dr.viewTransform = controller.getDisplay().isLogView() ? ViewTransform.LOG : ViewTransform.LINEAR;
 		
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
@@ -452,7 +451,9 @@ public class MapCanvas extends GraphicsPanel
 			SPECTRUM_HEIGHT,
 
 			controller.mapsController.isDimensionsProvided(),
-			"Colour" + (controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : ""),
+			"Colour" +
+					(controller.getDisplay().isLogView() ? " (Log Scale)" : "") + 
+					(controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : ""),
 
 			// create a list of color,string pairs for the legend by mapping the list of transitionseries per
 			// colour and filter for empty strings
