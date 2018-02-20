@@ -26,9 +26,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>CommonEnvironment</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>envi</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

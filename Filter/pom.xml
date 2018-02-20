@@ -27,24 +27,24 @@
 			<version>5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>Bolt</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>bolt-plugin</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>Eventful</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>eventful</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>SciTypes</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>scitypes</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>AutoDialog</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>autodialog-model</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sciencestudio.peakaboo</groupId>
@@ -52,14 +52,14 @@
 			<version>5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>SciDraw</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>scidraw</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>BoltCode</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>bolt-code</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

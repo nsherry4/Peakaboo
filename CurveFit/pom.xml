@@ -22,9 +22,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>SciDraw</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>scidraw</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sciencestudio.peakaboo</groupId>
@@ -32,9 +32,9 @@
 			<version>5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.libs</groupId>
-			<artifactId>SciTypes</artifactId>
-			<version>1.0</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>scitypes</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

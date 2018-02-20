@@ -37,7 +37,7 @@ public final class SpectrumList {
 	@SuppressWarnings("unchecked")
 	public static List<Spectrum> create(String name)
 	{
-		return ScratchLists.tryDiskBacked(new CompoundEncoder<>(Serializers.kryo(ISpectrum.class), Compressors.lz4()));
+		return ScratchLists.tryDiskBacked(new CompoundEncoder<>(Serializers.fst(ISpectrum.class), Compressors.lz4fast()));
 	}
 	
 }
