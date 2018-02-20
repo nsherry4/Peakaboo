@@ -4,7 +4,7 @@
 
 	<groupId>net.sciencestudio</groupId>
 	<artifactId>bolt-code</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>BoltCode</name>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>net.sciencestudio</groupId>
 			<artifactId>bolt-plugin</artifactId>
-			<version>1.0</version>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
