@@ -16,6 +16,7 @@ import peakaboo.dataset.EmptyDataSet;
 import peakaboo.dataset.StandardDataSet;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.internal.CroppedDataSource;
+import peakaboo.datasource.model.internal.SelectionDataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
@@ -96,6 +97,12 @@ public class DataController extends Eventful implements IDataController
 		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
+	@Override
+	public DataSource getDataSourceForSubset(List<Integer> points)
+	{
+		return new SelectionDataSource(dataModel.getDataSource(), points);
+	}
+	
 
 	@Override
 	public boolean hasDataSet()

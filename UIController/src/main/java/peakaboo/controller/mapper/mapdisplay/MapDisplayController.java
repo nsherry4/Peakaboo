@@ -39,19 +39,38 @@ public class MapDisplayController extends EventfulType<String>
 	private MapDisplaySettings 	tabModel;
 	private MappingController 	map;
 	private Function<Coord<Integer>, String> valueAtCoord;
-	
-	private Coord<Integer> dragStart, dragEnd;
-	private boolean hasBoundingRegion = false;
+
+	private AreaSelection areaSelection;
+	private PointsSelection pointsSelection;
 	
 	
 	public MapDisplayController(MappingController map)
 	{
-		tabModel = new MapDisplaySettings(map.mapsController.getMapResultSet().getAllTransitionSeries());
+		
 		this.map = map;
+		
+		tabModel = new MapDisplaySettings(map.mapsController.getMapResultSet().getAllTransitionSeries());
+		
+		//create selection models and pass their events along
+		areaSelection = new AreaSelection(map);
+		areaSelection.addListener(this::updateListeners);
+		
+		pointsSelection = new PointsSelection(map);
+		pointsSelection.addListener(this::updateListeners);
+
+		
+	}
+
+
+	public AreaSelection getAreaSelection() {
+		return areaSelection;
 	}
 
 	
-		
+
+	public PointsSelection getPointsSelection() {
+		return pointsSelection;
+	}
 
 
 	public MapScaleMode getMapScaleMode()
@@ -494,70 +513,18 @@ public class MapDisplayController extends EventfulType<String>
 
 	
 
-	public Coord<Integer> getDragStart()
-	{
-		return dragStart;
-	}
 
 
-	public void setDragStart(Coord<Integer> dragStart)
-	{
-		if (dragStart != null) 
-		{
-			if (dragStart.x < 0) dragStart.x = 0;
-			if (dragStart.y < 0) dragStart.y = 0;
-			if (dragStart.x >= map.settings.getDataWidth()) dragStart.x = map.settings.getDataWidth()-1;
-			if (dragStart.y >= map.settings.getDataHeight()) dragStart.y = map.settings.getDataHeight()-1;
-		}
-		
-		this.dragStart = dragStart;
-		
-		updateListeners(UpdateType.BOUNDING_REGION.toString());
-	}
+
 
 
 	
 
-	public Coord<Integer> getDragEnd()
-	{
-		return dragEnd;
-	}
 
 
 	
 
-	public void setDragEnd(Coord<Integer> dragEnd)
-	{
-		if (dragEnd != null)
-		{
-			if (dragEnd.x < 0) dragEnd.x = 0;
-			if (dragEnd.y < 0) dragEnd.y = 0;
-			if (dragEnd.x >= map.settings.getDataWidth()) dragEnd.x = map.settings.getDataWidth()-1;
-			if (dragEnd.y >= map.settings.getDataHeight()) dragEnd.y = map.settings.getDataHeight()-1;
-		}
-		
-		this.dragEnd = dragEnd;
-		
-		updateListeners(UpdateType.BOUNDING_REGION.toString());
-	}
 
-
-	
-
-	public boolean hasBoundingRegion()
-	{
-		return hasBoundingRegion;
-			
-	}
-
-
-	
-
-	public void setHasBoundingRegion(boolean hasBoundingRegion)
-	{
-		this.hasBoundingRegion = hasBoundingRegion;
-		updateListeners(UpdateType.BOUNDING_REGION.toString());
-	}
 	
 
 

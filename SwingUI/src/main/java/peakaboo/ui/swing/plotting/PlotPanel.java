@@ -266,7 +266,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			energyGuess.setEnabled(true);
 			toolbarInfo.setEnabled(true);
 
-			toolbarMap.setEnabled(controller.fitting().canMap());
+			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());
 
 			
 

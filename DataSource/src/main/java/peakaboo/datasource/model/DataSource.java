@@ -14,6 +14,10 @@ public interface DataSource
 {
 	
 	
+	default boolean isContiguous() {
+		return true;
+	}
+	
 	/**
 	 * Returns a DataSourceMetadata, or null
 	 */

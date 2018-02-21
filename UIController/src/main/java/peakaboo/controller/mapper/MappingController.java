@@ -3,6 +3,7 @@ package peakaboo.controller.mapper;
 
 
 import java.io.InputStream;
+import java.util.List;
 
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
@@ -19,16 +20,14 @@ public class MappingController extends EventfulType<String>
 
 	public enum UpdateType
 	{
-		DATA_OPTIONS, DATA, UI_OPTIONS, BOUNDING_REGION, TABS;
+		DATA_OPTIONS, DATA, UI_OPTIONS, BOUNDING_REGION, POINT_SELECTION, TABS;
 	}
 	
 	
 	public 	MapSetController		mapsController;
 	private MapDisplayController	display;
 	public  MapSettings				settings;
-	
-	private EventfulTypeListener<String> controllerListener;
-	
+		
 	private IPlotController		plotcontroller;
 	
 	
@@ -76,18 +75,11 @@ public class MappingController extends EventfulType<String>
 	private void initialize(IPlotController plotcontroller)
 	{
 		display = new MapDisplayController(this);
-		
-		controllerListener = new EventfulTypeListener<String>() {
 
-			public void change(String message)
-			{
-				updateListeners(message);
-			}};
-		
 			
-		mapsController.addListener(controllerListener);
-		display.addListener(controllerListener);
-		settings.addListener(controllerListener);
+		mapsController.addListener(this::updateListeners);
+		display.addListener(this::updateListeners);
+		settings.addListener(this::updateListeners);
 		
 
 		this.plotcontroller = plotcontroller;
@@ -104,6 +96,12 @@ public class MappingController extends EventfulType<String>
 	{
 		return plotcontroller.data().getDataSourceForSubset(settings.getDataWidth(), settings.getDataHeight(), cstart, cend);
 	}
+
+	public DataSource getDataSourceForSubset(List<Integer> points)
+	{
+		return plotcontroller.data().getDataSourceForSubset(points);
+	}
+	
 	
 	public InputStream getSerializedPlotSettings()
 	{

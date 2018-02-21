@@ -25,6 +25,8 @@ import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.mapdisplay.AreaSelection;
+import peakaboo.controller.mapper.mapdisplay.PointsSelection;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
@@ -83,11 +85,13 @@ public class MapperToolbar extends JToolBar {
 			
 			final Corrections corr = CorrectionsManager.getCorrections("WL");
 			
-			final int xstart = controller.getDisplay().getDragStart().x;
-			final int ystart = controller.getDisplay().getDragStart().y;
+			AreaSelection selection = controller.getDisplay().getAreaSelection(); 
 			
-			final int xend = controller.getDisplay().getDragEnd().x;
-			final int yend = controller.getDisplay().getDragEnd().y;
+			final int xstart = selection.getStart().x;
+			final int ystart = selection.getStart().y;
+			
+			final int xend = selection.getEnd().x;
+			final int yend = selection.getEnd().y;
 			
 			final int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
 			
@@ -159,8 +163,15 @@ public class MapperToolbar extends JToolBar {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				panel.parentPlotter.newTab(controller.getDataSourceForSubset(controller.getDisplay().getDragStart(), controller.getDisplay().getDragEnd()), controller.getSerializedPlotSettings());
-				panel.parentPlotter.getWindow().toFront();
+				AreaSelection areaSelection = controller.getDisplay().getAreaSelection();
+				PointsSelection pointSelection = controller.getDisplay().getPointsSelection();
+				if (areaSelection.hasSelection()) {
+					panel.parentPlotter.newTab(controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd()), controller.getSerializedPlotSettings());
+					panel.parentPlotter.getWindow().toFront();
+				} else {
+					panel.parentPlotter.newTab(controller.getDataSourceForSubset(pointSelection.getPoints()), controller.getSerializedPlotSettings());
+					panel.parentPlotter.getWindow().toFront();
+				}
 			}
 		});
 		this.add(examineSubset, c);

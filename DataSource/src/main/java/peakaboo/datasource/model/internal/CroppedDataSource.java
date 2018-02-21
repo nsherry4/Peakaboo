@@ -76,9 +76,10 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index)
 	{
-		if (!originalDataSource.hasDataSize()) { throw new UnsupportedOperationException(); }
-				
-		return originalDataSource.getDataSize().getDataCoordinatesAtIndex(realIndex(index));
+		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
+		int x = grid.getXYFromIndex(index).first;
+		int y = grid.getXYFromIndex(index).second;
+		return new Coord<Integer>(x, y);
 	}
 	
 	
@@ -168,7 +169,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	{
 		//This should never be called, since the data source this one copies from
 		//should already have been initialized
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Cannot read in derived DataSource");
 	}
 
 
@@ -177,7 +178,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	{
 		//This should never be called, since the data source this one copies from
 		//should already have been initialized
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Cannot read in derived DataSource");
 	}
 
 
@@ -189,7 +190,6 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 
 	@Override
 	public DataSize getDataSize() {
-		if (!originalDataSource.hasDataSize()) { return null; }
 		return this;
 	}
 
@@ -202,7 +202,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 
 	@Override
 	public void setInteraction(Interaction interaction) {
-		originalDataSource.setInteraction(interaction);
+		throw new UnsupportedOperationException("Cannot set interaction in derived DataSource");
 	}
 
 	@Override
@@ -219,7 +219,12 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 
 	@Override
 	public PhysicalSize getPhysicalSize() {
-		return this;
+		if (originalDataSource.hasPhysicalSize()) {
+			return this;	
+		} else {
+			return null;
+		}
+		
 	}
 
 	

@@ -21,10 +21,13 @@ import javax.swing.SwingConstants;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.mapdisplay.AreaSelection;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
+import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
+import scitypes.Spectrum;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterface;
@@ -58,12 +61,13 @@ public class MapperPanel extends TabbedInterfacePanel
 
 		this.controller.addListener(s -> {
 			if (! s.equals(MappingController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
+			if (! s.equals(MappingController.UpdateType.POINT_SELECTION.toString())) setNeedsRedraw();
 			
 			toolbar.monochrome.setSelected(controller.settings.getMonochrome());
 			toolbar.spectrum.setSelected(controller.settings.getShowSpectrum());
 			toolbar.coords.setSelected(controller.settings.getShowCoords());
 			
-			if (controller.getDisplay().hasBoundingRegion())
+			if (controller.getDisplay().getAreaSelection().hasSelection() || controller.getDisplay().getPointsSelection().hasSelection())
 			{
 				toolbar.readIntensities.setEnabled(true);
 				toolbar.examineSubset.setEnabled(true);
@@ -109,8 +113,11 @@ public class MapperPanel extends TabbedInterfacePanel
 			
 			public void mouseDragged(MouseEvent e)
 			{
-				controller.getDisplay().setDragEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-				controller.getDisplay().setHasBoundingRegion( true );
+				controller.getDisplay().getPointsSelection().clearSelection();
+				
+				AreaSelection selection = controller.getDisplay().getAreaSelection();
+				selection.setEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
+				selection.setHasBoundingRegion( true );
 			}
 
 			public void mouseMoved(MouseEvent e)
@@ -118,7 +125,17 @@ public class MapperPanel extends TabbedInterfacePanel
 				showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
 			}
 
-			public void mouseClicked(MouseEvent e){}
+			public void mouseClicked(MouseEvent e){
+				System.out.println(e.getClickCount());
+				//Double-click selects points with similar intensity
+				if (e.getClickCount() >= 2 && controller.getDisplay().getMapDisplayMode() == MapDisplayMode.COMPOSITE) {
+					
+					controller.getDisplay().getAreaSelection().clearSelection();
+					
+					Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
+					controller.getDisplay().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2);
+				}
+			}
 
 			public void mouseEntered(MouseEvent e){}
 
@@ -126,9 +143,12 @@ public class MapperPanel extends TabbedInterfacePanel
 
 			public void mousePressed(MouseEvent e)
 			{			
-				controller.getDisplay().setDragStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-				controller.getDisplay().setDragEnd( null );
-				controller.getDisplay().setHasBoundingRegion( false );
+				controller.getDisplay().getPointsSelection().clearSelection();
+				
+				AreaSelection selection = controller.getDisplay().getAreaSelection();
+				selection.setStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
+				selection.setEnd( null );
+				selection.setHasBoundingRegion( false );
 			}
 
 			public void mouseReleased(MouseEvent e){}

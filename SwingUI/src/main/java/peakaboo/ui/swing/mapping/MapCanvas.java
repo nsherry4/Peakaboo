@@ -11,9 +11,11 @@ import java.util.Map;
 import com.google.common.base.Function;
 
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.mapdisplay.AreaSelection;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
 import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
+import peakaboo.controller.mapper.mapdisplay.PointsSelection;
 import peakaboo.mapping.colours.OverlayColour;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
@@ -26,6 +28,7 @@ import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
 import scidraw.drawing.map.painters.MapTechniqueFactory;
 import scidraw.drawing.map.painters.RasterSpectrumMapPainter;
+import scidraw.drawing.map.painters.SelectionMaskPainter;
 import scidraw.drawing.map.painters.SpectrumMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
@@ -237,10 +240,19 @@ public class MapCanvas extends GraphicsPanel
 		mapPainters.add(contourMapPainter);
 		
 		
-		if (controller.getDisplay().hasBoundingRegion())
+		
+		//There should only ever be one selection active at a time
+		AreaSelection areaSelection = controller.getDisplay().getAreaSelection();
+		if (areaSelection.hasSelection())
 		{
-			mapPainters.add(new BoundedRegionPainter(Color.white, controller.getDisplay().getDragStart(), controller.getDisplay().getDragEnd()));
+			mapPainters.add(new BoundedRegionPainter(Color.white, areaSelection.getStart(), areaSelection.getEnd()));
 		}
+		
+		PointsSelection pointsSelection = controller.getDisplay().getPointsSelection();
+		if (pointsSelection.hasSelection()) {
+			mapPainters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), controller.settings.getDataWidth(), controller.settings.getDataHeight()));
+		}
+		
 		
 		
 		map.setPainters(mapPainters);
@@ -387,9 +399,16 @@ public class MapCanvas extends GraphicsPanel
 		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints, false, 0);
 		mapPainters.add(invalidPainter);
 		
-		if (controller.getDisplay().hasBoundingRegion())
+		
+		//There should only ever be one selection active at a time
+		AreaSelection selection = controller.getDisplay().getAreaSelection();
+		if (selection.hasSelection())
 		{
-			mapPainters.add(new BoundedRegionPainter(Color.white, controller.getDisplay().getDragStart(), controller.getDisplay().getDragEnd()));
+			mapPainters.add(new BoundedRegionPainter(Color.white, selection.getStart(), selection.getEnd()));
+		}
+		PointsSelection pointsSelection = controller.getDisplay().getPointsSelection();
+		if (pointsSelection.hasSelection()) {
+			mapPainters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), controller.settings.getDataWidth(), controller.settings.getDataHeight()));
 		}
 		
 		map.setPainters(mapPainters);
@@ -550,11 +569,22 @@ public class MapCanvas extends GraphicsPanel
 				new FloodMapPainter(Color.black)
 		);
 		
-		if (controller.getDisplay().hasBoundingRegion())
+		
+		
+		//There should only ever be one selection active at a time
+		AreaSelection selection = controller.getDisplay().getAreaSelection();
+		if (selection.hasSelection())
 		{
-			painters.add(new BoundedRegionPainter(Color.white, controller.getDisplay().getDragStart(), controller.getDisplay().getDragEnd()));
+			painters.add(new BoundedRegionPainter(Color.white, selection.getStart(), selection.getEnd()));
+		}
+		
+		PointsSelection pointsSelection = controller.getDisplay().getPointsSelection();
+		if (pointsSelection.hasSelection()) {
+			painters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), controller.settings.getDataWidth(), controller.settings.getDataHeight()));
 		}
 
+		
+		
 		// set the new data
 		map.setPainters(painters);
 		map.draw();

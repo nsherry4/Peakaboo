@@ -22,6 +22,7 @@ public interface IDataController extends IEventful
 {
 
 	DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend);
+	DataSource getDataSourceForSubset(List<Integer> points);
 	
 	void setDataSource(DataSource ds);
 	void setDataSetProvider(DataSet dsp);
