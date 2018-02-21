@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.scandata;
+package peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -8,6 +8,7 @@ import net.sciencestudio.scratch.encoders.CompoundEncoder;
 import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.single.Compressed;
+import peakaboo.datasource.model.components.scandata.SimpleScanData;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 

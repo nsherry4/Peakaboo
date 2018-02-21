@@ -3,6 +3,9 @@ package peakaboo.datasource.model.components.scandata;
 import java.util.List;
 
 import peakaboo.datasource.model.SpectrumList;
+import peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
+import peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
+import peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;

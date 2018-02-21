@@ -1,8 +1,9 @@
-package peakaboo.datasource.model.components.scandata;
+package peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import peakaboo.datasource.model.components.scandata.SimpleScanData;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 

@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.scandata;
+package peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
