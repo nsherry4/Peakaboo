@@ -126,7 +126,6 @@ public class MapperPanel extends TabbedInterfacePanel
 			}
 
 			public void mouseClicked(MouseEvent e){
-				System.out.println(e.getClickCount());
 				//Double-click selects points with similar intensity
 				if (e.getClickCount() >= 2 && controller.getDisplay().getMapDisplayMode() == MapDisplayMode.COMPOSITE) {
 					

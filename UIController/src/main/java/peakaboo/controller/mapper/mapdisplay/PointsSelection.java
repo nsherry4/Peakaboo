@@ -91,7 +91,6 @@ public class PointsSelection extends EventfulType<String>{
 			
 		}
 		
-		System.out.println(points);
 		setPoints(points);
 		
 	}
