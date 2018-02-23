@@ -17,7 +17,7 @@ import javax.swing.JTable;
 
 import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
-import peakaboo.controller.plotter.filtering.IFilteringController;
+import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -36,7 +36,7 @@ public class EditButtonEditor extends DefaultCellEditor
 	private Container				owner;
 
 	private Filter					filter;
-	private IFilteringController	controller;
+	private FilteringController	controller;
 
 	private String					label;
 	private boolean					isPushed;
@@ -44,7 +44,7 @@ public class EditButtonEditor extends DefaultCellEditor
 	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
 
-	public EditButtonEditor(IFilteringController controller, Container owner)
+	public EditButtonEditor(FilteringController controller, Container owner)
 	{
 		super(new JCheckBox());
 

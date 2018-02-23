@@ -4,13 +4,13 @@ import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 
-import peakaboo.controller.plotter.filtering.IFilteringController;
+import peakaboo.controller.plotter.filtering.FilteringController;
 import swidget.widgets.ClearPanel;
 
 public class FiltersetViewer extends ClearPanel {
 
 	
-	private IFilteringController controller;
+	private FilteringController controller;
 	private CardLayout layout;
 	
 	private String EDIT = "EDIT";
@@ -22,7 +22,7 @@ public class FiltersetViewer extends ClearPanel {
 		return "Data Filters";
 	}
 	
-	public FiltersetViewer(IFilteringController _controller, Container owner){
+	public FiltersetViewer(FilteringController _controller, Container owner){
 		
 		super();
 		

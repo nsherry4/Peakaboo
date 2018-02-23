@@ -9,7 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
-import peakaboo.controller.plotter.filtering.IFilteringController;
+import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
@@ -22,7 +22,7 @@ import peakaboo.ui.javafx.widgets.dialogheader.DialogHeader;
 
 public class FilterUIController extends IActofUIController {
 
-	IFilteringController filters;
+	FilteringController filters;
 
 	@FXML private ListView<Filter> filterList;
 	@FXML ListView<BoltPluginController<? extends FilterPlugin>> listBackground, listNoise, listMath, listProgramming, listAdvanced;
@@ -47,7 +47,7 @@ public class FilterUIController extends IActofUIController {
 
 	}
 
-	public void setFilteringController(IFilteringController filters) {
+	public void setFilteringController(FilteringController filters) {
 		this.filters = filters;
 		populate();
 	}

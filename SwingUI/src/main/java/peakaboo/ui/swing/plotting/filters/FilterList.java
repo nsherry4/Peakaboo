@@ -16,7 +16,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import eventful.EventfulListener;
-import peakaboo.controller.plotter.filtering.IFilteringController;
+import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
@@ -27,7 +27,7 @@ import swidget.widgets.listcontrols.ListControls;
 public class FilterList extends ClearPanel {
 
 	
-	protected IFilteringController controller;
+	protected FilteringController controller;
 	protected FiltersetViewer owner;
 	
 	protected JTable t;
@@ -35,7 +35,7 @@ public class FilterList extends ClearPanel {
 	
 	protected ListControls controls;
 	
-	public FilterList(IFilteringController _controller, Container windowOwner, FiltersetViewer _owner){
+	public FilterList(FilteringController _controller, Container windowOwner, FiltersetViewer _owner){
 		
 		super();
 		

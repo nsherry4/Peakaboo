@@ -5,7 +5,7 @@ import java.awt.Window;
 import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
 import net.sciencestudio.autodialog.view.swing.editors.SwingEditorFactory;
-import peakaboo.controller.plotter.filtering.IFilteringController;
+import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 
 public class FilterDialog extends SwingAutoDialog{
@@ -14,7 +14,7 @@ public class FilterDialog extends SwingAutoDialog{
 		SwingEditorFactory.registerStyleProvider("sub-filter", SubfilterEditor::new);
 	}
 	
-	public FilterDialog(IFilteringController controller, Filter filter, AutoDialogButtons buttons, Window window) {
+	public FilterDialog(FilteringController controller, Filter filter, AutoDialogButtons buttons, Window window) {
 		super(window, filter.getParameterGroup(), buttons);
 		
 		getGroup().getValueHook().addListener(o -> {

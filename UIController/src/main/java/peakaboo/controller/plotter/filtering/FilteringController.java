@@ -16,7 +16,7 @@ import peakaboo.filter.model.plugin.FilterPlugin;
 import scitypes.ReadOnlySpectrum;
 
 
-public class FilteringController extends Eventful implements IFilteringController
+public class FilteringController extends Eventful
 {
 
 	PlotController	plot;
@@ -28,13 +28,11 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteringModel = new FilteringModel();
 	}
 
-	@Override
 	public FilteringModel getFilteringMode()
 	{
 		return filteringModel;
 	}
 
-	@Override
 	public void clearFilters()
 	{
 		filteringModel.filters.clear();
@@ -44,7 +42,6 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 
 	
-	@Override
 	public void addFilter(Filter f)
 	{
 		filteringModel.filters.add(f);
@@ -52,7 +49,6 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
-	@Override
 	public void removeFilter(int index)
 	{
 		filteringModel.filters.remove(index);
@@ -60,19 +56,16 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
-	@Override
 	public boolean filterSetContains(Filter f)
 	{
 		return filteringModel.filters.contains(f);
 	}
 
-	@Override
 	public int getFilterCount()
 	{
 		return filteringModel.filters.size();
 	}
 
-	@Override
 	public void setFilterEnabled(int index, boolean enabled)
 	{
 		filteringModel.filters.get(index).setEnabled(enabled);
@@ -80,13 +73,11 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
-	@Override
 	public boolean getFilterEnabled(int index)
 	{
 		return filteringModel.filters.get(index).isEnabled();
 	}
 
-	@Override
 	public void moveFilterUp(int index)
 	{
 		filteringModel.filters.moveFilterUp(index);
@@ -94,7 +85,6 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
-	@Override
 	public void moveFilterDown(int index)
 	{
 		filteringModel.filters.moveFilterDown(index);
@@ -102,27 +92,23 @@ public class FilteringController extends Eventful implements IFilteringControlle
 		filteredDataInvalidated();
 	}
 
-	@Override
 	public Filter getActiveFilter(int index)
 	{
 		return filteringModel.filters.get(index);
 	}
 
-	@Override
 	public int filterIndex(Filter f)
 	{
 		return filteringModel.filters.indexOf(f);
 	}
 
 
-	@Override
 	public void calculateFilteredData(ReadOnlySpectrum data)
 	{
 		filteringModel.filteredPlot = filteringModel.filters.applyFilters(data, true);
 		updateListeners();
 	}
 
-	@Override
 	public void filteredDataInvalidated()
 	{
 		// Clear cached values, since they now have to be recalculated
@@ -133,13 +119,11 @@ public class FilteringController extends Eventful implements IFilteringControlle
 
 	}
 
-	@Override
 	public FilterSet getActiveFilters()
 	{
 		return filteringModel.filters;
 	}
 
-	@Override
 	public ReadOnlySpectrum getFilteredPlot()
 	{
 		return filteringModel.filteredPlot;

@@ -14,7 +14,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
-import peakaboo.controller.plotter.filtering.IFilteringController;
+import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
@@ -30,7 +30,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 public class FilterSelectionList extends ClearPanel
 {
 
-	protected IFilteringController	controller;
+	protected FilteringController	controller;
 	protected FiltersetViewer		owner;
 
 	protected JTree					tree;
@@ -38,7 +38,7 @@ public class FilterSelectionList extends ClearPanel
 	private SelectionListControls 	controls;
 
 	
-	public FilterSelectionList(IFilteringController _controller, FiltersetViewer _owner)
+	public FilterSelectionList(FilteringController _controller, FiltersetViewer _owner)
 	{
 
 		this.controller = _controller;
