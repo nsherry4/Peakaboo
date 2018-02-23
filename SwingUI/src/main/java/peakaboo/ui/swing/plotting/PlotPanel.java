@@ -1254,7 +1254,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 			
-			sb.append("View Type: ");
+			sb.append("View: ");
 			sb.append(controller.settings().getChannelCompositeType().show());
 			sb.append(sep);
 			sb.append("Channel: ");
@@ -1275,7 +1275,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		else
 		{
 			
-			sb.append("View Type: ");
+			sb.append("View: ");
 			sb.append(controller.settings().getChannelCompositeType().show());
 			sb.append(sep);
 			sb.append("Channel: ");

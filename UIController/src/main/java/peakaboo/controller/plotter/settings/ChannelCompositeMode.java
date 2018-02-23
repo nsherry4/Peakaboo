@@ -19,11 +19,11 @@ public enum ChannelCompositeMode
 	
 	public String show() {
 		switch (this) {
-		case NONE: return "Individual Spectrum";
-		case AVERAGE: return "Mean Average of Spectra";
-		case MAXIMUM: return "Strongest Signal per Channel";
+		case NONE:    return "Individual Scan";
+		case AVERAGE: return "Mean per Channel";
+		case MAXIMUM: return "Max per Channel";
 		}
-		return "Unknown Composite Mode";
+		return "Unknown";
 	}
 
 	
