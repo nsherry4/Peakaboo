@@ -4,22 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
 import net.sciencestudio.bolt.scripting.BoltInterface;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
 import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
 import peakaboo.datasource.model.DataSource;
-import peakaboo.datasource.model.components.datasize.DataSize;
-import peakaboo.datasource.model.components.fileformat.FileFormat;
-import peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
-import peakaboo.datasource.model.components.interaction.Interaction;
-import peakaboo.datasource.model.components.interaction.SimpleInteraction;
-import peakaboo.datasource.model.components.metadata.Metadata;
-import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.model.components.scandata.ScanData;
-import peakaboo.datasource.model.components.scandata.SimpleScanData;
-import scitypes.ISpectrum;
 import scitypes.util.StringInput;
 
 

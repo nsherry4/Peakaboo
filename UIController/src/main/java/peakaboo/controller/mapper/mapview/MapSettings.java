@@ -5,7 +5,6 @@ import java.io.File;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.controller.mapper.mapset.MapSetMapData;
 import scitypes.Coord;
 
 /**

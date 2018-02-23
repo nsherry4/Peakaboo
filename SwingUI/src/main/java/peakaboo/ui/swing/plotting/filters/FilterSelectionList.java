@@ -2,7 +2,6 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 import java.awt.BorderLayout;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;

@@ -3,7 +3,6 @@ package peakaboo.filter.model;
 import java.io.File;
 import java.util.logging.Level;
 
-import commonenvironment.Env;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.BoltPluginLoader;
@@ -12,7 +11,6 @@ import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
-import peakaboo.common.Version;
 import peakaboo.filter.model.plugin.FilterPlugin;
 import peakaboo.filter.model.plugin.JavaFilterPlugin;
 import peakaboo.filter.model.plugin.JavaScriptFilterPlugin;

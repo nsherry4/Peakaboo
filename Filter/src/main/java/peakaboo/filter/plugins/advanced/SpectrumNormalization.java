@@ -2,7 +2,6 @@ package peakaboo.filter.plugins.advanced;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
-import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.ListStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;

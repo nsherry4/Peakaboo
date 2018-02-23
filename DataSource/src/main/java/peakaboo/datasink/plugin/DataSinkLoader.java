@@ -2,7 +2,6 @@ package peakaboo.datasink.plugin;
 
 import java.io.File;
 
-import commonenvironment.Env;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.BoltPluginLoader;
@@ -10,7 +9,6 @@ import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
-import peakaboo.common.Version;
 import peakaboo.datasink.plugin.plugins.CSV;
 
 public class DataSinkLoader

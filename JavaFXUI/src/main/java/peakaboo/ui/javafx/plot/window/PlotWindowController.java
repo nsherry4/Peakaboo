@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.controlsfx.dialog.CommandLinksDialog.CommandLinksButtonType;
 

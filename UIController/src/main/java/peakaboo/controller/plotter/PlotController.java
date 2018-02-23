@@ -9,7 +9,6 @@ import java.util.List;
 import eventful.EventfulListener;
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;

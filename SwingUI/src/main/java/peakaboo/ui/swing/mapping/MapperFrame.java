@@ -4,7 +4,6 @@ package peakaboo.ui.swing.mapping;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.io.File;
 
 import javax.swing.JFrame;
 

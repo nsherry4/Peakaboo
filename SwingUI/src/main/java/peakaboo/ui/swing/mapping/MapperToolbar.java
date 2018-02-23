@@ -3,8 +3,6 @@ package peakaboo.ui.swing.mapping;
 import static java.util.stream.Collectors.toList;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -16,13 +14,11 @@ import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import javax.swing.border.EmptyBorder;
 
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapdisplay.AreaSelection;
@@ -31,7 +27,6 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
-import peakaboo.ui.swing.plotting.PlotPanel;
 import scitypes.GridPerspective;
 import scitypes.Pair;
 import scitypes.Range;

@@ -15,7 +15,6 @@ import plural.executor.ExecutorSet;
 import plural.executor.eachindex.EachIndexExecutor;
 import plural.executor.eachindex.implementations.PluralEachIndexExecutor;
 import scitypes.ReadOnlySpectrum;
-import scitypes.SpectrumCalculations;
 
 /**
  * This class contains logic for generating maps for a {@link AbstractDataSet}, so that functionality does not have to be duplicated across various implementations

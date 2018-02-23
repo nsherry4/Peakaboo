@@ -1,18 +1,10 @@
 package peakaboo.controller.plotter.filtering;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import eventful.Eventful;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
-import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.filter.model.FilteringModel;
-import peakaboo.filter.model.plugin.FilterPlugin;
 import scitypes.ReadOnlySpectrum;
 
 

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import eventful.EventfulType;
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.mapview.MapSettings;

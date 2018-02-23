@@ -27,12 +27,9 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
-import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
-import swidget.widgets.listcontrols.ListControlButton;
 import swidget.widgets.listcontrols.ListControls;
-import swidget.widgets.listcontrols.ListControls.ElementCount;
 
 
 

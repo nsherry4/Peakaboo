@@ -15,7 +15,6 @@ import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SigDigits;
-import scitypes.SpectrumCalculations;
 
 
 /**

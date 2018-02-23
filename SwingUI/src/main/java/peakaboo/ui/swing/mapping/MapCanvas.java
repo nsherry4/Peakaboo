@@ -8,11 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Function;
-
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapdisplay.AreaSelection;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
 import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
 import peakaboo.controller.mapper.mapdisplay.PointsSelection;

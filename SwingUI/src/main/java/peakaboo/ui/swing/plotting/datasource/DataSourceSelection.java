@@ -14,8 +14,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
 
 import peakaboo.datasource.model.DataSource;
 import swidget.icons.StockIcon;
@@ -25,7 +23,6 @@ import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.toggle.ItemToggleButton;
 import swidget.widgets.toggle.ToggleGroup;
-import swidget.widgets.toggle.ItemToggleButton;
 
 
 public class DataSourceSelection extends JDialog
