@@ -9,7 +9,7 @@ import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.controller.plotter.fitting.IFittingController;
-import peakaboo.controller.plotter.settings.ISettingsController;
+import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
@@ -52,7 +52,7 @@ public interface IPlotController extends IEventfulType<String>
 	/**
 	 * Get the settings controller
 	 */
-	ISettingsController settings();
+	SettingsController settings();
 	
 
 	

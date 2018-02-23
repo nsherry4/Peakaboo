@@ -18,7 +18,6 @@ import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
-import peakaboo.controller.plotter.settings.ISettingsController;
 import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.controller.plotter.undo.UndoController;
@@ -51,7 +50,7 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	private IDataController					dataController;
 	private IFilteringController			filteringController;
 	private IFittingController				fittingController;
-	private ISettingsController				settingsController;
+	private SettingsController				settingsController;
 
 	private MapSettings						savedMapSettings;
 
@@ -276,7 +275,7 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 		return undoController;
 	}
 
-	public ISettingsController settings()
+	public SettingsController settings()
 	{
 		return settingsController;
 	}

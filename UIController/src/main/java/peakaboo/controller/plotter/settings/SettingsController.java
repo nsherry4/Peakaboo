@@ -1,5 +1,7 @@
 package peakaboo.controller.plotter.settings;
 
+import java.io.Serializable;
+
 import eventful.Eventful;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
@@ -8,7 +10,7 @@ import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
 
-public class SettingsController extends Eventful implements ISettingsController
+public class SettingsController extends Eventful implements Serializable
 {
 
 	
@@ -21,7 +23,6 @@ public class SettingsController extends Eventful implements ISettingsController
 		settingsModel = new SettingsModel();
 	}
 
-	@Override
 	public SettingsModel getSettingsModel()
 	{
 		return settingsModel;
@@ -33,20 +34,17 @@ public class SettingsController extends Eventful implements ISettingsController
 	}
 	
 
-	@Override
 	public float getZoom()
 	{
 		return settingsModel.zoom;
 	}
 
-	@Override
 	public void setZoom(float zoom)
 	{
 		settingsModel.zoom = zoom;
 		updateListeners();
 	}
 
-	@Override
 	public void setShowIndividualSelections(boolean showIndividualSelections)
 	{
 		settingsModel.showIndividualFittings = showIndividualSelections;
@@ -54,13 +52,11 @@ public class SettingsController extends Eventful implements ISettingsController
 		plot.fitting().fittingDataInvalidated();
 	}
 
-	@Override
 	public boolean getShowIndividualSelections()
 	{
 		return settingsModel.showIndividualFittings;
 	}
 
-	@Override
 	public void setEnergyPerChannel(float energy)
 	{
 		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
@@ -72,13 +68,11 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public float getEnergyPerChannel()
 	{
 		return plot.getDR().unitSize;
 	}
 
-	@Override
 	public void setMaxEnergy(float energy)
 	{
 		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
@@ -90,7 +84,6 @@ public class SettingsController extends Eventful implements ISettingsController
 
 	}
 
-	@Override
 	public float getMaxEnergy()
 	{
 		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
@@ -100,7 +93,6 @@ public class SettingsController extends Eventful implements ISettingsController
 		return plot.getDR().unitSize * (plot.data().getDataSet().channelsPerScan());
 	}
 
-	@Override
 	public void setViewLog(boolean log)
 	{
 		if (log)
@@ -115,13 +107,11 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public boolean getViewLog()
 	{
 		return settingsModel.viewTransform == ViewTransform.LOG;
 	}
 
-	@Override
 	public void setShowChannelMode(ChannelCompositeMode mode)
 	{
 		settingsModel.channelComposite = mode;
@@ -130,13 +120,11 @@ public class SettingsController extends Eventful implements ISettingsController
 	}
 	
 
-	@Override
 	public ChannelCompositeMode getChannelCompositeType()
 	{
 		return settingsModel.channelComposite;
 	}
 
-	@Override
 	public void setScanNumber(int number)
 	{
 		//negative is downwards, positive is upwards
@@ -166,13 +154,11 @@ public class SettingsController extends Eventful implements ISettingsController
 		plot.filtering().filteredDataInvalidated();
 	}
 
-	@Override
 	public int getScanNumber()
 	{
 		return settingsModel.scanNumber;
 	}
 
-	@Override
 	public void setShowAxes(boolean axes)
 	{
 		settingsModel.showAxes = axes;
@@ -181,19 +167,16 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public boolean getShowAxes()
 	{
 		return settingsModel.showAxes;
 	}
 
-	@Override
 	public boolean getShowTitle()
 	{
 		return settingsModel.showPlotTitle;
 	}
 
-	@Override
 	public void setShowTitle(boolean show)
 	{
 		settingsModel.showPlotTitle = show;
@@ -202,7 +185,6 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public void setMonochrome(boolean mono)
 	{
 		settingsModel.monochrome = mono;
@@ -210,13 +192,11 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public boolean getMonochrome()
 	{
 		return settingsModel.monochrome;
 	}
 
-	@Override
 	public void setShowElementTitles(boolean show)
 	{
 		settingsModel.showElementFitTitles = show;
@@ -224,7 +204,6 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public void setShowElementMarkers(boolean show)
 	{
 		settingsModel.showElementFitMarkers = show;
@@ -232,7 +211,6 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public void setShowElementIntensities(boolean show)
 	{
 		settingsModel.showElementFitIntensities = show;
@@ -240,25 +218,21 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public boolean getShowElementTitles()
 	{
 		return settingsModel.showElementFitTitles;
 	}
 
-	@Override
 	public boolean getShowElementMarkers()
 	{
 		return settingsModel.showElementFitMarkers;
 	}
 
-	@Override
 	public boolean getShowElementIntensities()
 	{
 		return settingsModel.showElementFitIntensities;
 	}
 
-	@Override
 	public void setShowRawData(boolean show)
 	{
 		settingsModel.backgroundShowOriginal = show;
@@ -266,20 +240,17 @@ public class SettingsController extends Eventful implements ISettingsController
 		updateListeners();
 	}
 
-	@Override
 	public boolean getShowRawData()
 	{
 		return settingsModel.backgroundShowOriginal;
 	}
 
-	@Override
 	public float getEnergyForChannel(int channel)
 	{
 		if (!plot.data().hasDataSet()) return 0.0f;
 		return channel * plot.getDR().unitSize;
 	}
 
-	@Override
 	public Pair<Float, Float> getValueForChannel(int channel)
 	{
 		if (channel == -1) return null;
@@ -292,13 +263,11 @@ public class SettingsController extends Eventful implements ISettingsController
 	}
 
 
-	@Override
 	public EscapePeakType getEscapePeakType()
 	{
 		return settingsModel.escape;
 	}
 	
-	@Override
 	public void setEscapePeakType(EscapePeakType type)
 	{
 		plot.fitting().setEscapeType(type);

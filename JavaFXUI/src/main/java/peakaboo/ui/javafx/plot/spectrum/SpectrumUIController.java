@@ -16,7 +16,7 @@ import javafx.scene.control.ScrollPane;
 import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.fitting.IFittingController;
-import peakaboo.controller.plotter.settings.ISettingsController;
+import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.ui.javafx.change.ChangeController;
@@ -95,7 +95,7 @@ public class SpectrumUIController extends IActofUIController {
 	private void replot() {
 
 		DrawingRequest dr = plotController.getDR();
-		ISettingsController settings = plotController.settings();
+		SettingsController settings = plotController.settings();
 
 		int xmax = 2048;
 		if (data != null) {
