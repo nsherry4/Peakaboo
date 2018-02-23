@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
@@ -24,7 +24,7 @@ import swidget.widgets.ClearPanel;
 public class CurveFittingView extends ClearPanel implements Changeable
 {
 
-	protected IFittingController	controller;
+	protected FittingController	controller;
 	private PlotController	 		plotController;
 
 	private final String			FITTED		= "Fitted";
@@ -45,7 +45,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	
 
-	public CurveFittingView(IFittingController _controller, PlotController plotController, PlotCanvas canvas)
+	public CurveFittingView(FittingController _controller, PlotController plotController, PlotCanvas canvas)
 	{
 		super();
 

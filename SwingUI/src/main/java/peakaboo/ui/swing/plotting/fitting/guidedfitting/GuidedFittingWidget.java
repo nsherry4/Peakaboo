@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
@@ -30,7 +30,7 @@ class GuidedFittingWidget extends TSSelectorGroup
 	private List<ImageButton> editButtons;
 
 
-	public GuidedFittingWidget(IFittingController controller)
+	public GuidedFittingWidget(FittingController controller)
 	{
 		super(controller, 1);
 		

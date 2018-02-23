@@ -22,7 +22,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -45,10 +45,10 @@ public class FittingPanel extends ClearPanel implements Changeable
 	protected MutableTableModel	tm;
 
 	CurveFittingView			owner;
-	IFittingController			controller;
+	FittingController			controller;
 
 
-	public FittingPanel(final IFittingController controller, final CurveFittingView owner)
+	public FittingPanel(final FittingController controller, final CurveFittingView owner)
 	{
 
 		this.owner = owner;

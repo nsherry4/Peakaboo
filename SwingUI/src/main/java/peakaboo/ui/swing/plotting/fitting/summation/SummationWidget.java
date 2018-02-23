@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
@@ -21,7 +21,7 @@ class SummationWidget extends TSSelectorGroup
 
 	private SummationPanel parent;
 	
-	public SummationWidget(IFittingController controller, SummationPanel parent)
+	public SummationWidget(FittingController controller, SummationPanel parent)
 	{
 
 		super(controller, 2);

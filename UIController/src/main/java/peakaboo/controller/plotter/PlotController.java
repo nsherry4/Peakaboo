@@ -14,7 +14,6 @@ import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.IUndoController;
@@ -47,7 +46,7 @@ public class PlotController extends EventfulType<String>
 	private IUndoController					undoController;
 	private DataController					dataController;
 	private FilteringController				filteringController;
-	private IFittingController				fittingController;
+	private FittingController				fittingController;
 	private SettingsController				settingsController;
 
 	private MapSettings						savedMapSettings;
@@ -276,7 +275,7 @@ public class PlotController extends EventfulType<String>
 		return filteringController;
 	}
 
-	public IFittingController fitting()
+	public FittingController fitting()
 	{
 		return fittingController;
 	}

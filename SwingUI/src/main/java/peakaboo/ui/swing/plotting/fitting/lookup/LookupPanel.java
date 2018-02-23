@@ -13,7 +13,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
@@ -33,12 +33,12 @@ public class LookupPanel extends ClearPanel implements Changeable
 	protected JTree					unfitTree;
 
 	CurveFittingView				owner;
-	IFittingController				controller;
+	FittingController				controller;
 
 	private SelectionListControls	selControls;
 
 
-	public LookupPanel(final IFittingController controller, final CurveFittingView owner)
+	public LookupPanel(final FittingController controller, final CurveFittingView owner)
 	{
 
 		this.owner = owner;

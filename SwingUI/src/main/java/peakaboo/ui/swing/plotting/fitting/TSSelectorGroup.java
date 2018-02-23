@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
 import eventful.EventfulListener;
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -23,14 +23,14 @@ import swidget.widgets.ImageButton.Layout;
 public abstract class TSSelectorGroup extends JPanel implements Scrollable
 {
 
-	protected IFittingController controller;
+	protected FittingController controller;
 
 	protected List<TSSelector>	selectors;
 	protected ImageButton		addButton;
 	
 	private int					minSelectors;
 	
-	public TSSelectorGroup(IFittingController controller, int minimumSelectors)
+	public TSSelectorGroup(FittingController controller, int minimumSelectors)
 	{
 		this.controller = controller;
 		this.minSelectors = minimumSelectors;

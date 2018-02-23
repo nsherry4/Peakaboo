@@ -7,7 +7,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.curvefit.peaktable.Element;
@@ -19,11 +19,11 @@ public class FittingRenderer extends DefaultTableCellRenderer
 {
 
 	private TSWidget tswidget;
-	private IFittingController controller;
+	private FittingController controller;
 
 	
 	
-	public FittingRenderer(IFittingController controller){
+	public FittingRenderer(FittingController controller){
 		
 		
 		

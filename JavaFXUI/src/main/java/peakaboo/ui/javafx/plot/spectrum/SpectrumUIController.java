@@ -15,7 +15,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ScrollPane;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
@@ -142,7 +142,7 @@ public class SpectrumUIController extends IActofUIController {
 		setSeriesStyle(seriesnum++, colour);
 
 		// fittings
-		IFittingController fittings = plotController.fitting();
+		FittingController fittings = plotController.fitting();
 		FittingResultSet fitted = fittings.getFittingSelectionResults();
 		colour = monochrome ? TANGO_GREY_4 : TANGO_BLACK;
 		if (settings.getShowIndividualSelections()) {
@@ -193,7 +193,7 @@ public class SpectrumUIController extends IActofUIController {
 		updateSeriesFromSpectrum(seriesRawData, plotdata.second);
 
 		//fittings
-		IFittingController fittings = plotController.fitting();
+		FittingController fittings = plotController.fitting();
 		FittingResultSet fitted = fittings.getFittingSelectionResults();
 		if (plotController.settings().getShowIndividualSelections()) {
 			int count = 0;

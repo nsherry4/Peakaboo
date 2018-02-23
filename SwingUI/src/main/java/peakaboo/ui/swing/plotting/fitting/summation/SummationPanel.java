@@ -7,7 +7,7 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
@@ -22,7 +22,7 @@ public class SummationPanel extends JPanel
 	protected SummationWidget	summationWidget;
 	boolean active = true;
 
-	public SummationPanel(final IFittingController controller, final CurveFittingView owner)
+	public SummationPanel(final FittingController controller, final CurveFittingView owner)
 	{
 		
 		SelectionListControls selControls = new SelectionListControls("Summation") {

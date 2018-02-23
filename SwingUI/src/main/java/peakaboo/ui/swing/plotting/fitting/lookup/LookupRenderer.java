@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.Element;
@@ -22,10 +22,10 @@ class LookupRenderer extends DefaultTreeCellRenderer
 {
 
 	private TSWidget			tswidget;
-	private IFittingController	controller;
+	private FittingController	controller;
 	private JLabel				tstLabel;
 
-	public LookupRenderer(IFittingController controller)
+	public LookupRenderer(FittingController controller)
 	{
 
 		this.controller = controller;

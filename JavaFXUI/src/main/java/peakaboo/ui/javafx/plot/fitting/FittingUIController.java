@@ -14,7 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.BorderPane;
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.ui.javafx.change.ChangeController;
@@ -25,7 +25,7 @@ import peakaboo.ui.javafx.widgets.dialogheader.DialogHeader;
 
 public class FittingUIController extends IActofUIController {
 
-	private IFittingController fittings;
+	private FittingController fittings;
 
 	@FXML private BorderPane fittingsPane, lookupPane, autofitPane, summationPane;
 	@FXML private TableView<TransitionSeries> fittingsTable;
@@ -76,7 +76,7 @@ public class FittingUIController extends IActofUIController {
 	}
 	
 	
-	public void setFittingController(IFittingController fittings) {
+	public void setFittingController(FittingController fittings) {
 		this.fittings = fittings;
 		populateFittings();
 		populateLookups();

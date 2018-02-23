@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.curvefit.peaktable.Element;
@@ -26,11 +26,11 @@ class FittingEditor extends AbstractCellEditor implements TreeCellEditor
 {
 	
 	private TSWidget tswidget;
-	private IFittingController controller;
+	private FittingController controller;
 	private DefaultTreeCellRenderer renderer;
 	
 
-	public FittingEditor(DefaultTreeCellRenderer renderer, IFittingController controller)
+	public FittingEditor(DefaultTreeCellRenderer renderer, FittingController controller)
 	{
 		
 		super();

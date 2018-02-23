@@ -13,7 +13,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import peakaboo.controller.plotter.fitting.IFittingController;
+import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.Element;
@@ -27,12 +27,12 @@ class LookupEditor extends DefaultTreeCellEditor
 
 	private TSWidget	tswidget;
 	private JLabel						tstLabel;
-	private IFittingController			controller;
+	private FittingController			controller;
 	private DefaultTreeCellRenderer		renderer;
 
 
 
-	public LookupEditor(JTree tree, DefaultTreeCellRenderer renderer, IFittingController controller)
+	public LookupEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller)
 	{
 
 		super(tree, renderer);
