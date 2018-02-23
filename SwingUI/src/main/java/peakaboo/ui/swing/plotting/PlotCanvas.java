@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import javax.swing.Scrollable;
 
 import eventful.EventfulTypeListener;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.view.FittingMarkersPainter;
 import peakaboo.curvefit.view.FittingPainter;
 import peakaboo.curvefit.view.FittingSumPainter;
@@ -56,12 +56,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	public DrawingRequest			dr;
 	
 
-	private IPlotController			controller;
+	private PlotController			controller;
 
 	private Consumer<Integer>		grabChannelFromClickCallback;
 
 
-	public PlotCanvas(final IPlotController controller, final PlotPanel parent)
+	public PlotCanvas(final PlotController controller, final PlotPanel parent)
 	{
 
 		super();
@@ -78,11 +78,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			public void change(String s)
 			{
 				if (
-						s.equals(IPlotController.UpdateType.UI.toString())
+						s.equals(PlotController.UpdateType.UI.toString())
 						||
-						s.equals(IPlotController.UpdateType.DATA.toString())
+						s.equals(PlotController.UpdateType.DATA.toString())
 						||
-						s.equals(IPlotController.UpdateType.UNDO.toString())
+						s.equals(PlotController.UpdateType.UNDO.toString())
 					)
 				{
 					updateCanvasSize();

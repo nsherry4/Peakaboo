@@ -6,7 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import eventful.Eventful;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import scitypes.Pair;
 
 
@@ -14,11 +14,11 @@ import scitypes.Pair;
 public class UndoController extends Eventful implements IUndoController
 {
 
-	IPlotController	plot;
+	PlotController	plot;
 	UndoModel		undoModel;
 
 
-	public UndoController(IPlotController plotController)
+	public UndoController(PlotController plotController)
 	{
 		this.plot = plotController;
 		undoModel = new UndoModel();

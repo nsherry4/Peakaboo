@@ -39,7 +39,7 @@ import scitypes.ReadOnlySpectrum;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PlotController extends EventfulType<String> implements IPlotController
+public class PlotController extends EventfulType<String> 
 {
 	
 	public List<AxisPainter>				axisPainters;
@@ -55,6 +55,11 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	private MapSettings						savedMapSettings;
 
 
+	public static enum UpdateType
+	{
+		DATA, FITTING, FILTER, UNDO, UI
+	}
+	
 	
 	public PlotController()
 	{
@@ -129,7 +134,6 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	}
 	
 	
-	@Override
 	public InputStream getSerializedPlotSettings()
 	{
 		//save the current state
@@ -140,7 +144,6 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 		return bais;	
 	}
 	
-	@Override
 	public void savePreferences(OutputStream outStream)
 	{
 		Settings.savePreferences(
@@ -152,7 +155,6 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 			);
 	}
 
-	@Override
 	public void loadPreferences(InputStream inStream, boolean isUndoAction)
 	{
 		Settings.loadPreferences(this, dataController,
@@ -198,7 +200,9 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	}
 	
 
-	@Override
+	/**
+	 * Returns a pair of spectra. The first one is the filtered data, the second is the original
+	 */
 	public Pair<ReadOnlySpectrum, ReadOnlySpectrum> getDataForPlot()
 	{
 
@@ -216,7 +220,11 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	}
 
 
-	@Override
+	/**
+	 * In order to prevent high cpu use every time calculated data such as averaged, filtered, or 
+	 * fitted plots are requested, the calculated data is cached. When a setting is changed such 
+	 * that the cached data would no longer match freshly calculated data, the cache must be cleared.
+	 */
 	public void regenerateCahcedData()
 	{
 
@@ -247,7 +255,12 @@ public class PlotController extends EventfulType<String> implements IPlotControl
 	}
 	
 	
-	@Override
+	/**
+	 * Returns an {@link ExecutorSet} which will generate a map based on the user's current 
+	 * selections.
+	 * @param type The type of {@link FittingTransform} to use in the calculation
+	 * @return
+	 */
 	public ExecutorSet<MapResultSet> getMapCreationTask(FittingTransform type)
 	{
 		return dataController.TASK_calculateMap(filteringController.getActiveFilters(), fittingController.getFittingSelections(), type);

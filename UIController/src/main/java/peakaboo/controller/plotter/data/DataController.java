@@ -6,7 +6,7 @@ import java.util.List;
 
 import eventful.Eventful;
 import eventful.EventfulListener;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.discards.Discards;
 import peakaboo.controller.plotter.data.discards.DiscardsList;
 import peakaboo.curvefit.model.FittingSet;
@@ -34,11 +34,11 @@ public class DataController extends Eventful implements IDataController
 {
 
 	private DataSet 			dataModel;
-	private IPlotController		plot;
+	private PlotController		plot;
 	private Discards			discards;
 	
 	
-	public DataController(IPlotController plotController)
+	public DataController(PlotController plotController)
 	{
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();

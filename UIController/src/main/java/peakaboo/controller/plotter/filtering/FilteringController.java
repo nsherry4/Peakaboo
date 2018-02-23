@@ -7,7 +7,7 @@ import java.util.List;
 import eventful.Eventful;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterSet;
@@ -19,10 +19,10 @@ import scitypes.ReadOnlySpectrum;
 public class FilteringController extends Eventful implements IFilteringController
 {
 
-	IPlotController	plot;
+	PlotController	plot;
 	FilteringModel	filteringModel;
 	
-	public FilteringController(IPlotController plotController)
+	public FilteringController(PlotController plotController)
 	{
 		this.plot = plotController;
 		filteringModel = new FilteringModel();

@@ -13,7 +13,7 @@ import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ScrollPane;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.controller.plotter.settings.SettingsController;
@@ -39,7 +39,7 @@ import scitypes.SigDigits;
 public class SpectrumUIController extends IActofUIController {
 
 	IDataController data;
-	IPlotController plotController;
+	PlotController plotController;
 
 	private final String TANGO_DARK_GREEN = "#4e9a06";
 	private final String TANGO_DARK_PURPLE = "#5c3566";
@@ -86,7 +86,7 @@ public class SpectrumUIController extends IActofUIController {
 
 	}
 
-	public void setPlotController(IPlotController plotController) {
+	public void setPlotController(PlotController plotController) {
 		this.plotController = plotController;
 		replot();
 	}

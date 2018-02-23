@@ -3,7 +3,7 @@ package peakaboo.controller.plotter.settings;
 import java.io.Serializable;
 
 import eventful.Eventful;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
@@ -15,9 +15,9 @@ public class SettingsController extends Eventful implements Serializable
 
 	
 	private SettingsModel settingsModel;
-	private IPlotController plot;
+	private PlotController plot;
 	
-	public SettingsController(IPlotController plotController)
+	public SettingsController(PlotController plotController)
 	{
 		this.plot = plotController;
 		settingsModel = new SettingsModel();

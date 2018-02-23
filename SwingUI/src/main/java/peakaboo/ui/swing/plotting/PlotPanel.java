@@ -86,7 +86,6 @@ import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.mapview.MapSettings;
-import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.curvefit.controller.TSOrdering;
@@ -158,7 +157,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 
 	//Non-UI
-	IPlotController				controller;
+	PlotController				controller;
 	PlotCanvas					canvas;
 	File						saveFilesFolder;
 	File						savedSessionFileName;
@@ -238,7 +237,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		programTitle = title;
 	}
 
-	public IPlotController getController()
+	public PlotController getController()
 	{
 		return controller;
 	}

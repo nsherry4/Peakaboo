@@ -12,7 +12,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.mapview.MapSettings;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import swidget.widgets.tabbedinterface.TabbedInterface;
 
@@ -29,7 +29,7 @@ public class MapperFrame extends JFrame
 
 	private TabbedInterface<MapperPanel> tabs;
 
-	protected IPlotController	plotController;
+	protected PlotController	plotController;
 		
 	EventfulTypeListener<String> controllerListener;
 	
@@ -38,7 +38,7 @@ public class MapperFrame extends JFrame
 	private MapSetController 		mapData;
 	
 	
-	public MapperFrame(TabbedPlotterManager plotter, MapSetController mapData, MapSettings previousMapSettings, IPlotController plotcontroller)
+	public MapperFrame(TabbedPlotterManager plotter, MapSetController mapData, MapSettings previousMapSettings, PlotController plotcontroller)
 	{
 		super();
 		this.plotController = plotcontroller;

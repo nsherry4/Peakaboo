@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import eventful.EventfulType;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.controller.TSOrdering;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.FittingResult;
@@ -28,9 +28,9 @@ public class FittingController extends EventfulType<Boolean> implements IFitting
 {
 
 	FittingModel fittingModel;
-	IPlotController plot;
+	PlotController plot;
 	
-	public FittingController(IPlotController plotController)
+	public FittingController(PlotController plotController)
 	{
 		this.plot = plotController;
 		fittingModel = new FittingModel();

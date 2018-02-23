@@ -28,7 +28,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.mapview.MapSettings;
-import peakaboo.controller.plotter.IPlotController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.dataset.DatasetReadResult;
@@ -61,7 +60,7 @@ public class PlotWindowController extends IActofUIController {
     private FittingUIController fittingUI;
 
 
-    private IPlotController plotController;
+    private PlotController plotController;
     private String savedSessionFileName;
 
     @FXML

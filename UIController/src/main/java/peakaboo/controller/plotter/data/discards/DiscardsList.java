@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 
 public class DiscardsList implements Discards {
 
 	private List<Integer> discards = new ArrayList<Integer>();
-	private IPlotController plot;
+	private PlotController plot;
 	
-	public DiscardsList(IPlotController plot) {
+	public DiscardsList(PlotController plot) {
 		this.plot = plot;
 	}
 	

@@ -10,7 +10,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.mapview.MapSettings;
-import peakaboo.controller.plotter.IPlotController;
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasource.model.DataSource;
 import scitypes.Coord;
 
@@ -28,10 +28,10 @@ public class MappingController extends EventfulType<String>
 	private MapDisplayController	display;
 	public  MapSettings				settings;
 		
-	private IPlotController		plotcontroller;
+	private PlotController			plotcontroller;
 	
 	
-	public MappingController(IPlotController plotcontroller)
+	public MappingController(PlotController plotcontroller)
 	{
 		
 		this.mapsController = new MapSetController();
@@ -47,7 +47,7 @@ public class MappingController extends EventfulType<String>
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(MappingController copy, IPlotController plotcontroller)
+	public MappingController(MappingController copy, PlotController plotcontroller)
 	{
 		this.mapsController = copy.mapsController;
 		this.settings = new MapSettings(this, copy.settings);
@@ -62,7 +62,7 @@ public class MappingController extends EventfulType<String>
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(MapSetController data, MapSettings settings, IPlotController plotcontroller)
+	public MappingController(MapSetController data, MapSettings settings, PlotController plotcontroller)
 	{
 		this.mapsController = data;
 		this.settings = new MapSettings(this, settings);
@@ -72,7 +72,7 @@ public class MappingController extends EventfulType<String>
 	}
 	
 	
-	private void initialize(IPlotController plotcontroller)
+	private void initialize(PlotController plotcontroller)
 	{
 		display = new MapDisplayController(this);
 
