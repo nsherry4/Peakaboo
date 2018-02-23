@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.data.IDataController;
+import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.filter.model.FilteringModel;
@@ -39,7 +39,7 @@ public class Settings
 	 */
 	public static void loadPreferences(
 			PlotController plotController,
-			IDataController dataController,
+			DataController dataController,
 			final SettingsModel settings,
 			final FittingModel fittings,
 			final FilteringModel filters,

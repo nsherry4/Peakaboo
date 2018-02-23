@@ -12,7 +12,6 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.data.DataController;
-import peakaboo.controller.plotter.data.IDataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.filtering.IFilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
@@ -47,7 +46,7 @@ public class PlotController extends EventfulType<String>
 
 	
 	private IUndoController					undoController;
-	private IDataController					dataController;
+	private DataController					dataController;
 	private IFilteringController			filteringController;
 	private IFittingController				fittingController;
 	private SettingsController				settingsController;
@@ -268,7 +267,7 @@ public class PlotController extends EventfulType<String>
 
 	
 	
-	public IDataController data()
+	public DataController data()
 	{
 		return dataController;
 	}

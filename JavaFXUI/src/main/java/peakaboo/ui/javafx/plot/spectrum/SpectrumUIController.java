@@ -14,7 +14,7 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ScrollPane;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.data.IDataController;
+import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.fitting.IFittingController;
 import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.curvefit.model.FittingResult;
@@ -38,7 +38,7 @@ import scitypes.SigDigits;
 
 public class SpectrumUIController extends IActofUIController {
 
-	IDataController data;
+	DataController data;
 	PlotController plotController;
 
 	private final String TANGO_DARK_GREEN = "#4e9a06";

@@ -30,7 +30,7 @@ import scitypes.ReadOnlySpectrum;
  * DataController wraps a DataSet in a UI-aware layer which integrates with the {@link IPlotController}
  * 
  */
-public class DataController extends Eventful implements IDataController
+public class DataController extends Eventful
 {
 
 	private DataSet 			dataModel;
@@ -46,7 +46,6 @@ public class DataController extends Eventful implements IDataController
 	}
 
 	
-	@Override
 	public DataSet getDataSet() {
 		return dataModel;
 	}
@@ -57,7 +56,6 @@ public class DataController extends Eventful implements IDataController
 	// =============================================
 	
 
-	@Override
 	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<File> files, DataSource dsp)
 	{
 
@@ -91,20 +89,17 @@ public class DataController extends Eventful implements IDataController
 
 
 
-	@Override
 	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
 	{
 		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
-	@Override
 	public DataSource getDataSourceForSubset(List<Integer> points)
 	{
 		return new SelectionDataSource(dataModel.getDataSource(), points);
 	}
 	
 
-	@Override
 	public boolean hasDataSet()
 	{
 		return dataModel.hasData();
@@ -140,7 +135,6 @@ public class DataController extends Eventful implements IDataController
 
 	}
 	
-	@Override
 	public void setDataSource(DataSource ds)
 	{
 		setDataSetProvider(new StandardDataSet(ds));
@@ -150,7 +144,6 @@ public class DataController extends Eventful implements IDataController
 	
 
 	
-	@Override
 	public Discards getDiscards() {
 		return discards;
 	}
@@ -170,7 +163,6 @@ public class DataController extends Eventful implements IDataController
 
 	
 	
-	@Override
 	public Iterator<ReadOnlySpectrum> getScanIterator()
 	{
 		
@@ -180,14 +172,12 @@ public class DataController extends Eventful implements IDataController
 			ReadOnlySpectrum next = dataModel.getScanData().get(nextIndex);
 			
 			
-			@Override
-			public boolean hasNext()
+					public boolean hasNext()
 			{
 				return next != null;
 			}
 
-			@Override
-			public ReadOnlySpectrum next()
+					public ReadOnlySpectrum next()
 			{
 				ReadOnlySpectrum current = next;
 				nextIndex = dataModel.firstNonNullScanIndex(nextIndex+1);
@@ -199,19 +189,12 @@ public class DataController extends Eventful implements IDataController
 				return current;
 			}
 
-			@Override
-			public void remove()
+					public void remove()
 			{
 				throw new UnsupportedOperationException();
 			}};
 		
 	}
-	
 
-
-
-
-	
-	
 	
 }
