@@ -30,7 +30,8 @@ public class SettingsModel implements Serializable
 	public float				zoom;
 	public boolean				monochrome;
 	public boolean				showAxes;
-
+	public boolean				lockPlotHeight;
+	
 	public EscapePeakType		escape;
 	
 	public ViewTransform		viewTransform;
@@ -45,6 +46,7 @@ public class SettingsModel implements Serializable
 		zoom = 1.0f;
 		monochrome = false;
 		showAxes = false;
+		lockPlotHeight = true;
 		escape = EscapePeakType.SILICON;
 		viewTransform = ViewTransform.LINEAR;
 	}
@@ -64,6 +66,7 @@ public class SettingsModel implements Serializable
 		zoom = copy.zoom;
 		monochrome = copy.monochrome;
 		showAxes = copy.showAxes;
+		lockPlotHeight = copy.lockPlotHeight;
 		
 		escape = copy.escape;
 		viewTransform = copy.viewTransform;

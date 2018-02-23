@@ -23,14 +23,15 @@ import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
-import swidget.widgets.toggle.ComplexToggle;
-import swidget.widgets.toggle.ComplexToggleGroup;
+import swidget.widgets.toggle.ItemToggleButton;
+import swidget.widgets.toggle.ToggleGroup;
+import swidget.widgets.toggle.ItemToggleButton;
 
 
 public class DataSourceSelection extends JDialog
 {
 	
-	private Map<ComplexToggle, DataSource> toggleMap;
+	private Map<ItemToggleButton, DataSource> toggleMap;
 	private DataSource selected;
 	
 	public DataSourceSelection()
@@ -41,7 +42,7 @@ public class DataSourceSelection extends JDialog
 	public DataSource pickDSP(Container parent, List<DataSource> dsps)
 	{	
 		
-		toggleMap = new HashMap<ComplexToggle, DataSource>();
+		toggleMap = new HashMap<ItemToggleButton, DataSource>();
 		
 		setTitle("Please Select Data Format");
 		Container c = getContentPane();
@@ -59,12 +60,12 @@ public class DataSourceSelection extends JDialog
 		optionPanel.setBorder(Spacing.bHuge());
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 		
-		final List<ComplexToggle> toggleButtons = new ArrayList<ComplexToggle>();
-		ComplexToggle toggle;
-		final ComplexToggleGroup group = new ComplexToggleGroup();
+		final List<ItemToggleButton> toggleButtons = new ArrayList<ItemToggleButton>();
+		ItemToggleButton toggle;
+		final ToggleGroup group = new ToggleGroup();
 		for (DataSource dsp : dsps)
 		{
-			toggle = new ComplexToggle("", dsp.getFileFormat().getFormatName(), dsp.getFileFormat().getFormatDescription());
+			toggle = new ItemToggleButton("", dsp.getFileFormat().getFormatName(), dsp.getFileFormat().getFormatDescription());
 			toggleMap.put(toggle, dsp);
 			group.registerButton(toggle);	
 			toggleButtons.add(toggle);

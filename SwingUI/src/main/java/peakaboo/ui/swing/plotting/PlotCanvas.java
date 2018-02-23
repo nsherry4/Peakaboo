@@ -141,7 +141,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	public void updateCanvasSize()
 	{
-	
+			
+		//Width
 		double parentWidth = 1.0;
 		if (this.getParent() != null)
 		{
@@ -151,9 +152,45 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		int newWidth = (int) (controller.data().getDataSet().channelsPerScan() * controller.settings().getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
-		this.setPreferredSize(new Dimension(newWidth, 1));
+		
+		
+		//Height
+		double parentHeight = 1.0;
+		if (this.getParent() != null)
+		{
+			parentHeight = this.getParent().getHeight();
+		}
 
+		int newHeight = (int) (200 * controller.settings().getZoom());
+		if (newHeight < parentHeight) newHeight = (int) parentHeight;
+		
+		if (controller.settings().getLockPlotHeight()) {
+			newHeight = (int) parentHeight;
+		}
+		
+		
+		//Generate new sizes
+		Rectangle oldView = this.getVisibleRect();
+		Dimension oldSize = getPreferredSize();
+		Dimension newSize = new Dimension(newWidth, newHeight);
+		Rectangle newView = new Rectangle(oldView);
+		
+
+		//Ratio of new size to old one.
+		float dx = (float)newSize.width / (float)oldSize.width;
+		float dy = (float)newSize.height / (float)oldSize.height;
+
+		//Scale view by size ratio
+		newView.x = (int) (oldView.x * dx);
+		newView.y = (int) (oldView.y * dy);
+
+		//Set new size and update
+		this.setPreferredSize(newSize);
 		this.revalidate();
+		this.scrollRectToVisible(newView);
+		
+		
+
 
 	}
 
@@ -439,7 +476,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	//**************************************************************
 	public Dimension getPreferredScrollableViewportSize()
 	{
-		return new Dimension(600, 300);
+		return new Dimension(600, 1000);
 	}
 
 
@@ -451,7 +488,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	public boolean getScrollableTracksViewportHeight()
 	{
-		return true;
+		return false;
 	}
 
 

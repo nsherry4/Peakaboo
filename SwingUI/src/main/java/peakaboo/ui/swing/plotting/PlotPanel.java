@@ -146,7 +146,8 @@ import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.ZoomSlider;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
-import swidget.widgets.toggle.ComplexToggle;
+import swidget.widgets.toggle.ItemToggleButton;
+import swidget.widgets.toggle.ImageToggleButton;
 
 
 
@@ -370,7 +371,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas);
 
 		JPanel canvasPanel = new JPanel(new BorderLayout());
@@ -1152,8 +1153,8 @@ public class PlotPanel extends TabbedInterfacePanel
 		channelLabel.setBorder(Spacing.bSmall());
 		bottomPanel.add(channelLabel, BorderLayout.CENTER);
 
-		zoomSlider = createZoomPanel();
-		bottomPanel.add(zoomSlider, BorderLayout.EAST);
+		JPanel zoomPanel = createZoomPanel();
+		bottomPanel.add(zoomPanel, BorderLayout.EAST);
 
 		scanSelector = new ClearPanel();
 		scanSelector.setLayout(new BoxLayout(scanSelector, BoxLayout.X_AXIS));
@@ -1162,7 +1163,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		scanNo.getEditor().setPreferredSize(new Dimension(50, 0));
 		scanLabel = new JLabel("Scan");
 		scanLabel.setBorder(Spacing.bSmall());
-		scanBlock = new ComplexToggle(
+		scanBlock = new ItemToggleButton(
 			StockIcon.CHOOSE_CANCEL,
 			"Flag this scan to exclude it and extrapolate it from neighbouring points in maps", "");
 
@@ -1201,18 +1202,31 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	private ZoomSlider createZoomPanel()
+	private JPanel createZoomPanel()
 	{
-		final ZoomSlider slider = new ZoomSlider(10, 500, 10);
-		slider.setValue(100);
-		slider.addListener(new EventfulListener() {
+		
+		JPanel zoomPanel = new JPanel(new BorderLayout());
+		
+		zoomSlider = new ZoomSlider(10, 1000, 10);
+		zoomSlider.setValue(100);
+		zoomSlider.addListener(new EventfulListener() {
 			
 			public void change()
 			{
-				controller.settings().setZoom(slider.getValue() / 100f);
+				controller.settings().setZoom(zoomSlider.getValue() / 100f);
 			}
 		});
-		return slider;
+		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
+
+		
+		final ImageToggleButton lockHorizontal = new ImageToggleButton(StockIcon.MISC_LOCKED, "", "Lock Horizontal Zoom to Window Size");
+		lockHorizontal.setSelected(true);
+		lockHorizontal.addActionListener(e -> {
+			controller.settings().setLockPlotHeight(lockHorizontal.isSelected());
+		});
+		zoomPanel.add(lockHorizontal, BorderLayout.EAST);
+		
+		return zoomPanel;
 	}
 	
 

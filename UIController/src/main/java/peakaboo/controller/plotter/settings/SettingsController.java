@@ -305,5 +305,13 @@ public class SettingsController extends Eventful implements ISettingsController
 		settingsModel.escape = type;
 	}
 	
+	public boolean getLockPlotHeight() {
+		return settingsModel.lockPlotHeight;
+	}
+	public void setLockPlotHeight(boolean lock) {
+		settingsModel.lockPlotHeight = lock;
+		updateListeners();
+	}
+	
 	
 }

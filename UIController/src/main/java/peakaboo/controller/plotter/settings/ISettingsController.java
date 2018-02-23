@@ -58,4 +58,7 @@ public interface ISettingsController extends IEventful
 	void setEscapePeakType(EscapePeakType type);
 	SettingsModel getSettingsModel();
 	
+	boolean getLockPlotHeight();
+	void setLockPlotHeight(boolean lock);
+	
 }
