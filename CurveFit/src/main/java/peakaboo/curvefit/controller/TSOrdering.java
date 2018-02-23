@@ -324,17 +324,16 @@ public class TSOrdering
 		tss = tss.subList(0, 15);
 		
 		//now sort by score
-		Collections.sort(tss, (ts1, ts2) -> {
-			Float prox1, prox2;
-			
-			prox1 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts1);
-			prox2 = TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts2);
-			
-			return prox1.compareTo(prox2);
-		});
-				
-		//take the 5 best in sorted order based on score
-		return tss.subList(0, 5);
+		tss = tss.stream()
+			.map(ts -> new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts)))
+			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
+			.limit(15)
+			.map(p -> p.first)
+			.collect(Collectors.toList());
+
+		
+		//take the best in sorted order based on score
+		return tss.subList(0, 6);
 	}
 
 	
