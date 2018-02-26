@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
@@ -72,6 +73,7 @@ import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.common.Configuration;
+import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.mapview.MapSettings;
@@ -1376,7 +1378,11 @@ public class PlotPanel extends TabbedInterfacePanel
 						DatasetReadResult result = reading.getResult();
 						if (result.status == ReadStatus.FAILED)
 						{
-							JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+							if (result.problem != null) {
+								Peakaboo.showError(result.problem, "Error Opening Data", "Peakaboo could not open this dataset");
+							} else {
+								JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+							}
 						}
 
 						// set some controls based on the fact that we have just loaded a
@@ -1419,8 +1425,8 @@ public class PlotPanel extends TabbedInterfacePanel
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Peakaboo.showError(e);			
+			PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
+			Peakaboo.showError(e, "Failed to export data");
 		}
 		
 
@@ -1701,9 +1707,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		List<PropertyViewPanel> panels = new ArrayList<>();
 		
 		properties = new LinkedHashMap<String, String>();
+		properties.put("Data Format", "" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
 		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().maximumIntensity());
+		
 		PropertyViewPanel basic = new PropertyViewPanel(properties, "Basic Information");
 		panels.add(basic);
 		

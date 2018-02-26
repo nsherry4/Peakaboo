@@ -12,6 +12,7 @@ import peakaboo.controller.plotter.data.discards.DiscardsList;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
+import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.dataset.EmptyDataSet;
 import peakaboo.dataset.StandardDataSet;
 import peakaboo.datasource.model.DataSource;
@@ -72,9 +73,11 @@ public class DataController extends Eventful
 			public void change()
 			{
 				if (readTasks.getCompleted() && dataset.channelsPerScan() > 0 && !loadedNewDataSet) {
-												
-					setDataSetProvider(dataset);
-					loadedNewDataSet = true;
+					DatasetReadResult result = readTasks.getResult();
+					if (result.status == ReadStatus.SUCCESS) {
+						setDataSetProvider(dataset);
+						loadedNewDataSet = true;
+					}
 
 				}
 			}

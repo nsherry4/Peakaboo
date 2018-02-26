@@ -29,14 +29,22 @@ public class Peakaboo
 {
 	private static final Logger LOGGER = PeakabooLog.get();
 
-	public static boolean showError(Throwable e)
+
+	public static boolean showError(Throwable e, String message) {
+		return showError(e, message, null);
+	}
+	
+	public static boolean showError(Throwable e, String message, String text)
 	{
-		TaskDialog errorDialog = new TaskDialog("Peakaboo");
+		TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
 		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-		errorDialog.setInstruction("Peakaboo has encountered a problem and must exit");
+		errorDialog.setInstruction(message);
 		
-		String text = "";
-		if (Strings.isEmpty(text)) text = "The problem is of type " + e.getClass().getSimpleName();
+		
+		if (text != null) {
+			text += "\n";
+		}
+		text += "The problem is of type " + e.getClass().getSimpleName();
 		errorDialog.setText(text);
 			
 		JTextArea stacktrace = new JTextArea();
@@ -48,6 +56,7 @@ public class Peakaboo
 		errorDialog.getDetails().setExpandableComponent(scroller);
 		errorDialog.getDetails().setExpanded(false);
 		
+	
 		return (errorDialog.show().getTag().ordinal() != 0);
 	}
 	
@@ -78,7 +87,7 @@ public class Peakaboo
 			PeakabooLog.get().log(Level.SEVERE, "Critical Error in Peakaboo", e);
 			
 			//if the user chooses to close rather than restart, break out of the loop
-			showError(e);
+			showError(e, "Peakaboo has encountered a problem and must exit");
 			System.exit(1);
 			
 		}

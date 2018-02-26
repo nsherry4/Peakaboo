@@ -181,26 +181,27 @@ public class StandardDataSet implements DataSet
 			protected DatasetReadResult execute()
 			{
 				
-				final int scanCount;
-				
-				opening.advanceState();
-				
-				//anon function to call when we get the number of scans
-				Consumer<Integer> gotScanCount = (Integer count) ->	{
-					reading.setWorkUnits(count);
+				try {
+						
+					final int scanCount;
+					
 					opening.advanceState();
-					reading.advanceState();
-				};
-				
-				//anon function to call to check if the user has requested the operation be aborted
-				Supplier<Boolean> isAborted = () -> isAborted() || isAbortRequested();
-				
-				//anon function to call when the loader reads a scan from the input data
-				Consumer<Integer> readScans = (Integer count) -> reading.workUnitCompleted(count);
-				
+					
+					//anon function to call when we get the number of scans
+					Consumer<Integer> gotScanCount = (Integer count) ->	{
+						reading.setWorkUnits(count);
+						opening.advanceState();
+						reading.advanceState();
+					};
+					
+					//anon function to call to check if the user has requested the operation be aborted
+					Supplier<Boolean> isAborted = () -> isAborted() || isAbortRequested();
+					
+					//anon function to call when the loader reads a scan from the input data
+					Consumer<Integer> readScans = (Integer count) -> reading.workUnitCompleted(count);
+					
+	
 
-				try
-				{
 					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
 					if (files.size() == 1)
 					{
@@ -210,49 +211,47 @@ public class StandardDataSet implements DataSet
 					{
 						dataSource.read(new ArrayList<File>(files));
 					}
-				
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					aborted();
-					return new DatasetReadResult(ReadStatus.FAILED, "Failed to read from the selected file(s)");
-				}
-				
 
-				
-				if (isAborted.get())
-				{
-					aborted();
-					return new DatasetReadResult(ReadStatus.CANCELLED);
+	
+					
+					if (isAborted.get())
+					{
+						aborted();
+						return new DatasetReadResult(ReadStatus.CANCELLED);
+					}
+					
+					
+					scanCount = dataSource.getScanData().scanCount();
+					if (scanCount == 0) return new DatasetReadResult(ReadStatus.FAILED, "Did not find any data in file(s)");
+					gotScanCount.accept(scanCount);
+					reading.advanceState();
+					
+					applying.setWorkUnits(dataSource.getScanData().scanCount());
+					applying.advanceState();
+					
+					
+					//now that we have the datasource, read it
+					readDataSource(  dataSource, applying, isAborted, files.get(0).getParentFile()  );
+					
+					
+					if (isAborted.get())
+					{
+						aborted();
+						return new DatasetReadResult(ReadStatus.CANCELLED);
+					}
+					
+					
+					//we're done
+					applying.workUnitCompleted();
+					applying.advanceState();
+					
+					return new DatasetReadResult(ReadStatus.SUCCESS);
+					
+					
+					
+				} catch (Exception e) {
+					return new DatasetReadResult(e);
 				}
-				
-				
-				scanCount = dataSource.getScanData().scanCount();
-				if (scanCount == 0) return new DatasetReadResult(ReadStatus.FAILED, "Did not find any data in file(s)");
-				gotScanCount.accept(scanCount);
-				reading.advanceState();
-				
-				applying.setWorkUnits(dataSource.getScanData().scanCount());
-				applying.advanceState();
-				
-				
-				//now that we have the datasource, read it
-				readDataSource(  dataSource, applying, isAborted, files.get(0).getParentFile()  );
-				
-				
-				if (isAborted.get())
-				{
-					aborted();
-					return new DatasetReadResult(ReadStatus.CANCELLED);
-				}
-				
-				
-				//we're done
-				applying.workUnitCompleted();
-				applying.advanceState();
-				
-				return new DatasetReadResult(ReadStatus.SUCCESS);
 				
 			}
 			
