@@ -18,6 +18,7 @@ def setup
 		
 		resources.each{|res|
 			source, target = res
+			FileUtils.mkdir_p(target)
 			`cp -f "./resources/#{source}" "#{target}"`
 		}
 	end
@@ -34,10 +35,11 @@ def setup
 	 jarfile = "Peakaboo.jar"
 
 	#Deb Package
-	dapppath = "./deb/4.0/usr/share/Peakaboo/"
-	dbinpath = "./deb/4.0/usr/bin/"
+	dapppath = "./deb/5.0/usr/share/Peakaboo/"
+	dbinpath = "./deb/5.0/usr/bin/"
+	dconpath = "./deb/5.0/DEBIAN/"
 	
-	resources = [["shared/icon.png", dapppath], ["shared/logo.png", dapppath], ["linux/peakaboo", dbinpath]]
+	resources = [["shared/icon.png", dapppath], ["shared/logo.png", dapppath], ["linux/peakaboo", dbinpath], ["linux/control", dconpath]]
 
 	doSetup(jarfile, dapppath, resources)
 

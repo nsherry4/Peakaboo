@@ -1437,7 +1437,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionMap(FittingTransform type)
 	{
 
-		Mutable<Boolean> mapShown = new Mutable(false);
+		Mutable<Boolean> mapShown = new Mutable<>(false);
 		if (!controller.data().hasDataSet()) return;
 
 
