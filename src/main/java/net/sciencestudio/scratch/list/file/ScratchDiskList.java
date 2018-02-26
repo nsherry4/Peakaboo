@@ -31,7 +31,9 @@ public class ScratchDiskList<T> extends AbstractList<T>{
 	
 	@Override
 	public T get(int index) {
-		return encoder.decode(backing.get(index));
+		byte[] bytes = backing.get(index);
+		if (bytes == null) { return null; }
+		return encoder.decode(bytes);
 	}
 	
 	@Override
