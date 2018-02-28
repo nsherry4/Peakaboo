@@ -209,7 +209,7 @@ public class MapCanvas extends GraphicsPanel
 			paletteList,
 
 			controller.mapsController.isDimensionsProvided(),
-			"Intensity (counts)"
+			(controller.getDisplay().isLogView() ? "Log Scale Intensity (counts)" : "Intensity (counts)")
 		);
 		axisPainters.add(spectrumCoordPainter);
 
