@@ -46,7 +46,7 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	{
 		reach = new Parameter<>("Reach of Polynomial (2n+1)", new IntegerStyle(), 7, this::validate);
 		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 5, this::validate);
-		Parameter<?> sep = new Parameter<>(null, new SeparatorStyle(), null);
+		Parameter<?> sep = new Parameter<>(null, new SeparatorStyle(), 0);
 		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false, this::validate);
 		max = new Parameter<>("Smoothing Cutoff: (counts)", new RealStyle(), 4.0f, this::validate);
 		max.setEnabled(false);

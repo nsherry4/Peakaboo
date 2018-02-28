@@ -30,10 +30,11 @@ import peakaboo.filter.plugins.mathematical.Multiply;
 import peakaboo.filter.plugins.mathematical.Subtraction;
 import peakaboo.filter.plugins.noise.AggressiveWaveletNoiseFilter;
 import peakaboo.filter.plugins.noise.FourierLowPass;
-import peakaboo.filter.plugins.noise.MovingAverage;
+import peakaboo.filter.plugins.noise.FlatAveraging;
 import peakaboo.filter.plugins.noise.SavitskyGolaySmoothing;
 import peakaboo.filter.plugins.noise.SpringSmoothing;
 import peakaboo.filter.plugins.noise.WaveletNoiseFilter;
+import peakaboo.filter.plugins.noise.WeightedAveraging;
 
 
 public class FilterLoader
@@ -82,7 +83,8 @@ public class FilterLoader
 		
 		newPluginLoader.registerPlugin(AggressiveWaveletNoiseFilter.class);
 		newPluginLoader.registerPlugin(FourierLowPass.class);
-		newPluginLoader.registerPlugin(MovingAverage.class);
+		newPluginLoader.registerPlugin(FlatAveraging.class);
+		newPluginLoader.registerPlugin(WeightedAveraging.class);
 		newPluginLoader.registerPlugin(SavitskyGolaySmoothing.class);
 		newPluginLoader.registerPlugin(SpringSmoothing.class);
 		newPluginLoader.registerPlugin(WaveletNoiseFilter.class);

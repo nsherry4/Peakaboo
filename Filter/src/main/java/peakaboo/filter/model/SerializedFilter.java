@@ -5,6 +5,15 @@ import java.util.List;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.filter.model.plugin.FilterPlugin;
 
+/**
+ * SerializedFilter holds a reference to a filter, and provides getters/setters for
+ * the class and the serialized parameters. When this class is serialzied, the class
+ * and parameters are exposed to the serializing agent. When this object is read back
+ * in, the setters will receive a Class, and serialized parameters. Calling getFilter 
+ * will then reconstruct the filter from that data. 
+ * @author NAS
+ *
+ */
 public class SerializedFilter {
 
 
@@ -35,7 +44,7 @@ public class SerializedFilter {
 	}
 
 	public List<Object> getSettings() {
-		return filter.save();
+		return filter.getParameterGroup().serialize();
 	}
 
 	public void setSettings(List<Object> settings) {
@@ -49,7 +58,7 @@ public class SerializedFilter {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
 				filter = plugin.create();
 				filter.initialize();
-				filter.load(settings);
+				filter.getParameterGroup().deserialize(settings);
 				return filter;
 			}
 		}

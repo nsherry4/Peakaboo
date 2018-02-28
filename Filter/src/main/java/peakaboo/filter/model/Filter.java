@@ -71,9 +71,5 @@ public interface Filter {
 	ReadOnlySpectrum filter(ReadOnlySpectrum data, boolean cache);
 	
 	
-	List<Object> save();
-	
-	void load(List<Object> settings);
-	
 
 }

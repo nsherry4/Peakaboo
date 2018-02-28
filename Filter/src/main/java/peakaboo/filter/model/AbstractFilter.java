@@ -172,32 +172,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	}
 	
 	
-	
-	@Override
-	public List<Object> save() {
-		List<Object> valuemap = new ArrayList<>();
-		for (Value<?> param : getParameters()) {
-			Object value = param.getValue();
-			if (value instanceof Filter) {
-				value = new SerializedFilter((Filter)value);
-			}
-			valuemap.add(value);
-		}
-		return valuemap;
-	}
-	
-	@Override
-	public void load(List<Object> settings) {
-		for (Integer i : new Range(0, settings.size()-1)) {
-			Value<Object> param = (Value<Object>) getParameters().get(i);
-			Object loaded = settings.get(i);
-			if (loaded instanceof SerializedFilter) {
-				loaded = ((SerializedFilter) loaded).getFilter();
-			}
-			param.setValue(loaded);
-		}
-	}
-	
+
 
 	
 

@@ -3,8 +3,12 @@ package peakaboo.filter.plugins.advanced;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.yaml.snakeyaml.Yaml;
+
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
+import net.sciencestudio.autodialog.model.classinfo.ClassInfo;
+import net.sciencestudio.autodialog.model.classinfo.SimpleClassInfo;
 import net.sciencestudio.autodialog.model.style.CoreStyle;
 import net.sciencestudio.autodialog.model.style.SimpleStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
@@ -12,6 +16,7 @@ import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
+import peakaboo.filter.model.SerializedFilter;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
@@ -39,7 +44,12 @@ public class SubFilter extends AbstractFilter
 		
 		begin = new Parameter<>("Start Index", new IntegerStyle(), 0, this::validate);
 		end = new Parameter<>("Stop Index", new IntegerStyle(), 10, this::validate);
-		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0));
+		
+		Yaml yaml = new Yaml();
+		
+		ClassInfo<Filter> filterClassInfo = new SimpleClassInfo<Filter>(Filter.class, f -> yaml.dump(new SerializedFilter(f)), s -> ((SerializedFilter)yaml.load(s)).getFilter());
+		
+		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0), filterClassInfo);
 		filter.setPossibleValues(filters);
 		
 		addParameter(begin, end, filter);

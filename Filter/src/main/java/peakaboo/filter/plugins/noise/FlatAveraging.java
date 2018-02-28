@@ -16,13 +16,13 @@ import scitypes.ReadOnlySpectrum;
  */
 
 
-public final class MovingAverage extends AbstractSimpleFilter
+public final class FlatAveraging extends AbstractSimpleFilter
 {
 
 	private Parameter<Integer> reach;
 
 
-	public MovingAverage()
+	public FlatAveraging()
 	{
 		super();
 
@@ -43,7 +43,7 @@ public final class MovingAverage extends AbstractSimpleFilter
 	@Override
 	public String getFilterName()
 	{
-		return "Moving Average";
+		return "Flat Averaging";
 	}
 
 

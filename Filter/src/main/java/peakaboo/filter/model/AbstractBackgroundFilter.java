@@ -29,7 +29,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90, this::validate);
 		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE, this::validate);
 		
-		Parameter<?> sep1 = new Parameter<>(null, new SeparatorStyle(), null);
+		Parameter<?> sep1 = new Parameter<>(null, new SeparatorStyle(), 0);
 		
 		partial = new Parameter<>("Apply to Subset", new BooleanStyle(), Boolean.FALSE, this::validate);
 		startindex = new Parameter<>("Start Index", new IntegerStyle(), 0, this::validate);
@@ -40,7 +40,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 		});
 		
 		
-		Parameter<?> sep2 = new Parameter<>(null, new SeparatorStyle(), null);
+		Parameter<?> sep2 = new Parameter<>(null, new SeparatorStyle(), 0);
 		
 		
 		startindex.setEnabled(false);

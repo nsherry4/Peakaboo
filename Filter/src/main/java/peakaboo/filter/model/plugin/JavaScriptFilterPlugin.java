@@ -169,17 +169,6 @@ public class JavaScriptFilterPlugin implements FilterPlugin, BoltScriptPlugin {
 		
 	}
 	
-	@Override
-	public List<Object> save() {
-		// TODO Auto-generated method stub
-		return new ArrayList<>();
-	}
-
-	@Override
-	public void load(List<Object> settings) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	public String toString()
 	{
