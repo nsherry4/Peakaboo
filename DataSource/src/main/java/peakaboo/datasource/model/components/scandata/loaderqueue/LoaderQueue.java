@@ -11,6 +11,10 @@ public interface LoaderQueue {
 		submit(new ISpectrum(s));
 	}
 
+	/**
+	 * Marks this queue as closed and blocks waiting for the processing thread to complete.
+	 * @throws InterruptedException
+	 */
 	void finish() throws InterruptedException;
 
 }

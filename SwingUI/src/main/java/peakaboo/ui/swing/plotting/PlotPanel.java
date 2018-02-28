@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -115,6 +116,7 @@ import scitypes.util.Mutable;
 import scitypes.util.StringInput;
 import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.PropertyDialogue;
+import swidget.dialogues.fileio.SimpleIODialogues;
 import swidget.dialogues.fileio.SwidgetIO;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -1409,19 +1411,14 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionExportData(DataSink sink) {
 		DataSource source = controller.data().getDataSet().getDataSource();
 		
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
-			sink.write(source, os);
 			
-			exportedDataFileName = SwidgetIO.saveFile(
-					container.getWindow(),
-					"Export Scan Data",
-					sink.getFormatExtension(),
-					sink.getFormatName(),
-					exportedDataFileName,
-					os);
+			String saveFilename = SimpleIODialogues.chooseFileSave(container.getWindow(), "Export Scan Data", exportedDataFileName, sink.getFormatExtension(), sink.getFormatName());
+			if (saveFilename == null) {
+				return;
+			}
 			
-			os.close();
+			sink.write(source, new File(saveFilename).toPath());
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.stream.Collectors;
 
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
@@ -33,8 +36,8 @@ public class CSV implements JavaDataSinkPlugin {
 	}
 
 	@Override
-	public void write(DataSource source, OutputStream destination) throws IOException {
-		Writer writer = new OutputStreamWriter(destination);
+	public void write(DataSource source, Path destination) throws IOException {
+		Writer writer = new OutputStreamWriter(Files.newOutputStream(destination));
 		for (ReadOnlySpectrum s : source.getScanData()) {
 			String spectrum = s.stream().map(f -> Float.toString(f)).collect(Collectors.joining(", "));
 			writer.write(spectrum);
@@ -50,7 +53,7 @@ public class CSV implements JavaDataSinkPlugin {
 
 	@Override
 	public String getFormatName() {
-		return "Comma Separated Value";
+		return "Comma Separated Values";
 	}
 
 	@Override

@@ -1,14 +1,14 @@
 package peakaboo.datasink.model;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.Path;
 
 import peakaboo.datasource.model.DataSource;
 
 public interface DataSink
 {
 	
-	void write(DataSource source, OutputStream destination) throws IOException;
+	void write(DataSource source, Path destination) throws IOException;
 	
 	
 	

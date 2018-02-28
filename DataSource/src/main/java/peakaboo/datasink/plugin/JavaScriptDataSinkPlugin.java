@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 import net.sciencestudio.bolt.scripting.BoltInterface;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
@@ -53,7 +54,7 @@ public class JavaScriptDataSinkPlugin implements DataSinkPlugin, BoltScriptPlugi
 	}
 
 	@Override
-	public void write(DataSource source, OutputStream destination) throws IOException {
+	public void write(DataSource source, Path destination) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
