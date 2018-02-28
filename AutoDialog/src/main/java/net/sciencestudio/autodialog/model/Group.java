@@ -2,6 +2,7 @@ package net.sciencestudio.autodialog.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -99,25 +100,35 @@ public class Group implements Value<List<Value<?>>> {
 		}
 	}
 	
-	public List<Object> dumpValues() {
-		List<Object> flat = new ArrayList<>();
+	
+	public void deserialize(List<Object> stored) {
+		Iterator<Object> iter = stored.iterator();
 		visit(p -> {
-			//Don't save Group values, they're just a list of the parameters we'll get to next
-			if (p instanceof Parameter<?>) {
-				flat.add(p.getValue());				
+			if (!iter.hasNext()) {
+				throw new RuntimeException("Unexpected end of data");
 			}
+			Object item = iter.next();
+			if (item instanceof String && p instanceof Parameter<?>) {
+				((Parameter<?>)p).deserialize((String)item);
+			} else if (item instanceof List<?> && p instanceof Group) {
+				((Group)p).deserialize((List<Object>) item);
+			} else {
+				throw new RuntimeException("Structure mismatch");
+			}
+			
 		});
-		return flat;
 	}
 	
-	public void loadValues(List<Object> values) {
-		final List<Object> copy = new ArrayList<>(values);
+	public List<Object> serialize() {
+		List<Object> dumped = new ArrayList<>();
 		visit(p -> {
-			//Don't load Group values, they're just a list of the parameters we'll get to next
 			if (p instanceof Parameter<?>) {
-				((Value<Object>)p).setValue(copy.remove(0));			
+				dumped.add(((Parameter<?>) p).serialize());
+			} else if (p instanceof Group) {
+				dumped.add(((Group) p).serialize());
 			}
 		});
+		return dumped;
 	}
 	
 }

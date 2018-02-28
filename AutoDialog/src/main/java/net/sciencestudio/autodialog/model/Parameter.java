@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.function.Function;
 
 import eventful.EventfulType;
+import net.sciencestudio.autodialog.model.classinfo.ClassInfo;
+import net.sciencestudio.autodialog.model.classinfo.ClassInfoDefaults;
 import net.sciencestudio.autodialog.model.style.Style;
 
 /**
@@ -26,30 +28,64 @@ public class Parameter<T> implements Serializable, Value<T>
 	
 	private EventfulType<T>	valueHook = new EventfulType<>();
 	private EventfulType<Boolean> enabledHook = new EventfulType<>();
+	
+	private ClassInfo<T> 	classInfo;
 		
 	
 	public Parameter(String name, Style<T> style, T value) {
 		this(name, style, value, p -> true);
 	}
+
+	public Parameter(String name, Style<T> style, T value, ClassInfo<T> classInfo) {
+		this(name, style, value, classInfo, p -> true);
+	}
 	
 	public Parameter(String name, Style<T> style, T value, Function<Parameter<T>, Boolean> validator)
 	{
+		this(name, style, value, null, validator);
+	}
+	
+	public Parameter(String name, Style<T> style, T value, ClassInfo<T> classInfo, Function<Parameter<T>, Boolean> validator)
+	{
 		this.style = style;
 		this.name = name;
-		this.value = value;
 		this.enabled = true;
 		this.validator = validator;
+		
+		this.classInfo = classInfo;
+		//if class info is null, try to guess it
+		if (this.classInfo == null && value == null) {
+			throw new UnsupportedOperationException("Cannot create Parameter with no ClassInfo and a null value");
+		} else if (this.classInfo == null) {
+			//Try to guess the class info for primitives
+			this.classInfo = (ClassInfo<T>) ClassInfoDefaults.guess(value.getClass());
+		}
+		
+		//If guessing failed, throw exception
+		if (this.classInfo == null) {
+			throw new UnsupportedOperationException("Cannot determine ClassInfo information automatically");
+		}
+		
+		
+		assignValue(value);
 	}
 
+	
+	private void assignValue(T value) {
+		if (classInfo != null && !(classInfo.getValueClass().isInstance(value))) {
+			throw new ClassCastException(value.getClass().getName() + " cannot be cast to " + classInfo.getValueClass().getName());
+		}
+		this.value = value;
+	}
 	
 	@Override
 	public synchronized boolean setValue(T value) {
 		boolean success = true;
-		T oldValue = this.value;
-		this.value = value;
+		T oldValue = getValue();
+		assignValue(value);
 		if (!validator.apply(this)) {
 			//revert
-			this.value = oldValue;
+			assignValue(oldValue);
 			success = false;
 		}
 		//notify value listeners. Even if validation failed, so that the failing editor can revert.
@@ -104,6 +140,14 @@ public class Parameter<T> implements Serializable, Value<T>
 		return validator;
 	}
 	
+	
+	public void deserialize(String stored) {
+		setValue(classInfo.deserialize(stored));
+	}
+	
+	public String serialize() {
+		return classInfo.serialize(getValue());
+	}
 	
 	
 }

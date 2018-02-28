@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import net.sciencestudio.autodialog.model.classinfo.ClassInfo;
 import net.sciencestudio.autodialog.model.style.Style;
 
 public class SelectionParameter<T> extends Parameter<T> {
@@ -16,7 +17,17 @@ public class SelectionParameter<T> extends Parameter<T> {
 		super(name, style, value);
 	}
 
+	public SelectionParameter(String name, Style<T> style, T value, ClassInfo<T> classInfo)
+	{
+		super(name, style, value, classInfo);
+	}
+
 	public SelectionParameter(String name, Style<T> style, T value, Function<Parameter<T>, Boolean> validator)
+	{
+		super(name, style, value, validator);
+	}
+	
+	public SelectionParameter(String name, Style<T> style, T value, ClassInfo<T> classInfo, Function<Parameter<T>, Boolean> validator)
 	{
 		super(name, style, value, validator);
 	}

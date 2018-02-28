@@ -45,7 +45,7 @@ public class Test {
 		s2.getValue().add(new Parameter<>("Integer #2", new IntegerSpinnerStyle(), 0));
 		s2.getValue().add(new Parameter<>("Real", new RealSliderStyle(), 0f));
 		
-		g2.getValue().add(new Parameter<>("Dummy Separator", new SeparatorStyle(), null));
+		g2.getValue().add(new Parameter<>("Dummy Separator", new SeparatorStyle(), 0));
 		SelectionParameter<LabelStyle> sel = new SelectionParameter<>("List", new ListStyle<>(), LabelStyle.LABEL_HIDDEN);
 		sel.setPossibleValues(Arrays.asList(LabelStyle.values()));
 		g2.getValue().add(sel);

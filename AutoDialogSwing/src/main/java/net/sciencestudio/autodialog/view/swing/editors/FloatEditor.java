@@ -30,7 +30,7 @@ public class FloatEditor extends AbstractSwingEditor<Float>
 		param.getEnabledHook().addListener(e -> setEnabled(e));
 		
 		
-		control.setModel(new SpinnerNumberModel((Float)param.getValue(), null, null, 0.1d));
+		control.setModel(new SpinnerNumberModel((Float)param.getValue(), null, null, 0.1f));
 		control.getEditor().setPreferredSize(new Dimension(70, control.getEditor().getPreferredSize().height));
 		control.setValue((Float)param.getValue());
 		
