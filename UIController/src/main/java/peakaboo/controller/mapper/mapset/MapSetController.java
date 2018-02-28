@@ -2,6 +2,7 @@ package peakaboo.controller.mapper.mapset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController.UpdateType;
@@ -9,6 +10,7 @@ import peakaboo.mapping.results.MapResultSet;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.ISpectrum;
+import scitypes.Pair;
 import scitypes.SISize;
 import scitypes.Spectrum;
 
@@ -96,27 +98,18 @@ public class MapSetController extends EventfulType<String>
 	
 	public Coord<Integer> guessDataDimensions() {
 		Spectrum all = mapModel.mapResults.sumAllTransitionSeriesMaps();
-		Spectrum deltas = new ISpectrum(all);
-		
-		
-		//compute first order deltas
-		for (int i = 1; i < deltas.size(); i++) {
-			float delta = Math.abs(deltas.get(i) - deltas.get(i-1));
-			deltas.set(i-1, delta);
-		}
-		
-		//compute second order deltas. We're not looking for steep changes, 
-		//we're looking for sudden discontinuities, the change in the change.
-		for (int i = 1; i < deltas.size(); i++) {
-			float delta = (float)Math.sqrt(Math.abs(deltas.get(i) - deltas.get(i-1)));
-			deltas.set(i-1, delta);
-		}
+
 		
 		//find the highest average edge delta
 		int bestX = 0, bestY = 0;
 		float bestDelta = Float.MAX_VALUE;
 		int min = (int) Math.max(Math.sqrt(all.size()) / 15, 2); //don't consider dimensions that are too small
+		List<Integer> widths = new ArrayList<>();
 		for (int x = min; x <= all.size() / min; x++) {
+			widths.add(x);
+		}
+		
+		Optional<Pair<Coord<Integer>, Float>> best = widths.stream().parallel().map(x -> {
 			
 			float delta;
 			int y;
@@ -128,22 +121,19 @@ public class MapSetController extends EventfulType<String>
 				delta = getDimensionScore(all, x, y); //include the last incomplete row
 			}
 			
-			//System.out.println("x=" + x + ", y=" + y + ", delta=" + delta);
+//			System.out.println("x=" + x + ", y=" + y + ", delta=" + delta);
 			
-			if (delta < bestDelta) {
-				bestX = x;
-				bestY = y;
-				bestDelta = delta;
-			}
+			return new Pair<>(new Coord<>(x, y), delta);
 			
-			
-		}
+		}).min((a, b) -> a.second.compareTo(b.second));
 		
-		if (bestX > 0 && bestY > 0) {
-			return new Coord<>(bestX, bestY);
+		
+		if (best.isPresent()) {
+			return best.get().first;
 		} else {
 			return null;
 		}
+
 		
 	}
 	
