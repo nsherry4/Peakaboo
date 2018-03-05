@@ -1,7 +1,9 @@
 package peakaboo.controller.mapper.mapdisplay;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
@@ -52,36 +54,40 @@ public class PointsSelection extends EventfulType<String>{
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		
 		List<Integer> points = new ArrayList<>();
+		Set<Integer> pointSet = new HashSet<>();
 		
 		if (! contiguous) {
 			//All points, even those not touching
-			for (int y : new Range(0, h)) {
-				for (int x : new Range(0, w)) {
+			for (int y : new Range(0, h-1)) {
+				for (int x : new Range(0, w-1)) {
 					float other = grid.get(data, x, y);
-					if (value > other * 0.8f && value < other * 1.2f) {
+					if (value >= other * 0.8f && value <= other * 1.2f) {
 						points.add(grid.getIndexFromXY(x, y));
 					}
 				}
 			}
 		} else {
-			points.add(grid.getIndexFromXY(clickedAt.x, clickedAt.y));
+			int point = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
+			points.add(point);
+			pointSet.add(point);
 			int cursor = 0;
 			while (cursor < points.size()) {
-				int point = points.get(cursor);
+				point = points.get(cursor);
 				int x, y;
 				
 				int[] neighbours = new int[] {grid.north(point), grid.south(point), grid.east(point), grid.west(point)};
 				for (int neighbour : neighbours) {
 					//out-of-bounds, re-tread checks
 					if (neighbour == -1) continue;
-					if (points.contains(neighbour)) continue;
+					if (pointSet.contains(neighbour)) continue;
 					
 					x = grid.getXYFromIndex(neighbour).first;
 					y = grid.getXYFromIndex(neighbour).second;
 					
 					float other = grid.get(data, x, y);
-					if (value > other * 0.8f && value < other * 1.2f) {
+					if (value >= other * 0.8f && value <= other * 1.2f) {
 						points.add(neighbour);
+						pointSet.add(neighbour);
 					}
 				}
 
@@ -91,6 +97,7 @@ public class PointsSelection extends EventfulType<String>{
 			
 		}
 		
+				
 		setPoints(points);
 		
 	}
