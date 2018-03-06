@@ -106,6 +106,9 @@ import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
+import plural.streams.StreamExecutor;
+import plural.streams.swing.StreamExecutorPanel;
+import plural.streams.swing.StreamExecutorView;
 import plural.swing.ExecutorSetView;
 import plural.swing.ExecutorSetViewDialog;
 import scidraw.swing.SavePicture;
@@ -1750,13 +1753,33 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		
 		
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		//setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		
-		float energy = TSOrdering.proposeEnergyLevel(controller.data().getDataSet().averagePlot(), controller.fitting().getVisibleTransitionSeries());
 		
-		controller.settings().setMaxEnergy(energy);
+		StreamExecutor<Float> energyTask = TSOrdering.proposeEnergyLevel(controller.data().getDataSet().averagePlot(), controller.fitting().getVisibleTransitionSeries());
+		StreamExecutorView energyView = new StreamExecutorView(energyTask, "Evaluating Fittings");
+		StreamExecutorPanel energyPanel = new StreamExecutorPanel("Detecting Energy Level", energyView);
 		
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		energyTask.addListener(() -> {
+			if (energyTask.getState() != StreamExecutor.State.RUNNING) {
+				this.clearModal();
+			}
+			
+			if (energyTask.getState() == StreamExecutor.State.COMPLETED) {
+				Float energy = energyTask.getResult().orElse(null);
+				if (energy != null) {
+					controller.settings().setMaxEnergy(energy);
+				}
+			}
+		});
+		
+		this.showModal(energyPanel);
+		energyTask.start();
+		
+		
+		//controller.settings().setMaxEnergy(energy);
+		
+		//setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		
 	}
 

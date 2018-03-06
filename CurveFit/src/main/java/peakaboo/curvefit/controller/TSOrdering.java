@@ -1,6 +1,7 @@
 package peakaboo.curvefit.controller;
 
 
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
@@ -16,6 +18,7 @@ import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
 import peakaboo.curvefit.peaktable.PeakTable;
+import plural.streams.StreamExecutor;
 import scitypes.ISpectrum;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
@@ -342,50 +345,75 @@ public class TSOrdering
 	}
 
 	
-	public static float proposeEnergyLevel(ReadOnlySpectrum spectrum, List<TransitionSeries> tsList) {
-		float bestEnergy = 0f;
-		float bestScore = 0f;
+	public static StreamExecutor<Float> proposeEnergyLevel(ReadOnlySpectrum spectrum, List<TransitionSeries> tsList) {
 		
-		//build a new model for experimenting with
-		FittingSet fits = new FittingSet();
-		for (TransitionSeries ts : tsList) {
-			fits.addTransitionSeries(ts);
+		List<Float> energies = new ArrayList<>();
+		for (float energy = 0.05f; energy <= 100f; energy += 0.05f) {
+			energies.add(energy);
 		}
 		
-		
-		float score;
-		for (float energy = 0.05f; energy <= 50f; energy += 0.05f) {
-			fits.setEnergyPerChannel(energy / spectrum.size());
-			FittingResultSet results = fits.calculateFittings(spectrum);
-			
-			score = 0f;
-			for (FittingResult fit : results.fits) {
-				score += Math.sqrt(fit.fit.sum());
+		StreamExecutor<Float> executor = new StreamExecutor<>(20);
+		executor.setTask(energies, stream -> {
+
+			//build a new model for experimenting with
+			FittingSet fits = new FittingSet();
+			for (TransitionSeries ts : tsList) {
+				fits.addTransitionSeries(ts);
 			}
 			
-			if (score > bestScore) {
-				bestScore = score;
-				bestEnergy = energy;
+			//Score each energy value using our observed stream
+			List<Float> scores = stream.map(energy -> {
+				
+				fits.setEnergyPerChannel(energy / spectrum.size());
+				FittingResultSet results = fits.calculateFittings(spectrum);
+				float score = 0f;
+				score = 0f;
+				for (FittingResult fit : results.fits) {
+					score += Math.sqrt(fit.fit.sum());
+				}
+				return score;
+				
+			}).collect(Collectors.toList());
+		
+			if (executor.getState() == StreamExecutor.State.ABORTED) {
+				return null;
 			}
-		}
-		
-		
-		for (float energy = bestEnergy - 0.1f; energy <= bestEnergy + 0.1f; energy += 0.01f) {
-			fits.setEnergyPerChannel(energy / spectrum.size());
-			FittingResultSet results = fits.calculateFittings(spectrum);
 			
-			score = 0f;
-			for (FittingResult fit : results.fits) {
-				score += Math.sqrt(fit.fit.sum());
+			//Find the best score, and its energy
+			float bestScore = 0f;
+			float bestEnergy = 0f;
+			
+			for (int i = 0; i < energies.size(); i++) {
+				float energy = energies.get(i);
+				float score = scores.get(i);
+				if (score > bestScore) {
+					bestScore = score;
+					bestEnergy = energy;
+				}
 			}
 			
-			if (score > bestScore) {
-				bestScore = score;
-				bestEnergy = energy;
+			//refine the search with a more granular interval
+			for (float energy = bestEnergy - 0.1f; energy <= bestEnergy + 0.1f; energy += 0.01f) {
+				fits.setEnergyPerChannel(energy / spectrum.size());
+				FittingResultSet results = fits.calculateFittings(spectrum);
+				
+				float score = 0f;
+				for (FittingResult fit : results.fits) {
+					score += Math.sqrt(fit.fit.sum());
+				}
+				
+				if (score > bestScore) {
+					bestScore = score;
+					bestEnergy = energy;
+				}
 			}
-		}
-		
-		return bestEnergy;
+			
+			return bestEnergy;
+			
+		});
+
+
+		return executor;
 	}
 	
 }
