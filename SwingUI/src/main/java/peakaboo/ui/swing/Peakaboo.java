@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
@@ -30,34 +31,39 @@ public class Peakaboo
 	private static final Logger LOGGER = PeakabooLog.get();
 
 
-	public static boolean showError(Throwable e, String message) {
-		return showError(e, message, null);
+	public static void showError(Throwable e, String message) {
+		showError(e, message, null);
 	}
 	
-	public static boolean showError(Throwable e, String message, String text)
+	public static void showError(Throwable e, String message, String text)
 	{
-		TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
-		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-		errorDialog.setInstruction(message);
-		
-		
-		if (text != null) {
-			text += "\n";
-		}
-		text += "The problem is of type " + e.getClass().getSimpleName();
-		errorDialog.setText(text);
+		SwingUtilities.invokeLater(() -> {
+			TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
+			errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+			errorDialog.setInstruction(message);
 			
-		JTextArea stacktrace = new JTextArea();
-		stacktrace.setEditable(false);
-		stacktrace.setText(Strings.stackStraceAsString(e));
+			String realText = text;
+			
+			if (realText != null) {
+				realText += "\n";
+			} else {
+				realText = "";
+			}
+			realText += "The problem is of type " + e.getClass().getSimpleName();
+			errorDialog.setText(realText);
+				
+			JTextArea stacktrace = new JTextArea();
+			stacktrace.setEditable(false);
+			stacktrace.setText(Strings.stackStraceAsString(e));
+			
+			JScrollPane scroller = new JScrollPane(stacktrace);
+			scroller.setPreferredSize(new Dimension(500, 200));
+			errorDialog.getDetails().setExpandableComponent(scroller);
+			errorDialog.getDetails().setExpanded(true);
 		
-		JScrollPane scroller = new JScrollPane(stacktrace);
-		scroller.setPreferredSize(new Dimension(500, 200));
-		errorDialog.getDetails().setExpandableComponent(scroller);
-		errorDialog.getDetails().setExpanded(false);
-		
-	
-		return (errorDialog.show().getTag().ordinal() != 0);
+			errorDialog.show();
+		});
+			
 	}
 	
 
