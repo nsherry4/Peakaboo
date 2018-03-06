@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.SwingUtilities;
+
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapdisplay.AreaSelection;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
 import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
 import peakaboo.controller.mapper.mapdisplay.PointsSelection;
 import peakaboo.mapping.colours.OverlayColour;
+import peakaboo.ui.swing.Peakaboo;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
@@ -67,7 +70,11 @@ public class MapCanvas extends GraphicsPanel
 	@Override
 	protected void drawGraphics(Surface backend, boolean vector)
 	{
-		drawMap(backend, vector);
+		try {
+			drawMap(backend, vector);
+		} catch (Exception e) {
+			Peakaboo.showError(e, "Unable to Draw Map");
+		}
 	}
 
 	@Override

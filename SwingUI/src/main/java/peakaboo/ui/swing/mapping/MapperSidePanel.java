@@ -9,11 +9,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.views.ViewsContainer;
+import plural.streams.StreamExecutor;
+import plural.streams.swing.StreamExecutorPanel;
+import plural.streams.swing.StreamExecutorView;
 import scitypes.Coord;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -23,11 +27,11 @@ import swidget.widgets.Spacing;
 
 
 
-public class SidePanel extends JPanel
+public class MapperSidePanel extends JPanel
 {
 
 	protected MappingController		controller;
-	
+	private MapperPanel 			tabPanel;
 
 	private JSpinner			shadesSpinner;
 	private JCheckBox			contours;
@@ -39,10 +43,11 @@ public class SidePanel extends JPanel
 	public final static boolean	SHOW_UI_FRAME_BORDERS	= true;
 
 
-	public SidePanel(MappingController controller)
+	public MapperSidePanel(MapperPanel tabPanel, MappingController controller)
 	{
 
 		this.controller = controller;
+		this.tabPanel = tabPanel;
 
 		createControls();
 
@@ -229,13 +234,31 @@ public class SidePanel extends JPanel
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
 			magic.addActionListener(e -> {
-				Coord<Integer> guess = controller.mapsController.guessDataDimensions();
-				if (guess != null) {
-					height.setValue(1);
-					width.setValue(1);
-					height.setValue(guess.y);
-					width.setValue(guess.x);
-				}
+				StreamExecutor<Coord<Integer>> guessTask = controller.mapsController.guessDataDimensions();
+				StreamExecutorView view = new StreamExecutorView(guessTask, "Evaluating Sizes");
+				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
+				guessTask.addListener(() -> {
+					SwingUtilities.invokeLater(() -> {
+						if (guessTask.getState() == StreamExecutor.State.ABORTED) {
+							tabPanel.clearModal();
+						}
+						if (guessTask.getState() == StreamExecutor.State.COMPLETED) {
+						
+							tabPanel.clearModal();
+							
+							Coord<Integer> guess = guessTask.getResult().orElse(null);
+							if (guess != null) {
+								height.setValue(1);
+								width.setValue(1);
+								height.setValue(guess.y);
+								width.setValue(guess.x);
+							}							
+						}
+					});
+				});
+				tabPanel.showModal(panel);
+				guessTask.start();				
+
 			});
 			mapProperties.add(magic, c);
 		} else {

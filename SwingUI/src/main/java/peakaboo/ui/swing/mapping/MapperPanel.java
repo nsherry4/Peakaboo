@@ -94,16 +94,17 @@ public class MapperPanel extends TabbedInterfacePanel
 	private void init()
 	{
 
-		setLayout(new BorderLayout());
+		JPanel contentLayer = this.getContentLayer();
+		contentLayer.setLayout(new BorderLayout());
 		
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new SidePanel(controller), createCanvasPanel());
+		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new MapperSidePanel(this, controller), createCanvasPanel());
 		split.setResizeWeight(0);
 		split.setOneTouchExpandable(true);
 		split.setBorder(Spacing.bNone());
-		add(split, BorderLayout.CENTER);	
+		contentLayer.add(split, BorderLayout.CENTER);	
 		
 		toolbar = new MapperToolbar(this, controller);
-		add(toolbar, BorderLayout.NORTH);
+		contentLayer.add(toolbar, BorderLayout.NORTH);
 		
 		
 		class CompleteMouseListener implements MouseMotionListener, MouseListener

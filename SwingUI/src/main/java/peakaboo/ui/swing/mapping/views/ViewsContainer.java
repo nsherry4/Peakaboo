@@ -16,7 +16,7 @@ import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
-import peakaboo.ui.swing.mapping.SidePanel;
+import peakaboo.ui.swing.mapping.MapperSidePanel;
 import swidget.widgets.ClearPanel;
 
 
@@ -67,7 +67,7 @@ public class ViewsContainer extends ClearPanel
 		setLayout(new BorderLayout());
 		add(cardPanel, BorderLayout.CENTER);
 		add(modeSelect, BorderLayout.NORTH);
-		if (SidePanel.SHOW_UI_FRAME_BORDERS) setBorder(new TitledBorder("Fittings"));
+		if (MapperSidePanel.SHOW_UI_FRAME_BORDERS) setBorder(new TitledBorder("Fittings"));
 		
 		
 	}
