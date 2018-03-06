@@ -97,7 +97,7 @@ public class MapperPanel extends TabbedInterfacePanel
 		JPanel contentLayer = this.getContentLayer();
 		contentLayer.setLayout(new BorderLayout());
 		
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new MapperSidePanel(this, controller), createCanvasPanel());
+		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new MapperViewPanel(this, controller), createCanvasPanel());
 		split.setResizeWeight(0);
 		split.setOneTouchExpandable(true);
 		split.setBorder(Spacing.bNone());

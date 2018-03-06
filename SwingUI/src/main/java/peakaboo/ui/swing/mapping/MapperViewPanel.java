@@ -27,7 +27,7 @@ import swidget.widgets.Spacing;
 
 
 
-public class MapperSidePanel extends JPanel
+public class MapperViewPanel extends JPanel
 {
 
 	protected MappingController		controller;
@@ -43,7 +43,7 @@ public class MapperSidePanel extends JPanel
 	public final static boolean	SHOW_UI_FRAME_BORDERS	= true;
 
 
-	public MapperSidePanel(MapperPanel tabPanel, MappingController controller)
+	public MapperViewPanel(MapperPanel tabPanel, MappingController controller)
 	{
 
 		this.controller = controller;

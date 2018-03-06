@@ -74,7 +74,7 @@ public class MapperToolbar extends JToolBar {
 		this.addSeparator();
 		
 		
-		readIntensities = new ToolbarImageButton(StockIcon.BADGE_INFO, "Get Intensities", "Get fitting intensities for the selected region", true);
+		readIntensities = new ToolbarImageButton(StockIcon.BADGE_INFO, "Get Intensities", "Get fitting intensities for the selection", true);
 		readIntensities.addActionListener(e -> {
 			Map<String, String> fittings = new HashMap<String, String>();
 			
@@ -153,7 +153,7 @@ public class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		examineSubset =  new ToolbarImageButton("view-subset", "Plot Region", "Plot the selected region", true);
+		examineSubset =  new ToolbarImageButton("view-subset", "Plot Selection", "Plot the selection as a new data set", true);
 		examineSubset.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
