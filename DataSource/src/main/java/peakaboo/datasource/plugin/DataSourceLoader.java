@@ -11,8 +11,6 @@ import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
-import peakaboo.datasource.plugin.plugins.CSVZ;
-import peakaboo.datasource.plugin.plugins.PeakabooSimpleBinaryZipDataSource;
 import peakaboo.datasource.plugin.plugins.PlainText;
 
 public class DataSourceLoader
@@ -51,8 +49,6 @@ public class DataSourceLoader
 			
 		//register built-in plugins
 		javaLoader.registerPlugin(PlainText.class);
-		javaLoader.registerPlugin(CSVZ.class);
-		javaLoader.registerPlugin(PeakabooSimpleBinaryZipDataSource.class);
 		
 		
 		
