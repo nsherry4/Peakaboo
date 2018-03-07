@@ -58,7 +58,7 @@ public class MapperPanel extends TabbedInterfacePanel
 		this.owner = owner;
 
 		this.controller.addListener(s -> {
-			if (! s.equals(MappingController.UpdateType.BOUNDING_REGION.toString())) setNeedsRedraw();
+			if (! s.equals(MappingController.UpdateType.AREA_SELECTION.toString())) setNeedsRedraw();
 			if (! s.equals(MappingController.UpdateType.POINT_SELECTION.toString())) setNeedsRedraw();
 			
 			toolbar.monochrome.setSelected(controller.settings.getMonochrome());

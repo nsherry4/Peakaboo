@@ -40,7 +40,7 @@ public class AreaSelection extends EventfulType<String> {
 		
 		this.start = dragStart;
 		
-		updateListeners(UpdateType.BOUNDING_REGION.toString());
+		updateListeners(UpdateType.AREA_SELECTION.toString());
 	}
 
 	
@@ -62,7 +62,7 @@ public class AreaSelection extends EventfulType<String> {
 		
 		this.end = dragEnd;
 		
-		updateListeners(UpdateType.BOUNDING_REGION.toString());
+		updateListeners(UpdateType.AREA_SELECTION.toString());
 	}
 
 	
@@ -78,7 +78,7 @@ public class AreaSelection extends EventfulType<String> {
 	public void setHasBoundingRegion(boolean hasBoundingRegion)
 	{
 		this.hasSelection = hasBoundingRegion;
-		updateListeners(UpdateType.BOUNDING_REGION.toString());
+		updateListeners(UpdateType.AREA_SELECTION.toString());
 	}
 
 

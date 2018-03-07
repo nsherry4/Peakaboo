@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping.views;
+package peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -17,10 +17,13 @@ import javax.swing.border.TitledBorder;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
 import peakaboo.ui.swing.mapping.MapperViewPanel;
+import peakaboo.ui.swing.mapping.sidebar.modes.Composite;
+import peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
+import peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
 import swidget.widgets.ClearPanel;
 
 
-public class ViewsContainer extends ClearPanel
+public class MapFittingPanel extends ClearPanel
 {
 
 	protected CardLayout			card;
@@ -31,7 +34,7 @@ public class ViewsContainer extends ClearPanel
 	
 	
 	
-	public ViewsContainer(final MapDisplayController controller)
+	public MapFittingPanel(final MapDisplayController controller)
 	{
 		//create the card panel
 		cardPanel = new ClearPanel();
