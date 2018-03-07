@@ -12,7 +12,7 @@ public class PeakabooLog {
 
 	public static void init() {
 		try {
-			File appDir = Configuration.appDir();
+			File appDir = Configuration.appDir("Logging");
 			appDir.mkdirs();
 			String filename = appDir.getPath() + "/Peakaboo-" + new Timestamp(System.currentTimeMillis()) + ".log";
 			
