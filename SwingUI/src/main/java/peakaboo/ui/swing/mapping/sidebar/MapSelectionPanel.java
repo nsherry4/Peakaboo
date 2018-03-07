@@ -12,7 +12,7 @@ import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.MapperPanel;
-import peakaboo.ui.swing.mapping.MapperViewPanel;
+import peakaboo.ui.swing.mapping.MapperSidebar;
 import swidget.widgets.SettingsPanel;
 
 public class MapSelectionPanel extends SettingsPanel {
@@ -23,7 +23,7 @@ public class MapSelectionPanel extends SettingsPanel {
 	
 	
 	public MapSelectionPanel(MapperPanel tabPanel, MappingController controller) {
-		if (MapperViewPanel.SHOW_UI_FRAME_BORDERS) this.setBorder(new TitledBorder("Selection"));
+		if (MapperSidebar.SHOW_UI_FRAME_BORDERS) this.setBorder(new TitledBorder("Selection"));
 		
 		String thresholdTip = "<html>Controls the selection threshold.<br/>Points selected will be between (v/threshold, v*threshold),<br/>where v is the value of the clicked point.</html>";
 		SpinnerNumberModel thresholdModel = new SpinnerNumberModel(controller.getDisplay().getPointsSelection().getThreshold(), 1.0d, 100.0d, 0.1d);

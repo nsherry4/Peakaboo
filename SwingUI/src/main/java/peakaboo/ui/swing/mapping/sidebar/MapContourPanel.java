@@ -12,7 +12,7 @@ import javax.swing.border.TitledBorder;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.MapperPanel;
-import peakaboo.ui.swing.mapping.MapperViewPanel;
+import peakaboo.ui.swing.mapping.MapperSidebar;
 import swidget.widgets.Spacing;
 
 public class MapContourPanel extends JPanel {
@@ -24,7 +24,7 @@ public class MapContourPanel extends JPanel {
 	public MapContourPanel(MapperPanel tabPanel, MappingController controller) {
 		
 		
-		if (MapperViewPanel.SHOW_UI_FRAME_BORDERS) this.setBorder(new TitledBorder("Appearance"));
+		if (MapperSidebar.SHOW_UI_FRAME_BORDERS) this.setBorder(new TitledBorder("Appearance"));
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();

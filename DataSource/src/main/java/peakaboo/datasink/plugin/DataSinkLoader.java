@@ -10,6 +10,8 @@ import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
 import peakaboo.datasink.plugin.plugins.CSV;
+import peakaboo.datasink.plugin.plugins.CSVZip;
+import peakaboo.datasink.plugin.plugins.PeakabooSimpleBinaryZipDataSink;
 
 public class DataSinkLoader
 {
@@ -47,6 +49,8 @@ public class DataSinkLoader
 			
 		//register built-in plugins
 		javaLoader.registerPlugin(CSV.class);
+		javaLoader.registerPlugin(CSVZip.class);
+		javaLoader.registerPlugin(PeakabooSimpleBinaryZipDataSink.class);
 		
 		
 		
