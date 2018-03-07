@@ -1,6 +1,7 @@
 package net.sciencestudio.autodialog.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +27,10 @@ public class Group implements Value<List<Value<?>>> {
 
 	public Group(String name, Style<List<Value<?>>> style) {
 		this(name, new ArrayList<>(), style);
+	}
+
+	public Group(String name, Value<?>... values) {
+		this(name, Arrays.asList(values));
 	}
 	
 	public Group(String name, Collection<Value<?>> values) {

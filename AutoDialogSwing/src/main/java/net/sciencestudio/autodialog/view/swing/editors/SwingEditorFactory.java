@@ -16,6 +16,7 @@ public class SwingEditorFactory {
 	
 	static {
 		registerStyleProvider("file-name", FilenameEditor::new);
+		registerStyleProvider("integer-slider", IntegerSliderEditor::new);
 	}
 	
 	

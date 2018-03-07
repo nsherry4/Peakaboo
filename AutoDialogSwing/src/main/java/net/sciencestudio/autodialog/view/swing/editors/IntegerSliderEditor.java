@@ -1,18 +1,22 @@
 package net.sciencestudio.autodialog.view.swing.editors;
 
+import java.awt.Dimension;
+
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sciencestudio.autodialog.model.Parameter;
 
-public class SliderEditor extends WrappingEditor<Integer, JSlider> {
+public class IntegerSliderEditor extends WrappingEditor<Integer, JSlider> {
 	
-	public SliderEditor() {
+	public IntegerSliderEditor() {
 		this(new JSlider());
+		component.setPreferredSize(new Dimension(150, 0));
+		
 	}
 	
-	public SliderEditor(JSlider component) {
+	public IntegerSliderEditor(JSlider component) {
 		super(component);
 	}
 
