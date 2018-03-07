@@ -16,8 +16,11 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
@@ -27,6 +30,8 @@ import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import swidget.dialogues.fileio.SwidgetIO;
+import swidget.widgets.DraggingScrollPaneListener;
+import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterface;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
@@ -42,7 +47,7 @@ public class MapperPanel extends TabbedInterfacePanel
 	protected TabbedPlotterManager parentPlotter;
 	
 	private JLabel			warnOnTooSmallDataset;
-	private JLabel			mapMouseMonitor;
+	private MapStatusBar			statusBar;
 	
 	TabbedInterface<MapperPanel>	owner;
 	MapperFrame						frame;
@@ -76,6 +81,9 @@ public class MapperPanel extends TabbedInterfacePanel
 			
 			
 			owner.setTabTitle(this, getTitle());
+			//if (s.equals(MappingController.UpdateType.UI_OPTIONS.toString())) {
+				canvas.updateCanvasSize();
+			//}
 			repaint();
 		});
 
@@ -112,26 +120,31 @@ public class MapperPanel extends TabbedInterfacePanel
 			
 			public void mouseDragged(MouseEvent e)
 			{
-				controller.getDisplay().getPointsSelection().clearSelection();
-				
-				AreaSelection selection = controller.getDisplay().getAreaSelection();
-				selection.setEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-				selection.setHasBoundingRegion( true );
+				if (SwingUtilities.isLeftMouseButton(e)) {
+					controller.getDisplay().getPointsSelection().clearSelection();
+					
+					AreaSelection selection = controller.getDisplay().getAreaSelection();
+					selection.setEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
+					selection.setHasBoundingRegion( true );
+				}
 			}
 
 			public void mouseMoved(MouseEvent e)
 			{
-				showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
+				statusBar.showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
 			}
 
 			public void mouseClicked(MouseEvent e){
-				//Double-click selects points with similar intensity
-				if (e.getClickCount() >= 2 && controller.getDisplay().getMapDisplayMode() == MapDisplayMode.COMPOSITE) {
-					
-					controller.getDisplay().getAreaSelection().clearSelection();
-					
-					Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-					controller.getDisplay().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2);
+				
+				if (SwingUtilities.isLeftMouseButton(e)) {
+					//Double-click selects points with similar intensity
+					if (e.getClickCount() >= 2 && controller.getDisplay().getMapDisplayMode() == MapDisplayMode.COMPOSITE) {
+						
+						controller.getDisplay().getAreaSelection().clearSelection();
+						
+						Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
+						controller.getDisplay().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2);
+					}
 				}
 			}
 
@@ -141,12 +154,14 @@ public class MapperPanel extends TabbedInterfacePanel
 
 			public void mousePressed(MouseEvent e)
 			{			
-				controller.getDisplay().getPointsSelection().clearSelection();
-				
-				AreaSelection selection = controller.getDisplay().getAreaSelection();
-				selection.setStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-				selection.setEnd( null );
-				selection.setHasBoundingRegion( false );
+				if (SwingUtilities.isLeftMouseButton(e)) {
+					controller.getDisplay().getPointsSelection().clearSelection();
+					
+					AreaSelection selection = controller.getDisplay().getAreaSelection();
+					selection.setStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
+					selection.setEnd( null );
+					selection.setHasBoundingRegion( false );
+				}
 			}
 
 			public void mouseReleased(MouseEvent e){}
@@ -215,7 +230,12 @@ public class MapperPanel extends TabbedInterfacePanel
 	private JPanel createCanvasPanel()
 	{
 		canvas = new MapCanvas(controller);
-
+		JScrollPane canvasScroller = new JScrollPane(canvas);
+		canvasScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		canvasScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		canvasScroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		new DraggingScrollPaneListener(canvasScroller.getViewport(), canvas, Buttons.MIDDLE, Buttons.RIGHT);
+		
 		JPanel canvasContainer = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -224,7 +244,7 @@ public class MapperPanel extends TabbedInterfacePanel
 		c.weighty = 1.0;
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.BOTH;
-		canvasContainer.add(canvas, c);
+		canvasContainer.add(canvasScroller, c);
 
 		warnOnTooSmallDataset = new JLabel("Warning: Map dimensions are smaller than data set ("
 				+ controller.mapsController.getMapSize() + ")");
@@ -250,18 +270,14 @@ public class MapperPanel extends TabbedInterfacePanel
 		c.fill = GridBagConstraints.HORIZONTAL;
 		canvasContainer.add(warnOnTooSmallDataset, c);
 
-		mapMouseMonitor = new JLabel("");
-		mapMouseMonitor.setBorder(Spacing.bSmall());
-		mapMouseMonitor.setHorizontalAlignment(JLabel.CENTER);
-		mapMouseMonitor.setFont(mapMouseMonitor.getFont().deriveFont(Font.PLAIN));
-		showValueAtCoord(null);
+		statusBar = new MapStatusBar(this, controller);
 
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 0.0;
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		canvasContainer.add(mapMouseMonitor, c);
+		canvasContainer.add(statusBar, c);
 
 		return canvasContainer;
 	}
@@ -290,32 +306,6 @@ public class MapperPanel extends TabbedInterfacePanel
 	}
 
 	
-	public void showValueAtCoord(Coord<Integer> mapCoord)
-	{
-		String noValue = "Index: -, X: -, Y: -, Value: -";
 
-		if (mapCoord == null)
-		{
-			mapMouseMonitor.setText(noValue);
-			return;
-		}
-
-		int index = mapCoord.y * controller.settings.getDataWidth() + mapCoord.x;
-		index++;
-		
-		if (controller.settings.isValidPoint(mapCoord))
-		{
-			String value = controller.getDisplay().getIntensityMeasurementAtPoint(mapCoord);
-			if (controller.settings.getInterpolation() != 0) value += " (not interpolated)";
-			
-			mapMouseMonitor.setText("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
-					+ value);
-		}
-		else
-		{
-			mapMouseMonitor.setText(noValue);
-		}
-
-	}
 
 }

@@ -4,6 +4,8 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +67,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		dr = new DrawingRequest();
 		map = new MapDrawing(null, dr);
+				
 	}
 	
 	@Override
@@ -598,6 +601,58 @@ public class MapCanvas extends GraphicsPanel
 		
 	}
 	
+	
+	public void updateCanvasSize()
+	{
+			
+		//Width
+		double parentWidth = 1.0;
+		if (this.getParent() != null)
+		{
+			parentWidth = this.getParent().getWidth();
+		}
+
+		int newWidth = (int) (parentWidth * controller.settings.getZoom());
+		if (newWidth < parentWidth) newWidth = (int) parentWidth;
+
+		
+		
+		//Height
+		double parentHeight = 1.0;
+		if (this.getParent() != null)
+		{
+			parentHeight = this.getParent().getHeight();
+		}
+
+		int newHeight = (int) (parentHeight * controller.settings.getZoom());
+		if (newHeight < parentHeight) newHeight = (int) parentHeight;
+		
+		
+		//Generate new sizes
+		Rectangle oldView = this.getVisibleRect();
+		Dimension oldSize = getPreferredSize();
+		Dimension newSize = new Dimension(newWidth, newHeight);
+		Rectangle newView = new Rectangle(oldView);
+		
+
+		//Ratio of new size to old one.
+		float dx = (float)newSize.width / (float)oldSize.width;
+		float dy = (float)newSize.height / (float)oldSize.height;
+
+		//Scale view by size ratio
+		newView.x = (int) (oldView.x * dx);
+		newView.y = (int) (oldView.y * dy);
+
+		//Set new size and update
+		this.setPreferredSize(newSize);
+		this.revalidate();
+		this.scrollRectToVisible(newView);
+		
+		
+
+
+	}
+
 	
 	
 	protected void drawMap(Surface context, boolean vector)

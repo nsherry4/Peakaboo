@@ -30,11 +30,14 @@ public class MapSettings extends EventfulType<String> //TODO remove extends
 	public boolean	contour				= false;
 	public int		interpolation		= 0;
 	public boolean	monochrome			= false;
+
+	public float	zoom				= 1f;
 	
 	public Coord<Integer> viewDimensions = new Coord<Integer>(1, 1);
 	
 	public File		savePictureFolder 	= null;
 	public File		dataSourceFolder 	= null;
+	
 	
 	public MapSettings(MappingController mapController, MapSettings copy)
 	{
@@ -53,6 +56,8 @@ public class MapSettings extends EventfulType<String> //TODO remove extends
 			
 			this.savePictureFolder = copy.savePictureFolder;
 			this.dataSourceFolder = copy.dataSourceFolder;
+			
+			this.zoom = copy.zoom;
 		}
 	}
 	
@@ -165,6 +170,18 @@ public class MapSettings extends EventfulType<String> //TODO remove extends
 		return this.contour;
 	}
 
+	
+	//zoom
+	public float getZoom() {
+		return zoom;
+	}
+
+
+	public void setZoom(float zoom) {
+		this.zoom = zoom;
+		updateListeners(UpdateType.UI_OPTIONS.toString());
+	}
+	
 
 	// spectrum
 	public void setSpectrumSteps(int steps)

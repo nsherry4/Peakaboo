@@ -127,6 +127,7 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ComponentListPanel;
 import swidget.widgets.DraggingScrollPaneListener;
+import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.DropdownImageButton;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -360,7 +361,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas);
+		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas, Buttons.LEFT, Buttons.MIDDLE);
 
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);
