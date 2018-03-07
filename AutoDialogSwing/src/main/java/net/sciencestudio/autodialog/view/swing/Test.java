@@ -25,8 +25,13 @@ public class Test {
 	public static void main(String[] args)
 	{
 		
-		Swidget.initialize();
+		Swidget.initialize(() -> {
+			gui();
+		});
+	}
 			
+	public static void gui() {
+		
 		Group top = new Group("Demo", new TabbedLayoutStyle());
 		Group g1 = new Group("First Set", new FramedLayoutStyle());
 		Group g2 = new Group("Second Set");
