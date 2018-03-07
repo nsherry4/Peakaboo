@@ -1,5 +1,6 @@
 package peakaboo.common;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -10,7 +11,9 @@ public class PeakabooLog {
 
 	public static void init() {
 		try {
-			FileHandler handler = new FileHandler(Configuration.appDir().getPath() + "/Peakaboo.log");
+			File appDir = Configuration.appDir();
+			appDir.mkdirs();
+			FileHandler handler = new FileHandler(appDir.getPath() + "/Peakaboo.log");
 			handler.setFormatter(new SimpleFormatter());
 			Logger.getLogger("").addHandler(handler);
 		} catch (SecurityException | IOException e) {
