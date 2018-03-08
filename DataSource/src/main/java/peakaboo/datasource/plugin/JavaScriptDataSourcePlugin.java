@@ -3,10 +3,12 @@ package peakaboo.datasource.plugin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.logging.Level;
 
 import net.sciencestudio.bolt.scripting.BoltInterface;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
 import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
+import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
@@ -40,11 +42,11 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 			try {
 				js.setScript(StringInput.contents(this.scriptFile));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				PeakabooLog.get().log(Level.SEVERE, "Error setting Java Script Data Source source code", e);
 			}
 			js.initialize();
 		} catch (Exception e) {
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error initializing Java Script Data Source plugin", e);
 		}
 	}
 	

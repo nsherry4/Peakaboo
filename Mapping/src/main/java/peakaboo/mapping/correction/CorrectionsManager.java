@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 
 
@@ -24,7 +26,7 @@ public class CorrectionsManager
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error reading corrections table", e);
 		}
 		
 	}

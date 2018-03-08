@@ -3,9 +3,11 @@ package peakaboo.filter.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.Value;
+import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.filter.model.plugin.JavaFilterPlugin;
 import scidraw.drawing.plot.painters.PlotPainter;
@@ -148,7 +150,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 		catch(Throwable e)
 		{
 			System.out.println(getFilterName() + " Filter Failed");
-			if (!Version.release) e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error applying filter " + this.getClass().getName(), e);
 			return data;
 		}
 		

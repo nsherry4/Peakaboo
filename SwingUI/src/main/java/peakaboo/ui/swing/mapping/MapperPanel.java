@@ -13,6 +13,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,6 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import eventful.EventfulTypeListener;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapdisplay.AreaSelection;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
@@ -220,7 +222,7 @@ public class MapperPanel extends TabbedInterfacePanel
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
 		}
 
 	}

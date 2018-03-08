@@ -1,6 +1,7 @@
 package peakaboo.datasink.plugin;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
@@ -9,6 +10,7 @@ import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
+import peakaboo.common.PeakabooLog;
 import peakaboo.datasink.plugin.plugins.CSV;
 
 public class DataSinkLoader
@@ -22,7 +24,7 @@ public class DataSinkLoader
 			try {
 				loadPlugins();
 			} catch (ClassInheritanceException | ClassInstantiationException e) {
-				e.printStackTrace();
+				PeakabooLog.get().log(Level.SEVERE, "Failed to load DataSink Plugins", e);
 			}
 		}
 	}

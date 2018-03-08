@@ -67,8 +67,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.ezware.dialog.task.TaskDialogs;
-
 import commonenvironment.Apps;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
@@ -783,19 +781,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		plugins.add(createMenuItem(
 				"Open Folder", null, "Opens the plugins folder to add or remove plugin files",
-				e -> {
-					File appDataDir = Configuration.appDir("Plugins");
-					appDataDir.mkdirs();
-					Desktop desktop = Desktop.getDesktop();
-					try {
-						desktop.open(appDataDir);
-					} catch (IOException e1) {
-						TaskDialogs.showException(e1);
-						e1.printStackTrace();
-					}
-				},
-				null, null
-		));
+				e -> actionOpenPluginFolder(),null, null));
 		
 	
 		
@@ -1049,6 +1035,13 @@ public class PlotPanel extends TabbedInterfacePanel
 		menu = new JMenu("Help");
 		menu.setMnemonic(KeyEvent.VK_H);
 		
+		JMenuItem logs = createMenuItem(
+				"Logs", null, null,
+				e -> actionShowLogs(),
+				null, null
+			);
+		menu.add(logs);
+		
 		JMenuItem contents = createMenuItem(
 			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
 			e -> actionHelp(),
@@ -1062,6 +1055,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			null, null
 		);
 		menu.add(about);
+		
 		
 		
 		menuBar.add(menu);
@@ -1385,7 +1379,7 @@ public class PlotPanel extends TabbedInterfacePanel
 						if (result.status == ReadStatus.FAILED)
 						{
 							if (result.problem != null) {
-								Peakaboo.showError(result.problem, "Error Opening Data", "Peakaboo could not open this dataset");
+								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
 							} else {
 								JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 							}
@@ -1427,7 +1421,6 @@ public class PlotPanel extends TabbedInterfacePanel
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
-			Peakaboo.showError(e, "Failed to export data");
 		}
 		
 
@@ -1526,8 +1519,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		catch (IOException e)
 		{
-			TaskDialogs.showException(e);
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
 		}
 
 	}
@@ -1596,8 +1588,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			Exception e = execset.getResult();
 			if (e != null)
 			{
-				e.printStackTrace();
-				TaskDialogs.showException(e);
+				PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
 				tempfile.delete();
 				return;
 			}
@@ -1620,8 +1611,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		catch (IOException e)
 		{
-			TaskDialogs.showException(e);
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
 		}
 		
 	}
@@ -1669,8 +1659,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		catch (IOException e)
 		{
-			TaskDialogs.showException(e);
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
 		}
 
 	}
@@ -1694,8 +1683,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		catch (IOException e)
 		{
-			TaskDialogs.showException(e);
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
 		}
 
 	}
@@ -1782,6 +1770,29 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		//setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		
+	}
+	
+	public void actionOpenPluginFolder() {
+		File appDataDir = Configuration.appDir("Plugins");
+		appDataDir.mkdirs();
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			desktop.open(appDataDir);
+		} catch (IOException e1) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
+		}
+	}
+	
+	
+	public void actionShowLogs() {
+		File appDataDir = Configuration.appDir("Logging");
+		appDataDir.mkdirs();
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			desktop.open(appDataDir);
+		} catch (IOException e1) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to open logging folder", e1);
+		}
 	}
 
 }

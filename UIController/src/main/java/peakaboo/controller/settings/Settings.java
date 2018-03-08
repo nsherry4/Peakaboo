@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.logging.Level;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.settings.SettingsModel;
@@ -139,7 +141,7 @@ public class Settings
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error saving preference state", e);
 			return;
 		}
 

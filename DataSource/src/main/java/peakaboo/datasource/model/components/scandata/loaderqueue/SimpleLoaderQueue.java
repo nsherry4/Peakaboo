@@ -2,7 +2,9 @@ package peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.model.components.scandata.SimpleScanData;
 import scitypes.Spectrum;
 
@@ -28,7 +30,7 @@ public class SimpleLoaderQueue implements LoaderQueue {
 						return;
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					PeakabooLog.get().log(Level.SEVERE, "Exception while processing LoaderQueue Spectrum entries", e);
 					Thread.currentThread().interrupt();
 					return;
 				}

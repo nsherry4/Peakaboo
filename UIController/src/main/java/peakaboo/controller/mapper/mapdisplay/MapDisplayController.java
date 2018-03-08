@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import eventful.EventfulType;
 import peakaboo.calculations.Interpolation;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -494,8 +496,7 @@ public class MapDisplayController extends EventfulType<String>
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error saving map as csv", e);
 		}
 		
 
@@ -505,8 +506,7 @@ public class MapDisplayController extends EventfulType<String>
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.WARNING, "Error closing output stream", e);
 		}
 
 	}

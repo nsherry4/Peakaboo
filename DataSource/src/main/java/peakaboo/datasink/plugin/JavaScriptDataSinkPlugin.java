@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
+import java.util.logging.Level;
 
 import net.sciencestudio.bolt.scripting.BoltInterface;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
 import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
+import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.model.DataSource;
 import scitypes.util.StringInput;
 
@@ -30,11 +32,11 @@ public class JavaScriptDataSinkPlugin implements DataSinkPlugin, BoltScriptPlugi
 			try {
 				js.setScript(StringInput.contents(this.scriptFile));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				PeakabooLog.get().log(Level.SEVERE, "Failed to set JavaScript Data Sink Plugin Source Code", e);
 			}
 			js.initialize();
 		} catch (Exception e) {
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Failed to set JavaScript Data Sink Plugin Source Code", e);
 		}
 	}
 	

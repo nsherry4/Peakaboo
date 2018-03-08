@@ -9,9 +9,11 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.swing.SwingUtilities;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapdisplay.AreaSelection;
 import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
@@ -76,7 +78,7 @@ public class MapCanvas extends GraphicsPanel
 		try {
 			drawMap(backend, vector);
 		} catch (Exception e) {
-			Peakaboo.showError(e, "Unable to Draw Map");
+			PeakabooLog.get().log(Level.SEVERE, "Unable to draw map", e);
 		}
 	}
 

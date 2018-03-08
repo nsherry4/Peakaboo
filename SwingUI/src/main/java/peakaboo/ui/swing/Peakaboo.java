@@ -1,7 +1,9 @@
 package peakaboo.ui.swing;
 
 import java.awt.Dimension;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
@@ -54,7 +56,7 @@ public class Peakaboo
 				
 			JTextArea stacktrace = new JTextArea();
 			stacktrace.setEditable(false);
-			stacktrace.setText(Strings.stackStraceAsString(e));
+			stacktrace.setText((e != null) ? Strings.stackStraceAsString(e) : "No additional information available");
 			
 			JScrollPane scroller = new JScrollPane(stacktrace);
 			scroller.setPreferredSize(new Dimension(500, 200));
@@ -100,11 +102,38 @@ public class Peakaboo
 		
 	}
 	
+	public static void errorHook() {
+		PeakabooLog.get().addHandler(new Handler() {
+			
+			@Override
+			public void publish(LogRecord record) {
+				if (record.getLevel() == Level.SEVERE) {
+					Throwable t = record.getThrown();
+					String m = record.getMessage();
+					showError(t, m);
+				}
+			}
+			
+			@Override
+			public void flush() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void close() throws SecurityException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
 	public static void run() {
 		
 		LOGGER.log(Level.INFO, "Starting Peakaboo");
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		Swidget.initialize(Version.splash, Version.icon, () -> {
+			errorHook();
 			PeakabooLog.init();
 			PeakTableReader.readPeakTable();
 			DataSourceLoader.load();

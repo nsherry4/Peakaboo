@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.script.ScriptException;
 
@@ -11,6 +12,7 @@ import net.sciencestudio.autodialog.model.Value;
 import net.sciencestudio.bolt.scripting.BoltInterface;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
 import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
+import peakaboo.common.PeakabooLog;
 import peakaboo.filter.model.FilterType;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
@@ -44,11 +46,11 @@ public class JavaScriptFilterPlugin implements FilterPlugin, BoltScriptPlugin {
 			try {
 				js.setScript(StringInput.contents(this.scriptFile));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				PeakabooLog.get().log(Level.SEVERE, "Error setting Java Script Data Source source code", e);
 			}
 			js.initialize();
 		} catch (Exception e) {
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error initializing Java Script Data Source plugin", e);
 		}
 	}
 	
@@ -140,7 +142,7 @@ public class JavaScriptFilterPlugin implements FilterPlugin, BoltScriptPlugin {
 		try {
 			result = (float[]) js.call("filter", copy);
 		} catch (NoSuchMethodException | ScriptException e) {
-			e.printStackTrace();
+			PeakabooLog.get().log(Level.SEVERE, "Error calling Java Script Filter plugin", e);
 			result = data.backingArrayCopy();
 		}
 		

@@ -3,7 +3,9 @@ package peakaboo.datasource.plugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
 
@@ -30,7 +32,7 @@ public class DataSourceLookup
 					if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yes_by_contents.add(datasource); }
 				} 
 				catch (Throwable e) {
-					e.printStackTrace();
+					PeakabooLog.get().log(Level.SEVERE, "Error while evaluating data sources", e);
 				} 
 			}
 		}
@@ -46,7 +48,7 @@ public class DataSourceLookup
 					if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yes_by_contents.add(datasource); }
 				} 
 				catch (Throwable e) {
-					e.printStackTrace();
+					PeakabooLog.get().log(Level.SEVERE, "Error while evaluating data sources", e);
 				} 
 			}
 			

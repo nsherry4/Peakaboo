@@ -25,11 +25,13 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 import java.util.TooManyListenersException;
+import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
 
 /**
@@ -287,7 +289,8 @@ public class FileDrop
         {   // Make a drop listener
             dropListener = new DropTargetListener()
             {   public void dragEnter( DropTargetDragEvent evt )
-                {       log( out, "FileDrop: dragEnter event." );
+                {       
+            	PeakabooLog.get().log(Level.FINEST, "FileDrop: dragEnter event." );
 
                     // Is this an acceptable drag event?
                     if( isDragOk( out, evt ) )
@@ -296,20 +299,20 @@ public class FileDrop
                         if( c instanceof JComponent )
                         {   JComponent jc = (JComponent) c;
                             normalBorder = jc.getBorder();
-                            log( out, "FileDrop: normal border saved." );
+                            PeakabooLog.get().log(Level.FINEST, "FileDrop: normal border saved." );
                             jc.setBorder( dragBorder );
-                            log( out, "FileDrop: drag border set." );
+                            PeakabooLog.get().log(Level.FINEST, "FileDrop: drag border set." );
                         }   // end if: JComponent   
 
                         // Acknowledge that it's okay to enter
                         //evt.acceptDrag( java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE );
                         evt.acceptDrag( DnDConstants.ACTION_COPY );
-                        log( out, "FileDrop: event accepted." );
+                        PeakabooLog.get().log(Level.FINEST, "FileDrop: event accepted." );
                     }   // end if: drag ok
                     else 
                     {   // Reject the drag event
                         evt.rejectDrag();
-                        log( out, "FileDrop: event rejected." );
+                        PeakabooLog.get().log(Level.FINEST, "FileDrop: event rejected." );
                     }   // end else: drag not ok
                 }   // end dragEnter
 
@@ -320,7 +323,7 @@ public class FileDrop
 
                 @SuppressWarnings("unchecked")
 				public void drop( DropTargetDropEvent evt )
-                {   log( out, "FileDrop: drop event." );
+                {   PeakabooLog.get().log(Level.FINEST, "FileDrop: drop event." );
                     try
                     {   // Get whatever was dropped
                         Transferable tr = evt.getTransferable();
@@ -331,7 +334,7 @@ public class FileDrop
                             // Say we'll take it.
                             //evt.acceptDrop ( java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE );
                             evt.acceptDrop ( DnDConstants.ACTION_COPY );
-                            log( out, "FileDrop: file list accepted." );
+                            PeakabooLog.get().log(Level.FINEST, "FileDrop: file list accepted." );
 
                             // Get a useful list
                             List<File> fileList = (List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
@@ -348,7 +351,7 @@ public class FileDrop
 
                             // Mark that drop is completed.
                             evt.getDropTargetContext().dropComplete(true);
-                            log( out, "FileDrop: drop complete." );
+                            PeakabooLog.get().log(Level.FINEST, "FileDrop: drop complete." );
                         }   // end if: file list
                         else // this section will check for a reader flavor.
                         {
@@ -361,7 +364,7 @@ public class FileDrop
                                     // Say we'll take it.
                                     //evt.acceptDrop ( java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE );
                                     evt.acceptDrop(DnDConstants.ACTION_COPY);
-                                    log(out, "FileDrop: reader accepted.");
+                                    PeakabooLog.get().log(Level.FINEST, "FileDrop: reader accepted.");
 
                                     Reader reader = flavors[zz].getReaderForText(tr);
 
@@ -372,26 +375,24 @@ public class FileDrop
                                     
                                     // Mark that drop is completed.
                                     evt.getDropTargetContext().dropComplete(true);
-                                    log(out, "FileDrop: drop complete.");
+                                    PeakabooLog.get().log(Level.FINEST, "FileDrop: drop complete.");
                                     handled = true;
                                     break;
                                 }
                             }
                             if(!handled){
-                                log( out, "FileDrop: not a file list or reader - abort." );
+                            	PeakabooLog.get().log(Level.FINEST, "FileDrop: not a file list or reader - abort." );
                                 evt.rejectDrop();
                             }
                             // END 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
                         }   // end else: not a file list
                     }   // end try
                     catch ( IOException io) 
-                    {   log( out, "FileDrop: IOException - abort:" );
-                        io.printStackTrace( out );
+                    {   PeakabooLog.get().log(Level.SEVERE, "FileDrop: IOException - abort:" , io);
                         evt.rejectDrop();
                     }   // end catch IOException
                     catch (UnsupportedFlavorException ufe) 
-                    {   log( out, "FileDrop: UnsupportedFlavorException - abort:" );
-                        ufe.printStackTrace( out );
+                    {   PeakabooLog.get().log(Level.SEVERE, "FileDrop: UnsupportedFlavorException - abort:", ufe);
                         evt.rejectDrop();
                     }   // end catch: UnsupportedFlavorException
                     finally
@@ -400,32 +401,32 @@ public class FileDrop
                         if( c instanceof JComponent )
                         {   JComponent jc = (JComponent) c;
                             jc.setBorder( normalBorder );
-                            log( out, "FileDrop: normal border restored." );
+                            PeakabooLog.get().log(Level.FINEST, "FileDrop: normal border restored." );
                         }   // end if: JComponent
                     }   // end finally
                 }   // end drop
 
                 public void dragExit( DropTargetEvent evt ) 
-                {   log( out, "FileDrop: dragExit event." );
+                {   PeakabooLog.get().log(Level.FINEST, "FileDrop: dragExit event." );
                     // If it's a Swing component, reset its border
                     if( c instanceof JComponent )
                     {   JComponent jc = (JComponent) c;
                         jc.setBorder( normalBorder );
-                        log( out, "FileDrop: normal border restored." );
+                        PeakabooLog.get().log(Level.FINEST, "FileDrop: normal border restored." );
                     }   // end if: JComponent
                 }   // end dragExit
 
                 public void dropActionChanged( DropTargetDragEvent evt ) 
-                {   log( out, "FileDrop: dropActionChanged event." );
+                {   PeakabooLog.get().log(Level.FINEST, "FileDrop: dropActionChanged event." );
                     // Is this an acceptable drag event?
                     if( isDragOk( out, evt ) )
                     {   //evt.acceptDrag( java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE );
                         evt.acceptDrag( DnDConstants.ACTION_COPY );
-                        log( out, "FileDrop: event accepted." );
+                        PeakabooLog.get().log(Level.FINEST, "FileDrop: event accepted." );
                     }   // end if: drag ok
                     else 
                     {   evt.rejectDrag();
-                        log( out, "FileDrop: event rejected." );
+                    	PeakabooLog.get().log(Level.FINEST, "FileDrop: event rejected." );
                     }   // end else: drag not ok
                 }   // end dropActionChanged
             }; // end DropTargetListener
@@ -434,7 +435,7 @@ public class FileDrop
             makeDropTarget( out, c, recursive );
         }   // end if: supports dnd
         else
-        {   log( out, "FileDrop: Drag and drop is not supported with this JVM" );
+        {   PeakabooLog.get().log(Level.FINEST, "FileDrop: Drag and drop is not supported with this JVM" );
         }   // end else: does not support DnD
     }   // end constructor
 
@@ -473,13 +474,13 @@ public class FileDrop
                     File file = new File(new URI(line));
                     list.add(file);
                 } catch (Exception ex) {
-                    log(out, "Error with " + line + ": " + ex.getMessage());
+                	PeakabooLog.get().log(Level.FINEST, "Error with " + line + ": " + ex.getMessage());
                 }
             }
 
             return list.toArray(new File[list.size()]);
         } catch (IOException ex) {
-            log(out, "FileDrop: IOException");
+        	PeakabooLog.get().log(Level.FINEST, "FileDrop: IOException");
         }
         return new File[0];
      }
@@ -494,22 +495,22 @@ public class FileDrop
         {   dt.addDropTargetListener( dropListener );
         }   // end try
         catch( TooManyListenersException e )
-        {   e.printStackTrace();
-            log(out, "FileDrop: Drop will not work due to previous error. Do you have another listener attached?" );
+        {
+        	PeakabooLog.get().log(Level.SEVERE, "FileDrop: Drop will not work due to previous error. Do you have another listener attached?", e);
         }   // end catch
         
         // Listen for hierarchy changes and remove the drop target when the parent gets cleared out.
         c.addHierarchyListener( new HierarchyListener()
         {   public void hierarchyChanged( HierarchyEvent evt )
-            {   log( out, "FileDrop: Hierarchy changed." );
+            {   PeakabooLog.get().log(Level.FINEST, "FileDrop: Hierarchy changed." );
                 Component parent = c.getParent();
                 if( parent == null )
                 {   c.setDropTarget( null );
-                    log( out, "FileDrop: Drop target cleared from component." );
+                	PeakabooLog.get().log(Level.FINEST, "FileDrop: Drop target cleared from component." );
                 }   // end if: null parent
                 else
                 {   new DropTarget(c, dropListener);
-                    log( out, "FileDrop: Drop target added to component." );
+                	PeakabooLog.get().log(Level.FINEST, "FileDrop: Drop target added to component." );
                 }   // end else: parent not null
             }   // end hierarchyChanged
         }); // end hierarchy listener
@@ -557,23 +558,15 @@ public class FileDrop
         // If logging is enabled, show data flavors
         if( out != null )
         {   if( flavors.length == 0 )
-                log( out, "FileDrop: no data flavors." );
+        		PeakabooLog.get().log(Level.FINEST, "FileDrop: no data flavors." );
             for( i = 0; i < flavors.length; i++ )
-                log( out, flavors[i].toString() );
+            	PeakabooLog.get().log(Level.FINEST, flavors[i].toString() );
         }   // end if: logging enabled
         
         return ok;
     }   // end isDragOk
     
-    
-    /** Outputs <tt>message</tt> to <tt>out</tt> if it's not null. */
-    private static void log( PrintStream out, String message )
-    {   // Log message if requested
-        if( out != null )
-            out.println( message );
-    }   // end log
 
-    
     
     
     /**
@@ -605,7 +598,8 @@ public class FileDrop
     public static boolean remove( PrintStream out, Component c, boolean recursive )
     {   // Make sure we support dnd.
         if( supportsDnD() )
-        {   log( out, "FileDrop: Removing drag-and-drop hooks." );
+        {   
+        	PeakabooLog.get().log(Level.INFO, "FileDrop: Removing drag-and-drop hooks." );
             c.setDropTarget( null );
             if( recursive && ( c instanceof Container ) )
             {   Component[] comps = ((Container)c).getComponents();
