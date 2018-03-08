@@ -1,10 +1,13 @@
 package net.sciencestudio.bolt.scripting;
 
+import java.util.logging.Level;
+
 import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
+import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
 import net.sciencestudio.bolt.scripting.languages.Language;
 
@@ -21,7 +24,6 @@ public class BoltInterface extends BoltScripter {
 			engine = this.language.getEngine();
 			engine.eval(this.script);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new BoltScriptExecutionException("Error executing script\n\n" + e.getMessage() + "\n-----\n" + getStdErr(), e);
 		}
 	}

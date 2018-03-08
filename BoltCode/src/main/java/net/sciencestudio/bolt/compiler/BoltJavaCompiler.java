@@ -11,8 +11,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
+
+import net.sciencestudio.bolt.Bolt;
 
 
 public class BoltJavaCompiler {
@@ -97,8 +100,7 @@ public class BoltJavaCompiler {
 					}
 					
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Bolt.logger().log(Level.WARNING, "Compiler Error: Cannot find class", e);
 				}
 				
 			}

@@ -8,7 +8,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.logging.Level;
 
+import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 
@@ -69,7 +71,7 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 		}
 		catch (ServiceConfigurationError e)
 		{
-			e.printStackTrace();
+			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
 			throw new ClassInstantiationException(e);
 		}
 	}
@@ -169,8 +171,7 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
-				System.err.println("Failed to load plugin at " + files[i]);
+				Bolt.logger().log(Level.WARNING, "Unable to load plugin at " + files[i], e);
 			}
 		}
 		
@@ -187,7 +188,7 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 				registerPlugin((Class<? extends T>) t.getClass(), url);
 			}
 		} catch (ServiceConfigurationError e) {
-			e.printStackTrace();
+			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
 		}
 	}
 	

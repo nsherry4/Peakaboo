@@ -3,7 +3,9 @@ package net.sciencestudio.bolt.scripting.plugin;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 
+import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 
 
@@ -41,14 +43,12 @@ public class IBoltScriptPluginController<T extends BoltScriptPlugin> implements 
 		}
 		catch (InstantiationException e)
 		{
-			e.printStackTrace();
-			System.out.println(runnerClass);
+			Bolt.logger().log(Level.SEVERE, "Failed to create new plugin instance of " + runnerClass, e);
 			return null;
 		}
 		catch (IllegalAccessException e)
 		{
-			e.printStackTrace();
-			System.out.println(runnerClass);
+			Bolt.logger().log(Level.SEVERE, "Failed to create new plugin instance of " + runnerClass, e);
 			return null;
 		}
 	}
@@ -92,7 +92,7 @@ public class IBoltScriptPluginController<T extends BoltScriptPlugin> implements 
 		try {
 			return scriptFile.toURI().toURL();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			Bolt.logger().log(Level.SEVERE, "Invalid script source", e);
 			return null;
 		}
 	}

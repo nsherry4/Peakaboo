@@ -1,5 +1,8 @@
 package net.sciencestudio.bolt.compiler;
 
+import java.util.logging.Level;
+
+import net.sciencestudio.bolt.Bolt;
 
 abstract class BoltJavaFunction {
 
@@ -83,12 +86,13 @@ abstract class BoltJavaFunction {
 		try {
 			return mainClass.newInstance();
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			Bolt.logger().log(Level.WARNING, "Error instantianting class", e);
 			throw new BoltCompilationException("Error instantiating class");
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			Bolt.logger().log(Level.WARNING, "Error instantianting class", e);
 			throw new BoltCompilationException("Error instantiating class");
 		} catch (Exception e) {
+			Bolt.logger().log(Level.WARNING, "Error instantianting class", e);
 			throw new BoltCompilationException("Error instantiating class");
 		}
 	}

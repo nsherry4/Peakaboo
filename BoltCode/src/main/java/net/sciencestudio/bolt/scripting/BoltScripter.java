@@ -1,6 +1,7 @@
 package net.sciencestudio.bolt.scripting;
 import java.io.StringWriter;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
@@ -10,6 +11,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
+import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.scripting.languages.Language;
 
 
@@ -145,7 +147,7 @@ public class BoltScripter {
 				getEngine().eval(script);
 			}
 		} catch (ScriptException e) {
-			e.printStackTrace();
+			Bolt.logger().log(Level.WARNING, "Unable to evaluate script", e);
 			throw e;
 		}
 	}

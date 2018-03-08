@@ -1,7 +1,9 @@
 package net.sciencestudio.bolt.plugin.java;
 
 import java.net.URL;
+import java.util.logging.Level;
 
+import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 
 public class IBoltPluginController<T extends BoltJavaPlugin> implements BoltPluginController<T> {
@@ -45,14 +47,12 @@ public class IBoltPluginController<T extends BoltJavaPlugin> implements BoltPlug
 		}
 		catch (InstantiationException e)
 		{
-			e.printStackTrace();
-			System.out.println(implClass);
+			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
 			return null;
 		}
 		catch (IllegalAccessException e)
 		{
-			e.printStackTrace();
-			System.out.println(implClass);
+			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
 			return null;
 		}
 	}
