@@ -2,7 +2,9 @@ package peakaboo.common;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,8 +15,14 @@ public class PeakabooLog {
 	public static void init() {
 		try {
 			File appDir = Configuration.appDir("Logging");
+			System.out.println(appDir);
 			appDir.mkdirs();
-			String filename = appDir.getPath() + "/Peakaboo-" + new Timestamp(System.currentTimeMillis()) + ".log";
+			
+			//filename must not have characters in it which will make windows cry...
+			Date ts = new Date();
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+			String filename = appDir.getPath() + "/Peakaboo Log for " + formatter.format(ts) + ".log";
+			System.out.println(filename);
 			
 			
 			//Workaround for JDK-8189953
