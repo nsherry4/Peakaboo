@@ -2,8 +2,10 @@ package net.sciencestudio.scratch.list;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 
 import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchLog;
 import net.sciencestudio.scratch.list.array.ScratchArrayList;
 import net.sciencestudio.scratch.list.file.ScratchDiskList;
 
@@ -21,7 +23,7 @@ public class ScratchLists {
 		try {
 			return diskBacked(encoder);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ScratchLog.get().log(Level.SEVERE, "Could not allocate disk-backed store, using in-memory store instead", e);
 			return memoryBacked(encoder);
 		}
 	}
