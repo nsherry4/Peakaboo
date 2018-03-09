@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
@@ -28,6 +29,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.internal.CroppedDataSource;
 import peakaboo.datasource.model.internal.SelectionDataSource;
+import peakaboo.datasource.model.internal.SubsetDataSource;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
@@ -165,23 +167,25 @@ public class MapperToolbar extends JToolBar {
 				AreaSelection areaSelection = controller.getDisplay().getAreaSelection();
 				PointsSelection pointSelection = controller.getDisplay().getPointsSelection();
 				
+				SubsetDataSource sds;
 				if (areaSelection.hasSelection()) {
-					CroppedDataSource cds = controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd());
-					SavedSettings settings = controller.getSavedSettingsObject();
-					
-					//TODO: modify the settings data bad scans to update the indexes
-					
-					panel.parentPlotter.newTab(cds, settings.serialize());
-					panel.parentPlotter.getWindow().toFront();
+					sds = controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd());
 				} else {
-					SelectionDataSource sds = controller.getDataSourceForSubset(pointSelection.getPoints());
-					SavedSettings settings = controller.getSavedSettingsObject();
-					
-					//TODO: modify the settings data bad scans to update the indexes
-					
-					panel.parentPlotter.newTab(sds, settings.serialize());
-					panel.parentPlotter.getWindow().toFront();
+					sds = controller.getDataSourceForSubset(pointSelection.getPoints());
 				}
+				
+				SavedSettings settings = controller.getSavedSettingsObject();
+				
+				//update the bad scan indexes to match the new data source's indexing scheme
+				settings.badScans = settings.badScans.stream()
+						.map(index -> sds.getUpdatedIndex(index))
+						.filter(index -> index > 0)
+						.collect(Collectors.toList()
+					);
+				
+				panel.parentPlotter.newTab(sds, settings.serialize());
+				panel.parentPlotter.getWindow().toFront();
+				
 			}
 		});
 		this.add(examineSubset, c);

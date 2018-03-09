@@ -17,7 +17,7 @@ import scitypes.ReadOnlySpectrum;
  * @author NAS
  *
  */
-public class SelectionDataSource implements DataSource, ScanData {
+public class SelectionDataSource implements SubsetDataSource, ScanData {
 
 	private DataSource source;
 	private List<Integer> selectedIndexes;
@@ -33,7 +33,7 @@ public class SelectionDataSource implements DataSource, ScanData {
 	
 	@Override
 	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
-		return source.getScanData().get(selectedIndexes.get(index));
+		return source.getScanData().get(getOriginalIndex(index));
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class SelectionDataSource implements DataSource, ScanData {
 
 	@Override
 	public String scanName(int index) {
-		return source.getScanData().scanName(selectedIndexes.get(index));
+		return source.getScanData().scanName(getOriginalIndex(index));
 	}
 
 	@Override
@@ -99,6 +99,17 @@ public class SelectionDataSource implements DataSource, ScanData {
 	@Override
 	public void read(List<File> files) throws Exception {
 		throw new UnsupportedOperationException("Cannot read in derived DataSource");
+	}
+
+	
+	@Override
+	public int getOriginalIndex(int index) {
+		return selectedIndexes.get(index);
+	}
+
+	@Override
+	public int getUpdatedIndex(int originalIndex) {
+		return selectedIndexes.indexOf(originalIndex);
 	}
 
 }

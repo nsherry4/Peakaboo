@@ -19,7 +19,7 @@ import scitypes.SISize;
 import scitypes.Spectrum;
 
 
-public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, ScanData
+public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSize, ScanData
 {
 
 	private DataSource					originalDataSource;
@@ -83,7 +83,9 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 	}
 	
 	
-	private int realIndex(int index) {
+
+	@Override
+	public int getOriginalIndex(int index) {
 		
 		
 		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
@@ -95,8 +97,24 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 		x += rangeX.getStart();
 		y += rangeY.getStart();
 		
-		return  origgrid.getIndexFromXY(x, y);
+		return origgrid.getIndexFromXY(x, y);
 	}
+	
+	
+	@Override
+	public int getUpdatedIndex(int originalIndex) {
+		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
+		GridPerspective<Spectrum> origgrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
+		
+		int x = origgrid.getXYFromIndex(originalIndex).first;
+		int y = origgrid.getXYFromIndex(originalIndex).second;
+		
+		x -= rangeX.getStart();
+		y -= rangeY.getStart();
+		
+		return grid.getIndexFromXY(x, y);
+	}
+	
 	
 	public int scanCount()
 	{
@@ -105,7 +123,7 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 
 
 	public String scanName(int index) {
-		return originalDataSource.getScanData().scanName(realIndex(index));
+		return originalDataSource.getScanData().scanName(getOriginalIndex(index));
 	}
 
 
@@ -117,22 +135,8 @@ public class CroppedDataSource implements DataSource, DataSize, PhysicalSize, Sc
 
 	public Coord<Number> getPhysicalCoordinatesAtIndex(int index)
 	{
-		
 		if (!originalDataSource.hasDataSize()) { throw new UnsupportedOperationException(); }
-		
-		GridPerspective<Spectrum> grid = new GridPerspective<Spectrum>(rangeX.size(), rangeY.size(), null);
-		GridPerspective<Spectrum> origgrid = new GridPerspective<Spectrum>(sizeX, sizeY, null);
-		
-		int x = grid.getXYFromIndex(index).first;
-		int y = grid.getXYFromIndex(index).second;
-		
-		x += rangeX.getStart();
-		y += rangeY.getStart();
-		
-		int realIndex = origgrid.getIndexFromXY(x, y);
-				
-		return originalDataSource.getPhysicalSize().getPhysicalCoordinatesAtIndex(realIndex);
-	
+		return originalDataSource.getPhysicalSize().getPhysicalCoordinatesAtIndex(getOriginalIndex(index));
 	}
 
 
