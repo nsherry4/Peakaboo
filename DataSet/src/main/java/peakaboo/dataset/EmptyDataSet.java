@@ -152,6 +152,12 @@ public class EmptyDataSet implements DataSet
 		return new DummyScanData();
 	}
 
+	@Override
+	public boolean hasGenuineDataSize() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 
 

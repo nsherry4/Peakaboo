@@ -74,7 +74,7 @@ public class MapDimensionsPanel extends JPanel {
 		this.add(height, c);
 		
 		
-		if (!controller.mapsController.isDimensionsProvided()) {
+		if (!controller.mapsController.hasOriginalDataDimensions()) {
 			ImageButton magic = new ImageButton("auto", "", "Try to detect the map's dimensions.", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
 			c.gridx = 0;
 			c.gridwidth = 2;

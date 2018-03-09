@@ -450,6 +450,12 @@ public class StandardDataSet implements DataSet
 	}
 
 
+	@Override
+	public boolean hasGenuineDataSize() {
+		return getDataSource().hasDataSize();
+	}
+
+
 	
 }
 

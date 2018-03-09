@@ -29,34 +29,18 @@ public class MapSetController extends EventfulType<String>
 	}
 	
 
-	
+
+	/**
+	 * Sets the map's data model. dataDimensions, realDimensions, realDimensionsUnits may be null
+	 */
 	public void setMapData(
 			MapResultSet data,
 			String datasetName,
-			List<Integer> badPoints
-	)
-	{
-		
-		mapModel.mapResults = data;
-		mapModel.datasetTitle = datasetName;
-		mapModel.badPoints = badPoints;
-		
-		mapModel.dimensionsProvided = false;
-		
-		mapModel.realDimensions = null;
-		mapModel.realDimensionsUnits = null;
-		
-		updateListeners(UpdateType.DATA.toString());
-		
-	}
-	
-	public void setMapData(
-			MapResultSet data,
-			String datasetName,
+			List<Integer> badPoints,
 			Coord<Integer> dataDimensions,
 			Coord<Bounds<Number>> realDimensions,
-			SISize realDimensionsUnits,
-			List<Integer> badPoints
+			SISize realDimensionsUnits
+			
 	)
 	{
 	
@@ -66,7 +50,7 @@ public class MapSetController extends EventfulType<String>
 		mapModel.badPoints = badPoints;
 		
 		mapModel.originalDimensions = dataDimensions;
-		mapModel.dimensionsProvided = true;
+		mapModel.originalDimensionsProvided = dataDimensions != null;
 		mapModel.realDimensions = realDimensions;
 		mapModel.realDimensionsUnits = realDimensionsUnits;
 
@@ -88,7 +72,13 @@ public class MapSetController extends EventfulType<String>
 	
 
 	
-
+	public Coord<Integer> getOriginalDataDimensions() {
+		return mapModel.originalDimensions;
+	}
+	
+	public boolean hasOriginalDataDimensions() {
+		return mapModel.originalDimensionsProvided;
+	}
 	
 	public int getOriginalDataHeight() {
 		return mapModel.originalDimensions.y;
@@ -200,11 +190,6 @@ public class MapSetController extends EventfulType<String>
 	
 
 
-	public boolean isDimensionsProvided()
-	{
-		return mapModel.dimensionsProvided;
-	}
-
 
 	public List<Integer> getBadPoints()
 	{
@@ -268,5 +253,9 @@ public class MapSetController extends EventfulType<String>
 	{
 		return mapModel.mapResults;
 	}
+
+
+
+	
 	
 }

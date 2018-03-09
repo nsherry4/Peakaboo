@@ -110,8 +110,11 @@ import plural.streams.swing.StreamExecutorView;
 import plural.swing.ExecutorSetView;
 import plural.swing.ExecutorSetViewDialog;
 import scidraw.swing.SavePicture;
+import scitypes.Bounds;
+import scitypes.Coord;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
+import scitypes.SISize;
 import scitypes.SigDigits;
 import scitypes.util.Mutable;
 import scitypes.util.StringInput;
@@ -1455,27 +1458,28 @@ public class PlotPanel extends TabbedInterfacePanel
 				MapSetController mapData = new MapSetController();
 				
 
-				if (controller.data().getDataSet().hasPhysicalSize())
-				{
-
-					mapData.setMapData(
-							results,
-							controller.data().getDataSet().getScanData().datasetName(),
-							controller.data().getDataSet().getDataSize().getDataDimensions(),
-							controller.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
-							controller.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
-							controller.data().getDiscards().list()
-						);
-					
-				} else {
-									
-					mapData.setMapData(
-							results,
-							controller.data().getDataSet().getScanData().datasetName(),
-							controller.data().getDiscards().list()
-						);
-					
+				Coord<Integer> dataDimensions = null;
+				Coord<Bounds<Number>> physicalDimensions = null;
+				SISize physicalUnit = null;
+				
+				if (controller.data().getDataSet().hasPhysicalSize()) {
+					physicalDimensions = controller.data().getDataSet().getPhysicalSize().getPhysicalDimensions();
+					physicalUnit = controller.data().getDataSet().getPhysicalSize().getPhysicalUnit();
 				}
+				
+				if (controller.data().getDataSet().hasGenuineDataSize()) {
+					dataDimensions = controller.data().getDataSet().getDataSize().getDataDimensions();
+				}
+				
+				mapData.setMapData(
+						results,
+						controller.data().getDataSet().getScanData().datasetName(),
+						controller.data().getDiscards().list(),
+						dataDimensions,
+						physicalDimensions,
+						physicalUnit
+					);
+				
 				
 				MapSettings mapSettings = controller.getLastMapSettings();
 

@@ -220,7 +220,7 @@ public class MapCanvas extends GraphicsPanel
 			spectrumSteps,
 			paletteList,
 
-			controller.mapsController.isDimensionsProvided(),
+			controller.mapsController.getRealDimensions() != null,
 			(controller.getDisplay().isLogView() ? "Log Scale Intensity (counts)" : "Intensity (counts)")
 		);
 		axisPainters.add(spectrumCoordPainter);
@@ -364,7 +364,7 @@ public class MapCanvas extends GraphicsPanel
 			spectrumSteps,
 			paletteList,
 
-			controller.mapsController.isDimensionsProvided(),
+			controller.mapsController.getRealDimensions() != null,
 			"Intensity (ratio)" + (controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Ratio sides scaled independently" : ""),
 			1,
 			controller.getDisplay().getMapDisplayMode() == MapDisplayMode.RATIO,
@@ -478,7 +478,7 @@ public class MapCanvas extends GraphicsPanel
 			controller.settings.getShowSpectrum(),
 			SPECTRUM_HEIGHT,
 
-			controller.mapsController.isDimensionsProvided(),
+			controller.mapsController.getRealDimensions() != null,
 			"Colour" +
 					(controller.getDisplay().isLogView() ? " (Log Scale)" : "") + 
 					(controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : ""),
@@ -677,7 +677,7 @@ public class MapCanvas extends GraphicsPanel
 		map.setContext(context);
 		
 		
-		if (controller.mapsController.isDimensionsProvided())
+		if (controller.mapsController.getRealDimensions() != null)
 		{
 
 			Coord<Bounds<Number>> realDims = controller.mapsController.getRealDimensions();

@@ -21,8 +21,8 @@ public class MapSetMapData
 	
 	
 	public Coord<Integer>			originalDimensions	= new Coord<Integer>(1, 1);
-	public boolean					dimensionsProvided	= false;
-
+	public boolean					originalDimensionsProvided = false;
+	
 	public MapResultSet				mapResults			= null;
 	public String					datasetTitle		= "";
 	public Coord<Number>			topRightCoord, topLeftCoord, bottomRightCoord, bottomLeftCoord;

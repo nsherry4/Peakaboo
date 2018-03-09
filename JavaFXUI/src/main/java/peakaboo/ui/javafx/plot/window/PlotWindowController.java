@@ -49,6 +49,9 @@ import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;
 import peakaboo.ui.javafx.widgets.NumberSpinner;
 import plural.executor.ExecutorSet;
+import scitypes.Bounds;
+import scitypes.Coord;
+import scitypes.SISize;
 
 
 public class PlotWindowController extends IActofUIController {
@@ -168,26 +171,31 @@ public class PlotWindowController extends IActofUIController {
     public void onMapFittings() throws IOException {
     	//TODO: Show progress
     	MapResultSet results = plotController.getMapCreationTask(FittingTransform.AREA).startWorkingBlocking();
-    	
     	MapSettings mapSettings = plotController.getLastMapSettings();
-    	
     	MapSetController mapData = new MapSetController();
+    	
+    	
+		Coord<Integer> dataDimensions = null;
+		Coord<Bounds<Number>> physicalDimensions = null;
+		SISize physicalUnit = null;
+		
 		if (plotController.data().getDataSet().hasPhysicalSize()) {
-			mapData.setMapData(
-					results,
-					plotController.data().getDataSet().getScanData().datasetName(),
-					plotController.data().getDataSet().getDataSize().getDataDimensions(),
-					plotController.data().getDataSet().getPhysicalSize().getPhysicalDimensions(),
-					plotController.data().getDataSet().getPhysicalSize().getPhysicalUnit(),
-					plotController.data().getDiscards().list()
-				);
-		} else {
-			mapData.setMapData(
-					results,
-					plotController.data().getDataSet().getScanData().datasetName(),
-					plotController.data().getDiscards().list()
-				);
+			physicalDimensions = plotController.data().getDataSet().getPhysicalSize().getPhysicalDimensions();
+			physicalUnit = plotController.data().getDataSet().getPhysicalSize().getPhysicalUnit();
 		}
+		
+		if (plotController.data().getDataSet().hasGenuineDataSize()) {
+			dataDimensions = plotController.data().getDataSet().getDataSize().getDataDimensions();
+		}
+		
+    	
+		mapData.setMapData(
+				results,
+				plotController.data().getDataSet().getScanData().datasetName(),
+				plotController.data().getDiscards().list(),
+				dataDimensions, physicalDimensions, physicalUnit				
+			);
+
 		
 		MappingController mapController = new MappingController(mapData, mapSettings, plotController);
 		    	

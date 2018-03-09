@@ -140,8 +140,13 @@ public interface DataSet {
 
 	boolean hasPhysicalSize();
 	PhysicalSize getPhysicalSize();
+	
+	/**
+	 * Return a data size. If the underlying {@link DataSource} has a data size, return 
+	 * that, otherwise, create a dummy one.
+	 */
 	DataSize getDataSize();
-
+	boolean hasGenuineDataSize();
 	
 	
 
