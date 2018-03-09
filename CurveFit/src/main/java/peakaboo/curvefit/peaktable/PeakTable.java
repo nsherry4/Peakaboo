@@ -30,7 +30,13 @@ public class PeakTable
 
 	private static ArrayList<TransitionSeries> elementTransitions = new ArrayList<TransitionSeries>();
 
-
+	private static ArrayList<TransitionSeries> getAllTransitions() {
+		ArrayList<TransitionSeries> newlist = new ArrayList<>();
+		for (TransitionSeries ts : elementTransitions) {
+			newlist.add(new TransitionSeries(ts));
+		}
+		return newlist;
+	}
 
 	/**
 	 * Adds a {@link TransitionSeries} to the PeakTable
@@ -58,7 +64,7 @@ public class PeakTable
 
 		List<Pair<TransitionSeries, Double>> matches = new ArrayList<Pair<TransitionSeries, Double>>();
 
-		for (TransitionSeries ts : elementTransitions)
+		for (TransitionSeries ts : getAllTransitions())
 		{
 			matches.add(new Pair<TransitionSeries, Double>(ts, ts.getProximityToEnergy(energy)));
 		}
@@ -84,17 +90,17 @@ public class PeakTable
 	 */
 	public static List<TransitionSeries> getTransitionSeriesForElement(final Element e)
 	{
-		return elementTransitions.stream().filter(ts -> (ts.element == e)).collect(Collectors.toList());
+		return getAllTransitions().stream().filter(ts -> (ts.element == e)).collect(Collectors.toList());
 	}
 	
 	public static List<TransitionSeries> getAllTransitionSeries()
 	{
-		return elementTransitions.stream().map(a -> a).collect(toList());
+		return getAllTransitions().stream().map(a -> a).collect(toList());
 	}
 	
 	public static TransitionSeries getTransitionSeries(final Element e, final TransitionSeriesType t)
 	{
-		List<TransitionSeries> tss = elementTransitions.stream().filter(ts -> (ts.element == e) && (ts.type == t)).collect(Collectors.toList());
+		List<TransitionSeries> tss = getAllTransitions().stream().filter(ts -> (ts.element == e) && (ts.type == t)).collect(Collectors.toList());
 		if (tss.size() == 0) return null;
 		return tss.get(0);
 	}

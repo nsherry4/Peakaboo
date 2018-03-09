@@ -17,17 +17,17 @@ public class Transition implements Serializable, Comparable<Transition>{
 	/**
 	 * The energy value of this transition -- where the peak will be centred
 	 */
-	public float energyValue;
+	public final float energyValue;
 	
 	/**
 	 * The {@link TransitionType} for this {@link Transition}
 	 */
-	public TransitionType type;
+	public final TransitionType type;
 	
 	/**
 	 * The relative intensity of this peak compared to the a1 peak of the same {@link TransitionSeries}
 	 */
-	public float relativeIntensity;
+	public final float relativeIntensity;
 
 	/**
 	 * Create a new Transition

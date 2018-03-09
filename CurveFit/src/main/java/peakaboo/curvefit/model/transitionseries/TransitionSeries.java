@@ -36,34 +36,34 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	/**
 	 * The {@link TransitionSeriesType} that this TransitionSeries represents
 	 */
-	public TransitionSeriesType		type;
+	public final TransitionSeriesType		type;
 	
 	/**
 	 * the {@link TransitionSeriesMode} which describes this TransitionSeries.
 	 */
-	public TransitionSeriesMode		mode;
+	public final TransitionSeriesMode		mode;
 
 	/**
 	 * If this is a compound TransitionSeries, this list contains the component TransitionSeries
 	 */
-	private List<TransitionSeries>	 componentSeries;
+	private final List<TransitionSeries> 	componentSeries;
 
 	/**
 	 * The {@link Element} that this TransitionSeries represents
 	 */
-	public Element					element;
+	public final Element					element;
 
-	private List<Transition>		transitions;
+	private final List<Transition>			transitions;
 
 	/**
 	 * The general intensity of this TransitionSeries
 	 */
-	public double					intensity;
+	public final double						intensity;
 
 	/**
 	 * Toggle for the visibility of this TransitionSeries
 	 */
-	public boolean					visible;
+	public boolean							visible;
 
 
 	/**
@@ -87,6 +87,27 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		this.visible = visible;
 	}
 
+	
+	/**
+	 * Copy constructor. This is required because when working with two plots at the 
+	 * same time, they must have copies so that things like visibility can be modified
+	 * independently.
+	 */
+	public TransitionSeries(TransitionSeries other) {
+		this.type = other.type;
+		this.mode = other.mode;
+		
+		this.componentSeries = new ArrayList<>();
+		for (TransitionSeries ts : other.componentSeries) {
+			this.componentSeries.add(new TransitionSeries(ts));
+		}
+
+		this.element = other.element;
+		this.transitions = other.transitions;
+		this.intensity = other.intensity;
+		this.visible = other.visible;
+	}
+	
 
 	/**
 	 * Creates a new TransitionSeries based on the given parameters
