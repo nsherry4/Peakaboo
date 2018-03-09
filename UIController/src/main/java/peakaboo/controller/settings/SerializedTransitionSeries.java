@@ -13,7 +13,7 @@ public class SerializedTransitionSeries
 {
 
 	public List<String> components;
-		
+	public boolean visible;
 
 	public SerializedTransitionSeries()
 	{
@@ -29,6 +29,9 @@ public class SerializedTransitionSeries
 		{
 			components.add(bt.element.name() + ":" + bt.type.name());
 		}
+		
+		this.visible = ts.visible;
+		
 	}
 	
 	
@@ -52,8 +55,10 @@ public class SerializedTransitionSeries
 			tss.add(created);
 		}
 		
-				
-		return TransitionSeries.summation(tss);
+		TransitionSeries ts = TransitionSeries.summation(tss);
+		ts.visible = this.visible;
+		
+		return ts;
 		
 	}
 	
