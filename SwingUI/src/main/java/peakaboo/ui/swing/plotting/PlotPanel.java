@@ -1506,8 +1506,9 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		try
 		{
+			String saved = controller.saveSettings();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			controller.savePreferences(baos);
+			baos.write(saved.getBytes());
 			savedSessionFileName = SwidgetIO.saveFile(
 					container.getWindow(),
 					"Save Session Data",
@@ -1678,7 +1679,7 @@ public class PlotPanel extends TabbedInterfacePanel
 					savedSessionFileName);
 			
 			if (f != null) {
-				controller.loadPreferences(new FileInputStream(f), false);
+				controller.loadSettings(StringInput.contents(f), false);
 			}
 		}
 		catch (IOException e)

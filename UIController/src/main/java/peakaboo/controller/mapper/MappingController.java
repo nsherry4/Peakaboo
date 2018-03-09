@@ -10,7 +10,10 @@ import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
 import peakaboo.controller.mapper.mapset.MapSetController;
 import peakaboo.controller.mapper.mapview.MapSettings;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.settings.SavedSettings;
 import peakaboo.datasource.model.DataSource;
+import peakaboo.datasource.model.internal.CroppedDataSource;
+import peakaboo.datasource.model.internal.SelectionDataSource;
 import scitypes.Coord;
 
 
@@ -91,20 +94,24 @@ public class MappingController extends EventfulType<String>
 		return display;
 	}
 
-	public DataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
+	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
 		return plotcontroller.data().getDataSourceForSubset(settings.getDataWidth(), settings.getDataHeight(), cstart, cend);
 	}
 
-	public DataSource getDataSourceForSubset(List<Integer> points)
+	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
 	{
 		return plotcontroller.data().getDataSourceForSubset(points);
 	}
 	
 	
-	public InputStream getSerializedPlotSettings()
+	public SavedSettings getSavedSettingsObject() {
+		return plotcontroller.getSavedSettingsObject();
+	}
+	
+	public String getSavedSettings()
 	{
-		return plotcontroller.getSerializedPlotSettings();
+		return plotcontroller.saveSettings();
 	}
 	
 

@@ -1,7 +1,9 @@
 package peakaboo.controller.plotter;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -17,7 +19,7 @@ import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.controller.plotter.undo.UndoController;
-import peakaboo.controller.settings.Settings;
+import peakaboo.controller.settings.SavedSettings;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
@@ -130,35 +132,19 @@ public class PlotController extends EventfulType<String>
 	}
 	
 	
-	public InputStream getSerializedPlotSettings()
-	{
-		//save the current state
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		savePreferences(baos);
-		
-		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-		return bais;	
+	public SavedSettings getSavedSettingsObject() {
+		return SavedSettings.pack(this);
 	}
 	
-	public void savePreferences(OutputStream outStream)
+	public String saveSettings()
 	{
-		Settings.savePreferences(
-				this, 
-				settingsController.getSettingsModel(), 
-				fittingController.getFittingModel(),
-				filteringController.getFilteringMode(), 
-				outStream
-			);
+		return SavedSettings.pack(this).serialize();
 	}
 
-	public void loadPreferences(InputStream inStream, boolean isUndoAction)
+	public void loadSettings(String data, boolean isUndoAction)
 	{
-		Settings.loadPreferences(this, dataController,
-				settingsController.getSettingsModel(), 
-				fittingController.getFittingModel(),
-				filteringController.getFilteringMode(),
-				inStream
-			);
+		SavedSettings saved = SavedSettings.deserialize(data);
+		SavedSettings.unpack(saved, this);
 		
 		if (!isUndoAction) undoController.setUndoPoint("Load Session");
 		

@@ -4,8 +4,11 @@ package peakaboo.controller.plotter.undo;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.logging.Level;
 
 import eventful.Eventful;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import scitypes.Pair;
 
@@ -29,7 +32,12 @@ public class UndoController extends Eventful implements IUndoController
 	{
 		//save the current state
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		plot.savePreferences(baos);
+		String saved = plot.saveSettings();
+		try {
+			baos.write(saved.getBytes());
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to write state for undo point", e);
+		}
 
 		if (undoModel.undoStack.size() > 0)
 		{
@@ -95,7 +103,7 @@ public class UndoController extends Eventful implements IUndoController
 
 		undoModel.redoStack.push(undoModel.undoStack.pop());
 
-		plot.loadPreferences(new ByteArrayInputStream(undoModel.undoStack.peek().second.toByteArray()), true);
+		plot.loadSettings(new String(undoModel.undoStack.peek().second.toByteArray()), true);
 
 		updateListeners();
 
@@ -110,7 +118,7 @@ public class UndoController extends Eventful implements IUndoController
 
 		undoModel.undoStack.push(undoModel.redoStack.pop());
 
-		plot.loadPreferences(new ByteArrayInputStream(undoModel.undoStack.peek().second.toByteArray()), true);
+		plot.loadSettings(new String(undoModel.undoStack.peek().second.toByteArray()), true);
 
 		updateListeners();
 		plot.settings().updateListeners();

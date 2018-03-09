@@ -92,12 +92,12 @@ public class DataController extends Eventful
 
 
 
-	public DataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
+	public CroppedDataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
 	{
 		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
-	public DataSource getDataSourceForSubset(List<Integer> points)
+	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
 	{
 		return new SelectionDataSource(dataModel.getDataSource(), points);
 	}

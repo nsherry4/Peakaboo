@@ -23,7 +23,11 @@ import javax.swing.JToolBar;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.mapdisplay.AreaSelection;
 import peakaboo.controller.mapper.mapdisplay.PointsSelection;
+import peakaboo.controller.settings.SavedSettings;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.datasource.model.DataSource;
+import peakaboo.datasource.model.internal.CroppedDataSource;
+import peakaboo.datasource.model.internal.SelectionDataSource;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
@@ -160,11 +164,22 @@ public class MapperToolbar extends JToolBar {
 			{
 				AreaSelection areaSelection = controller.getDisplay().getAreaSelection();
 				PointsSelection pointSelection = controller.getDisplay().getPointsSelection();
+				
 				if (areaSelection.hasSelection()) {
-					panel.parentPlotter.newTab(controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd()), controller.getSerializedPlotSettings());
+					CroppedDataSource cds = controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd());
+					SavedSettings settings = controller.getSavedSettingsObject();
+					
+					//TODO: modify the settings data bad scans to update the indexes
+					
+					panel.parentPlotter.newTab(cds, settings.serialize());
 					panel.parentPlotter.getWindow().toFront();
 				} else {
-					panel.parentPlotter.newTab(controller.getDataSourceForSubset(pointSelection.getPoints()), controller.getSerializedPlotSettings());
+					SelectionDataSource sds = controller.getDataSourceForSubset(pointSelection.getPoints());
+					SavedSettings settings = controller.getSavedSettingsObject();
+					
+					//TODO: modify the settings data bad scans to update the indexes
+					
+					panel.parentPlotter.newTab(sds, settings.serialize());
 					panel.parentPlotter.getWindow().toFront();
 				}
 			}
