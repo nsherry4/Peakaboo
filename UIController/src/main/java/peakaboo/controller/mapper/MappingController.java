@@ -2,16 +2,14 @@ package peakaboo.controller.mapper;
 
 
 
-import java.io.InputStream;
 import java.util.List;
 
 import eventful.EventfulType;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
-import peakaboo.controller.mapper.mapset.MapSetController;
-import peakaboo.controller.mapper.mapview.MapSettings;
+import peakaboo.controller.mapper.data.MapSetController;
+import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.settings.SavedSettings;
-import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.internal.CroppedDataSource;
 import peakaboo.datasource.model.internal.SelectionDataSource;
 import scitypes.Coord;
@@ -27,20 +25,15 @@ public class MappingController extends EventfulType<String>
 	
 	
 	public 	MapSetController		mapsController;
-	private MapDisplayController	display;
-	public  MapSettings				settings;
-		
+	private MapSettingsController	display;
+
 	private PlotController			plotcontroller;
 	
 	
 	public MappingController(PlotController plotcontroller)
 	{
-		
 		this.mapsController = new MapSetController();
-		this.settings = new MapSettings(this);
-
-		initialize(plotcontroller);
-		
+		initialize(plotcontroller, null);
 	}
 
 	/**
@@ -52,37 +45,30 @@ public class MappingController extends EventfulType<String>
 	public MappingController(MappingController copy, PlotController plotcontroller)
 	{
 		this.mapsController = copy.mapsController;
-		this.settings = new MapSettings(this, copy.settings);
-		
-		initialize(plotcontroller);
+		initialize(plotcontroller, null);
 		
 	}
 	
 	/**
 	 * This copy constructor copies the user preferences from the map,
-	 * and does directly references the map data
+	 * and does directly reference the map data
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(MapSetController data, MapSettings settings, PlotController plotcontroller)
+	public MappingController(MapSetController data, MapViewSettings copyViewSettings, PlotController plotcontroller)
 	{
 		this.mapsController = data;
-		this.settings = new MapSettings(this, settings);
-		
-		initialize(plotcontroller);
+		initialize(plotcontroller, copyViewSettings);
 		
 	}
 	
 	
-	private void initialize(PlotController plotcontroller)
+	private void initialize(PlotController plotcontroller, MapViewSettings copyViewSettings)
 	{
-		display = new MapDisplayController(this);
+		display = new MapSettingsController(this, copyViewSettings);
 
-			
 		mapsController.addListener(this::updateListeners);
-		display.addListener(this::updateListeners);
-		settings.addListener(this::updateListeners);
-		
+		display.addListener(this::updateListeners);		
 
 		this.plotcontroller = plotcontroller;
 	}
@@ -90,13 +76,13 @@ public class MappingController extends EventfulType<String>
 
 	
 
-	public MapDisplayController getDisplay() {
+	public MapSettingsController getSettings() {
 		return display;
 	}
 
 	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return plotcontroller.data().getDataSourceForSubset(settings.getDataWidth(), settings.getDataHeight(), cstart, cend);
+		return plotcontroller.data().getDataSourceForSubset(getSettings().getView().getDataWidth(), getSettings().getView().getDataHeight(), cstart, cend);
 	}
 
 	public SelectionDataSource getDataSourceForSubset(List<Integer> points)

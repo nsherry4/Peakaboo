@@ -21,8 +21,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
-import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
+import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.controller.mapper.settings.MapFittingSettings;
+import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
@@ -34,25 +35,25 @@ import swidget.widgets.Spacing;
 
 public class Overlay extends JPanel {
 
-	private MapDisplayController controller;
-
+	private MapFittingSettings mapFittings;
+	
 	private JRadioButton 		relativeScale;
 	private JRadioButton 		absoluteScale;
 	private JCheckBox			logView;
 	
-	public Overlay(MapDisplayController _controller) {
+	public Overlay(MapSettingsController _controller) {
 
-		this.controller = _controller;
+		this.mapFittings = _controller.getMapFittings();
 		
 		createElementsList();
 
-		controller.addListener(new EventfulTypeListener<String>() {
+		_controller.addListener(new EventfulTypeListener<String>() {
 
 			public void change(String s)
 			{
 				
-				absoluteScale.setSelected(controller.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-				relativeScale.setSelected(controller.getMapScaleMode() == MapScaleMode.RELATIVE);			
+				absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
+				relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
 
 			}
 		});
@@ -66,9 +67,9 @@ public class Overlay extends JPanel {
 		JPanel viewFrame = new JPanel(new BorderLayout());
 		
 		logView = new JCheckBox("Logarithmic Scale");
-		logView.setSelected(controller.isLogView());
+		logView.setSelected(mapFittings.isLogView());
 		logView.addActionListener(e -> {
-			controller.setLogView(logView.isSelected());
+			mapFittings.setLogView(logView.isSelected());
 		});
 		viewFrame.add(logView, BorderLayout.NORTH);
 		
@@ -104,13 +105,13 @@ public class Overlay extends JPanel {
 		relativeScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.RELATIVE);
+				mapFittings.setMapScaleMode(MapScaleMode.RELATIVE);
 			}
 		});
 		absoluteScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.ABSOLUTE);
+				mapFittings.setMapScaleMode(MapScaleMode.ABSOLUTE);
 			}
 		});
 		
@@ -145,16 +146,16 @@ public class Overlay extends JPanel {
 				if (columnIndex == 0) {
 					
 					Boolean bvalue = (Boolean) value;
-					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
+					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
-					controller.setTransitionSeriesVisibility(ts, bvalue);
-					controller.invalidateInterpolation();
+					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
+					mapFittings.invalidateInterpolation();
 				} 
 				else if (columnIndex == 2)
 				{
-					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
-					controller.setOverlayColour(ts, (OverlayColour)value);
-					controller.invalidateInterpolation();
+					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					mapFittings.setOverlayColour(ts, (OverlayColour)value);
+					mapFittings.invalidateInterpolation();
 				}
 			}
 
@@ -178,13 +179,13 @@ public class Overlay extends JPanel {
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
 
-				TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
+				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
 
-					case 0: return controller.getTransitionSeriesVisibility(ts);
+					case 0: return mapFittings.getTransitionSeriesVisibility(ts);
 					case 1: return ts.toElementString();
-					case 2: return controller.getOverlayColour(ts);
+					case 2: return mapFittings.getOverlayColour(ts);
 				}
 
 				return null;
@@ -192,7 +193,7 @@ public class Overlay extends JPanel {
 			}
 
 			public int getRowCount() {
-				return controller.getAllTransitionSeries().size();
+				return mapFittings.getAllTransitionSeries().size();
 			}
 
 			public String getColumnName(int columnIndex) {

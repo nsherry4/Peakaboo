@@ -15,10 +15,11 @@ import javax.swing.SwingUtilities;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.mapdisplay.AreaSelection;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
-import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
-import peakaboo.controller.mapper.mapdisplay.PointsSelection;
+import peakaboo.controller.mapper.settings.AreaSelection;
+import peakaboo.controller.mapper.settings.MapDisplayMode;
+import peakaboo.controller.mapper.settings.MapScaleMode;
+import peakaboo.controller.mapper.settings.MapViewSettings;
+import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.ui.swing.Peakaboo;
 import scidraw.drawing.DrawingRequest;
@@ -56,6 +57,7 @@ public class MapCanvas extends GraphicsPanel
 {
 
 	MappingController 		controller;
+	MapViewSettings			viewSettings;
 	DrawingRequest 		    dr;
 	
 	private MapDrawing		map;
@@ -66,6 +68,7 @@ public class MapCanvas extends GraphicsPanel
 	public MapCanvas(MappingController controller)
 	{
 		this.controller = controller;
+		this.viewSettings = controller.getSettings().getView();
 		
 		dr = new DrawingRequest();
 		map = new MapDrawing(null, dr);
@@ -130,9 +133,9 @@ public class MapCanvas extends GraphicsPanel
 
 		Coord<Float> mapSize = map.calcMapSize();
 		int locX, locY;
-		locX = (int) (leftOffset + (((float) coord.x / (float) controller.settings.getDataWidth()) * mapSize.x) - (MapDrawing
+		locX = (int) (leftOffset + (((float) coord.x / (float) viewSettings.getDataWidth()) * mapSize.x) - (MapDrawing
 			.calcInterpolatedCellSize(mapSize.x, mapSize.y, dr) * 0.5));
-		locY = (int) (topOffset + (((float) coord.y / (float) controller.settings.getDataHeight()) * mapSize.y) - (MapDrawing
+		locY = (int) (topOffset + (((float) coord.y / (float) viewSettings.getDataHeight()) * mapSize.y) - (MapDrawing
 			.calcInterpolatedCellSize(mapSize.x, mapSize.y, dr) * 0.5));
 
 		return new Coord<Integer>(locX, locY);
@@ -154,51 +157,51 @@ public class MapCanvas extends GraphicsPanel
 	private void drawBackendComposite(Surface backend, boolean vector, int spectrumSteps)
 	{
 		
-		AbstractPalette palette 			=		new ThermalScalePalette(spectrumSteps, controller.settings.getMonochrome());
+		AbstractPalette palette 			=		new ThermalScalePalette(spectrumSteps, viewSettings.getMonochrome());
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
 		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
 		
-		Spectrum data = controller.getDisplay().getCompositeMapData();
+		Spectrum data = controller.getSettings().getMapFittings().getCompositeMapData();
 		
-		dr.uninterpolatedWidth = controller.settings.getDataWidth();
-		dr.uninterpolatedHeight = controller.settings.getDataHeight();
-		dr.dataWidth = controller.settings.getInterpolatedWidth();
-		dr.dataHeight = controller.settings.getInterpolatedHeight();
-		dr.viewTransform = controller.getDisplay().isLogView() ? ViewTransform.LOG : ViewTransform.LINEAR;
+		dr.uninterpolatedWidth = viewSettings.getDataWidth();
+		dr.uninterpolatedHeight = viewSettings.getDataHeight();
+		dr.dataWidth = viewSettings.getInterpolatedWidth();
+		dr.dataHeight = viewSettings.getInterpolatedHeight();
+		dr.viewTransform = controller.getSettings().getMapFittings().isLogView() ? ViewTransform.LOG : ViewTransform.LINEAR;
 
 		
-		if (controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE)
+		if (controller.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE)
 		{
 			dr.maxYIntensity = data.max();
 		}
 		else
 		{
-			dr.maxYIntensity = controller.getDisplay().sumAllTransitionSeriesMaps().max();
+			dr.maxYIntensity = controller.getSettings().getMapFittings().sumAllTransitionSeriesMaps().max();
 		}
 
 		
-		palette = new ThermalScalePalette(spectrumSteps, controller.settings.getMonochrome());
+		palette = new ThermalScalePalette(spectrumSteps, viewSettings.getMonochrome());
 
 		
 
-		if (controller.settings.getShowDatasetTitle())
+		if (viewSettings.getShowDatasetTitle())
 		{
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.mapsController.getDatasetTitle(), null));
 		}
 
-		if (controller.settings.getShowTitle())
+		if (viewSettings.getShowTitle())
 		{
 			String mapTitle = "";
 
-			if (controller.getDisplay().getVisibleTransitionSeries().size() > 1)
+			if (controller.getSettings().getMapFittings().getVisibleTransitionSeries().size() > 1)
 			{
-				mapTitle = "Composite of " + controller.getDisplay().mapLongTitle();
+				mapTitle = "Composite of " + controller.getSettings().getMapFittings().mapLongTitle();
 			}
 			else
 			{
-				mapTitle = "Map of " + controller.getDisplay().mapLongTitle();
+				mapTitle = "Map of " + controller.getSettings().getMapFittings().mapLongTitle();
 			}
 			
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
@@ -208,20 +211,20 @@ public class MapCanvas extends GraphicsPanel
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter
 		(
 
-			controller.settings.getDrawCoords(),
+			viewSettings.getDrawCoords(),
 			controller.mapsController.getBottomLeftCoord(),
 			controller.mapsController.getBottomRightCoord(),
 			controller.mapsController.getTopLeftCoord(),
 			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getRealDimensionUnits(),
 
-			controller.settings.getShowSpectrum(),
+			viewSettings.getShowSpectrum(),
 			SPECTRUM_HEIGHT,
 			spectrumSteps,
 			paletteList,
 
 			controller.mapsController.getRealDimensions() != null,
-			(controller.getDisplay().isLogView() ? "Log Scale Intensity (counts)" : "Intensity (counts)")
+			(controller.getSettings().getMapFittings().isLogView() ? "Log Scale Intensity (counts)" : "Intensity (counts)")
 		);
 		axisPainters.add(spectrumCoordPainter);
 
@@ -238,7 +241,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (contourMapPainter == null) {
-			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data, controller.settings.getContours(), spectrumSteps); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data, viewSettings.getContours(), spectrumSteps); 
 		} else {
 			/*Spectrum modData = SpectrumCalculations.gridYReverse(
 					data, 
@@ -251,15 +254,15 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//There should only ever be one selection active at a time
-		AreaSelection areaSelection = controller.getDisplay().getAreaSelection();
+		AreaSelection areaSelection = controller.getSettings().getAreaSelection();
 		if (areaSelection.hasSelection())
 		{
 			mapPainters.add(new BoundedRegionPainter(Color.white, areaSelection.getStart(), areaSelection.getEnd()));
 		}
 		
-		PointsSelection pointsSelection = controller.getDisplay().getPointsSelection();
+		PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
 		if (pointsSelection.hasSelection()) {
-			mapPainters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), controller.settings.getDataWidth(), controller.settings.getDataHeight()));
+			mapPainters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), viewSettings.getDataWidth(), viewSettings.getDataHeight()));
 		}
 		
 		
@@ -284,17 +287,17 @@ public class MapCanvas extends GraphicsPanel
 		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
 		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
-		Pair<Spectrum, Spectrum> ratiodata = controller.getDisplay().getRatioMapData();
+		Pair<Spectrum, Spectrum> ratiodata = controller.getSettings().getMapFittings().getRatioMapData();
 		
-		dr.uninterpolatedWidth = controller.settings.getDataWidth();
-		dr.uninterpolatedHeight = controller.settings.getDataHeight();
-		dr.dataWidth = controller.settings.getInterpolatedWidth();
-		dr.dataHeight = controller.settings.getInterpolatedHeight();
+		dr.uninterpolatedWidth = viewSettings.getDataWidth();
+		dr.uninterpolatedHeight = viewSettings.getDataHeight();
+		dr.dataWidth = viewSettings.getInterpolatedWidth();
+		dr.dataHeight = viewSettings.getInterpolatedHeight();
 		//LOG view not supported
 		dr.viewTransform = ViewTransform.LINEAR;
 		
 		//create a unique list of the represented sides of the ratio from the set of visible TransitionSeries
-		List<Integer> ratioSideValues = controller.getDisplay().getVisibleTransitionSeries().stream().map(ts -> controller.getDisplay().getRatioSide(ts)).distinct().collect(toList());
+		List<Integer> ratioSideValues = controller.getSettings().getMapFittings().getVisibleTransitionSeries().stream().map(ts -> controller.getSettings().getMapFittings().getRatioSide(ts)).distinct().collect(toList());
 		
 		
 		//this is a valid ratio if there is at least 1 visible TS for each side
@@ -310,7 +313,7 @@ public class MapCanvas extends GraphicsPanel
 		//if this is a valid ratio, make a real colour palette -- otherwise, just a black palette
 		if (validRatio)
 		{
-			paletteList.add(new RatioPalette(spectrumSteps, controller.settings.getMonochrome()));
+			paletteList.add(new RatioPalette(spectrumSteps, viewSettings.getMonochrome()));
 		}
 		
 		
@@ -335,16 +338,16 @@ public class MapCanvas extends GraphicsPanel
 
 		
 		//if we're showing a dataset title, add a title axis painter to put a title on the top
-		if (controller.settings.getShowDatasetTitle())
+		if (viewSettings.getShowDatasetTitle())
 		{
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.mapsController.getDatasetTitle(), null));
 		}
 
 		//if we're map title, add a title axis painter to put a title on the bottom
-		if (controller.settings.getShowTitle())
+		if (viewSettings.getShowTitle())
 		{
 			String mapTitle = "";
-			mapTitle = controller.getDisplay().mapLongTitle();
+			mapTitle = controller.getSettings().getMapFittings().mapLongTitle();
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
 		}
 		
@@ -352,22 +355,22 @@ public class MapCanvas extends GraphicsPanel
 		//create a new coordinate/axis painter using the values in the model
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter
 		(
-			controller.settings.getDrawCoords(),
+			viewSettings.getDrawCoords(),
 			controller.mapsController.getBottomLeftCoord(),
 			controller.mapsController.getBottomRightCoord(),
 			controller.mapsController.getTopLeftCoord(),
 			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getRealDimensionUnits(),
 
-			controller.settings.getShowSpectrum(),
+			viewSettings.getShowSpectrum(),
 			SPECTRUM_HEIGHT,
 			spectrumSteps,
 			paletteList,
 
 			controller.mapsController.getRealDimensions() != null,
-			"Intensity (ratio)" + (controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Ratio sides scaled independently" : ""),
+			"Intensity (ratio)" + (controller.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Ratio sides scaled independently" : ""),
 			1,
-			controller.getDisplay().getMapDisplayMode() == MapDisplayMode.RATIO,
+			controller.getSettings().getMapFittings().getMapDisplayMode() == MapDisplayMode.RATIO,
 			spectrumMarkers
 		);
 		axisPainters.add(spectrumCoordPainter);
@@ -384,7 +387,7 @@ public class MapCanvas extends GraphicsPanel
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (ratioMapPainter == null) {
-			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, controller.settings.getContours(), spectrumSteps); 
+			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, viewSettings.getContours(), spectrumSteps); 
 		} else {
 			ratioMapPainter.setData(ratiodata.first);
 			ratioMapPainter.setPalettes(paletteList);
@@ -410,14 +413,14 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//There should only ever be one selection active at a time
-		AreaSelection selection = controller.getDisplay().getAreaSelection();
+		AreaSelection selection = controller.getSettings().getAreaSelection();
 		if (selection.hasSelection())
 		{
 			mapPainters.add(new BoundedRegionPainter(Color.white, selection.getStart(), selection.getEnd()));
 		}
-		PointsSelection pointsSelection = controller.getDisplay().getPointsSelection();
+		PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
 		if (pointsSelection.hasSelection()) {
-			mapPainters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), controller.settings.getDataWidth(), controller.settings.getDataHeight()));
+			mapPainters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), viewSettings.getDataWidth(), viewSettings.getDataHeight()));
 		}
 		
 		map.setPainters(mapPainters);
@@ -439,14 +442,14 @@ public class MapCanvas extends GraphicsPanel
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
-		Map<OverlayColour, Spectrum> data = controller.getDisplay().getOverlayMapData();
+		Map<OverlayColour, Spectrum> data = controller.getSettings().getMapFittings().getOverlayMapData();
 		
 		
-		dr.uninterpolatedWidth = controller.settings.getDataWidth();
-		dr.uninterpolatedHeight = controller.settings.getDataHeight();
-		dr.dataWidth = controller.settings.getInterpolatedWidth();
-		dr.dataHeight = controller.settings.getInterpolatedHeight();
-		dr.viewTransform = controller.getDisplay().isLogView() ? ViewTransform.LOG : ViewTransform.LINEAR;
+		dr.uninterpolatedWidth = viewSettings.getDataWidth();
+		dr.uninterpolatedHeight = viewSettings.getDataHeight();
+		dr.dataWidth = viewSettings.getInterpolatedWidth();
+		dr.dataHeight = viewSettings.getInterpolatedHeight();
+		dr.viewTransform = controller.getSettings().getMapFittings().isLogView() ? ViewTransform.LOG : ViewTransform.LINEAR;
 		
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
@@ -468,31 +471,31 @@ public class MapCanvas extends GraphicsPanel
 
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
-			controller.settings.getDrawCoords(),
+			viewSettings.getDrawCoords(),
 			controller.mapsController.getBottomLeftCoord(),
 			controller.mapsController.getBottomRightCoord(),
 			controller.mapsController.getTopLeftCoord(),
 			controller.mapsController.getTopRightCoord(),
 			controller.mapsController.getRealDimensionUnits(),
 
-			controller.settings.getShowSpectrum(),
+			viewSettings.getShowSpectrum(),
 			SPECTRUM_HEIGHT,
 
 			controller.mapsController.getRealDimensions() != null,
 			"Colour" +
-					(controller.getDisplay().isLogView() ? " (Log Scale)" : "") + 
-					(controller.getDisplay().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : ""),
+					(controller.getSettings().getMapFittings().isLogView() ? " (Log Scale)" : "") + 
+					(controller.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : ""),
 
 			// create a list of color,string pairs for the legend by mapping the list of transitionseries per
 			// colour and filter for empty strings
 
 			// input list - get a unique list of colours in use
 
-			controller.getDisplay().getOverlayColourValues().stream()
+			controller.getSettings().getMapFittings().getOverlayColourValues().stream()
 				.distinct()
 				.map(ocolour -> new Pair<Color, String>(ocolour.toColor(),					//convert the color objects into color,string pairs (ie color/element list)	
-						controller.getDisplay().getOverlayColourKeys().stream()						//grab a list of all TSs from the TS->Colour	
-							.filter(ts -> controller.getDisplay().getOverlayColour(ts) == ocolour)	//filter for the right color
+						controller.getSettings().getMapFittings().getOverlayColourKeys().stream()						//grab a list of all TSs from the TS->Colour	
+							.filter(ts -> controller.getSettings().getMapFittings().getOverlayColour(ts) == ocolour)	//filter for the right color
 							.map(ts -> ts.toElementString())								//get element string
 							.collect(joining(", "))											//comma separated list
 						)
@@ -506,15 +509,15 @@ public class MapCanvas extends GraphicsPanel
 
 			
 
-		if (controller.settings.getShowDatasetTitle())
+		if (viewSettings.getShowDatasetTitle())
 		{
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.mapsController.getDatasetTitle(), null));
 		}
 
-		if (controller.settings.getShowTitle())
+		if (viewSettings.getShowTitle())
 		{
 			String mapTitle = "";
-			mapTitle = "Overlay of " + controller.getDisplay().mapLongTitle();
+			mapTitle = "Overlay of " + controller.getSettings().getMapFittings().mapLongTitle();
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
 		}
 
@@ -581,15 +584,15 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//There should only ever be one selection active at a time
-		AreaSelection selection = controller.getDisplay().getAreaSelection();
+		AreaSelection selection = controller.getSettings().getAreaSelection();
 		if (selection.hasSelection())
 		{
 			painters.add(new BoundedRegionPainter(Color.white, selection.getStart(), selection.getEnd()));
 		}
 		
-		PointsSelection pointsSelection = controller.getDisplay().getPointsSelection();
+		PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
 		if (pointsSelection.hasSelection()) {
-			painters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), controller.settings.getDataWidth(), controller.settings.getDataHeight()));
+			painters.add(new SelectionMaskPainter(Color.white, pointsSelection.getPoints(), viewSettings.getDataWidth(), viewSettings.getDataHeight()));
 		}
 
 		
@@ -614,7 +617,7 @@ public class MapCanvas extends GraphicsPanel
 			parentWidth = this.getParent().getWidth();
 		}
 
-		int newWidth = (int) (parentWidth * controller.settings.getZoom());
+		int newWidth = (int) (parentWidth * viewSettings.getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
 		
@@ -626,7 +629,7 @@ public class MapCanvas extends GraphicsPanel
 			parentHeight = this.getParent().getHeight();
 		}
 
-		int newHeight = (int) (parentHeight * controller.settings.getZoom());
+		int newHeight = (int) (parentHeight * viewSettings.getZoom());
 		if (newHeight < parentHeight) newHeight = (int) parentHeight;
 		
 		
@@ -666,11 +669,11 @@ public class MapCanvas extends GraphicsPanel
 		
 
 		// Map Dimensions
-		int originalWidth = controller.settings.getDataWidth();
-		int originalHeight = controller.settings.getDataHeight();
+		int originalWidth = viewSettings.getDataWidth();
+		int originalHeight = viewSettings.getDataHeight();
 
-		dr.dataHeight = controller.settings.getDataHeight();
-		dr.dataWidth = controller.settings.getDataWidth();
+		dr.dataHeight = viewSettings.getDataHeight();
+		dr.dataWidth = viewSettings.getDataWidth();
 		dr.imageWidth = getWidth();
 		dr.imageHeight = getHeight();
 		
@@ -704,9 +707,9 @@ public class MapCanvas extends GraphicsPanel
 		}
 		
 		
-		final int spectrumSteps = (controller.settings.getContours()) ? controller.settings.getSpectrumSteps() : Spectrums.DEFAULT_STEPS;
+		final int spectrumSteps = (viewSettings.getContours()) ? viewSettings.getSpectrumSteps() : Spectrums.DEFAULT_STEPS;
 		
-		switch (controller.getDisplay().getMapDisplayMode())
+		switch (controller.getSettings().getMapFittings().getMapDisplayMode())
 		{
 			case COMPOSITE:
 				drawBackendComposite(context, vector, spectrumSteps);

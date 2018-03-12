@@ -16,35 +16,36 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
-import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
+import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.controller.mapper.settings.MapFittingSettings;
+import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.mapping.results.MapResult;
 import swidget.widgets.Spacing;
 
 public class Composite extends JPanel {
 	
-	private MapDisplayController		controller;
+	private MapFittingSettings mapFittings;
 	
 	private JRadioButton 		relativeScale;
 	private JRadioButton 		absoluteScale;
 	private JCheckBox			logView;
 	
 	
-	public Composite(MapDisplayController _controller) {
+	public Composite(MapSettingsController _controller) {
 		
-		this.controller = _controller;
+		this.mapFittings = _controller.getMapFittings();
 		
 		createElementsList();
 		
-		controller.addListener(new EventfulTypeListener<String>() {
+		_controller.addListener(new EventfulTypeListener<String>() {
 
 			public void change(String s)
 			{
 				
-				absoluteScale.setSelected(controller.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-				relativeScale.setSelected(controller.getMapScaleMode() == MapScaleMode.RELATIVE);			
-				logView.setSelected(controller.isLogView());
+				absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
+				relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
+				logView.setSelected(mapFittings.isLogView());
 			}
 		});
 		
@@ -70,9 +71,9 @@ public class Composite extends JPanel {
 		JPanel viewFrame = new JPanel(new BorderLayout());
 		
 		logView = new JCheckBox("Logarithmic Scale");
-		logView.setSelected(controller.isLogView());
+		logView.setSelected(mapFittings.isLogView());
 		logView.addActionListener(e -> {
-			controller.setLogView(logView.isSelected());
+			mapFittings.setLogView(logView.isSelected());
 		});
 		viewFrame.add(logView, BorderLayout.NORTH);
 		
@@ -95,8 +96,8 @@ public class Composite extends JPanel {
 		scaleGroup.add(absoluteScale);
 		absoluteScale.setSelected(true);
 		
-		relativeScale.addActionListener(e -> controller.setMapScaleMode(MapScaleMode.RELATIVE));
-		absoluteScale.addActionListener(e -> controller.setMapScaleMode(MapScaleMode.ABSOLUTE));
+		relativeScale.addActionListener(e -> mapFittings.setMapScaleMode(MapScaleMode.RELATIVE));
+		absoluteScale.addActionListener(e -> mapFittings.setMapScaleMode(MapScaleMode.ABSOLUTE));
 		
 		modeFrame.add(relativeScale);
 		modeFrame.add(absoluteScale);
@@ -116,9 +117,9 @@ public class Composite extends JPanel {
 			{
 				if (columnIndex == 0) {
 					Boolean bvalue = (Boolean) value;
-					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
-					controller.setTransitionSeriesVisibility(ts, bvalue);
-					controller.invalidateInterpolation();
+					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
+					mapFittings.invalidateInterpolation();
 				}
 			}
 
@@ -140,11 +141,11 @@ public class Composite extends JPanel {
 			public Object getValueAt(int rowIndex, int columnIndex)
 			{
 				
-				TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
+				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 				
 				if (columnIndex == 0) {
 
-					return controller.getTransitionSeriesVisibility(ts);
+					return mapFittings.getTransitionSeriesVisibility(ts);
 
 				} else {
 
@@ -156,7 +157,7 @@ public class Composite extends JPanel {
 
 			public int getRowCount()
 			{
-				return controller.getAllTransitionSeries().size();
+				return mapFittings.getAllTransitionSeries().size();
 			}
 
 

@@ -41,7 +41,7 @@ public class MapStatusBar extends JPanel {
 		ZoomSlider zoom = new ZoomSlider(10, 100, 1);
 		add(zoom, BorderLayout.EAST);
 		zoom.addListener(() -> {
-			controller.settings.setZoom(zoom.getValue()/10f);
+			controller.getSettings().getView().setZoom(zoom.getValue()/10f);
 		});
 		
 		
@@ -62,13 +62,13 @@ public class MapStatusBar extends JPanel {
 			return;
 		}
 
-		int index = mapCoord.y * controller.settings.getDataWidth() + mapCoord.x;
+		int index = mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x;
 		index++;
 		
-		if (controller.settings.isValidPoint(mapCoord))
+		if (controller.getSettings().getView().isValidPoint(mapCoord))
 		{
-			String value = controller.getDisplay().getIntensityMeasurementAtPoint(mapCoord);
-			if (controller.settings.getInterpolation() != 0) value += " (not interpolated)";
+			String value = controller.getSettings().getMapFittings().getIntensityMeasurementAtPoint(mapCoord);
+			if (controller.getSettings().getView().getInterpolation() != 0) value += " (not interpolated)";
 			
 			setStatus("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
 					+ value);

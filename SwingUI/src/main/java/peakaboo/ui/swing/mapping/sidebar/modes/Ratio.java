@@ -22,8 +22,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
-import peakaboo.controller.mapper.mapdisplay.MapScaleMode;
+import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.controller.mapper.settings.MapFittingSettings;
+import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import swidget.icons.IconSize;
@@ -34,14 +35,14 @@ import swidget.widgets.Spacing;
 
 public class Ratio extends JPanel {
 
-	private MapDisplayController controller;
-
+	private MapFittingSettings mapFittings;
+	
 	private JRadioButton 		relativeScale;
 	private JRadioButton 		absoluteScale;
 	
-	public Ratio(MapDisplayController _controller) {
+	public Ratio(MapSettingsController _controller) {
 
-		this.controller = _controller;
+		this.mapFittings = _controller.getMapFittings();
 
 		setLayout(new GridBagLayout());
 
@@ -58,13 +59,13 @@ public class Ratio extends JPanel {
 		add(createElementsList(), maingbc);
 		
 		
-		controller.addListener(new EventfulTypeListener<String>() {
+		_controller.addListener(new EventfulTypeListener<String>() {
 
 			public void change(String s)
 			{
 				
-				absoluteScale.setSelected(controller.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-				relativeScale.setSelected(controller.getMapScaleMode() == MapScaleMode.RELATIVE);			
+				absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
+				relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
 
 			}
 		});
@@ -107,13 +108,13 @@ public class Ratio extends JPanel {
 		relativeScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.RELATIVE);
+				mapFittings.setMapScaleMode(MapScaleMode.RELATIVE);
 			}
 		});
 		absoluteScale.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				controller.setMapScaleMode(MapScaleMode.ABSOLUTE);
+				mapFittings.setMapScaleMode(MapScaleMode.ABSOLUTE);
 			}
 		});
 		
@@ -148,16 +149,16 @@ public class Ratio extends JPanel {
 				if (columnIndex == 0) {
 					
 					Boolean bvalue = (Boolean) value;
-					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
+					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
-					controller.setTransitionSeriesVisibility(ts, bvalue);
-					controller.invalidateInterpolation();
+					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
+					mapFittings.invalidateInterpolation();
 				} 
 				else if (columnIndex == 2)
 				{
-					TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
-					controller.setRatioSide(ts, (Integer)value);
-					controller.invalidateInterpolation();
+					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					mapFittings.setRatioSide(ts, (Integer)value);
+					mapFittings.invalidateInterpolation();
 				}
 			}
 
@@ -181,13 +182,13 @@ public class Ratio extends JPanel {
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
 
-				TransitionSeries ts = controller.getAllTransitionSeries().get(rowIndex);
+				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
 
-					case 0: return controller.getTransitionSeriesVisibility(ts);
+					case 0: return mapFittings.getTransitionSeriesVisibility(ts);
 					case 1: return ts.toElementString();
-					case 2: return controller.getRatioSide(ts);
+					case 2: return mapFittings.getRatioSide(ts);
 				}
 
 				return null;
@@ -195,7 +196,7 @@ public class Ratio extends JPanel {
 			}
 
 			public int getRowCount() {
-				return controller.getAllTransitionSeries().size();
+				return mapFittings.getAllTransitionSeries().size();
 			}
 
 			public String getColumnName(int columnIndex) {

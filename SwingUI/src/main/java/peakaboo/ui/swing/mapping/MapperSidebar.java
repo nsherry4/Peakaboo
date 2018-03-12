@@ -101,7 +101,7 @@ public class MapperSidebar extends JPanel
 		
 		JPanel tabFittings = new JPanel(new BorderLayout());
 		tabFittings.setBorder(Spacing.bSmall());
-		tabFittings.add(new MapFittingPanel(controller.getDisplay()), BorderLayout.CENTER);
+		tabFittings.add(new MapFittingPanel(controller.getSettings()), BorderLayout.CENTER);
 		tabs.add("Peak Fittings", tabFittings);
 		
 		

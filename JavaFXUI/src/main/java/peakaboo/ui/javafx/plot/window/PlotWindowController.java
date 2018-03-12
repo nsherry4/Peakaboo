@@ -25,8 +25,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.mapset.MapSetController;
-import peakaboo.controller.mapper.mapview.MapSettings;
+import peakaboo.controller.mapper.data.MapSetController;
+import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.dataset.DatasetReadResult;
@@ -171,7 +171,6 @@ public class PlotWindowController extends IActofUIController {
     public void onMapFittings() throws IOException {
     	//TODO: Show progress
     	MapResultSet results = plotController.getMapCreationTask(FittingTransform.AREA).startWorkingBlocking();
-    	MapSettings mapSettings = plotController.getLastMapSettings();
     	MapSetController mapData = new MapSetController();
     	
     	
@@ -197,7 +196,7 @@ public class PlotWindowController extends IActofUIController {
 			);
 
 		
-		MappingController mapController = new MappingController(mapData, mapSettings, plotController);
+		MappingController mapController = new MappingController(mapData, null, plotController);
 		    	
 		
 		//create a new change bus for the mapping window, it's results should be isolated from changes elsewhere

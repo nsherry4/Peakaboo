@@ -38,16 +38,16 @@ public class MapTabController extends IActofUIController {
 	private void setMappingController(MappingController controller) {
 		this.controller = controller;
 		
-		controller.settings.setDataWidth(121);
-		controller.settings.setDataHeight(41);
+		controller.getSettings().getView().setDataWidth(121);
+		controller.getSettings().getView().setDataHeight(41);
 
 		
 		
 		int minX, minY, maxX, maxY;
 		minX = 0;
 		minY = 0;
-		maxX = controller.settings.getDataWidth();
-		maxY = controller.settings.getDataHeight();
+		maxX = controller.getSettings().getView().getDataWidth();
+		maxY = controller.getSettings().getView().getDataHeight();
 		
 		Spectrum spectrum = controller.mapsController.getMapResultSet().sumAllTransitionSeriesMaps();
 		Series<Number, Number> series  = Spectrums.asSeries2D(spectrum, maxX, maxY);

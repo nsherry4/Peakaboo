@@ -1,11 +1,8 @@
-package peakaboo.controller.mapper.mapdisplay;
+package peakaboo.controller.mapper.settings;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,12 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import eventful.EventfulType;
 import peakaboo.calculations.Interpolation;
-import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
@@ -34,82 +29,76 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class MapDisplayController extends EventfulType<String>
-{
+public class MapFittingSettings extends EventfulType<String> {
 	
+	private MappingController map;
 	
-	private MapDisplaySettings 	tabModel;
-	private MappingController 	map;
 	private Function<Coord<Integer>, String> valueAtCoord;
-
-	private AreaSelection areaSelection;
-	private PointsSelection pointsSelection;
+	
+	private Map<TransitionSeries, Integer> ratioSide;
+	private Map<TransitionSeries, OverlayColour> overlayColour;
+	private Map<TransitionSeries, Boolean> visible;
+	
+	private MapScaleMode mapScaleMode;
+	
+	private MapDisplayMode displayMode;
+	private boolean logView;
 	
 	
-	public MapDisplayController(MappingController map)
-	{
-		
+	public MapFittingSettings(MappingController map){
 		this.map = map;
 		
-		tabModel = new MapDisplaySettings(map.mapsController.getMapResultSet().getAllTransitionSeries());
+		displayMode = MapDisplayMode.COMPOSITE;
+		mapScaleMode = MapScaleMode.ABSOLUTE;
 		
-		//create selection models and pass their events along
-		areaSelection = new AreaSelection(map);
-		areaSelection.addListener(this::updateListeners);
+		ratioSide = new HashMap<TransitionSeries, Integer>();
+		overlayColour = new HashMap<TransitionSeries, OverlayColour>();
+		visible = new HashMap<TransitionSeries, Boolean>();
 		
-		pointsSelection = new PointsSelection(map);
-		pointsSelection.addListener(this::updateListeners);
-
+		for (TransitionSeries ts : map.mapsController.getMapResultSet().getAllTransitionSeries())
+		{
+			ratioSide.put(ts, 1);
+			overlayColour.put(ts, OverlayColour.RED);
+			visible.put(ts, true);
+		}
 		
 	}
-
-
-	public AreaSelection getAreaSelection() {
-		return areaSelection;
-	}
-
 	
-
-	public PointsSelection getPointsSelection() {
-		return pointsSelection;
-	}
-
+	
 
 	public MapScaleMode getMapScaleMode()
 	{
-		return tabModel.mapScaleMode;
+		return this.mapScaleMode;
 	}
 
 
 	public void setMapScaleMode(MapScaleMode mode)
 	{
-		tabModel.mapScaleMode = mode;
+		this.mapScaleMode = mode;
 		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
 
 	public boolean isLogView() {
-		return tabModel.logView;
+		return this.logView;
 	}
 	public void setLogView(boolean logView) {
-		tabModel.logView = logView;
+		this.logView = logView;
 		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
 	
 
 	public MapDisplayMode getMapDisplayMode()
 	{
-		return tabModel.displayMode;
+		return this.displayMode;
 	}
 
 
 
 	public void setMapDisplayMode(MapDisplayMode mode)
 	{		
-		tabModel.displayMode = mode;
+		this.displayMode = mode;
 		invalidateInterpolation();
 	}
-	
-	
 	
 
 	public void invalidateInterpolation()
@@ -132,15 +121,15 @@ public class MapDisplayController extends EventfulType<String>
 		Spectrum data = sumVisibleTransitionSeriesMaps();
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.settings.getDataWidth(),
-				map.settings.getDataHeight(),
+				map.getSettings().getView().getDataWidth(),
+				map.getSettings().getView().getDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, data, map.mapsController.getBadPoints());
 		
 		// interpolation of data
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(data, grid, map.settings.getInterpolation());
+		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(data, grid, map.getSettings().getView().getInterpolation());
 
 		
 		//map.mapsController.interpolatedSize.x = interpolationResult.first.width;
@@ -159,8 +148,8 @@ public class MapDisplayController extends EventfulType<String>
 	{
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.settings.getDataWidth(),
-				map.settings.getDataHeight(),
+				map.getSettings().getView().getDataWidth(),
+				map.getSettings().getView().getDataHeight(),
 				0.0f);
 		
 		
@@ -174,7 +163,7 @@ public class MapDisplayController extends EventfulType<String>
 		
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = dataset.stream()
-				.filter(e -> (tabModel.overlayColour.get(e.first) == OverlayColour.RED))
+				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.RED))
 				.map(e -> e.second)
 				.collect(toList());
 
@@ -182,7 +171,7 @@ public class MapDisplayController extends EventfulType<String>
 			redSpectrum = redSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.RED, redSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(redSpectrum, grid, map.settings.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(redSpectrum, grid, map.getSettings().getView().getInterpolation());
 			redSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -195,7 +184,7 @@ public class MapDisplayController extends EventfulType<String>
 		
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> greenSpectrums = dataset.stream()
-				.filter(e -> (tabModel.overlayColour.get(e.first) == OverlayColour.GREEN))
+				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.GREEN))
 				.map(e -> e.second)
 				.collect(toList());
 		
@@ -203,7 +192,7 @@ public class MapDisplayController extends EventfulType<String>
 			greenSpectrum = greenSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.GREEN, greenSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, map.settings.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, map.getSettings().getView().getInterpolation());
 			greenSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -216,7 +205,7 @@ public class MapDisplayController extends EventfulType<String>
 			
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> blueSpectrums = dataset.stream()
-				.filter(e -> tabModel.overlayColour.get(e.first) == OverlayColour.BLUE)
+				.filter(e -> this.overlayColour.get(e.first) == OverlayColour.BLUE)
 				.map(e -> e.second)
 				.collect(toList());
 		
@@ -224,7 +213,7 @@ public class MapDisplayController extends EventfulType<String>
 			blueSpectrum = blueSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.BLUE, blueSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, map.settings.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, map.getSettings().getView().getInterpolation());
 			blueSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -238,7 +227,7 @@ public class MapDisplayController extends EventfulType<String>
 		
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> yellowSpectrums = dataset.stream()
-				.filter(e -> tabModel.overlayColour.get(e.first) == OverlayColour.YELLOW)
+				.filter(e -> this.overlayColour.get(e.first) == OverlayColour.YELLOW)
 				.map(e -> e.second)
 				.collect(toList());
 		
@@ -246,7 +235,7 @@ public class MapDisplayController extends EventfulType<String>
 			yellowSpectrum = yellowSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
 			uninterpolatedColours.put(OverlayColour.YELLOW, yellowSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(yellowSpectrum, grid, map.settings.getInterpolation());
+			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(yellowSpectrum, grid, map.getSettings().getView().getInterpolation());
 			yellowSpectrum = interpolationResult.second;
 			//mapModel.interpolatedSize.x = interpolationResult.first.width;
 			//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -257,7 +246,7 @@ public class MapDisplayController extends EventfulType<String>
 			
 		
 		
-		if (tabModel.mapScaleMode == MapScaleMode.RELATIVE)
+		if (this.mapScaleMode == MapScaleMode.RELATIVE)
 		{
 			if (redSpectrum != null ) SpectrumCalculations.normalize_inplace(redSpectrum);
 			if (greenSpectrum != null ) SpectrumCalculations.normalize_inplace(greenSpectrum);
@@ -291,7 +280,7 @@ public class MapDisplayController extends EventfulType<String>
 		Spectrum side1Data = sumGivenTransitionSeriesMaps(side1);
 		Spectrum side2Data = sumGivenTransitionSeriesMaps(side2);
 		
-		if (tabModel.mapScaleMode == MapScaleMode.RELATIVE)
+		if (this.mapScaleMode == MapScaleMode.RELATIVE)
 		{
 			SpectrumCalculations.normalize_inplace(side1Data);
 			SpectrumCalculations.normalize_inplace(side2Data);
@@ -328,8 +317,8 @@ public class MapDisplayController extends EventfulType<String>
 		
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.settings.getDataWidth(),
-				map.settings.getDataHeight(),
+				map.getSettings().getView().getDataWidth(),
+				map.getSettings().getView().getDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
@@ -338,7 +327,7 @@ public class MapDisplayController extends EventfulType<String>
 	
 		Spectrum mapdata;
 		
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(ratioData, grid, map.settings.getInterpolation());
+		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(ratioData, grid, map.getSettings().getView().getInterpolation());
 		mapdata = interpolationResult.second;
 		//mapModel.interpolatedSize.x = interpolationResult.first.width;
 		//mapModel.interpolatedSize.y = interpolationResult.first.height;
@@ -382,9 +371,9 @@ public class MapDisplayController extends EventfulType<String>
 	{
 		valueAtCoord = coord -> {
 			
-			if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
+			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.settings.getDataWidth() * coord.y + coord.x;
+			int index = map.getSettings().getView().getDataWidth() * coord.y + coord.x;
 			List<String> results = new ArrayList<String>();
 			for (OverlayColour c : OverlayColour.values())
 			{
@@ -404,9 +393,9 @@ public class MapDisplayController extends EventfulType<String>
 	private void putValueFunctionForRatio(final Pair<Spectrum, Spectrum> ratioData)
 	{
 		valueAtCoord = coord -> {
-			if (tabModel.mapScaleMode == MapScaleMode.RELATIVE) return "--";
+			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.settings.getDataWidth() * coord.y + coord.x;
+			int index = map.getSettings().getView().getDataWidth() * coord.y + coord.x;
 			if (ratioData.second.get(index) != 0) return "Invalid";
 			return Ratios.fromFloat(  ratioData.first.get(index)  );
 		};
@@ -422,7 +411,7 @@ public class MapDisplayController extends EventfulType<String>
 	private void putValueFunctionForComposite(final Spectrum data)
 	{
 		valueAtCoord = coord -> {
-			int index = map.settings.getDataWidth() * coord.y + coord.x;
+			int index = map.getSettings().getView().getDataWidth() * coord.y + coord.x;
 			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
 		};
 	}
@@ -460,7 +449,7 @@ public class MapDisplayController extends EventfulType<String>
 		//the getXXXXXXXXMapData methods have the side-effect of (re)placing
 		//the valueAdCoord :: Coord<Integer> -> String  variable/function to reflect the values it calculates
 		//we run these methods to ensure that the data and the function are correct
-		switch (tabModel.displayMode)
+		switch (this.displayMode)
 		{
 			case COMPOSITE:
 				getCompositeMapData();
@@ -477,11 +466,11 @@ public class MapDisplayController extends EventfulType<String>
 		}
 		
 
-		for (int y = 0; y < map.settings.getDataHeight(); y++) {
+		for (int y = 0; y < map.getSettings().getView().getDataHeight(); y++) {
 			
 			if (y != 0) sb.append("\n");
 			
-			for (int x = 0; x < map.settings.getDataWidth(); x++) {
+			for (int x = 0; x < map.getSettings().getView().getDataWidth(); x++) {
 				
 				if (x != 0) sb.append(", ");
 				sb.append(valueAtCoord.apply(new Coord<Integer>(x, y)));
@@ -523,7 +512,7 @@ public class MapDisplayController extends EventfulType<String>
 
 	public String mapLongTitle(){ 
 	
-		switch (tabModel.displayMode)
+		switch (this.displayMode)
 		{
 			case RATIO:
 				String side1Title = mapLongTitle(getTransitionSeriesForRatioSide(1));
@@ -571,7 +560,7 @@ public class MapDisplayController extends EventfulType<String>
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<TransitionSeries> tsList = tabModel.visible.keySet().stream().filter(a -> true).collect(toList());
+		List<TransitionSeries> tsList = this.visible.keySet().stream().filter(a -> true).collect(toList());
 		Collections.sort(tsList);
 		return tsList;
 	}
@@ -579,7 +568,7 @@ public class MapDisplayController extends EventfulType<String>
 
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return getAllTransitionSeries().stream().filter(e -> tabModel.visible.get(e)).collect(toList());
+		return getAllTransitionSeries().stream().filter(e -> this.visible.get(e)).collect(toList());
 	}
 	
 
@@ -605,7 +594,7 @@ public class MapDisplayController extends EventfulType<String>
 
 	public Spectrum sumAllTransitionSeriesMaps()
 	{		
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tabModel.visible.keySet());
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visible.keySet());
 	}
 
 
@@ -615,55 +604,54 @@ public class MapDisplayController extends EventfulType<String>
 	public List<TransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
 		return getVisibleTransitionSeries().stream().filter(e -> {
-			Integer thisSide = tabModel.ratioSide.get(e);
+			Integer thisSide = this.ratioSide.get(e);
 			return thisSide == side;
 		}).collect(toList());
 	}
 
-
-
+	
+	
+	
+	
 
 	public OverlayColour getOverlayColour(TransitionSeries ts)
 	{
-		return tabModel.overlayColour.get(ts);
+		return this.overlayColour.get(ts);
 	}
 	public void setOverlayColour(TransitionSeries ts, OverlayColour c)
 	{
-		tabModel.overlayColour.put(ts, c);
+		this.overlayColour.put(ts, c);
 	}
 	
 	public Collection<OverlayColour> getOverlayColourValues()
 	{
-		return tabModel.overlayColour.values();
+		return this.overlayColour.values();
 	}
 	public Set<TransitionSeries> getOverlayColourKeys()
 	{
-		return tabModel.overlayColour.keySet();
+		return this.overlayColour.keySet();
 	}
 	
 
 	public int getRatioSide(TransitionSeries ts)
 	{
-		return tabModel.ratioSide.get(ts);
+		return this.ratioSide.get(ts);
 	}
 	public void setRatioSide(TransitionSeries ts, int side)
 	{
-		tabModel.ratioSide.put(ts, side);
+		this.ratioSide.put(ts, side);
 	}
 	
 	public boolean getTransitionSeriesVisibility(TransitionSeries ts)
 	{
-		return tabModel.visible.get(ts);
+		return this.visible.get(ts);
 	}
 	public void setTransitionSeriesVisibility(TransitionSeries ts, boolean visible)
 	{
-		tabModel.visible.put(ts, visible);
+		this.visible.put(ts, visible);
 	}
 
 
 
-
-
-
-
+	
 }

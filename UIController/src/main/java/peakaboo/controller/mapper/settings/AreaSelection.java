@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.mapdisplay;
+package peakaboo.controller.mapper.settings;
 
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
@@ -34,8 +34,8 @@ public class AreaSelection extends EventfulType<String> {
 		{
 			if (dragStart.x < 0) dragStart.x = 0;
 			if (dragStart.y < 0) dragStart.y = 0;
-			if (dragStart.x >= map.settings.getDataWidth()) dragStart.x = map.settings.getDataWidth()-1;
-			if (dragStart.y >= map.settings.getDataHeight()) dragStart.y = map.settings.getDataHeight()-1;
+			if (dragStart.x >= map.getSettings().getView().getDataWidth()) dragStart.x = map.getSettings().getView().getDataWidth()-1;
+			if (dragStart.y >= map.getSettings().getView().getDataHeight()) dragStart.y = map.getSettings().getView().getDataHeight()-1;
 		}
 		
 		this.start = dragStart;
@@ -56,8 +56,8 @@ public class AreaSelection extends EventfulType<String> {
 		{
 			if (dragEnd.x < 0) dragEnd.x = 0;
 			if (dragEnd.y < 0) dragEnd.y = 0;
-			if (dragEnd.x >= map.settings.getDataWidth()) dragEnd.x = map.settings.getDataWidth()-1;
-			if (dragEnd.y >= map.settings.getDataHeight()) dragEnd.y = map.settings.getDataHeight()-1;
+			if (dragEnd.x >= map.getSettings().getView().getDataWidth()) dragEnd.x = map.getSettings().getView().getDataWidth()-1;
+			if (dragEnd.y >= map.getSettings().getView().getDataHeight()) dragEnd.y = map.getSettings().getView().getDataHeight()-1;
 		}
 		
 		this.end = dragEnd;

@@ -22,8 +22,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.mapdisplay.AreaSelection;
-import peakaboo.controller.mapper.mapdisplay.PointsSelection;
+import peakaboo.controller.mapper.settings.AreaSelection;
+import peakaboo.controller.mapper.settings.MapViewSettings;
+import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSettings;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.datasource.model.DataSource;
@@ -86,7 +87,7 @@ public class MapperToolbar extends JToolBar {
 			
 			final Corrections corr = CorrectionsManager.getCorrections("WL");
 			
-			AreaSelection selection = controller.getDisplay().getAreaSelection(); 
+			AreaSelection selection = controller.getSettings().getAreaSelection(); 
 			
 			final int xstart = selection.getStart().x;
 			final int ystart = selection.getStart().y;
@@ -96,7 +97,10 @@ public class MapperToolbar extends JToolBar {
 			
 			final int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
 			
-			final GridPerspective<Float> grid = new GridPerspective<Float>(controller.settings.getDataWidth(), controller.settings.getDataHeight(), 0f);
+			final GridPerspective<Float> grid = new GridPerspective<Float>(
+					controller.getSettings().getView().getDataWidth(), 
+					controller.getSettings().getView().getDataHeight(), 
+					0f);
 			
 			
 			//generate a list of pairings of TransitionSeries and their intensity values
@@ -164,8 +168,8 @@ public class MapperToolbar extends JToolBar {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				AreaSelection areaSelection = controller.getDisplay().getAreaSelection();
-				PointsSelection pointSelection = controller.getDisplay().getPointsSelection();
+				AreaSelection areaSelection = controller.getSettings().getAreaSelection();
+				PointsSelection pointSelection = controller.getSettings().getPointsSelection();
 				
 				SubsetDataSource sds;
 				if (areaSelection.hasSelection()) {
@@ -218,16 +222,17 @@ public class MapperToolbar extends JToolBar {
 		coords = new JCheckBoxMenuItem("Show Coordinates");
 		monochrome = new JCheckBoxMenuItem("Monochrome");
 
-		title.setSelected(controller.settings.getShowTitle());
-		spectrum.setSelected(controller.settings.getShowSpectrum());
-		coords.setSelected(controller.settings.getShowCoords());
-		dstitle.setSelected(controller.settings.getShowDatasetTitle());
+		MapViewSettings viewSettings = controller.getSettings().getView();
+		title.setSelected(viewSettings.getShowTitle());
+		spectrum.setSelected(viewSettings.getShowSpectrum());
+		coords.setSelected(viewSettings.getShowCoords());
+		dstitle.setSelected(viewSettings.getShowDatasetTitle());
 
-		spectrum.addActionListener(e -> controller.settings.setShowSpectrum(spectrum.isSelected()));
-		coords.addActionListener(e -> controller.settings.setShowCoords(coords.isSelected()));
-		title.addActionListener(e -> controller.settings.setShowTitle(title.isSelected()));
-		dstitle.addActionListener(e -> controller.settings.setShowDatasetTitle(dstitle.isSelected()));
-		monochrome.addActionListener(e -> controller.settings.setMonochrome(monochrome.isSelected()));
+		spectrum.addActionListener(e -> viewSettings.setShowSpectrum(spectrum.isSelected()));
+		coords.addActionListener(e -> viewSettings.setShowCoords(coords.isSelected()));
+		title.addActionListener(e -> viewSettings.setShowTitle(title.isSelected()));
+		dstitle.addActionListener(e -> viewSettings.setShowDatasetTitle(dstitle.isSelected()));
+		monochrome.addActionListener(e -> viewSettings.setMonochrome(monochrome.isSelected()));
 		
 		menu.add(title);
 		menu.add(dstitle);

@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
-import peakaboo.controller.mapper.mapdisplay.MapDisplayController;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
+import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.controller.mapper.settings.MapDisplayMode;
 import peakaboo.ui.swing.mapping.MapperSidebar;
 import peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
@@ -34,7 +34,7 @@ public class MapFittingPanel extends ClearPanel
 	
 	
 	
-	public MapFittingPanel(final MapDisplayController controller)
+	public MapFittingPanel(final MapSettingsController controller)
 	{
 		//create the card panel
 		cardPanel = new ClearPanel();
@@ -60,7 +60,7 @@ public class MapFittingPanel extends ClearPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				MapDisplayMode mode = (MapDisplayMode)modeSelect.getSelectedItem();
-				controller.setMapDisplayMode(mode);
+				controller.getMapFittings().setMapDisplayMode(mode);
 				card.show(cardPanel, mode.toString());
 			}
 		});

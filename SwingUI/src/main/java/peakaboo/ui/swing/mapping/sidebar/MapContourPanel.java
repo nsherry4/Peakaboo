@@ -38,9 +38,9 @@ public class MapContourPanel extends JPanel {
 		c.gridy = 0;
 		
 		interpolation = new JSpinner();
-		interpolation.setValue(controller.settings.getInterpolation());
+		interpolation.setValue(controller.getSettings().getView().getInterpolation());
 		interpolation.addChangeListener(e -> {
-			controller.settings.setInterpolation((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getSettings().getView().setInterpolation((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 		c.gridx = 0;
 		c.anchor = GridBagConstraints.LINE_START;
@@ -53,16 +53,16 @@ public class MapContourPanel extends JPanel {
 
 		c.gridy += 1;
 		contours = new JCheckBox("Contours");
-		contours.setSelected(controller.settings.getContours());
+		contours.setSelected(controller.getSettings().getView().getContours());
 		contours.addActionListener(e -> {
-			controller.settings.setContours(((JCheckBox) e.getSource()).isSelected());
+			controller.getSettings().getView().setContours(((JCheckBox) e.getSource()).isSelected());
 		});
 
 		shadesSpinner = new JSpinner();
-		shadesSpinner.setValue(controller.settings.getSpectrumSteps());
-		shadesSpinner.setEnabled(controller.settings.getContours());
+		shadesSpinner.setValue(controller.getSettings().getView().getSpectrumSteps());
+		shadesSpinner.setEnabled(controller.getSettings().getView().getContours());
 		shadesSpinner.addChangeListener(e -> {
-			controller.settings.setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getSettings().getView().setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 		
 		c.gridx = 0;
@@ -76,10 +76,10 @@ public class MapContourPanel extends JPanel {
 
 		
 		controller.addListener(e -> {
-			shadesSpinner.setValue(controller.settings.getSpectrumSteps());
-			shadesSpinner.setEnabled(controller.settings.getContours());
-			contours.setSelected(controller.settings.getContours());
-			interpolation.setValue(controller.settings.getInterpolation());
+			shadesSpinner.setValue(controller.getSettings().getView().getSpectrumSteps());
+			shadesSpinner.setEnabled(controller.getSettings().getView().getContours());
+			contours.setSelected(controller.getSettings().getView().getContours());
+			interpolation.setValue(controller.getSettings().getView().getInterpolation());
 		});
 		
 	}

@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.mapset;
+package peakaboo.controller.mapper.data;
 
 import java.util.ArrayList;
 import java.util.List;

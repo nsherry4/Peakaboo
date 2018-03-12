@@ -27,8 +27,8 @@ import javax.swing.border.EmptyBorder;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.mapdisplay.AreaSelection;
-import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
+import peakaboo.controller.mapper.settings.AreaSelection;
+import peakaboo.controller.mapper.settings.MapDisplayMode;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
@@ -70,11 +70,11 @@ public class MapperPanel extends TabbedInterfacePanel
 			if (! s.equals(MappingController.UpdateType.AREA_SELECTION.toString())) setNeedsRedraw();
 			if (! s.equals(MappingController.UpdateType.POINT_SELECTION.toString())) setNeedsRedraw();
 			
-			toolbar.monochrome.setSelected(controller.settings.getMonochrome());
-			toolbar.spectrum.setSelected(controller.settings.getShowSpectrum());
-			toolbar.coords.setSelected(controller.settings.getShowCoords());
+			toolbar.monochrome.setSelected(controller.getSettings().getView().getMonochrome());
+			toolbar.spectrum.setSelected(controller.getSettings().getView().getShowSpectrum());
+			toolbar.coords.setSelected(controller.getSettings().getView().getShowCoords());
 			
-			if (controller.getDisplay().getAreaSelection().hasSelection() || controller.getDisplay().getPointsSelection().hasSelection())
+			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
 			{
 				toolbar.readIntensities.setEnabled(true);
 				toolbar.examineSubset.setEnabled(true);
@@ -99,7 +99,7 @@ public class MapperPanel extends TabbedInterfacePanel
 	}
 	
 	public String getTitle() {
-		return controller.getDisplay().mapLongTitle();
+		return controller.getSettings().getMapFittings().mapLongTitle();
 	}
 
 
@@ -125,9 +125,9 @@ public class MapperPanel extends TabbedInterfacePanel
 			public void mouseDragged(MouseEvent e)
 			{
 				if (SwingUtilities.isLeftMouseButton(e)) {
-					controller.getDisplay().getPointsSelection().clearSelection();
+					controller.getSettings().getPointsSelection().clearSelection();
 					
-					AreaSelection selection = controller.getDisplay().getAreaSelection();
+					AreaSelection selection = controller.getSettings().getAreaSelection();
 					selection.setEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
 					selection.setHasBoundingRegion( true );
 				}
@@ -142,12 +142,12 @@ public class MapperPanel extends TabbedInterfacePanel
 				
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					//Double-click selects points with similar intensity
-					if (e.getClickCount() >= 2 && controller.getDisplay().getMapDisplayMode() == MapDisplayMode.COMPOSITE) {
+					if (e.getClickCount() >= 2 && controller.getSettings().getMapFittings().getMapDisplayMode() == MapDisplayMode.COMPOSITE) {
 						
-						controller.getDisplay().getAreaSelection().clearSelection();
+						controller.getSettings().getAreaSelection().clearSelection();
 						
 						Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-						controller.getDisplay().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2);
+						controller.getSettings().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2);
 					}
 				}
 			}
@@ -159,9 +159,9 @@ public class MapperPanel extends TabbedInterfacePanel
 			public void mousePressed(MouseEvent e)
 			{			
 				if (SwingUtilities.isLeftMouseButton(e)) {
-					controller.getDisplay().getPointsSelection().clearSelection();
+					controller.getSettings().getPointsSelection().clearSelection();
 					
-					AreaSelection selection = controller.getDisplay().getAreaSelection();
+					AreaSelection selection = controller.getSettings().getAreaSelection();
 					selection.setStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
 					selection.setEnd( null );
 					selection.setHasBoundingRegion( false );
@@ -181,7 +181,7 @@ public class MapperPanel extends TabbedInterfacePanel
 			public void change(String ss)
 			{
 
-				if (controller.settings.getDataHeight() * controller.settings.getDataWidth() == controller.mapsController.getMapSize())
+				if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.mapsController.getMapSize())
 				{
 					warnOnTooSmallDataset.setVisible(false);
 				}
@@ -202,26 +202,26 @@ public class MapperPanel extends TabbedInterfacePanel
 	
 	public void actionSavePicture()
 	{
-		if (controller.settings.savePictureFolder == null) controller.settings.savePictureFolder = controller.settings.dataSourceFolder;
-		File result = new SavePicture(frame, canvas, controller.settings.savePictureFolder).getStartingFolder();
+		if (controller.getSettings().getView().savePictureFolder == null) controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
+		File result = new SavePicture(frame, canvas, controller.getSettings().getView().savePictureFolder).getStartingFolder();
 		if (result != null) {
-			controller.settings.savePictureFolder = result;
+			controller.getSettings().getView().savePictureFolder = result;
 		}
 	}
 	
 	public void actionSaveCSV()
 	{
-		if (controller.settings.savePictureFolder == null) controller.settings.savePictureFolder = controller.settings.dataSourceFolder;
+		if (controller.getSettings().getView().savePictureFolder == null) controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
 		
-		String csv = controller.getDisplay().mapAsCSV();
+		String csv = controller.getSettings().getMapFittings().mapAsCSV();
 		try
 		{
 			SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
-			File file = SwidgetFileDialogs.saveFile(this, "Save Map(s) as CSV", controller.settings.savePictureFolder, txt);
+			File file = SwidgetFileDialogs.saveFile(this, "Save Map(s) as CSV", controller.getSettings().getView().savePictureFolder, txt);
 			if (file == null) {
 				return;
 			}
-			controller.settings.savePictureFolder = file.getParentFile();
+			controller.getSettings().getView().savePictureFolder = file.getParentFile();
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(csv.getBytes());
 			os.close();
@@ -262,7 +262,7 @@ public class MapperPanel extends TabbedInterfacePanel
 		warnOnTooSmallDataset.setOpaque(true);
 		warnOnTooSmallDataset.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		if (controller.settings.getDataHeight() * controller.settings.getDataWidth() == controller.mapsController.getMapSize())
+		if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.mapsController.getMapSize())
 		{
 			warnOnTooSmallDataset.setVisible(false);
 		}

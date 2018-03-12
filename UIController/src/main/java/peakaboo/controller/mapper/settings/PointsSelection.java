@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.mapdisplay;
+package peakaboo.controller.mapper.settings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -72,9 +72,9 @@ public class PointsSelection extends EventfulType<String>{
 
 	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous) {
 		
-		Spectrum data = map.getDisplay().getCompositeMapData();
-		int w = map.settings.getDataWidth();
-		int h = map.settings.getDataHeight();
+		Spectrum data = map.getSettings().getMapFittings().getCompositeMapData();
+		int w = map.getSettings().getView().getDataWidth();
+		int h = map.getSettings().getView().getDataHeight();
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		
@@ -141,8 +141,8 @@ public class PointsSelection extends EventfulType<String>{
 		Set<Integer> pointSet = new HashSet<>();
 		pointSet.addAll(points);
 	
-		int w = map.settings.getDataWidth();
-		int h = map.settings.getDataHeight();
+		int w = map.getSettings().getView().getDataWidth();
+		int h = map.getSettings().getView().getDataHeight();
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
 		
 		//visit all existing points

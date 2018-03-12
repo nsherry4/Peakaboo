@@ -11,7 +11,7 @@ import java.util.List;
 import eventful.EventfulListener;
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.mapview.MapSettings;
+import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
@@ -50,7 +50,7 @@ public class PlotController extends EventfulType<String>
 	private FittingController				fittingController;
 	private SettingsController				settingsController;
 
-	private MapSettings						savedMapSettings;
+	private MapViewSettings						savedMapSettings;
 
 
 	public static enum UpdateType
@@ -122,15 +122,6 @@ public class PlotController extends EventfulType<String>
 		undoController.setUndoPoint("");
 	}
 
-
-	public void setLastMapSettings(MapSettings settings) {
-		savedMapSettings = settings;
-	}
-	
-	public MapSettings getLastMapSettings() {
-		return savedMapSettings;
-	}
-	
 	
 	public SavedSettings getSavedSettingsObject() {
 		return SavedSettings.pack(this);

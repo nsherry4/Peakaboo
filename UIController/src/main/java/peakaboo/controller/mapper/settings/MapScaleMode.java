@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.mapdisplay;
+package peakaboo.controller.mapper.settings;
 
 public enum MapScaleMode {
 	RELATIVE,

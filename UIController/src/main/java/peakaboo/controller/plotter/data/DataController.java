@@ -122,10 +122,6 @@ public class DataController extends Eventful
 		
 		plot.fitting().setFittingParameters(dataModel.energyPerChannel());
 				
-		if (plot.getLastMapSettings() != null) {
-			plot.getLastMapSettings().setInterpolation(0);
-		}
-		
 		plot.history().clearUndos();
 			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere

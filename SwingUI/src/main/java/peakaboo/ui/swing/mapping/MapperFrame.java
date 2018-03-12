@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.mapset.MapSetController;
-import peakaboo.controller.mapper.mapview.MapSettings;
+import peakaboo.controller.mapper.data.MapSetController;
+import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import swidget.widgets.tabbedinterface.TabbedInterface;
@@ -33,13 +33,14 @@ public class MapperFrame extends JFrame
 	EventfulTypeListener<String> controllerListener;
 	
 	private TabbedPlotterManager 	parentPlotter;
-	private MapSettings 			previousMapSettings;
+	private MapViewSettings 		previousMapSettings;
 	private MapSetController 		mapData;
 	
 	
-	public MapperFrame(TabbedPlotterManager plotter, MapSetController mapData, MapSettings previousMapSettings, PlotController plotcontroller)
+	public MapperFrame(TabbedPlotterManager plotter, MapSetController mapData, MapViewSettings previousMapSettings, PlotController plotcontroller)
 	{
 		super();
+			
 		this.plotController = plotcontroller;
 		this.parentPlotter = plotter;
 		this.previousMapSettings = previousMapSettings;
@@ -48,7 +49,7 @@ public class MapperFrame extends JFrame
 		init();
 
 		setLocationRelativeTo(plotter.getWindow());
-		
+				
 	}
 	
 	
@@ -59,14 +60,6 @@ public class MapperFrame extends JFrame
 		return parentPlotter;
 	}
 
-
-
-	public MapSettings showDialog()
-	{
-		setVisible(true);
-		
-		return tabs.getActiveTab().controller.settings;
-	}
 
 
 	private void init()
@@ -105,9 +98,9 @@ public class MapperFrame extends JFrame
 
 	private MapperPanel createMapperPanel()
 	{
-		MapSettings lastMapSettings = previousMapSettings;
+		MapViewSettings lastMapSettings = previousMapSettings;
 		if (tabs.getActiveTab() != null) {
-			lastMapSettings = tabs.getActiveTab().controller.settings;
+			lastMapSettings = tabs.getActiveTab().controller.getSettings().getView();
 		}
 		
 		MappingController newController = new MappingController(mapData, lastMapSettings, plotController);

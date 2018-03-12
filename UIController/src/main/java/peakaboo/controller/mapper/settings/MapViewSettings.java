@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.mapview;
+package peakaboo.controller.mapper.settings;
 
 import java.io.File;
 
@@ -13,7 +13,7 @@ import scitypes.Coord;
  * @author NAS
  *
  */
-public class MapSettings extends EventfulType<String> //TODO remove extends
+public class MapViewSettings extends EventfulType<String> //TODO remove extends
 {
 
 	//SOURCE DATA
@@ -39,9 +39,11 @@ public class MapSettings extends EventfulType<String> //TODO remove extends
 	public File		dataSourceFolder 	= null;
 	
 	
-	public MapSettings(MappingController mapController, MapSettings copy)
+	public MapViewSettings(MappingController mapController, MapViewSettings copy)
 	{
 		this(mapController);
+		
+		//Any settings which should persist between map windows should be copied here
 		if (copy != null) {
 			this.drawCoordinates = copy.drawCoordinates;
 			this.drawSpectrum = copy.drawSpectrum;
@@ -62,7 +64,7 @@ public class MapSettings extends EventfulType<String> //TODO remove extends
 	}
 	
 	
-	public MapSettings(MappingController mapController)
+	public MapViewSettings(MappingController mapController)
 	{
 		setMappingController(mapController);
 	}

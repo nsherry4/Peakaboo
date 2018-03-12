@@ -43,9 +43,9 @@ public class MapDimensionsPanel extends JPanel {
 		c.weighty = 0.0;
 		c.gridy = 0;
 		width = new JSpinner();
-		width.setValue(controller.settings.getDataWidth());
+		width.setValue(controller.getSettings().getView().getDataWidth());
 		width.addChangeListener(e -> {
-			controller.settings.setDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getSettings().getView().setDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
@@ -59,9 +59,9 @@ public class MapDimensionsPanel extends JPanel {
 
 		c.gridy += 1;
 		height = new JSpinner();
-		height.setValue(controller.settings.getDataHeight());
+		height.setValue(controller.getSettings().getView().getDataHeight());
 		height.addChangeListener(e -> {
-			controller.settings.setDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getSettings().getView().setDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
@@ -127,8 +127,8 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		controller.addListener(e -> {
-			width.setValue(controller.settings.getDataWidth());
-			height.setValue(controller.settings.getDataHeight());
+			width.setValue(controller.getSettings().getView().getDataWidth());
+			height.setValue(controller.getSettings().getView().getDataHeight());
 		});
 		
 	}

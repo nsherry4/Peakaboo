@@ -75,8 +75,8 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.controller.mapper.mapset.MapSetController;
-import peakaboo.controller.mapper.mapview.MapSettings;
+import peakaboo.controller.mapper.data.MapSetController;
+import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.curvefit.controller.TSOrdering;
@@ -1481,12 +1481,9 @@ public class PlotPanel extends TabbedInterfacePanel
 					);
 				
 				
-				MapSettings mapSettings = controller.getLastMapSettings();
+				mapperWindow = new MapperFrame(container, mapData, null, controller);
 
-				
-				mapperWindow = new MapperFrame(container, mapData, mapSettings, controller);
-
-				mapperWindow.showDialog();
+				mapperWindow.setVisible(true);
 
 			}
 			
