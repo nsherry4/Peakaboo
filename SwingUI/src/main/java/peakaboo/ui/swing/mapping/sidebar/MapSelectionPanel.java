@@ -41,8 +41,18 @@ public class MapSelectionPanel extends SettingsPanel {
 			controller.getSettings().getPointsSelection().setPadding((Integer) padding.getValue());
 		});
 		
+		JLabel paddingLabel = new JLabel("Padding");
 		addSetting(threshold, thresholdLabel, LabelPosition.BESIDE, false, false);
-		addSetting(padding, "Padding", LabelPosition.BESIDE, false, false);
+		addSetting(padding, paddingLabel, LabelPosition.BESIDE, false, false);
+		
+		controller.addListener(s -> {
+			boolean enabled = controller.getSettings().getView().getInterpolation() == 0;
+			this.setEnabled(enabled);
+			threshold.setEnabled(enabled);
+			padding.setEnabled(enabled);
+			thresholdLabel.setEnabled(enabled);
+			paddingLabel.setEnabled(enabled);
+		});
 		
 	}
 	

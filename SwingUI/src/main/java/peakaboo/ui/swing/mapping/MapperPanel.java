@@ -82,8 +82,7 @@ public class MapperPanel extends TabbedInterfacePanel
 				toolbar.readIntensities.setEnabled(false);
 				toolbar.examineSubset.setEnabled(false);
 			}
-			
-			
+						
 			owner.setTabTitle(this, getTitle());
 			//if (s.equals(MappingController.UpdateType.UI_OPTIONS.toString())) {
 				canvas.updateCanvasSize();
@@ -140,9 +139,11 @@ public class MapperPanel extends TabbedInterfacePanel
 
 			public void mouseClicked(MouseEvent e){
 				
-				if (SwingUtilities.isLeftMouseButton(e)) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2) {
 					//Double-click selects points with similar intensity
-					if (e.getClickCount() >= 2 && controller.getSettings().getMapFittings().getMapDisplayMode() == MapDisplayMode.COMPOSITE) {
+					if (controller.getSettings().getMapFittings().getMapDisplayMode() == MapDisplayMode.COMPOSITE &&
+						controller.getSettings().getView().getInterpolation() == 0	
+						) {
 						
 						controller.getSettings().getAreaSelection().clearSelection();
 						

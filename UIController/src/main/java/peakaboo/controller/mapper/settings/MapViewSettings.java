@@ -105,6 +105,13 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		if (passes < 0) passes = 0;
 		interpolation = passes;
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		
+		
+		//Interpolation is incompatible with points selection
+		if (passes > 0 && mapController.getSettings().getPointsSelection().hasSelection()) {
+			mapController.getSettings().getPointsSelection().clearSelection();
+		}
+		
 	}
 	
 	public int getInterpolation()
