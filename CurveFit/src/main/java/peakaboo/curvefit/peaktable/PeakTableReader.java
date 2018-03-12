@@ -174,7 +174,7 @@ public class PeakTableReader
 
 			ts.setTransition(ll);
 
-			if (e.atomicNumber() > 44) PeakTable.addSeries(ts);
+			if (e.atomicNumber() >= 23) PeakTable.addSeries(ts);
 
 
 			
