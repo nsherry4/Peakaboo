@@ -1,9 +1,14 @@
 package peakaboo.controller.mapper.settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import scitypes.Coord;
+import scitypes.GridPerspective;
+import scitypes.Range;
 
 /**
  * Represents a box-style selection over an area
@@ -65,6 +70,35 @@ public class AreaSelection extends EventfulType<String> {
 		updateListeners(UpdateType.AREA_SELECTION.toString());
 	}
 
+	
+	/**
+	 * generate a list of indexes in the map which are selected
+	 */
+	public List<Integer> getPoints() {
+		List<Integer> indexes = new ArrayList<>();
+		
+		final int xstart = getStart().x;
+		final int ystart = getStart().y;
+		
+		final int xend = getEnd().x;
+		final int yend = getEnd().y;
+		
+		final int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
+		
+		final GridPerspective<Float> grid = new GridPerspective<Float>(
+				map.getSettings().getView().getDataWidth(), 
+				map.getSettings().getView().getDataHeight(), 
+				0f);
+		
+		for (int x : new Range(xstart, xend)) {
+			for (int y : new Range(ystart, yend)){
+				indexes.add( grid.getIndexFromXY(x, y) );
+			}
+		}
+		
+		return indexes;
+	}
+	
 	
 	public boolean hasSelection()
 	{

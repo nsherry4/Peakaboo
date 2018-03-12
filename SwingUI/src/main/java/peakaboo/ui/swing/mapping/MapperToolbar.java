@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,31 +88,25 @@ public class MapperToolbar extends JToolBar {
 			
 			final Corrections corr = CorrectionsManager.getCorrections("WL");
 			
-			AreaSelection selection = controller.getSettings().getAreaSelection(); 
+			List<Integer> indexes = new ArrayList<>();
 			
-			final int xstart = selection.getStart().x;
-			final int ystart = selection.getStart().y;
+			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
+			PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
 			
-			final int xend = selection.getEnd().x;
-			final int yend = selection.getEnd().y;
-			
-			final int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
-			
-			final GridPerspective<Float> grid = new GridPerspective<Float>(
-					controller.getSettings().getView().getDataWidth(), 
-					controller.getSettings().getView().getDataHeight(), 
-					0f);
-			
+			if (areaSelection.hasSelection()) {
+				indexes.addAll(areaSelection.getPoints());
+			} else if (pointsSelection.hasSelection()) {
+				indexes.addAll(pointsSelection.getPoints());
+			}
+				
 			
 			//generate a list of pairings of TransitionSeries and their intensity values
 			List<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().stream().map((MapResult r) -> {
 				float sum = 0;
-				for (int x : new Range(xstart, xend)) {
-					for (int y : new Range(ystart, yend)){
-						sum += r.data.get(grid.getIndexFromXY(x, y));
-					}
+				for (int index : indexes) {
+					sum += r.data.get(index);
 				}
-				return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / size);
+				return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / indexes.size());
 			}).collect(toList());
 			
 			
@@ -156,6 +151,7 @@ public class MapperToolbar extends JToolBar {
 			
 			
 			panel.showModal(corrections);
+			
 				
 				
 		});

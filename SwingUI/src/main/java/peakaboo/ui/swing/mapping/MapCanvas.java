@@ -28,7 +28,6 @@ import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.Surface.CompositeModes;
 import scidraw.drawing.common.Spectrums;
 import scidraw.drawing.map.MapDrawing;
-import scidraw.drawing.map.painters.BoundedRegionPainter;
 import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
 import scidraw.drawing.map.painters.MapTechniqueFactory;
@@ -255,9 +254,8 @@ public class MapCanvas extends GraphicsPanel
 		
 		//There should only ever be one selection active at a time
 		AreaSelection areaSelection = controller.getSettings().getAreaSelection();
-		if (areaSelection.hasSelection())
-		{
-			mapPainters.add(new BoundedRegionPainter(Color.white, areaSelection.getStart(), areaSelection.getEnd()));
+		if (areaSelection.hasSelection()) {
+			mapPainters.add(new SelectionMaskPainter(Color.white, areaSelection.getPoints(), viewSettings.getDataWidth(), viewSettings.getDataHeight()));
 		}
 		
 		PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
@@ -413,10 +411,10 @@ public class MapCanvas extends GraphicsPanel
 		
 		
 		//There should only ever be one selection active at a time
-		AreaSelection selection = controller.getSettings().getAreaSelection();
-		if (selection.hasSelection())
+		AreaSelection areaSelection = controller.getSettings().getAreaSelection();
+		if (areaSelection.hasSelection())
 		{
-			mapPainters.add(new BoundedRegionPainter(Color.white, selection.getStart(), selection.getEnd()));
+			mapPainters.add(new SelectionMaskPainter(Color.white, areaSelection.getPoints(), viewSettings.getDataWidth(), viewSettings.getDataHeight()));
 		}
 		PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
 		if (pointsSelection.hasSelection()) {
@@ -585,9 +583,8 @@ public class MapCanvas extends GraphicsPanel
 		
 		//There should only ever be one selection active at a time
 		AreaSelection selection = controller.getSettings().getAreaSelection();
-		if (selection.hasSelection())
-		{
-			painters.add(new BoundedRegionPainter(Color.white, selection.getStart(), selection.getEnd()));
+		if (selection.hasSelection()) {
+			painters.add(new SelectionMaskPainter(Color.white, selection.getPoints(), viewSettings.getDataWidth(), viewSettings.getDataHeight()));
 		}
 		
 		PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
