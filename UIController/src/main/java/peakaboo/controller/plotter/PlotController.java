@@ -1,17 +1,10 @@
 package peakaboo.controller.plotter;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import eventful.EventfulListener;
 import eventful.EventfulType;
 import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
@@ -49,8 +42,6 @@ public class PlotController extends EventfulType<String>
 	private FilteringController				filteringController;
 	private FittingController				fittingController;
 	private SettingsController				settingsController;
-
-	private MapViewSettings						savedMapSettings;
 
 
 	public static enum UpdateType
