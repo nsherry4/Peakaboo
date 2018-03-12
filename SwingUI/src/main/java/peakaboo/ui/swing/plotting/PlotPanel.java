@@ -1378,10 +1378,12 @@ public class PlotPanel extends TabbedInterfacePanel
 					if (reading.isAborted() || reading.getCompleted()){
 
 						DatasetReadResult result = reading.getResult();
-						if (result.status == ReadStatus.FAILED)
+						if (result == null || result.status == ReadStatus.FAILED)
 						{
-							if (result.problem != null) {
+							if (result == null) {
 								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
+							} else if (result.problem != null) {
+								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
 							} else {
 								JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 							}
