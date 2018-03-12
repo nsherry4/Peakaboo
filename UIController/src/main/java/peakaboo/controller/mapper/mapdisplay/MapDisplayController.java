@@ -453,9 +453,9 @@ public class MapDisplayController extends EventfulType<String>
 	
 
 
-	public void mapAsCSV(OutputStream os)
+	public String mapAsCSV()
 	{
-		final OutputStreamWriter osw = new OutputStreamWriter(os);
+		StringBuilder sb = new StringBuilder();
 
 		//the getXXXXXXXXMapData methods have the side-effect of (re)placing
 		//the valueAdCoord :: Coord<Integer> -> String  variable/function to reflect the values it calculates
@@ -477,37 +477,19 @@ public class MapDisplayController extends EventfulType<String>
 		}
 		
 
-
-		try {
+		for (int y = 0; y < map.settings.getDataHeight(); y++) {
 			
-		
-			for (int y = 0; y < map.settings.getDataHeight(); y++) {
+			if (y != 0) sb.append("\n");
+			
+			for (int x = 0; x < map.settings.getDataWidth(); x++) {
 				
-				if (y != 0) osw.write("\n");
+				if (x != 0) sb.append(", ");
+				sb.append(valueAtCoord.apply(new Coord<Integer>(x, y)));
 				
-				for (int x = 0; x < map.settings.getDataWidth(); x++) {
-					
-					if (x != 0) osw.write(", ");
-					osw.write(valueAtCoord.apply(new Coord<Integer>(x, y)));
-					
-				}
 			}
+		}
 			
-		}
-		catch (IOException e)
-		{
-			PeakabooLog.get().log(Level.SEVERE, "Error saving map as csv", e);
-		}
-		
-
-		try
-		{
-			osw.close();
-		}
-		catch (IOException e)
-		{
-			PeakabooLog.get().log(Level.WARNING, "Error closing output stream", e);
-		}
+		return sb.toString();
 
 	}
 

@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -31,7 +32,8 @@ import peakaboo.controller.mapper.mapdisplay.MapDisplayMode;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
-import swidget.dialogues.fileio.SwidgetIO;
+import swidget.dialogues.fileio.SimpleFileExtension;
+import swidget.dialogues.fileio.SwidgetFileDialogs;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.Spacing;
@@ -211,14 +213,18 @@ public class MapperPanel extends TabbedInterfacePanel
 	{
 		if (controller.settings.savePictureFolder == null) controller.settings.savePictureFolder = controller.settings.dataSourceFolder;
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		controller.getDisplay().mapAsCSV(baos);
+		String csv = controller.getDisplay().mapAsCSV();
 		try
 		{
-			File result = SwidgetIO.saveFile(this, "Save Map(s) as Text", "txt", "Text File", controller.settings.savePictureFolder, baos);
-			if (result != null) {
-				controller.settings.savePictureFolder = result;
+			SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
+			File file = SwidgetFileDialogs.saveFile(this, "Save Map(s) as CSV", controller.settings.savePictureFolder, txt);
+			if (file == null) {
+				return;
 			}
+			controller.settings.savePictureFolder = file.getParentFile();
+			FileOutputStream os = new FileOutputStream(file);
+			os.write(csv.getBytes());
+			os.close();
 		}
 		catch (IOException e)
 		{
