@@ -97,6 +97,8 @@ public class MapSettings extends EventfulType<String> //TODO remove extends
 		
 		}
 
+		//Hard cap to prevent wildly making up data that doesn't exist
+		passes = Math.min(passes, 3);
 		
 		if (passes < 0) passes = 0;
 		interpolation = passes;
