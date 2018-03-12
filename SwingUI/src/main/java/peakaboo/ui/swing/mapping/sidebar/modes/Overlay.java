@@ -47,15 +47,10 @@ public class Overlay extends JPanel {
 		
 		createElementsList();
 
-		_controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String s)
-			{
-				
-				absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-				relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
-
-			}
+		_controller.addListener(s -> {
+			absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
+			relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
+			logView.setSelected(mapFittings.isLogView());
 		});
 		
 	}
