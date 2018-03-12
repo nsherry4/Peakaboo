@@ -231,7 +231,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public boolean canMap()
 	{
-		return ! (getFittedTransitionSeries().size() == 0 || plot.data().getDataSet().getScanData().scanCount() == 0);
+		return ! (getVisibleTransitionSeries().size() == 0 || plot.data().getDataSet().getScanData().scanCount() == 0);
 	}
 
 
