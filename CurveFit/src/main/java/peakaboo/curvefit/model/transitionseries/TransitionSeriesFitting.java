@@ -32,6 +32,10 @@ public class TransitionSeriesFitting implements Serializable
 	// private List<Double> unscaledFit;
 	Spectrum					normalizedUnscaledFit;
 	//private List<Boolean>		constraintMask;
+	
+	//When a fitting is generated, it must be scaled to a range of 0.0-1.0
+	//This is the value it's original max intensity, which the fitting is
+	//then divided by
 	private float				normalizationScale;
 	
 

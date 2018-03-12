@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -365,11 +366,11 @@ public class TSOrdering
 			List<Float> scores = stream.map(energy -> {
 				
 				fits.setEnergyPerChannel(energy / spectrum.size());
-				FittingResultSet results = fits.calculateFittings(spectrum);
-				float score = 0f;
-				score = 0f;
-				for (FittingResult fit : results.fits) {
-					score += Math.sqrt(fit.fit.sum());
+				
+				Map<TransitionSeries, Float> heights = fits.roughIndivudualHeights(spectrum);
+				float score = 0;
+				for (Float f : heights.values()) {
+					score += Math.sqrt(f);
 				}
 				return score;
 				
@@ -391,7 +392,7 @@ public class TSOrdering
 					bestEnergy = energy;
 				}
 			}
-			
+						
 			//refine the search with a more granular interval
 			for (float energy = bestEnergy - 0.1f; energy <= bestEnergy + 0.1f; energy += 0.01f) {
 				fits.setEnergyPerChannel(energy / spectrum.size());

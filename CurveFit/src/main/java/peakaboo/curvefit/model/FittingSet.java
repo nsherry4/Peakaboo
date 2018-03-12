@@ -4,8 +4,11 @@ package peakaboo.curvefit.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
@@ -272,6 +275,32 @@ public class FittingSet implements Serializable
 
 	}
 
+
+	/**
+	 * Rough method for estimating how intense each {@link TransitionSeries} will be with the 
+	 * given data and energy level. This is useful for auto-calibration of energy levels
+	 * @param data
+	 * @return
+	 */
+	public synchronized Map<TransitionSeries, Float> roughIndivudualHeights(ReadOnlySpectrum data) {
+		
+		Map<TransitionSeries, Float> heights = new HashMap<>();
+		
+		for (TransitionSeriesFitting f : fittings) {
+			if (f.transitionSeries.visible) {
+				float height = 0f;
+				for (Transition t : f.transitionSeries.getAllTransitions()) {
+					int channel = (int) (t.energyValue / energyPerChannel);
+					if (channel >= data.size()) continue;
+					height += data.get(channel);
+				}
+				heights.put(f.transitionSeries, height);
+			}
+		}
+		
+		return heights;
+	}
+	
 
 	// calculates fittings, residual, total curve
 	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data)
