@@ -130,14 +130,13 @@ public class SavedSettings
 		}
 		
 		
-		// read in the drawing request
-		plotController.setDR(data.drawingRequest);
+		
 		settings.copy( data.settings );
 		
 		
 		if (dataController.hasDataSet()) {
-			fittings.selections.setDataParameters(dataController.getDataSet().channelsPerScan(), plotController.getDR().unitSize, settings.escape);
-			fittings.proposals.setDataParameters(dataController.getDataSet().channelsPerScan(), plotController.getDR().unitSize, settings.escape);
+			fittings.selections.setDataParameters(dataController.getDataSet().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
+			fittings.proposals.setDataParameters(dataController.getDataSet().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
 		}
 
 
@@ -166,7 +165,6 @@ public class SavedSettings
 		
 		
 		//other structs
-		data.drawingRequest = plotController.getDR();
 		data.settings = settings;
 
 		data.badScans = plotController.data().getDiscards().list();

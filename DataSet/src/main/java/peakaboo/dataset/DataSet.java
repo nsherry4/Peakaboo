@@ -90,7 +90,7 @@ public interface DataSet {
 	 * 
 	 * @return the energy per channel
 	 */
-	float energyPerChannel();
+	//float energyPerChannel();
 
 	/**
 	 * Returns the size of a single scan

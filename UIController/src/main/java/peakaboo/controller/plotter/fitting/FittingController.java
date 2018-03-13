@@ -220,7 +220,9 @@ public class FittingController extends EventfulType<Boolean>
 		
 		return TSOrdering.proposeTransitionSeriesFromChannel(
 				plot.settings().getEscapePeakType(),
-				plot.settings().getEnergyPerChannel(),
+				plot.settings().getMinEnergy(),
+				plot.settings().getMaxEnergy(),
+				plot.data().getDataSet().channelsPerScan(),
 				plot.filtering().getFilteredPlot(),
 				fittingModel.selections,
 				fittingModel.proposals,
@@ -235,14 +237,13 @@ public class FittingController extends EventfulType<Boolean>
 	}
 
 
-	public void setFittingParameters(float energyPerChannel)
+	public void setFittingParameters(float min, float max)
 	{
 
 		int scanSize = 0;
 		
-		plot.getDR().unitSize = energyPerChannel;
-		fittingModel.selections.setDataParameters(scanSize, energyPerChannel, plot.settings().getEscapePeakType());
-		fittingModel.proposals.setDataParameters(scanSize, energyPerChannel, plot.settings().getEscapePeakType());
+		fittingModel.selections.setDataParameters(scanSize, min, max, plot.settings().getEscapePeakType());
+		fittingModel.proposals.setDataParameters(scanSize, min, max, plot.settings().getEscapePeakType());
 
 		setUndoPoint("Calibration");
 		plot.filtering().filteredDataInvalidated();

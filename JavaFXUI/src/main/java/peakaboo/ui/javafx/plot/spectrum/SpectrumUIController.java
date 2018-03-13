@@ -94,7 +94,15 @@ public class SpectrumUIController extends IActofUIController {
 	//used when the chart itself needs to be changed (eg axes)
 	private void replot() {
 
-		DrawingRequest dr = plotController.getDR();
+		/*
+		 * NAS 2018-03-13: The drawing request used to be fetched from the plotController, 
+		 * but this wasn't happening in the swing version of the UI. The only thing it 
+		 * seemed to be used for was storing the unitSize, which was actually storing
+		 * information about energy per channel. This method of measuring energy was
+		 * replaced with a (min,max,width) tuple, and there was no need to keep the dr
+		 * in the controller
+		 */
+		DrawingRequest dr = new DrawingRequest();
 		SettingsController settings = plotController.settings();
 
 		int xmax = 2048;

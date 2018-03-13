@@ -28,7 +28,8 @@ public class FittingSet implements Serializable
 	private List<TransitionSeriesFitting>	fittings;
 	private List<TransitionSeries>			fitTransitionSeries;
 
-	private float							energyPerChannel;
+	//private float							energyPerChannel;
+	private float							minEnergy, maxEnergy;
 	private int								dataWidth;
 
 
@@ -41,15 +42,17 @@ public class FittingSet implements Serializable
 		fittings = new ArrayList<TransitionSeriesFitting>();
 		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
-		this.energyPerChannel = 0.0f;
+		this.minEnergy = 0.0f;
+		this.maxEnergy = 0.0f;
 		this.escapeType = EscapePeakType.NONE;
 	}
 
 	
 
-	public synchronized void setEnergyPerChannel(float energyPerChannel)
+	public synchronized void setEnergy(float min, float max)
 	{
-		this.energyPerChannel = energyPerChannel;
+		this.minEnergy = min;
+		this.maxEnergy = max;
 		regenerateFittings();
 	}
 
@@ -74,10 +77,15 @@ public class FittingSet implements Serializable
 		regenerateFittings();
 	}
 	
-	public synchronized void setDataParameters(int dataWidth, float energy, EscapePeakType escapeType)
+	/**
+	 * Update several parameters which would require regenerating fittings all in one shot
+	 */
+	public synchronized void setDataParameters(int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escapeType)
 	{
 		this.dataWidth = dataWidth;
-		this.energyPerChannel = energy;
+		this.minEnergy = minEnergy;
+		this.maxEnergy = maxEnergy;
+		this.escapeType = escapeType;
 		regenerateFittings();
 	}
 
@@ -106,7 +114,7 @@ public class FittingSet implements Serializable
 
 	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-		fittings.add(new TransitionSeriesFitting(ts, dataWidth, energyPerChannel, escapeType));
+		fittings.add(new TransitionSeriesFitting(ts, dataWidth, minEnergy, maxEnergy, escapeType));
 	}
 
 
@@ -285,12 +293,15 @@ public class FittingSet implements Serializable
 	public synchronized Map<TransitionSeries, Float> roughIndivudualHeights(ReadOnlySpectrum data) {
 		
 		Map<TransitionSeries, Float> heights = new HashMap<>();
+		if (dataWidth == 0) {
+			return heights;
+		}
 		
 		for (TransitionSeriesFitting f : fittings) {
 			if (f.transitionSeries.visible) {
 				float height = 0f;
 				for (Transition t : f.transitionSeries.getAllTransitions()) {
-					int channel = (int) (t.energyValue / energyPerChannel);
+					int channel = channelForEnergy(t.energyValue, minEnergy, maxEnergy, dataWidth);
 					if (channel >= data.size()) continue;
 					height += data.get(channel);
 				}
@@ -299,6 +310,21 @@ public class FittingSet implements Serializable
 		}
 		
 		return heights;
+	}
+	
+	
+	public static int channelForEnergy(float energy, float minEnergy, float maxEnergy, int dataWidth) {
+		float range = maxEnergy - minEnergy;
+		float energyPerChannel = range / (float)dataWidth;
+		int channel = Math.round((energy - minEnergy) / energyPerChannel);
+		return channel;
+	}
+	
+	public static float energyForChannel(int channel, float minEnergy, float maxEnergy, int dataWidth) {
+		float range = maxEnergy - minEnergy;
+		float energyPerChannel = range / (float)dataWidth;
+		float energy = minEnergy + channel * energyPerChannel;
+		return energy;
 	}
 	
 

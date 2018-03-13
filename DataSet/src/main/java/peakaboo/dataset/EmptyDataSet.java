@@ -109,12 +109,6 @@ public class EmptyDataSet implements DataSet
 		return new File("");
 	}
 
-	@Override
-	public float energyPerChannel()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public Metadata getMetadata() {

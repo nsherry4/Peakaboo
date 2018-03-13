@@ -35,6 +35,8 @@ public class SettingsModel implements Serializable
 	public EscapePeakType		escape;
 	
 	public ViewTransform		viewTransform;
+	
+	public float				minEnergy, maxEnergy;
 
 
 	public SettingsModel()
@@ -49,6 +51,8 @@ public class SettingsModel implements Serializable
 		lockPlotHeight = true;
 		escape = EscapePeakType.SILICON;
 		viewTransform = ViewTransform.LINEAR;
+		minEnergy = 0.0f;
+		maxEnergy = 0.0f;
 	}
 
 	public void copy(SettingsModel copy)
@@ -70,6 +74,9 @@ public class SettingsModel implements Serializable
 		
 		escape = copy.escape;
 		viewTransform = copy.viewTransform;
+		
+		minEnergy = copy.minEnergy;
+		maxEnergy = copy.maxEnergy;
 		
 	}
 
