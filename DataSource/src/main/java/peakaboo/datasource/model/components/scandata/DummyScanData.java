@@ -31,4 +31,9 @@ public class DummyScanData implements ScanData {
 		return "<No Data>";
 	}
 
+	@Override
+	public float minEnergy() {
+		return 0;
+	}
+
 }

@@ -51,6 +51,12 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 	public float maxEnergy() {
 		return source.getScanData().maxEnergy();
 	}
+	
+	@Override
+	public float minEnergy() {
+		return source.getScanData().minEnergy();
+	}
+	
 
 	@Override
 	public String datasetName() {

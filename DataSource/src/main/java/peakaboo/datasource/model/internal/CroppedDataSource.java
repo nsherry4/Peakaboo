@@ -49,11 +49,17 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 
 
+	@Override
 	public float maxEnergy()
 	{
 		return originalDataSource.getScanData().maxEnergy();
 	}
 
+	@Override
+	public float minEnergy() {
+		return originalDataSource.getScanData().minEnergy();
+	}
+	
 
 	public ReadOnlySpectrum get(int index)
 	{
@@ -231,6 +237,9 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 		}
 		
 	}
+
+
+
 
 	
 	
