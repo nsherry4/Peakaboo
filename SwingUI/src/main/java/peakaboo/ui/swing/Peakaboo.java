@@ -49,7 +49,7 @@ public class Peakaboo
 			if (realText != null) {
 				realText += "\n";
 			} else {
-				realText = "";
+				realText = e.getMessage() + "\n";
 			}
 			realText += "The problem is of type " + e.getClass().getSimpleName();
 			errorDialog.setText(realText);

@@ -150,7 +150,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 		catch(Throwable e)
 		{
 			System.out.println(getFilterName() + " Filter Failed");
-			PeakabooLog.get().log(Level.SEVERE, "Error applying filter " + this.getClass().getName(), e);
+			PeakabooLog.get().log(Level.SEVERE, "Error applying filter " + this.getClass().getSimpleName(), e);
 			return data;
 		}
 		
