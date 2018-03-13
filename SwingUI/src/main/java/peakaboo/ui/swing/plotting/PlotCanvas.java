@@ -246,11 +246,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	protected void drawGraphics(Surface context, boolean vector, Dimension size)
 	{
 		
-		dr.imageHeight = (float) size.getHeight();
-		dr.imageWidth = (float) size.getWidth();
-		dr.viewTransform = controller.settings().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
-		dr.unitSize = controller.settings().getEnergyPerChannel();
-		dr.drawToVectorSurface = context.isVectorSurface();
 		
 		////////////////////////////////////////////////////////////////////
 		// Data Calculation
@@ -301,6 +296,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		ReadOnlySpectrum drawingData = dataForPlot.first;
 		float maxIntensity = Math.max(controller.data().getDataSet().maximumIntensity(), drawingData.max());
 		int datasetSize = Math.min(controller.data().getDataSet().channelsPerScan(), drawingData.size());
+		
+		dr.imageHeight = (float) size.getHeight();
+		dr.imageWidth = (float) size.getWidth();
+		dr.viewTransform = controller.settings().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
+		dr.unitSize = (controller.settings().getMaxEnergy() - controller.settings().getMinEnergy()) / (float)datasetSize;
+		dr.drawToVectorSurface = context.isVectorSurface();
 		
 		// if axes are shown, also draw horizontal grid lines
 		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
@@ -410,7 +411,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
 			axisPainters.add(new TickMarkAxisPainter(
 				new Bounds<Float>(0.0f, maxIntensity),
-				new Bounds<Float>(0.0f, dr.unitSize * datasetSize),
+				new Bounds<Float>(controller.settings().getMinEnergy(), controller.settings().getMaxEnergy()),
 				null,
 				new Bounds<Float>(0.0f, maxIntensity),
 				dr.viewTransform == ViewTransform.LOG,

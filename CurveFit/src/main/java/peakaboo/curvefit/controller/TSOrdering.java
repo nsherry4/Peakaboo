@@ -45,7 +45,13 @@ public class TSOrdering
 	 * @param escape the kind of {@link EscapePeakType} these fittings should use
 	 * @return an ordered list of {@link TransitionSeries}
 	 */
-	public static List<TransitionSeries> optimizeTSOrdering(final float energyPerChannel, final List<TransitionSeries> unfitted, final Spectrum s, final EscapePeakType escape)
+	public static List<TransitionSeries> optimizeTSOrdering(
+			float minEnergy, 
+			float maxEnergy, 
+			final int dataWidth,
+			List<TransitionSeries> unfitted, 
+			Spectrum s, 
+			EscapePeakType escape)
 	{
 		List<TransitionSeries> ordered = new ArrayList<>(unfitted);
 
@@ -53,7 +59,7 @@ public class TSOrdering
 
 			public int compare(TransitionSeries ts1, TransitionSeries ts2)
 			{
-				return compareTSs(ts1, ts2, energyPerChannel, s, escape);
+				return compareTSs(ts1, ts2, minEnergy, maxEnergy, dataWidth, s, escape);
 			}
 		});
 		
@@ -68,9 +74,14 @@ public class TSOrdering
 	 * @param spectrum the data to use to score this {@link TransitionSeries}
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final ReadOnlySpectrum spectrum)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
+			EscapePeakType escape, 
+			final float minEnergy, 
+			final float maxEnergy, 
+			final int dataWidth,
+			final ReadOnlySpectrum spectrum)
 	{
-		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, true);
+		return fScoreTransitionSeries(escape, minEnergy, maxEnergy, dataWidth, spectrum, null, true);
 	}
 	
 	/**
@@ -81,9 +92,15 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(EscapePeakType escape, final float energyPerChannel, final ReadOnlySpectrum spectrum, boolean useBaseSize)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
+			EscapePeakType escape, 
+			final float minEnergy, 
+			final float maxEnergy, 
+			final int dataWidth,
+			final ReadOnlySpectrum spectrum, 
+			boolean useBaseSize)
 	{
-		return fScoreTransitionSeries(escape, energyPerChannel, spectrum, null, useBaseSize);
+		return fScoreTransitionSeries(escape, minEnergy, maxEnergy, dataWidth, spectrum, null, useBaseSize);
 	}
 	
 	/**
@@ -95,13 +112,21 @@ public class TSOrdering
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(final EscapePeakType escape, final float energyPerChannel, final ReadOnlySpectrum spectrum, final Float energy, final boolean useBaseSize)
+	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
+			final EscapePeakType escape, 
+			final float minEnergy, 
+			final float maxEnergy, 
+			final int dataWidth,
+			final ReadOnlySpectrum spectrum, 
+			final Float energy, 
+			final boolean useBaseSize
+		)
 	{
 	
 		//scoring function to evaluate each TransitionSeries
 		return new Function<TransitionSeries, Float>() {
 
-			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, spectrum.size(), energyPerChannel, escape);
+			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, spectrum.size(), minEnergy, maxEnergy, escape);
 			Spectrum s = new ISpectrum(spectrum);
 			
 			public Float apply(TransitionSeries ts)
@@ -111,6 +136,7 @@ public class TSOrdering
 				{
 					prox = 1.0;
 				} else  {
+					float energyPerChannel = (maxEnergy - minEnergy) / (float)dataWidth;
 					prox = ts.getProximityScore(energy, ((double)(energyPerChannel))*2d); //Math.abs(ts.getProximityToEnergy(energy));
 					//if (prox <= energyPerChannel*10) prox = energyPerChannel*10;
 					prox = Math.log1p(prox);
@@ -154,10 +180,10 @@ public class TSOrdering
 	 * @param escape the kind of {@link EscapePeakType} that should
 	 * @return a list of all {@link TransitionSeries} which overlap with the given one
 	 */
-	public static List<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, float energyPerChannel, int spectrumSize, final EscapePeakType escape)
+	public static List<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, float minEnergy, float maxEnergy, int spectrumSize, final EscapePeakType escape)
 	{
-		final TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, spectrumSize, energyPerChannel, escape);
-		final TransitionSeriesFitting tsf2 = new TransitionSeriesFitting(null, spectrumSize, energyPerChannel, escape);
+		final TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, spectrumSize, minEnergy, maxEnergy, escape);
+		final TransitionSeriesFitting tsf2 = new TransitionSeriesFitting(null, spectrumSize, minEnergy, maxEnergy, escape);
 		
 		//we want the true flag so that we make sure that elements which overlap an escape peak are still considered overlapping
 		tsf1.setTransitionSeries(ts, true);
@@ -173,7 +199,14 @@ public class TSOrdering
 	
 
 	//accept two transition series, and return an ordered pair, where the ordering indicates the preferred fitting sequence for best results
-	private static Pair<TransitionSeries, TransitionSeries> orderTSPairByScore(final TransitionSeries ts1, final TransitionSeries ts2, final float energyPerChannel, final Spectrum s, final EscapePeakType escape)
+	private static Pair<TransitionSeries, TransitionSeries> orderTSPairByScore(
+			final TransitionSeries ts1, 
+			final TransitionSeries ts2, 
+			final float minEnergy, 
+			final float maxEnergy, 
+			final int dataWidth,
+			final Spectrum s, 
+			final EscapePeakType escape)
 	{
 				
 		Pair<TransitionSeries, TransitionSeries> order = new Pair<TransitionSeries, TransitionSeries>();
@@ -181,11 +214,11 @@ public class TSOrdering
 		Float ordering1, ordering2;
 		Function<TransitionSeries, Float> scorer;
 		
-		scorer = fScoreTransitionSeries(escape, energyPerChannel, s, false);
+		scorer = fScoreTransitionSeries(escape, minEnergy, maxEnergy, dataWidth, s, false);
 		scorer.apply(ts1);
 		ordering1 = scorer.apply(ts2);
 		
-		scorer = fScoreTransitionSeries(escape, energyPerChannel, s, false);
+		scorer = fScoreTransitionSeries(escape, minEnergy, maxEnergy, dataWidth, s, false);
 		scorer.apply(ts2);
 		ordering2 = scorer.apply(ts1);		
 		
@@ -203,9 +236,16 @@ public class TSOrdering
 	
 	
 	//compare two TransitionSeries -- useful for implementing a Comparator
-	private static int compareTSs(TransitionSeries ts1, TransitionSeries ts2, final float energyPerChannel, final Spectrum s, final EscapePeakType escape)
+	private static int compareTSs(
+			TransitionSeries ts1, 
+			TransitionSeries ts2, 
+			final float minEnergy, 
+			final float maxEnergy, 
+			final int dataWidth,
+			final Spectrum s, 
+			final EscapePeakType escape)
 	{
-		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, energyPerChannel, s, escape);
+		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, minEnergy, maxEnergy, dataWidth, s, escape);
 		if (orderedPair.first == ts1) return -1;
 		return 1;
 	}
@@ -227,7 +267,9 @@ public class TSOrdering
 	 */
 	public static List<TransitionSeries> proposeTransitionSeriesFromChannel(
 			final EscapePeakType escape,
-			final float energyPerChannel, 
+			final float minEnergy,
+			final float maxEnergy,
+			final int dataWidth,
 			final ReadOnlySpectrum data, 
 			final FittingSet fits,
 			final FittingSet proposed,
@@ -274,8 +316,8 @@ public class TSOrdering
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		
 
-		final float energy = channel * energyPerChannel;	
-
+		final float energy = FittingSet.energyForChannel(channel, minEnergy, maxEnergy, dataWidth);	
+		
 
 		//get a list of all transition series to start with
 		List<TransitionSeries> tss = new ArrayList<>(PeakTable.getAllTransitionSeries());
@@ -329,7 +371,7 @@ public class TSOrdering
 		
 		//now sort by score
 		tss = tss.stream()
-			.map(ts -> new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(escape, energyPerChannel, s, energy, true).apply(ts)))
+			.map(ts -> new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(escape, minEnergy, maxEnergy, dataWidth, s, energy, true).apply(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
 			.limit(15)
 			.map(p -> p.first)
@@ -340,10 +382,6 @@ public class TSOrdering
 		return tss.subList(0, 6);
 	}
 
-	
-	public static void test(ReadOnlySpectrum spectrum) {
-		
-	}
 
 	
 	public static StreamExecutor<Float> proposeEnergyLevel(ReadOnlySpectrum spectrum, List<TransitionSeries> tsList) {
@@ -365,7 +403,8 @@ public class TSOrdering
 			//Score each energy value using our observed stream
 			List<Float> scores = stream.map(energy -> {
 				
-				fits.setEnergyPerChannel(energy / spectrum.size());
+				//NAS 2018-03-13 - this should try min energies other than 0
+				fits.setEnergy(0, energy);
 				
 				Map<TransitionSeries, Float> heights = fits.roughIndivudualHeights(spectrum);
 				float score = 0;
@@ -395,7 +434,7 @@ public class TSOrdering
 						
 			//refine the search with a more granular interval
 			for (float energy = bestEnergy - 0.1f; energy <= bestEnergy + 0.1f; energy += 0.01f) {
-				fits.setEnergyPerChannel(energy / spectrum.size());
+				fits.setEnergy(0, energy);
 				FittingResultSet results = fits.calculateFittings(spectrum);
 				
 				float score = 0f;

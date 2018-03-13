@@ -428,12 +428,6 @@ public class StandardDataSet implements DataSet
 
 
 	@Override
-	public float energyPerChannel()
-	{
-		return getScanData().maxEnergy() / channelsPerScan();
-	}
-
-	@Override
 	public DataSource getDataSource()
 	{
 		return dataSource;

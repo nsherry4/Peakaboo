@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
 import peakaboo.curvefit.model.fittingfunctions.GaussianFittingFunction;
 import peakaboo.curvefit.model.transition.Transition;
@@ -48,7 +49,7 @@ public class TransitionSeriesFitting implements Serializable
 
 	private int					baseSize;
 	private int					dataWidth;
-	private float 				energyPerChannel;
+	private float 				minEnergy, maxEnergy;
 
 	public static final float	SIGMA	= 0.062f;
 	private EscapePeakType		escape	= EscapePeakType.SILICON;
@@ -66,18 +67,19 @@ public class TransitionSeriesFitting implements Serializable
 	 * @param energyPerChannel
 	 *            the energy per data point in the source data
 	 */
-	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, EscapePeakType escape, float standardDeviations)
+	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escape, float standardDeviations)
 	{
-		this(ts, dataWidth, energyPerChannel, escape);
+		this(ts, dataWidth, minEnergy, maxEnergy, escape);
 		this.standardDeviations = standardDeviations;
 		
 	}
-	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float energyPerChannel, EscapePeakType escape)
+	public TransitionSeriesFitting(TransitionSeries ts, int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escape)
 	{
 
 		this.dataWidth = dataWidth;
 		this.escape = escape;
-		this.energyPerChannel = energyPerChannel;
+		this.minEnergy = minEnergy;
+		this.maxEnergy = maxEnergy;
 		standardDeviations = defaultStandardDeviations;
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
@@ -95,7 +97,7 @@ public class TransitionSeriesFitting implements Serializable
 	public void setTransitionSeries(TransitionSeries ts, boolean fitEscapes)
 	{
 		calculateConstraintMask(ts, fitEscapes);
-		calcUnscaledFit(ts, energyPerChannel, (ts.type != TransitionSeriesType.COMPOSITE));
+		calcUnscaledFit(ts, minEnergy, maxEnergy, (ts.type != TransitionSeriesType.COMPOSITE));
 
 		this.transitionSeries = ts;
 	}
@@ -246,7 +248,7 @@ public class TransitionSeriesFitting implements Serializable
 	}
 	
 	
-	
+
 	
 	
 	private void calculateConstraintMask(TransitionSeries ts, boolean fitEscapes)
@@ -265,10 +267,12 @@ public class TransitionSeriesFitting implements Serializable
 		for (Transition t : ts)
 		{
 
-			range = getSigmaForTransition(SIGMA, t) / energyPerChannel;
+			//get the range of the peak in channels
+			range = FittingSet.channelForEnergy(getSigmaForTransition(SIGMA, t), minEnergy, maxEnergy, dataWidth);
 			range *= standardDeviations;
 			
-			mean = t.energyValue / energyPerChannel;
+			//get the centre of the peak in channels
+			mean = FittingSet.channelForEnergy(t.energyValue, minEnergy, maxEnergy, dataWidth);
 
 			start = (int) (mean - range);
 			stop = (int) (mean + range);
@@ -285,7 +289,7 @@ public class TransitionSeriesFitting implements Serializable
 			if (fitEscapes && escape.hasOffset())
 			{
 				for (Transition esc : escape.offset()) {
-					mean = (t.energyValue-esc.energyValue) / energyPerChannel;
+					mean = FittingSet.channelForEnergy((t.energyValue-esc.energyValue), minEnergy, maxEnergy, dataWidth);
 					
 					start = (int) (mean - range);
 					stop = (int) (mean + range);
@@ -308,7 +312,7 @@ public class TransitionSeriesFitting implements Serializable
 	
 
 	// generates an initial unscaled curvefit from which later curves are scaled as needed
-	private void calcUnscaledFit(TransitionSeries ts, float energyPerChannel, boolean fitEscape)
+	private void calcUnscaledFit(TransitionSeries ts, float minEnergy, float maxEnergy, boolean fitEscape)
 	{
 
 		Spectrum fit = new ISpectrum(dataWidth);
@@ -318,8 +322,8 @@ public class TransitionSeriesFitting implements Serializable
 		{
 
 			FittingFunction g = new GaussianFittingFunction(
-					t.energyValue / energyPerChannel, 
-					getSigmaForTransition(SIGMA, t) / energyPerChannel, 
+					FittingSet.channelForEnergy(t.energyValue, minEnergy, maxEnergy, dataWidth), 
+					FittingSet.channelForEnergy(getSigmaForTransition(SIGMA, t), minEnergy, maxEnergy, dataWidth), 
 					t.relativeIntensity
 				);
 
@@ -329,10 +333,11 @@ public class TransitionSeriesFitting implements Serializable
 			{
 				for (Transition esc : escape.offset()) {
 									
-					g = new GaussianFittingFunction((t.energyValue - esc.energyValue) / energyPerChannel, getSigmaForTransition(
-								SIGMA,
-								t)
-								/ energyPerChannel, t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity);
+					g = new GaussianFittingFunction(
+							FittingSet.channelForEnergy((t.energyValue - esc.energyValue), minEnergy, maxEnergy, dataWidth), 
+							FittingSet.channelForEnergy(getSigmaForTransition(SIGMA, t), minEnergy, maxEnergy, dataWidth), 
+							t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity
+						);
 					
 					functions.add(g);
 				}

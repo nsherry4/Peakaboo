@@ -119,9 +119,11 @@ public class DataController extends Eventful
 		dataModel = dsp;
 		
 		plot.settings().setScanNumber( dsp.firstNonNullScanIndex() );
-		plot.settings().setEnergyPerChannel(dsp.energyPerChannel());
+		plot.settings().setMinEnergy(dsp.getDataSource().getScanData().minEnergy());
+		plot.settings().setMaxEnergy(dsp.getDataSource().getScanData().maxEnergy());
 		
-		plot.fitting().setFittingParameters(dataModel.energyPerChannel());
+		//NAS 2018-03-13 -- this is done when calling setMin/MaxEnergy in plot settings -- is it also required here?
+		//plot.fitting().setFittingParameters(dsp.getDataSource().getScanData().minEnergy(), dsp.getDataSource().getScanData().maxEnergy());
 				
 		plot.history().clearUndos();
 			
