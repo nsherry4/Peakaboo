@@ -243,11 +243,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	// GraphicsPanel extension
 	//**************************************************************
 	@Override
-	protected void drawGraphics(Surface context, boolean vector)
+	protected void drawGraphics(Surface context, boolean vector, Dimension size)
 	{
 		
-		dr.imageHeight = getHeight();
-		dr.imageWidth = getWidth();
+		dr.imageHeight = (float) size.getHeight();
+		dr.imageWidth = (float) size.getWidth();
 		dr.viewTransform = controller.settings().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.unitSize = controller.settings().getEnergyPerChannel();
 		dr.drawToVectorSurface = context.isVectorSurface();
@@ -261,7 +261,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		if (dataForPlot == null) return;
 		
 		//white background
-		context.rectangle(0, 0, getWidth(), getHeight());
+		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
 		context.setSource(Color.white);
 		context.fill();
 

@@ -75,10 +75,10 @@ public class MapCanvas extends GraphicsPanel
 	}
 	
 	@Override
-	protected void drawGraphics(Surface backend, boolean vector)
+	protected void drawGraphics(Surface backend, boolean vector, Dimension size)
 	{
 		try {
-			drawMap(backend, vector);
+			drawMap(backend, vector, size);
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Unable to draw map", e);
 		}
@@ -657,10 +657,10 @@ public class MapCanvas extends GraphicsPanel
 
 	
 	
-	protected void drawMap(Surface context, boolean vector)
+	protected void drawMap(Surface context, boolean vector, Dimension size)
 	{
 		
-		context.rectangle(0, 0, getWidth(), getHeight());
+		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
 		context.setSource(Color.white);
 		context.fill();
 		
@@ -671,8 +671,8 @@ public class MapCanvas extends GraphicsPanel
 
 		dr.dataHeight = viewSettings.getDataHeight();
 		dr.dataWidth = viewSettings.getDataWidth();
-		dr.imageWidth = getWidth();
-		dr.imageHeight = getHeight();
+		dr.imageWidth = (float)size.getWidth();
+		dr.imageHeight = (float)size.getHeight();
 		
 		map.setContext(context);
 		
