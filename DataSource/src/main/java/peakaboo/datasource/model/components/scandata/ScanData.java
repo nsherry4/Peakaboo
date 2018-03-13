@@ -51,10 +51,14 @@ public interface ScanData extends Iterable<ReadOnlySpectrum>
 
 
 	/**
-	 * Returns the maximum energy value for any channel for the scans in this set.
+	 * Returns the energy value for the last channel in this scan.
 	 */
 	float maxEnergy();
 
+	/**
+	 * Returns the energy value for the first channel
+	 */
+	float minEnergy();
 
 
 	/**
