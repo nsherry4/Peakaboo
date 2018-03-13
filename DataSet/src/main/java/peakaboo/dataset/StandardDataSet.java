@@ -64,11 +64,11 @@ public class StandardDataSet implements DataSet
 	}
 	
 	
-	public StandardDataSet(DataSource ds)
+	public StandardDataSet(DataSource ds, DummyExecutor progress)
 	{
 		super();
 		
-		readDataSource(ds, null, null, new File(""));
+		readDataSource(ds, progress, null, new File(""));
 		dataSource = ds;
 		
 	}

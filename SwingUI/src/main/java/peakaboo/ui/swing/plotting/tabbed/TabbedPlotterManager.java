@@ -35,8 +35,7 @@ public class TabbedPlotterManager
 		PlotPanel plotPanel = newTab();
 		
 		//create a new datasource which is a subset of the passed one
-		plotPanel.getController().data().setDataSource(ds);
-		plotPanel.getController().loadSettings(savedSettings, false);
+		plotPanel.loadExistingDataSource(ds, savedSettings);
 		return plotPanel;
 		
 	}

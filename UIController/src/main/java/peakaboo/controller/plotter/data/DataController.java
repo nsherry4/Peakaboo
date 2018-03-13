@@ -22,6 +22,7 @@ import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
 import peakaboo.mapping.results.MapResultSet;
+import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
 import scitypes.ReadOnlySpectrum;
@@ -134,9 +135,9 @@ public class DataController extends Eventful
 
 	}
 	
-	public void setDataSource(DataSource ds)
+	public void setDataSource(DataSource ds, DummyExecutor progress)
 	{
-		setDataSetProvider(new StandardDataSet(ds));
+		setDataSetProvider(new StandardDataSet(ds, progress));
 	}
 
 

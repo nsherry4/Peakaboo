@@ -111,6 +111,7 @@ import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
 import plural.swing.ExecutorSetView;
 import plural.swing.ExecutorSetViewDialog;
+import plural.swing.ExecutorView;
 import scidraw.swing.SavePicture;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -1408,7 +1409,32 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 	}
 	
+	
+	public void loadExistingDataSource(DataSource ds, String settings) {
+		
+		DummyExecutor progress = new DummyExecutor(ds.getScanData().scanCount());
+		progress.advanceState();
+		ExecutorSet<Boolean> exec = new ExecutorSet<Boolean>("Loading Data Set") {
 
+			@Override
+			protected Boolean execute() {
+				getController().data().setDataSource(ds, progress);
+				getController().loadSettings(settings, false);
+				clearModal();
+				return true;
+			}}; 
+			
+		
+		exec.addExecutor(progress, "Calculating Values");
+			
+		ExecutorSetView view = new ExecutorSetView(exec);
+		showModal(view);
+		exec.startWorking();
+		
+	}
+
+	
+	
 
 	private void actionExportData(DataSink sink) {
 		DataSource source = controller.data().getDataSet().getDataSource();
