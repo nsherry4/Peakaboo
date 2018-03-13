@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.model.DataSource;
@@ -205,11 +206,11 @@ public class StandardDataSet implements DataSet
 					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
 					if (files.size() == 1)
 					{
-						dataSource.read(files.get(0));
+						dataSource.read(files.get(0).toPath());
 					}
 					else
 					{
-						dataSource.read(new ArrayList<File>(files));
+						dataSource.read(files.stream().map(File::toPath).collect(Collectors.toList()));
 					}
 
 	

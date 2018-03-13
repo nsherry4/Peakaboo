@@ -1335,7 +1335,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	{
 
 		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
-		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(filenames, candidates);
+		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(filenames.stream().map(File::toPath).collect(Collectors.toList()), candidates);
 		
 		if (formats.size() > 1)
 		{

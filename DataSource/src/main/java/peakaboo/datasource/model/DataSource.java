@@ -1,6 +1,7 @@
 package peakaboo.datasource.model;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -79,13 +80,13 @@ public interface DataSource
 	 * throughout the lifetime of this DataSource object.
 	 * @throws Exception
 	 */
-	void read(File file) throws Exception;
+	void read(Path path) throws Exception;
 	
 	/**
 	 * Reads the given files as a whole dataset. This method, collectively with 
-	 * {@link DataSource#read(String)}, will be called either 0 or 1 times 
+	 * {@link DataSource#read(Path)}, will be called either 0 or 1 times 
 	 * throughout the lifetime of this DataSource object.
 	 * @throws Exception
 	 */
-	void read(List<File> files) throws Exception;
+	void read(List<Path> paths) throws Exception;
 }

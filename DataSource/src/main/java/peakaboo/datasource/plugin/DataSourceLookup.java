@@ -1,6 +1,7 @@
 package peakaboo.datasource.plugin;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -12,20 +13,20 @@ import peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
 public class DataSourceLookup
 {
 
-	public static List<DataSource> findDataSourcesForFiles(List<File> filenames, List<DataSourcePlugin> dsps)
+	public static List<DataSource> findDataSourcesForFiles(List<Path> paths, List<DataSourcePlugin> dsps)
 	{	
 		
 		List<DataSource> maybe_by_filename = new ArrayList<DataSource>();
 		List<DataSource> maybe_by_contents = new ArrayList<DataSource>();
 		List<DataSource> yes_by_contents = new ArrayList<DataSource>();
 		
-		if (filenames.size() == 1)
+		if (paths.size() == 1)
 		{
-			File file = filenames.get(0);
+			Path path = paths.get(0);
 			for (DataSource datasource : dsps)
 			{
 				try {
-					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(file);
+					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(path);
 					if ( compat == FileFormatCompatibility.NO ) continue;
 					if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
 					if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }
@@ -41,7 +42,7 @@ public class DataSourceLookup
 			for (DataSource datasource : dsps)
 			{
 				try {
-					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<File>(filenames));
+					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<>(paths));
 					if ( compat == FileFormatCompatibility.NO ) continue;
 					if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
 					if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }

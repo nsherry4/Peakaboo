@@ -1,6 +1,6 @@
 package peakaboo.sdk.examples.datasource;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,7 +19,7 @@ public class CSVDataSource extends AbstractDataSource
 
 	SimpleScanData		scanData;
 	SimpleFileFormat	fileFormat;
-	File				file;
+	Path				file;
 	
 	public CSVDataSource()
 	{
@@ -35,11 +35,11 @@ public class CSVDataSource extends AbstractDataSource
 
 
 	@Override
-	public void read(File file) throws Exception
+	public void read(Path file) throws Exception
 	{
 		Scanner s = null;
 		this.file = file;
-		this.scanData = new SimpleScanData(file.getName());
+		this.scanData = new SimpleScanData(file.getFileName().toString());
 		
 		int spectrumSize = -1;
 		
@@ -90,7 +90,7 @@ public class CSVDataSource extends AbstractDataSource
 	}
 
 	@Override
-	public void read(List<File> files) throws Exception
+	public void read(List<Path> files) throws Exception
 	{
 		if (files == null) throw new UnsupportedOperationException();
 		if (files.size() == 0) throw new UnsupportedOperationException();

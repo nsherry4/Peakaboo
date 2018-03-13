@@ -1,6 +1,7 @@
 package peakaboo.datasource.model.internal;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import peakaboo.datasource.model.DataSource;
@@ -169,7 +170,7 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 
 	@Override
-	public void read(File file) throws Exception
+	public void read(Path file) throws Exception
 	{
 		//This should never be called, since the data source this one copies from
 		//should already have been initialized
@@ -178,7 +179,7 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 
 	@Override
-	public void read(List<File> files) throws Exception
+	public void read(List<Path> files) throws Exception
 	{
 		//This should never be called, since the data source this one copies from
 		//should already have been initialized

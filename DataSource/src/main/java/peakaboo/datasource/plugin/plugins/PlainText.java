@@ -3,7 +3,12 @@ package peakaboo.datasource.plugin.plugins;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import peakaboo.datasource.model.AbstractDataSource;
@@ -63,15 +68,12 @@ public class PlainText extends AbstractDataSource
 	//==============================================
 
 	@Override
-	public void read(File file) throws Exception
+	public void read(Path file) throws Exception
 	{
 
-		scandata = new SimpleScanData(file.getName());
+		scandata = new SimpleScanData(file.getFileName().toString());
 		
-	
-		//Split the input up by line
-		StringInput lines = StringInput.lines(file);
-		
+		Iterator<String> lines = Files.lines(file).iterator();
 
 		while (lines.hasNext())
 		{
@@ -107,7 +109,7 @@ public class PlainText extends AbstractDataSource
 	}
 
 	@Override
-	public void read(List<File> files) throws Exception
+	public void read(List<Path> files) throws Exception
 	{
 		
 		if (files == null) throw new UnsupportedOperationException();

@@ -1,6 +1,7 @@
 package peakaboo.datasource.model.internal;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import peakaboo.datasource.model.DataSource;
@@ -61,11 +62,11 @@ public class DelegatingDataSource implements DataSource {
 		return backer.getFileFormat();
 	}
 
-	public void read(File file) throws Exception {
+	public void read(Path file) throws Exception {
 		backer.read(file);
 	}
 
-	public void read(List<File> files) throws Exception {
+	public void read(List<Path> files) throws Exception {
 		backer.read(files);
 	}
 

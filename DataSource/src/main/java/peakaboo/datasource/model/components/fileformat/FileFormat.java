@@ -1,6 +1,7 @@
 package peakaboo.datasource.model.components.fileformat;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 public interface FileFormat {
@@ -20,13 +21,13 @@ public interface FileFormat {
 	 * Determines if this DataSource can read the given file as a whole 
 	 * dataset, and returns info on how certain it is
 	 */
-	FileFormatCompatibility compatibility(File filename);
+	FileFormatCompatibility compatibility(Path filename);
 
 	/**
 	 * Determines if this DataSource can read the given files as a whole 
 	 * dataset, and returns info on how certain it is
 	 */
-	FileFormatCompatibility compatibility(List<File> filenames);
+	FileFormatCompatibility compatibility(List<Path> filenames);
 	
 	/**
 	 * Returns a name for this DataSource Plugin

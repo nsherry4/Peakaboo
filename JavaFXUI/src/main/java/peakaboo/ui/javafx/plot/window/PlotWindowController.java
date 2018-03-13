@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.controlsfx.dialog.CommandLinksDialog.CommandLinksButtonType;
@@ -275,7 +276,7 @@ public class PlotWindowController extends IActofUIController {
     private void loadFiles(List<File> files) {
 
 		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
-		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(files, candidates);
+		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(files.stream().map(File::toPath).collect(Collectors.toList()), candidates);
 
         if (formats.size() > 1) {
             DataSource dsp = pickDSP(formats, getNode());

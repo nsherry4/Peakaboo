@@ -2,6 +2,8 @@ package peakaboo.datasource.plugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -91,10 +93,12 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 	}
 
 	@Override
-	public void read(File file) throws Exception {
-		scanData = new SimpleScanData(file.getName());
+	public void read(Path file) throws Exception {
+		scanData = new SimpleScanData(file.getFileName().toString());
 		
-		List<List<Double>> result = (List<List<Double>>) js.call("read", StringInput.contents(file));
+		
+		String contents = StringInput.contents(Files.newBufferedReader(file));
+		List<List<Double>> result = (List<List<Double>>) js.call("read", contents);
 		
 		for (List<Double> scan : result) {
 			ISpectrum spectrum = new ISpectrum(scan.size());
@@ -107,7 +111,7 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 	}
 
 	@Override
-	public void read(List<File> files) throws Exception {
+	public void read(List<Path> files) throws Exception {
 		read(files.get(0));
 	}
 
