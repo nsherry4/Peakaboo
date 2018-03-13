@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
+import net.sciencestudio.autodialog.model.classinfo.ClassInfo;
+import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
 import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import peakaboo.calculations.Noise;
@@ -43,7 +45,9 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFTStyle.LINEAR);
+		
+		
+		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFTStyle.LINEAR, new EnumClassInfo<>(FFTStyle.class));
 		rolloff.setPossibleValues(Arrays.asList(FFTStyle.values()));
 		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerStyle(), 8, this::validate);
 		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerStyle(), 6, this::validate);
