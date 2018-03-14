@@ -45,28 +45,31 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 	}
 	
 
-	public void registerPlugin(Class<? extends T> loadedClass) throws ClassInstantiationException
+	public BoltPluginController<T>  registerPlugin(Class<? extends T> loadedClass) throws ClassInstantiationException
 	{
 		URL url = null;
 		try {
 			url = BoltJar.getJarForClass(loadedClass).toURI().toURL();
 		} catch (MalformedURLException | NullPointerException e) {
 		}
-		registerPlugin(loadedClass, url);
+		return registerPlugin(loadedClass, url);
 	}
 	
-	public void registerPlugin(Class<? extends T> loadedClass, URL source) throws ClassInstantiationException
+	public BoltPluginController<T> registerPlugin(Class<? extends T> loadedClass, URL source) throws ClassInstantiationException
 	{
 		
 		try 
 		{
-			if (!test(loadedClass)) { return; } 
+			if (!test(loadedClass)) { return null; } 
 			
 			BoltPluginController<T> plugin = new IBoltPluginController<>(target, loadedClass, source);
 			
 			if (plugin.isEnabled()) {
 				plugins.addPlugin(plugin);
+				return plugin;
 			}
+			
+			return null;
 
 		}
 		catch (ServiceConfigurationError e)
