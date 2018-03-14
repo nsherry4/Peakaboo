@@ -122,9 +122,7 @@ public class DataController extends Eventful
 		plot.settings().setMinEnergy(dsp.getDataSource().getScanData().minEnergy());
 		plot.settings().setMaxEnergy(dsp.getDataSource().getScanData().maxEnergy());
 		
-		//NAS 2018-03-13 -- this is done when calling setMin/MaxEnergy in plot settings -- is it also required here?
-		//plot.fitting().setFittingParameters(dsp.getDataSource().getScanData().minEnergy(), dsp.getDataSource().getScanData().maxEnergy());
-				
+	
 		plot.history().clearUndos();
 			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere

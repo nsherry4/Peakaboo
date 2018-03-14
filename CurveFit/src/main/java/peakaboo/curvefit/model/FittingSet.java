@@ -28,7 +28,6 @@ public class FittingSet implements Serializable
 	private List<TransitionSeriesFitting>	fittings;
 	private List<TransitionSeries>			fitTransitionSeries;
 
-	//private float							energyPerChannel;
 	private	EnergyCalibration				calibration;
 
 

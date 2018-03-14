@@ -1753,7 +1753,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
-			JOptionPane.showMessageDialog(this, "Attempting to detect a max maxEnergy value requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without an maxEnergy level set.");
+			JOptionPane.showMessageDialog(this, "Attempting to detect an energy calibration requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.");
 			return;
 		}
 		
