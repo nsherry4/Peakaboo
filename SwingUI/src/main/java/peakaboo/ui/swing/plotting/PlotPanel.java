@@ -512,7 +512,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		c2.gridx += 1;
 		
 		minEnergy = new JSpinner();
-		minEnergy.setModel(new SpinnerNumberModel(0.0, 0.0, 204.8, 0.01));
+		minEnergy.setModel(new SpinnerNumberModel(0.0, -20.48, 20.48, 0.01));
 		
 		maxEnergy = new JSpinner();
 		maxEnergy.setModel(new SpinnerNumberModel(20.48, 0.0, 204.8, 0.01));
