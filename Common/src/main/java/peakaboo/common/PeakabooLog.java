@@ -15,14 +15,12 @@ public class PeakabooLog {
 	public static void init() {
 		try {
 			File appDir = Configuration.appDir("Logging");
-			System.out.println(appDir);
 			appDir.mkdirs();
 			
 			//filename must not have characters in it which will make windows cry...
 			Date ts = new Date();
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			String filename = appDir.getPath() + "/Peakaboo Log for " + formatter.format(ts) + ".log";
-			System.out.println(filename);
 			
 			
 			//Workaround for JDK-8189953

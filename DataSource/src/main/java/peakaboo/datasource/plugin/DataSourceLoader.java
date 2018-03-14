@@ -3,6 +3,7 @@ package peakaboo.datasource.plugin;
 import java.io.File;
 import java.util.logging.Level;
 
+import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.BoltPluginLoader;
@@ -36,6 +37,9 @@ public class DataSourceLoader
 
 	
 	private synchronized static void loadPlugins() throws ClassInheritanceException, ClassInstantiationException {
+		if (loaded == true) {
+			return;
+		}
 		
 		BoltPluginLoader<JavaDataSourcePlugin> javaLoader = new BoltPluginLoader<JavaDataSourcePlugin>(plugins, JavaDataSourcePlugin.class);  
 		
@@ -52,9 +56,15 @@ public class DataSourceLoader
 		
 		
 		
-		
 		IBoltScriptPluginLoader<JavaScriptDataSourcePlugin> jsLoader = new IBoltScriptPluginLoader<>(plugins, JavaScriptDataSourcePlugin.class);
 		jsLoader.scanDirectory(appDataDir, ".js");
+		
+		
+		//Log info for plugins
+		for (BoltPluginController<? extends DataSourcePlugin> plugin : plugins.getAll()) {
+			PeakabooLog.get().info("Found DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
+		}
+		
 		
 
 		loaded = true;
@@ -63,7 +73,11 @@ public class DataSourceLoader
 	public synchronized static void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
 		try {
 			BoltPluginLoader<JavaDataSourcePlugin> javaLoader = new BoltPluginLoader<JavaDataSourcePlugin>(plugins, JavaDataSourcePlugin.class);
-			javaLoader.registerPlugin(clazz);
+			BoltPluginController<JavaDataSourcePlugin> plugin = javaLoader.registerPlugin(clazz);
+			if (plugin != null) {
+				PeakabooLog.get().info("Registered DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
+			}
+			
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.WARNING, "Error registering data source plugin " + clazz.getName(), e);
 		}
