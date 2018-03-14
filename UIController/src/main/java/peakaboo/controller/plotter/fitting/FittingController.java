@@ -7,6 +7,7 @@ import java.util.List;
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.controller.TSOrdering;
+import peakaboo.curvefit.model.EnergyCalibration;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
@@ -218,11 +219,11 @@ public class FittingController extends EventfulType<Boolean>
 		
 		if (! plot.data().hasDataSet() ) return null;
 		
+		EnergyCalibration calibration = new EnergyCalibration(plot.settings().getMinEnergy(), plot.settings().getMaxEnergy(), plot.data().getDataSet().channelsPerScan());
+		
 		return TSOrdering.proposeTransitionSeriesFromChannel(
 				plot.settings().getEscapePeakType(),
-				plot.settings().getMinEnergy(),
-				plot.settings().getMaxEnergy(),
-				plot.data().getDataSet().channelsPerScan(),
+				calibration,
 				plot.filtering().getFilteredPlot(),
 				fittingModel.selections,
 				fittingModel.proposals,

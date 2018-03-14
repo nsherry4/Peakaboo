@@ -29,8 +29,7 @@ public class FittingSet implements Serializable
 	private List<TransitionSeries>			fitTransitionSeries;
 
 	//private float							energyPerChannel;
-	private float							minEnergy, maxEnergy;
-	private int								dataWidth;
+	private	EnergyCalibration				calibration;
 
 
 	private EscapePeakType					escapeType;
@@ -42,8 +41,7 @@ public class FittingSet implements Serializable
 		fittings = new ArrayList<TransitionSeriesFitting>();
 		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
-		this.minEnergy = 0.0f;
-		this.maxEnergy = 0.0f;
+		this.calibration = new EnergyCalibration(0, 0, 0);
 		this.escapeType = EscapePeakType.NONE;
 	}
 
@@ -51,15 +49,15 @@ public class FittingSet implements Serializable
 
 	public synchronized void setEnergy(float min, float max)
 	{
-		this.minEnergy = min;
-		this.maxEnergy = max;
+		this.calibration.setMinEnergy(min);
+		this.calibration.setMaxEnergy(max);
 		regenerateFittings();
 	}
 
 
 	public synchronized void setDataWidth(int dataWidth)
 	{
-		this.dataWidth = dataWidth;
+		this.calibration.setDataWidth(dataWidth);
 		regenerateFittings();
 	}
 
@@ -82,9 +80,7 @@ public class FittingSet implements Serializable
 	 */
 	public synchronized void setDataParameters(int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escapeType)
 	{
-		this.dataWidth = dataWidth;
-		this.minEnergy = minEnergy;
-		this.maxEnergy = maxEnergy;
+		this.calibration = new EnergyCalibration(minEnergy, maxEnergy, dataWidth);
 		this.escapeType = escapeType;
 		regenerateFittings();
 	}
@@ -114,7 +110,7 @@ public class FittingSet implements Serializable
 
 	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-		fittings.add(new TransitionSeriesFitting(ts, dataWidth, minEnergy, maxEnergy, escapeType));
+		fittings.add(new TransitionSeriesFitting(ts, calibration, escapeType));
 	}
 
 
@@ -287,13 +283,14 @@ public class FittingSet implements Serializable
 	/**
 	 * Rough method for estimating how intense each {@link TransitionSeries} will be with the 
 	 * given data and energy level. This is useful for auto-calibration of energy levels
-	 * @param data
+	 * @param data the spectrum to measure against
+	 * @param calibration A custom calibration to allow multithreaded use of this method
 	 * @return
 	 */
-	public synchronized Map<TransitionSeries, Float> roughIndivudualHeights(ReadOnlySpectrum data) {
+	public Map<TransitionSeries, Float> roughIndivudualHeights(ReadOnlySpectrum data, EnergyCalibration calibration) {
 		
 		Map<TransitionSeries, Float> heights = new HashMap<>();
-		if (dataWidth == 0) {
+		if (calibration.getDataWidth() == 0) {
 			return heights;
 		}
 		
@@ -301,7 +298,7 @@ public class FittingSet implements Serializable
 			if (f.transitionSeries.visible) {
 				float height = 0f;
 				for (Transition t : f.transitionSeries.getAllTransitions()) {
-					int channel = channelForEnergy(t.energyValue, minEnergy, maxEnergy, dataWidth);
+					int channel = calibration.channelFromEnergy(t.energyValue);
 					if (channel >= data.size()) continue;
 					if (channel < 0) continue;
 					height += data.get(channel);
@@ -313,27 +310,16 @@ public class FittingSet implements Serializable
 		return heights;
 	}
 	
+
 	
-	public static int channelForEnergy(float energy, float minEnergy, float maxEnergy, int dataWidth) {
-		float range = maxEnergy - minEnergy;
-		float energyPerChannel = range / (float)dataWidth;
-		int channel = Math.round((energy - minEnergy) / energyPerChannel);
-		return channel;
+	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data) {
+		return calculateFittingsUnsynchronized(data);
 	}
 	
-	public static float energyForChannel(int channel, float minEnergy, float maxEnergy, int dataWidth) {
-		float range = maxEnergy - minEnergy;
-		float energyPerChannel = range / (float)dataWidth;
-		float energy = minEnergy + channel * energyPerChannel;
-		return energy;
-	}
-	
+	public FittingResultSet calculateFittingsUnsynchronized(ReadOnlySpectrum data) {
 
-	// calculates fittings, residual, total curve
-	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data)
-	{
 
-		if (data.size() != dataWidth) setDataWidth(data.size());
+		if (data.size() != calibration.getDataWidth()) setDataWidth(data.size());
 		
 		
 		FittingResultSet results = new FittingResultSet(data.size());

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.model.EnergyCalibration;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
@@ -242,7 +243,8 @@ public class SettingsController extends Eventful implements Serializable
 	public float getEnergyForChannel(int channel)
 	{
 		if (!plot.data().hasDataSet()) return 0.0f;
-		return FittingSet.energyForChannel(channel, getMinEnergy(), getMaxEnergy(), plot.data().getDataSet().channelsPerScan());
+		EnergyCalibration calibration = new EnergyCalibration(getMinEnergy(), getMaxEnergy(), plot.data().getDataSet().channelsPerScan());
+		return calibration.energyFromChannel(channel);
 	}
 
 	public Pair<Float, Float> getValueForChannel(int channel)
