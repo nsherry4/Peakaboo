@@ -48,6 +48,9 @@ public class FittingSet implements Serializable
 
 	public synchronized void setEnergy(float min, float max)
 	{
+		if (max < min) {
+			throw new RuntimeException("Minimum energy cannot be greater than maximum energy");
+		}
 		this.calibration.setMinEnergy(min);
 		this.calibration.setMaxEnergy(max);
 		regenerateFittings();
@@ -79,6 +82,9 @@ public class FittingSet implements Serializable
 	 */
 	public synchronized void setDataParameters(int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escapeType)
 	{
+		if (maxEnergy < minEnergy) {
+			throw new RuntimeException("Minimum energy cannot be greater than maximum energy");
+		}
 		this.calibration = new EnergyCalibration(minEnergy, maxEnergy, dataWidth);
 		this.escapeType = escapeType;
 		regenerateFittings();

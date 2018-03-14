@@ -525,8 +525,22 @@ public class PlotPanel extends TabbedInterfacePanel
 		energyControls.add(maxEnergy, c2);
 		c2.gridx += 1;
 		
-		minEnergy.addChangeListener(e -> controller.settings().setMinEnergy(((Double) minEnergy.getValue()).floatValue()));
-		maxEnergy.addChangeListener(e -> controller.settings().setMaxEnergy(((Double) maxEnergy.getValue()).floatValue()));
+		minEnergy.addChangeListener(e -> {
+			float min = ((Number) minEnergy.getValue()).floatValue();
+			if (min > controller.settings().getMaxEnergy()) {
+				min = controller.settings().getMaxEnergy() - 0.01f;
+				minEnergy.setValue(min);
+			} 
+			controller.settings().setMinEnergy(min);	
+		});
+		maxEnergy.addChangeListener(e -> {
+			float max = ((Number) maxEnergy.getValue()).floatValue();
+			if (max < controller.settings().getMinEnergy()) {
+				max = controller.settings().getMinEnergy() + 0.01f;
+				maxEnergy.setValue(max);
+			} 
+			controller.settings().setMaxEnergy(max);
+		});
 		
 		
 		energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
