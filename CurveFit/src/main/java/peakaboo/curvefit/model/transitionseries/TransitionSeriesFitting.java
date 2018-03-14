@@ -267,15 +267,15 @@ public class TransitionSeriesFitting implements Serializable
 		for (Transition t : ts)
 		{
 
-			//get the range of the peak in channels
-			range = FittingSet.channelForEnergy(getSigmaForTransition(SIGMA, t), minEnergy, maxEnergy, dataWidth);
+			//get the range of the peak
+			range = getSigmaForTransition(SIGMA, t);
 			range *= standardDeviations;
 			
 			//get the centre of the peak in channels
-			mean = FittingSet.channelForEnergy(t.energyValue, minEnergy, maxEnergy, dataWidth);
+			mean = t.energyValue;
 
-			start = (int) (mean - range);
-			stop = (int) (mean + range);
+			start = FittingSet.channelForEnergy(mean - range, minEnergy, maxEnergy, dataWidth);
+			stop = FittingSet.channelForEnergy(mean + range, minEnergy, maxEnergy, dataWidth);
 			if (start < 0) start = 0;
 			if (stop > dataWidth - 1) stop = dataWidth - 1;
 			if (start > dataWidth - 1) start = dataWidth - 1;
@@ -318,12 +318,15 @@ public class TransitionSeriesFitting implements Serializable
 		Spectrum fit = new ISpectrum(dataWidth);
 		List<FittingFunction> functions = new ArrayList<FittingFunction>();
 		
+		float energyPerChannel = (maxEnergy - minEnergy) / (float)dataWidth;
+		
 		for (Transition t : ts)
 		{
 
+			
 			FittingFunction g = new GaussianFittingFunction(
 					FittingSet.channelForEnergy(t.energyValue, minEnergy, maxEnergy, dataWidth), 
-					FittingSet.channelForEnergy(getSigmaForTransition(SIGMA, t), minEnergy, maxEnergy, dataWidth), 
+					getSigmaForTransition(SIGMA, t) / energyPerChannel, 
 					t.relativeIntensity
 				);
 
@@ -335,7 +338,7 @@ public class TransitionSeriesFitting implements Serializable
 									
 					g = new GaussianFittingFunction(
 							FittingSet.channelForEnergy((t.energyValue - esc.energyValue), minEnergy, maxEnergy, dataWidth), 
-							FittingSet.channelForEnergy(getSigmaForTransition(SIGMA, t), minEnergy, maxEnergy, dataWidth), 
+							getSigmaForTransition(SIGMA, t) / energyPerChannel, 
 							t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity
 						);
 					

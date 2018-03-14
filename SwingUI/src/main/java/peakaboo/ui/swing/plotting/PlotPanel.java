@@ -182,8 +182,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	JToolBar                    toolBar;
 	
 	//===PLOTTING UI WIDGETS===
-	JSpinner					energy;
-	ChangeListener				energyListener;
+	JSpinner					minEnergy, maxEnergy;
 	ImageButton					toolbarSnapshot;
 	DropdownImageButton			toolbarMap;
 	ImageButton					toolbarInfo;
@@ -265,7 +264,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			
 
 
-			setEnergySpinner();
+			setEnergySpinners();
 
 
 			if (controller.settings().getChannelCompositeType() == ChannelCompositeMode.NONE)
@@ -302,12 +301,11 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 
 
-	private void setEnergySpinner()
+	private void setEnergySpinners()
 	{
 		//dont let the listeners get wind of this change		
-		energy.removeChangeListener(energyListener);
-		energy.setValue((double) controller.settings().getMaxEnergy());
-		energy.addChangeListener(energyListener);
+		minEnergy.setValue((double) controller.settings().getMinEnergy());
+		maxEnergy.setValue((double) controller.settings().getMaxEnergy());
 	}
 
 
@@ -389,7 +387,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.add(new CurveFittingView(controller.fitting(), controller, canvas), 0);
 		tabs.add(new FiltersetViewer(controller.filtering(), container.getWindow()), 1);
-
+		
 		
 		c.gridx = 0;
 		c.gridy = 1;
@@ -509,16 +507,27 @@ public class PlotPanel extends TabbedInterfacePanel
 		c2.fill = GridBagConstraints.NONE;
 		c2.anchor = GridBagConstraints.EAST;
 
-		JLabel energyLabel = new JLabel("Max Energy (keV): ");
+		JLabel energyLabel = new JLabel("Energy (keV) ");
 		energyControls.add(energyLabel, c2);
-
-		energy = new JSpinner();
-		energy.setModel(new SpinnerNumberModel(20.48, 0.0, 204.8, 0.01));
-
 		c2.gridx += 1;
-		energyControls.add(energy, c2);
-		energy.addChangeListener(e -> controller.settings().setMaxEnergy(((Double) energy.getValue()).floatValue()));
+		
+		minEnergy = new JSpinner();
+		minEnergy.setModel(new SpinnerNumberModel(0.0, 0.0, 204.8, 0.01));
+		
+		maxEnergy = new JSpinner();
+		maxEnergy.setModel(new SpinnerNumberModel(20.48, 0.0, 204.8, 0.01));
+
+		
+		energyControls.add(minEnergy, c2);
 		c2.gridx += 1;
+		energyControls.add(new JLabel(" to "), c2);
+		c2.gridx += 1;
+		energyControls.add(maxEnergy, c2);
+		c2.gridx += 1;
+		
+		minEnergy.addChangeListener(e -> controller.settings().setMinEnergy(((Double) minEnergy.getValue()).floatValue()));
+		maxEnergy.addChangeListener(e -> controller.settings().setMaxEnergy(((Double) maxEnergy.getValue()).floatValue()));
+		
 		
 		energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
 		energyControls.add(energyGuess, c2);
@@ -1744,7 +1753,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
-			JOptionPane.showMessageDialog(this, "Attempting to detect a max energy value requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without an energy level set.");
+			JOptionPane.showMessageDialog(this, "Attempting to detect a max maxEnergy value requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without an maxEnergy level set.");
 			return;
 		}
 		
@@ -1752,7 +1761,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		//setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		
 		
-		StreamExecutor<Float> energyTask = TSOrdering.proposeEnergyLevel(controller.data().getDataSet().averagePlot(), controller.fitting().getVisibleTransitionSeries());
+		StreamExecutor<Pair<Float, Float>> energyTask = TSOrdering.proposeEnergyLevel(
+				controller.data().getDataSet().averagePlot(), 
+				controller.fitting().getVisibleTransitionSeries(), 
+				controller.data().getDataSet().channelsPerScan());
 		StreamExecutorView energyView = new StreamExecutorView(energyTask, "Evaluating Fittings");
 		StreamExecutorPanel energyPanel = new StreamExecutorPanel("Detecting Energy Level", energyView);
 		
@@ -1762,9 +1774,10 @@ public class PlotPanel extends TabbedInterfacePanel
 			}
 			
 			if (energyTask.getState() == StreamExecutor.State.COMPLETED) {
-				Float energy = energyTask.getResult().orElse(null);
+				Pair<Float, Float> energy = energyTask.getResult().orElse(null);
 				if (energy != null) {
-					controller.settings().setMaxEnergy(energy);
+					controller.settings().setMinEnergy(energy.first);
+					controller.settings().setMaxEnergy(energy.second);
 				}
 			}
 		});
@@ -1773,7 +1786,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		energyTask.start();
 		
 		
-		//controller.settings().setMaxEnergy(energy);
+		//controller.settings().setMaxEnergy(maxEnergy);
 		
 		//setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		

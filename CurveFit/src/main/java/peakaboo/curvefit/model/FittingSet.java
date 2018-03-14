@@ -57,7 +57,7 @@ public class FittingSet implements Serializable
 	}
 
 
-	private synchronized void setDataWidth(int dataWidth)
+	public synchronized void setDataWidth(int dataWidth)
 	{
 		this.dataWidth = dataWidth;
 		regenerateFittings();
@@ -303,6 +303,7 @@ public class FittingSet implements Serializable
 				for (Transition t : f.transitionSeries.getAllTransitions()) {
 					int channel = channelForEnergy(t.energyValue, minEnergy, maxEnergy, dataWidth);
 					if (channel >= data.size()) continue;
+					if (channel < 0) continue;
 					height += data.get(channel);
 				}
 				heights.put(f.transitionSeries, height);
