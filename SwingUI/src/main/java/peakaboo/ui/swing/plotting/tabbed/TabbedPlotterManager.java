@@ -18,7 +18,7 @@ public class TabbedPlotterManager
 		this.plotterFrame = plotterFrame;
 	}
 
-	public Window getWindow()
+	public TabbedPlotterFrame getWindow()
 	{
 		return plotterFrame;
 	}

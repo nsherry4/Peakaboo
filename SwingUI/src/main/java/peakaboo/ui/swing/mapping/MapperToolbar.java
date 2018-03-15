@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -184,7 +185,14 @@ public class MapperToolbar extends JToolBar {
 					);
 				
 				panel.parentPlotter.newTab(sds, settings.serialize());
-				panel.parentPlotter.getWindow().toFront();
+				//Focus and un-minimize
+				JFrame plotWindow = panel.parentPlotter.getWindow();
+				plotWindow.toFront();
+				int windowState = plotWindow.getExtendedState();
+				if ((windowState & JFrame.ICONIFIED) == JFrame.ICONIFIED) {
+					plotWindow.setExtendedState(windowState ^ JFrame.ICONIFIED);
+				}
+				
 				
 			}
 		});
