@@ -257,7 +257,18 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 			// calculates filters and fittings if needed
 			Pair<ReadOnlySpectrum, ReadOnlySpectrum> dataForPlot = controller.getDataForPlot();
-			if (dataForPlot == null) return;
+			if (dataForPlot == null) {
+				PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot was null");
+				return;
+			}
+			if (dataForPlot.first == null) {
+				PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (filtered) was null");
+				return;
+			};
+			if (dataForPlot.second == null) {
+				PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (raw) was null");
+				return;
+			};
 			
 			//white background
 			context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
