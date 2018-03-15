@@ -75,6 +75,10 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	
 	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data)
 	{
+		if (data == null) {
+			return null;
+		}
+		
 		int start = startindex.getValue();
 		int stop = stopindex.getValue();
 		if (stop >= data.size()) stop = data.size() - 1;
