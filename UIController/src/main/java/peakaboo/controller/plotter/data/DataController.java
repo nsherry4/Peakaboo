@@ -119,10 +119,10 @@ public class DataController extends Eventful
 		dataModel = dsp;
 		
 		plot.settings().setScanNumber( dsp.firstNonNullScanIndex() );
-		plot.settings().setEnergyPerChannel(dsp.energyPerChannel());
+		plot.settings().setMinEnergy(dsp.getDataSource().getScanData().minEnergy());
+		plot.settings().setMaxEnergy(dsp.getDataSource().getScanData().maxEnergy());
 		
-		plot.fitting().setFittingParameters(dataModel.energyPerChannel());
-				
+	
 		plot.history().clearUndos();
 			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere

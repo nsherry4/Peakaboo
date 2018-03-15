@@ -15,6 +15,7 @@ public class SimpleScanData implements ScanData {
 	
 	private List<Spectrum> spectra;
 	private float maxEnergy;
+	private float minEnergy = 0;
 	private String name;
 	
 	public SimpleScanData(String name) {
@@ -77,6 +78,15 @@ public class SimpleScanData implements ScanData {
 	}
 
 	@Override
+	public float minEnergy() {
+		return minEnergy;
+	}
+	
+	public void setMinEnergy(float min) {
+		minEnergy = min;
+	}
+	
+	@Override
 	public String datasetName() {
 		return name;
 	}
@@ -88,5 +98,6 @@ public class SimpleScanData implements ScanData {
 			return new SimpleLoaderQueue(this, capacity);
 		}
 	}
-	
+
+
 }

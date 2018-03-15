@@ -34,7 +34,6 @@ public class PlotController extends EventfulType<String>
 {
 	
 	public List<AxisPainter>				axisPainters;
-	public DrawingRequest					dr;
 
 	
 	private IUndoController					undoController;
@@ -58,10 +57,7 @@ public class PlotController extends EventfulType<String>
 
 	private void initPlotController()
 	{
-		
-		dr = new DrawingRequest();
-		
-		
+				
 		undoController = new UndoController(this);
 		dataController = new DataController(this);
 		filteringController = new FilteringController(this);
@@ -267,15 +263,5 @@ public class PlotController extends EventfulType<String>
 		this.axisPainters = axisPainters;
 	}
 	
-	public DrawingRequest getDR()
-	{
-		return dr;
-	}
-
-	public void setDR(DrawingRequest dr)
-	{
-		this.dr = dr;
-	}
-
 	
 }

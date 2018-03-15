@@ -7,6 +7,7 @@ import java.util.List;
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.controller.TSOrdering;
+import peakaboo.curvefit.model.EnergyCalibration;
 import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
@@ -218,9 +219,11 @@ public class FittingController extends EventfulType<Boolean>
 		
 		if (! plot.data().hasDataSet() ) return null;
 		
+		EnergyCalibration calibration = new EnergyCalibration(plot.settings().getMinEnergy(), plot.settings().getMaxEnergy(), plot.data().getDataSet().channelsPerScan());
+		
 		return TSOrdering.proposeTransitionSeriesFromChannel(
 				plot.settings().getEscapePeakType(),
-				plot.settings().getEnergyPerChannel(),
+				calibration,
 				plot.filtering().getFilteredPlot(),
 				fittingModel.selections,
 				fittingModel.proposals,
@@ -235,14 +238,13 @@ public class FittingController extends EventfulType<Boolean>
 	}
 
 
-	public void setFittingParameters(float energyPerChannel)
+	public void setFittingParameters(float min, float max)
 	{
 
 		int scanSize = 0;
 		
-		plot.getDR().unitSize = energyPerChannel;
-		fittingModel.selections.setDataParameters(scanSize, energyPerChannel, plot.settings().getEscapePeakType());
-		fittingModel.proposals.setDataParameters(scanSize, energyPerChannel, plot.settings().getEscapePeakType());
+		fittingModel.selections.setDataParameters(scanSize, min, max, plot.settings().getEscapePeakType());
+		fittingModel.proposals.setDataParameters(scanSize, min, max, plot.settings().getEscapePeakType());
 
 		setUndoPoint("Calibration");
 		plot.filtering().filteredDataInvalidated();

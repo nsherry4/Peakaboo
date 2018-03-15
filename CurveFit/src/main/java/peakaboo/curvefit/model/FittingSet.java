@@ -28,8 +28,7 @@ public class FittingSet implements Serializable
 	private List<TransitionSeriesFitting>	fittings;
 	private List<TransitionSeries>			fitTransitionSeries;
 
-	private float							energyPerChannel;
-	private int								dataWidth;
+	private	EnergyCalibration				calibration;
 
 
 	private EscapePeakType					escapeType;
@@ -41,22 +40,26 @@ public class FittingSet implements Serializable
 		fittings = new ArrayList<TransitionSeriesFitting>();
 		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
-		this.energyPerChannel = 0.0f;
+		this.calibration = new EnergyCalibration(0, 0, 0);
 		this.escapeType = EscapePeakType.NONE;
 	}
 
 	
 
-	public synchronized void setEnergyPerChannel(float energyPerChannel)
+	public synchronized void setEnergy(float min, float max)
 	{
-		this.energyPerChannel = energyPerChannel;
+		if (max < min) {
+			throw new RuntimeException("Minimum energy cannot be greater than maximum energy");
+		}
+		this.calibration.setMinEnergy(min);
+		this.calibration.setMaxEnergy(max);
 		regenerateFittings();
 	}
 
 
-	private synchronized void setDataWidth(int dataWidth)
+	public synchronized void setDataWidth(int dataWidth)
 	{
-		this.dataWidth = dataWidth;
+		this.calibration.setDataWidth(dataWidth);
 		regenerateFittings();
 	}
 
@@ -74,10 +77,16 @@ public class FittingSet implements Serializable
 		regenerateFittings();
 	}
 	
-	public synchronized void setDataParameters(int dataWidth, float energy, EscapePeakType escapeType)
+	/**
+	 * Update several parameters which would require regenerating fittings all in one shot
+	 */
+	public synchronized void setDataParameters(int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escapeType)
 	{
-		this.dataWidth = dataWidth;
-		this.energyPerChannel = energy;
+		if (maxEnergy < minEnergy) {
+			throw new RuntimeException("Minimum energy cannot be greater than maximum energy");
+		}
+		this.calibration = new EnergyCalibration(minEnergy, maxEnergy, dataWidth);
+		this.escapeType = escapeType;
 		regenerateFittings();
 	}
 
@@ -106,7 +115,7 @@ public class FittingSet implements Serializable
 
 	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-		fittings.add(new TransitionSeriesFitting(ts, dataWidth, energyPerChannel, escapeType));
+		fittings.add(new TransitionSeriesFitting(ts, calibration, escapeType));
 	}
 
 
@@ -279,19 +288,24 @@ public class FittingSet implements Serializable
 	/**
 	 * Rough method for estimating how intense each {@link TransitionSeries} will be with the 
 	 * given data and energy level. This is useful for auto-calibration of energy levels
-	 * @param data
+	 * @param data the spectrum to measure against
+	 * @param calibration A custom calibration to allow multithreaded use of this method
 	 * @return
 	 */
-	public synchronized Map<TransitionSeries, Float> roughIndivudualHeights(ReadOnlySpectrum data) {
+	public Map<TransitionSeries, Float> roughIndivudualHeights(ReadOnlySpectrum data, EnergyCalibration calibration) {
 		
 		Map<TransitionSeries, Float> heights = new HashMap<>();
+		if (calibration.getDataWidth() == 0) {
+			return heights;
+		}
 		
 		for (TransitionSeriesFitting f : fittings) {
 			if (f.transitionSeries.visible) {
 				float height = 0f;
 				for (Transition t : f.transitionSeries.getAllTransitions()) {
-					int channel = (int) (t.energyValue / energyPerChannel);
+					int channel = calibration.channelFromEnergy(t.energyValue);
 					if (channel >= data.size()) continue;
+					if (channel < 0) continue;
 					height += data.get(channel);
 				}
 				heights.put(f.transitionSeries, height);
@@ -302,11 +316,15 @@ public class FittingSet implements Serializable
 	}
 	
 
-	// calculates fittings, residual, total curve
-	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data)
-	{
+	
+	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data) {
+		return calculateFittingsUnsynchronized(data);
+	}
+	
+	public FittingResultSet calculateFittingsUnsynchronized(ReadOnlySpectrum data) {
 
-		if (data.size() != dataWidth) setDataWidth(data.size());
+
+		if (data.size() != calibration.getDataWidth()) setDataWidth(data.size());
 		
 		
 		FittingResultSet results = new FittingResultSet(data.size());

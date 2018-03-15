@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.model.EnergyCalibration;
+import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
@@ -57,42 +59,35 @@ public class SettingsController extends Eventful implements Serializable
 		return settingsModel.showIndividualFittings;
 	}
 
-	public void setEnergyPerChannel(float energy)
-	{
-		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
-		{
-			return;
-		}
-		
-		plot.fitting().setFittingParameters(energy);
+
+	public void setMaxEnergy(float max) {
+		settingsModel.maxEnergy = max;
+		//if (plot.data().hasDataSet() && plot.data().getDataSet().channelsPerScan() > 0) {
+			plot.fitting().setFittingParameters(getMinEnergy(), max);
+		//}
 		updateListeners();
-	}
-
-	public float getEnergyPerChannel()
-	{
-		return plot.getDR().unitSize;
-	}
-
-	public void setMaxEnergy(float energy)
-	{
-		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
-		{
-			return;
-		}
-		//dont set an undo point here -- setEnergyPerChannel does that already
-		setEnergyPerChannel(energy / (plot.data().getDataSet().channelsPerScan()));
-
 	}
 
 	public float getMaxEnergy()
 	{
-		if (!plot.data().hasDataSet() || plot.data().getDataSet().channelsPerScan() == 0)
-		{
-			return 20.48f;
-		}
-		return plot.getDR().unitSize * (plot.data().getDataSet().channelsPerScan());
+		return settingsModel.maxEnergy;
 	}
 
+	
+	public void setMinEnergy(float min) {
+		settingsModel.minEnergy = min;
+		//if (plot.data().hasDataSet() && plot.data().getDataSet().channelsPerScan() > 0) {
+			plot.fitting().setFittingParameters(min, getMaxEnergy());
+		//}
+		updateListeners();
+	}
+
+	
+	public float getMinEnergy()
+	{
+		return settingsModel.minEnergy;
+	}
+	
 	public void setViewLog(boolean log)
 	{
 		if (log)
@@ -248,7 +243,8 @@ public class SettingsController extends Eventful implements Serializable
 	public float getEnergyForChannel(int channel)
 	{
 		if (!plot.data().hasDataSet()) return 0.0f;
-		return channel * plot.getDR().unitSize;
+		EnergyCalibration calibration = new EnergyCalibration(getMinEnergy(), getMaxEnergy(), plot.data().getDataSet().channelsPerScan());
+		return calibration.energyFromChannel(channel);
 	}
 
 	public Pair<Float, Float> getValueForChannel(int channel)
