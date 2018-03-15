@@ -3,6 +3,7 @@ package peakaboo.controller.plotter.data;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 
 import eventful.Eventful;
 import eventful.EventfulListener;
@@ -135,9 +136,12 @@ public class DataController extends Eventful
 
 	}
 	
-	public void setDataSource(DataSource ds, DummyExecutor progress)
+	public void setDataSource(DataSource ds, DummyExecutor progress, Supplier<Boolean> isAborted)
 	{
-		setDataSetProvider(new StandardDataSet(ds, progress));
+		StandardDataSet dataset = new StandardDataSet(ds, progress, isAborted);
+		if (!isAborted.get()) {
+			setDataSetProvider(dataset);
+		}
 	}
 
 

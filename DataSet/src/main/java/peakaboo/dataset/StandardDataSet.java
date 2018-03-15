@@ -65,11 +65,11 @@ public class StandardDataSet implements DataSet
 	}
 	
 	
-	public StandardDataSet(DataSource ds, DummyExecutor progress)
+	public StandardDataSet(DataSource ds, DummyExecutor progress, Supplier<Boolean> isAborted)
 	{
 		super();
 		
-		readDataSource(ds, progress, null, new File(""));
+		readDataSource(ds, progress, isAborted, new File(""));
 		dataSource = ds;
 		
 	}
@@ -324,7 +324,7 @@ public class StandardDataSet implements DataSet
 		
 		avg = new ISpectrum(spectrumLength);
 		max10 = new ISpectrum(spectrumLength);
-		
+		int updateInterval = Math.max(ds.getScanData().scanCount()/100, 20);
 		
 		for (int i = 0; i < ds.getScanData().scanCount(); i++)
 		{
@@ -340,9 +340,10 @@ public class StandardDataSet implements DataSet
 			//read the real coordinates for this scan
 			if (ds.hasPhysicalSize()) realCoords.add(ds.getPhysicalSize().getPhysicalCoordinatesAtIndex(i));
 			
-			
-			if (applying != null) applying.workUnitCompleted();
-			if (isAborted != null && isAborted.get()) return;
+			if (i % updateInterval == 0) {
+				if (applying != null) applying.workUnitCompleted(updateInterval);
+				if (isAborted != null && isAborted.get()) return;
+			}
 			
 		}
 		

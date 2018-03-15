@@ -1444,7 +1444,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 			@Override
 			protected Boolean execute() {
-				getController().data().setDataSource(ds, progress);
+				getController().data().setDataSource(ds, progress, this::isAborted);
 				getController().loadSettings(settings, false);
 				clearModal();
 				return true;
