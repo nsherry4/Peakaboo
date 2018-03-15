@@ -26,7 +26,7 @@ public class Version {
 	public final static boolean rc = false;
 	public final static boolean beta = false;
 	
-	public final static String devReleaseDescription = "Development Version";
+	public final static String devReleaseDescription = "Development Version - " + buildDate;
 	public final static String rcReleaseDescription = "Release Candidate";
 	public final static String releaseDescription = release ? "" : rc ? rcReleaseDescription : devReleaseDescription;
 	

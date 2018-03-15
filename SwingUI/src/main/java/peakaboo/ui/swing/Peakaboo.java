@@ -130,7 +130,7 @@ public class Peakaboo
 	
 	public static void run() {
 		
-		LOGGER.log(Level.INFO, "Starting Peakaboo");
+		LOGGER.log(Level.INFO, "Starting " + Version.title);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		Swidget.initialize(Version.splash, Version.icon, () -> {
 			errorHook();
