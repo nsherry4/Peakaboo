@@ -99,7 +99,7 @@ public class MapSetController extends EventfulType<String>
 			widths.add(x);
 		}
 		
-		StreamExecutor<Coord<Integer>> executor = new StreamExecutor<>();
+		StreamExecutor<Coord<Integer>> executor = new StreamExecutor<>("Evaluating Sizes");
 		executor.setTask(widths, stream -> {
 			
 			Optional<Pair<Coord<Integer>, Float>> best = stream.map(x -> {

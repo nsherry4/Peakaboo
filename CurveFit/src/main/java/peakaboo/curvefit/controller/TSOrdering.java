@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +27,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
 import peakaboo.curvefit.peaktable.PeakTable;
 import plural.streams.StreamExecutor;
+import plural.streams.StreamExecutor.State;
 import scitypes.ISpectrum;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
@@ -372,109 +377,5 @@ public class TSOrdering
 
 
 	
-	public static StreamExecutor<Pair<Float, Float>> proposeEnergyLevel(ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, int dataWidth) {
-		
-		List<Pair<Float, Float>> energies = new ArrayList<>();
-		for (float max = 0.05f; max <= 100f; max += 0.05f) {
-			for (float min = -10.0f; min < 10.0f; min += 0.05) {
-				energies.add(new Pair<Float, Float>(min, max));
-			}
-		}
-		
-		StreamExecutor<Pair<Float, Float>> executor = new StreamExecutor<>(energies.size() / 100);
-		executor.setTask(energies, stream -> {
-
-			//build a new model for experimenting with
-			FittingSet fits = new FittingSet();
-			fits.setDataWidth(dataWidth);
-			for (TransitionSeries ts : tsList) {
-				fits.addTransitionSeries(ts);
-			}
-			
-			//Score each energy value using our observed stream
-			List<Float> scores = stream.map(energyPair -> {
-				
-				EnergyCalibration calibration = new EnergyCalibration(energyPair.first, energyPair.second, dataWidth);
-				
-				Map<TransitionSeries, Float> heights = fits.roughIndivudualHeights(spectrum, calibration);
-				float score = 0;
-				for (Float f : heights.values()) {
-					score += Math.sqrt(f);
-				}
-				return score;
-				
-			}).collect(Collectors.toList());
-		
-			if (executor.getState() == StreamExecutor.State.ABORTED) {
-				return null;
-			}
-			
-			//Find the best score, and its energy
-			float bestScore = 0f;
-			float bestMax = 0f;
-			float bestMin = 0f;
-			
-			for (int i = 0; i < energies.size(); i++) {
-				Pair<Float, Float> energy = energies.get(i);
-				float score = scores.get(i);
-				if (score > bestScore) {
-					bestScore = score;
-					bestMin = energy.first;
-					bestMax = energy.second;
-				}
-			}
-			
-			PeakabooLog.get().log(Level.INFO, "Proposing Energy Level Stage 1: bestMin=" + bestMin + ", bestMax=" + bestMax);
-			
-			float window = 0.1f;
-			Pair<Float, Float> fineTuned = proposeEnergyFineTuning(spectrum, tsList, dataWidth, bestMin-window, bestMin+window, bestMax-window, bestMax+window);
-			
-			PeakabooLog.get().log(Level.INFO, "Proposing Energy Level Stage 2: bestMin=" + fineTuned.first+ ", bestMax=" + fineTuned.second);
-			
-			return fineTuned;
-			
-			
-		});
-
-
-		return executor;
-	}
-	
-	public static Pair<Float, Float> proposeEnergyFineTuning(ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, int dataWidth, float lomin, float himin, float lomax, float himax) {
-		
-		//build a new model for experimenting with
-		FittingSet fits = new FittingSet();
-		fits.setDataWidth(dataWidth);
-		for (TransitionSeries ts : tsList) {
-			fits.addTransitionSeries(ts);
-		}
-		
-		//Find the best score, and its energy
-		float bestScore = 0f;
-		float bestMin = lomin;
-		float bestMax = himax;
-		
-		for (float min = lomin; min <= himin; min += 0.01f) {
-			for (float max = lomax; max <= himax; max += 0.01f) {
-				if (max <= min) continue;
-				
-				fits.setEnergy(min, max);
-				FittingResultSet results = fits.calculateFittingsUnsynchronized(spectrum);
-				
-				float score = 0f;
-				for (FittingResult fit : results.fits) {
-					score += Math.sqrt(fit.fit.sum());
-				}
-				
-				if (score > bestScore) {
-					bestScore = score;
-					bestMin = min;
-					bestMax = max;
-				}
-			}
-		}
-		
-		return new Pair<Float, Float>(bestMin, bestMax);
-	}
 	
 }

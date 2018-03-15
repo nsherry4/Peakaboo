@@ -83,7 +83,7 @@ public class MapDimensionsPanel extends JPanel {
 			c.anchor = GridBagConstraints.LINE_END;
 			magic.addActionListener(e -> {
 				StreamExecutor<Coord<Integer>> guessTask = controller.mapsController.guessDataDimensions();
-				StreamExecutorView view = new StreamExecutorView(guessTask, "Evaluating Sizes");
+				StreamExecutorView view = new StreamExecutorView(guessTask);
 				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
 				guessTask.addListener(() -> {
 					SwingUtilities.invokeLater(() -> {

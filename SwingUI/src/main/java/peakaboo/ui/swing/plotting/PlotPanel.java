@@ -79,7 +79,9 @@ import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
+import peakaboo.curvefit.controller.AutoEnergyCalibration;
 import peakaboo.curvefit.controller.TSOrdering;
+import peakaboo.curvefit.model.EnergyCalibration;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
@@ -107,6 +109,7 @@ import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
+import plural.streams.StreamExecutorSet;
 import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
 import plural.swing.ExecutorSetView;
@@ -1775,28 +1778,30 @@ public class PlotPanel extends TabbedInterfacePanel
 		//setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		
 		
-		StreamExecutor<Pair<Float, Float>> energyTask = TSOrdering.proposeEnergyLevel(
+		StreamExecutorSet<EnergyCalibration> energyTask = AutoEnergyCalibration.propose(
 				controller.data().getDataSet().averagePlot(), 
 				controller.fitting().getVisibleTransitionSeries(), 
 				controller.data().getDataSet().channelsPerScan());
-		StreamExecutorView energyView = new StreamExecutorView(energyTask, "Evaluating Fittings");
-		StreamExecutorPanel energyPanel = new StreamExecutorPanel("Detecting Energy Level", energyView);
 		
-		energyTask.addListener(() -> {
-			if (energyTask.getState() != StreamExecutor.State.RUNNING) {
+		
+		List<StreamExecutorView> views = energyTask.getExecutors().stream().map(StreamExecutorView::new).collect(Collectors.toList());
+		StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Energy Level", views);
+				
+		energyTask.last().addListener(() -> {
+			if (energyTask.last().getState() != StreamExecutor.State.RUNNING) {
 				this.clearModal();
 			}
 			
-			if (energyTask.getState() == StreamExecutor.State.COMPLETED) {
-				Pair<Float, Float> energy = energyTask.getResult().orElse(null);
+			if (energyTask.last().getState() == StreamExecutor.State.COMPLETED) {
+				EnergyCalibration energy = energyTask.last().getResult().orElse(null);
 				if (energy != null) {
-					controller.settings().setMinEnergy(energy.first);
-					controller.settings().setMaxEnergy(energy.second);
+					controller.settings().setMinEnergy(energy.getMinEnergy());
+					controller.settings().setMaxEnergy(energy.getMaxEnergy());
 				}
 			}
 		});
 		
-		this.showModal(energyPanel);
+		this.showModal(panel);
 		energyTask.start();
 		
 		

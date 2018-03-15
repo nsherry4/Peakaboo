@@ -82,5 +82,9 @@ public class EnergyCalibration {
 		return energyPerChannel;
 	}
 	
+	@Override
+	public String toString() {
+		return "EnergyCalibration(" + minEnergy + ", " + maxEnergy + ")";
+	}
 	
 }
