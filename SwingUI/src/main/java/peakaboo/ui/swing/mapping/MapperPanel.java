@@ -33,7 +33,6 @@ import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFileDialogs;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;

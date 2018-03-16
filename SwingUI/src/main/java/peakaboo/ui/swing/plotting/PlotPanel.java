@@ -128,7 +128,6 @@ import scitypes.util.StringInput;
 import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFileDialogs;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
