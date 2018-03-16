@@ -139,7 +139,7 @@ public class MapperToolbar extends JToolBar {
 			contentPanel.setBorder(Spacing.bHuge());
 			
 			ButtonBox bbox = new ButtonBox(Spacing.bHuge());
-			ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", "Close this window");
+			ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", "Close this window", true);
 			close.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e)

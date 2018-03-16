@@ -42,9 +42,9 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 	}
 	
 
-	public String datasetName()
-	{
-		return originalDataSource.getScanData().datasetName() + " Subset";
+	@Override
+	public String datasetName() {
+		return "Crop of " + originalDataSource.getScanData().datasetName();
 	}
 
 

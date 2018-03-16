@@ -60,7 +60,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 
 	@Override
 	public String datasetName() {
-		return source.getScanData().datasetName() + " Subset";
+		return "Subset of " + source.getScanData().datasetName();
 	}
 
 	@Override
