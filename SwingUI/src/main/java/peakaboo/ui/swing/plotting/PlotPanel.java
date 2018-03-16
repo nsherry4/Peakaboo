@@ -92,6 +92,7 @@ import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.metadata.Metadata;
+import peakaboo.datasource.model.components.scandata.ScanData;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
@@ -128,6 +129,7 @@ import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.PropertyDialogue;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFileDialogs;
+import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -747,7 +749,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		exportFilteredDataMenuItem = createMenuItem(
 				"Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
-				e -> actionSaveFittedDataInformation(),
+				e -> actionSaveFilteredData(),
 				null, null
 		);
 		export.add(exportFilteredDataMenuItem);
@@ -1248,9 +1250,12 @@ public class PlotPanel extends TabbedInterfacePanel
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
 	// data set, and returns it to the caller
-	public List<File> openNewDataset(List<SimpleFileExtension> extensions)
+	public void openNewDataset(List<SimpleFileExtension> extensions)
 	{
-		return SwidgetFileDialogs.openFiles(null, "Select Data Files to Open", controller.data().getDataSet().getDataSourcePath(), extensions);
+		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", controller.data().getDataSet().getDataSourcePath(), extensions, files -> {
+			if (!files.isPresent()) return;
+			loadFiles(files.get());
+		});
 	}
 
 
@@ -1350,9 +1355,8 @@ public class PlotPanel extends TabbedInterfacePanel
 			exts.add(ext);
 		}
 
-		List<File> files = openNewDataset(exts);
-		if (files == null) return;
-		loadFiles(files);
+		openNewDataset(exts);
+		
 		
 	}
 	
@@ -1394,16 +1398,15 @@ public class PlotPanel extends TabbedInterfacePanel
 			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(files, dsp);
 			
 			
-//			ExecutorSetViewDialog view = new ExecutorSetViewDialog(container.getWindow(), reading);
-//			//handle some race condition where the window gets told to close too early on failure
-//			//I don't think its in my code, but I don't know for sure
-//			view.setVisible(false);
 			
 			ExecutorSetView execPanel = new ExecutorSetView(reading); 
+			Mutable<Boolean> finished = new Mutable<Boolean>(false);
 			reading.addListener(() -> {
 				javax.swing.SwingUtilities.invokeLater(() -> {
 					if (reading.isAborted() || reading.getCompleted()){
-
+						if (finished.get()) { return; }
+						finished.set(true);
+						
 						DatasetReadResult result = reading.getResult();
 						if (result == null || result.status == ReadStatus.FAILED)
 						{
@@ -1419,13 +1422,13 @@ public class PlotPanel extends TabbedInterfacePanel
 						// set some controls based on the fact that we have just loaded a
 						// new data set
 						savedSessionFileName = null;
-						clearModal();
+						popModalComponent();
 						
 					}			
 				});
 			});
 			
-			showModal(execPanel);
+			pushModalComponent(execPanel);
 			reading.startWorking();
 			
 			
@@ -1446,7 +1449,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			protected Boolean execute() {
 				getController().data().setDataSource(ds, progress, this::isAborted);
 				getController().loadSettings(settings, false);
-				clearModal();
+				popModalComponent();
 				return true;
 			}}; 
 			
@@ -1454,7 +1457,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		exec.addExecutor(progress, "Calculating Values");
 			
 		ExecutorSetView view = new ExecutorSetView(exec);
-		showModal(view);
+		pushModalComponent(view);
 		exec.startWorking();
 		
 	}
@@ -1464,25 +1467,20 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	private void actionExportData(DataSink sink) {
 		DataSource source = controller.data().getDataSet().getDataSource();
-		
-		try {
-			
-			SimpleFileExtension ext = new SimpleFileExtension(sink.getFormatName(), sink.getFormatExtension());
-			File saveFile = SwidgetFileDialogs.saveFile(container.getWindow(), "Export Scan Data", exportedDataFileName, ext);
-			if (saveFile == null) {
+
+		SimpleFileExtension ext = new SimpleFileExtension(sink.getFormatName(), sink.getFormatExtension());
+		SwidgetFilePanels.saveFile(container.getWindow(), "Export Scan Data", exportedDataFileName, ext, file -> {
+			if (!file.isPresent()) {
 				return;
 			}
+			try {
+				sink.write(source, file.get().toPath());
+			} catch (IOException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
+			}
 			
-			sink.write(source, saveFile.toPath());
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
-		}
-		
+		});
 
-		
-		
 	}
 
 	private void actionMap(FittingTransform type)
@@ -1495,7 +1493,6 @@ public class PlotPanel extends TabbedInterfacePanel
 		final ExecutorSet<MapResultSet> tasks = controller.getMapCreationTask(type);
 		if (tasks == null) return;
 
-		//new ExecutorSetViewDialog(container.getWindow(), tasks);
 		ExecutorSetView execPanel = new ExecutorSetView(tasks);
 		tasks.addListener(() -> {
 			if (tasks.getCompleted())
@@ -1542,12 +1539,12 @@ public class PlotPanel extends TabbedInterfacePanel
 			}
 			
 			if (tasks.getCompleted() || tasks.isAborted()) {
-				clearModal();
+				popModalComponent();
 			}
 		});
 		
 		
-		showModal(execPanel);
+		pushModalComponent(execPanel);
 		tasks.startWorking();
 
 
@@ -1559,26 +1556,23 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionSaveSession()
 	{
 
-		try
-		{
-			SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-			File file = SwidgetFileDialogs.saveFile(container.getWindow(), "Save Session Data", savedSessionFileName, peakaboo);
-			if (file == null) {
+		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
+		SwidgetFilePanels.saveFile(this, "Save Session Data", savedSessionFileName, peakaboo, file -> {
+			if (!file.isPresent()) {
 				return;
 			}
+			try {
+				FileOutputStream os = new FileOutputStream(file.get());
+				os.write(controller.saveSettings().getBytes());
+				os.close();
+				savedSessionFileName = file.get().getParentFile();
+			}
+			catch (IOException e)
+			{
+				PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
+			}
 			
-			FileOutputStream os = new FileOutputStream(file);
-			os.write(controller.saveSettings().getBytes());
-			os.close();
-			
-			savedSessionFileName = file.getParentFile();
-			
-		}
-		catch (IOException e)
-		{
-			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
-		}
-
+		});
 	}
 
 
@@ -1587,12 +1581,17 @@ public class PlotPanel extends TabbedInterfacePanel
 		if (saveFilesFolder == null) {
 			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
 		}
-		SavePicture sp = new SavePicture(container.getWindow(), canvas, saveFilesFolder);
-		saveFilesFolder = sp.getStartingFolder(); 
+		SavePicture sp = new SavePicture(this, canvas, saveFilesFolder, file -> {
+			if (file.isPresent()) {
+				saveFilesFolder = file.get().getParentFile();
+			}
+		});
+		sp.show();
+		 
 	}
 
 
-	private void actionSaveFittedDataInformation()
+	private void actionSaveFilteredData()
 	{
 		if (saveFilesFolder == null) {
 			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
@@ -1601,56 +1600,64 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
 		final FilterSet filters = controller.filtering().getActiveFilters();
-		
+		System.out.println(filters.getFilters());
 
 		SimpleFileExtension text = new SimpleFileExtension("Text File", "txt");
-		File saveFile = SwidgetFileDialogs.saveFile(container.getWindow(), "Save Fitted Data to Text File", saveFilesFolder, text);
-		if (saveFile == null) { 
-			return;
-		}
-		saveFilesFolder = saveFile.getParentFile();
-		
-		// get an output stream to write the data to
-		final DummyExecutor exec = new DummyExecutor(controller.data().getDataSet().getScanData().scanCount());
-		ExecutorSet<Exception> execset = new ExecutorSet<Exception>("Exporting Data") {
-			
-			@Override
-			protected Exception execute()
-			{
-				try {
-					
-					exec.advanceState();
-					
-					OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(saveFile));
-					Iterator<ReadOnlySpectrum> iter = controller.data().getScanIterator();
-					while (iter.hasNext())
-					{
-						ReadOnlySpectrum s = iter.next();
-						s = filters.applyFiltersUnsynchronized(s, false);
-						osw.write(s.toString() + "\n");
-						exec.workUnitCompleted();
-					}
-					osw.close();
-					
-					exec.advanceState();
-					
-					return null;
-				} catch (Exception e) { return e; }
+		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", saveFilesFolder, text, saveFile -> {
+			if (!saveFile.isPresent()) {
+				return;
 			}
-		};
-		execset.addExecutor(exec, "Applying Filters");
-		
-		
-		new ExecutorSetViewDialog(container.getWindow(), execset);
-		
-		Exception e = execset.getResult();
-		if (e != null)
-		{
-			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
-			saveFile.delete();
-			return;
-		}
+			
+			saveFilesFolder = saveFile.get().getParentFile();
+			
+			StreamExecutor<Throwable> streamexec = new StreamExecutor<>("Exporting Data");
+			streamexec.setParallel(false);
+			streamexec.setTask(controller.data().getDataSet().getScanData(), stream -> {
+				
+				try {
+										
+					Mutable<Boolean> errored = new Mutable<>(false);
+					OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(saveFile.get()));
+					stream.forEach(spectrum -> {
+						spectrum = filters.applyFiltersUnsynchronized(spectrum, false);
+						try {
+							osw.write(spectrum.toString() + "\n");
+						} catch (Exception e) { 
+							if (!errored.get()) {
+								PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
+								streamexec.abort();
+								errored.set(true);
+							}
+						}
+					});
 
+					osw.close();
+										
+					return null;
+				} catch (Exception e) { 
+					PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
+				}
+				
+				return null;
+			});
+			
+			StreamExecutorView view = new StreamExecutorView(streamexec);
+			StreamExecutorPanel panel = new StreamExecutorPanel("Exporting Data", view);
+			
+			streamexec.addListener(() -> {
+				if (streamexec.getState() != StreamExecutor.State.RUNNING) {
+					popModalComponent();
+				}
+				if (streamexec.getState() == StreamExecutor.State.ABORTED) {
+					saveFile.get().delete();
+				}
+			});
+			
+			pushModalComponent(panel);
+			streamexec.start();
+			
+			
+		});
 		
 	}
 	
@@ -1662,65 +1669,57 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
-		float intensity;
+		
 
-		try
-		{
-			
-			SimpleFileExtension ext = new SimpleFileExtension("Text File", "txt");
-			File file = SwidgetFileDialogs.saveFile(container.getWindow(), "Save Fitting Information to Text File", saveFilesFolder, ext);
-			if (file == null) {
+		
+		SimpleFileExtension ext = new SimpleFileExtension("Text File", "txt");
+		SwidgetFilePanels.saveFile(this, "Save Fitting Information to Text File", saveFilesFolder, ext, file -> {
+			if (!file.isPresent()) {
 				return;
 			}
-			
-			// get an output stream to write the data to
-			FileOutputStream os = new FileOutputStream(file);
-			OutputStreamWriter osw = new OutputStreamWriter(os);
-
-			// write out the data
-			for (TransitionSeries ts : tss)
-			{
-
-				if (ts.visible)
+			try {
+				// get an output stream to write the data to
+				FileOutputStream os = new FileOutputStream(file.get());
+				OutputStreamWriter osw = new OutputStreamWriter(os);
+								
+				// write out the data
+				float intensity;
+				for (TransitionSeries ts : tss)
 				{
-					intensity = controller.fitting().getTransitionSeriesIntensity(ts);
-					osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+
+					if (ts.visible)
+					{
+						intensity = controller.fitting().getTransitionSeriesIntensity(ts);
+						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+					}
 				}
+				osw.close();
+				os.close();
 			}
-			osw.close();
-			os.close();
-
-
-		}
-		catch (IOException e)
-		{
-			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
-		}
+			catch (IOException e)
+			{
+				PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
+			}
+			
+		});
 
 	}
 
+	public void actionLoadSession() {
 
-	public void actionLoadSession()
-	{
-
-		try
-		{
-			SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-			File f = SwidgetFileDialogs.openFile(container.getWindow(), "Load Session Data", savedSessionFileName, peakaboo);
-			if (f == null) {
+		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
+		SwidgetFilePanels.openFile(this, "Load Session Data", savedSessionFileName, peakaboo, file -> {
+			if (!file.isPresent()) {
 				return;
 			}
-			
-			controller.loadSettings(StringInput.contents(f), false);
-			
-		}
-		catch (IOException e)
-		{
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
-		}
+			try {
+				controller.loadSettings(StringInput.contents(file.get()), false);
+			} catch (IOException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
+			}
+		});
 
 	}
-
 
 	public void actionShowInfo()
 	{
@@ -1789,7 +1788,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				
 		energyTask.last().addListener(() -> {
 			if (energyTask.last().getState() != StreamExecutor.State.RUNNING) {
-				this.clearModal();
+				popModalComponent();
 			}
 			
 			if (energyTask.last().getState() == StreamExecutor.State.COMPLETED) {
@@ -1801,7 +1800,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			}
 		});
 		
-		this.showModal(panel);
+		pushModalComponent(panel);
 		energyTask.start();
 		
 		

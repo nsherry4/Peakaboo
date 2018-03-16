@@ -88,11 +88,11 @@ public class MapDimensionsPanel extends JPanel {
 				guessTask.addListener(() -> {
 					SwingUtilities.invokeLater(() -> {
 						if (guessTask.getState() == StreamExecutor.State.ABORTED) {
-							tabPanel.clearModal();
+							tabPanel.popModalComponent();
 						}
 						if (guessTask.getState() == StreamExecutor.State.COMPLETED) {
 						
-							tabPanel.clearModal();
+							tabPanel.popModalComponent();
 							
 							Coord<Integer> guess = guessTask.getResult().orElse(null);
 							if (guess != null) {
@@ -104,7 +104,7 @@ public class MapDimensionsPanel extends JPanel {
 						}
 					});
 				});
-				tabPanel.showModal(panel);
+				tabPanel.pushModalComponent(panel);
 				guessTask.start();				
 
 			});

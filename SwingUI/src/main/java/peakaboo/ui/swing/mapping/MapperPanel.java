@@ -34,6 +34,7 @@ import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFileDialogs;
+import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.Spacing;
@@ -204,33 +205,39 @@ public class MapperPanel extends TabbedInterfacePanel
 	public void actionSavePicture()
 	{
 		if (controller.getSettings().getView().savePictureFolder == null) controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
-		File result = new SavePicture(frame, canvas, controller.getSettings().getView().savePictureFolder).getStartingFolder();
-		if (result != null) {
-			controller.getSettings().getView().savePictureFolder = result;
-		}
+		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().getView().savePictureFolder, file -> {
+			if (file.isPresent()) {
+				controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
+			}
+		});
+		sp.show();
 	}
 	
 	public void actionSaveCSV()
 	{
-		if (controller.getSettings().getView().savePictureFolder == null) controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
+		if (controller.getSettings().getView().savePictureFolder == null) {
+			controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
+		}
 		
 		String csv = controller.getSettings().getMapFittings().mapAsCSV();
-		try
-		{
-			SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
-			File file = SwidgetFileDialogs.saveFile(this, "Save Map(s) as CSV", controller.getSettings().getView().savePictureFolder, txt);
-			if (file == null) {
+
+		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
+		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().getView().savePictureFolder, txt, file -> {
+			if (!file.isPresent()) {
 				return;
 			}
-			controller.getSettings().getView().savePictureFolder = file.getParentFile();
-			FileOutputStream os = new FileOutputStream(file);
-			os.write(csv.getBytes());
-			os.close();
-		}
-		catch (IOException e)
-		{
-			PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
-		}
+			try
+			{
+				controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
+				FileOutputStream os = new FileOutputStream(file.get());
+				os.write(csv.getBytes());
+				os.close();
+			}
+			catch (IOException e)
+			{
+				PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
+			}
+		});
 
 	}
 	

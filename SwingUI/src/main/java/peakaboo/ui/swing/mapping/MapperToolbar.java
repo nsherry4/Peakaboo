@@ -144,14 +144,14 @@ public class MapperToolbar extends JToolBar {
 				
 				public void actionPerformed(ActionEvent e)
 				{
-					panel.clearModal();
+					panel.popModalComponent();
 				}
 			});
 			bbox.addRight(close);
 			corrections.add(bbox, BorderLayout.SOUTH);
 			
 			
-			panel.showModal(corrections);
+			panel.pushModalComponent(corrections);
 			
 				
 				
