@@ -10,6 +10,8 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import scitypes.Coord;
 import scitypes.GridPerspective;
+import scitypes.ISpectrum;
+import scitypes.Pair;
 import scitypes.Range;
 import scitypes.Spectrum;
 
@@ -72,12 +74,38 @@ public class PointsSelection extends EventfulType<String>{
 
 	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
 				
-		Spectrum data = map.getSettings().getMapFittings().getCompositeMapData();
+		MapDisplayMode displayMode = map.getSettings().getMapFittings().getMapDisplayMode();
+		Spectrum data = null;
+		List<Integer> invalid = new ArrayList<>();
+		
+		if (displayMode == MapDisplayMode.COMPOSITE) {
+			data = map.getSettings().getMapFittings().getCompositeMapData();
+		} else if (displayMode == MapDisplayMode.RATIO) {
+			Pair<Spectrum, Spectrum> ratiodata = map.getSettings().getMapFittings().getRatioMapData();
+			data = ratiodata.first;
+			Spectrum invalidMap = ratiodata.second;
+			for (int i = 0; i < invalidMap.size(); i++) {
+				if (invalidMap.get(i) > 0f) {
+					invalid.add(i);
+				}
+			}
+		}
+		
 		int w = map.getSettings().getView().getDataWidth();
 		int h = map.getSettings().getView().getDataHeight();
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
 		int clickedAtIndex = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
+		
+		System.out.println(value);
+		//If we're selecting on a ratio map, and the selected point is 1:10 instead of 10:1,
+		//it will be represented as a negative number. We flip it here for convenience
+		if (displayMode == MapDisplayMode.RATIO && value < 0f) {
+			for (int i = 0; i < data.size(); i++) {
+				data.set(i, -data.get(i));
+			}
+			value = grid.get(data, clickedAt.x, clickedAt.y);
+		}
 		
 		List<Integer> points = new ArrayList<>();
 		Set<Integer> pointSet = new HashSet<>();

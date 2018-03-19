@@ -140,10 +140,9 @@ public class MapperPanel extends TabbedInterfacePanel
 			public void mouseClicked(MouseEvent e){
 				
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2) {
+					MapDisplayMode displayMode = controller.getSettings().getMapFittings().getMapDisplayMode();
 					//Double-click selects points with similar intensity
-					if (controller.getSettings().getMapFittings().getMapDisplayMode() == MapDisplayMode.COMPOSITE &&
-						controller.getSettings().getView().getInterpolation() == 0	
-						) {
+					if ((displayMode == MapDisplayMode.COMPOSITE || displayMode == MapDisplayMode.RATIO) && controller.getSettings().getView().getInterpolation() == 0) {
 						
 						controller.getSettings().getAreaSelection().clearSelection();
 						
