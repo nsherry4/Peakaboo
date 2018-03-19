@@ -148,7 +148,7 @@ public class MapperPanel extends TabbedInterfacePanel
 						controller.getSettings().getAreaSelection().clearSelection();
 						
 						Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-						controller.getSettings().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2);
+						controller.getSettings().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2, e.isControlDown());
 					}
 				}
 			}
@@ -159,7 +159,7 @@ public class MapperPanel extends TabbedInterfacePanel
 
 			public void mousePressed(MouseEvent e)
 			{			
-				if (SwingUtilities.isLeftMouseButton(e)) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && !e.isControlDown()) {
 					controller.getSettings().getPointsSelection().clearSelection();
 					
 					AreaSelection selection = controller.getSettings().getAreaSelection();

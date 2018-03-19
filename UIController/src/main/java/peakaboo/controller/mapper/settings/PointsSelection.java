@@ -70,12 +70,13 @@ public class PointsSelection extends EventfulType<String>{
 		updateListeners(UpdateType.POINT_SELECTION.toString());
 	}
 
-	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous) {
-		
+	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
+				
 		Spectrum data = map.getSettings().getMapFittings().getCompositeMapData();
 		int w = map.getSettings().getView().getDataWidth();
 		int h = map.getSettings().getView().getDataHeight();
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
+		int clickedAtIndex = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		
 		List<Integer> points = new ArrayList<>();
@@ -132,8 +133,26 @@ public class PointsSelection extends EventfulType<String>{
 			points = padSelection(points);
 		}
 		
-				
-		setPoints(points);
+		
+		
+		if (modify && getPoints().contains(clickedAtIndex))	{
+			//if we're in modify selection mode, and the user clicked on an already 
+			//selected point, then we remove these points from the previous selection
+			List<Integer> merged = new ArrayList<>(getPoints());
+			merged.removeAll(points);
+			setPoints(merged);
+		} else if (modify) {
+			//if we're in modify selection mode and the user clicked on a point not
+			//already selected, then we add these points to the previous selection
+			//use a set to ensure uniqueness
+			Set<Integer> merged = new HashSet<>(getPoints());
+			merged.addAll(points);
+			setPoints(new ArrayList<>(merged));
+		} else {
+			//we're not in modify mode, so we just set the selection to the current value
+			setPoints(points);	
+		}
+		
 		
 	}
 	
