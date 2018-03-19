@@ -1235,7 +1235,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
 
 		
-		final ImageToggleButton lockHorizontal = new ImageToggleButton(StockIcon.MISC_LOCKED, "", "Lock Horizontal Zoom to Window Size");
+		final ImageToggleButton lockHorizontal = new ImageToggleButton(StockIcon.MISC_LOCKED, "", "Lock Vertical Zoom to Window Size");
 		lockHorizontal.setSelected(true);
 		lockHorizontal.addActionListener(e -> {
 			controller.settings().setLockPlotHeight(lockHorizontal.isSelected());
