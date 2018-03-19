@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -88,6 +90,12 @@ public class MapperPanel extends TabbedInterfacePanel
 				canvas.updateCanvasSize();
 			//}
 			repaint();
+		});
+		
+		this.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				canvas.updateCanvasSize();
+			}
 		});
 
 		owner.setTabTitle(this, getTitle());
