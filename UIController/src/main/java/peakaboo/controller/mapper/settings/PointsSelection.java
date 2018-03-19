@@ -97,7 +97,6 @@ public class PointsSelection extends EventfulType<String>{
 		int clickedAtIndex = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		
-		System.out.println(value);
 		//If we're selecting on a ratio map, and the selected point is 1:10 instead of 10:1,
 		//it will be represented as a negative number. We flip it here for convenience
 		if (displayMode == MapDisplayMode.RATIO && value < 0f) {
