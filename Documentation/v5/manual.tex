@@ -131,7 +131,7 @@
 Peakaboo allows users to identify the spectral origins of an XRF spectrum using a 
 routine that fits all components of the K, L, or M spectrum including escape peaks 
 and pileup peaks, and then plots their spatial intensity distributions as maps. It 
-was developed as part of the Science Studio project
+was developed as part of the Science Studio project.
 
 \tocsection{Accepted File Formats}
 
@@ -141,7 +141,7 @@ numbers. Each row represents a single spectrum.
 
 Because of the wide variety of data formats, Peakaboo also makes it easy to create
 plug-ins for supporting additional data formats. Some examples of file formats 
-supported by plug-ins include Amktek, Sigray, and Inca Emsa.
+supported by plug-ins include Amptek, Sigray, and Inca Emsa.
 
 Peakaboo also allows users who are familiar with the Java or JavaScript programming 
 languages to add support for new file formats. See the section on ``Extending Peakaboo'' 
@@ -157,8 +157,8 @@ to contact the developer at \command{nsherry4@uwo.ca}
 
 \tocsection{Opening Data}
 
-Select \button{document-open}{Open} from the toolbar or 
-\command{File \menu \button{document-open}{Open}} from the menu to locate your 
+Select \button{document-open}{Open} or 
+\command{\button{action-menu}{Menu} \menu \button{document-open}{Open}} to locate your 
 XRF data. If all scan point data is contained in a single file, simply select
 that file and open it. If there are many individual scan point files, 
 (eg one scan per file), then locate them in their directory and use 
@@ -173,25 +173,25 @@ XRF data will believe that it can open a particular data set. This is usually th
 of many different file formats having some of the same properties, such as similar file 
 extensions (eg \file{.txt}, \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo 
 cannot automatically determine which XRF reader plug-in to use, it will ask you to indicate 
-which format your data is in. Select the entry which best matches your data.
+which format your data is in. Select the entry which matches your data.
 
-\screenshot{select-datasource}{Peakaboo's file format conflict dialog}
-
-\tocsection{Examining the Data}
+\tocsection{Viewing the Data}
 
 The \icon{zoom-in} \icon{zoom-out} zoom slider bar on the bottom right of the window 
-allows you to expand the x-axis (energy scale). You can use the scroll bar above
-this area, click and drag on the spectrum itself, to pan back and forth to view 
-different energy regions.
+allows you to expand the x-axis (energy scale). You can use the scroll bar below the scan 
+(or click and drag on the spectrum itself) to pan back and forth to view different energy 
+regions. The \button{misc-locked}{Lock Zoom} button locks the vertical zoom to the size 
+of the viewing area. You can disable this if you wish to zoom in vertically as well as 
+horizontally.
 
 \screenshot{zoom-scroll}{Zoom controls and horizontal scrollbar}
 
 
 \tocsection{Individual Scans}
 
-The \command{Scan \#} field on the left side, under the spectrum view, allows you 
-to view individual spectra in a map. Click on the arrows to move in the desired 
-direction or enter a value and press \command{Enter}. This option will be disabled 
+The \command{Scan} field on the left side, under the spectrum view, allows you 
+to view individual spectra in a map. Click on the up and down arrows to select the desired 
+scan, or enter a value and press \command{Enter}. This option will be disabled 
 if you are viewing the mean average or strongest per channel composites rather than 
 individual scans.
 
@@ -200,21 +200,24 @@ individual scans.
 
 \tocsection{Energy Levels}
 
-The \command{Max Energy} setting on the upper right provides energy calibration. 
-If your dataset contains this value, the maximum energy value will be set 
-automatically. If not, you will have to enter it manually. This value can be 
+The \command{Energy} settings on the upper right provides energy calibration. 
+If your dataset contains this value, the minimim and maximum energy values will be set 
+automatically. If not, you will have to enter them manually. This value can be 
 tweaked or adjusted by selecting a major element known or suspected to be present 
 in the sample, and adjusting the energy range until the associated peak fits properly. 
-First add your axes to the spectrum by selecting \command{View \menu\ Axes} from 
-the menu. The Y Axis -- \command{Relative Intensity} and X Axis -- \command{Energy (keV)} should now be 
-labelled for you.
 
 \screenshot{max-energy}{The maximum energy selector}
 
-On the left side of the screen, under the \command{Peak Fitting} tab, click on the 
+The \button{auto}{Auto-Calibration} tool will attempt to do this automatically, although it's 
+results should be double-checked. 
+
+To do this manually, first add your axes to the spectrum 
+by selecting \command{\button{action-menu}{Menu} \menu\ View \menu\ Axes} from the menu. The Y Axis -- 
+\command{Relative Intensity} and X Axis -- \command{Energy (keV)} should now be labelled 
+for you. On the left side of the screen, under the \command{Peak Fitting} tab, click on the 
 drop-down arrow beside the \button{edit-add}{Add Fittings} button and select 
-\command{Elemental Lookup}, and a list of elements will become visible, 
-listed in increasing atomic number. Find the element you wish to use as a reference, 
+\command{Elemental Lookup}; a list of elements will become visible, 
+listed by increasing atomic number. Find the element you wish to use as a reference, 
 and click on the checkbox on the box next to it. A set of peaks will appear in shaded 
 red within the spectrum. Adjust the Max Energy (keV) setting to move the red shaded 
 peaks to fit these intense peaks in the spectrum. The Max Energy setting should now
@@ -228,34 +231,34 @@ appear off, check your calibration again.
 
 \tocsection{Customizing the View}
 
-The \command{View} menu contains many settings to help you to visualize the 
-spectrum: \command{Logarithmic Scale} (usually best), \command{Axes} (shows energy 
-and intensity scales), \command{Mean Average of Spectra} is the average of all scans 
-(averages each energy channel across all spectra within a map to give you a much 
+The \command{\button{action-menu}{Menu} \menu\ View} menu contains many settings to help you 
+visualize the spectrum: \command{Logarithmic Scale} (usually best), \command{Axes} (shows energy 
+and intensity scales), \command{Mean per Channel} is the average of all scans 
+(averages each energy channel across all spectra within a data set to give you a much 
 improved composite spectrum).
 
-You can also add curve fitting markings to your spectrum: 
-\command{View \menu\ Curve Fit \menu\ Element Names} to label each curve with the 
-name of the element it represents,
-\command{View \menu\ Curve Fit \menu\ Markings} showing transition markings (K-, L-lines), 
-and \command{View \menu\ Curve Fit \menu\ Heights} for fitting heights (max counts).
+You can also add curve fitting markings to your spectrum: \command{\button{action-menu}{Menu} 
+\menu\ View \menu\ Curve Fit \menu\ Element Names} to label each curve with the 
+name of the element it represents, \command{\button{action-menu}{Menu} \menu\ 
+View \menu\ Curve Fit \menu\ Markings} showing transition markings (K-, L-lines), 
+and \command{\button{action-menu}{Menu} \menu\ View \menu\ Curve Fit \menu\ Heights} for 
+fitting heights (max counts).
 
 \screenshot{view-example}{Peakaboo with mean averaged data, axes and fitting labels}
 
 Your spectrum, as it appears in the window, can also be saved by selecting 
 \button{device-camera}{Export Plot as Image} from the toolbar, 
-\command{File \menu\ Export Plot as Image}, or \shortcut{Control}{P}.  
+\command{\button{action-menu} \menu\ Export Plot as Image}, or \shortcut{Control}{P}.  
 Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can 
-also save the fittings results as a text file by selecting 
-\command{File \menu \button{document-export}{Export Fittings as Text}}.
+also save the fitting results as a text file by selecting \command{\button{action-menu}{Menu} \menu\ Export \menu\ Fittings as Text}.
 
 
 \tocsection{Saving and Loading Sessions}
 
 You can save your session information, so that next time you want to look at your XRF 
 data, you can just load this information (session) and not have to start from the 
-beginning. These options are found under \command{File \menu \button{document-save}{Save Session}} 
-and \command{File \menu\ Load Session}.
+beginning. These options are found under \command{\button{action-menu}{Menu} \menu\ \button{document-save}{Save Session}} 
+and \command{\button{action-menu}{Menu} \menu\ Load Session}.
 
 
 
@@ -270,13 +273,13 @@ detector you used to collect the XRF spectra. Features may be present in your
 spectra that are due to incoming X-rays interacting with the detector material. For
 example, for a \element{Si} detector, there is a probability that some of the incoming X-rays
 will interact with the \element{Si} and kick out \element{Si} K-shell electrons, thereby reducing the
-incoming X-ray's measured energy by 1.74 keV. This escape peak is present for the
-major elements in the sample.
+incoming X-ray's measured energy by 1.74 keV. This escape peak may be present for 
+major elements in a sample.
 
 To include escape peaks in fitting the peaks in your spectra, select 
-\command{View \menu\ Escape Peaks} and choose either \command{Silicon} or 
+\command{\button{action-menu}{Menu} \menu\ View \menu\ Escape Peaks} and choose either \command{Silicon} or 
 \command{Germanium}, depending on the type of detector you used. 
-If you do not need to fit escape peaks, choose \command{None}.
+If you do not need to fit escape peaks, choose \command{None}. By default, \command{Silicon} is selected.
 
 \tocsection{Selecting Fittings}
 
@@ -284,17 +287,16 @@ There are three different tools which can be used to fit your data. To access th
 options, click on the drop-down arrow next to the \button{edit-add}{Add Fittings} button at 
 the top of the \command{Peak Fitting} tab.
 
-\screenshot{fitting-lines}{Detail of all fitting lines for Iron K}
 
 \tocsubsection{Guided Fitting}
 
-This is the default option for \button{edit-add}{Add Fitting}. Click on the
-peak you wish to fit and the program will fit the peak with a possible option. Other 
-possible element lines will also be displayed in the drop down list. To add another 
-fitting, click on the \button{edit-add}{Add}  button below the current entry and 
-click on another peak. To edit a previous fitting, click \button{edit-edit}{Edit}. 
-Once you are happy with the fittings click \button{choose-ok}{OK} to add the 
-fittings to your list.
+This is the default option for \button{edit-add}{Add Fittings} when an energy 
+calibration is present. Click on the peak you wish to fit and the program will fit 
+the peak with a possible option. Other possible options will also be displayed 
+in the drop down list. To add another fitting, click on the \button{edit-add}{Add} 
+button below the current entry and click on another peak. To edit a previous fitting, 
+click \button{edit-edit}{Edit}. Once you are happy with the fittings click 
+\button{choose-ok}{OK} to add the fittings to your list.
 
 \screenshot{guided-fitting}{The guided gitting controls}
 
@@ -343,11 +345,11 @@ the height of a fitting, in the case of peak overlap, a fitting will occasionall
 be calculated to be larger than it ought to be. In this case, other fittings may be 
 underrepresented because there is no more signal left for those fittings to be fit to.
 Changing the order of fittings can reveal and correct these problems. Select a fitting 
-(\shortcut{Control}{P} to select several) that you wish to change the ordering of, and
+(\shortcut{Control}{Click} to select several) that you wish to change the ordering of, and
 click \button{go-up}{Move Up} or \button{go-down}{Move Down} to adjust the ordering
 of their fitting.
 
-Adjusting the \command{Max Energy} setting by $\pm$ 0.05 keV can also sometimes improve fitting
+Adjusting the \command{Energy} calibration slightly (e.g. by $\pm$ 0.05 keV) can also sometimes improve fitting
 if the energy value provided with the data is not exactly accurate. See the section on Energy 
 Levels under ``Getting Started'' for more details.
 
@@ -368,12 +370,12 @@ intensity rations for the K transitions have been optimized for $\sim$20KV irrad
 intensities for most L transitions have not been so optimized. The values provided by Krause 
 \cite{kraus} have been used. 
 
-For fitting of the spectral peaks, a Gaussian fitting function was used with a width which
+For fitting of the spectral peaks, a Gaussian fitting function is used, with a width which
 expands slightly as the energy level increases, to agree with observed variation.
 
 The identification of a particular element requires a close fit of multiple transitions. 
 When the presence of a particular element is to be tested in the presence of overlapping 
-fittings, the unknown element’s predicted spectrum is fitted to that portion of the 
+fittings, the unknown element's predicted spectrum is fitted to that portion of the 
 measured spectrum which is not already accounted for by the fittings from the other 
 elements. The fitting algorithm developed does not allow all sets of elemental peaks to 
 be freely variable to fill the available peak intensity envelope. A criterion for 
@@ -390,11 +392,11 @@ points can be found in a paper discussing Peakaboo \cite{mcintyre}.
 To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. 
 Click on the dropdown arrow to the right of the \button{map}{Map Fittings} button to 
 choose either the fitting area (default) or fitting height for mapping. Only those 
-fittings which are enabled in your \command{Fitted Elements} list will be mapped. It 
+fittings which are enabled in your \command{Peak Fitting} list will be mapped. It 
 is recommended that you enable all fittings for mapping as each fitting results in 
 an individual map which can be disabled later. If your map is quite large, or you 
-are using time-intensive filters, then it may be better to map fewer fittings at a 
-time as the processing on your desktop or laptop will take considerable time.
+are using time-intensive filters, it may be better to map fewer fittings at a 
+time as the processing on slower computers may take considerable time.
 
 Once you have clicked on \button{map}{Map Fittings}, a window will pop up indicating the
 progress of mapping the fitted elements.
@@ -407,26 +409,28 @@ widths and heights are automatically set to appropriate values. Otherwise, the u
 must adjust the width and height. All fittings will be represented in the initial map. 
 To get the individual element maps, uncheck all other fittings, leaving the element 
 fitting you wish to view. If your maps have a pixelated appearance, you may want to 
-try interpolating the data and using contouring.
+try interpolating the data and using contouring. Note that interpolation is not adding 
+new data to the map, and should not be used to excess.
 
 if you wish to scale a fitting to its own highest intensity, select \command{Visible Fittings}
-under the \command{Scale Intensities by:} section. If you choose the 
+under the \command{Peak Fittings} sidebar tab. If you choose the 
 \command{All Fittings}, then the maps will be scaled to the highest intensity from 
 the sum of all fittings. A minor element will show very a low intensity 
 distribution with this latter option, but appear much more intense with the former.
 
-Element line maps may be saved by clicking on the \button{device-camera}{Save Image} 
-button on the toolbar or by selecting \command{Maps \menu\button{device-camera}{Save Image}}
-from the menu. Various formats are available for saving your element line maps, 
+Maps may be saved by clicking the \button{device-camera}{Save Image} button on the toolbar.
+Various formats are available for saving your element line maps, 
 Pixel Image (\command{PNG}), Vector Image (\command{SVG}) and \command{PDF} format.
 
 
 \tocsection{Overlays}
 
 The \command{Overlay} option for mapping is chosen from the drop down list under 
-\command{Mapped Fittings}. This allows you to sort fittings into three groups: 
-\command{Red}, \command{Blue}, \command{Green}. These groups are overlaid, with the
-presence of each colour indicating the intensities of their fitting groups.
+\command{Peak Fittings} sidebar tab. This allows you to sort fittings into four groups: 
+\command{Red}, \command{Blue}, \command{Green}, and \command{Yellow}. These groups are 
+overlaid, with the presence of each colour indicating the intensities of their fitting 
+groups. Because Red, Green, and Blue are the primary colours for computer displays, using 
+all four colours can introduce ambiguity, and care should be taken when making selections.
 
 \screenshot{map-overlay}{Overlay of Iron and Zinc concentration}
 
@@ -441,8 +445,8 @@ incorrect.
 \tocsection{Ratios}
 
 Mapping of element ratios is also available within Peakaboo. Select \command{Ratio} from the
-\command{Mapped Fittings} dropdown list. Select the fittings (or fitting sets) you wish to
-view in ratio and choose the desired colours from the dropdown lists next to each
+\command{Peak Fittings} dropdown list. Select the fittings (or fitting sets) you wish to
+view in ratio and select the desired colours from the dropdown lists next to each
 fitting.
 
 \screenshot{map-ratio}{Ratio of Iron and Zinc}
@@ -452,13 +456,27 @@ fitting.
 Missing or skewed spectra within a data set can be removed from the map. Hover the mouse
 over the bad data point in the mapping window, and the index of that data point will 
 appear in the status bar at the bottom of the window. To view the errant data point, 
-return to the plotting window, making sure you are in \command{Individual Spectrum} mode, and 
+return to the plotting window, making sure you are in \command{Individual Scan} mode, and 
 enter the \command{Index \#} of the invalid data in the \command{Scan} field at the bottom 
 of the window. 
 
 Click on the \button{choose-cancel}{Exclude} button to flag the scan as bad, and to  exclude it from 
 the data set. In all future maps, this data point will be interpolated from neighbouring data.
 
+
+\tocsection{Selecting Subsections}
+
+There are two ways to select sections of a map, cropping and point-selection. Cropping is 
+acomplished by clicking and dragging on the map to create a selection mask. 
+
+\screenshot{select-subset}{Selecting a cropped subset of a data set}
+
+Point selection is acomplished by double clicking on a point of interest, which will 
+select all points in a contiguous region with similar intensity. Triple clicking will select 
+all points in a map with similar intensity regardless of location. More complex selections 
+can be made by holding the \command{Control} key while double-clicking.
+
+\screenshot{select-points}{Selecting a series of contiguous high-intensity points from the data set}
 
 \tocsection{Examining Subsections}
 
@@ -470,7 +488,7 @@ measured in a glass matrix. The relative intensities of these elements have been
 into Peakaboo as conversion coefficients. Using these coefficients the concentration of 
 elements within a low $Z$ matrix can be estimated.
 
-\screenshot{select-subset}{Selecting a subset of a data set}
+
 
 Left click and drag the mouse in order to draw a rectangle surrounding the region
 you wish to select. To view the relative intensity information, click on 
