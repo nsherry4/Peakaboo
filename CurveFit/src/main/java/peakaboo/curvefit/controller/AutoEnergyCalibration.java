@@ -11,21 +11,24 @@ import peakaboo.curvefit.model.EnergyCalibration;
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
+import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;
 import scitypes.Pair;
 import scitypes.Range;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 public class AutoEnergyCalibration {
 
 
 	private static List<EnergyCalibration> allEnergies(int dataWidth) {
 		List<EnergyCalibration> energies = new ArrayList<>();
-		for (float max = 0.05f; max <= 100f; max += 0.05f) {
-			for (float min = -10.0f; min < 10.0f; min += 0.05) {
-				if (min >= max) continue;
+		for (float max = 0.25f; max <= 100f; max += 0.05f) {
+			for (float min = -0.25f; min < 0.25f; min += 0.05) {
+				if (min >= max-1f) continue;
 				energies.add(new EnergyCalibration(min, max, dataWidth));
 			}
 		}
@@ -52,7 +55,7 @@ public class AutoEnergyCalibration {
 		
 		
 		//SCORE THE ENERGY PAIRS AND CREATE AN INDEX -> SCORE MAP
-		StreamExecutor<List<EnergyCalibration>> scorer = new StreamExecutor<>("Searching", energies.size() / 100);
+		StreamExecutor<List<EnergyCalibration>> scorer = new StreamExecutor<>("Searching for Calibrations", energies.size() / 100);
 		
 		scorer.setTask(new Range(0, energies.size()-1), stream -> {
 
@@ -62,11 +65,14 @@ public class AutoEnergyCalibration {
 			//Score each energy value using our observed stream
 			List<Pair<Integer, Float>> scores = stream.map(index -> {
 				
-				Map<TransitionSeries, Float> heights = fits.roughIndivudualHeights(spectrum, energies.get(index));
-				float score = 0;
-				for (Float f : heights.values()) {
-					score += Math.sqrt(f);
-				}
+				EnergyCalibration calibration = energies.get(index);
+				
+//				Map<Transition, Float> heights = fits.roughIndivudualHeights(spectrum, calibration);
+//				float score = 0;
+//				for (Float f : heights.values()) {
+//					score += Math.sqrt(f);
+//				}
+				float score = scoreFitFast(fits, spectrum, calibration);
 				return new Pair<>(index, score);
 				
 			}).collect(Collectors.toList());
@@ -82,13 +88,9 @@ public class AutoEnergyCalibration {
 			List<EnergyCalibration> filteredScores = new ArrayList<>();
 			float bestScore = scores.get(0).second;
 			
-			int cursor = 0;
-			int maxCursor = Math.min(200, scores.size());
-			while (cursor < maxCursor) {
-				float score = scores.get(cursor).second;
-				if (score < bestScore * 0.8f) break;
-				filteredScores.add(energies.get(scores.get(cursor).first));
-				cursor++;
+			for (Pair<Integer, Float> score : scores) {
+				if (score.second < bestScore * 0.5f) break;
+				filteredScores.add(energies.get(score.first));
 			}
 						
 			return filteredScores;
@@ -106,26 +108,26 @@ public class AutoEnergyCalibration {
 	 */
 	private static StreamExecutor<EnergyCalibration> chooseFromRoughOptions(Supplier<List<EnergyCalibration>> energies, ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, int dataWidth) {
 		
-		StreamExecutor<EnergyCalibration> scorer = new StreamExecutor<>("Refining Results", 5);
+		StreamExecutor<EnergyCalibration> scorer = new StreamExecutor<>("Evaluating Candidates", 5);
 		scorer.setTask(energies, stream -> {
 			
 			//build a new model for experimenting with
-			FittingSet fits = fitModel(tsList, dataWidth);
+			ThreadLocal<FittingSet> fits = ThreadLocal.withInitial(() -> fitModel(tsList, dataWidth));
 			
 			//Score each energy value using our observed stream
 			List<Float> scores = stream.map(calibration -> {
 				
 				FittingResultSet results;
-				synchronized(fits) {
-					fits.setEnergy(calibration.getMinEnergy(), calibration.getMaxEnergy());
-					results = fits.calculateFittings(spectrum);
-				}
+				fits.get().setEnergy(calibration.getMinEnergy(), calibration.getMaxEnergy());
+				results = fits.get().calculateFittings(spectrum);
 				
-				float score = 0f;
-				for (FittingResult fit : results.fits) {
-					score += Math.sqrt(fit.fit.sum());
-				}
-				return score;
+				
+//				float score = 0f;
+//				for (FittingResult fit : results.fits) {
+//					score += Math.sqrt(fit.fit.sum());
+//				}
+//				return score;
+				return scoreFitGood(results, spectrum);
 				
 			}).collect(Collectors.toList());
 			
@@ -155,6 +157,49 @@ public class AutoEnergyCalibration {
 	}
 	
 	
+	private static float scoreFitFast(FittingSet fits, ReadOnlySpectrum spectrum, EnergyCalibration calibration) {
+		float score = 0;
+
+		for (TransitionSeries ts : fits.getVisibleTransitionSeries()) {
+			if (ts.visible) {
+				float height = 0;
+				for (Transition t : ts.getAllTransitions()) {
+					
+					int channel = calibration.channelFromEnergy(t.energyValue);
+					if (channel >= spectrum.size()) continue;
+					if (channel < 0) continue;
+					height += spectrum.get(channel);
+				}
+				score += Math.sqrt(height);
+			}
+		}
+		
+		return score;
+	}
+	
+	public static float scoreFitGood(FittingResultSet results, ReadOnlySpectrum spectrum) {
+		float score = 0f;
+
+		Spectrum fit = results.totalFit;
+
+		//Method #2: find the percentage of signal fit
+		float percent = 0;
+		for (int i = 0; i < spectrum.size(); i++) {
+			if (spectrum.get(i) <= 1f) { continue; }
+			percent = fit.get(i) / spectrum.get(i);
+			
+			//Signal beyond a certain percent is as good as a perfect fit.
+			percent = (float) Math.min(percent*1.1, 1);
+			//square root because middling fit should not be rewarded too much
+			score += Math.sqrt(percent);
+		}
+		
+			
+		
+		return score;
+	}
+	
+	
 	private static EnergyCalibration fineTune(EnergyCalibration calibration, ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, float window) {
 		
 		//build a new model for experimenting with
@@ -178,10 +223,7 @@ public class AutoEnergyCalibration {
 				fits.setEnergy(min, max);
 				FittingResultSet results = fits.calculateFittingsUnsynchronized(spectrum);
 				
-				float score = 0f;
-				for (FittingResult fit : results.fits) {
-					score += Math.sqrt(fit.fit.sum());
-				}
+				float score = scoreFitGood(results, spectrum);
 				
 				if (score > bestScore) {
 					bestScore = score;

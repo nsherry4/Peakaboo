@@ -285,36 +285,6 @@ public class FittingSet implements Serializable
 	}
 
 
-	/**
-	 * Rough method for estimating how intense each {@link TransitionSeries} will be with the 
-	 * given data and energy level. This is useful for auto-calibration of energy levels
-	 * @param data the spectrum to measure against
-	 * @param calibration A custom calibration to allow multithreaded use of this method
-	 * @return
-	 */
-	public Map<TransitionSeries, Float> roughIndivudualHeights(ReadOnlySpectrum data, EnergyCalibration calibration) {
-		
-		Map<TransitionSeries, Float> heights = new HashMap<>();
-		if (calibration.getDataWidth() == 0) {
-			return heights;
-		}
-		
-		for (TransitionSeriesFitting f : fittings) {
-			if (f.transitionSeries.visible) {
-				float height = 0f;
-				for (Transition t : f.transitionSeries.getAllTransitions()) {
-					int channel = calibration.channelFromEnergy(t.energyValue);
-					if (channel >= data.size()) continue;
-					if (channel < 0) continue;
-					height += data.get(channel);
-				}
-				heights.put(f.transitionSeries, height);
-			}
-		}
-		
-		return heights;
-	}
-	
 
 	
 	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data) {
