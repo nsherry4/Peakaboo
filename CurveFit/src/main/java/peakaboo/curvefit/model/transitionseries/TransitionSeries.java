@@ -453,11 +453,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				}
 
 			case SUMMATION:
-
-				Collections.sort(componentSeries);
-				Collections.sort(otherTS.componentSeries);
 				
-				List<Integer> differences = ListOps.zipWith(componentSeries, otherTS.componentSeries, (ts1, ts2) -> ts1.compareTo(ts2)).stream()
+				//Don't modify state just for a comparison
+				List<TransitionSeries> mySeries = new ArrayList<>(componentSeries);
+				List<TransitionSeries> theirSeries = new ArrayList<>(otherTS.componentSeries);
+				Collections.sort(mySeries);
+				Collections.sort(theirSeries);
+				
+				List<Integer> differences = ListOps.zipWith(mySeries, theirSeries, (ts1, ts2) -> ts1.compareTo(ts2)).stream()
 												.filter(a -> a.equals(0))
 												.collect(toList());
 
@@ -504,11 +507,13 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 		if (type == TransitionSeriesType.COMPOSITE)
 		{
-			Collections.sort(componentSeries);
-			Collections.sort(other.componentSeries);
+			//Don't modify state just for a comparison
+			List<TransitionSeries> mySeries = new ArrayList<>(componentSeries);
+			List<TransitionSeries> theirSeries = new ArrayList<>(other.componentSeries);
+			Collections.sort(mySeries);
+			Collections.sort(theirSeries);
 
-			return ListOps.zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b)).stream().reduce(true, Boolean::logicalAnd);
-			//if ( !all(zipWith(componentSeries, other.componentSeries, (a, b) -> a.equals(b))) ) return false;
+			return ListOps.zipWith(mySeries, theirSeries, (a, b) -> a.equals(b)).stream().reduce(true, Boolean::logicalAnd);
 		}
 		
 		return true;
