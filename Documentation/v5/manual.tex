@@ -18,7 +18,8 @@
 
 \usepackage[margin=1.4in]{geometry}
 
-
+%more generous box-fitting
+\setlength{\emergencystretch}{3em}
 
 
 
@@ -508,24 +509,24 @@ The spectra from the selected region or `subset' can then be processed with Peak
 
 \tocsection{Using Filters}
 
-Filters can be accessed by clicking on the \command{Filters} tab and then clicking on 
+Filters can be accessed by clicking on the \command{Data Filters} sidebar tab and then clicking on 
 \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into
 types. Each type heading can be expanded by clicking on the expander to the left of the filter 
 type. Select the filter you wish to use and then click \button{choose-ok}{OK} 
 to add the filter. 
 
-Once you have added the filter, if you want to modify or check the 
-parameters associated with your filter, click on the \button{misc-preferences}{Settings} 
-button next to the filter name to bring up the filter settings window. As you change 
+Once you have added the filter, you can modify or check the 
+parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} 
+button next to the filter. This will bring up a settings panel for this filter. As you change 
 the parameters, you will see the changes reflected in the spectrum being displayed. Once 
 you are satisfied with the filter settings, you may close the window.
 
 To view a full listing of built-in filters and their descriptions, see the appendix.
 
-\screenshot{brukner-filter}{The Brukner filter's settings window}
+\screenshot{brukner-filter}{The Brukner background filter's settings window}
 
 The use of filters will obviously alter the spectrum. If you wish to see the original spectrum
-in addition to the filtered data, select \command{View \menu\ Raw Data Outline}.
+in addition to the filtered data, select \command{\button{action-menu}{Menu} \menu\ View \menu\ Raw Data Outline}.
 
 \screenshot{raw-outline}{Background-subtracted data with the original data drawn in red.}
 
@@ -559,60 +560,44 @@ the \element{Ar}. Close the edit window.
 Peakaboo allows users who are familiar with the Java programming language to extend its functionality by
 creating custom filters and adding support for new file formats. Users who are interested in
 developing extensions for Peakaboo will need to make sure they have the Java Development Kit (JDK)
-installed in their computer (available from \href{http://java.com}{Java.com}). A good code editor,
+installed on their computer (available from \href{http://java.com}{Java.com}). A good code editor,
 such as Eclipse, is also recommended. 
 
-Plugins in Peababoo are classes which extend a specific superclass. The superclass in question 
-depends on the kind of plugin being created. These classes should be bundled in \file{.jar} files
-and placed in the user's application data directory. For example, on Linux, this path is 
-\file{\textasciitilde/.config/Peakaboo}.
+Plugins in Peababoo are classes which implement a specific interface. The interface in question 
+depends on the kind of plugin being created. These plugin classes should be bundled in \file{.jar} files
+and placed in the correct plugin folder inside of the user's application data directory. For example, 
+on Linux, this path is \file{\textasciitilde/.config/Peakaboo5/}. You can access this folder by selecting
+\command{\button{action-menu}{Menu} \menu\ Plugins \menu\ Open Folder}.
 
 In order to know which classes to load without scanning each class in every jar file, a jar 
 containing a plugin must include a manifest file, located at \file{META-INF/services/} under
-the root of the jar file. The file name must be the qualified name of the superclass that this type
-of plugin extends, and the contents of the file must be the qualified names of each class to be 
+the root of the jar file. The file name must be the qualified name of the interface that this type
+of plugin implements, and the contents of the file must be the qualified names of each class to be 
 loaded as a plugin, one per line.
 
-Example plugins for both filters and file formats are available online at 
+The specific interfaces used for different types of plugins are:
+\begin{itemize}  
+\item Data Source: \class{peakaboo.datasource.plugin.JavaDataSourcePlugin}
+\item Data Sink: \class{peakaboo.datasink.plugin.JavaDataSinkPlugin}
+\item Filter: \class{peakaboo.filter.plugin.JavaFilterPlugin}
+\end{itemize}
+
+Example plugins for both filters and data sources are available online at 
 \href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file 
-containing Peakaboo for building against, as part of the Peakaboo 5 Software Development Kit.
+containing Peakaboo for building against.
 
 \tocsection{Filters}
 
-Custom filters should extend the \class{AbstractSimpleFilter} or \class{AbstractBackgroundFilter} 
-classes, and should either not define a constructor, or define a \code{public} no-argument constructor
-which calls \code{super}, the superclass's constructor.
+Custom filters must implement \class{JavaFilterPlugin}, and for convenience may also extend the 
+\class{AbstractSimpleFilter} or \class{AbstractBackgroundFilter} classes, and should either not 
+define a constructor, or define a \code{public} no-argument constructor.
 
 \tocsubsection{Parameters}
 
 Filters define a series of \class{Parameter}s, each with an associated data type. These parameters are 
-displayed in the filter's settings panel, using the associated data types to determine what kind of 
-widgets should be used. These parameters should be created and initialized in the filter's \code{initialize} 
-method. \class{Parameter}s can be created using the following constructor:
-
-\codeblock{%
-\class{Parameter}(\\
-\tab \class{String} name,\\
-\tab \class{ValueType} type,\\
-\tab \class{Object} value\\
-)
-}
-
-\class{ValueType} is an enumeration containing a listing of the different possible types of data that this 
-\class{Parameter} can hold.
-
-\codeblock{%
-public static enum \class{ValueType}\\
-\{\\
-\tab INTEGER, \comment{//Integer}\\
-\tab REAL, \comment{//Float or Double}\\
-\tab BOOLEAN, \comment{//Boolean}\\
-\tab SET\_ELEMENT , \comment{//Object}\\ 
-\tab FILTER, \comment{//AbstractFilter}\\
-\tab SEPARATOR, \comment{//null}\\
-\tab CODE \comment{//String}\\
-\}
-}
+displayed in the filter's settings panel, using the associated data types and class information to 
+determine what kind of widgets should be used. These parameters should be created and initialized in 
+the filter's \code{initialize} method.
 
 Once constructed, the parameter should be passed to the \code{addParameter} method of the superclass. This 
 method returns an integer value which you can use to retrieve the parameter later using 
@@ -624,163 +609,113 @@ track the parameter:
 @Override\\
 public void initialize()\\
 \{\\
-\tab AMOUNT = addParameter(\\
-\tab\tab new \class{Parameter}("Amount to Add", \class{ValueType}.REAL, 1.0)\\
-\tab );\\
+\tab Parameter<Float> add = new \class{Parameter<>}(\\
+\tab\tab "Amount to Add", \ \ \ \ \  //Human-readable name\\
+\tab\tab new \class{RealStyle()}, \ \ \ \ \  //Style hint for UI generation\\
+\tab\tab 1.0f, \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  //Starting value\\
+\tab\tab this::validate);\ \ \ \ \ \  //validation function\\
+\\
+\tab addParameter(add);\\
 \}
 }
 
-This creates a new \class{Parameter} called ``Amount to Add'' with a value type of \code{REAL} and a 
-default value of 1.0, and adds it to this filter's set of parameters.
-
-For choosing from one of several preset values, the \code{SET\_ELEMENT} value type can be used in conjunction with
-an alternate constructor for the \class{Parameter} class.
-
-\codeblock{\\
-\class{Parameter}(\\
-\tab \class{String} name,\\
-\tab \class{ValueType} type,\\
-\tab \class{Object} value,\\
-\tab \class{Object}[] possibleValues\\
-)
-}
-
-For more complex \class{Parameter} value types, a parameter may have properties associated with it. 
-For example, the interface widget used to display \code{CODE} parameters looks for properties named 
-\code{``Language''} and \code{``ErrorMessage''}; the former used to control syntax highlighting, and 
-latter used during the \class{Parameter} validation process to report compilation/execution errors to 
-the user. Currently, the code editor is the only one to make use of properties.
-
+This creates a new \class{Parameter} called ``Amount to Add'' with a Float data type, a default value of 1.0, and a 
+validation function. It then adds it to this filter's set of parameters.
 
 \tocsubsection{Validation}
 
-Whenever the user makes changes to the filter's parameter values in the \button{misc-preferences}{Settings} dialog, 
-the new combination of parameter values is validated in a call to the filter's \code{validateParameters}
-method. This method returns \code{true} if the new combination of parameter values is acceptable, and \code{false}
-otherwise.
+Whenever the user makes changes to a filter's parameter value in the \button{misc-preferences}{Settings} dialog, 
+the new parameter value is validated in a call to the parameter's validator method. In the example above, the 
+parameter's validate method is in the filter itself, and could be used by other parameters to validate 
+combinations of values.
 
-If the parameter values do not validate, then the values of the input fields are reset to their old values. 
-The only exception to this is the \command{CODE} data type, the editor for which displays an error message
-rather than reverting someone's code changes.
+If the parameter values do not validate, then the values of the input fields are reset to their old values.
 
 
 \tocsubsection{Processing Spectra}
 
-An active filter's \code{filterApplyTo(\class{Spectrum} data)} method is called repeatedly. This method should 
-return a modified \class{Spectrum} containing the results of filtering the input \class{Spectrum}
+An active filter's \code{filterApplyTo(\class{ReadOnlySpectrum} data)} method is called repeatedly. 
+This method should return a modified \class{Spectrum} containing the results of filtering the 
+input \class{ReadOnlySpectrum}.
 
-The \class{Spectrum} class has a \class{List}-like interface, but uses a fixed-size \class{float} array to 
-store the actual data for memory and performance reasons.  If you prefer to work with the \class{float[]} data directly, the \code{backingArray}
-method provides direct access to it.
+The \class{Spectrum} and \class{ReadOnlySpectrum} classes have a \class{List}-like interface, but use a 
+fixed-size \class{float} array to store the actual data for memory and performance reasons.  If you 
+prefer to work with the \class{float[]} data directly, the \code{backingArray} method provides direct 
+access to it.
 
 \tocsection{File Formats (Data Sources)}
 
-Adding support for new file formats in Peakaboo is accomplished by creating a new data source. When creating a 
-new data source, the \class{AbstractDSP} (DSP being short for Data Source Plugin) should be extended. This subclass 
-should either not define a constructor, or define a \code{public} no-argument constructor which calles 
-\code{super}, the superclass's constructor. If you are attempting to integrate existing code and cannot extend 
-\class{AbstractDSP}, the \class{DataSource} interface (which \class{AbstractDSP} implements) can be implemented 
-instead, and wrapped in a \class{DelegatingDSP}.
+Adding support for new file formats in Peakaboo is accomplished by creating a new Data Source. When creating a 
+new data source, the \class{JavaDataSourcePlugin} interface must be implemented. The implementation should 
+either not define a constructor, or define a \code{public} no-argument constructor. A Data Source has a 
+number of methods to retrieve other data structures, some of which are optional.
 
+\tocsubsection{File Format}
 
-\tocsubsection{Defining File Extensions}
+The \class{FileFormat} interface is how a Data Source describes the type of files it reads and tests if it 
+can read specific files. When the user opens one or more files, Peakaboo must determine which Data Source 
+plugin(s) may be used, and it relies on the Data Source's FileFormat to inform it.
 
-Providing a list of file extensions that your data will typically have allows users to browse for your data format
-more easily, and is the first step in filtering out data that your data source does not support. This is done with
-the \code{List<String> getFileExtensions()} method that you must implement. Note that the file extensions you 
-provide are not binding, and the user may select any file with any file extension.
+For convenience, the \class{SimpleFileFormat} class provides an easy way to get started, with file-extension 
+based testing and the ability to specify single or multi-file support. Because many data sources use very
+common file extentions (e.g. \command{.dat}) or container files (e.g. \command{HDF}), developers should 
+consider implementing proper testing through an examination of a file's contents.
 
-\tocsubsection{Checking the Format of a File}
-
-Once the user has selected a file or files to open, Peakaboo determines which (if any) data sources are able to 
-read the selected data. The data source must implement the \code{boolean canRead(\class{String} filename)} and 
-\code{boolean canRead(\class{List}<\class{String}> filenames)} methods, returning \code{true} if the data source believes 
-that it is able to read the given file(s). While this method should avoid performing time consuming checks like 
-reading in the whole data set just to see if it can, it should still perform enough of a check to differentiate it 
-from other file formats which may share the same file extension.
 
 \tocsubsection{Reading the Data}
 
-Once your data source has been selected for reading the data, one of the \code{void read(\class{String} filename)} and 
-\code{void read(\class{List}<\class{String}> filenames)} methods will be called. The file names given here will be 
-the same as the file names given to the \code{canRead} method earlier, so there is no need to recheck the files.
+Once your data source has been selected, one of the \code{void read(\class{Path} path)} and 
+\code{void read(\class{List}<\class{Path}> paths)} methods will be called. The paths given here will be 
+the same as the file tested for compatibility through the supplied \class{FileFormat}, so there is no need 
+to recheck the files.
 
-When reading the data, there are several methods defined by \class{AbstractDSP} which help to provide a smoother 
-user experience.
+Because Peakaboo is an interactive desktop application, progress can be reported to the user through the 
+\class{Interaction} class. The Data Source interface defines get/set methods for this object, and this object
+will be present when data is being read. It contains several methods which can be used to report progress or 
+allow user control.
 
 \codeblock{%
-boolean isAborted()\\
-void haveScanCount(\class{int} scanCount)\\
-void newScansRead(\class{int} number)
+boolean checkReadAborted()\\
+void notifyScanCount(\class{int} scanCount)\\
+void notifyScanRead(\class{int} number)
 }
 
-The \code{isAborted} method checks to see if the user has decided to abort the read operation. This method 
+The \code{checkReadAborted} method checks to see if the user has decided to abort the read operation. This method 
 should be checked periodically, and if it returns \code{true}, the read operation should be halted. The data source
 will not be used after the user has requested the read be aborted, so there is no need to worry about any 
-inconsistent state caused by aborting the read.
+inconsistent state caused by aborting the read. Any open files should still be closed.
 
-The \code{haveScanCount} method reports the number of scans in the data set. The \code{newScansRead} method 
-reports that a certain number of new scans have been read. These two methods used together allow Peakaboo to
-show the progress of the read operation to the user. In some file formats, it is not feasible to determine the 
-number of scans in advance of reading them. In this case, simply do not call either of these methods, and the
-interface will show a ``busy'' indicator instead.
+The \code{notifyScanCount} method reports the number of scans in the data set to the user interface. The 
+\code{notifyScanRead} method reports that a certain number of new scans have been read since it was last 
+called. These two methods used together allow Peakaboo to show the progress of the read operation to the 
+user. In some file formats, it is not feasible to determine the number of scans in advance of reading them. 
+In this case, simply do not call either of these methods, and the interface will show a ``busy'' indicator instead.
 
 
 \tocsubsection{Accessing the Data}
 
-Once the \code{read} method has been called, your data source will need to provide access to the data it 
-has been asked to read. the \code{\class{Spectrum} get(\class{int} index)} method should provide the spectral data at the
-given index.
-
-The \class{Spectrum} class has \class{List}-like interface, but uses a fixed-size \class{float} array to 
-store the actual data. A new \class{Spectrum} can be created using one of 
-\code{Spectrum(\class{float[]} data)} which copies the array, or 
-\code{Spectrum(\class{float[]} data, \class{boolean} copy)} which optionally does not.
-
-\tocsubsection{Memory Issues with Large Data Sets}
-
-When working with large data sets, memory can sometimes become an issue, especially with older machines or 
-when the JVM's heap size is small. The \class{SpectrumList} class provides a \class{List} interface for storing 
-\class{Spectrum} objects by writing the data to disk and reading it back in using a very fast serialization library 
-called Kryo. This allows your data source to read large data sets without having to worry about memory 
-constraints. The only caveat is that modification of data read out of this list will not be present when
-the data is read from the list again, unless the list is explicitly updated with the modified data.
-
-The \class{SpectrumList} class implements the \class{List} interface, with the exception that it can act as a sparse
-list. With \class{SpectrumList} lists, the following is valid, and will not throw an \class{IndexOutOfBoundsException}
-
-\codeblock{%
-\class{List}<\class{Spectrum}> spectrumlist = \class{SpectrumList}.create("My Data Set");\\
-spectrumlist.set(4, new Spectrum(10));\\
-\class{Spectrum} newspectrum = spectrumlist.get(4);
-}
-
-The static method \code{\class{List}<\class{Spectrum}> \class{SpectrumList}.create(String name)} will return 
-a new \class{SpectrumList} object. In the event of an \class{IOException} from using the temporary file, another (in-memory)
-\class{List} implementation which also acts as a sparse list will be returned instead.
+Once the \code{read} method has been called, your data source will need to provide access to the data. This is 
+achieved through the \class{ScanData} interface. For convenience, the \class{SimpleScanData} class is provided.
+It is recommended that the \class{SimpleScanData} class be used in most cases, as it provides a number of 
+performace optimizations. Other implementations of \class{ScanData} should study the \class{SimpleScanData} 
+implementation for an idea of how to achieve these for themselves.
 
 
 \tocsubsection{Providing Extended Information}
 
 Each data source reads from different kinds of files, which contain different kinds of information about the scan. 
-Each data source indicates what kinds of information are available through the 
-\code{\class{boolean} hasMetadata()} and \code{\class{boolean} hasScanDimensions()} methods. 
-
-The \code{hasMetadata} method returns \code{true} if it has information such as the name of the scan, the time it was 
-collected, the name of the facility it was collected at, and so forth. If this method returns \code{true}, then this 
-data source must return values for the methods defined in the \class{DSMetadata} interface. If it returns \code{false}, it
-should throw \class{UnsupportedOperationException}s when these methods are called.
-
-The \code{hasScanDimensions} method returns \code{true} if it has information such as the data dimensions, the physical 
-dimensions, and so forth. If this method returns \code{true}, then this data source must return values for the methods 
-defined in the \class{DSScanDimensions} interface. If it returns \code{false}, it should throw 
-\class{UnsupportedOperationException}s when these methods are called.
+Further information can be exposed through the \class{DataSize}, \class{PhysicalSize}, and \class{Metadata} 
+interfaces.
 
 \cleardoublepage
 \appendix
 
 
 \chapter{Filter Descriptions}
+
+Because Peakaboo uses a plug-in system for fitlers, this cannot be an exhaustive list, but it does cover all 
+built-in filters.
+
 \tocsection{Background Filters}
 
 \tocsubsection{Polynomial}
@@ -817,23 +752,22 @@ performing a Wavelet transformation on the spectrum. This breaks the data down
 into sections each representing a different frequency range. The high-frequency
 regions are then smoothed, and a reverse transform is applied.
 
-\tocsubsection{Aggressive Wavelet Low-Pass}
-
-This filter attempts to reduce high-frequency noise by performing a wavelet 
-transformation on the spectrum. This breaks the data down into sections each 
-representing a different frequency range. The high-frequency regions are then 
-completely removed, and a reverse transform is applied.
-
 \tocsubsection{Fourier Low-Pass}
 
 This filter transforms the spectral data with a Fourier Transformation into a 
 frequency domain. Data from a high frequency range (noise) is filtered out, 
 while lower frequencies (peaks, background) are passed through.
 
-\tocsubsection{Moving Average}
+\tocsubsection{Flat Averaging}
 
 This filter refines the values of each point in a scan by sampling it and the 
 $n$ points to either side of it, and replacing it with an average of the sampled points.
+
+\tocsubsection{Weighted Averaging}
+
+This filter refines the values of each point in a scan by sampling it and the 
+$n$ points to either side of it, and replacing it with an exponentially weighted average
+of the sampled points.
 
 \tocsubsection{Spring Smoothing}
 
@@ -897,38 +831,6 @@ always the same across all spectra.
 
 This filter allows the application of another filter to a portion of a spectrum.
 
-
-\tocsection{Programming Filters}
-
-\tocsubsection{Java Code}
-
-This filter allows you to create your own filter in the Java programming language.
-
-\tocsubsection{Python Code}
-
-This filter allows you to create your own filter in the Python programming language using Jython.
-
-
-
-
-\chapter{File Format Descriptions}
-
-\tocsection{CDFML Files}
-
-CDFML XRF files are a format defined by the Canadian Light Source using NASA's CDF/CDFML container.
-
-\tocsection{Peakaboo Plain Text Files}
-
-Peakaboo Plain Text format is a simple XRF format comprised of rows of space-separated numbers. Each row 
-represents a single spectrum.
-
-\tocsection{CLS Data Acquisition Format}
-
-Data format used by the Canadian Light Source for XRF collection on the VESPERS beamline
-
-\tocsection{MCA Files}
-
-Experimental support for the MCA XRF data format.
 
 \bibliographystyle{plain}
 \bibliography{manual}
