@@ -9,7 +9,7 @@ import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.Value;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.filter.model.plugin.JavaFilterPlugin;
+import peakaboo.filter.plugins.JavaFilterPlugin;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
 import scitypes.Range;

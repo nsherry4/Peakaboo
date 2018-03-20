@@ -17,7 +17,7 @@ import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterType;
-import peakaboo.filter.model.plugin.FilterPlugin;
+import peakaboo.filter.plugins.FilterPlugin;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

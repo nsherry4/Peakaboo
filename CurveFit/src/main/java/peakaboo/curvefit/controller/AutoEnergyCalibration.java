@@ -120,13 +120,6 @@ public class AutoEnergyCalibration {
 				FittingResultSet results;
 				fits.get().setEnergy(calibration.getMinEnergy(), calibration.getMaxEnergy());
 				results = fits.get().calculateFittings(spectrum);
-				
-				
-//				float score = 0f;
-//				for (FittingResult fit : results.fits) {
-//					score += Math.sqrt(fit.fit.sum());
-//				}
-//				return score;
 				return scoreFitGood(results, spectrum);
 				
 			}).collect(Collectors.toList());

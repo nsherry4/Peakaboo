@@ -1,4 +1,4 @@
-package peakaboo.filter.model.plugin;
+package peakaboo.filter.plugins;
 
 import java.io.File;
 import java.io.FileNotFoundException;
