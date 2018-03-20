@@ -132,6 +132,7 @@ import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
+import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ComponentListPanel;
 import swidget.widgets.DraggingScrollPaneListener;
@@ -1724,7 +1725,6 @@ public class PlotPanel extends TabbedInterfacePanel
 	{
 		
 		Map<String, String> properties;
-		List<PropertyViewPanel> panels = new ArrayList<>();
 		
 		properties = new LinkedHashMap<String, String>();
 		properties.put("Data Format", "" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
@@ -1732,14 +1732,12 @@ public class PlotPanel extends TabbedInterfacePanel
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().maximumIntensity());
 		
-		PropertyViewPanel basic = new PropertyViewPanel(properties, "Basic Information");
-		panels.add(basic);
+		
 		
 		
 		//Extended attributes
 		if (controller.data().getDataSet().hasMetadata()) {
 			Metadata metadata = controller.data().getDataSet().getMetadata();
-			properties = new LinkedHashMap<String, String>();
 			
 			properties.put("Date of Creation", metadata.getCreationTime());
 			properties.put("Created By", metadata.getCreator());
@@ -1755,12 +1753,25 @@ public class PlotPanel extends TabbedInterfacePanel
 			properties.put("Instrument", metadata.getInstrumentName());
 			properties.put("Technique", metadata.getTechniqueName());
 			
-			PropertyViewPanel extended = new PropertyViewPanel(properties, "Extended Information");
-			panels.add(extended);
 		}
 		
 		
-		new PropertyDialogue("Dataset Information", container.getWindow(), panels);
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		PropertyViewPanel propPanel = new PropertyViewPanel(properties, "Dataset Information");
+		propPanel.setBorder(Spacing.bHuge());
+		panel.add(propPanel, BorderLayout.CENTER);
+		
+		ButtonBox box = new ButtonBox(true);
+		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
+		box.addRight(close);
+		close.addActionListener(e -> {
+			this.popModalComponent();
+		});
+		panel.add(box, BorderLayout.SOUTH);
+		
+		this.pushModalComponent(panel);
+		
 
 	}
 	
