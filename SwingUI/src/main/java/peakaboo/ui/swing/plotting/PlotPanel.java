@@ -1498,11 +1498,9 @@ public class PlotPanel extends TabbedInterfacePanel
 			if (tasks.getCompleted())
 			{
 
-				//Additional events should not create additional map windows
-				if (mapShown.get() == true) {
+				if (mapShown.testAndSet(true) == true) {
 					return;
 				}
-				mapShown.set(true);
 				
 				MapperFrame mapperWindow;
 				MapResultSet results = tasks.getResult();

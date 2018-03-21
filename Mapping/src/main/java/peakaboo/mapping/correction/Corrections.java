@@ -10,6 +10,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.Element;
+import peakaboo.curvefit.peaktable.PeakTable;
 import scitypes.Pair;
 
 
@@ -39,8 +40,7 @@ public class Corrections
 			
 			float factor = Float.parseFloat(parts[2]);
 			
-			//add a dummy transitionseries -- this will pass the TransitionSeries#equals test with the real thing
-			correctionPairs.add(new Pair<TransitionSeries, Float>(new TransitionSeries(e, tst, TransitionSeriesMode.PRIMARY), factor));
+			correctionPairs.add(new Pair<TransitionSeries, Float>(PeakTable.getTransitionSeries(e, tst), factor));
 		}
 		
 		
