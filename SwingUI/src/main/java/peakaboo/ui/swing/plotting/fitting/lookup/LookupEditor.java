@@ -10,6 +10,7 @@ import java.util.EventObject;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTree;
+import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
@@ -79,7 +80,8 @@ class LookupEditor extends DefaultTreeCellEditor
 
 			tswidget.setBackground(renderer.getBackgroundSelectionColor());
 			tswidget.setForeground(renderer.getTextSelectionColor());
-			tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
+			//tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
+			tswidget.setBorder(new EmptyBorder(2, 2, 2, 2));
 			
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tswidget;
@@ -91,6 +93,7 @@ class LookupEditor extends DefaultTreeCellEditor
 
 			tstLabel.setBackground(renderer.getBackgroundSelectionColor());
 			tstLabel.setForeground(renderer.getTextSelectionColor());
+			tstLabel.setBorder(new EmptyBorder(4, 4, 4, 4));			
 			
 			tstLabel.setText(tst.toString());
 			

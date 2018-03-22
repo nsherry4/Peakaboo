@@ -7,6 +7,7 @@ import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTree;
+import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.fitting.FittingController;
@@ -55,7 +56,6 @@ class LookupRenderer extends DefaultTreeCellRenderer
 			
 			tswidget.setBackground(getBackgroundSelectionColor());
 			tswidget.setForeground(getTextSelectionColor());
-			tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, getBorderSelectionColor()));
 			tswidget.setOpaque(true);
 
 		}
@@ -63,7 +63,6 @@ class LookupRenderer extends DefaultTreeCellRenderer
 		{
 			tswidget.setBackground(getBackgroundNonSelectionColor());
 			tswidget.setForeground(getTextNonSelectionColor());
-			tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, getBackgroundNonSelectionColor()));
 			tswidget.setOpaque(false);
 		}
 
@@ -77,6 +76,8 @@ class LookupRenderer extends DefaultTreeCellRenderer
 
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			// element.setPreferredSize(new Dimension(0, element.getPreferredSize().height));
+
+			tswidget.setBorder(new EmptyBorder(2, 2, 2, 2));
 			
 			return tswidget;
 		}
@@ -96,6 +97,8 @@ class LookupRenderer extends DefaultTreeCellRenderer
 				tstLabel.setForeground(getTextNonSelectionColor());
 				tstLabel.setOpaque(false);
 			}
+			
+			tstLabel.setBorder(new EmptyBorder(4, 4, 4, 4));
 						
 			return tstLabel;
 		}
