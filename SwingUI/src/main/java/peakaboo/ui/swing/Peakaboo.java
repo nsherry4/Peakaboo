@@ -135,9 +135,17 @@ public class Peakaboo
 	
 	public static void run() {
 		
+		
+		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
+		//NEED TO SET THESE RIGHT AT THE START BEFORE ANY AWT/SWING STUFF HAPPENS.
+		//THAT INCLUDES CREATING ANY ImageIcon DATA FOR SPLASH SCREEN
+		System.setProperty("sun.java2d.xrender", "false");
+		System.setProperty("sun.java2d.pmoffscreen", "false");
+		
+		
 		LOGGER.log(Level.INFO, "Starting " + Version.title);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
-		StratusLookAndFeel laf = new StratusLookAndFeel(new DarkTheme());
+		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		Swidget.initialize(Version.splash, Version.icon, () -> {
 			try {
 				UIManager.setLookAndFeel(laf);
