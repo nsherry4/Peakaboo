@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
@@ -21,6 +23,9 @@ import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
+import stratus.StratusLookAndFeel;
+import stratus.theme.DarkTheme;
+import stratus.theme.LightTheme;
 import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -132,7 +137,13 @@ public class Peakaboo
 		
 		LOGGER.log(Level.INFO, "Starting " + Version.title);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
+		StratusLookAndFeel laf = new StratusLookAndFeel(new DarkTheme());
 		Swidget.initialize(Version.splash, Version.icon, () -> {
+			try {
+				UIManager.setLookAndFeel(laf);
+			} catch (UnsupportedLookAndFeelException e) {
+				PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
+			}
 			errorHook();
 			PeakabooLog.init();
 			PeakTableReader.readPeakTable();

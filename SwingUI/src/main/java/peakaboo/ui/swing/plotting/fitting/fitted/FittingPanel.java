@@ -336,6 +336,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		fitTable.setShowVerticalLines(false);
 		fitTable.setShowHorizontalLines(false);
+		fitTable.setFillsViewportHeight(true);
 
 		fitTable.setRowHeight(renderer.getPreferredSize().height);
 

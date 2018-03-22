@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
@@ -44,8 +45,8 @@ public class FilterList extends ClearPanel {
 		
 		setLayout(new BorderLayout());
 		
-		JScrollPane scroller = new JScrollPane(createFilterTable(windowOwner), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroller.getViewport().setBackground(Color.white);
+		JTable table = createFilterTable(windowOwner);
+		JScrollPane scroller = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.setBorder(Spacing.bNone());
 		
 		add(scroller, BorderLayout.CENTER);
@@ -144,8 +145,8 @@ public class FilterList extends ClearPanel {
 		};
 		
 		t = new JTable(m);
-		
-		
+		t.setFillsViewportHeight(true);
+				
 		t.getColumnModel().getColumn(1).setCellRenderer(new EditButtonRenderer());
 		t.getColumnModel().getColumn(1).setCellEditor(new EditButtonEditor(controller, owner));
 		
