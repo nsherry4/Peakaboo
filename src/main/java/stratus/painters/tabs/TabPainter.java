@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.Window;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
@@ -60,15 +61,24 @@ public class TabPainter extends StatefulPainter{
 		
 			g.setColor(fill);
 			g.fillRect(0, 0, width, height);
-			
-			g.setColor(getTheme().getWidgetBorder());
-			g.drawRect(0, 0, width, height-1);
-			
+
+			//bottom stroke
 			Stroke old = g.getStroke();
 			g.setStroke(bottomStroke);
 			g.setColor(bottom);
-			g.drawLine(0, height-2, width+1, height-2);
+			g.drawLine(0, height-2, width, height-2);
 			g.setStroke(old);
+			
+			//border
+			g.setColor(getTheme().getWidgetBorder());
+			GeneralPath border = new GeneralPath();
+			border.moveTo(0, height-1);
+			border.lineTo(0, 0);
+			border.lineTo(width, 0);
+			border.lineTo(width, height-1);
+			g.draw(border);
+			
+
 		}
 		
     	//Focus dash if focused but not pressed
