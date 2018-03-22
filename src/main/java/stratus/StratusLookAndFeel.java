@@ -34,6 +34,7 @@ import stratus.painters.Themed;
 import stratus.painters.TableHeaderPainter;
 import stratus.painters.TitledBorderBorder;
 import stratus.painters.ToolTipPainter;
+import stratus.painters.TreeArrowPainter;
 import stratus.painters.checkbutton.CheckButtonPainter;
 import stratus.painters.checkbutton.CheckPainter;
 import stratus.painters.progressbar.ProgressBarBackgroundPainter;
@@ -98,13 +99,14 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		// UI/Theme Overrides
 		reg(ret, "nimbusSelection", theme.getHighlight());
 		reg(ret, "nimbusSelectionBackground", theme.getHighlight());
-		reg(ret, "nimbusFocus", new Color(0x72a0d1));
+		reg(ret, "nimbusFocus", theme.getHighlight());
 		reg(ret, "nimbusBlueGrey", theme.getBorder());
-		reg(ret, "nimbusInfoBlue", new Color(0x2e6fb4));
-		reg(ret, "nimbusBase", new Color(0x3D6A99));
-		reg(ret, "nimbusOrange", new Color(0x2F76BF));
-
-		reg(ret, "textInactiveText", new Color(0x919191));
+		reg(ret, "nimbusInfoBlue", theme.getHighlight());
+		reg(ret, "nimbusBase", theme.getHighlight());
+		reg(ret, "nimbusOrange", theme.getHighlight());
+		reg(ret, "nimbusLightBackground", theme.getControl());
+		
+		reg(ret, "textInactiveText", theme.getControlTextDisabled());
 		reg(ret, "textHighlight", theme.getHighlight());
 		reg(ret, "textBackground", theme.getHighlight());
 
@@ -156,32 +158,32 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "MenuBar.contentMargins", new Insets(0, 0, 0, 0));
 			reg(ret, "MenuBar:Menu.contentMargins", new Insets(4, 8, 5, 8));
 			reg(ret, "MenuBar:Menu[Enabled].textForeground", theme.getMenuControlText());
-			reg(ret, "MenuBar:Menu[MouseOver].textForeground", theme.getMenuControlTextSelected());
+			reg(ret, "MenuBar:Menu[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "MenuBar:Menu[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			
 			reg(ret, "MenuItem[Enabled].textForeground", theme.getMenuControlText());
 			reg(ret, "MenuItem[Disabled].textForeground", theme.getControlTextDisabled());
-			reg(ret, "MenuItem[MouseOver].textForeground", theme.getMenuControlTextSelected());
+			reg(ret, "MenuItem[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "MenuItem.contentMargins", new Insets(4, 12, 4, 13));
 			reg(ret, "MenuItem:MenuItemAccelerator[Enabled].textForeground", theme.getControlTextDisabled());
 			reg(ret, "MenuItem:MenuItemAccelerator[Disabled].textForeground", theme.getControlTextDisabled());
-			reg(ret, "MenuItem:MenuItemAccelerator[MouseOver].textForeground", theme.getMenuControlTextSelected());
+			reg(ret, "MenuItem:MenuItemAccelerator[MouseOver].textForeground", theme.getHighlightText());
 			
 
 			reg(ret, "CheckBoxMenuItem.contentMargins", new Insets(4, 12, 4, 13));
 			reg(ret, "CheckBoxMenuItem[Enabled].textForeground", theme.getMenuControlText());
-			reg(ret, "CheckBoxMenuItem[MouseOver].textForeground", theme.getMenuControlTextSelected());
+			reg(ret, "CheckBoxMenuItem[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "CheckBoxMenuItem[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			reg(ret, "RadioButtonMenuItem.contentMargins", new Insets(4, 12, 4, 13));
 			reg(ret, "RadioButtonMenuItem[Enabled].textForeground", theme.getMenuControlText());
-			reg(ret, "RadioButtonMenuItem[MouseOver].textForeground", theme.getMenuControlTextSelected());
+			reg(ret, "RadioButtonMenuItem[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "RadioButtonMenuItem[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			reg(ret, "Menu.contentMargins", new Insets(4, 12, 4, 5));
 			reg(ret, "Menu[Enabled].textForeground", theme.getMenuControlText());
-			reg(ret, "Menu[MouseOver].textForeground", theme.getMenuControlTextSelected());
+			reg(ret, "Menu[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "Menu[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			reg(ret, "PopupMenu[Enabled].backgroundPainter", new CompositePainter(new FillPainter(theme.getMenuControl()), new BorderPainter(theme.getBorder(), 1, 0)));
@@ -558,6 +560,8 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			//TABLE
 			reg(ret, "Table.background", theme.getTextControl());
 			reg(ret, "Table.alternateRowColor", Stratus.darken(theme.getTextControl()));
+			reg(ret, "Table:\"Table.cellRenderer\".background", theme.getTextControl());
+			reg(ret, "Table[Enabled+Selected].textForeground", theme.getHighlightText());
 			
 			//TABLEHEADER
 			reg(ret, "TableHeader:\"TableHeader.renderer\"[Disabled+Sorted].backgroundPainter", new TableHeaderPainter(theme));
@@ -570,7 +574,8 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "TableHeader:\"TableHeader.renderer\"[Pressed].backgroundPainter", new TableHeaderPainter(theme));
 			
 			reg(ret, "TableHeader.foreground", theme.getTableHeaderText());
-			reg(ret, "TableHeader.textForeground", theme.getTableHeaderText());
+			//For some reason, using the reg method, which wraps colors in a UIResource, causes this one property to break
+			ret.put("TableHeader.textForeground", theme.getTableHeaderText());
 			reg(ret, "TableHeader.disabledText", theme.getControlTextDisabled());
 			reg(ret, "TableHeader:\"TableHeader.renderer\".contentMargins", new Insets(3, 5, 3, 5));
 			reg(ret, "TableHeader.font", ((Font)ret.get("TableHeader.font")).deriveFont(Font.BOLD));
@@ -579,6 +584,12 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			//TREE
 			reg(ret, "Tree.background", theme.getTextControl());
+			reg(ret, "Tree[Enabled].expandedIconPainter", new TreeArrowPainter(theme.getControlText(), true));
+			reg(ret, "Tree[Enabled].collapsedIconPainter", new TreeArrowPainter(theme.getControlText(), false));
+			reg(ret, "Tree[Enabled+Selected].expandedIconPainter", new TreeArrowPainter(theme.getControlText(), true));
+			reg(ret, "Tree[Enabled+Selected].collapsedIconPainter", new TreeArrowPainter(theme.getControlText(), false));
+			
+			//LIST
 			reg(ret, "List.background", theme.getTextControl());			
 			
 			//SPLITPANE

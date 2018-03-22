@@ -9,7 +9,13 @@ public class DarkTheme implements Theme {
 	private Color highlight = new Color(0x498ed8);
 	private Color control = new Color(0x3B4141);
 	private Color controlText = new Color(0xffffff);
+	private Color controlTextDisabled = new Color(0x666666);
 	private Color border = new Color(0x212424);
+	
+	private Color widget = Stratus.darken(control, 0.02f);
+	private Color widgetBevel = Stratus.lighten(control, 0.1f);
+	
+	private Color textControl = Stratus.darken(control, 0.05f);
 	
 	private Color menuControl = control;
 	private Color menuControlText = controlText;
@@ -33,7 +39,7 @@ public class DarkTheme implements Theme {
 	
 	@Override
 	public Color getControlTextDisabled() {
-		return border;
+		return controlTextDisabled;
 	}
 	
 	@Override
@@ -53,25 +59,23 @@ public class DarkTheme implements Theme {
 	}
 	
 	@Override
-	public Color getMenuControlTextSelected() {
+	public Color getHighlightText() {
 		return menuControlText;
 	}
 
-
 	@Override
 	public Color getWidget() {
-		return Stratus.darken(getControl(), 0.02f);
+		return widget;
 	}
-
 
 	@Override
 	public Color getWidgetBevel() {
-		return Stratus.lighten(getControl(), 0.1f);
+		return widgetBevel;
 	}
 
 	@Override
 	public Color getTextControl() {
-		return Stratus.darken(getControl(), 0.05f);
+		return textControl;
 	}
 
 	@Override

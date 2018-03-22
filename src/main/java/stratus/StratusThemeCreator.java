@@ -160,7 +160,7 @@ public class StratusThemeCreator
 
 	private static void setStratusLookAndFeel() {
 		try {
-			UIManager.setLookAndFeel(new StratusLookAndFeel(new LightTheme()));
+			UIManager.setLookAndFeel(new StratusLookAndFeel(new DarkTheme()));
 		} catch (UnsupportedLookAndFeelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -5,13 +5,14 @@ import java.awt.Color;
 public interface Theme {
 
 	public Color getHighlight();
+	public Color getHighlightText();
+	
 	public Color getControl();
 	public Color getControlText();
 	public Color getControlTextDisabled();
 	
 	public Color getMenuControl();
 	public Color getMenuControlText();
-	public Color getMenuControlTextSelected();
 	
 	public Color getWidget();
 	public Color getWidgetBevel();
