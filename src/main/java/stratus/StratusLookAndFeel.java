@@ -100,7 +100,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		reg(ret, "nimbusSelection", theme.getHighlight());
 		reg(ret, "nimbusSelectionBackground", theme.getHighlight());
 		reg(ret, "nimbusFocus", theme.getHighlight());
-		reg(ret, "nimbusBlueGrey", theme.getBorder());
+		reg(ret, "nimbusBlueGrey", theme.getWidgetBorder());
 		reg(ret, "nimbusInfoBlue", theme.getHighlight());
 		reg(ret, "nimbusBase", theme.getHighlight());
 		reg(ret, "nimbusOrange", theme.getHighlight());
@@ -111,7 +111,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		reg(ret, "textBackground", theme.getHighlight());
 
 		reg(ret, "text", theme.getControlText());
-		reg(ret, "menu", theme.getMenuControl());
+		reg(ret, "menu", theme.getMenu());
 		reg(ret, "control", theme.getControl());
 
 		
@@ -157,12 +157,12 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "MenuBar:Menu[Selected].backgroundPainter", new FillPainter(theme.getHighlight()));
 			reg(ret, "MenuBar.contentMargins", new Insets(0, 0, 0, 0));
 			reg(ret, "MenuBar:Menu.contentMargins", new Insets(4, 8, 5, 8));
-			reg(ret, "MenuBar:Menu[Enabled].textForeground", theme.getMenuControlText());
+			reg(ret, "MenuBar:Menu[Enabled].textForeground", theme.getMenuText());
 			reg(ret, "MenuBar:Menu[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "MenuBar:Menu[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			
-			reg(ret, "MenuItem[Enabled].textForeground", theme.getMenuControlText());
+			reg(ret, "MenuItem[Enabled].textForeground", theme.getMenuText());
 			reg(ret, "MenuItem[Disabled].textForeground", theme.getControlTextDisabled());
 			reg(ret, "MenuItem[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "MenuItem.contentMargins", new Insets(4, 12, 4, 13));
@@ -172,21 +172,21 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 
 			reg(ret, "CheckBoxMenuItem.contentMargins", new Insets(4, 12, 4, 13));
-			reg(ret, "CheckBoxMenuItem[Enabled].textForeground", theme.getMenuControlText());
+			reg(ret, "CheckBoxMenuItem[Enabled].textForeground", theme.getMenuText());
 			reg(ret, "CheckBoxMenuItem[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "CheckBoxMenuItem[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			reg(ret, "RadioButtonMenuItem.contentMargins", new Insets(4, 12, 4, 13));
-			reg(ret, "RadioButtonMenuItem[Enabled].textForeground", theme.getMenuControlText());
+			reg(ret, "RadioButtonMenuItem[Enabled].textForeground", theme.getMenuText());
 			reg(ret, "RadioButtonMenuItem[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "RadioButtonMenuItem[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			reg(ret, "Menu.contentMargins", new Insets(4, 12, 4, 5));
-			reg(ret, "Menu[Enabled].textForeground", theme.getMenuControlText());
+			reg(ret, "Menu[Enabled].textForeground", theme.getMenuText());
 			reg(ret, "Menu[MouseOver].textForeground", theme.getHighlightText());
 			reg(ret, "Menu[Disabled].textForeground", theme.getControlTextDisabled());
 			
-			reg(ret, "PopupMenu[Enabled].backgroundPainter", new CompositePainter(new FillPainter(theme.getMenuControl()), new BorderPainter(theme.getBorder(), 1, 0)));
+			reg(ret, "PopupMenu[Enabled].backgroundPainter", new CompositePainter(new FillPainter(theme.getMenu()), new BorderPainter(theme.getWidgetBorder(), 1, 0)));
 			
 			
 			//TOOLBAR
@@ -421,7 +421,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.FOCUSED));
 			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.SELECTED));
 			
-			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].textForeground", theme.getTextText());
+			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].textForeground", theme.getRecessedText());
 			
 			
 			
@@ -435,7 +435,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "TextField[Enabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
 			reg(ret, "TextField[Focused].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));
 	
-			reg(ret, "TextField.foreground", theme.getTextText());
+			reg(ret, "TextField.foreground", theme.getRecessedText());
 			
 			
 			//PASSWORD FIELD
@@ -558,9 +558,9 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 	
 			//TABLE
-			reg(ret, "Table.background", theme.getTextControl());
-			reg(ret, "Table.alternateRowColor", Stratus.darken(theme.getTextControl()));
-			reg(ret, "Table:\"Table.cellRenderer\".background", theme.getTextControl());
+			reg(ret, "Table.background", theme.getRecessedControl());
+			reg(ret, "Table.alternateRowColor", Stratus.darken(theme.getRecessedControl()));
+			reg(ret, "Table:\"Table.cellRenderer\".background", theme.getRecessedControl());
 			reg(ret, "Table[Enabled+Selected].textForeground", theme.getHighlightText());
 			
 			//TABLEHEADER
@@ -583,14 +583,14 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			
 			//TREE
-			reg(ret, "Tree.background", theme.getTextControl());
+			reg(ret, "Tree.background", theme.getRecessedControl());
 			reg(ret, "Tree[Enabled].expandedIconPainter", new TreeArrowPainter(theme.getControlText(), true));
 			reg(ret, "Tree[Enabled].collapsedIconPainter", new TreeArrowPainter(theme.getControlText(), false));
 			reg(ret, "Tree[Enabled+Selected].expandedIconPainter", new TreeArrowPainter(theme.getControlText(), true));
 			reg(ret, "Tree[Enabled+Selected].collapsedIconPainter", new TreeArrowPainter(theme.getControlText(), false));
 			
 			//LIST
-			reg(ret, "List.background", theme.getTextControl());			
+			reg(ret, "List.background", theme.getRecessedControl());			
 			
 			//SPLITPANE
 			reg(ret, "SplitPane:SplitPaneDivider[Enabled].backgroundPainter", new SplitPaneDividerPainter(theme));

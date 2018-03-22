@@ -13,7 +13,7 @@ public class SliderThumbPainter extends ButtonPainter {
 
 	public SliderThumbPainter(Theme theme, ButtonState... buttonStates) {
 		super(theme, buttonStates);
-		borderColor = Stratus.darken(getTheme().getBorder(), 0.15f);
+		borderColor = Stratus.darken(getTheme().getWidgetBorder(), 0.15f);
 	}
 	
 	@Override

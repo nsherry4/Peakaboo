@@ -34,15 +34,15 @@ public class SliderTrackPainter extends SimpleThemed implements Painter<JCompone
 		
 		//Fill
 		if (enabled) {
-			g.setPaint(new LinearGradientPaint(0, height/2-2, 0, height/2-2+4, new float[] {0, 1f}, new Color[] {getTheme().getBorder(), getTheme().getControl()}));
+			g.setPaint(new LinearGradientPaint(0, height/2-2, 0, height/2-2+4, new float[] {0, 1f}, new Color[] {getTheme().getWidgetBorder(), getTheme().getControl()}));
 			g.fill(area);
 		}
 		
     	//Border
     	if (enabled) {
-    		g.setPaint(Stratus.darken(getTheme().getBorder(), 0.1f));
+    		g.setPaint(Stratus.darken(getTheme().getWidgetBorder(), 0.1f));
     	} else {
-    		g.setPaint(getTheme().getBorder());
+    		g.setPaint(getTheme().getWidgetBorder());
     	}
     	g.draw(area);
     	

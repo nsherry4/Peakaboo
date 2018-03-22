@@ -33,9 +33,9 @@ public class TabPainter extends StatefulPainter{
 			bottomTL = getTheme().getHighlight();
 		} else {
 			fillNL = Stratus.darken(getTheme().getControl(), 0.08f);
-			bottomNL = Stratus.darken(getTheme().getBorder(), 0.1f);
+			bottomNL = Stratus.darken(getTheme().getWidgetBorder(), 0.1f);
 			fillTL = Stratus.darken(getTheme().getControl(), 0.04f);;
-			bottomTL = getTheme().getBorder();
+			bottomTL = getTheme().getWidgetBorder();
 		}
 
 		
@@ -61,7 +61,7 @@ public class TabPainter extends StatefulPainter{
 			g.setColor(fill);
 			g.fillRect(0, 0, width, height);
 			
-			g.setColor(getTheme().getBorder());
+			g.setColor(getTheme().getWidgetBorder());
 			g.drawRect(0, 0, width, height-1);
 			
 			Stroke old = g.getStroke();

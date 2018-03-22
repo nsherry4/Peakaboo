@@ -20,7 +20,7 @@ import java.awt.BasicStroke;
 //Fills the area of button style controls (no borders, etc)
 public class ButtonPainter extends StatefulPainter {
 
-	protected Color c1, c2, cBevel;
+	protected Color c1, c2, cBevel, cDash;
 	protected Color[] colours;
     protected Color borderColor;
     
@@ -55,25 +55,27 @@ public class ButtonPainter extends StatefulPainter {
     	this.c1 = Stratus.lighten(base, 0.06f);
     	this.c2 = Stratus.darken(base, 0.06f);
     	this.cBevel = getTheme().getWidgetBevel();
-    	this.borderColor = getTheme().getBorder();
+    	Color text = getTheme().getControlText();
+    	this.cDash = new Color(text.getRed(), text.getGreen(), text.getBlue(), 50);
+    	this.borderColor = getTheme().getWidgetBorder();
     	
     	if (isPressed() || isSelected()) {
     		this.c1 = Stratus.darken(base, 0.12f);
     		this.c2 = Stratus.darken(base, 0.06f);
-        	this.borderColor = getTheme().getBorder();
+        	this.borderColor = getTheme().getWidgetBorder();
     	}
 
     	
     	if (isDisabled()) {
     		this.c1 = getTheme().getControl();
     		this.c2 = getTheme().getControl();
-    		this.borderColor = getTheme().getBorder();
+    		this.borderColor = getTheme().getWidgetBorder();
     		
     		//Disabled and selected, like toggle button
         	if (isSelected()) {
         		this.c1 = Stratus.darken(c1, 0.06f);
         		this.c2 = Stratus.darken(c2, 0.06f);
-            	this.borderColor = getTheme().getBorder();
+            	this.borderColor = getTheme().getWidgetBorder();
         	}
     		
     	}
@@ -121,7 +123,7 @@ public class ButtonPainter extends StatefulPainter {
     	//Focus dash if focused but not pressed
     	pad += 1;
     	if (isFocused() && !isPressed()) {
-        	g.setPaint(new Color(0, 0, 0, 0.15f));
+        	g.setPaint(cDash);
         	Shape focus = new RoundRectangle2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, radius, radius);
         	Stroke old = g.getStroke();
         	g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[] {2, 2}, 0f));

@@ -38,7 +38,7 @@ public class CheckPainter extends SimpleThemed implements Painter<JComponent>{
 		if (enabled) {
 			g.setPaint(getTheme().getControlText());
 		} else {
-			g.setPaint(getTheme().getBorder());
+			g.setPaint(getTheme().getWidgetBorder());
 		}
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

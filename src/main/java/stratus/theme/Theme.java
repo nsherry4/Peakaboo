@@ -4,6 +4,7 @@ import java.awt.Color;
 
 public interface Theme {
 
+	//Highlighted items/text, eg menu items, text, table entries
 	public Color getHighlight();
 	public Color getHighlightText();
 	
@@ -11,15 +12,17 @@ public interface Theme {
 	public Color getControlText();
 	public Color getControlTextDisabled();
 	
-	public Color getMenuControl();
-	public Color getMenuControlText();
+	public Color getMenu();
+	public Color getMenuText();
 	
+	//raised widgets like buttons, checkboxes, etc...
 	public Color getWidget();
 	public Color getWidgetBevel();
-	public Color getBorder();
+	public Color getWidgetBorder();
 	
-	public Color getTextControl();
-	public Color getTextText();
+	//sunken widgets like text fields, tables, progress bars...
+	public Color getRecessedControl();
+	public Color getRecessedText();
 	
 	public Color getTableHeader();
 	public Color getTableHeaderText();

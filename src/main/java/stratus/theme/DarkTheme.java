@@ -43,18 +43,18 @@ public class DarkTheme implements Theme {
 	}
 	
 	@Override
-	public Color getBorder() {
+	public Color getWidgetBorder() {
 		return border;
 	}
 	
 	
 	@Override
-	public Color getMenuControl() {
+	public Color getMenu() {
 		return menuControl;
 	}
 
 	@Override
-	public Color getMenuControlText() {
+	public Color getMenuText() {
 		return menuControlText;
 	}
 	
@@ -74,12 +74,12 @@ public class DarkTheme implements Theme {
 	}
 
 	@Override
-	public Color getTextControl() {
+	public Color getRecessedControl() {
 		return textControl;
 	}
 
 	@Override
-	public Color getTextText() {
+	public Color getRecessedText() {
 		return controlText;
 	}
 

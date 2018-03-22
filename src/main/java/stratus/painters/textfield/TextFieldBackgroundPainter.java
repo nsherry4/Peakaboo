@@ -28,8 +28,8 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
 		super(theme, buttonStates);
 		
 		if (!isDisabled()) {
-			c1 = Stratus.darken(getTheme().getTextControl(), 0.025f);
-			c2 = getTheme().getTextControl();
+			c1 = Stratus.darken(getTheme().getRecessedControl(), 0.025f);
+			c2 = getTheme().getRecessedControl();
 		} else {
 			c1 = Stratus.darken(getTheme().getControl(), 0.025f);
 			c2 = getTheme().getControl();
@@ -59,7 +59,7 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
     		g.setPaint(getTheme().getHighlight());
     		borderStroke = 2;
     	} else {
-    		g.setPaint(getTheme().getBorder());
+    		g.setPaint(getTheme().getWidgetBorder());
     	}
     	
     	g.setStroke(new BasicStroke(borderStroke));

@@ -20,7 +20,7 @@ public class LightTheme implements Theme {
 	
 	private Color tableHeaderText = new Color(0x666666);
 	
-	private Color scrollHandle = Stratus.darken(getBorder(), 0.1f);
+	private Color scrollHandle = Stratus.darken(getWidgetBorder(), 0.1f);
 	
 	@Override
 	public Color getHighlight() {
@@ -43,17 +43,17 @@ public class LightTheme implements Theme {
 	}
 	
 	@Override
-	public Color getBorder() {
+	public Color getWidgetBorder() {
 		return border;
 	}
 
 	@Override
-	public Color getMenuControl() {
+	public Color getMenu() {
 		return menuControl;
 	}
 
 	@Override
-	public Color getMenuControlText() {
+	public Color getMenuText() {
 		return menuControlText;
 	}
 
@@ -74,12 +74,12 @@ public class LightTheme implements Theme {
 	}
 
 	@Override
-	public Color getTextControl() {
+	public Color getRecessedControl() {
 		return Color.WHITE;
 	}
 
 	@Override
-	public Color getTextText() {
+	public Color getRecessedText() {
 		return controlText;
 	}
 

@@ -47,7 +47,7 @@ public class ProgressBarBackgroundPainter extends SimpleThemed implements Painte
     	g.fill(border);
     	
     	//Border
-    	g.setPaint(getTheme().getBorder());
+    	g.setPaint(getTheme().getWidgetBorder());
     	g.draw(border);
     	
     	

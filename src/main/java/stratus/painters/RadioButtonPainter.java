@@ -15,7 +15,7 @@ public class RadioButtonPainter extends ButtonPainter {
 	public RadioButtonPainter(Theme theme, boolean selected, ButtonState... buttonStates) {
 		super(theme, buttonStates);
 		this.selected = selected;
-		borderColor = Stratus.darken(getTheme().getBorder(), 0.1f);
+		borderColor = Stratus.darken(getTheme().getWidgetBorder(), 0.1f);
 		
 		this.colours = new Color[] {Stratus.lighten(colours[0]), c1, c2};
 		this.points = new float[] {0, 0.2f, 1f};
@@ -28,7 +28,7 @@ public class RadioButtonPainter extends ButtonPainter {
 		
 		if (selected) {
 			if (isDisabled()) {
-				g.setColor(getTheme().getBorder());
+				g.setColor(getTheme().getWidgetBorder());
 			} else {
 				g.setColor(getTheme().getControlText());				
 			}

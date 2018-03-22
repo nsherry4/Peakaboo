@@ -74,7 +74,7 @@ public class TabbedAreaPainter extends SimpleThemed implements Painter<JComponen
     	g.setPaint(lastPaint);
     	g.fillRect(0, 0, width, height);
     	
-    	g.setColor(getTheme().getBorder());
+    	g.setColor(getTheme().getWidgetBorder());
     	g.drawLine(0, height-1, width, height-1);
 		
 	}

@@ -35,7 +35,7 @@ public class ToolbarBorderPainter extends SimpleThemed implements Painter<JCompo
 		}
 		
 		
-		g.setPaint(getTheme().getBorder());
+		g.setPaint(getTheme().getWidgetBorder());
 		g.drawLine(startX, startY, endX, endY);
 		
 	}

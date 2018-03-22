@@ -20,7 +20,7 @@ public class SplitPaneDividerPainter extends SimpleThemed implements Painter<JCo
 		g.setColor(getTheme().getControl());
 		g.fillRect(0, 0, width, height);
 		
-		g.setColor(getTheme().getBorder());
+		g.setColor(getTheme().getWidgetBorder());
 		g.drawLine(0, 0, width, 0);
 		g.drawLine(0, height-1, width, height-1);
 		
