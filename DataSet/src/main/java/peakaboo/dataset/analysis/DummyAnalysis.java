@@ -14,13 +14,6 @@ public class DummyAnalysis implements Analysis {
 		return null;
 	}
 	
-	@Override
-	public Spectrum averagePlot(List<Integer> excludedIndices)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 
 	@Override

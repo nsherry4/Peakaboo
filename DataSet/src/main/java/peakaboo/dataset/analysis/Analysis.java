@@ -1,15 +1,21 @@
 package peakaboo.dataset.analysis;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import scitypes.ReadOnlySpectrum;
 
 public interface Analysis {
 
 	
-	
+	/**
+	 * Accepts a new scan and it's index (position in the data). Performs any 
+	 * incremental metrics it may wish to do. 
+	 * @param index
+	 * @param spectrum
+	 */
 	void process(int index, ReadOnlySpectrum spectrum);
+	
+	
 	
 
 	
@@ -20,14 +26,6 @@ public interface Analysis {
 	 */
 	ReadOnlySpectrum averagePlot();
 
-	/**
-	 * Produces a single scan/list containing the average value for each channel
-	 * 
-	 * @param excludedIndices
-	 *            is a list of indices to exclude from the average
-	 * @return average scan
-	 */
-	ReadOnlySpectrum averagePlot(List<Integer> excludedIndices);
 
 	/**
 	 * Produces a single scan/list containing the most intense values for each channel
