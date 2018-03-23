@@ -561,7 +561,9 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Table.background", theme.getRecessedControl());
 			reg(ret, "Table.alternateRowColor", Stratus.darken(theme.getRecessedControl()));
 			reg(ret, "Table:\"Table.cellRenderer\".background", theme.getRecessedControl());
-			reg(ret, "Table[Enabled+Selected].textForeground", theme.getHighlightText());
+			reg(ret, "Table[Disabled].textForeground", theme.getControlTextDisabled());
+			reg(ret, "Table[Enabled].textForeground", theme.getControlText());
+			reg(ret, "Table[Selected].textForeground", theme.getHighlightText());
 			
 			//TABLEHEADER
 			reg(ret, "TableHeader:\"TableHeader.renderer\"[Disabled+Sorted].backgroundPainter", new TableHeaderPainter(theme));
