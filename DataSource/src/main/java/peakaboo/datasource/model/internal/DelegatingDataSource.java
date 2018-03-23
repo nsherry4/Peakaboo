@@ -47,12 +47,8 @@ public class DelegatingDataSource implements DataSource {
 		return backer.getMetadata();
 	}
 
-	public DataSize getDataSize() {
+	public Optional<DataSize> getDataSize() {
 		return backer.getDataSize();
-	}
-
-	public boolean hasDataSize() {
-		return backer.hasDataSize();
 	}
 
 	public FileFormat getFileFormat() {

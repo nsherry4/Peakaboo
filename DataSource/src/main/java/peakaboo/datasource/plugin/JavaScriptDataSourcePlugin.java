@@ -159,9 +159,9 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 	}
 
 	@Override
-	public DataSize getDataSize() {
+	public Optional<DataSize> getDataSize() {
 		//Not Implemented
-		return null;
+		return Optional.empty();
 	}
 
 	@Override

@@ -144,8 +144,8 @@ public class PlainText extends AbstractDataSource
 	//==============================================
 	
 	@Override
-	public DataSize getDataSize() {
-		return null;
+	public Optional<DataSize> getDataSize() {
+		return Optional.empty();
 	}
 
 

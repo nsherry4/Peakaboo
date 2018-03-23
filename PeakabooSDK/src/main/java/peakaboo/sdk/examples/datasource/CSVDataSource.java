@@ -110,9 +110,9 @@ public class CSVDataSource extends AbstractDataSource
 
 
 	@Override
-	public DataSize getDataSize() {
+	public Optional<DataSize> getDataSize() {
 		//Unsupported by this DataSource
-		return null;
+		return Optional.empty();
 	}
 
 

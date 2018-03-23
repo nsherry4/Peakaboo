@@ -72,7 +72,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 	
 	@Override
-	public DataSize getDataSize() {
+	public Optional<DataSize> getDataSize() {
 		return null;
 	}
 

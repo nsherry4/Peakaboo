@@ -396,8 +396,8 @@ public class StandardDataSet implements DataSet
 	
 	@Override
 	public DataSize getDataSize() {
-		if (dataSource.hasDataSize()) {
-			return dataSource.getDataSize();
+		if (dataSource.getDataSize().isPresent()) {
+			return dataSource.getDataSize().get();
 		} else {
 			return new DummyDataSize(dataSource);
 		}
@@ -443,7 +443,7 @@ public class StandardDataSet implements DataSet
 
 	@Override
 	public boolean hasGenuineDataSize() {
-		return getDataSource().hasDataSize();
+		return getDataSource().getDataSize().isPresent();
 	}
 
 

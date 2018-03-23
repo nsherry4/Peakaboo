@@ -70,7 +70,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 	}
 
 	@Override
-	public DataSize getDataSize() {
+	public Optional<DataSize> getDataSize() {
 		return null;
 	}
 
