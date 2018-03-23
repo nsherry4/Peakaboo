@@ -127,11 +127,11 @@ public class SettingsController extends Eventful implements Serializable
 
 		if (direction > 0)
 		{
-			number = plot.data().getDataSet().firstNonNullScanIndex(number);
+			number = plot.data().getDataSet().getAnalysis().firstNonNullScanIndex(number);
 		}
 		else
 		{
-			number = plot.data().getDataSet().lastNonNullScanIndex(number);
+			number = plot.data().getDataSet().getAnalysis().lastNonNullScanIndex(number);
 		}
 
 		if (number == -1)

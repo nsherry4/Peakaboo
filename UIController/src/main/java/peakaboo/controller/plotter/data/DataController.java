@@ -107,7 +107,7 @@ public class DataController extends Eventful
 
 	public boolean hasDataSet()
 	{
-		return dataModel.hasData();
+		return dataModel.hasGenuineData();
 	}
 
 
@@ -119,7 +119,7 @@ public class DataController extends Eventful
 		DataSet old = dataModel;
 		dataModel = dsp;
 		
-		plot.settings().setScanNumber( dsp.firstNonNullScanIndex() );
+		plot.settings().setScanNumber( dsp.getAnalysis().firstNonNullScanIndex() );
 		plot.settings().setMinEnergy(dsp.getDataSource().getScanData().minEnergy());
 		plot.settings().setMaxEnergy(dsp.getDataSource().getScanData().maxEnergy());
 		
@@ -172,19 +172,19 @@ public class DataController extends Eventful
 		
 		return new Iterator<ReadOnlySpectrum>() {
 
-			int nextIndex = dataModel.firstNonNullScanIndex();
+			int nextIndex = dataModel.getAnalysis().firstNonNullScanIndex();
 			ReadOnlySpectrum next = dataModel.getScanData().get(nextIndex);
 			
 			
-					public boolean hasNext()
+			public boolean hasNext()
 			{
 				return next != null;
 			}
 
-					public ReadOnlySpectrum next()
+			public ReadOnlySpectrum next()
 			{
 				ReadOnlySpectrum current = next;
-				nextIndex = dataModel.firstNonNullScanIndex(nextIndex+1);
+				nextIndex = dataModel.getAnalysis().firstNonNullScanIndex(nextIndex+1);
 				if (nextIndex == -1) {
 					next = null;
 				} else {
@@ -193,7 +193,7 @@ public class DataController extends Eventful
 				return current;
 			}
 
-					public void remove()
+			public void remove()
 			{
 				throw new UnsupportedOperationException();
 			}};

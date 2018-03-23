@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
+import peakaboo.dataset.analysis.Analysis;
+import peakaboo.dataset.analysis.DataSourceAnalysis;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.datasize.DummyDataSize;
@@ -45,10 +47,8 @@ import scitypes.SpectrumCalculations;
 public class StandardDataSet implements DataSet
 {
 
-	protected Spectrum				averagedSpectrum;
-	protected Spectrum				maximumSpectrum;
+
 	
-	protected float					maxValue;
 	protected int					spectrumLength;
 	
 	protected DataSource			dataSource;
@@ -58,6 +58,7 @@ public class StandardDataSet implements DataSet
 	
 	protected File					dataSourcePath;
 
+	protected Analysis				analysis;
 	
 
 	public StandardDataSet()
@@ -74,80 +75,6 @@ public class StandardDataSet implements DataSet
 		dataSource = ds;
 		
 	}
-
-
-	@Override
-	public Spectrum averagePlot()
-	{
-		return new ISpectrum(averagedSpectrum);
-	}
-
-
-	@Override
-	public Spectrum averagePlot(final List<Integer> excludedIndcies)
-	{
-
-		if (excludedIndcies.size() == 0) return averagePlot();
-
-		
-		//Filter for *JUST* the scans which have been marked as bad
-		List<ReadOnlySpectrum> badScans = excludedIndcies.stream().map(index -> dataSource.getScanData().get(index)).collect(toList());
-
-		Spectrum Ae;
-		Spectrum At;
-		int Nt, Ne;
-
-		// At - Total average for whole dataset
-		// Ae - average for excluded data set (ie just the bad ones)
-		// Nt = Total number of scans in whole dataset
-		// Ne - number of bad scans
-		//
-		// In order to figure out what the new average should be once we exclude the bad scans
-		// we could recalculate from the good scans, but that would take a long time. We will operate
-		// under the assumption that there will be many more good scans than bad scans.
-		// so calculating the average of the bad scans should be relatively fast.
-		// (At - Ae*(Ne/Nt)) * (Nt/(Nt-Ne))
-
-		Ae = SpectrumCalculations.getDatasetAverage(badScans);
-		At = averagedSpectrum;
-		Nt = dataSource.getScanData().scanCount();
-		Ne = badScans.size();
-
-		// if all scans are marked as bad, lets just return a list of 0s of the same length as the average scan
-		if (Nt == Ne)
-		{
-			return new ISpectrum(new ISpectrum(averagedSpectrum.size(), 0.0f));
-		}
-
-		float Net = (float) Ne / (float) Nt;
-		float Ntte = Nt / ((float) Nt - (float) Ne);
-
-		Spectrum goodAverage = new ISpectrum(averagedSpectrum.size());
-		for (int i = 0; i < averagedSpectrum.size(); i++)
-		{
-			goodAverage.set(i, (At.get(i) - Ae.get(i) * Net) * Ntte);
-		}
-
-		return new ISpectrum(goodAverage);
-
-	}
-
-
-	@Override
-	public Spectrum maximumPlot()
-	{
-		return new ISpectrum(maximumSpectrum);
-	}
-
-
-	@Override
-	public float maximumIntensity()
-	{
-		if (dataSource.getScanData().scanCount() == 0) return 0;
-				
-		return maxValue;
-	}
-
 
 
 
@@ -269,30 +196,7 @@ public class StandardDataSet implements DataSet
 
 
 	
-	
-	@Override
-	public int firstNonNullScanIndex()
-	{
-		return DataSet.firstNonNullScanIndex(dataSource, 0);
-	}
-	
-	@Override
-	public int firstNonNullScanIndex(int start)
-	{
-		return DataSet.firstNonNullScanIndex(dataSource, start);
-	}
-	
-	@Override
-	public int lastNonNullScanIndex()
-	{
-		return DataSet.lastNonNullScanIndex(dataSource, dataSource.getScanData().scanCount()-1);
-	}
-	
-	@Override
-	public int lastNonNullScanIndex(int upto)
-	{
-		return DataSet.lastNonNullScanIndex(dataSource, upto);
-	}
+
 	
 	
 	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted, File path)
@@ -319,29 +223,24 @@ public class StandardDataSet implements DataSet
 
 		
 		//go over each scan, calculating the average, max10th and max value
-		float max = Float.MIN_VALUE;
 		ReadOnlySpectrum current;
-		Spectrum avg, max10;
-		
-		avg = new ISpectrum(spectrumLength);
-		max10 = new ISpectrum(spectrumLength);
 		int updateInterval = Math.max(ds.getScanData().scanCount()/100, 20);
 		
+		analysis = new DataSourceAnalysis(this, ds);
 		for (int i = 0; i < ds.getScanData().scanCount(); i++)
 		{
 			current = ds.getScanData().get(i);
+			analysis.process(i, current);
 			
 			if (current == null) continue;
 			
-			SpectrumCalculations.addLists_inplace(avg, current);
-			SpectrumCalculations.maxLists_inplace(max10, current);
-			
-			max = Math.max(max, current.max());
-			
+					
 			//read the real coordinates for this scan
 			if (ds.getPhysicalSize().isPresent()) {
 				realCoords.add(ds.getPhysicalSize().get().getPhysicalCoordinatesAtIndex(i));
 			}
+			
+			
 			
 			if (i % updateInterval == 0) {
 				if (applying != null) applying.workUnitCompleted(updateInterval);
@@ -350,19 +249,13 @@ public class StandardDataSet implements DataSet
 			
 		}
 		
-		SpectrumCalculations.divideBy_inplace(avg, ds.getScanData().scanCount());
-		
-		averagedSpectrum = avg;
-		maximumSpectrum = max10;
-		
-		maxValue = max;
-
 		dataSourcePath = path;
 		this.dataSource = ds;
 		
 
 	}
 	
+	@Override
 	public File getDataSourcePath()
 	{
 		return dataSourcePath;
@@ -377,7 +270,7 @@ public class StandardDataSet implements DataSet
 
 
 	@Override
-	public boolean hasData()
+	public boolean hasGenuineData()
 	{
 		return dataSource.getScanData().scanCount() > 0;
 	}
@@ -414,7 +307,6 @@ public class StandardDataSet implements DataSet
 	@Override
 	public int channelsPerScan()
 	{
-		// TODO Auto-generated method stub
 		return spectrumLength;
 	}
 
@@ -440,6 +332,12 @@ public class StandardDataSet implements DataSet
 	@Override
 	public boolean hasGenuineDataSize() {
 		return getDataSource().getDataSize().isPresent();
+	}
+
+
+	@Override
+	public Analysis getAnalysis() {
+		return analysis;
 	}
 
 

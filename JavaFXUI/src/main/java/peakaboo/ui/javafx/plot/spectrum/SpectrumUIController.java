@@ -256,7 +256,7 @@ public class SpectrumUIController extends IActofUIController {
 	private ValueAxis<Number> getYAxis() {
 		double ymax = 100;
 		if (data != null) {
-			ymax = data.getDataSet().maximumIntensity();
+			ymax = data.getDataSet().getAnalysis().maximumIntensity();
 		}
 
 		if (plotController.settings().getViewLog()) {

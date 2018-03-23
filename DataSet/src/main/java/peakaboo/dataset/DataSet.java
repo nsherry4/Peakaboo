@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+import peakaboo.dataset.analysis.Analysis;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.metadata.Metadata;
@@ -24,67 +25,8 @@ import scitypes.ReadOnlySpectrum;
 public interface DataSet {
 
 	
+	Analysis getAnalysis();
 	
-	/**
-	 * Produces a single scan/list containing the average value for each channel
-	 * 
-	 * @return average scan
-	 */
-	ReadOnlySpectrum averagePlot();
-
-	/**
-	 * Produces a single scan/list containing the average value for each channel
-	 * 
-	 * @param excludedIndices
-	 *            is a list of indices to exclude from the average
-	 * @return average scan
-	 */
-	ReadOnlySpectrum averagePlot(List<Integer> excludedIndices);
-
-	/**
-	 * Produces a single scan/list containing the most intense values for each channel
-	 * 
-	 * @return the top signal-per-channel scan
-	 */
-	ReadOnlySpectrum maximumPlot();
-
-	
-
-
-	/**
-	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
-	 * @param start the index from which to start searching
-	 * @return the index of the first non-null scan
-	 */
-	int firstNonNullScanIndex(int start);
-
-	/**
-	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
-	 * @return the index of the first non-null scan, or -1 if no such scans exist
-	 */
-	int firstNonNullScanIndex();
-
-	/**
-	 * Finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
-	 * @param upto the maximum index to consider
-	 * @return the index of the last non-null scan
-	 */
-	int lastNonNullScanIndex(int upto);
-
-	/**
-	 * Finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
-	 * @return the index of the last non-null scan, or -1 if no such scans exist
-	 */
-	int lastNonNullScanIndex();
-
-
-	/**
-	 * Calculates the maximum single-channel intensity across all scans
-	 * 
-	 * @return the maximum intensity
-	 */
-	float maximumIntensity();
-
 
 	/**
 	 * Returns the size of a single scan
@@ -103,14 +45,14 @@ public interface DataSet {
 
 	/**
 	 * Does this implementation of the DataSetContainer actually contain data? {@link EmptyDataSet} purposefully
-	 * doesn't. This is different than the hasScanData method for a DataSource, since hasData() will return false 
-	 * if a ScanData object exists, but has 0 scans.
+	 * doesn't. This is different than getScanData() == null for a DataSource, since hasGenuineData() 
+	 * will return false if a ScanData object exists, but has 0 scans.
 	 * 
 	 * @return true if this dataset has data, false otherwise
 	 */
 	//Note: This is different than a hasScanData method for a DataSource, since a DataSet will 
 	//always have ScanData, even if it's a DummyScanData object.
-	boolean hasData();
+	boolean hasGenuineData();
 
 
 

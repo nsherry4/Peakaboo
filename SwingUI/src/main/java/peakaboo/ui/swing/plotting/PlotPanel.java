@@ -1731,7 +1731,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		properties.put("Data Format", "" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
 		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().channelsPerScan());
-		properties.put("Maximum Intensity", "" + controller.data().getDataSet().maximumIntensity());
+		properties.put("Maximum Intensity", "" + controller.data().getDataSet().getAnalysis().maximumIntensity());
 		
 		
 		
@@ -1789,7 +1789,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		StreamExecutorSet<EnergyCalibration> energyTask = AutoEnergyCalibration.propose(
-				controller.data().getDataSet().averagePlot(), 
+				controller.data().getDataSet().getAnalysis().averagePlot(), 
 				controller.fitting().getVisibleTransitionSeries(), 
 				controller.data().getDataSet().channelsPerScan());
 		

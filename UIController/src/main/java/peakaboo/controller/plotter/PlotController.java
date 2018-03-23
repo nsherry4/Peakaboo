@@ -148,9 +148,9 @@ public class PlotController extends EventfulType<String>
 		ReadOnlySpectrum originalData = null;
 		
 		if (settingsController.getChannelCompositeType() == ChannelCompositeMode.AVERAGE) {
-			originalData = dataController.getDataSet().averagePlot();
+			originalData = dataController.getDataSet().getAnalysis().averagePlot();
 		} else if (settingsController.getChannelCompositeType()  == ChannelCompositeMode.MAXIMUM) {
-			originalData = dataController.getDataSet().maximumPlot();
+			originalData = dataController.getDataSet().getAnalysis().maximumPlot();
 		} else {
 			originalData = dataController.getDataSet().getScanData().get(settingsController.getScanNumber());
 		}

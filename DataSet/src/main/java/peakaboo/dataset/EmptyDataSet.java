@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+import peakaboo.dataset.analysis.Analysis;
+import peakaboo.dataset.analysis.DummyAnalysis;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.metadata.Metadata;
@@ -16,40 +18,11 @@ import scitypes.Spectrum;
 public class EmptyDataSet implements DataSet
 {
 
-	@Override
-	public Spectrum averagePlot()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public Spectrum averagePlot(List<Integer> excludedIndices)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	@Override
-	public float maximumIntensity()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Spectrum maximumPlot()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 	
 	@Override
-	public boolean hasData(){
+	public boolean hasGenuineData(){
 		return false;
 	}
 
@@ -69,33 +42,6 @@ public class EmptyDataSet implements DataSet
 	}
 
 
-	@Override
-	public int firstNonNullScanIndex()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int firstNonNullScanIndex(int start)
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int lastNonNullScanIndex(int upto)
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int lastNonNullScanIndex()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public DataSource getDataSource()
@@ -138,6 +84,14 @@ public class EmptyDataSet implements DataSet
 	public boolean hasGenuineDataSize() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+
+	@Override
+	public Analysis getAnalysis() {
+		// TODO Auto-generated method stub
+		return new DummyAnalysis();
 	}
 
 
