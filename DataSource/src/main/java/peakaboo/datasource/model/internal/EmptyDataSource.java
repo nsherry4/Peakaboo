@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -24,8 +25,8 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	// Data Source //
 	
 	@Override
-	public Metadata getMetadata() {
-		return null;
+	public Optional<Metadata> getMetadata() {
+		return Optional.empty();
 	}
 
 	@Override

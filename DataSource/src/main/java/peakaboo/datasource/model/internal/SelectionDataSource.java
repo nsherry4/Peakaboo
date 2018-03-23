@@ -3,6 +3,7 @@ package peakaboo.datasource.model.internal;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -64,7 +65,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 	}
 
 	@Override
-	public Metadata getMetadata() {
+	public Optional<Metadata> getMetadata() {
 		return source.getMetadata();
 	}
 

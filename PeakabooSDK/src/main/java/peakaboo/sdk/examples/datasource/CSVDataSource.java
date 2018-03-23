@@ -2,6 +2,7 @@ package peakaboo.sdk.examples.datasource;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import peakaboo.datasource.model.AbstractDataSource;
@@ -102,9 +103,9 @@ public class CSVDataSource extends AbstractDataSource
 
 
 	@Override
-	public Metadata getMetadata() {
+	public Optional<Metadata> getMetadata() {
 		//Unsupported by this DataSource
-		return null;
+		return Optional.empty();
 	}
 
 

@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.scripting.BoltInterface;
@@ -152,9 +153,9 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 
 	
 	@Override
-	public Metadata getMetadata() {
+	public Optional<Metadata> getMetadata() {
 		//Not Implemented
-		return null;
+		return Optional.empty();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package peakaboo.dataset;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -111,16 +112,10 @@ public class EmptyDataSet implements DataSet
 
 
 	@Override
-	public Metadata getMetadata() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<Metadata> getMetadata() {
+		return Optional.empty();
 	}
 
-	@Override
-	public boolean hasMetadata() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public boolean hasPhysicalSize() {

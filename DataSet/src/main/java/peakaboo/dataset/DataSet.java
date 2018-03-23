@@ -2,6 +2,7 @@ package peakaboo.dataset;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -123,8 +124,7 @@ public interface DataSet {
 	//TODO: Test this to see if the memory issue still exists
 	void discard();
 	
-	Metadata getMetadata();
-	boolean hasMetadata();
+	Optional<Metadata> getMetadata();
 	
 	//boolean hasScanData();
 	ScanData getScanData();

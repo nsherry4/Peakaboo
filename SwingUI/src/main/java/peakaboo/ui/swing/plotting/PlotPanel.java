@@ -1734,8 +1734,8 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		//Extended attributes
-		if (controller.data().getDataSet().hasMetadata()) {
-			Metadata metadata = controller.data().getDataSet().getMetadata();
+		if (controller.data().getDataSet().getMetadata().isPresent()) {
+			Metadata metadata = controller.data().getDataSet().getMetadata().get();
 			
 			properties.put("Date of Creation", metadata.getCreationTime());
 			properties.put("Created By", metadata.getCreator());

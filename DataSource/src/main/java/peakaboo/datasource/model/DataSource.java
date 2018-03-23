@@ -3,6 +3,7 @@ package peakaboo.datasource.model;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
@@ -19,19 +20,9 @@ public interface DataSource
 		return true;
 	}
 	
-	/**
-	 * Returns a DataSourceMetadata, or null
-	 */
-	Metadata getMetadata();
 	
-	/**
-	 * Tests if a DataSource has metadata defined in {@link Metadata}
-	 * @return true if the data is provided, false otherwise
-	 */
-	default boolean hasMetadata() {
-		return (getMetadata() != null);
-	}
-	
+	Optional<Metadata> getMetadata();
+		
 	
 	
 	

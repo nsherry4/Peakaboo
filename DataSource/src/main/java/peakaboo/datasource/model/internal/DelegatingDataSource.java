@@ -3,6 +3,7 @@ package peakaboo.datasource.model.internal;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -42,12 +43,8 @@ public class DelegatingDataSource implements DataSource {
 	}
 
 	
-	public Metadata getMetadata() {
+	public Optional<Metadata> getMetadata() {
 		return backer.getMetadata();
-	}
-
-	public boolean hasMetadata() {
-		return backer.hasMetadata();
 	}
 
 	public DataSize getDataSize() {
