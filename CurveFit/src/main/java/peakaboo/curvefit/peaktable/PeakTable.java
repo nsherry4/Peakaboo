@@ -32,6 +32,10 @@ public class PeakTable
 
 	private static ArrayList<TransitionSeries> getAllTransitions() {
 		ArrayList<TransitionSeries> newlist = new ArrayList<>();
+		//Make sure the canonical TransitionSeries list is initialized
+		if (elementTransitions.size() == 0) {
+			PeakTableReader.readPeakTable();
+		}
 		for (TransitionSeries ts : elementTransitions) {
 			newlist.add(new TransitionSeries(ts));
 		}

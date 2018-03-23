@@ -59,6 +59,10 @@ public class StandardDataSet implements DataSet
 	}
 	
 	
+	public StandardDataSet(DataSource ds) {
+		this(ds, null, null);
+	}
+	
 	public StandardDataSet(DataSource ds, DummyExecutor progress, Supplier<Boolean> isAborted)
 	{
 		super();

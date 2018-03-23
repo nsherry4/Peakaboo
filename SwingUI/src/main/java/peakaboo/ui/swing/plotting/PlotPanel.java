@@ -1333,7 +1333,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
 		contents.website = "www.sciencestudio.net";
-		contents.copyright = "Copyright &copy; 2009-2012 by The University of Western Ontario and The Canadian Light Source Inc.";
+		contents.copyright = "Copyright &copy; 2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/peakaboo/credits.txt"));
 		contents.logo = IconFactory.getImageIcon( Version.logo );
