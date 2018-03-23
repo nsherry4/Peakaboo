@@ -4,12 +4,14 @@ package peakaboo.dataset;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import commonenvironment.AlphaNumericComparitor;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.dataset.analysis.Analysis;
 import peakaboo.dataset.analysis.DataSourceAnalysis;
@@ -76,9 +78,10 @@ public class StandardDataSet implements DataSet
 	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<File> files, final DataSource dataSource)
 	{
 
+		// sort the filenames alphanumerically. Files like "point2" should appear before "point10"
+		Comparator<String> comparitor = new AlphaNumericComparitor(); 
+		files.sort((a, b) -> comparitor.compare(a.toString(), b.toString()));
 		
-		// sort the filenames property
-		Collections.sort(files);
 		
 		// Create the tasklist for reading the files
 		final ExecutorSet<DatasetReadResult> tasklist;
