@@ -48,9 +48,6 @@ public class StandardDataSet implements DataSet
 	//information about scans, so we store the physical coordinates
 	//here
 	protected List<Coord<Number>>	realCoords;
-	
-	protected File					dataSourcePath;
-
 	protected Analysis				analysis;
 	
 
@@ -64,7 +61,7 @@ public class StandardDataSet implements DataSet
 	{
 		super();
 		
-		readDataSource(ds, progress, isAborted, new File(""));
+		readDataSource(ds, progress, isAborted);
 		dataSource = ds;
 		
 	}
@@ -153,7 +150,7 @@ public class StandardDataSet implements DataSet
 					
 					
 					//now that we have the datasource, read it
-					readDataSource(  dataSource, applying, isAborted, files.get(0).getParentFile()  );
+					readDataSource(dataSource, applying, isAborted);
 					
 					
 					if (isAborted.get())
@@ -192,15 +189,11 @@ public class StandardDataSet implements DataSet
 
 	
 	
-	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted, File path)
+	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted)
 	{
 		
 		if (ds == null || ds.getScanData().scanCount() == 0) return;
-				
 
-		
-
-		
 		
 		//if this data source has dimensions, make space to store them all in a list
 		if (ds.getPhysicalSize().isPresent())
@@ -231,18 +224,10 @@ public class StandardDataSet implements DataSet
 			
 		}
 		
-		dataSourcePath = path;
 		this.dataSource = ds;
 		
 
 	}
-	
-	@Override
-	public File getDataSourcePath()
-	{
-		return dataSourcePath;
-	}
-
 	
 
 	@Override

@@ -41,12 +41,6 @@ public class EmptyDataSet implements DataSet
 		return null;
 	}
 
-	@Override
-	public File getDataSourcePath()
-	{
-		return new File("");
-	}
-
 
 	@Override
 	public Optional<Metadata> getMetadata() {

@@ -69,6 +69,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import commonenvironment.Apps;
+import commonenvironment.Env;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
@@ -163,6 +164,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	File						saveFilesFolder;
 	File						savedSessionFileName;
 	File						exportedDataFileName;
+	File						datasetFolder;
 	String                      programTitle;
 
 	
@@ -207,6 +209,8 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		savedSessionFileName = null;
 		exportedDataFileName = null;
+		
+		datasetFolder = Env.homeDirectory();
 
 		controller = new PlotController();
 				
@@ -1254,8 +1258,9 @@ public class PlotPanel extends TabbedInterfacePanel
 	// data set, and returns it to the caller
 	public void openNewDataset(List<SimpleFileExtension> extensions)
 	{
-		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", controller.data().getDataSet().getDataSourcePath(), extensions, files -> {
+		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", datasetFolder, extensions, files -> {
 			if (!files.isPresent()) return;
+			datasetFolder = files.get().get(0).getParentFile();
 			loadFiles(files.get());
 		});
 	}
@@ -1580,7 +1585,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionSavePicture()
 	{
 		if (saveFilesFolder == null) {
-			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+			saveFilesFolder = datasetFolder;
 		}
 		SavePicture sp = new SavePicture(this, canvas, saveFilesFolder, file -> {
 			if (file.isPresent()) {
@@ -1595,7 +1600,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionSaveFilteredData()
 	{
 		if (saveFilesFolder == null) {
-			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+			saveFilesFolder = datasetFolder;
 		}
 		
 		
@@ -1666,7 +1671,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	{
 
 		if (saveFilesFolder == null) {
-			saveFilesFolder = controller.data().getDataSet().getDataSourcePath();
+			saveFilesFolder = datasetFolder;
 		}
 
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();

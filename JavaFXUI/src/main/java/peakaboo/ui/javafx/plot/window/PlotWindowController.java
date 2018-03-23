@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.controlsfx.dialog.CommandLinksDialog.CommandLinksButtonType;
 
+import commonenvironment.Env;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -265,7 +266,7 @@ public class PlotWindowController extends IActofUIController {
         if (files == null) { return null; }
         //array returned from dialog is unmodifiable
         files = new ArrayList<>(files);
-        File lastDir = plotController.data().getDataSet().getDataSourcePath();
+        File lastDir = Env.homeDirectory();
         chooser.setInitialDirectory(lastDir);
 
         return files;

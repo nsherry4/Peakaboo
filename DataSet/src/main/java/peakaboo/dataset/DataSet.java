@@ -33,7 +33,7 @@ public interface DataSet {
 	 * 
 	 * @return data source string
 	 */
-	File getDataSourcePath();
+	//File getDataSourcePath();
 
 	
 	ScanData getScanData();
@@ -58,7 +58,8 @@ public interface DataSet {
 	
 	/**
 	 * Return a data size. If the underlying {@link DataSource} has a data size, return 
-	 * that, otherwise, create a dummy one.
+	 * that, otherwise, create a dummy one, since it's easier than having a bunch of 
+	 * <code> if (hasDataSize) { ... } else { ... } </code> statements everywhere.
 	 */
 	DataSize getDataSize();
 	boolean hasGenuineDataSize();
