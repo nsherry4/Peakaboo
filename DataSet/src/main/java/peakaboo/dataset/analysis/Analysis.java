@@ -1,7 +1,5 @@
 package peakaboo.dataset.analysis;
 
-import java.util.List;
-
 import scitypes.ReadOnlySpectrum;
 
 /**

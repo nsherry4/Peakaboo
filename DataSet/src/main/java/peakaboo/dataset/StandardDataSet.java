@@ -1,8 +1,6 @@
 package peakaboo.dataset;
 
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,31 +24,29 @@ import peakaboo.datasource.model.components.scandata.ScanData;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import scitypes.Coord;
-import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
 
 /**
- * Given a DataSource, this class calculates the average and max spectra,
- * along with a few other values. This allows the data to be calculated 
- * once and accessed many times without adding cache logic elsewhere 
- * in the program. This is intended to layer features on top of a 
- * DataSource in order to keep the DataSource implementation simple. It
- * is not intended to store user settings/overrides.
+ * Given a DataSource, a DataSet  is intended to layer features on top of a 
+ * DataSource in order to keep the DataSource implementation simple. It is 
+ * also intended to present a more programmer-friendly interface to the rest 
+ * of Peakaboo, whereas a DataSource is intended to be more user-friendly to 
+ * the DataSource implementer. It is not intended to store user settings or 
+ * overrides.
  * 
- * @author Nathaniel Sherry, 2009-2017
+ * @author Nathaniel Sherry, 2009-2018
  */
-
 public class StandardDataSet implements DataSet
 {
 
 
 	protected DataSource			dataSource;
 
-	//list of real coordinates for each scan
+	//Data sources are not guaranteed to be fast at retrieving 
+	//information about scans, so we store the physical coordinates
+	//here
 	protected List<Coord<Number>>	realCoords;
 	
 	protected File					dataSourcePath;

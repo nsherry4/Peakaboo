@@ -1,9 +1,5 @@
 package peakaboo.dataset.analysis;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-
 import peakaboo.dataset.DataSet;
 import peakaboo.datasource.model.DataSource;
 import scitypes.ISpectrum;
@@ -13,7 +9,6 @@ import scitypes.SpectrumCalculations;
 
 public class DataSourceAnalysis implements Analysis {
 
-	private DataSet dataSet;
 	private DataSource dataSource;
 	
 	
@@ -25,7 +20,6 @@ public class DataSourceAnalysis implements Analysis {
 	
 	
 	public DataSourceAnalysis(DataSet dataSet, DataSource dataSource) {
-		this.dataSet = dataSet;
 		this.dataSource = dataSource;
 		
 		int nonNullScanIndex = firstNonNullScanIndex(0);

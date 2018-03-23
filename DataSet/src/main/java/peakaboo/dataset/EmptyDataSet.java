@@ -1,7 +1,6 @@
 package peakaboo.dataset;
 
 import java.io.File;
-import java.util.List;
 import java.util.Optional;
 
 import peakaboo.dataset.analysis.Analysis;
@@ -12,7 +11,6 @@ import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.model.components.scandata.DummyScanData;
 import peakaboo.datasource.model.components.scandata.ScanData;
-import scitypes.Spectrum;
 
 
 public class EmptyDataSet implements DataSet
