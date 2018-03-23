@@ -131,8 +131,7 @@ public interface DataSet {
 
 	DataSource getDataSource();
 
-	boolean hasPhysicalSize();
-	PhysicalSize getPhysicalSize();
+	Optional<PhysicalSize> getPhysicalSize();
 	
 	/**
 	 * Return a data size. If the underlying {@link DataSource} has a data size, return 

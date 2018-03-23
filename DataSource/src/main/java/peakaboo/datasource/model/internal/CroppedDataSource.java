@@ -143,8 +143,8 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 	public Coord<Number> getPhysicalCoordinatesAtIndex(int index)
 	{
-		if (!originalDataSource.getDataSize().isPresent()) { throw new UnsupportedOperationException(); }
-		return originalDataSource.getPhysicalSize().getPhysicalCoordinatesAtIndex(getOriginalIndex(index));
+		if (!originalDataSource.getPhysicalSize().isPresent()) { throw new UnsupportedOperationException(); }
+		return originalDataSource.getPhysicalSize().get().getPhysicalCoordinatesAtIndex(getOriginalIndex(index));
 	}
 
 
@@ -170,8 +170,8 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 	public SISize getPhysicalUnit()
 	{
-		if (!originalDataSource.getDataSize().isPresent()) { throw new UnsupportedOperationException(); }
-		return originalDataSource.getPhysicalSize().getPhysicalUnit();
+		if (!originalDataSource.getPhysicalSize().isPresent()) { throw new UnsupportedOperationException(); }
+		return originalDataSource.getPhysicalSize().get().getPhysicalUnit();
 	}
 
 
@@ -230,11 +230,11 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 
 	@Override
-	public PhysicalSize getPhysicalSize() {
-		if (originalDataSource.hasPhysicalSize()) {
-			return this;	
+	public Optional<PhysicalSize> getPhysicalSize() {
+		if (originalDataSource.getPhysicalSize().isPresent()) {
+			return Optional.of(this);
 		} else {
-			return null;
+			return Optional.empty();
 		}
 		
 	}

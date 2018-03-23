@@ -23,13 +23,7 @@ public interface DataSource
 	
 	Optional<Metadata> getMetadata();
 	Optional<DataSize> getDataSize();
-	
-	
-	PhysicalSize getPhysicalSize();
-	
-	default boolean hasPhysicalSize() {
-		return (getPhysicalSize() != null);		
-	}
+	Optional<PhysicalSize> getPhysicalSize();
 	
 
 	

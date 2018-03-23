@@ -69,7 +69,7 @@ public class DelegatingDataSource implements DataSource {
 	}
 
 	@Override
-	public PhysicalSize getPhysicalSize() {
+	public Optional<PhysicalSize> getPhysicalSize() {
 		return backer.getPhysicalSize();
 	}
 	

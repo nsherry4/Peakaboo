@@ -165,7 +165,7 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 	}
 
 	@Override
-	public PhysicalSize getPhysicalSize() {
+	public Optional<PhysicalSize> getPhysicalSize() {
 		//Not Implemented
 		return null;
 	}

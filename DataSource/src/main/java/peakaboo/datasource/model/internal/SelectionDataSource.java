@@ -75,8 +75,8 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 	}
 
 	@Override
-	public PhysicalSize getPhysicalSize() {
-		return null;
+	public Optional<PhysicalSize> getPhysicalSize() {
+		return Optional.empty();
 	}
 
 	@Override

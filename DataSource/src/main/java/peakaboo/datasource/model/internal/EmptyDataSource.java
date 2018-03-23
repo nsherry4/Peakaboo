@@ -97,8 +97,8 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	}
 
 	@Override
-	public PhysicalSize getPhysicalSize() {
-		return null;
+	public Optional<PhysicalSize> getPhysicalSize() {
+		return Optional.empty();
 	}
 
 

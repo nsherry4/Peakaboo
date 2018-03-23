@@ -33,6 +33,7 @@ import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.model.DataSource;
+import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
@@ -179,9 +180,10 @@ public class PlotWindowController extends IActofUIController {
 		Coord<Bounds<Number>> physicalDimensions = null;
 		SISize physicalUnit = null;
 		
-		if (plotController.data().getDataSet().hasPhysicalSize()) {
-			physicalDimensions = plotController.data().getDataSet().getPhysicalSize().getPhysicalDimensions();
-			physicalUnit = plotController.data().getDataSet().getPhysicalSize().getPhysicalUnit();
+		if (plotController.data().getDataSet().getPhysicalSize().isPresent()) {
+			PhysicalSize physical = plotController.data().getDataSet().getPhysicalSize().get();
+			physicalDimensions = physical.getPhysicalDimensions();
+			physicalUnit = physical.getPhysicalUnit();
 		}
 		
 		if (plotController.data().getDataSet().hasGenuineDataSize()) {

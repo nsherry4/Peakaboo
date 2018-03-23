@@ -117,9 +117,9 @@ public class CSVDataSource extends AbstractDataSource
 
 
 	@Override
-	public PhysicalSize getPhysicalSize() {
+	public Optional<PhysicalSize> getPhysicalSize() {
 		//Unsupported by this DataSource
-		return null;
+		return Optional.empty();
 	}
 
 

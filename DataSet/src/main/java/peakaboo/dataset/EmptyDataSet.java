@@ -118,15 +118,8 @@ public class EmptyDataSet implements DataSet
 
 
 	@Override
-	public boolean hasPhysicalSize() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public PhysicalSize getPhysicalSize() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<PhysicalSize> getPhysicalSize() {
+		return Optional.empty();
 	}
 
 	@Override

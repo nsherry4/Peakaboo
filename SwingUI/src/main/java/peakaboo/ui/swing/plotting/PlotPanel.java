@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -92,6 +93,7 @@ import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.metadata.Metadata;
+import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.model.components.scandata.ScanData;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.datasource.plugin.DataSourceLookup;
@@ -1511,9 +1513,10 @@ public class PlotPanel extends TabbedInterfacePanel
 				Coord<Bounds<Number>> physicalDimensions = null;
 				SISize physicalUnit = null;
 				
-				if (controller.data().getDataSet().hasPhysicalSize()) {
-					physicalDimensions = controller.data().getDataSet().getPhysicalSize().getPhysicalDimensions();
-					physicalUnit = controller.data().getDataSet().getPhysicalSize().getPhysicalUnit();
+				Optional<PhysicalSize> physical = controller.data().getDataSet().getPhysicalSize();
+				if (physical.isPresent()) {
+					physicalDimensions = physical.get().getPhysicalDimensions();
+					physicalUnit = physical.get().getPhysicalUnit();
 				}
 				
 				if (controller.data().getDataSet().hasGenuineDataSize()) {

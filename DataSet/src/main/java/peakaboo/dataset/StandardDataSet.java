@@ -312,7 +312,7 @@ public class StandardDataSet implements DataSet
 		
 		
 		//if this data source has dimensions, make space to store them all in a list
-		if (ds.hasPhysicalSize())
+		if (ds.getPhysicalSize().isPresent())
 		{
 			realCoords = new ArrayList<Coord<Number>>();
 		}
@@ -339,7 +339,9 @@ public class StandardDataSet implements DataSet
 			max = Math.max(max, current.max());
 			
 			//read the real coordinates for this scan
-			if (ds.hasPhysicalSize()) realCoords.add(ds.getPhysicalSize().getPhysicalCoordinatesAtIndex(i));
+			if (ds.getPhysicalSize().isPresent()) {
+				realCoords.add(ds.getPhysicalSize().get().getPhysicalCoordinatesAtIndex(i));
+			}
 			
 			if (i % updateInterval == 0) {
 				if (applying != null) applying.workUnitCompleted(updateInterval);
@@ -381,15 +383,9 @@ public class StandardDataSet implements DataSet
 	}
 
 
-	@Override
-	public boolean hasPhysicalSize()
-	{
-		return dataSource.hasPhysicalSize();
-	}
-	
 	
 	@Override
-	public PhysicalSize getPhysicalSize() {
+	public Optional<PhysicalSize> getPhysicalSize() {
 		return dataSource.getPhysicalSize();
 	}
 
