@@ -24,32 +24,16 @@ public interface DataSource
 	Optional<Metadata> getMetadata();
 	Optional<DataSize> getDataSize();
 	Optional<PhysicalSize> getPhysicalSize();
-	
-
-	
-
 	FileFormat getFileFormat();
-	
-	
-	
-	void setInteraction(Interaction interaction);
-	Interaction getInteraction();
-	
-	default boolean hasInteraction() {
-		return (getInteraction() != null);
-	}
-	
-	
-	
-	
-	default boolean hasScanData() {
-		return (getScanData() != null);
-	}
 	ScanData getScanData();
 	
+	Interaction getInteraction();
+	void setInteraction(Interaction interaction);
+	
+
 	
 	
-	
+
 
 	/**
 	 * Reads the given file as a whole dataset. This method, collectively with 

@@ -429,7 +429,7 @@ public class StandardDataSet implements DataSet
 
 	@Override
 	public ScanData getScanData() {
-		if (dataSource.hasScanData()) {
+		if (dataSource.getScanData() != null) {
 			return dataSource.getScanData();
 		} else {
 			return new DummyScanData();
