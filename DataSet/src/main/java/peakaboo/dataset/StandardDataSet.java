@@ -48,9 +48,6 @@ public class StandardDataSet implements DataSet
 {
 
 
-	
-	protected int					spectrumLength;
-	
 	protected DataSource			dataSource;
 
 	//list of real coordinates for each scan
@@ -206,13 +203,7 @@ public class StandardDataSet implements DataSet
 				
 
 		
-		int nonNullScanIndex = DataSet.firstNonNullScanIndex(ds, 0);
-		if (nonNullScanIndex == -1) return;
-		ReadOnlySpectrum nonNullScan = ds.getScanData().get(nonNullScanIndex);
-		if (nonNullScan == null) return;
-		
-		spectrumLength = nonNullScan.size();
-		
+
 		
 		
 		//if this data source has dimensions, make space to store them all in a list
@@ -231,17 +222,12 @@ public class StandardDataSet implements DataSet
 		{
 			current = ds.getScanData().get(i);
 			analysis.process(i, current);
-			
-			if (current == null) continue;
-			
-					
+
 			//read the real coordinates for this scan
 			if (ds.getPhysicalSize().isPresent()) {
 				realCoords.add(ds.getPhysicalSize().get().getPhysicalCoordinatesAtIndex(i));
 			}
-			
-			
-			
+
 			if (i % updateInterval == 0) {
 				if (applying != null) applying.workUnitCompleted(updateInterval);
 				if (isAborted != null && isAborted.get()) return;
@@ -301,13 +287,6 @@ public class StandardDataSet implements DataSet
 	{
 		//discard our reference to the datasource
 		dataSource = null;
-	}
-
-
-	@Override
-	public int channelsPerScan()
-	{
-		return spectrumLength;
 	}
 
 

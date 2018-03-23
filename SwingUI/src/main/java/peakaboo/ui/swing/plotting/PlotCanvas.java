@@ -151,7 +151,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			parentWidth = this.getParent().getWidth();
 		}
 
-		int newWidth = (int) (controller.data().getDataSet().channelsPerScan() * controller.settings().getZoom());
+		int newWidth = (int) (controller.data().getDataSet().getAnalysis().channelsPerScan() * controller.settings().getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
 		
@@ -220,7 +220,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 		if (x < 0 || !controller.data().hasDataSet()) return -1;
 
-		channel = (int) ((x / plotWidth) * controller.data().getDataSet().channelsPerScan());
+		channel = (int) ((x / plotWidth) * controller.data().getDataSet().getAnalysis().channelsPerScan());
 		return channel;
 
 	}
@@ -309,7 +309,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
 			ReadOnlySpectrum drawingData = dataForPlot.first;
 			float maxIntensity = Math.max(controller.data().getDataSet().getAnalysis().maximumIntensity(), drawingData.max());
-			int datasetSize = Math.min(controller.data().getDataSet().channelsPerScan(), drawingData.size());
+			int datasetSize = Math.min(controller.data().getDataSet().getAnalysis().channelsPerScan(), drawingData.size());
 			
 			dr.imageHeight = (float) size.getHeight();
 			dr.imageWidth = (float) size.getWidth();

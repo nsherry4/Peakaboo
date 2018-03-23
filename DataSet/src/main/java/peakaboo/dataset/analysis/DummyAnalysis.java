@@ -65,5 +65,13 @@ public class DummyAnalysis implements Analysis {
 		
 	}
 
+
+
+	@Override
+	public int channelsPerScan() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 }

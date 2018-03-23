@@ -219,7 +219,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 		if (! plot.data().hasDataSet() ) return null;
 		
-		EnergyCalibration calibration = new EnergyCalibration(plot.settings().getMinEnergy(), plot.settings().getMaxEnergy(), plot.data().getDataSet().channelsPerScan());
+		EnergyCalibration calibration = new EnergyCalibration(plot.settings().getMinEnergy(), plot.settings().getMaxEnergy(), plot.data().getDataSet().getAnalysis().channelsPerScan());
 		
 		return TSOrdering.proposeTransitionSeriesFromChannel(
 				plot.settings().getEscapePeakType(),

@@ -243,14 +243,14 @@ public class SettingsController extends Eventful implements Serializable
 	public float getEnergyForChannel(int channel)
 	{
 		if (!plot.data().hasDataSet()) return 0.0f;
-		EnergyCalibration calibration = new EnergyCalibration(getMinEnergy(), getMaxEnergy(), plot.data().getDataSet().channelsPerScan());
+		EnergyCalibration calibration = new EnergyCalibration(getMinEnergy(), getMaxEnergy(), plot.data().getDataSet().getAnalysis().channelsPerScan());
 		return calibration.energyFromChannel(channel);
 	}
 
 	public Pair<Float, Float> getValueForChannel(int channel)
 	{
 		if (channel == -1) return null;
-		if (channel >= plot.data().getDataSet().channelsPerScan()) return null;
+		if (channel >= plot.data().getDataSet().getAnalysis().channelsPerScan()) return null;
 
 		Pair<ReadOnlySpectrum, ReadOnlySpectrum> scans = plot.getDataForPlot();
 		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);

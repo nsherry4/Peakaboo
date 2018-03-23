@@ -34,13 +34,6 @@ public class EmptyDataSet implements DataSet
 		
 	}
 
-	@Override
-	public int channelsPerScan()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 
 
 	@Override

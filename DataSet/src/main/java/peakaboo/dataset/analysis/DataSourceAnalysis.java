@@ -17,8 +17,9 @@ public class DataSourceAnalysis implements Analysis {
 	private DataSource dataSource;
 	
 	
-	protected Spectrum				averagedSpectrum;
-	protected int					averageScanCount;
+	protected int					channelCount;
+	protected Spectrum				summedSpectrum;
+	protected int					summedScanCount;
 	protected Spectrum				maximumSpectrum;
 	protected float					maxValue;
 	
@@ -27,10 +28,17 @@ public class DataSourceAnalysis implements Analysis {
 		this.dataSet = dataSet;
 		this.dataSource = dataSource;
 		
-		int size = this.dataSet.channelsPerScan();
-		averagedSpectrum = new ISpectrum(size);
-		averageScanCount = 0;
-		maximumSpectrum = new ISpectrum(size);
+		int nonNullScanIndex = firstNonNullScanIndex(0);
+		if (nonNullScanIndex == -1) {
+			throw new RuntimeException("Cannot find non-null scan");
+		}
+		ReadOnlySpectrum nonNullScan = dataSource.getScanData().get(nonNullScanIndex);
+		channelCount = nonNullScan.size();
+
+		
+		summedSpectrum = new ISpectrum(channelCount);
+		summedScanCount = 0;
+		maximumSpectrum = new ISpectrum(channelCount);
 		maxValue = 0;
 		
 	}
@@ -39,8 +47,8 @@ public class DataSourceAnalysis implements Analysis {
 	@Override
 	public void process(int index, ReadOnlySpectrum spectrum) {
 		if (spectrum == null) return;
-		SpectrumCalculations.addLists_inplace(averagedSpectrum, spectrum);
-		averageScanCount++;
+		SpectrumCalculations.addLists_inplace(summedSpectrum, spectrum);
+		summedScanCount++;
 		SpectrumCalculations.maxLists_inplace(maximumSpectrum, spectrum);
 		maxValue = Math.max(maxValue, spectrum.max());
 	}
@@ -49,25 +57,43 @@ public class DataSourceAnalysis implements Analysis {
 	@Override
 	public int firstNonNullScanIndex()
 	{
-		return DataSet.firstNonNullScanIndex(dataSource, 0);
+		return firstNonNullScanIndex(0);
 	}
 	
 	@Override
 	public int firstNonNullScanIndex(int start)
 	{
-		return DataSet.firstNonNullScanIndex(dataSource, start);
+		for (int i = start; i < dataSource.getScanData().scanCount(); i++)
+		{
+			if (dataSource.getScanData().get(i) != null)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	@Override
 	public int lastNonNullScanIndex()
 	{
-		return DataSet.lastNonNullScanIndex(dataSource, dataSource.getScanData().scanCount()-1);
+		return lastNonNullScanIndex(dataSource.getScanData().scanCount()-1);
 	}
 	
 	@Override
 	public int lastNonNullScanIndex(int upto)
 	{
-		return DataSet.lastNonNullScanIndex(dataSource, upto);
+		upto = Math.min(upto, dataSource.getScanData().scanCount()-1);
+		
+		for (int i = upto; i >= 0; i--)
+		{
+			if (dataSource.getScanData().get(i) != null)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	@Override
@@ -90,7 +116,13 @@ public class DataSourceAnalysis implements Analysis {
 	@Override
 	public Spectrum averagePlot()
 	{
-		return SpectrumCalculations.divideBy(averagedSpectrum, averageScanCount);
+		return SpectrumCalculations.divideBy(summedSpectrum, summedScanCount);
+	}
+
+
+	@Override
+	public int channelsPerScan() {
+		return channelCount;
 	}
 
 	

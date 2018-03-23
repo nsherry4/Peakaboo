@@ -34,6 +34,13 @@ public interface Analysis {
 	 */
 	ReadOnlySpectrum maximumPlot();
 
+
+	/**
+	 * Returns the size of a single scan
+	 * 
+	 * @return size of a scan
+	 */
+	int channelsPerScan();
 	
 
 

@@ -135,8 +135,8 @@ public class SavedSettings
 		
 		
 		if (dataController.hasDataSet()) {
-			fittings.selections.setDataParameters(dataController.getDataSet().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
-			fittings.proposals.setDataParameters(dataController.getDataSet().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
+			fittings.selections.setDataParameters(dataController.getDataSet().getAnalysis().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
+			fittings.proposals.setDataParameters(dataController.getDataSet().getAnalysis().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
 		}
 
 

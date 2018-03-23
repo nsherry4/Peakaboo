@@ -74,7 +74,7 @@ public class DataController extends Eventful
 			
 			public void change()
 			{
-				if (readTasks.getCompleted() && dataset.channelsPerScan() > 0 && !loadedNewDataSet) {
+				if (readTasks.getCompleted() && dataset.getAnalysis().channelsPerScan() > 0 && !loadedNewDataSet) {
 					DatasetReadResult result = readTasks.getResult();
 					if (result.status == ReadStatus.SUCCESS) {
 						setDataSetProvider(dataset);

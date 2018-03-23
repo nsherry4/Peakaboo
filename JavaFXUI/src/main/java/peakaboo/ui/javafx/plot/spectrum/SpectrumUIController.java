@@ -107,7 +107,7 @@ public class SpectrumUIController extends IActofUIController {
 
 		int xmax = 2048;
 		if (data != null) {
-			xmax = data.getDataSet().channelsPerScan();
+			xmax = data.getDataSet().getAnalysis().channelsPerScan();
 		}
 		NumberAxis xAxis = new NumberAxis(0, xmax - 1, 50);
 		spectrum = new AreaChart<Number, Number>(xAxis, getYAxis());
