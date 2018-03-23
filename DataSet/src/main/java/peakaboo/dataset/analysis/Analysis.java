@@ -4,11 +4,18 @@ import java.util.List;
 
 import scitypes.ReadOnlySpectrum;
 
+/**
+ * Peakaboo derives a number of measurements from a Data Set which are not
+ * directly provided by the DataSource. This includes things like the average
+ * scan. This is separated from the DataSet for composability and simplicity 
+ * @author NAS
+ *
+ */
 public interface Analysis {
 
 	
 	/**
-	 * Accepts a new scan and it's index (position in the data). Performs any 
+	 * Accepts a new scan and it's index (position in the data). Calculates any 
 	 * incremental metrics it may wish to do. 
 	 * @param index
 	 * @param spectrum

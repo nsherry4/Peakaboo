@@ -14,20 +14,19 @@ import scitypes.ReadOnlySpectrum;
 
 
 /**
- * Given a DataSource, a DataSet provides the average and max spectra,
- * along with a few other values. This is intended to layer 
- * features on top of a DataSource in order to keep the DataSource 
- * implementation simple. It is not intended to store user 
- * settings/overrides.
+ * Given a DataSource, a DataSet  is intended to layer features on top of a 
+ * DataSource in order to keep the DataSource implementation simple. It is 
+ * also intended to present a more programmer-friendly interface to the rest 
+ * of Peakaboo, whereas a DataSource is intended to be more user-friendly to 
+ * the DataSource implementer. It is not intended to store user settings or 
+ * overrides.
  * 
- * @author Nathaniel Sherry, 2009-2017
+ * @author Nathaniel Sherry, 2009-2018
  */
 public interface DataSet {
 
-	
-	Analysis getAnalysis();
-	
 
+	Analysis getAnalysis();
 
 
 	/**
@@ -38,6 +37,9 @@ public interface DataSet {
 	 */
 	File getDataSourcePath();
 
+	
+	ScanData getScanData();
+	
 	/**
 	 * Does this implementation of the DataSetContainer actually contain data? {@link EmptyDataSet} purposefully
 	 * doesn't. This is different than getScanData() == null for a DataSource, since hasGenuineData() 
@@ -47,24 +49,10 @@ public interface DataSet {
 	 */
 	//Note: This is different than a hasScanData method for a DataSource, since a DataSet will 
 	//always have ScanData, even if it's a DummyScanData object.
-	boolean hasGenuineData();
+	boolean hasGenuineScanData();
 
 
-
-
-	/**
-	 * This appears to be a workaround to a garbage collection issue where <i>something</i> is 
-	 * maintaining a reference to the DataSet. By discarding the underlying DataSource, we can
-	 * allow memory to be freed even with the reference. This should really be tested to see if
-	 * it is still an issue. 
-	 */
-	//TODO: Test this to see if the memory issue still exists
-	void discard();
-	
 	Optional<Metadata> getMetadata();
-	
-	//boolean hasScanData();
-	ScanData getScanData();
 
 	DataSource getDataSource();
 
@@ -76,6 +64,17 @@ public interface DataSet {
 	 */
 	DataSize getDataSize();
 	boolean hasGenuineDataSize();
+	
+	
+	
+	/**
+	 * This appears to be a workaround to a garbage collection issue where <i>something</i> is 
+	 * maintaining a reference to the DataSet. By discarding the underlying DataSource, we can
+	 * allow memory to be freed even with the reference. This should really be tested to see if
+	 * it is still an issue. 
+	 */
+	//TODO: Test this to see if the memory issue still exists
+	void discard();
 
 
 }

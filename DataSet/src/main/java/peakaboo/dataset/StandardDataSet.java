@@ -256,7 +256,7 @@ public class StandardDataSet implements DataSet
 
 
 	@Override
-	public boolean hasGenuineData()
+	public boolean hasGenuineScanData()
 	{
 		return dataSource.getScanData().scanCount() > 0;
 	}

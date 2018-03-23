@@ -22,7 +22,7 @@ public class EmptyDataSet implements DataSet
 
 	
 	@Override
-	public boolean hasGenuineData(){
+	public boolean hasGenuineScanData(){
 		return false;
 	}
 

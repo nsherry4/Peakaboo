@@ -107,7 +107,7 @@ public class DataController extends Eventful
 
 	public boolean hasDataSet()
 	{
-		return dataModel.hasGenuineData();
+		return dataModel.hasGenuineScanData();
 	}
 
 
