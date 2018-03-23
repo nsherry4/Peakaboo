@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import peakaboo.datasource.model.AbstractDataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
@@ -20,6 +19,7 @@ import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.model.components.scandata.ScanData;
 import peakaboo.datasource.model.components.scandata.SimpleScanData;
+import peakaboo.datasource.plugin.AbstractDataSource;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.util.StringInput;
