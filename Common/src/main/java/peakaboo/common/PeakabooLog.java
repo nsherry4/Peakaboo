@@ -16,20 +16,17 @@ public class PeakabooLog {
 		try {
 			File appDir = Configuration.appDir("Logging");
 			appDir.mkdirs();
-			
-			//filename must not have characters in it which will make windows cry...
-			Date ts = new Date();
-			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-			String filename = appDir.getPath() + "/Peakaboo Log for " + formatter.format(ts) + ".log";
+
+			String filename = appDir.getPath() + "/Peakaboo.%g.log";
 			
 			
 			//Workaround for JDK-8189953
-			File file = new File(filename);
-			file.createNewFile();
+			new File(appDir.getPath() + "/Peakaboo.0.log").createNewFile();
+			new File(appDir.getPath() + "/Peakaboo.1.log").createNewFile();
 			////////////////////////////
 			
 			
-			FileHandler handler = new FileHandler(filename);
+			FileHandler handler = new FileHandler(filename, 128*1024*1024, 2, true);
 			handler.setFormatter(new SimpleFormatter());
 			Logger.getLogger("").addHandler(handler);
 		} catch (SecurityException | IOException e) {
