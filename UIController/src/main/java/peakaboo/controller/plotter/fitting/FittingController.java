@@ -2,6 +2,7 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eventful.EventfulType;
@@ -17,6 +18,7 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.PeakTable;
 import scitypes.ReadOnlySpectrum;
+import swidget.widgets.listcontrols.ListControls;
 
 
 public class FittingController extends EventfulType<Boolean>
@@ -24,6 +26,10 @@ public class FittingController extends EventfulType<Boolean>
 
 	FittingModel fittingModel;
 	PlotController plot;
+	
+	//This is not part of the fitting model because it is a subset of the 
+	//already fitted TSs, and doesn't actually get fit
+	List<TransitionSeries> highlighted = new ArrayList<>();
 	
 	public FittingController(PlotController plotController)
 	{
@@ -285,6 +291,15 @@ public class FittingController extends EventfulType<Boolean>
 	public FittingResultSet getFittingSelectionResults()
 	{
 		return fittingModel.selectionResults;
+	}
+
+	public List<TransitionSeries> getHighlightedTransitionSeries() {
+		return highlighted;
+	}
+	
+	public void setHighlightedTransitionSeries(List<TransitionSeries> highlighted) {
+		this.highlighted = highlighted;
+		updateListeners(false);
 	}
 	
 	

@@ -2,6 +2,7 @@ package peakaboo.curvefit.view;
 
 
 import java.awt.Color;
+import java.util.List;
 
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
@@ -21,7 +22,7 @@ import scidraw.drawing.plot.painters.PlotPainter;
 public class FittingPainter extends PlotPainter
 {
 
-	private FittingResultSet	data;
+	private List<FittingResult>	data;
 	private Color				stroke;
 	private Color				fill;
 
@@ -35,7 +36,7 @@ public class FittingPainter extends PlotPainter
 	 */
 	public FittingPainter(FittingResultSet data, Color stroke)
 	{
-		init(data, stroke, new Color(0.0f, 0.0f, 0.0f, 0.0f));
+		this(data, stroke, new Color(0.0f, 0.0f, 0.0f, 0.0f));
 	}
 
 
@@ -49,23 +50,31 @@ public class FittingPainter extends PlotPainter
 	 */
 	public FittingPainter(FittingResultSet data, Color stroke, Color fill)
 	{
-		init(data, stroke, fill);
+		this(data.fits, stroke, fill);
 	}
-
-
-	private void init(FittingResultSet data, Color stroke, Color fill)
-	{
+	
+	
+	/**
+	 * 
+	 * Create a new FittingPainter
+	 * 
+	 * @param data the data to draw on the plot
+	 * @param stroke the {@link Color} to stroke the data with
+	 * @param fill the {@link Color} to fill the data with
+	 */
+	public FittingPainter(List<FittingResult> data, Color stroke, Color fill) {
 		this.data = data;
 		this.stroke = stroke;
 		this.fill = fill;
 	}
 
 
+
 	@Override
 	public void drawElement(PainterData p)
 	{
 		
-		for (FittingResult fitResult : data.fits) {
+		for (FittingResult fitResult : data) {
 
 			traceData(p, fitResult.fit);
 

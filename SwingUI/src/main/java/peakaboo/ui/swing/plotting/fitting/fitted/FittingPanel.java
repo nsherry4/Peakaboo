@@ -9,15 +9,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
@@ -136,33 +142,20 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		};
 
-
-		
-//		ListControlButton fitwizard = new ListControlButton(StockIcon.EDIT_SORT_DES, "Optimal Fitting", "Attempt to find the optimal fitting") {
-//			
-//			@Override
-//			public void setEnableState(ElementCount ec)
-//			{
-//				this.setEnabled(ec == ElementCount.MANY);
-//			}
-//		};
-//		
-//		controls.addButton(fitwizard, 4);
-//		fitwizard.addActionListener(new ActionListener() {
-//			
-//			public void actionPerformed(ActionEvent e)
-//			{
-//				
-//				controller.optimizeTransitionSeriesOrdering();
-//			}
-//		});
-		
-		
+	
 		
 		this.add(controls, BorderLayout.NORTH);
 
 	}
 
+	private List<TransitionSeries> getSelected() {
+		if (! fitTable.hasFocus()) { return Collections.EMPTY_LIST; }
+		List<TransitionSeries> selected = new ArrayList<>();
+		for (int i : fitTable.getSelectedRows()) {
+			selected.add(controller.getFittedTransitionSeries().get(i));
+		}
+		return selected;
+	}
 
 	public void changed()
 	{
@@ -347,6 +340,25 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		//fitTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fitTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		fitTable.getSelectionModel().addListSelectionListener(e -> {
+			if (e.getValueIsAdjusting()) { return; }
+			controller.setHighlightedTransitionSeries(getSelected());
+		});
+		fitTable.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (e.isTemporary()) { return; }
+				controller.setHighlightedTransitionSeries(getSelected());
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (e.isTemporary()) { return; }
+				controller.setHighlightedTransitionSeries(getSelected());
+			}
+		});
 		
 		JScrollPane scroll = new JScrollPane(fitTable);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

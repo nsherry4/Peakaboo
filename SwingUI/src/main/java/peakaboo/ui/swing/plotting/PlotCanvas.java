@@ -13,12 +13,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import javax.swing.Scrollable;
 
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.model.FittingResult;
+import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.view.FittingMarkersPainter;
 import peakaboo.curvefit.view.FittingPainter;
 import peakaboo.curvefit.view.FittingSumPainter;
@@ -67,7 +70,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	{
 
 		super();
-
+		this.setFocusable(true);
 
 		this.controller = controller;
 		dr = new DrawingRequest();
@@ -124,6 +127,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			{
 				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
 					grabChannelFromClickCallback.accept(channelFromCoordinate(e.getX()));
+				}
+				//Make the plot canvas focusable
+				if (!PlotCanvas.this.hasFocus()) {
+					PlotCanvas.this.requestFocus();
 				}
 			}
 		});
@@ -279,6 +286,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			////////////////////////////////////////////////////////////////////
 			Color fitting, fittingStroke, fittingSum;
 			Color proposed, proposedStroke, proposedSum;
+			Color selected, selectedStroke;
 	
 			fitting = new Color(0.0f, 0.0f, 0.0f, 0.3f);
 			fittingStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
@@ -287,15 +295,27 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			// Colour/Monochrome colours for curve fittings
 			if (controller.settings().getMonochrome())
 			{
-				proposed = new Color(1.0f, 1.0f, 1.0f, 0.3f);
-				proposedStroke = new Color(1.0f, 1.0f, 1.0f, 0.5f);
-				proposedSum = new Color(1.0f, 1.0f, 1.0f, 0.8f);
+				proposed = new Color(0x50ffffff, true);
+				proposedStroke = new Color(0x80ffffff, true);
+				proposedSum = new Color(0xD0ffffff, true);
 			}
 			else
 			{
-				proposed = new Color(0.64f, 0.0f, 0.0f, 0.3f);
-				proposedStroke = new Color(0.64f, 0.0f, 0.0f, 0.5f);
-				proposedSum = new Color(0.64f, 0.0f, 0.0f, 0.8f);
+				proposed = new Color(0x80D32F2F, true);
+				proposedStroke = new Color(0x80B71C1C, true);
+				proposedSum = new Color(0xD0B71C1C, true);
+			}
+			
+			// Colour/Monochrome colours for highlighted/selected fittings
+			if (controller.settings().getMonochrome())
+			{
+				selected = new Color(0x50ffffff, true);
+				selectedStroke = new Color(0x80ffffff, true);
+			}
+			else
+			{
+				selected = new Color(0x800288D1, true);
+				selectedStroke = new Color(0xff01579B, true);
 			}
 	
 	
@@ -362,16 +382,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			//draw curve fitting for proposed fittings
 			if (controller.fitting().getProposedTransitionSeries().size() > 0)
 			{
-				if (controller.settings().getShowIndividualSelections())
-				{
+				if (controller.settings().getShowIndividualSelections()) {
 					plotPainters.add(new FittingPainter(controller.fitting().getFittingProposalResults(), proposedStroke, proposed));
+				} else {
+					plotPainters.add(new FittingSumPainter(controller.fitting().getFittingProposalResults().totalFit, proposedStroke, proposed));
 				}
-				else
-				{
-					plotPainters
-						.add(new FittingSumPainter(controller.fitting().getFittingProposalResults().totalFit, proposedStroke, proposed));
-				}
-	
+
 				plotPainters.add(
 	
 					new FittingSumPainter(SpectrumCalculations.addLists(
@@ -382,6 +398,18 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			}
 			
 	
+			//highlighted fittings
+			List<TransitionSeries> selectedFits = controller.fitting().getHighlightedTransitionSeries();
+			System.out.println(!selectedFits.isEmpty());
+			if (!selectedFits.isEmpty()) {
+				List<FittingResult> selectedFitResults = controller.fitting().getFittingSelectionResults().fits
+						.stream()
+						.filter(r -> selectedFits.contains(r.transitionSeries))
+						.collect(Collectors.toList());
+				plotPainters.add(new FittingPainter(selectedFitResults, selectedStroke, selected));
+			}
+			
+			
 			plotPainters.add(new FittingTitlePainter(
 					controller.fitting().getFittingSelectionResults(),
 					controller.settings().getShowElementTitles(),
