@@ -400,7 +400,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 			//highlighted fittings
 			List<TransitionSeries> selectedFits = controller.fitting().getHighlightedTransitionSeries();
-			System.out.println(!selectedFits.isEmpty());
 			if (!selectedFits.isEmpty()) {
 				List<FittingResult> selectedFitResults = controller.fitting().getFittingSelectionResults().fits
 						.stream()

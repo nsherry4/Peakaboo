@@ -6,6 +6,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import javax.swing.JMenuItem;
@@ -148,7 +151,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 	}
 
-	private List<TransitionSeries> getSelected() {
+	private List<TransitionSeries> getSelected() {		
 		if (! fitTable.hasFocus()) { return Collections.EMPTY_LIST; }
 		List<TransitionSeries> selected = new ArrayList<>();
 		for (int i : fitTable.getSelectedRows()) {
@@ -338,9 +341,9 @@ public class FittingPanel extends ClearPanel implements Changeable
 		column.setPreferredWidth(40);
 		column.setMaxWidth(100);
 
-		//fitTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fitTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
+		//On selection change or focus change, update the controller's list of highlighted fits
 		fitTable.getSelectionModel().addListSelectionListener(e -> {
 			if (e.getValueIsAdjusting()) { return; }
 			controller.setHighlightedTransitionSeries(getSelected());
