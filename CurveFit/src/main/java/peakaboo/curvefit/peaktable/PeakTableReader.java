@@ -7,8 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
+
+import com.github.tschoonj.xraylib.Xraylib;
+import com.github.tschoonj.xraylib.XraylibException;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.model.transition.Transition;
@@ -28,12 +33,61 @@ import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 
 public class PeakTableReader
 {
+	
+	public static void readPeakTable() {
+		readPeakTableXraylib();
+		//readPeakTableManual();
+	}
+	
+	public static void readPeakTableXraylib() {
+		
+		for (Element e : Element.values()) {
+			readElementShell(-1 ,   -29, e, TransitionSeriesType.K);
+			readElementShell(-30,  -110, e, TransitionSeriesType.L);
+			readElementShell(-114, -400, e, TransitionSeriesType.M);			
+		}
+
+	}
+	
+	private static void readElementShell(int firstLine, int lastLine, Element elem, TransitionSeriesType tstype) {
+		TransitionSeries ts = new TransitionSeries(elem, tstype);
+		
+		float maxRel = 0f;
+		for (int i = firstLine; i >= lastLine; i--) {
+			try {
+				maxRel = (float) Math.max(maxRel, Xraylib.RadRate(elem.atomicNumber(), i));	
+			} catch (XraylibException e) {
+				//this is normal, not all lines are available
+			}
+			
+		}
+		for (int i = firstLine; i >= lastLine; i--) {
+			try {
+				float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), i);
+				float rel = (float) Xraylib.RadRate(elem.atomicNumber(), i);
+				
+				//don't bother with this if the line is <0.1% the intensity of the largest line
+				if (rel < maxRel*0.001) { 
+					System.out.println("skipping: " + elem + ", " + rel);
+					continue; 
+				}
+				Transition t = new Transition(value, rel, TransitionType.other);
+				ts.setTransition(t);
+			} catch (XraylibException ex) {
+				//this is normal, not all lines are available
+			}
+		}
+		if (ts.hasTransitions()) {
+			PeakTable.addSeries(ts);
+		}
+	}
+	
 
 	/**
 	 * Read a peak table from a predetermined relative location 
 	 * @return a populated PeakTable object
 	 */
-	public static void readPeakTable()
+	public static void readPeakTableManual()
 	{
 
 		
