@@ -111,6 +111,10 @@ public class MapFittingSettings extends EventfulType<String> {
 	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
 	{
 		if (valueAtCoord == null) return "";
+		MapViewSettings view = map.getSettings().getView();
+		if (mapCoord.x < 0 || mapCoord.y < 0 || mapCoord.x >= view.getDataWidth() || mapCoord.y >= view.getDataHeight()) {
+			return "";
+		}
 		return valueAtCoord.apply(mapCoord);
 	}
 	
