@@ -1,6 +1,8 @@
 package peakaboo.ui.swing;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.lang.reflect.Field;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -133,8 +135,22 @@ public class Peakaboo
 		});
 	}
 	
-	public static void run() {
+	private static void setAppTitle(String title) {
+		try
+		{
+		    Toolkit toolkit = Toolkit.getDefaultToolkit();
+		    Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
+		    awtAppClassNameField.setAccessible(true);
+		    awtAppClassNameField.set(toolkit, title);
+		}
+		catch (NoSuchFieldException | IllegalAccessException e)
+		{
+		    e.printStackTrace();
+		}
 		
+	}
+	
+	public static void run() {
 		
 		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
 		//NEED TO SET THESE RIGHT AT THE START BEFORE ANY AWT/SWING STUFF HAPPENS.
@@ -143,9 +159,11 @@ public class Peakaboo
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
 		
+		
 		LOGGER.log(Level.INFO, "Starting " + Version.title);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
+		setAppTitle("Peakaboo 5");
 		Swidget.initialize(Version.splash, Version.icon, () -> {
 			try {
 				UIManager.setLookAndFeel(laf);
