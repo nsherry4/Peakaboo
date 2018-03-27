@@ -11,7 +11,6 @@ package peakaboo.curvefit.model.fittingfunctions;
 
 public class GaussianFittingFunction implements FittingFunction {
 
-	public float sigma;
 	public float mean;
 	public float height;
 	
@@ -22,8 +21,8 @@ public class GaussianFittingFunction implements FittingFunction {
 	
 	public GaussianFittingFunction(float mean, float sigma, float height)
 	{
+		
 		this.mean = mean;
-		this.sigma = sigma;
 		this.height = height;
 		
 		base = (

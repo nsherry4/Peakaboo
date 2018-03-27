@@ -323,8 +323,8 @@ public class TransitionSeriesFitting implements Serializable
 
 			
 			FittingFunction g = new GaussianFittingFunction(
-					calibration.channelFromEnergy(t.energyValue), 
-					calibration.channelFromEnergyRelative(getSigmaForTransition(SIGMA, t)), 
+					t.energyValue, 
+					getSigmaForTransition(SIGMA, t), 
 					t.relativeIntensity
 				);
 
@@ -335,8 +335,8 @@ public class TransitionSeriesFitting implements Serializable
 				for (Transition esc : escape.offset()) {
 									
 					g = new GaussianFittingFunction(
-							calibration.channelFromEnergy(t.energyValue - esc.energyValue), 
-							calibration.channelFromEnergyRelative(getSigmaForTransition(SIGMA, t)), 
+							t.energyValue - esc.energyValue, 
+							getSigmaForTransition(SIGMA, t), 
 							t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity
 						);
 					
@@ -356,7 +356,7 @@ public class TransitionSeriesFitting implements Serializable
 			for (FittingFunction f : functions)
 			{
 
-				value += f.getHeightAtPoint(i);
+				value += f.getHeightAtPoint(calibration.energyFromChannel(i));
 
 			}
 			fit.set(i, value);
