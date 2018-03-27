@@ -8,7 +8,7 @@ package peakaboo.curvefit.model.fittingfunctions;
  *
  */
 
-public class LorentzFittingFunction implements FittingFunction{
+class LorentzFittingFunction implements FittingFunction{
 
 	private float mean;
 	private float gamma;
@@ -17,7 +17,7 @@ public class LorentzFittingFunction implements FittingFunction{
 	public LorentzFittingFunction(float mean, float gamma, float height){
 		
 		this.mean = mean;
-		this.gamma = gamma;
+		this.gamma = gamma / 2f;
 		this.height = height;
 		
 	}

@@ -9,7 +9,7 @@ import java.util.List;
 import peakaboo.curvefit.model.EnergyCalibration;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
-import peakaboo.curvefit.model.fittingfunctions.GaussianFittingFunction;
+import peakaboo.curvefit.model.fittingfunctions.FittingFunctionFactory;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.peaktable.Element;
 import scitypes.ISpectrum;
@@ -322,7 +322,7 @@ public class TransitionSeriesFitting implements Serializable
 		{
 
 			
-			FittingFunction g = new GaussianFittingFunction(
+			FittingFunction g = FittingFunctionFactory.get(
 					t.energyValue, 
 					getSigmaForTransition(SIGMA, t), 
 					t.relativeIntensity
@@ -334,7 +334,7 @@ public class TransitionSeriesFitting implements Serializable
 			{
 				for (Transition esc : escape.offset()) {
 									
-					g = new GaussianFittingFunction(
+					g = FittingFunctionFactory.get(
 							t.energyValue - esc.energyValue, 
 							getSigmaForTransition(SIGMA, t), 
 							t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity

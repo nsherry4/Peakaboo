@@ -9,7 +9,7 @@ package peakaboo.curvefit.model.fittingfunctions;
  *
  */
 
-public class GaussianFittingFunction implements FittingFunction {
+class GaussianFittingFunction implements FittingFunction {
 
 	public float mean;
 	public float height;

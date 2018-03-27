@@ -4,7 +4,8 @@ import java.awt.Color;
 
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
-import peakaboo.curvefit.model.fittingfunctions.GaussianFittingFunction;
+import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
+import peakaboo.curvefit.model.fittingfunctions.FittingFunctionFactory;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
@@ -69,7 +70,7 @@ public class FittingMarkersPainter extends PlotPainter
 
 				if (channel > p.dr.dataWidth) continue;
 				
-				GaussianFittingFunction gauss = new GaussianFittingFunction(
+				FittingFunction gauss = FittingFunctionFactory.get(
 						t.energyValue,
 						TransitionSeriesFitting.getSigmaForTransition(TransitionSeriesFitting.SIGMA, t),
 						t.relativeIntensity
