@@ -17,16 +17,15 @@ public class PeakabooLog {
 			File appDir = Configuration.appDir("Logging");
 			appDir.mkdirs();
 
-			String filename = appDir.getPath() + "/Peakaboo.%g.log";
+			String filename = appDir.getPath() + "/Peakaboo.log";
 			
 			
 			//Workaround for JDK-8189953
-			new File(appDir.getPath() + "/Peakaboo.0.log").createNewFile();
-			new File(appDir.getPath() + "/Peakaboo.1.log").createNewFile();
+			new File(appDir.getPath() + "/Peakaboo.log").createNewFile();
 			////////////////////////////
 			
 			
-			FileHandler handler = new FileHandler(filename, 128*1024*1024, 2, true);
+			FileHandler handler = new FileHandler(filename, 128*1024*1024, 1, true);
 			handler.setFormatter(new SimpleFormatter());
 			Logger.getLogger("").addHandler(handler);
 		} catch (SecurityException | IOException e) {
