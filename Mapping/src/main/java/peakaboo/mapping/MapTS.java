@@ -55,7 +55,7 @@ public class MapTS
 			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(index), false);
 			
 			//TODO: this call is synchronized. Can we do better?
-			FittingResultSet frs = fittings.calculateFittings(data);
+			FittingResultSet frs = fittings.fit(data);
 
 			for (FittingResult result : frs.fits)
 			{

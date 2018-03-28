@@ -76,7 +76,7 @@ public class FittingPainter extends PlotPainter
 		
 		for (FittingResult fitResult : data) {
 
-			traceData(p, fitResult.fit);
+			traceData(p, fitResult.getFit());
 
 			p.context.setSource(fill);
 			p.context.fillPreserve();

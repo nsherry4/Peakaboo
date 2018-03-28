@@ -11,13 +11,13 @@ import java.util.Map;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 /**
- * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link TransitionSeriesFitting}s based on various provided parameters. 
+ * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link TransitionSeriesFitter}s based on various provided parameters. 
  * @author Nathaniel Sherry, 2009-2010
  *
  */
@@ -25,19 +25,16 @@ import scitypes.SpectrumCalculations;
 public class FittingSet implements Serializable
 {
 
-	private List<TransitionSeriesFitting>	fittings;
+	private List<TransitionSeriesFitter>	fitters;
 	private List<TransitionSeries>			fitTransitionSeries;
-
 	private	EnergyCalibration				calibration;
-
-
 	private EscapePeakType					escapeType;
 	
 	
 
 	public FittingSet()
 	{
-		fittings = new ArrayList<TransitionSeriesFitting>();
+		fitters = new ArrayList<TransitionSeriesFitter>();
 		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
 		this.calibration = new EnergyCalibration(0, 0, 0);
@@ -53,14 +50,14 @@ public class FittingSet implements Serializable
 		}
 		this.calibration.setMinEnergy(min);
 		this.calibration.setMaxEnergy(max);
-		regenerateFittings();
+		regenerateFitters();
 	}
 
 
 	public synchronized void setDataWidth(int dataWidth)
 	{
 		this.calibration.setDataWidth(dataWidth);
-		regenerateFittings();
+		regenerateFitters();
 	}
 
 
@@ -74,11 +71,11 @@ public class FittingSet implements Serializable
 	public void setEscapeType(EscapePeakType escapeType)
 	{
 		this.escapeType = escapeType;
-		regenerateFittings();
+		regenerateFitters();
 	}
 	
 	/**
-	 * Update several parameters which would require regenerating fittings all in one shot
+	 * Update several parameters which would require regenerating fitters all in one shot
 	 */
 	public synchronized void setDataParameters(int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escapeType)
 	{
@@ -87,14 +84,14 @@ public class FittingSet implements Serializable
 		}
 		this.calibration = new EnergyCalibration(minEnergy, maxEnergy, dataWidth);
 		this.escapeType = escapeType;
-		regenerateFittings();
+		regenerateFitters();
 	}
 
 
 	
-	private synchronized void regenerateFittings()
+	private synchronized void regenerateFitters()
 	{
-		fittings.clear();
+		fitters.clear();
 		for (TransitionSeries ts : fitTransitionSeries)
 		{
 			addTransitionSeriesToFittings(ts);
@@ -115,7 +112,7 @@ public class FittingSet implements Serializable
 
 	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-		fittings.add(new TransitionSeriesFitting(ts, calibration, escapeType));
+		fitters.add(new TransitionSeriesFitter(ts, calibration, escapeType));
 	}
 
 
@@ -123,8 +120,8 @@ public class FittingSet implements Serializable
 	{
 		fitTransitionSeries.remove(ts);
 
-		List<TransitionSeriesFitting> fittingsToRemove = new ArrayList<TransitionSeriesFitting>();
-		for (TransitionSeriesFitting f : fittings)
+		List<TransitionSeriesFitter> fittingsToRemove = new ArrayList<TransitionSeriesFitter>();
+		for (TransitionSeriesFitter f : fitters)
 		{
 
 			if (f.getTransitionSeries().equals(ts))
@@ -135,7 +132,7 @@ public class FittingSet implements Serializable
 
 		}
 
-		fittings.removeAll(fittingsToRemove);
+		fitters.removeAll(fittingsToRemove);
 		
 		ts.setVisible(true);
 		
@@ -152,7 +149,7 @@ public class FittingSet implements Serializable
 		}
 		
 		fitTransitionSeries.clear();
-		fittings.clear();
+		fitters.clear();
 	}
 
 
@@ -183,7 +180,7 @@ public class FittingSet implements Serializable
 			}
 		}
 		
-		regenerateFittings();
+		regenerateFitters();
 		
 		return movedTS;
 		
@@ -220,7 +217,7 @@ public class FittingSet implements Serializable
 				break;
 			}
 		}
-		regenerateFittings();
+		regenerateFitters();
 		
 		return movedTS;
 		
@@ -253,7 +250,7 @@ public class FittingSet implements Serializable
 			}
 		}
 
-		regenerateFittings();
+		regenerateFitters();
 	}
 
 
@@ -287,11 +284,11 @@ public class FittingSet implements Serializable
 
 
 	
-	public synchronized FittingResultSet calculateFittings(ReadOnlySpectrum data) {
-		return calculateFittingsUnsynchronized(data);
+	public synchronized FittingResultSet fit(ReadOnlySpectrum data) {
+		return fitUnsynchronized(data);
 	}
 	
-	public FittingResultSet calculateFittingsUnsynchronized(ReadOnlySpectrum data) {
+	public FittingResultSet fitUnsynchronized(ReadOnlySpectrum data) {
 
 
 		if (data.size() != calibration.getDataWidth()) setDataWidth(data.size());
@@ -299,24 +296,20 @@ public class FittingSet implements Serializable
 		
 		FittingResultSet results = new FittingResultSet(data.size());
 
-		Spectrum curve = null;
-		float scale, normalization;
 
-		// calculate the fittings
-		for (TransitionSeriesFitting f : fittings)
+		// calculate the fitters
+		for (TransitionSeriesFitter fitter : fitters)
 		{
 			
-			if (f.getTransitionSeries().visible)
+			if (fitter.getTransitionSeries().visible)
 			{
 
-				scale = f.getRatioForCurveUnderData(data);
-				curve = f.scaleFitToData(scale);
-				normalization = f.getNormalizationScale();
-				data = SpectrumCalculations.subtractLists(data, curve, 0.0f);
+				FittingResult result = fitter.fit(data);
+				data = SpectrumCalculations.subtractLists(data, result.getFit(), 0.0f);
 				
-				results.fits.add(new FittingResult(curve, f.getTransitionSeries(), scale, normalization));
-
-				SpectrumCalculations.addLists_inplace(results.totalFit, curve);
+				//should this be done through a method addFit?
+				results.fits.add(result);
+				SpectrumCalculations.addLists_inplace(results.totalFit, result.getFit());
 
 			}
 			
@@ -331,7 +324,7 @@ public class FittingSet implements Serializable
 	
 
 	// don't need to synchronize this, since the only interaction
-	// it has with fitting data is in the calculateFittings() function
+	// it has with fitting data is in the fit() function
 	// which IS synchronized
 	public float calculateAreaUnderFit(ReadOnlySpectrum data)
 	{
@@ -339,7 +332,7 @@ public class FittingSet implements Serializable
 		float result;
 		float sum;
 
-		FittingResultSet results = calculateFittings(data);
+		FittingResultSet results = fit(data);
 
 		sum = 0;
 		for (float d : results.totalFit)

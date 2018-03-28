@@ -24,7 +24,7 @@ import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
 import peakaboo.curvefit.peaktable.PeakTable;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.State;
@@ -111,7 +111,7 @@ public class TSOrdering
 		//scoring function to evaluate each TransitionSeries
 		return new Function<TransitionSeries, Float>() {
 
-			TransitionSeriesFitting tsf = new TransitionSeriesFitting(null, calibration, escape);
+			TransitionSeriesFitter fitter = new TransitionSeriesFitter(null, calibration, escape);
 			Spectrum s = new ISpectrum(spectrum);
 			
 			public Float apply(TransitionSeries ts)
@@ -127,14 +127,13 @@ public class TSOrdering
 					
 				}
 				
-				tsf.setTransitionSeries(ts);
-				Float ratio, remainingArea;
+				fitter.setTransitionSeries(ts);
+				Float remainingArea;
 				
 				//get the fitting ratio, and the fitting spectrum
-				ratio = tsf.getRatioForCurveUnderData(s);
-				Spectrum fitting = tsf.scaleFitToData(ratio);
+				FittingResult result = fitter.fit(s);
 				//remove this fitting from the spectrum
-				SpectrumCalculations.subtractLists_inplace(s, fitting, 0.0f);
+				SpectrumCalculations.subtractLists_inplace(s, result.getFit(), 0.0f);
 				
 				//square the values left in s
 				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
@@ -143,7 +142,7 @@ public class TSOrdering
 				
 				if (useBaseSize)
 				{
-					return (float)( remainingArea * tsf.getSizeOfBase() * prox );
+					return (float)( remainingArea * fitter.getSizeOfBase() * prox );
 				} else {
 					return (float)( remainingArea * prox );
 				}
@@ -166,17 +165,17 @@ public class TSOrdering
 	 */
 	public static List<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, EnergyCalibration calibration, final EscapePeakType escape)
 	{
-		final TransitionSeriesFitting tsf1 = new TransitionSeriesFitting(null, calibration, escape);
-		final TransitionSeriesFitting tsf2 = new TransitionSeriesFitting(null, calibration, escape);
+		final TransitionSeriesFitter fitter1 = new TransitionSeriesFitter(null, calibration, escape);
+		final TransitionSeriesFitter fitter2 = new TransitionSeriesFitter(null, calibration, escape);
 		
 		//we want the true flag so that we make sure that elements which overlap an escape peak are still considered overlapping
-		tsf1.setTransitionSeries(ts, true);
+		fitter1.setTransitionSeries(ts, true);
 		
 		//map all other TSs to booleans to check if this overlaps
 		return tss.stream().filter((TransitionSeries otherts) -> {
 			if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
-			tsf2.setTransitionSeries(otherts, true);						
-			return (tsf1.isOverlapping(tsf2));
+			fitter2.setTransitionSeries(otherts, true);						
+			return (fitter1.isOverlapping(fitter2));
 		}).collect(Collectors.toList());
 	}
 	
@@ -285,8 +284,8 @@ public class TSOrdering
 		if (currentTSisUsed) proposed.remove(currentTS);
 		
 		//recalculate
-		FittingResultSet fitResults = fits.calculateFittings(data);
-		FittingResultSet proposedResults = proposed.calculateFittings(fitResults.residual);
+		FittingResultSet fitResults = fits.fit(data);
+		FittingResultSet proposedResults = proposed.fit(fitResults.residual);
 		
 		
 		final ReadOnlySpectrum s = proposedResults.residual;

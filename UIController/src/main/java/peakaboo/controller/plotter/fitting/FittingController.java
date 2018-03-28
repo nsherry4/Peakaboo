@@ -256,12 +256,12 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void calculateProposalFittings()
 	{
-		fittingModel.proposalResults = fittingModel.proposals.calculateFittings(fittingModel.selectionResults.residual);
+		fittingModel.proposalResults = fittingModel.proposals.fit(fittingModel.selectionResults.residual);
 	}
 
 	public void calculateSelectionFittings(ReadOnlySpectrum data)
 	{
-		fittingModel.selectionResults = fittingModel.selections.calculateFittings(data);
+		fittingModel.selectionResults = fittingModel.selections.fit(data);
 	}
 
 	public boolean hasProposalFitting()

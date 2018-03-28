@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.curvefit.model.EnergyCalibration;
+import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
 import peakaboo.curvefit.model.fittingfunctions.FittingFunctionFactory;
 import peakaboo.curvefit.model.transition.Transition;
@@ -21,13 +22,13 @@ import scitypes.SpectrumCalculations;
 
 
 /**
- * A TransitionSeriesFitting represents the curve created by applying a {@link FittingFunction} 
+ * A TransitionSeriesFitter represents the curve created by applying a {@link FittingFunction} 
  * to a {@link TransitionSeries}. It can then be applied to signal to determine the scale of fit.
  * 
  * @author NAS
  */
 
-public class TransitionSeriesFitting implements Serializable
+public class TransitionSeriesFitter implements Serializable
 {
 
 	//The {@link TransitionSeries} that this fitting is based on
@@ -62,7 +63,7 @@ public class TransitionSeriesFitting implements Serializable
 	
 
 	/**
-	 * Create a new TransitionSeriesFitting.
+	 * Create a new TransitionSeriesFitter.
 	 * 
 	 * @param ts
 	 *            the TransitionSeries to fit
@@ -71,13 +72,13 @@ public class TransitionSeriesFitting implements Serializable
 	 * @param energyPerChannel
 	 *            the energy per data point in the source data
 	 */
-	public TransitionSeriesFitting(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape, float standardDeviations)
+	public TransitionSeriesFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape, float standardDeviations)
 	{
 		this(ts, calibration, escape);
 		this.rangeMultiplier = standardDeviations;
 		
 	}
-	public TransitionSeriesFitting(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape)
+	public TransitionSeriesFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape)
 	{
 
 		this.calibration = calibration;
@@ -115,12 +116,19 @@ public class TransitionSeriesFitting implements Serializable
 	 *            amount to scale the fitting by
 	 * @return a scaled fit
 	 */
-	public Spectrum scaleFitToData(float scale)
+	private Spectrum scaleFitToData(float scale)
 	{
 		return SpectrumCalculations.multiplyBy(normalizedCurve, scale);
 	}
 	
 
+	public FittingResult fit(ReadOnlySpectrum data) {
+		float scale = getRatioForCurveUnderData(data);
+		ReadOnlySpectrum scaledData = scaleFitToData(scale);
+		FittingResult result = new FittingResult(scaledData, this, scale);
+		return result;
+	}
+	
 
 	/**
 	 * Calculates the amount that this fitting should be scaled by to best fit the given data set
@@ -129,7 +137,7 @@ public class TransitionSeriesFitting implements Serializable
 	 *            the data to scale the fit to match
 	 * @return a scale value
 	 */
-	public float getRatioForCurveUnderData(ReadOnlySpectrum data)
+	private float getRatioForCurveUnderData(ReadOnlySpectrum data)
 	{
 			
 		float topIntensity = Float.MIN_VALUE;
@@ -229,7 +237,7 @@ public class TransitionSeriesFitting implements Serializable
 	}
 	
 	
-	public boolean isOverlapping(TransitionSeriesFitting other)
+	public boolean isOverlapping(TransitionSeriesFitter other)
 	{
 		return intenseRanges.isTouching(other.intenseRanges);
 		

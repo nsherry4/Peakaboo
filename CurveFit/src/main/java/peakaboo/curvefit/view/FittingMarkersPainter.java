@@ -8,7 +8,7 @@ import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
 import peakaboo.curvefit.model.fittingfunctions.FittingFunctionFactory;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
@@ -64,7 +64,7 @@ public class FittingMarkersPainter extends PlotPainter
 				markerHeights.set(i, 0.0f);
 			}
 
-			for (Transition t : fit.transitionSeries) {
+			for (Transition t : fit.getFitter().getTransitionSeries()) {
 
 				channel = getChannelAtEnergy(p.dr, t.energyValue);
 
@@ -74,7 +74,7 @@ public class FittingMarkersPainter extends PlotPainter
 
 				
 				//get a height value from the fitting function, then apply the same transformation as the fitting did
-				markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.scaleFactor / fit.normalizationScale;
+				markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.getTotalScale();
 							
 				//markerHeights.set((int) channel, markerHeight);
 				
@@ -96,8 +96,8 @@ public class FittingMarkersPainter extends PlotPainter
 						positionX = getXForChannel(p, channel);
 						
 						
-						markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.scaleFactor / fit.normalizationScale;
-						markerHeight *= TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element);
+						markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.getTotalScale();
+						markerHeight *= TransitionSeriesFitter.escapeIntensity(fit.getTransitionSeries().element);
 						markerHeight *= esc.relativeIntensity;
 						markerHeight = transformValueForPlot(p.dr, markerHeight);
 						
@@ -108,11 +108,9 @@ public class FittingMarkersPainter extends PlotPainter
 					}
 				}
 
-				//markerHeights.set((int)channel, markerHeight * TransitionSeriesFitting.escapeIntensity(fit.transitionSeries.element));
 
 			}
 
-			//traceData(p.context, p.dr, p.plotSize, p.dataHeights, TraceType.LINE, markerHeights);
 			p.context.stroke();
 
 		}

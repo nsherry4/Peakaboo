@@ -13,7 +13,7 @@ import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitting;
+import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;
 import scitypes.Pair;
@@ -119,7 +119,7 @@ public class AutoEnergyCalibration {
 				
 				FittingResultSet results;
 				fits.get().setEnergy(calibration.getMinEnergy(), calibration.getMaxEnergy());
-				results = fits.get().calculateFittings(spectrum);
+				results = fits.get().fit(spectrum);
 				return scoreFitGood(results, spectrum);
 				
 			}).collect(Collectors.toList());
@@ -214,7 +214,7 @@ public class AutoEnergyCalibration {
 				if (max <= min) continue;
 				
 				fits.setEnergy(min, max);
-				FittingResultSet results = fits.calculateFittingsUnsynchronized(spectrum);
+				FittingResultSet results = fits.fitUnsynchronized(spectrum);
 				
 				float score = scoreFitGood(results, spectrum);
 				

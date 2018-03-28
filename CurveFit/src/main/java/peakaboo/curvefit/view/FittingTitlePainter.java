@@ -84,10 +84,10 @@ public class FittingTitlePainter extends PlotPainter
 			
 			for (FittingResult fit : fittings.fits){
 		
-			titleName = fit.transitionSeries.getDescription();
+			titleName = fit.getTransitionSeries().getDescription();
 
 			
-			titleHeight = SigDigits.roundFloatTo(fit.scaleFactor, 1);
+			titleHeight = SigDigits.roundFloatTo(fit.getFitScale(), 1);
 
 			title = "";
 			if (drawElementNames) title += titleName;
@@ -98,7 +98,7 @@ public class FittingTitlePainter extends PlotPainter
 			
 
 				//TransitionType type = TransitionType.a1;
-				t = fit.transitionSeries.getStrongestTransition();
+				t = fit.getTransitionSeries().getStrongestTransition();
 				
 				if (t != null) {
 					
