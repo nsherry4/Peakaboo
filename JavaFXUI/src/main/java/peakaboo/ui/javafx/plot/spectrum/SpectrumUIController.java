@@ -157,7 +157,7 @@ public class SpectrumUIController extends IActofUIController {
 			seriesIndividualFittings.clear();
 			for (FittingResult result : fitted.fits) {
 				Series<Number, Number> series;
-				series = Spectrums.asSeries(result.fit);
+				series = Spectrums.asSeries(result.getFit());
 				series.setName("Fittings");
 				spectrum.getData().add(series);
 				seriesIndividualFittings.add(series);
@@ -206,7 +206,7 @@ public class SpectrumUIController extends IActofUIController {
 		if (plotController.settings().getShowIndividualSelections()) {
 			int count = 0;
 			for (FittingResult result : fitted.fits) {
-				updateSeriesFromSpectrum(seriesIndividualFittings.get(count++), result.fit);
+				updateSeriesFromSpectrum(seriesIndividualFittings.get(count++), result.getFit());
 			}
 		} else {
 			updateSeriesFromSpectrum(seriesFittings, fitted.totalFit);

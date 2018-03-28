@@ -114,8 +114,8 @@ public class FittingController extends EventfulType<Boolean>
 
 		for (FittingResult result : fittingModel.selectionResults.fits)
 		{
-			if (result.transitionSeries == ts) {
-				float max = result.fit.max();
+			if (result.getTransitionSeries() == ts) {
+				float max = result.getFit().max();
 				if (Float.isNaN(max)) max = 0f;
 				return max;
 			}

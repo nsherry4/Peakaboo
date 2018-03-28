@@ -60,8 +60,8 @@ public class MapTS
 			for (FittingResult result : frs.fits)
 			{
 				maps.putIntensityInMapAtPoint(
-					type == FittingTransform.AREA ? result.fit.sum() : result.fit.max(),
-					result.transitionSeries,
+					type == FittingTransform.AREA ? result.getFit().sum() : result.getFit().max(),
+					result.getTransitionSeries(),
 					index);
 			}
 

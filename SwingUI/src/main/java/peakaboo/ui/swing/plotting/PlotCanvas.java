@@ -403,7 +403,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			if (!selectedFits.isEmpty()) {
 				List<FittingResult> selectedFitResults = controller.fitting().getFittingSelectionResults().fits
 						.stream()
-						.filter(r -> selectedFits.contains(r.transitionSeries))
+						.filter(r -> selectedFits.contains(r.getTransitionSeries()))
 						.collect(Collectors.toList());
 				plotPainters.add(new FittingPainter(selectedFitResults, selectedStroke, selected));
 			}
