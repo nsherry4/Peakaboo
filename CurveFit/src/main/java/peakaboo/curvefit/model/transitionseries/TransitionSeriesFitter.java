@@ -52,7 +52,7 @@ public class TransitionSeriesFitter implements Serializable
 	
 	
 	//How broad an area around each transition to consider important
-	public static final float		DEFAULT_RANGE_MULT = 1f;
+	public static final float		DEFAULT_RANGE_MULT = 0.5f; //HWHM is default significant area
 	private float					rangeMultiplier;
 	
 	//Areas where the curve is strong enough that we need to consider it.

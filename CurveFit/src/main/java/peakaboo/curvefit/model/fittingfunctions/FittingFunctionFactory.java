@@ -26,7 +26,7 @@ public class FittingFunctionFactory {
 	
 	//Fast approximation of a voigt function by summing 70% gaussian, 30% lorentzian
 	public static FittingFunction pseudovoigt(float mean, float width, float height) {
-		return new MixedFittingFunction(gauss(mean, width, height), lorentz(mean, width, height), 0.8f);
+		return new MixedFittingFunction(gauss(mean, width, height), lorentz(mean, width, height), 0.7f);
 	}
 	
 }
