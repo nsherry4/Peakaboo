@@ -9,32 +9,27 @@ package peakaboo.curvefit.model.fittingfunctions;
  *
  */
 
-class GaussianFittingFunction implements FittingFunction {
+class GaussianFittingFunction extends SimpleFittingFunction {
 
-	public float mean;
-	public float height;
-	
 	private double base;
 	private double TwoSigmaSquared;
 	
 	
 	
-	public GaussianFittingFunction(float mean, float sigma, float height)
+	public GaussianFittingFunction(float mean, float fwhm, float height)
 	{
-		
-		this.mean = mean;
-		this.height = height;
+		super(mean, fwhm/2.35482f, height);
 		
 		base = (
 				
 				               1.0f
 				/*------------------------------*/ /
-				   sigma*(Math.sqrt(2*Math.PI))
+				   width*(Math.sqrt(2*Math.PI))
 				
 		);
 		
 		
-		TwoSigmaSquared = 2 * sigma * sigma;
+		TwoSigmaSquared = 2 * width * width;
 	}
 	
 	public float getHeightAtPoint(float point)

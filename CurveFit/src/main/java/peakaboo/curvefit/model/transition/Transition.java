@@ -69,6 +69,19 @@ public class Transition implements Serializable, Comparable<Transition>{
 	}
 	
 	
+	/**
+	 * The FWHM value for a {@link Transition} changes based on the energy level. This method 
+	 * calculates the FWHM value which should be used for this Transition.
+	 */
+	public float getFWHM()
+	{
+		//this was originally scaled with a gaussian function, so we
+		//conver the to the gaussian FWHM
+		float sigma = (0.062f - 0.01f) + (energyValue / 500.0f);
+		float fwhm = sigma * 2.35482f;
+		return fwhm;
+	}
+	
 	@Override
 	public String toString()
 	{

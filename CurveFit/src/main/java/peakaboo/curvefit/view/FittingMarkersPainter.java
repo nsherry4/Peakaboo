@@ -70,14 +70,10 @@ public class FittingMarkersPainter extends PlotPainter
 
 				if (channel > p.dr.dataWidth) continue;
 				
-				FittingFunction gauss = FittingFunctionFactory.get(
-						t.energyValue,
-						TransitionSeriesFitting.getSigmaForTransition(TransitionSeriesFitting.SIGMA, t),
-						t.relativeIntensity
-					);
+				FittingFunction gauss = FittingFunctionFactory.get(t);
 
 				
-				
+				//get a height value from the fitting function, then apply the same transformation as the fitting did
 				markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.scaleFactor / fit.normalizationScale;
 							
 				//markerHeights.set((int) channel, markerHeight);

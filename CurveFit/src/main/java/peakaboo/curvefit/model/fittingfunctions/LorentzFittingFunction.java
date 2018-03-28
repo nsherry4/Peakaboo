@@ -8,29 +8,23 @@ package peakaboo.curvefit.model.fittingfunctions;
  *
  */
 
-class LorentzFittingFunction implements FittingFunction{
+class LorentzFittingFunction extends SimpleFittingFunction {
 
-	private float mean;
-	private float gamma;
-	private float height;
+
 	
-	public LorentzFittingFunction(float mean, float gamma, float height){
-		
-		this.mean = mean;
-		this.gamma = gamma;
-		this.height = height;
-		
+	public LorentzFittingFunction(float mean, float fwhm, float height) {
+		super(mean, fwhm/2f, height);
 	}
-	
+
 	public float getHeightAtPoint(float point) {
 		
 		double value = 0.0;
 		
 		value = 
 		(
-			                         gamma
+			                         width
 			/*----------------------------------------------------*/ / 
-			   (Math.pow((point - mean), 2) + Math.pow(gamma, 2))
+			   (Math.pow((point - mean), 2) + Math.pow(width, 2))
 			
 		) * (
 			      1

@@ -2,15 +2,14 @@ package peakaboo.curvefit.model.fittingfunctions;
 
 public class IdaFittingFunction extends SimpleFittingFunction {
 
-	public IdaFittingFunction(float mean, float gamma, float height) {
-		super(mean, gamma*1.05f, height);
+	public IdaFittingFunction(float mean, float fwhm, float height) {
+		super(mean, fwhm/1.762747174f, height);
 	}
 
 	@Override
 	public float getHeightAtPoint(float point) {
 		float x = point - mean;
-		//return height * (float)((gamma/2f)*Math.pow((1+Math.pow((x/gamma), 2)), -1.5f));
-		return height * (float)Math.pow(sech(x/gamma), 2);
+		return height * (float)Math.pow(sech(x/width), 2);
 	}
 
 	private float sech(float value) {

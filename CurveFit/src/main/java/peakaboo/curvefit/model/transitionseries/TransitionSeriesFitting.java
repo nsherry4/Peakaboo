@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.curvefit.model.EnergyCalibration;
-import peakaboo.curvefit.model.FittingSet;
 import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
 import peakaboo.curvefit.model.fittingfunctions.FittingFunctionFactory;
 import peakaboo.curvefit.model.transition.Transition;
@@ -22,40 +21,45 @@ import scitypes.SpectrumCalculations;
 
 
 /**
- * A TransitionSeriesFitting represents the fitting of the set of {@link Transition}s in a {@link TransitionSeries} to a
- * set of raw data using a {@link GaussianFittingFunction}
+ * A TransitionSeriesFitting represents the curve created by applying a {@link FittingFunction} 
+ * to a {@link TransitionSeries}. It can then be applied to signal to determine the scale of fit.
  * 
- * @author Nathaniel Sherry, 2009
+ * @author NAS
  */
 
 public class TransitionSeriesFitting implements Serializable
 {
 
-	// private List<Double> unscaledFit;
-	Spectrum					normalizedUnscaledFit;
-	//private List<Boolean>		constraintMask;
+	//The {@link TransitionSeries} that this fitting is based on
+	private TransitionSeries		transitionSeries;
 	
-	//When a fitting is generated, it must be scaled to a range of 0.0-1.0
+	private EscapePeakType			escape	= EscapePeakType.SILICON;
+
+	//Calibration for applying curve to data
+	private EnergyCalibration 		calibration;
+	
+	
+	
+	//When a fitting is generated, it must be scaled to a range of 0.0-1.0, as
+	//a FittingFunction won't do that automatically.
 	//This is the value it's original max intensity, which the fitting is
 	//then divided by
-	private float				normalizationScale;
+	private float					normalizationScale;
+	//This is the curve created by applying a FittingFunction to the TransitionSeries 
+	private Spectrum				normalizedCurve;	
+
 	
-
-	private RangeSet			transitionRanges;
 	
-	/**
-	 * The {@link TransitionSeries} that this fitting is based on.
-	 */
-	public TransitionSeries		transitionSeries;
-
-	private int					baseSize;
-	private EnergyCalibration 	calibration;
-
-	public static final float	SIGMA	= 0.062f;
-	private EscapePeakType		escape	= EscapePeakType.SILICON;
-
-	public static float			defaultStandardDeviations = 1f;
-	private float				standardDeviations;
+	//How broad an area around each transition to consider important
+	public static final float		DEFAULT_RANGE_MULT = 1f;
+	private float					rangeMultiplier;
+	
+	//Areas where the curve is strong enough that we need to consider it.
+	private RangeSet				intenseRanges;
+	
+	//how large a footprint this curve has, used in scoring fittings
+	private int						baseSize;
+	
 
 	/**
 	 * Create a new TransitionSeriesFitting.
@@ -70,7 +74,7 @@ public class TransitionSeriesFitting implements Serializable
 	public TransitionSeriesFitting(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape, float standardDeviations)
 	{
 		this(ts, calibration, escape);
-		this.standardDeviations = standardDeviations;
+		this.rangeMultiplier = standardDeviations;
 		
 	}
 	public TransitionSeriesFitting(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape)
@@ -78,10 +82,10 @@ public class TransitionSeriesFitting implements Serializable
 
 		this.calibration = calibration;
 		this.escape = escape;
-		standardDeviations = defaultStandardDeviations;
+		rangeMultiplier = DEFAULT_RANGE_MULT;
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
-		transitionRanges = new RangeSet();
+		intenseRanges = new RangeSet();
 		
 		if (ts != null) setTransitionSeries(ts, false);
 		
@@ -100,6 +104,9 @@ public class TransitionSeriesFitting implements Serializable
 		this.transitionSeries = ts;
 	}
 	
+	public TransitionSeries getTransitionSeries() {
+		return transitionSeries;
+	}
 	
 	/**
 	 * Returns a scaled fit based on the given scale value
@@ -110,7 +117,7 @@ public class TransitionSeriesFitting implements Serializable
 	 */
 	public Spectrum scaleFitToData(float scale)
 	{
-		return SpectrumCalculations.multiplyBy(normalizedUnscaledFit, scale);
+		return SpectrumCalculations.multiplyBy(normalizedCurve, scale);
 	}
 	
 
@@ -130,9 +137,8 @@ public class TransitionSeriesFitting implements Serializable
 		float currentIntensity;
 		float cutoff;
 		
-
 		//look at every point in the ranges covered by transitions, find the max intensity
-		for (Integer i : transitionRanges)
+		for (Integer i : intenseRanges)
 		{
 			if (i < 0 || i >= data.size()) continue;
 			currentIntensity = data.get(i);
@@ -161,14 +167,14 @@ public class TransitionSeriesFitting implements Serializable
 
 		
 		//look at every point in the ranges covered by transitions 
-		for (Integer i : transitionRanges)
+		for (Integer i : intenseRanges)
 		{
 			if (i < 0 || i >= data.size()) continue;
 			
-			if (normalizedUnscaledFit.get(i) >= cutoff)
+			if (normalizedCurve.get(i) >= cutoff)
 			{
 				
-				thisFactor = data.get(i) / normalizedUnscaledFit.get(i);
+				thisFactor = data.get(i) / normalizedCurve.get(i);
 				if (thisFactor < smallestFactor && !Float.isNaN(thisFactor)) 
 				{
 					smallestFactor = thisFactor;
@@ -202,25 +208,7 @@ public class TransitionSeriesFitting implements Serializable
 
 
 	/**
-	 * The sigma value for a {@link GaussianFittingFunction} changes based on the energy level of the {@link Transition}
-	 * in question. This method calculates the sigma value which should be used for a given Transition.
-	 * 
-	 * @param SIGMA
-	 *            a base sigma value
-	 * @param t
-	 *            the {@link Transition} to calculate a specific sigma value for
-	 * @return the sigma value to be used for the given {@link Transition}
-	 */
-	public static float getSigmaForTransition(float SIGMA, Transition t)
-	{
-		float sigma = (SIGMA - 0.01f) + (t.energyValue / 500.0f);
-		// double sigma = (SIGMA - 0.015) + (t.energyValue / 100.0);
-		return sigma;
-	}
-
-
-	/**
-	 * The scale by which the original collection of gaussian curves was scaled by to get it into the range of 0.0 - 1.0
+	 * The scale by which the original collection of curves was scaled by to get it into the range of 0.0 - 1.0
 	 * 
 	 * @return the normalization scale value
 	 */
@@ -243,7 +231,7 @@ public class TransitionSeriesFitting implements Serializable
 	
 	public boolean isOverlapping(TransitionSeriesFitting other)
 	{
-		return transitionRanges.isTouching(other.transitionRanges);
+		return intenseRanges.isTouching(other.intenseRanges);
 		
 	}
 	
@@ -255,7 +243,7 @@ public class TransitionSeriesFitting implements Serializable
 	{
 
 		
-		transitionRanges.clear();
+		intenseRanges.clear();
 
 		float range;
 		float mean;
@@ -268,8 +256,8 @@ public class TransitionSeriesFitting implements Serializable
 		{
 
 			//get the range of the peak
-			range = getSigmaForTransition(SIGMA, t);
-			range *= standardDeviations;
+			range = t.getFWHM();
+			range *= rangeMultiplier;
 			
 			//get the centre of the peak in channels
 			mean = t.energyValue;
@@ -282,7 +270,7 @@ public class TransitionSeriesFitting implements Serializable
 
 			baseSize += stop - start + 1;
 			
-			transitionRanges.addRange(new Range(start, stop));
+			intenseRanges.addRange(new Range(start, stop));
 			
 			
 			
@@ -299,7 +287,7 @@ public class TransitionSeriesFitting implements Serializable
 	
 					baseSize += stop - start + 1;
 					
-					transitionRanges.addRange(new Range(start, stop));
+					intenseRanges.addRange(new Range(start, stop));
 					
 				}
 			}
@@ -322,11 +310,7 @@ public class TransitionSeriesFitting implements Serializable
 		{
 
 			
-			FittingFunction g = FittingFunctionFactory.get(
-					t.energyValue, 
-					getSigmaForTransition(SIGMA, t), 
-					t.relativeIntensity
-				);
+			FittingFunction g = FittingFunctionFactory.get(t);
 
 			functions.add(g);
 
@@ -336,7 +320,7 @@ public class TransitionSeriesFitting implements Serializable
 									
 					g = FittingFunctionFactory.get(
 							t.energyValue - esc.energyValue, 
-							getSigmaForTransition(SIGMA, t), 
+							t.getFWHM(), 
 							t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity
 						);
 					
@@ -369,11 +353,11 @@ public class TransitionSeriesFitting implements Serializable
 			normalizationScale = fit.max();
 			if (normalizationScale == 0.0)
 			{
-				normalizedUnscaledFit = SpectrumCalculations.multiplyBy(fit, 0.0f);
+				normalizedCurve = SpectrumCalculations.multiplyBy(fit, 0.0f);
 			}
 			else
 			{
-				normalizedUnscaledFit = SpectrumCalculations.divideBy(fit, normalizationScale);
+				normalizedCurve = SpectrumCalculations.divideBy(fit, normalizationScale);
 			}
 
 		}
@@ -385,5 +369,8 @@ public class TransitionSeriesFitting implements Serializable
 	{
 		return "[" + transitionSeries + "] x " + normalizationScale;
 	}
+
+	
+	
 
 }

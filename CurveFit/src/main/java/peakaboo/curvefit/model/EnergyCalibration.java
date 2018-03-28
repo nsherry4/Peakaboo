@@ -1,5 +1,11 @@
 package peakaboo.curvefit.model;
 
+/**
+ * Represents the energy calibration and data size for data. This is 
+ * useful for converting between energy values and channel values. 
+ * @author NAS
+ *
+ */
 public class EnergyCalibration {
 
 	private float minEnergy, maxEnergy;

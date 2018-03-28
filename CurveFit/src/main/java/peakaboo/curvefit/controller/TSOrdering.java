@@ -78,21 +78,6 @@ public class TSOrdering
 	 * @param escape the kind of {@link EscapePeakType} the fitting should use
 	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
 	 * @param spectrum the data to use to score this {@link TransitionSeries}
-	 * @return a score for this {@link TransitionSeries}
-	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
-			EscapePeakType escape, 
-			EnergyCalibration calibration,
-			final ReadOnlySpectrum spectrum)
-	{
-		return fScoreTransitionSeries(escape, calibration, spectrum, null, true);
-	}
-	
-	/**
-	 * Creates an anonymous function to score a {@link TransitionSeries}
-	 * @param escape the kind of {@link EscapePeakType} the fitting should use
-	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
-	 * @param spectrum the data to use to score this {@link TransitionSeries}
 	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */

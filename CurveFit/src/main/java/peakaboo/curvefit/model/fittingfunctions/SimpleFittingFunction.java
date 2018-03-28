@@ -3,13 +3,13 @@ package peakaboo.curvefit.model.fittingfunctions;
 public abstract class SimpleFittingFunction implements FittingFunction {
 
 	protected float mean;
-	protected float gamma;
+	protected float width;
 	protected float height;
 	
-	public SimpleFittingFunction(float mean, float gamma, float height){
+	public SimpleFittingFunction(float mean, float width, float height){
 		
 		this.mean = mean;
-		this.gamma = gamma;
+		this.width = width;
 		this.height = height;
 		
 	}

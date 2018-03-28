@@ -127,7 +127,7 @@ public class FittingSet implements Serializable
 		for (TransitionSeriesFitting f : fittings)
 		{
 
-			if (f.transitionSeries.equals(ts))
+			if (f.getTransitionSeries().equals(ts))
 			{
 				fittingsToRemove.add(f);
 				break;
@@ -306,7 +306,7 @@ public class FittingSet implements Serializable
 		for (TransitionSeriesFitting f : fittings)
 		{
 			
-			if (f.transitionSeries.visible)
+			if (f.getTransitionSeries().visible)
 			{
 
 				scale = f.getRatioForCurveUnderData(data);
@@ -314,7 +314,7 @@ public class FittingSet implements Serializable
 				normalization = f.getNormalizationScale();
 				data = SpectrumCalculations.subtractLists(data, curve, 0.0f);
 				
-				results.fits.add(new FittingResult(curve, f.transitionSeries, scale, normalization));
+				results.fits.add(new FittingResult(curve, f.getTransitionSeries(), scale, normalization));
 
 				SpectrumCalculations.addLists_inplace(results.totalFit, curve);
 
