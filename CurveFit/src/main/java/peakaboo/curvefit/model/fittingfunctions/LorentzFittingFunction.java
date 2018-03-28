@@ -17,7 +17,7 @@ class LorentzFittingFunction implements FittingFunction{
 	public LorentzFittingFunction(float mean, float gamma, float height){
 		
 		this.mean = mean;
-		this.gamma = gamma / 2f;
+		this.gamma = gamma;
 		this.height = height;
 		
 	}
