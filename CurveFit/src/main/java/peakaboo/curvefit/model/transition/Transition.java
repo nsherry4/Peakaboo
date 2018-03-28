@@ -20,11 +20,6 @@ public class Transition implements Serializable, Comparable<Transition>{
 	public final float energyValue;
 	
 	/**
-	 * The {@link TransitionType} for this {@link Transition}
-	 */
-	public final TransitionType type;
-	
-	/**
 	 * The relative intensity of this peak compared to the a1 peak of the same {@link TransitionSeries}
 	 */
 	public final float relativeIntensity;
@@ -34,11 +29,10 @@ public class Transition implements Serializable, Comparable<Transition>{
 	 * @param value energy value of this Transition
 	 * @param relativeIntensity relative intensity of this Transition
 	 */
-	public Transition(float value, float relativeIntensity, TransitionType type){
+	public Transition(float value, float relativeIntensity){
 
 		this.energyValue = value;
 		this.relativeIntensity = relativeIntensity;
-		this.type = type;
 	}
 
 
@@ -65,7 +59,7 @@ public class Transition implements Serializable, Comparable<Transition>{
 	 */
 	public Transition summation(Transition other)
 	{
-		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity, TransitionType.pileup);
+		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity);
 	}
 	
 	
@@ -85,7 +79,7 @@ public class Transition implements Serializable, Comparable<Transition>{
 	@Override
 	public String toString()
 	{
-		return type + "(" + energyValue + "keV) @ " + relativeIntensity;
+		return "Transition: " + energyValue + "keV @ " + relativeIntensity;
 	}
 	
 }

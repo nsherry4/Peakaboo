@@ -1,23 +1,9 @@
 package peakaboo.curvefit.peaktable;
 
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.github.tschoonj.xraylib.Xraylib;
 import com.github.tschoonj.xraylib.XraylibException;
 
-import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.model.transition.Transition;
-import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 
@@ -35,11 +21,6 @@ public class PeakTableReader
 {
 	
 	public static void readPeakTable() {
-		readPeakTableXraylib();
-		//readPeakTableManual();
-	}
-	
-	public static void readPeakTableXraylib() {
 		
 		for (Element e : Element.values()) {
 			readElementShell(-1 ,   -29, e, TransitionSeriesType.K);
@@ -52,6 +33,7 @@ public class PeakTableReader
 	private static void readElementShell(int firstLine, int lastLine, Element elem, TransitionSeriesType tstype) {
 		TransitionSeries ts = new TransitionSeries(elem, tstype);
 		
+		//find the strongest transition line, so we can skip anything significantly weaker than it
 		float maxRel = 0f;
 		for (int i = firstLine; i >= lastLine; i--) {
 			try {
@@ -67,11 +49,9 @@ public class PeakTableReader
 				float rel = (float) Xraylib.RadRate(elem.atomicNumber(), i);
 				
 				//don't bother with this if the line is <0.1% the intensity of the largest line
-				if (rel < maxRel*0.001) { 
-					System.out.println("skipping: " + elem + ", " + rel);
-					continue; 
-				}
-				Transition t = new Transition(value, rel, TransitionType.other);
+				if (rel < maxRel*0.001) { continue; }
+				
+				Transition t = new Transition(value, rel);
 				ts.setTransition(t);
 			} catch (XraylibException ex) {
 				//this is normal, not all lines are available
@@ -80,216 +60,6 @@ public class PeakTableReader
 		if (ts.hasTransitions()) {
 			PeakTable.addSeries(ts);
 		}
-	}
-	
-
-	/**
-	 * Read a peak table from a predetermined relative location 
-	 * @return a populated PeakTable object
-	 */
-	public static void readPeakTableManual()
-	{
-
-		
-		int elementDataWidth = 2;
-
-		InputStream ins = PeakTableReader.class.getResourceAsStream("/peakaboo/curvefit/peaktable/PeakTable.tsv");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
-		
-
-		String line;
-		List<String> elements = new ArrayList<String>();
-
-		try {
-
-			while ((line = reader.readLine()) != null) {
-				elements.add(line);
-			}
-
-		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Error reading Peak Table", e);
-		}
-
-		//remove headers
-		elements.remove(0);
-		elements.remove(0);
-
-
-		String[] lineSplit;
-		List<String> sections;
-
-
-
-
-		int atomicNumber = 0;
-
-		for (String element : elements) {
-
-			if (element == null) continue;
-
-			lineSplit = element.split("\t");
-			sections = Arrays.asList(lineSplit);
-
-			//name
-			//Integer.parseInt(sections.get(0));
-			
-			//number
-			//sections.get(1);
-
-			int column = 2;
-
-			Transition k1, k2, k3;
-
-			// table.addElement( createTransition(sections, name, number,
-			// TransitionType.esc, column++) );
-
-
-			Element e = Element.values()[atomicNumber];
-						
-			// K
-			TransitionSeries ts = new TransitionSeries(e, TransitionSeriesType.K);
-
-			//escape
-			//createTransition(sections, column, TransitionType.esc);
-			column += elementDataWidth;
-
-			// ts.setTransition(TransitionType.esc, esc);
-
-			// ka
-			//k
-			//createTransition(sections, column, TransitionType.other);
-			column += elementDataWidth;
-			k1 = createTransition(sections, column, TransitionType.a1);
-			column += elementDataWidth;
-			k2 = createTransition(sections, column, TransitionType.a2);
-			column += elementDataWidth;
-
-
-			ts.setTransition(k1);
-			ts.setTransition(k2);
-
-
-			// kB
-			//k
-			//createTransition(sections, column, TransitionType.other);
-			column += elementDataWidth;
-			k1 = createTransition(sections, column, TransitionType.b1);
-			column += elementDataWidth;
-			k3 = createTransition(sections, column, TransitionType.b2);
-			column += elementDataWidth;
-			k2 = createTransition(sections, column, TransitionType.b3);
-			column += elementDataWidth;
-
-			ts.setTransition(k1);
-			ts.setTransition(k2);
-			ts.setTransition(k3);
-
-			PeakTable.addSeries(ts);
-			//table.addSeries(ts.pileup());
-
-
-			ts = new TransitionSeries(e, TransitionSeriesType.L);
-			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
-
-			//escape
-			//createTransition(sections, column, TransitionType.esc);
-			column += elementDataWidth;
-
-			la = createTransition(sections, column, TransitionType.a1);
-			column += elementDataWidth;
-
-			lb1 = createTransition(sections, column, TransitionType.b1);
-			column += elementDataWidth;
-			lb2 = createTransition(sections, column, TransitionType.b2);
-			column += elementDataWidth;
-
-			lg1 = createTransition(sections, column, TransitionType.g1);
-			column += elementDataWidth;
-			lg2 = createTransition(sections, column, TransitionType.g2);
-			column += elementDataWidth;
-			lg3 = createTransition(sections, column, TransitionType.g3);
-			column += elementDataWidth;
-			lg4 = createTransition(sections, column, TransitionType.g4);
-			column += elementDataWidth;
-
-			ll = createTransition(sections, column, TransitionType._l);
-			column += elementDataWidth;
-
-
-			ts.setTransition(la);
-
-			ts.setTransition(lb1);
-			ts.setTransition(lb2);
-
-			ts.setTransition(lg1);
-			ts.setTransition(lg2);
-			ts.setTransition(lg3);
-			ts.setTransition(lg4);
-
-			ts.setTransition(ll);
-
-			if (e.atomicNumber() >= 23) PeakTable.addSeries(ts);
-
-
-			
-			ts = new TransitionSeries(e, TransitionSeriesType.M);
-			Transition ma1, mb1, mg;
-
-			//escape
-			//createTransition(sections, column, TransitionType.esc);
-			column += elementDataWidth;
-
-			//mz
-			//createTransition(sections, column, TransitionType.other);
-			column += elementDataWidth;
-			
-			//unknown
-			//createTransition(sections, column, TransitionType.other);
-			column += elementDataWidth;
-			ma1 = createTransition(sections, column, TransitionType.a1);
-			column += elementDataWidth;
-			mb1 = createTransition(sections, column, TransitionType.b1);
-			column += elementDataWidth;
-			mg = createTransition(sections, column, TransitionType.g1);
-			column += elementDataWidth;
-			
-			//mn
-			createTransition(sections, column, TransitionType.other);
-			column += elementDataWidth;
-			
-			//unknown
-			createTransition(sections, column, TransitionType.other);
-			column += elementDataWidth;
-
-			
-			ts.setTransition(ma1);
-			ts.setTransition(mb1);
-			ts.setTransition(mg);
-
-			if (e.atomicNumber() > 72) PeakTable.addSeries(ts);
-
-			atomicNumber++;
-
-		}
-
-	}
-
-	private static Transition createTransition(List<String> sections, int column, TransitionType type)
-	{
-
-		float energy = 0.0f;
-		float relIntensity = 0.0f;
-
-		try {
-			energy = Float.parseFloat(sections.get(column));
-			relIntensity = Float.parseFloat(sections.get(column + 1));
-		} catch (NumberFormatException e) {
-			//Empty spaces with no data end up here. It's normal.
-		}
-
-		if (energy == 0.0 || relIntensity == 0.0) return null;
-		return new Transition(energy, relIntensity / 100.0f, type);
-
 	}
 
 }

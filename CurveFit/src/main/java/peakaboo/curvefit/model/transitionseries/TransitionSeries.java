@@ -15,7 +15,6 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.model.transition.Transition;
-import peakaboo.curvefit.model.transition.TransitionType;
 import peakaboo.curvefit.peaktable.Element;
 import scitypes.util.ListOps;
 
@@ -140,19 +139,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
-	/**
-	 * Retrieves a {@link Transition} from this TransitionSeries based on the provided {@link TransitionType}
-	 * 
-	 * @param transitionType
-	 *            the type of {@link Transition} to retrieve
-	 * @return the {@link Transition} for the given {@link TransitionType}
-	 */
-	public Transition getTransition(final TransitionType transitionType)
-	{
-		List<Transition> matches = transitions.stream().filter(t -> t.type == transitionType).collect(Collectors.toList());
-		if (matches.size() > 0) return matches.get(0);
-		return null;
-	}
 
 
 	/**
