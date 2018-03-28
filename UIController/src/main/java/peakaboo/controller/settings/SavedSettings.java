@@ -13,8 +13,8 @@ import org.yaml.snakeyaml.Yaml;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
+import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
-import peakaboo.curvefit.model.FittingModel;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;

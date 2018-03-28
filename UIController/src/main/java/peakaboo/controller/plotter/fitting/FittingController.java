@@ -9,7 +9,6 @@ import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.controller.TSOrdering;
 import peakaboo.curvefit.model.EnergyCalibration;
-import peakaboo.curvefit.model.FittingModel;
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
 import peakaboo.curvefit.model.FittingSet;
@@ -27,9 +26,6 @@ public class FittingController extends EventfulType<Boolean>
 	FittingModel fittingModel;
 	PlotController plot;
 	
-	//This is not part of the fitting model because it is a subset of the 
-	//already fitted TSs, and doesn't actually get fit
-	List<TransitionSeries> highlighted = new ArrayList<>();
 	
 	public FittingController(PlotController plotController)
 	{
@@ -294,11 +290,11 @@ public class FittingController extends EventfulType<Boolean>
 	}
 
 	public List<TransitionSeries> getHighlightedTransitionSeries() {
-		return highlighted;
+		return fittingModel.highlighted;
 	}
 	
 	public void setHighlightedTransitionSeries(List<TransitionSeries> highlighted) {
-		this.highlighted = highlighted;
+		fittingModel.highlighted = highlighted;
 		updateListeners(false);
 	}
 	
