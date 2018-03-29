@@ -1,4 +1,4 @@
-package peakaboo.curvefit.model.fittingfunctions;
+package peakaboo.curvefit.model.fitting.functions;
 
 import peakaboo.curvefit.model.transition.Transition;
 

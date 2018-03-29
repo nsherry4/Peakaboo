@@ -8,8 +8,8 @@ import java.util.List;
 
 import peakaboo.curvefit.model.EnergyCalibration;
 import peakaboo.curvefit.model.FittingResult;
-import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
-import peakaboo.curvefit.model.fittingfunctions.FittingFunctionFactory;
+import peakaboo.curvefit.model.fitting.functions.FittingFunction;
+import peakaboo.curvefit.model.fitting.functions.FittingFunctionFactory;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.peaktable.Element;
 import scitypes.ISpectrum;

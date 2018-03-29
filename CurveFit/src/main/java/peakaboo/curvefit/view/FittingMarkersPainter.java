@@ -4,8 +4,8 @@ import java.awt.Color;
 
 import peakaboo.curvefit.model.FittingResult;
 import peakaboo.curvefit.model.FittingResultSet;
-import peakaboo.curvefit.model.fittingfunctions.FittingFunction;
-import peakaboo.curvefit.model.fittingfunctions.FittingFunctionFactory;
+import peakaboo.curvefit.model.fitting.functions.FittingFunction;
+import peakaboo.curvefit.model.fitting.functions.FittingFunctionFactory;
 import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.model.transitionseries.EscapePeakType;
 import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
