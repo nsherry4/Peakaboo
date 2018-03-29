@@ -23,6 +23,7 @@ import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.fitting.parameters.FittingParameters;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
 import peakaboo.curvefit.transitionseries.TransitionSeries;
@@ -54,6 +55,7 @@ public class TSOrdering
 	 * @return an ordered list of {@link TransitionSeries}
 	 */
 	public static List<TransitionSeries> optimizeTSOrdering(
+			FittingParameters parameters,
 			EnergyCalibration calibration,
 			List<TransitionSeries> unfitted, 
 			Spectrum s, 
@@ -65,7 +67,7 @@ public class TSOrdering
 
 			public int compare(TransitionSeries ts1, TransitionSeries ts2)
 			{
-				return compareTSs(ts1, ts2, calibration, s, escape);
+				return compareTSs(ts1, ts2, parameters, calibration, s, escape);
 			}
 		});
 		
@@ -83,11 +85,12 @@ public class TSOrdering
 	 */
 	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
 			EscapePeakType escape, 
+			FittingParameters parameters,
 			EnergyCalibration calibration,
 			final ReadOnlySpectrum spectrum, 
 			boolean useBaseSize)
 	{
-		return fScoreTransitionSeries(escape, calibration, spectrum, null, useBaseSize);
+		return fScoreTransitionSeries(escape, parameters, calibration, spectrum, null, useBaseSize);
 	}
 	
 	/**
@@ -101,6 +104,7 @@ public class TSOrdering
 	 */
 	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
 			final EscapePeakType escape, 
+			final FittingParameters parameters,
 			EnergyCalibration calibration,
 			final ReadOnlySpectrum spectrum, 
 			final Float energy, 
@@ -111,7 +115,7 @@ public class TSOrdering
 		//scoring function to evaluate each TransitionSeries
 		return new Function<TransitionSeries, Float>() {
 
-			CurveFitter fitter = new CurveFitter(null, calibration, escape);
+			CurveFitter fitter = new CurveFitter(null, parameters, calibration, escape);
 			Spectrum s = new ISpectrum(spectrum);
 			
 			public Float apply(TransitionSeries ts)
@@ -153,38 +157,14 @@ public class TSOrdering
 	}
 	
 	
-	
-	/**
-	 * Return a list of all {@link TransitionSeries} which overlap with the given {@link TransitionSeries}
-	 * @param ts the {@link TransitionSeries} with which to check for overlaps
-	 * @param tss the other {@link TransitionSeries}, which should be checked for overlaps with ts
-	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
-	 * @param spectrumSize the size of the data to be fitted
-	 * @param escape the kind of {@link EscapePeakType} that should
-	 * @return a list of all {@link TransitionSeries} which overlap with the given one
-	 */
-	public static List<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, EnergyCalibration calibration, final EscapePeakType escape)
-	{
-		final CurveFitter fitter1 = new CurveFitter(null, calibration, escape);
-		final CurveFitter fitter2 = new CurveFitter(null, calibration, escape);
-		
-		//we want the true flag so that we make sure that elements which overlap an escape peak are still considered overlapping
-		fitter1.setTransitionSeries(ts, true);
-		
-		//map all other TSs to booleans to check if this overlaps
-		return tss.stream().filter((TransitionSeries otherts) -> {
-			if (otherts.equals(ts)) return false;	//its not overlapping if its the same TS
-			fitter2.setTransitionSeries(otherts, true);						
-			return (fitter1.isOverlapping(fitter2));
-		}).collect(Collectors.toList());
-	}
-	
+
 	
 
 	//accept two transition series, and return an ordered pair, where the ordering indicates the preferred fitting sequence for best results
 	private static Pair<TransitionSeries, TransitionSeries> orderTSPairByScore(
 			final TransitionSeries ts1, 
 			final TransitionSeries ts2, 
+			FittingParameters parameters,
 			EnergyCalibration calibration,
 			final Spectrum s, 
 			final EscapePeakType escape)
@@ -195,11 +175,11 @@ public class TSOrdering
 		Float ordering1, ordering2;
 		Function<TransitionSeries, Float> scorer;
 		
-		scorer = fScoreTransitionSeries(escape, calibration, s, false);
+		scorer = fScoreTransitionSeries(escape, parameters, calibration, s, false);
 		scorer.apply(ts1);
 		ordering1 = scorer.apply(ts2);
 		
-		scorer = fScoreTransitionSeries(escape, calibration, s, false);
+		scorer = fScoreTransitionSeries(escape, parameters, calibration, s, false);
 		scorer.apply(ts2);
 		ordering2 = scorer.apply(ts1);		
 		
@@ -220,11 +200,12 @@ public class TSOrdering
 	private static int compareTSs(
 			TransitionSeries ts1, 
 			TransitionSeries ts2, 
+			FittingParameters parameters,
 			EnergyCalibration calibration,
 			final Spectrum s, 
 			final EscapePeakType escape)
 	{
-		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, calibration, s, escape);
+		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, parameters, calibration, s, escape);
 		if (orderedPair.first == ts1) return -1;
 		return 1;
 	}
@@ -346,9 +327,12 @@ public class TSOrdering
 		//take the top n based on position alone
 		tss = tss.subList(0, 15);
 		
+		
+		//TODO: Pulling the calibration from the fits FittingSet seems like a bad plan, and the parameters should somehow live somewhere else?
+		
 		//now sort by score
 		tss = tss.stream()
-			.map(ts -> new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(escape, calibration, s, energy, true).apply(ts)))
+			.map(ts -> new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(escape, fits.getFittingParameters(), calibration, s, energy, true).apply(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
 			.limit(15)
 			.map(p -> p.first)

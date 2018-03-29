@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import peakaboo.curvefit.fitting.parameters.FittingParameters;
+import peakaboo.curvefit.fitting.parameters.StandardFittingParameters;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
 import peakaboo.curvefit.transitionseries.TransitionSeries;
@@ -26,6 +28,10 @@ public class FittingSet implements Serializable
 
 	private List<CurveFitter>				fitters;
 	private List<TransitionSeries>			fitTransitionSeries;
+	
+	private FittingParameters				parameters;
+	
+	//TODO: Move these to FittingParameters
 	private	EnergyCalibration				calibration;
 	private EscapePeakType					escapeType;
 	
@@ -38,6 +44,7 @@ public class FittingSet implements Serializable
 
 		this.calibration = new EnergyCalibration(0, 0, 0);
 		this.escapeType = EscapePeakType.NONE;
+		this.parameters = new StandardFittingParameters();
 	}
 
 	
@@ -111,7 +118,7 @@ public class FittingSet implements Serializable
 
 	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-		fitters.add(new CurveFitter(ts, calibration, escapeType));
+		fitters.add(new CurveFitter(ts, parameters, calibration, escapeType));
 	}
 
 
@@ -342,6 +349,13 @@ public class FittingSet implements Serializable
 
 		return result;
 
+	}
+
+
+	//TODO: This isn't a good idea. We need to be notified 
+	//when any parameter is changed and right now that isn't happening.
+	public FittingParameters getFittingParameters() {
+		return parameters;
 	}
 
 }

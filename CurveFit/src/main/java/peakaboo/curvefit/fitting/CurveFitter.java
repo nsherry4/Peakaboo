@@ -41,6 +41,9 @@ public class CurveFitter implements Serializable
 	//Calibration for applying curve to data
 	private EnergyCalibration 		calibration;
 	
+	//The details of how we generate our fitting curve
+	private FittingParameters 		parameters;
+	
 	
 	
 	//When a fitting is generated, it must be scaled to a range of 0.0-1.0, as
@@ -67,24 +70,16 @@ public class CurveFitter implements Serializable
 	/**
 	 * Create a new CurveFitter.
 	 * 
-	 * @param ts
-	 *            the TransitionSeries to fit
-	 * @param dataWidth
-	 *            the size of the source data
-	 * @param energyPerChannel
-	 *            the energy per data point in the source data
+	 * @param ts the TransitionSeries to fit
+	 * @param calibration the energy settings to use
+	 * @param escape the type of escape peaks to model
 	 */
-	public CurveFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape, float standardDeviations)
-	{
-		this(ts, calibration, escape);
-		this.rangeMultiplier = standardDeviations;
-		
-	}
-	public CurveFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape)
+	public CurveFitter(TransitionSeries ts, FittingParameters parameters, EnergyCalibration calibration, EscapePeakType escape)
 	{
 
 		this.calibration = calibration;
 		this.escape = escape;
+		this.parameters = parameters;
 		rangeMultiplier = DEFAULT_RANGE_MULT;
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
@@ -302,9 +297,7 @@ public class CurveFitter implements Serializable
 		Spectrum fit = new ISpectrum(calibration.getDataWidth());
 		List<FittingFunction> functions = new ArrayList<FittingFunction>();
 		
-		//TODO: This should be passed in, not just created blank
-		FittingParameters parameters = new StandardFittingParameters();
-		
+
 		//Build a list of fitting functions
 		for (Transition t : ts)
 		{
