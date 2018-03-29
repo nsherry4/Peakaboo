@@ -6,9 +6,11 @@ import peakaboo.curvefit.fitting.CurveFitter;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.fitting.functions.FittingFunctionFactory;
+import peakaboo.curvefit.fitting.parameters.FittingParameters;
+import peakaboo.curvefit.fitting.parameters.StandardFittingParameters;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
@@ -64,17 +66,20 @@ public class FittingMarkersPainter extends PlotPainter
 				markerHeights.set(i, 0.0f);
 			}
 
-			for (Transition t : fit.getFitter().getTransitionSeries()) {
+			TransitionSeries ts = fit.getFitter().getTransitionSeries();
+			for (Transition t : ts) {
 
 				channel = getChannelAtEnergy(p.dr, t.energyValue);
 
 				if (channel > p.dr.dataWidth) continue;
 				
-				FittingFunction gauss = FittingFunctionFactory.get(t);
+				//TODO: This should not just be created blank here
+				FittingParameters parameters = new StandardFittingParameters();
+				FittingFunction fitFn = parameters.forTransition(t, ts.type);
 
 				
 				//get a height value from the fitting function, then apply the same transformation as the fitting did
-				markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.getTotalScale();
+				markerHeight = fitFn.forEnergy(t.energyValue) * fit.getTotalScale();
 							
 				//markerHeights.set((int) channel, markerHeight);
 				
@@ -95,10 +100,10 @@ public class FittingMarkersPainter extends PlotPainter
 						
 						positionX = getXForChannel(p, channel);
 						
-						
-						markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.getTotalScale();
-						markerHeight *= CurveFitter.escapeIntensity(fit.getTransitionSeries().element);
-						markerHeight *= esc.relativeIntensity;
+						FittingFunction escFn = parameters.forEscape(t, esc, ts.element, ts.type);
+						markerHeight = escFn.forEnergy(t.energyValue) * fit.getTotalScale();
+						//markerHeight *= CurveFitter.escapeIntensity(fit.getTransitionSeries().element);
+						//markerHeight *= esc.relativeIntensity;
 						markerHeight = transformValueForPlot(p.dr, markerHeight);
 						
 					

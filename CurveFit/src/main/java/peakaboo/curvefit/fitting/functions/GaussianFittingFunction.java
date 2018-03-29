@@ -1,6 +1,6 @@
 package peakaboo.curvefit.fitting.functions;
 
-
+import peakaboo.curvefit.fitting.context.FittingContext;
 /**
  * 
  * Gaussian functions seem to model XRF data very well.
@@ -9,44 +9,46 @@ package peakaboo.curvefit.fitting.functions;
  *
  */
 
-class GaussianFittingFunction extends SimpleFittingFunction {
+public class GaussianFittingFunction implements FittingFunction {
 
 	private double base;
 	private double TwoSigmaSquared;
+	private float mean, height;
 	
-	
-	
-	public GaussianFittingFunction(float mean, float fwhm, float height)
-	{
-		super(mean, fwhm/2.35482f, height);
+	@Override
+	public void initialize(FittingContext context) {
+				
+		float sigma = context.getFWHM()/2.35482f;
+		this.height = context.getHeight();
+		this.mean = context.getEnergy();
 		
 		base = (
 				
 				               1.0f
 				/*------------------------------*/ /
-				   width*(Math.sqrt(2*Math.PI))
+				   sigma*(Math.sqrt(2*Math.PI))
 				
 		);
 		
 		
-		TwoSigmaSquared = 2 * width * width;
+		TwoSigmaSquared = 2 * sigma * sigma;
 	}
 	
-	public float getHeightAtPoint(float point)
+	public float forEnergy(float energy)
 	{
 		double exp = - (
 		
-				   Math.pow((point - mean), 2)
-				/*-----------------------------*/ /
+				Math.pow((energy - mean), 2)
+				/*------------------------*/ /
 						TwoSigmaSquared
 		
 		);
 		
-		return (float)(base * Math.exp(exp) * height);
+		return (float)(base * Math.exp(exp)) * height;
 		
 				
 	}
-	
+
 
 	
 }

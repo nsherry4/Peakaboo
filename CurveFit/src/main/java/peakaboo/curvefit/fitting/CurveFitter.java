@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.fitting.functions.FittingFunctionFactory;
+import peakaboo.curvefit.fitting.parameters.FittingParameters;
+import peakaboo.curvefit.fitting.parameters.StandardFittingParameters;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
@@ -199,21 +200,7 @@ public class CurveFitter implements Serializable
 	}
 
 
-	public static float escapeIntensity(Element e)
-	{
-		/*
-		 * The paper
-		 * 
-		 * " Measurement and calculation of escape peak intensities in synchrotron radiation X-ray fluorescence analysis
-		 * S.X. Kang a, X. Sun a, X. Ju b, Y.Y. Huang b, K. Yao a, Z.Q. Wu a, D.C. Xian b"
-		 * 
-		 * provides a listing of escape peak intensities relative to the real peak by element. By taking this data into
-		 * openoffice and fitting an exponential regression line to it, we arrive at the formula esc(z) = (543268.59
-		 * z^-4.48)%
-		 */
 
-		return 543268.59f * (float) Math.pow((e.ordinal() + 1), -4.48) / 100.0f;
-	}
 
 
 	/**
@@ -314,33 +301,25 @@ public class CurveFitter implements Serializable
 
 		Spectrum fit = new ISpectrum(calibration.getDataWidth());
 		List<FittingFunction> functions = new ArrayList<FittingFunction>();
-				
+		
+		//TODO: This should be passed in, not just created blank
+		FittingParameters parameters = new StandardFittingParameters();
+		
+		//Build a list of fitting functions
 		for (Transition t : ts)
 		{
 
-			
-			FittingFunction g = FittingFunctionFactory.get(t);
+			functions.add(parameters.forTransition(t, ts.type));
 
-			functions.add(g);
-
-			if (fitEscape && escape.hasOffset())
-			{
+			if (fitEscape && escape.hasOffset()) {
 				for (Transition esc : escape.offset()) {
-									
-					g = FittingFunctionFactory.get(
-							t.energyValue - esc.energyValue, 
-							t.getFWHM(), 
-							t.relativeIntensity * escapeIntensity(ts.element) * esc.relativeIntensity
-						);
-					
-					functions.add(g);
+					functions.add(parameters.forEscape(t, esc, ts.element, ts.type));
 				}
 			}
 
-			
-
 		}
 
+		//Use the functions to generate a model
 		float value;
 		for (int i = 0; i < calibration.getDataWidth(); i++)
 		{
@@ -349,7 +328,7 @@ public class CurveFitter implements Serializable
 			for (FittingFunction f : functions)
 			{
 
-				value += f.getHeightAtPoint(calibration.energyFromChannel(i));
+				value += f.forEnergy(calibration.energyFromChannel(i));
 
 			}
 			fit.set(i, value);

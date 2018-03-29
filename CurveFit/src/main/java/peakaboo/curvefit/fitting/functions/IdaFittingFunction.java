@@ -1,15 +1,21 @@
 package peakaboo.curvefit.fitting.functions;
 
-public class IdaFittingFunction extends SimpleFittingFunction {
+import peakaboo.curvefit.fitting.context.FittingContext;
 
-	public IdaFittingFunction(float mean, float fwhm, float height) {
-		super(mean, fwhm/1.762747174f, height);
+public class IdaFittingFunction implements FittingFunction {
+
+	private float mean, gamma, height;
+	
+	public void initialize(FittingContext context) {
+		this.mean = context.getEnergy();
+		this.gamma = context.getFWHM()/1.762747174f;
+		this.height = context.getHeight();
 	}
 
 	@Override
-	public float getHeightAtPoint(float point) {
-		float x = point - mean;
-		return height * (float)Math.pow(sech(x/width), 2);
+	public float forEnergy(float energy) {
+		float x = energy - mean;
+		return height * (float)Math.pow(sech(x/gamma), 2);
 	}
 
 	private float sech(float value) {

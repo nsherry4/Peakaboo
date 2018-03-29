@@ -1,5 +1,7 @@
 package peakaboo.curvefit.fitting.functions;
 
+import peakaboo.curvefit.fitting.context.FittingContext;
+
 /**
  * 
  * This turned out not to fit peaks well at all.
@@ -8,23 +10,27 @@ package peakaboo.curvefit.fitting.functions;
  *
  */
 
-class LorentzFittingFunction extends SimpleFittingFunction {
+public class LorentzFittingFunction implements FittingFunction {
 
-
+	private FittingContext context;
+	private float gamma;
+	private float mean;
 	
-	public LorentzFittingFunction(float mean, float fwhm, float height) {
-		super(mean, fwhm/2f, height);
+	public void initialize(FittingContext context) {
+		this.context = context;
+		this.gamma = context.getFWHM()/2f;
+		this.mean = context.getEnergy();
 	}
 
-	public float getHeightAtPoint(float point) {
+	public float forEnergy(float point) {
 		
 		double value = 0.0;
 		
 		value = 
 		(
-			                         width
+			                         gamma
 			/*----------------------------------------------------*/ / 
-			   (Math.pow((point - mean), 2) + Math.pow(width, 2))
+			   (Math.pow((point - mean), 2) + Math.pow(gamma, 2))
 			
 		) * (
 			      1
@@ -34,7 +40,7 @@ class LorentzFittingFunction extends SimpleFittingFunction {
 		
 		
 		
-		return (float)(value * height);
+		return (float)(value * context.getHeight());
 	}
 
 }

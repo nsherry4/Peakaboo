@@ -1,5 +1,7 @@
 package peakaboo.curvefit.fitting.functions;
 
+import peakaboo.curvefit.fitting.context.FittingContext;
+
 public class MixedFittingFunction implements FittingFunction {
 
 	private FittingFunction f1, f2;
@@ -11,10 +13,15 @@ public class MixedFittingFunction implements FittingFunction {
 		this.percentF1 = percentF1;
 	}
 
+	public void initialize(FittingContext context) {
+		f1.initialize(context);
+		f2.initialize(context);
+	}
+	
 	@Override
-	public float getHeightAtPoint(float point) {
-		float f1v = this.f1.getHeightAtPoint(point) * percentF1;
-		float f2v = this.f2.getHeightAtPoint(point) * (1f - percentF1);
+	public float forEnergy(float energy) {
+		float f1v = this.f1.forEnergy(energy) * percentF1;
+		float f2v = this.f2.forEnergy(energy) * (1f - percentF1);
 		return f1v + f2v;
 	}
 	
