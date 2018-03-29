@@ -47,9 +47,12 @@ public class StandardFittingContext implements FittingContext {
 	@Override
 	//TODO: In the future, this can draw on the fitting parameters to customize this
 	public float getFWHM() {
-		float sigma = (0.062f - 0.01f) + (energy / 500.0f);
-		float fwhm = sigma * 2.35482f;
-		return fwhm;
+		//float sigma = (0.062f - 0.01f) + (energy / 500.0f);
+		//float fwhm = sigma * 2.35482f;
+		
+		//return 0.1225f + (energy / 212.0f);
+		return 0.11f + (energy / 212.0f);
+		
 	}
 
 
