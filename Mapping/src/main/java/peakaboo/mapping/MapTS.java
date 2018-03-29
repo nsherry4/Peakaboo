@@ -3,10 +3,10 @@ package peakaboo.mapping;
 import java.util.List;
 import java.util.function.Consumer;
 
-import peakaboo.curvefit.model.FittingResult;
-import peakaboo.curvefit.model.FittingResultSet;
-import peakaboo.curvefit.model.FittingSet;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.fitting.FittingResult;
+import peakaboo.curvefit.fitting.FittingResultSet;
+import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.StandardDataSet;
 import peakaboo.filter.model.FilterSet;

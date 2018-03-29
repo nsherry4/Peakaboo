@@ -1,4 +1,4 @@
-package peakaboo.curvefit.model;
+package peakaboo.curvefit.fitting;
 
 /**
  * Represents the energy calibration and data size for data. This is 

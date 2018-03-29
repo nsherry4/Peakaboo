@@ -1,4 +1,4 @@
-package peakaboo.curvefit.view;
+package peakaboo.ui.swing.plotting.fitting.painters;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import peakaboo.curvefit.model.FittingResult;
-import peakaboo.curvefit.model.FittingResultSet;
-import peakaboo.curvefit.model.transition.Transition;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.fitting.FittingResult;
+import peakaboo.curvefit.fitting.FittingResultSet;
+import peakaboo.curvefit.transition.Transition;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Bounds;

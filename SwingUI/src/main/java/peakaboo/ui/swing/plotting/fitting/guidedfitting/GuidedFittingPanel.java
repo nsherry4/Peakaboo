@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;

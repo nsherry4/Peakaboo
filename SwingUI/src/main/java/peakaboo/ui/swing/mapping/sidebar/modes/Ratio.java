@@ -23,9 +23,9 @@ import javax.swing.table.TableModel;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

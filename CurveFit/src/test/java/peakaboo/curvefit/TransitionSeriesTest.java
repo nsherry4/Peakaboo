@@ -6,11 +6,11 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transitionseries.TransitionSeriesMode;
+import peakaboo.curvefit.transitionseries.TransitionSeriesType;
 
 public class TransitionSeriesTest {
 

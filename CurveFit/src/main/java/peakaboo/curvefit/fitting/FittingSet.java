@@ -1,4 +1,4 @@
-package peakaboo.curvefit.model;
+package peakaboo.curvefit.fitting;
 
 
 
@@ -8,16 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import peakaboo.curvefit.model.transition.Transition;
-import peakaboo.curvefit.model.transitionseries.EscapePeakType;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
+import peakaboo.curvefit.transition.Transition;
+import peakaboo.curvefit.transitionseries.EscapePeakType;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 /**
- * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link TransitionSeriesFitter}s based on various provided parameters. 
+ * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link CurveFitter}s based on various provided parameters. 
  * @author Nathaniel Sherry, 2009-2010
  *
  */
@@ -25,7 +24,7 @@ import scitypes.SpectrumCalculations;
 public class FittingSet implements Serializable
 {
 
-	private List<TransitionSeriesFitter>	fitters;
+	private List<CurveFitter>				fitters;
 	private List<TransitionSeries>			fitTransitionSeries;
 	private	EnergyCalibration				calibration;
 	private EscapePeakType					escapeType;
@@ -34,7 +33,7 @@ public class FittingSet implements Serializable
 
 	public FittingSet()
 	{
-		fitters = new ArrayList<TransitionSeriesFitter>();
+		fitters = new ArrayList<CurveFitter>();
 		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
 		this.calibration = new EnergyCalibration(0, 0, 0);
@@ -112,7 +111,7 @@ public class FittingSet implements Serializable
 
 	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
 	{
-		fitters.add(new TransitionSeriesFitter(ts, calibration, escapeType));
+		fitters.add(new CurveFitter(ts, calibration, escapeType));
 	}
 
 
@@ -120,8 +119,8 @@ public class FittingSet implements Serializable
 	{
 		fitTransitionSeries.remove(ts);
 
-		List<TransitionSeriesFitter> fittingsToRemove = new ArrayList<TransitionSeriesFitter>();
-		for (TransitionSeriesFitter f : fitters)
+		List<CurveFitter> fittingsToRemove = new ArrayList<CurveFitter>();
+		for (CurveFitter f : fitters)
 		{
 
 			if (f.getTransitionSeries().equals(ts))
@@ -298,7 +297,7 @@ public class FittingSet implements Serializable
 
 
 		// calculate the fitters
-		for (TransitionSeriesFitter fitter : fitters)
+		for (CurveFitter fitter : fitters)
 		{
 			
 			if (fitter.getTransitionSeries().visible)

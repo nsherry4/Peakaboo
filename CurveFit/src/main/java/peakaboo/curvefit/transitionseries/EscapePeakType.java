@@ -1,11 +1,11 @@
-package peakaboo.curvefit.model.transitionseries;
+package peakaboo.curvefit.transitionseries;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.curvefit.model.transition.Transition;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
+import peakaboo.curvefit.transition.Transition;
 
 /**
  * Describes the kind of escape peaks that would be expected from different kinds of detectors.

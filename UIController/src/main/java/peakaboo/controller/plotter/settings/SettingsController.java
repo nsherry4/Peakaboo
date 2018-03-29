@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.model.EnergyCalibration;
-import peakaboo.curvefit.model.FittingSet;
-import peakaboo.curvefit.model.transitionseries.EscapePeakType;
+import peakaboo.curvefit.fitting.EnergyCalibration;
+import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.transitionseries.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;

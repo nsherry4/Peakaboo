@@ -1,14 +1,14 @@
-package peakaboo.curvefit.view;
+package peakaboo.ui.swing.plotting.fitting.painters;
 
 import java.awt.Color;
 
-import peakaboo.curvefit.model.FittingResult;
-import peakaboo.curvefit.model.FittingResultSet;
-import peakaboo.curvefit.model.fitting.functions.FittingFunction;
-import peakaboo.curvefit.model.fitting.functions.FittingFunctionFactory;
-import peakaboo.curvefit.model.transition.Transition;
-import peakaboo.curvefit.model.transitionseries.EscapePeakType;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
+import peakaboo.curvefit.fitting.CurveFitter;
+import peakaboo.curvefit.fitting.FittingResult;
+import peakaboo.curvefit.fitting.FittingResultSet;
+import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.fitting.functions.FittingFunctionFactory;
+import peakaboo.curvefit.transition.Transition;
+import peakaboo.curvefit.transitionseries.EscapePeakType;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
@@ -97,7 +97,7 @@ public class FittingMarkersPainter extends PlotPainter
 						
 						
 						markerHeight = gauss.getHeightAtPoint(t.energyValue) * fit.getTotalScale();
-						markerHeight *= TransitionSeriesFitter.escapeIntensity(fit.getTransitionSeries().element);
+						markerHeight *= CurveFitter.escapeIntensity(fit.getTransitionSeries().element);
 						markerHeight *= esc.relativeIntensity;
 						markerHeight = transformValueForPlot(p.dr, markerHeight);
 						

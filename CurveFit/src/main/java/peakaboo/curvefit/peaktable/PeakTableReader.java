@@ -3,9 +3,9 @@ package peakaboo.curvefit.peaktable;
 import com.github.tschoonj.xraylib.Xraylib;
 import com.github.tschoonj.xraylib.XraylibException;
 
-import peakaboo.curvefit.model.transition.Transition;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.Transition;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transitionseries.TransitionSeriesType;
 
 
 

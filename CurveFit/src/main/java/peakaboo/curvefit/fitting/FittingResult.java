@@ -1,14 +1,13 @@
-package peakaboo.curvefit.model;
+package peakaboo.curvefit.fitting;
 
 
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
  * 
- * This class stores the results of applying a Spectrum to a {@link TransitionSeriesFitter}, 
+ * This class stores the results of applying a Spectrum to a {@link CurveFitter}, 
  * as well as the {@link TransitionSeries} that generated the fitter.
  * 
  * @author Nathaniel Sherry, 2009
@@ -19,14 +18,14 @@ public class FittingResult
 {
 
 	private ReadOnlySpectrum		fit;
-	private TransitionSeriesFitter	fitter;
+	private CurveFitter	fitter;
 
 	private float					fitScale;
 	private float					normalizationScale;
 	
 	private TransitionSeries		transitionSeries;
 
-	public FittingResult(ReadOnlySpectrum fit, TransitionSeriesFitter fitter, float fitScale)	{
+	public FittingResult(ReadOnlySpectrum fit, CurveFitter fitter, float fitScale)	{
 		this.fit = fit;
 		this.fitter = fitter;
 		this.fitScale = fitScale;
@@ -40,7 +39,7 @@ public class FittingResult
 	}
 
 
-	public TransitionSeriesFitter getFitter() {
+	public CurveFitter getFitter() {
 		return fitter;
 	}
 

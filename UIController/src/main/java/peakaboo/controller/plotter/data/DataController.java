@@ -10,7 +10,7 @@ import eventful.EventfulListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.discards.Discards;
 import peakaboo.controller.plotter.data.discards.DiscardsList;
-import peakaboo.curvefit.model.FittingSet;
+import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;

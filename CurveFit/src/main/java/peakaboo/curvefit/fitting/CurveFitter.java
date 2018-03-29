@@ -1,4 +1,4 @@
-package peakaboo.curvefit.model.transitionseries;
+package peakaboo.curvefit.fitting;
 
 
 
@@ -6,12 +6,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.curvefit.model.EnergyCalibration;
-import peakaboo.curvefit.model.FittingResult;
-import peakaboo.curvefit.model.fitting.functions.FittingFunction;
-import peakaboo.curvefit.model.fitting.functions.FittingFunctionFactory;
-import peakaboo.curvefit.model.transition.Transition;
+import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.fitting.functions.FittingFunctionFactory;
 import peakaboo.curvefit.peaktable.Element;
+import peakaboo.curvefit.transition.Transition;
+import peakaboo.curvefit.transitionseries.EscapePeakType;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transitionseries.TransitionSeriesType;
 import scitypes.ISpectrum;
 import scitypes.Range;
 import scitypes.RangeSet;
@@ -22,13 +23,13 @@ import scitypes.SpectrumCalculations;
 
 
 /**
- * A TransitionSeriesFitter represents the curve created by applying a {@link FittingFunction} 
+ * A CurveFitter represents the curve created by applying a {@link FittingFunction} 
  * to a {@link TransitionSeries}. It can then be applied to signal to determine the scale of fit.
  * 
  * @author NAS
  */
 
-public class TransitionSeriesFitter implements Serializable
+public class CurveFitter implements Serializable
 {
 
 	//The {@link TransitionSeries} that this fitting is based on
@@ -63,7 +64,7 @@ public class TransitionSeriesFitter implements Serializable
 	
 
 	/**
-	 * Create a new TransitionSeriesFitter.
+	 * Create a new CurveFitter.
 	 * 
 	 * @param ts
 	 *            the TransitionSeries to fit
@@ -72,13 +73,13 @@ public class TransitionSeriesFitter implements Serializable
 	 * @param energyPerChannel
 	 *            the energy per data point in the source data
 	 */
-	public TransitionSeriesFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape, float standardDeviations)
+	public CurveFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape, float standardDeviations)
 	{
 		this(ts, calibration, escape);
 		this.rangeMultiplier = standardDeviations;
 		
 	}
-	public TransitionSeriesFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape)
+	public CurveFitter(TransitionSeries ts, EnergyCalibration calibration, EscapePeakType escape)
 	{
 
 		this.calibration = calibration;
@@ -237,7 +238,7 @@ public class TransitionSeriesFitter implements Serializable
 	}
 	
 	
-	public boolean isOverlapping(TransitionSeriesFitter other)
+	public boolean isOverlapping(CurveFitter other)
 	{
 		return intenseRanges.isTouching(other.intenseRanges);
 		

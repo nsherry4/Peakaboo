@@ -6,11 +6,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesType;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transitionseries.TransitionSeriesMode;
+import peakaboo.curvefit.transitionseries.TransitionSeriesType;
 import scitypes.Pair;
 
 

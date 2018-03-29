@@ -1,6 +1,6 @@
-package peakaboo.curvefit.model.transitionseries;
+package peakaboo.curvefit.transitionseries;
 
-import peakaboo.curvefit.model.transition.Transition;
+import peakaboo.curvefit.transition.Transition;
 
 
 

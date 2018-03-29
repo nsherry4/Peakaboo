@@ -1,4 +1,4 @@
-package peakaboo.curvefit.model;
+package peakaboo.curvefit.fitting;
 
 
 import java.util.ArrayList;

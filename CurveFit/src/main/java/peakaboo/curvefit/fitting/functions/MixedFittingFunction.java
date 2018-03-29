@@ -1,4 +1,4 @@
-package peakaboo.curvefit.model.fitting.functions;
+package peakaboo.curvefit.fitting.functions;
 
 public class MixedFittingFunction implements FittingFunction {
 

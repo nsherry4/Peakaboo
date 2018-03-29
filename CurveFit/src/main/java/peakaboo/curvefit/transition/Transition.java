@@ -1,8 +1,8 @@
-package peakaboo.curvefit.model.transition;
+package peakaboo.curvefit.transition;
 
 import java.io.Serializable;
 
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 
 /**
  * 

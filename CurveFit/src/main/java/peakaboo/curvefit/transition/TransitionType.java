@@ -1,4 +1,4 @@
-package peakaboo.curvefit.model.transition;
+package peakaboo.curvefit.transition;
 
 
 /**

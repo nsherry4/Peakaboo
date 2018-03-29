@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.model.EnergyCalibration;
-import peakaboo.curvefit.model.FittingResult;
-import peakaboo.curvefit.model.FittingResultSet;
-import peakaboo.curvefit.model.FittingSet;
-import peakaboo.curvefit.model.transitionseries.EscapePeakType;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesFitter;
+import peakaboo.curvefit.fitting.CurveFitter;
+import peakaboo.curvefit.fitting.EnergyCalibration;
+import peakaboo.curvefit.fitting.FittingResult;
+import peakaboo.curvefit.fitting.FittingResultSet;
+import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.PeakTable;
+import peakaboo.curvefit.transitionseries.EscapePeakType;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.State;
 import scitypes.ISpectrum;
@@ -111,7 +111,7 @@ public class TSOrdering
 		//scoring function to evaluate each TransitionSeries
 		return new Function<TransitionSeries, Float>() {
 
-			TransitionSeriesFitter fitter = new TransitionSeriesFitter(null, calibration, escape);
+			CurveFitter fitter = new CurveFitter(null, calibration, escape);
 			Spectrum s = new ISpectrum(spectrum);
 			
 			public Float apply(TransitionSeries ts)
@@ -165,8 +165,8 @@ public class TSOrdering
 	 */
 	public static List<TransitionSeries> getTSsOverlappingTS(final TransitionSeries ts, final List<TransitionSeries> tss, EnergyCalibration calibration, final EscapePeakType escape)
 	{
-		final TransitionSeriesFitter fitter1 = new TransitionSeriesFitter(null, calibration, escape);
-		final TransitionSeriesFitter fitter2 = new TransitionSeriesFitter(null, calibration, escape);
+		final CurveFitter fitter1 = new CurveFitter(null, calibration, escape);
+		final CurveFitter fitter2 = new CurveFitter(null, calibration, escape);
 		
 		//we want the true flag so that we make sure that elements which overlap an escape peak are still considered overlapping
 		fitter1.setTransitionSeries(ts, true);

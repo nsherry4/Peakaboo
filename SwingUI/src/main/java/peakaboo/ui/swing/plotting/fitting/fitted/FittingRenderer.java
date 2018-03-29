@@ -8,9 +8,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.model.transitionseries.TransitionSeries;
-import peakaboo.curvefit.model.transitionseries.TransitionSeriesMode;
 import peakaboo.curvefit.peaktable.Element;
+import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transitionseries.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import scitypes.SigDigits;
 

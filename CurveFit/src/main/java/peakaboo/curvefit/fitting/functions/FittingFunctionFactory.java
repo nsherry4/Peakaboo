@@ -1,6 +1,6 @@
-package peakaboo.curvefit.model.fitting.functions;
+package peakaboo.curvefit.fitting.functions;
 
-import peakaboo.curvefit.model.transition.Transition;
+import peakaboo.curvefit.transition.Transition;
 
 public class FittingFunctionFactory {
 
