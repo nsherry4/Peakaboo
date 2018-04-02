@@ -82,7 +82,7 @@ public class FittingTitlePainter extends PlotPainter
 			
 			p.context.setSource(colour);
 			
-			for (FittingResult fit : fittings.fits){
+			for (FittingResult fit : fittings.getFits()){
 		
 			titleName = fit.getTransitionSeries().getDescription();
 

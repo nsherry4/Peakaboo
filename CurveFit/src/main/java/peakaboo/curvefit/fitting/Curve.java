@@ -52,11 +52,11 @@ public class Curve implements Serializable
 	
 	
 	//How broad an area around each transition to consider important
-	public static final float		DEFAULT_RANGE_MULT = 0.5f; //HWHM is default significant area
+	private static final float		DEFAULT_RANGE_MULT = 0.5f; //HWHM is default significant area
 	private float					rangeMultiplier;
 	
 	//Areas where the curve is strong enough that we need to consider it.
-	RangeSet						intenseRanges;
+	private RangeSet				intenseRanges;
 	
 	//how large a footprint this curve has, used in scoring fittings
 	private int						baseSize;
@@ -140,9 +140,13 @@ public class Curve implements Serializable
 		
 	}
 	
+
+	public RangeSet getIntenseRanges() {
+		return intenseRanges;
+	}
+	
 	
 
-	
 	/**
 	 * Given a TransitionSeries, calculate the range of channels which are important
 	 */

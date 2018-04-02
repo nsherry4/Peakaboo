@@ -155,7 +155,7 @@ public class SpectrumUIController extends IActofUIController {
 		colour = monochrome ? TANGO_GREY_4 : TANGO_BLACK;
 		if (settings.getShowIndividualSelections()) {
 			seriesIndividualFittings.clear();
-			for (FittingResult result : fitted.fits) {
+			for (FittingResult result : fitted.getFits()) {
 				Series<Number, Number> series;
 				series = Spectrums.asSeries(result.getFit());
 				series.setName("Fittings");
@@ -165,8 +165,8 @@ public class SpectrumUIController extends IActofUIController {
 			}
 		} else {
 			System.out.println("ASDF");
-			System.out.println(fitted.totalFit.get(250));
-			seriesFittings = Spectrums.asSeries(fitted.totalFit);
+			System.out.println(fitted.getTotalFit().get(250));
+			seriesFittings = Spectrums.asSeries(fitted.getTotalFit());
 			seriesFittings.setName("Fittings");
 			spectrum.getData().add(seriesFittings);
 			setSeriesStyle(seriesnum++, colour + "7f", colour);
@@ -205,11 +205,11 @@ public class SpectrumUIController extends IActofUIController {
 		FittingResultSet fitted = fittings.getFittingSelectionResults();
 		if (plotController.settings().getShowIndividualSelections()) {
 			int count = 0;
-			for (FittingResult result : fitted.fits) {
+			for (FittingResult result : fitted.getFits()) {
 				updateSeriesFromSpectrum(seriesIndividualFittings.get(count++), result.getFit());
 			}
 		} else {
-			updateSeriesFromSpectrum(seriesFittings, fitted.totalFit);
+			updateSeriesFromSpectrum(seriesFittings, fitted.getTotalFit());
 		}
 		
 	}

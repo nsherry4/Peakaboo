@@ -267,10 +267,10 @@ public class TSOrdering
 		
 		//recalculate
 		FittingResultSet fitResults = Fitter.fit(data, fits);
-		FittingResultSet proposedResults = Fitter.fit(fitResults.residual, proposed);
+		FittingResultSet proposedResults = Fitter.fit(fitResults.getResidual(), proposed);
 		
 		
-		final ReadOnlySpectrum s = proposedResults.residual;
+		final ReadOnlySpectrum s = proposedResults.getResidual();
 		
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		

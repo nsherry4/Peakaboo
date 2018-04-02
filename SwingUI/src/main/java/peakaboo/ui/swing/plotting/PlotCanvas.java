@@ -372,11 +372,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			if (controller.settings().getShowIndividualSelections())
 			{
 				plotPainters.add(new FittingPainter(controller.fitting().getFittingSelectionResults(), fittingStroke, fitting));
-				plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().totalFit, fittingSum));
+				plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().getTotalFit(), fittingSum));
 			}
 			else
 			{			
-				plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().totalFit, fittingSum, fitting));
+				plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().getTotalFit(), fittingSum, fitting));
 			}
 			
 			//draw curve fitting for proposed fittings
@@ -385,14 +385,14 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 				if (controller.settings().getShowIndividualSelections()) {
 					plotPainters.add(new FittingPainter(controller.fitting().getFittingProposalResults(), proposedStroke, proposed));
 				} else {
-					plotPainters.add(new FittingSumPainter(controller.fitting().getFittingProposalResults().totalFit, proposedStroke, proposed));
+					plotPainters.add(new FittingSumPainter(controller.fitting().getFittingProposalResults().getTotalFit(), proposedStroke, proposed));
 				}
 
 				plotPainters.add(
 	
 					new FittingSumPainter(SpectrumCalculations.addLists(
-							controller.fitting().getFittingProposalResults().totalFit,
-							controller.fitting().getFittingSelectionResults().totalFit), proposedSum)
+							controller.fitting().getFittingProposalResults().getTotalFit(),
+							controller.fitting().getFittingSelectionResults().getTotalFit()), proposedSum)
 	
 				);
 			}
@@ -401,7 +401,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			//highlighted fittings
 			List<TransitionSeries> selectedFits = controller.fitting().getHighlightedTransitionSeries();
 			if (!selectedFits.isEmpty()) {
-				List<FittingResult> selectedFitResults = controller.fitting().getFittingSelectionResults().fits
+				List<FittingResult> selectedFitResults = controller.fitting().getFittingSelectionResults().getFits()
 						.stream()
 						.filter(r -> selectedFits.contains(r.getTransitionSeries()))
 						.collect(Collectors.toList());

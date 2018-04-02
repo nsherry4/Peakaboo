@@ -112,7 +112,7 @@ public class FittingController extends EventfulType<Boolean>
 
 		if (fittingModel.selectionResults == null) return 0.0f;
 
-		for (FittingResult result : fittingModel.selectionResults.fits)
+		for (FittingResult result : fittingModel.selectionResults.getFits())
 		{
 			if (result.getTransitionSeries() == ts) {
 				float max = result.getFit().max();
@@ -254,7 +254,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void calculateProposalFittings()
 	{
-		fittingModel.proposalResults = Fitter.fit(fittingModel.selectionResults.residual, fittingModel.proposals);
+		fittingModel.proposalResults = Fitter.fit(fittingModel.selectionResults.getResidual(), fittingModel.proposals);
 	}
 
 	public void calculateSelectionFittings(ReadOnlySpectrum data)

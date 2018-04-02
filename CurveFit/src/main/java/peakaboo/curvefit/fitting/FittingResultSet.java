@@ -20,10 +20,10 @@ import scitypes.Spectrum;
 public class FittingResultSet
 {
 
-	public Spectrum				totalFit;
-	public ReadOnlySpectrum		residual;
-	public List<FittingResult>	fits;
-	public FittingParameters	parameters;
+	Spectrum			totalFit;
+	ReadOnlySpectrum	residual;
+	List<FittingResult>	fits;
+	FittingParameters	parameters;
 	
 	public FittingResultSet(int size)
 	{
@@ -31,5 +31,25 @@ public class FittingResultSet
 		totalFit = new ISpectrum(size);
 		residual = new ISpectrum(size);
 	}
+
+	
+	
+	public Spectrum getTotalFit() {
+		return totalFit;
+	}
+
+	public ReadOnlySpectrum getResidual() {
+		return residual;
+	}
+
+	public List<FittingResult> getFits() {
+		return fits;
+	}
+
+	public FittingParameters getParameters() {
+		return parameters;
+	}
+	
+	
 	
 }

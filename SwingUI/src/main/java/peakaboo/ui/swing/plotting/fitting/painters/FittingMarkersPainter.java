@@ -57,7 +57,7 @@ public class FittingMarkersPainter extends PlotPainter
 		p.context.setLineWidth(1.0f);
 		p.context.setSource(colour);
 		
-		for (FittingResult fit : fitResults.fits) {
+		for (FittingResult fit : fitResults.getFits()) {
 
 			
 			for (int i = 0; i < p.dr.dataWidth; i++) {
@@ -72,7 +72,7 @@ public class FittingMarkersPainter extends PlotPainter
 				if (channel > p.dr.dataWidth) continue;
 				
 				//TODO: This should not just be created blank here
-				FittingParameters parameters = fitResults.parameters;
+				FittingParameters parameters = fitResults.getParameters();
 				FittingFunction fitFn = parameters.forTransition(t, ts.type);
 
 				

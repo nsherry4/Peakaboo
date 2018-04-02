@@ -173,7 +173,7 @@ public class AutoEnergyCalibration {
 	public static float scoreFitGood(FittingResultSet results, ReadOnlySpectrum spectrum) {
 		float score = 0f;
 
-		Spectrum fit = results.totalFit;
+		Spectrum fit = results.getTotalFit();
 
 		//Method #2: find the percentage of signal fit
 		float percent = 0;

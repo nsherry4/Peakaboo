@@ -58,7 +58,7 @@ public class Fitter {
 		float cutoff;
 		
 		//look at every point in the ranges covered by transitions, find the max intensity
-		for (Integer i : curve.intenseRanges)
+		for (Integer i : curve.getIntenseRanges())
 		{
 			if (i < 0 || i >= data.size()) continue;
 			currentIntensity = data.get(i);
@@ -87,7 +87,7 @@ public class Fitter {
 
 		
 		//look at every point in the ranges covered by transitions 
-		for (Integer i : curve.intenseRanges)
+		for (Integer i : curve.getIntenseRanges())
 		{
 			if (i < 0 || i >= data.size()) continue;
 			

@@ -50,7 +50,7 @@ public class FittingPainter extends PlotPainter
 	 */
 	public FittingPainter(FittingResultSet data, Color stroke, Color fill)
 	{
-		this(data.fits, stroke, fill);
+		this(data.getFits(), stroke, fill);
 	}
 	
 	

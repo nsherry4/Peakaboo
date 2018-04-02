@@ -57,7 +57,7 @@ public class MapTS
 			
 			FittingResultSet frs = Fitter.fit(data, fittings);
 
-			for (FittingResult result : frs.fits)
+			for (FittingResult result : frs.getFits())
 			{
 				maps.putIntensityInMapAtPoint(
 					type == FittingTransform.AREA ? result.getFit().sum() : result.getFit().max(),
