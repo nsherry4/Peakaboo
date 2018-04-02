@@ -274,12 +274,37 @@ public class FittingSet implements Serializable
 
 	}
 
-
-
-	//TODO: This isn't a good idea. We need to be notified 
-	//when any parameter is changed and right now that isn't happening.
 	public FittingParameters getFittingParameters() {
 		return parameters;
+	}
+	
+	
+	
+	/**
+	 * Fit this FittingSet against spectrum data
+	 */
+	public FittingResultSet fit(ReadOnlySpectrum data) {
+
+		FittingResultSet results = new FittingResultSet(data.size());
+		results.parameters = FittingParameters.copy(this.getFittingParameters());
+		
+		// calculate the curves
+		for (Curve curve : this.getCurves()) {
+			if (!curve.getTransitionSeries().visible) { continue; }
+			
+			FittingResult result = curve.fit(data);
+			data = SpectrumCalculations.subtractLists(data, result.getFit(), 0.0f);
+			
+			//should this be done through a method addFit?
+			results.fits.add(result);
+			SpectrumCalculations.addLists_inplace(results.totalFit, result.getFit());
+		}
+
+		results.residual = data;
+		
+
+		return results;
+		
 	}
 
 }

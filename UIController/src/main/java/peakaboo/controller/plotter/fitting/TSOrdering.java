@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.fitting.Curve;
 import peakaboo.curvefit.fitting.EnergyCalibration;
-import peakaboo.curvefit.fitting.Fitter;
 import peakaboo.curvefit.fitting.FittingParameters;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
@@ -136,7 +135,7 @@ public class TSOrdering
 				Float remainingArea;
 				
 				//get the fitting ratio, and the fitting spectrum
-				FittingResult result = Fitter.fit(s, curve);
+				FittingResult result = curve.fit(s);
 				//remove this fitting from the spectrum
 				SpectrumCalculations.subtractLists_inplace(s, result.getFit(), 0.0f);
 				
@@ -266,8 +265,8 @@ public class TSOrdering
 		if (currentTSisUsed) proposed.remove(currentTS);
 		
 		//recalculate
-		FittingResultSet fitResults = Fitter.fit(data, fits);
-		FittingResultSet proposedResults = Fitter.fit(fitResults.getResidual(), proposed);
+		FittingResultSet fitResults = fits.fit(data);
+		FittingResultSet proposedResults = proposed.fit(fitResults.getResidual());
 		
 		
 		final ReadOnlySpectrum s = proposedResults.getResidual();

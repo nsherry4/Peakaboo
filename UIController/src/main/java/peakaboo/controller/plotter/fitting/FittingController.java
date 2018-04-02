@@ -8,7 +8,6 @@ import java.util.List;
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.EnergyCalibration;
-import peakaboo.curvefit.fitting.Fitter;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -254,12 +253,12 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void calculateProposalFittings()
 	{
-		fittingModel.proposalResults = Fitter.fit(fittingModel.selectionResults.getResidual(), fittingModel.proposals);
+		fittingModel.proposalResults = fittingModel.proposals.fit(fittingModel.selectionResults.getResidual());
 	}
 
 	public void calculateSelectionFittings(ReadOnlySpectrum data)
 	{
-		fittingModel.selectionResults = Fitter.fit(data, fittingModel.selections);
+		fittingModel.selectionResults = fittingModel.selections.fit(data);
 	}
 
 	public boolean hasProposalFitting()

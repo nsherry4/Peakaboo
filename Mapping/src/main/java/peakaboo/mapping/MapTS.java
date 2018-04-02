@@ -3,7 +3,6 @@ package peakaboo.mapping;
 import java.util.List;
 import java.util.function.Consumer;
 
-import peakaboo.curvefit.fitting.Fitter;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -55,7 +54,7 @@ public class MapTS
 			
 			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(index));
 			
-			FittingResultSet frs = Fitter.fit(data, fittings);
+			FittingResultSet frs = fittings.fit(data);
 
 			for (FittingResult result : frs.getFits())
 			{

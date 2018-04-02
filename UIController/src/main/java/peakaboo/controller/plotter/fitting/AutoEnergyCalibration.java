@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.fitting.EnergyCalibration;
-import peakaboo.curvefit.fitting.Fitter;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -119,7 +118,7 @@ public class AutoEnergyCalibration {
 				
 				FittingResultSet results;
 				fits.get().setEnergy(calibration.getMinEnergy(), calibration.getMaxEnergy());
-				results = Fitter.fit(spectrum, fits.get());
+				results = fits.get().fit(spectrum);
 				return scoreFitGood(results, spectrum);
 				
 			}).collect(Collectors.toList());
@@ -214,7 +213,7 @@ public class AutoEnergyCalibration {
 				if (max <= min) continue;
 				
 				fits.setEnergy(min, max);
-				FittingResultSet results = Fitter.fit(spectrum, fits);
+				FittingResultSet results = fits.fit(spectrum);
 				
 				float score = scoreFitGood(results, spectrum);
 				
