@@ -79,18 +79,13 @@ public class Curve implements Serializable
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		intenseRanges = new RangeSet();
 		
-		if (ts != null) setTransitionSeries(ts, calibration, false);
+		if (ts != null) setTransitionSeries(ts, calibration);
 		
 	}
-
+	
 	public void setTransitionSeries(TransitionSeries ts, EnergyCalibration calibration)
 	{
-		setTransitionSeries(ts, calibration, false);
-	}
-	
-	public void setTransitionSeries(TransitionSeries ts, EnergyCalibration calibration, boolean fitEscapes)
-	{
-		calculateConstraintMask(ts, calibration, fitEscapes);
+		calculateConstraintMask(ts, calibration);
 		calcUnscaledFit(ts, calibration, (ts.type != TransitionSeriesType.COMPOSITE));
 		this.transitionSeries = ts;
 	}
@@ -151,7 +146,7 @@ public class Curve implements Serializable
 	/**
 	 * Given a TransitionSeries, calculate the range of channels which are important
 	 */
-	private void calculateConstraintMask(TransitionSeries ts, EnergyCalibration calibration, boolean fitEscapes)
+	private void calculateConstraintMask(TransitionSeries ts, EnergyCalibration calibration)
 	{
 
 		
@@ -186,23 +181,23 @@ public class Curve implements Serializable
 			
 			
 			
-			if (fitEscapes && escape.hasOffset())
-			{
-				for (Transition esc : escape.offset()) {
-					mean = calibration.channelFromEnergy(t.energyValue-esc.energyValue);
-					
-					start = (int) (mean - range);
-					stop = (int) (mean + range);
-					if (start < 0) start = 0;
-					if (stop > calibration.getDataWidth() - 1) stop = calibration.getDataWidth() - 1;
-					if (start > calibration.getDataWidth() - 1) start = calibration.getDataWidth() - 1;
-	
-					baseSize += stop - start + 1;
-					
-					intenseRanges.addRange(new Range(start, stop));
-					
-				}
-			}
+//			if (fitEscapes && escape.hasOffset())
+//			{
+//				for (Transition esc : escape.offset()) {
+//					mean = calibration.channelFromEnergy(t.energyValue-esc.energyValue);
+//					
+//					start = (int) (mean - range);
+//					stop = (int) (mean + range);
+//					if (start < 0) start = 0;
+//					if (stop > calibration.getDataWidth() - 1) stop = calibration.getDataWidth() - 1;
+//					if (start > calibration.getDataWidth() - 1) start = calibration.getDataWidth() - 1;
+//	
+//					baseSize += stop - start + 1;
+//					
+//					intenseRanges.addRange(new Range(start, stop));
+//					
+//				}
+//			}
 			
 		}
 		
