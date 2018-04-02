@@ -13,8 +13,8 @@ import javax.swing.tree.TreeCellEditor;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
-import peakaboo.curvefit.transitionseries.TransitionSeriesMode;
+import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import scitypes.SigDigits;
 

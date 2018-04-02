@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.icons.IconSize;

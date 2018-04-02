@@ -4,8 +4,8 @@ import com.github.tschoonj.xraylib.Xraylib;
 import com.github.tschoonj.xraylib.XraylibException;
 
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 
 
 

@@ -2,14 +2,13 @@ package peakaboo.ui.swing.plotting.fitting.painters;
 
 import java.awt.Color;
 
-import peakaboo.curvefit.fitting.Curve;
 import peakaboo.curvefit.fitting.FittingParameters;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.EscapePeakType;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
@@ -65,7 +64,7 @@ public class FittingMarkersPainter extends PlotPainter
 				markerHeights.set(i, 0.0f);
 			}
 
-			TransitionSeries ts = fit.getCurve().getTransitionSeries();
+			TransitionSeries ts = fit.getTransitionSeries();
 			for (Transition t : ts) {
 
 				channel = getChannelAtEnergy(p.dr, t.energyValue);

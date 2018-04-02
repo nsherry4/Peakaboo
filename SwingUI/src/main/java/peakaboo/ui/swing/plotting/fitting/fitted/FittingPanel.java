@@ -32,7 +32,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;

@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
-import peakaboo.curvefit.transitionseries.TransitionSeriesMode;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeriesMode;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 import scitypes.Pair;
 
 

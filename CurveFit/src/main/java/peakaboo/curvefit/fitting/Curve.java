@@ -8,10 +8,10 @@ import java.util.List;
 
 import peakaboo.curvefit.fitting.functions.FittingFunction;
 import peakaboo.curvefit.peaktable.Element;
+import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.EscapePeakType;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 import scitypes.ISpectrum;
 import scitypes.Range;
 import scitypes.RangeSet;

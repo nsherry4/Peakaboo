@@ -7,14 +7,13 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.fitting.Curve;
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.Fitter;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;
 import scitypes.Pair;

@@ -1,8 +1,4 @@
-package peakaboo.curvefit.transitionseries;
-
-import peakaboo.curvefit.transition.Transition;
-
-
+package peakaboo.curvefit.transition;
 
 /**
  * This lists the various series of {@link Transition}s, such as all of the K transitions

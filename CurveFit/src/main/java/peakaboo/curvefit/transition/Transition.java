@@ -2,8 +2,6 @@ package peakaboo.curvefit.transition;
 
 import java.io.Serializable;
 
-import peakaboo.curvefit.transitionseries.TransitionSeries;
-
 /**
  * 
  *  This class stores the information about a single transition as defined in the peak table

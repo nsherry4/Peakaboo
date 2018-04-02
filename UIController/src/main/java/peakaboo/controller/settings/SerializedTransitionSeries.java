@@ -5,8 +5,8 @@ import java.util.List;
 
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 
 
 public class SerializedTransitionSeries

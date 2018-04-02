@@ -9,7 +9,7 @@ import java.util.List;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Bounds;

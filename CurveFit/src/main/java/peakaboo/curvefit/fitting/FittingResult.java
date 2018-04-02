@@ -1,7 +1,7 @@
 package peakaboo.curvefit.fitting;
 
 
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 

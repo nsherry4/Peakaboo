@@ -13,9 +13,9 @@ import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.transitionseries.EscapePeakType;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.EscapePeakType;
+import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 import scitypes.ReadOnlySpectrum;
 import swidget.widgets.listcontrols.ListControls;
 

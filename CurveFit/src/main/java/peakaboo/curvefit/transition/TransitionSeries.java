@@ -1,4 +1,4 @@
-package peakaboo.curvefit.transitionseries;
+package peakaboo.curvefit.transition;
 
 
 
@@ -15,7 +15,6 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.transition.Transition;
 import scitypes.util.ListOps;
 
 

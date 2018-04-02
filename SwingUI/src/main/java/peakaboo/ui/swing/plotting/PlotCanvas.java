@@ -21,7 +21,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.FittingResult;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.filter.model.Filter;
 import peakaboo.ui.swing.plotting.fitting.painters.FittingMarkersPainter;
 import peakaboo.ui.swing.plotting.fitting.painters.FittingPainter;

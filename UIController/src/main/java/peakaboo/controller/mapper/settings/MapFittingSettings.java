@@ -17,7 +17,7 @@ import eventful.EventfulType;
 import peakaboo.calculations.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.curvefit.transitionseries.TransitionSeries;
+import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import scitypes.Coord;
 import scitypes.GridPerspective;

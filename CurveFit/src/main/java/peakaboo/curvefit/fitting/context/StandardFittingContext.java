@@ -3,7 +3,7 @@ package peakaboo.curvefit.fitting.context;
 import peakaboo.curvefit.fitting.FittingParameters;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 
 public class StandardFittingContext implements FittingContext {
 

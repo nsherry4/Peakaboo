@@ -2,7 +2,7 @@ package peakaboo.curvefit.fitting.functions;
 
 import peakaboo.curvefit.fitting.context.FittingContext;
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 
 /**
  * 

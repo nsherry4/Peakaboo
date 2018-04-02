@@ -6,7 +6,7 @@ import peakaboo.curvefit.fitting.functions.FittingFunction;
 import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transitionseries.TransitionSeriesType;
+import peakaboo.curvefit.transition.TransitionSeriesType;
 
 public class FittingParameters {
 

@@ -6,7 +6,7 @@ import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.transitionseries.EscapePeakType;
+import peakaboo.curvefit.transition.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
