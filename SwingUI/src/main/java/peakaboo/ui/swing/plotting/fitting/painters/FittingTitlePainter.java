@@ -87,7 +87,7 @@ public class FittingTitlePainter extends PlotPainter
 			titleName = fit.getTransitionSeries().getDescription();
 
 			
-			titleHeight = SigDigits.roundFloatTo(fit.getFitScale(), 1);
+			titleHeight = SigDigits.roundFloatTo(fit.getCurveScale(), 1);
 
 			title = "";
 			if (drawElementNames) title += titleName;

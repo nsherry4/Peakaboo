@@ -112,6 +112,10 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
+	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data) {
+		return applyFilters(data, false);
+	}
+	
 	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data, boolean filtersShouldCache)
 	{
 
@@ -119,6 +123,10 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
+	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data) {
+		return applyFiltersUnsynchronized(data, false);
+	}
+	
 	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, boolean filtersShouldCache)
 	{
 

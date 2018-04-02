@@ -3,6 +3,7 @@ package peakaboo.mapping;
 import java.util.List;
 import java.util.function.Consumer;
 
+import peakaboo.curvefit.fitting.Fitter;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
@@ -52,10 +53,9 @@ public class MapTS
 			ReadOnlySpectrum original = datasetProvider.getScanData().get(index);
 			if (original == null) return;
 			
-			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(index), false);
+			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(index));
 			
-			//TODO: this call is synchronized. Can we do better?
-			FittingResultSet frs = fittings.fit(data);
+			FittingResultSet frs = Fitter.fit(data, fittings);
 
 			for (FittingResult result : frs.fits)
 			{

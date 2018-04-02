@@ -62,9 +62,9 @@ public class SettingsController extends Eventful implements Serializable
 
 	public void setMaxEnergy(float max) {
 		settingsModel.maxEnergy = max;
-		//if (plot.data().hasDataSet() && plot.data().getDataSet().channelsPerScan() > 0) {
-			plot.fitting().setFittingParameters(getMinEnergy(), max);
-		//}
+		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
+		plot.fitting().setFittingParameters(dataWidth, getMinEnergy(), max);
+
 		updateListeners();
 	}
 
@@ -76,9 +76,8 @@ public class SettingsController extends Eventful implements Serializable
 	
 	public void setMinEnergy(float min) {
 		settingsModel.minEnergy = min;
-		//if (plot.data().hasDataSet() && plot.data().getDataSet().channelsPerScan() > 0) {
-			plot.fitting().setFittingParameters(min, getMaxEnergy());
-		//}
+		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
+		plot.fitting().setFittingParameters(dataWidth, min, getMaxEnergy());
 		updateListeners();
 	}
 

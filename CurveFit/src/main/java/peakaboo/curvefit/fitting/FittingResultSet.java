@@ -23,7 +23,7 @@ public class FittingResultSet
 	public Spectrum				totalFit;
 	public ReadOnlySpectrum		residual;
 	public List<FittingResult>	fits;
-
+	public FittingParameters	parameters;
 	
 	public FittingResultSet(int size)
 	{

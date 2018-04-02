@@ -80,9 +80,9 @@ import peakaboo.common.Version;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
+import peakaboo.controller.plotter.fitting.TSOrdering;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
-import peakaboo.curvefit.controller.AutoEnergyCalibration;
-import peakaboo.curvefit.controller.TSOrdering;
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
 import peakaboo.curvefit.transitionseries.TransitionSeries;
@@ -250,53 +250,31 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void setWidgetsState()
 	{
 
-		snapshotMenuItem.setEnabled(false);
-		exportFittingsMenuItem.setEnabled(false);
-		exportFilteredDataMenuItem.setEnabled(false);
-		toolbarSnapshot.setEnabled(false);
-		exportSinks.setEnabled(false);
-		energyGuess.setEnabled(false);
-		toolbarInfo.setEnabled(false);
+		boolean hasData = controller.data().hasDataSet();
 		
-		if (controller.data().hasDataSet())
-		{
-
-			bottomPanel.setEnabled(true);
-			snapshotMenuItem.setEnabled(true);
-			exportFittingsMenuItem.setEnabled(true);
-			exportFilteredDataMenuItem.setEnabled(true);
-			toolbarSnapshot.setEnabled(true);
-			exportSinks.setEnabled(true);
-			energyGuess.setEnabled(true);
-			toolbarInfo.setEnabled(true);
-
+		bottomPanel.setEnabled(hasData);
+		snapshotMenuItem.setEnabled(hasData);
+		exportFittingsMenuItem.setEnabled(hasData);
+		exportFilteredDataMenuItem.setEnabled(hasData);
+		toolbarSnapshot.setEnabled(hasData);
+		exportSinks.setEnabled(hasData);
+		energyGuess.setEnabled(hasData);
+		toolbarInfo.setEnabled(hasData);
+		
+		if (hasData) {
 			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());
-
-			
-
-
 			setEnergySpinners();
 
-
-			if (controller.settings().getChannelCompositeType() == ChannelCompositeMode.NONE)
-			{
-
+			if (controller.settings().getChannelCompositeType() == ChannelCompositeMode.NONE) {
 				scanNo.setValue(controller.settings().getScanNumber() + 1);
 				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.settings().getScanNumber()));
-				
 				scanSelector.setEnabled(true);
-
-			}
-			else
-			{
+			} else {
 				scanSelector.setEnabled(false);
 			}
 
 		}
-		else
-		{
-			bottomPanel.setEnabled(false);
-		}
+
 
 		undo.setEnabled(controller.history().canUndo());
 		redo.setEnabled(controller.history().canRedo());

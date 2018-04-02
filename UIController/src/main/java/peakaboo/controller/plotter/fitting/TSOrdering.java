@@ -1,4 +1,4 @@
-package peakaboo.curvefit.controller;
+package peakaboo.controller.plotter.fitting;
 
 
 import java.io.StreamCorruptedException;
@@ -18,12 +18,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.fitting.CurveFitter;
+import peakaboo.curvefit.fitting.Curve;
 import peakaboo.curvefit.fitting.EnergyCalibration;
+import peakaboo.curvefit.fitting.Fitter;
+import peakaboo.curvefit.fitting.FittingParameters;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.fitting.parameters.FittingParameters;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
 import peakaboo.curvefit.transitionseries.TransitionSeries;
@@ -115,7 +116,7 @@ public class TSOrdering
 		//scoring function to evaluate each TransitionSeries
 		return new Function<TransitionSeries, Float>() {
 
-			CurveFitter fitter = new CurveFitter(null, parameters, calibration, escape);
+			Curve curve = new Curve(null, parameters, calibration, escape);
 			Spectrum s = new ISpectrum(spectrum);
 			
 			public Float apply(TransitionSeries ts)
@@ -131,11 +132,11 @@ public class TSOrdering
 					
 				}
 				
-				fitter.setTransitionSeries(ts);
+				curve.setTransitionSeries(ts, calibration);
 				Float remainingArea;
 				
 				//get the fitting ratio, and the fitting spectrum
-				FittingResult result = fitter.fit(s);
+				FittingResult result = Fitter.fit(s, curve);
 				//remove this fitting from the spectrum
 				SpectrumCalculations.subtractLists_inplace(s, result.getFit(), 0.0f);
 				
@@ -146,7 +147,7 @@ public class TSOrdering
 				
 				if (useBaseSize)
 				{
-					return (float)( remainingArea * fitter.getSizeOfBase() * prox );
+					return (float)( remainingArea * curve.getSizeOfBase() * prox );
 				} else {
 					return (float)( remainingArea * prox );
 				}
@@ -265,8 +266,8 @@ public class TSOrdering
 		if (currentTSisUsed) proposed.remove(currentTS);
 		
 		//recalculate
-		FittingResultSet fitResults = fits.fit(data);
-		FittingResultSet proposedResults = proposed.fit(fitResults.residual);
+		FittingResultSet fitResults = Fitter.fit(data, fits);
+		FittingResultSet proposedResults = Fitter.fit(fitResults.residual, proposed);
 		
 		
 		final ReadOnlySpectrum s = proposedResults.residual;

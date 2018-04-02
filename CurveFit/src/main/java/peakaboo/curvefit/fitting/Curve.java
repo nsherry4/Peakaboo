@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.fitting.parameters.FittingParameters;
-import peakaboo.curvefit.fitting.parameters.StandardFittingParameters;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
@@ -24,22 +22,19 @@ import scitypes.SpectrumCalculations;
 
 
 /**
- * A CurveFitter represents the curve created by applying a {@link FittingFunction} 
+ * A Curve represents the curve created by applying a {@link FittingFunction} 
  * to a {@link TransitionSeries}. It can then be applied to signal to determine the scale of fit.
  * 
  * @author NAS
  */
 
-public class CurveFitter implements Serializable
+public class Curve implements Serializable
 {
 
 	//The {@link TransitionSeries} that this fitting is based on
 	private TransitionSeries		transitionSeries;
 	
 	private EscapePeakType			escape	= EscapePeakType.SILICON;
-
-	//Calibration for applying curve to data
-	private EnergyCalibration 		calibration;
 	
 	//The details of how we generate our fitting curve
 	private FittingParameters 		parameters;
@@ -52,7 +47,7 @@ public class CurveFitter implements Serializable
 	//then divided by
 	private float					normalizationScale;
 	//This is the curve created by applying a FittingFunction to the TransitionSeries 
-	private Spectrum				normalizedCurve;	
+	Spectrum						normalizedCurve;	
 
 	
 	
@@ -61,23 +56,22 @@ public class CurveFitter implements Serializable
 	private float					rangeMultiplier;
 	
 	//Areas where the curve is strong enough that we need to consider it.
-	private RangeSet				intenseRanges;
+	RangeSet						intenseRanges;
 	
 	//how large a footprint this curve has, used in scoring fittings
 	private int						baseSize;
 	
 
 	/**
-	 * Create a new CurveFitter.
+	 * Create a new Curve.
 	 * 
 	 * @param ts the TransitionSeries to fit
 	 * @param calibration the energy settings to use
 	 * @param escape the type of escape peaks to model
 	 */
-	public CurveFitter(TransitionSeries ts, FittingParameters parameters, EnergyCalibration calibration, EscapePeakType escape)
+	public Curve(TransitionSeries ts, FittingParameters parameters, EnergyCalibration calibration, EscapePeakType escape)
 	{
 
-		this.calibration = calibration;
 		this.escape = escape;
 		this.parameters = parameters;
 		rangeMultiplier = DEFAULT_RANGE_MULT;
@@ -85,20 +79,19 @@ public class CurveFitter implements Serializable
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		intenseRanges = new RangeSet();
 		
-		if (ts != null) setTransitionSeries(ts, false);
+		if (ts != null) setTransitionSeries(ts, calibration, false);
 		
 	}
 
-	public void setTransitionSeries(TransitionSeries ts)
+	public void setTransitionSeries(TransitionSeries ts, EnergyCalibration calibration)
 	{
-		setTransitionSeries(ts, false);
+		setTransitionSeries(ts, calibration, false);
 	}
 	
-	public void setTransitionSeries(TransitionSeries ts, boolean fitEscapes)
+	public void setTransitionSeries(TransitionSeries ts, EnergyCalibration calibration, boolean fitEscapes)
 	{
-		calculateConstraintMask(ts, fitEscapes);
-		calcUnscaledFit(ts, (ts.type != TransitionSeriesType.COMPOSITE));
-
+		calculateConstraintMask(ts, calibration, fitEscapes);
+		calcUnscaledFit(ts, calibration, (ts.type != TransitionSeriesType.COMPOSITE));
 		this.transitionSeries = ts;
 	}
 	
@@ -113,86 +106,12 @@ public class CurveFitter implements Serializable
 	 *            amount to scale the fitting by
 	 * @return a scaled fit
 	 */
-	private Spectrum scaleFitToData(float scale)
+	Spectrum scale(float scale)
 	{
 		return SpectrumCalculations.multiplyBy(normalizedCurve, scale);
 	}
 	
 
-	public FittingResult fit(ReadOnlySpectrum data) {
-		float scale = getRatioForCurveUnderData(data);
-		ReadOnlySpectrum scaledData = scaleFitToData(scale);
-		FittingResult result = new FittingResult(scaledData, this, scale);
-		return result;
-	}
-	
-
-	/**
-	 * Calculates the amount that this fitting should be scaled by to best fit the given data set
-	 * 
-	 * @param data
-	 *            the data to scale the fit to match
-	 * @return a scale value
-	 */
-	private float getRatioForCurveUnderData(ReadOnlySpectrum data)
-	{
-			
-		float topIntensity = Float.MIN_VALUE;
-		boolean dataConsidered = false;
-		float currentIntensity;
-		float cutoff;
-		
-		//look at every point in the ranges covered by transitions, find the max intensity
-		for (Integer i : intenseRanges)
-		{
-			if (i < 0 || i >= data.size()) continue;
-			currentIntensity = data.get(i);
-			if (currentIntensity > topIntensity) topIntensity = currentIntensity;
-			dataConsidered = true;
-			
-		}
-		if (! dataConsidered) return 0.0f;	
-		
-		
-		
-		// calculate cut-off point where we do not consider any signal weaker than this when trying to fit
-		if (topIntensity > 0.0)
-		{
-			cutoff = (float) Math.log(topIntensity * 2);
-			cutoff = cutoff / topIntensity; // expresessed w.r.t strongest signal
-		}
-		else
-		{
-			cutoff = 0.0f;
-		}
-
-		float thisFactor;
-		float smallestFactor = Float.MAX_VALUE;
-		boolean ratiosConsidered = false;
-
-		
-		//look at every point in the ranges covered by transitions 
-		for (Integer i : intenseRanges)
-		{
-			if (i < 0 || i >= data.size()) continue;
-			
-			if (normalizedCurve.get(i) >= cutoff)
-			{
-				
-				thisFactor = data.get(i) / normalizedCurve.get(i);
-				if (thisFactor < smallestFactor && !Float.isNaN(thisFactor)) 
-				{
-					smallestFactor = thisFactor;
-					ratiosConsidered = true;
-				}
-			}
-		}
-
-		if (! ratiosConsidered) return 0.0f;
-
-		return smallestFactor;
-
-	}
 
 
 
@@ -220,7 +139,7 @@ public class CurveFitter implements Serializable
 	}
 	
 	
-	public boolean isOverlapping(CurveFitter other)
+	public boolean isOverlapping(Curve other)
 	{
 		return intenseRanges.isTouching(other.intenseRanges);
 		
@@ -229,8 +148,10 @@ public class CurveFitter implements Serializable
 	
 
 	
-	
-	private void calculateConstraintMask(TransitionSeries ts, boolean fitEscapes)
+	/**
+	 * Given a TransitionSeries, calculate the range of channels which are important
+	 */
+	private void calculateConstraintMask(TransitionSeries ts, EnergyCalibration calibration, boolean fitEscapes)
 	{
 
 		
@@ -247,7 +168,7 @@ public class CurveFitter implements Serializable
 		{
 
 			//get the range of the peak
-			range = t.getFWHM();
+			range = parameters.getFWHM(t);
 			range *= rangeMultiplier;
 			
 			//get the centre of the peak in channels
@@ -291,9 +212,13 @@ public class CurveFitter implements Serializable
 	
 
 	// generates an initial unscaled curvefit from which later curves are scaled as needed
-	private void calcUnscaledFit(TransitionSeries ts, boolean fitEscape)
+	private void calcUnscaledFit(TransitionSeries ts, EnergyCalibration calibration, boolean fitEscape)
 	{
 
+		if (calibration.getDataWidth() == 0) {
+			throw new RuntimeException("DataWidth cannot be 0");
+		}
+		
 		Spectrum fit = new ISpectrum(calibration.getDataWidth());
 		List<FittingFunction> functions = new ArrayList<FittingFunction>();
 		
@@ -328,20 +253,17 @@ public class CurveFitter implements Serializable
 
 		}
 
-		
-		if (calibration.getDataWidth() > 0)
-		{
-			normalizationScale = fit.max();
-			if (normalizationScale == 0.0)
-			{
-				normalizedCurve = SpectrumCalculations.multiplyBy(fit, 0.0f);
-			}
-			else
-			{
-				normalizedCurve = SpectrumCalculations.divideBy(fit, normalizationScale);
-			}
 
+		normalizationScale = fit.max();
+		if (normalizationScale == 0.0)
+		{
+			normalizedCurve = SpectrumCalculations.multiplyBy(fit, 0.0f);
 		}
+		else
+		{
+			normalizedCurve = SpectrumCalculations.divideBy(fit, normalizationScale);
+		}
+
 
 	}
 

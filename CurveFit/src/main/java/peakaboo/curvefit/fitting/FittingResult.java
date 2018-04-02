@@ -7,8 +7,8 @@ import scitypes.Spectrum;
 
 /**
  * 
- * This class stores the results of applying a Spectrum to a {@link CurveFitter}, 
- * as well as the {@link TransitionSeries} that generated the fitter.
+ * This class stores the results of applying a Spectrum to a {@link Curve}, 
+ * as well as the {@link TransitionSeries} that generated the curve.
  * 
  * @author Nathaniel Sherry, 2009
  * 
@@ -18,19 +18,19 @@ public class FittingResult
 {
 
 	private ReadOnlySpectrum		fit;
-	private CurveFitter	fitter;
+	private Curve	curve;
 
-	private float					fitScale;
+	private float					curveScale;
 	private float					normalizationScale;
 	
 	private TransitionSeries		transitionSeries;
 
-	public FittingResult(ReadOnlySpectrum fit, CurveFitter fitter, float fitScale)	{
+	public FittingResult(ReadOnlySpectrum fit, Curve curve, float curveScale)	{
 		this.fit = fit;
-		this.fitter = fitter;
-		this.fitScale = fitScale;
-		this.normalizationScale = fitter.getNormalizationScale();
-		this.transitionSeries = fitter.getTransitionSeries();
+		this.curve = curve;
+		this.curveScale = curveScale;
+		this.normalizationScale = curve.getNormalizationScale();
+		this.transitionSeries = curve.getTransitionSeries();
 	}
 
 
@@ -39,21 +39,21 @@ public class FittingResult
 	}
 
 
-	public CurveFitter getFitter() {
-		return fitter;
+	public Curve getCurve() {
+		return curve;
 	}
 
 
-	public float getFitScale() {
-		return fitScale;
+	public float getCurveScale() {
+		return curveScale;
 	}
 	
-	public float normalizationScale() {
+	public float getNormalizationScale() {
 		return normalizationScale;
 	}
 	
 	public float getTotalScale() {
-		return fitScale / normalizationScale;
+		return curveScale / normalizationScale;
 	}
 	
 	public TransitionSeries getTransitionSeries() {

@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import peakaboo.curvefit.fitting.parameters.FittingParameters;
-import peakaboo.curvefit.fitting.parameters.StandardFittingParameters;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
 import peakaboo.curvefit.transitionseries.TransitionSeries;
@@ -18,7 +16,7 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 /**
- * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link CurveFitter}s based on various provided parameters. 
+ * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 
  * @author Nathaniel Sherry, 2009-2010
  *
  */
@@ -26,7 +24,8 @@ import scitypes.SpectrumCalculations;
 public class FittingSet implements Serializable
 {
 
-	private List<CurveFitter>				fitters;
+	private List<Curve>						curves;
+	private boolean							curvesValid = false;
 	private List<TransitionSeries>			fitTransitionSeries;
 	
 	private FittingParameters				parameters;
@@ -39,12 +38,12 @@ public class FittingSet implements Serializable
 
 	public FittingSet()
 	{
-		fitters = new ArrayList<CurveFitter>();
+		curves = new ArrayList<Curve>();
 		fitTransitionSeries = new ArrayList<TransitionSeries>();
 
 		this.calibration = new EnergyCalibration(0, 0, 0);
 		this.escapeType = EscapePeakType.NONE;
-		this.parameters = new StandardFittingParameters();
+		this.parameters = new FittingParameters(this);
 	}
 
 	
@@ -56,14 +55,14 @@ public class FittingSet implements Serializable
 		}
 		this.calibration.setMinEnergy(min);
 		this.calibration.setMaxEnergy(max);
-		regenerateFitters();
+		invalidateCurves();
 	}
 
 
 	public synchronized void setDataWidth(int dataWidth)
 	{
 		this.calibration.setDataWidth(dataWidth);
-		regenerateFitters();
+		invalidateCurves();
 	}
 
 
@@ -77,11 +76,11 @@ public class FittingSet implements Serializable
 	public void setEscapeType(EscapePeakType escapeType)
 	{
 		this.escapeType = escapeType;
-		regenerateFitters();
+		invalidateCurves();
 	}
 	
 	/**
-	 * Update several parameters which would require regenerating fitters all in one shot
+	 * Update several parameters which would require regenerating curves all in one shot
 	 */
 	public synchronized void setDataParameters(int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escapeType)
 	{
@@ -90,72 +89,60 @@ public class FittingSet implements Serializable
 		}
 		this.calibration = new EnergyCalibration(minEnergy, maxEnergy, dataWidth);
 		this.escapeType = escapeType;
-		regenerateFitters();
+		invalidateCurves();
 	}
 
 
 	
-	private synchronized void regenerateFitters()
+	synchronized void invalidateCurves()
 	{
-		fitters.clear();
-		for (TransitionSeries ts : fitTransitionSeries)
-		{
-			addTransitionSeriesToFittings(ts);
-		}
+		curves.clear();
+		curvesValid = false;
 	}
 
 
+	public List<Curve> getCurves() {
+		if (!curvesValid) {
+			synchronized (this) {
+				if (!curvesValid) {
+					for (TransitionSeries ts : fitTransitionSeries) {
+						generateCurve(ts);
+					}
+					curvesValid = true;
+				}
+			}
+		}
+		return new ArrayList<>(curves);
+	}
+	
 	public synchronized void addTransitionSeries(TransitionSeries ts)
 	{
 
 		if (fitTransitionSeries.contains(ts)) return;
-		
-		addTransitionSeriesToFittings(ts);
 		fitTransitionSeries.add(ts);
+		invalidateCurves();
 
 	}
 
 
-	private synchronized void addTransitionSeriesToFittings(TransitionSeries ts)
+	private synchronized void generateCurve(TransitionSeries ts)
 	{
-		fitters.add(new CurveFitter(ts, parameters, calibration, escapeType));
+		curves.add(new Curve(ts, parameters, calibration, escapeType));
 	}
 
 
 	public synchronized void remove(TransitionSeries ts)
 	{
 		fitTransitionSeries.remove(ts);
-
-		List<CurveFitter> fittingsToRemove = new ArrayList<CurveFitter>();
-		for (CurveFitter f : fitters)
-		{
-
-			if (f.getTransitionSeries().equals(ts))
-			{
-				fittingsToRemove.add(f);
-				break;
-			}
-
-		}
-
-		fitters.removeAll(fittingsToRemove);
-		
-		ts.setVisible(true);
-		
+		invalidateCurves();
 	}
 	
 	//if this has been set to false, and it is a primary TS, we may see it again, so we don't want this
 	//setting hanging around
 	public synchronized void clear()
 	{
-		
-		for (TransitionSeries t : fitTransitionSeries)
-		{
-			t.setVisible(true);
-		}
-		
 		fitTransitionSeries.clear();
-		fitters.clear();
+		invalidateCurves();
 	}
 
 
@@ -186,7 +173,7 @@ public class FittingSet implements Serializable
 			}
 		}
 		
-		regenerateFitters();
+		invalidateCurves();
 		
 		return movedTS;
 		
@@ -223,7 +210,7 @@ public class FittingSet implements Serializable
 				break;
 			}
 		}
-		regenerateFitters();
+		invalidateCurves();
 		
 		return movedTS;
 		
@@ -256,7 +243,7 @@ public class FittingSet implements Serializable
 			}
 		}
 
-		regenerateFitters();
+		invalidateCurves();
 	}
 
 
@@ -287,69 +274,6 @@ public class FittingSet implements Serializable
 
 	}
 
-
-
-	
-	public synchronized FittingResultSet fit(ReadOnlySpectrum data) {
-		return fitUnsynchronized(data);
-	}
-	
-	public FittingResultSet fitUnsynchronized(ReadOnlySpectrum data) {
-
-
-		if (data.size() != calibration.getDataWidth()) setDataWidth(data.size());
-		
-		
-		FittingResultSet results = new FittingResultSet(data.size());
-
-
-		// calculate the fitters
-		for (CurveFitter fitter : fitters)
-		{
-			
-			if (fitter.getTransitionSeries().visible)
-			{
-
-				FittingResult result = fitter.fit(data);
-				data = SpectrumCalculations.subtractLists(data, result.getFit(), 0.0f);
-				
-				//should this be done through a method addFit?
-				results.fits.add(result);
-				SpectrumCalculations.addLists_inplace(results.totalFit, result.getFit());
-
-			}
-			
-
-		}
-
-		results.residual = data;
-
-		return results;
-
-	}
-	
-
-	// don't need to synchronize this, since the only interaction
-	// it has with fitting data is in the fit() function
-	// which IS synchronized
-	public float calculateAreaUnderFit(ReadOnlySpectrum data)
-	{
-
-		float result;
-		float sum;
-
-		FittingResultSet results = fit(data);
-
-		sum = 0;
-		for (float d : results.totalFit)
-		{
-			sum += d;
-		}
-		result = sum /= data.size();
-
-		return result;
-
-	}
 
 
 	//TODO: This isn't a good idea. We need to be notified 

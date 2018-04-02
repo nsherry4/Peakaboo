@@ -2,12 +2,11 @@ package peakaboo.ui.swing.plotting.fitting.painters;
 
 import java.awt.Color;
 
-import peakaboo.curvefit.fitting.CurveFitter;
+import peakaboo.curvefit.fitting.Curve;
+import peakaboo.curvefit.fitting.FittingParameters;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.fitting.parameters.FittingParameters;
-import peakaboo.curvefit.fitting.parameters.StandardFittingParameters;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transitionseries.EscapePeakType;
 import peakaboo.curvefit.transitionseries.TransitionSeries;
@@ -66,7 +65,7 @@ public class FittingMarkersPainter extends PlotPainter
 				markerHeights.set(i, 0.0f);
 			}
 
-			TransitionSeries ts = fit.getFitter().getTransitionSeries();
+			TransitionSeries ts = fit.getCurve().getTransitionSeries();
 			for (Transition t : ts) {
 
 				channel = getChannelAtEnergy(p.dr, t.energyValue);
@@ -74,7 +73,7 @@ public class FittingMarkersPainter extends PlotPainter
 				if (channel > p.dr.dataWidth) continue;
 				
 				//TODO: This should not just be created blank here
-				FittingParameters parameters = new StandardFittingParameters();
+				FittingParameters parameters = fitResults.parameters;
 				FittingFunction fitFn = parameters.forTransition(t, ts.type);
 
 				
@@ -102,7 +101,7 @@ public class FittingMarkersPainter extends PlotPainter
 						
 						FittingFunction escFn = parameters.forEscape(t, esc, ts.element, ts.type);
 						markerHeight = escFn.forEnergy(t.energyValue) * fit.getTotalScale();
-						//markerHeight *= CurveFitter.escapeIntensity(fit.getTransitionSeries().element);
+						//markerHeight *= Curve.escapeIntensity(fit.getTransitionSeries().element);
 						//markerHeight *= esc.relativeIntensity;
 						markerHeight = transformValueForPlot(p.dr, markerHeight);
 						
