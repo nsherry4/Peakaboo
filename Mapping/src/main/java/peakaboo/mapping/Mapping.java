@@ -24,7 +24,7 @@ import scitypes.ReadOnlySpectrum;
  *
  */
 
-public class MapTS
+public class Mapping
 {
 
 	/**
@@ -35,7 +35,7 @@ public class MapTS
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
 	 * @return a {@link StreamExecutor} which will return a {@link MapResultSet}
 	 */
-	public static StreamExecutor<MapResultSet> map(DataSet dataset, FilterSet filters, FittingSet fittings) {
+	public static StreamExecutor<MapResultSet> mapTask(DataSet dataset, FilterSet filters, FittingSet fittings) {
 		
 		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
