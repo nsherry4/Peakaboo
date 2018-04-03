@@ -531,7 +531,10 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		
 		c.gridx++;
-		toolbar.add(createMenuButton(), c);
+		toolbar.add(createViewMenuButton(), c);
+		
+		c.gridx++;
+		toolbar.add(createMainMenuButton(), c);
 		
 
 	}
@@ -632,35 +635,28 @@ public class PlotPanel extends TabbedInterfacePanel
 		if (listener != null) menuItem.addActionListener(e -> listener.accept(e));
 	}
 	
-	private List<JMenu> createMenus()
-	{
 
-		JMenu menu;
-
-		List<JMenu> menuBar = new ArrayList<>();
-
-		
-
-		// FILE Menu
-		menu = new JMenu("File");
-		menu.setMnemonic(KeyEvent.VK_F);
-		menu.getAccessibleContext().setAccessibleDescription("Read and Write Data Sets");
+	
+	private ToolbarImageButton createMainMenuButton() {
+		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_MAIN, "Main Menu");
+		JPopupMenu mainMenu = new JPopupMenu();
 
 		
-		menu.add(createMenuItem(
+		
+		mainMenu.add(createMenuItem(
 				"Open Data\u2026", StockIcon.DOCUMENT_OPEN.toMenuIcon(), "Opens new data sets.",
 				e -> actionOpenData(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), KeyEvent.VK_O
 		));
 		
 		
-		menu.add(createMenuItem(
+		mainMenu.add(createMenuItem(
 				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
 				e -> actionSaveSession(),
 				null, null
 		));
 		
-		menu.add(createMenuItem(
+		mainMenu.add(createMenuItem(
 				"Load Session", null, null,
 				e -> actionLoadSession(),
 				null, null
@@ -707,7 +703,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		export.add(exportFittingsMenuItem);
 
 
-		menu.add(export);
+		mainMenu.add(export);
 		
 		
 		JMenu plugins = new JMenu("Plugins");
@@ -764,31 +760,9 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 	
 		
-		menu.add(plugins);
-		
-		
-		
-//		menu.add(createMenuItem(
-//				"Exit", StockIcon.WINDOW_CLOSE.toMenuIcon(), "Exits the Program",
-//				e -> System.exit(0),
-//				null, KeyEvent.VK_X
-//		));
+		mainMenu.add(plugins);
 
-		menuBar.add(menu);
-
-
-
-
-
-
-
-
-
-		// EDIT Menu
-		menu = new JMenu("Edit");
-		menu.setMnemonic(KeyEvent.VK_E);
-		menu.getAccessibleContext().setAccessibleDescription("Edit this data set");
-
+		mainMenu.addSeparator();
 
 		
 		undo = createMenuItem(
@@ -796,27 +770,52 @@ public class PlotPanel extends TabbedInterfacePanel
 				e -> controller.history().undo(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK), KeyEvent.VK_U
 		);
-		menu.add(undo);
+		mainMenu.add(undo);
 
 		redo = createMenuItem(
 				"Redo", StockIcon.EDIT_REDO.toMenuIcon(), "Redoes a previously undone action",
 				e -> controller.history().redo(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), KeyEvent.VK_R
 		);
-		menu.add(redo);
+		mainMenu.add(redo);
 
-		menuBar.add(menu);
+		mainMenu.addSeparator();
+
+		//HELP Menu
+		
+		JMenuItem logs = createMenuItem(
+				"Logs", null, null,
+				e -> actionShowLogs(),
+				null, null
+			);
+		mainMenu.add(logs);
+		
+		JMenuItem contents = createMenuItem(
+			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
+			e -> actionHelp(),
+			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
+		);
+		mainMenu.add(contents);
+		
+		JMenuItem about = createMenuItem(
+			"About", StockIcon.MISC_ABOUT.toMenuIcon(), null,
+			e -> actionAbout(),
+			null, null
+		);
+		mainMenu.add(about);
 
 
+		
+		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
+		return menuButton;
+	}
 
+	private ToolbarImageButton createViewMenuButton() {
+		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_VIEW, "View Menu");
+		JPopupMenu mainMenu = new JPopupMenu();
 
+		
 
-
-		// VIEW Menu
-		menu = new JMenu("View");
-		menu.setMnemonic(KeyEvent.VK_V);
-		menu.getAccessibleContext().setAccessibleDescription("Change the way the plot is viewed");
-		menuBar.add(menu);
 
 		final JMenuItem logPlot, axes, monochrome, title, raw, fittings;
 
@@ -871,15 +870,15 @@ public class PlotPanel extends TabbedInterfacePanel
 				null, KeyEvent.VK_O
 		);	
 		
-		menu.add(logPlot);
-		menu.add(axes);
-		menu.add(title);
-		menu.add(monochrome);
+		mainMenu.add(logPlot);
+		mainMenu.add(axes);
+		mainMenu.add(title);
+		mainMenu.add(monochrome);
 		
-		menu.addSeparator();
+		mainMenu.addSeparator();
 		
-		menu.add(raw);
-		menu.add(fittings);
+		mainMenu.add(raw);
+		mainMenu.add(fittings);
 
 
 		// Element Drawing submenu
@@ -917,7 +916,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		elementDrawing.add(eintensities);
 
 		
-		menu.add(elementDrawing);
+		mainMenu.add(elementDrawing);
 		
 		
 		
@@ -948,10 +947,10 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		}
 		
-		menu.add(escapePeaks);
+		mainMenu.add(escapePeaks);
 		
 
-		menu.addSeparator();
+		mainMenu.addSeparator();
 		
 
 
@@ -967,7 +966,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				KeyEvent.VK_I
 			);
 		viewGroup.add(individual);
-		menu.add(individual);
+		mainMenu.add(individual);
 		
 
 		average = createMenuRadioItem(
@@ -978,7 +977,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				KeyEvent.VK_M
 			);
 		viewGroup.add(average);
-		menu.add(average);
+		mainMenu.add(average);
 		
 
 		maximum = createMenuRadioItem(
@@ -989,57 +988,10 @@ public class PlotPanel extends TabbedInterfacePanel
 				KeyEvent.VK_T
 			);
 		viewGroup.add(maximum);
-		menu.add(maximum);
+		mainMenu.add(maximum);
 		
 		
 		
-
-		
-		
-//		//Mapping Menu
-//		menu = new JMenu("Mapping");
-//		menu.setMnemonic(KeyEvent.VK_S);
-//
-//
-//		populateFittingMenu(menu);
-//
-//		menuBar.add(menu);
-//		
-		
-		
-		
-		
-		
-		//HELP Menu
-		menu = new JMenu("Help");
-		menu.setMnemonic(KeyEvent.VK_H);
-		
-		JMenuItem logs = createMenuItem(
-				"Logs", null, null,
-				e -> actionShowLogs(),
-				null, null
-			);
-		menu.add(logs);
-		
-		JMenuItem contents = createMenuItem(
-			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
-			e -> actionHelp(),
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
-		);
-		menu.add(contents);
-		
-		JMenuItem about = createMenuItem(
-			"About", StockIcon.MISC_ABOUT.toMenuIcon(), null,
-			e -> actionAbout(),
-			null, null
-		);
-		menu.add(about);
-		
-		
-		
-		menuBar.add(menu);
-		
-
 		controller.addListener(new EventfulTypeListener<String>() {
 
 			public void change(String s)
@@ -1076,35 +1028,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		});
 		
 		
-		return menuBar;
-	}
-
-	
-	private ToolbarImageButton createMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.ACTION_MENU, "Main Menu");
-		JPopupMenu mainMenu = new JPopupMenu();
-
-		boolean first = true;
-		for (JMenu menu : createMenus()) {
-			
-			if (!first) { mainMenu.addSeparator(); }
-			first = false;
-			
-			if (menu.getText() == "View") {
-				mainMenu.add(menu);
-			} else {
-				for (Component item : menu.getMenuComponents()) {
-					mainMenu.add(item);
-				}
-			}
-			
-		}
-
-		
 		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
-
+	
 
 	private JPanel createBottomBar()
 	{

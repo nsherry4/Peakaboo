@@ -15,6 +15,7 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
+import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;
@@ -135,8 +136,12 @@ public class SavedSettings
 		
 		
 		if (dataController.hasDataSet()) {
-			fittings.selections.setDataParameters(dataController.getDataSet().getAnalysis().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
-			fittings.proposals.setDataParameters(dataController.getDataSet().getAnalysis().channelsPerScan(), settings.minEnergy, settings.maxEnergy, settings.escape);
+			EnergyCalibration calibration = new EnergyCalibration(settings.minEnergy, settings.maxEnergy, dataController.getDataSet().getAnalysis().channelsPerScan());
+			fittings.selections.getFittingParameters().setCalibration(calibration);
+			fittings.proposals.getFittingParameters().setCalibration(calibration);
+			
+			fittings.selections.getFittingParameters().setEscapeType(settings.escape);
+			fittings.proposals.getFittingParameters().setEscapeType(settings.escape);
 		}
 
 

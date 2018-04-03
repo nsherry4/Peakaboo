@@ -5,6 +5,7 @@ import peakaboo.curvefit.fitting.context.StandardFittingContext;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
 import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.peaktable.Element;
+import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeriesType;
 
@@ -14,6 +15,8 @@ public class FittingParameters {
 	
 	private float fwhmBase = 0.12245064f;
 	private float fwhmMult = 0.00470964f;
+	private	EnergyCalibration	calibration = new EnergyCalibration(0, 0, 0);
+	private EscapePeakType		escapeType = EscapePeakType.NONE;
 	
 	private FittingParameters() {}
 	
@@ -49,6 +52,13 @@ public class FittingParameters {
 		return function;
 	}
 	
+	private void invalidate() {
+		if (fits != null) {
+			this.fits.invalidateCurves();
+		}
+	}
+	
+	
 	
 	/**
 	 * The FWHM value for a {@link Transition} changes based on the energy level. This method 
@@ -78,11 +88,26 @@ public class FittingParameters {
 		invalidate();
 	}
 	
-	private void invalidate() {
-		if (fits != null) {
-			this.fits.invalidateCurves();
-		}
+	public EnergyCalibration getCalibration() {
+		return calibration;
+	}
+	
+	public void setCalibration(float minEnergy, float maxEnergy, int dataWidth) {
+		setCalibration(new EnergyCalibration(minEnergy, maxEnergy, dataWidth));
+	}
+	
+	public void setCalibration(EnergyCalibration calibration) {
+		this.calibration = calibration;
+		invalidate();
+	}
+	
+	public EscapePeakType getEscapeType() {
+		return this.escapeType;
 	}
 
+	public void setEscapeType(EscapePeakType escape) {
+		this.escapeType = escape;
+		invalidate();
+	}
 
 }

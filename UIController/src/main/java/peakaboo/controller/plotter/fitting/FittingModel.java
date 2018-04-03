@@ -41,8 +41,8 @@ public class FittingModel
 	{
 		selections = new FittingSet();
 		proposals = new FittingSet();
-		selections.setEscapeType(EscapePeakType.getDefault());
-		proposals.setEscapeType(EscapePeakType.getDefault());
+		selections.getFittingParameters().setEscapeType(EscapePeakType.getDefault());
+		proposals.getFittingParameters().setEscapeType(EscapePeakType.getDefault());
 		selectionResults = null;
 		proposalResults = null;
 		highlighted = new ArrayList<>();

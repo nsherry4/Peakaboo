@@ -19,13 +19,11 @@ import java.util.stream.Stream;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.fitting.Curve;
-import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingParameters;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.TransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.State;
@@ -48,18 +46,12 @@ public class TSOrdering
 
 	/**
 	 * Attempts to find an optimal ordering for a given list of {@link TransitionSeries}
-	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
-	 * @param unfitted the list of {@link TransitionSeries} to attempt to order
-	 * @param s the data to use to score orderings
-	 * @param escape the kind of {@link EscapePeakType} these fittings should use
 	 * @return an ordered list of {@link TransitionSeries}
 	 */
 	public static List<TransitionSeries> optimizeTSOrdering(
 			FittingParameters parameters,
-			EnergyCalibration calibration,
 			List<TransitionSeries> unfitted, 
-			Spectrum s, 
-			EscapePeakType escape)
+			Spectrum s)
 	{
 		List<TransitionSeries> ordered = new ArrayList<>(unfitted);
 
@@ -67,7 +59,7 @@ public class TSOrdering
 
 			public int compare(TransitionSeries ts1, TransitionSeries ts2)
 			{
-				return compareTSs(ts1, ts2, parameters, calibration, s, escape);
+				return compareTSs(ts1, ts2, parameters, s);
 			}
 		});
 		
@@ -77,35 +69,22 @@ public class TSOrdering
 	
 	/**
 	 * Creates an anonymous function to score a {@link TransitionSeries}
-	 * @param escape the kind of {@link EscapePeakType} the fitting should use
-	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
-	 * @param spectrum the data to use to score this {@link TransitionSeries}
-	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
 	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
-			EscapePeakType escape, 
 			FittingParameters parameters,
-			EnergyCalibration calibration,
 			final ReadOnlySpectrum spectrum, 
 			boolean useBaseSize)
 	{
-		return fScoreTransitionSeries(escape, parameters, calibration, spectrum, null, useBaseSize);
+		return fScoreTransitionSeries(parameters, spectrum, null, useBaseSize);
 	}
 	
 	/**
 	 * Creates an anonymous function to score a {@link TransitionSeries}
-	 * @param escape the kind of {@link EscapePeakType} the fitting should use
-	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
-	 * @param spectrum the data to use to score this {@link TransitionSeries}
-	 * @param energy score {@link TransitionSeries} better the closer they are to the given energy value
-	 * @param useBaseSize should {@link TransitionSeries} with larger base sizes (wider) be scored worse
 	 * @return a score for this {@link TransitionSeries}
 	 */
 	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
-			final EscapePeakType escape, 
 			final FittingParameters parameters,
-			EnergyCalibration calibration,
 			final ReadOnlySpectrum spectrum, 
 			final Float energy, 
 			final boolean useBaseSize
@@ -115,7 +94,7 @@ public class TSOrdering
 		//scoring function to evaluate each TransitionSeries
 		return new Function<TransitionSeries, Float>() {
 
-			Curve curve = new Curve(null, parameters, calibration, escape);
+			Curve curve = new Curve(null, parameters);
 			Spectrum s = new ISpectrum(spectrum);
 			
 			public Float apply(TransitionSeries ts)
@@ -125,13 +104,13 @@ public class TSOrdering
 				{
 					prox = 1.0;
 				} else  {
-					prox = ts.getProximityScore(energy, ((double)(calibration.energyPerChannel()))*2d); //Math.abs(ts.getProximityToEnergy(energy));
+					prox = ts.getProximityScore(energy, ((double)(parameters.getCalibration().energyPerChannel()))*2d); //Math.abs(ts.getProximityToEnergy(energy));
 					//if (prox <= energyPerChannel*10) prox = energyPerChannel*10;
 					prox = Math.log1p(prox);
 					
 				}
 				
-				curve.setTransitionSeries(ts, calibration);
+				curve.setTransitionSeries(ts);
 				Float remainingArea;
 				
 				//get the fitting ratio, and the fitting spectrum
@@ -165,9 +144,7 @@ public class TSOrdering
 			final TransitionSeries ts1, 
 			final TransitionSeries ts2, 
 			FittingParameters parameters,
-			EnergyCalibration calibration,
-			final Spectrum s, 
-			final EscapePeakType escape)
+			final Spectrum s)
 	{
 				
 		Pair<TransitionSeries, TransitionSeries> order = new Pair<TransitionSeries, TransitionSeries>();
@@ -175,11 +152,11 @@ public class TSOrdering
 		Float ordering1, ordering2;
 		Function<TransitionSeries, Float> scorer;
 		
-		scorer = fScoreTransitionSeries(escape, parameters, calibration, s, false);
+		scorer = fScoreTransitionSeries(parameters, s, false);
 		scorer.apply(ts1);
 		ordering1 = scorer.apply(ts2);
 		
-		scorer = fScoreTransitionSeries(escape, parameters, calibration, s, false);
+		scorer = fScoreTransitionSeries(parameters, s, false);
 		scorer.apply(ts2);
 		ordering2 = scorer.apply(ts1);		
 		
@@ -201,11 +178,9 @@ public class TSOrdering
 			TransitionSeries ts1, 
 			TransitionSeries ts2, 
 			FittingParameters parameters,
-			EnergyCalibration calibration,
-			final Spectrum s, 
-			final EscapePeakType escape)
+			final Spectrum s)
 	{
-		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, parameters, calibration, s, escape);
+		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, parameters, s);
 		if (orderedPair.first == ts1) return -1;
 		return 1;
 	}
@@ -216,18 +191,9 @@ public class TSOrdering
 	
 	/**
 	 * Generates a list of {@link TransitionSeries} which are good fits for the given data at the given channel index
-	 * @param escape the kind of {@link EscapePeakType} to use when finding good matches
-	 * @param energyPerChannel the range of energy covered by one data point in a {@link Spectrum}
-	 * @param data the data against which {@link TransitionSeries} should be scored
-	 * @param fits the current set of fitted {@link TransitionSeries}
-	 * @param proposed the current set of proposed {@link TransitionSeries}
-	 * @param channel the channel for which the recommendations have been requested
-	 * @param currentTS the currently suggested {@link TransitionSeries}. If a previous suggestion was made, it should not be included in the fittings subtracted from the given data, as it will prevent good fittigs from being propsed.
 	 * @return an ordered list of {@link TransitionSeries} which are good fits for the given data at the given channel
 	 */
 	public static List<TransitionSeries> proposeTransitionSeriesFromChannel(
-			final EscapePeakType escape,
-			EnergyCalibration calibration,
 			final ReadOnlySpectrum data, 
 			final FittingSet fits,
 			final FittingSet proposed,
@@ -274,7 +240,7 @@ public class TSOrdering
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		
 
-		final float energy = calibration.energyFromChannel(channel);	
+		final float energy = fits.getFittingParameters().getCalibration().energyFromChannel(channel);	
 		
 
 		//get a list of all transition series to start with
@@ -332,7 +298,7 @@ public class TSOrdering
 		
 		//now sort by score
 		tss = tss.stream()
-			.map(ts -> new Pair<TransitionSeries, Float>(ts, TSOrdering.fScoreTransitionSeries(escape, fits.getFittingParameters(), calibration, s, energy, true).apply(ts)))
+			.map(ts -> new Pair<>(ts, TSOrdering.fScoreTransitionSeries(fits.getFittingParameters(), s, energy, true).apply(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
 			.limit(15)
 			.map(p -> p.first)

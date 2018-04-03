@@ -29,73 +29,16 @@ public class FittingSet implements Serializable
 	private List<TransitionSeries>			fitTransitionSeries;
 	
 	private FittingParameters				parameters;
-	
-	//TODO: Move these to FittingParameters
-	private	EnergyCalibration				calibration;
-	private EscapePeakType					escapeType;
-	
-	
 
-	public FittingSet()
-	{
+	
+	public FittingSet() {
 		curves = new ArrayList<Curve>();
 		fitTransitionSeries = new ArrayList<TransitionSeries>();
-
-		this.calibration = new EnergyCalibration(0, 0, 0);
-		this.escapeType = EscapePeakType.NONE;
 		this.parameters = new FittingParameters(this);
 	}
 
 	
-
-	public synchronized void setEnergy(float min, float max)
-	{
-		if (max < min) {
-			throw new RuntimeException("Minimum energy cannot be greater than maximum energy");
-		}
-		this.calibration.setMinEnergy(min);
-		this.calibration.setMaxEnergy(max);
-		invalidateCurves();
-	}
-
-
-	public synchronized void setDataWidth(int dataWidth)
-	{
-		this.calibration.setDataWidth(dataWidth);
-		invalidateCurves();
-	}
-
-
-	public EscapePeakType getEscapeType()
-	{
-		return escapeType;
-	}
-
-
-	
-	public void setEscapeType(EscapePeakType escapeType)
-	{
-		this.escapeType = escapeType;
-		invalidateCurves();
-	}
-	
-	/**
-	 * Update several parameters which would require regenerating curves all in one shot
-	 */
-	public synchronized void setDataParameters(int dataWidth, float minEnergy, float maxEnergy, EscapePeakType escapeType)
-	{
-		if (maxEnergy < minEnergy) {
-			throw new RuntimeException("Minimum energy cannot be greater than maximum energy");
-		}
-		this.calibration = new EnergyCalibration(minEnergy, maxEnergy, dataWidth);
-		this.escapeType = escapeType;
-		invalidateCurves();
-	}
-
-
-	
-	synchronized void invalidateCurves()
-	{
+	synchronized void invalidateCurves() {
 		curves.clear();
 		curvesValid = false;
 	}
@@ -124,10 +67,9 @@ public class FittingSet implements Serializable
 
 	}
 
-
 	private synchronized void generateCurve(TransitionSeries ts)
 	{
-		curves.add(new Curve(ts, parameters, calibration, escapeType));
+		curves.add(new Curve(ts, parameters));
 	}
 
 

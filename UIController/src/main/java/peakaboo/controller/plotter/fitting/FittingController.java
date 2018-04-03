@@ -201,8 +201,8 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void setEscapeType(EscapePeakType type)
 	{
-		fittingModel.selections.setEscapeType(type);
-		fittingModel.proposals.setEscapeType(type);
+		fittingModel.selections.getFittingParameters().setEscapeType(type);
+		fittingModel.proposals.getFittingParameters().setEscapeType(type);
 		
 		fittingDataInvalidated();
 		
@@ -219,12 +219,8 @@ public class FittingController extends EventfulType<Boolean>
 	{
 		
 		if (! plot.data().hasDataSet() ) return null;
-		
-		EnergyCalibration calibration = new EnergyCalibration(plot.settings().getMinEnergy(), plot.settings().getMaxEnergy(), plot.data().getDataSet().getAnalysis().channelsPerScan());
-		
+				
 		return TSOrdering.proposeTransitionSeriesFromChannel(
-				plot.settings().getEscapePeakType(),
-				calibration,
 				plot.filtering().getFilteredPlot(),
 				fittingModel.selections,
 				fittingModel.proposals,
@@ -241,10 +237,13 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void setFittingParameters(int scanSize, float min, float max)
 	{
+		fittingModel.selections.getFittingParameters().setCalibration(min, max, scanSize);
+		fittingModel.proposals.getFittingParameters().setCalibration(min, max, scanSize);
 
-		fittingModel.selections.setDataParameters(scanSize, min, max, plot.settings().getEscapePeakType());
-		fittingModel.proposals.setDataParameters(scanSize, min, max, plot.settings().getEscapePeakType());
+		fittingModel.selections.getFittingParameters().setEscapeType(plot.settings().getEscapePeakType());
+		fittingModel.proposals.getFittingParameters().setEscapeType(plot.settings().getEscapePeakType());
 
+		
 		setUndoPoint("Calibration");
 		plot.filtering().filteredDataInvalidated();
 	}

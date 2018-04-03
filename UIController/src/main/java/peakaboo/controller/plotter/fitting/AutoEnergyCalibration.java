@@ -36,7 +36,8 @@ public class AutoEnergyCalibration {
 	
 	private static FittingSet fitModel(List<TransitionSeries> tsList, int dataWidth) {
 		FittingSet fits = new FittingSet();
-		fits.setDataWidth(dataWidth);
+		EnergyCalibration old = fits.getFittingParameters().getCalibration();
+		fits.getFittingParameters().setCalibration(old.getMinEnergy(), old.getMaxEnergy(), dataWidth);
 		for (TransitionSeries ts : tsList) {
 			fits.addTransitionSeries(ts);
 		}
@@ -117,7 +118,7 @@ public class AutoEnergyCalibration {
 			List<Float> scores = stream.map(calibration -> {
 				
 				FittingResultSet results;
-				fits.get().setEnergy(calibration.getMinEnergy(), calibration.getMaxEnergy());
+				fits.get().getFittingParameters().setCalibration(calibration);
 				results = fits.get().fit(spectrum);
 				return scoreFitGood(results, spectrum);
 				
@@ -212,7 +213,7 @@ public class AutoEnergyCalibration {
 			for (float max = lomax; max <= himax; max += 0.01f) {
 				if (max <= min) continue;
 				
-				fits.setEnergy(min, max);
+				fits.getFittingParameters().setCalibration(min, max, calibration.getDataWidth());
 				FittingResultSet results = fits.fit(spectrum);
 				
 				float score = scoreFitGood(results, spectrum);

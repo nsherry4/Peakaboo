@@ -12,6 +12,9 @@ public class EnergyCalibration {
 	private int dataWidth;
 	
 	public EnergyCalibration(float min, float max, int dataWidth) {
+		if (max < min) {
+			throw new RuntimeException("Minimum energy cannot be greater than maximum energy");
+		}
 		this.minEnergy = min;
 		this.maxEnergy = max;
 		this.dataWidth = dataWidth;
@@ -25,21 +28,10 @@ public class EnergyCalibration {
 
 
 
-	public void setMinEnergy(float minEnergy) {
-		this.minEnergy = minEnergy;
-	}
-
-
-
 	public float getMaxEnergy() {
 		return maxEnergy;
 	}
 
-
-
-	public void setMaxEnergy(float maxEnergy) {
-		this.maxEnergy = maxEnergy;
-	}
 
 
 
@@ -47,11 +39,6 @@ public class EnergyCalibration {
 		return dataWidth;
 	}
 
-
-
-	public void setDataWidth(int dataWidth) {
-		this.dataWidth = dataWidth;
-	}
 
 
 

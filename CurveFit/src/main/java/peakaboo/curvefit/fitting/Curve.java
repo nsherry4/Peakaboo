@@ -33,9 +33,7 @@ public class Curve implements Serializable
 
 	//The {@link TransitionSeries} that this fitting is based on
 	private TransitionSeries		transitionSeries;
-	
-	private EscapePeakType			escape	= EscapePeakType.SILICON;
-	
+		
 	//The details of how we generate our fitting curve
 	private FittingParameters 		parameters;
 	
@@ -66,28 +64,27 @@ public class Curve implements Serializable
 	 * Create a new Curve.
 	 * 
 	 * @param ts the TransitionSeries to fit
-	 * @param calibration the energy settings to use
-	 * @param escape the type of escape peaks to model
+	 * @param parameters the fitting parameters to use to model this curve
 	 */
-	public Curve(TransitionSeries ts, FittingParameters parameters, EnergyCalibration calibration, EscapePeakType escape)
+	public Curve(TransitionSeries ts, FittingParameters parameters)
 	{
 
-		this.escape = escape;
 		this.parameters = parameters;
 		rangeMultiplier = DEFAULT_RANGE_MULT;
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		intenseRanges = new RangeSet();
 		
-		if (ts != null) setTransitionSeries(ts, calibration);
+		if (ts != null) setTransitionSeries(ts);
 		
 	}
 	
-	public void setTransitionSeries(TransitionSeries ts, EnergyCalibration calibration)
+	public void setTransitionSeries(TransitionSeries ts)
 	{
-		calculateConstraintMask(ts, calibration);
-		calcUnscaledFit(ts, calibration, (ts.type != TransitionSeriesType.COMPOSITE));
 		this.transitionSeries = ts;
+		calculateConstraintMask();
+		calcUnscaledFit(ts.type != TransitionSeriesType.COMPOSITE);
+		
 	}
 	
 	public TransitionSeries getTransitionSeries() {
@@ -150,7 +147,7 @@ public class Curve implements Serializable
 	/**
 	 * Given a TransitionSeries, calculate the range of channels which are important
 	 */
-	private void calculateConstraintMask(TransitionSeries ts, EnergyCalibration calibration)
+	private void calculateConstraintMask()
 	{
 
 		
@@ -162,8 +159,8 @@ public class Curve implements Serializable
 
 		baseSize = 0;
 		
-		
-		for (Transition t : ts)
+		EnergyCalibration calibration = parameters.getCalibration();
+		for (Transition t : this.transitionSeries)
 		{
 
 			//get the range of the peak
@@ -183,26 +180,6 @@ public class Curve implements Serializable
 			
 			intenseRanges.addRange(new Range(start, stop));
 			
-			
-			
-//			if (fitEscapes && escape.hasOffset())
-//			{
-//				for (Transition esc : escape.offset()) {
-//					mean = calibration.channelFromEnergy(t.energyValue-esc.energyValue);
-//					
-//					start = (int) (mean - range);
-//					stop = (int) (mean + range);
-//					if (start < 0) start = 0;
-//					if (stop > calibration.getDataWidth() - 1) stop = calibration.getDataWidth() - 1;
-//					if (start > calibration.getDataWidth() - 1) start = calibration.getDataWidth() - 1;
-//	
-//					baseSize += stop - start + 1;
-//					
-//					intenseRanges.addRange(new Range(start, stop));
-//					
-//				}
-//			}
-			
 		}
 		
 		
@@ -211,9 +188,10 @@ public class Curve implements Serializable
 	
 
 	// generates an initial unscaled curvefit from which later curves are scaled as needed
-	private void calcUnscaledFit(TransitionSeries ts, EnergyCalibration calibration, boolean fitEscape)
+	private void calcUnscaledFit(boolean fitEscape)
 	{
 
+		EnergyCalibration calibration = parameters.getCalibration();
 		if (calibration.getDataWidth() == 0) {
 			throw new RuntimeException("DataWidth cannot be 0");
 		}
@@ -223,14 +201,14 @@ public class Curve implements Serializable
 		
 
 		//Build a list of fitting functions
-		for (Transition t : ts)
+		for (Transition t : this.transitionSeries)
 		{
 
-			functions.add(parameters.forTransition(t, ts.type));
+			functions.add(parameters.forTransition(t, this.transitionSeries.type));
 
-			if (fitEscape && escape.hasOffset()) {
-				for (Transition esc : escape.offset()) {
-					functions.add(parameters.forEscape(t, esc, ts.element, ts.type));
+			if (fitEscape && parameters.getEscapeType().hasOffset()) {
+				for (Transition esc : parameters.getEscapeType().offset()) {
+					functions.add(parameters.forEscape(t, esc, this.transitionSeries.element, this.transitionSeries.type));
 				}
 			}
 
