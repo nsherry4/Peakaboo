@@ -222,6 +222,12 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 					
 	
 			//BUTTON on TOOLBAR
+			reg(ret, "ToolBar:Button.foreground", 						theme.getControlText());
+			reg(ret, "ToolBar:Button.textForeground",					theme.getControlText());
+			reg(ret, "ToolBar:Button.disabledText", 					theme.getControlTextDisabled());
+			reg(ret, "ToolBar:Button[Disabled].textForeground", 		theme.getControlTextDisabled());
+			reg(ret, "ToolBar:Button[Default+Pressed].textForeground", 	theme.getControlText());
+			
 			reg(ret, "ToolBar:Button[Focused+MouseOver].backgroundPainter", 	new ButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
 			reg(ret, "ToolBar:Button[Focused+Pressed].backgroundPainter", 	new ButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
 			reg(ret, "ToolBar:Button[Focused].backgroundPainter", 			new ButtonPainter(theme, ButtonState.FOCUSED));
@@ -332,6 +338,12 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "ComboBox:\"ComboBox.arrowButton\"[Pressed].foregroundPainter", new ComboBoxArrowPainter(theme.getControlText()));
 			reg(ret, "ComboBox:\"ComboBox.arrowButton\"[MouseOver].foregroundPainter", new ComboBoxArrowPainter(theme.getControlText()));
 			reg(ret, "ComboBox:\"ComboBox.arrowButton\"[Disabled].foregroundPainter", new ComboBoxArrowPainter(theme.getControlTextDisabled()));
+
+			//combobox list renderer colours
+			reg(ret, "ComboBox:\"ComboBox.listRenderer\".background", theme.getRecessedControl());
+			reg(ret, "ComboBox:\"ComboBox.listRenderer\"[Disabled].textForeground", theme.getControlTextDisabled());
+			reg(ret, "ComboBox:\"ComboBox.listRenderer\"[Selected].background", theme.getHighlight());
+			reg(ret, "ComboBox:\"ComboBox.listRenderer\"[Selected].textForeground", theme.getHighlightText());
 			
 			reg(ret, "ComboBox.foreground", theme.getControlText());
 			
