@@ -35,7 +35,7 @@ public class MapTS
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
 	 * @return a {@link StreamExecutor} which will return a {@link MapResultSet}
 	 */
-	public static StreamExecutor<MapResultSet> map(DataSet dataset, FilterSet filters, FittingSet fittings, FittingTransform type) {
+	public static StreamExecutor<MapResultSet> map(DataSet dataset, FilterSet filters, FittingSet fittings) {
 		
 		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
@@ -52,8 +52,7 @@ public class MapTS
 				FittingResultSet frs = fittings.fit(data);
 				
 				for (FittingResult result : frs.getFits()) {
-					float intensity = type == FittingTransform.AREA ? result.getFit().sum() : result.getFit().max();
-					maps.putIntensityInMapAtPoint(intensity, result.getTransitionSeries(), index);
+					maps.putIntensityInMapAtPoint(result.getFit().sum(), result.getTransitionSeries(), index);
 				}
 				
 			});

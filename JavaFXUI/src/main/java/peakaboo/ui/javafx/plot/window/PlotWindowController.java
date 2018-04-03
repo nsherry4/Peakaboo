@@ -40,7 +40,6 @@ import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
-import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.javafx.change.IChangeController;
 import peakaboo.ui.javafx.map.window.MapWindowController;
@@ -177,7 +176,7 @@ public class PlotWindowController extends IActofUIController {
 
     public void onMapFittings() {
     	//TODO: Show progress
-    	StreamExecutor<MapResultSet> mapTask = plotController.getMapTask(FittingTransform.AREA);
+    	StreamExecutor<MapResultSet> mapTask = plotController.getMapTask();
     	mapTask.start();
     	mapTask.addListener(event -> {
     		if (event == Event.COMPLETED) {

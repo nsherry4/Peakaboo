@@ -20,7 +20,6 @@ import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.internal.CroppedDataSource;
 import peakaboo.datasource.model.internal.SelectionDataSource;
 import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.MapTS;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.DummyExecutor;
@@ -156,9 +155,9 @@ public class DataController extends Eventful
 	
 
 	
-	public StreamExecutor<MapResultSet> getMapTask(FilterSet filters, FittingSet fittings, FittingTransform type)
+	public StreamExecutor<MapResultSet> getMapTask(FilterSet filters, FittingSet fittings)
 	{
-		return MapTS.map(dataModel, filters, fittings, type);
+		return MapTS.map(dataModel, filters, fittings);
 	}
 	
 	

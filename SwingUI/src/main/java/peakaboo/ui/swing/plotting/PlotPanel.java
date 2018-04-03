@@ -101,7 +101,6 @@ import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.mapping.MapperFrame;
@@ -194,7 +193,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	//===PLOTTING UI WIDGETS===
 	JSpinner					minEnergy, maxEnergy;
 	ImageButton					toolbarSnapshot;
-	DropdownImageButton			toolbarMap;
+	ImageButton					toolbarMap;
 	ImageButton					toolbarInfo;
 	ImageButton					energyGuess;
 	ZoomSlider					zoomSlider;
@@ -459,22 +458,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		c.gridx += 1;
 		toolbarInfo.setEnabled(false);
 		toolbar.add(toolbarInfo, c);
-
-		JPopupMenu mapMenu = new JPopupMenu();
-		populateFittingMenu(mapMenu);
+	
 		
-		
-		toolbarMap = new DropdownImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", IconSize.TOOLBAR_SMALL, ToolbarImageButton.significantLayout, mapMenu);
-		toolbarMap.addListener(message -> {
-			switch (message)
-			{
-				case MAIN: 
-					actionMap(FittingTransform.AREA);
-					break;
-				case MENU:
-					break;
-			}
-		});
+		toolbarMap = new ImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", ToolbarImageButton.significantLayout, IconSize.TOOLBAR_SMALL);
+		toolbarMap.addActionListener(e -> actionMap());
 		
 		c.gridx += 1;
 		toolbarMap.setEnabled(false);
@@ -550,33 +537,6 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 
 	
-	private void populateFittingMenu(JComponent menu)
-	{
-		final JMenuItem mapArea = createMenuItem(
-				"Map Fitting Area", null, null, 
-				e -> actionMap(FittingTransform.AREA),
-				null, null
-		);
-		mapArea.setEnabled(false);
-		menu.add(mapArea);
-		
-		
-		final JMenuItem mapHeights = createMenuItem(
-				"Map Fitting Heights", null, null, 
-				e -> actionMap(FittingTransform.HEIGHT),
-				null, null
-		);
-		mapHeights.setEnabled(false);
-		menu.add(mapHeights);
-		
-		
-		controller.addListener(message -> {
-			mapHeights.setEnabled(controller.fitting().canMap());
-			mapArea.setEnabled(controller.fitting().canMap());
-		});
-		
-	}
-
 	
 	private JCheckBoxMenuItem createMenuCheckItem(String title, ImageIcon icon, String description, Consumer<Boolean> listener, KeyStroke key, Integer mnemonic)
 	{
@@ -1469,14 +1429,13 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	private void actionMap(FittingTransform type)
+	private void actionMap()
 	{
 
 		if (!controller.data().hasDataSet()) return;
 
 
-		//final ExecutorSet<MapResultSet> tasks = controller.getMapCreationTask(type);
-		StreamExecutor<MapResultSet> mapTask = controller.getMapTask(type);
+		StreamExecutor<MapResultSet> mapTask = controller.getMapTask();
 		if (mapTask == null) return;
 
 		StreamExecutorView taskView = new StreamExecutorView(mapTask);
