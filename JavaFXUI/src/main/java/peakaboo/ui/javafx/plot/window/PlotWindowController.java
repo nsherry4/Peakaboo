@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.controlsfx.dialog.CommandLinksDialog;
@@ -26,6 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
@@ -52,6 +54,7 @@ import peakaboo.ui.javafx.util.FXUtil;
 import peakaboo.ui.javafx.util.IActofUIController;
 import peakaboo.ui.javafx.widgets.NumberSpinner;
 import plural.executor.ExecutorSet;
+import plural.streams.StreamExecutor;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -171,42 +174,54 @@ public class PlotWindowController extends IActofUIController {
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
-    public void onMapFittings() throws IOException {
+    public void onMapFittings() {
     	//TODO: Show progress
-    	MapResultSet results = plotController.getMapCreationTask(FittingTransform.AREA).startWorkingBlocking();
-    	MapSetController mapData = new MapSetController();
-    	
-    	
-		Coord<Integer> dataDimensions = null;
-		Coord<Bounds<Number>> physicalDimensions = null;
-		SISize physicalUnit = null;
-		
-		if (plotController.data().getDataSet().getPhysicalSize().isPresent()) {
-			PhysicalSize physical = plotController.data().getDataSet().getPhysicalSize().get();
-			physicalDimensions = physical.getPhysicalDimensions();
-			physicalUnit = physical.getPhysicalUnit();
-		}
-		
-		if (plotController.data().getDataSet().hasGenuineDataSize()) {
-			dataDimensions = plotController.data().getDataSet().getDataSize().getDataDimensions();
-		}
-		
-    	
-		mapData.setMapData(
-				results,
-				plotController.data().getDataSet().getScanData().datasetName(),
-				plotController.data().getDiscards().list(),
-				dataDimensions, physicalDimensions, physicalUnit				
-			);
+    	StreamExecutor<MapResultSet> mapTask = plotController.getMapTask(FittingTransform.AREA);
+    	mapTask.start();
+    	mapTask.addListener(() -> {
+    		if (mapTask.getState() == StreamExecutor.State.COMPLETED) {
+    			
+    	    	MapResultSet results = mapTask.getResult().get();
+    	    	MapSetController mapData = new MapSetController();
+    	    	
+    	    	
+    			Coord<Integer> dataDimensions = null;
+    			Coord<Bounds<Number>> physicalDimensions = null;
+    			SISize physicalUnit = null;
+    			
+    			if (plotController.data().getDataSet().getPhysicalSize().isPresent()) {
+    				PhysicalSize physical = plotController.data().getDataSet().getPhysicalSize().get();
+    				physicalDimensions = physical.getPhysicalDimensions();
+    				physicalUnit = physical.getPhysicalUnit();
+    			}
+    			
+    			if (plotController.data().getDataSet().hasGenuineDataSize()) {
+    				dataDimensions = plotController.data().getDataSet().getDataSize().getDataDimensions();
+    			}
+    			
+    	    	
+    			mapData.setMapData(
+    					results,
+    					plotController.data().getDataSet().getScanData().datasetName(),
+    					plotController.data().getDiscards().list(),
+    					dataDimensions, physicalDimensions, physicalUnit				
+    				);
 
-		
-		MappingController mapController = new MappingController(mapData, null, plotController);
-		    	
-		
-		//create a new change bus for the mapping window, it's results should be isolated from changes elsewhere
-		MapWindowController mapWindow = MapWindowController.load(new IChangeController());
-		mapWindow.newTab(mapController);
-		mapWindow.show();
+    			
+    			MappingController mapController = new MappingController(mapData, null, plotController);
+    			    	
+    			try {
+    				//create a new change bus for the mapping window, it's results should be isolated from changes elsewhere
+    				MapWindowController mapWindow = MapWindowController.load(new IChangeController());
+    				mapWindow.newTab(mapController);
+    				mapWindow.show();
+    			} catch (IOException e) {
+    				PeakabooLog.get().log(Level.SEVERE, "Failed to display maps", e);
+    			}
+    			
+    		}
+    	});
+
 		
 		
     	

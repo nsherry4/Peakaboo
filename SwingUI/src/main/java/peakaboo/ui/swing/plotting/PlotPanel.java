@@ -1475,64 +1475,73 @@ public class PlotPanel extends TabbedInterfacePanel
 		if (!controller.data().hasDataSet()) return;
 
 
-		final ExecutorSet<MapResultSet> tasks = controller.getMapCreationTask(type);
-		if (tasks == null) return;
+		//final ExecutorSet<MapResultSet> tasks = controller.getMapCreationTask(type);
+		StreamExecutor<MapResultSet> mapTask = controller.getMapTask(type);
+		if (mapTask == null) return;
 
-		ExecutorSetView execPanel = new ExecutorSetView(tasks);
-		tasks.addListener(() -> {
-			if (tasks.getCompleted())
-			{
-
-				if (mapShown.testAndSet(true) == true) {
-					return;
-				}
-				
-				MapperFrame mapperWindow;
-				MapResultSet results = tasks.getResult();
-				MapSetController mapData = new MapSetController();
-				
-
-				Coord<Integer> dataDimensions = null;
-				Coord<Bounds<Number>> physicalDimensions = null;
-				SISize physicalUnit = null;
-				
-				Optional<PhysicalSize> physical = controller.data().getDataSet().getPhysicalSize();
-				if (physical.isPresent()) {
-					physicalDimensions = physical.get().getPhysicalDimensions();
-					physicalUnit = physical.get().getPhysicalUnit();
-				}
-				
-				if (controller.data().getDataSet().hasGenuineDataSize()) {
-					dataDimensions = controller.data().getDataSet().getDataSize().getDataDimensions();
-				}
-				
-				mapData.setMapData(
-						results,
-						controller.data().getDataSet().getScanData().datasetName(),
-						controller.data().getDiscards().list(),
-						dataDimensions,
-						physicalDimensions,
-						physicalUnit
-					);
-				
-				
-				mapperWindow = new MapperFrame(container, mapData, null, controller);
-
-				mapperWindow.setVisible(true);
-
-			}
+		StreamExecutorView taskView = new StreamExecutorView(mapTask);
+		StreamExecutorPanel taskPanel = new StreamExecutorPanel("Generating Maps", taskView);
+		
+		mapTask.addListener(() -> {
 			
-			if (tasks.getCompleted() || tasks.isAborted()) {
+			//hide taskPanel when completed
+			if (mapTask.getState() == StreamExecutor.State.COMPLETED || mapTask.getState() == StreamExecutor.State.ABORTED) {
 				popModalComponent();
 			}
+			
+			//If the state isn't COMPLETED, or the map has already been show, exit early
+			if (mapTask.getState() != StreamExecutor.State.COMPLETED) {
+				return;
+			}
+			if (mapShown.testAndSet(true) == true) {
+				return;
+			}
+			
+			//If there is no result, exit early
+			if (!mapTask.getResult().isPresent()) {
+				return;
+			}
+			
+			
+			MapperFrame mapperWindow;
+			MapResultSet results = mapTask.getResult().get();
+			MapSetController mapData = new MapSetController();
+			
+
+			Coord<Integer> dataDimensions = null;
+			Coord<Bounds<Number>> physicalDimensions = null;
+			SISize physicalUnit = null;
+			
+			Optional<PhysicalSize> physical = controller.data().getDataSet().getPhysicalSize();
+			if (physical.isPresent()) {
+				physicalDimensions = physical.get().getPhysicalDimensions();
+				physicalUnit = physical.get().getPhysicalUnit();
+			}
+			
+			if (controller.data().getDataSet().hasGenuineDataSize()) {
+				dataDimensions = controller.data().getDataSet().getDataSize().getDataDimensions();
+			}
+			
+			mapData.setMapData(
+					results,
+					controller.data().getDataSet().getScanData().datasetName(),
+					controller.data().getDiscards().list(),
+					dataDimensions,
+					physicalDimensions,
+					physicalUnit
+				);
+			
+			
+			mapperWindow = new MapperFrame(container, mapData, null, controller);
+
+			mapperWindow.setVisible(true);
+
 		});
 		
 		
-		pushModalComponent(execPanel);
-		tasks.startWorking();
+		pushModalComponent(taskPanel);
+		mapTask.start();
 
-
-		
 
 	}
 

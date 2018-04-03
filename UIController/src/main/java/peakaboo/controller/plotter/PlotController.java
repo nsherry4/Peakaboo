@@ -16,6 +16,7 @@ import peakaboo.controller.settings.SavedSettings;
 import peakaboo.mapping.FittingTransform;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
+import plural.streams.StreamExecutor;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scitypes.Pair;
@@ -216,16 +217,14 @@ public class PlotController extends EventfulType<String>
 	
 	
 	/**
-	 * Returns an {@link ExecutorSet} which will generate a map based on the user's current 
+	 * Returns an {@link StreamExecutor} which will generate a map based on the user's current 
 	 * selections.
 	 * @param type The type of {@link FittingTransform} to use in the calculation
 	 * @return
 	 */
-	public ExecutorSet<MapResultSet> getMapCreationTask(FittingTransform type)
-	{
-		return dataController.TASK_calculateMap(filteringController.getActiveFilters(), fittingController.getFittingSelections(), type);
+	public StreamExecutor<MapResultSet> getMapTask(FittingTransform type) {
+		return dataController.getMapTask(filteringController.getActiveFilters(), fittingController.getFittingSelections(), type);
 	}
-
 	
 	
 	public DataController data()

@@ -14,6 +14,8 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.ExecutorSet;
 import plural.executor.eachindex.EachIndexExecutor;
 import plural.executor.eachindex.implementations.PluralEachIndexExecutor;
+import plural.streams.StreamExecutor;
+import scitypes.Range;
 import scitypes.ReadOnlySpectrum;
 
 /**
@@ -26,68 +28,40 @@ public class MapTS
 {
 
 	/**
-	 * Generates a map based on the given inputs. Returns a {@link ExecutorSet} which can execute this task asynchronously and return the result
-	 * @param datasetProvider the {@link StandardDataSet} providing access to data
+	 * Generates a map based on the given inputs. Returns a {@link StreamExecutor} which can execute this task asynchronously and return the result
+	 * @param dataset the {@link DataSet} providing access to data
 	 * @param filters the {@link FilterSet} containing all filters needing to be applied to this data
 	 * @param fittings the {@link FittingSet} containing all fittings needing to be turned into maps
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
-	 * @return a {@link ExecutorSet} which will return a {@link MapResultSet}
+	 * @return a {@link StreamExecutor} which will return a {@link MapResultSet}
 	 */
-	public static ExecutorSet<MapResultSet> calculateMap(final DataSet datasetProvider, final FilterSet filters, final FittingSet fittings, final FittingTransform type)
-	{
-
-		final ExecutorSet<MapResultSet> tasklist;
-
-		// ======================================================================
-		// LOGIC FOR FILTERS AND FITTING
-		// Original => Filtered => Fittings => Stored-In-Map
-		// ======================================================================
-		//final List<List<Double>> filteredData;
-
-		final List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		final MapResultSet maps = new MapResultSet(transitionSeries, datasetProvider.getScanData().scanCount());
+	public static StreamExecutor<MapResultSet> map(DataSet dataset, FilterSet filters, FittingSet fittings, FittingTransform type) {
 		
-		final Consumer<Integer> t_filter = index -> {
-			
-			ReadOnlySpectrum original = datasetProvider.getScanData().get(index);
-			if (original == null) return;
-			
-			ReadOnlySpectrum data = filters.applyFiltersUnsynchronized(datasetProvider.getScanData().get(index));
-			
-			FittingResultSet frs = fittings.fit(data);
-
-			for (FittingResult result : frs.getFits())
-			{
-				maps.putIntensityInMapAtPoint(
-					type == FittingTransform.AREA ? result.getFit().sum() : result.getFit().max(),
-					result.getTransitionSeries(),
-					index);
-			}
-
-			return;
-
-		};
-
-
-		final EachIndexExecutor executor = new PluralEachIndexExecutor(datasetProvider.getScanData().scanCount(), t_filter);
-
-		tasklist = new ExecutorSet<MapResultSet>("Generating Data for Map") {
-
-			@Override
-			public MapResultSet execute()
-			{
-				// process these scans in parallel
-				executor.executeBlocking();
-				if (isAborted()) return null;	
-				return maps;
-			}
-
-		};
+		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
+		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
 		
-		tasklist.addExecutor(executor, "Apply Filters and Fittings");
-
-
-		return tasklist;
+		//Math.max(1, dataset.getScanData().scanCount())
+		StreamExecutor<MapResultSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", 1);
+		streamer.setTask(new Range(0, dataset.getScanData().scanCount()-1), stream -> {
+			stream.forEach(index -> {
+				
+				ReadOnlySpectrum data = dataset.getScanData().get(index);
+				if (data == null) return;
+				
+				data = filters.applyFiltersUnsynchronized(data);
+				FittingResultSet frs = fittings.fit(data);
+				
+				for (FittingResult result : frs.getFits()) {
+					float intensity = type == FittingTransform.AREA ? result.getFit().sum() : result.getFit().max();
+					maps.putIntensityInMapAtPoint(intensity, result.getTransitionSeries(), index);
+				}
+				
+			});
+			return maps;
+		}); 
+		
+		return streamer;
+		
 	}
 	
 }

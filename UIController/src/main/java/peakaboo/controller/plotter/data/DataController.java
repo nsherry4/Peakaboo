@@ -25,6 +25,7 @@ import peakaboo.mapping.MapTS;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
+import plural.streams.StreamExecutor;
 import scitypes.Coord;
 import scitypes.ReadOnlySpectrum;
 
@@ -154,14 +155,11 @@ public class DataController extends Eventful
 	
 	
 
-
 	
-	public ExecutorSet<MapResultSet> TASK_calculateMap(FilterSet filters, FittingSet fittings, FittingTransform type)
+	public StreamExecutor<MapResultSet> getMapTask(FilterSet filters, FittingSet fittings, FittingTransform type)
 	{
-		return MapTS.calculateMap(dataModel, filters, fittings, type);
+		return MapTS.map(dataModel, filters, fittings, type);
 	}
-	
-
 	
 	
 
