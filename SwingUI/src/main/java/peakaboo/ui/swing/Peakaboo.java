@@ -55,7 +55,7 @@ public class Peakaboo
 			
 			if (realText != null) {
 				realText += "\n";
-			} else {
+			} else if (e != null && e.getMessage() != null) {
 				realText = e.getMessage() + "\n";
 			}
 			realText += "The problem is of type " + e.getClass().getSimpleName();

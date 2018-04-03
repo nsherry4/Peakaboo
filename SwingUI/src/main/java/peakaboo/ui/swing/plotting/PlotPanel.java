@@ -811,7 +811,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 
 	private ToolbarImageButton createViewMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_VIEW, "View Menu");
+		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_SETTINGS, "Plot Settings Menu");
 		JPopupMenu mainMenu = new JPopupMenu();
 
 		

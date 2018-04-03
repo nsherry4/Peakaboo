@@ -31,8 +31,8 @@ public class PeakTableReader
 {
 	
 	public static void readPeakTable() {
-		//readPeakTableXraylib();
-		readPeakTableManual();
+		readPeakTableXraylib();
+		//readPeakTableManual();
 	}
 	
 	public static void readPeakTableXraylib() {
