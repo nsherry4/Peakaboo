@@ -113,6 +113,7 @@ import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
+import plural.streams.StreamExecutor.Event;
 import plural.streams.StreamExecutorSet;
 import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
@@ -1471,7 +1472,6 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void actionMap(FittingTransform type)
 	{
 
-		Mutable<Boolean> mapShown = new Mutable<>(false);
 		if (!controller.data().hasDataSet()) return;
 
 
@@ -1482,25 +1482,19 @@ public class PlotPanel extends TabbedInterfacePanel
 		StreamExecutorView taskView = new StreamExecutorView(mapTask);
 		StreamExecutorPanel taskPanel = new StreamExecutorPanel("Generating Maps", taskView);
 		
-		mapTask.addListener(() -> {
+		mapTask.addListener(event -> {
 			
-			//hide taskPanel when completed
-			if (mapTask.getState() == StreamExecutor.State.COMPLETED || mapTask.getState() == StreamExecutor.State.ABORTED) {
-				popModalComponent();
-			}
+			//if this is just a progress event, exit early
+			if (event == Event.PROGRESS) { return; }
 			
-			//If the state isn't COMPLETED, or the map has already been show, exit early
-			if (mapTask.getState() != StreamExecutor.State.COMPLETED) {
-				return;
-			}
-			if (mapShown.testAndSet(true) == true) {
-				return;
-			}
+			//hide the task panel since this is either COMPLETED or ABORTED
+			popModalComponent();
+			
+			//If this task was aborted instead of completed, exit early
+			if (event == Event.ABORTED) { return; }
 			
 			//If there is no result, exit early
-			if (!mapTask.getResult().isPresent()) {
-				return;
-			}
+			if (!mapTask.getResult().isPresent()) { return; }
 			
 			
 			MapperFrame mapperWindow;
@@ -1637,11 +1631,13 @@ public class PlotPanel extends TabbedInterfacePanel
 			StreamExecutorView view = new StreamExecutorView(streamexec);
 			StreamExecutorPanel panel = new StreamExecutorPanel("Exporting Data", view);
 			
-			streamexec.addListener(() -> {
-				if (streamexec.getState() != StreamExecutor.State.RUNNING) {
+			streamexec.addListener(event -> {
+				//if not just a progress event, hide the modal panel
+				if (event != Event.PROGRESS) {
 					popModalComponent();
 				}
-				if (streamexec.getState() == StreamExecutor.State.ABORTED) {
+				//remove the output file if the task was aborted
+				if (event == Event.ABORTED) {
 					saveFile.get().delete();
 				}
 			});
@@ -1789,12 +1785,14 @@ public class PlotPanel extends TabbedInterfacePanel
 		List<StreamExecutorView> views = energyTask.getExecutors().stream().map(StreamExecutorView::new).collect(Collectors.toList());
 		StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Energy Level", views);
 				
-		energyTask.last().addListener(() -> {
-			if (energyTask.last().getState() != StreamExecutor.State.RUNNING) {
+		energyTask.last().addListener(event -> {
+			//if event is not progress, then its either COMPLETED or ABORTED, so hide the panel
+			if (event != Event.PROGRESS) {
 				popModalComponent();
 			}
 			
-			if (energyTask.last().getState() == StreamExecutor.State.COMPLETED) {
+			//if the last executor completed successfully, then set the calibration
+			if (event == Event.COMPLETED) {
 				EnergyCalibration energy = energyTask.last().getResult().orElse(null);
 				if (energy != null) {
 					controller.settings().setMinEnergy(energy.getMinEnergy());

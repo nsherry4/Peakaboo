@@ -55,6 +55,7 @@ import peakaboo.ui.javafx.util.IActofUIController;
 import peakaboo.ui.javafx.widgets.NumberSpinner;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
+import plural.streams.StreamExecutor.Event;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SISize;
@@ -178,8 +179,8 @@ public class PlotWindowController extends IActofUIController {
     	//TODO: Show progress
     	StreamExecutor<MapResultSet> mapTask = plotController.getMapTask(FittingTransform.AREA);
     	mapTask.start();
-    	mapTask.addListener(() -> {
-    		if (mapTask.getState() == StreamExecutor.State.COMPLETED) {
+    	mapTask.addListener(event -> {
+    		if (event == Event.COMPLETED) {
     			
     	    	MapResultSet results = mapTask.getResult().get();
     	    	MapSetController mapData = new MapSetController();

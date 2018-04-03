@@ -14,6 +14,7 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.MapperPanel;
 import peakaboo.ui.swing.mapping.MapperSidebar;
 import plural.streams.StreamExecutor;
+import plural.streams.StreamExecutor.Event;
 import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
 import scitypes.Coord;
@@ -85,12 +86,12 @@ public class MapDimensionsPanel extends JPanel {
 				StreamExecutor<Coord<Integer>> guessTask = controller.mapsController.guessDataDimensions();
 				StreamExecutorView view = new StreamExecutorView(guessTask);
 				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
-				guessTask.addListener(() -> {
+				guessTask.addListener(event -> {
 					SwingUtilities.invokeLater(() -> {
-						if (guessTask.getState() == StreamExecutor.State.ABORTED) {
+						if (event == Event.ABORTED) {
 							tabPanel.popModalComponent();
 						}
-						if (guessTask.getState() == StreamExecutor.State.COMPLETED) {
+						if (event == Event.COMPLETED) {
 						
 							tabPanel.popModalComponent();
 							
