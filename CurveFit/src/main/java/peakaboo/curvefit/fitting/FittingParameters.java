@@ -1,7 +1,10 @@
 package peakaboo.curvefit.fitting;
 
+import java.util.logging.Level;
+
+import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.fitting.context.FittingContext;
-import peakaboo.curvefit.fitting.context.StandardFittingContext;
+import peakaboo.curvefit.fitting.context.FittingContext;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
 import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.peaktable.Element;
@@ -17,6 +20,7 @@ public class FittingParameters {
 	private float fwhmMult = 0.00470964f;
 	private	EnergyCalibration	calibration = new EnergyCalibration(0, 0, 0);
 	private EscapePeakType		escapeType = EscapePeakType.NONE;
+	private Class<? extends FittingFunction> fittingFunction = PseudoVoigtFittingFunction.class;
 	
 	private FittingParameters() {}
 	
@@ -36,20 +40,26 @@ public class FittingParameters {
 	
 	
 	public FittingFunction forTransition(Transition transition, TransitionSeriesType type) {
-		FittingContext context = new StandardFittingContext(this, transition, type);
+		FittingContext context = new FittingContext(this, transition, type);
 		return buildFunction(context);
 	}
 
 	public FittingFunction forEscape(Transition transition, Transition escape, Element element, TransitionSeriesType type) {
-		FittingContext context = new StandardFittingContext(this, transition, escape, element, type);
+		FittingContext context = new FittingContext(this, transition, escape, element, type);
 		return buildFunction(context);
 	}
 
 	private FittingFunction buildFunction(FittingContext context) {
-		//TODO: This should be parameterized instead of being hard-coded
-		FittingFunction function = new PseudoVoigtFittingFunction();
-		function.initialize(context);
-		return function;
+		FittingFunction function;
+		try {
+			function = fittingFunction.newInstance();
+			function.initialize(context);
+			return function;
+		} catch (InstantiationException | IllegalAccessException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to create fitting function, using default", e);
+			return new PseudoVoigtFittingFunction();
+		}
+		
 	}
 	
 	private void invalidate() {
@@ -80,7 +90,7 @@ public class FittingParameters {
 
 	
 	public float getFWHMMult() {
-		return fwhmBase;
+		return fwhmMult;
 	}
 	
 	public void setFWMHMult(float mult) {
@@ -108,6 +118,15 @@ public class FittingParameters {
 	public void setEscapeType(EscapePeakType escape) {
 		this.escapeType = escape;
 		invalidate();
+	}
+	
+	public void setFittingFunction(Class<? extends FittingFunction> cls) {
+		this.fittingFunction = cls;
+		invalidate();
+	}
+
+	public Class<? extends FittingFunction> getFittingFunction() {
+		return fittingFunction;
 	}
 
 }

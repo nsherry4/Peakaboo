@@ -43,8 +43,10 @@ import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -53,8 +55,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -67,6 +71,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
 import commonenvironment.Apps;
 import commonenvironment.Env;
@@ -84,6 +90,11 @@ import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import peakaboo.controller.plotter.fitting.TSOrdering;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.curvefit.fitting.EnergyCalibration;
+import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.fitting.functions.GaussianFittingFunction;
+import peakaboo.curvefit.fitting.functions.IdaFittingFunction;
+import peakaboo.curvefit.fitting.functions.LorentzFittingFunction;
+import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
@@ -137,11 +148,14 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.ComplexMenuItem;
 import swidget.widgets.ComponentListPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
+import swidget.widgets.SettingsPanel.LabelPosition;
 import swidget.widgets.DropdownImageButton;
 import swidget.widgets.ImageButton;
+import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.ZoomSlider;
@@ -473,63 +487,9 @@ public class PlotPanel extends TabbedInterfacePanel
 		c.weightx = 0.0;
 
 
-		JPanel energyControls = new ClearPanel();
-		energyControls.setBorder(new EmptyBorder(0, 0, 0, Spacing.huge*2));
-		energyControls.setLayout(new GridBagLayout());
-		GridBagConstraints c2 = new GridBagConstraints();
-		c2.gridx = 0;
-		c2.gridy = 0;
-		c2.weightx = 0;
-		c2.weighty = 0;
-		c2.fill = GridBagConstraints.NONE;
-		c2.anchor = GridBagConstraints.EAST;
-
-		JLabel energyLabel = new JLabel("Energy (keV) ");
-		energyControls.add(energyLabel, c2);
-		c2.gridx += 1;
-		
-		minEnergy = new JSpinner();
-		minEnergy.setModel(new SpinnerNumberModel(0.0, -20.48, 20.48, 0.01));
-		
-		maxEnergy = new JSpinner();
-		maxEnergy.setModel(new SpinnerNumberModel(20.48, 0.0, 204.8, 0.01));
-
-		
-		energyControls.add(minEnergy, c2);
-		c2.gridx += 1;
-		energyControls.add(new JLabel(" to "), c2);
-		c2.gridx += 1;
-		energyControls.add(maxEnergy, c2);
-		c2.gridx += 1;
-		
-		minEnergy.addChangeListener(e -> {
-			float min = ((Number) minEnergy.getValue()).floatValue();
-			if (min > controller.settings().getMaxEnergy()) {
-				min = controller.settings().getMaxEnergy() - 0.01f;
-				minEnergy.setValue(min);
-			} 
-			controller.settings().setMinEnergy(min);	
-		});
-		maxEnergy.addChangeListener(e -> {
-			float max = ((Number) maxEnergy.getValue()).floatValue();
-			if (max < controller.settings().getMinEnergy()) {
-				max = controller.settings().getMinEnergy() + 0.01f;
-				maxEnergy.setValue(max);
-			} 
-			controller.settings().setMaxEnergy(max);
-		});
-		
-		
-		energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
-		energyControls.add(energyGuess, c2);
-		energyGuess.addActionListener(e -> {
-			actionGuessMaxEnergy();
-		});
-		
-		c.gridx += 1;		
-		toolbar.add(energyControls, c);
-
-		
+		c.gridx++;
+		toolbar.add(createEnergyMenuButton(), c);
+				
 		c.gridx++;
 		toolbar.add(createViewMenuButton(), c);
 		
@@ -636,6 +596,157 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 
+	
+	private ToolbarImageButton createEnergyMenuButton() {
+		ToolbarImageButton menuButton = new ToolbarImageButton("menu-energy", "Energy & Peak Calibration");
+		JPopupMenu mainMenu = new JPopupMenu();
+		JMenuItem template = new JMenuItem();
+
+		
+		
+		SettingsPanel energy = new SettingsPanel(Spacing.iTiny());
+		energy.setOpaque(false);
+		energy.setBorder(Spacing.bMedium());
+		JLabel energyTitle = new JLabel("Energy Calibration (keV)");
+		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
+		energy.addSetting(energyTitle);
+		
+		
+		
+		minEnergy = new JSpinner();
+		minEnergy.setModel(new SpinnerNumberModel(0.0, -20.48, 20.48, 0.01));
+		minEnergy.getEditor().setPreferredSize(new Dimension(72, (int)minEnergy.getPreferredSize().getHeight()));
+		minEnergy.getEditor().setOpaque(false);
+		minEnergy.addChangeListener(e -> {
+			float min = ((Number) minEnergy.getValue()).floatValue();
+			if (min > controller.settings().getMaxEnergy()) {
+				min = controller.settings().getMaxEnergy() - 0.01f;
+				minEnergy.setValue(min);
+			} 
+			controller.settings().setMinEnergy(min);	
+		});
+		energy.addSetting(minEnergy, "Minimum");
+		
+		
+		maxEnergy = new JSpinner();
+		maxEnergy.setModel(new SpinnerNumberModel(20.48, 0.0, 204.8, 0.01));
+		maxEnergy.getEditor().setPreferredSize(new Dimension(72, (int)maxEnergy.getPreferredSize().getHeight()));
+		maxEnergy.getEditor().setOpaque(false);
+		maxEnergy.addChangeListener(e -> {
+			float max = ((Number) maxEnergy.getValue()).floatValue();
+			if (max < controller.settings().getMinEnergy()) {
+				max = controller.settings().getMinEnergy() + 0.01f;
+				maxEnergy.setValue(max);
+			} 
+			controller.settings().setMaxEnergy(max);
+		});
+		energy.addSetting(maxEnergy, "Maximum");
+
+		energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
+		energyGuess.addActionListener(e -> {
+			//custom controls in a menu don't hide the menu when activated
+			mainMenu.setVisible(false);
+			actionGuessMaxEnergy();	
+		});
+		energy.addSetting(energyGuess);
+		
+		
+		
+		
+		
+		SettingsPanel peakwidth = new SettingsPanel(Spacing.iTiny());
+		peakwidth.setOpaque(false);
+		peakwidth.setBorder(Spacing.bMedium());
+		JLabel peakwidthTitle = new JLabel("Peak Model (ev)");
+		peakwidthTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		peakwidthTitle.setFont(peakwidthTitle.getFont().deriveFont(Font.BOLD));
+		peakwidth.addSetting(peakwidthTitle);
+
+
+		JSpinner fwhmBase = new JSpinner();
+		fwhmBase.setModel(new SpinnerNumberModel(controller.fitting().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
+		fwhmBase.getEditor().setPreferredSize(new Dimension(72, (int)fwhmBase.getPreferredSize().getHeight()));
+		fwhmBase.getEditor().setOpaque(false);
+		fwhmBase.addChangeListener(e -> {
+			
+			float base = ((Number) fwhmBase.getValue()).floatValue()/1000;
+			controller.fitting().setFWHMBase(base);			
+			
+		});
+		peakwidth.addSetting(fwhmBase, "FWHM Base");
+
+		
+		JSpinner fwhmMult = new JSpinner();
+		fwhmMult.setModel(new SpinnerNumberModel(controller.fitting().getFWHMMult()*1000, 0.0, 1000.0, 0.1));
+		fwhmMult.getEditor().setPreferredSize(new Dimension(72, (int)fwhmMult.getPreferredSize().getHeight()));
+		fwhmMult.getEditor().setOpaque(false);
+		fwhmMult.addChangeListener(e -> {
+			
+			float mult = ((Number) fwhmMult.getValue()).floatValue()/1000;
+			controller.fitting().setFWHMMult(mult);			
+			
+		});
+		peakwidth.addSetting(fwhmMult, "FWHM Scale");
+		
+		
+		
+		
+		ButtonGroup functionGroup = new ButtonGroup();
+		
+		
+		JRadioButton voigt = new JRadioButton("Pseudo-Voigt");
+		voigt.setSelected(controller.fitting().getFittingFunction() == PseudoVoigtFittingFunction.class);
+		voigt.addActionListener(e -> {
+			controller.fitting().setFittingFunction(PseudoVoigtFittingFunction.class);
+		});
+		functionGroup.add(voigt);
+		peakwidth.addSetting(voigt);
+		
+		
+		JRadioButton gaussian = new JRadioButton("Gaussian");
+		gaussian.setSelected(controller.fitting().getFittingFunction() == GaussianFittingFunction.class);
+		gaussian.addActionListener(e -> {
+			controller.fitting().setFittingFunction(GaussianFittingFunction.class);
+		});
+		functionGroup.add(gaussian);
+		peakwidth.addSetting(gaussian);
+		
+		
+		JRadioButton ida = new JRadioButton("Ida");
+		ida.setSelected(controller.fitting().getFittingFunction() == IdaFittingFunction.class);
+		ida.addActionListener(e -> {
+			controller.fitting().setFittingFunction(IdaFittingFunction.class);
+		});
+		functionGroup.add(ida);
+		peakwidth.addSetting(ida);
+		
+		
+		JRadioButton lorentz = new JRadioButton("Lorentz");
+		lorentz.setSelected(controller.fitting().getFittingFunction() == LorentzFittingFunction.class);
+		lorentz.addActionListener(e -> {
+			controller.fitting().setFittingFunction(LorentzFittingFunction.class);
+		});
+		functionGroup.add(lorentz);
+		peakwidth.addSetting(lorentz);
+
+		
+		
+		
+		
+		
+		
+		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
+
+		outer.addSetting(energy);
+		outer.addSetting(peakwidth);
+		outer.setOpaque(false);
+		mainMenu.add(outer);
+		
+		
+		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
+		return menuButton;
+	}
 	
 	private ToolbarImageButton createMainMenuButton() {
 		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_MAIN, "Main Menu");

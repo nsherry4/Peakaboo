@@ -11,6 +11,8 @@ import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.TransitionSeries;
@@ -292,6 +294,39 @@ public class FittingController extends EventfulType<Boolean>
 	public void setHighlightedTransitionSeries(List<TransitionSeries> highlighted) {
 		fittingModel.highlighted = highlighted;
 		updateListeners(false);
+	}
+	
+	public float getFWHMBase() {
+		return fittingModel.selections.getFittingParameters().getFWHMBase();
+	}
+	
+	public void setFWHMBase(float base) {
+		fittingModel.selections.getFittingParameters().setFWMHBase(base);
+		fittingModel.proposals.getFittingParameters().setFWMHBase(base);
+		fittingDataInvalidated();
+		setUndoPoint("Change Peak Shape");
+	}
+
+	public float getFWHMMult() {
+		return fittingModel.selections.getFittingParameters().getFWHMMult();
+	}
+	
+	public void setFWHMMult(float mult) {
+		fittingModel.selections.getFittingParameters().setFWMHMult(mult);
+		fittingModel.proposals.getFittingParameters().setFWMHMult(mult);
+		fittingDataInvalidated();
+		setUndoPoint("Change Peak Shape");
+	}
+
+	public void setFittingFunction(Class<? extends FittingFunction> cls) {
+		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
+		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
+		fittingDataInvalidated();
+		setUndoPoint("Change Peak Shape");
+	}
+	
+	public Class<? extends FittingFunction> getFittingFunction() {
+		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
 	
