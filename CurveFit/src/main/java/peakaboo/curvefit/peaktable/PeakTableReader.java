@@ -30,12 +30,14 @@ import peakaboo.curvefit.transition.TransitionSeriesType;
 public class PeakTableReader
 {
 	
+	//default peak table source
 	public static void readPeakTable() {
 		readPeakTableXraylib();
 		//readPeakTableManual();
 	}
 	
 	public static void readPeakTableXraylib() {
+		PeakTable.clearSeries();
 		
 		for (Element e : Element.values()) {
 			readElementShell(-1 ,   -29, e, TransitionSeriesType.K);
@@ -83,9 +85,8 @@ public class PeakTableReader
 	 * Read a peak table from a predetermined relative location 
 	 * @return a populated PeakTable object
 	 */
-	public static void readPeakTableManual()
-	{
-
+	public static void readPeakTableManual() {
+		PeakTable.clearSeries();
 		
 		int elementDataWidth = 2;
 

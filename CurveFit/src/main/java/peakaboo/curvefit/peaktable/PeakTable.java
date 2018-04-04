@@ -53,6 +53,10 @@ public class PeakTable
 		if (ts.getTransitionCount() == 0) return;
 		elementTransitions.add(ts);
 	}
+	
+	public static void clearSeries() {
+		elementTransitions.clear();
+	}
 
 
 	/**
@@ -110,7 +114,7 @@ public class PeakTable
 	}
 	
 	public static void main(String[] args) {
-		PeakTableReader.readPeakTable();
+		PeakTableReader.readPeakTableXraylib();
 		for (TransitionSeries ts : PeakTable.getAllTransitionSeries()) {
 			System.out.println(ts);
 		}

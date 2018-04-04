@@ -15,7 +15,7 @@ public class PeakabooFX extends Application {
     PlotWindowController plot;
 
     public static void main(String[] args) {
-    	PeakTableReader.readPeakTable();
+    	PeakTableReader.readPeakTableXraylib();
         launch(args);
     }
 

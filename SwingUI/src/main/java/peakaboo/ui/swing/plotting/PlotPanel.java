@@ -95,6 +95,7 @@ import peakaboo.curvefit.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.functions.IdaFittingFunction;
 import peakaboo.curvefit.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
+import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
@@ -915,7 +916,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			null, null
 		);
 		mainMenu.add(about);
-
+		
 
 		
 		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
@@ -1106,6 +1107,31 @@ public class PlotPanel extends TabbedInterfacePanel
 		maximum.setSelected(controller.settings().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM);
 		viewGroup.add(maximum);
 		mainMenu.add(maximum);
+		
+		
+		
+		
+		if (!Version.release) {
+			JMenuItem localPeakTable = new JMenuItem("Load Local Peak Table");
+			localPeakTable.addActionListener(e -> {
+				PeakTableReader.readPeakTableManual();
+				controller.fitting().clearTransitionSeries();
+				controller.fitting().clearProposedTransitionSeries();
+			});
+			JMenuItem xraylibPeakTable = new JMenuItem("Load Xraylib Peak Table");
+			xraylibPeakTable.addActionListener(e -> {
+				PeakTableReader.readPeakTableXraylib();
+				controller.fitting().clearTransitionSeries();
+				controller.fitting().clearProposedTransitionSeries();
+			});
+			
+			mainMenu.addSeparator();
+			mainMenu.add(localPeakTable);
+			mainMenu.add(xraylibPeakTable);
+			
+		}
+		
+		
 		
 		
 		
