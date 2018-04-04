@@ -160,17 +160,17 @@ public class PlotWindowController extends IActofUIController {
     }
 
     public void selectSignalSingle() {
-        plotController.settings().setShowChannelMode(ChannelCompositeMode.NONE);
+        plotController.settings().setChannelCompositeMode(ChannelCompositeMode.NONE);
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void selectSignalAverage() {
-        plotController.settings().setShowChannelMode(ChannelCompositeMode.AVERAGE);
+        plotController.settings().setChannelCompositeMode(ChannelCompositeMode.AVERAGE);
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void selectSignalMax() {
-        plotController.settings().setShowChannelMode(ChannelCompositeMode.MAXIMUM);
+        plotController.settings().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM);
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
