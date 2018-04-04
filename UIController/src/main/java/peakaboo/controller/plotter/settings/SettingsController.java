@@ -106,7 +106,7 @@ public class SettingsController extends Eventful implements Serializable
 		return settingsModel.viewTransform == ViewTransform.LOG;
 	}
 
-	public void setShowChannelMode(ChannelCompositeMode mode)
+	public void setChannelCompositeMode(ChannelCompositeMode mode)
 	{
 		settingsModel.channelComposite = mode;
 		setUndoPoint(mode.show());
@@ -114,7 +114,7 @@ public class SettingsController extends Eventful implements Serializable
 	}
 	
 
-	public ChannelCompositeMode getChannelCompositeType()
+	public ChannelCompositeMode getChannelCompositeMode()
 	{
 		return settingsModel.channelComposite;
 	}

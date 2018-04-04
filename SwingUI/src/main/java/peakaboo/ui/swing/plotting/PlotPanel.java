@@ -279,7 +279,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());
 			setEnergySpinners();
 
-			if (controller.settings().getChannelCompositeType() == ChannelCompositeMode.NONE) {
+			if (controller.settings().getChannelCompositeMode() == ChannelCompositeMode.NONE) {
 				scanNo.setValue(controller.settings().getScanNumber() + 1);
 				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.settings().getScanNumber()));
 				scanSelector.setEnabled(true);
@@ -513,11 +513,12 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		Consumer<ActionEvent> checkListener = e -> {
 			boolean orig = menuItem.isSelected();
+			boolean state = !orig;
 			if (e.getSource() == menuItem) {
-				orig = !orig;
+				state = orig;
 			}
-			menuItem.setSelected(!orig);
-			listener.accept(!orig);
+			menuItem.setSelected(state);
+			listener.accept(state);
 		};
 		
 		configureMenuItem(menuItem, description, checkListener, key, mnemonic);
@@ -938,6 +939,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				},
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), KeyEvent.VK_L
 		);
+		logPlot.setSelected(controller.settings().getViewLog());
 		
 		axes = createMenuCheckItem(
 				"Axes", null, "Toggles display of axes and grid lines",
@@ -946,6 +948,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				},
 				null, null
 		);
+		axes.setSelected(controller.settings().getShowAxes());
 
 		title = createMenuCheckItem(
 				"Title", null, "Toggles display of the current data set's title",
@@ -1072,10 +1075,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		individual = createMenuRadioItem(
 				ChannelCompositeMode.NONE.show(), 
 				null, null, 
-				o -> controller.settings().setShowChannelMode(ChannelCompositeMode.NONE), 
+				o -> controller.settings().setChannelCompositeMode(ChannelCompositeMode.NONE), 
 				KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), 
 				KeyEvent.VK_I
 			);
+		individual.setSelected(controller.settings().getChannelCompositeMode() == ChannelCompositeMode.NONE);
 		viewGroup.add(individual);
 		mainMenu.add(individual);
 		
@@ -1083,10 +1087,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		average = createMenuRadioItem(
 				ChannelCompositeMode.AVERAGE.show(), 
 				null, null, 
-				o -> controller.settings().setShowChannelMode(ChannelCompositeMode.AVERAGE), 
+				o -> controller.settings().setChannelCompositeMode(ChannelCompositeMode.AVERAGE), 
 				KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), 
 				KeyEvent.VK_M
 			);
+		average.setSelected(controller.settings().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE);
 		viewGroup.add(average);
 		mainMenu.add(average);
 		
@@ -1094,10 +1099,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		maximum = createMenuRadioItem(
 				ChannelCompositeMode.MAXIMUM.show(), 
 				null, null, 
-				o -> controller.settings().setShowChannelMode(ChannelCompositeMode.MAXIMUM),
+				o -> controller.settings().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM),
 				KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), 
 				KeyEvent.VK_T
 			);
+		maximum.setSelected(controller.settings().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM);
 		viewGroup.add(maximum);
 		mainMenu.add(maximum);
 		
@@ -1117,7 +1123,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				emarkings.setSelected(controller.settings().getShowElementMarkers());
 				eintensities.setSelected(controller.settings().getShowElementIntensities());
 
-				switch (controller.settings().getChannelCompositeType())
+				switch (controller.settings().getChannelCompositeMode())
 				{
 
 					case NONE:
@@ -1259,7 +1265,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 			
 			sb.append("View: ");
-			sb.append(controller.settings().getChannelCompositeType().show());
+			sb.append(controller.settings().getChannelCompositeMode().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append(String.valueOf(channel));
@@ -1280,7 +1286,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		{
 			
 			sb.append("View: ");
-			sb.append(controller.settings().getChannelCompositeType().show());
+			sb.append(controller.settings().getChannelCompositeMode().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append("-");

@@ -43,14 +43,14 @@ public class SettingsModel implements Serializable
 	{
 		scanNumber = 0;
 		showIndividualFittings = false;
-		channelComposite = ChannelCompositeMode.NONE;
+		channelComposite = ChannelCompositeMode.AVERAGE;
 		backgroundShowOriginal = false;
 		zoom = 1.0f;
 		monochrome = false;
-		showAxes = false;
+		showAxes = true;
 		lockPlotHeight = true;
 		escape = EscapePeakType.SILICON;
-		viewTransform = ViewTransform.LINEAR;
+		viewTransform = ViewTransform.LOG;
 		minEnergy = 0.0f;
 		maxEnergy = 0.0f;
 	}
