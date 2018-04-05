@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 import eventful.Eventful;
 import eventful.EventfulListener;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.discards.Discards;
 import peakaboo.controller.plotter.data.discards.DiscardsList;
@@ -74,14 +76,30 @@ public class DataController extends Eventful
 			
 			public void change()
 			{
-				if (readTasks.getCompleted() && dataset.getAnalysis().channelsPerScan() > 0 && !loadedNewDataSet) {
-					DatasetReadResult result = readTasks.getResult();
-					if (result.status == ReadStatus.SUCCESS) {
-						setDataSetProvider(dataset);
-						loadedNewDataSet = true;
+				if (!readTasks.getCompleted()) { return; }
+				
+				switch (readTasks.getResult().status) {
+				case SUCCESS:
+					if (dataset.getAnalysis().channelsPerScan() > 0 && !loadedNewDataSet) {
+						DatasetReadResult result = readTasks.getResult();
+						if (result.status == ReadStatus.SUCCESS) {
+							setDataSetProvider(dataset);
+							loadedNewDataSet = true;
+						}
 					}
-
+					return;
+					
+				case FAILED:
+					//Error reporting is handled at the UI level in this case. 
+					//Just don't try to read the result.
+					return;
+					
+				case CANCELLED:
+					return;
 				}
+				
+
+
 			}
 
 		};
