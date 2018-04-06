@@ -21,16 +21,19 @@ public class Transition implements Serializable, Comparable<Transition>{
 	 * The relative intensity of this peak compared to the a1 peak of the same {@link TransitionSeries}
 	 */
 	public final float relativeIntensity;
+	
+	public final String name;
 
 	/**
 	 * Create a new Transition
 	 * @param value energy value of this Transition
 	 * @param relativeIntensity relative intensity of this Transition
 	 */
-	public Transition(float value, float relativeIntensity){
+	public Transition(float value, float relativeIntensity, String name){
 
 		this.energyValue = value;
 		this.relativeIntensity = relativeIntensity;
+		this.name = name;
 	}
 
 
@@ -57,14 +60,14 @@ public class Transition implements Serializable, Comparable<Transition>{
 	 */
 	public Transition summation(Transition other)
 	{
-		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity);
+		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity, "(" + this.name + " + " + other.name + ")");
 	}
 
 	
 	@Override
 	public String toString()
 	{
-		return "Transition: " + energyValue + "keV @ " + relativeIntensity;
+		return "Transition " + this.name + ": " + energyValue + "keV @ " + relativeIntensity;
 	}
 	
 }

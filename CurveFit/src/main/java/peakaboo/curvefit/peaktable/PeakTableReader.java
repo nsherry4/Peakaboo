@@ -41,7 +41,11 @@ public class PeakTableReader
 		
 		for (Element e : Element.values()) {
 			readElementShell(-1 ,   -29, e, TransitionSeriesType.K);
+			
+			//Don't read the L1L2,L1L3 lines -- they're at a way lower energy value and can 
+			//mess up fitting on data where low energy ranges are poorly behaved
 			readElementShell(-30,  -110, e, TransitionSeriesType.L);
+			//readElementShell(-32,  -110, e, TransitionSeriesType.L);
 			readElementShell(-114, -400, e, TransitionSeriesType.M);			
 		}
 
@@ -64,11 +68,19 @@ public class PeakTableReader
 			try {
 				float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), i);
 				float rel = (float) Xraylib.RadRate(elem.atomicNumber(), i);
+				float absorb = 1f;
+//				try {
+//					absorb = (float) Xraylib.CS_FluorLine_Kissel_Cascade(elem.atomicNumber(), i, 20000);
+//					System.out.println(absorb);
+//				} catch (XraylibException e) {
+//					
+//				}
+				
 				
 				//don't bother with this if the line is <0.1% the intensity of the largest line
 				if (rel < maxRel*0.001) { continue; }
 				
-				Transition t = new Transition(value, rel);
+				Transition t = new Transition(value, rel*absorb, elem.name() + " " + tstype.name() + " #" + i + " @" + value + " keV");
 				ts.setTransition(t);
 			} catch (XraylibException ex) {
 				//this is normal, not all lines are available
@@ -285,8 +297,19 @@ public class PeakTableReader
 		}
 
 		if (energy == 0.0 || relIntensity == 0.0) return null;
-		return new Transition(energy, relIntensity / 100.0f);
+		return new Transition(energy, relIntensity / 100.0f, ""+column);
 
+	}
+	
+	
+	public static void main(String[] args) {
+//		readPeakTableXraylib();
+//		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Zn, TransitionSeriesType.L);
+//		for (Transition t : ts.getAllTransitions()) {
+//			System.out.println(t.name);
+//		}
+		
+		
 	}
 
 	
