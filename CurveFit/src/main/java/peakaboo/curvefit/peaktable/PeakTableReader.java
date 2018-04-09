@@ -87,7 +87,7 @@ public class PeakTableReader
 		for (int i : lines) {
 			try {
 				float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), i);
-				float rel = lineRelativeIntensity(elem, i);
+				float rel = lineRelativeIntensity(elem, i) / maxRel;
 				
 				//don't bother with this if the line is <0.1% the intensity of the largest line
 				if (rel < maxRel*0.001) { continue; }
@@ -325,7 +325,7 @@ public class PeakTableReader
 	
 	public static void main(String[] args) {
 		readPeakTableXraylib();
-		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Fe, TransitionSeriesType.K);
+		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Zn, TransitionSeriesType.K);
 		for (Transition t : ts.getAllTransitions()) {
 			System.out.println(t.name);
 		}
