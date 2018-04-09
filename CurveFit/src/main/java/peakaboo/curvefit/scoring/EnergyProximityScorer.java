@@ -13,25 +13,18 @@ import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
-public class EnergyMatchScorer implements Scorer {
+public class EnergyProximityScorer implements Scorer {
 
-	private ReadOnlySpectrum data;
-	private FittingParameters parameters;
 	private float energy;
-	private Curve curve;
-	
-	public EnergyMatchScorer(ReadOnlySpectrum data, FittingParameters parameters, float energy) {
-		this.data = data;
-		this.parameters = FittingParameters.copy(parameters);
+			
+	public EnergyProximityScorer(float energy) {
 		this.energy = energy;
-		
-		this.curve = new Curve(null, this.parameters);
 	}
 
 	@Override
 	public float score(TransitionSeries ts) {
 		
-		curve.setTransitionSeries(ts);
+		//curve.setTransitionSeries(ts);
 		
 		float maxRel = 0f;
 		for (Transition t : ts.getAllTransitions()) {

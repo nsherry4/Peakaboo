@@ -24,7 +24,9 @@ import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.scoring.EnergyMatchScorer;
+import peakaboo.curvefit.scoring.CompoundScorer;
+import peakaboo.curvefit.scoring.EnergyProximityScorer;
+import peakaboo.curvefit.scoring.FastFittingScorer;
 import peakaboo.curvefit.scoring.Scorer;
 import peakaboo.curvefit.transition.TransitionSeries;
 import plural.streams.StreamExecutor;
@@ -93,7 +95,7 @@ public class TSOrdering
 		)
 	{
 	
-		return new EnergyMatchScorer(spectrum, parameters, energy);
+		return new CompoundScorer(new EnergyProximityScorer(energy), new FastFittingScorer(spectrum, parameters.getCalibration()));
 		
 //		//scoring function to evaluate each TransitionSeries
 //		return new Function<TransitionSeries, Float>() {

@@ -67,11 +67,6 @@ public class AutoEnergyCalibration {
 				
 				EnergyCalibration calibration = energies.get(index);
 				
-//				Map<Transition, Float> heights = fits.roughIndivudualHeights(spectrum, calibration);
-//				float score = 0;
-//				for (Float f : heights.values()) {
-//					score += Math.sqrt(f);
-//				}
 				float score = scoreFitFast(fits, spectrum, calibration);
 				return new Pair<>(index, score);
 				
