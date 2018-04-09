@@ -148,8 +148,9 @@ public class TSOrdering
 			//the closer the better, so we accent this
 			float p = (float)Math.log1p(proximityScorer.score(ts));
 			//Don't reward a better fit too much as the signal fitted grows
-			float f = (float)Math.sqrt(1+fastfitScorer.score(ts));
-			float score = p * f;
+			float f = 1+fastfitScorer.score(ts);
+			
+			float score = p * f;			
 			return score;
 		};
 		
@@ -158,7 +159,7 @@ public class TSOrdering
 		tss = tss.stream()
 			.map(ts -> new Pair<>(ts, -fastScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
-			.limit(6)
+			.limit(15)
 			.map(p -> p.first)
 			.collect(Collectors.toList());
 

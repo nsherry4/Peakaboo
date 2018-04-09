@@ -7,7 +7,9 @@ import peakaboo.curvefit.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
 
 /**
- * Scores a TransitionSeries based on 
+ * Scores a TransitionSeries based on how well a rough, 
+ * Transition-by-Transition fit estimate fits the given
+ * data 
  * @author NAS
  *
  */
@@ -27,28 +29,45 @@ public class FastFittingScorer implements Scorer {
 		
 		//find the lowest multiplier as a constraint on signal fitted
 		float lowestMult = Float.MAX_VALUE;
+		int count = 0;
 		for (Transition t : ts.getAllTransitions()) {
+			
 			
 			int channel = calibration.channelFromEnergy(t.energyValue);
 			if (channel >= data.size()) continue;
 			if (channel < 0) continue;
-			float channelHeight = data.get(channel);
+			//add 1 for a little wiggle room, and to prevent /0 errors
+			float channelHeight = 1+data.get(channel);
 			
 			float mult = channelHeight / t.relativeIntensity;
 			lowestMult = Math.min(lowestMult, mult);
+			count++;
 		}
 		if (lowestMult == Float.MAX_VALUE) {
-			lowestMult = 0;
+			return 0;
 		}
 	
 		
-		//multiply each transition's channel by the lowest multiplier
+		//scale each transition by the lowest mult, and find out how "snugly" 
+		//each transition fits the data.
 		float score = 0;
 		for (Transition t : ts.getAllTransitions()) {			
-			score += t.relativeIntensity * lowestMult;
+			//score += t.relativeIntensity * lowestMult;
+			
+			float fit = t.relativeIntensity * lowestMult;
+			
+			int channel = 1+calibration.channelFromEnergy(t.energyValue);
+			if (channel >= data.size()) continue;
+			if (channel < 0) continue;
+			//add 1 for a little wiggle room, and to prevent /0 errors
+			float channelHeight = 1+data.get(channel);
+			
+			//we calculate how good the fit is
+			score += fit / (float)channelHeight;
+			
 		}
 				
-		return score;
+		return score/(float)count;
 
 	}
 
