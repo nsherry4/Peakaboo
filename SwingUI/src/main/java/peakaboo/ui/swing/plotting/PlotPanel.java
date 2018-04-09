@@ -95,6 +95,7 @@ import peakaboo.curvefit.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.functions.IdaFittingFunction;
 import peakaboo.curvefit.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
+import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.TransitionSeries;
@@ -1114,12 +1115,14 @@ public class PlotPanel extends TabbedInterfacePanel
 		if (!Version.release) {
 			JMenuItem localPeakTable = new JMenuItem("Load Local Peak Table");
 			localPeakTable.addActionListener(e -> {
+				PeakTable.clearSeries();
 				PeakTableReader.readPeakTableManual();
 				controller.fitting().clearTransitionSeries();
 				controller.fitting().clearProposedTransitionSeries();
 			});
 			JMenuItem xraylibPeakTable = new JMenuItem("Load Xraylib Peak Table");
 			xraylibPeakTable.addActionListener(e -> {
+				PeakTable.clearSeries();
 				PeakTableReader.readPeakTableXraylib();
 				controller.fitting().clearTransitionSeries();
 				controller.fitting().clearProposedTransitionSeries();

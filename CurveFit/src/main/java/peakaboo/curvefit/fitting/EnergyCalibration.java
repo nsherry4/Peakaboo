@@ -2,7 +2,8 @@ package peakaboo.curvefit.fitting;
 
 /**
  * Represents the energy calibration and data size for data. This is 
- * useful for converting between energy values and channel values. 
+ * useful for converting between energy values and channel values. It
+ * is also immutable.
  * @author NAS
  *
  */

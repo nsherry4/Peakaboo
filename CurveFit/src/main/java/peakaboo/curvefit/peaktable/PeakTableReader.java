@@ -16,6 +16,8 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.curvefit.transition.TransitionSeriesType;
+import scitypes.Range;
+import scitypes.RangeSet;
 
 
 
@@ -37,50 +39,66 @@ public class PeakTableReader
 	}
 	
 	public static void readPeakTableXraylib() {
-		PeakTable.clearSeries();
+		//PeakTable.clearSeries();
+		
+		RangeSet kLines = new RangeSet();
+		kLines.addRange(new Range(-29, -1));
+		
+		RangeSet lLines = new RangeSet();
+		lLines.addRange(new Range(-110, -30));
+		//L1L*
+		lLines.removeRange(new Range(-30, -31));
+		//L2L*
+		lLines.removeRange(new Range(-59, -59));
+		
+		RangeSet mLines = new RangeSet();
+		mLines.addRange(new Range(-219, -114));
+		mLines.removeRange(new Range(-114, -117));
+		mLines.removeRange(new Range(-137, -139));
+		mLines.removeRange(new Range(-159, -160));
+		mLines.removeRange(new Range(-181, -181));
+		
 		
 		for (Element e : Element.values()) {
-			readElementShell(-1 ,   -29, e, TransitionSeriesType.K);
+			readElementShell(kLines, e, TransitionSeriesType.K);
 			
 			//Don't read the L1L2,L1L3 lines -- they're at a way lower energy value and can 
 			//mess up fitting on data where low energy ranges are poorly behaved
-			readElementShell(-30,  -110, e, TransitionSeriesType.L);
-			//readElementShell(-32,  -110, e, TransitionSeriesType.L);
-			readElementShell(-114, -400, e, TransitionSeriesType.M);			
+			//readElementShell(-30,  -110, e, TransitionSeriesType.L);
+			readElementShell(lLines, e, TransitionSeriesType.L);
+			readElementShell(mLines, e, TransitionSeriesType.M);			
 		}
 
 	}
 	
-	private static void readElementShell(int firstLine, int lastLine, Element elem, TransitionSeriesType tstype) {
+	private static void readElementShell(RangeSet lines, Element elem, TransitionSeriesType tstype) {
 		TransitionSeries ts = new TransitionSeries(elem, tstype);
 		
 		//find the strongest transition line, so we can skip anything significantly weaker than it
 		float maxRel = 0f;
-		for (int i = firstLine; i >= lastLine; i--) {
+		for (int i : lines) {
 			try {
-				maxRel = (float) Math.max(maxRel, Xraylib.RadRate(elem.atomicNumber(), i));	
+				maxRel = (float) Math.max(maxRel, Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), i, 20000));	
 			} catch (XraylibException e) {
 				//this is normal, not all lines are available
 			}
 			
 		}
-		for (int i = firstLine; i >= lastLine; i--) {
+		for (int i : lines) {
 			try {
 				float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), i);
-				float rel = (float) Xraylib.RadRate(elem.atomicNumber(), i);
-				float absorb = 1f;
-//				try {
-//					absorb = (float) Xraylib.CS_FluorLine_Kissel_Cascade(elem.atomicNumber(), i, 20000);
-//					System.out.println(absorb);
-//				} catch (XraylibException e) {
-//					
-//				}
+				float rel = 1f;
+				try {
+					rel = (float) Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), i, 20000);
+				} catch (XraylibException e) {
+					
+				}
 				
 				
 				//don't bother with this if the line is <0.1% the intensity of the largest line
 				if (rel < maxRel*0.001) { continue; }
 				
-				Transition t = new Transition(value, rel*absorb, elem.name() + " " + tstype.name() + " #" + i + " @" + value + " keV");
+				Transition t = new Transition(value, rel, elem.name() + " " + tstype.name() + " #" + i + " @" + value + " keV x " + rel*100 + "%");
 				ts.setTransition(t);
 			} catch (XraylibException ex) {
 				//this is normal, not all lines are available
@@ -98,7 +116,7 @@ public class PeakTableReader
 	 * @return a populated PeakTable object
 	 */
 	public static void readPeakTableManual() {
-		PeakTable.clearSeries();
+		//PeakTable.clearSeries();
 		
 		int elementDataWidth = 2;
 
@@ -126,7 +144,6 @@ public class PeakTableReader
 
 		String[] lineSplit;
 		List<String> sections;
-
 
 
 
@@ -193,7 +210,7 @@ public class PeakTableReader
 			ts.setTransition(k2);
 			ts.setTransition(k3);
 
-			PeakTable.addSeries(ts);
+			//PeakTable.addSeries(ts);
 			//table.addSeries(ts.pileup());
 
 
@@ -237,7 +254,7 @@ public class PeakTableReader
 
 			ts.setTransition(ll);
 
-			if (e.atomicNumber() >= 23) PeakTable.addSeries(ts);
+			//if (e.atomicNumber() >= 23) PeakTable.addSeries(ts);
 
 
 			
@@ -303,11 +320,11 @@ public class PeakTableReader
 	
 	
 	public static void main(String[] args) {
-//		readPeakTableXraylib();
-//		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Zn, TransitionSeriesType.L);
-//		for (Transition t : ts.getAllTransitions()) {
-//			System.out.println(t.name);
-//		}
+		readPeakTableXraylib();
+		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Au, TransitionSeriesType.M);
+		for (Transition t : ts.getAllTransitions()) {
+			System.out.println(t.name);
+		}
 		
 		
 	}

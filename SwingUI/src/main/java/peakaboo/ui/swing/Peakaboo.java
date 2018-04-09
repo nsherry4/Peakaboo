@@ -172,7 +172,7 @@ public class Peakaboo
 			}
 			errorHook();
 			PeakabooLog.init();
-			PeakTableReader.readPeakTableXraylib();
+			PeakTableReader.readPeakTable();
 			DataSourceLoader.load();
 			FilterLoader.load();
 			runPeakaboo();

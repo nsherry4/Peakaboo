@@ -35,6 +35,10 @@ public class FittingParameters {
 		param.fwhmBase = copyFrom.fwhmBase;
 		param.fwhmMult = copyFrom.fwhmMult;
 		param.fits = null;
+		param.escapeType = copyFrom.escapeType;
+		param.fittingFunction = copyFrom.fittingFunction;
+		//immutable
+		param.calibration = copyFrom.calibration;
 		return param;
 	}
 	
