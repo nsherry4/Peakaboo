@@ -24,7 +24,7 @@ import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.scoring.CompoundScorer;
+import peakaboo.curvefit.scoring.CurveFittingScorer;
 import peakaboo.curvefit.scoring.EnergyProximityScorer;
 import peakaboo.curvefit.scoring.FastFittingScorer;
 import peakaboo.curvefit.scoring.Scorer;
@@ -40,7 +40,7 @@ import scitypes.SpectrumCalculations;
 
 /**
  * This class contains functions to do things like score, suggest, or sort TransitionSeries based on provided data.
- * @author Nathaniel Sherry, 2010
+ * @author NAS, 2010-2018
  *
  */
 
@@ -48,151 +48,8 @@ public class TSOrdering
 {
 
 
-	/**
-	 * Attempts to find an optimal ordering for a given list of {@link TransitionSeries}
-	 * @return an ordered list of {@link TransitionSeries}
-	 */
-	public static List<TransitionSeries> optimizeTSOrdering(
-			FittingParameters parameters,
-			List<TransitionSeries> unfitted, 
-			Spectrum s)
-	{
-		List<TransitionSeries> ordered = new ArrayList<>(unfitted);
 
-		Collections.sort(ordered, new Comparator<TransitionSeries>() {
 
-			public int compare(TransitionSeries ts1, TransitionSeries ts2)
-			{
-				return compareTSs(ts1, ts2, parameters, s);
-			}
-		});
-		
-		return ordered;
-	}
-	
-	
-	/**
-	 * Creates an anonymous function to score a {@link TransitionSeries}
-	 * @return a score for this {@link TransitionSeries}
-	 */
-	public static Scorer fScoreTransitionSeries(
-			FittingParameters parameters,
-			final ReadOnlySpectrum spectrum, 
-			boolean useBaseSize)
-	{
-		return fScoreTransitionSeries(parameters, spectrum, null, useBaseSize);
-	}
-	
-	/**
-	 * Creates an anonymous function to score a {@link TransitionSeries}
-	 * @return a score for this {@link TransitionSeries}
-	 */
-	public static Scorer fScoreTransitionSeries(
-			final FittingParameters parameters,
-			final ReadOnlySpectrum spectrum, 
-			final Float energy, 
-			final boolean useBaseSize
-		)
-	{
-	
-		return new CompoundScorer(new EnergyProximityScorer(energy), new FastFittingScorer(spectrum, parameters.getCalibration()));
-		
-//		//scoring function to evaluate each TransitionSeries
-//		return new Function<TransitionSeries, Float>() {
-//
-//			Curve curve = new Curve(null, parameters);
-//			Spectrum s = new ISpectrum(spectrum);
-//			
-//			public Float apply(TransitionSeries ts)
-//			{
-//				double prox;
-//				if (energy == null)
-//				{
-//					prox = 1.0;
-//				} else  {
-//					prox = ts.getProximityScore(energy, ((double)(parameters.getCalibration().energyPerChannel()))*2d); //Math.abs(ts.getProximityToEnergy(energy));
-//					//if (prox <= energyPerChannel*10) prox = energyPerChannel*10;
-//					prox = Math.log1p(prox);
-//					
-//				}
-//				
-//				curve.setTransitionSeries(ts);
-//				Float remainingArea;
-//				
-//				//get the fitting ratio, and the fitting spectrum
-//				FittingResult result = curve.fit(s);
-//				//remove this fitting from the spectrum
-//				SpectrumCalculations.subtractLists_inplace(s, result.getFit(), 0.0f);
-//				
-//				//square the values left in s
-//				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
-//				
-//				remainingArea = unfit.sum() / s.size();
-//				
-//				if (useBaseSize)
-//				{
-//					return (float)( remainingArea * curve.getSizeOfBase() * prox );
-//				} else {
-//					return (float)( remainingArea * prox );
-//				}
-//				
-//			}
-//		};
-		
-	}
-	
-	
-
-	
-
-	//accept two transition series, and return an ordered pair, where the ordering indicates the preferred fitting sequence for best results
-	private static Pair<TransitionSeries, TransitionSeries> orderTSPairByScore(
-			final TransitionSeries ts1, 
-			final TransitionSeries ts2, 
-			FittingParameters parameters,
-			final Spectrum s)
-	{
-				
-		Pair<TransitionSeries, TransitionSeries> order = new Pair<TransitionSeries, TransitionSeries>();
-		
-		Float ordering1, ordering2;
-		Scorer scorer;
-		
-		scorer = fScoreTransitionSeries(parameters, s, false);
-		scorer.score(ts1);
-		ordering1 = scorer.score(ts2);
-		
-		scorer = fScoreTransitionSeries(parameters, s, false);
-		scorer.score(ts2);
-		ordering2 = scorer.score(ts1);		
-		
-		if (ordering1 < ordering2)
-		{
-			order.first = ts1;
-			order.second = ts2;
-		} else {
-			order.first = ts2;
-			order.second = ts1;
-		}
-		
-		return order;
-	}
-	
-	
-	//compare two TransitionSeries -- useful for implementing a Comparator
-	private static int compareTSs(
-			TransitionSeries ts1, 
-			TransitionSeries ts2, 
-			FittingParameters parameters,
-			final Spectrum s)
-	{
-		Pair<TransitionSeries, TransitionSeries> orderedPair = orderTSPairByScore(ts1, ts2, parameters, s);
-		if (orderedPair.first == ts1) return -1;
-		return 1;
-	}
-	
-	
-	
 	
 	
 	/**
@@ -284,35 +141,30 @@ public class TSOrdering
 		//remove any duplicates we might have created while adding the summations
 		tss = new ArrayList<>(new HashSet<>(tss));
 		
-
-		//sort first by how close they are to the channel in quesiton
-		tss.sort((ts1, ts2) -> {
-			Double prox1, prox2;
-
-			prox1 = Math.abs(ts1.getProximityToEnergy(energy));
-			prox2 = Math.abs(ts2.getProximityToEnergy(energy));
-
-			return prox1.compareTo(prox2);
-		});
+	
+		Scorer proximityScorer = new EnergyProximityScorer(energy, fits.getFittingParameters().getCalibration());
+		Scorer fastfitScorer = new FastFittingScorer(s, fits.getFittingParameters().getCalibration());
+		Scorer fastScorer = ts -> {
+			//the closer the better, so we accent this
+			float p = (float)Math.log1p(proximityScorer.score(ts));
+			//Don't reward a better fit too much as the signal fitted grows
+			float f = (float)Math.sqrt(1+fastfitScorer.score(ts));
+			float score = p * f;
+			return score;
+		};
 		
-		
-		//take the top n based on position alone
-		tss = tss.subList(0, 15);
-		
-		
-		//TODO: Pulling the calibration from the fits FittingSet seems like a bad plan, and the parameters should somehow live somewhere else?
 		
 		//now sort by score
 		tss = tss.stream()
-			.map(ts -> new Pair<>(ts, TSOrdering.fScoreTransitionSeries(fits.getFittingParameters(), s, energy, true).score(ts)))
+			.map(ts -> new Pair<>(ts, -fastScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
-			.limit(15)
+			.limit(6)
 			.map(p -> p.first)
 			.collect(Collectors.toList());
 
 		
 		//take the best in sorted order based on score
-		return tss.subList(0, 6);
+		return tss;
 	}
 
 

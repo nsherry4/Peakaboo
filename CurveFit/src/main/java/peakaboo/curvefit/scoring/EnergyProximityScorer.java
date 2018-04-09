@@ -6,40 +6,66 @@ import java.util.List;
 import java.util.Optional;
 
 import peakaboo.curvefit.fitting.Curve;
+import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingParameters;
+import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
+
+/**
+ * Scores a TransitionSeries based on how close it is to a given energy 
+ * value. Individual transitions are scored by the distance from their 
+ * energy level as well as their relative intensity, and the best score
+ * is chosen to represent the whole TransitionSeries.
+ * @author NAS
+ *
+ */
 public class EnergyProximityScorer implements Scorer {
 
 	private float energy;
-			
-	public EnergyProximityScorer(float energy) {
+	private EnergyCalibration calibration;
+	
+	public EnergyProximityScorer(float energy, EnergyCalibration calibration) {
 		this.energy = energy;
+		this.calibration = calibration;
 	}
 
 	@Override
 	public float score(TransitionSeries ts) {
-		
-		//curve.setTransitionSeries(ts);
-		
+				
 		float maxRel = 0f;
 		for (Transition t : ts.getAllTransitions()) {
-			maxRel = Math.max(maxRel, t.relativeIntensity);
+			maxRel = (float) Math.max(maxRel, t.relativeIntensity);
 		}
 		
-		float bestScore = 0l;
+		float score = 0;
 		float proxScore = 0;
 		for (Transition t : ts.getAllTransitions()) {
+			if (t.energyValue < calibration.getMinEnergy() || t.energyValue > calibration.getMaxEnergy()) {
+				continue;
+			}
+			
 			proxScore = Math.abs(t.energyValue - this.energy);
+			
+			//More precision than the 2x energy per channel is just noise, don't 
+			//reward the 0.0001keV fit over the 0.001keV fit...
+			proxScore = Math.max(proxScore, calibration.energyPerChannel()*2f);
+			
+			//Because larger scores are better
+			proxScore = calibration.energyPerChannel()*25 - proxScore;
+			if (proxScore <= 0) {
+				continue;
+			}
+			
 			proxScore *= t.relativeIntensity / maxRel;
-			bestScore = Math.max(proxScore, bestScore);
+			score += proxScore;
 		}
 		
-		return bestScore;		
+		return score;		
 		
 		
 	}
