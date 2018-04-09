@@ -1,5 +1,7 @@
 package peakaboo.curvefit.scoring;
 
+import java.util.List;
+
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
@@ -25,12 +27,15 @@ public class FastFittingScorer implements Scorer {
 	
 	@Override
 	public float score(TransitionSeries ts) {
-		if (ts.getAllTransitions().size() == 0) { return 0; }
+		
 		
 		//find the lowest multiplier as a constraint on signal fitted
 		float lowestMult = Float.MAX_VALUE;
 		int count = 0;
-		for (Transition t : ts.getAllTransitions()) {
+		List<Transition> transitions = ts.getAllTransitions();
+		if (transitions.size() == 0) { return 0; }
+		
+		for (Transition t : transitions) {
 			
 			
 			int channel = calibration.channelFromEnergy(t.energyValue);
@@ -51,8 +56,7 @@ public class FastFittingScorer implements Scorer {
 		//scale each transition by the lowest mult, and find out how "snugly" 
 		//each transition fits the data.
 		float score = 0;
-		for (Transition t : ts.getAllTransitions()) {			
-			//score += t.relativeIntensity * lowestMult;
+		for (Transition t : transitions) {			
 			
 			float fit = t.relativeIntensity * lowestMult;
 			

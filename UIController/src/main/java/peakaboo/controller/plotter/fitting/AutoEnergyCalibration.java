@@ -11,6 +11,9 @@ import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.scoring.FastFittingScorer;
+import peakaboo.curvefit.scoring.FastSignalMatchScorer;
+import peakaboo.curvefit.scoring.Scorer;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import plural.streams.StreamExecutor;
@@ -148,17 +151,10 @@ public class AutoEnergyCalibration {
 	private static float scoreFitFast(FittingSet fits, ReadOnlySpectrum spectrum, EnergyCalibration calibration) {
 		float score = 0;
 
+		Scorer scorer = new FastSignalMatchScorer(spectrum, calibration);		
 		for (TransitionSeries ts : fits.getVisibleTransitionSeries()) {
 			if (ts.visible) {
-				float height = 0;
-				for (Transition t : ts.getAllTransitions()) {
-					
-					int channel = calibration.channelFromEnergy(t.energyValue);
-					if (channel >= spectrum.size()) continue;
-					if (channel < 0) continue;
-					height += spectrum.get(channel);
-				}
-				score += Math.sqrt(height);
+				score += Math.sqrt(scorer.score(ts));
 			}
 		}
 		
