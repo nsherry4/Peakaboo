@@ -67,9 +67,8 @@ public class FittingMarkersPainter extends PlotPainter
 			TransitionSeries ts = fit.getTransitionSeries();
 			for (Transition t : ts) {
 
-				channel = getChannelAtEnergy(p.dr, t.energyValue);
-
-				if (channel > p.dr.dataWidth) continue;
+				channel = fitResults.getParameters().getCalibration().channelFromEnergy(t.energyValue);
+				if (channel >= p.dr.dataWidth || channel < 0) continue;
 				
 				//TODO: This should not just be created blank here
 				FittingParameters parameters = fitResults.getParameters();
@@ -93,7 +92,7 @@ public class FittingMarkersPainter extends PlotPainter
 				{
 					for (Transition esc : escapeType.offset()) {
 					
-						channel = getChannelAtEnergy(p.dr, t.energyValue - esc.energyValue);
+						channel = fitResults.getParameters().getCalibration().channelFromEnergy(t.energyValue - esc.energyValue);
 						if (channel < 0) continue;
 						
 						positionX = getXForChannel(p, channel);
