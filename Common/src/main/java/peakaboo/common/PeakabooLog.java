@@ -136,7 +136,7 @@ class CustomFormatter extends Formatter {
 			record.getLoggerName(), 
 			record.getLevel().getLocalizedName(), 
 			record.getMessage(),
-			String.valueOf(record.getThrown())
+			record.getThrown() == null ? "" : String.valueOf(record.getThrown())
 		);
 	}
 
