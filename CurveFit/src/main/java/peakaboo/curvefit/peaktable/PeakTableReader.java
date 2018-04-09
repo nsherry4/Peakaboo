@@ -78,7 +78,7 @@ public class PeakTableReader
 		float maxRel = 0f;
 		for (int i : lines) {
 			try {
-				maxRel = (float) Math.max(maxRel, Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), i, 20000));	
+				maxRel = (float) Math.max(maxRel, Xraylib.CS_FluorLine(elem.atomicNumber(), i, 20000));	
 			} catch (XraylibException e) {
 				//this is normal, not all lines are available
 			}
@@ -89,7 +89,7 @@ public class PeakTableReader
 				float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), i);
 				float rel = 1f;
 				try {
-					rel = (float) Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), i, 20000);
+					rel = (float) Xraylib.CS_FluorLine(elem.atomicNumber(), i, 20000);
 				} catch (XraylibException e) {
 					
 				}

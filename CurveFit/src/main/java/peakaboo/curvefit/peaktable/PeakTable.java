@@ -59,34 +59,6 @@ public class PeakTable
 	}
 
 
-	/**
-	 * Generates a list of pairs of {@link TransitionSeries} and doubles, indicating the TransitionSeries nearest to the
-	 * given energy, and its distance in energy from the ideal.
-	 * 
-	 * @param energy
-	 *            the energy level to match against
-	 * @return a list of pairs of {@link TransitionSeries} and Doubles indicating how far away each TransitionSeries is
-	 */
-	public static List<Pair<TransitionSeries, Double>> getNearestMatchesToEnergy(double energy)
-	{
-
-		List<Pair<TransitionSeries, Double>> matches = new ArrayList<Pair<TransitionSeries, Double>>();
-
-		for (TransitionSeries ts : getAllTransitions())
-		{
-			matches.add(new Pair<TransitionSeries, Double>(ts, ts.getProximityToEnergy(energy)));
-		}
-
-		Collections.sort(matches, new Comparator<Pair<TransitionSeries, Double>>() {
-
-			public int compare(Pair<TransitionSeries, Double> o1, Pair<TransitionSeries, Double> o2)
-			{
-				return (int) Math.round(o1.second - o2.second);
-			}
-		});
-
-		return matches;
-	}
 
 
 	/**

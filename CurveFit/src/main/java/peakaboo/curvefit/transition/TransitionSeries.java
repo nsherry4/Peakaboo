@@ -330,20 +330,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 	
 
-	/**
-	 * Returns the lowest energy value of any {@link Transition} in this {@link TransitionSeries}
-	 * @return lowest energy values
-	 */
-	public double getLowestEnergyValue()
-	{
-		double lowest = Double.MAX_VALUE;
-		for (Transition t : transitions)
-		{
-			if (t.energyValue < lowest) lowest = t.energyValue;
-		}
-		return lowest;
-	}
-
 
 	/**
 	 * Accepts a list of {@link TransitionSeries} and generates a composite TransitionSeries representing the occasional simultaneous detection of all of the given {@link TransitionSeries}

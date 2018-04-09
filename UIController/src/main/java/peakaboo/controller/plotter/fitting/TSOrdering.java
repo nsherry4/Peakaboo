@@ -24,6 +24,8 @@ import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.PeakTable;
+import peakaboo.curvefit.scoring.EnergyMatchScorer;
+import peakaboo.curvefit.scoring.Scorer;
 import peakaboo.curvefit.transition.TransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.State;
@@ -71,7 +73,7 @@ public class TSOrdering
 	 * Creates an anonymous function to score a {@link TransitionSeries}
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
+	public static Scorer fScoreTransitionSeries(
 			FittingParameters parameters,
 			final ReadOnlySpectrum spectrum, 
 			boolean useBaseSize)
@@ -83,7 +85,7 @@ public class TSOrdering
 	 * Creates an anonymous function to score a {@link TransitionSeries}
 	 * @return a score for this {@link TransitionSeries}
 	 */
-	public static Function<TransitionSeries, Float> fScoreTransitionSeries(
+	public static Scorer fScoreTransitionSeries(
 			final FittingParameters parameters,
 			final ReadOnlySpectrum spectrum, 
 			final Float energy, 
@@ -91,47 +93,49 @@ public class TSOrdering
 		)
 	{
 	
-		//scoring function to evaluate each TransitionSeries
-		return new Function<TransitionSeries, Float>() {
-
-			Curve curve = new Curve(null, parameters);
-			Spectrum s = new ISpectrum(spectrum);
-			
-			public Float apply(TransitionSeries ts)
-			{
-				double prox;
-				if (energy == null)
-				{
-					prox = 1.0;
-				} else  {
-					prox = ts.getProximityScore(energy, ((double)(parameters.getCalibration().energyPerChannel()))*2d); //Math.abs(ts.getProximityToEnergy(energy));
-					//if (prox <= energyPerChannel*10) prox = energyPerChannel*10;
-					prox = Math.log1p(prox);
-					
-				}
-				
-				curve.setTransitionSeries(ts);
-				Float remainingArea;
-				
-				//get the fitting ratio, and the fitting spectrum
-				FittingResult result = curve.fit(s);
-				//remove this fitting from the spectrum
-				SpectrumCalculations.subtractLists_inplace(s, result.getFit(), 0.0f);
-				
-				//square the values left in s
-				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
-				
-				remainingArea = unfit.sum() / s.size();
-				
-				if (useBaseSize)
-				{
-					return (float)( remainingArea * curve.getSizeOfBase() * prox );
-				} else {
-					return (float)( remainingArea * prox );
-				}
-				
-			}
-		};
+		return new EnergyMatchScorer(spectrum, parameters, energy);
+		
+//		//scoring function to evaluate each TransitionSeries
+//		return new Function<TransitionSeries, Float>() {
+//
+//			Curve curve = new Curve(null, parameters);
+//			Spectrum s = new ISpectrum(spectrum);
+//			
+//			public Float apply(TransitionSeries ts)
+//			{
+//				double prox;
+//				if (energy == null)
+//				{
+//					prox = 1.0;
+//				} else  {
+//					prox = ts.getProximityScore(energy, ((double)(parameters.getCalibration().energyPerChannel()))*2d); //Math.abs(ts.getProximityToEnergy(energy));
+//					//if (prox <= energyPerChannel*10) prox = energyPerChannel*10;
+//					prox = Math.log1p(prox);
+//					
+//				}
+//				
+//				curve.setTransitionSeries(ts);
+//				Float remainingArea;
+//				
+//				//get the fitting ratio, and the fitting spectrum
+//				FittingResult result = curve.fit(s);
+//				//remove this fitting from the spectrum
+//				SpectrumCalculations.subtractLists_inplace(s, result.getFit(), 0.0f);
+//				
+//				//square the values left in s
+//				Spectrum unfit = SpectrumCalculations.multiplyLists(s, s);
+//				
+//				remainingArea = unfit.sum() / s.size();
+//				
+//				if (useBaseSize)
+//				{
+//					return (float)( remainingArea * curve.getSizeOfBase() * prox );
+//				} else {
+//					return (float)( remainingArea * prox );
+//				}
+//				
+//			}
+//		};
 		
 	}
 	
@@ -150,15 +154,15 @@ public class TSOrdering
 		Pair<TransitionSeries, TransitionSeries> order = new Pair<TransitionSeries, TransitionSeries>();
 		
 		Float ordering1, ordering2;
-		Function<TransitionSeries, Float> scorer;
+		Scorer scorer;
 		
 		scorer = fScoreTransitionSeries(parameters, s, false);
-		scorer.apply(ts1);
-		ordering1 = scorer.apply(ts2);
+		scorer.score(ts1);
+		ordering1 = scorer.score(ts2);
 		
 		scorer = fScoreTransitionSeries(parameters, s, false);
-		scorer.apply(ts2);
-		ordering2 = scorer.apply(ts1);		
+		scorer.score(ts2);
+		ordering2 = scorer.score(ts1);		
 		
 		if (ordering1 < ordering2)
 		{
@@ -298,7 +302,7 @@ public class TSOrdering
 		
 		//now sort by score
 		tss = tss.stream()
-			.map(ts -> new Pair<>(ts, TSOrdering.fScoreTransitionSeries(fits.getFittingParameters(), s, energy, true).apply(ts)))
+			.map(ts -> new Pair<>(ts, TSOrdering.fScoreTransitionSeries(fits.getFittingParameters(), s, energy, true).score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
 			.limit(15)
 			.map(p -> p.first)
