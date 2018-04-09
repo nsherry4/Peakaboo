@@ -78,7 +78,7 @@ public class PeakTableReader
 		float maxRel = 0f;
 		for (int i : lines) {
 			try {
-				maxRel = (float) Math.max(maxRel, Xraylib.CS_FluorLine(elem.atomicNumber(), i, 20000));	
+				maxRel = (float) Math.max(maxRel, lineRelativeIntensity(elem, i));	
 			} catch (XraylibException e) {
 				//this is normal, not all lines are available
 			}
@@ -87,13 +87,7 @@ public class PeakTableReader
 		for (int i : lines) {
 			try {
 				float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), i);
-				float rel = 1f;
-				try {
-					rel = (float) Xraylib.CS_FluorLine(elem.atomicNumber(), i, 20000);
-				} catch (XraylibException e) {
-					
-				}
-				
+				float rel = lineRelativeIntensity(elem, i);
 				
 				//don't bother with this if the line is <0.1% the intensity of the largest line
 				if (rel < maxRel*0.001) { continue; }
@@ -109,6 +103,16 @@ public class PeakTableReader
 		}
 	}
 
+	private static float lineRelativeIntensity(Element elem, int line) {
+		
+		//Make a call to this method even though we don't use the result.
+		//This will throw an exception for certain lines which we want to exclude.
+		//This is exceptionally poor form, and should probably be replaced ASAP.
+		Xraylib.RadRate(elem.atomicNumber(), line);
+		
+		return (float) Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), line, 20000);
+		
+	}
 
 
 	/**
@@ -321,7 +325,7 @@ public class PeakTableReader
 	
 	public static void main(String[] args) {
 		readPeakTableXraylib();
-		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Au, TransitionSeriesType.M);
+		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Fe, TransitionSeriesType.K);
 		for (Transition t : ts.getAllTransitions()) {
 			System.out.println(t.name);
 		}
