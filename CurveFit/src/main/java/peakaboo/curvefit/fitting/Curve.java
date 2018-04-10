@@ -2,7 +2,6 @@ package peakaboo.curvefit.fitting;
 
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ import scitypes.SpectrumCalculations;
  * @author NAS
  */
 
-public class Curve implements Serializable
+public class Curve
 {
 
 	//The {@link TransitionSeries} that this fitting is based on

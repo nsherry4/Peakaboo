@@ -54,10 +54,13 @@ public class Peakaboo
 			
 			if (realText != null) {
 				realText += "\n";
-			} else if (e != null && e.getMessage() != null) {
-				realText = e.getMessage() + "\n";
+			} else if (e != null) {
+				if (e.getMessage() != null) {
+					realText = e.getMessage() + "\n";
+				}
+				realText += "The problem is of type " + e.getClass().getSimpleName();
 			}
-			realText += "The problem is of type " + e.getClass().getSimpleName();
+			
 			errorDialog.setText(realText);
 				
 			JTextArea stacktrace = new JTextArea();

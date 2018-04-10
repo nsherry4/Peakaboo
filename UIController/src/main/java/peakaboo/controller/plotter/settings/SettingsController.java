@@ -1,7 +1,5 @@
 package peakaboo.controller.plotter.settings;
 
-import java.io.Serializable;
-
 import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.fitting.EnergyCalibration;
@@ -11,7 +9,7 @@ import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
 
-public class SettingsController extends Eventful implements Serializable
+public class SettingsController extends Eventful
 {
 
 	

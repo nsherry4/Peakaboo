@@ -2,7 +2,6 @@ package peakaboo.curvefit.fitting;
 
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import scitypes.SpectrumCalculations;
  *
  */
 
-public class FittingSet implements Serializable
+public class FittingSet
 {
 
 	private List<Curve>						curves;
