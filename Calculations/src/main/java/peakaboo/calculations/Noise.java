@@ -123,7 +123,6 @@ public class Noise
 		int size = windowSpan*2+1;
 		float[] weights = new float[size];
 		for (int i = 0; i < windowSpan; i++) {
-			int dist = windowSpan - i;
 			weights[i] = (float) Math.pow(2, i);
 			weights[size-1 - i] = (float) Math.pow(2, i);
 		}

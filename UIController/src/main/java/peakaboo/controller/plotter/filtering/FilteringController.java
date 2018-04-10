@@ -48,10 +48,6 @@ public class FilteringController extends Eventful
 		filteredDataInvalidated();
 	}
 
-	public boolean filterSetContains(Filter f)
-	{
-		return filteringModel.filters.contains(f);
-	}
 
 	public int getFilterCount()
 	{

@@ -121,12 +121,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	}
 
-	public void moveTransitionSeriesUp(TransitionSeries e)
-	{
-		fittingModel.selections.moveTransitionSeriesUp(e);
-		setUndoPoint("Move Fitting Up");
-		fittingDataInvalidated();
-	}
+
 
 	public void moveTransitionSeriesUp(List<TransitionSeries> tss)
 	{
@@ -135,12 +130,6 @@ public class FittingController extends EventfulType<Boolean>
 		fittingDataInvalidated();
 	}
 	
-	public void moveTransitionSeriesDown(TransitionSeries e)
-	{
-		fittingModel.selections.moveTransitionSeriesDown(e);
-		setUndoPoint("Move Fitting Down");
-		fittingDataInvalidated();
-	}
 
 	public void moveTransitionSeriesDown(List<TransitionSeries> tss)
 	{

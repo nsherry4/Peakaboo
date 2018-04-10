@@ -1,4 +1,4 @@
-package peakaboo.filter.plugins;
+package peakaboo.sdk.examples.filter;
 
 
 import net.sciencestudio.autodialog.model.Parameter;

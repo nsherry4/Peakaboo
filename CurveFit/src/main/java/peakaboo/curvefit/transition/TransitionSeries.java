@@ -213,58 +213,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
-	/**
-	 * Calculates how close this TransitionSeries is to a given energy by examining the energy point of each
-	 * {@link Transition} in this TransitionSeries
-	 * 
-	 * @param energy
-	 *            the energy to compare to
-	 * @return the minimum distance of any {@link Transition} in this TransitionSeries to energy
-	 */
-	public double getProximityToEnergy(double energy)
-	{
-
-		double nearest = Math.abs(transitions.iterator().next().energyValue - energy);
-		double current;
-
-		for (Transition t : transitions)
-		{
-
-			current = t.energyValue - energy;
-			if (Math.abs(current) < Math.abs(nearest)) nearest = current;
-
-		}
-
-		return nearest;
-	}
-	
-	/**
-	 * Calculates a score representing how close this TransitionSeries is to a given energy by ranking all of the Transitions
-	 * {@link Transition} in this TransitionSeries using {@link TransitionSeries#getProximityToEnergy}
-	 * 
-	 * @param energy
-	 *            the energy to compare to
-	 * @return the minimum distance of any {@link Transition} in this TransitionSeries to energy
-	 */
-	public double getProximityScore(final double energy, Double minEnergyDistance)
-	{
-		
-		final double minDistance;
-		if (minEnergyDistance == null)
-		{
-			minDistance = 0d;
-		} else {
-			minDistance = minEnergyDistance;
-		}
-		
-		List<Double> scores = transitions.stream()
-				.map(t -> t.relativeIntensity / (Math.max( Math.abs(t.energyValue - energy), minDistance )))
-				.collect(toList());
-		
-		
-		return 1 / scores.stream().reduce(0d, (a, b) -> a + b);
-
-	}
 
 
 	/**
@@ -555,18 +503,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
-	/**
-	 * Returns a list containing the {@link Element} name and {@link TransitionSeriesType} for this {@link TransitionSeries}. if this {@link TransitionSeries} is not a primary one, null is returned 
-	 * @return
-	 */
-	public List<String> toSerializableList()
-	{
-		if (type == TransitionSeriesType.COMPOSITE) return null;
-		List<String> data = new ArrayList<>();
-		data.add(element.name());
-		data.add(type.name());
-		return data;
-	}
 
 
 }

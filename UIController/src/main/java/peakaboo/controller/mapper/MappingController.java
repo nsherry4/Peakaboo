@@ -20,7 +20,7 @@ public class MappingController extends EventfulType<String>
 
 	public enum UpdateType
 	{
-		DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION, TABS;
+		DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION;
 	}
 	
 	
@@ -30,28 +30,9 @@ public class MappingController extends EventfulType<String>
 	private PlotController			plotcontroller;
 	
 	
-	public MappingController(PlotController plotcontroller)
-	{
-		this.mapsController = new MapSetController();
-		initialize(plotcontroller, null);
-	}
-
 	/**
-	 * This copy constructor copies only the user preferences from the map,
-	 * and does not copy anthing else like map data
-	 * @param copy
-	 * @param plotcontroller
-	 */
-	public MappingController(MappingController copy, PlotController plotcontroller)
-	{
-		this.mapsController = copy.mapsController;
-		initialize(plotcontroller, null);
-		
-	}
-	
-	/**
-	 * This copy constructor copies the user preferences from the map,
-	 * and does directly reference the map data
+	 * This constructor copies the user preferences from the map,
+	 * and directly references the map data
 	 * @param copy
 	 * @param plotcontroller
 	 */

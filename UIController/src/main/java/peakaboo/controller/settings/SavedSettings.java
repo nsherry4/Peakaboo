@@ -20,7 +20,6 @@ import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;
 import peakaboo.filter.plugins.noise.SpringSmoothing;
-import scidraw.drawing.DrawingRequest;
 
 
 
@@ -34,13 +33,10 @@ import scidraw.drawing.DrawingRequest;
 public class SavedSettings
 {
 
-	public DrawingRequest					drawingRequest;
 	public SettingsModel					settings;
-	
 	public List<Integer>					badScans;
-
-	
 	public List<SerializedFilter>			filters = new ArrayList<>();
+	
 	public void storeFilters(List<Filter> filters) {
 		this.filters.clear();
 		for (Filter filter : filters) {

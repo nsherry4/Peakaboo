@@ -18,10 +18,6 @@ public class MapSettingsController extends EventfulType<String>
 	
 	
 	
-	public MapSettingsController(MappingController map) {
-		this(map, null);
-	}
-	
 	public MapSettingsController(MappingController map, MapViewSettings copyViewSettings)
 	{
 		

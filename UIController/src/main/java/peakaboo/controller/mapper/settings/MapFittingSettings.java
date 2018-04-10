@@ -503,25 +503,20 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 
 
-	public String mapShortTitle(List<TransitionSeries> list){ return getShortDatasetTitle(list); }
-	
-
-	public String mapLongTitle(List<TransitionSeries> list){ return getDatasetTitle(list); }
-	
 	
 	
 
-	public String mapShortTitle(){ return getShortDatasetTitle(getVisibleTransitionSeries()); }
 	
+
 
 	public String mapLongTitle(){ 
 	
 		switch (this.displayMode)
 		{
 			case RATIO:
-				String side1Title = mapLongTitle(getTransitionSeriesForRatioSide(1));
+				String side1Title = getDatasetTitle(getTransitionSeriesForRatioSide(1));
 
-				String side2Title = mapLongTitle(getTransitionSeriesForRatioSide(2));
+				String side2Title = getDatasetTitle(getTransitionSeriesForRatioSide(2));
 
 				return "Map of " + side1Title + " : " + side2Title;
 			
@@ -540,9 +535,8 @@ public class MapFittingSettings extends EventfulType<String> {
 				
 		}
 		
-	}
-	
-	
+	}	
+
 
 	private String getDatasetTitle(List<TransitionSeries> list)
 	{

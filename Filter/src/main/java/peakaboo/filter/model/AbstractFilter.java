@@ -33,7 +33,6 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	public boolean				enabled;
 	
 	protected ReadOnlySpectrum	previewCache;
-	protected ReadOnlySpectrum	calculatedData;
 	
 	
 	//==============================================
