@@ -29,10 +29,10 @@ import swidget.widgets.listcontrols.SelectionListControls;
 class FilterSelectionList extends ClearPanel
 {
 
-	protected FilteringController	controller;
-	protected FiltersetViewer		owner;
+	private FilteringController		controller;
+	private FiltersetViewer			owner;
 
-	protected JTree					tree;
+	private JTree					tree;
 	
 	private SelectionListControls 	controls;
 

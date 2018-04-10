@@ -24,23 +24,23 @@ import swidget.widgets.ClearPanel;
 public class CurveFittingView extends ClearPanel implements Changeable
 {
 
-	protected FittingController	controller;
-	private PlotController	 		plotController;
+	private FittingController	controller;
+	private PlotController	 	plotController;
 
-	private final String			FITTED		= "Fitted";
-	private final String			LOOKUP		= "Lookup";
-	private final String			SUMMATION	= "Summation";
-	private final String			SMART		= "Smart";
+	private final String		FITTED		= "Fitted";
+	private final String		LOOKUP		= "Lookup";
+	private final String		SUMMATION	= "Summation";
+	private final String		SMART		= "Smart";
 
 
-	protected FittingPanel			fittedPanel;
-	protected LookupPanel			proposalPanel;
-	protected SummationPanel		summationPanel;
-	protected GuidedFittingPanel		smartPanel;
+	private FittingPanel		fittedPanel;
+	private LookupPanel			proposalPanel;
+	private SummationPanel		summationPanel;
+	private GuidedFittingPanel	smartPanel;
 	
 	
-	protected JPanel				cardPanel;
-	protected CardLayout			card;
+	private JPanel				cardPanel;
+	private CardLayout			card;
 
 	
 	

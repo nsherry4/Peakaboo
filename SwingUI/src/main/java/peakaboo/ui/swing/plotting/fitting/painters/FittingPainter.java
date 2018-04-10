@@ -27,18 +27,6 @@ public class FittingPainter extends PlotPainter
 	private Color				fill;
 
 
-	/**
-	 * 
-	 * Create a new FittingPainter without a fill {@link Color}
-	 * 
-	 * @param data the data to draw on the plot
-	 * @param stroke the {@link Color} to stroke the data with
-	 */
-	public FittingPainter(FittingResultSet data, Color stroke)
-	{
-		this(data, stroke, new Color(0.0f, 0.0f, 0.0f, 0.0f));
-	}
-
 
 	/**
 	 * 

@@ -19,7 +19,7 @@ import swidget.widgets.listcontrols.SelectionListControls;
 public class SummationPanel extends JPanel
 {
 
-	protected SummationWidget	summationWidget;
+	private SummationWidget	summationWidget;
 	boolean active = true;
 
 	public SummationPanel(final FittingController controller, final CurveFittingView owner)

@@ -16,10 +16,10 @@ import peakaboo.curvefit.transition.TransitionSeries;
 public class TSSelector extends EventfulPanel
 {
 	
-	JComboBox<TransitionSeries>	tsCombo;
-	JLabel		tsLabel;
+	private JComboBox<TransitionSeries> tsCombo;
+	private JLabel tsLabel;
 	
-	ActionListener tsComboListener;
+	private ActionListener tsComboListener;
 	
 	public TSSelector()
 	{

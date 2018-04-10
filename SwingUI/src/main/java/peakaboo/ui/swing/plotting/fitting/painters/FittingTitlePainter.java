@@ -38,17 +38,6 @@ public class FittingTitlePainter extends PlotPainter
 	
 	private Color colour;
 	
-	/**
-	 * Create a FittingTitlePainter which draws in black
-	 * @param fittings the {@link FittingResultSet} for the data being drawn
-	 * @param drawTSNames flag to indicate if the names of {@link TransitionSeries} should be drawn
-	 * @param drawMaxIntensities flag to indicate if the heights of {@link TransitionSeries} should be drawn
-	 */
-	public FittingTitlePainter(FittingResultSet fittings, boolean drawTSNames, boolean drawMaxIntensities){
-		
-		this(fittings, drawTSNames, drawMaxIntensities, Color.black);	
-		
-	}
 	
 	/**
 	 * Create a FittingTitlePainter which draws in the given {@link Color}
@@ -135,7 +124,7 @@ public class FittingTitlePainter extends PlotPainter
 	}
 	
 	
-	public float baseHeightForTitle(PainterData p, String title, float energy)
+	private float baseHeightForTitle(PainterData p, String title, float energy)
 	{
 			
 		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, energy);

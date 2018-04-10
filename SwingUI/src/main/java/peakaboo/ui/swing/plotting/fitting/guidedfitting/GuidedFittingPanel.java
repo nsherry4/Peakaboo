@@ -32,7 +32,7 @@ public class GuidedFittingPanel extends JPanel
 	private SelectionListControls	selControls;
 	private GuidedFittingWidget		guidedWidget;
 
-	List<TransitionSeries>			potentials;
+	private List<TransitionSeries>	potentials;
 
 
 	public GuidedFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas)

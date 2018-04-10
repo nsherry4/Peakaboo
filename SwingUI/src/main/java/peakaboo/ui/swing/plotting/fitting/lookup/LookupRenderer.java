@@ -4,7 +4,6 @@ package peakaboo.ui.swing.plotting.fitting.lookup;
 
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;

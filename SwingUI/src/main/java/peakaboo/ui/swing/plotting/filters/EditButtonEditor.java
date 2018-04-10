@@ -30,13 +30,13 @@ import swidget.widgets.Spacing;
 class EditButtonEditor extends DefaultCellEditor
 {
 
-	protected ImageButton			button;
+	private ImageButton				button;
 	private JPanel 					container;
 	
 	private Container				owner;
 
 	private Filter					filter;
-	private FilteringController	controller;
+	private FilteringController		controller;
 
 	private String					label;
 	private boolean					isPushed;

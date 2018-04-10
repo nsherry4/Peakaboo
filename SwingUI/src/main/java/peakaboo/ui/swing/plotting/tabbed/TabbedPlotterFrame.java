@@ -15,7 +15,7 @@ public class TabbedPlotterFrame extends JFrame
 {
 
 	
-	TabbedInterface<PlotPanel> tabControl;
+	private TabbedInterface<PlotPanel> tabControl;
 	//private Map<PlotPanel, TabbedContainer> containers;
 	
 	private static int openWindows = 0;

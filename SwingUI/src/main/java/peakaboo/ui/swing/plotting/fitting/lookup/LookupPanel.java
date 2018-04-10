@@ -29,11 +29,10 @@ import swidget.widgets.listcontrols.SelectionListControls;
 public class LookupPanel extends ClearPanel implements Changeable
 {
 
-	protected MutableTreeModel		utm;
-	protected JTree					unfitTree;
+	private MutableTreeModel		utm;
+	private JTree					unfitTree;
 
-	CurveFittingView				owner;
-	FittingController				controller;
+	private FittingController		controller;
 
 	private SelectionListControls	selControls;
 
@@ -41,7 +40,6 @@ public class LookupPanel extends ClearPanel implements Changeable
 	public LookupPanel(final FittingController controller, final CurveFittingView owner)
 	{
 
-		this.owner = owner;
 		this.controller = controller;
 
 		selControls = new SelectionListControls("Fittings") {

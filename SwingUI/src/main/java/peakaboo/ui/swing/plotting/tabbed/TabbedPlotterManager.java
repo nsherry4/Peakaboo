@@ -1,7 +1,5 @@
 package peakaboo.ui.swing.plotting.tabbed;
 
-import java.awt.Window;
-import java.io.InputStream;
 
 import peakaboo.datasource.model.DataSource;
 import peakaboo.ui.swing.plotting.PlotPanel;

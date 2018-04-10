@@ -38,10 +38,10 @@ public class FiltersetViewer extends ClearPanel {
 		
 	}
 	
-	public void showEditPane(){
+	void showEditPane(){
 		layout.show(this, EDIT);
 	}
-	public void showSelectPane(){
+	void showSelectPane(){
 		layout.show(this, SELECT);
 	}
 	
