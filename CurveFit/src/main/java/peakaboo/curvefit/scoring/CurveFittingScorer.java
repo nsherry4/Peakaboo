@@ -8,19 +8,19 @@ import scitypes.ReadOnlySpectrum;
 
 public class CurveFittingScorer implements Scorer {
 
-	private Curve curve;
+	private ThreadLocal<Curve> curve;
 	private ReadOnlySpectrum data;
 	
 	public CurveFittingScorer(ReadOnlySpectrum data, FittingParameters parameters) {
 		this.data = data;
-		this.curve = new Curve(null, parameters);
+		this.curve = ThreadLocal.withInitial(() -> new Curve(null, parameters));
 	}
 	
 	@Override
-	public synchronized float score(TransitionSeries ts) {
+	public float score(TransitionSeries ts) {
 		
-		curve.setTransitionSeries(ts);
-		FittingResult result = curve.fit(data);
+		curve.get().setTransitionSeries(ts);
+		FittingResult result = curve.get().fit(data);
 		return result.getFit().sum();
 		
 	}
