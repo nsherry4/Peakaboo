@@ -7,28 +7,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.Box;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.border.TitledBorder;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.sidebar.MapContourPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapSelectionPanel;
-import plural.streams.StreamExecutor;
-import plural.streams.swing.StreamExecutorPanel;
-import plural.streams.swing.StreamExecutorView;
-import scitypes.Coord;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
 
 

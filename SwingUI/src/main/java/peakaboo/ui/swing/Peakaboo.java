@@ -26,7 +26,6 @@ import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import stratus.StratusLookAndFeel;
-import stratus.theme.DarkTheme;
 import stratus.theme.LightTheme;
 import swidget.Swidget;
 import swidget.icons.IconFactory;

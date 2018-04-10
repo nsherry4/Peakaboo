@@ -15,11 +15,10 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
+import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.mapping.results.MapResult;
 import swidget.widgets.Spacing;
 

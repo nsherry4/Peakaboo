@@ -1,19 +1,14 @@
 package peakaboo.mapping;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.dataset.DataSet;
-import peakaboo.dataset.StandardDataSet;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
-import plural.executor.ExecutorSet;
-import plural.executor.eachindex.EachIndexExecutor;
-import plural.executor.eachindex.implementations.PluralEachIndexExecutor;
 import plural.streams.StreamExecutor;
 import scitypes.Range;
 import scitypes.ReadOnlySpectrum;

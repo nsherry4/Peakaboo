@@ -1,19 +1,8 @@
 package peakaboo.curvefit.scoring;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Optional;
-
-import peakaboo.curvefit.fitting.Curve;
 import peakaboo.curvefit.fitting.EnergyCalibration;
-import peakaboo.curvefit.fitting.FittingParameters;
-import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 
 /**

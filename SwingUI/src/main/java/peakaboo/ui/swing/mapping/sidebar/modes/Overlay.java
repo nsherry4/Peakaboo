@@ -20,11 +20,10 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import eventful.EventfulTypeListener;
-import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
+import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.mapping.colours.OverlayColour;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import swidget.icons.IconSize;

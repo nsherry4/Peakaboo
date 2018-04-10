@@ -1,41 +1,20 @@
 package peakaboo.controller.plotter.fitting;
 
 
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.fitting.Curve;
-import peakaboo.curvefit.fitting.FittingParameters;
-import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.scoring.CurveFittingScorer;
 import peakaboo.curvefit.scoring.EnergyProximityScorer;
 import peakaboo.curvefit.scoring.FastFittingScorer;
 import peakaboo.curvefit.scoring.Scorer;
 import peakaboo.curvefit.transition.TransitionSeries;
-import plural.streams.StreamExecutor;
-import plural.streams.StreamExecutor.State;
-import scitypes.ISpectrum;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
 /**

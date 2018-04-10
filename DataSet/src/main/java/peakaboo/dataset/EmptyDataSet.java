@@ -1,6 +1,5 @@
 package peakaboo.dataset;
 
-import java.io.File;
 import java.util.Optional;
 
 import peakaboo.dataset.analysis.Analysis;

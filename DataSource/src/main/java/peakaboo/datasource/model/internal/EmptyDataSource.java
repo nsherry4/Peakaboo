@@ -1,6 +1,5 @@
 package peakaboo.datasource.model.internal;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;

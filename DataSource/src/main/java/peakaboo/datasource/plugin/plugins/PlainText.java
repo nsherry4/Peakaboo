@@ -2,11 +2,8 @@ package peakaboo.datasource.plugin.plugins;
 
 import static java.util.stream.Collectors.toList;
 
-import java.io.File;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +19,6 @@ import peakaboo.datasource.model.components.scandata.SimpleScanData;
 import peakaboo.datasource.plugin.AbstractDataSource;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
-import scitypes.util.StringInput;
 
 
 public class PlainText extends AbstractDataSource

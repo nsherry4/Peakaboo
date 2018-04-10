@@ -4,11 +4,9 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 
 import eventful.Eventful;
 import eventful.EventfulListener;
-import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.discards.Discards;
 import peakaboo.controller.plotter.data.discards.DiscardsList;

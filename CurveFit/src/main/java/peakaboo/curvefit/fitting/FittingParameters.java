@@ -4,7 +4,6 @@ import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.fitting.context.FittingContext;
-import peakaboo.curvefit.fitting.context.FittingContext;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
 import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.peaktable.Element;

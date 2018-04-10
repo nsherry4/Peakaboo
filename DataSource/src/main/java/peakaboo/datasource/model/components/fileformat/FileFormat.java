@@ -1,6 +1,5 @@
 package peakaboo.datasource.model.components.fileformat;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 

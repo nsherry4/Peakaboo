@@ -2,23 +2,19 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.curvefit.transition.TransitionSeriesType;
 import scitypes.ReadOnlySpectrum;
-import swidget.widgets.listcontrols.ListControls;
 
 
 public class FittingController extends EventfulType<Boolean>

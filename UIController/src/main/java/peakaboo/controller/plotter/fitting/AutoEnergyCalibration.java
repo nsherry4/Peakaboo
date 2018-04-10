@@ -3,18 +3,14 @@ package peakaboo.controller.plotter.fitting;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.fitting.EnergyCalibration;
-import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.scoring.FastFittingScorer;
 import peakaboo.curvefit.scoring.FastSignalMatchScorer;
 import peakaboo.curvefit.scoring.Scorer;
-import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;

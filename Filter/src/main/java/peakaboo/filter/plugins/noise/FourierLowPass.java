@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
-import net.sciencestudio.autodialog.model.classinfo.ClassInfo;
 import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
 import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;

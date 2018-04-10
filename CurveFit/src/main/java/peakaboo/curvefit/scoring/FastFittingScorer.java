@@ -3,7 +3,6 @@ package peakaboo.curvefit.scoring;
 import java.util.List;
 
 import peakaboo.curvefit.fitting.EnergyCalibration;
-import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;

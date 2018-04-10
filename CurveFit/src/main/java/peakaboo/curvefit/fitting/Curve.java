@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import peakaboo.curvefit.transition.TransitionSeriesType;

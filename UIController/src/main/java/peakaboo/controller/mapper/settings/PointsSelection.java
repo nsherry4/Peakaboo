@@ -10,7 +10,6 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import scitypes.Coord;
 import scitypes.GridPerspective;
-import scitypes.ISpectrum;
 import scitypes.Pair;
 import scitypes.Range;
 import scitypes.Spectrum;

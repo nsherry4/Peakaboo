@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import peakaboo.curvefit.peaktable.Element;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.transition.TransitionSeries;
-import peakaboo.curvefit.transition.TransitionSeriesMode;
 import peakaboo.curvefit.transition.TransitionSeriesType;
 import scitypes.Pair;
 
