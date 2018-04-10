@@ -9,10 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.border.TitledBorder;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.ui.swing.mapping.MapperPanel;
-import peakaboo.ui.swing.mapping.MapperSidebar;
 import swidget.widgets.Spacing;
 
 public class MapContourPanel extends JPanel {
@@ -21,10 +18,10 @@ public class MapContourPanel extends JPanel {
 	private JCheckBox contours;
 	private JSpinner interpolation;
 	
-	public MapContourPanel(MapperPanel tabPanel, MappingController controller) {
+	public MapContourPanel(MappingController controller) {
 		
 		
-		if (MapperSidebar.SHOW_UI_FRAME_BORDERS) this.setBorder(new TitledBorder("Appearance"));
+		this.setBorder(new TitledBorder("Appearance"));
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();

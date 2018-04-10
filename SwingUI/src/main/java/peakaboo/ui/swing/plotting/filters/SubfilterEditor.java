@@ -170,7 +170,7 @@ class SubfilterEditor extends AbstractSwingEditor<Filter>
 		return getFilter();
 	}
 
-	public void validateFailed() {
+	private void validateFailed() {
 		setFromParameter();
 	}
 	

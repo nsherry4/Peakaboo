@@ -24,9 +24,8 @@ import swidget.widgets.Spacing;
 public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCellRenderer
 {
 
-	DefaultListCellRenderer		listRenderer	= new DefaultListCellRenderer();
-
-	DefaultTableCellRenderer	tableRenderer	= new DefaultTableCellRenderer();
+	private DefaultListCellRenderer	listRenderer = new DefaultListCellRenderer();
+	private DefaultTableCellRenderer tableRenderer = new DefaultTableCellRenderer();
 
 
 	private void configureRenderer(JLabel renderer, Object value)

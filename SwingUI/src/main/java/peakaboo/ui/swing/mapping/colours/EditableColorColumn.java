@@ -32,13 +32,7 @@ class SquareIcon implements Icon
 	}
 
 
-	public SquareIcon(Color color, boolean selected)
-	{
-		this(color, selected, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	}
-
-
-	public SquareIcon(Color color, boolean selected, int width, int height)
+	private SquareIcon(Color color, boolean selected, int width, int height)
 	{
 		this.color = color;
 		this.selected = selected;

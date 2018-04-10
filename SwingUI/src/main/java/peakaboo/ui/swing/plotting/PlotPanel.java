@@ -175,47 +175,47 @@ public class PlotPanel extends TabbedInterfacePanel
 
 
 	//Non-UI
-	PlotController				controller;
-	PlotCanvas					canvas;
-	File						saveFilesFolder;
-	File						savedSessionFileName;
-	File						exportedDataFileName;
-	File						datasetFolder;
-	String                      programTitle;
+	private PlotController				controller;
+	private PlotCanvas					canvas;
+	private File						saveFilesFolder;
+	private File						savedSessionFileName;
+	private File						exportedDataFileName;
+	private File						datasetFolder;
+	private String                      programTitle;
 
 	
 	
 	//===MAIN MENU WIDGETS===
 	
 	//FILE
-	JMenuItem					snapshotMenuItem;
-	JMenuItem					exportFittingsMenuItem;
-	JMenuItem					exportFilteredDataMenuItem;
-	JMenuItem					saveSession;
-	JMenu 						exportSinks;
+	private JMenuItem					snapshotMenuItem;
+	private JMenuItem					exportFittingsMenuItem;
+	private JMenuItem					exportFilteredDataMenuItem;
+	private JMenuItem					saveSession;
+	private JMenu 						exportSinks;
 
 	//EDIT
-	JMenuItem					undo, redo;
+	private JMenuItem					undo, redo;
 
 
-	JSpinner					scanNo;
-	JLabel						scanLabel;
-	JToggleButton				scanBlock;
-	JLabel						channelLabel;
+	private JSpinner					scanNo;
+	private JLabel						scanLabel;
+	private JToggleButton				scanBlock;
+	private JLabel						channelLabel;
 
 	//===TOOLBAR WIDGETS===
-	JToolBar                    toolBar;
+	private JToolBar                    toolBar;
 	
 	//===PLOTTING UI WIDGETS===
-	JSpinner					minEnergy, maxEnergy;
-	ImageButton					toolbarSnapshot;
-	ImageButton					toolbarMap;
-	ImageButton					toolbarInfo;
-	ImageButton					energyGuess;
-	ZoomSlider					zoomSlider;
-	JPanel						bottomPanel;
-	JPanel						scanSelector;
-	JScrollPane					scrolledCanvas;
+	private JSpinner					minEnergy, maxEnergy;
+	private ImageButton					toolbarSnapshot;
+	private ImageButton					toolbarMap;
+	private ImageButton					toolbarInfo;
+	private ImageButton					energyGuess;
+	private ZoomSlider					zoomSlider;
+	private JPanel						bottomPanel;
+	private JPanel						scanSelector;
+	private JScrollPane					scrolledCanvas;
 
 
 	public PlotPanel(TabbedPlotterManager container)
@@ -603,7 +603,6 @@ public class PlotPanel extends TabbedInterfacePanel
 	private ToolbarImageButton createEnergyMenuButton() {
 		ToolbarImageButton menuButton = new ToolbarImageButton("menu-energy", "Energy & Peak Calibration");
 		JPopupMenu mainMenu = new JPopupMenu();
-		JMenuItem template = new JMenuItem();
 
 		
 		
@@ -853,7 +852,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 
 					
-					JDialog dialog = new JDialog(container.getWindow()); //TODO: owner
+					JDialog dialog = new JDialog(container.getWindow());
 					dialog.setContentPane(tabs);
 					
 					dialog.setResizable(false);
@@ -1268,7 +1267,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	// prompts the user with a file selection dialogue
 	// reads the returned file list, loads the related
 	// data set, and returns it to the caller
-	public void openNewDataset(List<SimpleFileExtension> extensions)
+	private void openNewDataset(List<SimpleFileExtension> extensions)
 	{
 		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", datasetFolder, extensions, files -> {
 			if (!files.isPresent()) return;
@@ -1380,7 +1379,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 
-	public void loadFiles(List<File> filenames)
+	void loadFiles(List<File> filenames)
 	{
 
 		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
@@ -1409,7 +1408,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 	}
 	
-	public void loadFiles(List<File> files, DataSource dsp)
+	private void loadFiles(List<File> files, DataSource dsp)
 	{
 		if (files != null)
 		{
@@ -1726,7 +1725,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	public void actionLoadSession() {
+	private void actionLoadSession() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
 		SwidgetFilePanels.openFile(this, "Load Session Data", savedSessionFileName, peakaboo, file -> {
@@ -1742,7 +1741,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	public void actionShowInfo()
+	private void actionShowInfo()
 	{
 		
 		Map<String, String> properties;
@@ -1796,16 +1795,13 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 	
-	public void actionGuessMaxEnergy() {
+	private void actionGuessMaxEnergy() {
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
 			JOptionPane.showMessageDialog(this, "Attempting to detect an energy calibration requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.");
 			return;
 		}
-		
-		
-		//setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		
 		
 		StreamExecutorSet<EnergyCalibration> energyTask = AutoEnergyCalibration.propose(
@@ -1835,15 +1831,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		pushModalComponent(panel);
 		energyTask.start();
-		
-		
-		//controller.settings().setMaxEnergy(maxEnergy);
-		
-		//setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
 		
 	}
 	
-	public void actionOpenPluginFolder() {
+	private void actionOpenPluginFolder() {
 		File appDataDir = Configuration.appDir("Plugins");
 		appDataDir.mkdirs();
 		Desktop desktop = Desktop.getDesktop();
@@ -1855,7 +1847,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 	
-	public void actionShowLogs() {
+	private void actionShowLogs() {
 		File appDataDir = Configuration.appDir("Logging");
 		appDataDir.mkdirs();
 		Desktop desktop = Desktop.getDesktop();

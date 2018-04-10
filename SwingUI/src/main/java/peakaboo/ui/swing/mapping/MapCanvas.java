@@ -52,19 +52,19 @@ import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class MapCanvas extends GraphicsPanel
+class MapCanvas extends GraphicsPanel
 {
 
-	MappingController 		controller;
-	MapViewSettings			viewSettings;
-	DrawingRequest 		    dr;
+	private MappingController 		controller;
+	private MapViewSettings			viewSettings;
+	private DrawingRequest 		    dr;
 	
 	private MapDrawing		map;
 	private SpectrumMapPainter contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue, overlayMapPainterYellow;
 
 	private static final int	SPECTRUM_HEIGHT = 15;
 	
-	public MapCanvas(MappingController controller)
+	MapCanvas(MappingController controller)
 	{
 		this.controller = controller;
 		this.viewSettings = controller.getSettings().getView();

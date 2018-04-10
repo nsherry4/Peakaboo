@@ -55,12 +55,12 @@ public class MapperPanel extends TabbedInterfacePanel
 	private JLabel			warnOnTooSmallDataset;
 	private MapStatusBar			statusBar;
 	
-	TabbedInterface<MapperPanel>	owner;
-	MapperFrame						frame;
+	private TabbedInterface<MapperPanel>	owner;
+	private MapperFrame						frame;
 
 	private MapperToolbar		toolbar;
 
-	public MapperPanel(MappingController controller, TabbedPlotterManager parentPlotter, TabbedInterface<MapperPanel> owner, MapperFrame frame)
+	MapperPanel(MappingController controller, TabbedPlotterManager parentPlotter, TabbedInterface<MapperPanel> owner, MapperFrame frame)
 	{
 
 		this.controller = controller;
@@ -71,24 +71,10 @@ public class MapperPanel extends TabbedInterfacePanel
 		this.controller.addListener(s -> {
 			if (! s.equals(MappingController.UpdateType.AREA_SELECTION.toString())) setNeedsRedraw();
 			if (! s.equals(MappingController.UpdateType.POINT_SELECTION.toString())) setNeedsRedraw();
-			
-			toolbar.monochrome.setSelected(controller.getSettings().getView().getMonochrome());
-			toolbar.spectrum.setSelected(controller.getSettings().getView().getShowSpectrum());
-			toolbar.coords.setSelected(controller.getSettings().getView().getShowCoords());
-			
-			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
-			{
-				toolbar.readIntensities.setEnabled(true);
-				toolbar.examineSubset.setEnabled(true);
-			} else {
-				toolbar.readIntensities.setEnabled(false);
-				toolbar.examineSubset.setEnabled(false);
-			}
-						
+				
 			owner.setTabTitle(this, getTitle());
-			//if (s.equals(MappingController.UpdateType.UI_OPTIONS.toString())) {
-				canvas.updateCanvasSize();
-			//}
+			
+			canvas.updateCanvasSize();
 			repaint();
 		});
 		

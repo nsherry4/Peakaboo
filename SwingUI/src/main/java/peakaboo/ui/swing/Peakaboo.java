@@ -40,11 +40,11 @@ public class Peakaboo
 	private static final Logger LOGGER = PeakabooLog.get();
 
 
-	public static void showError(Throwable e, String message) {
+	private static void showError(Throwable e, String message) {
 		showError(e, message, null);
 	}
 	
-	public static void showError(Throwable e, String message, String text)
+	private static void showError(Throwable e, String message, String text)
 	{
 		SwingUtilities.invokeLater(() -> {
 			TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
@@ -96,7 +96,7 @@ public class Peakaboo
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
-			TabbedPlotterFrame peakaboo = new TabbedPlotterFrame();
+			new TabbedPlotterFrame();
 		} catch (Exception e) {
 			
 			PeakabooLog.get().log(Level.SEVERE, "Critical Error in Peakaboo", e);

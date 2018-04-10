@@ -16,7 +16,6 @@ import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.controller.mapper.settings.MapDisplayMode;
-import peakaboo.ui.swing.mapping.MapperSidebar;
 import peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
@@ -26,11 +25,11 @@ import swidget.widgets.ClearPanel;
 public class MapFittingPanel extends ClearPanel
 {
 
-	protected CardLayout			card;
+	private CardLayout	card;
 
-	private JPanel					cardPanel;
+	private JPanel		cardPanel;
 	
-	private JPanel					compPanel, overPanel, ratioPanel;
+	private JPanel		compPanel, overPanel, ratioPanel;
 	
 	
 	
@@ -70,7 +69,7 @@ public class MapFittingPanel extends ClearPanel
 		setLayout(new BorderLayout());
 		add(cardPanel, BorderLayout.CENTER);
 		add(modeSelect, BorderLayout.NORTH);
-		if (MapperSidebar.SHOW_UI_FRAME_BORDERS) setBorder(new TitledBorder("Fittings"));
+		setBorder(new TitledBorder("Fittings"));
 		
 		
 	}

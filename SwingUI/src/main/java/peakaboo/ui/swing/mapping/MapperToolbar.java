@@ -47,14 +47,14 @@ import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.properties.PropertyViewPanel;
 
-public class MapperToolbar extends JToolBar {
+class MapperToolbar extends JToolBar {
 
-	ToolbarImageButton	readIntensities, examineSubset;
+	private ToolbarImageButton	readIntensities, examineSubset;
 	
-	JCheckBoxMenuItem	monochrome;
-	JMenuItem			title, spectrum, coords, dstitle;
+	private JCheckBoxMenuItem	monochrome;
+	private JMenuItem			title, spectrum, coords, dstitle;
 	
-	public MapperToolbar(MapperPanel panel, MappingController controller) {
+	MapperToolbar(MapperPanel panel, MappingController controller) {
 
 
 		this.setFloatable(false);
@@ -206,6 +206,26 @@ public class MapperToolbar extends JToolBar {
 		
 		this.add(createOptionsButton(controller), c);
 		c.gridx++;
+		
+		
+		
+		controller.addListener(s -> {
+			monochrome.setSelected(controller.getSettings().getView().getMonochrome());
+			spectrum.setSelected(controller.getSettings().getView().getShowSpectrum());
+			coords.setSelected(controller.getSettings().getView().getShowCoords());
+			
+			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
+			{
+				readIntensities.setEnabled(true);
+				examineSubset.setEnabled(true);
+			} else {
+				readIntensities.setEnabled(false);
+				examineSubset.setEnabled(false);
+			}
+
+		});
+		
+		
 		
 	}
 	

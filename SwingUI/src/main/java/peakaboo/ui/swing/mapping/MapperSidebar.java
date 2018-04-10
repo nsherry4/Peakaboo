@@ -33,18 +33,14 @@ import swidget.widgets.Spacing;
 
 
 
-public class MapperSidebar extends JPanel
+class MapperSidebar extends JPanel
 {
 
-	protected MappingController		controller;
+	private MappingController		controller;
 	private MapperPanel 			tabPanel;
 
 
-
-	public final static boolean	SHOW_UI_FRAME_BORDERS	= true;
-
-
-	public MapperSidebar(MapperPanel tabPanel, MappingController controller)
+	MapperSidebar(MapperPanel tabPanel, MappingController controller)
 	{
 		this.controller = controller;
 		this.tabPanel = tabPanel;
@@ -80,14 +76,14 @@ public class MapperSidebar extends JPanel
 		maingbc.gridy++;
 		maingbc.weighty = 0.0;
 		maingbc.fill = GridBagConstraints.HORIZONTAL;
-		tabSettings.add(new MapContourPanel(tabPanel, controller), maingbc);
+		tabSettings.add(new MapContourPanel(controller), maingbc);
 
 		//Selection settings
 		// map settings
 		maingbc.gridy++;
 		maingbc.weighty = 0.0;
 		maingbc.fill = GridBagConstraints.HORIZONTAL;
-		tabSettings.add(new MapSelectionPanel(tabPanel, controller), maingbc);
+		tabSettings.add(new MapSelectionPanel(controller), maingbc);
 		
 		maingbc.gridy++;
 		maingbc.weighty = 1f;

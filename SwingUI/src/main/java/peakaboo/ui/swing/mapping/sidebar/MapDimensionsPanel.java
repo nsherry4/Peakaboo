@@ -9,10 +9,8 @@ import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.MapperPanel;
-import peakaboo.ui.swing.mapping.MapperSidebar;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.Event;
 import plural.streams.swing.StreamExecutorPanel;
@@ -31,7 +29,7 @@ public class MapDimensionsPanel extends JPanel {
 	
 	public MapDimensionsPanel(MapperPanel tabPanel, MappingController controller) {
 				
-		if (MapperSidebar.SHOW_UI_FRAME_BORDERS) this.setBorder(new TitledBorder("Dimensions"));
+		this.setBorder(new TitledBorder("Dimensions"));
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();

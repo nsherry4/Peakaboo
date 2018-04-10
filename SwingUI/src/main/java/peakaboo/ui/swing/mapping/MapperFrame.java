@@ -27,10 +27,8 @@ public class MapperFrame extends JFrame
 {
 
 	private TabbedInterface<MapperPanel> tabs;
-
-	protected PlotController	plotController;
-		
-	EventfulTypeListener<String> controllerListener;
+	private PlotController	plotController;	
+	private EventfulTypeListener<String> controllerListener;
 	
 	private TabbedPlotterManager 	parentPlotter;
 	private MapViewSettings 		previousMapSettings;

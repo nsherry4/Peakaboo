@@ -58,7 +58,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 {
 
 	private PlotDrawing				plot;
-	public DrawingRequest			dr;
+	private DrawingRequest			dr;
 	
 
 	private PlotController			controller;
@@ -66,7 +66,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	private Consumer<Integer>		grabChannelFromClickCallback;
 
 
-	public PlotCanvas(final PlotController controller, final PlotPanel parent)
+	PlotCanvas(final PlotController controller, final PlotPanel parent)
 	{
 
 		super();

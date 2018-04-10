@@ -11,13 +11,13 @@ import scitypes.Coord;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
 
-public class MapStatusBar extends JPanel {
+class MapStatusBar extends JPanel {
 
 	private JLabel status;
 	private MappingController controller;
-	MapperPanel tabPanel;
+	private MapperPanel tabPanel;
 	
-	public MapStatusBar(MapperPanel tabPanel, MappingController controller) {
+	MapStatusBar(MapperPanel tabPanel, MappingController controller) {
 		
 		this.controller = controller;
 		this.tabPanel = tabPanel;
