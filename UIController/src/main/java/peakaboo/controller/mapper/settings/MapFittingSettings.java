@@ -524,9 +524,18 @@ public class MapFittingSettings extends EventfulType<String> {
 				String side2Title = mapLongTitle(getTransitionSeriesForRatioSide(2));
 
 				return "Map of " + side1Title + " : " + side2Title;
-				
+			
+			case OVERLAY:
+				return "Overlay of " + getDatasetTitle(getVisibleTransitionSeries());				
+		
+			case COMPOSITE:
+				if (getVisibleTransitionSeries().size() > 1) {
+					return "Composite of " + getDatasetTitle(getVisibleTransitionSeries());
+				} else {
+					return "Map of " + getDatasetTitle(getVisibleTransitionSeries());
+				}
+		
 			default:
-				
 				return "Map of " + getDatasetTitle(getVisibleTransitionSeries());
 				
 		}

@@ -165,17 +165,7 @@ class MapCanvas extends GraphicsPanel
 
 		if (viewSettings.getShowTitle())
 		{
-			String mapTitle = "";
-
-			if (controller.getSettings().getMapFittings().getVisibleTransitionSeries().size() > 1)
-			{
-				mapTitle = "Composite of " + controller.getSettings().getMapFittings().mapLongTitle();
-			}
-			else
-			{
-				mapTitle = "Map of " + controller.getSettings().getMapFittings().mapLongTitle();
-			}
-			
+			String mapTitle = controller.getSettings().getMapFittings().mapLongTitle();			
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
 		}
 		
@@ -317,8 +307,7 @@ class MapCanvas extends GraphicsPanel
 		//if we're map title, add a title axis painter to put a title on the bottom
 		if (viewSettings.getShowTitle())
 		{
-			String mapTitle = "";
-			mapTitle = controller.getSettings().getMapFittings().mapLongTitle();
+			String mapTitle = controller.getSettings().getMapFittings().mapLongTitle();
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
 		}
 		
@@ -487,8 +476,7 @@ class MapCanvas extends GraphicsPanel
 
 		if (viewSettings.getShowTitle())
 		{
-			String mapTitle = "";
-			mapTitle = "Overlay of " + controller.getSettings().getMapFittings().mapLongTitle();
+			String mapTitle = controller.getSettings().getMapFittings().mapLongTitle();
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
 		}
 
