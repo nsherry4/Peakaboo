@@ -133,7 +133,21 @@ public class MapperPanel extends TabbedInterfacePanel
 						controller.getSettings().getAreaSelection().clearSelection();
 						
 						Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-						controller.getSettings().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2, e.isControlDown());
+						if (e.isControlDown()) {
+							if (e.getClickCount() == 2) {
+								controller.getSettings().getPointsSelection().makeSelection(clickedAt, true, true);
+							} else if (e.getClickCount() == 3) {
+								//Triple clicks only get run after a double click gets run. If CTRL is down, that means we need to
+								//undo the action caused by the previous (improper) double-click, so we re-run the contiguous
+								//selection modification to perform the reverse modification.
+								controller.getSettings().getPointsSelection().makeSelection(clickedAt, true, true);
+								controller.getSettings().getPointsSelection().makeSelection(clickedAt, false, true);
+							}
+						} else {
+							controller.getSettings().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2, false);
+						}
+
+						
 					}
 				}
 			}

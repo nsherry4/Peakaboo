@@ -105,9 +105,8 @@ public class PointsSelection extends EventfulType<String>{
 			value = grid.get(data, clickedAt.x, clickedAt.y);
 		}
 		
-		List<Integer> points = new ArrayList<>();
-		Set<Integer> pointSet = new HashSet<>();
 		
+		List<Integer> points = new ArrayList<>();
 		if (! contiguous) {
 			//All points, even those not touching
 			for (int y : new Range(0, h-1)) {
@@ -122,6 +121,7 @@ public class PointsSelection extends EventfulType<String>{
 				}
 			}
 		} else {
+			Set<Integer> pointSet = new HashSet<>();
 			int point = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
 			points.add(point);
 			pointSet.add(point);
