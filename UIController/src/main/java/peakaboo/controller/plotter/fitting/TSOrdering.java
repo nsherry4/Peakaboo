@@ -58,8 +58,7 @@ public class TSOrdering
 	 */
 	public static List<TransitionSeries> proposeTransitionSeriesFromChannel(
 			final ReadOnlySpectrum data, 
-			final FittingSet fits,
-			final FittingSet proposed,
+			FittingController controller,
 			final int channel, 
 			TransitionSeries currentTS
 	)
@@ -87,6 +86,10 @@ public class TSOrdering
 		 * 
 		 */
 	
+		
+		FittingSet fits = controller.getFittingSelections();
+		FittingSet proposed = controller.getFittingProposals();
+		
 		
 		//remove the current transitionseries from the list of proposed trantision series so we can re-suggest it.
 		//otherwise, the copy getting fitted eats all the signal from the one we would suggest during scoring

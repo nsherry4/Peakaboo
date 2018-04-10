@@ -191,14 +191,7 @@ public class FittingSet implements Serializable
 
 	public synchronized List<TransitionSeries> getFittedTransitionSeries()
 	{
-		List<TransitionSeries> fittedElements = new ArrayList<TransitionSeries>();
-
-		for (TransitionSeries e : fitTransitionSeries)
-		{
-			fittedElements.add(e);
-		}
-
-		return fittedElements;
+		return new ArrayList<>(fitTransitionSeries);
 	}
 
 

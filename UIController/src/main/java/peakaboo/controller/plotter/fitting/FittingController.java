@@ -224,8 +224,7 @@ public class FittingController extends EventfulType<Boolean>
 				
 		return TSOrdering.proposeTransitionSeriesFromChannel(
 				plot.filtering().getFilteredPlot(),
-				fittingModel.selections,
-				fittingModel.proposals,
+				this,
 				channel,
 				currentTS	
 		);
@@ -277,6 +276,11 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections;
 	}
 
+	public FittingSet getFittingProposals()
+	{
+		return fittingModel.proposals;
+	}
+	
 	public FittingResultSet getFittingProposalResults()
 	{
 		return fittingModel.proposalResults;

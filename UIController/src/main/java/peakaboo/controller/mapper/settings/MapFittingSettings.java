@@ -572,7 +572,13 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return getAllTransitionSeries().stream().filter(e -> this.visible.get(e)).collect(toList());
+		List<TransitionSeries> visible = new ArrayList<>();
+		for (TransitionSeries ts : getAllTransitionSeries()) {
+			if (this.visible.get(ts)) {
+				visible.add(ts);
+			}
+		}
+		return visible;
 	}
 	
 
