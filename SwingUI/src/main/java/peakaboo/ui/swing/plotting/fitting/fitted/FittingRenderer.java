@@ -15,7 +15,7 @@ import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import scitypes.SigDigits;
 
 
-public class FittingRenderer extends DefaultTableCellRenderer
+class FittingRenderer extends DefaultTableCellRenderer
 {
 
 	private TSWidget tswidget;
@@ -23,7 +23,7 @@ public class FittingRenderer extends DefaultTableCellRenderer
 
 	
 	
-	public FittingRenderer(FittingController controller){
+	FittingRenderer(FittingController controller){
 		
 		
 		

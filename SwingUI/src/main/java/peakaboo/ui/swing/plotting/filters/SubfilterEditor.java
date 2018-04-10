@@ -19,22 +19,22 @@ import swidget.widgets.Spacing;
 
 
 
-public class SubfilterEditor extends AbstractSwingEditor<Filter> 
+class SubfilterEditor extends AbstractSwingEditor<Filter> 
 {
 	
 	//Param containing the subfilter
-	SelectionParameter<Filter>	selparam;
+	private SelectionParameter<Filter>	selparam;
 	
 	//GUI
-	JPanel						control;
-	JComponent					subfilterView;
-	JPanel						subfilterPanel;
-	JComboBox<Filter>			filterCombo;
+	private JPanel						control;
+	private JComponent					subfilterView;
+	private JPanel						subfilterPanel;
+	private JComboBox<Filter>			filterCombo;
 	
 	//Subfilter
-	Filter 						subfilter;
+	private Filter 						subfilter;
 	
-	public SubfilterEditor() {}
+	SubfilterEditor() {}
 	
 	@Override
 	public void initialize(Parameter<Filter> p)

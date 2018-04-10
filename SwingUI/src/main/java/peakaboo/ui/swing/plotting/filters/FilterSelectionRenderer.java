@@ -11,10 +11,10 @@ import peakaboo.filter.model.FilterType;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 
-public class FilterSelectionRenderer extends DefaultTreeCellRenderer
+class FilterSelectionRenderer extends DefaultTreeCellRenderer
 {
 
-	public FilterSelectionRenderer()
+	FilterSelectionRenderer()
 	{
 		super();
 		setBorder(Spacing.bSmall());

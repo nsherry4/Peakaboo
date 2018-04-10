@@ -73,7 +73,7 @@ import peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
  * @author  rharder@users.sf.net
  * @version 1.0.1
  */
-public class FileDrop
+class FileDrop
 {
     private transient Border normalBorder;
     private transient DropTargetListener dropListener;
@@ -95,7 +95,7 @@ public class FileDrop
      * @param listener Listens for <tt>filesDropped</tt>.
      * @since 1.0
      */
-    public FileDrop(final Component c, final Listener listener )
+    FileDrop(final Component c, final Listener listener )
     {  
     	this( null,  // Logging stream
               c,     // Drop target

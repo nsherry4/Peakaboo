@@ -27,7 +27,7 @@ import swidget.widgets.Spacing;
 
 
 
-public class EditButtonEditor extends DefaultCellEditor
+class EditButtonEditor extends DefaultCellEditor
 {
 
 	protected ImageButton			button;

@@ -14,7 +14,7 @@ import peakaboo.filter.model.Filter;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 
-public class FilterRenderer extends JPanel implements TableCellRenderer
+class FilterRenderer extends JPanel implements TableCellRenderer
 {
 
 	private JLabel	name;

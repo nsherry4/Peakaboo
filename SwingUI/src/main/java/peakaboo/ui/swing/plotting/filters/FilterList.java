@@ -25,18 +25,18 @@ import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControls;
 
 
-public class FilterList extends ClearPanel {
+class FilterList extends ClearPanel {
 
 	
-	protected FilteringController controller;
-	protected FiltersetViewer owner;
+	private FilteringController controller;
+	private FiltersetViewer owner;
 	
-	protected JTable t;
+	private JTable t;
 	private MutableTableModel m;
 	
-	protected ListControls controls;
+	private ListControls controls;
 	
-	public FilterList(FilteringController _controller, Container windowOwner, FiltersetViewer _owner){
+	FilterList(FilteringController _controller, Container windowOwner, FiltersetViewer _owner){
 		
 		super();
 		

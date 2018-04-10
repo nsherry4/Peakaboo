@@ -15,7 +15,7 @@ import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
 
 
-public class EditButtonRenderer implements TableCellRenderer
+class EditButtonRenderer implements TableCellRenderer
 {
 
 	private ImageButton	edit;

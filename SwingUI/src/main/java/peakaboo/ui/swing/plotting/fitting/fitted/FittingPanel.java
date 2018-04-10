@@ -45,13 +45,13 @@ import swidget.widgets.listcontrols.ListControls;
 public class FittingPanel extends ClearPanel implements Changeable
 {
 
-	protected ListControls		controls;
-	protected JTable			fitTable;
+	private ListControls		controls;
+	private JTable			fitTable;
 
-	protected MutableTableModel	tm;
+	private MutableTableModel	tm;
 
-	CurveFittingView			owner;
-	FittingController			controller;
+	private CurveFittingView			owner;
+	private FittingController			controller;
 
 
 	public FittingPanel(final FittingController controller, final CurveFittingView owner)

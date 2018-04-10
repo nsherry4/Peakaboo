@@ -26,7 +26,7 @@ import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.listcontrols.SelectionListControls;
 
 
-public class FilterSelectionList extends ClearPanel
+class FilterSelectionList extends ClearPanel
 {
 
 	protected FilteringController	controller;
@@ -37,7 +37,7 @@ public class FilterSelectionList extends ClearPanel
 	private SelectionListControls 	controls;
 
 	
-	public FilterSelectionList(FilteringController _controller, FiltersetViewer _owner)
+	FilterSelectionList(FilteringController _controller, FiltersetViewer _owner)
 	{
 
 		this.controller = _controller;

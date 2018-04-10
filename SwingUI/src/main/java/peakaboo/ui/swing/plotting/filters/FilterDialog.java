@@ -8,13 +8,13 @@ import net.sciencestudio.autodialog.view.swing.editors.SwingEditorFactory;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 
-public class FilterDialog extends SwingAutoDialog{
+class FilterDialog extends SwingAutoDialog{
 	
 	static {
 		SwingEditorFactory.registerStyleProvider("sub-filter", SubfilterEditor::new);
 	}
 	
-	public FilterDialog(FilteringController controller, Filter filter, AutoDialogButtons buttons, Window window) {
+	FilterDialog(FilteringController controller, Filter filter, AutoDialogButtons buttons, Window window) {
 		super(window, filter.getParameterGroup(), buttons);
 		
 		getGroup().getValueHook().addListener(o -> {
