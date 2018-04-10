@@ -95,6 +95,7 @@ class FilterSelectionList extends ClearPanel
 				if (parent instanceof FilterType) {
 
 					ft = (FilterType) parent;
+					@SuppressWarnings("unchecked")
 					BoltPluginController<? extends FilterPlugin> plugin = (BoltPluginController<? extends FilterPlugin>) child;
 					
 					return FilterLoader.getPluginSet().getAll().indexOf(plugin);
@@ -202,6 +203,7 @@ class FilterSelectionList extends ClearPanel
 				Object leaf = path.getLastPathComponent();
 
 				if (leaf instanceof BoltPluginController<?>) {
+					@SuppressWarnings("unchecked")
 					BoltPluginController<? extends FilterPlugin> plugin = (BoltPluginController<? extends FilterPlugin>) leaf;
 					Filter filter = plugin.create();
 					filter.initialize();

@@ -148,7 +148,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 
 
-	public void updateCanvasSize()
+	void updateCanvasSize()
 	{
 			
 		//Width
@@ -210,7 +210,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	}
 
 
-	public int channelFromCoordinate(int x)
+	int channelFromCoordinate(int x)
 	{
 
 		if (plot == null) return -1;

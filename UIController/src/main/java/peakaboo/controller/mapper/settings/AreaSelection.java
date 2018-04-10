@@ -82,9 +82,7 @@ public class AreaSelection extends EventfulType<String> {
 		
 		final int xend = getEnd().x;
 		final int yend = getEnd().y;
-		
-		final int size = (Math.abs(xstart - xend) + 1) * (Math.abs(ystart - yend) + 1);
-		
+				
 		final GridPerspective<Float> grid = new GridPerspective<Float>(
 				map.getSettings().getView().getDataWidth(), 
 				map.getSettings().getView().getDataHeight(), 

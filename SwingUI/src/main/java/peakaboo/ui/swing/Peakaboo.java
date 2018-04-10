@@ -108,7 +108,7 @@ public class Peakaboo
 		
 	}
 	
-	public static void errorHook() {
+	private static void errorHook() {
 		PeakabooLog.get().addHandler(new Handler() {
 			
 			@Override

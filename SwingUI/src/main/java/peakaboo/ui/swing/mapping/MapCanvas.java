@@ -117,30 +117,6 @@ class MapCanvas extends GraphicsPanel
 
 	}
 
-
-	public Coord<Integer> getPointForMapCoordinate(Coord<Integer> coord)
-	{
-		if (map == null) return null;
-
-		Coord<Bounds<Float>> borders = map.calcAxisBorders();
-		float topOffset, leftOffset;
-		topOffset = borders.y.start;
-		leftOffset = borders.x.start;
-
-		Coord<Float> mapSize = map.calcMapSize();
-		int locX, locY;
-		locX = (int) (leftOffset + (((float) coord.x / (float) viewSettings.getDataWidth()) * mapSize.x) - (MapDrawing
-			.calcInterpolatedCellSize(mapSize.x, mapSize.y, dr) * 0.5));
-		locY = (int) (topOffset + (((float) coord.y / (float) viewSettings.getDataHeight()) * mapSize.y) - (MapDrawing
-			.calcInterpolatedCellSize(mapSize.x, mapSize.y, dr) * 0.5));
-
-		return new Coord<Integer>(locX, locY);
-	}
-
-	
-	
-	
-	
 	
 	
 
@@ -654,7 +630,7 @@ class MapCanvas extends GraphicsPanel
 
 	
 	
-	protected void drawMap(Surface context, boolean vector, Dimension size)
+	private void drawMap(Surface context, boolean vector, Dimension size)
 	{
 		
 		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());

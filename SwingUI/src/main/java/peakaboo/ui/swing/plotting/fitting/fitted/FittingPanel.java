@@ -146,7 +146,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 	}
 
 	private List<TransitionSeries> getSelected() {		
-		if (! fitTable.hasFocus()) { return Collections.EMPTY_LIST; }
+		if (! fitTable.hasFocus()) { return Collections.emptyList(); }
 		List<TransitionSeries> selected = new ArrayList<>();
 		for (int i : fitTable.getSelectedRows()) {
 			selected.add(controller.getFittedTransitionSeries().get(i));

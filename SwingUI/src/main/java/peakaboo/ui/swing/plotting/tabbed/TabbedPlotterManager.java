@@ -11,7 +11,7 @@ public class TabbedPlotterManager
 	
 	private TabbedPlotterFrame plotterFrame;
 	
-	public TabbedPlotterManager(TabbedPlotterFrame plotterFrame)
+	TabbedPlotterManager(TabbedPlotterFrame plotterFrame)
 	{
 		this.plotterFrame = plotterFrame;
 	}
@@ -38,7 +38,7 @@ public class TabbedPlotterManager
 		
 	}
 	
-	public PlotPanel newTab()
+	private PlotPanel newTab()
 	{
 		return plotterFrame.getTabControl().newTab();
 	}

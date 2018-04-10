@@ -7,7 +7,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.EventObject;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;

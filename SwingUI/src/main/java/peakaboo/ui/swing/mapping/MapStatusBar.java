@@ -15,12 +15,10 @@ class MapStatusBar extends JPanel {
 
 	private JLabel status;
 	private MappingController controller;
-	private MapperPanel tabPanel;
 	
 	MapStatusBar(MapperPanel tabPanel, MappingController controller) {
 		
 		this.controller = controller;
-		this.tabPanel = tabPanel;
 		
 		setLayout(new BorderLayout());
 		

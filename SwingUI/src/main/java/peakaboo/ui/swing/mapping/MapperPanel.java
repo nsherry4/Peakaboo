@@ -44,26 +44,21 @@ import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 public class MapperPanel extends TabbedInterfacePanel
 {
 
-	private MapCanvas			canvas;
+	private MapCanvas				canvas;
 	
-	protected MappingController	controller;
-	protected TabbedPlotterManager parentPlotter;
+	protected MappingController		controller;
+	protected TabbedPlotterManager 	parentPlotter;
 	
-	private JLabel			warnOnTooSmallDataset;
+	private JLabel					warnOnTooSmallDataset;
 	private MapStatusBar			statusBar;
 	
-	private TabbedInterface<MapperPanel>	owner;
-	private MapperFrame						frame;
+	private MapperToolbar			toolbar;
 
-	private MapperToolbar		toolbar;
-
-	MapperPanel(MappingController controller, TabbedPlotterManager parentPlotter, TabbedInterface<MapperPanel> owner, MapperFrame frame)
+	MapperPanel(MappingController controller, TabbedPlotterManager parentPlotter, TabbedInterface<MapperPanel> owner)
 	{
 
 		this.controller = controller;
 		this.parentPlotter = parentPlotter;
-		this.frame = frame;
-		this.owner = owner;
 
 		this.controller.addListener(s -> {
 			if (! s.equals(MappingController.UpdateType.AREA_SELECTION.toString())) setNeedsRedraw();
@@ -191,7 +186,7 @@ public class MapperPanel extends TabbedInterfacePanel
 	
 	
 	
-	public void actionSavePicture()
+	void actionSavePicture()
 	{
 		if (controller.getSettings().getView().savePictureFolder == null) controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
 		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().getView().savePictureFolder, file -> {
@@ -202,7 +197,7 @@ public class MapperPanel extends TabbedInterfacePanel
 		sp.show();
 	}
 	
-	public void actionSaveCSV()
+	void actionSaveCSV()
 	{
 		if (controller.getSettings().getView().savePictureFolder == null) {
 			controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
@@ -288,7 +283,7 @@ public class MapperPanel extends TabbedInterfacePanel
 	}
 
 
-	public void fullRedraw()
+	private void fullRedraw()
 	{
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -305,7 +300,7 @@ public class MapperPanel extends TabbedInterfacePanel
 	}
 
 
-	public void setNeedsRedraw()
+	private void setNeedsRedraw()
 	{
 		canvas.setNeedsRedraw();
 	}

@@ -7,7 +7,6 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
@@ -28,8 +27,7 @@ public class MapperFrame extends JFrame
 
 	private TabbedInterface<MapperPanel> tabs;
 	private PlotController	plotController;	
-	private EventfulTypeListener<String> controllerListener;
-	
+
 	private TabbedPlotterManager 	parentPlotter;
 	private MapViewSettings 		previousMapSettings;
 	private MapSetController 		mapData;
@@ -102,7 +100,7 @@ public class MapperFrame extends JFrame
 		}
 		
 		MappingController newController = new MappingController(mapData, lastMapSettings, plotController);
-		final MapperPanel viewer = new MapperPanel(newController, parentPlotter, tabs, this);
+		final MapperPanel viewer = new MapperPanel(newController, parentPlotter, tabs);
 		return viewer;					
 	}
 

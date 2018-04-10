@@ -18,8 +18,6 @@ import swidget.widgets.TextWrapping;
 
 public class PluginData extends ClearPanel {
 	
-	private BoltPluginController<? extends BoltPlugin> plugin;
-	
 	private JLabel name;
 	private JLabel version;
 	private JLabel description;
@@ -28,7 +26,6 @@ public class PluginData extends ClearPanel {
 	
 	public PluginData(BoltPluginController<? extends BoltPlugin> plugin) {
 		super(new BorderLayout());
-		this.plugin = plugin;
 		
 		this.setMinimumSize(new Dimension(500, 100));
 		

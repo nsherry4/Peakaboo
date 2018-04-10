@@ -167,7 +167,6 @@ public class PlotPanel extends TabbedInterfacePanel
 	private JMenuItem					snapshotMenuItem;
 	private JMenuItem					exportFittingsMenuItem;
 	private JMenuItem					exportFilteredDataMenuItem;
-	private JMenuItem					saveSession;
 	private JMenu 						exportSinks;
 
 	//EDIT
