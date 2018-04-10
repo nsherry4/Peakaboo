@@ -161,40 +161,36 @@ public class MapperToolbar extends JToolBar {
 		
 		
 		examineSubset =  new ToolbarImageButton("view-subset", "Plot Selection", "Plot the selection as a new data set", true);
-		examineSubset.addActionListener(new ActionListener() {
+		examineSubset.addActionListener(e -> {
 			
-			public void actionPerformed(ActionEvent e)
-			{
-				AreaSelection areaSelection = controller.getSettings().getAreaSelection();
-				PointsSelection pointSelection = controller.getSettings().getPointsSelection();
-				
-				SubsetDataSource sds;
-				if (areaSelection.hasSelection()) {
-					sds = controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd());
-				} else {
-					sds = controller.getDataSourceForSubset(pointSelection.getPoints());
-				}
-				
-				SavedSettings settings = controller.getSavedSettingsObject();
-				
-				//update the bad scan indexes to match the new data source's indexing scheme
-				settings.badScans = settings.badScans.stream()
-						.map(index -> sds.getUpdatedIndex(index))
-						.filter(index -> index > 0)
-						.collect(Collectors.toList()
-					);
-				
-				panel.parentPlotter.newTab(sds, settings.serialize());
-				//Focus and un-minimize
-				JFrame plotWindow = panel.parentPlotter.getWindow();
-				plotWindow.toFront();
-				int windowState = plotWindow.getExtendedState();
-				if ((windowState & JFrame.ICONIFIED) == JFrame.ICONIFIED) {
-					plotWindow.setExtendedState(windowState ^ JFrame.ICONIFIED);
-				}
-				
-				
+			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
+			PointsSelection pointSelection = controller.getSettings().getPointsSelection();
+			
+			SubsetDataSource sds;
+			if (areaSelection.hasSelection()) {
+				sds = controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd());
+			} else {
+				sds = controller.getDataSourceForSubset(pointSelection.getPoints());
 			}
+			
+			SavedSettings settings = controller.getSavedSettingsObject();
+			
+			//update the bad scan indexes to match the new data source's indexing scheme
+			settings.badScans = settings.badScans.stream()
+					.map(index -> sds.getUpdatedIndex(index))
+					.filter(index -> index > 0)
+					.collect(Collectors.toList()
+				);
+		
+			panel.parentPlotter.newTab(sds, settings.serialize());
+			//Focus and un-minimize
+			JFrame plotWindow = panel.parentPlotter.getWindow();
+			plotWindow.toFront();
+			int windowState = plotWindow.getExtendedState();
+			if ((windowState & JFrame.ICONIFIED) == JFrame.ICONIFIED) {
+				plotWindow.setExtendedState(windowState ^ JFrame.ICONIFIED);
+			}
+						
 		});
 		this.add(examineSubset, c);
 		c.gridx++;
