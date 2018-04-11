@@ -14,11 +14,14 @@ public class LorentzFittingFunction implements FittingFunction {
 
 	private FittingContext context;
 	private float gamma;
+	private float gammaSquared;
 	private float mean;
+	private double OneOverPi = 1f / Math.PI;
 	
 	public void initialize(FittingContext context) {
 		this.context = context;
 		this.gamma = context.getFWHM()/2f;
+		this.gammaSquared = gamma*gamma;
 		this.mean = context.getEnergy();
 	}
 
@@ -30,12 +33,10 @@ public class LorentzFittingFunction implements FittingFunction {
 		(
 			                         gamma
 			/*----------------------------------------------------*/ / 
-			   (Math.pow((point - mean), 2) + Math.pow(gamma, 2))
+			      (Math.pow((point - mean), 2) + gammaSquared)
 			
 		) * (
-			      1
-			/*---------*/ /
-			   Math.PI
+			OneOverPi
 		);
 		
 		
