@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -78,23 +79,23 @@ public class Peakaboo
 	}
 	
 
+	private static void warnLowMemory() {
+		LOGGER.log(Level.INFO, "Max heap size = " + Env.heapSize());
+		
+		if (Env.heapSize() <= 128){
+			String message = "This system's Java VM is only allocated " + Env.heapSize()
+			+ "MB of memory: processing large data sets may be quite slow, if not impossible.";
+			String title = "Low on Memory";
+			JOptionPane optionPane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+			JDialog dialog = optionPane.createDialog("Low Memory");
+			dialog.setAlwaysOnTop(true);
+			dialog.setVisible(true);
+		}
+	}
 	
 	private static void runPeakaboo()
 	{
 
-		LOGGER.log(Level.INFO, "Max heap size = " + Env.heapSize());
-		
-		if (Env.heapSize() <= 128){
-			JOptionPane.showMessageDialog(
-				null,
-				"This system's Java VM is only allocated " + Env.heapSize()
-				+ "MB of memory: processing large data sets may be quite slow, if not impossible.",
-				"Low on Memory",
-				JOptionPane.INFORMATION_MESSAGE,
-				StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-		}
-			
-		
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
@@ -166,14 +167,16 @@ public class Peakaboo
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		setAppTitle("Peakaboo 5");
+			
 		Swidget.initialize(Version.splash, Version.icon, () -> {
 			try {
 				UIManager.setLookAndFeel(laf);
 			} catch (UnsupportedLookAndFeelException e) {
 				PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
 			}
-			errorHook();
+			warnLowMemory();
 			PeakabooLog.init();
+			errorHook();
 			PeakTableReader.readPeakTable();
 			DataSourceLoader.load();
 			FilterLoader.load();
