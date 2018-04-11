@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -121,6 +123,17 @@ class CustomFormatter extends Formatter {
 		} else {
 			className = record.getSourceClassName() + ":" + record.getSourceMethodName();
 		}
+		
+		String thrown = "";
+		if (record.getThrown() != null) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			record.getThrown().printStackTrace(pw);
+			pw.flush();
+			thrown = sw.toString();
+		}
+		
+		
 		return String.format(
 			format, 
 			new java.util.Date(record.getMillis()), 
@@ -128,7 +141,7 @@ class CustomFormatter extends Formatter {
 			record.getLoggerName(), 
 			record.getLevel().getLocalizedName(), 
 			record.getMessage(),
-			record.getThrown() == null ? "" : String.valueOf(record.getThrown())
+			thrown
 		);
 	}
 
