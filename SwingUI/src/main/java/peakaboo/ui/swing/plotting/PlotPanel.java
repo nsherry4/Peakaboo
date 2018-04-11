@@ -635,7 +635,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		SettingsPanel peakwidth = new SettingsPanel(Spacing.iTiny());
 		peakwidth.setOpaque(false);
 		peakwidth.setBorder(Spacing.bMedium());
-		JLabel peakwidthTitle = new JLabel("Peak Model (ev)");
+		JLabel peakwidthTitle = new JLabel("<html><div style='text-align: center;'>Peak Model (ev)<br /><span style='color: red'>WARNING: ADVANCED</span></div></html>");
 		peakwidthTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		peakwidthTitle.setFont(peakwidthTitle.getFont().deriveFont(Font.BOLD));
 		peakwidth.addSetting(peakwidthTitle);

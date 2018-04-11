@@ -70,7 +70,6 @@ public class FittingMarkersPainter extends PlotPainter
 				channel = fitResults.getParameters().getCalibration().channelFromEnergy(t.energyValue);
 				if (channel >= p.dr.dataWidth || channel < 0) continue;
 				
-				//TODO: This should not just be created blank here
 				FittingParameters parameters = fitResults.getParameters();
 				FittingFunction fitFn = parameters.forTransition(t, ts.type);
 
