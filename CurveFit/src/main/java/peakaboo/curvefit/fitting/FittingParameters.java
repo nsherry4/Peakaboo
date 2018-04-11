@@ -15,8 +15,10 @@ public class FittingParameters {
 
 	private FittingSet fits;
 	
-	private float fwhmBase = 0.12245064f;
-	private float fwhmMult = 0.00470964f;
+	//private float fwhmBase = 0.12245064f;
+	//private float fwhmMult = 0.00470964f;
+	private float fwhmBase = 0.055f;
+	private float fwhmMult = 0.013f;;
 	private	EnergyCalibration	calibration = new EnergyCalibration(0, 0, 0);
 	private EscapePeakType		escapeType = EscapePeakType.NONE;
 	private Class<? extends FittingFunction> fittingFunction = PseudoVoigtFittingFunction.class;
