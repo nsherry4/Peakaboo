@@ -124,8 +124,8 @@ public class TSOrdering
 		tss = new ArrayList<>(new HashSet<>(tss));
 		
 	
-		Scorer proximityScorer = new EnergyProximityScorer(energy, fits.getFittingParameters().getCalibration());
-		Scorer fastfitScorer = new FastFittingScorer(s, fits.getFittingParameters().getCalibration());
+		Scorer proximityScorer = new EnergyProximityScorer(energy, fits.getFittingParameters());
+		Scorer fastfitScorer = new FastFittingScorer(s, fits.getFittingParameters());
 		Scorer fastScorer = ts -> {
 			//the closer the better, so we accent this
 			float p = (float)Math.log1p(proximityScorer.score(ts));

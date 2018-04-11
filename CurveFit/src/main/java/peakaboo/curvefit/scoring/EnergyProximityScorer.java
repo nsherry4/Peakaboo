@@ -1,6 +1,11 @@
 package peakaboo.curvefit.scoring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import peakaboo.curvefit.fitting.EnergyCalibration;
+import peakaboo.curvefit.fitting.FittingParameters;
+import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 
@@ -16,24 +21,28 @@ import peakaboo.curvefit.transition.TransitionSeries;
 public class EnergyProximityScorer implements Scorer {
 
 	private float energy;
-	private EnergyCalibration calibration;
+	private FittingParameters parameters;
 	
-	public EnergyProximityScorer(float energy, EnergyCalibration calibration) {
+	public EnergyProximityScorer(float energy, FittingParameters parameters) {
 		this.energy = energy;
-		this.calibration = calibration;
+		this.parameters = parameters;
 	}
 
 	@Override
 	public float score(TransitionSeries ts) {
-				
+		
+		List<Transition> transitions = new ArrayList<>(ts.getAllTransitions());
+		
 		float maxRel = 0f;
-		for (Transition t : ts.getAllTransitions()) {
+		for (Transition t : transitions) {
 			maxRel = (float) Math.max(maxRel, t.relativeIntensity);
 		}
 		
+		EnergyCalibration calibration = parameters.getCalibration();
+		
 		float score = 0;
 		float proxScore = 0;
-		for (Transition t : ts.getAllTransitions()) {
+		for (Transition t : transitions) {
 			if (t.energyValue < calibration.getMinEnergy() || t.energyValue > calibration.getMaxEnergy()) {
 				continue;
 			}

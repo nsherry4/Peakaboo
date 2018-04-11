@@ -5,6 +5,12 @@ import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
 
+/**
+ * Scores a TransitionSeries based on a rough calculation of
+ * how much signal it would match
+ * @author NAS
+ *
+ */
 public class FastSignalMatchScorer implements Scorer{
 
 	private ReadOnlySpectrum data;

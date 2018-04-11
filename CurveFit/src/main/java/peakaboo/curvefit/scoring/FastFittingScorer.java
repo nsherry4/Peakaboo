@@ -1,43 +1,48 @@
 package peakaboo.curvefit.scoring;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import peakaboo.curvefit.fitting.Curve;
 import peakaboo.curvefit.fitting.EnergyCalibration;
+import peakaboo.curvefit.fitting.FittingParameters;
+import peakaboo.curvefit.fitting.FittingResult;
+import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
 
 /**
  * Scores a TransitionSeries based on how well a rough, 
- * Transition-by-Transition fit estimate fits the given
- * data 
+ * Transition-by-Transition fit estimate matches the 
+ * given data 
  * @author NAS
  *
  */
 public class FastFittingScorer implements Scorer {
 
 	private ReadOnlySpectrum data;
-	private EnergyCalibration calibration;
+	private FittingParameters parameters;
 	
-	public FastFittingScorer(ReadOnlySpectrum data, EnergyCalibration calibration) {
+	public FastFittingScorer(ReadOnlySpectrum data, FittingParameters parameters) {
 		this.data = data;
-		this.calibration = calibration;
+		this.parameters = parameters;
 	}
+	
 	
 	@Override
 	public float score(TransitionSeries ts) {
 		
+		List<Transition> transitions = new ArrayList<>(ts.getAllTransitions());	
 		
 		//find the lowest multiplier as a constraint on signal fitted
 		float lowestMult = Float.MAX_VALUE;
-		int count = 0;
-		List<Transition> transitions = ts.getAllTransitions();
 		if (transitions.size() == 0) { return 0; }
 		
 		for (Transition t : transitions) {
 			
 			
-			int channel = calibration.channelFromEnergy(t.energyValue);
+			int channel = parameters.getCalibration().channelFromEnergy(t.energyValue);
 			if (channel >= data.size()) continue;
 			if (channel < 0) continue;
 			//add 1 for a little wiggle room, and to prevent /0 errors
@@ -45,7 +50,7 @@ public class FastFittingScorer implements Scorer {
 			
 			float mult = channelHeight / t.relativeIntensity;
 			lowestMult = Math.min(lowestMult, mult);
-			count++;
+			
 		}
 		if (lowestMult == Float.MAX_VALUE) {
 			return 0;
@@ -54,23 +59,30 @@ public class FastFittingScorer implements Scorer {
 		
 		//scale each transition by the lowest mult, and find out how "snugly" 
 		//each transition fits the data.
-		float score = 0;
+		float snugness = 0;
+		float signal = 0;
+		int count = 0;
 		for (Transition t : transitions) {			
 			
 			float fit = t.relativeIntensity * lowestMult;
 			
-			int channel = 1+calibration.channelFromEnergy(t.energyValue);
+			int channel = 1+parameters.getCalibration().channelFromEnergy(t.energyValue);
 			if (channel >= data.size()) continue;
 			if (channel < 0) continue;
 			//add 1 for a little wiggle room, and to prevent /0 errors
 			float channelHeight = 1+data.get(channel);
 			
 			//we calculate how good the fit is
-			score += fit / (float)channelHeight;
+			snugness += fit / (float)channelHeight;
+			signal += fit;
+			count++;
 			
 		}
 				
-		return score/(float)count;
+		snugness /= (float)count;
+		signal /= (float)count;
+		
+		return signal * snugness;
 
 	}
 
