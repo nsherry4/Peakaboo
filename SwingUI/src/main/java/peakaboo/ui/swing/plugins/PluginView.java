@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.misc;
+package peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,7 +16,7 @@ import swidget.icons.IconSize;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.TextWrapping;
 
-public class PluginData extends ClearPanel {
+public class PluginView extends ClearPanel {
 	
 	private JLabel name;
 	private JLabel version;
@@ -24,7 +24,7 @@ public class PluginData extends ClearPanel {
 	private JLabel enabled;
 	private JLabel type;
 	
-	public PluginData(BoltPluginController<? extends BoltPlugin> plugin) {
+	public PluginView(BoltPluginController<? extends BoltPlugin> plugin) {
 		super(new BorderLayout());
 		
 		this.setMinimumSize(new Dimension(500, 100));

@@ -100,11 +100,12 @@ import peakaboo.filter.model.FilterLoader;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.mapping.MapperFrame;
-import peakaboo.ui.swing.misc.PluginData;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
+import peakaboo.ui.swing.plugins.PluginView;
+import peakaboo.ui.swing.plugins.PluginsOverview;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
@@ -800,35 +801,10 @@ public class PlotPanel extends TabbedInterfacePanel
 				"Status", null, "Shows information about loaded plugins",
 				e -> {
 					
-					JTabbedPane tabs = new JTabbedPane();
-
-					ComponentListPanel dsPanel = new ComponentListPanel(
-						DataSourceLoader
-						.getPluginSet()
-						.getAll()
-						.stream()
-						.map(PluginData::new)
-						.collect(Collectors.toList())
-					);
-					
-					
-					ComponentListPanel filterPanel = new ComponentListPanel(
-						FilterLoader
-						.getPluginSet()
-						.getAll()
-						.stream()
-						.map(PluginData::new)
-						.collect(Collectors.toList())
-					);
-					
-					
-					tabs.add("Data Sources", dsPanel);
-					tabs.add("Filters", filterPanel);
-
-
+					PluginsOverview overview = new PluginsOverview();
 					
 					JDialog dialog = new JDialog(container.getWindow());
-					dialog.setContentPane(tabs);
+					dialog.setContentPane(overview);
 					
 					dialog.setResizable(false);
 					dialog.setPreferredSize(new Dimension(535, 500));

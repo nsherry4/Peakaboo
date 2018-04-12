@@ -84,7 +84,7 @@ public class Peakaboo
 		
 		if (Env.heapSize() <= 128){
 			String message = "This system's Java VM is only allocated " + Env.heapSize()
-			+ "MB of memory: processing large data sets may be quite slow, if not impossible.";
+			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low on Memory";
 			JOptionPane optionPane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
 			JDialog dialog = optionPane.createDialog("Low Memory");
