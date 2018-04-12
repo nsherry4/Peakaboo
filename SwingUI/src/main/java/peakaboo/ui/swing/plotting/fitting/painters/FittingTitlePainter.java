@@ -154,8 +154,10 @@ public class FittingTitlePainter extends PlotPainter
 
 		});
 		
-				
-		float baseline = p.dataHeights.subSpectrum(currentLabel.x.start.intValue(), currentLabel.x.end.intValue()).max();
+		
+		int baselineStart = Math.max(0, currentLabel.x.start.intValue());
+		int baselineEnd = Math.min(p.dataHeights.size(), currentLabel.x.end.intValue());
+		float baseline = p.dataHeights.subSpectrum(baselineStart, baselineEnd).max();
 		float currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
 		
 		//go over all previous labels in order of bottom y coordinate
