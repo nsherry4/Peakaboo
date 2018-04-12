@@ -56,7 +56,7 @@ public class SwingEditorFactory {
 	private static <T> SwingEditor<T> fallback(CoreStyle fallbackStyle) {
 		switch (fallbackStyle) {
 			case BOOLEAN: return (SwingEditor<T>) new BooleanEditor();
-			case TEXT_VALUE: return (SwingEditor<T>) new TextAreaEditor();
+			case TEXT_VALUE: return (SwingEditor<T>) new TextBoxEditor();
 			case TEXT_AREA: return (SwingEditor<T>) new TextAreaEditor();
 			case INTEGER: return (SwingEditor<T>) new IntegerEditor();
 			case FLOAT: return (SwingEditor<T>) new FloatEditor();

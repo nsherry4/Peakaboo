@@ -100,22 +100,15 @@ public class SwingAutoDialog extends JDialog
 		if (buttons == AutoDialogButtons.OK_CANCEL) {
 			
 			ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK, "OK", true);
-			ok.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e)
-				{
-					SwingAutoDialog.this.setVisible(false);
-					selected_ok = true;
-				}
+			ok.addActionListener(e -> {
+				this.selected_ok = true;
+				System.err.println("Set OK");
+				SwingAutoDialog.this.setVisible(false);
 			});
 			
 			ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
-			cancel.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e)
-				{
-					SwingAutoDialog.this.setVisible(false);
-				}
+			cancel.addActionListener(e -> {
+				SwingAutoDialog.this.setVisible(false);
 			});
 			
 			bbox.addRight(0, cancel);
@@ -124,12 +117,8 @@ public class SwingAutoDialog extends JDialog
 		} else if (buttons == AutoDialogButtons.CLOSE) {
 			
 			ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
-			close.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e)
-				{
-					SwingAutoDialog.this.setVisible(false);
-				}
+			close.addActionListener(e -> {
+				SwingAutoDialog.this.setVisible(false);
 			});
 			
 			bbox.addRight(0, close);

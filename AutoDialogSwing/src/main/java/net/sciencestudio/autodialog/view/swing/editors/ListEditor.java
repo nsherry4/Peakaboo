@@ -1,11 +1,15 @@
 package net.sciencestudio.autodialog.view.swing.editors;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+
+import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
@@ -31,8 +35,9 @@ public class ListEditor<T> extends AbstractSwingEditor<T>
 		
 		
 		
-		for (T t : selparam.getPossibleValues()) control.addItem(t);
+		control.setModel(new ListComboBoxModel<>(selparam.getPossibleValues()));
 		control.setAlignmentX(Component.LEFT_ALIGNMENT);
+		control.setPreferredSize(new Dimension(150, control.getPreferredSize().height));
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
