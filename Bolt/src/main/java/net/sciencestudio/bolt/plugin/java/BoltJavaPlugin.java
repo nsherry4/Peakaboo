@@ -1,7 +1,5 @@
 package net.sciencestudio.bolt.plugin.java;
 
-import com.sun.webkit.plugin.Plugin;
-
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 
 /**
