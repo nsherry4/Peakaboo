@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import net.sciencestudio.autodialog.model.Group;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
@@ -140,5 +141,9 @@ public class CSVDataSource extends AbstractDataSource
 		return "1.0";
 	}
 
+	@Override
+	public Optional<Group> getParameters() {
+		return Optional.empty();
+	}
 
 }

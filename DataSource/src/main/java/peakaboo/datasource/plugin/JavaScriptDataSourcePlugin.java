@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.bolt.scripting.BoltInterface;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
 import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
@@ -169,6 +170,10 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 		//Not Implemented
 		return Optional.empty();
 	}
-
+	
+	@Override
+	public Optional<Group> getParameters() {
+		return Optional.empty();
+	}
 
 }

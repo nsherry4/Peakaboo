@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import net.sciencestudio.autodialog.model.Group;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
@@ -100,7 +101,10 @@ public class EmptyDataSource implements DataSource, FileFormat {
 		return Optional.empty();
 	}
 
-
+	@Override
+	public Optional<Group> getParameters() {
+		return Optional.empty();
+	}
 
 	
 }

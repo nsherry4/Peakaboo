@@ -66,6 +66,9 @@ import commonenvironment.Apps;
 import commonenvironment.Env;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
+import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
+import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
+import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.Configuration;
@@ -138,6 +141,7 @@ import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.ZoomSlider;
+import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.properties.PropertyViewPanel;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 import swidget.widgets.toggle.ImageToggleButton;
@@ -1340,7 +1344,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		{
 			DataSourceSelection selection = new DataSourceSelection();
 			DataSource dsp = selection.pickDSP(container.getWindow(), formats);
-			if (dsp != null) loadFiles(filenames, dsp);
+			if (dsp != null) parameterPrompt(filenames, dsp);
 		}
 		else if (formats.size() == 0)
 		{
@@ -1354,16 +1358,55 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		else
 		{
-			loadFiles(filenames, formats.get(0));
+			parameterPrompt(filenames, formats.get(0));
 		}
 		
+	}
+	
+	private void parameterPrompt(List<File> files, DataSource dsp) {
+		//If this data source required any additional input, get it for it now
+		if (dsp.getParameters().isPresent()) {
+			JPanel paramPanel = new JPanel(new BorderLayout());
+					
+			TitlePaintedPanel title = new TitlePaintedPanel("Additional Information Required", false);
+			title.setBorder(Spacing.bMedium());
+			
+			
+			SwingAutoPanel sap = new SwingAutoPanel(dsp.getParameters().get());
+			sap.setBorder(Spacing.bMedium());
+			
+			ButtonBox bbox = new ButtonBox();
+			ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK, "OK", true);
+			ok.addActionListener(e -> {
+				this.popModalComponent();
+				loadFiles(files, dsp);
+			});
+			
+			ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
+			cancel.addActionListener(e -> {
+				this.popModalComponent();
+				return;
+			});
+			
+			bbox.addRight(0, cancel);
+			bbox.addRight(0, ok);
+			
+			paramPanel.add(title, BorderLayout.NORTH);
+			paramPanel.add(sap, BorderLayout.CENTER);
+			paramPanel.add(bbox, BorderLayout.SOUTH);
+
+			this.pushModalComponent(paramPanel);
+			
+		} else {
+			loadFiles(files, dsp);
+		}
 	}
 	
 	private void loadFiles(List<File> files, DataSource dsp)
 	{
 		if (files != null)
 		{
-
+			
 			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(files, dsp);
 			
 			
