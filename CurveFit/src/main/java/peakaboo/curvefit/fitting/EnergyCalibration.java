@@ -59,16 +59,6 @@ public class EnergyCalibration {
 		return energy;
 	}
 	
-	/**
-	 * Converts an energy measurement into channel-scaled units. 
-	 * This is used for relative measurements like peak width which 
-	 * should not be scaled by minEnergy offset. 
-	 */
-	public float channelFromEnergyRelative(float energy) {
-		
-		int channel = Math.round(energy / energyPerChannel());
-		return channel;
-	}
 	
 	public float energyPerChannel() {
 		float range = maxEnergy - minEnergy;
