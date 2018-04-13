@@ -79,15 +79,26 @@ public class Peakaboo
 	}
 	
 
+	private static void warnDevRelease() {
+		if (!Version.release){
+			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
+			String title = "Development Build of Peakaboo";
+			JOptionPane optionPane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+			JDialog dialog = optionPane.createDialog(title);
+			dialog.setAlwaysOnTop(true);
+			dialog.setVisible(true);
+		}
+	}
+	
 	private static void warnLowMemory() {
 		LOGGER.log(Level.INFO, "Max heap size = " + Env.heapSize());
 		
 		if (Env.heapSize() <= 128){
 			String message = "This system's Java VM is only allocated " + Env.heapSize()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
-			String title = "Low on Memory";
+			String title = "Low Memory";
 			JOptionPane optionPane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-			JDialog dialog = optionPane.createDialog("Low Memory");
+			JDialog dialog = optionPane.createDialog(title);
 			dialog.setAlwaysOnTop(true);
 			dialog.setVisible(true);
 		}
@@ -174,9 +185,10 @@ public class Peakaboo
 			} catch (UnsupportedLookAndFeelException e) {
 				PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
 			}
-			warnLowMemory();
 			PeakabooLog.init();
 			errorHook();
+			warnLowMemory();
+			warnDevRelease();
 			PeakTableReader.readPeakTable();
 			DataSourceLoader.load();
 			FilterLoader.load();
