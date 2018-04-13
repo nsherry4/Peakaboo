@@ -168,7 +168,6 @@ public class Peakaboo
 	
 	private static void startGCTimer() {
 		gcTimer = new Timer(1000*60, e -> {  
-			System.out.println("GC");
 			System.gc(); 
 		});
 		
