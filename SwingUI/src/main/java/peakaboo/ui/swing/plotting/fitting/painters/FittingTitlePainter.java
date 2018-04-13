@@ -10,6 +10,7 @@ import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.transition.Transition;
 import peakaboo.curvefit.transition.TransitionSeries;
+import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Bounds;
@@ -155,8 +156,11 @@ public class FittingTitlePainter extends PlotPainter
 		});
 		
 		
-		int baselineStart = Math.max(0, currentLabel.x.start.intValue());
-		int baselineEnd = Math.min(p.dataHeights.size(), currentLabel.x.end.intValue());
+		int baselineStart = currentLabel.x.start.intValue();
+		int baselineEnd = currentLabel.x.end.intValue();
+		if (baselineStart >= baselineEnd) {
+			return 0;
+		}
 		float baseline = p.dataHeights.subSpectrum(baselineStart, baselineEnd).max();
 		float currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
 		
@@ -178,6 +182,62 @@ public class FittingTitlePainter extends PlotPainter
 
 		
 	}
+	
+
+
+	
+	protected Coord<Bounds<Float>> getTextLabelDimensions(PainterData p, String title, float energy)
+	{
+		DrawingRequest dr = p.dr;
+
+		float textWidth = p.context.getTextWidth(title);
+
+		float channelSize = p.plotSize.x / dr.dataWidth;
+		float centreChannel = fittings.getParameters().getCalibration().channelFromEnergy(energy);
+
+		float titleStart = centreChannel * channelSize;
+		titleStart -= (textWidth / 2.0);
+
+
+		float titleHeight = p.context.getFontHeight();
+		float penWidth = getPenWidth(getBaseUnitSize(dr), dr);
+		float totalHeight = (titleHeight + penWidth * 2);
+		
+		float farLeft = titleStart - penWidth * 2;
+		float width = textWidth + penWidth * 4;
+		float farRight = farLeft + width;
+
+		float leftChannel = (float)Math.max(0, Math.floor(farLeft / channelSize));
+		float rightChannel = (float)Math.min(p.dr.dataWidth-1, Math.ceil(farRight / channelSize));
+		
+		
+		
+		return new Coord<Bounds<Float>>(new Bounds<Float>(leftChannel, rightChannel), new Bounds<Float>(penWidth, totalHeight));
+		
+	}
+	
+	/**
+	 * Draws a text label on the plot
+	 * @param p the {@link PainterData} structure containing objects and information needed to draw to the plot.
+	 * @param title the title of the label
+	 * @param energy the energy value at which to centre the label
+	 */
+	protected void drawTextLabel(PainterData p, String title, float energy, float xStart, float yStart)
+	{
+		drawTextLabel(p, title, energy, xStart, yStart, true);
+	}
+	protected void drawTextLabel(PainterData p, String title, float energy, float xStart, float yStart, boolean resetColour)
+	{
+		if (xStart > p.plotSize.x) return;
+
+		if (title != null) {
+
+			if (resetColour) p.context.setSource(0.0f, 0.0f, 0.0f);
+			p.context.writeText(title, xStart, p.plotSize.y - yStart);
+		}
+
+	}
+	
 	
 
 
