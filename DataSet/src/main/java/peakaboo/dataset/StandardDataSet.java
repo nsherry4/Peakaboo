@@ -230,6 +230,7 @@ public class StandardDataSet implements DataSet
 			
 		}
 		
+		System.gc();
 		this.dataSource = ds;
 		
 

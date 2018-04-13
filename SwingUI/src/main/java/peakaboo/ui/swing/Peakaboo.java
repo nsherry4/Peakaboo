@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -38,7 +39,8 @@ import swidget.icons.StockIcon;
 public class Peakaboo
 {
 	private static final Logger LOGGER = PeakabooLog.get();
-
+	private static Timer gcTimer;
+	
 
 	private static void showError(Throwable e, String message) {
 		showError(e, message, null);
@@ -164,6 +166,16 @@ public class Peakaboo
 		
 	}
 	
+	private static void startGCTimer() {
+		gcTimer = new Timer(1000*60, e -> {  
+			System.out.println("GC");
+			System.gc(); 
+		});
+		
+		gcTimer.setRepeats(true);
+		gcTimer.start();
+	}
+	
 	public static void run() {
 		
 		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
@@ -187,6 +199,7 @@ public class Peakaboo
 			}
 			PeakabooLog.init();
 			errorHook();
+			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
 			PeakTableReader.readPeakTable();

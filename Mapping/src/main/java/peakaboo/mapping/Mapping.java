@@ -51,6 +51,7 @@ public class Mapping
 				}
 				
 			});
+			System.gc();
 			return maps;
 		}); 
 		
