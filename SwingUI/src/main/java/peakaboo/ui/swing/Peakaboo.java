@@ -12,6 +12,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -175,6 +176,14 @@ public class Peakaboo
 		gcTimer.start();
 	}
 	
+	private static void setLaF(LookAndFeel laf) {
+		try {
+			UIManager.setLookAndFeel(laf);
+		} catch (UnsupportedLookAndFeelException e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
+		}
+	}
+	
 	public static void run() {
 		
 		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
@@ -191,11 +200,7 @@ public class Peakaboo
 		setAppTitle("Peakaboo 5");
 			
 		Swidget.initialize(Version.splash, Version.icon, () -> {
-			try {
-				UIManager.setLookAndFeel(laf);
-			} catch (UnsupportedLookAndFeelException e) {
-				PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
-			}
+			setLaF(laf);
 			PeakabooLog.init();
 			errorHook();
 			startGCTimer();
