@@ -76,42 +76,45 @@ public class PeakTableReader
 		
 		//find the strongest transition line, so we can skip anything significantly weaker than it
 		float maxRel = 0f;
-		for (int i : lines) {
-			try {
-				maxRel = (float) Math.max(maxRel, lineRelativeIntensity(elem, i));	
-			} catch (XraylibException e) {
-				//this is normal, not all lines are available
-			}
+		for (int line : lines) {
+			if (!hasLine(elem, line)) continue;
+			maxRel = (float) Math.max(maxRel, lineRelativeIntensity(elem, line));	
 			
 		}
-		for (int i : lines) {
-			try {
-				float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), i);
-				float rel = lineRelativeIntensity(elem, i) / maxRel;
-				
-				//don't bother with this if the line is <0.1% the intensity of the largest line
-				if (rel < maxRel*0.001) { continue; }
-				
-				Transition t = new Transition(value, rel, elem.name() + " " + tstype.name() + " #" + i + " @" + value + " keV x " + rel*100 + "%");
-				ts.setTransition(t);
-			} catch (XraylibException ex) {
-				//this is normal, not all lines are available
-			}
+		for (int line : lines) {
+			if (!hasLine(elem, line)) continue;
+			
+			float value = (float) Xraylib.LineEnergy(elem.atomicNumber(), line);
+			float rel = lineRelativeIntensity(elem, line) / maxRel;
+			
+			//don't bother with this if the line is <0.1% the intensity of the largest line
+			if (rel < maxRel*0.001) { continue; }
+			
+			Transition t = new Transition(value, rel, elem.name() + " " + tstype.name() + " #" + line + " @" + value + " keV x " + rel*100 + "%");
+			ts.setTransition(t);
+
 		}
 		if (ts.hasTransitions()) {
 			PeakTable.addSeries(ts);
 		}
 	}
 
-	private static float lineRelativeIntensity(Element elem, int line) {
-		
-		//Make a call to this method even though we don't use the result.
-		//This will throw an exception for certain lines which we want to exclude.
-		//This is exceptionally poor form, and should probably be replaced ASAP.
-		Xraylib.RadRate(elem.atomicNumber(), line);
-		
+	private static boolean hasLine(Element elem, int line) {
+		try {
+			lineEnergy(elem, line);
+			lineRelativeIntensity(elem, line);
+			return true;
+		} catch (XraylibException ex) {
+			return false;
+		}
+	}
+	
+	private static float lineEnergy(Element elem, int line) {
+		return (float) Xraylib.LineEnergy(elem.atomicNumber(), line);
+	}
+	
+	private static float lineRelativeIntensity(Element elem, int line) {	
 		return (float) Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), line, 20000);
-		
 	}
 
 
