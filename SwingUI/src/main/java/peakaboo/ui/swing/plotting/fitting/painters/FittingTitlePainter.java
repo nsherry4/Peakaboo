@@ -193,7 +193,7 @@ public class FittingTitlePainter extends PlotPainter
 		float textWidth = p.context.getTextWidth(title);
 
 		float channelSize = p.plotSize.x / dr.dataWidth;
-		float centreChannel = fittings.getParameters().getCalibration().channelFromEnergy(energy);
+		float centreChannel = fittings.getParameters().getCalibration().fractionalChannelFromEnergy(energy);
 
 		float titleStart = centreChannel * channelSize;
 		titleStart -= (textWidth / 2.0);

@@ -47,8 +47,11 @@ public class EnergyCalibration {
 	 * Converts an energy value to a channel value
 	 */
 	public int channelFromEnergy(float energy) {
-		int channel = Math.round((energy - minEnergy) / energyPerChannel());
-		return channel;
+		return Math.round(fractionalChannelFromEnergy(energy));
+	}
+	
+	public float fractionalChannelFromEnergy(float energy) {
+		return (energy - minEnergy) / energyPerChannel();
 	}
 
 	/**
