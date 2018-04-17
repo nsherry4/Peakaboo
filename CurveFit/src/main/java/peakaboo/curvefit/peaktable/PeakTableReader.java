@@ -114,7 +114,7 @@ public class PeakTableReader
 	}
 	
 	private static float lineRelativeIntensity(Element elem, int line) {	
-		return (float) Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), line, 20000);
+		return (float) Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), line, 20);
 	}
 
 
