@@ -147,10 +147,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 
 
-
-	void updateCanvasSize()
-	{
-			
+	private Dimension calculateCanvasSize() {
 		//Width
 		double parentWidth = 1.0;
 		if (this.getParent() != null)
@@ -177,11 +174,23 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			newHeight = (int) parentHeight;
 		}
 		
+		//Generate new size
+		Dimension newSize = new Dimension(newWidth, newHeight);
 		
-		//Generate new sizes
+		return newSize;
+	}
+
+	void updateCanvasSize()
+	{
+		
+		Dimension newSize = calculateCanvasSize();
 		Rectangle oldView = this.getVisibleRect();
 		Dimension oldSize = getPreferredSize();
-		Dimension newSize = new Dimension(newWidth, newHeight);
+		
+		if (newSize.equals(oldSize)) {
+			return;
+		}
+		
 		Rectangle newView = new Rectangle(oldView);
 		
 
@@ -197,12 +206,14 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		this.setPreferredSize(newSize);
 		this.revalidate();
 		this.scrollRectToVisible(newView);
-		
-		
-
 
 	}
 
+	public void validate() {
+		updateCanvasSize();
+		super.validate();
+	}
+	
 
 	private int channelWidth(int multiplier)
 	{
@@ -254,7 +265,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	@Override
 	protected void drawGraphics(Surface context, boolean vector, Dimension size)
 	{
-		
+				
 		try {
 			
 			
