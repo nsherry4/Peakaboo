@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -1295,6 +1296,10 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	private void actionAbout()
 	{
+		ImageIcon logo = IconFactory.getImageIcon( Version.logo );
+		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+		
+		
 		AboutDialogue.Contents contents = new AboutDialogue.Contents();
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
@@ -1302,7 +1307,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		contents.copyright = "Copyright &copy; 2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/peakaboo/credits.txt"));
-		contents.logo = IconFactory.getImageIcon( Version.logo );
+		contents.logo = logo;
 		contents.version = Integer.toString(Version.versionNoMajor);
 		contents.longVersion = Version.longVersionNo;
 		contents.releaseDescription = Version.releaseDescription;
