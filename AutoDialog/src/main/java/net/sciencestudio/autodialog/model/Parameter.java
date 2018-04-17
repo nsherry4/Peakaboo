@@ -72,7 +72,7 @@ public class Parameter<T> implements Serializable, Value<T>
 
 	
 	private void assignValue(T value) {
-		if (classInfo != null && !(classInfo.getValueClass().isInstance(value))) {
+		if (classInfo != null && value != null && !(classInfo.getValueClass().isInstance(value))) {
 			throw new ClassCastException(value.getClass().getName() + " cannot be cast to " + classInfo.getValueClass().getName());
 		}
 		this.value = value;
