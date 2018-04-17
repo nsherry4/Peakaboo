@@ -217,8 +217,6 @@ public class MapperPanel extends TabbedInterfacePanel
 			controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
 		}
 		
-		String csv = controller.getSettings().getMapFittings().mapAsCSV();
-
 		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
 		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().getView().savePictureFolder, txt, file -> {
 			if (!file.isPresent()) {
@@ -228,7 +226,7 @@ public class MapperPanel extends TabbedInterfacePanel
 			{
 				controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
 				FileOutputStream os = new FileOutputStream(file.get());
-				os.write(csv.getBytes());
+				os.write(controller.getSettings().getMapFittings().mapAsCSV().getBytes());
 				os.close();
 			}
 			catch (IOException e)
