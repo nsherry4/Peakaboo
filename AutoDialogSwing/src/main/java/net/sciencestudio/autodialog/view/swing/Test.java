@@ -3,9 +3,15 @@ package net.sciencestudio.autodialog.view.swing;
 
 import java.util.Arrays;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
+import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
+import net.sciencestudio.autodialog.model.classinfo.StringClassInfo;
 import net.sciencestudio.autodialog.model.style.editors.CheckBoxStyle;
 import net.sciencestudio.autodialog.model.style.editors.FileNameStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerSliderStyle;
@@ -22,9 +28,9 @@ import swidget.Swidget;
 
 public class Test {
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws UnsupportedLookAndFeelException
 	{
-		
+		UIManager.setLookAndFeel(new NimbusLookAndFeel());
 		Swidget.initialize(() -> {
 			gui();
 		});
@@ -51,11 +57,11 @@ public class Test {
 		s2.getValue().add(new Parameter<>("Real", new RealSliderStyle(), 0f));
 		
 		g2.getValue().add(new Parameter<>("Dummy Separator", new SeparatorStyle(), 0));
-		SelectionParameter<LabelStyle> sel = new SelectionParameter<>("List", new ListStyle<>(), LabelStyle.LABEL_HIDDEN);
+		SelectionParameter<LabelStyle> sel = new SelectionParameter<>("List", new ListStyle<>(), LabelStyle.LABEL_HIDDEN, new EnumClassInfo<>(LabelStyle.class));
 		sel.setPossibleValues(Arrays.asList(LabelStyle.values()));
 		g2.getValue().add(sel);
 		
-		g2.getValue().add(new Parameter<>("Filename", new FileNameStyle(), null));
+		g2.getValue().add(new Parameter<>("Filename", new FileNameStyle(), null, new StringClassInfo()));
 		
 		g2.getValue().add(new Parameter<>("Slider", new IntegerSliderStyle(), 1));
 		g2.getValue().add(new Parameter<String>("TextArea", new TextAreaStyle(), ""));
