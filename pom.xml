@@ -11,7 +11,6 @@
   
   <modules>
     <module>Common</module>
-    <module>Calculations</module>
     <module>CurveFit</module>
     <module>DataSet</module>
     <module>DataSource</module>
