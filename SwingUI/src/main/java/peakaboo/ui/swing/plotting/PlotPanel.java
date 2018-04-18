@@ -86,6 +86,7 @@ import peakaboo.curvefit.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.functions.IdaFittingFunction;
 import peakaboo.curvefit.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
+import peakaboo.curvefit.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.peaktable.PeakTableReader;
 import peakaboo.curvefit.transition.EscapePeakType;
@@ -681,17 +682,26 @@ public class PlotPanel extends TabbedInterfacePanel
 		ButtonGroup functionGroup = new ButtonGroup();
 		
 		
-		JRadioButton voigt = new JRadioButton("Pseudo-Voigt");
-		voigt.setSelected(controller.fitting().getFittingFunction() == PseudoVoigtFittingFunction.class);
-		voigt.addActionListener(e -> {
+		JRadioButton pseudovoigt = new JRadioButton("Pseudo-Voigt");
+		pseudovoigt.setSelected(controller.settings().getFittingFunction() == PseudoVoigtFittingFunction.class);
+		pseudovoigt.addActionListener(e -> {
 			controller.settings().setFittingFunction(PseudoVoigtFittingFunction.class);
+		});
+		functionGroup.add(pseudovoigt);
+		peakwidth.addSetting(pseudovoigt);
+		
+		
+		JRadioButton voigt = new JRadioButton("Test Voigt");
+		voigt.setSelected(controller.settings().getFittingFunction() == ConvolvingVoigtFittingFunction.class);
+		voigt.addActionListener(e -> {
+			controller.settings().setFittingFunction(ConvolvingVoigtFittingFunction.class);
 		});
 		functionGroup.add(voigt);
 		peakwidth.addSetting(voigt);
 		
 		
 		JRadioButton gaussian = new JRadioButton("Gaussian");
-		gaussian.setSelected(controller.fitting().getFittingFunction() == GaussianFittingFunction.class);
+		gaussian.setSelected(controller.settings().getFittingFunction() == GaussianFittingFunction.class);
 		gaussian.addActionListener(e -> {
 			controller.settings().setFittingFunction(GaussianFittingFunction.class);
 		});
@@ -700,7 +710,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		JRadioButton ida = new JRadioButton("Ida");
-		ida.setSelected(controller.fitting().getFittingFunction() == IdaFittingFunction.class);
+		ida.setSelected(controller.settings().getFittingFunction() == IdaFittingFunction.class);
 		ida.addActionListener(e -> {
 			controller.settings().setFittingFunction(IdaFittingFunction.class);
 		});
@@ -709,7 +719,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		JRadioButton lorentz = new JRadioButton("Lorentz");
-		lorentz.setSelected(controller.fitting().getFittingFunction() == LorentzFittingFunction.class);
+		lorentz.setSelected(controller.settings().getFittingFunction() == LorentzFittingFunction.class);
 		lorentz.addActionListener(e -> {
 			controller.settings().setFittingFunction(LorentzFittingFunction.class);
 		});

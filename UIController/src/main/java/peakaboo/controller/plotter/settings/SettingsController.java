@@ -23,6 +23,7 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.transition.EscapePeakType;
 import scidraw.drawing.ViewTransform;
@@ -317,6 +318,10 @@ public class SettingsController extends Eventful
 		settingsModel.session.fittingFunctionName = cls.getName();
 	}
 	
+	public Class<? extends FittingFunction> getFittingFunction() {
+		return plot.fitting().getFittingFunction();
+	}
+
 	
 	/**
 	 * This should really only be called at creation time, since it loads settings 
@@ -355,6 +360,7 @@ public class SettingsController extends Eventful
 			PeakabooLog.get().log(Level.WARNING, "Could not save persistent settings", e);
 		}
 	}
+
 
 	
 }
