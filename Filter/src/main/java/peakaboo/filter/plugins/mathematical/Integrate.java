@@ -1,10 +1,11 @@
 package peakaboo.filter.plugins.mathematical;
 
 
-import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 
 public class Integrate extends AbstractSimpleFilter
@@ -25,7 +26,7 @@ public class Integrate extends AbstractSimpleFilter
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
-		return Noise.integ(data);
+		return integ(data);
 	}
 	
 
@@ -64,6 +65,30 @@ public class Integrate extends AbstractSimpleFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+	
+	
+	
+	/**
+	 * Calculates the integral (sums up to X) for a spectrum
+	 * @param list the data to find the integral for
+	 * @return a list of sums
+	 */
+	public static Spectrum integ(ReadOnlySpectrum list)
+	{
+		
+		Spectrum result = new ISpectrum(list.size());
+		float val = 0;
+		
+		
+		for (int i = 0; i < list.size(); i++)
+		{
+			val += list.get(i);
+			result.set(i,  val );
+		}
+		
+		return result;
+		
 	}
 
 

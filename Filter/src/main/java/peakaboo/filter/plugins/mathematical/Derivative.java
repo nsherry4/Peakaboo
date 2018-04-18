@@ -1,10 +1,11 @@
 package peakaboo.filter.plugins.mathematical;
 
 
-import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 
 public class Derivative extends AbstractSimpleFilter
@@ -25,7 +26,7 @@ public class Derivative extends AbstractSimpleFilter
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
-		return Noise.deriv(data);
+		return deriv(data);
 	}
 
 
@@ -63,6 +64,27 @@ public class Derivative extends AbstractSimpleFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+	
+
+	/**
+	 * Calculates the derivitive (deltas) for a spectrum
+	 * @param list the data to find the deltas for
+	 * @return a list of deltas
+	 */
+	public static Spectrum deriv(ReadOnlySpectrum list)
+	{
+	
+		Spectrum result = new ISpectrum(list.size());
+		
+		result.add(list.get(0));
+		for (int i = 0; i < list.size()-1; i++)
+		{
+			result.set(i, list.get(i+1) - list.get(i));
+		}
+			
+		return result;
+		
 	}
 
 }

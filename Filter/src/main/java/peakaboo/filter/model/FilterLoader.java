@@ -14,12 +14,10 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.filter.plugins.JavaScriptFilterPlugin;
-import peakaboo.filter.plugins.advanced.DataToWavelet;
 import peakaboo.filter.plugins.advanced.Identity;
 import peakaboo.filter.plugins.advanced.Interpolation;
 import peakaboo.filter.plugins.advanced.SpectrumNormalization;
 import peakaboo.filter.plugins.advanced.SubFilter;
-import peakaboo.filter.plugins.advanced.WaveletToData;
 import peakaboo.filter.plugins.background.BruknerRemoval;
 import peakaboo.filter.plugins.background.LinearTrimRemoval;
 import peakaboo.filter.plugins.background.PolynomialRemoval;
@@ -28,7 +26,6 @@ import peakaboo.filter.plugins.mathematical.Derivative;
 import peakaboo.filter.plugins.mathematical.Integrate;
 import peakaboo.filter.plugins.mathematical.Multiply;
 import peakaboo.filter.plugins.mathematical.Subtraction;
-import peakaboo.filter.plugins.noise.AggressiveWaveletNoiseFilter;
 import peakaboo.filter.plugins.noise.FlatAveraging;
 import peakaboo.filter.plugins.noise.FourierLowPass;
 import peakaboo.filter.plugins.noise.SavitskyGolaySmoothing;
@@ -65,11 +62,9 @@ public class FilterLoader
 		
 
 		//register built-in plugins
-		newPluginLoader.registerPlugin(DataToWavelet.class);
 		newPluginLoader.registerPlugin(Identity.class);
 		newPluginLoader.registerPlugin(SubFilter.class);
 		newPluginLoader.registerPlugin(SpectrumNormalization.class);
-		newPluginLoader.registerPlugin(WaveletToData.class);
 		
 		newPluginLoader.registerPlugin(BruknerRemoval.class);
 		newPluginLoader.registerPlugin(LinearTrimRemoval.class);
@@ -81,7 +76,6 @@ public class FilterLoader
 		newPluginLoader.registerPlugin(Multiply.class);
 		newPluginLoader.registerPlugin(Subtraction.class);
 		
-		newPluginLoader.registerPlugin(AggressiveWaveletNoiseFilter.class);
 		newPluginLoader.registerPlugin(FourierLowPass.class);
 		newPluginLoader.registerPlugin(FlatAveraging.class);
 		newPluginLoader.registerPlugin(WeightedAveraging.class);

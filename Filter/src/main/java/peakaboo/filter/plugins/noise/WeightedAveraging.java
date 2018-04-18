@@ -2,10 +2,11 @@ package peakaboo.filter.plugins.noise;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 public class WeightedAveraging extends AbstractSimpleFilter {
 
@@ -64,7 +65,7 @@ public class WeightedAveraging extends AbstractSimpleFilter {
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
-		data = Noise.WeightedMovingAverage(data, reach.getValue());
+		data = WeightedMovingAverage(data, reach.getValue());
 		return data;
 	}
 
@@ -86,5 +87,66 @@ public class WeightedAveraging extends AbstractSimpleFilter {
 	public String pluginVersion() {
 		return "1.0";
 	}
+	
+	
+	/**
+	 * 
+	 * Performs a center-weighted moving average over a data set
+	 * 
+	 * @param data
+	 *            the data to be averaged
+	 * @param windowSpan
+	 *            the distance from the centrepoint to an edge of the set of numbers being averaged
+	 * @return a moving-average smoothed data set
+	 */
+	public static Spectrum WeightedMovingAverage(ReadOnlySpectrum data, int windowSpan)
+	{
+
+		/*
+		 * for a windowSpan n, the center-point's weight will be 2^n. 
+		 * Other points will be 2^(n-d) where d is distance from center.
+		 * This will continue until at the outsides of the window, n=d,
+		 * and the weight is 2^0=1
+		 */
+		
+		int size = windowSpan*2+1;
+		float[] weights = new float[size];
+		for (int i = 0; i < windowSpan; i++) {
+			weights[i] = (float) Math.pow(2, i);
+			weights[size-1 - i] = (float) Math.pow(2, i);
+		}
+		weights[windowSpan] = (float) Math.pow(2, windowSpan);
+			
+				
+		Spectrum smoothed = new ISpectrum(data.size());
+		
+		int start, stop;
+		float totalWeight;
+		int pos;
+		float sum;
+		for (int i = 0; i < data.size(); i++) {
+
+			// exact same as in last loop
+			start = Math.max(0,  i - windowSpan);
+			stop = Math.min(data.size()-1, i + windowSpan + 1);
+			
+			totalWeight = 0;
+			pos = 0;
+			sum = 0;
+			for (int p = start; p < stop; p++) {
+				totalWeight += weights[pos];
+				sum += (data.get(p) * weights[pos]);
+				pos++;
+			}
+
+			smoothed.set(i, sum / totalWeight);
+
+		}
+
+
+		return smoothed;
+
+	}
+	
 
 }

@@ -2,15 +2,17 @@ package peakaboo.filter.plugins.noise;
 
 
 
+import JSci.maths.polynomials.RealPolynomial;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import net.sciencestudio.autodialog.model.style.editors.SeparatorStyle;
-import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 /**
  * 
@@ -105,7 +107,7 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
-		return Noise.SavitskyGolayFilter(
+		return SavitskyGolayFilter(
 			data, 
 			order.getValue(), 
 			reach.getValue(),
@@ -127,4 +129,104 @@ public final class SavitskyGolaySmoothing extends AbstractSimpleFilter
 		return true;
 	}
 
+
+	/**
+	 * Savitsky-Golay filter is like a moving average, but with higher order polynomials. <br>
+	 * <br>
+	 * Regular moving average can be seen as calculating a line which is fitted to the data points in
+	 * the moving average window, and then taking the value of the line at the centre-point (where the data
+	 * point being averaged is)<br>
+	 * <br>
+	 * This routine fits a higher order polynomial to the data in the averaging window, and determines the
+	 * value of the centre-point just as before.<br>
+	 * <br>
+	 * This has the advantage of preserving the shapes of peaks much better, because lower points on either
+	 * side don't result in the average-line being lowered, but can be represented much more accurately by
+	 * using higher order polynomials such as a parabola, which won't truncate the peak in nearly as drastic a
+	 * way.
+	 * 
+	 * @param data the data to be smoothed
+	 * @param order the power/order of the polynomial to fit to each section of the  data
+	 * @param reach the distance from the centrepoint to the edge of the data being considered in a fitting
+	 * @return a Savitsky-Golay smoothed data set.
+	 */
+	public static Spectrum SavitskyGolayFilter(ReadOnlySpectrum data, int order, int reach, float min, float max)
+	{
+
+		
+		Spectrum result = new ISpectrum(data.size());
+
+		RealPolynomial soln;
+
+		double[] allDataAsArray = new double[data.size()];
+		double[] indexAsArray = new double[reach * 2];
+		double[][] dataAsArray = new double[2][reach * 2];
+		
+		
+		for (int i = 0; i < data.size(); i++) {
+			allDataAsArray[i] = data.get(i);
+		}
+		for (int i = 0; i < indexAsArray.length; i++) {
+			indexAsArray[i] = i;
+		}
+		
+		
+
+
+		int subStart, subStop;
+		
+		boolean needsCustomArray = false;
+		int customArraySize;
+		for (int i = 0; i < data.size(); i++) {
+
+			if (data.get(i) < min || data.get(i) > max)
+			{
+				result.set(i, data.get(i));
+			}
+			else
+			{
+				// exact same as in last loop
+				subStart = i - reach;
+				subStop = i + reach + 1;
+
+				if (subStart < 0) 
+				{
+					subStart = 0;
+					needsCustomArray = true;
+				}
+				if (subStop >= data.size()) 
+				{
+					subStop = data.size() - 1;
+					needsCustomArray = true;
+				}
+
+				// pack the data into an array
+				if (needsCustomArray)
+				{
+					customArraySize = subStop - subStart + 1;
+					dataAsArray = new double[2][customArraySize];
+					System.arraycopy(indexAsArray, 0, dataAsArray[0], 0, subStop - subStart - 1);
+					
+					
+					if (customArraySize == reach*2) needsCustomArray = false;
+					
+					
+				}
+
+				//System.arraycopy(indexAsArray, 0, dataAsArray[0], 0, subStop - subStart - 1);
+				System.arraycopy(allDataAsArray, subStart, dataAsArray[1], 0, subStop - subStart - 1);
+			
+				
+				soln = JSci.maths.LinearMath.leastSquaresFit(order, dataAsArray);
+
+				result.set(i, (float)Math.max(soln.map(reach), 0.0));
+			}
+			
+		}
+
+
+		return result;
+	}
+	
+	
 }

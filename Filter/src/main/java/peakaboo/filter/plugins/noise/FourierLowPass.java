@@ -4,16 +4,18 @@ package peakaboo.filter.plugins.noise;
 
 import java.util.Arrays;
 
+import JSci.maths.Complex;
+import JSci.maths.FourierMath;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
 import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import peakaboo.calculations.Noise;
-import peakaboo.calculations.Noise.FFTStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 /**
  * 
@@ -28,7 +30,7 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	
 	private Parameter<Integer> startWavelength;
 	private Parameter<Integer> endWavelength;
-	private SelectionParameter<FFTStyle> rolloff;
+	private SelectionParameter<FFT.FilterStyle> rolloff;
 
 
 	public FourierLowPass()
@@ -46,8 +48,8 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	{
 		
 		
-		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFTStyle.LINEAR, new EnumClassInfo<>(FFTStyle.class));
-		rolloff.setPossibleValues(Arrays.asList(FFTStyle.values()));
+		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFT.FilterStyle.LINEAR, new EnumClassInfo<>(FFT.FilterStyle.class));
+		rolloff.setPossibleValues(Arrays.asList(FFT.FilterStyle.values()));
 		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerStyle(), 8, this::validate);
 		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerStyle(), 6, this::validate);
 		
@@ -59,7 +61,7 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	{
 
 		int start, end;
-		boolean isCutoff = rolloff.getValue() == FFTStyle.CUTOFF;
+		boolean isCutoff = rolloff.getValue() == FFT.FilterStyle.CUTOFF;
 		endWavelength.setEnabled(!isCutoff);
 
 		start = startWavelength.getValue();
@@ -103,7 +105,7 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		
-		data = Noise.FFTLowPassFilter(
+		data = FFT.LowPassFilter(
 			data,
 			rolloff.getValue(),
 			startWavelength.getValue(),
@@ -125,5 +127,232 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	{
 		return false;
 	}
+
+}
+
+class FFT {
+
+	/**
+	 * 
+	 * Enumerates the ways in which the Fast Fourier Transform can work to eliminate high-frequency noise from
+	 * a data set
+	 * 
+	 * @author Nathaniel Sherry
+	 * 
+	 */
+	public enum FilterStyle
+	{
+
+		CUTOFF {
+
+			@Override
+			public String toString()
+			{
+				return "Cutoff";
+			}
+		},
+		LINEAR {
+
+			@Override
+			public String toString()
+			{
+				return "Linear Roll-Off";
+			}
+		},
+		SINE {
+
+			@Override
+			public String toString()
+			{
+				return "Sinusoidal Roll-Off";
+			}
+		}
+	}
+
+	
+	public static Complex[] DataToFFT(ReadOnlySpectrum data)
+	{
+		
+		// Fast Fourier Transform
+
+		double[] dataAsDoubles = new double[data.size()];
+
+		for (int i = 0; i < data.size(); i++) {
+			dataAsDoubles[i] = data.get(i);
+		}
+
+
+		// FFT Transform
+		return FourierMath.transform(dataAsDoubles);
+		
+	}
+	
+
+	public static Spectrum FFTToData(Complex[] fft)
+	{
+		// FFT Inverse Transform
+		fft = FourierMath.inverseTransform(fft);
+
+
+		// get the data into a list of doubles for returning
+		Spectrum result = new ISpectrum(fft.length);
+		for (int i = 0; i < fft.length; i++) {
+			result.set(  i, Math.max(  0f, (float)(fft[i].real())  )  );
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * Performs a Fast Fourier Transformation, and proceeds to remove high-frequency data.
+	 * 
+	 * @param data
+	 *            the data to be filtered
+	 * @param style
+	 *            the {@link FilterStyle} which determines how the boundary between high-frequency and the rest
+	 *            of the data is treated
+	 * @param beginFilterAtWavelength
+	 *            wavelength at which to begin filtering out noise
+	 * @param endGradualFilterAtWavelength
+	 *            when using a gradual fall-off method, the wavelength at above which to completely eliminate
+	 *            high-frequency noise
+	 * @return a Fast Fourier Transformation Low-Pass filtered data set
+	 */
+	public static Spectrum LowPassFilter(ReadOnlySpectrum data, FilterStyle style, int beginFilterAtWavelength,
+			int endGradualFilterAtWavelength)
+	{
+
+		int startcutoff, endcutoff;
+
+		/*
+		 * 2048 data points gets you: f = 1/2048, so l (wavelength) = 2048 f = 2/2048, so l = 1024
+		 * 
+		 * looking for ways to remove wavelengths less than minSignalWidth
+		 * 
+		 * 2048 / 2 = 1024 so data.size / cutoff = minSignalWidth data.size / minSignalWidth = cutoff
+		 */
+
+		startcutoff = (data.size() / 2) - (int) ((double) data.size() / (double) beginFilterAtWavelength);
+		endcutoff = (data.size() / 2) - (int) ((double) data.size() / (double) endGradualFilterAtWavelength);
+
+		return doFFTFilter(data, style, startcutoff, endcutoff);
+		// return getFFTBandstopFilter(data, cutoff, 0);
+
+	}
+
+
+	private static Spectrum doFFTFilter(ReadOnlySpectrum data, FilterStyle style, int start, int stop)
+	{
+
+		// FFT
+		Complex[] transformedData = DataToFFT(data);
+
+
+		// Do something with the transformed data
+		if (style == FilterStyle.LINEAR) {
+			FFTLinearStyle(transformedData, start, stop);
+		} else if (style == FilterStyle.SINE) {
+			FFTSineStyle(transformedData, start, stop);
+		} else {
+			FFTCutoffStyle(transformedData, start);
+		}
+
+
+		// FFT Inverse Transform
+		transformedData = FourierMath.inverseTransform(transformedData);
+
+
+		// get the data into a list of doubles for returning
+		Spectrum result = new ISpectrum(data.size());
+		for (int i = 0; i < data.size(); i++) {
+			result.set(  i, Math.max(0f, (float)transformedData[i].real())  );
+		}
+
+		return result;
+
+	}
+
+
+	private static void FFTCutoffStyle(Complex[] data, int start)
+	{
+
+		double centre = data.length / 2.0;
+		for (int i = 0; i < data.length; i++) {
+
+			if (i > Math.floor(centre - start) && i < Math.ceil(centre + start)) {
+				data[i] = new Complex(0.0, 0.0);
+			}
+
+		}
+	}
+
+
+	private static void FFTLinearStyle(Complex[] data, int start, int stop)
+	{
+
+		// start and stop are distances from the centrepoint, so start should be a higher number than stop
+
+		double centre = data.length / 2.0;
+
+		// start and stop as expressed by distances from center
+		int di;
+
+		double percentLeftInLine = 0.0;
+
+
+		for (int i = 0; i < data.length; i++) {
+
+			di = (int) Math.abs(centre - i);
+
+
+			// in between start and stop
+			if (di < start && di > stop) {
+				percentLeftInLine = 1.0 - ((double) (di - start) / (double) (stop - start));
+				data[i] = new Complex(data[i].real() * percentLeftInLine, data[i].imag() * percentLeftInLine);
+			} else if (di < start) {
+
+				data[i] = new Complex(0.0, 0.0);
+			}
+
+
+
+		}
+	}
+
+
+	private static void FFTSineStyle(Complex[] data, int start, int stop)
+	{
+
+		// start and stop are distances from the centrepoint, so start should be a higher number than stop
+
+		double centre = data.length / 2.0;
+
+		// start and stop as expressed by distances from center
+		int di;
+
+		double percentLeftInLine = 0.0;
+		double sine;
+
+		for (int i = 0; i < data.length; i++) {
+
+			di = (int) Math.abs(centre - i);
+
+
+			// in between start and stop
+			if (di < start && di > stop) {
+				percentLeftInLine = 1.0 - ((double) (di - start) / (double) (stop - start));
+				sine = (Math.sin(Math.PI * percentLeftInLine - Math.PI / 2.0) + 1.0) / 2.0;
+				data[i] = new Complex(data[i].real() * sine, data[i].imag() * sine);
+			} else if (di < start) {
+
+				data[i] = new Complex(0.0, 0.0);
+			}
+
+		}
+
+	}
+
+
 
 }

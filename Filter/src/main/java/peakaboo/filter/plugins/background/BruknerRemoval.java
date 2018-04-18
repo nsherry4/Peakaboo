@@ -4,9 +4,10 @@ package peakaboo.filter.plugins.background;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import peakaboo.calculations.Background;
 import peakaboo.filter.model.AbstractBackgroundFilter;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 /**
@@ -54,7 +55,7 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent)
 	{		
 		return SpectrumCalculations.multiplyBy(
-				Background.calcBackgroundBrukner(data, width.getValue(), iterations.getValue()), (percent/100.0f)
+				calcBackgroundBrukner(data, width.getValue(), iterations.getValue()), (percent/100.0f)
 			);
 	}
 
@@ -90,6 +91,84 @@ public final class BruknerRemoval extends AbstractBackgroundFilter
 	{
 		return true;
 	}
+
+	
+	
+
+	
+	/**
+	 * Calculates the background using the Brukner technique. Brukner technique works by taking 
+	 * min(data, moving_average(data)) repeatedly. This prevents strong signal from
+	 * bleeding into nearby areas, while reducing the strong signal at the same time.
+	 * 
+	 * @param data the {@link Spectrum} data to calculate the background from
+	 * @param windowSize the window size for the moving average 
+	 * @param repetitions the number of iterations of the smoothing/minvalue step to perform
+	 * @return the calculated background
+	 */
+	public static Spectrum calcBackgroundBrukner(ReadOnlySpectrum data, int windowSize, int repetitions)
+	{
+
+		// FIRST STEP
+		float Iavg = data.sum() / data.size();
+		float Imin = data.min();
+		float diff = Iavg - Imin;
+		final float cutoff = Iavg + 2 * diff;
+
+		Spectrum result = new ISpectrum(data); 
+
+		//initially cap the data at the given cutoff
+		for (int i = 0; i < result.size(); i++)
+		{
+			if (result.get(i) > cutoff) result.set(i, cutoff);
+		}
+		
+		Spectrum result2 = new ISpectrum(result.size());
+
+		int i = 0;
+		while (repetitions > 0)
+		{
+			removeBackgroundBruknerIteration(result, result2, windowSize);
+			
+			i++;
+			if (i > repetitions)
+			{
+				result = result2;
+				break;
+			}
+
+			removeBackgroundBruknerIteration(result2, result, windowSize);
+			
+			i++;
+			if (i > repetitions) break;
+
+		}
+
+		return result;
+
+	}
+	
+	/**
+	 * Performs a single iteration of the brukner min(data, moving average) process
+	 * @param source the data to look at
+	 * @param target the {@link Spectrum} to write the new values out to
+	 * @param windowSize the window size for the moving average
+	 */
+	private static void removeBackgroundBruknerIteration(final Spectrum source, final Spectrum target, final int windowSize)
+	{
+
+		for (int i = 0; i < source.size(); i++)
+		{
+			int start, stop;
+			start = Math.max(i - windowSize, 0);
+			stop = Math.min(i + windowSize+1, source.size() - 1);
+			float average = SpectrumCalculations.sumValuesInList(source, start, stop) / (windowSize * 2 + 1);
+			target.set(i, Math.min(average, source.get(i)));
+			
+		}
+		
+	}
+	
 
 
 }

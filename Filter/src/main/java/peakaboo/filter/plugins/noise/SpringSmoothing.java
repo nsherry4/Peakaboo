@@ -4,10 +4,12 @@ package peakaboo.filter.plugins.noise;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
-import peakaboo.calculations.Noise;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
+import peakaboo.filter.plugins.mathematical.Derivative;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 /**
  * 
@@ -96,7 +98,7 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	@Override
 	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
-		data = Noise.SpringFilter(
+		data = SpringFilter(
 				data, 
 				multiplier.getValue().floatValue(), 
 				falloff.getValue().floatValue(), 
@@ -115,6 +117,76 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	public boolean canFilterSubset()
 	{
 		return true;
+	}
+
+	
+
+	/**
+	 * The Spring filter is designed to smooth weaker data while preserving the structure of stronger signals.
+	 * The Spring filter Filter operates on the assumption that weak signal should be smoothed more than strong signal.
+	 * It treats each pair of points as if they were connected by a spring. With each iteration, a tension force draws
+	 * neighbouring points closer together. The Force Multiplier controls how strongly the two elements are pulled 
+	 * together, and the Force Falloff Rate controls how aggressively stronger signal is anchored in place, unmoved 
+	 * by spring forces. This prevents peaks from being distorted by the smoothing algorithm.
+	 * @param data the {@link Spectrum} to smooth
+	 * @param forceMultiplier the linear force multiplier value
+	 * @param falloffExp the exponential force falloff value
+	 * @param iterations the number of iterations to perform the smoothing
+	 * @return the smoothed data
+	 */
+	public static Spectrum SpringFilter(ReadOnlySpectrum data, float forceMultiplier, float falloffExp, int iterations)
+	{
+		Spectrum result = new ISpectrum(data);
+		
+		for (int i = 0; i < iterations; i++)
+		{
+			SpringFilterIteration(result, forceMultiplier, falloffExp);
+		}
+		
+		return result;
+
+	}
+	
+	private static void SpringFilterIteration(Spectrum data, float forceMultiplier, float falloffExp)
+	{
+
+	
+		Spectrum deltas = Derivative.deriv(data);
+		
+		Spectrum forces = new ISpectrum(data.size());
+		
+		//calculate the forces for each point
+		//forces represent how much pull a points neighbours are exerting on it.
+		//the further away its neighbours are, the more the "spring" has streched, and
+		//the stronger the force will be.
+		//Then, we want to make sure that peaks aren't distorted, so we reduce the force
+		//as the signal gets stronger. This fits with the assumption that weaker signal will be
+		//noisier.
+		float dist, force;
+		for (int i = 0; i < forces.size(); i++)
+		{
+			
+			if (i == 0) 						force = -deltas.get(0) / 2.0f;
+			else if (i == forces.size() - 1)  	force = deltas.get(deltas.size()-1) / 2.0f;
+			else 								force = (deltas.get(i-1) + (-deltas.get(i))) / 4.0f; 
+
+			//if dist dips below 0 and we use a falloff exp like 1.6, we'd like to get a sensible answer, rather than NaN
+			dist = Math.abs(data.get(i));
+			dist = (float) Math.pow(dist, falloffExp);
+			if (dist < 1) dist = 1f;
+			
+			//distFromAverage = 1f;
+			if (force < 0)
+			{
+				force = Math.max(force,  (force / dist) * forceMultiplier);
+			} else {
+				force = Math.min(force, (force / dist) * forceMultiplier);
+			}
+			
+			data.set(i, data.get(i) - force);
+			
+		}
+		
 	}
 
 	

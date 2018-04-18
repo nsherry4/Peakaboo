@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import eventful.EventfulType;
-import peakaboo.calculations.Interpolation;
+import peakaboo.controller.mapper.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.transition.TransitionSeries;
