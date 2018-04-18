@@ -12,7 +12,7 @@ import peakaboo.curvefit.fitting.context.FittingContext;
 
 public class LorentzFittingFunction implements FittingFunction {
 
-	private FittingContext context;
+	protected FittingContext context;
 	private float gamma;
 	private float gammaSquared;
 	private float mean;
@@ -20,9 +20,18 @@ public class LorentzFittingFunction implements FittingFunction {
 	
 	public void initialize(FittingContext context) {
 		this.context = context;
-		this.gamma = context.getFWHM()/2f;
+		this.gamma = calcGamma();
 		this.gammaSquared = gamma*gamma;
 		this.mean = context.getEnergy();
+	}
+	
+	protected float calcGamma() {
+		return context.getFWHM()/2f;
+	}
+	
+	
+	public float getGamma() {
+		return gamma;
 	}
 
 	public float forEnergy(float point) {

@@ -11,14 +11,15 @@ import peakaboo.curvefit.fitting.context.FittingContext;
 
 public class GaussianFittingFunction implements FittingFunction {
 
+	private FittingContext context;
 	private double base;
 	private double OneOverTwoSigmaSquared;
 	private float mean, height;
 	
 	@Override
 	public void initialize(FittingContext context) {
-				
-		float sigma = context.getFWHM()/2.35482f;
+		this.context = context;
+		float sigma = calcSigma();
 		this.height = context.getHeight();
 		this.mean = context.getEnergy();
 		
@@ -32,6 +33,10 @@ public class GaussianFittingFunction implements FittingFunction {
 		
 		
 		OneOverTwoSigmaSquared = 1d / (2 * sigma * sigma);
+	}
+	
+	protected float calcSigma() {
+		return context.getFWHM()/2.35482f;
 	}
 	
 	public float forEnergy(float energy)

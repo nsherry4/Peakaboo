@@ -26,12 +26,12 @@ public class Transition implements Serializable, Comparable<Transition>{
 
 	/**
 	 * Create a new Transition
-	 * @param value energy value of this Transition
+	 * @param energyValue energy value of this Transition
 	 * @param relativeIntensity relative intensity of this Transition
 	 */
-	public Transition(float value, float relativeIntensity, String name){
+	public Transition(float energyValue, float relativeIntensity, String name){
 
-		this.energyValue = value;
+		this.energyValue = energyValue;
 		this.relativeIntensity = relativeIntensity;
 		this.name = name;
 	}

@@ -43,9 +43,17 @@ public class FittingContext {
 		return parameters;
 	}
 	
+	public Transition getTransition() {
+		return transition;
+	}
+	
 	
 	public float getFWHM() {
 		return parameters.getFWHM(transition);
+	}
+
+	public TransitionSeriesType getTransitionSeriesType() {
+		return type;
 	}
 	
 }

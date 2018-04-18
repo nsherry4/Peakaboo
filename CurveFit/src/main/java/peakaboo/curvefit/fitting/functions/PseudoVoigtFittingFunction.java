@@ -14,6 +14,7 @@ public class PseudoVoigtFittingFunction implements FittingFunction {
 		FittingFunction l = new LorentzFittingFunction();
 		l.initialize(context);
 		
+		//Gaussian and Lorentz functions should have the same FWHM, which they will get from `context`
 		this.backer = new MixedFittingFunction(g, l, 0.8f);
 	}
 	
