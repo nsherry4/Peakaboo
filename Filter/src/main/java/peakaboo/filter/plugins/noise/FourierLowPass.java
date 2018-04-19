@@ -11,6 +11,7 @@ import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
 import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
+import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
 import scitypes.ISpectrum;
@@ -28,8 +29,8 @@ import scitypes.Spectrum;
 public final class FourierLowPass extends AbstractSimpleFilter
 {
 	
-	private Parameter<Integer> startWavelength;
-	private Parameter<Integer> endWavelength;
+	private Parameter<Float> startWavelength;
+	private Parameter<Float> endWavelength;
 	private SelectionParameter<FFT.FilterStyle> rolloff;
 
 
@@ -48,10 +49,10 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	{
 		
 		
-		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFT.FilterStyle.LINEAR, new EnumClassInfo<>(FFT.FilterStyle.class));
+		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFT.FilterStyle.LINEAR, new EnumClassInfo<>(FFT.FilterStyle.class), this::validate);
 		rolloff.setPossibleValues(Arrays.asList(FFT.FilterStyle.values()));
-		startWavelength = new Parameter<>("Starting Wavelength (keV)", new IntegerStyle(), 8, this::validate);
-		endWavelength = new Parameter<>("Ending Wavelength (keV)", new IntegerStyle(), 6, this::validate);
+		startWavelength = new Parameter<>("Starting Wavelength", new RealStyle(), 8f, this::validate);
+		endWavelength = new Parameter<>("Ending Wavelength", new RealStyle(), 6f, this::validate);
 		
 		addParameter(rolloff, startWavelength, endWavelength);
 	}
@@ -60,15 +61,15 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	private boolean validate(Parameter<?> p)
 	{
 
-		int start, end;
+		float start, end;
 		boolean isCutoff = rolloff.getValue() == FFT.FilterStyle.CUTOFF;
 		endWavelength.setEnabled(!isCutoff);
 
 		start = startWavelength.getValue();
-		if (start > 15 || start < 1) return false;
+		if (start > 50 || start < 3) return false;
 
 		end = endWavelength.getValue();
-		if (end > 15 || end < 0) return false;
+		if (end > 50 || end < 2) return false;
 
 		if (!isCutoff && start < end) return false;
 
@@ -219,13 +220,25 @@ class FFT {
 	 *            high-frequency noise
 	 * @return a Fast Fourier Transformation Low-Pass filtered data set
 	 */
-	public static Spectrum LowPassFilter(ReadOnlySpectrum data, FilterStyle style, int beginFilterAtWavelength,
-			int endGradualFilterAtWavelength)
+	public static Spectrum LowPassFilter(ReadOnlySpectrum data, FilterStyle style, float startWavelength,
+			float endWavelength)
 	{
 
 		int startcutoff, endcutoff;
 
 		/*
+		 * From JSci: [DFT is] an array containing the positive time part of the signal followed by the negative time part
+		 * 
+		 * So the highest frequency data is actually in the middle of the array.
+		 * 
+		 * The values are waves with phase+amplitude stored as complex numbers, where
+		 * the array index k represents the frequency of the wave.
+		 * 
+		 * So we want to remove signal below a certain channel width. This requires 
+		 * removing all signal with a wavelength below that size.
+		 * 
+		 * 
+		 * 
 		 * 2048 data points gets you: f = 1/2048, so l (wavelength) = 2048 f = 2/2048, so l = 1024
 		 * 
 		 * looking for ways to remove wavelengths less than minSignalWidth
@@ -233,9 +246,18 @@ class FFT {
 		 * 2048 / 2 = 1024 so data.size / cutoff = minSignalWidth data.size / minSignalWidth = cutoff
 		 */
 
-		startcutoff = (data.size() / 2) - (int) ((double) data.size() / (double) beginFilterAtWavelength);
-		endcutoff = (data.size() / 2) - (int) ((double) data.size() / (double) endGradualFilterAtWavelength);
+		
+		
+		
+		int halfsize = (data.size() / 2);
 
+		//wavelength of 4 has frequency of data.size() / 4
+		int startFrequency = Math.round(data.size() / startWavelength);
+		int endFrequency = Math.round(data.size() / endWavelength);
+		
+		startcutoff = Math.max(0, halfsize - startFrequency);
+		endcutoff = Math.max(0, halfsize - endFrequency);
+				
 		return doFFTFilter(data, style, startcutoff, endcutoff);
 		// return getFFTBandstopFilter(data, cutoff, 0);
 
