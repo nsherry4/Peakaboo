@@ -144,6 +144,7 @@ import swidget.widgets.ToolbarImageButton;
 import swidget.widgets.ZoomSlider;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.properties.PropertyViewPanel;
+import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 import swidget.widgets.toggle.ImageToggleButton;
 import swidget.widgets.toggle.ItemToggleButton;
@@ -371,7 +372,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		});
 		
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.add(new CurveFittingView(controller.fitting(), controller, canvas), 0);
+		tabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
 		tabs.add(new FiltersetViewer(controller.filtering(), container.getWindow()), 1);
 		
 		
@@ -1353,13 +1354,13 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		else if (formats.size() == 0)
 		{
-			JOptionPane.showMessageDialog(
-					this, 
-					"Could not determine the data format of the selected file(s)", 
+			new TabbedInterfaceDialog(
 					"Open Failed", 
+					"Could not determine the data format of the selected file(s)", 
 					JOptionPane.ERROR_MESSAGE, 
-					StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON)
-				);
+					JOptionPane.DEFAULT_OPTION, 
+					v -> {}
+				).showIn(this);
 		}
 		else
 		{
@@ -1432,7 +1433,13 @@ public class PlotPanel extends TabbedInterfacePanel
 							} else if (result.problem != null) {
 								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
 							} else {
-								JOptionPane.showMessageDialog(this, "Peakaboo could not open this dataset.\n" + result.message, "Open Failed", JOptionPane.OK_OPTION, StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+								new TabbedInterfaceDialog(
+										"Open Failed", 
+										"Peakaboo could not open this dataset.\n" + result.message, 
+										JOptionPane.ERROR_MESSAGE,
+										JOptionPane.DEFAULT_OPTION,
+										v -> {}
+									).showIn(this);
 							}
 						}
 
@@ -1799,7 +1806,13 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
-			JOptionPane.showMessageDialog(this, "Attempting to detect an energy calibration requires at least two elements to be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.");
+			new TabbedInterfaceDialog(
+					"Cannot Detect Energy Calibration", 
+					"Detecting energy calibration requires that at least two elements be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
+					JOptionPane.WARNING_MESSAGE,
+					JOptionPane.DEFAULT_OPTION,
+					v -> {}
+				).showIn(this);
 			return;
 		}
 		

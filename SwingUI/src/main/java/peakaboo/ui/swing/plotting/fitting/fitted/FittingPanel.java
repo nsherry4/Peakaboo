@@ -68,7 +68,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 				"Clear all fittings",
 				"Move the selected fittings up",
 				"Move the selected fittings down" };
-		controls = new ListControls(tooltips, addMenu) {
+		controls = new ListControls(tooltips, addMenu, true) {
 
 			@Override
 			public void up()
@@ -133,8 +133,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 			@Override
 			public void add()
 			{
-				owner.smartAdd();
-
+				//Not used when the add button it set to show it's popup menu
+				//owner.smartAdd();
 			}
 
 		};

@@ -6,17 +6,20 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.ui.swing.plotting.PlotCanvas;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
 import peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 
 
 
@@ -26,6 +29,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 
 	private FittingController	controller;
 	private PlotController	 	plotController;
+	private PlotPanel			plotPanel;
 
 	private final String		FITTED		= "Fitted";
 	private final String		LOOKUP		= "Lookup";
@@ -45,12 +49,13 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	
 
-	public CurveFittingView(FittingController _controller, PlotController plotController, PlotCanvas canvas)
+	public CurveFittingView(FittingController _controller, PlotController plotController, PlotPanel plotPanel, PlotCanvas canvas)
 	{
 		super();
-
+		
 		this.controller = _controller;
 		this.plotController = plotController;
+		this.plotPanel = plotPanel;
 
 		setPreferredSize(new Dimension(200, getPreferredSize().height));
 
@@ -112,19 +117,25 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	public void guidedAdd()
 	{
-		smartPanel.resetSelectors();
-		smartPanel.setSelectionMode(true);
-		card.show(cardPanel, SMART);
-		changed();
+		if (plotController.data().hasDataSet() && plotController.settings().getMaxEnergy() > 0f) {
+			smartPanel.resetSelectors();
+			smartPanel.setSelectionMode(true);
+			card.show(cardPanel, SMART);
+			changed();
+		} else {
+			new TabbedInterfaceDialog(
+					"No Energy Calibration", 
+					"Guided fitting cannot proceed without energy calibration.", 
+					JOptionPane.WARNING_MESSAGE, 
+					JOptionPane.DEFAULT_OPTION, 
+					result -> {}
+				).showIn(plotPanel);
+			
+		}
+		
+
 	}
 	
-	public void smartAdd() {
-		if (plotController.data().hasDataSet() && plotController.settings().getMaxEnergy() > 0f) {
-			guidedAdd();
-		} else {
-			elementalAdd();
-		}
-	}
 
 	
 	
