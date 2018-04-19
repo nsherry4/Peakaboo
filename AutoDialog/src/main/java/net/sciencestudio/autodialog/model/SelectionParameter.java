@@ -29,7 +29,7 @@ public class SelectionParameter<T> extends Parameter<T> {
 	
 	public SelectionParameter(String name, Style<T> style, T value, ClassInfo<T> classInfo, Function<Parameter<T>, Boolean> validator)
 	{
-		super(name, style, value, validator);
+		super(name, style, value, classInfo, validator);
 	}
 	
 
