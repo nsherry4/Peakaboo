@@ -105,7 +105,7 @@ public class ConvolvingSavitskyGolay extends AbstractSimpleFilter {
 
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {
-		return FastSavitskyGolayFilter(data, order.getValue(), reach.getValue(), 0f, max.getValue());
+		return FastSavitskyGolayFilter(data, order.getValue(), reach.getValue(), 0f, ignore.getValue() ? max.getValue() : Float.MAX_VALUE);
 	}
 
 	@Override
