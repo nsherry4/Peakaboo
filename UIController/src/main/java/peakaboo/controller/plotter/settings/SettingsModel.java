@@ -17,79 +17,20 @@ import scidraw.drawing.ViewTransform;
 public class SettingsModel implements Serializable
 {
 	
-	public int					scanNumber;
-	public boolean				showIndividualFittings;
-	
-	public boolean				showElementFitTitles;
-	public boolean				showElementFitMarkers;
-	public boolean				showElementFitIntensities;
-	
-	public boolean				showPlotTitle;
-	public ChannelCompositeMode	channelComposite;
-	public boolean				backgroundShowOriginal;
-	public float				zoom;
-	public boolean				monochrome;
-	public boolean				showAxes;
-	public boolean				lockPlotHeight;
-	
-	public EscapePeakType		escape;
-	
-	public ViewTransform		viewTransform;
-	
-	public float				minEnergy, maxEnergy;
+	public PersistentSettingsModel persistent;
+	public SessionSettingsModel session;
 
 
 	public SettingsModel()
 	{
-		scanNumber = 0;
-		showIndividualFittings = false;
-		channelComposite = ChannelCompositeMode.AVERAGE;
-		backgroundShowOriginal = false;
-		zoom = 1.0f;
-		monochrome = false;
-		showAxes = true;
-		lockPlotHeight = true;
-		escape = EscapePeakType.SILICON;
-		viewTransform = ViewTransform.LOG;
-		minEnergy = 0.0f;
-		maxEnergy = 0.0f;
+		persistent = new PersistentSettingsModel();
+		session = new SessionSettingsModel();
 	}
 
 	public void copy(SettingsModel copy)
 	{
-		scanNumber = copy.scanNumber;
-		showIndividualFittings = copy.showIndividualFittings;
-		
-		showElementFitTitles = copy.showElementFitTitles;
-		showElementFitMarkers = copy.showElementFitMarkers;
-		showElementFitIntensities = copy.showElementFitIntensities;
-		
-		showPlotTitle = copy.showPlotTitle;
-		channelComposite = copy.channelComposite;
-		backgroundShowOriginal = copy.backgroundShowOriginal;
-		zoom = copy.zoom;
-		monochrome = copy.monochrome;
-		showAxes = copy.showAxes;
-		lockPlotHeight = copy.lockPlotHeight;
-		
-		escape = copy.escape;
-		viewTransform = copy.viewTransform;
-		
-		minEnergy = copy.minEnergy;
-		maxEnergy = copy.maxEnergy;
-		
-	}
-
-	//For JYAML Serialization Purposes -- Needs this to handle enums
-	public String getChannelComposite()
-	{
-		return channelComposite.name();
-	}
-
-
-	public void setChannelComposite(String channelComposite)
-	{
-		this.channelComposite = ChannelCompositeMode.valueOf(channelComposite);
+		persistent = new PersistentSettingsModel(copy.persistent);
+		session = new SessionSettingsModel(copy.session);		
 	}
 
 }

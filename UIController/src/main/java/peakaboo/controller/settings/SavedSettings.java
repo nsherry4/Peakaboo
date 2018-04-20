@@ -132,12 +132,16 @@ public class SavedSettings
 		
 		
 		if (dataController.hasDataSet()) {
-			EnergyCalibration calibration = new EnergyCalibration(settings.minEnergy, settings.maxEnergy, dataController.getDataSet().getAnalysis().channelsPerScan());
+			EnergyCalibration calibration = new EnergyCalibration(
+					settings.session.minEnergy, 
+					settings.session.maxEnergy, 
+					dataController.getDataSet().getAnalysis().channelsPerScan()
+				);
 			fittings.selections.getFittingParameters().setCalibration(calibration);
 			fittings.proposals.getFittingParameters().setCalibration(calibration);
 			
-			fittings.selections.getFittingParameters().setEscapeType(settings.escape);
-			fittings.proposals.getFittingParameters().setEscapeType(settings.escape);
+			fittings.selections.getFittingParameters().setEscapeType(settings.session.escape);
+			fittings.proposals.getFittingParameters().setEscapeType(settings.session.escape);
 		}
 
 

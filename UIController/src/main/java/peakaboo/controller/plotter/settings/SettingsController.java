@@ -35,30 +35,30 @@ public class SettingsController extends Eventful
 
 	public float getZoom()
 	{
-		return settingsModel.zoom;
+		return settingsModel.session.zoom;
 	}
 
 	public void setZoom(float zoom)
 	{
-		settingsModel.zoom = zoom;
+		settingsModel.session.zoom = zoom;
 		updateListeners();
 	}
 
 	public void setShowIndividualSelections(boolean showIndividualSelections)
 	{
-		settingsModel.showIndividualFittings = showIndividualSelections;
+		settingsModel.persistent.showIndividualFittings = showIndividualSelections;
 		setUndoPoint("Individual Fittings");
 		plot.fitting().fittingDataInvalidated();
 	}
 
 	public boolean getShowIndividualSelections()
 	{
-		return settingsModel.showIndividualFittings;
+		return settingsModel.persistent.showIndividualFittings;
 	}
 
 
 	public void setMaxEnergy(float max) {
-		settingsModel.maxEnergy = max;
+		settingsModel.session.maxEnergy = max;
 		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
 		plot.fitting().setFittingParameters(dataWidth, getMinEnergy(), max);
 
@@ -67,12 +67,12 @@ public class SettingsController extends Eventful
 
 	public float getMaxEnergy()
 	{
-		return settingsModel.maxEnergy;
+		return settingsModel.session.maxEnergy;
 	}
 
 	
 	public void setMinEnergy(float min) {
-		settingsModel.minEnergy = min;
+		settingsModel.session.minEnergy = min;
 		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
 		plot.fitting().setFittingParameters(dataWidth, min, getMaxEnergy());
 		updateListeners();
@@ -81,18 +81,18 @@ public class SettingsController extends Eventful
 	
 	public float getMinEnergy()
 	{
-		return settingsModel.minEnergy;
+		return settingsModel.session.minEnergy;
 	}
 	
 	public void setViewLog(boolean log)
 	{
 		if (log)
 		{
-			settingsModel.viewTransform = ViewTransform.LOG;
+			settingsModel.session.viewTransform = ViewTransform.LOG;
 		}
 		else
 		{
-			settingsModel.viewTransform = ViewTransform.LINEAR;
+			settingsModel.session.viewTransform = ViewTransform.LINEAR;
 		}
 		setUndoPoint("Log View");
 		updateListeners();
@@ -100,12 +100,12 @@ public class SettingsController extends Eventful
 
 	public boolean getViewLog()
 	{
-		return settingsModel.viewTransform == ViewTransform.LOG;
+		return settingsModel.session.viewTransform == ViewTransform.LOG;
 	}
 
 	public void setChannelCompositeMode(ChannelCompositeMode mode)
 	{
-		settingsModel.channelComposite = mode;
+		settingsModel.session.channelComposite = mode;
 		setUndoPoint(mode.show());
 		plot.filtering().filteredDataInvalidated();
 	}
@@ -113,13 +113,13 @@ public class SettingsController extends Eventful
 
 	public ChannelCompositeMode getChannelCompositeMode()
 	{
-		return settingsModel.channelComposite;
+		return settingsModel.session.channelComposite;
 	}
 
 	public void setScanNumber(int number)
 	{
 		//negative is downwards, positive is upwards
-		int direction = number - settingsModel.scanNumber;
+		int direction = number - settingsModel.session.scanNumber;
 
 		if (direction > 0)
 		{
@@ -141,18 +141,18 @@ public class SettingsController extends Eventful
 			number = plot.data().getDataSet().getScanData().scanCount() - 1;
 		}
 		if (number < 0) number = 0;
-		settingsModel.scanNumber = number;
+		settingsModel.session.scanNumber = number;
 		plot.filtering().filteredDataInvalidated();
 	}
 
 	public int getScanNumber()
 	{
-		return settingsModel.scanNumber;
+		return settingsModel.session.scanNumber;
 	}
 
 	public void setShowAxes(boolean axes)
 	{
-		settingsModel.showAxes = axes;
+		settingsModel.persistent.showAxes = axes;
 		plot.setAxisPainters(null);
 		setUndoPoint("Axes");
 		updateListeners();
@@ -160,17 +160,17 @@ public class SettingsController extends Eventful
 
 	public boolean getShowAxes()
 	{
-		return settingsModel.showAxes;
+		return settingsModel.persistent.showAxes;
 	}
 
 	public boolean getShowTitle()
 	{
-		return settingsModel.showPlotTitle;
+		return settingsModel.persistent.showPlotTitle;
 	}
 
 	public void setShowTitle(boolean show)
 	{
-		settingsModel.showPlotTitle = show;
+		settingsModel.persistent.showPlotTitle = show;
 		plot.setAxisPainters(null);
 		setUndoPoint("Title");
 		updateListeners();
@@ -178,62 +178,62 @@ public class SettingsController extends Eventful
 
 	public void setMonochrome(boolean mono)
 	{
-		settingsModel.monochrome = mono;
+		settingsModel.persistent.monochrome = mono;
 		setUndoPoint("Monochrome");
 		updateListeners();
 	}
 
 	public boolean getMonochrome()
 	{
-		return settingsModel.monochrome;
+		return settingsModel.persistent.monochrome;
 	}
 
 	public void setShowElementTitles(boolean show)
 	{
-		settingsModel.showElementFitTitles = show;
+		settingsModel.persistent.showElementFitTitles = show;
 		setUndoPoint("Fitting Titles");
 		updateListeners();
 	}
 
 	public void setShowElementMarkers(boolean show)
 	{
-		settingsModel.showElementFitMarkers = show;
+		settingsModel.persistent.showElementFitMarkers = show;
 		setUndoPoint("Fitting Markers");
 		updateListeners();
 	}
 
 	public void setShowElementIntensities(boolean show)
 	{
-		settingsModel.showElementFitIntensities = show;
+		settingsModel.persistent.showElementFitIntensities = show;
 		setUndoPoint("Fitting Heights");
 		updateListeners();
 	}
 
 	public boolean getShowElementTitles()
 	{
-		return settingsModel.showElementFitTitles;
+		return settingsModel.persistent.showElementFitTitles;
 	}
 
 	public boolean getShowElementMarkers()
 	{
-		return settingsModel.showElementFitMarkers;
+		return settingsModel.persistent.showElementFitMarkers;
 	}
 
 	public boolean getShowElementIntensities()
 	{
-		return settingsModel.showElementFitIntensities;
+		return settingsModel.persistent.showElementFitIntensities;
 	}
 
 	public void setShowRawData(boolean show)
 	{
-		settingsModel.backgroundShowOriginal = show;
+		settingsModel.session.backgroundShowOriginal = show;
 		setUndoPoint("Raw Data Outline");
 		updateListeners();
 	}
 
 	public boolean getShowRawData()
 	{
-		return settingsModel.backgroundShowOriginal;
+		return settingsModel.session.backgroundShowOriginal;
 	}
 
 	public float getEnergyForChannel(int channel)
@@ -257,20 +257,20 @@ public class SettingsController extends Eventful
 
 	public EscapePeakType getEscapePeakType()
 	{
-		return settingsModel.escape;
+		return settingsModel.session.escape;
 	}
 	
 	public void setEscapePeakType(EscapePeakType type)
 	{
 		plot.fitting().setEscapeType(type);
-		settingsModel.escape = type;
+		settingsModel.session.escape = type;
 	}
 	
 	public boolean getLockPlotHeight() {
-		return settingsModel.lockPlotHeight;
+		return settingsModel.session.lockPlotHeight;
 	}
 	public void setLockPlotHeight(boolean lock) {
-		settingsModel.lockPlotHeight = lock;
+		settingsModel.session.lockPlotHeight = lock;
 		updateListeners();
 	}
 	
