@@ -72,14 +72,10 @@ public class MappingController extends EventfulType<String>
 	}
 	
 	
-	public SavedSettings getSavedSettingsObject() {
-		return plotcontroller.getSavedSettingsObject();
+	public SavedSettings getSavedSettings() {
+		return plotcontroller.getSavedSettings();
 	}
 	
-	public String getSavedSettings()
-	{
-		return plotcontroller.saveSettings();
-	}
 	
 
 }

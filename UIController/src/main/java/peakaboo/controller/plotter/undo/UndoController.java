@@ -24,7 +24,7 @@ public class UndoController extends Eventful implements IUndoController
 	public void setUndoPoint(String change)
 	{
 		//save the current state
-		String saved = plot.saveSettings();
+		String saved = plot.getSavedSettings().serialize();
 
 		if (undoModel.undoStack.size() > 0)
 		{

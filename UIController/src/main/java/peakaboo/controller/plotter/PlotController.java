@@ -108,14 +108,11 @@ public class PlotController extends EventfulType<String>
 	}
 
 	
-	public SavedSettings getSavedSettingsObject() {
+	public SavedSettings getSavedSettings() {
 		return SavedSettings.pack(this);
 	}
 	
-	public String saveSettings()
-	{
-		return SavedSettings.pack(this).serialize();
-	}
+
 
 	public void loadSettings(String data, boolean isUndoAction)
 	{

@@ -168,7 +168,7 @@ class MapperToolbar extends JToolBar {
 				sds = controller.getDataSourceForSubset(pointSelection.getPoints());
 			}
 			
-			SavedSettings settings = controller.getSavedSettingsObject();
+			SavedSettings settings = controller.getSavedSettings();
 			
 			//update the bad scan indexes to match the new data source's indexing scheme
 			settings.badScans = settings.badScans.stream()
