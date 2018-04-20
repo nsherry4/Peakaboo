@@ -1,8 +1,5 @@
 package peakaboo.controller.settings;
 
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.settings.PersistentSettingsModel;
@@ -16,26 +13,20 @@ public class SavedPersistence {
 	 * Decodes a serialized data object from yaml
 	 */
 	public static SavedPersistence deserialize(String yaml) {
-		Yaml y = new Yaml();
-		SavedPersistence data = (SavedPersistence)y.load(yaml);
-		return data;
+		return SettingsSerializer.deserialize(yaml);
 	}
-	
-	
 	/**
 	 * Encodes the serialized data as yaml
 	 */
 	public String serialize() {
-		DumperOptions options = new DumperOptions();
-		options.setDefaultFlowStyle(FlowStyle.BLOCK);
-		Yaml y = new Yaml(options);	
-		return y.dump(this);
+		return SettingsSerializer.serialize(this);
 	}
+	
 	
 	/**
 	 * Builds a SavedPersistence object from the model
 	 */
-	public static SavedPersistence pack(PlotController plotController) {
+	public static SavedPersistence storeFrom(PlotController plotController) {
 		SavedPersistence saved = new SavedPersistence();
 		saved.persistent = plotController.settings().getSettingsModel().persistent;
 		return saved;
@@ -44,8 +35,8 @@ public class SavedPersistence {
 	/**
 	 * applies serialized preferences to the model
 	 */
-	public static void unpack(SavedPersistence data, PlotController plotController) {
-		plotController.settings().getSettingsModel().persistent = data.persistent;
+	public void loadInto(PlotController plotController) {
+		plotController.settings().getSettingsModel().persistent = this.persistent;
 	}
 	
 }

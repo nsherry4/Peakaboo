@@ -1,7 +1,26 @@
 package peakaboo.controller.plotter.settings;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.logging.Level;
+
+import commonenvironment.Env;
 import eventful.Eventful;
+import peakaboo.common.Configuration;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.transition.EscapePeakType;
 import scidraw.drawing.ViewTransform;
@@ -47,6 +66,7 @@ public class SettingsController extends Eventful
 	public void setShowIndividualSelections(boolean showIndividualSelections)
 	{
 		settingsModel.persistent.showIndividualFittings = showIndividualSelections;
+		savePersistentSettings();
 		setUndoPoint("Individual Fittings");
 		plot.fitting().fittingDataInvalidated();
 	}
@@ -153,6 +173,7 @@ public class SettingsController extends Eventful
 	public void setShowAxes(boolean axes)
 	{
 		settingsModel.persistent.showAxes = axes;
+		savePersistentSettings();
 		plot.setAxisPainters(null);
 		setUndoPoint("Axes");
 		updateListeners();
@@ -171,6 +192,7 @@ public class SettingsController extends Eventful
 	public void setShowTitle(boolean show)
 	{
 		settingsModel.persistent.showPlotTitle = show;
+		savePersistentSettings();
 		plot.setAxisPainters(null);
 		setUndoPoint("Title");
 		updateListeners();
@@ -179,6 +201,7 @@ public class SettingsController extends Eventful
 	public void setMonochrome(boolean mono)
 	{
 		settingsModel.persistent.monochrome = mono;
+		savePersistentSettings();
 		setUndoPoint("Monochrome");
 		updateListeners();
 	}
@@ -191,6 +214,7 @@ public class SettingsController extends Eventful
 	public void setShowElementTitles(boolean show)
 	{
 		settingsModel.persistent.showElementFitTitles = show;
+		savePersistentSettings();
 		setUndoPoint("Fitting Titles");
 		updateListeners();
 	}
@@ -198,6 +222,7 @@ public class SettingsController extends Eventful
 	public void setShowElementMarkers(boolean show)
 	{
 		settingsModel.persistent.showElementFitMarkers = show;
+		savePersistentSettings();
 		setUndoPoint("Fitting Markers");
 		updateListeners();
 	}
@@ -205,6 +230,7 @@ public class SettingsController extends Eventful
 	public void setShowElementIntensities(boolean show)
 	{
 		settingsModel.persistent.showElementFitIntensities = show;
+		savePersistentSettings();
 		setUndoPoint("Fitting Heights");
 		updateListeners();
 	}
@@ -274,5 +300,43 @@ public class SettingsController extends Eventful
 		updateListeners();
 	}
 	
+	
+	/**
+	 * This should really only be called at creation time, since it loads settings 
+	 * from disk and does not create an undo point.
+	 */
+	public void loadPersistentSettings() {
+		File file = new File(Configuration.appDir() + "/settings.yaml");
+		try {
+			
+			byte[] bytes = Files.readAllBytes(file.toPath());
+			String yaml = new String(bytes);
+			SavedPersistence saved = SavedPersistence.deserialize(yaml);
+			saved.loadInto(plot);
+					
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.WARNING, "Could not load persistent settings", e);
+		}
+		
+		plot.filtering().filteredDataInvalidated();
+		plot.fitting().fittingDataInvalidated();
+		updateListeners();
+		
+	}
+	
+	
+	private void savePersistentSettings() {
+		File file = new File(Configuration.appDir() + "/settings.yaml");
+		try {
+			
+			SavedPersistence saved = SavedPersistence.storeFrom(plot);
+			String yaml = saved.serialize();
+			byte[] bytes = yaml.getBytes();
+			Files.write(file.toPath(), bytes);
+			
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.WARNING, "Could not save persistent settings", e);
+		}
+	}
 	
 }

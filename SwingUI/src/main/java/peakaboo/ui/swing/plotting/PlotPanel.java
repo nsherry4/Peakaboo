@@ -1588,7 +1588,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			}
 			try {
 				FileOutputStream os = new FileOutputStream(file.get());
-				os.write(controller.getSavedSettings().serialize().getBytes());
+				os.write(controller.getSavedSettings().session.serialize().getBytes());
 				os.close();
 				savedSessionFileName = file.get().getParentFile();
 			}
@@ -1740,7 +1740,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				return;
 			}
 			try {
-				controller.loadSettings(StringInput.contents(file.get()), false);
+				controller.loadSessionSettings(StringInput.contents(file.get()));
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
 			}

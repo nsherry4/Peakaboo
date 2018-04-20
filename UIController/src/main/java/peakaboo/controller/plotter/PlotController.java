@@ -12,6 +12,7 @@ import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.controller.plotter.undo.UndoController;
+import peakaboo.controller.settings.SavedSession;
 import peakaboo.controller.settings.SavedSettings;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
@@ -61,7 +62,7 @@ public class PlotController extends EventfulType<String>
 		filteringController = new FilteringController(this);
 		fittingController = new FittingController(this);
 		settingsController = new SettingsController(this);
-
+		settingsController.loadPersistentSettings();
 		
 		undoController.addListener(new EventfulListener() {
 			
@@ -109,7 +110,7 @@ public class PlotController extends EventfulType<String>
 
 	
 	public SavedSettings getSavedSettings() {
-		return SavedSettings.pack(this);
+		return SavedSettings.storeFrom(this);
 	}
 	
 
@@ -117,9 +118,24 @@ public class PlotController extends EventfulType<String>
 	public void loadSettings(String data, boolean isUndoAction)
 	{
 		SavedSettings saved = SavedSettings.deserialize(data);
-		SavedSettings.unpack(saved, this);
+		saved.loadInto(this);
 		
 		if (!isUndoAction) undoController.setUndoPoint("Load Session");
+		
+		filteringController.filteredDataInvalidated();
+		fittingController.fittingDataInvalidated();
+		fittingController.fittingProposalsInvalidated();
+		settingsController.updateListeners();
+		
+		//fire an update message from the fittingcontroller with a boolean flag
+		//indicating that the change is not comming from inside the fitting controller
+		fittingController.updateListeners(true);
+		
+	}
+	
+	public void loadSessionSettings(String yaml) {
+		SavedSession saved = SavedSession.deserialize(yaml);
+		saved.loadInto(this);
 		
 		filteringController.filteredDataInvalidated();
 		fittingController.fittingDataInvalidated();

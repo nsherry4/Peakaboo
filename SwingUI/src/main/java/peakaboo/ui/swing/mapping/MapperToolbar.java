@@ -171,7 +171,8 @@ class MapperToolbar extends JToolBar {
 			SavedSettings settings = controller.getSavedSettings();
 			
 			//update the bad scan indexes to match the new data source's indexing scheme
-			settings.badScans = settings.badScans.stream()
+			//TODO: Is there a better way to do this?
+			settings.session.badScans = settings.session.badScans.stream()
 					.map(index -> sds.getUpdatedIndex(index))
 					.filter(index -> index > 0)
 					.collect(Collectors.toList()
