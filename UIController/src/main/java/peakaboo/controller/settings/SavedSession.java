@@ -4,13 +4,16 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.settings.SessionSettingsModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.fitting.EnergyCalibration;
+import peakaboo.curvefit.fitting.functions.FittingFunction;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;
@@ -115,6 +118,19 @@ public class SavedSession {
 			
 			fittingModel.selections.getFittingParameters().setEscapeType(settingsModel.session.escape);
 			fittingModel.proposals.getFittingParameters().setEscapeType(settingsModel.session.escape);
+			
+			fittingModel.selections.getFittingParameters().setFWMHBase(settingsModel.session.fwhmBase);
+			fittingModel.proposals.getFittingParameters().setFWMHMult(settingsModel.session.fwhmMult);
+			
+			Class<? extends FittingFunction> fittingFunctionClass ;
+			try {
+				fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(settingsModel.session.fittingFunctionName);
+				fittingModel.selections.getFittingParameters().setFittingFunction(fittingFunctionClass);
+				fittingModel.proposals.getFittingParameters().setFittingFunction(fittingFunctionClass);
+			} catch (ClassNotFoundException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + settingsModel.session.fittingFunctionName, e);
+			}
+			
 		}
 		
 		

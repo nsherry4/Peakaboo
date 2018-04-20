@@ -1,5 +1,7 @@
 package peakaboo.controller.plotter.settings;
 
+import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.transition.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 
@@ -13,6 +15,8 @@ public class SessionSettingsModel {
 	public EscapePeakType		escape;
 	public ViewTransform		viewTransform;
 	public float				minEnergy, maxEnergy;
+	public float 				fwhmBase, fwhmMult;
+	public String 				fittingFunctionName;
 	
 	public SessionSettingsModel() {
 
@@ -25,6 +29,10 @@ public class SessionSettingsModel {
 		viewTransform = ViewTransform.LOG;
 		minEnergy = 0.0f;
 		maxEnergy = 0.0f;
+		fwhmBase = 0.055f;
+		fwhmMult = 0.013f;
+		fittingFunctionName = PseudoVoigtFittingFunction.class.getName();
+		
 		
 	}
 	
@@ -41,6 +49,10 @@ public class SessionSettingsModel {
 		
 		minEnergy = copy.minEnergy;
 		maxEnergy = copy.maxEnergy;
+		
+		fwhmBase = copy.fwhmBase;
+		fwhmMult = copy.fwhmMult;
+		fittingFunctionName = copy.fittingFunctionName;
 	}
 	
 	//For JYAML Serialization Purposes -- Needs this to handle enums

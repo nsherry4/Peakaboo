@@ -642,7 +642,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		SettingsPanel peakwidth = new SettingsPanel(Spacing.iTiny());
 		peakwidth.setOpaque(false);
 		peakwidth.setBorder(Spacing.bMedium());
-		JLabel peakwidthTitle = new JLabel("<html><div style='text-align: center;'>Peak Model (ev)<br /><span style='color: red'>WARNING: ADVANCED</span></div></html>");
+		JLabel peakwidthTitle = new JLabel("<html><div style='text-align: center;'>Peak Model<br /><span style='color: red'>WARNING: ADVANCED</span></div></html>");
 		peakwidthTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		peakwidthTitle.setFont(peakwidthTitle.getFont().deriveFont(Font.BOLD));
 		peakwidth.addSetting(peakwidthTitle);
@@ -655,10 +655,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		fwhmBase.addChangeListener(e -> {
 			
 			float base = ((Number) fwhmBase.getValue()).floatValue()/1000;
-			controller.fitting().setFWHMBase(base);			
+			controller.settings().setFWHMBase(base);
 			
 		});
-		peakwidth.addSetting(fwhmBase, "FWHM Base");
+		peakwidth.addSetting(fwhmBase, "FWHM Base (keV)");
 
 		
 		JSpinner fwhmMult = new JSpinner();
@@ -668,10 +668,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		fwhmMult.addChangeListener(e -> {
 			
 			float mult = ((Number) fwhmMult.getValue()).floatValue()/1000;
-			controller.fitting().setFWHMMult(mult);			
+			controller.settings().setFWHMMult(mult);			
 			
 		});
-		peakwidth.addSetting(fwhmMult, "FWHM Scale");
+		peakwidth.addSetting(fwhmMult, "FWHM Scale (ev)");
 		
 		
 		
@@ -682,7 +682,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		JRadioButton voigt = new JRadioButton("Pseudo-Voigt");
 		voigt.setSelected(controller.fitting().getFittingFunction() == PseudoVoigtFittingFunction.class);
 		voigt.addActionListener(e -> {
-			controller.fitting().setFittingFunction(PseudoVoigtFittingFunction.class);
+			controller.settings().setFittingFunction(PseudoVoigtFittingFunction.class);
 		});
 		functionGroup.add(voigt);
 		peakwidth.addSetting(voigt);
@@ -691,7 +691,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		JRadioButton gaussian = new JRadioButton("Gaussian");
 		gaussian.setSelected(controller.fitting().getFittingFunction() == GaussianFittingFunction.class);
 		gaussian.addActionListener(e -> {
-			controller.fitting().setFittingFunction(GaussianFittingFunction.class);
+			controller.settings().setFittingFunction(GaussianFittingFunction.class);
 		});
 		functionGroup.add(gaussian);
 		peakwidth.addSetting(gaussian);
@@ -700,7 +700,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		JRadioButton ida = new JRadioButton("Ida");
 		ida.setSelected(controller.fitting().getFittingFunction() == IdaFittingFunction.class);
 		ida.addActionListener(e -> {
-			controller.fitting().setFittingFunction(IdaFittingFunction.class);
+			controller.settings().setFittingFunction(IdaFittingFunction.class);
 		});
 		functionGroup.add(ida);
 		peakwidth.addSetting(ida);
@@ -709,7 +709,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		JRadioButton lorentz = new JRadioButton("Lorentz");
 		lorentz.setSelected(controller.fitting().getFittingFunction() == LorentzFittingFunction.class);
 		lorentz.addActionListener(e -> {
-			controller.fitting().setFittingFunction(LorentzFittingFunction.class);
+			controller.settings().setFittingFunction(LorentzFittingFunction.class);
 		});
 		functionGroup.add(lorentz);
 		peakwidth.addSetting(lorentz);
