@@ -14,6 +14,7 @@ import org.yaml.snakeyaml.Yaml;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.fitting.FittingModel;
+import peakaboo.controller.plotter.settings.SessionSettingsModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.filter.model.Filter;
@@ -33,7 +34,7 @@ import peakaboo.filter.plugins.noise.SpringSmoothing;
 public class SavedSettings
 {
 
-	public SettingsModel					settings;
+	public SessionSettingsModel				session;
 	public List<Integer>					badScans;
 	public List<SerializedFilter>			filters = new ArrayList<>();
 	
@@ -128,7 +129,7 @@ public class SavedSettings
 		
 		
 		
-		settings.copy( data.settings );
+		settings.session = new SessionSettingsModel(data.session);
 		
 		
 		if (dataController.hasDataSet()) {
@@ -170,7 +171,7 @@ public class SavedSettings
 		
 		
 		//other structs
-		data.settings = settings;
+		data.session = settings.session;
 
 		data.badScans = plotController.data().getDiscards().list();
 		
