@@ -99,10 +99,6 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 		return this;
 	}
 
-	@Override
-	public void read(Path file) throws Exception {
-		throw new UnsupportedOperationException("Cannot read in derived DataSource");
-	}
 
 	@Override
 	public void read(List<Path> files) throws Exception {
@@ -121,7 +117,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 	}
 
 	@Override
-	public Optional<Group> getParameters() {
+	public Optional<Group> getParameters(List<Path> paths) {
 		return Optional.empty();
 	}
 	

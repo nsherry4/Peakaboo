@@ -176,14 +176,6 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 
 
-	@Override
-	public void read(Path file) throws Exception
-	{
-		//This should never be called, since the data source this one copies from
-		//should already have been initialized
-		throw new UnsupportedOperationException("Cannot read in derived DataSource");
-	}
-
 
 	@Override
 	public void read(List<Path> files) throws Exception
@@ -241,7 +233,7 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 
 
 	@Override
-	public Optional<Group> getParameters() {
+	public Optional<Group> getParameters(List<Path> paths) {
 		return Optional.empty();
 	}
 

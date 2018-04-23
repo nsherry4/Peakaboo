@@ -96,12 +96,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		});
 		
 		
-		new FileDrop(this, new FileDrop.Listener() {
-
-			public void filesDropped(File[] files)
-			{
-				parent.loadFiles(new ArrayList<>(Arrays.asList(files)));
-			}
+		new FileDrop(this, files -> {
+			parent.loadFiles(Arrays.asList(files).stream().map(File::toPath).collect(Collectors.toList()));
 		});
 
 		

@@ -21,7 +21,7 @@ public interface DataSource
 	}
 
 	
-	Optional<Group> getParameters();
+	Optional<Group> getParameters(List<Path> paths);
 	Optional<Metadata> getMetadata();
 	Optional<DataSize> getDataSize();
 	Optional<PhysicalSize> getPhysicalSize();
@@ -32,18 +32,7 @@ public interface DataSource
 	void setInteraction(Interaction interaction);
 	
 
-	
-	
-
-
-	/**
-	 * Reads the given file as a whole dataset. This method, collectively with 
-	 * {@link DataSource#read(List)}, will be called either 0 or 1 times 
-	 * throughout the lifetime of this DataSource object.
-	 * @throws Exception
-	 */
-	void read(Path path) throws Exception;
-	
+		
 	/**
 	 * Reads the given files as a whole dataset. This method, collectively with 
 	 * {@link DataSource#read(Path)}, will be called either 0 or 1 times 

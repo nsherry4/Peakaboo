@@ -55,9 +55,6 @@ public class DelegatingDataSource implements DataSource {
 		return backer.getFileFormat();
 	}
 
-	public void read(Path file) throws Exception {
-		backer.read(file);
-	}
 
 	public void read(List<Path> files) throws Exception {
 		backer.read(files);
@@ -74,8 +71,8 @@ public class DelegatingDataSource implements DataSource {
 	}
 	
 	@Override
-	public Optional<Group> getParameters() {
-		return Optional.empty();
+	public Optional<Group> getParameters(List<Path> paths) {
+		return backer.getParameters(paths);
 	}
 	
 }

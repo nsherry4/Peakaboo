@@ -44,10 +44,6 @@ public class EmptyDataSource implements DataSource, FileFormat {
 		return Collections.emptyList();
 	}
 
-	@Override
-	public void read(Path file) throws Exception {
-		throw new UnsupportedOperationException();
-	}
 
 	@Override
 	public void read(List<Path> files) throws Exception {
@@ -102,7 +98,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	}
 
 	@Override
-	public Optional<Group> getParameters() {
+	public Optional<Group> getParameters(List<Path> paths) {
 		return Optional.empty();
 	}
 

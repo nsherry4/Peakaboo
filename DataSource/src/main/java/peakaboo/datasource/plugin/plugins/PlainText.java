@@ -66,9 +66,15 @@ public class PlainText extends AbstractDataSource
 	//==============================================
 
 	@Override
-	public void read(Path file) throws Exception
+	public void read(List<Path> files) throws Exception
 	{
-
+		
+		if (files == null) throw new UnsupportedOperationException();
+		if (files.size() == 0) throw new UnsupportedOperationException();
+		if (files.size() > 1) throw new UnsupportedOperationException();
+		
+		Path file = files.get(0);
+		
 		scandata = new SimpleScanData(file.getFileName().toString());
 		
 		Iterator<String> lines = Files.lines(file).iterator();
@@ -104,17 +110,8 @@ public class PlainText extends AbstractDataSource
 			getInteraction().notifyScanRead(1);
 			
 		}
-	}
+		
 
-	@Override
-	public void read(List<Path> files) throws Exception
-	{
-		
-		if (files == null) throw new UnsupportedOperationException();
-		if (files.size() == 0) throw new UnsupportedOperationException();
-		if (files.size() > 1) throw new UnsupportedOperationException();
-		
-		read(files.get(0));
 	}
 
 
@@ -159,7 +156,7 @@ public class PlainText extends AbstractDataSource
 	}
 
 	@Override
-	public Optional<Group> getParameters() {
+	public Optional<Group> getParameters(List<Path> paths) {
 		return Optional.empty();
 	}
 

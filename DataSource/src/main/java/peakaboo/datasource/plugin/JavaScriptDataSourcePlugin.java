@@ -94,7 +94,7 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 		return scanData;
 	}
 
-	@Override
+
 	public void read(Path file) throws Exception {
 		scanData = new SimpleScanData(file.getFileName().toString());
 		
@@ -172,7 +172,7 @@ public class JavaScriptDataSourcePlugin implements DataSourcePlugin, BoltScriptP
 	}
 	
 	@Override
-	public Optional<Group> getParameters() {
+	public Optional<Group> getParameters(List<Path> paths) {
 		return Optional.empty();
 	}
 

@@ -36,7 +36,6 @@ public class CSVDataSource extends AbstractDataSource
 		
 
 
-	@Override
 	public void read(Path file) throws Exception
 	{
 		Scanner s = null;
@@ -142,7 +141,7 @@ public class CSVDataSource extends AbstractDataSource
 	}
 
 	@Override
-	public Optional<Group> getParameters() {
+	public Optional<Group> getParameters(List<Path> paths) {
 		return Optional.empty();
 	}
 

@@ -2,6 +2,7 @@ package peakaboo.dataset;
 
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -75,15 +76,15 @@ public class StandardDataSet implements DataSet
 
 	/**
 	 * Reads the list of filenames as a {@link DataSource}
-	 * @param files the files to read as a {@link DataSource}
+	 * @param paths the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<File> files, final DataSource dataSource)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, final DataSource dataSource)
 	{
 
 		// sort the filenames alphanumerically. Files like "point2" should appear before "point10"
 		Comparator<String> comparitor = new AlphaNumericComparitor(); 
-		files.sort((a, b) -> comparitor.compare(a.toString(), b.toString()));
+		paths.sort((a, b) -> comparitor.compare(a.toString(), b.toString()));
 		
 		
 		// Create the tasklist for reading the files
@@ -128,15 +129,8 @@ public class StandardDataSet implements DataSet
 	
 
 					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
-					if (files.size() == 1)
-					{
-						dataSource.read(files.get(0).toPath());
-					}
-					else
-					{
-						dataSource.read(files.stream().map(File::toPath).collect(Collectors.toList()));
-					}
-
+					dataSource.read(paths);
+					
 	
 					
 					if (isAborted.get())

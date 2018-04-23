@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -67,6 +68,7 @@ import commonenvironment.Apps;
 import commonenvironment.Env;
 import eventful.EventfulListener;
 import eventful.EventfulTypeListener;
+import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
@@ -1229,7 +1231,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", datasetFolder, extensions, files -> {
 			if (!files.isPresent()) return;
 			datasetFolder = files.get().get(0).getParentFile();
-			loadFiles(files.get());
+			loadFiles(files.get().stream().map(File::toPath).collect(Collectors.toList()));
 		});
 	}
 
@@ -1340,17 +1342,17 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 
-	void loadFiles(List<File> filenames)
+	void loadFiles(List<Path> paths)
 	{
 
 		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
-		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(filenames.stream().map(File::toPath).collect(Collectors.toList()), candidates);
+		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
 		
 		if (formats.size() > 1)
 		{
 			DataSourceSelection selection = new DataSourceSelection();
 			DataSource dsp = selection.pickDSP(container.getWindow(), formats);
-			if (dsp != null) parameterPrompt(filenames, dsp);
+			if (dsp != null) parameterPrompt(paths, dsp);
 		}
 		else if (formats.size() == 0)
 		{
@@ -1364,21 +1366,22 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		else
 		{
-			parameterPrompt(filenames, formats.get(0));
+			parameterPrompt(paths, formats.get(0));
 		}
 		
 	}
 	
-	private void parameterPrompt(List<File> files, DataSource dsp) {
+	private void parameterPrompt(List<Path> files, DataSource dsp) {
+		Optional<Group> parameters = dsp.getParameters(files);
 		//If this data source required any additional input, get it for it now
-		if (dsp.getParameters().isPresent()) {
+		if (parameters.isPresent()) {
 			JPanel paramPanel = new JPanel(new BorderLayout());
 					
 			TitlePaintedPanel title = new TitlePaintedPanel("Additional Information Required", false);
 			title.setBorder(Spacing.bMedium());
 			
 			
-			SwingAutoPanel sap = new SwingAutoPanel(dsp.getParameters().get());
+			SwingAutoPanel sap = new SwingAutoPanel(parameters.get());
 			sap.setBorder(Spacing.bMedium());
 			
 			ButtonBox bbox = new ButtonBox();
@@ -1408,12 +1411,12 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 	}
 	
-	private void loadFiles(List<File> files, DataSource dsp)
+	private void loadFiles(List<Path> paths, DataSource dsp)
 	{
-		if (files != null)
+		if (paths != null)
 		{
 			
-			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(files, dsp);
+			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(paths, dsp);
 			
 			
 			

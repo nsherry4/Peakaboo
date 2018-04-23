@@ -343,7 +343,7 @@ public class PlotWindowController extends IActofUIController {
     private void loadFiles(List<File> files, DataSource dsp) {
         if (files != null) {
 
-            ExecutorSet<DatasetReadResult> reading = plotController.data().TASK_readFileListAsDataset(files, dsp);
+            ExecutorSet<DatasetReadResult> reading = plotController.data().TASK_readFileListAsDataset(files.stream().map(File::toPath).collect(Collectors.toList()), dsp);
 
             // ExecutorSetView view = new
             // ExecutorSetView(getNode().getScene().getWindow(), reading);
