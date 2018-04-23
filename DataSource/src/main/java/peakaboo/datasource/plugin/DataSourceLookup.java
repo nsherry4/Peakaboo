@@ -19,40 +19,22 @@ public class DataSourceLookup
 		List<DataSource> maybe_by_contents = new ArrayList<DataSource>();
 		List<DataSource> yes_by_contents = new ArrayList<DataSource>();
 		
-		if (paths.size() == 1)
+
+		for (DataSource datasource : dsps)
 		{
-			Path path = paths.get(0);
-			for (DataSource datasource : dsps)
-			{
-				try {
-					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(path);
-					if ( compat == FileFormatCompatibility.NO ) continue;
-					if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
-					if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }
-					if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yes_by_contents.add(datasource); }
-				} 
-				catch (Throwable e) {
-					PeakabooLog.get().log(Level.SEVERE, "Error while evaluating data sources", e);
-				} 
-			}
+			try {
+				FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<>(paths));
+				if ( compat == FileFormatCompatibility.NO ) continue;
+				if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
+				if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }
+				if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yes_by_contents.add(datasource); }
+			} 
+			catch (Throwable e) {
+				PeakabooLog.get().log(Level.SEVERE, "Error while evaluating data sources", e);
+			} 
 		}
-		else
-		{
-			for (DataSource datasource : dsps)
-			{
-				try {
-					FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<>(paths));
-					if ( compat == FileFormatCompatibility.NO ) continue;
-					if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
-					if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }
-					if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yes_by_contents.add(datasource); }
-				} 
-				catch (Throwable e) {
-					PeakabooLog.get().log(Level.SEVERE, "Error while evaluating data sources", e);
-				} 
-			}
 			
-		}
+		
 		if (yes_by_contents.size() > 0) { return yes_by_contents; }
 		if (maybe_by_contents.size() > 0) { return maybe_by_contents; }
 		return maybe_by_filename;

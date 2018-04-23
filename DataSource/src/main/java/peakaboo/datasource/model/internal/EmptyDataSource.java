@@ -29,10 +29,6 @@ public class EmptyDataSource implements DataSource, FileFormat {
 		return Optional.empty();
 	}
 
-	@Override
-	public FileFormatCompatibility compatibility(Path filename) {
-		return FileFormatCompatibility.NO;
-	}
 
 	@Override
 	public FileFormatCompatibility compatibility(List<Path> filenames) {

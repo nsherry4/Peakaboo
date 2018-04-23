@@ -28,7 +28,6 @@ public class SimpleFileFormat implements FileFormat {
 		return Collections.unmodifiableList(extensions);
 	}
 
-	@Override
 	public FileFormatCompatibility compatibility(Path path) {
 		boolean match = extensions.stream()
 					.map(ext -> path.toString().toLowerCase().endsWith(ext.toLowerCase()))

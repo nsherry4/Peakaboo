@@ -17,12 +17,6 @@ public interface FileFormat {
 	
 	
 	/**
-	 * Determines if this DataSource can read the given file as a whole 
-	 * dataset, and returns info on how certain it is
-	 */
-	FileFormatCompatibility compatibility(Path filename);
-
-	/**
 	 * Determines if this DataSource can read the given files as a whole 
 	 * dataset, and returns info on how certain it is
 	 */
