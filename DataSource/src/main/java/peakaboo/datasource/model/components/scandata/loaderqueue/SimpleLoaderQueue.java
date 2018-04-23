@@ -10,7 +10,12 @@ import scitypes.Spectrum;
 
 public class SimpleLoaderQueue implements LoaderQueue {
 	
-	private LinkedBlockingQueue<Optional<Spectrum>> queue;
+	class SpectrumIndex {
+		public Spectrum spectrum;
+		public int index;
+	}
+	
+	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
 	private SimpleScanData data;
 	public SimpleLoaderQueue(SimpleScanData data) {
@@ -23,9 +28,13 @@ public class SimpleLoaderQueue implements LoaderQueue {
 		thread = new Thread(() -> {
 			while(true) {
 				try {
-					Optional<Spectrum> option = queue.take();
-					if (option.isPresent()) {
-						data.add(option.get()); 
+					SpectrumIndex struct = queue.take();
+					if (struct.spectrum != null) {
+						if (struct.index == -1) {
+							data.add(struct.spectrum);
+						} else {
+							data.set(struct.index, struct.spectrum);
+						}
 					} else {
 						return;
 					}
@@ -41,20 +50,28 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	}
 	
 	@Override
+	public void submit(int index, Spectrum s) throws InterruptedException {
+		SpectrumIndex struct = new SpectrumIndex();
+		struct.index = index;
+		struct.spectrum = s;
+		queue.put(struct);
+	}
+	
+	@Override
 	public void submit(Spectrum s) throws InterruptedException {
-		if (queue != null) {
-			queue.put(Optional.of(s));
-		} else {
-			data.add(s);
-		}
+		submit(-1, s);
 	}
 	
 	
 	@Override
 	public void finish() throws InterruptedException {
 		if (queue != null) {
-			queue.put(Optional.ofNullable(null));
+			SpectrumIndex struct = new SpectrumIndex();
+			queue.put(struct);
 			thread.join();
 		}
 	}
 }
+
+
+

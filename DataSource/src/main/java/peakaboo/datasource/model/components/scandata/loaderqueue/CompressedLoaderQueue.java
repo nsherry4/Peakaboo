@@ -16,7 +16,12 @@ import scitypes.Spectrum;
 
 public class CompressedLoaderQueue implements LoaderQueue {
 
-	private LinkedBlockingQueue<Optional<Compressed<Spectrum>>> queue;
+	class SpectrumIndex {
+		public Compressed<Spectrum> spectrum;
+		public int index;
+	}
+	
+	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
 	private SimpleScanData data;
 	private ScratchEncoder<Spectrum> encoder;
@@ -32,9 +37,13 @@ public class CompressedLoaderQueue implements LoaderQueue {
 		thread = new Thread(() -> {
 			while(true) {
 				try {
-					Optional<Compressed<Spectrum>> option = queue.take();
-					if (option.isPresent()) {
-						data.add(option.get().get()); 
+					SpectrumIndex struct = queue.take();
+					if (struct.spectrum != null) {
+						if (struct.index == -1) {
+							data.add(struct.spectrum.get());
+						} else {
+							data.set(struct.index, struct.spectrum.get());
+						}
 					} else {
 						return;
 					}
@@ -49,19 +58,25 @@ public class CompressedLoaderQueue implements LoaderQueue {
 
 	}
 	
+	@Override
 	public void submit(Spectrum s) throws InterruptedException {
-		if (queue != null) {
-			queue.put(Optional.of(Compressed.create(s, this.encoder)));
-		} else {
-			data.add(s);
-		}
+		submit(-1, s);
 	}
 	
+	@Override
+	public void submit(int index, Spectrum s) throws InterruptedException {
+		SpectrumIndex struct = new SpectrumIndex();
+		struct.index = index;
+		struct.spectrum = Compressed.create(s, this.encoder);
+		queue.put(struct);
+	}
+	
+	@Override
 	public void finish() throws InterruptedException {
-		if (queue != null) {
-			queue.put(Optional.ofNullable(null));
-			thread.join();
-		}
+		queue.put(new SpectrumIndex());
+		thread.join();
 	}
 	
 }
+
+
