@@ -12,6 +12,12 @@ public class SimplePhysicalSize implements PhysicalSize {
 	private Map<Integer, Coord<Number>> points = new HashMap<>();
 	private Coord<Bounds<Number>> dimensions = null;
 	
+	private SISize units;
+	
+	public SimplePhysicalSize(SISize units) {
+		this.units = units;
+	}
+	
 	@Override
 	public Coord<Number> getPhysicalCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
 		if (points.containsKey(index)) {
@@ -45,8 +51,7 @@ public class SimplePhysicalSize implements PhysicalSize {
 
 	@Override
 	public SISize getPhysicalUnit() {
-		// TODO Auto-generated method stub
-		return null;
+		return units;
 	}
 	
 	public void putPoint(int index, Coord<Number> point) {
