@@ -14,6 +14,7 @@ import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
+//From Handbook of X-Ray Spectrometry
 public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 
 	private Parameter<Integer> reach;
@@ -25,24 +26,28 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	
 	private static Map<String, float[]> coeffLookup = new HashMap<>();
 	static {
+		
 		coeffLookup.put("2:2", new float[]{17, 12, -3});
-		coeffLookup.put("3:2", new float[]{17, 12, -3});
 		coeffLookup.put("2:3", new float[]{7, 6, 3, -2});
-		coeffLookup.put("3:3", new float[]{7, 6, 3, -2});
 		coeffLookup.put("2:4", new float[]{59, 54, 39, 14, -21});
-		coeffLookup.put("3:4", new float[]{59, 54, 39, 14, -21});
+		coeffLookup.put("2:5", new float[]{89, 84, 69, 44, 9, -36});
+		coeffLookup.put("2:6", new float[]{25, 24, 21, 16, 9, 0, -11});
+		coeffLookup.put("2:7", new float[]{167, 162, 147, 122, 87, 42, -13, -78});
+		coeffLookup.put("2:8", new float[]{43, 42, 39, 34, 27, 18, 7, -6, -21});
+		coeffLookup.put("2:9", new float[]{269, 264, 249, 224, 189, 144, 89, 24, -51, -136});
+		coeffLookup.put("2:10", new float[]{329, 324, 309, 284, 249, 204, 149, 84, 9, -76, -171});
+		coeffLookup.put("2:11", new float[]{79, 78, 75, 70, 63, 54, 43, 30, 15, -2, -21, -42});
+		coeffLookup.put("2:12", new float[]{467, 462, 447, 422, 387, 342, 287, 222, 147, 62, -33, -138, -253});
 		
 		coeffLookup.put("4:3", new float[]{131, 75, -30, 5});
-		coeffLookup.put("5:3", new float[]{131, 75, -30, 5});
 		coeffLookup.put("4:4", new float[]{179, 135, 30, -55, 15});
-		coeffLookup.put("5:4", new float[]{179, 135, 30, -55, 15});
 	}
 	
 	@Override
 	public void initialize()
 	{
 		
-		reach = new Parameter<>("Reach of Polynomial (2n+1)", new IntegerStyle(), 4, this::validate);
+		reach = new Parameter<>("Half-Window Size", new IntegerStyle(), 4, this::validate);
 		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 3, this::validate);
 		Parameter<?> sep = new Parameter<>(null, new SeparatorStyle(), 0);
 		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false, this::validate);
@@ -57,7 +62,10 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 	
 	private String getFitString() {
-		return order.getValue() + ":" + reach.getValue();
+		int p = order.getValue();
+		if (p == 3) p = 2;
+		if (p == 5) p = 4;
+		return p + ":" + reach.getValue();
 	}
 	
 	private float[] getCoeffs() {
@@ -82,10 +90,10 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 
 		// a 0th order polynomial isn't going to be terribly useful, and this algorithm starts to get a little
 		// wonky when it goes over 10
-		if (order.getValue() > 10 || order.getValue() < 1) return false;
+		if (order.getValue() > 12 || order.getValue() < 1) return false;
 
 		// polynomial of order k needs at least k+1 data points in set.
-		if (order.getValue() >= reach.getValue() * 2 + 1) return false;
+		if (order.getValue() > reach.getValue() * 2 + 1) return false;
 
 		
 		return true;
