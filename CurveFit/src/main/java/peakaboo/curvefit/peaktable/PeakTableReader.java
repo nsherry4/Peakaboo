@@ -217,7 +217,7 @@ public class PeakTableReader
 			ts.setTransition(k2);
 			ts.setTransition(k3);
 
-			//PeakTable.addSeries(ts);
+			PeakTable.addSeries(ts);
 			//table.addSeries(ts.pileup());
 
 
@@ -261,7 +261,7 @@ public class PeakTableReader
 
 			ts.setTransition(ll);
 
-			//if (e.atomicNumber() >= 23) PeakTable.addSeries(ts);
+			if (e.atomicNumber() >= 23) PeakTable.addSeries(ts);
 
 
 			
@@ -327,12 +327,21 @@ public class PeakTableReader
 	
 	
 	public static void main(String[] args) {
-		readPeakTableXraylib();
-		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Zn, TransitionSeriesType.K);
-		for (Transition t : ts.getAllTransitions()) {
-			System.out.println(t.name);
-		}
+//		readPeakTableXraylib();
+//		TransitionSeries ts = PeakTable.getTransitionSeries(Element.Zn, TransitionSeriesType.K);
+//		for (Transition t : ts.getAllTransitions()) {
+//			System.out.println(t.name);
+//		}
 		
+		
+		RangeSet kLines = new RangeSet();
+		kLines.addRange(new Range(-13, -1));
+		
+		for (int line : kLines) {
+
+				System.out.println(Xraylib.RadRate(Element.W.atomicNumber(), line));
+
+		}
 		
 	}
 
