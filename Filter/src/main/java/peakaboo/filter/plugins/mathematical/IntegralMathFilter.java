@@ -8,33 +8,33 @@ import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
-public class Derivative extends AbstractSimpleFilter
+public class IntegralMathFilter extends AbstractSimpleFilter
 {
 
-	
 	@Override
 	public String pluginVersion() {
 		return "1.0";
 	}
-	
+
 	@Override
 	public void initialize()
 	{
 
 	}
 	
+	
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
-		return deriv(data);
+		return integ(data);
 	}
-
+	
 
 	@Override
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getFilterName() + " transforms the data such that each channel represents the difference between itself and the channel before it.";
+		return "The " + getFilterName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
 	}
 
 
@@ -42,7 +42,7 @@ public class Derivative extends AbstractSimpleFilter
 	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
-		return "Derivative";
+		return "Integral";
 	}
 
 
@@ -53,6 +53,7 @@ public class Derivative extends AbstractSimpleFilter
 		return FilterType.MATHEMATICAL;
 	}
 
+	
 	@Override
 	public boolean pluginEnabled()
 	{
@@ -66,25 +67,30 @@ public class Derivative extends AbstractSimpleFilter
 		return true;
 	}
 	
-
-	/**
-	 * Calculates the derivitive (deltas) for a spectrum
-	 * @param list the data to find the deltas for
-	 * @return a list of deltas
-	 */
-	public static Spectrum deriv(ReadOnlySpectrum list)
-	{
 	
-		Spectrum result = new ISpectrum(list.size());
+	
+	/**
+	 * Calculates the integral (sums up to X) for a spectrum
+	 * @param list the data to find the integral for
+	 * @return a list of sums
+	 */
+	public static Spectrum integ(ReadOnlySpectrum list)
+	{
 		
-		result.add(list.get(0));
-		for (int i = 0; i < list.size()-1; i++)
+		Spectrum result = new ISpectrum(list.size());
+		float val = 0;
+		
+		
+		for (int i = 0; i < list.size(); i++)
 		{
-			result.set(i, list.get(i+1) - list.get(i));
+			val += list.get(i);
+			result.set(i,  val );
 		}
-			
+		
 		return result;
 		
 	}
+
+
 
 }

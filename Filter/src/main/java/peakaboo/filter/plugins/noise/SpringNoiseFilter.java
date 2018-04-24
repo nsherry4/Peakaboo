@@ -6,7 +6,7 @@ import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
-import peakaboo.filter.plugins.mathematical.Derivative;
+import peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -19,14 +19,14 @@ import scitypes.Spectrum;
  */
 
 
-public final class SpringSmoothing extends AbstractSimpleFilter
+public final class SpringNoiseFilter extends AbstractSimpleFilter
 {
 
 	private Parameter<Integer> iterations;
 	private Parameter<Float> multiplier;
 	private Parameter<Float> falloff;
 
-	public SpringSmoothing()
+	public SpringNoiseFilter()
 	{
 		super();
 	}
@@ -151,7 +151,7 @@ public final class SpringSmoothing extends AbstractSimpleFilter
 	{
 
 	
-		Spectrum deltas = Derivative.deriv(data);
+		Spectrum deltas = DerivativeMathFilter.deriv(data);
 		
 		Spectrum forces = new ISpectrum(data.size());
 		

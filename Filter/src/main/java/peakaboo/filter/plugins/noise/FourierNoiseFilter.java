@@ -26,7 +26,7 @@ import scitypes.Spectrum;
  */
 
 
-public final class FourierLowPass extends AbstractSimpleFilter
+public final class FourierNoiseFilter extends AbstractSimpleFilter
 {
 	
 	private Parameter<Float> startWavelength;
@@ -34,7 +34,7 @@ public final class FourierLowPass extends AbstractSimpleFilter
 	private SelectionParameter<FFT.FilterStyle> rolloff;
 
 
-	public FourierLowPass()
+	public FourierNoiseFilter()
 	{
 		super();
 	}

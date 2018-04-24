@@ -17,14 +17,14 @@ import scitypes.SpectrumCalculations;
  */
 
 
-public final class PolynomialRemoval extends AbstractBackgroundFilter
+public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter
 {
 
 	private Parameter<Integer> width;
 	private Parameter<Integer> power;
 
 
-	public PolynomialRemoval()
+	public PolynomialBackgroundFilter()
 	{
 		super();
 	}

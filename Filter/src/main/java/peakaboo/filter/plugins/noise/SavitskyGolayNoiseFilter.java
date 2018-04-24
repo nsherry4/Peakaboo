@@ -14,7 +14,7 @@ import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
-public class ConvolvingSavitskyGolay extends AbstractSimpleFilter {
+public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 
 	private Parameter<Integer> reach;
 	private Parameter<Integer> order;

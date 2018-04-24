@@ -4,7 +4,7 @@ import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
 import scitypes.ReadOnlySpectrum;
 
-public class Identity extends AbstractSimpleFilter
+public class IdentityFilter extends AbstractSimpleFilter
 {
 
 	@Override

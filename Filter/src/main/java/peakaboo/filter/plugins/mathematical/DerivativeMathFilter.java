@@ -8,33 +8,33 @@ import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 
-public class Integrate extends AbstractSimpleFilter
+public class DerivativeMathFilter extends AbstractSimpleFilter
 {
 
+	
 	@Override
 	public String pluginVersion() {
 		return "1.0";
 	}
-
+	
 	@Override
 	public void initialize()
 	{
 
 	}
 	
-	
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
-		return integ(data);
+		return deriv(data);
 	}
-	
+
 
 	@Override
 	public String getFilterDescription()
 	{
 		// TODO Auto-generated method stub
-		return "The " + getFilterName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
+		return "The " + getFilterName() + " transforms the data such that each channel represents the difference between itself and the channel before it.";
 	}
 
 
@@ -42,7 +42,7 @@ public class Integrate extends AbstractSimpleFilter
 	public String getFilterName()
 	{
 		// TODO Auto-generated method stub
-		return "Integral";
+		return "Derivative";
 	}
 
 
@@ -53,7 +53,6 @@ public class Integrate extends AbstractSimpleFilter
 		return FilterType.MATHEMATICAL;
 	}
 
-	
 	@Override
 	public boolean pluginEnabled()
 	{
@@ -67,30 +66,25 @@ public class Integrate extends AbstractSimpleFilter
 		return true;
 	}
 	
-	
-	
+
 	/**
-	 * Calculates the integral (sums up to X) for a spectrum
-	 * @param list the data to find the integral for
-	 * @return a list of sums
+	 * Calculates the derivitive (deltas) for a spectrum
+	 * @param list the data to find the deltas for
+	 * @return a list of deltas
 	 */
-	public static Spectrum integ(ReadOnlySpectrum list)
+	public static Spectrum deriv(ReadOnlySpectrum list)
 	{
-		
+	
 		Spectrum result = new ISpectrum(list.size());
-		float val = 0;
 		
-		
-		for (int i = 0; i < list.size(); i++)
+		result.add(list.get(0));
+		for (int i = 0; i < list.size()-1; i++)
 		{
-			val += list.get(i);
-			result.set(i,  val );
+			result.set(i, list.get(i+1) - list.get(i));
 		}
-		
+			
 		return result;
 		
 	}
-
-
 
 }

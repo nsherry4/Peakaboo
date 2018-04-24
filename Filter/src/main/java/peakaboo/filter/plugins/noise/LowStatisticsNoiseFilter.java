@@ -9,7 +9,7 @@ import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
-public class LowStatisticsDigitalFilter extends AbstractSimpleFilter {
+public class LowStatisticsNoiseFilter extends AbstractSimpleFilter {
 
 	Parameter<Integer> pWindowSize;
 	Parameter<Float> pMaxSignal, pCentrepointFactor, pMaxSlope;

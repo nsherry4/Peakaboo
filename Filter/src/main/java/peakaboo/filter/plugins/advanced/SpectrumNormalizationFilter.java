@@ -12,7 +12,7 @@ import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class SpectrumNormalization extends AbstractSimpleFilter
+public class SpectrumNormalizationFilter extends AbstractSimpleFilter
 {
 	
 	private Parameter<Integer> pStartChannel;

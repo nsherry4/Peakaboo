@@ -9,7 +9,7 @@ import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
-public class Interpolation extends AbstractSimpleFilter
+public class InterpolationFilter extends AbstractSimpleFilter
 {
 	
 	

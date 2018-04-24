@@ -18,14 +18,14 @@ import scitypes.SpectrumCalculations;
  */
 
 
-public final class LinearTrimRemoval extends AbstractBackgroundFilter
+public final class LinearTrimBackgroundFilter extends AbstractBackgroundFilter
 {
 
 	private Parameter<Integer> width;
 	private Parameter<Integer> iterations;
 
 
-	public LinearTrimRemoval()
+	public LinearTrimBackgroundFilter()
 	{
 		super();
 	}

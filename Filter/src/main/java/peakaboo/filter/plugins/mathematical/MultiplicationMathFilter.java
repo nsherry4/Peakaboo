@@ -10,7 +10,7 @@ import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
 
 
-public class Multiply extends AbstractSimpleFilter
+public class MultiplicationMathFilter extends AbstractSimpleFilter
 {
 
 	private Parameter<Float> amount;

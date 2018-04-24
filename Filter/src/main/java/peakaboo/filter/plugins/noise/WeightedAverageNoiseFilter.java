@@ -8,12 +8,12 @@ import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
-public class WeightedAveraging extends AbstractSimpleFilter {
+public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 
 	private Parameter<Integer> reach;
 
 
-	public WeightedAveraging()
+	public WeightedAverageNoiseFilter()
 	{
 		super();
 

@@ -18,7 +18,7 @@ import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;
-import peakaboo.filter.plugins.noise.SpringSmoothing;
+import peakaboo.filter.plugins.noise.SpringNoiseFilter;
 
 
 
@@ -76,7 +76,7 @@ public class SavedSettings
 	public static void main(String[] args) {
 		
 		Yaml y = new Yaml();
-		Filter filter = new SpringSmoothing();
+		Filter filter = new SpringNoiseFilter();
 		SerializedFilter serial = new SerializedFilter(filter);
 			
 		y.dump(serial);

@@ -17,14 +17,14 @@ import scitypes.SpectrumCalculations;
  * @author Nathaniel Sherry, 2009
  */
 
-public final class BruknerRemoval extends AbstractBackgroundFilter
+public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 {
 
 	private Parameter<Integer> width;
 	private Parameter<Integer> iterations;
 
 
-	public BruknerRemoval()
+	public BruknerBackgroundFilter()
 	{
 		super();
 	}

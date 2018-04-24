@@ -14,24 +14,24 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.filter.plugins.JavaScriptFilterPlugin;
-import peakaboo.filter.plugins.advanced.Identity;
-import peakaboo.filter.plugins.advanced.Interpolation;
-import peakaboo.filter.plugins.advanced.SpectrumNormalization;
+import peakaboo.filter.plugins.advanced.IdentityFilter;
+import peakaboo.filter.plugins.advanced.InterpolationFilter;
+import peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
 import peakaboo.filter.plugins.advanced.SubFilter;
-import peakaboo.filter.plugins.background.BruknerRemoval;
-import peakaboo.filter.plugins.background.LinearTrimRemoval;
-import peakaboo.filter.plugins.background.PolynomialRemoval;
-import peakaboo.filter.plugins.mathematical.Addition;
-import peakaboo.filter.plugins.mathematical.Derivative;
-import peakaboo.filter.plugins.mathematical.Integrate;
-import peakaboo.filter.plugins.mathematical.Multiply;
-import peakaboo.filter.plugins.mathematical.Subtraction;
-import peakaboo.filter.plugins.noise.ConvolvingSavitskyGolay;
-import peakaboo.filter.plugins.noise.FourierLowPass;
-import peakaboo.filter.plugins.noise.LowStatisticsDigitalFilter;
-import peakaboo.filter.plugins.noise.SpringSmoothing;
+import peakaboo.filter.plugins.background.BruknerBackgroundFilter;
+import peakaboo.filter.plugins.background.LinearTrimBackgroundFilter;
+import peakaboo.filter.plugins.background.PolynomialBackgroundFilter;
+import peakaboo.filter.plugins.mathematical.AdditionMathFilter;
+import peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
+import peakaboo.filter.plugins.mathematical.IntegralMathFilter;
+import peakaboo.filter.plugins.mathematical.MultiplicationMathFilter;
+import peakaboo.filter.plugins.mathematical.SubtractionMathFilter;
+import peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
+import peakaboo.filter.plugins.noise.FourierNoiseFilter;
+import peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
+import peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import peakaboo.filter.plugins.noise.WaveletNoiseFilter;
-import peakaboo.filter.plugins.noise.WeightedAveraging;
+import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
 
 public class FilterLoader
@@ -62,27 +62,27 @@ public class FilterLoader
 		
 
 		//register built-in plugins
-		newPluginLoader.registerPlugin(Identity.class);
+		newPluginLoader.registerPlugin(IdentityFilter.class);
 		newPluginLoader.registerPlugin(SubFilter.class);
-		newPluginLoader.registerPlugin(SpectrumNormalization.class);
+		newPluginLoader.registerPlugin(SpectrumNormalizationFilter.class);
 		
-		newPluginLoader.registerPlugin(BruknerRemoval.class);
-		newPluginLoader.registerPlugin(LinearTrimRemoval.class);
-		newPluginLoader.registerPlugin(PolynomialRemoval.class);
+		newPluginLoader.registerPlugin(BruknerBackgroundFilter.class);
+		newPluginLoader.registerPlugin(LinearTrimBackgroundFilter.class);
+		newPluginLoader.registerPlugin(PolynomialBackgroundFilter.class);
 		
-		newPluginLoader.registerPlugin(Addition.class);
-		newPluginLoader.registerPlugin(Derivative.class);
-		newPluginLoader.registerPlugin(Integrate.class);
-		newPluginLoader.registerPlugin(Multiply.class);
-		newPluginLoader.registerPlugin(Subtraction.class);
+		newPluginLoader.registerPlugin(AdditionMathFilter.class);
+		newPluginLoader.registerPlugin(DerivativeMathFilter.class);
+		newPluginLoader.registerPlugin(IntegralMathFilter.class);
+		newPluginLoader.registerPlugin(MultiplicationMathFilter.class);
+		newPluginLoader.registerPlugin(SubtractionMathFilter.class);
 		
-		newPluginLoader.registerPlugin(FourierLowPass.class);
-		newPluginLoader.registerPlugin(WeightedAveraging.class);
-		newPluginLoader.registerPlugin(ConvolvingSavitskyGolay.class);
-		newPluginLoader.registerPlugin(SpringSmoothing.class);
+		newPluginLoader.registerPlugin(FourierNoiseFilter.class);
+		newPluginLoader.registerPlugin(WeightedAverageNoiseFilter.class);
+		newPluginLoader.registerPlugin(SavitskyGolayNoiseFilter.class);
+		newPluginLoader.registerPlugin(SpringNoiseFilter.class);
 		newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
-		newPluginLoader.registerPlugin(Interpolation.class);
-		newPluginLoader.registerPlugin(LowStatisticsDigitalFilter.class);
+		newPluginLoader.registerPlugin(InterpolationFilter.class);
+		newPluginLoader.registerPlugin(LowStatisticsNoiseFilter.class);
 		
 		
 		
