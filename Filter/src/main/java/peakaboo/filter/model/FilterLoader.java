@@ -28,6 +28,7 @@ import peakaboo.filter.plugins.mathematical.Multiply;
 import peakaboo.filter.plugins.mathematical.Subtraction;
 import peakaboo.filter.plugins.noise.ConvolvingSavitskyGolay;
 import peakaboo.filter.plugins.noise.FourierLowPass;
+import peakaboo.filter.plugins.noise.LowStatisticsDigitalFilter;
 import peakaboo.filter.plugins.noise.SpringSmoothing;
 import peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import peakaboo.filter.plugins.noise.WeightedAveraging;
@@ -81,6 +82,7 @@ public class FilterLoader
 		newPluginLoader.registerPlugin(SpringSmoothing.class);
 		newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
 		newPluginLoader.registerPlugin(Interpolation.class);
+		newPluginLoader.registerPlugin(LowStatisticsDigitalFilter.class);
 		
 		
 		
