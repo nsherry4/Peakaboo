@@ -15,7 +15,6 @@ import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.filter.plugins.JavaScriptFilterPlugin;
 import peakaboo.filter.plugins.advanced.IdentityFilter;
-import peakaboo.filter.plugins.advanced.InterpolationFilter;
 import peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
 import peakaboo.filter.plugins.advanced.SubFilter;
 import peakaboo.filter.plugins.background.BruknerBackgroundFilter;
@@ -81,7 +80,6 @@ public class FilterLoader
 		newPluginLoader.registerPlugin(SavitskyGolayNoiseFilter.class);
 		newPluginLoader.registerPlugin(SpringNoiseFilter.class);
 		newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
-		newPluginLoader.registerPlugin(InterpolationFilter.class);
 		newPluginLoader.registerPlugin(LowStatisticsNoiseFilter.class);
 		
 		
