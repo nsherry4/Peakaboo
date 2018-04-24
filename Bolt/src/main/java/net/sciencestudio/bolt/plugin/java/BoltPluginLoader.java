@@ -190,9 +190,9 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 			{
 				registerPlugin((Class<? extends T>) t.getClass(), url);
 			}
-		} catch (ServiceConfigurationError e) {
+		} catch (ServiceConfigurationError | NoClassDefFoundError e) {
 			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
-		}
+		} 
 	}
 	
 	public void register()
