@@ -20,6 +20,7 @@ import peakaboo.filter.plugins.advanced.SubFilter;
 import peakaboo.filter.plugins.background.BruknerBackgroundFilter;
 import peakaboo.filter.plugins.background.LinearTrimBackgroundFilter;
 import peakaboo.filter.plugins.background.PolynomialBackgroundFilter;
+import peakaboo.filter.plugins.background.SquareSnipBackgroundFilter;
 import peakaboo.filter.plugins.mathematical.AdditionMathFilter;
 import peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
 import peakaboo.filter.plugins.mathematical.IntegralMathFilter;
@@ -68,6 +69,7 @@ public class FilterLoader
 		newPluginLoader.registerPlugin(BruknerBackgroundFilter.class);
 		newPluginLoader.registerPlugin(LinearTrimBackgroundFilter.class);
 		newPluginLoader.registerPlugin(PolynomialBackgroundFilter.class);
+		newPluginLoader.registerPlugin(SquareSnipBackgroundFilter.class);
 		
 		newPluginLoader.registerPlugin(AdditionMathFilter.class);
 		newPluginLoader.registerPlugin(DerivativeMathFilter.class);
