@@ -207,6 +207,7 @@ public class StandardDataSet implements DataSet
 		//go over each scan, calculating the average, max10th and max value
 		ReadOnlySpectrum current;
 		int updateInterval = Math.min(Math.max(ds.getScanData().scanCount()/100, 20), 1000);
+		int gcInterval = 5000;
 		
 		analysis = new DataSourceAnalysis(this, ds);
 		for (int i = 0; i < ds.getScanData().scanCount(); i++)
@@ -222,6 +223,8 @@ public class StandardDataSet implements DataSet
 			if (i % updateInterval == 0) {
 				if (applying != null) applying.workUnitCompleted(updateInterval);
 				if (isAborted != null && isAborted.get()) return;
+			}
+			if (i % gcInterval == 0) {
 				System.gc();
 			}
 			
