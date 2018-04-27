@@ -1,6 +1,7 @@
 package peakaboo.curvefit.transition;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import peakaboo.curvefit.peaktable.Element;
@@ -15,60 +16,43 @@ import peakaboo.curvefit.peaktable.PeakTable;
 
 public enum EscapePeakType
 {
-	NONE,
-	SILICON,
-	GERMANIUM,
+	NONE {
+		public boolean hasOffset() { return false; }
+		public List<Transition> offset() { return Collections.emptyList(); }
+		public float energyGap() { return SILICON.energyGap(); }
+		public float fanoFactor() { return SILICON.fanoFactor(); }
+		public String pretty() { return "None"; }
+	},
+	
+	SILICON {
+		public boolean hasOffset() { return true; }
+		public List<Transition> offset() { return PeakTable.getTransitionSeries(Element.Si, TransitionSeriesType.K).getAllTransitions(); }
+		public float energyGap() { return 0.00358f; }
+		public float fanoFactor() { return 0.144f; }
+		public String pretty() { return "Silicon"; }
+	},
+	
+	GERMANIUM {
+		public boolean hasOffset() { return true; }
+		public List<Transition> offset() { return PeakTable.getTransitionSeries(Element.Ge, TransitionSeriesType.K).getAllTransitions(); }
+		public float energyGap() { return 0.0029f; }
+		public float fanoFactor() { return 0.13f; }
+		public String pretty() { return "Germanium"; }
+	},
 
 	
 	;
 	
-	/**
-	 * returns true if this kind of {@link EscapePeakType} contains any {@link Transition}s
-	 * @return true if this {@link EscapePeakType} is non-empty
-	 */
-	public boolean hasOffset() {
-		switch (this) {
-		case NONE: return false;
-		case SILICON: return true;
-		case GERMANIUM: return true;
-		}
-		return true;
-	}
+
 	
-	
-	/**
-	 * Returns a list of {@link Transition}s representing this escape peak
-	 * @return a list of {@link Transition}s
-	 */
-	public List<Transition> offset(){
-		switch (this) {
-		case SILICON: return PeakTable.getTransitionSeries(Element.Si, TransitionSeriesType.K).getAllTransitions();
-		case GERMANIUM: return PeakTable.getTransitionSeries(Element.Ge, TransitionSeriesType.K).getAllTransitions();
-		}
-		return new ArrayList<Transition>(); 
-	}
-	
-	
-	public float energyGap() {
-		switch (this) {
-		case NONE: //have to assume something... 
-		case SILICON: return 0.00358f;
-		case GERMANIUM: return 0.0029f;
-		}
-		return SILICON.energyGap();
-	}
-	
+
+
 	
 	/**
 	 * Returns a pretty-printed description of this {@link EscapePeakType}
 	 * @return a {@link String} describing this {@link EscapePeakType}
 	 */
-	public String show() {
-		switch (this) {
-		case NONE: return "None";
-		case SILICON: return "Silicon";
-		case GERMANIUM: return "Germanium";
-		}
+	public String pretty() {
 		return this.name().toLowerCase(); 
 	}
 	
@@ -96,12 +80,41 @@ public enum EscapePeakType
 	}
 
 
-	public float fanoFactor() {
-		switch (this) {
-		case NONE:
-		case SILICON: return 0.144f;
-		case GERMANIUM: return 0.13f;
-		}
-		return SILICON.fanoFactor();
+
+	
+	
+	/**
+	 * returns true if this kind of {@link EscapePeakType} contains any {@link Transition}s
+	 * @return true if this {@link EscapePeakType} is non-empty
+	 */
+	public boolean hasOffset() {
+		throw new UnsupportedOperationException();
 	}
+	
+	/**
+	 * Returns a list of {@link Transition}s representing this escape peak
+	 * @return a list of {@link Transition}s
+	 */
+	public List<Transition> offset(){
+		throw new UnsupportedOperationException();
+	}
+	
+	
+	/**
+	 * Energy gap is the energy required to produce an electron-hole pair in the 
+	 * element, and is used in the calculation of peak widths.
+	 */
+	public float energyGap() {
+		throw new UnsupportedOperationException();
+	}
+	
+	
+	/**
+	 * This is used in the calculation of peak widths. 
+	 * @return
+	 */
+	public float fanoFactor() {
+		throw new UnsupportedOperationException();
+	}
+	
 }

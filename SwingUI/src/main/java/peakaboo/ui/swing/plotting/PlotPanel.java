@@ -998,7 +998,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		for (EscapePeakType t : EscapePeakType.values())
 		{
-			final JRadioButtonMenuItem escapeItem = new JRadioButtonMenuItem(t.show());
+			final JRadioButtonMenuItem escapeItem = new JRadioButtonMenuItem(t.pretty());
 			escapePeakGroup.add(escapeItem);
 			escapePeaks.add(escapeItem);
 			if (t == EscapePeakType.SILICON) escapeItem.setSelected(true);
