@@ -15,10 +15,7 @@ public class FittingParameters {
 
 	private FittingSet fits;
 	
-	//private float fwhmBase = 0.12245064f;
-	//private float fwhmMult = 0.00470964f;
-	private float fwhmBase = 0.055f;
-	private float fwhmMult = 0.013f;
+	private float fwhmBase = 0.080f;
 	private	EnergyCalibration	calibration = new EnergyCalibration(0, 0, 0);
 	private EscapePeakType		escapeType = EscapePeakType.NONE;
 	private Class<? extends FittingFunction> fittingFunction = PseudoVoigtFittingFunction.class;
@@ -34,7 +31,6 @@ public class FittingParameters {
 	public static FittingParameters copy(FittingParameters copyFrom) {
 		FittingParameters param = new FittingParameters();
 		param.fwhmBase = copyFrom.fwhmBase;
-		param.fwhmMult = copyFrom.fwhmMult;
 		param.fits = null;
 		param.escapeType = copyFrom.escapeType;
 		param.fittingFunction = copyFrom.fittingFunction;
@@ -80,8 +76,26 @@ public class FittingParameters {
 	 * calculates the FWHM value which should be used for this Transition.
 	 */
 	public float getFWHM(Transition t) {
-		//y = mx+b
-		return (fwhmMult * t.energyValue) + fwhmBase;
+		//See Handbook of X-Ray Spectrometry rev2 p282
+		
+		//Energy required to create electron-hole pair in detector material
+		float energyGap = getEscapeType().energyGap();
+		float fano = getEscapeType().fanoFactor();
+		
+		float noise = fwhmBase;
+		
+		float energy = t.energyValue;
+		float noiseComponent = (float) (Math.pow(noise / 2.3548, 2));
+		float energyComponent = (float) (energyGap*fano*energy);
+			
+		float sigmaSquared = noiseComponent + energyComponent;
+		float sigma = (float) Math.sqrt(sigmaSquared);
+		
+		//gaussian sigma to ev
+		float fwhm = sigma * 2.35482f;
+		
+		return fwhm;
+		
 	}
 
 	public float getFWHMBase() {
@@ -93,15 +107,6 @@ public class FittingParameters {
 		invalidate();
 	}
 
-	
-	public float getFWHMMult() {
-		return fwhmMult;
-	}
-	
-	public void setFWMHMult(float mult) {
-		this.fwhmMult = mult;
-		invalidate();
-	}
 	
 	public EnergyCalibration getCalibration() {
 		return calibration;

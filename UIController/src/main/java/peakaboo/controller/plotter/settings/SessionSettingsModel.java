@@ -29,7 +29,7 @@ public class SessionSettingsModel {
 		viewTransform = ViewTransform.LOG;
 		minEnergy = 0.0f;
 		maxEnergy = 0.0f;
-		fwhmBase = 0.055f;
+		fwhmBase = 0.080f;
 		fwhmMult = 0.013f;
 		fittingFunctionName = PseudoVoigtFittingFunction.class.getName();
 		

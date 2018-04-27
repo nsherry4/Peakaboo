@@ -48,6 +48,17 @@ public enum EscapePeakType
 		return new ArrayList<Transition>(); 
 	}
 	
+	
+	public float energyGap() {
+		switch (this) {
+		case NONE: //have to assume something... 
+		case SILICON: return 0.00358f;
+		case GERMANIUM: return 0.0029f;
+		}
+		return SILICON.energyGap();
+	}
+	
+	
 	/**
 	 * Returns a pretty-printed description of this {@link EscapePeakType}
 	 * @return a {@link String} describing this {@link EscapePeakType}
@@ -82,5 +93,15 @@ public enum EscapePeakType
 		 */
 
 		return 543268.59f * (float) Math.pow((e.ordinal() + 1), -4.48) / 100.0f;
+	}
+
+
+	public float fanoFactor() {
+		switch (this) {
+		case NONE:
+		case SILICON: return 0.144f;
+		case GERMANIUM: return 0.13f;
+		}
+		return SILICON.fanoFactor();
 	}
 }

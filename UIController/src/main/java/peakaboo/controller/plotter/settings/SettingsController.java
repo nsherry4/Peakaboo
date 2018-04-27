@@ -308,10 +308,11 @@ public class SettingsController extends Eventful
 		settingsModel.session.fwhmBase = base;
 	}
 	
-	public void setFWHMMult(float mult) {
-		plot.fitting().setFWHMMult(mult);	
-		settingsModel.session.fwhmMult = mult;
+	public float getFWHMBase() {
+		return plot.fitting().getFWHMBase();
 	}
+
+	
 
 	public void setFittingFunction(Class<? extends FittingFunction> cls) {
 		plot.fitting().setFittingFunction(cls);
@@ -360,6 +361,7 @@ public class SettingsController extends Eventful
 			PeakabooLog.get().log(Level.WARNING, "Could not save persistent settings", e);
 		}
 	}
+
 
 
 	

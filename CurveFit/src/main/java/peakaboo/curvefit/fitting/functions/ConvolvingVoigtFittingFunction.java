@@ -53,7 +53,7 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 			sum += kernelValue * signalValue;
 			normalizer += kernelValue;
 			
-			deltaEnergy += 0.001;
+			deltaEnergy += 0.0005;
 			
 			
 		}

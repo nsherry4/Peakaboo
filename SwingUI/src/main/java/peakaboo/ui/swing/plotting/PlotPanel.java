@@ -652,7 +652,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 
 		JSpinner fwhmBase = new JSpinner();
-		fwhmBase.setModel(new SpinnerNumberModel(controller.fitting().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
+		fwhmBase.setModel(new SpinnerNumberModel(controller.settings().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
 		fwhmBase.getEditor().setPreferredSize(new Dimension(72, (int)fwhmBase.getPreferredSize().getHeight()));
 		fwhmBase.getEditor().setOpaque(false);
 		fwhmBase.addChangeListener(e -> {
@@ -661,22 +661,8 @@ public class PlotPanel extends TabbedInterfacePanel
 			controller.settings().setFWHMBase(base);
 			
 		});
-		peakwidth.addSetting(fwhmBase, "FWHM Base (keV)");
-
-		
-		JSpinner fwhmMult = new JSpinner();
-		fwhmMult.setModel(new SpinnerNumberModel(controller.fitting().getFWHMMult()*1000, 0.0, 1000.0, 0.1));
-		fwhmMult.getEditor().setPreferredSize(new Dimension(72, (int)fwhmMult.getPreferredSize().getHeight()));
-		fwhmMult.getEditor().setOpaque(false);
-		fwhmMult.addChangeListener(e -> {
-			
-			float mult = ((Number) fwhmMult.getValue()).floatValue()/1000;
-			controller.settings().setFWHMMult(mult);			
-			
-		});
-		peakwidth.addSetting(fwhmMult, "FWHM Scale (ev)");
-		
-		
+		peakwidth.addSetting(fwhmBase, "FWHM Noise (eV)");
+	
 		
 		
 		ButtonGroup functionGroup = new ButtonGroup();

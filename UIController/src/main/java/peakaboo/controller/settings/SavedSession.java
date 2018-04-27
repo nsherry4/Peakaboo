@@ -120,7 +120,6 @@ public class SavedSession {
 			fittingModel.proposals.getFittingParameters().setEscapeType(settingsModel.session.escape);
 			
 			fittingModel.selections.getFittingParameters().setFWMHBase(settingsModel.session.fwhmBase);
-			fittingModel.proposals.getFittingParameters().setFWMHMult(settingsModel.session.fwhmMult);
 			
 			Class<? extends FittingFunction> fittingFunctionClass ;
 			try {

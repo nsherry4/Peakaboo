@@ -296,17 +296,6 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Change Peak Shape");
 	}
 
-	public float getFWHMMult() {
-		return fittingModel.selections.getFittingParameters().getFWHMMult();
-	}
-	
-	public void setFWHMMult(float mult) {
-		fittingModel.selections.getFittingParameters().setFWMHMult(mult);
-		fittingModel.proposals.getFittingParameters().setFWMHMult(mult);
-		fittingDataInvalidated();
-		setUndoPoint("Change Peak Shape");
-	}
-
 	public void setFittingFunction(Class<? extends FittingFunction> cls) {
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
