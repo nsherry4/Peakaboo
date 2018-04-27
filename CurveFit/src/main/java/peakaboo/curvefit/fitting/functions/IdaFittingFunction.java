@@ -14,8 +14,13 @@ public class IdaFittingFunction implements FittingFunction {
 
 	@Override
 	public float forEnergy(float energy) {
+		return forEnergyAbsolute(energy) * height;
+	}
+	
+	@Override
+	public float forEnergyAbsolute(float energy) {
 		float x = energy - mean;
-		return height * (float)Math.pow(sech(x/gamma), 2);
+		return (float)Math.pow(sech(x/gamma), 2);
 	}
 
 	private float sech(float value) {

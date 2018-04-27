@@ -26,5 +26,10 @@ public interface FittingFunction {
 	 */
 	float forEnergy(float energy);
 
+	/**
+	 * Similar to forEnergy, but the value returned is not scaled
+	 * to the relative intensity of the transition it represents.
+	 */
+	float forEnergyAbsolute(float energy);
 	
 }

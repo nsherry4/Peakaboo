@@ -39,13 +39,15 @@ public class GaussianFittingFunction implements FittingFunction {
 		return context.getFWHM()/2.35482f;
 	}
 	
+	@Override
 	public float forEnergy(float energy)
 	{
+		return forEnergyAbsolute(energy) * height;
+	}
+	
+	public float forEnergyAbsolute(float energy) {
 		double exp = - (Math.pow((energy - mean), 2)  *  OneOverTwoSigmaSquared);
-		
-		return (float)(base * Math.exp(exp)) * height;
-		
-				
+		return (float)(base * Math.exp(exp));
 	}
 
 

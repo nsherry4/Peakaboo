@@ -16,12 +16,14 @@ public class LorentzFittingFunction implements FittingFunction {
 	private float gamma;
 	private float gammaSquared;
 	private float mean;
-	private double OneOverPi = 1f / Math.PI;
+	private double OneOverPiGamma;
 	
 	public void initialize(FittingContext context) {
 		this.context = context;
 		this.gamma = calcGamma();
 		this.gammaSquared = gamma*gamma;
+		this.OneOverPiGamma = 1f / (Math.PI * gamma);
+		
 		this.mean = context.getEnergy();
 	}
 	
@@ -34,23 +36,27 @@ public class LorentzFittingFunction implements FittingFunction {
 		return gamma;
 	}
 
-	public float forEnergy(float point) {
+	@Override
+	public float forEnergy(float energy) {
+		return forEnergyAbsolute(energy) * context.getHeight();
+	}
+	
+	public float forEnergyAbsolute(float energy) {
 		
 		double value = 0.0;
 		
 		value = 
 		(
-			                         gamma
+				                 gammaSquared
 			/*----------------------------------------------------*/ / 
-			      (Math.pow((point - mean), 2) + gammaSquared)
+			      (Math.pow((energy - mean), 2) + gammaSquared)
 			
 		) * (
-			OneOverPi
+			OneOverPiGamma
 		);
 		
 		
-		
-		return (float)(value * context.getHeight());
+		return (float)value;
 	}
 
 }
