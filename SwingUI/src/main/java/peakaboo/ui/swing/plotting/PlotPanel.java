@@ -1819,6 +1819,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		StreamExecutorSet<EnergyCalibration> energyTask = AutoEnergyCalibration.propose(
 				controller.data().getDataSet().getAnalysis().averagePlot(), 
 				controller.fitting().getVisibleTransitionSeries(), 
+				controller.fitting(),
 				controller.data().getDataSet().getAnalysis().channelsPerScan());
 		
 		

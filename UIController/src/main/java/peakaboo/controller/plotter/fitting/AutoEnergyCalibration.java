@@ -9,9 +9,7 @@ import java.util.stream.Collectors;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.curve.scoring.FastSignalMatchScorer;
 import peakaboo.curvefit.curve.scoring.Scorer;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -103,7 +101,13 @@ public class AutoEnergyCalibration {
 	/**
 	 * Uses a slower algorithm to choose the best calibration from the rough options
 	 */
-	private static StreamExecutor<EnergyCalibration> chooseFromRoughOptions(Supplier<List<EnergyCalibration>> energies, ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, int dataWidth) {
+	private static StreamExecutor<EnergyCalibration> chooseFromRoughOptions(
+			Supplier<List<EnergyCalibration>> energies, 
+			ReadOnlySpectrum spectrum, 
+			List<TransitionSeries> tsList,
+			FittingController controller,
+			int dataWidth
+		) {
 		
 		StreamExecutor<EnergyCalibration> scorer = new StreamExecutor<>("Evaluating Candidates", 5);
 		scorer.setTask(energies, stream -> {
@@ -116,7 +120,7 @@ public class AutoEnergyCalibration {
 				
 				FittingResultSet results;
 				fits.get().getFittingParameters().setCalibration(calibration);
-				results = new GreedyFittingSolver().solve(spectrum, fits.get(), new UnderCurveFitter());
+				results = controller.getFittingSolver().solve(spectrum, fits.get(), controller.getCurveFitter());
 				return scoreFitGood(results, spectrum);
 				
 			}).collect(Collectors.toList());
@@ -135,7 +139,7 @@ public class AutoEnergyCalibration {
 			}
 
 			EnergyCalibration best = energies.get().get(bestIndex);
-			return fineTune(best, spectrum, tsList, 0.1f);
+			return fineTune(best, spectrum, tsList, controller, 0.1f);
 			
 		});
 		
@@ -183,7 +187,13 @@ public class AutoEnergyCalibration {
 	}
 	
 	
-	private static EnergyCalibration fineTune(EnergyCalibration calibration, ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, float window) {
+	private static EnergyCalibration fineTune(
+			EnergyCalibration calibration, 
+			ReadOnlySpectrum spectrum, 
+			List<TransitionSeries> tsList, 
+			FittingController controller,
+			float window
+		) {
 		
 		//build a new model for experimenting with
 		FittingSet fits = fitModel(tsList, calibration.getDataWidth());
@@ -204,7 +214,7 @@ public class AutoEnergyCalibration {
 				if (max <= min) continue;
 				
 				fits.getFittingParameters().setCalibration(min, max, calibration.getDataWidth());
-				FittingResultSet results = new GreedyFittingSolver().solve(spectrum, fits, new UnderCurveFitter());
+				FittingResultSet results = controller.getFittingSolver().solve(spectrum, fits, controller.getCurveFitter());
 				
 				float score = scoreFitGood(results, spectrum);
 				
@@ -220,10 +230,15 @@ public class AutoEnergyCalibration {
 	}
 	
 	
-	public static StreamExecutorSet<EnergyCalibration> propose(ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, int dataWidth) {
+	public static StreamExecutorSet<EnergyCalibration> propose(
+			ReadOnlySpectrum spectrum, 
+			List<TransitionSeries> tsList, 
+			FittingController controller, 
+			int dataWidth
+		) {
 		
 		StreamExecutor<List<EnergyCalibration>> rough = roughOptions(allEnergies(dataWidth), spectrum, tsList, dataWidth);
-		StreamExecutor<EnergyCalibration> quality = chooseFromRoughOptions(() -> rough.getResult().get(), spectrum, tsList, dataWidth);
+		StreamExecutor<EnergyCalibration> quality = chooseFromRoughOptions(() -> rough.getResult().get(), spectrum, tsList, controller, dataWidth);
 		rough.then(quality);
 		
 		return new StreamExecutorSet<>(rough, quality);

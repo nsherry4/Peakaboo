@@ -9,7 +9,9 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.table.PeakTable;
@@ -24,6 +26,9 @@ public class FittingController extends EventfulType<Boolean>
 
 	FittingModel fittingModel;
 	PlotController plot;
+	
+	CurveFitter curveFitter = new UnderCurveFitter();
+	FittingSolver fittingSolver = new GreedyFittingSolver();
 	
 	
 	public FittingController(PlotController plotController)
@@ -240,12 +245,12 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void calculateProposalFittings()
 	{
-		fittingModel.proposalResults = new GreedyFittingSolver().solve(fittingModel.selectionResults.getResidual(), fittingModel.proposals, new UnderCurveFitter());
+		fittingModel.proposalResults = getFittingSolver().solve(fittingModel.selectionResults.getResidual(), fittingModel.proposals, getCurveFitter());
 	}
 
 	public void calculateSelectionFittings(ReadOnlySpectrum data)
 	{
-		fittingModel.selectionResults = new GreedyFittingSolver().solve(data, fittingModel.selections, new UnderCurveFitter());
+		fittingModel.selectionResults = getFittingSolver().solve(data, fittingModel.selections, getCurveFitter());
 	}
 
 	public boolean hasProposalFitting()
@@ -309,5 +314,12 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
+	public CurveFitter getCurveFitter() {
+		return curveFitter;
+	}
+	
+	public FittingSolver getFittingSolver() {
+		return fittingSolver;
+	}
 	
 }

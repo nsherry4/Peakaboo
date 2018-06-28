@@ -12,6 +12,8 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.discards.Discards;
 import peakaboo.controller.plotter.data.discards.DiscardsList;
 import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.dataset.DataSet;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
@@ -172,9 +174,9 @@ public class DataController extends Eventful
 	
 
 	
-	public StreamExecutor<MapResultSet> getMapTask(FilterSet filters, FittingSet fittings)
+	public StreamExecutor<MapResultSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver)
 	{
-		return Mapping.mapTask(dataModel, filters, fittings);
+		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver);
 	}
 	
 	

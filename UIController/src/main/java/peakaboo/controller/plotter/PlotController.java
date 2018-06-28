@@ -233,7 +233,12 @@ public class PlotController extends EventfulType<String>
 	 * @return
 	 */
 	public StreamExecutor<MapResultSet> getMapTask() {
-		return dataController.getMapTask(filteringController.getActiveFilters(), fittingController.getFittingSelections());
+		return dataController.getMapTask(
+				filteringController.getActiveFilters(), 
+				fittingController.getFittingSelections(), 
+				fittingController.getCurveFitter(), 
+				fittingController.getFittingSolver()
+			);
 	}
 	
 	

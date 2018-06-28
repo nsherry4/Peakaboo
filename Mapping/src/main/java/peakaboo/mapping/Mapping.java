@@ -5,9 +5,8 @@ import java.util.List;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
@@ -33,7 +32,13 @@ public class Mapping
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
 	 * @return a {@link StreamExecutor} which will return a {@link MapResultSet}
 	 */
-	public static StreamExecutor<MapResultSet> mapTask(DataSet dataset, FilterSet filters, FittingSet fittings) {
+	public static StreamExecutor<MapResultSet> mapTask(
+			DataSet dataset, 
+			FilterSet filters, 
+			FittingSet fittings, 
+			CurveFitter fitter, 
+			FittingSolver solver
+		) {
 		
 		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
@@ -48,8 +53,7 @@ public class Mapping
 				
 				data = filters.applyFiltersUnsynchronized(data);
 				
-				FittingSolver solver = new GreedyFittingSolver();
-				FittingResultSet frs = solver.solve(data, fittings, new UnderCurveFitter());
+				FittingResultSet frs = solver.solve(data, fittings, fitter);
 				
 				for (FittingResult result : frs.getFits()) {
 					maps.putIntensityInMapAtPoint(result.getFit().sum(), result.getTransitionSeries(), index);
