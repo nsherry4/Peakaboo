@@ -6,7 +6,7 @@ import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
- * Defines a method by which a {@link Curve} is fitted against a
+ * Defines a method by which a single {@link Curve} is fitted against a
  * {@link Spectrum} to determine how much the curve should be scaled by to match
  * the data.
  * 
