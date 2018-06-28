@@ -13,7 +13,7 @@ import javax.swing.Scrollable;
 
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;

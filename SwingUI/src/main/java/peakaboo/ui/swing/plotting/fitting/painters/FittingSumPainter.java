@@ -3,7 +3,7 @@ package peakaboo.ui.swing.plotting.fitting.painters;
 
 import java.awt.Color;
 
-import peakaboo.curvefit.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResult;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;

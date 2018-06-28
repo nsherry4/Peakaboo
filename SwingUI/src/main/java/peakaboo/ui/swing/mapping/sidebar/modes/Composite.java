@@ -18,7 +18,7 @@ import javax.swing.table.TableModel;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.mapping.results.MapResult;
 import swidget.widgets.Spacing;
 

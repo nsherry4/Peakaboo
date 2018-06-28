@@ -2,13 +2,13 @@ package peakaboo.mapping;
 
 import java.util.List;
 
-import peakaboo.curvefit.fitting.FittingResult;
-import peakaboo.curvefit.fitting.FittingResultSet;
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.fitting.fitter.UnderCurveFitter;
-import peakaboo.curvefit.fitting.solver.FittingSolver;
-import peakaboo.curvefit.fitting.solver.GreedyFittingSolver;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;

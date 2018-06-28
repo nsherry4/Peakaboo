@@ -4,8 +4,8 @@ package peakaboo.ui.swing.plotting.fitting.painters;
 import java.awt.Color;
 import java.util.List;
 
-import peakaboo.curvefit.fitting.FittingResult;
-import peakaboo.curvefit.fitting.FittingResultSet;
+import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;

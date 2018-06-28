@@ -24,7 +24,7 @@ import com.ezware.dialog.task.TaskDialog;
 import commonenvironment.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.curvefit.peaktable.PeakTableReader;
+import peakaboo.curvefit.peak.table.PeakTableReader;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;

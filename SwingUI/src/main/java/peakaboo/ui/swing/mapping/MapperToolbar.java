@@ -28,7 +28,7 @@ import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSettings;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;

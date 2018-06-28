@@ -3,10 +3,10 @@ package peakaboo.controller.settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.transition.TransitionSeries;
-import peakaboo.curvefit.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 
 public class SerializedTransitionSeries

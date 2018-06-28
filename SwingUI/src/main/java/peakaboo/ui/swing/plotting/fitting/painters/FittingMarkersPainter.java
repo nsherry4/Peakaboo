@@ -2,13 +2,13 @@ package peakaboo.ui.swing.plotting.fitting.painters;
 
 import java.awt.Color;
 
-import peakaboo.curvefit.fitting.FittingParameters;
-import peakaboo.curvefit.fitting.FittingResult;
-import peakaboo.curvefit.fitting.FittingResultSet;
-import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.transition.EscapePeakType;
-import peakaboo.curvefit.transition.Transition;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.curve.fitting.FittingParameters;
+import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.peak.fitting.FittingFunction;
+import peakaboo.curvefit.peak.transition.EscapePeakType;
+import peakaboo.curvefit.peak.transition.Transition;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;

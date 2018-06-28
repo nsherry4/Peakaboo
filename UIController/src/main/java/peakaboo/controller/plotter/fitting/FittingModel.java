@@ -3,10 +3,10 @@ package peakaboo.controller.plotter.fitting;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.curvefit.fitting.FittingResultSet;
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.transition.EscapePeakType;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.peak.transition.EscapePeakType;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 
 
 

@@ -10,9 +10,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.transition.TransitionSeries;
-import peakaboo.curvefit.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import swidget.widgets.Spacing;
 

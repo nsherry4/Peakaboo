@@ -2,7 +2,7 @@ package peakaboo.mapping.results;
 
 
 
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 

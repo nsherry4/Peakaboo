@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.transition.TransitionSeries;
-import peakaboo.curvefit.transition.TransitionSeriesMode;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.widgets.ClearPanel;

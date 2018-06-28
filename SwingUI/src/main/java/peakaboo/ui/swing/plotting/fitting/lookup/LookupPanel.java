@@ -14,8 +14,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.transition.TransitionSeries;
-import peakaboo.curvefit.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTreeModel;

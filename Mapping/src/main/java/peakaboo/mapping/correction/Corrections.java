@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-import peakaboo.curvefit.peaktable.Element;
-import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.transition.TransitionSeries;
-import peakaboo.curvefit.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import scitypes.Pair;
 
 

@@ -1,8 +1,8 @@
 package peakaboo.controller.plotter.settings;
 
-import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.fitting.functions.PseudoVoigtFittingFunction;
-import peakaboo.curvefit.transition.EscapePeakType;
+import peakaboo.curvefit.peak.fitting.FittingFunction;
+import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import peakaboo.curvefit.peak.transition.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 
 public class SessionSettingsModel {

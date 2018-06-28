@@ -25,7 +25,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

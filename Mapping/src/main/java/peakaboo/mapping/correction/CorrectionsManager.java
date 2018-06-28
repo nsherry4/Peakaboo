@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.peaktable.PeakTableReader;
+import peakaboo.curvefit.peak.table.PeakTableReader;
 
 
 public class CorrectionsManager

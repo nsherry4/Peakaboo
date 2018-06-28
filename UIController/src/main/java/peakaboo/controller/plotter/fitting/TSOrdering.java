@@ -6,15 +6,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.fitting.FittingResultSet;
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.fitting.fitter.UnderCurveFitter;
-import peakaboo.curvefit.fitting.solver.GreedyFittingSolver;
-import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.scoring.EnergyProximityScorer;
-import peakaboo.curvefit.scoring.FastFittingScorer;
-import peakaboo.curvefit.scoring.Scorer;
-import peakaboo.curvefit.transition.TransitionSeries;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import peakaboo.curvefit.curve.scoring.EnergyProximityScorer;
+import peakaboo.curvefit.curve.scoring.FastFittingScorer;
+import peakaboo.curvefit.curve.scoring.Scorer;
+import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 

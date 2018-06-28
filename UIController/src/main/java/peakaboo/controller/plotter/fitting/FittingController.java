@@ -6,16 +6,16 @@ import java.util.List;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.fitting.FittingResult;
-import peakaboo.curvefit.fitting.FittingResultSet;
-import peakaboo.curvefit.fitting.FittingSet;
-import peakaboo.curvefit.fitting.fitter.UnderCurveFitter;
-import peakaboo.curvefit.fitting.functions.FittingFunction;
-import peakaboo.curvefit.fitting.solver.GreedyFittingSolver;
-import peakaboo.curvefit.peaktable.PeakTable;
-import peakaboo.curvefit.transition.EscapePeakType;
-import peakaboo.curvefit.transition.TransitionSeries;
-import peakaboo.curvefit.transition.TransitionSeriesType;
+import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import peakaboo.curvefit.peak.fitting.FittingFunction;
+import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.transition.EscapePeakType;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import scitypes.ReadOnlySpectrum;
 
 

@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import peakaboo.curvefit.peaktable.PeakTableReader;
+import peakaboo.curvefit.peak.table.PeakTableReader;
 import peakaboo.ui.javafx.plot.window.PlotWindowController;
 
 
