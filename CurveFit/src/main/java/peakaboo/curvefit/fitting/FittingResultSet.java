@@ -32,6 +32,16 @@ public class FittingResultSet
 		residual = new ISpectrum(size);
 	}
 
+	public FittingResultSet(
+			Spectrum totalFit, 
+			ReadOnlySpectrum residual, 
+			List<FittingResult> fits, 
+			FittingParameters parameters) {
+		this.totalFit = totalFit;
+		this.residual = residual;
+		this.fits = fits;
+		this.parameters = parameters;
+	}
 	
 	
 	public Spectrum getTotalFit() {
@@ -49,6 +59,8 @@ public class FittingResultSet
 	public FittingParameters getParameters() {
 		return parameters;
 	}
+	
+	
 	
 	
 	

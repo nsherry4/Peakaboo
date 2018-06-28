@@ -10,6 +10,7 @@ import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
 import peakaboo.curvefit.fitting.functions.FittingFunction;
+import peakaboo.curvefit.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.transition.EscapePeakType;
 import peakaboo.curvefit.transition.TransitionSeries;
@@ -238,12 +239,12 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void calculateProposalFittings()
 	{
-		fittingModel.proposalResults = fittingModel.proposals.fit(fittingModel.selectionResults.getResidual());
+		fittingModel.proposalResults = new GreedyFittingSolver().solve(fittingModel.selectionResults.getResidual(), fittingModel.proposals);
 	}
 
 	public void calculateSelectionFittings(ReadOnlySpectrum data)
 	{
-		fittingModel.selectionResults = fittingModel.selections.fit(data);
+		fittingModel.selectionResults = new GreedyFittingSolver().solve(data, fittingModel.selections);
 	}
 
 	public boolean hasProposalFitting()

@@ -4,6 +4,11 @@ import java.util.Comparator;
 
 import peakaboo.curvefit.transition.TransitionSeries;
 
+/**
+ * Interface for scoring how well a {@link TransitionSeries} matches a spectrum.
+ * @author NAS
+ *
+ */
 public interface Scorer extends Comparator<TransitionSeries> {
 
 	float score(TransitionSeries ts);
