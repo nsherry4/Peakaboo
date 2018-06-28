@@ -8,6 +8,7 @@ import peakaboo.curvefit.fitting.FittingParameters;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.fitting.fitter.CurveFitter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -20,7 +21,7 @@ public class GreedyFittingSolver implements FittingSolver {
 	 * Fit this FittingSet against spectrum data
 	 */
 	@Override
-	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings) {
+	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter) {
 
 		
 		Spectrum resultTotalFit = new ISpectrum(data.size());
@@ -30,8 +31,8 @@ public class GreedyFittingSolver implements FittingSolver {
 		// calculate the curves
 		for (Curve curve : fittings.getCurves()) {
 			if (!curve.getTransitionSeries().visible) { continue; }
-			
-			FittingResult result = curve.fit(data);
+						
+			FittingResult result = fitter.fit(data, curve);
 			data = SpectrumCalculations.subtractLists(data, result.getFit(), 0.0f);
 			
 			//should this be done through a method addFit?

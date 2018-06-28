@@ -5,6 +5,7 @@ import java.util.List;
 import peakaboo.curvefit.fitting.FittingResult;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.fitting.solver.FittingSolver;
 import peakaboo.curvefit.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.transition.TransitionSeries;
@@ -48,7 +49,7 @@ public class Mapping
 				data = filters.applyFiltersUnsynchronized(data);
 				
 				FittingSolver solver = new GreedyFittingSolver();
-				FittingResultSet frs = solver.solve(data, fittings);
+				FittingResultSet frs = solver.solve(data, fittings, new UnderCurveFitter());
 				
 				for (FittingResult result : frs.getFits()) {
 					maps.putIntensityInMapAtPoint(result.getFit().sum(), result.getTransitionSeries(), index);

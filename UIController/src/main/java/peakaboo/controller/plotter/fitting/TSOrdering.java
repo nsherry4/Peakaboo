@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peaktable.PeakTable;
 import peakaboo.curvefit.scoring.EnergyProximityScorer;
@@ -77,8 +78,8 @@ public class TSOrdering
 		if (currentTSisUsed) proposed.remove(currentTS);
 		
 		//recalculate
-		FittingResultSet fitResults = new GreedyFittingSolver().solve(data,  fits);
-		FittingResultSet proposedResults = new GreedyFittingSolver().solve(fitResults.getResidual(), proposed);
+		FittingResultSet fitResults = new GreedyFittingSolver().solve(data,  fits, new UnderCurveFitter());
+		FittingResultSet proposedResults = new GreedyFittingSolver().solve(fitResults.getResidual(), proposed, new UnderCurveFitter());
 		
 		
 		final ReadOnlySpectrum s = proposedResults.getResidual();

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import peakaboo.curvefit.fitting.EnergyCalibration;
 import peakaboo.curvefit.fitting.FittingResultSet;
 import peakaboo.curvefit.fitting.FittingSet;
+import peakaboo.curvefit.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.fitting.solver.FittingSolver;
 import peakaboo.curvefit.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.scoring.FastSignalMatchScorer;
@@ -115,7 +116,7 @@ public class AutoEnergyCalibration {
 				
 				FittingResultSet results;
 				fits.get().getFittingParameters().setCalibration(calibration);
-				results = new GreedyFittingSolver().solve(spectrum, fits.get());
+				results = new GreedyFittingSolver().solve(spectrum, fits.get(), new UnderCurveFitter());
 				return scoreFitGood(results, spectrum);
 				
 			}).collect(Collectors.toList());
@@ -203,7 +204,7 @@ public class AutoEnergyCalibration {
 				if (max <= min) continue;
 				
 				fits.getFittingParameters().setCalibration(min, max, calibration.getDataWidth());
-				FittingResultSet results = new GreedyFittingSolver().solve(spectrum, fits);
+				FittingResultSet results = new GreedyFittingSolver().solve(spectrum, fits, new UnderCurveFitter());
 				
 				float score = scoreFitGood(results, spectrum);
 				
