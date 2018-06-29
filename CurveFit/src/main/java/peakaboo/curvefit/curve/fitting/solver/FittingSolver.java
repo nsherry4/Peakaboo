@@ -14,6 +14,8 @@ import scitypes.Spectrum;
  */
 public interface FittingSolver {
 
+	String name();
+	
 	FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter);
 	
 }

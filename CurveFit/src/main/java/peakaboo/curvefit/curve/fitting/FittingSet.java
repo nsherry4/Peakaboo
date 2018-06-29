@@ -4,6 +4,7 @@ package peakaboo.curvefit.curve.fitting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
@@ -50,6 +51,10 @@ public class FittingSet
 			}
 		}
 		return new ArrayList<>(curves);
+	}
+	
+	public List<Curve> getVisibleCurves() {
+		return getCurves().stream().filter(c -> c.getTransitionSeries().isVisible()).collect(Collectors.toList());
 	}
 	
 	public synchronized void addTransitionSeries(TransitionSeries ts)

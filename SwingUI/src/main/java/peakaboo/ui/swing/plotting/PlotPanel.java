@@ -40,6 +40,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -630,7 +631,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		});
 		energy.addSetting(maxEnergy, "Maximum");
 
-		energyGuess = new ToolbarImageButton("auto", "", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.");
+		energyGuess = new ToolbarImageButton("auto", "Guess Calibration", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.", true);
 		energyGuess.addActionListener(e -> {
 			//custom controls in a menu don't hide the menu when activated
 			mainMenu.setVisible(false);
@@ -642,86 +643,27 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		
-		SettingsPanel peakwidth = new SettingsPanel(Spacing.iTiny());
-		peakwidth.setOpaque(false);
-		peakwidth.setBorder(Spacing.bMedium());
-		JLabel peakwidthTitle = new JLabel("<html><div style='text-align: center;'>Peak Model<br /><span style='color: red'>WARNING: ADVANCED</span></div></html>");
-		peakwidthTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		peakwidthTitle.setFont(peakwidthTitle.getFont().deriveFont(Font.BOLD));
-		peakwidth.addSetting(peakwidthTitle);
+		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
+		advanced.setOpaque(false);
+		advanced.setBorder(Spacing.bMedium());
+		JButton advancedButton = new JButton("Advanced Options");
+		advancedButton.addActionListener(e -> {
+			AdvancedSettingsPanel advancedPanel = new AdvancedSettingsPanel(this, controller);
+			mainMenu.setVisible(false);
+			pushModalComponent(advancedPanel);
+		});
+				//new JLabel("<html><div style='text-align: center;'>Peak Model<br /><span style='color: red'>WARNING: ADVANCED</span></div></html>");
+		advancedButton.setHorizontalAlignment(SwingConstants.CENTER);
+		advancedButton.setFont(advancedButton.getFont().deriveFont(Font.BOLD));
+		advanced.addSetting(advancedButton);
 
 
-		JSpinner fwhmBase = new JSpinner();
-		fwhmBase.setModel(new SpinnerNumberModel(controller.settings().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
-		fwhmBase.getEditor().setPreferredSize(new Dimension(72, (int)fwhmBase.getPreferredSize().getHeight()));
-		fwhmBase.getEditor().setOpaque(false);
-		fwhmBase.addChangeListener(e -> {
-			
-			float base = ((Number) fwhmBase.getValue()).floatValue()/1000;
-			controller.settings().setFWHMBase(base);
-			
-		});
-		peakwidth.addSetting(fwhmBase, "FWHM Noise (eV)");
-	
-		
-		
-		ButtonGroup functionGroup = new ButtonGroup();
-		
-		
-		JRadioButton pseudovoigt = new JRadioButton("Pseudo-Voigt");
-		pseudovoigt.setSelected(controller.settings().getFittingFunction() == PseudoVoigtFittingFunction.class);
-		pseudovoigt.addActionListener(e -> {
-			controller.settings().setFittingFunction(PseudoVoigtFittingFunction.class);
-		});
-		functionGroup.add(pseudovoigt);
-		peakwidth.addSetting(pseudovoigt);
-		
-		
-		JRadioButton voigt = new JRadioButton("Test Voigt");
-		voigt.setSelected(controller.settings().getFittingFunction() == ConvolvingVoigtFittingFunction.class);
-		voigt.addActionListener(e -> {
-			controller.settings().setFittingFunction(ConvolvingVoigtFittingFunction.class);
-		});
-		functionGroup.add(voigt);
-		peakwidth.addSetting(voigt);
-		
-		
-		JRadioButton gaussian = new JRadioButton("Gaussian");
-		gaussian.setSelected(controller.settings().getFittingFunction() == GaussianFittingFunction.class);
-		gaussian.addActionListener(e -> {
-			controller.settings().setFittingFunction(GaussianFittingFunction.class);
-		});
-		functionGroup.add(gaussian);
-		peakwidth.addSetting(gaussian);
-		
-		
-		JRadioButton ida = new JRadioButton("Ida");
-		ida.setSelected(controller.settings().getFittingFunction() == IdaFittingFunction.class);
-		ida.addActionListener(e -> {
-			controller.settings().setFittingFunction(IdaFittingFunction.class);
-		});
-		functionGroup.add(ida);
-		peakwidth.addSetting(ida);
-		
-		
-		JRadioButton lorentz = new JRadioButton("Lorentz");
-		lorentz.setSelected(controller.settings().getFittingFunction() == LorentzFittingFunction.class);
-		lorentz.addActionListener(e -> {
-			controller.settings().setFittingFunction(LorentzFittingFunction.class);
-		});
-		functionGroup.add(lorentz);
-		peakwidth.addSetting(lorentz);
-
-		
-		
-		
-		
 		
 		
 		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
 
 		outer.addSetting(energy);
-		outer.addSetting(peakwidth);
+		outer.addSetting(advanced);
 		outer.setOpaque(false);
 		mainMenu.add(outer);
 		

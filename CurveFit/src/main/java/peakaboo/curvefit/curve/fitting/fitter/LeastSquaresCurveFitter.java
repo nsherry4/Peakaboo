@@ -21,7 +21,11 @@ import scitypes.Spectrum;
 
 public class LeastSquaresCurveFitter implements CurveFitter {
 
-		
+	@Override
+	public String name() {
+		return "Least Squares";
+	}
+	
 	@Override
 	public FittingResult fit(ReadOnlySpectrum data, Curve curve) {
 		float scale = this.findLeastSquaresScaleFactor(data, curve);
@@ -35,7 +39,7 @@ public class LeastSquaresCurveFitter implements CurveFitter {
 		RangeSet channels = curve.getIntenseRanges();
 		
 		//find channel count
-		int count = this.channelCount(curve);
+		int channelCount = this.channelCount(curve);
 		
 		MultivariateJacobianFunction distanceFromData = point -> {
 				
@@ -44,8 +48,8 @@ public class LeastSquaresCurveFitter implements CurveFitter {
 			
 			//These store the total distance and distance-per-dimension.
 			//Since we have only one dimension, these should be the same..?
-			RealVector vector = new ArrayRealVector(count);
-			RealMatrix matrix = new Array2DRowRealMatrix(count, 1);
+			RealVector vector = new ArrayRealVector(channelCount);
+			RealMatrix matrix = new Array2DRowRealMatrix(channelCount, 1);
 			
 			
 			int index = 0;
@@ -69,7 +73,7 @@ public class LeastSquaresCurveFitter implements CurveFitter {
 		
 		LeastSquaresProblem problem = new LeastSquaresBuilder()
 			.start(new double[1] )
-			.target(new double[count])
+			.target(new double[channelCount])
 			.model(distanceFromData)
 			.lazyEvaluation(false)
 			.maxEvaluations(1000)

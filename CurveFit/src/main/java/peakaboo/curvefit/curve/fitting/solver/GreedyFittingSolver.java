@@ -16,6 +16,10 @@ import scitypes.SpectrumCalculations;
 
 public class GreedyFittingSolver implements FittingSolver {
 
+
+	public String name() {
+		return "Greedy";
+	}
 	
 	/**
 	 * Fit this FittingSet against spectrum data

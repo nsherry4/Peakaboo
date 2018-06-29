@@ -7,6 +7,12 @@ import scitypes.ReadOnlySpectrum;
 public class UnderCurveFitter implements CurveFitter {
 
 
+	@Override
+	public String name() {
+		return "Max Under Curve";
+	}
+	
+	
 
 	/**
 	 * Fits this curve against spectrum data
