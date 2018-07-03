@@ -1,7 +1,7 @@
-package peakaboo.controller.plotter.settings;
+package peakaboo.controller.plotter.view;
 
 
-public class PersistentSettingsModel {
+public class PersistentViewModel {
 
 	public boolean				showElementFitTitles;
 	public boolean				showElementFitMarkers;
@@ -13,12 +13,12 @@ public class PersistentSettingsModel {
 	public boolean				monochrome;
 	
 	
-	public PersistentSettingsModel() {
+	public PersistentViewModel() {
 		showElementFitTitles = true;
 		showAxes = true;
 	}
 	
-	public PersistentSettingsModel(PersistentSettingsModel copy) {
+	public PersistentViewModel(PersistentViewModel copy) {
 
 		showElementFitTitles = copy.showElementFitTitles;
 		showElementFitMarkers = copy.showElementFitMarkers;

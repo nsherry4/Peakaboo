@@ -203,7 +203,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public EscapePeakType getEscapeType()
 	{
-		return plot.settings().getEscapePeakType();
+		return plot.view().getEscapePeakType();
 	}
 	
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
@@ -230,8 +230,8 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.selections.getFittingParameters().setCalibration(min, max, scanSize);
 		fittingModel.proposals.getFittingParameters().setCalibration(min, max, scanSize);
 
-		fittingModel.selections.getFittingParameters().setEscapeType(plot.settings().getEscapePeakType());
-		fittingModel.proposals.getFittingParameters().setEscapeType(plot.settings().getEscapePeakType());
+		fittingModel.selections.getFittingParameters().setEscapeType(plot.view().getEscapePeakType());
+		fittingModel.proposals.getFittingParameters().setEscapeType(plot.view().getEscapePeakType());
 
 		
 		setUndoPoint("Calibration");

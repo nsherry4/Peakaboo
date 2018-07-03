@@ -2,11 +2,11 @@ package peakaboo.controller.settings;
 
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.settings.PersistentSettingsModel;
+import peakaboo.controller.plotter.view.PersistentViewModel;
 
 public class SavedPersistence {
 
-	public PersistentSettingsModel persistent;
+	public PersistentViewModel persistent;
 	
 	
 	/**
@@ -28,7 +28,7 @@ public class SavedPersistence {
 	 */
 	public static SavedPersistence storeFrom(PlotController plotController) {
 		SavedPersistence saved = new SavedPersistence();
-		saved.persistent = plotController.settings().getSettingsModel().persistent;
+		saved.persistent = plotController.view().getViewModel().persistent;
 		return saved;
 	}
 	
@@ -36,7 +36,7 @@ public class SavedPersistence {
 	 * applies serialized preferences to the model
 	 */
 	public void loadInto(PlotController plotController) {
-		plotController.settings().getSettingsModel().persistent = this.persistent;
+		plotController.view().getViewModel().persistent = this.persistent;
 	}
 	
 }

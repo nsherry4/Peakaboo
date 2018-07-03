@@ -81,7 +81,7 @@ import peakaboo.common.Version;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
-import peakaboo.controller.plotter.settings.ChannelCompositeMode;
+import peakaboo.controller.plotter.view.ChannelCompositeMode;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
@@ -267,9 +267,9 @@ public class PlotPanel extends TabbedInterfacePanel
 			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());
 			setEnergySpinners();
 
-			if (controller.settings().getChannelCompositeMode() == ChannelCompositeMode.NONE) {
-				scanNo.setValue(controller.settings().getScanNumber() + 1);
-				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.settings().getScanNumber()));
+			if (controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE) {
+				scanNo.setValue(controller.view().getScanNumber() + 1);
+				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.view().getScanNumber()));
 				scanSelector.setEnabled(true);
 			} else {
 				scanSelector.setEnabled(false);
@@ -283,7 +283,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		undo.setText("Undo " + controller.history().getNextUndo());
 		redo.setText("Redo " + controller.history().getNextRedo());
 
-		zoomSlider.setValueEventless((int)(controller.settings().getZoom()*100));
+		zoomSlider.setValueEventless((int)(controller.view().getZoom()*100));
 		setTitleBar();
 
 		container.getWindow().validate();
@@ -295,8 +295,8 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void setEnergySpinners()
 	{
 		//dont let the listeners get wind of this change		
-		minEnergy.setValue((double) controller.settings().getMinEnergy());
-		maxEnergy.setValue((double) controller.settings().getMaxEnergy());
+		minEnergy.setValue((double) controller.view().getMinEnergy());
+		maxEnergy.setValue((double) controller.view().getMaxEnergy());
 	}
 
 
@@ -608,11 +608,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		minEnergy.getEditor().setOpaque(false);
 		minEnergy.addChangeListener(e -> {
 			float min = ((Number) minEnergy.getValue()).floatValue();
-			if (min > controller.settings().getMaxEnergy()) {
-				min = controller.settings().getMaxEnergy() - 0.01f;
+			if (min > controller.view().getMaxEnergy()) {
+				min = controller.view().getMaxEnergy() - 0.01f;
 				minEnergy.setValue(min);
 			} 
-			controller.settings().setMinEnergy(min);	
+			controller.view().setMinEnergy(min);	
 		});
 		energy.addSetting(minEnergy, "Minimum");
 		
@@ -623,11 +623,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		maxEnergy.getEditor().setOpaque(false);
 		maxEnergy.addChangeListener(e -> {
 			float max = ((Number) maxEnergy.getValue()).floatValue();
-			if (max < controller.settings().getMinEnergy()) {
-				max = controller.settings().getMinEnergy() + 0.01f;
+			if (max < controller.view().getMinEnergy()) {
+				max = controller.view().getMinEnergy() + 0.01f;
 				maxEnergy.setValue(max);
 			} 
-			controller.settings().setMaxEnergy(max);
+			controller.view().setMaxEnergy(max);
 		});
 		energy.addSetting(maxEnergy, "Maximum");
 
@@ -833,25 +833,25 @@ public class PlotPanel extends TabbedInterfacePanel
 		logPlot = createMenuCheckItem(
 				"Logarithmic Scale", null, "Toggles the plot between a linear and logarithmic scale",
 				b -> {
-					controller.settings().setViewLog(b);
+					controller.view().setViewLog(b);
 				},
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), KeyEvent.VK_L
 		);
-		logPlot.setSelected(controller.settings().getViewLog());
+		logPlot.setSelected(controller.view().getViewLog());
 		
 		axes = createMenuCheckItem(
 				"Axes", null, "Toggles display of axes and grid lines",
 				b -> {
-					controller.settings().setShowAxes(b);
+					controller.view().setShowAxes(b);
 				},
 				null, null
 		);
-		axes.setSelected(controller.settings().getShowAxes());
+		axes.setSelected(controller.view().getShowAxes());
 
 		title = createMenuCheckItem(
 				"Title", null, "Toggles display of the current data set's title",
 				b -> {
-					controller.settings().setShowTitle(b);
+					controller.view().setShowTitle(b);
 				},
 				null, null
 		);
@@ -859,7 +859,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		monochrome = createMenuCheckItem(
 				"Monochrome", null, "Toggles the monochrome colour palette",
 				b -> {
-					controller.settings().setMonochrome(b);
+					controller.view().setMonochrome(b);
 				},
 				null, KeyEvent.VK_M
 		);
@@ -869,7 +869,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		raw = createMenuCheckItem(
 				"Raw Data Outline", null, "Toggles an outline of the original raw data",
 				b -> {
-					controller.settings().setShowRawData(b);
+					controller.view().setShowRawData(b);
 				},
 				null, KeyEvent.VK_O
 		);
@@ -877,7 +877,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		fittings = createMenuCheckItem(
 				"Individual Fittings", null, "Switches between showing all fittings as a single curve and showing all fittings individually",
 				b -> {
-					controller.settings().setShowIndividualSelections(b);
+					controller.view().setShowIndividualSelections(b);
 				},
 				null, KeyEvent.VK_O
 		);	
@@ -901,7 +901,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		etitles = createMenuCheckItem(
 				"Element Names", null, "Label fittings with the names of their elements",
 				b -> {
-					controller.settings().setShowElementTitles(b);
+					controller.view().setShowElementTitles(b);
 				},
 				null, null
 		);
@@ -911,7 +911,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		emarkings = createMenuCheckItem(
 				"Markings", null, "Label fittings with lines denoting their energies",
 				b -> {
-					controller.settings().setShowElementMarkers(b);
+					controller.view().setShowElementMarkers(b);
 				},
 				null, null
 		);
@@ -921,7 +921,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		eintensities = createMenuCheckItem(
 				"Heights", null, "Label fittings with their heights",
 				b -> {
-					controller.settings().setShowElementIntensities(b);
+					controller.view().setShowElementIntensities(b);
 				},
 				null, null
 		);
@@ -950,11 +950,11 @@ public class PlotPanel extends TabbedInterfacePanel
 			
 			escapeItem.addActionListener(e -> {
 				escapeItem.setSelected(true);
-				controller.settings().setEscapePeakType(finalt);
+				controller.view().setEscapePeakType(finalt);
 			});
 			
 			controller.addListener(message -> {
-				escapeItem.setSelected( controller.settings().getEscapePeakType() == finalt );
+				escapeItem.setSelected( controller.view().getEscapePeakType() == finalt );
 			});
 
 		}
@@ -973,11 +973,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		individual = createMenuRadioItem(
 				ChannelCompositeMode.NONE.show(), 
 				null, null, 
-				o -> controller.settings().setChannelCompositeMode(ChannelCompositeMode.NONE), 
+				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.NONE), 
 				KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), 
 				KeyEvent.VK_I
 			);
-		individual.setSelected(controller.settings().getChannelCompositeMode() == ChannelCompositeMode.NONE);
+		individual.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE);
 		viewGroup.add(individual);
 		mainMenu.add(individual);
 		
@@ -985,11 +985,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		average = createMenuRadioItem(
 				ChannelCompositeMode.AVERAGE.show(), 
 				null, null, 
-				o -> controller.settings().setChannelCompositeMode(ChannelCompositeMode.AVERAGE), 
+				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE), 
 				KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), 
 				KeyEvent.VK_M
 			);
-		average.setSelected(controller.settings().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE);
+		average.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE);
 		viewGroup.add(average);
 		mainMenu.add(average);
 		
@@ -997,11 +997,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		maximum = createMenuRadioItem(
 				ChannelCompositeMode.MAXIMUM.show(), 
 				null, null, 
-				o -> controller.settings().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM),
+				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM),
 				KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), 
 				KeyEvent.VK_T
 			);
-		maximum.setSelected(controller.settings().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM);
+		maximum.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM);
 		viewGroup.add(maximum);
 		mainMenu.add(maximum);
 		
@@ -1039,16 +1039,16 @@ public class PlotPanel extends TabbedInterfacePanel
 			public void change(String s)
 			{
 
-				logPlot.setSelected(controller.settings().getViewLog());
-				axes.setSelected(controller.settings().getShowAxes());
-				title.setSelected(controller.settings().getShowTitle());
-				monochrome.setSelected(controller.settings().getMonochrome());
+				logPlot.setSelected(controller.view().getViewLog());
+				axes.setSelected(controller.view().getShowAxes());
+				title.setSelected(controller.view().getShowTitle());
+				monochrome.setSelected(controller.view().getMonochrome());
 
-				etitles.setSelected(controller.settings().getShowElementTitles());
-				emarkings.setSelected(controller.settings().getShowElementMarkers());
-				eintensities.setSelected(controller.settings().getShowElementIntensities());
+				etitles.setSelected(controller.view().getShowElementTitles());
+				emarkings.setSelected(controller.view().getShowElementMarkers());
+				eintensities.setSelected(controller.view().getShowElementIntensities());
 
-				switch (controller.settings().getChannelCompositeMode())
+				switch (controller.view().getChannelCompositeMode())
 				{
 
 					case NONE:
@@ -1063,8 +1063,8 @@ public class PlotPanel extends TabbedInterfacePanel
 
 				}
 
-				raw.setSelected(controller.settings().getShowRawData());
-				fittings.setSelected(controller.settings().getShowIndividualSelections());
+				raw.setSelected(controller.view().getShowRawData());
+				fittings.setSelected(controller.view().getShowIndividualSelections());
 
 			}
 		});
@@ -1111,7 +1111,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			{
 				JSpinner scan = (JSpinner) e.getSource();
 				int value = (Integer) ((scan).getValue());
-				controller.settings().setScanNumber(value - 1);
+				controller.view().setScanNumber(value - 1);
 			}
 		});
 		bottomPanel.add(scanSelector, BorderLayout.WEST);
@@ -1122,9 +1122,9 @@ public class PlotPanel extends TabbedInterfacePanel
 			public void actionPerformed(ActionEvent e)
 			{
 				if (scanBlock.isSelected()) {
-					controller.data().getDiscards().discard(controller.settings().getScanNumber());
+					controller.data().getDiscards().discard(controller.view().getScanNumber());
 				} else {
-					controller.data().getDiscards().undiscard(controller.settings().getScanNumber());
+					controller.data().getDiscards().undiscard(controller.view().getScanNumber());
 				}
 			}
 		});
@@ -1144,7 +1144,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			
 			public void change()
 			{
-				controller.settings().setZoom(zoomSlider.getValue() / 100f);
+				controller.view().setZoom(zoomSlider.getValue() / 100f);
 			}
 		});
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
@@ -1153,7 +1153,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		final ImageToggleButton lockHorizontal = new ImageToggleButton(StockIcon.MISC_LOCKED, "", "Lock Vertical Zoom to Window Size");
 		lockHorizontal.setSelected(true);
 		lockHorizontal.addActionListener(e -> {
-			controller.settings().setLockPlotHeight(lockHorizontal.isSelected());
+			controller.view().setLockPlotHeight(lockHorizontal.isSelected());
 		});
 		zoomPanel.add(lockHorizontal, BorderLayout.EAST);
 		
@@ -1178,8 +1178,8 @@ public class PlotPanel extends TabbedInterfacePanel
 	{
 
 		int channel = canvas.channelFromCoordinate(x);
-		float energy = controller.settings().getEnergyForChannel(channel);
-		Pair<Float, Float> values = controller.settings().getValueForChannel(channel);
+		float energy = controller.view().getEnergyForChannel(channel);
+		Pair<Float, Float> values = controller.view().getValueForChannel(channel);
 
 		StringBuilder sb = new StringBuilder();
 		String sep = ",  ";
@@ -1190,7 +1190,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 			
 			sb.append("View: ");
-			sb.append(controller.settings().getChannelCompositeMode().show());
+			sb.append(controller.view().getChannelCompositeMode().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append(String.valueOf(channel));
@@ -1211,7 +1211,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		{
 			
 			sb.append("View: ");
-			sb.append(controller.settings().getChannelCompositeMode().show());
+			sb.append(controller.view().getChannelCompositeMode().show());
 			sb.append(sep);
 			sb.append("Channel: ");
 			sb.append("-");
@@ -1778,8 +1778,8 @@ public class PlotPanel extends TabbedInterfacePanel
 			if (event == Event.COMPLETED) {
 				EnergyCalibration energy = energyTask.last().getResult().orElse(null);
 				if (energy != null) {
-					controller.settings().setMinEnergy(energy.getMinEnergy());
-					controller.settings().setMaxEnergy(energy.getMaxEnergy());
+					controller.view().setMinEnergy(energy.getMinEnergy());
+					controller.view().setMaxEnergy(energy.getMaxEnergy());
 				}
 			}
 		});

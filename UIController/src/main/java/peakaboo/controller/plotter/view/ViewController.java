@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.settings;
+package peakaboo.controller.plotter.view;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,22 +33,22 @@ import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
 
-public class SettingsController extends Eventful
+public class ViewController extends Eventful
 {
 
 	
-	private SettingsModel settingsModel;
+	private ViewModel viewModel;
 	private PlotController plot;
 	
-	public SettingsController(PlotController plotController)
+	public ViewController(PlotController plotController)
 	{
 		this.plot = plotController;
-		settingsModel = new SettingsModel();
+		viewModel = new ViewModel();
 	}
 
-	public SettingsModel getSettingsModel()
+	public ViewModel getViewModel()
 	{
-		return settingsModel;
+		return viewModel;
 	}
 
 	private void setUndoPoint(String change)
@@ -59,18 +59,18 @@ public class SettingsController extends Eventful
 
 	public float getZoom()
 	{
-		return settingsModel.session.zoom;
+		return viewModel.session.zoom;
 	}
 
 	public void setZoom(float zoom)
 	{
-		settingsModel.session.zoom = zoom;
+		viewModel.session.zoom = zoom;
 		updateListeners();
 	}
 
 	public void setShowIndividualSelections(boolean showIndividualSelections)
 	{
-		settingsModel.persistent.showIndividualFittings = showIndividualSelections;
+		viewModel.persistent.showIndividualFittings = showIndividualSelections;
 		savePersistentSettings();
 		setUndoPoint("Individual Fittings");
 		plot.fitting().fittingDataInvalidated();
@@ -78,12 +78,12 @@ public class SettingsController extends Eventful
 
 	public boolean getShowIndividualSelections()
 	{
-		return settingsModel.persistent.showIndividualFittings;
+		return viewModel.persistent.showIndividualFittings;
 	}
 
 
 	public void setMaxEnergy(float max) {
-		settingsModel.session.maxEnergy = max;
+		viewModel.session.maxEnergy = max;
 		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
 		plot.fitting().setFittingParameters(dataWidth, getMinEnergy(), max);
 
@@ -92,12 +92,12 @@ public class SettingsController extends Eventful
 
 	public float getMaxEnergy()
 	{
-		return settingsModel.session.maxEnergy;
+		return viewModel.session.maxEnergy;
 	}
 
 	
 	public void setMinEnergy(float min) {
-		settingsModel.session.minEnergy = min;
+		viewModel.session.minEnergy = min;
 		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
 		plot.fitting().setFittingParameters(dataWidth, min, getMaxEnergy());
 		updateListeners();
@@ -106,18 +106,18 @@ public class SettingsController extends Eventful
 	
 	public float getMinEnergy()
 	{
-		return settingsModel.session.minEnergy;
+		return viewModel.session.minEnergy;
 	}
 	
 	public void setViewLog(boolean log)
 	{
 		if (log)
 		{
-			settingsModel.session.viewTransform = ViewTransform.LOG;
+			viewModel.session.viewTransform = ViewTransform.LOG;
 		}
 		else
 		{
-			settingsModel.session.viewTransform = ViewTransform.LINEAR;
+			viewModel.session.viewTransform = ViewTransform.LINEAR;
 		}
 		setUndoPoint("Log View");
 		updateListeners();
@@ -125,12 +125,12 @@ public class SettingsController extends Eventful
 
 	public boolean getViewLog()
 	{
-		return settingsModel.session.viewTransform == ViewTransform.LOG;
+		return viewModel.session.viewTransform == ViewTransform.LOG;
 	}
 
 	public void setChannelCompositeMode(ChannelCompositeMode mode)
 	{
-		settingsModel.session.channelComposite = mode;
+		viewModel.session.channelComposite = mode;
 		setUndoPoint(mode.show());
 		plot.filtering().filteredDataInvalidated();
 	}
@@ -138,13 +138,13 @@ public class SettingsController extends Eventful
 
 	public ChannelCompositeMode getChannelCompositeMode()
 	{
-		return settingsModel.session.channelComposite;
+		return viewModel.session.channelComposite;
 	}
 
 	public void setScanNumber(int number)
 	{
 		//negative is downwards, positive is upwards
-		int direction = number - settingsModel.session.scanNumber;
+		int direction = number - viewModel.session.scanNumber;
 
 		if (direction > 0)
 		{
@@ -166,18 +166,18 @@ public class SettingsController extends Eventful
 			number = plot.data().getDataSet().getScanData().scanCount() - 1;
 		}
 		if (number < 0) number = 0;
-		settingsModel.session.scanNumber = number;
+		viewModel.session.scanNumber = number;
 		plot.filtering().filteredDataInvalidated();
 	}
 
 	public int getScanNumber()
 	{
-		return settingsModel.session.scanNumber;
+		return viewModel.session.scanNumber;
 	}
 
 	public void setShowAxes(boolean axes)
 	{
-		settingsModel.persistent.showAxes = axes;
+		viewModel.persistent.showAxes = axes;
 		savePersistentSettings();
 		plot.setAxisPainters(null);
 		setUndoPoint("Axes");
@@ -186,17 +186,17 @@ public class SettingsController extends Eventful
 
 	public boolean getShowAxes()
 	{
-		return settingsModel.persistent.showAxes;
+		return viewModel.persistent.showAxes;
 	}
 
 	public boolean getShowTitle()
 	{
-		return settingsModel.persistent.showPlotTitle;
+		return viewModel.persistent.showPlotTitle;
 	}
 
 	public void setShowTitle(boolean show)
 	{
-		settingsModel.persistent.showPlotTitle = show;
+		viewModel.persistent.showPlotTitle = show;
 		savePersistentSettings();
 		plot.setAxisPainters(null);
 		setUndoPoint("Title");
@@ -205,7 +205,7 @@ public class SettingsController extends Eventful
 
 	public void setMonochrome(boolean mono)
 	{
-		settingsModel.persistent.monochrome = mono;
+		viewModel.persistent.monochrome = mono;
 		savePersistentSettings();
 		setUndoPoint("Monochrome");
 		updateListeners();
@@ -213,12 +213,12 @@ public class SettingsController extends Eventful
 
 	public boolean getMonochrome()
 	{
-		return settingsModel.persistent.monochrome;
+		return viewModel.persistent.monochrome;
 	}
 
 	public void setShowElementTitles(boolean show)
 	{
-		settingsModel.persistent.showElementFitTitles = show;
+		viewModel.persistent.showElementFitTitles = show;
 		savePersistentSettings();
 		setUndoPoint("Fitting Titles");
 		updateListeners();
@@ -226,7 +226,7 @@ public class SettingsController extends Eventful
 
 	public void setShowElementMarkers(boolean show)
 	{
-		settingsModel.persistent.showElementFitMarkers = show;
+		viewModel.persistent.showElementFitMarkers = show;
 		savePersistentSettings();
 		setUndoPoint("Fitting Markers");
 		updateListeners();
@@ -234,7 +234,7 @@ public class SettingsController extends Eventful
 
 	public void setShowElementIntensities(boolean show)
 	{
-		settingsModel.persistent.showElementFitIntensities = show;
+		viewModel.persistent.showElementFitIntensities = show;
 		savePersistentSettings();
 		setUndoPoint("Fitting Heights");
 		updateListeners();
@@ -242,29 +242,29 @@ public class SettingsController extends Eventful
 
 	public boolean getShowElementTitles()
 	{
-		return settingsModel.persistent.showElementFitTitles;
+		return viewModel.persistent.showElementFitTitles;
 	}
 
 	public boolean getShowElementMarkers()
 	{
-		return settingsModel.persistent.showElementFitMarkers;
+		return viewModel.persistent.showElementFitMarkers;
 	}
 
 	public boolean getShowElementIntensities()
 	{
-		return settingsModel.persistent.showElementFitIntensities;
+		return viewModel.persistent.showElementFitIntensities;
 	}
 
 	public void setShowRawData(boolean show)
 	{
-		settingsModel.session.backgroundShowOriginal = show;
+		viewModel.session.backgroundShowOriginal = show;
 		setUndoPoint("Raw Data Outline");
 		updateListeners();
 	}
 
 	public boolean getShowRawData()
 	{
-		return settingsModel.session.backgroundShowOriginal;
+		return viewModel.session.backgroundShowOriginal;
 	}
 
 	public float getEnergyForChannel(int channel)
@@ -288,26 +288,26 @@ public class SettingsController extends Eventful
 
 	public EscapePeakType getEscapePeakType()
 	{
-		return settingsModel.session.escape;
+		return viewModel.session.escape;
 	}
 	
 	public void setEscapePeakType(EscapePeakType type)
 	{
 		plot.fitting().setEscapeType(type);
-		settingsModel.session.escape = type;
+		viewModel.session.escape = type;
 	}
 	
 	public boolean getLockPlotHeight() {
-		return settingsModel.session.lockPlotHeight;
+		return viewModel.session.lockPlotHeight;
 	}
 	public void setLockPlotHeight(boolean lock) {
-		settingsModel.session.lockPlotHeight = lock;
+		viewModel.session.lockPlotHeight = lock;
 		updateListeners();
 	}
 	
 	public void setFWHMBase(float base) {
 		plot.fitting().setFWHMBase(base);	
-		settingsModel.session.fwhmBase = base;
+		viewModel.session.fwhmBase = base;
 	}
 	
 	public float getFWHMBase() {
@@ -318,7 +318,7 @@ public class SettingsController extends Eventful
 	
 	public void setCurveFitter(CurveFitter fitter) {
 		plot.fitting().setCurveFitter(fitter);
-		settingsModel.session.curveFitterName = fitter.getClass().getName();
+		viewModel.session.curveFitterName = fitter.getClass().getName();
 	}
 	
 	public CurveFitter getCurveFitter() {
@@ -329,7 +329,7 @@ public class SettingsController extends Eventful
 	
 	public void setFittingSolver(FittingSolver solver) {
 		plot.fitting().setFittingSolver(solver);
-		settingsModel.session.fittingSolverName = solver.getClass().getName();
+		viewModel.session.fittingSolverName = solver.getClass().getName();
 	}
 	
 	public FittingSolver getFittingSolver() {
@@ -340,7 +340,7 @@ public class SettingsController extends Eventful
 
 	public void setFittingFunction(Class<? extends FittingFunction> cls) {
 		plot.fitting().setFittingFunction(cls);
-		settingsModel.session.fittingFunctionName = cls.getName();
+		viewModel.session.fittingFunctionName = cls.getName();
 	}
 	
 	public Class<? extends FittingFunction> getFittingFunction() {

@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.settings;
+package peakaboo.controller.plotter.view;
 
 
 
@@ -14,23 +14,23 @@ import scidraw.drawing.ViewTransform;
 // appropriate DrawingExtensions. Does not include information regarding
 // how to draw the plot, although it does contain settings about which
 // data to plot
-public class SettingsModel implements Serializable
+public class ViewModel implements Serializable
 {
 	
-	public PersistentSettingsModel persistent;
-	public SessionSettingsModel session;
+	public PersistentViewModel persistent;
+	public SessionViewModel session;
 
 
-	public SettingsModel()
+	public ViewModel()
 	{
-		persistent = new PersistentSettingsModel();
-		session = new SessionSettingsModel();
+		persistent = new PersistentViewModel();
+		session = new SessionViewModel();
 	}
 
-	public void copy(SettingsModel copy)
+	public void copy(ViewModel copy)
 	{
-		persistent = new PersistentSettingsModel(copy.persistent);
-		session = new SessionSettingsModel(copy.session);		
+		persistent = new PersistentViewModel(copy.persistent);
+		session = new SessionViewModel(copy.session);		
 	}
 
 }

@@ -99,7 +99,7 @@ public class UndoController extends Eventful implements IUndoController
 		plot.loadSettings(undoModel.undoStack.peek().second, true);
 
 		updateListeners();
-		plot.settings().updateListeners();
+		plot.view().updateListeners();
 		plot.filtering().updateListeners();
 		plot.fitting().updateListeners(true);
 

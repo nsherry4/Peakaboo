@@ -95,13 +95,13 @@ public class AdvancedSettingsPanel extends JPanel {
 		panel.setBorder(Spacing.bMedium());
 
 		JSpinner fwhmBase = new JSpinner();
-		fwhmBase.setModel(new SpinnerNumberModel(controller.settings().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
+		fwhmBase.setModel(new SpinnerNumberModel(controller.view().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
 		fwhmBase.getEditor().setPreferredSize(new Dimension(72, (int)fwhmBase.getPreferredSize().getHeight()));
 		fwhmBase.getEditor().setOpaque(false);
 		fwhmBase.addChangeListener(e -> {
 			
 			float base = ((Number) fwhmBase.getValue()).floatValue()/1000;
-			controller.settings().setFWHMBase(base);
+			controller.view().setFWHMBase(base);
 			
 		});
 		panel.addSetting(fwhmBase, "FWHM Noise (eV)");
@@ -110,8 +110,8 @@ public class AdvancedSettingsPanel extends JPanel {
 		
 		
 		JComboBox<FittingFunction> peakModelBox = makeCombo(
-				f -> f.getClass() == controller.settings().getFittingFunction(),
-				f -> controller.settings().setFittingFunction(f.getClass()),
+				f -> f.getClass() == controller.view().getFittingFunction(),
+				f -> controller.view().setFittingFunction(f.getClass()),
 				new PseudoVoigtFittingFunction(),
 				new ConvolvingVoigtFittingFunction(),
 				new GaussianFittingFunction(),
@@ -123,8 +123,8 @@ public class AdvancedSettingsPanel extends JPanel {
 		
 		
 		JComboBox<CurveFitter> fittersBox = makeCombo(
-				f -> f.getClass() == controller.settings().getCurveFitter().getClass(),
-				f -> controller.settings().setCurveFitter(f),
+				f -> f.getClass() == controller.view().getCurveFitter().getClass(),
+				f -> controller.view().setCurveFitter(f),
 				new UnderCurveFitter(),
 				new LeastSquaresCurveFitter()
 			);
@@ -135,8 +135,8 @@ public class AdvancedSettingsPanel extends JPanel {
 		
 		
 		JComboBox<FittingSolver> solversBox = makeCombo(
-				f -> f.getClass() == controller.settings().getFittingSolver().getClass(), 
-				f -> controller.settings().setFittingSolver(f), 
+				f -> f.getClass() == controller.view().getFittingSolver().getClass(), 
+				f -> controller.view().setFittingSolver(f), 
 				new GreedyFittingSolver(),
 				new LeastSquaresFittingSolver()
 			);

@@ -2,16 +2,14 @@ package peakaboo.controller.plotter;
 
 import java.util.List;
 
-import eventful.EventfulListener;
 import eventful.EventfulType;
-import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.controller.plotter.settings.ChannelCompositeMode;
-import peakaboo.controller.plotter.settings.SettingsController;
 import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.controller.plotter.undo.UndoController;
+import peakaboo.controller.plotter.view.ChannelCompositeMode;
+import peakaboo.controller.plotter.view.ViewController;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.controller.settings.SavedSettings;
 import peakaboo.mapping.results.MapResultSet;
@@ -39,7 +37,7 @@ public class PlotController extends EventfulType<String>
 	private DataController					dataController;
 	private FilteringController				filteringController;
 	private FittingController				fittingController;
-	private SettingsController				settingsController;
+	private ViewController				viewController;
 
 
 	public static enum UpdateType
@@ -61,14 +59,14 @@ public class PlotController extends EventfulType<String>
 		dataController = new DataController(this);
 		filteringController = new FilteringController(this);
 		fittingController = new FittingController(this);
-		settingsController = new SettingsController(this);
-		settingsController.loadPersistentSettings();
+		viewController = new ViewController(this);
+		viewController.loadPersistentSettings();
 		
 		undoController.addListener(() -> updateListeners(UpdateType.UNDO.toString()));
 		dataController.addListener(() -> updateListeners(UpdateType.DATA.toString()));
 		filteringController.addListener(() -> updateListeners(UpdateType.FILTER.toString()));		
 		fittingController.addListener(b -> updateListeners(UpdateType.FITTING.toString()));
-		settingsController.addListener(() -> updateListeners(UpdateType.UI.toString()));
+		viewController.addListener(() -> updateListeners(UpdateType.UI.toString()));
 		
 		undoController.setUndoPoint("");
 	}
@@ -90,7 +88,7 @@ public class PlotController extends EventfulType<String>
 		filteringController.filteredDataInvalidated();
 		fittingController.fittingDataInvalidated();
 		fittingController.fittingProposalsInvalidated();
-		settingsController.updateListeners();
+		viewController.updateListeners();
 		
 		//fire an update message from the fittingcontroller with a boolean flag
 		//indicating that the change is not comming from inside the fitting controller
@@ -105,7 +103,7 @@ public class PlotController extends EventfulType<String>
 		filteringController.filteredDataInvalidated();
 		fittingController.fittingDataInvalidated();
 		fittingController.fittingProposalsInvalidated();
-		settingsController.updateListeners();
+		viewController.updateListeners();
 		
 		//fire an update message from the fittingcontroller with a boolean flag
 		//indicating that the change is not comming from inside the fitting controller
@@ -123,12 +121,12 @@ public class PlotController extends EventfulType<String>
 	{
 		ReadOnlySpectrum originalData = null;
 		
-		if (settingsController.getChannelCompositeMode() == ChannelCompositeMode.AVERAGE) {
+		if (viewController.getChannelCompositeMode() == ChannelCompositeMode.AVERAGE) {
 			originalData = dataController.getDataSet().getAnalysis().averagePlot();
-		} else if (settingsController.getChannelCompositeMode()  == ChannelCompositeMode.MAXIMUM) {
+		} else if (viewController.getChannelCompositeMode()  == ChannelCompositeMode.MAXIMUM) {
 			originalData = dataController.getDataSet().getAnalysis().maximumPlot();
 		} else {
-			originalData = dataController.getDataSet().getScanData().get(settingsController.getScanNumber());
+			originalData = dataController.getDataSet().getScanData().get(viewController.getScanNumber());
 		}
 		
 		return originalData;
@@ -227,9 +225,9 @@ public class PlotController extends EventfulType<String>
 		return undoController;
 	}
 
-	public SettingsController settings()
+	public ViewController view()
 	{
-		return settingsController;
+		return viewController;
 	}
 
 	public List<AxisPainter> getAxisPainters()

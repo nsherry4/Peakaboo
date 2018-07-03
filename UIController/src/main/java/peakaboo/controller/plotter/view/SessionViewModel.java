@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.settings;
+package peakaboo.controller.plotter.view;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
@@ -7,7 +7,7 @@ import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import scidraw.drawing.ViewTransform;
 
-public class SessionSettingsModel {
+public class SessionViewModel {
 
 	public int					scanNumber;
 	public ChannelCompositeMode	channelComposite;
@@ -22,7 +22,7 @@ public class SessionSettingsModel {
 	public String				curveFitterName;
 	public String				fittingSolverName;
 	
-	public SessionSettingsModel() {
+	public SessionViewModel() {
 
 		scanNumber = 0;
 		channelComposite = ChannelCompositeMode.AVERAGE;
@@ -43,7 +43,7 @@ public class SessionSettingsModel {
 	}
 	
 	
-	public SessionSettingsModel(SessionSettingsModel copy) {
+	public SessionViewModel(SessionViewModel copy) {
 		scanNumber = copy.scanNumber;
 		
 		channelComposite = copy.channelComposite;

@@ -11,8 +11,8 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringModel;
 import peakaboo.controller.plotter.fitting.FittingModel;
-import peakaboo.controller.plotter.settings.SessionSettingsModel;
-import peakaboo.controller.plotter.settings.SettingsModel;
+import peakaboo.controller.plotter.view.SessionViewModel;
+import peakaboo.controller.plotter.view.ViewModel;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
@@ -22,7 +22,7 @@ import peakaboo.filter.model.SerializedFilter;
 
 public class SavedSession {
 
-	public SessionSettingsModel session;
+	public SessionViewModel session;
 	public List<Integer> badScans;
 	public List<SerializedFilter> filters = new ArrayList<>();
 	public List<SerializedTransitionSeries> fittings;
@@ -52,7 +52,7 @@ public class SavedSession {
 		
 		
 		SavedSession saved = new SavedSession();
-		saved.session = plotController.settings().getSettingsModel().session;
+		saved.session = plotController.view().getViewModel().session;
 		
 		//store bad scans
 		saved.badScans = plotController.data().getDiscards().list();
@@ -77,7 +77,7 @@ public class SavedSession {
 	public void loadInto(PlotController plotController) {
 		FilteringModel filterModel = plotController.filtering().getFilteringMode();
 		FittingModel fittingModel = plotController.fitting().getFittingModel();
-		SettingsModel settingsModel = plotController.settings().getSettingsModel();
+		ViewModel settingsModel = plotController.view().getViewModel();
 		DataController dataController = plotController.data();
 		
 		settingsModel.session = this.session;

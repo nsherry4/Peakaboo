@@ -117,7 +117,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	public void guidedAdd()
 	{
-		if (plotController.data().hasDataSet() && plotController.settings().getMaxEnergy() > 0f) {
+		if (plotController.data().hasDataSet() && plotController.view().getMaxEnergy() > 0f) {
 			smartPanel.resetSelectors();
 			smartPanel.setSelectionMode(true);
 			card.show(cardPanel, SMART);
