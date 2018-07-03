@@ -1529,7 +1529,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			}
 			try {
 				FileOutputStream os = new FileOutputStream(file.get());
-				os.write(controller.getSavedSettings().session.serialize().getBytes());
+				os.write(controller.getSavedSettings().serialize().getBytes());
 				os.close();
 				savedSessionFileName = file.get().getParentFile();
 			}

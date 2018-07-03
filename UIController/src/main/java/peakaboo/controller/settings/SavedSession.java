@@ -20,6 +20,11 @@ import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.SerializedFilter;
 
+/**
+ * Stores session settings which are saved/loaded when the user chooses to
+ * @author NAS
+ *
+ */
 public class SavedSession {
 
 	public SessionViewModel session;

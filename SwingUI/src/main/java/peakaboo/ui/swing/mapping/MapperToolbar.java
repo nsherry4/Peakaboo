@@ -27,7 +27,7 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
-import peakaboo.controller.settings.SavedSettings;
+import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
 import peakaboo.mapping.correction.Corrections;
@@ -168,11 +168,11 @@ class MapperToolbar extends JToolBar {
 				sds = controller.getDataSourceForSubset(pointSelection.getPoints());
 			}
 			
-			SavedSettings settings = controller.getSavedSettings();
+			SavedSession settings = controller.getSavedSettings();
 			
 			//update the bad scan indexes to match the new data source's indexing scheme
 			//TODO: Is there a better way to do this?
-			settings.session.badScans = settings.session.badScans.stream()
+			settings.badScans = settings.badScans.stream()
 					.map(index -> sds.getUpdatedIndex(index))
 					.filter(index -> index > 0)
 					.collect(Collectors.toList()

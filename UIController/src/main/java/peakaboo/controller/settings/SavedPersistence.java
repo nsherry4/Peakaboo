@@ -4,6 +4,11 @@ package peakaboo.controller.settings;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.view.PersistentViewModel;
 
+/**
+ * Stores persistent settings which are loaded when a PlotController is created.
+ * @author NAS
+ *
+ */
 public class SavedPersistence {
 
 	public PersistentViewModel persistent;

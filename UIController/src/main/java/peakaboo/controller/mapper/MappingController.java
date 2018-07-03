@@ -9,7 +9,7 @@ import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.settings.SavedSettings;
+import peakaboo.controller.settings.SavedSession;
 import peakaboo.datasource.model.internal.CroppedDataSource;
 import peakaboo.datasource.model.internal.SelectionDataSource;
 import scitypes.Coord;
@@ -72,7 +72,7 @@ public class MappingController extends EventfulType<String>
 	}
 	
 	
-	public SavedSettings getSavedSettings() {
+	public SavedSession getSavedSettings() {
 		return plotcontroller.getSavedSettings();
 	}
 	

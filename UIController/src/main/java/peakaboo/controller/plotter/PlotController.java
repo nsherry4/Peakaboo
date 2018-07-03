@@ -11,7 +11,6 @@ import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.controller.plotter.view.ChannelCompositeMode;
 import peakaboo.controller.plotter.view.ViewController;
 import peakaboo.controller.settings.SavedSession;
-import peakaboo.controller.settings.SavedSettings;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 import scidraw.drawing.painters.axis.AxisPainter;
@@ -37,7 +36,7 @@ public class PlotController extends EventfulType<String>
 	private DataController					dataController;
 	private FilteringController				filteringController;
 	private FittingController				fittingController;
-	private ViewController				viewController;
+	private ViewController					viewController;
 
 
 	public static enum UpdateType
@@ -72,15 +71,15 @@ public class PlotController extends EventfulType<String>
 	}
 
 	
-	public SavedSettings getSavedSettings() {
-		return SavedSettings.storeFrom(this);
+	public SavedSession getSavedSettings() {
+		return SavedSession.storeFrom(this);
 	}
 	
 
 
 	public void loadSettings(String data, boolean isUndoAction)
 	{
-		SavedSettings saved = SavedSettings.deserialize(data);
+		SavedSession saved = SavedSession.deserialize(data);
 		saved.loadInto(this);
 		
 		if (!isUndoAction) undoController.setUndoPoint("Load Session");
