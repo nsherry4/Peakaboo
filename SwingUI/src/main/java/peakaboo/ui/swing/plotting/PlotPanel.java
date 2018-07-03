@@ -83,6 +83,7 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import peakaboo.controller.plotter.settings.ChannelCompositeMode;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.IdaFittingFunction;
@@ -90,7 +91,6 @@ import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.table.PeakTableReader;
-import peakaboo.curvefit.peak.transition.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
@@ -940,7 +940,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		for (EscapePeakType t : EscapePeakType.values())
 		{
-			final JRadioButtonMenuItem escapeItem = new JRadioButtonMenuItem(t.pretty());
+			final JRadioButtonMenuItem escapeItem = new JRadioButtonMenuItem(t.get().pretty());
 			escapePeakGroup.add(escapeItem);
 			escapePeaks.add(escapeItem);
 			if (t == EscapePeakType.SILICON) escapeItem.setSelected(true);

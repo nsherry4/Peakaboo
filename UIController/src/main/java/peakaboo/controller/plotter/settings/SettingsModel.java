@@ -4,7 +4,7 @@ package peakaboo.controller.plotter.settings;
 
 import java.io.Serializable;
 
-import peakaboo.curvefit.peak.transition.EscapePeakType;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 
 

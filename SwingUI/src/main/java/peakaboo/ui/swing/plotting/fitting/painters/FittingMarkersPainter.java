@@ -5,8 +5,8 @@ import java.awt.Color;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.transition.EscapePeakType;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scidraw.drawing.DrawingRequest;
@@ -87,9 +87,9 @@ public class FittingMarkersPainter extends PlotPainter
 				p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
 				
 				
-				if (escapeType.hasOffset())
+				if (escapeType.get().hasOffset())
 				{
-					for (Transition esc : escapeType.offset()) {
+					for (Transition esc : escapeType.get().offset()) {
 					
 						channel = fitResults.getParameters().getCalibration().fractionalChannelFromEnergy(t.energyValue - esc.energyValue);
 						if (channel < 0) continue;

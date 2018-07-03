@@ -9,7 +9,7 @@ import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
-import peakaboo.curvefit.peak.transition.EscapePeakType;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 
 

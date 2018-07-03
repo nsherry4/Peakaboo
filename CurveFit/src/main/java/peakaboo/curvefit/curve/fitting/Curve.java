@@ -207,8 +207,8 @@ public class Curve
 
 			functions.add(parameters.forTransition(t, this.transitionSeries.type));
 
-			if (fitEscape && parameters.getEscapeType().hasOffset()) {
-				for (Transition esc : parameters.getEscapeType().offset()) {
+			if (fitEscape && parameters.getEscapeType().get().hasOffset()) {
+				for (Transition esc : parameters.getEscapeType().get().offset()) {
 					functions.add(parameters.forEscape(t, esc, this.transitionSeries.element, this.transitionSeries.type));
 				}
 			}

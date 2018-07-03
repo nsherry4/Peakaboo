@@ -3,11 +3,11 @@ package peakaboo.curvefit.curve.fitting;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingContext;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.EscapePeakType;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
@@ -79,8 +79,8 @@ public class FittingParameters {
 		//See Handbook of X-Ray Spectrometry rev2 p282
 		
 		//Energy required to create electron-hole pair in detector material
-		float energyGap = getEscapeType().energyGap();
-		float fano = getEscapeType().fanoFactor();
+		float energyGap = getEscapeType().get().energyGap();
+		float fano = getEscapeType().get().fanoFactor();
 		
 		float noise = fwhmBase;
 		
