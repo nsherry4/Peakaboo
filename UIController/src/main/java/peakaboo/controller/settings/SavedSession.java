@@ -10,9 +10,9 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.data.SavedDataSession;
-import peakaboo.controller.plotter.filtering.FilteringModel;
 import peakaboo.controller.plotter.filtering.SavedFilteringSession;
 import peakaboo.controller.plotter.fitting.FittingModel;
+import peakaboo.controller.plotter.fitting.SavedFittingSession;
 import peakaboo.controller.plotter.view.SessionViewModel;
 import peakaboo.controller.plotter.view.ViewModel;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
@@ -30,10 +30,12 @@ import peakaboo.filter.model.SerializedFilter;
 public class SavedSession {
 
 	public SessionViewModel session;
-	public List<SerializedTransitionSeries> fittings;
+	
 	
 	public SavedDataSession data;
 	public SavedFilteringSession filtering;
+	public SavedFittingSession fitting;
+	
 	
 	
 	/**
@@ -60,32 +62,25 @@ public class SavedSession {
 		
 		
 		//store bad scans
-		saved.data = SavedDataSession.storeFrom(plotController.data());
+		saved.data = new SavedDataSession().storeFrom(plotController.data());
 		
 		//store filters
-		saved.filtering = SavedFilteringSession.storeFrom(plotController.filtering());
+		saved.filtering = new SavedFilteringSession().storeFrom(plotController.filtering());
+		
+		//store fittings
+		saved.fitting = new SavedFittingSession().storeFrom(plotController.fitting());
 		
 		
 		
 		
 		
 		
-		
-		FittingModel fittingsModel = plotController.fitting().getFittingModel();
-		
+		//OLD STYLE
 		
 		
 		saved.session = plotController.view().getViewModel().session;
 		
-		
 
-		
-		
-		//store fittings
-		//map our list of TransitionSeries to SerializedTransitionSeries since we can't use the
-		//yaml library to build TransitionSeries
-		saved.fittings = fittingsModel.selections.getFittedTransitionSeries().stream().map(ts -> new SerializedTransitionSeries(ts)).collect(toList());
-		
 		return saved;
 	}
 	
@@ -100,12 +95,12 @@ public class SavedSession {
 		//restore filtering settings
 		this.filtering.loadInto(plotController.filtering());
 		
+		//restore fitting settings
+		this.fitting.loadInto(plotController.fitting());
 		
 		
 		
 		
-		
-		FilteringModel filterModel = plotController.filtering().getFilteringModel();
 		FittingModel fittingModel = plotController.fitting().getFittingModel();
 		ViewModel settingsModel = plotController.view().getViewModel();
 		DataController dataController = plotController.data();
@@ -115,14 +110,7 @@ public class SavedSession {
 		
 
 		
-		//restore fittings
-		// load transition series
-		fittingModel.selections.clear();		
-		//we can't serialize TransitionSeries directly, so we store a list of Ni:K strings instead
-		//we now convert them back to TransitionSeries
-		for (SerializedTransitionSeries sts : this.fittings) {
-			fittingModel.selections.addTransitionSeries(sts.toTS());
-		}
+
 		
 		
 		if (dataController.hasDataSet()) {
