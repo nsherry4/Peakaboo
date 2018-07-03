@@ -19,8 +19,6 @@ public class SessionViewModel {
 	public float				minEnergy, maxEnergy;
 	public float 				fwhmBase, fwhmMult;
 	public String 				fittingFunctionName;
-	public String				curveFitterName;
-	public String				fittingSolverName;
 	
 	public SessionViewModel() {
 
@@ -36,8 +34,6 @@ public class SessionViewModel {
 		fwhmBase = 0.080f;
 		fwhmMult = 0.013f;
 		fittingFunctionName = PseudoVoigtFittingFunction.class.getName();
-		curveFitterName = UnderCurveFitter.class.getName();
-		fittingSolverName = GreedyFittingSolver.class.getName();
 		
 		
 	}
@@ -60,8 +56,6 @@ public class SessionViewModel {
 		fwhmBase = copy.fwhmBase;
 		fwhmMult = copy.fwhmMult;
 		fittingFunctionName = copy.fittingFunctionName;
-		curveFitterName = copy.curveFitterName;
-		fittingSolverName = copy.fittingSolverName;
 	}
 	
 	//For JYAML Serialization Purposes -- Needs this to handle enums

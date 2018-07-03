@@ -123,8 +123,8 @@ public class AdvancedSettingsPanel extends JPanel {
 		
 		
 		JComboBox<CurveFitter> fittersBox = makeCombo(
-				f -> f.getClass() == controller.view().getCurveFitter().getClass(),
-				f -> controller.view().setCurveFitter(f),
+				f -> f.getClass() == controller.fitting().getCurveFitter().getClass(),
+				f -> controller.fitting().setCurveFitter(f),
 				new UnderCurveFitter(),
 				new LeastSquaresCurveFitter()
 			);
@@ -135,8 +135,8 @@ public class AdvancedSettingsPanel extends JPanel {
 		
 		
 		JComboBox<FittingSolver> solversBox = makeCombo(
-				f -> f.getClass() == controller.view().getFittingSolver().getClass(), 
-				f -> controller.view().setFittingSolver(f), 
+				f -> f.getClass() == controller.fitting().getFittingSolver().getClass(), 
+				f -> controller.fitting().setFittingSolver(f), 
 				new GreedyFittingSolver(),
 				new LeastSquaresFittingSolver()
 			);

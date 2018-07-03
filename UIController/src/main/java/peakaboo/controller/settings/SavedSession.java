@@ -137,23 +137,11 @@ public class SavedSession {
 			}
 			
 			
-			Class<? extends CurveFitter> curveFitterClass;
-			try {
-				curveFitterClass = (Class<? extends CurveFitter>) Class.forName(settingsModel.session.curveFitterName);
-				fittingModel.curveFitter = curveFitterClass.newInstance();
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + settingsModel.session.curveFitterName, e);
-			}
+
 			
 			
 			
-			Class<? extends FittingSolver> fittingSolverClass;
-			try {
-				fittingSolverClass = (Class<? extends FittingSolver>) Class.forName(settingsModel.session.fittingSolverName);
-				fittingModel.fittingSolver = fittingSolverClass.newInstance();
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + settingsModel.session.fittingSolverName, e);
-			}
+
 			
 			
 		}

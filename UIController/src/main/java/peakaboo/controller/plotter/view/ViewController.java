@@ -316,27 +316,6 @@ public class ViewController extends Eventful
 
 	
 	
-	public void setCurveFitter(CurveFitter fitter) {
-		plot.fitting().setCurveFitter(fitter);
-		viewModel.session.curveFitterName = fitter.getClass().getName();
-	}
-	
-	public CurveFitter getCurveFitter() {
-		return plot.fitting().getCurveFitter();
-	}
-	
-	
-	
-	public void setFittingSolver(FittingSolver solver) {
-		plot.fitting().setFittingSolver(solver);
-		viewModel.session.fittingSolverName = solver.getClass().getName();
-	}
-	
-	public FittingSolver getFittingSolver() {
-		return plot.fitting().getFittingSolver();
-	}
-	
-	
 
 	public void setFittingFunction(Class<? extends FittingFunction> cls) {
 		plot.fitting().setFittingFunction(cls);
