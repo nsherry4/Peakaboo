@@ -13,6 +13,8 @@ import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.settings.SessionSettingsModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilteringModel;
@@ -129,6 +131,26 @@ public class SavedSession {
 			} catch (ClassNotFoundException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + settingsModel.session.fittingFunctionName, e);
 			}
+			
+			
+			Class<? extends CurveFitter> curveFitterClass;
+			try {
+				curveFitterClass = (Class<? extends CurveFitter>) Class.forName(settingsModel.session.curveFitterName);
+				fittingModel.curveFitter = curveFitterClass.newInstance();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + settingsModel.session.curveFitterName, e);
+			}
+			
+			
+			
+			Class<? extends FittingSolver> fittingSolverClass;
+			try {
+				fittingSolverClass = (Class<? extends FittingSolver>) Class.forName(settingsModel.session.fittingSolverName);
+				fittingModel.fittingSolver = fittingSolverClass.newInstance();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + settingsModel.session.fittingSolverName, e);
+			}
+			
 			
 		}
 		

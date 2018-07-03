@@ -12,6 +12,10 @@ public class UnderCurveFitter implements CurveFitter {
 		return "Max Under Curve";
 	}
 	
+	@Override
+	public String toString() {
+		return name();
+	}
 	
 
 	/**

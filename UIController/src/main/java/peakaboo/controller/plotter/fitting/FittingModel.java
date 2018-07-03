@@ -5,6 +5,10 @@ import java.util.List;
 
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.transition.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 
@@ -36,6 +40,16 @@ public class FittingModel
 	
 	List<TransitionSeries> highlighted;
 	
+	/**
+	 * {@link CurveFitter} to use for all fitting of single curves to data
+	 */
+	public CurveFitter curveFitter;
+	
+	/**
+	 * {@link FittingSolver} to use for solving for the intensities of competing curves
+	 */
+	public FittingSolver fittingSolver;
+	
 	
 	public FittingModel()
 	{
@@ -46,6 +60,8 @@ public class FittingModel
 		selectionResults = null;
 		proposalResults = null;
 		highlighted = new ArrayList<>();
+		curveFitter = new UnderCurveFitter();
+		fittingSolver = new GreedyFittingSolver();
 	}
 	
 }

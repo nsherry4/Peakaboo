@@ -29,4 +29,15 @@ public class IdaFittingFunction implements FittingFunction {
 		return 2 / (temp + 1 / temp);
 	}
 	
+	@Override
+	public String name() {
+		return "Ida (Deprecated)";
+	}
+
+	@Override
+	public String toString() {
+		return name();
+	}
+	
+	
 }

@@ -27,6 +27,11 @@ public class LeastSquaresCurveFitter implements CurveFitter {
 	}
 	
 	@Override
+	public String toString() {
+		return name();
+	}
+	
+	@Override
 	public FittingResult fit(ReadOnlySpectrum data, Curve curve) {
 		float scale = this.findLeastSquaresScaleFactor(data, curve);
 		ReadOnlySpectrum scaledData = curve.scale(scale);

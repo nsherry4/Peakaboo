@@ -21,6 +21,11 @@ public class GreedyFittingSolver implements FittingSolver {
 		return "Greedy";
 	}
 	
+	@Override
+	public String toString() {
+		return name();
+	}
+	
 	/**
 	 * Fit this FittingSet against spectrum data
 	 */

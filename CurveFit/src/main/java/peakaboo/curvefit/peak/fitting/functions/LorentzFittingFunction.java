@@ -59,5 +59,16 @@ public class LorentzFittingFunction implements FittingFunction {
 		
 		return (float)value;
 	}
+	
+	@Override
+	public String name() {
+		return "Lorentz";
+	}
+
+	@Override
+	public String toString() {
+		return name();
+	}
+	
 
 }

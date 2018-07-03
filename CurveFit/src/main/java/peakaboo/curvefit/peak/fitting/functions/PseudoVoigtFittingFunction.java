@@ -32,4 +32,14 @@ public class PseudoVoigtFittingFunction implements FittingFunction {
 		return backer.forEnergyAbsolute(energy);
 	}
 
+	@Override
+	public String name() {
+		return "Pseudo-Voigt";
+	}
+
+	@Override
+	public String toString() {
+		return name();
+	}
+	
 }

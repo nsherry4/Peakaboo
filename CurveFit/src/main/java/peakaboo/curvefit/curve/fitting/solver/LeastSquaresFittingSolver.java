@@ -35,7 +35,12 @@ public class LeastSquaresFittingSolver implements FittingSolver {
 
 	@Override
 	public String name() {
-		return "Least Squares";
+		return "Least Squares (Beta)";
+	}
+	
+	@Override
+	public String toString() {
+		return name();
 	}
 
 	@Override

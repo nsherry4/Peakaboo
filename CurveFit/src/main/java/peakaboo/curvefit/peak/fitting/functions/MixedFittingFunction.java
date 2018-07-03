@@ -34,4 +34,15 @@ public class MixedFittingFunction implements FittingFunction {
 		return f1v + f2v;
 	}
 	
+	@Override
+	public String name() {
+		return "Mixed (Do not use directly)";
+	}
+
+	@Override
+	public String toString() {
+		return name();
+	}
+	
+	
 }

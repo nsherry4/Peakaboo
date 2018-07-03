@@ -84,4 +84,16 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 		};
 	}
 	
+	
+	@Override
+	public String name() {
+		return "Convolving Voigt";
+	}
+
+	@Override
+	public String toString() {
+		return name();
+	}
+	
+	
 }

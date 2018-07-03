@@ -28,11 +28,6 @@ public class FittingController extends EventfulType<Boolean>
 	PlotController plot;
 	
 	
-	
-	CurveFitter curveFitter = new UnderCurveFitter();
-	FittingSolver fittingSolver = new GreedyFittingSolver();
-	
-	
 	public FittingController(PlotController plotController)
 	{
 		this.plot = plotController;
@@ -317,23 +312,23 @@ public class FittingController extends EventfulType<Boolean>
 	}
 	
 	public CurveFitter getCurveFitter() {
-		return curveFitter;
+		return fittingModel.curveFitter;
 	}
 	
 	
 	public void setCurveFitter(CurveFitter curveFitter) {
-		this.curveFitter = curveFitter;
+		this.fittingModel.curveFitter = curveFitter;
 		fittingDataInvalidated();
 	}
 
 
 
 	public FittingSolver getFittingSolver() {
-		return fittingSolver;
+		return this.fittingModel.fittingSolver;
 	}
 	
 	public void setFittingSolver(FittingSolver fittingSolver) {
-		this.fittingSolver = fittingSolver;
+		this.fittingModel.fittingSolver = fittingSolver;
 		fittingDataInvalidated();
 	}
 	

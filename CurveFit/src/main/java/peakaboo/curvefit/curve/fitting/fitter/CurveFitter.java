@@ -22,5 +22,5 @@ public interface CurveFitter {
 	FittingResult fit(ReadOnlySpectrum data, Curve curve);
 	
 	String name(); 
-	
+		
 }

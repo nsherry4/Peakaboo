@@ -1,23 +1,33 @@
 package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
+import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.settings.SettingsSerializer;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.LeastSquaresCurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import peakaboo.curvefit.curve.fitting.solver.LeastSquaresFittingSolver;
+import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.IdaFittingFunction;
@@ -27,6 +37,7 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.SettingsPanel;
+import swidget.widgets.SettingsPanel.LabelPosition;
 import swidget.widgets.Spacing;
 
 public class AdvancedSettingsPanel extends JPanel {
@@ -35,7 +46,6 @@ public class AdvancedSettingsPanel extends JPanel {
 
 		SettingsPanel master = new SettingsPanel();
 		master.addSetting(peakFitting(controller));
-		master.addSetting(curveFitter(controller));
 		master.setBorder(Spacing.bLarge());
 		
 		this.setLayout(new BorderLayout());
@@ -55,35 +65,34 @@ public class AdvancedSettingsPanel extends JPanel {
 	}
 
 	
-	private JComponent curveFitter(PlotController controller) {
+	private <T> JComboBox<T> makeCombo(Predicate<T> matchesCurrent, Consumer<T> onSelect, T... items) {
 		
-		SettingsPanel fitters = new SettingsPanel();
-		ButtonGroup fittersGroup = new ButtonGroup();
-		
-		Consumer<CurveFitter> addFitter = fitter -> {
-			JRadioButton option = new JRadioButton(fitter.name());
-			option.setSelected(controller.fitting().getCurveFitter().getClass() == fitter.getClass());
-			option.addActionListener(e -> {
-				controller.fitting().setCurveFitter(fitter);
-			});
-			fittersGroup.add(option);
-			
-			fitters.addSetting(option);
+		JComboBox<T> comboBox = new JComboBox<>();
+		Consumer<T> addItem = fitter -> {
+			comboBox.addItem(fitter);
+			if (matchesCurrent.test(fitter)) {
+				comboBox.setSelectedItem(fitter);
+			}
 		};
+		for (T item : items) {
+			addItem.accept(item);
+		}
+		comboBox.addActionListener(e -> {
+			onSelect.accept((T) comboBox.getSelectedItem());
+		});
 		
-		addFitter.accept(new UnderCurveFitter());
-		addFitter.accept(new LeastSquaresCurveFitter());
-		
-		return titled(fitters, "Single-Curve Fitting");
-		
+		return comboBox;
 	}
+	
+
+
 	
 	private JComponent peakFitting(PlotController controller) {
 		
 
-		SettingsPanel peakwidth = new SettingsPanel();
-		peakwidth.setOpaque(false);
-		peakwidth.setBorder(Spacing.bMedium());
+		SettingsPanel panel = new SettingsPanel(new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.medium));
+		panel.setOpaque(false);
+		panel.setBorder(Spacing.bMedium());
 
 		JSpinner fwhmBase = new JSpinner();
 		fwhmBase.setModel(new SpinnerNumberModel(controller.settings().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
@@ -95,59 +104,46 @@ public class AdvancedSettingsPanel extends JPanel {
 			controller.settings().setFWHMBase(base);
 			
 		});
-		peakwidth.addSetting(fwhmBase, "FWHM Noise (eV)");
+		panel.addSetting(fwhmBase, "FWHM Noise (eV)");
 	
+
 		
 		
-		ButtonGroup functionGroup = new ButtonGroup();
+		JComboBox<FittingFunction> peakModelBox = makeCombo(
+				f -> f.getClass() == controller.settings().getFittingFunction(),
+				f -> controller.settings().setFittingFunction(f.getClass()),
+				new PseudoVoigtFittingFunction(),
+				new ConvolvingVoigtFittingFunction(),
+				new GaussianFittingFunction(),
+				new LorentzFittingFunction()
+			);
+		panel.addSetting(peakModelBox, "Peak Model", LabelPosition.BESIDE, false, true);
 		
 		
-		JRadioButton pseudovoigt = new JRadioButton("Pseudo-Voigt");
-		pseudovoigt.setSelected(controller.settings().getFittingFunction() == PseudoVoigtFittingFunction.class);
-		pseudovoigt.addActionListener(e -> {
-			controller.settings().setFittingFunction(PseudoVoigtFittingFunction.class);
-		});
-		functionGroup.add(pseudovoigt);
-		peakwidth.addSetting(pseudovoigt);
 		
 		
-		JRadioButton voigt = new JRadioButton("Test Voigt");
-		voigt.setSelected(controller.settings().getFittingFunction() == ConvolvingVoigtFittingFunction.class);
-		voigt.addActionListener(e -> {
-			controller.settings().setFittingFunction(ConvolvingVoigtFittingFunction.class);
-		});
-		functionGroup.add(voigt);
-		peakwidth.addSetting(voigt);
+		JComboBox<CurveFitter> fittersBox = makeCombo(
+				f -> f.getClass() == controller.settings().getCurveFitter().getClass(),
+				f -> controller.settings().setCurveFitter(f),
+				new UnderCurveFitter(),
+				new LeastSquaresCurveFitter()
+			);
+		panel.addSetting(fittersBox, "Single-Curve Fitting", LabelPosition.BESIDE, false, true);
+
 		
 		
-		JRadioButton gaussian = new JRadioButton("Gaussian");
-		gaussian.setSelected(controller.settings().getFittingFunction() == GaussianFittingFunction.class);
-		gaussian.addActionListener(e -> {
-			controller.settings().setFittingFunction(GaussianFittingFunction.class);
-		});
-		functionGroup.add(gaussian);
-		peakwidth.addSetting(gaussian);
 		
 		
-		JRadioButton ida = new JRadioButton("Ida");
-		ida.setSelected(controller.settings().getFittingFunction() == IdaFittingFunction.class);
-		ida.addActionListener(e -> {
-			controller.settings().setFittingFunction(IdaFittingFunction.class);
-		});
-		functionGroup.add(ida);
-		peakwidth.addSetting(ida);
+		JComboBox<FittingSolver> solversBox = makeCombo(
+				f -> f.getClass() == controller.settings().getFittingSolver().getClass(), 
+				f -> controller.settings().setFittingSolver(f), 
+				new GreedyFittingSolver(),
+				new LeastSquaresFittingSolver()
+			);
+		panel.addSetting(solversBox, "Multi-Curve Solver", LabelPosition.BESIDE, false, true);
 		
 		
-		JRadioButton lorentz = new JRadioButton("Lorentz");
-		lorentz.setSelected(controller.settings().getFittingFunction() == LorentzFittingFunction.class);
-		lorentz.addActionListener(e -> {
-			controller.settings().setFittingFunction(LorentzFittingFunction.class);
-		});
-		functionGroup.add(lorentz);
-		peakwidth.addSetting(lorentz);
-		
-		
-		return titled(peakwidth, "Peak Fitting");
+		return panel;
 		
 	}
 

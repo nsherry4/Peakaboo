@@ -22,6 +22,8 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
@@ -313,6 +315,28 @@ public class SettingsController extends Eventful
 	}
 
 	
+	
+	public void setCurveFitter(CurveFitter fitter) {
+		plot.fitting().setCurveFitter(fitter);
+		settingsModel.session.curveFitterName = fitter.getClass().getName();
+	}
+	
+	public CurveFitter getCurveFitter() {
+		return plot.fitting().getCurveFitter();
+	}
+	
+	
+	
+	public void setFittingSolver(FittingSolver solver) {
+		plot.fitting().setFittingSolver(solver);
+		settingsModel.session.fittingSolverName = solver.getClass().getName();
+	}
+	
+	public FittingSolver getFittingSolver() {
+		return plot.fitting().getFittingSolver();
+	}
+	
+	
 
 	public void setFittingFunction(Class<? extends FittingFunction> cls) {
 		plot.fitting().setFittingFunction(cls);
@@ -361,6 +385,8 @@ public class SettingsController extends Eventful
 			PeakabooLog.get().log(Level.WARNING, "Could not save persistent settings", e);
 		}
 	}
+
+
 
 
 

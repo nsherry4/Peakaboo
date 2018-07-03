@@ -30,4 +30,6 @@ public interface FittingFunction {
 	 */
 	float forEnergyAbsolute(float energy);
 	
+	String name();
+	
 }

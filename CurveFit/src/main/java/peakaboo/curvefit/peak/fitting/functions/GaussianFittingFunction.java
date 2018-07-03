@@ -53,5 +53,16 @@ public class GaussianFittingFunction implements FittingFunction {
 	}
 
 
+	@Override
+	public String name() {
+		return "Gaussian";
+	}
+
+	@Override
+	public String toString() {
+		return name();
+	}
+	
+	
 	
 }
