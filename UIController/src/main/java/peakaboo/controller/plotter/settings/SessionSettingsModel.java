@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter.settings;
 
+import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
@@ -40,6 +41,7 @@ public class SessionSettingsModel {
 		
 		
 	}
+	
 	
 	public SessionSettingsModel(SessionSettingsModel copy) {
 		scanNumber = copy.scanNumber;

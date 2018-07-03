@@ -1,5 +1,6 @@
-package peakaboo.filter.model;
+package peakaboo.controller.plotter.filtering;
 
+import peakaboo.filter.model.FilterSet;
 import scitypes.ReadOnlySpectrum;
 
 

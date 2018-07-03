@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
+import peakaboo.controller.plotter.filtering.FilteringModel;
 import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.settings.SessionSettingsModel;
 import peakaboo.controller.plotter.settings.SettingsModel;
@@ -17,7 +18,6 @@ import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilteringModel;
 import peakaboo.filter.model.SerializedFilter;
 
 public class SavedSession {
