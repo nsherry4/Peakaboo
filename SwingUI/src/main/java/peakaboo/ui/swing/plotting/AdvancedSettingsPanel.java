@@ -110,8 +110,8 @@ public class AdvancedSettingsPanel extends JPanel {
 		
 		
 		JComboBox<FittingFunction> peakModelBox = makeCombo(
-				f -> f.getClass() == controller.view().getFittingFunction(),
-				f -> controller.view().setFittingFunction(f.getClass()),
+				f -> f.getClass() == controller.fitting().getFittingFunction(),
+				f -> controller.fitting().setFittingFunction(f.getClass()),
 				new PseudoVoigtFittingFunction(),
 				new ConvolvingVoigtFittingFunction(),
 				new GaussianFittingFunction(),

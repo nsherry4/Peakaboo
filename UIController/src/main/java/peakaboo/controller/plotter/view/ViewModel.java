@@ -4,9 +4,6 @@ package peakaboo.controller.plotter.view;
 
 import java.io.Serializable;
 
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import scidraw.drawing.ViewTransform;
-
 
 // Holds settings related to the way the data is presented to the user.
 // This is here, rather than in the view because the drawing of the plot
@@ -27,10 +24,6 @@ public class ViewModel implements Serializable
 		session = new SessionViewModel();
 	}
 
-	public void copy(ViewModel copy)
-	{
-		persistent = new PersistentViewModel(copy.persistent);
-		session = new SessionViewModel(copy.session);		
-	}
+
 
 }

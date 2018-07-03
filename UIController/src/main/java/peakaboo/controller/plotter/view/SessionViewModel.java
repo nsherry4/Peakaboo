@@ -1,10 +1,6 @@
 package peakaboo.controller.plotter.view;
 
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import scidraw.drawing.ViewTransform;
 
 public class SessionViewModel {
@@ -18,7 +14,6 @@ public class SessionViewModel {
 	public ViewTransform		viewTransform;
 	public float				minEnergy, maxEnergy;
 	public float 				fwhmBase, fwhmMult;
-	public String 				fittingFunctionName;
 	
 	public SessionViewModel() {
 
@@ -33,31 +28,11 @@ public class SessionViewModel {
 		maxEnergy = 0.0f;
 		fwhmBase = 0.080f;
 		fwhmMult = 0.013f;
-		fittingFunctionName = PseudoVoigtFittingFunction.class.getName();
 		
 		
 	}
 	
-	
-	public SessionViewModel(SessionViewModel copy) {
-		scanNumber = copy.scanNumber;
 		
-		channelComposite = copy.channelComposite;
-		backgroundShowOriginal = copy.backgroundShowOriginal;
-		zoom = copy.zoom;
-		lockPlotHeight = copy.lockPlotHeight;
-		
-		escape = copy.escape;
-		viewTransform = copy.viewTransform;
-		
-		minEnergy = copy.minEnergy;
-		maxEnergy = copy.maxEnergy;
-		
-		fwhmBase = copy.fwhmBase;
-		fwhmMult = copy.fwhmMult;
-		fittingFunctionName = copy.fittingFunctionName;
-	}
-	
 	//For JYAML Serialization Purposes -- Needs this to handle enums
 	public String getChannelComposite()
 	{

@@ -127,21 +127,6 @@ public class SavedSession {
 			
 			fittingModel.selections.getFittingParameters().setFWMHBase(settingsModel.session.fwhmBase);
 			
-			Class<? extends FittingFunction> fittingFunctionClass ;
-			try {
-				fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(settingsModel.session.fittingFunctionName);
-				fittingModel.selections.getFittingParameters().setFittingFunction(fittingFunctionClass);
-				fittingModel.proposals.getFittingParameters().setFittingFunction(fittingFunctionClass);
-			} catch (ClassNotFoundException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + settingsModel.session.fittingFunctionName, e);
-			}
-			
-			
-
-			
-			
-			
-
 			
 			
 		}

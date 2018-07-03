@@ -9,14 +9,21 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.settings.SerializedTransitionSeries;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.peak.fitting.FittingFunction;
 
 public class SavedFittingSession {
 
 	public List<SerializedTransitionSeries> fittings;
+	
 	//Class name for FittingSolver
 	public String solver;
+	
 	//Class name for CurveFitter
 	public String fitter;
+	
+	//Class name for FittingFunction
+	public String function;
+	
 	
 	public SavedFittingSession storeFrom(FittingController controller) {
 		
@@ -31,6 +38,9 @@ public class SavedFittingSession {
 		
 		//Save single-curve fitter
 		fitter = controller.getCurveFitter().getClass().getName();
+		
+		//Save the fitting function
+		function = controller.getFittingFunction().getName();
 		
 		return this;
 	}
@@ -61,6 +71,16 @@ public class SavedFittingSession {
 			controller.fittingModel.curveFitter = curveFitterClass.newInstance();
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + fitter, e);
+		}
+		
+		//Restore the fitting function
+		Class<? extends FittingFunction> fittingFunctionClass ;
+		try {
+			fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(function);
+			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fittingFunctionClass);
+			controller.fittingModel.proposals.getFittingParameters().setFittingFunction(fittingFunctionClass);
+		} catch (ClassNotFoundException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + function, e);
 		}
 		
 		

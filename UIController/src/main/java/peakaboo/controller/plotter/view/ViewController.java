@@ -317,15 +317,6 @@ public class ViewController extends Eventful
 	
 	
 
-	public void setFittingFunction(Class<? extends FittingFunction> cls) {
-		plot.fitting().setFittingFunction(cls);
-		viewModel.session.fittingFunctionName = cls.getName();
-	}
-	
-	public Class<? extends FittingFunction> getFittingFunction() {
-		return plot.fitting().getFittingFunction();
-	}
-
 	
 	/**
 	 * This should really only be called at creation time, since it loads settings 
