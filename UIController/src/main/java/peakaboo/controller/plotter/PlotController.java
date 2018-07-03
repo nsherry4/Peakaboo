@@ -64,46 +64,11 @@ public class PlotController extends EventfulType<String>
 		settingsController = new SettingsController(this);
 		settingsController.loadPersistentSettings();
 		
-		undoController.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				updateListeners(UpdateType.UNDO.toString());
-			}
-		});
-		
-		dataController.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				updateListeners(UpdateType.DATA.toString());
-			}
-		});
-		
-		filteringController.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				updateListeners(UpdateType.FILTER.toString());
-			}
-		});
-		
-		fittingController.addListener(new EventfulTypeListener<Boolean>() {
-			
-			public void change(Boolean b)
-			{
-				updateListeners(UpdateType.FITTING.toString());
-			}
-		});
-		
-		settingsController.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				updateListeners(UpdateType.UI.toString());
-			}
-		});
-		
+		undoController.addListener(() -> updateListeners(UpdateType.UNDO.toString()));
+		dataController.addListener(() -> updateListeners(UpdateType.DATA.toString()));
+		filteringController.addListener(() -> updateListeners(UpdateType.FILTER.toString()));		
+		fittingController.addListener(b -> updateListeners(UpdateType.FITTING.toString()));
+		settingsController.addListener(() -> updateListeners(UpdateType.UI.toString()));
 		
 		undoController.setUndoPoint("");
 	}
