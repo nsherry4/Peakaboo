@@ -295,8 +295,8 @@ public class PlotPanel extends TabbedInterfacePanel
 	private void setEnergySpinners()
 	{
 		//dont let the listeners get wind of this change		
-		minEnergy.setValue((double) controller.view().getMinEnergy());
-		maxEnergy.setValue((double) controller.view().getMaxEnergy());
+		minEnergy.setValue((double) controller.fitting().getMinEnergy());
+		maxEnergy.setValue((double) controller.fitting().getMaxEnergy());
 	}
 
 
@@ -608,11 +608,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		minEnergy.getEditor().setOpaque(false);
 		minEnergy.addChangeListener(e -> {
 			float min = ((Number) minEnergy.getValue()).floatValue();
-			if (min > controller.view().getMaxEnergy()) {
-				min = controller.view().getMaxEnergy() - 0.01f;
+			if (min > controller.fitting().getMaxEnergy()) {
+				min = controller.fitting().getMaxEnergy() - 0.01f;
 				minEnergy.setValue(min);
 			} 
-			controller.view().setMinEnergy(min);	
+			controller.fitting().setMinEnergy(min);	
 		});
 		energy.addSetting(minEnergy, "Minimum");
 		
@@ -623,11 +623,11 @@ public class PlotPanel extends TabbedInterfacePanel
 		maxEnergy.getEditor().setOpaque(false);
 		maxEnergy.addChangeListener(e -> {
 			float max = ((Number) maxEnergy.getValue()).floatValue();
-			if (max < controller.view().getMinEnergy()) {
-				max = controller.view().getMinEnergy() + 0.01f;
+			if (max < controller.fitting().getMinEnergy()) {
+				max = controller.fitting().getMinEnergy() + 0.01f;
 				maxEnergy.setValue(max);
 			} 
-			controller.view().setMaxEnergy(max);
+			controller.fitting().setMaxEnergy(max);
 		});
 		energy.addSetting(maxEnergy, "Maximum");
 
@@ -950,11 +950,11 @@ public class PlotPanel extends TabbedInterfacePanel
 			
 			escapeItem.addActionListener(e -> {
 				escapeItem.setSelected(true);
-				controller.view().setEscapePeakType(finalt);
+				controller.fitting().setEscapeType(finalt);
 			});
 			
 			controller.addListener(message -> {
-				escapeItem.setSelected( controller.view().getEscapePeakType() == finalt );
+				escapeItem.setSelected( controller.fitting().getEscapeType() == finalt );
 			});
 
 		}
@@ -1778,8 +1778,8 @@ public class PlotPanel extends TabbedInterfacePanel
 			if (event == Event.COMPLETED) {
 				EnergyCalibration energy = energyTask.last().getResult().orElse(null);
 				if (energy != null) {
-					controller.view().setMinEnergy(energy.getMinEnergy());
-					controller.view().setMaxEnergy(energy.getMaxEnergy());
+					controller.fitting().setMinEnergy(energy.getMinEnergy());
+					controller.fitting().setMaxEnergy(energy.getMaxEnergy());
 				}
 			}
 		});

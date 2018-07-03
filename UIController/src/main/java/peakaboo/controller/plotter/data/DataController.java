@@ -139,8 +139,8 @@ public class DataController extends Eventful
 		dataModel = dsp;
 		
 		plot.view().setScanNumber( dsp.getAnalysis().firstNonNullScanIndex() );
-		plot.view().setMinEnergy(dsp.getDataSource().getScanData().minEnergy());
-		plot.view().setMaxEnergy(dsp.getDataSource().getScanData().maxEnergy());
+		plot.fitting().setMinEnergy(dsp.getDataSource().getScanData().minEnergy());
+		plot.fitting().setMaxEnergy(dsp.getDataSource().getScanData().maxEnergy());
 		
 	
 		plot.history().clearUndos();

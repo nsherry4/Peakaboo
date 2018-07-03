@@ -81,33 +81,6 @@ public class ViewController extends Eventful
 		return viewModel.persistent.showIndividualFittings;
 	}
 
-
-	public void setMaxEnergy(float max) {
-		viewModel.session.maxEnergy = max;
-		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
-		plot.fitting().setFittingParameters(dataWidth, getMinEnergy(), max);
-
-		updateListeners();
-	}
-
-	public float getMaxEnergy()
-	{
-		return viewModel.session.maxEnergy;
-	}
-
-	
-	public void setMinEnergy(float min) {
-		viewModel.session.minEnergy = min;
-		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
-		plot.fitting().setFittingParameters(dataWidth, min, getMaxEnergy());
-		updateListeners();
-	}
-
-	
-	public float getMinEnergy()
-	{
-		return viewModel.session.minEnergy;
-	}
 	
 	public void setViewLog(boolean log)
 	{
@@ -266,11 +239,15 @@ public class ViewController extends Eventful
 	{
 		return viewModel.session.backgroundShowOriginal;
 	}
-
+	
 	public float getEnergyForChannel(int channel)
 	{
 		if (!plot.data().hasDataSet()) return 0.0f;
-		EnergyCalibration calibration = new EnergyCalibration(getMinEnergy(), getMaxEnergy(), plot.data().getDataSet().getAnalysis().channelsPerScan());
+		EnergyCalibration calibration = new EnergyCalibration(
+				plot.fitting().getMinEnergy(), 
+				plot.fitting().getMaxEnergy(), 
+				plot.data().getDataSet().getAnalysis().channelsPerScan()
+			);
 		return calibration.energyFromChannel(channel);
 	}
 
@@ -285,17 +262,6 @@ public class ViewController extends Eventful
 		return new Pair<Float, Float>(scans.first.get(channel), scans.second.get(channel));
 	}
 
-
-	public EscapePeakType getEscapePeakType()
-	{
-		return viewModel.session.escape;
-	}
-	
-	public void setEscapePeakType(EscapePeakType type)
-	{
-		plot.fitting().setEscapeType(type);
-		viewModel.session.escape = type;
-	}
 	
 	public boolean getLockPlotHeight() {
 		return viewModel.session.lockPlotHeight;

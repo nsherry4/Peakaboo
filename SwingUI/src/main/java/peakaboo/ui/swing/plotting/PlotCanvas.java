@@ -341,7 +341,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			dr.imageHeight = (float) size.getHeight();
 			dr.imageWidth = (float) size.getWidth();
 			dr.viewTransform = controller.view().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
-			dr.unitSize = (controller.view().getMaxEnergy() - controller.view().getMinEnergy()) / (float)datasetSize;
+			dr.unitSize = (controller.fitting().getMaxEnergy() - controller.fitting().getMinEnergy()) / (float)datasetSize;
 			dr.drawToVectorSurface = context.isVectorSurface();
 			
 			// if axes are shown, also draw horizontal grid lines
@@ -433,8 +433,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			);
 			
 			if (controller.view().getShowElementMarkers()) {
-				plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingSelectionResults(), controller.view().getEscapePeakType(), fittingStroke));
-				plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingProposalResults(), controller.view().getEscapePeakType(), proposedStroke));
+				plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingSelectionResults(), controller.fitting().getEscapeType(), fittingStroke));
+				plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingProposalResults(), controller.fitting().getEscapeType(), proposedStroke));
 			}
 					
 	
@@ -459,7 +459,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 				axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
 				axisPainters.add(new TickMarkAxisPainter(
 					new Bounds<Float>(0.0f, maxIntensity),
-					new Bounds<Float>(controller.view().getMinEnergy(), controller.view().getMaxEnergy()),
+					new Bounds<Float>(controller.fitting().getMinEnergy(), controller.fitting().getMaxEnergy()),
 					null,
 					new Bounds<Float>(0.0f, maxIntensity),
 					dr.viewTransform == ViewTransform.LOG,

@@ -29,13 +29,13 @@ import peakaboo.filter.model.SerializedFilter;
  */
 public class SavedSession {
 
-	public SessionViewModel session;
+	
 	
 	
 	public SavedDataSession data;
 	public SavedFilteringSession filtering;
 	public SavedFittingSession fitting;
-	
+	public SessionViewModel view;
 	
 	
 	/**
@@ -71,14 +71,8 @@ public class SavedSession {
 		saved.fitting = new SavedFittingSession().storeFrom(plotController.fitting());
 		
 		
-		
-		
-		
-		
-		//OLD STYLE
-		
-		
-		saved.session = plotController.view().getViewModel().session;
+		//store view settings -- this is done differently, since view's session settings is itself serializable
+		saved.view = plotController.view().getViewModel().session;
 		
 
 		return saved;
@@ -105,7 +99,7 @@ public class SavedSession {
 		ViewModel settingsModel = plotController.view().getViewModel();
 		DataController dataController = plotController.data();
 		
-		settingsModel.session = this.session;
+		plotController.view().getViewModel().session = this.view;
 		
 		
 
@@ -114,21 +108,7 @@ public class SavedSession {
 		
 		
 		if (dataController.hasDataSet()) {
-			EnergyCalibration calibration = new EnergyCalibration(
-					settingsModel.session.minEnergy, 
-					settingsModel.session.maxEnergy, 
-					dataController.getDataSet().getAnalysis().channelsPerScan()
-				);
-			fittingModel.selections.getFittingParameters().setCalibration(calibration);
-			fittingModel.proposals.getFittingParameters().setCalibration(calibration);
-			
-			fittingModel.selections.getFittingParameters().setEscapeType(settingsModel.session.escape);
-			fittingModel.proposals.getFittingParameters().setEscapeType(settingsModel.session.escape);
-			
 			fittingModel.selections.getFittingParameters().setFWMHBase(settingsModel.session.fwhmBase);
-			
-			
-			
 		}
 		
 		

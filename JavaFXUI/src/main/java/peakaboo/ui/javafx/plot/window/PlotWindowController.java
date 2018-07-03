@@ -111,7 +111,7 @@ public class PlotWindowController extends IActofUIController {
 
         kev = new NumberSpinner(new BigDecimal(20.48d), new BigDecimal(0.01d));
         kev.numberProperty().addListener((obs, o, n) -> {
-        	plotController.view().setMaxEnergy(n.floatValue());
+        	plotController.fitting().setMaxEnergy(n.floatValue());
         	getChangeBus().broadcast(new EnergyLevelChange(this));
         });
         kev.setPrefWidth(100);

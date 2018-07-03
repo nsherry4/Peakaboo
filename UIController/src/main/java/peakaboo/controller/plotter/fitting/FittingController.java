@@ -10,9 +10,7 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.table.PeakTable;
@@ -203,7 +201,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public EscapePeakType getEscapeType()
 	{
-		return plot.view().getEscapePeakType();
+		return plot.fitting().getEscapeType();
 	}
 	
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
@@ -230,14 +228,41 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.selections.getFittingParameters().setCalibration(min, max, scanSize);
 		fittingModel.proposals.getFittingParameters().setCalibration(min, max, scanSize);
 
-		fittingModel.selections.getFittingParameters().setEscapeType(plot.view().getEscapePeakType());
-		fittingModel.proposals.getFittingParameters().setEscapeType(plot.view().getEscapePeakType());
+		fittingModel.selections.getFittingParameters().setEscapeType(plot.fitting().getEscapeType());
+		fittingModel.proposals.getFittingParameters().setEscapeType(plot.fitting().getEscapeType());
 
 		
 		setUndoPoint("Calibration");
 		plot.filtering().filteredDataInvalidated();
 	}
 
+	public void setMaxEnergy(float max) {
+		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
+		setFittingParameters(dataWidth, getMinEnergy(), max);
+
+		updateListeners(false);
+	}
+
+	public float getMaxEnergy()
+	{
+		return fittingModel.selections.getFittingParameters().getCalibration().getMaxEnergy();
+	}
+
+	public void setMinEnergy(float min) {
+		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
+		setFittingParameters(dataWidth, min, getMaxEnergy());
+		updateListeners(false);
+	}
+
+	
+	public float getMinEnergy()
+	{
+		return fittingModel.selections.getFittingParameters().getCalibration().getMinEnergy();
+	}
+	
+	
+	
+	
 	
 
 	public void calculateProposalFittings()
@@ -331,5 +356,10 @@ public class FittingController extends EventfulType<Boolean>
 		this.fittingModel.fittingSolver = fittingSolver;
 		fittingDataInvalidated();
 	}
+	
+	
+	
+	
+	
 	
 }

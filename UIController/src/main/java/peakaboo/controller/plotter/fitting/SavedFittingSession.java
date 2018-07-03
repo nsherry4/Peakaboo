@@ -9,6 +9,7 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.settings.SerializedTransitionSeries;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 
 public class SavedFittingSession {
@@ -23,6 +24,13 @@ public class SavedFittingSession {
 	
 	//Class name for FittingFunction
 	public String function;
+	
+	//Energy calibration
+	public float minEnergy;
+	public float maxEnergy;
+	
+	//Escape type
+	public EscapePeakType escape;
 	
 	
 	public SavedFittingSession storeFrom(FittingController controller) {
@@ -41,6 +49,13 @@ public class SavedFittingSession {
 		
 		//Save the fitting function
 		function = controller.getFittingFunction().getName();
+		
+		//Save energy calibration
+		minEnergy = controller.getMinEnergy();
+		maxEnergy = controller.getMaxEnergy();
+		
+		//Save escape peak type
+		escape = controller.getEscapeType();
 		
 		return this;
 	}
@@ -83,6 +98,13 @@ public class SavedFittingSession {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + function, e);
 		}
 		
+		
+		//Restore energy calibration
+		controller.setMinEnergy(minEnergy);
+		controller.setMaxEnergy(maxEnergy);
+
+		//Restore escape peak type
+		controller.setEscapeType(escape);
 		
 		
 		return this;

@@ -10,9 +10,7 @@ public class SessionViewModel {
 	public boolean				backgroundShowOriginal;
 	public float				zoom;
 	public boolean				lockPlotHeight;
-	public EscapePeakType		escape;
 	public ViewTransform		viewTransform;
-	public float				minEnergy, maxEnergy;
 	public float 				fwhmBase, fwhmMult;
 	
 	public SessionViewModel() {
@@ -22,10 +20,7 @@ public class SessionViewModel {
 		backgroundShowOriginal = false;
 		zoom = 1.0f;
 		lockPlotHeight = true;
-		escape = EscapePeakType.SILICON;
 		viewTransform = ViewTransform.LOG;
-		minEnergy = 0.0f;
-		maxEnergy = 0.0f;
 		fwhmBase = 0.080f;
 		fwhmMult = 0.013f;
 		
