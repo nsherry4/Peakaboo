@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
+import peakaboo.controller.plotter.data.SavedDataSession;
 import peakaboo.controller.plotter.filtering.FilteringModel;
 import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.view.SessionViewModel;
@@ -28,9 +29,10 @@ import peakaboo.filter.model.SerializedFilter;
 public class SavedSession {
 
 	public SessionViewModel session;
-	public List<Integer> badScans;
 	public List<SerializedFilter> filters = new ArrayList<>();
 	public List<SerializedTransitionSeries> fittings;
+	
+	public SavedDataSession data;
 	
 	
 	/**
@@ -60,7 +62,7 @@ public class SavedSession {
 		saved.session = plotController.view().getViewModel().session;
 		
 		//store bad scans
-		saved.badScans = plotController.data().getDiscards().list();
+		saved.data = SavedDataSession.storeFrom(plotController.data());
 		
 		//store filters
 		saved.filters.clear();
@@ -88,13 +90,7 @@ public class SavedSession {
 		settingsModel.session = this.session;
 		
 		//restore bad scans
-		dataController.getDiscards().clear();
-		for (Integer i : this.badScans)
-		{
-			if (  (dataController.hasDataSet() && dataController.getDataSet().getScanData().scanCount() > i)  ) {
-				dataController.getDiscards().discard(i);
-			}
-		}
+		this.data.loadInto(plotController.data());
 		
 		
 		//restore filters

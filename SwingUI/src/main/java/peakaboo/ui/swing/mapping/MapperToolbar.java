@@ -172,7 +172,7 @@ class MapperToolbar extends JToolBar {
 			
 			//update the bad scan indexes to match the new data source's indexing scheme
 			//TODO: Is there a better way to do this?
-			settings.badScans = settings.badScans.stream()
+			settings.data.discards = settings.data.discards.stream()
 					.map(index -> sds.getUpdatedIndex(index))
 					.filter(index -> index > 0)
 					.collect(Collectors.toList()
