@@ -19,7 +19,7 @@ public class FilteringController extends Eventful
 		filteringModel = new FilteringModel();
 	}
 
-	public FilteringModel getFilteringMode()
+	public FilteringModel getFilteringModel()
 	{
 		return filteringModel;
 	}

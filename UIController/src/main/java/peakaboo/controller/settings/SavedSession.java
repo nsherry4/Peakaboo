@@ -11,6 +11,7 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.data.SavedDataSession;
 import peakaboo.controller.plotter.filtering.FilteringModel;
+import peakaboo.controller.plotter.filtering.SavedFilteringSession;
 import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.view.SessionViewModel;
 import peakaboo.controller.plotter.view.ViewModel;
@@ -29,10 +30,10 @@ import peakaboo.filter.model.SerializedFilter;
 public class SavedSession {
 
 	public SessionViewModel session;
-	public List<SerializedFilter> filters = new ArrayList<>();
 	public List<SerializedTransitionSeries> fittings;
 	
 	public SavedDataSession data;
+	public SavedFilteringSession filtering;
 	
 	
 	/**
@@ -54,21 +55,31 @@ public class SavedSession {
 	 * Builds a SavedSession object from the model
 	 */
 	public static SavedSession storeFrom(PlotController plotController) {
-		FilteringModel filterModel = plotController.filtering().getFilteringMode();
-		FittingModel fittingsModel = plotController.fitting().getFittingModel();
-		
 		
 		SavedSession saved = new SavedSession();
-		saved.session = plotController.view().getViewModel().session;
+		
 		
 		//store bad scans
 		saved.data = SavedDataSession.storeFrom(plotController.data());
 		
 		//store filters
-		saved.filters.clear();
-		for (Filter filter : filterModel.filters) {
-			saved.filters.add(new SerializedFilter(filter));
-		}
+		saved.filtering = SavedFilteringSession.storeFrom(plotController.filtering());
+		
+		
+		
+		
+		
+		
+		
+		FittingModel fittingsModel = plotController.fitting().getFittingModel();
+		
+		
+		
+		saved.session = plotController.view().getViewModel().session;
+		
+		
+
+		
 		
 		//store fittings
 		//map our list of TransitionSeries to SerializedTransitionSeries since we can't use the
@@ -82,23 +93,27 @@ public class SavedSession {
 	 * applies serialized preferences to the model
 	 */
 	public void loadInto(PlotController plotController) {
-		FilteringModel filterModel = plotController.filtering().getFilteringMode();
+		
+		//restore data settings
+		this.data.loadInto(plotController.data());
+		
+		//restore filtering settings
+		this.filtering.loadInto(plotController.filtering());
+		
+		
+		
+		
+		
+		
+		FilteringModel filterModel = plotController.filtering().getFilteringModel();
 		FittingModel fittingModel = plotController.fitting().getFittingModel();
 		ViewModel settingsModel = plotController.view().getViewModel();
 		DataController dataController = plotController.data();
 		
 		settingsModel.session = this.session;
 		
-		//restore bad scans
-		this.data.loadInto(plotController.data());
 		
-		
-		//restore filters
-		filterModel.filters.clear();
-		for (SerializedFilter f : this.filters) {
-			filterModel.filters.add(f.getFilter());
-		}
-		
+
 		
 		//restore fittings
 		// load transition series

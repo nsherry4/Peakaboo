@@ -26,9 +26,9 @@ public class SavedDataSession {
 
 	
 	public static SavedDataSession storeFrom(DataController controller) {
-		SavedDataSession data = new SavedDataSession();
-		data.discards = controller.getDiscards().list();
-		return data;
+		SavedDataSession saved = new SavedDataSession();
+		saved.discards = controller.getDiscards().list();
+		return saved;
 	}
 	
 	public void loadInto(DataController controller) {
