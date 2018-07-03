@@ -16,7 +16,7 @@ import javafx.scene.control.ScrollPane;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.controller.plotter.settings.SettingsController;
+import peakaboo.controller.plotter.view.ViewController;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.ui.javafx.change.ChangeController;
@@ -103,7 +103,7 @@ public class SpectrumUIController extends IActofUIController {
 		 * in the controller
 		 */
 		DrawingRequest dr = new DrawingRequest();
-		SettingsController settings = plotController.settings();
+		ViewController settings = plotController.view();
 
 		int xmax = 2048;
 		if (data != null) {
@@ -138,7 +138,7 @@ public class SpectrumUIController extends IActofUIController {
 		int seriesnum = 0;
 		
 		String colour;
-		boolean monochrome = plotController.settings().getMonochrome();
+		boolean monochrome = plotController.view().getMonochrome();
 
 		Pair<ReadOnlySpectrum, ReadOnlySpectrum> plotdata = plotController.getDataForPlot();
 
@@ -203,7 +203,7 @@ public class SpectrumUIController extends IActofUIController {
 		//fittings
 		FittingController fittings = plotController.fitting();
 		FittingResultSet fitted = fittings.getFittingSelectionResults();
-		if (plotController.settings().getShowIndividualSelections()) {
+		if (plotController.view().getShowIndividualSelections()) {
 			int count = 0;
 			for (FittingResult result : fitted.getFits()) {
 				updateSeriesFromSpectrum(seriesIndividualFittings.get(count++), result.getFit());
@@ -259,7 +259,7 @@ public class SpectrumUIController extends IActofUIController {
 			ymax = data.getDataSet().getAnalysis().maximumIntensity();
 		}
 
-		if (plotController.settings().getViewLog()) {
+		if (plotController.view().getViewLog()) {
 			return new LogarithmicAxis(0, ymax * 1.1);
 		} else {
 			return new NumberAxis(0, ymax, SigDigits.toIntSigDigit(ymax / 10, 1));

@@ -31,7 +31,7 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.settings.ChannelCompositeMode;
+import peakaboo.controller.plotter.view.ChannelCompositeMode;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasource.model.DataSource;
@@ -111,7 +111,7 @@ public class PlotWindowController extends IActofUIController {
 
         kev = new NumberSpinner(new BigDecimal(20.48d), new BigDecimal(0.01d));
         kev.numberProperty().addListener((obs, o, n) -> {
-        	plotController.settings().setMaxEnergy(n.floatValue());
+        	plotController.view().setMaxEnergy(n.floatValue());
         	getChangeBus().broadcast(new EnergyLevelChange(this));
         });
         kev.setPrefWidth(100);
@@ -129,47 +129,47 @@ public class PlotWindowController extends IActofUIController {
     }
 
     public void toggleLogScale() {
-        plotController.settings().setViewLog(menuLogScale.isSelected());
+        plotController.view().setViewLog(menuLogScale.isSelected());
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void toggleAxes() {
-        plotController.settings().setShowAxes(menuAxes.isSelected());
+        plotController.view().setShowAxes(menuAxes.isSelected());
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void toggleTitle() {
-        plotController.settings().setShowTitle(menuTitle.isSelected());
+        plotController.view().setShowTitle(menuTitle.isSelected());
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void toggleMono() {
-        plotController.settings().setMonochrome(menuMono.isSelected());
+        plotController.view().setMonochrome(menuMono.isSelected());
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void toggleRawData() {
-        plotController.settings().setShowRawData(menuRawData.isSelected());
+        plotController.view().setShowRawData(menuRawData.isSelected());
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void toggleIndividual() {
-        plotController.settings().setShowIndividualSelections(menuIndividual.isSelected());
+        plotController.view().setShowIndividualSelections(menuIndividual.isSelected());
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void selectSignalSingle() {
-        plotController.settings().setChannelCompositeMode(ChannelCompositeMode.NONE);
+        plotController.view().setChannelCompositeMode(ChannelCompositeMode.NONE);
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void selectSignalAverage() {
-        plotController.settings().setChannelCompositeMode(ChannelCompositeMode.AVERAGE);
+        plotController.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE);
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
     public void selectSignalMax() {
-        plotController.settings().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM);
+        plotController.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM);
         getChangeBus().broadcast(new DisplayOptionsChange(this));
     }
 
