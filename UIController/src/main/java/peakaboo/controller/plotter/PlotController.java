@@ -6,7 +6,6 @@ import eventful.EventfulType;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.controller.plotter.undo.IUndoController;
 import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.controller.plotter.view.ChannelCompositeMode;
 import peakaboo.controller.plotter.view.ViewController;
@@ -32,7 +31,7 @@ public class PlotController extends EventfulType<String>
 	public List<AxisPainter>				axisPainters;
 
 	
-	private IUndoController					undoController;
+	private UndoController					undoController;
 	private DataController					dataController;
 	private FilteringController				filteringController;
 	private FittingController				fittingController;
@@ -219,7 +218,7 @@ public class PlotController extends EventfulType<String>
 		return fittingController;
 	}
 
-	public IUndoController history()
+	public UndoController history()
 	{
 		return undoController;
 	}
