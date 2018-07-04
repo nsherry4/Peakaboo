@@ -1,11 +1,11 @@
 package net.sciencestudio.scratch.encoders.compressors;
 
-import net.sciencestudio.scratch.ScratchEncoder;
-import net.sciencestudio.scratch.ScratchException;
-
 import java.io.IOException;
 
 import org.xerial.snappy.Snappy;
+
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.ScratchException;
 
 public class SnappyCompressionEncoder implements ScratchEncoder<byte[]> {
 

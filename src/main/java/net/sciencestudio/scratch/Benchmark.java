@@ -1,6 +1,5 @@
 package net.sciencestudio.scratch;
 
-import java.beans.Encoder;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;

@@ -2,13 +2,9 @@ package net.sciencestudio.scratch.list.file;
 
 import java.io.IOException;
 import java.util.AbstractList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.ScratchException;
-import net.sciencestudio.scratch.list.array.ScratchArrayList;
 
 public class ScratchDiskList<T> extends AbstractList<T>{
 

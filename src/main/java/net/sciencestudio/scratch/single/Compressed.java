@@ -5,9 +5,7 @@ import java.io.Serializable;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.CompoundEncoder;
 import net.sciencestudio.scratch.encoders.compressors.Compressors;
-import net.sciencestudio.scratch.encoders.compressors.DeflateCompressionEncoder;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
-import net.sciencestudio.scratch.encoders.serializers.SerializingEncoder;
 
 public class Compressed<T> implements ByteStorage<T> {
 

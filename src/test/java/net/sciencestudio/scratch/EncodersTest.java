@@ -3,7 +3,6 @@ package net.sciencestudio.scratch;
 import org.junit.Assert;
 import org.junit.Test;
 
-import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.single.Compressed;

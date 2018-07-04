@@ -1,19 +1,12 @@
 package net.sciencestudio.scratch.list.file;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-import net.sciencestudio.scratch.ScratchEncoder;
-import net.sciencestudio.scratch.ScratchException;
-import net.sciencestudio.scratch.encoders.serializers.SerializingEncoder;
 import scitypes.LongRange;
 import scitypes.LongRangeSet;
 

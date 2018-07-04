@@ -3,12 +3,11 @@ package net.sciencestudio.scratch;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.list.ScratchLists;
-
-import org.junit.Assert;
 
 
 public class ListTest{

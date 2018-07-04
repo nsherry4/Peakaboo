@@ -1,11 +1,10 @@
 package net.sciencestudio.scratch;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.single.Compressed;
-
-import org.junit.Assert;
 
 public class KryoTest {
 
