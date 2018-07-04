@@ -2,7 +2,6 @@ package net.sciencestudio.autodialog.view.swing.editors;
 
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.swing.JComponent;
 import javax.swing.JTextField;

@@ -3,7 +3,6 @@ package net.sciencestudio.autodialog.view.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +11,6 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
