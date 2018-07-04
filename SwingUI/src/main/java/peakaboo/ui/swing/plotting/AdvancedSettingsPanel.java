@@ -95,13 +95,13 @@ public class AdvancedSettingsPanel extends JPanel {
 		panel.setBorder(Spacing.bMedium());
 
 		JSpinner fwhmBase = new JSpinner();
-		fwhmBase.setModel(new SpinnerNumberModel(controller.view().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
+		fwhmBase.setModel(new SpinnerNumberModel(controller.fitting().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
 		fwhmBase.getEditor().setPreferredSize(new Dimension(72, (int)fwhmBase.getPreferredSize().getHeight()));
 		fwhmBase.getEditor().setOpaque(false);
 		fwhmBase.addChangeListener(e -> {
 			
 			float base = ((Number) fwhmBase.getValue()).floatValue()/1000;
-			controller.view().setFWHMBase(base);
+			controller.fitting().setFWHMBase(base);
 			
 		});
 		panel.addSetting(fwhmBase, "FWHM Noise (eV)");

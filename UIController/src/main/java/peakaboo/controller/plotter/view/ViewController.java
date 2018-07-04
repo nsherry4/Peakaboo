@@ -271,16 +271,6 @@ public class ViewController extends Eventful
 		updateListeners();
 	}
 	
-	public void setFWHMBase(float base) {
-		plot.fitting().setFWHMBase(base);	
-		viewModel.session.fwhmBase = base;
-	}
-	
-	public float getFWHMBase() {
-		return plot.fitting().getFWHMBase();
-	}
-
-	
 	
 
 	

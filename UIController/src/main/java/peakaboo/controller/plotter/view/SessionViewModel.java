@@ -11,7 +11,6 @@ public class SessionViewModel {
 	public float				zoom;
 	public boolean				lockPlotHeight;
 	public ViewTransform		viewTransform;
-	public float 				fwhmBase, fwhmMult;
 	
 	public SessionViewModel() {
 
@@ -21,9 +20,6 @@ public class SessionViewModel {
 		zoom = 1.0f;
 		lockPlotHeight = true;
 		viewTransform = ViewTransform.LOG;
-		fwhmBase = 0.080f;
-		fwhmMult = 0.013f;
-		
 		
 	}
 	

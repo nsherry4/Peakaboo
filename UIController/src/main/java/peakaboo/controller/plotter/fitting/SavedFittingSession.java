@@ -32,6 +32,9 @@ public class SavedFittingSession {
 	//Escape type
 	public EscapePeakType escape;
 	
+	//Peak Model parameters
+	public float fwhmBase;
+	
 	
 	public SavedFittingSession storeFrom(FittingController controller) {
 		
@@ -106,6 +109,9 @@ public class SavedFittingSession {
 		//Restore escape peak type
 		controller.setEscapeType(escape);
 		
+		
+		//Restore peak model parameters
+		controller.setFWHMBase(fwhmBase);
 		
 		return this;
 	}

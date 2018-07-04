@@ -92,26 +92,9 @@ public class SavedSession {
 		//restore fitting settings
 		this.fitting.loadInto(plotController.fitting());
 		
-		
-		
-		
-		FittingModel fittingModel = plotController.fitting().getFittingModel();
-		ViewModel settingsModel = plotController.view().getViewModel();
-		DataController dataController = plotController.data();
-		
+		//restore view settings directly, since it's model is serializable
 		plotController.view().getViewModel().session = this.view;
-		
-		
 
-		
-
-		
-		
-		if (dataController.hasDataSet()) {
-			fittingModel.selections.getFittingParameters().setFWMHBase(settingsModel.session.fwhmBase);
-		}
-		
-		
 	}
 	
 }
