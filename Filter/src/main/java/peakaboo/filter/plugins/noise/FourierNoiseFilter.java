@@ -10,7 +10,6 @@ import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
 import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
-import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;

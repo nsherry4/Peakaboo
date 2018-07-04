@@ -1,33 +1,16 @@
 package peakaboo.controller.plotter.view;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
-import commonenvironment.Env;
 import eventful.Eventful;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
-import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;

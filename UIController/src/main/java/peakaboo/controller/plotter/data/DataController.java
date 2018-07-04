@@ -1,6 +1,5 @@
 package peakaboo.controller.plotter.data;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;

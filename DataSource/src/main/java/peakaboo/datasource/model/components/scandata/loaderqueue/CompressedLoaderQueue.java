@@ -1,6 +1,5 @@
 package peakaboo.datasource.model.components.scandata.loaderqueue;
 
-import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
@@ -23,14 +22,12 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	
 	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
-	private SimpleScanData data;
 	private ScratchEncoder<Spectrum> encoder;
 	
 	public CompressedLoaderQueue(SimpleScanData data) {
 		this(data, 1000);
 	}
 	public CompressedLoaderQueue(SimpleScanData data, int depth) {
-		this.data = data;
 		this.encoder = new CompoundEncoder<>(Serializers.fst(ISpectrum.class), Compressors.lz4fast());
 		
 		queue = new LinkedBlockingQueue<>(depth);

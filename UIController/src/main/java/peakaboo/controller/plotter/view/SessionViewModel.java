@@ -1,6 +1,5 @@
 package peakaboo.controller.plotter.view;
 
-import peakaboo.curvefit.peak.escape.EscapePeakType;
 import scidraw.drawing.ViewTransform;
 
 public class SessionViewModel {

@@ -1,8 +1,8 @@
 package peakaboo.controller.settings;
 
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.Yaml;
 
 public class SettingsSerializer {
 

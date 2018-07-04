@@ -1,6 +1,5 @@
 package peakaboo.datasource.model.components.scandata.loaderqueue;
 
-import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
@@ -17,12 +16,10 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	
 	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
-	private SimpleScanData data;
 	public SimpleLoaderQueue(SimpleScanData data) {
 		this(data, 1000);
 	}
 	public SimpleLoaderQueue(SimpleScanData data, int depth) {
-		this.data = data;
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {

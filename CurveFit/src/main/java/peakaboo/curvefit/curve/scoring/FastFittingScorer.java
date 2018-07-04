@@ -3,11 +3,7 @@ package peakaboo.curvefit.curve.scoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;

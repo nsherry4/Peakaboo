@@ -5,7 +5,6 @@ import java.util.List;
 
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 

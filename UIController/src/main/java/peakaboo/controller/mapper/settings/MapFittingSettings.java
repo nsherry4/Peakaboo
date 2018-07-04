@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import eventful.EventfulType;
 import peakaboo.controller.mapper.Interpolation;
@@ -547,23 +546,8 @@ public class MapFittingSettings extends EventfulType<String> {
 		return title;
 		
 	}
-	
 
-	private String getShortDatasetTitle(List<TransitionSeries> list)
-	{
-		
-		Set<String> elementNames = list.stream().map(ts -> ts.element.toString()).collect(Collectors.toSet());
-		String title = elementNames.stream().collect(joining(", "));
-		
-		if (title == null) return "-";
-		return title;
-		
-	}
 	
-	
-	
-
-
 	public List<TransitionSeries> getAllTransitionSeries()
 	{
 		

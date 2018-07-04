@@ -1,24 +1,18 @@
 package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
@@ -30,7 +24,6 @@ import peakaboo.curvefit.curve.fitting.solver.LeastSquaresFittingSolver;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
-import peakaboo.curvefit.peak.fitting.functions.IdaFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import swidget.icons.StockIcon;

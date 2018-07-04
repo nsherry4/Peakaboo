@@ -1,26 +1,10 @@
 package peakaboo.controller.settings;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.data.SavedDataSession;
 import peakaboo.controller.plotter.filtering.SavedFilteringSession;
-import peakaboo.controller.plotter.fitting.FittingModel;
 import peakaboo.controller.plotter.fitting.SavedFittingSession;
 import peakaboo.controller.plotter.view.SessionViewModel;
-import peakaboo.controller.plotter.view.ViewModel;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.SerializedFilter;
 
 /**
  * Stores session settings which are saved/loaded when the user chooses to

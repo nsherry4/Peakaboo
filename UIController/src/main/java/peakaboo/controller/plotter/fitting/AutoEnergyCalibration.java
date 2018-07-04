@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.scoring.FastSignalMatchScorer;
 import peakaboo.curvefit.curve.scoring.Scorer;
 import peakaboo.curvefit.peak.transition.TransitionSeries;

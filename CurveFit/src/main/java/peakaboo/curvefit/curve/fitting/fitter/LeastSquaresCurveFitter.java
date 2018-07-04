@@ -95,7 +95,7 @@ public class LeastSquaresCurveFitter implements CurveFitter {
 		RangeSet channels = curve.getIntenseRanges();
 		
 		int count = 0;
-		for (int _ : channels) {
+		for (int i : channels) {
 			count++;
 		}
 		

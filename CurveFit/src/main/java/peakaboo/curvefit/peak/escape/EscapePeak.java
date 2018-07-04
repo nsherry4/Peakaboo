@@ -1,6 +1,5 @@
 package peakaboo.curvefit.peak.escape;
 
-import java.util.Collections;
 import java.util.List;
 
 import peakaboo.curvefit.peak.table.Element;

@@ -9,7 +9,6 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 	private FittingContext context;
 	
 	private FittingFunction signal;
-	private static int skip, noskip;
 	
 	@Override
 	public void initialize(FittingContext context) {

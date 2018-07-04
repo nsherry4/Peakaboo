@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.ReadOnlySpectrum;
-import scitypes.SpectrumCalculations;
 
 /**
  * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 
