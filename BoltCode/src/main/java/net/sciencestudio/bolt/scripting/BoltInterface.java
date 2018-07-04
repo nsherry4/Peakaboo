@@ -1,13 +1,10 @@
 package net.sciencestudio.bolt.scripting;
 
-import java.util.logging.Level;
-
 import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.scripting.languages.JavascriptLanguage;
 import net.sciencestudio.bolt.scripting.languages.Language;
 
