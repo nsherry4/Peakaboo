@@ -228,7 +228,7 @@ class MapperToolbar extends JToolBar {
 
 	private ToolbarImageButton createOptionsButton(MappingController controller) {
 		
-		ToolbarImageButton opts = new ToolbarImageButton(StockIcon.MENU_SETTINGS, "Map Settings Menu");
+		ToolbarImageButton opts = new ToolbarImageButton("menu-view", "Map Settings Menu");
 		
 		JPopupMenu menu = new JPopupMenu();
 		
