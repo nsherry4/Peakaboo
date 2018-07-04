@@ -2,12 +2,14 @@ package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Insets;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -21,6 +23,8 @@ import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.LeastSquaresFittingSolver;
+import peakaboo.curvefit.peak.escape.EscapePeak;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
@@ -28,14 +32,15 @@ import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
+import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.SettingsPanel;
 import swidget.widgets.SettingsPanel.LabelPosition;
 import swidget.widgets.Spacing;
 
-public class AdvancedSettingsPanel extends JPanel {
+public class AdvancedOptionsPanel extends JPanel {
 	
-	public AdvancedSettingsPanel(PlotPanel parent, PlotController controller) {
+	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
 
 		SettingsPanel master = new SettingsPanel();
 		master.addSetting(peakFitting(controller));
@@ -46,14 +51,15 @@ public class AdvancedSettingsPanel extends JPanel {
 		
 		
 		
-		ButtonBox box = new ButtonBox(true);
+		
 		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
 		close.addActionListener(e -> {
 			parent.popModalComponent();
 		});
-		box.addRight(close);
+
+		HeaderBox box = new HeaderBox(null, "Advanced Options", close);
 		
-		this.add(box, BorderLayout.SOUTH);
+		this.add(box, BorderLayout.NORTH);
 		
 	}
 
@@ -100,6 +106,16 @@ public class AdvancedSettingsPanel extends JPanel {
 		panel.addSetting(fwhmBase, "FWHM Noise (eV)");
 	
 
+		
+		JComboBox<EscapePeak> escapePeakBox = makeCombo(
+				e -> e.type() == controller.fitting().getEscapeType(),
+				e -> controller.fitting().setEscapeType(e.type()),
+				EscapePeakType.NONE.get(),
+				EscapePeakType.SILICON.get(),
+				EscapePeakType.GERMANIUM.get()
+			);
+		panel.addSetting(escapePeakBox, "Escape Peaks", LabelPosition.BESIDE, false, true);
+		
 		
 		
 		JComboBox<FittingFunction> peakModelBox = makeCombo(

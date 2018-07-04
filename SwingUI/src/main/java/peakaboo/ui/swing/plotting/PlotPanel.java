@@ -637,7 +637,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		advanced.setBorder(Spacing.bMedium());
 		JButton advancedButton = new JButton("Advanced Options");
 		advancedButton.addActionListener(e -> {
-			AdvancedSettingsPanel advancedPanel = new AdvancedSettingsPanel(this, controller);
+			AdvancedOptionsPanel advancedPanel = new AdvancedOptionsPanel(this, controller);
 			mainMenu.setVisible(false);
 			pushModalComponent(advancedPanel);
 		});
@@ -918,38 +918,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		
 		mainMenu.add(elementDrawing);
-		
-		
-		
-		
-		JMenu escapePeaks = new JMenu("Escape Peaks");
-		
-		
-		final ButtonGroup escapePeakGroup = new ButtonGroup();
-		
-		for (EscapePeakType t : EscapePeakType.values())
-		{
-			final JRadioButtonMenuItem escapeItem = new JRadioButtonMenuItem(t.get().pretty());
-			escapePeakGroup.add(escapeItem);
-			escapePeaks.add(escapeItem);
-			if (t == EscapePeakType.SILICON) escapeItem.setSelected(true);
-			
-			
-			final EscapePeakType finalt = t;
-			
-			escapeItem.addActionListener(e -> {
-				escapeItem.setSelected(true);
-				controller.fitting().setEscapeType(finalt);
-			});
-			
-			controller.addListener(message -> {
-				escapeItem.setSelected( controller.fitting().getEscapeType() == finalt );
-			});
 
-		}
-		
-		mainMenu.add(escapePeaks);
-		
 
 		mainMenu.addSeparator();
 		

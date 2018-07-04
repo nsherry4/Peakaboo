@@ -40,4 +40,9 @@ public class SiliconEscapePeak implements EscapePeak {
 		return pretty();
 	}
 
+	@Override
+	public EscapePeakType type() {
+		return EscapePeakType.SILICON;
+	}
+	
 }

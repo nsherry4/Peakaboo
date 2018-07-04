@@ -13,6 +13,8 @@ public interface EscapePeak {
 	float fanoFactor();
 	String pretty();
 	
+	EscapePeakType type();
+	
 	static float intensity(Element e)
 	{
 		/*

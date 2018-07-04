@@ -36,5 +36,10 @@ public class NoneEscapePeak implements EscapePeak {
 	public String toString() {
 		return pretty();
 	}
+	
+	@Override
+	public EscapePeakType type() {
+		return EscapePeakType.NONE;
+	}
 
 }

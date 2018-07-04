@@ -38,5 +38,10 @@ public class GermaniumEscapePeak implements EscapePeak {
 	public String toString() {
 		return pretty();
 	}
+
+	@Override
+	public EscapePeakType type() {
+		return EscapePeakType.GERMANIUM;
+	}
 	
 }
