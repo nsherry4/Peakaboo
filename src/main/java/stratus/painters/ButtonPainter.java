@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
+import java.awt.Paint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -58,8 +59,8 @@ public class ButtonPainter extends StatefulPainter {
     	this.borderColor = getTheme().getWidgetBorder();
     	
     	if (isPressed() || isSelected()) {
-    		this.c1 = Stratus.darken(base, 0.12f);
-    		this.c2 = Stratus.darken(base, 0.06f);
+    		this.c1 = Stratus.darken(base, 0.06f);
+    		this.c2 = Stratus.darken(base, 0.00f);
         	this.borderColor = getTheme().getWidgetBorder();
     	}
 
@@ -95,10 +96,12 @@ public class ButtonPainter extends StatefulPainter {
     	//Bevel under button
     	g.setPaint(cBevel);
     	Shape bevel = new RoundRectangle2D.Float(pad, pad+1, width-pad*2, height-pad*2, radius, radius);     
-    	g.fill(bevel);
+    	//g.fill(bevel);
     	
     	//Border
-    	g.setPaint(borderColor);
+    	//Border should be darker at the bottom when not pressed (bit of a shadow?)
+    	Paint borderGradient = new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.5f, 1f}, new Color[] {borderColor, Stratus.darken(borderColor, 0.15f)});
+    	g.setPaint(isPressed() || isSelected() ? borderColor : borderGradient);
     	Shape border = new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2, radius, radius);     
     	g.fill(border);
     	

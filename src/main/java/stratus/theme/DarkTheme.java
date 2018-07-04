@@ -12,7 +12,7 @@ public class DarkTheme implements Theme {
 	private Color controlTextDisabled = new Color(0x666666);
 	private Color border = new Color(0x212424);
 	
-	private Color widget = Stratus.darken(control, 0.02f);
+	private Color widget = Stratus.darken(control, 0.08f);
 	private Color widgetBevel = Stratus.lighten(control, 0.1f);
 	
 	private Color textControl = Stratus.darken(control, 0.05f);

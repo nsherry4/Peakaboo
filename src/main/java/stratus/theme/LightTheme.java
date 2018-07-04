@@ -12,7 +12,7 @@ public class LightTheme implements Theme {
 	private Color controlTextDisabled = new Color(0x999999);
 	private Color border = new Color(0xBABABA);
 	
-	private Color widget = Stratus.darken(getControl(), 0.02f);
+	private Color widget = Stratus.darken(getControl(), 0.08f);
 	private Color widgetBevel = Stratus.lighten(getWidget(), 0.2f);
 	
 	private Color menuControl = new Color(0xffffff);

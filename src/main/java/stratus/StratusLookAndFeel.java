@@ -308,6 +308,9 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "ComboBox[Focused+Pressed].backgroundPainter", new ButtonPainter(theme, ButtonState.PRESSED, ButtonState.FOCUSED));
 			reg(ret, "ComboBox[Focused+MouseOver].backgroundPainter", new ButtonPainter(theme, ButtonState.MOUSEOVER, ButtonState.FOCUSED));
 			
+			reg(ret, "ComboBox.contentMargins", new Insets(0, 4, 0, 4));
+			
+			
 			//For exitable comboboxes, don't draw anything, let the two components draw themselves
 			reg(ret, "ComboBox[Editable+Focused].backgroundPainter", new FillPainter(new Color(0, 0, 0, 0)));
 			
@@ -343,6 +346,8 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "ComboBox:\"ComboBox.listRenderer\"[Disabled].textForeground", theme.getControlTextDisabled());
 			reg(ret, "ComboBox:\"ComboBox.listRenderer\"[Selected].background", theme.getHighlight());
 			reg(ret, "ComboBox:\"ComboBox.listRenderer\"[Selected].textForeground", theme.getHighlightText());
+			
+			reg(ret, "ComboBox:\"ComboBox.listRenderer\".contentMargins", new Insets(4, 8, 4, 8));
 			
 			reg(ret, "ComboBox.foreground", theme.getControlText());
 			
