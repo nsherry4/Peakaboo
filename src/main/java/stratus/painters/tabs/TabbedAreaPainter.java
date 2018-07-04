@@ -1,14 +1,10 @@
 package stratus.painters.tabs;
 
 import java.awt.Color;
-import java.awt.Container;
-import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
-import java.awt.Shape;
 import java.awt.Window;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
 import javax.swing.Painter;

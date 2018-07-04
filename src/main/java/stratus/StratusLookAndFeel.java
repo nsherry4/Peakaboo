@@ -30,7 +30,6 @@ import stratus.painters.CompositePainter;
 import stratus.painters.FillPainter;
 import stratus.painters.RadioButtonPainter;
 import stratus.painters.SplitPaneDividerPainter;
-import stratus.painters.Themed;
 import stratus.painters.TableHeaderPainter;
 import stratus.painters.TitledBorderBorder;
 import stratus.painters.ToolTipPainter;

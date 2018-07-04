@@ -1,5 +1,6 @@
 package stratus.painters;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
@@ -8,14 +9,11 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.RoundRectangle2D;
 
-
 import javax.swing.JComponent;
 
 import stratus.Stratus;
 import stratus.Stratus.ButtonState;
 import stratus.theme.Theme;
-
-import java.awt.BasicStroke;
 
 //Fills the area of button style controls (no borders, etc)
 public class ButtonPainter extends StatefulPainter {

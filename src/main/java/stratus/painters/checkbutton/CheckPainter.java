@@ -8,7 +8,6 @@ import java.awt.Stroke;
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
-import stratus.Stratus;
 import stratus.painters.SimpleThemed;
 import stratus.theme.Theme;
 

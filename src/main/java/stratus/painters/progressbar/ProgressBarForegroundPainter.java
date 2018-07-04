@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
-import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;

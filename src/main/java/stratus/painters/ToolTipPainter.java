@@ -9,7 +9,6 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
-import stratus.Stratus;
 import stratus.theme.Theme;
 
 public class ToolTipPainter extends SimpleThemed implements Painter<JComponent> {

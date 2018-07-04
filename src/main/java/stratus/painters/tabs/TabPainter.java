@@ -10,7 +10,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
-import javax.swing.Painter;
 
 import stratus.Stratus;
 import stratus.Stratus.ButtonState;

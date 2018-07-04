@@ -7,7 +7,6 @@ import java.awt.LinearGradientPaint;
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
-import stratus.Stratus;
 import stratus.theme.Theme;
 
 public class TableHeaderPainter extends SimpleThemed implements Painter<JComponent>{
