@@ -201,7 +201,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public EscapePeakType getEscapeType()
 	{
-		return plot.fitting().getEscapeType();
+		return fittingModel.selections.getFittingParameters().getEscapeType();
 	}
 	
 	public List<TransitionSeries> proposeTransitionSeriesFromChannel(final int channel, TransitionSeries currentTS)
@@ -228,8 +228,9 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.selections.getFittingParameters().setCalibration(min, max, scanSize);
 		fittingModel.proposals.getFittingParameters().setCalibration(min, max, scanSize);
 
-		fittingModel.selections.getFittingParameters().setEscapeType(plot.fitting().getEscapeType());
-		fittingModel.proposals.getFittingParameters().setEscapeType(plot.fitting().getEscapeType());
+		//TODO: Why is this here? Are we just resetting it to be sure they stay in sync?
+		fittingModel.selections.getFittingParameters().setEscapeType(getEscapeType());
+		fittingModel.proposals.getFittingParameters().setEscapeType(getEscapeType());
 
 		
 		setUndoPoint("Calibration");

@@ -60,6 +60,9 @@ public class SavedFittingSession {
 		//Save escape peak type
 		escape = controller.getEscapeType();
 		
+		//Save peak model base width
+		fwhmBase = controller.getFWHMBase();
+		
 		return this;
 	}
 	
@@ -110,7 +113,7 @@ public class SavedFittingSession {
 		controller.setEscapeType(escape);
 		
 		
-		//Restore peak model parameters
+		//Restore peak model base width
 		controller.setFWHMBase(fwhmBase);
 		
 		return this;
