@@ -2,7 +2,6 @@ package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Insets;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -31,7 +30,6 @@ import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.SettingsPanel;
@@ -92,7 +90,7 @@ public class AdvancedOptionsPanel extends JPanel {
 		SettingsPanel panel = new SettingsPanel(new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.medium));
 		panel.setOpaque(false);
 		panel.setBorder(Spacing.bMedium());
-
+		
 		JSpinner fwhmBase = new JSpinner();
 		fwhmBase.setModel(new SpinnerNumberModel(controller.fitting().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
 		fwhmBase.getEditor().setPreferredSize(new Dimension(72, (int)fwhmBase.getPreferredSize().getHeight()));
@@ -103,7 +101,9 @@ public class AdvancedOptionsPanel extends JPanel {
 			controller.fitting().setFWHMBase(base);
 			
 		});
-		panel.addSetting(fwhmBase, "FWHM Noise (eV)");
+		
+		build(panel, fwhmBase, "FWHM Noise (eV)", "FWHM of Gaussian detector-based component of a peak.", false);
+		
 	
 
 		
@@ -114,8 +114,7 @@ public class AdvancedOptionsPanel extends JPanel {
 				EscapePeakType.SILICON.get(),
 				EscapePeakType.GERMANIUM.get()
 			);
-		panel.addSetting(escapePeakBox, "Escape Peaks", LabelPosition.BESIDE, false, true);
-		
+		build(panel, escapePeakBox, "Escape Peaks", "Escape peaks result when some of the energy absorbed by a detector is re-emitted.", true);
 		
 		
 		JComboBox<FittingFunction> peakModelBox = makeCombo(
@@ -126,7 +125,7 @@ public class AdvancedOptionsPanel extends JPanel {
 				new GaussianFittingFunction(),
 				new LorentzFittingFunction()
 			);
-		panel.addSetting(peakModelBox, "Peak Model", LabelPosition.BESIDE, false, true);
+		build(panel, peakModelBox, "Peak Model", "The mathematical function used to model an individual peak.", true);
 		
 		
 		
@@ -137,7 +136,7 @@ public class AdvancedOptionsPanel extends JPanel {
 				new UnderCurveFitter(),
 				new LeastSquaresCurveFitter()
 			);
-		panel.addSetting(fittersBox, "Single-Curve Fitting", LabelPosition.BESIDE, false, true);
+		build(panel, fittersBox, "Single-Curve Fitting", "The strategy used to fit a single element's emission curve to data.", true);
 
 		
 		
@@ -149,13 +148,23 @@ public class AdvancedOptionsPanel extends JPanel {
 				new GreedyFittingSolver(),
 				new LeastSquaresFittingSolver()
 			);
-		panel.addSetting(solversBox, "Multi-Curve Solver", LabelPosition.BESIDE, false, true);
+		build(panel, solversBox, "Multi-Curve Solver", "The strategy used to determine how overlapping element emission curves coexist.", true);
 		
 		
 		return panel;
 		
 	}
 
+	public void build(SettingsPanel panel, JComponent component, String title, String tooltip, boolean fill) {
+		JLabel label = new JLabel(title);
+		
+		component.setToolTipText(tooltip);
+		label.setToolTipText(tooltip);
+		
+		panel.addSetting(component, label, LabelPosition.BESIDE, false, fill);
+	}
+
+	
 	private JComponent titled(JComponent component, String title) {
 		JPanel titled = new JPanel(new BorderLayout());
 		titled.add(component, BorderLayout.WEST);
