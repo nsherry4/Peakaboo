@@ -1,8 +1,11 @@
 package peakaboo.curvefit.peak.table;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 public class PeakTableTest {
@@ -33,6 +36,13 @@ public class PeakTableTest {
 		Assert.assertTrue(combined.get(Element.Au, TransitionSeriesType.K) != null);
 		Assert.assertTrue(combined.get(Element.Fe, TransitionSeriesType.K).getTransitionCount() == 4);
 		Assert.assertTrue(combined.get(Element.Au, TransitionSeriesType.L).getTransitionCount() == 15);
+		
+		
+		//Testing convenience methods of PeakTable
+		List<TransitionSeries> series = combined.getForElement(Element.Au);
+		Assert.assertTrue(series.size() == 3);
+		Assert.assertEquals(series.get(0).element, Element.Au);
+		Assert.assertEquals(series.get(0).type, TransitionSeriesType.K);
 		
 	}
 	
