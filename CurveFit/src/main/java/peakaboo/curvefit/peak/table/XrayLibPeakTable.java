@@ -1,7 +1,6 @@
 package peakaboo.curvefit.peak.table;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.github.tschoonj.xraylib.Xraylib;
@@ -28,7 +27,7 @@ public class XrayLibPeakTable implements PeakTable {
 
 
 	@Override
-	public Collection<TransitionSeries> getAll() {
+	public List<TransitionSeries> getAll() {
 		return new ArrayList<>(series);
 	}
 

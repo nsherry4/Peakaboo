@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -28,7 +27,7 @@ public class KrausPeakTable implements PeakTable {
 	}
 	
 	@Override
-	public Collection<TransitionSeries> getAll() {
+	public List<TransitionSeries> getAll() {
 		return new ArrayList<>(series);
 	}
 

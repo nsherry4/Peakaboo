@@ -16,6 +16,14 @@ public enum TransitionSeriesType
 		{
 			return this.name() + " Series";
 		}
+		
+		@Override
+		public int shell() {
+			return 1;
+		}
+		
+		
+		
 	},
 	L {
 
@@ -24,6 +32,12 @@ public enum TransitionSeriesType
 		{
 			return this.name() + " Series";
 		}
+		
+		@Override
+		public int shell() {
+			return 2;
+		}
+		
 	},
 	M {
 
@@ -32,6 +46,12 @@ public enum TransitionSeriesType
 		{
 			return this.name() + " Series";
 		}
+		
+		@Override
+		public int shell() {
+			return 3;
+		}
+		
 	},
 	COMPOSITE {
 
@@ -40,12 +60,23 @@ public enum TransitionSeriesType
 		{
 			return "Composite Series";
 		}
+		
+		@Override
+		public int shell() {
+			return -1;
+		}
+		
 	};
 	
+	
+	public int shell() {
+		throw new UnsupportedOperationException();
+	}
 	
 	public static TransitionSeriesType fromTypeString(String type)
 	{
 		return TransitionSeriesType.valueOf(type);
 	}
 
+	
 }

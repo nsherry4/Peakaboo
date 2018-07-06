@@ -1,6 +1,5 @@
 package peakaboo.curvefit.peak.table;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,9 +22,9 @@ public interface PeakTable {
 		return tss.get(0);
 	}
 	
-	Collection<TransitionSeries> getAll();
+	List<TransitionSeries> getAll();
 	
-	default Collection<TransitionSeries> getForElement(Element e) {
+	default List<TransitionSeries> getForElement(Element e) {
 		return getAll()
 				.stream()
 				.filter(ts -> (ts.element == e))
