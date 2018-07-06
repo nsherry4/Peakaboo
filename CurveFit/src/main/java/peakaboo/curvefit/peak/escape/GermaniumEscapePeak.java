@@ -16,7 +16,7 @@ public class GermaniumEscapePeak implements EscapePeak {
 
 	@Override
 	public List<Transition> offset() {
-		return PeakTable.getTransitionSeries(Element.Ge, TransitionSeriesType.K).getAllTransitions();
+		return PeakTable.SYSTEM.get(Element.Ge, TransitionSeriesType.K).getAllTransitions();
 	}
 
 	@Override

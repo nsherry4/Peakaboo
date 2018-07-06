@@ -50,7 +50,7 @@ public class SerializedTransitionSeries
 			Element e = Element.valueOf(parts[0]);
 			TransitionSeriesType tst = TransitionSeriesType.fromTypeString(parts[1]);
 			
-			created = PeakTable.getTransitionSeries(e, tst);
+			created = PeakTable.SYSTEM.get(e, tst);
 			
 			tss.add(created);
 		}

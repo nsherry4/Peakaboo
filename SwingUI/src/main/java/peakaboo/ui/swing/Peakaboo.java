@@ -24,7 +24,10 @@ import com.ezware.dialog.task.TaskDialog;
 import commonenvironment.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.curvefit.peak.table.PeakTableReader;
+import peakaboo.curvefit.peak.table.CombinedPeakTable;
+import peakaboo.curvefit.peak.table.KrausPeakTable;
+import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasource.plugin.DataSourceLoader;
 import peakaboo.filter.model.FilterLoader;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
@@ -207,7 +210,10 @@ public class Peakaboo
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			PeakTableReader.readPeakTable();
+			PeakTable.SYSTEM.setSource(
+					new CombinedPeakTable(
+							new XrayLibPeakTable(), 
+							new KrausPeakTable()));
 			DataSourceLoader.load();
 			FilterLoader.load();
 			runPeakaboo();

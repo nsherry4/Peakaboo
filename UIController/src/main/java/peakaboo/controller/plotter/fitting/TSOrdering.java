@@ -89,7 +89,7 @@ public class TSOrdering
 		
 
 		//get a list of all transition series to start with
-		List<TransitionSeries> tss = new ArrayList<>(PeakTable.getAllTransitionSeries());
+		List<TransitionSeries> tss = new ArrayList<>(PeakTable.SYSTEM.getAll());
 
 		
 		//add in any 2x summations from the list of previously fitted AND proposed peaks.

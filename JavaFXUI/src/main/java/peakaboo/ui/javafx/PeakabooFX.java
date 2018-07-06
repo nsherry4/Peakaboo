@@ -6,7 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import peakaboo.curvefit.peak.table.PeakTableReader;
+import peakaboo.curvefit.peak.table.CombinedPeakTable;
+import peakaboo.curvefit.peak.table.KrausPeakTable;
+import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.ui.javafx.plot.window.PlotWindowController;
 
 
@@ -15,7 +18,7 @@ public class PeakabooFX extends Application {
     PlotWindowController plot;
 
     public static void main(String[] args) {
-    	PeakTableReader.readPeakTableXraylib();
+    	PeakTable.SYSTEM.setSource(new CombinedPeakTable(new XrayLibPeakTable(), new KrausPeakTable()));
         launch(args);
     }
 

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.peak.table.PeakTableReader;
+import peakaboo.curvefit.peak.table.PeakTable;
 
 
 public class CorrectionsManager
@@ -22,7 +22,7 @@ public class CorrectionsManager
 		correctionSets = new HashMap<String, Corrections>();
 		try
 		{
-			correctionSets.put("WL", new Corrections(PeakTableReader.class.getResource("/peakaboo/mapping/correction/wl.csv"))); 
+			correctionSets.put("WL", new Corrections(PeakTable.class.getResource("/peakaboo/mapping/correction/wl.csv"))); 
 		}
 		catch (IOException e)
 		{

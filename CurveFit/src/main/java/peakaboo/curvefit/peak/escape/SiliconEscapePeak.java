@@ -16,7 +16,7 @@ public class SiliconEscapePeak implements EscapePeak {
 
 	@Override
 	public List<Transition> offset() {
-		return PeakTable.getTransitionSeries(Element.Si, TransitionSeriesType.K).getAllTransitions();
+		return PeakTable.SYSTEM.get(Element.Si, TransitionSeriesType.K).getAllTransitions();
 	}
 
 	@Override

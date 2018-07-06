@@ -85,7 +85,7 @@ public class FittingController extends EventfulType<Boolean>
 	public List<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
 	{
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
-		return PeakTable.getAllTransitionSeries().stream().filter(ts -> (!fitted.contains(ts)) && tst.equals(ts.type)).collect(toList());
+		return PeakTable.SYSTEM.getAll().stream().filter(ts -> (!fitted.contains(ts)) && tst.equals(ts.type)).collect(toList());
 	}
 
 	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show)

@@ -39,7 +39,7 @@ public class Corrections
 			
 			float factor = Float.parseFloat(parts[2]);
 			
-			correctionPairs.add(new Pair<TransitionSeries, Float>(PeakTable.getTransitionSeries(e, tst), factor));
+			correctionPairs.add(new Pair<TransitionSeries, Float>(PeakTable.SYSTEM.get(e, tst), factor));
 		}
 		
 		
