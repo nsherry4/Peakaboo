@@ -77,9 +77,7 @@ public class FastFittingScorer implements Scorer {
 				
 		snugness /= (float)count;
 		signal /= (float)count;
-		
-		System.out.println(ts.element + " " + ts.type + ": " + snugness + ", " + signal);
-		
+				
 		float result = signal * snugness;
 		if (signal < 0 && snugness < 0) {
 			//both terms being negative would turn it positive, which would
