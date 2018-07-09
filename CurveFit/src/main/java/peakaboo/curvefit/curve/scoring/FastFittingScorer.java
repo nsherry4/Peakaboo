@@ -42,7 +42,7 @@ public class FastFittingScorer implements Scorer {
 			if (channel >= data.size()) continue;
 			if (channel < 0) continue;
 			//add 1 for a little wiggle room, and to prevent /0 errors
-			float channelHeight = 1+data.get(channel);
+			float channelHeight = 1+Math.max(0, data.get(channel));
 			
 			float mult = channelHeight / t.relativeIntensity;
 			lowestMult = Math.min(lowestMult, mult);
@@ -66,7 +66,7 @@ public class FastFittingScorer implements Scorer {
 			if (channel >= data.size()) continue;
 			if (channel < 0) continue;
 			//add 1 for a little wiggle room, and to prevent /0 errors
-			float channelHeight = 1+data.get(channel);
+			float channelHeight = 1+Math.max(0, data.get(channel));
 			
 			//we calculate how good the fit is
 			snugness += fit / (float)channelHeight;
@@ -78,7 +78,15 @@ public class FastFittingScorer implements Scorer {
 		snugness /= (float)count;
 		signal /= (float)count;
 		
-		return signal * snugness;
+		System.out.println(ts.element + " " + ts.type + ": " + snugness + ", " + signal);
+		
+		float result = signal * snugness;
+		if (signal < 0 && snugness < 0) {
+			//both terms being negative would turn it positive, which would
+			//give a misleadingly good result;
+			result = -result;
+		}
+		return result;
 
 	}
 
