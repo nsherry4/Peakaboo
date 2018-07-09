@@ -1,6 +1,7 @@
 package peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -42,7 +43,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 
 	@Override
 	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter) {
-		int size = fittings.getVisibleCurves().size();
+		List<Curve> curves = fittings.getVisibleCurves();
+		int size = curves.size();
+		
 		
 		if (size == 0) {
 			return new FittingResultSet(
@@ -54,7 +57,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		}
 		
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
-		for (Curve curve : fittings.getCurves()) {
+		for (Curve curve : curves) {
 			for (int channel : curve.getIntenseRanges()) {
 				intenseChannels.add(channel);
 			}
@@ -101,19 +104,18 @@ public class OptimizingFittingSolver implements FittingSolver {
 
 		double[] guess = new double[size];
 		for (int i = 0; i < size; i++) {
-			Curve curve = fittings.getCurves().get(i);
+			Curve curve = curves.get(i);
 			FittingResult guessFittingResult = fitter.fit(data, curve);
 			guess[i] = guessFittingResult.getCurveScale();
 		}
 		
-		SimplexOptimizer solver = new SimplexOptimizer(-1d, 0.1d);
+		SimplexOptimizer solver = new SimplexOptimizer(-1d, 1d);
 		PointValuePair result = solver.optimize(
 				new ObjectiveFunction(cost), 
 				new MultiDirectionalSimplex(size),
 				new InitialGuess(guess),
 				new MaxIter(10000),
 				new MaxEval(10000),
-				//new LinearConstraintSet(), 
 				new NonNegativeConstraint(true), 
 				GoalType.MINIMIZE
 			);
