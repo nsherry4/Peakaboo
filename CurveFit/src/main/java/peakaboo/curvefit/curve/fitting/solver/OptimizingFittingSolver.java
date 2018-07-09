@@ -1,7 +1,6 @@
 package peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,8 +14,7 @@ import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
-import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.MultiDirectionalSimplex;
-import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
+import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizer;
 
 import peakaboo.curvefit.curve.fitting.Curve;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
@@ -63,6 +61,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 			}
 		}
 		
+		//Mutable<Integer> counter = new Mutable<>(0);
+		
 		MultivariateFunction cost = new MultivariateFunction() {
 			
 			@Override
@@ -87,6 +87,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 					score += channel;
 				}
 				
+				//System.out.println("Run number " + counter.get());
+				//counter.set(counter.get()+1);
+				
 				//System.out.println(Arrays.toString(point));
 				//System.out.println(score);
 				
@@ -108,17 +111,28 @@ public class OptimizingFittingSolver implements FittingSolver {
 			FittingResult guessFittingResult = fitter.fit(data, curve);
 			guess[i] = guessFittingResult.getCurveScale();
 		}
+				
 		
-		SimplexOptimizer solver = new SimplexOptimizer(-1d, 1d);
-		PointValuePair result = solver.optimize(
+		
+		
+		//1358 reps on test session
+		//optimizer = new SimplexOptimizer(-1d, 1d);
+		
+		//308 reps on test session
+		//optimizer = new PowellOptimizer(0.001d, 1d);
+		
+		//265 reps on test session but occasionally dies?
+		//optimizer = new BOBYQAOptimizer(Math.max(size+2, size*2));
+		
+		PointValuePair result = new PowellOptimizer(0.001d, 1d).optimize(
 				new ObjectiveFunction(cost), 
-				new MultiDirectionalSimplex(size),
 				new InitialGuess(guess),
 				new MaxIter(10000),
 				new MaxEval(10000),
 				new NonNegativeConstraint(true), 
-				GoalType.MINIMIZE
-			);
+				GoalType.MINIMIZE);
+
+
 		
 		double[] scalings = result.getPoint();
 		
