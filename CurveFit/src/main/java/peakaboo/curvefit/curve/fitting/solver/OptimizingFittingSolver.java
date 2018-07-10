@@ -61,43 +61,35 @@ public class OptimizingFittingSolver implements FittingSolver {
 			}
 		}
 		
-		//Mutable<Integer> counter = new Mutable<>(0);
 		
 		MultivariateFunction cost = new MultivariateFunction() {
 			
 			@Override
 			public double value(double[] point) {
 				
-
-				
-				FittingResultSet result = evaluate(point, data, fittings);
-				ReadOnlySpectrum residual = result.getResidual();
-				
-				double score = 0;
-				for (int i = 0; i < residual.size(); i++) {
-					if (! intenseChannels.contains(i)) { continue; }
-					double channel = residual.get(i);
-					
-					//Negative values mean that we've fit more signal than exists
-					//We penalize this to prevent making up data where none exists.
-					if (channel < 0) {
-						channel = Math.abs(channel);
-						channel *= 1;
-					}
-					score += channel;
-				}
-				
-				//System.out.println("Run number " + counter.get());
-				//counter.set(counter.get()+1);
-				
-				//System.out.println(Arrays.toString(point));
-				//System.out.println(score);
-				
 				//We really don't like negative scaling factors, they don't make any logical sense.
 				for (double v : point) {
 					if (v < 0) {
 						return Math.abs(v) * 1000000;
 					}
+				}
+				
+				
+				FittingResultSet result = evaluate(point, data, fittings, curves);
+				ReadOnlySpectrum residual = result.getResidual();
+				
+				float score = 0;
+				for (int i : intenseChannels) {
+					float channel = residual.get(i);
+					
+					//Negative values mean that we've fit more signal than exists
+					//We penalize this to prevent making up data where none exists.
+					//if (channel < 0) {
+					//	channel = Math.abs(channel);
+					//	channel *= 1;
+					//}
+					channel = Math.abs(channel);
+					score += channel;
 				}
 				
 				return score;
@@ -136,16 +128,16 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		double[] scalings = result.getPoint();
 		
-		return evaluate(scalings, data, fittings);
+		return evaluate(scalings, data, fittings, curves);
 		
 		
 	}
 
-	private FittingResultSet evaluate(double[] point, ReadOnlySpectrum data, FittingSet fittings) {
+	private FittingResultSet evaluate(double[] point, ReadOnlySpectrum data, FittingSet fittings, List<Curve> curves) {
 		int index = 0;
 		List<FittingResult> fits = new ArrayList<>();
 		Spectrum total = new ISpectrum(data.size());
-		for (Curve curve : fittings.getVisibleCurves()) {
+		for (Curve curve : curves) {
 			float scale = (float) point[index++];
 			Spectrum scaled = curve.scale(scale);
 			fits.add(new FittingResult(scaled, curve, scale));
