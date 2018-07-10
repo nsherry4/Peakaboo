@@ -4,22 +4,16 @@ import scidraw.drawing.ViewTransform;
 
 public class PlotSettings {
 	
-	public boolean				showElementFitTitles;
-	public boolean				showElementFitMarkers;
-	public boolean				showElementFitIntensities;
-	public boolean				showIndividualFittings;
-	public boolean				showPlotTitle;
-	public boolean				showAxes;
-	public boolean				monochrome;
+	public boolean				showElementFitTitles = true;
+	public boolean				showElementFitMarkers = false;
+	public boolean				showElementFitIntensities = false;
+	public boolean				showIndividualFittings = false;
+	public boolean				showPlotTitle = false;
+	public boolean				showAxes = true;
+	public boolean				monochrome = false;
 	
-	
-	
-	public int					scanNumber;
-	public ChannelCompositeMode	channelComposite;
-	public boolean				backgroundShowOriginal;
-	public float				zoom;
-	public boolean				lockPlotHeight;
-	public ViewTransform		viewTransform;
+	public boolean				backgroundShowOriginal = false;
+	public ViewTransform		viewTransform = ViewTransform.LOG;
 	
 	
 }

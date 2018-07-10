@@ -60,14 +60,8 @@ import scitypes.SpectrumCalculations;
 public class PlotCanvas extends GraphicsPanel implements Scrollable
 {
 
-	private PlotDrawing				plot;
-	private DrawingRequest			dr;
-	
-	private Plot					plotObject;
-	
-
+	private PlotDrawing				plotDrawing;
 	private PlotController			controller;
-
 	private Consumer<Integer>		grabChannelFromClickCallback;
 
 
@@ -78,7 +72,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		this.setFocusable(true);
 
 		this.controller = controller;
-		dr = new DrawingRequest();
 		this.setMinimumSize(new Dimension(100, 100));
 
 		//setCanvasSize();
@@ -225,13 +218,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	int channelFromCoordinate(int x)
 	{
 
-		if (plot == null) return -1;
+		if (plotDrawing == null) return -1;
 
 		Coord<Bounds<Float>> axesSize;
 		int channel;
 
 		// Plot p = new Plot(this.toyContext, model.dr);
-		axesSize = plot.getPlotOffsetFromBottomLeft();
+		axesSize = plotDrawing.getPlotOffsetFromBottomLeft();
 
 		float plotWidth = axesSize.x.end - axesSize.x.start; // width - axesSize.x;
 		// x -= axesSize.x;
@@ -282,7 +275,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			if (dataForPlot == null) {
 				return;
 			}
-			plotObject = new Plot();
+			
 
 			
 			
@@ -307,10 +300,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			PlotSettings settings = new PlotSettings();
 			
 			settings.backgroundShowOriginal = controller.view().getShowRawData();
-			settings.channelComposite = controller.view().getChannelCompositeMode();
-			settings.lockPlotHeight = controller.view().getLockPlotHeight();
 			settings.monochrome = controller.view().getMonochrome();
-			settings.scanNumber = controller.view().getScanNumber();
 			settings.showAxes = controller.view().getShowAxes();
 			settings.showElementFitIntensities = controller.view().getShowElementIntensities();
 			settings.showElementFitMarkers = controller.view().getShowElementMarkers();
@@ -318,20 +308,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			settings.showIndividualFittings = controller.view().getShowIndividualSelections();
 			settings.showPlotTitle = controller.view().getShowTitle();
 			settings.viewTransform = controller.view().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
-			settings.zoom = controller.view().getZoom();
 			
 			
-
-			
-			
-			
-			plot = plotObject.draw(data, settings, context, vector, size);
-			
-			
-			
-			
-			
-	
+			Plot plotObject = new Plot();
+			plotDrawing = plotObject.draw(data, settings, context, size);
 	
 			
 		} catch (Exception e) {

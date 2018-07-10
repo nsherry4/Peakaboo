@@ -1,5 +1,6 @@
 package peakaboo.display.plot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
@@ -18,11 +19,13 @@ public class PlotData {
 	public DataSet dataset;
 	
 	public EnergyCalibration calibration;
-	public EscapePeakType escape;
+	public EscapePeakType escape = EscapePeakType.SILICON;
 	
-	public FilterSet filters;
-	public FittingResultSet proposedResults, selectionResults;
+	public FilterSet filters = new FilterSet();
+	public FittingResultSet proposedResults;
+	public FittingResultSet selectionResults;
 	
-	public List<TransitionSeries> highlightedTransitionSeries, proposedTransitionSeries;
+	public List<TransitionSeries> highlightedTransitionSeries = new ArrayList<>();
+	public List<TransitionSeries> proposedTransitionSeries = new ArrayList<>();
 	
 }

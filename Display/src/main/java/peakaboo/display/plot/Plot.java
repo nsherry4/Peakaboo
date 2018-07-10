@@ -2,6 +2,11 @@ package peakaboo.display.plot;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -10,7 +15,6 @@ import java.util.stream.Collectors;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.dataset.DataSet;
 import peakaboo.display.plot.fitting.FittingMarkersPainter;
 import peakaboo.display.plot.fitting.FittingPainter;
 import peakaboo.display.plot.fitting.FittingSumPainter;
@@ -18,7 +22,10 @@ import peakaboo.display.plot.fitting.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
+import scidraw.drawing.backends.DrawingSurfaceFactory;
+import scidraw.drawing.backends.SaveableSurface;
 import scidraw.drawing.backends.Surface;
+import scidraw.drawing.backends.SurfaceType;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.LineAxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
@@ -36,16 +43,17 @@ public class Plot {
 
 	private PlotDrawing plot;
 
-	public PlotDrawing draw(PlotData data, PlotSettings settings, Surface context, boolean vector, Dimension size) {
+	public PlotDrawing draw(PlotData data, PlotSettings settings, Surface context, Dimension size) {
+		
+		if (settings == null) {
+			settings = new PlotSettings();
+		}
 		
 		DrawingRequest dr = new DrawingRequest();
 		
-		if (data.raw == null) {
-			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (filtered) was null");
-			return null;
-		};
+
 		if (data.filtered == null) {
-			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (raw) was null");
+			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (filtered) was null");
 			return null;
 		};
 		
@@ -126,11 +134,11 @@ public class Plot {
 
 
 		// draw the filtered data
-		plotPainters.add(new PrimaryPlotPainter(data.raw, settings.monochrome));
+		plotPainters.add(new PrimaryPlotPainter(data.filtered, settings.monochrome));
 
 		
 		// draw the original data
-		if (settings.backgroundShowOriginal) {
+		if (data.raw != null && settings.backgroundShowOriginal) {
 			ReadOnlySpectrum originalData = data.raw;
 			plotPainters.add(new OriginalDataPainter(originalData, settings.monochrome));
 		}
@@ -148,19 +156,22 @@ public class Plot {
 			}
 		}
 
+		
 		// draw curve fitting
-		if (settings.showIndividualFittings)
-		{
-			plotPainters.add(new FittingPainter(data.selectionResults, fittingStroke, fitting));
-			plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum));
-		}
-		else
-		{			
-			plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum, fitting));
+		if (data.selectionResults != null) {
+			if (settings.showIndividualFittings)
+			{
+				plotPainters.add(new FittingPainter(data.selectionResults, fittingStroke, fitting));
+				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum));
+			}
+			else
+			{			
+				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum, fitting));
+			}
 		}
 		
 		//draw curve fitting for proposed fittings
-		if (data.proposedTransitionSeries.size() > 0)
+		if (data.proposedTransitionSeries != null && data.proposedTransitionSeries.size() > 0)
 		{
 			if (settings.showIndividualFittings) {
 				plotPainters.add(new FittingPainter(data.proposedResults, proposedStroke, proposed));
@@ -189,25 +200,34 @@ public class Plot {
 		}
 		
 		
-		plotPainters.add(new FittingTitlePainter(
-				data.selectionResults,
-				settings.showElementFitTitles,
-				settings.showElementFitIntensities,
-				fittingStroke
-			)
-		);
+		if (data.selectionResults != null) {
+			plotPainters.add(new FittingTitlePainter(
+					data.selectionResults,
+					settings.showElementFitTitles,
+					settings.showElementFitIntensities,
+					fittingStroke
+				)
+			);
+		}
 		
-		plotPainters.add(new FittingTitlePainter(
-				data.proposedResults,
-				settings.showElementFitTitles,
-				settings.showElementFitIntensities,
-				proposedStroke
-			)
-		);
+		if (data.proposedResults != null) {
+			plotPainters.add(new FittingTitlePainter(
+					data.proposedResults,
+					settings.showElementFitTitles,
+					settings.showElementFitIntensities,
+					proposedStroke
+				)
+			);
+		}
+		
 		
 		if (settings.showElementFitMarkers) {
-			plotPainters.add(new FittingMarkersPainter(data.selectionResults, data.escape, fittingStroke));
-			plotPainters.add(new FittingMarkersPainter(data.proposedResults, data.escape, proposedStroke));
+			if (data.selectionResults != null) {
+				plotPainters.add(new FittingMarkersPainter(data.selectionResults, data.escape, fittingStroke));
+			}
+			if (data.proposedResults != null) {
+				plotPainters.add(new FittingMarkersPainter(data.proposedResults, data.escape, proposedStroke));
+			}
 		}
 		
 		
@@ -257,6 +277,20 @@ public class Plot {
 		
 	}
 	
+	public void write(PlotData data, PlotSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
+		
+		SaveableSurface s = DrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
+		this.draw(data, settings, s, size);
+		s.write(out);
+		
+	}
 	
+	public void write(PlotData data, PlotSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
+		
+		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE);
+		this.write(data, settings, type, size, stream);
+		stream.close();
+		
+	}
 	
 }
