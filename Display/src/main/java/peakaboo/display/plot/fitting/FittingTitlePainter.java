@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting.painters;
+package peakaboo.display.plot.fitting;
 
 import java.awt.Color;
 import java.util.ArrayList;

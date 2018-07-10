@@ -16,6 +16,7 @@
     <module>DataSource</module>
     <module>Filter</module>
     <module>Mapping</module>
+    <module>Display</module>
     <module>UIController</module>
     <module>SwingUI</module>
     <module>JavaFXUI</module>

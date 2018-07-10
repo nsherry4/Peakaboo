@@ -6,6 +6,7 @@ import java.util.List;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
@@ -261,6 +262,9 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections.getFittingParameters().getCalibration().getMinEnergy();
 	}
 	
+	public EnergyCalibration getEnergyCalibration() {
+		return fittingModel.selections.getFittingParameters().getCalibration();
+	}
 	
 	
 	

@@ -22,11 +22,14 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.display.plot.Plot;
+import peakaboo.display.plot.PlotData;
+import peakaboo.display.plot.PlotSettings;
+import peakaboo.display.plot.fitting.FittingMarkersPainter;
+import peakaboo.display.plot.fitting.FittingPainter;
+import peakaboo.display.plot.fitting.FittingSumPainter;
+import peakaboo.display.plot.fitting.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
-import peakaboo.ui.swing.plotting.fitting.painters.FittingMarkersPainter;
-import peakaboo.ui.swing.plotting.fitting.painters.FittingPainter;
-import peakaboo.ui.swing.plotting.fitting.painters.FittingSumPainter;
-import peakaboo.ui.swing.plotting.fitting.painters.FittingTitlePainter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
@@ -59,6 +62,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	private PlotDrawing				plot;
 	private DrawingRequest			dr;
+	
+	private Plot					plotObject;
 	
 
 	private PlotController			controller;
@@ -265,6 +270,9 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		try {
 			
 			
+			
+
+			
 			////////////////////////////////////////////////////////////////////
 			// Data Calculation
 			////////////////////////////////////////////////////////////////////
@@ -274,209 +282,57 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			if (dataForPlot == null) {
 				return;
 			}
-			if (dataForPlot.first == null) {
-				PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (filtered) was null");
-				return;
-			};
-			if (dataForPlot.second == null) {
-				PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (raw) was null");
-				return;
-			};
-			
-			//white background
-			context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
-			context.setSource(Color.white);
-			context.fill();
-	
-			////////////////////////////////////////////////////////////////////
-			// Colour Selections
-			////////////////////////////////////////////////////////////////////
-			Color fitting, fittingStroke, fittingSum;
-			Color proposed, proposedStroke, proposedSum;
-			Color selected, selectedStroke;
-	
-			fitting = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-			fittingStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
-			fittingSum = new Color(0.0f, 0.0f, 0.0f, 0.8f);
-	
-			// Colour/Monochrome colours for curve fittings
-			if (controller.view().getMonochrome())
-			{
-				proposed = new Color(0x50ffffff, true);
-				proposedStroke = new Color(0x80ffffff, true);
-				proposedSum = new Color(0xD0ffffff, true);
-			}
-			else
-			{
-				proposed = new Color(0x80D32F2F, true);
-				proposedStroke = new Color(0x80B71C1C, true);
-				proposedSum = new Color(0xD0B71C1C, true);
-			}
-			
-			// Colour/Monochrome colours for highlighted/selected fittings
-			if (controller.view().getMonochrome())
-			{
-				selected = new Color(0x50ffffff, true);
-				selectedStroke = new Color(0x80ffffff, true);
-			}
-			else
-			{
-				selected = new Color(0x800288D1, true);
-				selectedStroke = new Color(0xff01579B, true);
-			}
-	
-	
-			
-	
-			////////////////////////////////////////////////////////////////////
-			// Plot Painters
-			////////////////////////////////////////////////////////////////////
-	
-			//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
-			//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
-			ReadOnlySpectrum drawingData = dataForPlot.first;
-			float maxIntensity = Math.max(controller.data().getDataSet().getAnalysis().maximumIntensity(), drawingData.max());
-			int datasetSize = Math.min(controller.data().getDataSet().getAnalysis().channelsPerScan(), drawingData.size());
-			
-			dr.imageHeight = (float) size.getHeight();
-			dr.imageWidth = (float) size.getWidth();
-			dr.viewTransform = controller.view().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
-			dr.unitSize = (controller.fitting().getMaxEnergy() - controller.fitting().getMinEnergy()) / (float)datasetSize;
-			dr.drawToVectorSurface = context.isVectorSurface();
-			
-			// if axes are shown, also draw horizontal grid lines
-			List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
-			if (controller.view().getShowAxes()) plotPainters.add(new GridlinePainter(new Bounds<Float>(
-				0.0f,
-				maxIntensity)));
-	
-	
-			// draw the filtered data
-			plotPainters.add(new PrimaryPlotPainter(drawingData, controller.view().getMonochrome()));
-	
-			
-			// draw the original data
-			if (controller.view().getShowRawData())
-			{
-				ReadOnlySpectrum originalData = dataForPlot.second;
-				plotPainters.add(new OriginalDataPainter(originalData, controller.view().getMonochrome()));
-			}
-			
-			
-			// get any painters that the filters might want to add to the mix
-			PlotPainter filterPainter;
-			for (Filter f : controller.filtering().getActiveFilters())
-			{
-				filterPainter = f.getPainter();
-				
-				if (filterPainter != null && f.isEnabled()) {
-					filterPainter.setSourceName(f.getFilterName());
-					plotPainters.add(filterPainter);
-				}
-			}
-	
-			// draw curve fitting
-			if (controller.view().getShowIndividualSelections())
-			{
-				plotPainters.add(new FittingPainter(controller.fitting().getFittingSelectionResults(), fittingStroke, fitting));
-				plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().getTotalFit(), fittingSum));
-			}
-			else
-			{			
-				plotPainters.add(new FittingSumPainter(controller.fitting().getFittingSelectionResults().getTotalFit(), fittingSum, fitting));
-			}
-			
-			//draw curve fitting for proposed fittings
-			if (controller.fitting().getProposedTransitionSeries().size() > 0)
-			{
-				if (controller.view().getShowIndividualSelections()) {
-					plotPainters.add(new FittingPainter(controller.fitting().getFittingProposalResults(), proposedStroke, proposed));
-				} else {
-					plotPainters.add(new FittingSumPainter(controller.fitting().getFittingProposalResults().getTotalFit(), proposedStroke, proposed));
-				}
+			plotObject = new Plot();
 
-				plotPainters.add(
-	
-					new FittingSumPainter(SpectrumCalculations.addLists(
-							controller.fitting().getFittingProposalResults().getTotalFit(),
-							controller.fitting().getFittingSelectionResults().getTotalFit()), proposedSum)
-	
-				);
-			}
-			
-	
-			//highlighted fittings
-			List<TransitionSeries> selectedFits = controller.fitting().getHighlightedTransitionSeries();
-			if (!selectedFits.isEmpty()) {
-				List<FittingResult> selectedFitResults = controller.fitting().getFittingSelectionResults().getFits()
-						.stream()
-						.filter(r -> selectedFits.contains(r.getTransitionSeries()))
-						.collect(Collectors.toList());
-				plotPainters.add(new FittingPainter(selectedFitResults, selectedStroke, selected));
-			}
 			
 			
-			plotPainters.add(new FittingTitlePainter(
-					controller.fitting().getFittingSelectionResults(),
-					controller.view().getShowElementTitles(),
-					controller.view().getShowElementIntensities(),
-					fittingStroke
-				)
-			);
+			PlotData data = new PlotData();
 			
-			plotPainters.add(new FittingTitlePainter(
-					controller.fitting().getFittingProposalResults(),
-					controller.view().getShowElementTitles(),
-					controller.view().getShowElementIntensities(),
-					proposedStroke
-				)
-			);
+			data.selectionResults = controller.fitting().getFittingSelectionResults();
+			data.proposedResults = controller.fitting().getFittingProposalResults();
+			data.calibration = controller.fitting().getEnergyCalibration();
+			data.escape = controller.fitting().getEscapeType();
+			data.highlightedTransitionSeries = controller.fitting().getHighlightedTransitionSeries();
+			data.proposedTransitionSeries = controller.fitting().getProposedTransitionSeries();
 			
-			if (controller.view().getShowElementMarkers()) {
-				plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingSelectionResults(), controller.fitting().getEscapeType(), fittingStroke));
-				plotPainters.add(new FittingMarkersPainter(controller.fitting().getFittingProposalResults(), controller.fitting().getEscapeType(), proposedStroke));
-			}
-					
-	
-	
-	
-			////////////////////////////////////////////////////////////////////
-			// Axis Painters
-			////////////////////////////////////////////////////////////////////
-	
-			//if (axisPainters == null)
-			//{
-			List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
-	
-			if (controller.view().getShowTitle())
-			{
-				axisPainters.add(new TitleAxisPainter(1.0f, null, null, controller.data().getDataSet().getScanData().datasetName(), null));
-			}
-	
-			if (controller.view().getShowAxes())
-			{
-	
-				axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
-				axisPainters.add(new TickMarkAxisPainter(
-					new Bounds<Float>(0.0f, maxIntensity),
-					new Bounds<Float>(controller.fitting().getMinEnergy(), controller.fitting().getMaxEnergy()),
-					null,
-					new Bounds<Float>(0.0f, maxIntensity),
-					dr.viewTransform == ViewTransform.LOG,
-					dr.viewTransform == ViewTransform.LOG));
-				axisPainters.add(new LineAxisPainter(true, true, controller.view().getShowTitle(), true));
-	
-			}
-	
-			//}
-	
+			data.dataset = controller.data().getDataSet();
 			
-			dr.maxYIntensity = maxIntensity;
-			dr.dataWidth = datasetSize;
+			data.filters = controller.filtering().getActiveFilters();
+			
+			data.filtered = dataForPlot.first;
+			data.raw = dataForPlot.second;
 			
 			
-			plot = new PlotDrawing(context, dr, plotPainters, axisPainters);
-			plot.draw();
+
+			PlotSettings settings = new PlotSettings();
+			
+			settings.backgroundShowOriginal = controller.view().getShowRawData();
+			settings.channelComposite = controller.view().getChannelCompositeMode();
+			settings.lockPlotHeight = controller.view().getLockPlotHeight();
+			settings.monochrome = controller.view().getMonochrome();
+			settings.scanNumber = controller.view().getScanNumber();
+			settings.showAxes = controller.view().getShowAxes();
+			settings.showElementFitIntensities = controller.view().getShowElementIntensities();
+			settings.showElementFitMarkers = controller.view().getShowElementMarkers();
+			settings.showElementFitTitles = controller.view().getShowElementTitles();
+			settings.showIndividualFittings = controller.view().getShowIndividualSelections();
+			settings.showPlotTitle = controller.view().getShowTitle();
+			settings.viewTransform = controller.view().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
+			settings.zoom = controller.view().getZoom();
+			
+			
+
+			
+			
+			
+			plot = plotObject.draw(data, settings, context, vector, size);
+			
+			
+			
+			
+			
+	
+	
 			
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to draw plot", e);

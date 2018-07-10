@@ -11,6 +11,7 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.display.plot.ChannelCompositeMode;
 import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;

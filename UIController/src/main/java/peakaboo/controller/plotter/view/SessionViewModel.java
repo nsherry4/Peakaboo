@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter.view;
 
+import peakaboo.display.plot.ChannelCompositeMode;
 import scidraw.drawing.ViewTransform;
 
 public class SessionViewModel {
