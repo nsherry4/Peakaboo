@@ -8,7 +8,12 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 public interface PeakTable {
 
-	static DelegatingPeakTable SYSTEM = new DelegatingPeakTable();
+	static final DelegatingPeakTable SYSTEM = new DelegatingPeakTable(
+			new CombinedPeakTable(
+					new XrayLibPeakTable(), 
+					new KrausPeakTable()
+			)
+	);
 	
 	default TransitionSeries get(Element e, TransitionSeriesType tst) {
 		List<TransitionSeries> tss = getAll()

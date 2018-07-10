@@ -8,6 +8,10 @@ public class DelegatingPeakTable implements PeakTable {
 
 	private PeakTable backing;
 	
+	public DelegatingPeakTable(PeakTable backing) {
+		this.backing = backing;
+	}
+	
 	public void setSource(PeakTable table) {
 		this.backing = table;
 	}
