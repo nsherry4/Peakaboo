@@ -18,6 +18,7 @@ import javax.swing.border.TitledBorder;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.LeastSquaresCurveFitter;
+import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
@@ -134,7 +135,9 @@ public class AdvancedOptionsPanel extends JPanel {
 				f -> f.getClass() == controller.fitting().getCurveFitter().getClass(),
 				f -> controller.fitting().setCurveFitter(f),
 				new UnderCurveFitter(),
+				new OptimizingCurveFitter(),
 				new LeastSquaresCurveFitter()
+				
 			);
 		build(panel, fittersBox, "Single-Curve Fitting", "The strategy used to fit a single element's emission curve to data.", true);
 
