@@ -15,6 +15,7 @@ import org.apache.commons.math3.util.Pair;
 
 import peakaboo.curvefit.curve.fitting.Curve;
 import peakaboo.curvefit.curve.fitting.FittingResult;
+import scitypes.ISpectrum;
 import scitypes.RangeSet;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -46,10 +47,13 @@ public class LeastSquaresCurveFitter implements CurveFitter {
 		//find channel count
 		int channelCount = this.channelCount(curve);
 		
+		
+		Spectrum scaled = new ISpectrum(data.size());
+		
 		MultivariateJacobianFunction distanceFromData = point -> {
 				
 			float scale = (float) point.getEntry(0);
-			Spectrum scaled = curve.scale(scale);
+			curve.scaleInto(scale, scaled);
 			
 			//These store the total distance and distance-per-dimension.
 			//Since we have only one dimension, these should be the same..?
