@@ -25,10 +25,10 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.display.plot.Plot;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
-import peakaboo.display.plot.fitting.FittingMarkersPainter;
-import peakaboo.display.plot.fitting.FittingPainter;
-import peakaboo.display.plot.fitting.FittingSumPainter;
-import peakaboo.display.plot.fitting.FittingTitlePainter;
+import peakaboo.display.plot.painters.FittingMarkersPainter;
+import peakaboo.display.plot.painters.FittingPainter;
+import peakaboo.display.plot.painters.FittingSumPainter;
+import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
@@ -262,13 +262,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 				
 		try {
 			
-			
-			
-
-			
-			////////////////////////////////////////////////////////////////////
-			// Data Calculation
-			////////////////////////////////////////////////////////////////////
 	
 			// calculates filters and fittings if needed
 			Pair<ReadOnlySpectrum, ReadOnlySpectrum> dataForPlot = controller.getDataForPlot();
@@ -277,8 +270,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			}
 			
 
-			
-			
 			PlotData data = new PlotData();
 			
 			data.selectionResults = controller.fitting().getFittingSelectionResults();

@@ -1,4 +1,4 @@
-package peakaboo.display.plot.fitting;
+package peakaboo.display.plot.painters;
 
 import java.awt.Color;
 

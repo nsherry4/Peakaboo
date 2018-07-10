@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.display.plot.fitting.FittingMarkersPainter;
-import peakaboo.display.plot.fitting.FittingPainter;
-import peakaboo.display.plot.fitting.FittingSumPainter;
-import peakaboo.display.plot.fitting.FittingTitlePainter;
+import peakaboo.display.plot.painters.FittingMarkersPainter;
+import peakaboo.display.plot.painters.FittingPainter;
+import peakaboo.display.plot.painters.FittingSumPainter;
+import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
@@ -41,7 +41,6 @@ import scitypes.SpectrumCalculations;
 
 public class Plot {
 
-	private PlotDrawing plot;
 
 	public PlotDrawing draw(PlotData data, PlotSettings settings, Surface context, Dimension size) {
 		
@@ -269,7 +268,7 @@ public class Plot {
 		dr.dataWidth = data.calibration.getDataWidth();
 		
 		
-		plot = new PlotDrawing(context, dr, plotPainters, axisPainters);
+		PlotDrawing plot = new PlotDrawing(context, dr, plotPainters, axisPainters);
 		plot.draw();
 				
 		return plot;

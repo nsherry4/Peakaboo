@@ -1,79 +1,76 @@
-package peakaboo.display.plot.fitting;
+package peakaboo.display.plot.painters;
 
 
 import java.awt.Color;
-import java.util.List;
 
 import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;
-
+import scitypes.Spectrum;
 
 /**
  * 
- * A {@link PlotPainter} for {@link PlotDrawing}s which draws the data for each {@link FittingResult} in a {@link FittingResultSet}
+ * A {@link PlotPainter} for {@link PlotDrawing}s which draws the data for the sum of a set of {@link FittingResult}s
  * 
  * @author Nathaniel Sherry, 2009
  * 
  */
 
-public class FittingPainter extends PlotPainter
+public class FittingSumPainter extends PlotPainter
 {
 
-	private List<FittingResult>	data;
-	private Color				stroke;
-	private Color				fill;
-
-
+	private Spectrum		data;
+	private Color			stroke;
+	private Color			fill;
 
 	/**
 	 * 
-	 * Create a new FittingPainter
+	 * Create a new FittingSumPainter without a fill {@link Color}
 	 * 
 	 * @param data the data to draw on the plot
 	 * @param stroke the {@link Color} to stroke the data with
-	 * @param fill the {@link Color} to fill the data with
 	 */
-	public FittingPainter(FittingResultSet data, Color stroke, Color fill)
+	public FittingSumPainter(Spectrum data, Color stroke)
 	{
-		this(data.getFits(), stroke, fill);
+		init(data, stroke, new Color(0.0f, 0.0f, 0.0f, 0.0f));
 	}
-	
-	
+
 	/**
 	 * 
-	 * Create a new FittingPainter
+	 * Create a new FittingSumPainter
 	 * 
 	 * @param data the data to draw on the plot
 	 * @param stroke the {@link Color} to stroke the data with
 	 * @param fill the {@link Color} to fill the data with
 	 */
-	public FittingPainter(List<FittingResult> data, Color stroke, Color fill) {
+	public FittingSumPainter(Spectrum data, Color stroke, Color fill)
+	{
+		init(data, stroke, fill);
+	}
+
+
+	private void init(Spectrum data, Color stroke, Color fill)
+	{
 		this.data = data;
 		this.stroke = stroke;
 		this.fill = fill;
 	}
 
 
-
 	@Override
 	public void drawElement(PainterData p)
 	{
-		
-		for (FittingResult fitResult : data) {
-
-			traceData(p, fitResult.getFit());
-
+		if (data != null)
+		{
+			traceData(p, data);
+	
 			p.context.setSource(fill);
 			p.context.fillPreserve();
-
+	
 			p.context.setSource(stroke);
 			p.context.stroke();
 		}
-		
-
 	}
 
 }
