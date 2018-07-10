@@ -401,7 +401,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	{
 		if (type != TransitionSeriesType.COMPOSITE) 
 		{
-			return type.ordinal() * element.ordinal();
+			return (1+type.ordinal()) * (1+element.ordinal());
 		}
 		else
 		{

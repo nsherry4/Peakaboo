@@ -36,7 +36,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 	private Map<TransitionSeries, Integer> ratioSide;
 	private Map<TransitionSeries, OverlayColour> overlayColour;
-	private Map<TransitionSeries, Boolean> visible;
+	private Map<TransitionSeries, Boolean> visibility;
 	
 	private MapScaleMode mapScaleMode;
 	
@@ -52,13 +52,12 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		ratioSide = new HashMap<TransitionSeries, Integer>();
 		overlayColour = new HashMap<TransitionSeries, OverlayColour>();
-		visible = new HashMap<TransitionSeries, Boolean>();
+		visibility = new HashMap<TransitionSeries, Boolean>();
 		
-		for (TransitionSeries ts : map.mapsController.getMapResultSet().getAllTransitionSeries())
-		{
+		for (TransitionSeries ts : map.mapsController.getMapResultSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
 			overlayColour.put(ts, OverlayColour.RED);
-			visible.put(ts, true);
+			visibility.put(ts, true);
 		}
 		
 	}
@@ -548,20 +547,20 @@ public class MapFittingSettings extends EventfulType<String> {
 	}
 
 	
-	public List<TransitionSeries> getAllTransitionSeries()
+	public synchronized List<TransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<TransitionSeries> tsList = this.visible.keySet().stream().filter(a -> true).collect(toList());
+		List<TransitionSeries> tsList = this.visibility.keySet().stream().filter(a -> true).collect(toList());
 		Collections.sort(tsList);
 		return tsList;
 	}
 	
 
-	public List<TransitionSeries> getVisibleTransitionSeries()
+	public synchronized List<TransitionSeries> getVisibleTransitionSeries()
 	{
 		List<TransitionSeries> visible = new ArrayList<>();
 		for (TransitionSeries ts : getAllTransitionSeries()) {
-			if (this.visible.get(ts)) {
+			if (this.visibility.get(ts)) {
 				visible.add(ts);
 			}
 		}
@@ -589,9 +588,9 @@ public class MapFittingSettings extends EventfulType<String> {
 	}
 	
 
-	public Spectrum sumAllTransitionSeriesMaps()
+	public synchronized Spectrum sumAllTransitionSeriesMaps()
 	{		
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visible.keySet());
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visibility.keySet());
 	}
 
 
@@ -639,13 +638,13 @@ public class MapFittingSettings extends EventfulType<String> {
 		this.ratioSide.put(ts, side);
 	}
 	
-	public boolean getTransitionSeriesVisibility(TransitionSeries ts)
+	public synchronized boolean getTransitionSeriesVisibility(TransitionSeries ts)
 	{
-		return this.visible.get(ts);
+		return this.visibility.get(ts);
 	}
-	public void setTransitionSeriesVisibility(TransitionSeries ts, boolean visible)
+	public synchronized void setTransitionSeriesVisibility(TransitionSeries ts, boolean visible)
 	{
-		this.visible.put(ts, visible);
+		this.visibility.put(ts, visible);
 	}
 
 
