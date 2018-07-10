@@ -50,33 +50,44 @@ public class LeastSquaresCurveFitter implements CurveFitter {
 		
 		Spectrum scaled = new ISpectrum(data.size());
 		
-		MultivariateJacobianFunction distanceFromData = point -> {
-				
-			float scale = (float) point.getEntry(0);
-			curve.scaleInto(scale, scaled);
+		MultivariateJacobianFunction distanceFromData = new MultivariateJacobianFunction() {
 			
 			//These store the total distance and distance-per-dimension.
 			//Since we have only one dimension, these should be the same..?
 			RealVector vector = new ArrayRealVector(channelCount);
 			RealMatrix matrix = new Array2DRowRealMatrix(channelCount, 1);
 			
-			
-			int index = 0;
-			for (int channel : channels) {
-				float distance = scaled.get(channel) - data.get(channel);
-				float absdist = Math.abs(distance);
-				vector.setEntry(index, absdist);
-				float deriv = 0;
-				if (distance != 0) {
-					deriv = distance / absdist;
+			@Override
+			public Pair<RealVector, RealMatrix> value(RealVector point) {
+
+				float scale = (float) point.getEntry(0);
+				curve.scaleInto(scale, scaled);
+				
+				//Zero out the data structures from last use
+				for (int i = 0; i < channelCount; i++) {
+					vector.setEntry(i, 0);
+					matrix.setEntry(i, 0, 0);
 				}
 				
-				matrix.setEntry(index, 0, deriv);
-				index++;
+				
+				int index = 0;
+				for (int channel : channels) {
+					float distance = scaled.get(channel) - data.get(channel);
+					float absdist = Math.abs(distance);
+					vector.setEntry(index, absdist);
+					float deriv = 0;
+					if (distance != 0) {
+						deriv = distance / absdist;
+					}
+					
+					matrix.setEntry(index, 0, deriv);
+					index++;
+				}
+				
+				// TODO Auto-generated method stub
+				return new Pair<>(vector, matrix);
+				
 			}
-			
-			// TODO Auto-generated method stub
-			return new Pair<>(vector, matrix);
 		};
 		
 		
