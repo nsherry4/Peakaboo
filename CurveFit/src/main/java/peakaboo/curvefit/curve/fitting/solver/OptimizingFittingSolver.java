@@ -50,7 +50,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 					new ISpectrum(data.size()), 
 					new ISpectrum(data), 
 					Collections.emptyList(), 
-					FittingParameters.copy(fittings.getFittingParameters())
+					FittingParameters.copy(fittings.getFittingParameters().copy())
 				);
 		}
 		
@@ -60,6 +60,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 				intenseChannels.add(channel);
 			}
 		}
+		
+		EvaluationContext context = new EvaluationContext(data, fittings, curves);
 		
 		
 		MultivariateFunction cost = new MultivariateFunction() {
@@ -75,8 +77,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 				}
 				
 				
-				FittingResultSet result = evaluate(point, data, fittings, curves);
-				ReadOnlySpectrum residual = result.getResidual();
+				ReadOnlySpectrum residual = test(point, context);
 				
 				float score = 0;
 				for (int i : intenseChannels) {
@@ -128,24 +129,55 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		double[] scalings = result.getPoint();
 		
-		return evaluate(scalings, data, fittings, curves);
+		return evaluate(scalings, context);
 		
 		
 	}
 
-	private FittingResultSet evaluate(double[] point, ReadOnlySpectrum data, FittingSet fittings, List<Curve> curves) {
+	private Spectrum test(double[] point, EvaluationContext context) {
 		int index = 0;
 		List<FittingResult> fits = new ArrayList<>();
-		Spectrum total = new ISpectrum(data.size());
-		for (Curve curve : curves) {
+		context.scratch.zero();
+		context.total.zero();
+		for (Curve curve : context.curves) {
+			float scale = (float) point[index++];
+			curve.scaleInto(scale, context.scratch);
+			fits.add(new FittingResult(context.scratch, curve, scale));
+			SpectrumCalculations.addLists_inplace(context.total, context.scratch);
+		}
+		Spectrum residual = SpectrumCalculations.subtractLists(context.data, context.total);
+		
+		return residual;
+	}
+	
+	private FittingResultSet evaluate(double[] point, EvaluationContext context) {
+		int index = 0;
+		List<FittingResult> fits = new ArrayList<>();
+		Spectrum total = new ISpectrum(context.data.size());
+		for (Curve curve : context.curves) {
 			float scale = (float) point[index++];
 			Spectrum scaled = curve.scale(scale);
 			fits.add(new FittingResult(scaled, curve, scale));
 			SpectrumCalculations.addLists_inplace(total, scaled);
 		}
-		Spectrum residual = SpectrumCalculations.subtractLists(data, total);
+		Spectrum residual = SpectrumCalculations.subtractLists(context.data, total);
 		
-		return new FittingResultSet(total, residual, fits, FittingParameters.copy(fittings.getFittingParameters()));
+		return new FittingResultSet(total, residual, fits, context.fittings.getFittingParameters().copy());
+}
+	
+	private class EvaluationContext {
+		public ReadOnlySpectrum data;
+		public FittingSet fittings;
+		public List<Curve> curves;
+		public Spectrum scratch;
+		public Spectrum total;
+		public EvaluationContext(ReadOnlySpectrum data, FittingSet fittings, List<Curve> curves) {
+			this.data = data;
+			this.fittings = fittings;
+			this.curves = curves;
+			this.scratch = new ISpectrum(data.size());
+			this.total = new ISpectrum(data.size());
+		}
 	}
 	
 }

@@ -104,6 +104,19 @@ public class Curve
 		return SpectrumCalculations.multiplyBy(normalizedCurve, scale);
 	}
 	
+	/**
+	 * Returns a scaled fit based on the given scale value in the target Spectrum
+	 * 
+	 * @param scale
+	 *            amount to scale the fitting by
+	 * @param target
+	 *            target Spectrum to store results
+	 * @return a scaled fit
+	 */
+	public Spectrum scaleInto(float scale, Spectrum target) {
+		SpectrumCalculations.multiplyBy_target(normalizedCurve, target, scale);
+		return target;
+	}
 
 
 

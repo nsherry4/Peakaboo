@@ -39,6 +39,10 @@ public class FittingParameters {
 		return param;
 	}
 	
+	public FittingParameters copy() {
+		return FittingParameters.copy(this);
+	}
+	
 	
 	public FittingFunction forTransition(Transition transition, TransitionSeriesType type) {
 		FittingContext context = new FittingContext(this, transition, type);
