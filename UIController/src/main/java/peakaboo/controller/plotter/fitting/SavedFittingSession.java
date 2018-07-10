@@ -106,8 +106,9 @@ public class SavedFittingSession {
 		
 		
 		//Restore energy calibration
-		controller.setMinEnergy(minEnergy);
 		controller.setMaxEnergy(maxEnergy);
+		controller.setMinEnergy(minEnergy);
+		
 
 		//Restore escape peak type
 		controller.setEscapeType(escape);

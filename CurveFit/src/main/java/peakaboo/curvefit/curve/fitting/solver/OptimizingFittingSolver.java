@@ -85,11 +85,10 @@ public class OptimizingFittingSolver implements FittingSolver {
 					
 					//Negative values mean that we've fit more signal than exists
 					//We penalize this to prevent making up data where none exists.
-					//if (channel < 0) {
-					//	channel = Math.abs(channel);
-					//	channel *= 1;
-					//}
-					channel = Math.abs(channel);
+					if (channel < 0) {
+						channel = Math.abs(channel);
+						channel *= 5;
+					}
 					score += channel;
 				}
 				
