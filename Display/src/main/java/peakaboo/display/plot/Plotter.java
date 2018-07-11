@@ -39,7 +39,7 @@ import scitypes.Bounds;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
 
-public class Plot {
+public class Plotter {
 
 
 	public PlotDrawing draw(PlotData data, PlotSettings settings, Surface context, Dimension size) {

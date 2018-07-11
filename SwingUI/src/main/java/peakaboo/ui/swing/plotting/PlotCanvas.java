@@ -22,7 +22,7 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.display.plot.Plot;
+import peakaboo.display.plot.Plotter;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
@@ -301,7 +301,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			settings.viewTransform = controller.view().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
 			
 			
-			Plot plotObject = new Plot();
+			Plotter plotObject = new Plotter();
 			plotDrawing = plotObject.draw(data, settings, context, size);
 	
 			

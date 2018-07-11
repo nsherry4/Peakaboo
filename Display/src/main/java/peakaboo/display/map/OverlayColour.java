@@ -1,4 +1,4 @@
-package peakaboo.mapping.colours;
+package peakaboo.display.map;
 
 import java.awt.Color;
 
