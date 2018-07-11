@@ -3,13 +3,20 @@ package peakaboo.display.map;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
+import scidraw.drawing.backends.DrawingSurfaceFactory;
+import scidraw.drawing.backends.SaveableSurface;
 import scidraw.drawing.backends.Surface;
+import scidraw.drawing.backends.SurfaceType;
 import scidraw.drawing.backends.Surface.CompositeModes;
 import scidraw.drawing.common.Spectrums;
 import scidraw.drawing.map.MapDrawing;
@@ -45,9 +52,30 @@ public class Mapper {
 		map = new MapDrawing(null, dr);
 	}
 	
+	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
+		
+		SaveableSurface s = DrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
+		this.draw(data, settings, s, type == SurfaceType.VECTOR, size);
+		s.write(out);
+		
+	}
+	
+	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
+		
+		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+		this.write(data, settings, type, size, stream);
+		stream.close();
+		
+	}
+	
+	
 	public MapDrawing draw(MapData data, MapSettings settings, Surface context, boolean vector, Dimension size) {
 	
 
+		
+		if (settings == null) {
+			settings = new MapSettings();
+		}
 		
 		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
 		context.setSource(Color.white);
@@ -112,8 +140,8 @@ public class Mapper {
 				
 		dr.uninterpolatedWidth = settings.dataWidth;
 		dr.uninterpolatedHeight = settings.dataHeight;
-		dr.dataWidth = settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight;
+		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
+		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
 		dr.viewTransform = settings.transform;
 
 		
@@ -207,8 +235,8 @@ public class Mapper {
 		
 		dr.uninterpolatedWidth = settings.dataWidth;
 		dr.uninterpolatedHeight = settings.dataHeight;
-		dr.dataWidth = settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight;
+		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
+		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
 		//LOG view not supported
 		dr.viewTransform = ViewTransform.LINEAR;
 		
@@ -351,8 +379,8 @@ public class Mapper {
 		
 		dr.uninterpolatedWidth = settings.dataWidth;
 		dr.uninterpolatedHeight = settings.dataHeight;
-		dr.dataWidth = settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight;
+		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
+		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
 		dr.viewTransform = settings.transform;
 		
 		
@@ -413,7 +441,6 @@ public class Mapper {
 
 		axisPainters.add(spectrumCoordPainter);
 
-		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = vector;
 
 		map.setContext(backend);
@@ -480,9 +507,6 @@ public class Mapper {
 		// set the new data
 		map.setPainters(painters);
 		map.draw();
-
-
-		dr.drawToVectorSurface = oldVector;
 		
 	}
 	

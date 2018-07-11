@@ -286,7 +286,7 @@ public class Plotter {
 	
 	public void write(PlotData data, PlotSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
 		
-		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE);
+		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 		this.write(data, settings, type, size, stream);
 		stream.close();
 		
