@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Peakaboo
+Comment=Plot and Map XRF Data
+Keywords=xrf;plot;map;
+TryExec=peakaboo
+Exec=peakaboo
+StartupNotify=true
+Terminal=false
+Type=Application
+Icon=/usr/share/Peakaboo/icon.png
+Categories=Science;Physics;Chemistry;
