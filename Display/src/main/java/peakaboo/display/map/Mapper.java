@@ -34,6 +34,7 @@ import scidraw.drawing.map.palettes.SaturationPalette;
 import scidraw.drawing.map.palettes.ThermalScalePalette;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
+import scitypes.Coord;
 import scitypes.Pair;
 import scitypes.Ratios;
 import scitypes.Spectrum;
@@ -52,7 +53,10 @@ public class Mapper {
 		map = new MapDrawing(null, dr);
 	}
 	
+	
 	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
+		
+		size = this.setDimensions(settings, size);
 		
 		SaveableSurface s = DrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
 		this.draw(data, settings, s, type == SurfaceType.VECTOR, size);
@@ -62,6 +66,8 @@ public class Mapper {
 	
 	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
 		
+		size = this.setDimensions(settings, size);
+		
 		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 		this.write(data, settings, type, size, stream);
 		stream.close();
@@ -69,27 +75,68 @@ public class Mapper {
 	}
 	
 	
-	public MapDrawing draw(MapData data, MapSettings settings, Surface context, boolean vector, Dimension size) {
-	
-
+	private Dimension setDimensions(MapSettings settings, Dimension size) {
 		
 		if (settings == null) {
 			settings = new MapSettings();
 		}
-		
-		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
-		context.setSource(Color.white);
-		context.fill();
 
+		
+		double width = 0;
+		double height = 0;
+		
+		if (size != null) {
+			width = size.getWidth();
+			height = size.getHeight();
+		}
+		
+		//Auto-detect dimensions
+		if (size == null || (size.getWidth() == 0 && size.getHeight() == 0)) {
+			dr.imageWidth = 1000;
+			dr.imageHeight = 1000;
+			Coord<Float> newsize = map.calcTotalSize();
+			width = newsize.x;
+			height = newsize.y;
+		}
+		else if (size.getWidth() == 0) {
+			dr.imageWidth = dr.imageHeight * 10;
+			width = map.calcTotalSize().x;
+			
+		}
+		else if (size.getHeight() == 0) {
+			dr.imageHeight = dr.imageWidth * 10;
+			height = map.calcTotalSize().y;
+		}
+		
+		size = new Dimension((int)Math.round(width), (int)Math.round(height));
+		
 		dr.dataHeight = settings.dataHeight;
 		dr.dataWidth = settings.dataWidth;
 		dr.imageWidth = (float)size.getWidth();
 		dr.imageHeight = (float)size.getHeight();
 		
+		return size;
+		
+	}
+	
+	
+	public MapDrawing draw(MapData data, MapSettings settings, Surface context, boolean vector, Dimension size) {
+	
+		if (settings == null) {
+			settings = new MapSettings();
+		}
+
+		size = this.setDimensions(settings, size);
+				
 		map.setContext(context);
 
 		
 		final int spectrumSteps = (settings.contours) ? settings.contourSteps : Spectrums.DEFAULT_STEPS;
+		
+		//clear background with white
+		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
+		context.setSource(Color.white);
+		context.fill();
 		
 		switch (settings.mode)
 		{
@@ -193,7 +240,7 @@ public class Mapper {
 
 		map.setContext(backend);
 		map.setAxisPainters(axisPainters);
-		map.setDrawingRequest(dr);
+		
 
 
 		paletteList.add(palette);
