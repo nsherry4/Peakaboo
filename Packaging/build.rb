@@ -88,5 +88,5 @@ puts "Building Windows Package..."
 puts "DONE\n\n"
 
 puts "Building Mac Package..."
-`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo4.dmg Peakaboo4`
-`cp -rf ./mac/Peakaboo4.dmg ./build/`
+`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo5.dmg Peakaboo5`
+`cp -rf ./mac/Peakaboo5.dmg ./build/`
