@@ -71,20 +71,21 @@ public class FittingTitlePainter extends PlotPainter
 		p.context.save();
 			
 			p.context.setSource(colour);
+			p.context.setFontSize(p.context.getFontSize() + 2);
 			
 			for (FittingResult fit : fittings.getFits()){
 		
-			titleName = fit.getTransitionSeries().getDescription();
-
-			
-			titleHeight = SigDigits.roundFloatTo(fit.getCurveScale(), 1);
-
-			title = "";
-			if (drawElementNames) title += titleName;
-			if (drawElementNames && drawMaxIntensities) title += " (";
-			if (drawMaxIntensities) title += titleHeight;
-			if (drawElementNames && drawMaxIntensities) title += ")";
-			
+				titleName = fit.getTransitionSeries().getDescription();
+	
+				
+				titleHeight = SigDigits.roundFloatTo(fit.getCurveScale(), 1);
+	
+				title = "";
+				if (drawElementNames) title += titleName;
+				if (drawElementNames && drawMaxIntensities) title += " (";
+				if (drawMaxIntensities) title += titleHeight;
+				if (drawElementNames && drawMaxIntensities) title += ")";
+				
 			
 
 				//TransitionType type = TransitionType.a1;
