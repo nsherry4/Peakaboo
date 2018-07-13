@@ -33,7 +33,7 @@ public class Test {
 		UIManager.setLookAndFeel(new NimbusLookAndFeel());
 		Swidget.initialize(() -> {
 			gui();
-		});
+		}, "Test");
 	}
 			
 	public static void gui() {
