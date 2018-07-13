@@ -8,3 +8,4 @@ Terminal=false
 Type=Application
 Icon=/usr/share/Peakaboo/icon.png
 Categories=Science;Physics;Chemistry;
+StartupWMClass=Peakaboo

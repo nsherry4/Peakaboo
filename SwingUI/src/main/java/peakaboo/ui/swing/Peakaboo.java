@@ -117,7 +117,7 @@ public class Peakaboo
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
-			new TabbedPlotterFrame();
+			new TabbedPlotterFrame(false);
 		} catch (Exception e) {
 			
 			PeakabooLog.get().log(Level.SEVERE, "Critical Error in Peakaboo", e);
@@ -204,7 +204,7 @@ public class Peakaboo
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		setAppTitle("Peakaboo 5");
 			
-		Swidget.initialize(Version.splash, Version.icon, () -> {
+		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);
 			PeakabooLog.init();
 			errorHook();
