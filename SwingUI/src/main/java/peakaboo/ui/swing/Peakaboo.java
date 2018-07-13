@@ -117,7 +117,7 @@ public class Peakaboo
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
-			new TabbedPlotterFrame(false);
+			new TabbedPlotterFrame();
 		} catch (Exception e) {
 			
 			PeakabooLog.get().log(Level.SEVERE, "Critical Error in Peakaboo", e);

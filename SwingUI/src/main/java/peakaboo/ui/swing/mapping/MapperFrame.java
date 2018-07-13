@@ -7,11 +7,13 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
+import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
+import swidget.icons.IconFactory;
 import swidget.widgets.tabbedinterface.TabbedInterface;
 
 
@@ -79,11 +81,12 @@ public class MapperFrame extends JFrame
 
 			@Override
 			protected void titleChanged(String title) {
-				setTitle(title);
+				//setTitle(title);
 			}
 		};
+		setTitle("Peakaboo");
+		setIconImage(IconFactory.getImage(Version.icon));
 		
-
 		pane.add(tabs, BorderLayout.CENTER);
 		this.pack();
 		

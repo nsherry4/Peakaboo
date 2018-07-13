@@ -19,10 +19,6 @@ public class TabbedPlotterFrame extends JFrame
 	private static int openWindows = 0;
 	
 	public TabbedPlotterFrame() {
-		this(true);
-	}
-	
-	public TabbedPlotterFrame(boolean useTabTitle) {
 	
 		openWindows++;
 		//containers = new HashMap<PlotPanel, TabbedContainer>();
@@ -41,13 +37,7 @@ public class TabbedPlotterFrame extends JFrame
 			protected void destroyComponent(PlotPanel component){}
 
 			@Override
-			protected void titleChanged(String title) {
-				if (useTabTitle) {
-					String windowTitle = "";
-					windowTitle += title + " - " + Version.title;
-					setTitle(windowTitle);
-				}
-			}
+			protected void titleChanged(String title) {}
 		};
 		
 		addWindowListener(new WindowListener() {
