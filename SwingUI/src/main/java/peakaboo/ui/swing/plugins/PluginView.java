@@ -1,69 +1,62 @@
 package peakaboo.ui.swing.plugins;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+import javax.swing.JPanel;
+
+import org.apache.batik.ext.swing.GridBagConstants;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
-import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
-import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
+import swidget.widgets.properties.PropertyViewPanel;
 
-public class PluginView extends ClearPanel {
+public class PluginView extends JPanel {
 	
-	private JLabel name;
-	private JLabel version;
 	private JLabel description;
-	private JLabel enabled;
-	private JLabel type;
 	
 	public PluginView(BoltPluginController<? extends BoltPlugin> plugin) {
-		super(new BorderLayout());
+		super(new GridBagLayout());
+		setBorder(Spacing.bHuge());
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstants.HORIZONTAL;
+		c.anchor = GridBagConstants.NORTHWEST;
+		c.weightx = 1f;
+		c.weighty = 0f;
+		c.gridx = 0;
+		c.gridy = 0;
 		
-		this.setMinimumSize(new Dimension(500, 100));
+		c.ipadx = Spacing.large;
+		c.ipady = Spacing.large;
 		
-		setOpaque(true);
-		setBackground(Color.WHITE);
-		setBorder(new LineBorder(Color.GRAY));
 		
 		String source = "Unknown";
 		if (plugin.getSource() != null) {
 			source = plugin.getSource().toString();
 		}
 		
-		name = new JLabel(plugin.getName());
-		version = new JLabel(plugin.getVersion());
-		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription() + "<br/><small>From: " + source + "</small>", 375));
-		enabled = new JLabel(new ImageIcon(IconFactory.getImageIcon(plugin.isEnabled() ? "choose-ok" : "choose-cancel", IconSize.BUTTON).getImage()));
-		type = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getPluginClass().getSimpleName(), 375));
+		Map<String, String> properties = new HashMap<>();
+		properties.put("Version", plugin.getVersion());
+		properties.put("Enabled", "" + plugin.isEnabled());
+		properties.put("Type", plugin.getPluginClass().getSimpleName());
+		properties.put("Source", source);
+		PropertyViewPanel propertyPanel = new PropertyViewPanel(properties, plugin.getName(), true);
 		
 		
-		name.setBorder(new EmptyBorder(10, 10, 20, 10));
-		name.setBorder(new EmptyBorder(5, 5, 5, 5));
-		version.setBorder(new EmptyBorder(5, 5, 5, 5));
-		description.setBorder(new EmptyBorder(5, 5, 5, 5));
-		enabled.setBorder(new EmptyBorder(5, 5, 5, 5));
-		type.setBorder(new EmptyBorder(5, 5, 5, 5));
+		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription(), 450));
 		
 		
-		name.setFont(name.getFont().deriveFont(20f));
-		description.setForeground(Color.GRAY);
-		version.setForeground(Color.GRAY);
-		type.setForeground(Color.GRAY);
-		
-		
-		this.add(name, BorderLayout.CENTER);
-		this.add(version, BorderLayout.EAST);
-		this.add(description, BorderLayout.SOUTH);
-		this.add(enabled, BorderLayout.WEST);
-		this.add(type, BorderLayout.NORTH);
+		this.add(propertyPanel, c);
+
+		c.gridy++;
+		c.weighty=1f;
+		this.add(description, c);
 		
 		
 	}

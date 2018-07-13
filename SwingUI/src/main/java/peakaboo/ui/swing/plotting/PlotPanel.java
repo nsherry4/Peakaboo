@@ -103,6 +103,7 @@ import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import peakaboo.ui.swing.plugins.PluginsOverview;
+import peakaboo.ui.swing.plugins.PluginsOverview;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
@@ -128,6 +129,8 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.DraggingScrollPaneListener;
+import swidget.widgets.HeaderBox;
+import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.ImageButton;
 import swidget.widgets.SettingsPanel;
@@ -733,22 +736,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		plugins.add(createMenuItem(
 				"Status", null, "Shows information about loaded plugins",
-				e -> {
-					
-					PluginsOverview overview = new PluginsOverview();
-					
-					JDialog dialog = new JDialog(container.getWindow());
-					dialog.setContentPane(overview);
-					
-					dialog.setResizable(false);
-					dialog.setPreferredSize(new Dimension(535, 500));
-					dialog.setMinimumSize(dialog.getPreferredSize());
-					dialog.setTitle("Peakaboo Plugins");
-					dialog.setModal(false);
-					dialog.setLocationRelativeTo(container.getWindow());
-					dialog.setVisible(true);
-					
-				},
+				e -> actionShowPlugins(),
 				null, null
 		));	
 		
@@ -1717,6 +1705,16 @@ public class PlotPanel extends TabbedInterfacePanel
 		pushModalComponent(panel);
 		energyTask.start();
 
+		
+	}
+	
+	private void actionShowPlugins() {
+			
+		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
+		close.addActionListener(e -> popModalComponent());
+		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(null, "Plugin Status", close), new PluginsOverview());
+		
+		pushModalComponent(main);
 		
 	}
 	
