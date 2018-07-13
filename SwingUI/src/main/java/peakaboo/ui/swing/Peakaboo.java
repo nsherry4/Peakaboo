@@ -157,17 +157,18 @@ public class Peakaboo
 	}
 	
 	private static void setAppTitle(String title) {
-		try
-		{
-		    Toolkit toolkit = Toolkit.getDefaultToolkit();
-		    Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
-		    awtAppClassNameField.setAccessible(true);
-		    awtAppClassNameField.set(toolkit, title);
-		}
-		catch (NoSuchFieldException | IllegalAccessException e)
-		{
-		    e.printStackTrace();
-		}
+		//This was broken with Java 8/9
+//		try
+//		{
+//		    Toolkit toolkit = Toolkit.getDefaultToolkit();
+//		    Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
+//		    awtAppClassNameField.setAccessible(true);
+//		    awtAppClassNameField.set(toolkit, title);
+//		}
+//		catch (NoSuchFieldException | IllegalAccessException e)
+//		{
+//		    e.printStackTrace();
+//		}
 		
 	}
 	
