@@ -9,49 +9,51 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import peakaboo.datasource.model.DataSource;
+import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
+import stratus.StratusLookAndFeel;
+import swidget.Swidget;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
+import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
+import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 import swidget.widgets.toggle.ItemToggleButton;
 import swidget.widgets.toggle.ToggleGroup;
 
 
-public class DataSourceSelection extends JDialog
+public class DataSourceSelection extends JPanel
 {
 	
 	private Map<ItemToggleButton, DataSource> toggleMap;
 	private DataSource selected;
 	
-	public DataSourceSelection()
-	{
-		
+	public DataSourceSelection() {
+		super(new BorderLayout());
 	}
 	
-	public DataSource pickDSP(Container parent, List<DataSource> dsps)
-	{	
+	public void pickDSP(TabbedInterfacePanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {	
 		
 		toggleMap = new HashMap<ItemToggleButton, DataSource>();
 		
-		setTitle("Please Select Data Format");
-		Container c = getContentPane();
-		
-		c.setLayout(new BorderLayout());
-		setResizable(false);
-		setModal(true);
+		JPanel body = new JPanel(new BorderLayout());
 		
 		TitlePaintedPanel title = new TitlePaintedPanel("Peakaboo can't decide what format this data is in.", true);
 		title.setBackgroundPaint(Color.decode("#FFE082"));
-		c.add(title, BorderLayout.NORTH);
-	
+		body.add(title, BorderLayout.NORTH);
 		
 		JPanel optionPanel = new JPanel();
 		optionPanel.setBorder(Spacing.bHuge());
@@ -72,54 +74,44 @@ public class DataSourceSelection extends JDialog
 		}
 		toggleButtons.get(0).setSelected(true);
 		
-		add(optionPanel, BorderLayout.CENTER);
+		body.add(optionPanel, BorderLayout.CENTER);
 		
 		
 		
-		ButtonBox box = new ButtonBox();
-		ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK, "OK");
-		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel");
 		
-		box.addRight(cancel);
-		box.addRight(ok);
-		add(box, BorderLayout.SOUTH);
 		
-		ok.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
-				setVisible(false);
-			}
+		
+		JButton ok = HeaderBox.button("OK", () -> {
+			parent.popModalComponent();
+			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
+			onSelect.accept(selected);
 		});
 		
-		cancel.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				selected = null;
-				setVisible(false);
-			}
+		JButton cancel = HeaderBox.button("Cancel", () -> {
+			parent.popModalComponent();
 		});
 		
+		HeaderBox box = new HeaderBox(cancel, "Please Select Data Format", ok);
 		
-		pack();
-		setLocationRelativeTo(parent);
-		setVisible(true);
 		
-		return selected;		
+		
+		add(box, BorderLayout.NORTH);
+		add(body, BorderLayout.CENTER);
+		
+		parent.pushModalComponent(this);
+		
+
+		
 		
 	}
 	
 	
-//	public static void main(String[] args)
+//	public static void main(String[] args) throws UnsupportedLookAndFeelException
 //	{
-//		Swidget.initialize();
-//		DataSourceSelection dss = new DataSourceSelection();
-//		AbstractDataSource dsp = dss.pickDSP(null, new ArrayList<AbstractDataSource>(new ScienceStudio(), new CDFMLSax()));
-//		System.out.println(dsp.getDataFormat());
+//		Swidget.initialize(() -> {}, "Test");
+//		UIManager.setLookAndFeel(new StratusLookAndFeel());
+//
+//		
 //	}
 	
 }

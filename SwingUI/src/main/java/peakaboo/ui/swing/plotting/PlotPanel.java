@@ -1207,8 +1207,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		if (formats.size() > 1)
 		{
 			DataSourceSelection selection = new DataSourceSelection();
-			DataSource dsp = selection.pickDSP(container.getWindow(), formats);
-			if (dsp != null) parameterPrompt(paths, dsp);
+			selection.pickDSP(this, formats, dsp -> parameterPrompt(paths, dsp));
 		}
 		else if (formats.size() == 0)
 		{
@@ -1710,8 +1709,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	
 	private void actionShowPlugins() {
 			
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
-		close.addActionListener(e -> popModalComponent());
+		JButton close = HeaderBox.button("Close", () -> popModalComponent());
 		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(null, "Plugin Status", close), new PluginsOverview());
 		
 		pushModalComponent(main);

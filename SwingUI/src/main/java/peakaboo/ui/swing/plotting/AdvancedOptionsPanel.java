@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -51,11 +52,7 @@ public class AdvancedOptionsPanel extends JPanel {
 		
 		
 		
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
-		close.addActionListener(e -> {
-			parent.popModalComponent();
-		});
-
+		JButton close = HeaderBox.button("Close", () -> parent.popModalComponent());
 		HeaderBox box = new HeaderBox(null, "Advanced Options", close);
 		
 		this.add(box, BorderLayout.NORTH);
