@@ -1,17 +1,23 @@
-package peakaboo.controller.plotter.fitting;
+package peakaboo.curvefit.peak.search;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.scoring.EnergyProximityScorer;
 import peakaboo.curvefit.curve.scoring.FastFittingScorer;
 import peakaboo.curvefit.curve.scoring.Scorer;
 import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
@@ -23,25 +29,119 @@ import scitypes.ReadOnlySpectrum;
  *
  */
 
-public class TSOrdering
+public class PeakProposal
 {
 
 
+	
+	public static List<TransitionSeries> search(
+			final ReadOnlySpectrum data,
+			PeakSearcher searcher,
+			FittingSet fits,
+			CurveFitter fitter,
+			FittingSolver solver
+		) {
+		
+				
+		//Proposals fitting set to store proposals in with same parameters
+		FittingSet proposals = new FittingSet(fits);
+		proposals.clear();
+		
+		
+		//Generate list of peaks
+		List<Integer> peaks = searcher.search(data);
+		
+		
+		//remove any peaks within the FWHM of an existing Transitions in fits
+		for (int peak : new ArrayList<>(peaks)) {
+			for (TransitionSeries ts : fits.getFittedTransitionSeries()) {
+				for (Transition t : ts) {
+					float hwhm = fits.getFittingParameters().getFWHM(t)/2f;
+					float min = t.energyValue - hwhm;
+					float max = t.energyValue + hwhm;
+					float energy = fits.getFittingParameters().getCalibration().energyFromChannel(peak);
+					if (min < energy && energy < max) {
+						peaks.remove(new Integer(peak));
+					}
+				}
+			}
+		}
+		
+		
+		
+		//Generate lists of guesses for all peaks
+		Map<Integer, List<TransitionSeries>> guesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
+		
+		
+		/*
+		 * Go peak by peak from strongest to weakest.
+		 * Take the first guess for that peak.
+		 * Find other peaks which also have that guess as part of their list of guesses
+		 * Remove those other peaks from future consideration 
+		 */
+		List<TransitionSeries> newFits = new ArrayList<>();
+		for (int channel : peaks) {
+			if (!guesses.containsKey(channel)) { continue; }
+			
+			//If the existing fits doesn't contain this, add it
+			TransitionSeries guess = guesses.get(channel).get(0);
+			if (!fits.getFittedTransitionSeries().contains(guess)) {
+				newFits.add(guess);
+				proposals.addTransitionSeries(guess);
+			}
+			
+			
+			//remove all peaks which contain this guess
+			for (int match : new ArrayList<>(guesses.keySet())) {
+				if (guesses.get(match).contains(guess)) { 
+					guesses.remove(match);
+				}
+			}
+			
+			
+			//Regenerate new guesses for remaining peaks based on combined 
+			//fittingset so that pileup is considered in future iterations
+			guesses = makeGuesses(data, guesses.keySet(), fits, proposals, fitter, solver);
+			
+			
+		}
+		
+		return newFits;
+		
 
+		
+	}
 
+	
+	private static Map<Integer, List<TransitionSeries>> makeGuesses(
+			ReadOnlySpectrum data, 
+			Collection<Integer> peaks, 
+			FittingSet fits,
+			FittingSet proposals,
+			CurveFitter fitter, 
+			FittingSolver solver
+		) {
+		Map<Integer, List<TransitionSeries>> guesses = new LinkedHashMap<>();
+		for (int channel : peaks) {
+			guesses.put(channel, fromChannel(data, fits, proposals, fitter, solver, channel, null));
+		}
+		return guesses;
+	}
 	
 	
 	/**
 	 * Generates a list of {@link TransitionSeries} which are good fits for the given data at the given channel index
 	 * @return an ordered list of {@link TransitionSeries} which are good fits for the given data at the given channel
 	 */
-	public static List<TransitionSeries> proposeTransitionSeriesFromChannel(
+	public static List<TransitionSeries> fromChannel(
 			final ReadOnlySpectrum data, 
-			FittingController controller,
+			FittingSet fits,
+			FittingSet proposed,
+			CurveFitter fitter,
+			FittingSolver solver,
 			final int channel, 
 			TransitionSeries currentTS
-	)
-	{
+		) {
 		
 		
 		/*
@@ -65,10 +165,7 @@ public class TSOrdering
 		 * 
 		 */
 	
-		
-		FittingSet fits = controller.getFittingSelections();
-		FittingSet proposed = controller.getFittingProposals();
-		
+			
 		
 		//remove the current transitionseries from the list of proposed trantision series so we can re-suggest it.
 		//otherwise, the copy getting fitted eats all the signal from the one we would suggest during scoring
@@ -76,8 +173,8 @@ public class TSOrdering
 		if (currentTSisUsed) proposed.remove(currentTS);
 		
 		//recalculate
-		FittingResultSet fitResults = controller.getFittingSolver().solve(data,  fits, controller.getCurveFitter());
-		FittingResultSet proposedResults = controller.getFittingSolver().solve(fitResults.getResidual(), proposed, controller.getCurveFitter());
+		FittingResultSet fitResults = solver.solve(data, fits, fitter);
+		FittingResultSet proposedResults = solver.solve(fitResults.getResidual(), proposed, fitter);
 		
 		
 		final ReadOnlySpectrum s = proposedResults.getResidual();

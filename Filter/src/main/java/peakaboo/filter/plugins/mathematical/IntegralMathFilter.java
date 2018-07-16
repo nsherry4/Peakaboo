@@ -6,6 +6,7 @@ import peakaboo.filter.model.FilterType;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 public class IntegralMathFilter extends AbstractSimpleFilter
@@ -77,17 +78,7 @@ public class IntegralMathFilter extends AbstractSimpleFilter
 	public static Spectrum integ(ReadOnlySpectrum list)
 	{
 		
-		Spectrum result = new ISpectrum(list.size());
-		float val = 0;
-		
-		
-		for (int i = 0; i < list.size(); i++)
-		{
-			val += list.get(i);
-			result.set(i,  val );
-		}
-		
-		return result;
+		return SpectrumCalculations.integral(list); 
 		
 	}
 

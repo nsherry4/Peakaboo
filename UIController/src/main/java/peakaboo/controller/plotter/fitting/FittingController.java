@@ -3,6 +3,7 @@ package peakaboo.controller.plotter.fitting;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Map;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
@@ -14,6 +15,8 @@ import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
+import peakaboo.curvefit.peak.search.DerivativePeakSearcher;
+import peakaboo.curvefit.peak.search.PeakProposal;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
@@ -210,9 +213,12 @@ public class FittingController extends EventfulType<Boolean>
 		
 		if (! plot.data().hasDataSet() ) return null;
 				
-		return TSOrdering.proposeTransitionSeriesFromChannel(
+		return PeakProposal.fromChannel(
 				plot.filtering().getFilteredPlot(),
-				this,
+				this.getFittingSelections(),
+				this.getFittingProposals(),
+				this.getCurveFitter(),
+				this.getFittingSolver(),
 				channel,
 				currentTS	
 		);
@@ -360,6 +366,25 @@ public class FittingController extends EventfulType<Boolean>
 	public void setFittingSolver(FittingSolver fittingSolver) {
 		this.fittingModel.fittingSolver = fittingSolver;
 		fittingDataInvalidated();
+	}
+
+	public void autodetectPeaks() {
+		DerivativePeakSearcher searcher = new DerivativePeakSearcher();
+		ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
+		List<TransitionSeries> results = PeakProposal.search(
+				data, 
+				searcher, 
+				getFittingSelections(), 
+				getCurveFitter(), 
+				getFittingSolver()
+			);
+				
+		for (TransitionSeries ts : results) {
+			getFittingSelections().addTransitionSeries(ts);
+		}
+		
+		fittingDataInvalidated();
+		
 	}
 	
 	
