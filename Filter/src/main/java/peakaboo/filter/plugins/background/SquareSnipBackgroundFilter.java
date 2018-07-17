@@ -15,13 +15,14 @@ public class SquareSnipBackgroundFilter extends AbstractBackgroundFilter {
 	
 	@Override
 	public void initialize() {
-		pHalfWindow = new Parameter<>("Half-Window Size", new IntegerStyle(), 60, this::validate);
-		pIterations = new Parameter<>("Iterations", new IntegerStyle(), 30, this::validate);
+		pHalfWindow = new Parameter<>("Half-Window Size", new IntegerStyle(), 150, this::validate);
+		pIterations = new Parameter<>("Iterations", new IntegerStyle(), 10, this::validate);
+		addParameter(pHalfWindow, pIterations);
 	}
 	
 	private boolean validate(Object o) {
-		if (pHalfWindow.getValue() < 5 || pHalfWindow.getValue() > 100) return false;
-		if (pIterations.getValue() < 10 || pIterations.getValue() > 200) return false;
+		if (pHalfWindow.getValue() < 50 || pHalfWindow.getValue() > 200) return false;
+		if (pIterations.getValue() < 5 || pIterations.getValue() > 50) return false;
 		return true;
 	}
 	
