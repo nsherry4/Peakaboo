@@ -9,16 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.curve.scoring.EnergyProximityScorer;
-import peakaboo.curvefit.curve.scoring.FastFittingScorer;
-import peakaboo.curvefit.curve.scoring.Scorer;
+import peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
+import peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
+import peakaboo.curvefit.peak.search.scoring.FastFittingScorer;
+import peakaboo.curvefit.peak.search.scoring.FittingScorer;
+import peakaboo.curvefit.peak.search.scoring.NoComplexPileupScorer;
+import peakaboo.curvefit.peak.search.scoring.ProportionalPileupScorer;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
@@ -42,7 +47,9 @@ public class PeakProposal
 			FittingSolver solver
 		) {
 		
-				
+		
+		EnergyCalibration calibration = fits.getFittingParameters().getCalibration();
+		
 		//Proposals fitting set to store proposals in with same parameters
 		FittingSet proposals = new FittingSet(fits);
 		proposals.clear();
@@ -59,7 +66,7 @@ public class PeakProposal
 					float hwhm = fits.getFittingParameters().getFWHM(t)/2f;
 					float min = t.energyValue - hwhm;
 					float max = t.energyValue + hwhm;
-					float energy = fits.getFittingParameters().getCalibration().energyFromChannel(peak);
+					float energy = calibration.energyFromChannel(peak);
 					if (min < energy && energy < max) {
 						peaks.remove(new Integer(peak));
 					}
@@ -75,7 +82,7 @@ public class PeakProposal
 		
 		/*
 		 * Go peak by peak from strongest to weakest.
-		 * Take the first guess for that peak.
+		 * Take the best guess for that peak.
 		 * Find other peaks which also have that guess as part of their list of guesses
 		 * Remove those other peaks from future consideration 
 		 */
@@ -83,8 +90,12 @@ public class PeakProposal
 		for (int channel : peaks) {
 			if (!guesses.containsKey(channel)) { continue; }
 			
-			//If the existing fits doesn't contain this, add it
+
+			//Get the best guess from the list
 			TransitionSeries guess = guesses.get(channel).get(0);
+			
+			
+			//If the existing fits doesn't contain this, add it
 			if (!fits.getFittedTransitionSeries().contains(guess)) {
 				newFits.add(guess);
 				proposals.addTransitionSeries(guess);
@@ -165,7 +176,7 @@ public class PeakProposal
 		 * 
 		 */
 	
-			
+		EnergyCalibration calibration = fits.getFittingParameters().getCalibration();
 		
 		//remove the current transitionseries from the list of proposed trantision series so we can re-suggest it.
 		//otherwise, the copy getting fitted eats all the signal from the one we would suggest during scoring
@@ -182,7 +193,7 @@ public class PeakProposal
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		
 
-		final float energy = fits.getFittingParameters().getCalibration().energyFromChannel(channel);	
+		final float energy = calibration.energyFromChannel(channel);	
 		
 
 		//get a list of all transition series to start with
@@ -221,22 +232,19 @@ public class PeakProposal
 		tss = new ArrayList<>(new HashSet<>(tss));
 		
 	
-		Scorer proximityScorer = new EnergyProximityScorer(energy, fits.getFittingParameters());
-		Scorer fastfitScorer = new FastFittingScorer(s, fits.getFittingParameters());
-		Scorer fastScorer = ts -> {
-			//the closer the better, so we accent this
-			float p = (float)Math.log1p(proximityScorer.score(ts));
-			//Don't reward a better fit too much as the signal fitted grows
-			float f = 1+fastfitScorer.score(ts);
-			
-			float score = p * f;			
-			return score;
-		};
+		
+		CompoundFittingScorer compoundScorer = new CompoundFittingScorer();
+		compoundScorer.add(new EnergyProximityScorer(energy, fits.getFittingParameters()), 10f);
+		compoundScorer.add(new FastFittingScorer(s, fits.getFittingParameters()), 10f);
+		compoundScorer.add(new NoComplexPileupScorer(), 2f);
+		compoundScorer.add(new ProportionalPileupScorer(data, calibration), 1f);
+		
+
 		
 		
 		//now sort by score
 		tss = tss.stream()
-			.map(ts -> new Pair<>(ts, -fastScorer.score(ts)))
+			.map(ts -> new Pair<>(ts, -compoundScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
 			.limit(15)
 			.map(p -> p.first)

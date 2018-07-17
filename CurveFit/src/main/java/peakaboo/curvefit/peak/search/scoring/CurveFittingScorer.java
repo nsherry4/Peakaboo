@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.scoring;
+package peakaboo.curvefit.peak.search.scoring;
 
 import peakaboo.curvefit.curve.fitting.Curve;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
@@ -7,7 +7,7 @@ import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
 
-public class CurveFittingScorer implements Scorer {
+public class CurveFittingScorer implements FittingScorer {
 
 	private ThreadLocal<Curve> curve;
 	private ReadOnlySpectrum data;
