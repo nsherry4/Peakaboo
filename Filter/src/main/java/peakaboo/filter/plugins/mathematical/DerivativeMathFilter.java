@@ -6,6 +6,7 @@ import peakaboo.filter.model.FilterType;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 
 public class DerivativeMathFilter extends AbstractSimpleFilter
@@ -75,15 +76,7 @@ public class DerivativeMathFilter extends AbstractSimpleFilter
 	public static Spectrum deriv(ReadOnlySpectrum list)
 	{
 	
-		Spectrum result = new ISpectrum(list.size());
-		
-		result.add(list.get(0));
-		for (int i = 0; i < list.size()-1; i++)
-		{
-			result.set(i, list.get(i+1) - list.get(i));
-		}
-			
-		return result;
+		return SpectrumCalculations.derivative(list);
 		
 	}
 

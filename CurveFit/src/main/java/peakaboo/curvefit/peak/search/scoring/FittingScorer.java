@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.scoring;
+package peakaboo.curvefit.peak.search.scoring;
 
 import java.util.Comparator;
 
@@ -6,10 +6,11 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 
 /**
  * Interface for scoring how well a {@link TransitionSeries} matches a spectrum.
+ * Larger scores represent better fits.
  * @author NAS
  *
  */
-public interface Scorer extends Comparator<TransitionSeries> {
+public interface FittingScorer extends Comparator<TransitionSeries> {
 
 	float score(TransitionSeries ts);
 	

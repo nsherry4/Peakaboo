@@ -30,6 +30,14 @@ public class FittingSet
 		this.parameters = new FittingParameters(this);
 	}
 
+	public FittingSet(FittingSet copy) {
+		this();
+		for (TransitionSeries ts : copy.getFittedTransitionSeries()) {
+			addTransitionSeries(ts);
+		}
+		this.parameters = copy.parameters.copy();
+	}
+	
 	
 	synchronized void invalidateCurves() {
 		curves.clear();

@@ -83,7 +83,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 		UnivariateOptimizer optimizer = new BrentOptimizer(0.0001, 0.00001);
 		UnivariatePointValuePair result = optimizer.optimize(
 				new UnivariateObjectiveFunction(score), 
-				new SearchInterval(0, guess*2, guess),
+				new SearchInterval(0, 1+guess*2, guess),
 				new MaxIter(10000),
 				new MaxEval(10000),
 				GoalType.MINIMIZE

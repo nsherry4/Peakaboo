@@ -4,6 +4,8 @@ package peakaboo.ui.swing.plotting.fitting;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
@@ -12,12 +14,17 @@ import javax.swing.JPanel;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.FittingController;
+import peakaboo.curvefit.peak.search.DerivativePeakSearcher;
+import peakaboo.curvefit.peak.search.PeakProposal;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
 import peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
+import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 
@@ -134,6 +141,13 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		}
 		
 
+	}
+	
+	public void autoAdd() {
+		
+		controller.autodetectPeaks();
+		changed();
+		
 	}
 	
 

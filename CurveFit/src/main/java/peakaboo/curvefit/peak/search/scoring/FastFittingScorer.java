@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.scoring;
+package peakaboo.curvefit.peak.search.scoring;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import scitypes.ReadOnlySpectrum;
  * @author NAS
  *
  */
-public class FastFittingScorer implements Scorer {
+public class FastFittingScorer implements FittingScorer {
 
 	private ReadOnlySpectrum data;
 	private FittingParameters parameters;
@@ -33,7 +33,7 @@ public class FastFittingScorer implements Scorer {
 		
 		//find the lowest multiplier as a constraint on signal fitted
 		float lowestMult = Float.MAX_VALUE;
-		if (transitions.size() == 0) { return 0; }
+		if (transitions.size() == 0) { return 1; }
 		
 		for (Transition t : transitions) {
 			
@@ -49,7 +49,7 @@ public class FastFittingScorer implements Scorer {
 			
 		}
 		if (lowestMult == Float.MAX_VALUE) {
-			return 0;
+			return 1;
 		}
 	
 		
@@ -84,7 +84,7 @@ public class FastFittingScorer implements Scorer {
 			//give a misleadingly good result;
 			result = -result;
 		}
-		return result;
+		return 1+result;
 
 	}
 

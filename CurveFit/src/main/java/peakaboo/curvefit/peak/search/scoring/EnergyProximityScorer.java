@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.scoring;
+package peakaboo.curvefit.peak.search.scoring;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
  * @author NAS
  *
  */
-public class EnergyProximityScorer implements Scorer {
+public class EnergyProximityScorer implements FittingScorer {
 
 	private float energy;
 	private FittingParameters parameters;
@@ -62,7 +62,8 @@ public class EnergyProximityScorer implements Scorer {
 			score += proxScore;
 		}
 		
-		return score;		
+		//the closer the better, so we accent this
+		return (float)Math.log1p(score);		
 		
 		
 	}

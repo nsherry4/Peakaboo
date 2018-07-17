@@ -205,8 +205,20 @@ public class FittingPanel extends ClearPanel implements Changeable
 				owner.guidedAdd();
 			}
 		});
+		
+		JMenuItem autoAddItems = new JMenuItem("Auto Fitting");
+		autoAddItems.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				owner.autoAdd();
+			}
+		});
+		
+				
 
 		menu.add(smartAddItem);
+		menu.add(autoAddItems);
 		menu.add(elementalAddItem);		
 		menu.add(summationAddItem);
 		

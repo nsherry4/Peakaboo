@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.scoring;
+package peakaboo.curvefit.peak.search.scoring;
 
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.Transition;
@@ -11,7 +11,7 @@ import scitypes.ReadOnlySpectrum;
  * @author NAS
  *
  */
-public class FastSignalMatchScorer implements Scorer{
+public class FastSignalMatchScorer implements FittingScorer{
 
 	private ReadOnlySpectrum data;
 	private EnergyCalibration calibration;
