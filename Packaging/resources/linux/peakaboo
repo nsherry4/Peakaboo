@@ -1,5 +1,66 @@
 #!/bin/bash
 
-#exec java -Xmx512m -XX:+UseConcMarkSweepGC -classpath /usr/share/Peakaboo/ Peakaboo
+#Newer versions of java (9+) should be passed the --illegal-access=permit flag. This is because
+#the Java 9+ module system puts some restrictions on reflection which must be explicitly permitted
+#Because Peakaboo makes aggressive use of reflection to store serialized data to avoid a massive
+#memory footprint, this needs to be enabled for Peakaboo to function. Java 9 just warns about it
+#but some future version of Java will default deny. This would break user's installs, so we set it
+#to be permissive now.
+#HOWEVER: Older versions of Java (8-) don't know what this flag is, and will wig out if they see it.
+#So it isn't as simple as just passing the flag for the versions that support it.
 
-java -XX:+UseG1GC -Xmx1024m -jar /usr/share/Peakaboo/Peakaboo.jar
+
+
+
+#Thank you Stack Overflow
+#https://stackoverflow.com/questions/4023830/how-to-compare-two-strings-in-dot-separated-version-format-in-bash#4024263
+vercomp () {
+    if [[ $1 == $2 ]]
+    then
+        comp=0
+        return
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            comp=1
+            return
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            comp=2
+            return
+        fi
+    done
+    comp=0
+    return
+}
+
+
+version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+version="11.0.0"
+vercomp $version "1.9"
+
+
+if [[ $comp == 2 ]]; then
+    #If version is less than 1.9
+    java -Xmx1024m -jar /usr/share/Peakaboo/Peakaboo.jar
+else
+    #version is 1.9 or greater (eg 1.9, 9.0, 10.0, etc)
+    java -Xmx1024m --illegal-access=permit -jar /usr/share/Peakaboo/Peakaboo.jar
+fi
+
+

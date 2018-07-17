@@ -2,7 +2,7 @@
 Name=Peakaboo
 Comment=Plot and Map XRF Data
 Keywords=xrf;plot;map;
-Exec=/usr/bin/java -jar /usr/share/Peakaboo/Peakaboo.jar
+Exec=peakaboo
 StartupNotify=true
 Terminal=false
 Type=Application
