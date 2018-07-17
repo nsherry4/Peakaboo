@@ -14,8 +14,6 @@ import javax.swing.JPanel;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.search.DerivativePeakSearcher;
-import peakaboo.curvefit.peak.search.PeakProposal;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.PlotPanel;

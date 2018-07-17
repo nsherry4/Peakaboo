@@ -28,7 +28,7 @@ class LookupEditor extends DefaultTreeCellEditor
 	private TSWidget	tswidget;
 	private JLabel						tstLabel;
 	private FittingController			controller;
-	private DefaultTreeCellRenderer		renderer;
+	private DefaultTreeCellRenderer		cellRenderer;
 
 
 
@@ -37,7 +37,7 @@ class LookupEditor extends DefaultTreeCellEditor
 
 		super(tree, renderer);
 
-		this.renderer = renderer;
+		this.cellRenderer = renderer;
 		this.controller = controller;
 
 		tswidget = new TSWidget(false);
@@ -77,8 +77,8 @@ class LookupEditor extends DefaultTreeCellEditor
 			Element e = ts.element;
 			tswidget.setName(e.atomicNumber() + ": " + ts.element.name() + " (" + ts.element + ")");
 
-			tswidget.setBackground(renderer.getBackgroundSelectionColor());
-			tswidget.setForeground(renderer.getTextSelectionColor());
+			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());
+			tswidget.setForeground(cellRenderer.getTextSelectionColor());
 			//tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
 			tswidget.setBorder(new EmptyBorder(2, 2, 2, 2));
 			
@@ -90,8 +90,8 @@ class LookupEditor extends DefaultTreeCellEditor
 		{
 			TransitionSeriesType tst = (TransitionSeriesType) value;
 
-			tstLabel.setBackground(renderer.getBackgroundSelectionColor());
-			tstLabel.setForeground(renderer.getTextSelectionColor());
+			tstLabel.setBackground(cellRenderer.getBackgroundSelectionColor());
+			tstLabel.setForeground(cellRenderer.getTextSelectionColor());
 			tstLabel.setBorder(new EmptyBorder(4, 4, 4, 4));			
 			
 			tstLabel.setText(tst.toString());

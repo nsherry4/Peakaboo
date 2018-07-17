@@ -14,13 +14,13 @@ import scitypes.Spectrum;
 public class ReciprocalFilter extends AbstractSimpleFilter
 {
 
-	Parameter<Boolean> enabled;
+	Parameter<Boolean> pEnabled;
 	
 	@Override
 	public void initialize()
 	{
-		enabled = new Parameter<>("Enabled", new BooleanStyle(), Boolean.TRUE);
-		addParameter(enabled);
+		pEnabled = new Parameter<>("Enabled", new BooleanStyle(), Boolean.TRUE);
+		addParameter(pEnabled);
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class ReciprocalFilter extends AbstractSimpleFilter
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		//check enabled property
-		if (!enabled.getValue()) return data;
+		if (!pEnabled.getValue()) return data;
 		
 		
 		Spectrum result = new ISpectrum(data.size());
