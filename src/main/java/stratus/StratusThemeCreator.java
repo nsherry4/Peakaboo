@@ -196,6 +196,7 @@ public class StratusThemeCreator
 			case Integer:
 				Integer i = (Integer) entry.getValue();
 				UIManager.put(entry.getKey(), i + rdm.nextInt(5));
+			default:
 			}
 		}
 	}
