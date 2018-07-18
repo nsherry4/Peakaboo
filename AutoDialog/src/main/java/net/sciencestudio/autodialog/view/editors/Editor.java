@@ -43,7 +43,7 @@ public interface Editor<T> extends View
 	 * Returns a hook which can be used to listen for changes to the editor's value
 	 * @return
 	 */
-	<T> EventfulType<T> getEditorValueHook();
+	EventfulType<T> getEditorValueHook();
 	
 
 	

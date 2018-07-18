@@ -9,14 +9,14 @@ import net.sciencestudio.autodialog.model.SelectionParameter;
 public class ListEditor<T> extends AbstractEditor<T>{
 
 	private ChoiceBox<T> node = new ChoiceBox<>();
-	private SelectionParameter<T> parameter;
 	
 	public ListEditor() {}
 	
 	@Override
 	public void init(Parameter<T> parameter) {
 		this.parameter = (SelectionParameter<T>) parameter;
-		node.getItems().addAll(this.parameter.getPossibleValues());
+		SelectionParameter<T> selectionParameter = (SelectionParameter<T>) parameter;
+		node.getItems().addAll(selectionParameter.getPossibleValues());
 		
 		node.getSelectionModel().selectedItemProperty().addListener(change -> {
 			getEditorValueHook().updateListeners(getEditorValue());
