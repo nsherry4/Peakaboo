@@ -3,7 +3,6 @@ package peakaboo.controller.plotter.undo;
 
 import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
-import scitypes.Pair;
 
 
 

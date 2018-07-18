@@ -9,8 +9,6 @@ import org.junit.Test;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.KrausPeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 public class TransitionSeriesTest {
 

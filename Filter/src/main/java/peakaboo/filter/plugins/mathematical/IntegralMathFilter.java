@@ -3,7 +3,6 @@ package peakaboo.filter.plugins.mathematical;
 
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
-import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;

@@ -2,15 +2,12 @@ package peakaboo.ui.swing.plotting;
 
 
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -20,34 +17,17 @@ import javax.swing.Scrollable;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.display.plot.Plotter;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
-import peakaboo.display.plot.painters.FittingMarkersPainter;
-import peakaboo.display.plot.painters.FittingPainter;
-import peakaboo.display.plot.painters.FittingSumPainter;
-import peakaboo.display.plot.painters.FittingTitlePainter;
-import peakaboo.filter.model.Filter;
-import scidraw.drawing.DrawingRequest;
+import peakaboo.display.plot.Plotter;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
-import scidraw.drawing.painters.axis.AxisPainter;
-import scidraw.drawing.painters.axis.LineAxisPainter;
-import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scidraw.drawing.plot.PlotDrawing;
-import scidraw.drawing.plot.painters.PlotPainter;
-import scidraw.drawing.plot.painters.axis.GridlinePainter;
-import scidraw.drawing.plot.painters.axis.TickMarkAxisPainter;
-import scidraw.drawing.plot.painters.plot.OriginalDataPainter;
-import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
-import scitypes.SpectrumCalculations;
 
 
 

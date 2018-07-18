@@ -9,7 +9,6 @@ import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
-import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
 public class PlotData {

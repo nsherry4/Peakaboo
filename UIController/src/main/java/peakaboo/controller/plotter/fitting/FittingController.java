@@ -3,7 +3,6 @@ package peakaboo.controller.plotter.fitting;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.Map;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;

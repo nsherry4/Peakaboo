@@ -1,8 +1,6 @@
 package peakaboo.ui.swing;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.lang.reflect.Field;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

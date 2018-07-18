@@ -1,14 +1,8 @@
 package peakaboo.ui.swing.mapping;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
@@ -17,40 +11,15 @@ import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.display.map.MapData;
-import peakaboo.display.map.MapDisplayMode;
 import peakaboo.display.map.MapScaleMode;
 import peakaboo.display.map.MapSettings;
 import peakaboo.display.map.Mapper;
-import peakaboo.display.map.OverlayColour;
-import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
-import scidraw.drawing.backends.Surface.CompositeModes;
-import scidraw.drawing.common.Spectrums;
-import scidraw.drawing.map.MapDrawing;
-import scidraw.drawing.map.painters.FloodMapPainter;
-import scidraw.drawing.map.painters.MapPainter;
-import scidraw.drawing.map.painters.MapTechniqueFactory;
-import scidraw.drawing.map.painters.RasterSpectrumMapPainter;
 import scidraw.drawing.map.painters.SelectionMaskPainter;
-import scidraw.drawing.map.painters.SpectrumMapPainter;
-import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
-import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
-import scidraw.drawing.map.palettes.AbstractPalette;
-import scidraw.drawing.map.palettes.OverlayPalette;
-import scidraw.drawing.map.palettes.RatioPalette;
-import scidraw.drawing.map.palettes.SaturationPalette;
-import scidraw.drawing.map.palettes.ThermalScalePalette;
-import scidraw.drawing.painters.axis.AxisPainter;
-import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.Pair;
-import scitypes.Ratios;
-import scitypes.SISize;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
 class MapCanvas extends GraphicsPanel

@@ -17,13 +17,11 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
 import peakaboo.curvefit.peak.search.scoring.FastFittingScorer;
-import peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import peakaboo.curvefit.peak.search.scoring.NoComplexPileupScorer;
 import peakaboo.curvefit.peak.search.scoring.ProportionalPileupScorer;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
