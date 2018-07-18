@@ -467,13 +467,13 @@ If the parameter values do not validate, then the values of the input fields are
 
 \tocsubsection{Processing Spectra}
 
-An active filter's \code{filterApplyTo(\class{ReadOnlySpectrum} data)} method is called repeatedly. This method should return a modified \class{Spectrum} containing the results of filtering the input \class{ReadOnlySpectrum}.
+An active filter's \code{filter(\class{ReadOnlySpectrum} data)} method is called repeatedly. This method should return a modified \class{Spectrum} containing the results of filtering the input \class{ReadOnlySpectrum}.
 
 The \class{Spectrum} and \class{ReadOnlySpectrum} classes have a \class{List}-like interface, but use a fixed-size \class{float} array to store the actual data for memory and performance reasons.  If you prefer to work with the \class{float[]} data directly, the \code{backingArray} method provides direct access to it.
 
 \tocsection{File Formats (Data Sources)}
 
-Adding support for new file formats in Peakaboo is accomplished by creating a new Data Source. When creating a new data source, the \class{JavaDataSourcePlugin} interface must be implemented. The implementation should either not define a constructor, or define a \code{public} no-argument constructor. A Data Source has a number of methods to retrieve other data structures, some of which are optional.
+Adding support for new file formats in Peakaboo is accomplished by creating a new Data Source. When creating a new data source, the \class{JavaDataSourcePlugin} interface must be implemented. The implementation should either not define a constructor, or define a \code{public} no-argument constructor. A Data Source has a number of methods to retrieve other data structures, some of which are \class{Optional}.
 
 \tocsubsection{File Format}
 
@@ -484,9 +484,9 @@ For convenience, the \class{SimpleFileFormat} class provides an easy way to get 
 
 \tocsubsection{Reading the Data}
 
-Once your data source has been selected, one of the \code{void read(\class{Path} path)} and \code{void read(\class{List}<\class{Path}> paths)} methods will be called. The paths given here will be the same as the file tested for compatibility through the supplied \class{FileFormat}, so there is no need to recheck the files.
+Once your data source has been selected, the \code{void read(\class{List}<\class{Path}> paths)} method will be called at most once. The paths given here will be the same as the paths tested for compatibility through the supplied \class{FileFormat}, so there is no need to recheck the files.
 
-Because Peakaboo is an interactive desktop application, progress can be reported to the user through the \class{Interaction} class. The Data Source interface defines get/set methods for this object, and this object will be present when data is being read. It contains several methods which can be used to report progress or allow user control.
+Because Peakaboo is an interactive desktop application, progress should be reported to the user through the \class{Interaction} class. The Data Source interface defines get/set methods for this object, and this object will be set before the data is read. It contains several methods which can be used to report progress or allow user control.
 
 \codeblock{%
 boolean checkReadAborted()\\
@@ -494,21 +494,21 @@ void notifyScanCount(\class{int} scanCount)\\
 void notifyScanRead(\class{int} number)
 }
 
-The \code{checkReadAborted} method checks to see if the user has decided to abort the read operation. This method should be checked periodically, and if it returns \code{true}, the read operation should be halted. The data source will not be used after the user has requested the read be aborted, so there is no need to worry about any inconsistent state caused by aborting the read. Any open files should still be closed.
+The \code{checkReadAborted} method checks to see if the user has decided to abort the read operation. This method should be checked periodically, and if it returns \code{true}, the read operation should be halted. The data source instance will not be used after the user has requested the read to be aborted, so there is no need to worry about any inconsistent state caused by aborting the read. Any open files should still be closed.
 
 The \code{notifyScanCount} method reports the number of scans in the data set to the user interface. The \code{notifyScanRead} method reports that a certain number of new scans have been read since it was last called. These two methods used together allow Peakaboo to show the progress of the read operation to the user. In some file formats, it is not feasible to determine the number of scans in advance of reading them. In this case, simply do not call either of these methods, and the interface will show a ``busy'' indicator instead.
 
 
 \tocsubsection{Accessing the Data}
 
-Once the \code{read} method has been called, your data source will need to provide access to the data. This is achieved through the \class{ScanData} interface. For convenience, the \class{SimpleScanData} class is provided. It is recommended that the \class{SimpleScanData} class be used in most cases, as it provides a number of 
-performace optimizations. Other implementations of \class{ScanData} should study the \class{SimpleScanData} implementation for an idea of how to achieve these for themselves.
+Once the \code{read} method has been called, your data source will need to provide access to the data. This is achieved through the \class{ScanData} interface. For convenience, the \class{SimpleScanData} class is provided. It is \emph{highly} recommended that the \class{SimpleScanData} class be used in most cases, as it provides a number of 
+performance and memory footprint optimizations. Other implementations of \class{ScanData} should study the \class{SimpleScanData} implementation for an idea of how to achieve these for themselves.
 
 
 \tocsubsection{Providing Extended Information}
 
 Each data source reads from different kinds of files, which contain different kinds of information about the scan. Further information can be exposed through the \class{DataSize}, \class{PhysicalSize}, and \class{Metadata} 
-interfaces.
+interfaces, which are all access through the \class{DataSource} interface as \class{Optional} values.
 
 
 \chapter{Filter Descriptions}
