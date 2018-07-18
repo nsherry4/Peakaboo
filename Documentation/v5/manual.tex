@@ -235,8 +235,7 @@ There are four different tools which can be used to fit your data. To access the
 
 \tocsubsection{Guided Fitting}
 
-Guided fitting will attempt to identify peaks one by one with user supervision. Click on the peak you wish to fit and the program will fit the peak with a possible option. Other possible options will also be displayed 
-in a drop down list in the side bar. To add another fitting, click on the \button{edit-add}{Add} button below the current entry and click on another peak. To edit a previous fitting, click \button{edit-edit}{Edit}. Once you are happy with the fittings click \button{choose-ok}{OK} to add the fittings to your list.
+Guided fitting will attempt to identify peaks one by one with user supervision. Click on the peak you wish to fit and the program will fit the peak with a possible option. Other possible options will also be displayed in a drop down list in the side bar. To add another fitting, click on the \button{edit-add}{Add} button below the current entry and click on another peak. To edit a previous fitting, click \button{edit-edit}{Edit}. Once you are happy with the fittings click \button{choose-ok}{OK} to add the fittings to your list.
 
 \screenshot{guided-fitting}{The guided fitting controls}
 
@@ -266,8 +265,7 @@ When using background filters, it is usually best to leave 10\%-15\% of the back
 
 \tocsubsection{Fitting Algorithms}
 
-When trying to determine how to fit an element's theoretical peak curve to real data, Peakaboo has several algorithms to make this determination. 
-The algorithm can be selected from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Single-Curve Fitting}. The available options are:
+When trying to determine how to fit an element's theoretical peak curve to real data, Peakaboo has several algorithms to make this determination. The algorithm can be selected from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Single-Curve Fitting}. The available options are:
 
 \begin{description}
 
@@ -301,7 +299,7 @@ Changing the order of fittings can reveal and correct these problems. Select a f
 
 \tocsection{Details of Peak Fitting}
 
-A fitting is a model composed of several ``transitions'' from one of the K, L, or M groups of electron transitions. The positions and relative intensities for each transition series were taken from several tabulated sources to build a model as accurate and as thorough as possible. Fittings take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the Xraylib project at \url{https://github.com/tschoonj/xraylib}. For high-Z elements where the K series fittings are available in Xraylib, values provided by Krause 
+A fitting is a model composed of several ``transitions'' from one of the K, L, or M groups of electron transitions. The positions and relative intensities for each transition series were taken from several tabulated sources to build a model as accurate and as thorough as possible. Fittings take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the \href{https://github.com/tschoonj/xraylib}{Xraylib} project. For high $Z$ elements where the K series fittings are available in Xraylib, values provided by Krause 
 \cite{kraus} have been used. The intensity rations have been optimized for $\sim$20keV irradiation.
 
 For fitting of the spectral peaks, a Pseudo-Voigt fitting function is used by default, with a width which expands slightly as the energy level increases, according to \cite{xray-handbook p282}. Other peak modelling functions are available from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Peak Model}
@@ -309,118 +307,72 @@ For fitting of the spectral peaks, a Pseudo-Voigt fitting function is used by de
 
 \tocchapter{Mapping}
 
-To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. 
-Click on the dropdown arrow to the right of the \button{map}{Map Fittings} button to 
-choose either the fitting area (default) or fitting height for mapping. Only those 
-fittings which are enabled in your \command{Peak Fitting} list will be mapped. It 
-is recommended that you enable all fittings for mapping as each fitting results in 
-an individual map which can be disabled later. If your map is quite large, or you 
-are using time-intensive filters, it may be better to map fewer fittings at a 
-time as the processing on slower computers may take considerable time.
-
-Once you have clicked on \button{map}{Map Fittings}, a window will pop up indicating the
-progress of mapping the fitted elements.
+To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. Only those fittings which are enabled in your \command{Peak Fitting} list will be mapped. It is recommended that you enable all fittings for mapping as each fitting results in an individual map which can be disabled later.
 
 \screenshot{map-window}{Peakaboo's mapping window}
 
-Once the mapping is complete, a window will appear with a coloured map, scale, and 
-list of mapped element lines. For datasets which contain dimension information, map 
-widths and heights are automatically set to appropriate values. Otherwise, the user 
-must adjust the width and height. All fittings will be represented in the initial map. 
-To get the individual element maps, uncheck all other fittings, leaving the element 
-fitting you wish to view. If your maps have a pixelated appearance, you may want to 
-try interpolating the data and using contouring. Note that interpolation is not adding 
-new data to the map, and should not be used to excess.
+Once the mapping is complete, a window will appear with a coloured map, scale, and list of mapped element lines. For datasets which contain dimension information, map widths and heights are automatically set to appropriate values. Otherwise, the user must adjust the width and height. 
 
-if you wish to scale a fitting to its own highest intensity, select \command{Visible Fittings}
-under the \command{Peak Fittings} sidebar tab. If you choose the 
-\command{All Fittings}, then the maps will be scaled to the highest intensity from 
-the sum of all fittings. A minor element will show very a low intensity 
-distribution with this latter option, but appear much more intense with the former.
+All fittings will be represented in the initial map. To get the individual element maps, uncheck all other fittings in the \command{Peak Fittings} tab in the sidebar, leaving the element fitting you wish to view. If your maps have a pixelated appearance, you may want to try interpolating the data and using contouring. Note that interpolation is not adding new data to the map, and should not be used to excess.
 
-Maps may be saved by clicking the \button{device-camera}{Save Image} button on the toolbar.
-Various formats are available for saving your element line maps, 
-Pixel Image (\command{PNG}), Vector Image (\command{SVG}) and \command{PDF} format.
+Maps are generally scaled against a global maximum of all fittings. If you wish to scale a fitting to its own highest intensity, select \command{Visible Fittings} under the \command{Peak Fittings} sidebar tab. If you choose the \command{All Fittings}, then the maps will be scaled to the highest intensity from the sum of all fittings. A minor element will show very a low intensity distribution with the latter option, but appear much more intense with the former.
+
+Maps may be saved by clicking the \button{device-camera}{Save Image} button on the toolbar. Various formats are available for saving your element line maps, Pixel Image (\command{PNG}), Vector Image (\command{SVG}) and \command{PDF} format.
 
 
 \tocsection{Overlays}
 
-The \command{Overlay} option for mapping is chosen from the drop down list under 
-\command{Peak Fittings} sidebar tab. This allows you to sort fittings into four groups: 
-\command{Red}, \command{Blue}, \command{Green}, and \command{Yellow}. These groups are 
-overlaid, with the presence of each colour indicating the intensities of their fitting 
-groups. Because Red, Green, and Blue are the primary colours for computer displays, using 
-all four colours can introduce ambiguity, and care should be taken when making selections.
+The \command{Overlay} option for mapping is chosen from the drop down list under \command{Peak Fittings} sidebar tab. This allows you to sort fittings into four groups: 
+
+\begin{itemize}[topsep=4pt,itemsep=1pt,partopsep=0pt, parsep=0pt]
+\item \command{Red}
+\item \command{Yellow}
+\item \command{Green}
+\item \command{Blue}
+\end{itemize}
+
+These groups are overlaid, with the presence of each colour indicating the intensities of their fitting groups. Because Red, Green, and Blue are the primary colours for computer displays, using all four colours can introduce ambiguity, and care should be taken when making selections.
 
 \screenshot{map-overlay}{Overlay of Iron and Zinc concentration}
 
-The \command{Scale Colours} options control the way that the fitting group's colours are scaled.
-With the \command{As a Group} option, the highest intensity from \emphasis{all} 
-groups of fittings is used to scale the intensities for \emphasis{every} group. With the 
-\command{Separately} option, the highest intensity from \emphasis{within each} 
-group of fittings is used to scale the intensities for that group. The \command{Separately}
-option produces maps which may be qualitatively interesting, but are quantitatively 
+The \command{Scale Colours} options control the way that the fitting group's colours are scaled. With the \command{As a Group} option, the highest intensity from \emphasis{all} groups of fittings is used to scale the intensities for \emphasis{every} group. With the \command{Separately} option, the highest intensity from \emphasis{within each} group of fittings is used to scale the intensities for that group. The \command{Separately} option produces maps which may be qualitatively interesting, but are quantitatively 
 incorrect.
 
 \tocsection{Ratios}
 
-Mapping of element ratios is also available within Peakaboo. Select \command{Ratio} from the
-\command{Peak Fittings} dropdown list. Select the fittings (or fitting sets) you wish to
-view in ratio and select the desired colours from the dropdown lists next to each
-fitting.
+Mapping of element ratios is also available within Peakaboo. Select \command{Ratio} from the \command{Peak Fittings} dropdown list. Select the fittings (or fitting sets) you wish to view in ratio and select the desired colours from the dropdown lists next to each fitting.
 
 \screenshot{map-ratio}{Ratio of Iron and Zinc}
 
 \tocsection{Errant Data}
 
-Missing or skewed spectra within a data set can be removed from the map. Hover the mouse
-over the bad data point in the mapping window, and the index of that data point will 
-appear in the status bar at the bottom of the window. To view the errant data point, 
-return to the plotting window, making sure you are in \command{Individual Scan} mode, and 
-enter the \command{Index \#} of the invalid data in the \command{Scan} field at the bottom 
-of the window. 
+Missing or skewed spectra within a data set can be removed from the map. Hover the mouse over the bad data point in the mapping window, and the index of that data point will appear in the status bar at the bottom of the window. To view the errant data point, return to the plotting window, making sure you are in \command{Individual Scan} mode, and enter the \command{Index \#} of the invalid data in the \command{Scan} field at the bottom of the window. 
 
-Click on the \button{choose-cancel}{Exclude} button to flag the scan as bad, and to  exclude it from 
-the data set. In all future maps, this data point will be interpolated from neighbouring data.
+Click on the \button{choose-cancel}{Exclude} button to flag the scan as bad, and to  exclude it from the data set. In all future maps, this data point will be interpolated from neighbouring data.
 
 
 \tocsection{Selecting Subsections}
 
-There are two ways to select sections of a map, cropping and point-selection. Cropping is 
-acomplished by clicking and dragging on the map to create a selection mask. 
+There are two ways to select sections of a map, cropping and point-selection. Cropping is accomplished by clicking and dragging on the map to create a selection mask. 
 
 \screenshot{select-subset}{Selecting a cropped subset of a data set}
 
-Point selection is acomplished by double clicking on a point of interest, which will 
-select all points in a contiguous region with similar intensity. Triple clicking will select 
-all points in a map with similar intensity regardless of location. More complex selections 
-can be made by holding the \command{Control} key while double-clicking.
+Point selection is accomplished by double clicking on a point of interest, which will select all points in a contiguous region with similar intensity. Triple clicking will select all points in a map with similar intensity regardless of location. More complex selections can be made by holding the \command{Control} key while double-clicking.
 
 \screenshot{select-points}{Selecting a series of contiguous high-intensity points from the data set}
 
 \tocsection{Examining Subsections}
 
-The distribution of elements will likely vary across your sample and hence your
-maps. For samples that have a composition that consists primarily of low atomic 
-number (low $Z$) elements, it is possible to make a rough estimate of the composition. 
-This estimate is based on the relative intensities of many elements (from $Z=20\ldots 44$) 
-measured in a glass matrix. The relative intensities of these elements have been entered 
-into Peakaboo as conversion coefficients. Using these coefficients the concentration of 
-elements within a low $Z$ matrix can be estimated.
+The distribution of elements will likely vary across your sample and hence your maps. For samples that have a composition that consists primarily of low atomic number (low $Z$) elements, it is possible to make a rough estimate of the composition. This estimate is based on the relative intensities of many elements (from $Z=20\ldots 44$) measured in a glass matrix. The relative intensities of these elements have been entered into Peakaboo as conversion coefficients. Using these coefficients the concentration of elements within a low $Z$ matrix can be estimated.
 
 
-
-Left click and drag the mouse in order to draw a rectangle surrounding the region
-you wish to select. To view the relative intensity information, click on 
-\button{badge-info}{Get Intensities} in the mapping window toolbar.
+Left click and drag the mouse in order to draw a rectangle surrounding the region you wish to select. To view the relative intensity information, click on \button{badge-info}{Get Intensities} in the mapping window toolbar.
 
 \screenshot{intensity-estimate}{Rough estimate of elemental intensity in the selected region}
 
-Peakaboo also allows you to view spectra from selected regions within your map. Using the 
-same technique as described above to select a subsection of your data, click 
-\button{view-subset}{Plot Region} to view the spectra for the selected region. Another 
-Peakaboo window will open up to display the spectra from the selected region or subset. 
-The spectra from the selected region or `subset' can then be processed with Peakaboo.
+\tocsection{Plotting Subsections}
+
+Peakaboo also allows you to view spectra from selected regions within your map. Using the same technique as described above to select a subsection of your data, click \button{view-subset}{Plot Region} to view the spectra for the selected region. Another tab in the plotting window will open up to display the spectra from the selected region or subset. The spectra can then be processed with Peakaboo.
 
 \screenshot{plot-subset}{Plotting window showing data for a subset of the original data set}
 
@@ -428,101 +380,58 @@ The spectra from the selected region or `subset' can then be processed with Peak
 
 \tocsection{Using Filters}
 
-Filters can be accessed by clicking on the \command{Data Filters} sidebar tab and then clicking on 
-\button{edit-add}{Add Filters} to display the available filters. Filters are grouped into
-types. Each type heading can be expanded by clicking on the expander to the left of the filter 
-type. Select the filter you wish to use and then click \button{choose-ok}{OK} 
-to add the filter. 
+Filters can be accessed by clicking on the \command{Data Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into types. Each type heading can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
 
-Once you have added the filter, you can modify or check the 
-parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} 
-button next to the filter. This will bring up a settings panel for this filter. As you change 
-the parameters, you will see the changes reflected in the spectrum being displayed. Once 
-you are satisfied with the filter settings, you may close the window.
+Once you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed. Once you are satisfied with the filter settings, you may close the window.
 
 To view a full listing of built-in filters and their descriptions, see the appendix.
 
 \screenshot{brukner-filter}{The Brukner background filter's settings window}
 
-The use of filters will obviously alter the spectrum. If you wish to see the original spectrum
-in addition to the filtered data, select \command{\button{main-menu}{Menu} \menu\ View \menu\ Raw Data Outline}.
+The use of filters will obviously alter the spectrum. If you wish to see the original spectrum in addition to the filtered data, select \command{\button{view-menu}{View} \menu\ Raw Data Outline}.
 
 \screenshot{raw-outline}{Background-subtracted data with the original data drawn in red.}
 
 \tocsection{Filtering Example with Normalizer Filter}
 
-When detector deadtime is very high, the detector cannot keep up with the incoming x-rays.
-For example, low energy x-rays such as those coming from \element{Ar} may not get counted
-and mapping the distribution of \element{Ar} will reveal areas of next to no intensity. 
+When detector deadtime is very high, the detector cannot keep up with the incoming x-rays. For example, low energy x-rays such as those coming from \element{Ar} may not get counted and mapping the distribution of \element{Ar} will reveal areas of next to no intensity. 
 
-The \command{Normalizer Filer} scales each spectrum so that the intensity at a given channel is
-always the same. This filter can be used in this case to correct the spectra. By normalizing 
-against a channel from within the \element{Ar} peak, we can mitigate the distortion caused by 
-detector saturation.
+The \command{Normalizer Filer} scales each spectrum so that the intensity at a given channel is always the same. This filter can be used in this case to correct the spectra. By normalizing against a channel from within the \element{Ar} peak, we can mitigate the distortion caused by detector saturation.
 
-Go to the \command{Filters} tab and add the \command{Normalizer Filter} found under the 
-\command{Advanced} filter types. Click on the \button{misc-preferences}{Settings} button 
-to bring up the settings window for the filter. Place the cursor on the \element{Ar} peak in the 
-spectrum and read the channel number and value (counts) from the information found 
-below the spectrum window, and enter them into the appropriate settings fields. Make sure 
-you are viewing the \command{Mean Average} spectrum to get the average value (counts) for 
-the \element{Ar}. Close the edit window.
+Go to the \command{Filters} tab and add the \command{Normalizer Filter} found under the \command{Advanced} filter types. Click on the \button{misc-preferences}{Settings} button to bring up the settings window for the filter. Place the cursor on the \element{Ar} peak in the spectrum and read the channel number and value (counts) from the information found below the spectrum window, and enter them into the appropriate settings fields. Make sure you are viewing the \command{Mean Average} spectrum to get the average value (counts) for the \element{Ar}. Close the edit window.
 
 \clearpage
-\screenshot{normalize-uncorrected-ar}{Uncorrected \element{Ar} with weak signal where \element{Ti} is strongest}
-\screenshot{normalize-uncorrected-ti}{Uncorrected \element{Ti}}
-\screenshot{normalize-corrected-ar}{Corrected \element{Ar}}
-\screenshot{normalize-corrected-ti}{Corrected \element{Ti} with greater maximum intensity}
+\screenshot{normalize-uncorrected-ar}{Uncorrected \element{Ar} with weak signal where \element{Ti} is strongest} \screenshot{normalize-uncorrected-ti}{Uncorrected \element{Ti}} \screenshot{normalize-corrected-ar}{Corrected \element{Ar}} \screenshot{normalize-corrected-ti}{Corrected \element{Ti} with greater maximum intensity}
 
 \tocchapter{Extending Peakaboo}
 
-Peakaboo allows users who are familiar with the Java programming language to extend its functionality by
-creating custom filters and adding support for new file formats. Users who are interested in
-developing extensions for Peakaboo will need to make sure they have the Java Development Kit (JDK)
-installed on their computer (available from \href{http://java.com}{Java.com}). A good code editor,
-such as Eclipse, is also recommended. 
+Peakaboo allows users who are familiar with the Java programming language to extend its functionality by creating custom filters and adding support for new file formats. Users who are interested in developing extensions for Peakaboo will need to make sure they have the Java Development Kit (JDK) installed on their computer (available from \href{http://java.com}{Java.com}). A dedicated code editor, such as Eclipse, is also recommended. 
 
-Plugins in Peababoo are classes which implement a specific interface. The interface in question 
-depends on the kind of plugin being created. These plugin classes should be bundled in \file{.jar} files
-and placed in the correct plugin folder inside of the user's application data directory. For example, 
-on Linux, this path is \file{\textasciitilde/.config/Peakaboo5/}. You can access this folder by selecting
-\command{\button{main-menu}{Menu} \menu\ Plugins \menu\ Open Folder}.
+Plugins in Peababoo are classes which implement a specific interface. The interface in question depends on the kind of plugin being created. These plugin classes should be bundled in \file{.jar} files and placed in the correct plugin folder inside of the user's application data directory. For example, on Linux, this path is \file{\textasciitilde/.config/Peakaboo5/}. You can access this folder by selecting \command{\button{main-menu}{Menu} \menu\ Plugins \menu\ Open Folder}.
 
-In order to know which classes to load without scanning each class in every jar file, a jar 
-containing a plugin must include a manifest file, located at \file{META-INF/services/} under
-the root of the jar file. The file name must be the qualified name of the interface that this type
-of plugin implements, and the contents of the file must be the qualified names of each class to be 
+In order to know which classes to load without scanning each class in every jar file, a jar containing a plugin must include a manifest file, located at \file{META-INF/services/} under the root of the jar file. The file name must be the qualified name of the interface that this type of plugin implements, and the contents of the file must be the qualified names of each class to be 
 loaded as a plugin, one per line.
 
 The specific interfaces used for different types of plugins are:
-\begin{itemize}  
+\begin{itemize}[topsep=4pt,itemsep=1pt,partopsep=0pt, parsep=0pt]
 \item Data Source: \class{peakaboo.datasource.plugin.JavaDataSourcePlugin}
 \item Data Sink: \class{peakaboo.datasink.plugin.JavaDataSinkPlugin}
 \item Filter: \class{peakaboo.filter.plugin.JavaFilterPlugin}
 \end{itemize}
 
 Example plugins for both filters and data sources are available online at 
-\href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file 
-containing Peakaboo for building against.
+\href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file containing Peakaboo for building against.
 
 \tocsection{Filters}
 
-Custom filters must implement \class{JavaFilterPlugin}, and for convenience may also extend the 
-\class{AbstractSimpleFilter} or \class{AbstractBackgroundFilter} classes, and should either not 
-define a constructor, or define a \code{public} no-argument constructor.
+Custom filters must implement \class{JavaFilterPlugin}, and for convenience may also extend the \class{AbstractSimpleFilter} or \class{AbstractBackgroundFilter} classes, and should either not define a constructor, or define a \code{public} no-argument constructor.
 
 \tocsubsection{Parameters}
 
-Filters define a series of \class{Parameter}s, each with an associated data type. These parameters are 
-displayed in the filter's settings panel, using the associated data types and class information to 
-determine what kind of widgets should be used. These parameters should be created and initialized in 
+Filters define a series of \class{Parameter}s, each with an associated data type. These parameters are displayed in the filter's settings panel, using the associated data types and class information to determine what kind of widgets should be used. These parameters should be created and initialized in 
 the filter's \code{initialize} method.
 
-Once constructed, the parameter should be passed to the \code{addParameter} method of the superclass. This 
-method returns an integer value which you can use to retrieve the parameter later using 
-\code{getParameter(int index)}. The alternative is to simply keep local references to all your \class{Parameter}s.
-Here is an example of the \code{initialize} method of the \class{Addition} filter using the integer value to 
-track the parameter:
+Once constructed, the parameter should be passed to the \code{addParameter} method of the superclass. This method returns an integer value which you can use to retrieve the parameter later using \code{getParameter(int index)}. The alternative is to simply keep local references to all your \class{Parameter}s. Here is an example of the \code{initialize} method of the \class{Addition} filter:
 
 \codeblock{%
 @Override\\
@@ -538,60 +447,37 @@ public void initialize()\\
 \}
 }
 
-This creates a new \class{Parameter} called ``Amount to Add'' with a Float data type, a default value of 1.0, and a 
-validation function. It then adds it to this filter's set of parameters.
+This creates a new \class{Parameter} called ``Amount to Add'' with a Float data type, a default value of 1.0, and a validation function defined elsewhere in the class body. It then adds it to this filter's set of parameters.
 
 \tocsubsection{Validation}
 
-Whenever the user makes changes to a filter's parameter value in the \button{misc-preferences}{Settings} dialog, 
-the new parameter value is validated in a call to the parameter's validator method. In the example above, the 
-parameter's validate method is in the filter itself, and could be used by other parameters to validate 
-combinations of values.
+Whenever the user makes changes to a filter's parameter value in the \button{misc-preferences}{Settings} dialog, the new parameter value is validated in a call to the parameter's validator method. In the example above, the parameter's validate method is in the filter itself, and could be used by other parameters to validate combinations of values.
 
 If the parameter values do not validate, then the values of the input fields are reset to their old values.
 
 
 \tocsubsection{Processing Spectra}
 
-An active filter's \code{filterApplyTo(\class{ReadOnlySpectrum} data)} method is called repeatedly. 
-This method should return a modified \class{Spectrum} containing the results of filtering the 
-input \class{ReadOnlySpectrum}.
+An active filter's \code{filterApplyTo(\class{ReadOnlySpectrum} data)} method is called repeatedly. This method should return a modified \class{Spectrum} containing the results of filtering the input \class{ReadOnlySpectrum}.
 
-The \class{Spectrum} and \class{ReadOnlySpectrum} classes have a \class{List}-like interface, but use a 
-fixed-size \class{float} array to store the actual data for memory and performance reasons.  If you 
-prefer to work with the \class{float[]} data directly, the \code{backingArray} method provides direct 
-access to it.
+The \class{Spectrum} and \class{ReadOnlySpectrum} classes have a \class{List}-like interface, but use a fixed-size \class{float} array to store the actual data for memory and performance reasons.  If you prefer to work with the \class{float[]} data directly, the \code{backingArray} method provides direct access to it.
 
 \tocsection{File Formats (Data Sources)}
 
-Adding support for new file formats in Peakaboo is accomplished by creating a new Data Source. When creating a 
-new data source, the \class{JavaDataSourcePlugin} interface must be implemented. The implementation should 
-either not define a constructor, or define a \code{public} no-argument constructor. A Data Source has a 
-number of methods to retrieve other data structures, some of which are optional.
+Adding support for new file formats in Peakaboo is accomplished by creating a new Data Source. When creating a new data source, the \class{JavaDataSourcePlugin} interface must be implemented. The implementation should either not define a constructor, or define a \code{public} no-argument constructor. A Data Source has a number of methods to retrieve other data structures, some of which are optional.
 
 \tocsubsection{File Format}
 
-The \class{FileFormat} interface is how a Data Source describes the type of files it reads and tests if it 
-can read specific files. When the user opens one or more files, Peakaboo must determine which Data Source 
-plugin(s) may be used, and it relies on the Data Source's FileFormat to inform it.
+The \class{FileFormat} interface is how a Data Source describes the type of files it reads and tests if it can read specific files. When the user opens one or more files, Peakaboo must determine which Data Source plugin(s) may be used, and it relies on the Data Source's FileFormat to inform it.
 
-For convenience, the \class{SimpleFileFormat} class provides an easy way to get started, with file-extension 
-based testing and the ability to specify single or multi-file support. Because many data sources use very
-common file extentions (e.g. \command{.dat}) or container files (e.g. \command{HDF}), developers should 
-consider implementing proper testing through an examination of a file's contents.
+For convenience, the \class{SimpleFileFormat} class provides an easy way to get started, with file-extension based testing and the ability to specify single or multi-file support. Because many data sources use very common file extentions (e.g. \command{.dat}) or container files (e.g. \command{HDF}), developers should consider implementing proper testing through an examination of a file's contents.
 
 
 \tocsubsection{Reading the Data}
 
-Once your data source has been selected, one of the \code{void read(\class{Path} path)} and 
-\code{void read(\class{List}<\class{Path}> paths)} methods will be called. The paths given here will be 
-the same as the file tested for compatibility through the supplied \class{FileFormat}, so there is no need 
-to recheck the files.
+Once your data source has been selected, one of the \code{void read(\class{Path} path)} and \code{void read(\class{List}<\class{Path}> paths)} methods will be called. The paths given here will be the same as the file tested for compatibility through the supplied \class{FileFormat}, so there is no need to recheck the files.
 
-Because Peakaboo is an interactive desktop application, progress can be reported to the user through the 
-\class{Interaction} class. The Data Source interface defines get/set methods for this object, and this object
-will be present when data is being read. It contains several methods which can be used to report progress or 
-allow user control.
+Because Peakaboo is an interactive desktop application, progress can be reported to the user through the \class{Interaction} class. The Data Source interface defines get/set methods for this object, and this object will be present when data is being read. It contains several methods which can be used to report progress or allow user control.
 
 \codeblock{%
 boolean checkReadAborted()\\
@@ -599,31 +485,20 @@ void notifyScanCount(\class{int} scanCount)\\
 void notifyScanRead(\class{int} number)
 }
 
-The \code{checkReadAborted} method checks to see if the user has decided to abort the read operation. This method 
-should be checked periodically, and if it returns \code{true}, the read operation should be halted. The data source
-will not be used after the user has requested the read be aborted, so there is no need to worry about any 
-inconsistent state caused by aborting the read. Any open files should still be closed.
+The \code{checkReadAborted} method checks to see if the user has decided to abort the read operation. This method should be checked periodically, and if it returns \code{true}, the read operation should be halted. The data source will not be used after the user has requested the read be aborted, so there is no need to worry about any inconsistent state caused by aborting the read. Any open files should still be closed.
 
-The \code{notifyScanCount} method reports the number of scans in the data set to the user interface. The 
-\code{notifyScanRead} method reports that a certain number of new scans have been read since it was last 
-called. These two methods used together allow Peakaboo to show the progress of the read operation to the 
-user. In some file formats, it is not feasible to determine the number of scans in advance of reading them. 
-In this case, simply do not call either of these methods, and the interface will show a ``busy'' indicator instead.
+The \code{notifyScanCount} method reports the number of scans in the data set to the user interface. The \code{notifyScanRead} method reports that a certain number of new scans have been read since it was last called. These two methods used together allow Peakaboo to show the progress of the read operation to the user. In some file formats, it is not feasible to determine the number of scans in advance of reading them. In this case, simply do not call either of these methods, and the interface will show a ``busy'' indicator instead.
 
 
 \tocsubsection{Accessing the Data}
 
-Once the \code{read} method has been called, your data source will need to provide access to the data. This is 
-achieved through the \class{ScanData} interface. For convenience, the \class{SimpleScanData} class is provided.
-It is recommended that the \class{SimpleScanData} class be used in most cases, as it provides a number of 
-performace optimizations. Other implementations of \class{ScanData} should study the \class{SimpleScanData} 
-implementation for an idea of how to achieve these for themselves.
+Once the \code{read} method has been called, your data source will need to provide access to the data. This is achieved through the \class{ScanData} interface. For convenience, the \class{SimpleScanData} class is provided. It is recommended that the \class{SimpleScanData} class be used in most cases, as it provides a number of 
+performace optimizations. Other implementations of \class{ScanData} should study the \class{SimpleScanData} implementation for an idea of how to achieve these for themselves.
 
 
 \tocsubsection{Providing Extended Information}
 
-Each data source reads from different kinds of files, which contain different kinds of information about the scan. 
-Further information can be exposed through the \class{DataSize}, \class{PhysicalSize}, and \class{Metadata} 
+Each data source reads from different kinds of files, which contain different kinds of information about the scan. Further information can be exposed through the \class{DataSize}, \class{PhysicalSize}, and \class{Metadata} 
 interfaces.
 
 \cleardoublepage
@@ -632,17 +507,13 @@ interfaces.
 
 \chapter{Filter Descriptions}
 
-Because Peakaboo uses a plug-in system for fitlers, this cannot be an exhaustive list, but it does cover all 
-built-in filters.
+Because Peakaboo uses a plug-in system for fitlers, this cannot be an exhaustive list, but it does cover all built-in filters.
 
 \tocsection{Background Filters}
 
 \tocsubsection{Polynomial}
 
-This filter attempts to fit a series of parabolic (or higher order single-term) curves 
-under the data, with a curve centred at each channel, and attempting to make each curve 
-as tall as possible while still staying completely under the spectrum. The union of 
-these curves is calculated and subtracted from the original data.
+This filter attempts to fit a series of parabolic (or higher order single-term) curves under the data, with a curve centred at each channel, and attempting to make each curve as tall as possible while still staying completely under the spectrum. The union of these curves is calculated and subtracted from the original data.
 
 \tocsubsection{Brukner}
 
@@ -652,24 +523,18 @@ taking the minimum of the unsmoothed and smoothed data for each channel on each 
 \tocsubsection{Linear Trim}
 
 This filter examines all pairs of points which are $n$ channels apart (ie (1, 10), 
-(2, 11), \ldots\ where $n = 10$). For each pair of points, any signal which exceeds a straight 
-line connecting the two points is truncated.
+(2, 11), \ldots\ where $n = 10$). For each pair of points, any signal which exceeds a straight line connecting the two points is truncated.
 
 \tocsection{Noise Filters}
 
 \tocsubsection{Savitsky-Golay}
 
 This filter attempts to remove noise by fitting a polynomial to each
-point $p_i$ and its surrounding points $p_{i-n} \ldots p_{i+n}$, and then taking the value of the
-polynomial at $p_i$. A moving average may be considered a special case of this
-filter with a polynomial of order 1.
+point $p_i$ and its surrounding points $p_{i-n} \ldots p_{i+n}$, and then taking the value of the polynomial at $p_i$. A moving average may be considered a special case of this filter with a polynomial of order 1.
 
 \tocsubsection{Wavelet Low-Pass}
 
-This filter attempts to reduce high-frequency noise by
-performing a Wavelet transformation on the spectrum. This breaks the data down
-into sections each representing a different frequency range. The high-frequency
-regions are then smoothed, and a reverse transform is applied.
+This filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then smoothed, and a reverse transform is applied.
 
 \tocsubsection{Fourier Low-Pass}
 
@@ -685,8 +550,7 @@ $n$ points to either side of it, and replacing it with an average of the sampled
 \tocsubsection{Weighted Averaging}
 
 This filter refines the values of each point in a scan by sampling it and the 
-$n$ points to either side of it, and replacing it with an exponentially weighted average
-of the sampled points.
+$n$ points to either side of it, and replacing it with an exponentially weighted average of the sampled points.
 
 \tocsubsection{Spring Smoothing}
 
@@ -695,11 +559,7 @@ than strong signal. It treats each pair of adjacent points as if they were
 connected by a spring. With each iteration, a tension force draws neighbouring
 points closer together.
 
-The \command{Force Multiplier} controls how strongly a 
-pair of points are pulled together, and the \command{Force Falloff Rate} controls 
-how aggressively stronger signal is anchored in place, unmoved by tension forces. 
-This prevents stronger intensity such as peak shapes from being distorted by the smoothing 
-algorithm.
+The \command{Force Multiplier} controls how strongly a pair of points are pulled together, and the \command{Force Falloff Rate} controls how aggressively stronger signal is anchored in place, unmoved by tension forces. This prevents stronger intensity such as peak shapes from being distorted by the smoothing algorithm.
 
 \tocsection{Mathematical Filters}
 
@@ -736,10 +596,7 @@ filter) to perform custom wavelet operations.
 
 \tocsubsection{Wavelet $\rightarrow$ Signal}
 
-This filter converts a wavelet representation of data back into
-spectrum data. This is intended to be used in conjunction with other filters
-(especially the \command{Filter Partial Spectrum} filter) to perform custom 
-wavelet operations.
+This filter converts a wavelet representation of data back into spectrum data. This is intended to be used in conjunction with other filters (especially the \command{Filter Partial Spectrum} filter) to perform custom wavelet operations.
 
 \tocsubsection{Normalizer}
 
