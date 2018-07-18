@@ -35,17 +35,17 @@ def setup
 	 jarfile = "Peakaboo.jar"
 
 	#Deb Package
-	dapppath = "./deb/5.0/usr/share/Peakaboo/"
-	dbinpath = "./deb/5.0/usr/bin/"
-	dconpath = "./deb/5.0/DEBIAN/"
-	resources = [["shared/icon.png", dapppath], ["shared/logo.png", dapppath], ["linux/peakaboo", dbinpath], ["linux/control", dconpath], ["linux/Peakaboo.desktop", "./deb/5.0/usr/share/applications/"]]
+	dapppath = "./deb/5.0.0/usr/share/Peakaboo/"
+	dbinpath = "./deb/5.0.0/usr/bin/"
+	dconpath = "./deb/5.0.0/DEBIAN/"
+	resources = [["shared/icon.png", dapppath], ["shared/logo.png", dapppath], ["linux/peakaboo", dbinpath], ["linux/control", dconpath], ["linux/Peakaboo.desktop", "./deb/5.0.0/usr/share/applications/"]]
 	doSetup(jarfile, dapppath, resources, false)
 
 
 	#RPM Package
-	apppath = "./rpm/5.0/usr/share/Peakaboo"
-	binpath = "./rpm/5.0/usr/bin/"
-	resources = [["shared/icon.png", apppath], ["shared/logo.png", apppath], ["linux/peakaboo", binpath], ["linux/Peakaboo.desktop", "./rpm/5.0/usr/share/applications/"]]
+	apppath = "./rpm/5.0.0/usr/share/Peakaboo"
+	binpath = "./rpm/5.0.0/usr/bin/"
+	resources = [["shared/icon.png", apppath], ["shared/logo.png", apppath], ["linux/peakaboo", binpath], ["linux/Peakaboo.desktop", "./rpm/5.0.0/usr/share/applications/"]]
 	doSetup(jarfile, apppath, resources, false)
 
 	#Win32 Package
