@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -771,13 +773,20 @@ public class PlotPanel extends TabbedInterfacePanel
 				null, null
 			);
 		mainMenu.add(logs);
+
+		JMenuItem bugreport = createMenuItem(
+				"Report a Bug", null, null,
+				e -> actionReportBug(),
+				null, null
+			);
+		mainMenu.add(bugreport);
 		
-		JMenuItem contents = createMenuItem(
+		JMenuItem help = createMenuItem(
 			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
 			e -> actionHelp(),
 			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
 		);
-		mainMenu.add(contents);
+		mainMenu.add(help);
 		
 		JMenuItem about = createMenuItem(
 			"About", StockIcon.MISC_ABOUT.toMenuIcon(), null,
@@ -1733,6 +1742,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		} catch (IOException e1) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to open logging folder", e1);
 		}
+	}
+	
+	private void actionReportBug() {
+		Apps.browser("https://github.com/nsherry4/Peakaboo/issues");
 	}
 
 }
