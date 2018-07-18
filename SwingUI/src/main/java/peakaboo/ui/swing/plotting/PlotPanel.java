@@ -1182,7 +1182,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	
 	private void actionHelp()
 	{
-		Apps.browser("http://sciencestudio.net/downloads/Peakaboo4/Peakaboo%204%20Users%20Guide.pdf");
+		Apps.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
 	}
 	
 	private void actionOpenData()
