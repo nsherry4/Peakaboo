@@ -517,10 +517,6 @@ Because Peakaboo uses a plug-in system for fitlers, this cannot be an exhaustive
 
 \tocsection{Background Filters}
 
-\tocsubsection{Polynomial}
-
-This filter attempts to fit a series of parabolic (or higher order single-term) curves under the data, with a curve centred at each channel, and attempting to make each curve as tall as possible while still staying completely under the spectrum. The union of these curves is calculated and subtracted from the original data.
-
 \tocsubsection{Brukner}
 
 This filter removes background over several iterations by smoothing the data and 
@@ -528,19 +524,21 @@ taking the minimum of the unsmoothed and smoothed data for each channel on each 
 
 \tocsubsection{Linear Trim}
 
-This filter examines all pairs of points which are $n$ channels apart (ie (1, 10), 
-(2, 11), \ldots\ where $n = 10$). For each pair of points, any signal which exceeds a straight line connecting the two points is truncated.
+This filter examines all pairs of points which are $n$ channels apart (ie $(1, 10), 
+(2, 11)$, \ldots\ where $n = 10$). For each pair of points, any signal which exceeds a straight line connecting the two points is truncated.
+
+\tocsubsection{Polynomial}
+
+This filter attempts to fit a series of parabolic (or higher order single-term) curves under the data, with a curve centred at each channel, and attempting to make each curve as tall as possible while still staying completely under the spectrum. The union of these curves is calculated and subtracted from the original data.
+
+\tocsubsection{Square Snip}
+
+This is a very fast background removal method based on the Peak Stripping algorithm. It iteratively replaces signal with the average of the points $(-window, +window)$ channels apart if that average is less than the existing signal. By taking a double square root of the signal and then reversing it afterwards, the number if iterations required is greatly reduced. Because noise-reduction filters are separate and composable, this version of the algorithm does not do any smoothing of it's own.
+
+
 
 \tocsection{Noise Filters}
 
-\tocsubsection{Savitsky-Golay}
-
-This filter attempts to remove noise by fitting a polynomial to each
-point $p_i$ and its surrounding points $p_{i-n} \ldots p_{i+n}$, and then taking the value of the polynomial at $p_i$. A moving average may be considered a special case of this filter with a polynomial of order 1.
-
-\tocsubsection{Wavelet Low-Pass}
-
-This filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then smoothed, and a reverse transform is applied.
 
 \tocsubsection{Fourier Low-Pass}
 
@@ -548,15 +546,18 @@ This filter transforms the spectral data with a Fourier Transformation into a
 frequency domain. Data from a high frequency range (noise) is filtered out, 
 while lower frequencies (peaks, background) are passed through.
 
-\tocsubsection{Flat Averaging}
-
-This filter refines the values of each point in a scan by sampling it and the 
-$n$ points to either side of it, and replacing it with an average of the sampled points.
 
 \tocsubsection{Weighted Averaging}
 
 This filter refines the values of each point in a scan by sampling it and the 
 $n$ points to either side of it, and replacing it with an exponentially weighted average of the sampled points.
+
+
+\tocsubsection{Savitsky-Golay}
+
+This filter attempts to remove noise by fitting a polynomial to each
+point $p_i$ and its surrounding points $p_{i-n} \ldots p_{i+n}$, and then taking the value of the polynomial at $p_i$. This filter is generally fast, while minimizing peak distortion. A moving average may be considered a special case of this filter with a polynomial of order 1.
+
 
 \tocsubsection{Spring Smoothing}
 
@@ -565,7 +566,30 @@ than strong signal. It treats each pair of adjacent points as if they were
 connected by a spring. With each iteration, a tension force draws neighbouring
 points closer together.
 
-The \command{Force Multiplier} controls how strongly a pair of points are pulled together, and the \command{Force Falloff Rate} controls how aggressively stronger signal is anchored in place, unmoved by tension forces. This prevents stronger intensity such as peak shapes from being distorted by the smoothing algorithm.
+The \command{Force Multiplier} controls how strongly a pair of points are pulled together, and the \command{Force Falloff Rate} controls how aggressively stronger signal is anchored in place, unmoved by tension forces. This prevents stronger intensity points such as peak shapes from being distorted by the smoothing algorithm.
+
+
+\tocsubsection{Wavelet Low-Pass}
+
+This filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then smoothed, and a reverse transform is applied.
+
+
+\tocsubsection{Low Statistics}
+
+This filter smooths signal per-channel by shrinking a moving-average window until either: 
+\begin{itemize}[topsep=4pt,itemsep=1pt,partopsep=0pt, parsep=0pt]
+	\item The signal in the window is less than Max Signal
+	\item Both of the following are true:
+	\begin{itemize}[topsep=4pt,itemsep=1pt,partopsep=0pt, parsep=0pt]
+		\item The signal in the window is less than Threshold x sqrt(centerpoint)
+		\item The slopes of the left vs. right windows is less than Max Slope
+	\end{itemize}
+\end{itemize}
+
+
+
+
+
 
 \tocsection{Mathematical Filters}
 
@@ -593,16 +617,6 @@ itself and all channels prior to it.
 
 
 \tocsection{Advanced Filters}
-
-\tocsubsection{Signal $\rightarrow$ Wavelet}
-
-This filter converts spectrum data into a wavelet representation. This is intended
-to be used in conjunction with other filters (especially the \command{Filter Partial Spectrum}
-filter) to perform custom wavelet operations.
-
-\tocsubsection{Wavelet $\rightarrow$ Signal}
-
-This filter converts a wavelet representation of data back into spectrum data. This is intended to be used in conjunction with other filters (especially the \command{Filter Partial Spectrum} filter) to perform custom wavelet operations.
 
 \tocsubsection{Normalizer}
 
