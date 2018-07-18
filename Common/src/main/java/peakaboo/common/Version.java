@@ -22,7 +22,7 @@ public class Version {
 	}
 	
 	
-	public final static boolean release = true;
+	public final static boolean release = false;
 	public final static boolean rc = false;
 	public final static boolean beta = false;
 	
