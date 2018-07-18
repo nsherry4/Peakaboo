@@ -15,10 +15,10 @@
    id="svg4157"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="action-menu.svg"
-   inkscape:export-filename="/home/nathaniel/Projects/SS/Git/Libraries/Swidget/src/main/resources/swidget/icons/48/action-menu.png"
-   inkscape:export-xdpi="180"
-   inkscape:export-ydpi="180">
+   sodipodi:docname="menu-main.svg"
+   inkscape:export-filename="/home/nathaniel/Projects/SS/Git/Libraries/Swidget/src/main/resources/swidget/icons/16/menu-main.png"
+   inkscape:export-xdpi="60"
+   inkscape:export-ydpi="60">
   <defs
      id="defs4159" />
   <sodipodi:namedview
@@ -29,7 +29,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="31.678384"
-     inkscape:cx="13.808304"
+     inkscape:cx="7.7473888"
      inkscape:cy="11.800472"
      inkscape:document-units="px"
      inkscape:current-layer="g4715"
@@ -65,7 +65,7 @@
          y="1037.7089"
          x="14.767678"
          width="11.249552"
-         style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#303030;fill-opacity:1;stroke:none;stroke-width:1;marker:none"
+         style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1;marker:none"
          inkscape:label="a"
          id="rect7356"
          height="2.5000534"
@@ -75,7 +75,7 @@
          y="1042.0839"
          x="14.767678"
          width="11.249552"
-         style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#303030;fill-opacity:1;stroke:none;stroke-width:1;marker:none"
+         style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1;marker:none"
          inkscape:label="a"
          id="rect7358"
          height="2.5000534"
@@ -85,7 +85,7 @@
          y="1046.459"
          x="14.767679"
          width="11.249551"
-         style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#303030;fill-opacity:1;stroke:none;stroke-width:1;marker:none"
+         style="color:#bebebe;display:inline;overflow:visible;visibility:visible;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1;marker:none"
          inkscape:label="a"
          id="rect7360"
          height="2.5000534"
