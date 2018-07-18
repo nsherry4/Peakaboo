@@ -305,6 +305,37 @@ A fitting is a model composed of several ``transitions'' from one of the K, L, o
 For fitting of the spectral peaks, a Pseudo-Voigt fitting function is used by default, with a width which expands slightly as the energy level increases, according to \cite{xray-handbook p282}. Other peak modelling functions are available from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Peak Model}
 
 
+
+
+\tocchapter{Filters}
+
+\tocsection{Using Filters}
+
+Filters can be accessed by clicking on the \command{Data Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into types. Each type heading can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
+
+Once you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed. Once you are satisfied with the filter settings, you may close the window.
+
+To view a full listing of built-in filters and their descriptions, see the appendix.
+
+\screenshot{brukner-filter}{The Brukner background filter's settings window}
+
+The use of filters will obviously alter the spectrum. If you wish to see the original spectrum in addition to the filtered data, select \command{\button{view-menu}{View} \menu\ Raw Data Outline}.
+
+\screenshot{raw-outline}{Background-subtracted data with the original data drawn in red.}
+
+\tocsection{Filtering Example with Normalizer Filter}
+
+When detector deadtime is very high, the detector cannot keep up with the incoming x-rays. For example, low energy x-rays such as those coming from \element{Ar} may not get counted and mapping the distribution of \element{Ar} will reveal areas of next to no intensity. 
+
+The \command{Normalizer Filer} scales each spectrum so that the intensity at a given channel is always the same. This filter can be used in this case to correct the spectra. By normalizing against a channel from within the \element{Ar} peak, we can mitigate the distortion caused by detector saturation.
+
+Go to the \command{Filters} tab and add the \command{Normalizer Filter} found under the \command{Advanced} filter types. Click on the \button{misc-preferences}{Settings} button to bring up the settings window for the filter. Place the cursor on the \element{Ar} peak in the spectrum and read the channel number and value (counts) from the information found below the spectrum window, and enter them into the appropriate settings fields. Make sure you are viewing the \command{Mean Average} spectrum to get the average value (counts) for the \element{Ar}. Close the edit window.
+
+\clearpage
+\screenshot{normalize-uncorrected-ar}{Uncorrected \element{Ar} with weak signal where \element{Ti} is strongest} \screenshot{normalize-uncorrected-ti}{Uncorrected \element{Ti}} \screenshot{normalize-corrected-ar}{Corrected \element{Ar}} \screenshot{normalize-corrected-ti}{Corrected \element{Ti} with greater maximum intensity}
+
+
+
 \tocchapter{Mapping}
 
 To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. Only those fittings which are enabled in your \command{Peak Fitting} list will be mapped. It is recommended that you enable all fittings for mapping as each fitting results in an individual map which can be disabled later.
@@ -376,34 +407,12 @@ Peakaboo also allows you to view spectra from selected regions within your map. 
 
 \screenshot{plot-subset}{Plotting window showing data for a subset of the original data set}
 
-\tocchapter{Filters}
 
-\tocsection{Using Filters}
 
-Filters can be accessed by clicking on the \command{Data Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into types. Each type heading can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
+\cleardoublepage
+\appendix
 
-Once you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed. Once you are satisfied with the filter settings, you may close the window.
-
-To view a full listing of built-in filters and their descriptions, see the appendix.
-
-\screenshot{brukner-filter}{The Brukner background filter's settings window}
-
-The use of filters will obviously alter the spectrum. If you wish to see the original spectrum in addition to the filtered data, select \command{\button{view-menu}{View} \menu\ Raw Data Outline}.
-
-\screenshot{raw-outline}{Background-subtracted data with the original data drawn in red.}
-
-\tocsection{Filtering Example with Normalizer Filter}
-
-When detector deadtime is very high, the detector cannot keep up with the incoming x-rays. For example, low energy x-rays such as those coming from \element{Ar} may not get counted and mapping the distribution of \element{Ar} will reveal areas of next to no intensity. 
-
-The \command{Normalizer Filer} scales each spectrum so that the intensity at a given channel is always the same. This filter can be used in this case to correct the spectra. By normalizing against a channel from within the \element{Ar} peak, we can mitigate the distortion caused by detector saturation.
-
-Go to the \command{Filters} tab and add the \command{Normalizer Filter} found under the \command{Advanced} filter types. Click on the \button{misc-preferences}{Settings} button to bring up the settings window for the filter. Place the cursor on the \element{Ar} peak in the spectrum and read the channel number and value (counts) from the information found below the spectrum window, and enter them into the appropriate settings fields. Make sure you are viewing the \command{Mean Average} spectrum to get the average value (counts) for the \element{Ar}. Close the edit window.
-
-\clearpage
-\screenshot{normalize-uncorrected-ar}{Uncorrected \element{Ar} with weak signal where \element{Ti} is strongest} \screenshot{normalize-uncorrected-ti}{Uncorrected \element{Ti}} \screenshot{normalize-corrected-ar}{Corrected \element{Ar}} \screenshot{normalize-corrected-ti}{Corrected \element{Ti} with greater maximum intensity}
-
-\tocchapter{Extending Peakaboo}
+\chapter{Extending Peakaboo}
 
 Peakaboo allows users who are familiar with the Java programming language to extend its functionality by creating custom filters and adding support for new file formats. Users who are interested in developing extensions for Peakaboo will need to make sure they have the Java Development Kit (JDK) installed on their computer (available from \href{http://java.com}{Java.com}). A dedicated code editor, such as Eclipse, is also recommended. 
 
@@ -500,9 +509,6 @@ performace optimizations. Other implementations of \class{ScanData} should study
 
 Each data source reads from different kinds of files, which contain different kinds of information about the scan. Further information can be exposed through the \class{DataSize}, \class{PhysicalSize}, and \class{Metadata} 
 interfaces.
-
-\cleardoublepage
-\appendix
 
 
 \chapter{Filter Descriptions}
