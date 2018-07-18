@@ -7,7 +7,7 @@ import java.util.logging.Level;
 
 public class Version {
 
-	public static String buildDate = "2018-02-06";
+	public static String buildDate = "";
 	
 	private static final Properties prop;
 	static {
@@ -22,7 +22,7 @@ public class Version {
 	}
 	
 	
-	public final static boolean release = false;
+	public final static boolean release = true;
 	public final static boolean rc = false;
 	public final static boolean beta = false;
 	
