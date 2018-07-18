@@ -19,6 +19,7 @@ import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.display.map.MapDisplayMode;
 import peakaboo.display.map.MapScaleMode;
+import peakaboo.display.map.OverlayChannel;
 import peakaboo.display.map.OverlayColour;
 import scitypes.Coord;
 import scitypes.GridPerspective;
@@ -148,7 +149,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 	
 
-	public Map<OverlayColour, Spectrum> getOverlayMapData()
+	public Map<OverlayColour, OverlayChannel> getOverlayMapData()
 	{
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
@@ -171,6 +172,11 @@ public class MapFittingSettings extends EventfulType<String> {
 				.map(e -> e.second)
 				.collect(toList());
 
+		List<TransitionSeries> redTS = dataset.stream()
+				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.RED))
+				.map(e -> e.first)
+				.collect(toList());
+		
 		if (redSpectrums != null && redSpectrums.size() > 0) {
 			redSpectrum = redSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
@@ -190,6 +196,11 @@ public class MapFittingSettings extends EventfulType<String> {
 		List<Spectrum> greenSpectrums = dataset.stream()
 				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.GREEN))
 				.map(e -> e.second)
+				.collect(toList());
+		
+		List<TransitionSeries> greendTS = dataset.stream()
+				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.GREEN))
+				.map(e -> e.first)
 				.collect(toList());
 		
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
@@ -213,6 +224,11 @@ public class MapFittingSettings extends EventfulType<String> {
 				.map(e -> e.second)
 				.collect(toList());
 		
+		List<TransitionSeries> blueTS = dataset.stream()
+				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.BLUE))
+				.map(e -> e.first)
+				.collect(toList());
+		
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
 			blueSpectrum = blueSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
 			
@@ -233,6 +249,11 @@ public class MapFittingSettings extends EventfulType<String> {
 		List<Spectrum> yellowSpectrums = dataset.stream()
 				.filter(e -> this.overlayColour.get(e.first) == OverlayColour.YELLOW)
 				.map(e -> e.second)
+				.collect(toList());
+		
+		List<TransitionSeries> yellowTS = dataset.stream()
+				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.YELLOW))
+				.map(e -> e.first)
 				.collect(toList());
 		
 		if (yellowSpectrums != null && yellowSpectrums.size() > 0) {
@@ -258,12 +279,12 @@ public class MapFittingSettings extends EventfulType<String> {
 			if (yellowSpectrum != null ) SpectrumCalculations.normalize_inplace(yellowSpectrum);
 		}
 		
-		Map<OverlayColour, Spectrum> colours = new HashMap<OverlayColour, Spectrum>();
+		Map<OverlayColour, OverlayChannel> colours = new HashMap<>();
 		
-		colours.put(OverlayColour.RED, redSpectrum);
-		colours.put(OverlayColour.GREEN, greenSpectrum);
-		colours.put(OverlayColour.BLUE, blueSpectrum);
-		colours.put(OverlayColour.YELLOW, yellowSpectrum);
+		colours.put(OverlayColour.RED, new OverlayChannel(redSpectrum, redTS));
+		colours.put(OverlayColour.GREEN, new OverlayChannel(greenSpectrum, greendTS));
+		colours.put(OverlayColour.BLUE, new OverlayChannel(blueSpectrum, blueTS));
+		colours.put(OverlayColour.YELLOW, new OverlayChannel(yellowSpectrum, yellowTS));
 		
 		putValueFunctionForOverlay(uninterpolatedColours);
 		return colours;

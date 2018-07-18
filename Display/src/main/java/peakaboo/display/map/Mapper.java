@@ -10,7 +10,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.common.base.Function;
+
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.DrawingSurfaceFactory;
@@ -433,10 +437,10 @@ public class Mapper {
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
 		
-		Spectrum redSpectrum = dlata.overlayData.get(OverlayColour.RED);
-		Spectrum greenSpectrum = dlata.overlayData.get(OverlayColour.GREEN);
-		Spectrum blueSpectrum = dlata.overlayData.get(OverlayColour.BLUE);
-		Spectrum yellowSpectrum = dlata.overlayData.get(OverlayColour.YELLOW);
+		Spectrum redSpectrum = dlata.overlayData.get(OverlayColour.RED).data;
+		Spectrum greenSpectrum = dlata.overlayData.get(OverlayColour.GREEN).data;
+		Spectrum blueSpectrum = dlata.overlayData.get(OverlayColour.BLUE).data;
+		Spectrum yellowSpectrum = dlata.overlayData.get(OverlayColour.YELLOW).data;
 		
 		
 		if (redSpectrum != null ) redMax = redSpectrum.max();
@@ -449,10 +453,14 @@ public class Mapper {
 
 
 		List<Pair<Color, String>> 	colours = new ArrayList<>();
-		if (redSpectrum != null) 	colours.add(new Pair<>(OverlayColour.RED.toColor(), OverlayColour.RED.toString()));
-		if (yellowSpectrum != null) colours.add(new Pair<>(OverlayColour.YELLOW.toColor(), OverlayColour.YELLOW.toString()));
-		if (greenSpectrum != null) 	colours.add(new Pair<>(OverlayColour.GREEN.toColor(), OverlayColour.GREEN.toString()));
-		if (blueSpectrum != null) 	colours.add(new Pair<>(OverlayColour.BLUE.toColor(), OverlayColour.BLUE.toString()));
+		Function<OverlayColour, String> tsFormatter = colour -> dlata.overlayData.get(colour).elements.stream()
+				.map(TransitionSeries::toString)
+				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
+		
+		if (redSpectrum != null) 	colours.add(new Pair<>(OverlayColour.RED.toColor(), tsFormatter.apply(OverlayColour.RED)));
+		if (yellowSpectrum != null) colours.add(new Pair<>(OverlayColour.YELLOW.toColor(), tsFormatter.apply(OverlayColour.YELLOW)));
+		if (greenSpectrum != null) 	colours.add(new Pair<>(OverlayColour.GREEN.toColor(), tsFormatter.apply(OverlayColour.GREEN)));
+		if (blueSpectrum != null) 	colours.add(new Pair<>(OverlayColour.BLUE.toColor(), tsFormatter.apply(OverlayColour.BLUE)));
 		
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
