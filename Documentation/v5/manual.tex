@@ -300,9 +300,9 @@ Changing the order of fittings can reveal and correct these problems. Select a f
 \tocsection{Details of Peak Fitting}
 
 A fitting is a model composed of several ``transitions'' from one of the K, L, or M groups of electron transitions. The positions and relative intensities for each transition series were taken from several tabulated sources to build a model as accurate and as thorough as possible. Fittings take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the \href{https://github.com/tschoonj/xraylib}{Xraylib} project. For high $Z$ elements where the K series fittings are available in Xraylib, values provided by Krause 
-\cite{kraus} have been used. The intensity rations have been optimized for $\sim$20keV irradiation.
+\cite{krause} have been used. The intensity rations have been optimized for $\sim$20keV irradiation.
 
-For fitting of the spectral peaks, a Pseudo-Voigt fitting function is used by default, with a width which expands slightly as the energy level increases, according to \cite{xray-handbook p282}. Other peak modelling functions are available from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Peak Model}
+For fitting of the spectral peaks, a Pseudo-Voigt fitting function is used by default, with a width which expands slightly as the energy level increases \cite[p.~282]{xray-handbook}. Other peak modelling functions are available from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Peak Model}
 
 
 
@@ -626,8 +626,28 @@ always the same across all spectra.
 This filter allows the application of another filter to a portion of a spectrum.
 
 
-\bibliographystyle{plain}
-\bibliography{manual}
+%\bibliographystyle{plain}
+%\bibliography{manual}
+
+\begin{thebibliography}{9}
+
+\bibitem{krause}
+	M.O. Krause, C.W. Nestor, C.J. Sparks and E. Ricci,
+	\textit{X-Ray Fluorescence Cross Sections for K and L X Rays of the elements}, 
+	Oak Ridge Report ORNL-5399, 
+	1978.
+
+\bibitem{xray-handbook}
+	Rene E. Van Grieken, Andrzej A. Markowicz,
+	\textit{Handbook of X-Ray Spectrometry},
+	Marcel Dekker, Inc.,
+	Second Edition,
+	2002
+	
+
+\end{thebibliography}
+
+
 
 \end{document}
 
