@@ -31,7 +31,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 
 	@Override
 	public String name() {
-		return "Optimizing (Beta)";
+		return "Optimizing";
 	}
 	
 	@Override
