@@ -10,6 +10,9 @@ A clear and concise description of what the bug is.
 **Peakaboo Version**
 See the About screen. [e.g. 5.0.0]
 
+**Logs**
+Please attach any logs available from Menu > Logs
+
 **To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
