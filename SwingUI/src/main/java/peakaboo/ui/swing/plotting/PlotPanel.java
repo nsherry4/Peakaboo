@@ -1167,7 +1167,8 @@ public class PlotPanel extends TabbedInterfacePanel
 		AboutDialogue.Contents contents = new AboutDialogue.Contents();
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
-		contents.website = "www.sciencestudio.net";
+		contents.linkref = "https://github.com/nsherry4/Peakaboo";
+		contents.linktext = "Website";
 		contents.copyright = "2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/peakaboo/credits.txt"));
