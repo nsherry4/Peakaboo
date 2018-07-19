@@ -42,7 +42,7 @@ public class PeakabooLog {
 		new File(appDir.getPath() + "/Peakaboo.log").createNewFile();
 		////////////////////////////
 		
-		FileHandler handler = new FileHandler(filename, 128*1024*1024, 1, true);
+		FileHandler handler = new FileHandler(filename, 16*1024*1024, 1, true);
 		handler.setFormatter(new CustomFormatter(format));
 		Logger.getLogger("").addHandler(handler);
 	}
