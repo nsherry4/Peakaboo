@@ -110,6 +110,11 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	public String pluginVersion() {
 		return "1.0";
 	}
+	
+	@Override
+	public String pluginUUID() {
+		return "cf3b0cd5-ab62-4d2c-9d93-fafaf3ab6400";
+	}
 
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {

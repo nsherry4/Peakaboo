@@ -153,4 +153,9 @@ public class SubFilter extends AbstractFilter
 		return false;
 	}
 	
+	@Override
+	public String pluginUUID() {
+		return "f44086fd-7b30-4ad9-a86f-761ed6a601c8";
+	}
+	
 }

@@ -23,6 +23,11 @@ public class ExampleFilter extends AbstractFilter {
 		return "1.0";
 	}
 	
+	@Override
+	public String pluginUUID() {
+		return "4c980528-4ac3-443a-9bc7-89080049f280";
+	}
+	
 	
 	@Override
 	public void initialize()

@@ -62,6 +62,11 @@ public class ReciprocalFilter extends AbstractSimpleFilter
 	}
 	
 	@Override
+	public String pluginUUID() {
+		return "d0b9c415-4d41-4a45-bb9a-0f35bc77cd14";
+	}
+	
+	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		//check enabled property

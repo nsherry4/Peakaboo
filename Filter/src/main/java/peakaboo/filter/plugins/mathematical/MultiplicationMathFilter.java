@@ -72,4 +72,10 @@ public class MultiplicationMathFilter extends AbstractSimpleFilter
 		return true;
 	}
 
+	@Override
+	public String pluginUUID() {
+		return "014cd405-0f41-4a24-9b66-10381cdf5a8c";
+	}
+	
+	
 }

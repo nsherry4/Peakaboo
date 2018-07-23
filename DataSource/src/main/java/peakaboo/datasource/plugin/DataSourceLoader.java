@@ -18,7 +18,8 @@ public class DataSourceLoader
 {
 
 	private static boolean loaded = false; 
-	private static BoltPluginSet<DataSourcePlugin> plugins = new IBoltPluginSet<>();
+	private static BoltPluginSet<DataSourcePlugin> __plugins = new IBoltPluginSet<>();
+	private static BoltPluginLoader<JavaDataSourcePlugin> __javaLoader;
 	
 	public static void load() {
 		if (!loaded) {
@@ -32,16 +33,22 @@ public class DataSourceLoader
 	
 	public synchronized static BoltPluginSet<DataSourcePlugin> getPluginSet() {
 		load();
-		return plugins;
+		return __plugins;
 	}
 
+	private static BoltPluginLoader<JavaDataSourcePlugin> javaLoader() throws ClassInheritanceException {
+		if (__javaLoader == null) {
+			__javaLoader = new BoltPluginLoader<JavaDataSourcePlugin>(__plugins, JavaDataSourcePlugin.class);
+		}
+		return __javaLoader;
+	}
 	
 	private synchronized static void loadPlugins() throws ClassInheritanceException, ClassInstantiationException {
 		if (loaded == true) {
 			return;
 		}
 		
-		BoltPluginLoader<JavaDataSourcePlugin> javaLoader = new BoltPluginLoader<JavaDataSourcePlugin>(plugins, JavaDataSourcePlugin.class);  
+		BoltPluginLoader<JavaDataSourcePlugin> javaLoader = javaLoader();  
 		
 		//load local jars
 		javaLoader.register();
@@ -56,12 +63,12 @@ public class DataSourceLoader
 		
 		
 		
-		IBoltScriptPluginLoader<JavaScriptDataSourcePlugin> jsLoader = new IBoltScriptPluginLoader<>(plugins, JavaScriptDataSourcePlugin.class);
+		IBoltScriptPluginLoader<JavaScriptDataSourcePlugin> jsLoader = new IBoltScriptPluginLoader<>(__plugins, JavaScriptDataSourcePlugin.class);
 		jsLoader.scanDirectory(appDataDir, ".js");
 		
 		
 		//Log info for plugins
-		for (BoltPluginController<? extends DataSourcePlugin> plugin : plugins.getAll()) {
+		for (BoltPluginController<? extends DataSourcePlugin> plugin : __plugins.getAll()) {
 			PeakabooLog.get().info("Found DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
 		}
 		
@@ -72,7 +79,7 @@ public class DataSourceLoader
 	
 	public synchronized static void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
 		try {
-			BoltPluginLoader<JavaDataSourcePlugin> javaLoader = new BoltPluginLoader<JavaDataSourcePlugin>(plugins, JavaDataSourcePlugin.class);
+			BoltPluginLoader<JavaDataSourcePlugin> javaLoader = javaLoader();
 			BoltPluginController<JavaDataSourcePlugin> plugin = javaLoader.registerPlugin(clazz);
 			if (plugin != null) {
 				PeakabooLog.get().info("Registered DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());

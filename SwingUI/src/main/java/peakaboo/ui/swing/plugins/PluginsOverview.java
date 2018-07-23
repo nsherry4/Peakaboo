@@ -75,7 +75,7 @@ public class PluginsOverview extends JPanel {
 		tree.addTreeSelectionListener(tse -> {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			details.removeAll();
-			if (!node.isLeaf()) { return; }
+			if (node == null || !node.isLeaf()) { return; }
 			details.add(new PluginView((BoltPluginController<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
 		});
 		

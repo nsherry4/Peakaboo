@@ -58,6 +58,11 @@ public class IdentityFilter extends AbstractSimpleFilter
 	{
 		return false;
 	}
+	
+	@Override
+	public String pluginUUID() {
+		return "da022b2e-08e1-479c-ac3a-91ab3e1dd116";
+	}
 
 
 }

@@ -169,6 +169,11 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 		
 	}
 	
+	
+	@Override
+	public String pluginUUID() {
+		return "03e7a19d-d0bc-4508-9a2d-6a887d2e74bb";
+	}
 
 
 }

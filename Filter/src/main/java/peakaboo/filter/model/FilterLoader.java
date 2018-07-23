@@ -38,9 +38,9 @@ public class FilterLoader
 {
 
 	private static boolean loaded = false; 
-	private static BoltPluginSet<FilterPlugin> plugins = new IBoltPluginSet<>();
-	
-	
+	private static BoltPluginSet<FilterPlugin> __plugins = new IBoltPluginSet<>();
+	private static BoltPluginLoader<JavaFilterPlugin> __boltPluginLoader;
+		
 	public static void load() {
 		try {
 			if (!loaded) {
@@ -51,14 +51,22 @@ public class FilterLoader
 		}
 	}
 	
-	
-	public static BoltPluginSet<FilterPlugin> getPluginSet() {
+		
+	public synchronized static BoltPluginSet<FilterPlugin> getPluginSet() {
 		load();
-		return plugins;
+		return __plugins;
 	}
 	
+	private static BoltPluginLoader<JavaFilterPlugin> pluginLoader() throws ClassInheritanceException {
+		if (__boltPluginLoader == null) {
+			__boltPluginLoader = new BoltPluginLoader<>(__plugins, JavaFilterPlugin.class);
+		}
+		return __boltPluginLoader;
+	}
+	
+	
 	private static void initLoader() throws ClassInheritanceException, ClassInstantiationException {
-		BoltPluginLoader<JavaFilterPlugin> newPluginLoader = new BoltPluginLoader<>(plugins, JavaFilterPlugin.class);
+		BoltPluginLoader<JavaFilterPlugin> newPluginLoader = pluginLoader();
 		
 
 		//register built-in plugins
@@ -96,7 +104,7 @@ public class FilterLoader
 
 
 		
-		IBoltScriptPluginLoader<JavaScriptFilterPlugin> jsLoader = new IBoltScriptPluginLoader<>(plugins, JavaScriptFilterPlugin.class);
+		IBoltScriptPluginLoader<JavaScriptFilterPlugin> jsLoader = new IBoltScriptPluginLoader<>(__plugins, JavaScriptFilterPlugin.class);
 		jsLoader.scanDirectory(appDataDir, ".js");
 		
 		
@@ -109,8 +117,7 @@ public class FilterLoader
 	
 	public synchronized static void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
 		try {
-			BoltPluginLoader<JavaFilterPlugin> javaLoader = new BoltPluginLoader<JavaFilterPlugin>(plugins, JavaFilterPlugin.class);
-			javaLoader.registerPlugin(clazz);
+			pluginLoader().registerPlugin(clazz);
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.WARNING, "Failed to register filter plugin " + clazz.getName(), e);
 		}
