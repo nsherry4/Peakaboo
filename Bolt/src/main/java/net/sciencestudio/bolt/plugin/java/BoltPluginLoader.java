@@ -155,7 +155,6 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 	
 	public void register(File file)
 	{
-		System.out.println(file);
 		File[] files;
 		if (file.isDirectory())
 		{
@@ -183,18 +182,14 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 	
 	public void register(URL url) throws ClassInstantiationException
 	{
-		System.out.println(url);
-		System.out.println(target);
 		
 		URLClassLoader urlLoader = new URLClassLoader(new URL[]{url});
 		ServiceLoader<T> loader = ServiceLoader.load(target, urlLoader);
 		loader.reload();
-		System.out.println(Arrays.asList(urlLoader.getURLs()));
 		
 		try {
 			for (T t : loader)
 			{
-				System.out.println("    " + t.getClass());
 				registerPlugin((Class<? extends T>) t.getClass(), url);
 			}
 		} catch (ServiceConfigurationError | NoClassDefFoundError e) {
@@ -204,7 +199,6 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 	
 	public void register()
 	{
-		System.out.println("0-Arg Register");
 		if (BoltJar.isClassInJar(target))
 		{
 			register(BoltJar.getJarForClass(target).getParentFile());
