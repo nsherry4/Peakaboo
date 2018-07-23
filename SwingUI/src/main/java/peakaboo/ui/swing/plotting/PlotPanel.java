@@ -742,7 +742,12 @@ public class PlotPanel extends TabbedInterfacePanel
 				"Open Folder", null, "Opens the plugins folder to add or remove plugin files",
 				e -> actionOpenPluginFolder(),null, null));
 		
-	
+
+		plugins.add(createMenuItem(
+				"Get Plugins", null, "Opens a web page with more information on Peakaboo Plugins",
+				e -> actionGetPlugins(),null, null));
+		
+		
 		
 		mainMenu.add(plugins);
 
@@ -1167,7 +1172,8 @@ public class PlotPanel extends TabbedInterfacePanel
 		AboutDialogue.Contents contents = new AboutDialogue.Contents();
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
-		contents.website = "www.sciencestudio.net";
+		contents.linkref = "https://github.com/nsherry4/Peakaboo";
+		contents.linktext = "Website";
 		contents.copyright = "2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/peakaboo/credits.txt"));
@@ -1730,6 +1736,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		} catch (IOException e1) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
 		}
+	}
+	
+	private void actionGetPlugins() {
+		Apps.browser("https://github.com/nsherry4/PeakabooPlugins");
 	}
 	
 	

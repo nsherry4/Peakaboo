@@ -197,7 +197,7 @@ public class Peakaboo
 		
 		
 		
-		LOGGER.log(Level.INFO, "Starting " + Version.title);
+		LOGGER.log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		setAppTitle("Peakaboo 5");
