@@ -32,7 +32,7 @@ public class Version {
 	
 	public final static int versionNoMajor = 5;
 	public final static int versionNoMinor = 0;
-	public final static int versionNoPoint = 0;
+	public final static int versionNoPoint = 1;
 	
 	
 	public final static String longVersionNo =  
