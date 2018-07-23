@@ -4,17 +4,11 @@ require 'fileutils'
 #function to extract the jar file
 
 
-def doSetup(jarfile, path, resources, unzip=true)
+def doSetup(jarfile, path, resources)
 
-	if unzip
-		FileUtils.mkdir_p(path)
-		`rm -rf #{path}`
-		FileUtils.mkdir_p(path)
-		`unzip "#{jarfile}" -d "#{path}"`
-	else
-		FileUtils.mkdir_p(path)
-		`cp "#{jarfile}" "#{path}"`
-	end
+	FileUtils.mkdir_p(path)
+	`cp "#{jarfile}" "#{path}"`
+
 
 	resources.each{|res|
 		source, target = res
@@ -51,7 +45,7 @@ def deb(jarfile, version)
 	dbinpath = "./deb/#{version}/usr/bin/"
 	dconpath = "./deb/#{version}/DEBIAN/"
 	resources = [["shared/icon.png", dapppath], ["shared/logo.png", dapppath], ["linux/peakaboo", dbinpath], ["linux/control", dconpath], ["linux/Peakaboo.desktop", "./deb/#{version}/usr/share/applications/"]]
-	doSetup(jarfile, dapppath, resources, false)
+	doSetup(jarfile, dapppath, resources)
 
 	puts "Building Debian Package..."
 	`cd ./deb && ./generate.sh`
@@ -67,7 +61,7 @@ def rpm(jarfile, version)
 	apppath = "./rpm/#{version}/usr/share/Peakaboo"
 	binpath = "./rpm/#{version}/usr/bin/"
 	resources = [["shared/icon.png", apppath], ["shared/logo.png", apppath], ["linux/peakaboo", binpath], ["linux/Peakaboo.desktop", "./rpm/#{version}/usr/share/applications/"]]
-	doSetup(jarfile, apppath, resources, false)
+	doSetup(jarfile, apppath, resources)
 
 	puts "Building Red Hat Package..."
 	`cd ./rpm && ./generate.sh`
@@ -87,7 +81,7 @@ def windows(jarfile, version)
 
 	winpath= "./windows-launch4j/"
 	resources = [["windows/Logo.ico", winpath]]
-	doSetup(jarfile, winpath, resources, false)
+	doSetup(jarfile, winpath, resources)
 
 	puts "Building Windows Package..."
 	#`rm -rf ./windows/_win32/_win32/*.exe`
@@ -105,7 +99,7 @@ def macos(jarfile, version)
 	#Mac OS Package
 	macpath = "./mac/Peakaboo/Peakaboo.app/Contents/Resources/Java"
 	resources = []
-	doSetup(jarfile, macpath, resources, false)
+	doSetup(jarfile, macpath, resources)
 
 	puts "Building Mac Package..."
 	`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo-#{version}.dmg Peakaboo5`
@@ -118,9 +112,9 @@ end
 
 version = "5.0.0"
 jarfile = import()
-#deb jarfile
-#rpm jarfile
-#windows jarfile
+deb jarfile, version
+rpm jarfile, version
+windows jarfile, version
 macos jarfile, version
 
 

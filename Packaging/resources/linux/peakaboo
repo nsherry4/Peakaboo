@@ -51,7 +51,7 @@ vercomp () {
 
 
 version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
-version="11.0.0"
+#version="11.0.0"
 vercomp $version "1.9"
 
 
