@@ -5,12 +5,21 @@ import java.util.List;
 public interface BoltPluginSet<T extends BoltPlugin> {
 
 	
-	public List<BoltPluginController<? extends T>> getAll();
+	List<BoltPluginController<? extends T>> getAll();
 
-
-	public List<T> newInstances();
+	
+	BoltPluginController<? extends T> getByUUID(String uuid);
 	
 	
-	public void addPlugin(BoltPluginController<? extends T> plugin);
+	default boolean hasUUID(String uuid) {
+		return getByUUID(uuid) != null;
+	}
+	
+	
+	List<T> newInstances();
+	
+	
+	void addPlugin(BoltPluginController<? extends T> plugin);
+	
 	
 }

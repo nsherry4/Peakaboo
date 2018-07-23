@@ -105,5 +105,13 @@ public class IBoltScriptPluginController<T extends BoltScriptPlugin> implements 
 	public String toString() {
 		return getName();
 	}
+
+	/**
+	 * Script files get a pass on generating a UUID, since we want to keep things simple
+	 */
+	@Override
+	public String getUUID() {
+		return getName();
+	}
 	
 }

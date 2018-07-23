@@ -33,6 +33,11 @@ public interface BoltPluginController<T extends BoltPlugin> {
 	 * A version string for this plugin. If the plugin cannot be loaded, returns null.
 	 */
 	String getVersion();
+	
+	/**
+	 * A UUID uniquely identifying the plugin.
+	 */
+	String getUUID();
 
 	URL getSource();
 

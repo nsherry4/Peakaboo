@@ -27,5 +27,11 @@ public interface BoltPlugin {
 	 * A version string for this plugin.
 	 */
 	String pluginVersion();
+	
+	
+	/**
+	 * Static UUID uniquely identifying the plugin
+	 */
+	String pluginUUID();
 
 }

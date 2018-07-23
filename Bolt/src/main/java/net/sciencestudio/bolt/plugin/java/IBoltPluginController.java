@@ -98,6 +98,12 @@ public class IBoltPluginController<T extends BoltJavaPlugin> implements BoltPlug
 	public String toString() {
 		return getName();
 	}
+
+	@Override
+	public String getUUID() {
+		if (instance == null) return null;
+		return instance.pluginUUID();
+	}
 	
 	
 }
