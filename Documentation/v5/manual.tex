@@ -299,7 +299,7 @@ Changing the order of fittings can reveal and correct these problems. Select a f
 
 \tocsection{Details of Peak Fitting}
 
-A fitting is a model composed of several ``transitions'' from one of the K, L, or M groups of electron transitions. The positions and relative intensities for each transition series were taken from several tabulated sources to build a model as accurate and as thorough as possible. Fittings take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the \href{https://github.com/tschoonj/xraylib}{Xraylib} project. For high $Z$ elements where the K series fittings are available in Xraylib, values provided by Krause 
+A fitting is a model composed of several ``transitions'' from one of the K, L, or M groups of electronic transitions within the particular atom. The positions and relative intensities for each transition series were taken from several tabulated sources to build a model as accurate and as thorough as possible. Fittings take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the \href{https://github.com/tschoonj/xraylib}{Xraylib} \cite{xraylib} project. For high $Z$ elements where the K series fittings are available in Xraylib, values provided by Krause 
 \cite{krause} have been used. The intensity rations have been optimized for $\sim$20keV irradiation.
 
 For fitting of the spectral peaks, a Pseudo-Voigt fitting function is used by default, with a width which expands slightly as the energy level increases \cite[p.~282]{xray-handbook}. Other peak modelling functions are available from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Peak Model}
@@ -320,6 +320,20 @@ To view a full listing of built-in filters and their descriptions, see the appen
 \screenshot{brukner-filter}{The Brukner background filter's settings window with raw data outline in plot}
 
 The use of filters will obviously alter the spectrum. If you wish to see the original spectrum in addition to the filtered data, select \command{\button{view-menu}{View} \menu\ Raw Data Outline}.
+
+
+\tocsection{Noise Removal}
+
+Noise reduction is essential since the spectra are taken at very brief intervals while the sample is scanned in the X-Ray beam. The software provides a number of mathematical filters that are used in noise reduction or in background attenuation or removal. Noise filters include moving average, fast Fourier transform (FFT) low pass, Savitsky-Golay, and others.
+
+Where applicable, noise removal filter parameters can be adjusted to suit the data in question. Best noise reduction with minimum change in peak shape is often achieved using a Savitsky-Golay filter.
+
+
+\tocsection{Background Removal}
+
+Background removal or reduction is particularly important for spectra acquired using white radiation. Peakaboo has a number of background removal filters of varying sophistication and performance. Varying levels of background can be removed, but care should be taken not to remove genuine signal along with the background, as this may degrade the peak fitting result.
+
+
 
 \tocsection{Filtering Example with Normalizer Filter}
 
@@ -631,6 +645,9 @@ This filter allows the application of another filter to a portion of a spectrum.
 
 \begin{thebibliography}{9}
 
+\bibitem{xraylib}
+	https://github.com/tschoonj/xraylib
+
 \bibitem{krause}
 	M.O. Krause, C.W. Nestor, C.J. Sparks and E. Ricci,
 	\textit{X-Ray Fluorescence Cross Sections for K and L X Rays of the elements}, 
@@ -643,7 +660,6 @@ This filter allows the application of another filter to a portion of a spectrum.
 	Marcel Dekker, Inc.,
 	Second Edition,
 	2002
-	
 
 \end{thebibliography}
 
