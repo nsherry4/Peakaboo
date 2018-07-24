@@ -40,6 +40,19 @@ public class FilteringController extends Eventful
 		filteredDataInvalidated();
 	}
 
+	public void moveFilter(int from, int to) {
+		//we'll be removing the item from the list, so if the 
+		//destination is greater than the source, decrement it 
+		//to make up the difference
+		if (to > from) { to--; }
+		
+		Filter filter = filteringModel.filters.get(from);
+		filteringModel.filters.remove(from);
+		filteringModel.filters.add(filter, to);
+		plot.history().setUndoPoint("Move Filter");
+		filteredDataInvalidated();
+	}
+	
 	public void removeFilter(int index)
 	{
 		filteringModel.filters.remove(index);

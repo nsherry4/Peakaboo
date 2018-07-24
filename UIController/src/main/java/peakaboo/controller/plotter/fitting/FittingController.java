@@ -53,7 +53,23 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Add Fitting");
 		fittingDataInvalidated();
 	}
-
+	
+	
+	public void moveTransitionSeries(int from, int to) {
+		//we'll be removing the item from the list, so if the 
+		//destination is greater than the source, decrement it 
+		//to make up the difference
+		if (to > from) { to--; }
+		
+		TransitionSeries ts = fittingModel.selections.getFittedTransitionSeries().get(from);
+		fittingModel.selections.remove(ts);
+		fittingModel.selections.insertTransitionSeries(to, ts);
+		
+		setUndoPoint("Move Fitting");
+		fittingDataInvalidated();
+		
+	}
+	
 	public void addAllTransitionSeries(List<TransitionSeries> tss)
 	{
 		for (TransitionSeries ts : tss)

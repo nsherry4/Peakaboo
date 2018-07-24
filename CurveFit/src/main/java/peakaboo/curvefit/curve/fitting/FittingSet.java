@@ -71,6 +71,15 @@ public class FittingSet
 		invalidateCurves();
 
 	}
+	
+	public synchronized void insertTransitionSeries(int index, TransitionSeries ts)
+	{
+
+		if (fitTransitionSeries.contains(ts)) return;
+		fitTransitionSeries.add(index, ts);
+		invalidateCurves();
+
+	}
 
 	private synchronized void generateCurve(TransitionSeries ts)
 	{
