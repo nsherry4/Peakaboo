@@ -1209,8 +1209,10 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 
-	void loadFiles(List<Path> paths)
-	{
+	void loadFiles(List<Path> paths) {
+		if (paths.size() == 0) {
+			return;
+		}
 
 		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
 		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
