@@ -94,8 +94,11 @@ public class PlotController extends EventfulType<String>
 		
 	}
 	
-	public void loadSessionSettings(String yaml) {
-		SavedSession saved = SavedSession.deserialize(yaml);
+	public SavedSession readSavedSettings(String yaml) {
+		return SavedSession.deserialize(yaml);
+	}
+	
+	public void loadSessionSettings(SavedSession saved) {
 		saved.loadInto(this);
 		
 		filteringController.filteredDataInvalidated();

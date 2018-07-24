@@ -1,6 +1,7 @@
 package peakaboo.controller.plotter.data;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
@@ -41,6 +42,7 @@ public class DataController extends Eventful
 	private DataSet 			dataModel;
 	private PlotController		plot;
 	private Discards			discards;
+	private List<Path>			dataPaths;
 	
 	
 	public DataController(PlotController plotController)
@@ -48,6 +50,7 @@ public class DataController extends Eventful
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();
 		discards = new DiscardsList(plot);
+		dataPaths = new ArrayList<>();
 	}
 
 	
@@ -215,5 +218,17 @@ public class DataController extends Eventful
 		
 	}
 
+
+	public List<Path> getDataPaths() {
+		return dataPaths;
+	}
+
+
+	public void setDataPaths(List<Path> dataPaths) {
+		this.dataPaths = dataPaths;
+	}
+
+	
+	
 	
 }

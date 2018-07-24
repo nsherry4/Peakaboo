@@ -79,6 +79,7 @@ import peakaboo.common.Version;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
+import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
@@ -1097,7 +1098,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", datasetFolder, extensions, files -> {
 			if (!files.isPresent()) return;
 			datasetFolder = files.get().get(0).getParentFile();
-			loadFiles(files.get().stream().map(File::toPath).collect(Collectors.toList()));
+			loadFiles(files.get().stream().map(File::toPath).collect(Collectors.toList()), null);
 		});
 	}
 
@@ -1209,7 +1210,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 
-	void loadFiles(List<Path> paths) {
+	void loadFiles(List<Path> paths, Runnable after) {
 		if (paths.size() == 0) {
 			return;
 		}
@@ -1220,7 +1221,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		if (formats.size() > 1)
 		{
 			DataSourceSelection selection = new DataSourceSelection();
-			selection.pickDSP(this, formats, dsp -> parameterPrompt(paths, dsp));
+			selection.pickDSP(this, formats, dsp -> parameterPrompt(paths, dsp, after));
 		}
 		else if (formats.size() == 0)
 		{
@@ -1234,12 +1235,12 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		else
 		{
-			parameterPrompt(paths, formats.get(0));
+			parameterPrompt(paths, formats.get(0), after);
 		}
 		
 	}
 	
-	private void parameterPrompt(List<Path> files, DataSource dsp) {
+	private void parameterPrompt(List<Path> files, DataSource dsp, Runnable after) {
 		Optional<Group> parameters = dsp.getParameters(files);
 		//If this data source required any additional input, get it for it now
 		if (parameters.isPresent()) {
@@ -1256,7 +1257,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK, "OK", true);
 			ok.addActionListener(e -> {
 				this.popModalComponent();
-				loadFiles(files, dsp);
+				loadFiles(files, dsp, after);
 			});
 			
 			ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
@@ -1275,11 +1276,12 @@ public class PlotPanel extends TabbedInterfacePanel
 			this.pushModalComponent(paramPanel);
 			
 		} else {
-			loadFiles(files, dsp);
+			loadFiles(files, dsp, after);
 		}
 	}
 	
-	private void loadFiles(List<Path> paths, DataSource dsp)
+
+	private void loadFiles(List<Path> paths, DataSource dsp, Runnable after)
 	{
 		if (paths != null)
 		{
@@ -1316,9 +1318,11 @@ public class PlotPanel extends TabbedInterfacePanel
 
 						// set some controls based on the fact that we have just loaded a
 						// new data set
+						controller.data().setDataPaths(paths);
 						savedSessionFileName = null;
 						canvas.updateCanvasSize();
 						popModalComponent();
+						after.run();
 						
 					}			
 				});
@@ -1611,7 +1615,41 @@ public class PlotPanel extends TabbedInterfacePanel
 				return;
 			}
 			try {
-				controller.loadSessionSettings(StringInput.contents(file.get()));
+				SavedSession session = controller.readSavedSettings(StringInput.contents(file.get()));
+				
+				List<Path> oldPaths = controller.data().getDataPaths();
+				List<Path> newPaths = session.data.filesAsDataPaths();
+				
+				//If the data files in the saved session are different, offer to load the data set from the new session
+				if (newPaths.size() > 0 && !newPaths.equals(oldPaths)) {
+					new TabbedInterfaceDialog(
+							"Open Associated Data Set?", 
+							"This session is associated with another data set. Do you want to open that data set now?", 
+							JOptionPane.QUESTION_MESSAGE, 
+							JOptionPane.YES_NO_OPTION, 
+							result -> {
+								if (result == (Integer)JOptionPane.YES_OPTION) {
+									//they said yes, load the new data, and then apply the session
+									//this needs to be done this way b/c loading a new dataset wipes out
+									//things like calibration info
+									this.loadFiles(session.data.filesAsDataPaths(), () -> {
+										controller.loadSessionSettings(session);	
+										savedSessionFileName = file.get();
+									});
+
+								} else {
+									//load the settings w/o the data, then set the file paths back to the current values
+									controller.loadSessionSettings(session);
+									//they said no, reset the stored paths to the old ones
+									controller.data().setDataPaths(oldPaths);
+								}
+							}
+						).showIn(this);
+				} else {
+					//just load the session, as there is either no data associated with it, or it's the same data
+					controller.loadSessionSettings(session);
+				}
+				
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
 			}
