@@ -35,14 +35,15 @@ else
   echo "Using volume_label=Untitled" 
   echo
 fi
+
 du_output=`du -sk $dir_path 2>&1`
 dir_size=`echo $du_output | cut -f1 -d" "`
 dir_size=`expr $dir_size + 1000` 
-dd if=/dev/zero of=$dmg_name bs=1024 count=$dir_size
-mkfs.hfsplus -v "$volume_label" $dmg_name
+dd if=/dev/zero of="$dmg_name" bs=1024 count=$dir_size
+mkfs.hfsplus -v "$volume_label" "$dmg_name"
 rm -rf ./tmp
 mkdir ./tmp
-mount -o loop -t hfsplus ./$dmg_name ./tmp/
+mount -o loop -t hfsplus "./$dmg_name" ./tmp/
 cp -r $dir_path/* ./tmp
 umount ./tmp
 rm -rf ./tmp
