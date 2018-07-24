@@ -97,12 +97,12 @@ end
 
 def macos(jarfile, version)
 	#Mac OS Package
-	macpath = "./mac/Peakaboo/Peakaboo.app/Contents/Resources/Java"
-	resources = []
+	macpath = "./mac"
+	resources = [["mac/peakaboo.icns", "./mac/"]]
 	doSetup(jarfile, macpath, resources)
 
 	puts "Building Mac Package..."
-	`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo-#{version}.dmg Peakaboo5`
+	`cd ./mac && ./build.sh`
 	`cp -rf ./mac/Peakaboo-#{version}.dmg ./build/`
 end
 
