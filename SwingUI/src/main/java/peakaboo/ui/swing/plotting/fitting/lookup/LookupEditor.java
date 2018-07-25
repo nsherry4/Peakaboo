@@ -74,27 +74,26 @@ class LookupEditor extends DefaultTreeCellEditor
 		{
 
 			TransitionSeries ts = (TransitionSeries) value;
-			Element e = ts.element;
-			tswidget.setName(e.atomicNumber() + ": " + ts.element.name() + " (" + ts.element + ")");
+			tswidget.setName(ts.type.toString());
 
 			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tswidget.setForeground(cellRenderer.getTextSelectionColor());
 			//tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
-			tswidget.setBorder(new EmptyBorder(2, 2, 2, 2));
+			tswidget.setBorder(Spacing.bTiny());
 			
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tswidget;
 
 		}
-		else if (value instanceof TransitionSeriesType)
+		else if (value instanceof Element)
 		{
-			TransitionSeriesType tst = (TransitionSeriesType) value;
-
+			Element element = (Element) value;
+			tstLabel.setText(element.atomicNumber() + " " + element.toString() + " (" + element.name() + ")");
+			
 			tstLabel.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tstLabel.setForeground(cellRenderer.getTextSelectionColor());
-			tstLabel.setBorder(new EmptyBorder(4, 4, 4, 4));			
+			tstLabel.setBorder(Spacing.bSmall());			
 			
-			tstLabel.setText(tst.toString());
 			
 			return tstLabel;
 		

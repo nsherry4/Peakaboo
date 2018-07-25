@@ -3,22 +3,32 @@ package peakaboo.ui.swing.plotting.fitting.lookup;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 import peakaboo.controller.plotter.fitting.FittingController;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
-import peakaboo.ui.swing.plotting.fitting.MutableTreeModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
@@ -31,7 +41,10 @@ public class LookupPanel extends ClearPanel implements Changeable
 
 	private MutableTreeModel		utm;
 	private JTree					unfitTree;
-
+	private JTextField				search;
+	private String					query = "";
+	private List<Element>			filtered = Arrays.asList(Element.values());
+	
 	private FittingController		controller;
 
 	private SelectionListControls	selControls;
@@ -63,18 +76,71 @@ public class LookupPanel extends ClearPanel implements Changeable
 		
 		this.setLayout(new BorderLayout());
 
-		JScrollPane fitted = createLookupTable();
-		this.add(fitted, BorderLayout.CENTER);
-
+		this.add(elementListPanel(), BorderLayout.CENTER);
 		this.add(new TitlePaintedPanel("Element Lookup", false, selControls), BorderLayout.NORTH);
 
 
 	}
+	
+	private JPanel elementListPanel() {
+		
+		JPanel panel = new JPanel(new BorderLayout());
 
+		JScrollPane fitted = createLookupTable();
+		panel.add(fitted, BorderLayout.CENTER);
+		
+		search = new SearchBox();
+		JPanel searchPanel = new JPanel(new BorderLayout());
+		searchPanel.add(search, BorderLayout.CENTER);
+		searchPanel.setBorder(new EmptyBorder(0, 0, 1, 0));
+		panel.add(searchPanel, BorderLayout.NORTH);
+
+		search.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (!search.getText().equals(query)) {
+					query = search.getText().toLowerCase();
+					filter();
+					utm.fireStructureChangeEvent();
+				}
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		search.addActionListener(e -> {
+			changed();
+		});
+		
+		return panel;
+		
+	}
+	
+	private boolean match(Element e) {
+		if ((e.name().toLowerCase()).contains(query)) return true;
+		if ((e.toString().toLowerCase()).contains(query)) return true;
+		if ((e.atomicNumber()+"").toLowerCase().contains(query)) return true;
+		
+		return false;
+	}
+
+	private void filter() {
+		filtered = Arrays.asList(Element.values()).stream().filter(this::match).collect(Collectors.toList());
+	}
 
 	public void changed()
 	{
-		utm.fireChangeEvent();
+		utm.fireStructureChangeEvent();
 		//unfitTree.setSelectionRow(0);
 	}
 
@@ -106,7 +172,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 					controller.fittingProposalsInvalidated();
 
 				}
-				else if (path.getLastPathComponent() instanceof TransitionSeriesType)
+				else if (path.getLastPathComponent() instanceof Element)
 				{
 					// do nothing
 				}
@@ -127,7 +193,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 				{
 					return true;
 				}
-				else if (node instanceof TransitionSeriesType)
+				else if (node instanceof Element)
 				{
 					return false;
 				}
@@ -145,14 +211,16 @@ public class LookupPanel extends ClearPanel implements Changeable
 			{
 				if (parent instanceof String)
 				{
-					TransitionSeriesType tst = (TransitionSeriesType) child;
-					return tst.ordinal();
+					Element e = (Element) child;
+					return filtered.indexOf(e);
 				}
-				else if (parent instanceof TransitionSeriesType)
+				else if (parent instanceof Element)
 				{
 					TransitionSeries ts = (TransitionSeries) child;
-					TransitionSeriesType tst = (TransitionSeriesType) parent;
-					return controller.getUnfittedTransitionSeries(tst).indexOf(ts);
+					Element e = (Element) parent;
+					List<TransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == ts.element).collect(Collectors.toList());
+					return ofElement.indexOf(ts);
+										
 				}
 				return 0;
 			}
@@ -160,13 +228,14 @@ public class LookupPanel extends ClearPanel implements Changeable
 
 			public int getChildCount(Object parent)
 			{
-				if (parent instanceof TransitionSeriesType)
+				if (parent instanceof Element)
 				{
-					return controller.getUnfittedTransitionSeries((TransitionSeriesType) parent).size();
+					Element e = (Element) parent;
+					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == e).collect(Collectors.toList()).size();
 				}
 				else if (parent instanceof String)
 				{
-					return TransitionSeriesType.values().length - 1;
+					return filtered.size();
 				}
 				return 0;
 			}
@@ -177,14 +246,13 @@ public class LookupPanel extends ClearPanel implements Changeable
 
 				if (parent instanceof String)
 				{
-					return TransitionSeriesType.values()[index];
+					return filtered.get(index);
 				}
-				else if (parent instanceof TransitionSeriesType)
+				else if (parent instanceof Element)
 				{
 
-					TransitionSeriesType type = (TransitionSeriesType) parent;
-					List<TransitionSeries> tss = controller.getUnfittedTransitionSeries(type);
-					return tss.get(index);
+					Element e = (Element) parent;
+					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == e).collect(Collectors.toList()).get(index);
 
 				}
 				return null;
@@ -199,7 +267,15 @@ public class LookupPanel extends ClearPanel implements Changeable
 			}
 
 
-			public void fireChangeEvent()
+			public void fireNodesChangeEvent()
+			{
+				for (TreeModelListener tml : listeners)
+				{
+					tml.treeNodesChanged(new TreeModelEvent(this, new TreePath(getRoot())));
+				}
+			}
+			
+			public void fireStructureChangeEvent()
 			{
 				for (TreeModelListener tml : listeners)
 				{
