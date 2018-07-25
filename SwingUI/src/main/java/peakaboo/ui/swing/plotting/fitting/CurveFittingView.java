@@ -124,8 +124,8 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			changed();
 		} else {
 			new TabbedInterfaceDialog(
-					"No Energy Calibration", 
-					"Guided fitting cannot proceed without energy calibration.", 
+					"Missing Data Set or Energy Calibration", 
+					"Guided fitting cannot proceed without a data set and energy calibration.", 
 					JOptionPane.WARNING_MESSAGE, 
 					JOptionPane.DEFAULT_OPTION, 
 					result -> {}
@@ -138,9 +138,19 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	public void autoAdd() {
 		
-		controller.autodetectPeaks();
-		changed();
-		
+		if (plotController.data().hasDataSet() && plotController.fitting().getMaxEnergy() > 0f) {
+			controller.autodetectPeaks();
+			changed();
+		} else {
+			new TabbedInterfaceDialog(
+					"Misisng Data Set or Energy Calibration", 
+					"Automatic fitting cannot proceed without a data set and energy calibration.", 
+					JOptionPane.WARNING_MESSAGE, 
+					JOptionPane.DEFAULT_OPTION, 
+					result -> {}
+				).showIn(plotPanel);
+			
+		}
 	}
 	
 
