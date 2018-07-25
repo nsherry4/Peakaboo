@@ -133,6 +133,7 @@ import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
@@ -1014,7 +1015,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		channelLabel.setBorder(Spacing.bSmall());
 		bottomPanel.add(channelLabel, BorderLayout.CENTER);
 
-		JPanel zoomPanel = createZoomPanel();
+		JComponent zoomPanel = createZoomPanel();
 		bottomPanel.add(zoomPanel, BorderLayout.EAST);
 
 		scanSelector = new ClearPanel();
@@ -1063,12 +1064,14 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	private JPanel createZoomPanel()
+	private JComponent createZoomPanel()
 	{
 		
-		JPanel zoomPanel = new JPanel(new BorderLayout());
+		JPanel zoomPanel = new ClearPanel(new BorderLayout());
+		zoomPanel.setBorder(Spacing.bMedium());
 		
 		zoomSlider = new ZoomSlider(10, 1000, 10);
+		zoomSlider.setOpaque(false);
 		zoomSlider.setValue(100);
 		zoomSlider.addListener(new EventfulListener() {
 			
@@ -1087,7 +1090,15 @@ public class PlotPanel extends TabbedInterfacePanel
 		});
 		zoomPanel.add(lockHorizontal, BorderLayout.EAST);
 		
-		return zoomPanel;
+		JPopupMenu zoomMenu = new JPopupMenu();
+		zoomMenu.setBorder(Spacing.bNone());
+		zoomMenu.add(zoomPanel);
+		ImageButton zoomButton = new ImageButton(StockIcon.FIND, "Zoom", Layout.IMAGE, false);
+		zoomButton.addActionListener(e -> {
+			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
+		});
+		
+		return zoomButton;
 	}
 	
 
