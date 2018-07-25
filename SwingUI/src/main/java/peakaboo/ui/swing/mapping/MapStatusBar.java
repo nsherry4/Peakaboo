@@ -5,11 +5,15 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import peakaboo.controller.mapper.MappingController;
 import scitypes.Coord;
+import swidget.icons.StockIcon;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
+import swidget.widgets.ImageButton.Layout;
 
 class MapStatusBar extends JPanel {
 
@@ -37,7 +41,18 @@ class MapStatusBar extends JPanel {
 		
 		//zoom controls
 		ZoomSlider zoom = new ZoomSlider(10, 100, 1);
-		add(zoom, BorderLayout.EAST);
+		zoom.setOpaque(false);
+		zoom.setBorder(Spacing.bMedium());
+		
+		JPopupMenu zoomMenu = new JPopupMenu();
+		zoomMenu.setBorder(Spacing.bNone());
+		zoomMenu.add(zoom);
+		ImageButton zoomButton = new ImageButton(StockIcon.FIND, "Zoom", Layout.IMAGE, false);
+		zoomButton.addActionListener(e -> {
+			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
+		});
+		
+		add(zoomButton, BorderLayout.EAST);
 		zoom.addListener(() -> {
 			controller.getSettings().getView().setZoom(zoom.getValue()/10f);
 		});
