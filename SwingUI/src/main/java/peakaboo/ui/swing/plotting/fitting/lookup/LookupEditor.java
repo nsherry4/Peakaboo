@@ -9,7 +9,6 @@ import java.util.EventObject;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
-import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 

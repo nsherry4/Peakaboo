@@ -1324,7 +1324,9 @@ public class PlotPanel extends TabbedInterfacePanel
 					savedSessionFileName = null;
 					canvas.updateCanvasSize();
 					popModalComponent();
-					after.run();
+					if (after != null) {
+						after.run();
+					}
 					
 							
 				});

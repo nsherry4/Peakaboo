@@ -1,51 +1,35 @@
 package peakaboo.ui.swing.plotting.fitting.lookup;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.LinearGradientPaint;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.Painter;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.TextUI;
-import javax.swing.plaf.basic.BasicFormattedTextFieldUI;
-import javax.swing.plaf.basic.BasicTextFieldUI;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.MetalTextFieldUI;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.EditorKit;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.View;
-import javax.swing.text.Position.Bias;
 
+import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 
-public class SearchBox extends JTextField {
+public class FilterBox extends JTextField {
 
-	private ImageIcon icon = StockIcon.FIND.toImageIcon(IconSize.BUTTON);
-		
-	public SearchBox() {
+	private ImageIcon icon = IconFactory.getImageIcon("filter", IconSize.BUTTON);
+	
+	public FilterBox() {
 		super();
 		
 		
 		UIDefaults dialogTheme = new UIDefaults();
-		Painter<SearchBox> painter = new Painter<SearchBox>() {
+		Painter<FilterBox> painter = new Painter<FilterBox>() {
 
 			@Override
-			public void paint(Graphics2D g, SearchBox object, int width, int height) {
+			public void paint(Graphics2D g, FilterBox object, int width, int height) {
 				g.setColor(Color.WHITE);
 				g.fillRect(0, 0, getWidth(), getHeight());
 				
@@ -96,7 +80,7 @@ public class SearchBox extends JTextField {
 			Graphics2D g2d = (Graphics2D) g;
 			RenderingHints hints = g2d.getRenderingHints();
 			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			g2d.drawString("Search", x, textBottom);
+			g2d.drawString("Filter...", x, textBottom);
 			g2d.setRenderingHints(hints);
 			g.setFont(prev);
 			g.setColor(prevColor);

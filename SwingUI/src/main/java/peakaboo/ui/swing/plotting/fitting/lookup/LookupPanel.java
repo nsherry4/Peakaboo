@@ -3,7 +3,6 @@ package peakaboo.ui.swing.plotting.fitting.lookup;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,11 +13,9 @@ import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
@@ -26,7 +23,6 @@ import javax.swing.tree.TreePath;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.ClearPanel;
@@ -89,7 +85,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 		JScrollPane fitted = createLookupTable();
 		panel.add(fitted, BorderLayout.CENTER);
 		
-		search = new SearchBox();
+		search = new FilterBox();
 		JPanel searchPanel = new JPanel(new BorderLayout());
 		searchPanel.add(search, BorderLayout.CENTER);
 		searchPanel.setBorder(new EmptyBorder(0, 0, 1, 0));
