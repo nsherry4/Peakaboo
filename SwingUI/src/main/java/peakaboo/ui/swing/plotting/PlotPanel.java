@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -1286,48 +1287,41 @@ public class PlotPanel extends TabbedInterfacePanel
 		if (paths != null)
 		{
 			
-			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(paths, dsp);
+			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(paths, dsp, result -> {
+				javax.swing.SwingUtilities.invokeLater(() -> {
+						
+					if (result == null || result.status == ReadStatus.FAILED)
+					{
+						if (result == null) {
+							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
+						} else if (result.problem != null) {
+							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
+						} else {
+							new TabbedInterfaceDialog(
+									"Open Failed", 
+									"Peakaboo could not open this dataset.\n" + result.message, 
+									JOptionPane.ERROR_MESSAGE,
+									JOptionPane.DEFAULT_OPTION,
+									v -> {}
+								).showIn(this);
+						}
+					}
+
+					// set some controls based on the fact that we have just loaded a
+					// new data set
+					controller.data().setDataPaths(paths);
+					savedSessionFileName = null;
+					canvas.updateCanvasSize();
+					popModalComponent();
+					after.run();
+					
+							
+				});
+			});
 			
 			
 			
 			ExecutorSetView execPanel = new ExecutorSetView(reading); 
-			Mutable<Boolean> finished = new Mutable<Boolean>(false);
-			reading.addListener(() -> {
-				javax.swing.SwingUtilities.invokeLater(() -> {
-					if (reading.isAborted() || reading.getCompleted()){
-						if (finished.get()) { return; }
-						finished.set(true);
-						
-						DatasetReadResult result = reading.getResult();
-						if (result == null || result.status == ReadStatus.FAILED)
-						{
-							if (result == null) {
-								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
-							} else if (result.problem != null) {
-								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
-							} else {
-								new TabbedInterfaceDialog(
-										"Open Failed", 
-										"Peakaboo could not open this dataset.\n" + result.message, 
-										JOptionPane.ERROR_MESSAGE,
-										JOptionPane.DEFAULT_OPTION,
-										v -> {}
-									).showIn(this);
-							}
-						}
-
-						// set some controls based on the fact that we have just loaded a
-						// new data set
-						controller.data().setDataPaths(paths);
-						savedSessionFileName = null;
-						canvas.updateCanvasSize();
-						popModalComponent();
-						after.run();
-						
-					}			
-				});
-			});
-			
 			pushModalComponent(execPanel);
 			reading.startWorking();
 			
@@ -1617,14 +1611,16 @@ public class PlotPanel extends TabbedInterfacePanel
 			try {
 				SavedSession session = controller.readSavedSettings(StringInput.contents(file.get()));
 				
-				List<Path> oldPaths = controller.data().getDataPaths();
-				List<Path> newPaths = session.data.filesAsDataPaths();
+				List<Path> currentPaths = controller.data().getDataPaths();
+				List<Path> sessionPaths = session.data.filesAsDataPaths();
+				
+				boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
 				
 				//If the data files in the saved session are different, offer to load the data set from the new session
-				if (newPaths.size() > 0 && !newPaths.equals(oldPaths)) {
+				if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
 					new TabbedInterfaceDialog(
 							"Open Associated Data Set?", 
-							"This session is associated with another data set. Do you want to open that data set now?", 
+							"This session is associated with another data set.\nDo you want to open that data set now?", 
 							JOptionPane.QUESTION_MESSAGE, 
 							JOptionPane.YES_NO_OPTION, 
 							result -> {
@@ -1632,7 +1628,7 @@ public class PlotPanel extends TabbedInterfacePanel
 									//they said yes, load the new data, and then apply the session
 									//this needs to be done this way b/c loading a new dataset wipes out
 									//things like calibration info
-									this.loadFiles(session.data.filesAsDataPaths(), () -> {
+									this.loadFiles(sessionPaths, () -> {
 										controller.loadSessionSettings(session);	
 										savedSessionFileName = file.get();
 									});
@@ -1641,7 +1637,7 @@ public class PlotPanel extends TabbedInterfacePanel
 									//load the settings w/o the data, then set the file paths back to the current values
 									controller.loadSessionSettings(session);
 									//they said no, reset the stored paths to the old ones
-									controller.data().setDataPaths(oldPaths);
+									controller.data().setDataPaths(currentPaths);
 								}
 							}
 						).showIn(this);

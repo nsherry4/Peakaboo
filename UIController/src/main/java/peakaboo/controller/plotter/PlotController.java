@@ -109,7 +109,7 @@ public class PlotController extends EventfulType<String>
 		//fire an update message from the fittingcontroller with a boolean flag
 		//indicating that the change is not comming from inside the fitting controller
 		fittingController.updateListeners(true);
-		
+
 	}
 
 	/**
