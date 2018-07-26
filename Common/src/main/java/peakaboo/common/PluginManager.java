@@ -39,7 +39,7 @@ public abstract class PluginManager<P extends BoltPlugin> {
 			
 			
 			try {
-				BoltJavaPluginLoader<? extends P> javaLoader = javaLoader();
+				BoltJavaPluginLoader<? extends P> javaLoader = javaLoader(plugins);
 				
 				//load plugins from local
 				javaLoader.register();
@@ -54,7 +54,7 @@ public abstract class PluginManager<P extends BoltPlugin> {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load plugins", e);
 			}
 
-			IBoltScriptPluginLoader<? extends P> scriptLoader = scriptLoader();
+			IBoltScriptPluginLoader<? extends P> scriptLoader = scriptLoader(plugins);
 			//load script plugins from the application plugin dir(s)
 			for (File directory : directories) {
 				directory.mkdirs();
@@ -73,12 +73,29 @@ public abstract class PluginManager<P extends BoltPlugin> {
 		return plugins;
 	}
 
+	
+	public boolean jarContainsPlugins(File jar) {
+		try {
+			//Create a new pluginset and load the jar. 
+			//Any plugins in this set after loading will have come from this jar
+			BoltPluginSet<P> dummySet = new IBoltPluginSet<>();
+			BoltJavaPluginLoader<? extends P> javaLoader = javaLoader(dummySet);
+			javaLoader.register(jar);
+			
+			return (dummySet.getAll().size() > 0);
+			
+		} catch (ClassInheritanceException e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to inspect jar", e);
+			return false;
+		}
+	}
+	
 
 	protected abstract void loadCustomPlugins();
 	
-	protected abstract BoltJavaPluginLoader<? extends P> javaLoader() throws ClassInheritanceException ;
+	protected abstract BoltJavaPluginLoader<? extends P> javaLoader(BoltPluginSet<P> pluginset) throws ClassInheritanceException ;
 	
-	protected abstract IBoltScriptPluginLoader<? extends P> scriptLoader();
+	protected abstract IBoltScriptPluginLoader<? extends P> scriptLoader(BoltPluginSet<P> pluginset);
 
 	
 	

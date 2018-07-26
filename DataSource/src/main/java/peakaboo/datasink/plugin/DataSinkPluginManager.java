@@ -2,6 +2,7 @@ package peakaboo.datasink.plugin;
 
 import java.util.logging.Level;
 
+import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
@@ -24,7 +25,7 @@ public class DataSinkPluginManager extends PluginManager<DataSinkPlugin>
 	protected void loadCustomPlugins() {
 		try {
 			
-			BoltJavaPluginLoader<JavaDataSinkPlugin> javaLoader = javaLoader();
+			BoltJavaPluginLoader<JavaDataSinkPlugin> javaLoader = javaLoader(getPlugins());
 			
 			//register built-in plugins
 			javaLoader.registerPlugin(CSV.class);
@@ -38,13 +39,13 @@ public class DataSinkPluginManager extends PluginManager<DataSinkPlugin>
 	}
 
 	@Override
-	protected BoltJavaPluginLoader<JavaDataSinkPlugin> javaLoader() throws ClassInheritanceException {
-		return new BoltJavaPluginLoader<JavaDataSinkPlugin>(getPlugins(), JavaDataSinkPlugin.class);
+	protected BoltJavaPluginLoader<JavaDataSinkPlugin> javaLoader(BoltPluginSet<DataSinkPlugin> pluginset) throws ClassInheritanceException {
+		return new BoltJavaPluginLoader<JavaDataSinkPlugin>(pluginset, JavaDataSinkPlugin.class);
 	}
 
 	@Override
-	protected IBoltScriptPluginLoader<? extends DataSinkPlugin> scriptLoader() {
-		return new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptDataSinkPlugin.class);
+	protected IBoltScriptPluginLoader<? extends DataSinkPlugin> scriptLoader(BoltPluginSet<DataSinkPlugin> pluginset) {
+		return new IBoltScriptPluginLoader<>(pluginset, JavaScriptDataSinkPlugin.class);
 	}
 	
 

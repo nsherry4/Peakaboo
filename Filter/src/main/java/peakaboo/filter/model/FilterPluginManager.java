@@ -3,6 +3,7 @@ package peakaboo.filter.model;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
@@ -47,7 +48,7 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 		
 		
 		try {
-			BoltJavaPluginLoader<JavaFilterPlugin> newPluginLoader = javaLoader();
+			BoltJavaPluginLoader<JavaFilterPlugin> newPluginLoader = javaLoader(getPlugins());
 			
 
 			//register built-in plugins
@@ -83,7 +84,7 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 	
 	public synchronized void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
 		try {
-			BoltJavaPluginLoader<JavaFilterPlugin> javaLoader = javaLoader();
+			BoltJavaPluginLoader<JavaFilterPlugin> javaLoader = javaLoader(getPlugins());
 			BoltPluginController<JavaFilterPlugin> plugin = javaLoader.registerPlugin(clazz);
 			if (plugin != null) {
 				PeakabooLog.get().info("Registered Filter Plugin " + plugin.getName() + " from " + plugin.getSource());
@@ -95,13 +96,13 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 	}
 
 	@Override
-	protected BoltJavaPluginLoader<JavaFilterPlugin> javaLoader() throws ClassInheritanceException {
-		return new BoltJavaPluginLoader<JavaFilterPlugin>(getPlugins(), JavaFilterPlugin.class);
+	protected BoltJavaPluginLoader<JavaFilterPlugin> javaLoader(BoltPluginSet<FilterPlugin> pluginset) throws ClassInheritanceException {
+		return new BoltJavaPluginLoader<JavaFilterPlugin>(pluginset, JavaFilterPlugin.class);
 	}
 
 	@Override
-	protected IBoltScriptPluginLoader<? extends FilterPlugin> scriptLoader() {
-		return new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptFilterPlugin.class);
+	protected IBoltScriptPluginLoader<? extends FilterPlugin> scriptLoader(BoltPluginSet<FilterPlugin> pluginset) {
+		return new IBoltScriptPluginLoader<>(pluginset, JavaScriptFilterPlugin.class);
 	}
 	
 	
