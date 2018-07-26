@@ -18,7 +18,7 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 
 
 
-public class BoltPluginLoader<T extends BoltJavaPlugin>
+public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 {
 
 	private BoltPluginSet<? super T>		plugins;
@@ -32,7 +32,7 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 	 * @param target
 	 * @throws ClassInheritanceException
 	 */
-	public BoltPluginLoader(BoltPluginSet<? super T> pluginset, final Class<T> target) throws ClassInheritanceException
+	public BoltJavaPluginLoader(BoltPluginSet<? super T> pluginset, final Class<T> target) throws ClassInheritanceException
 	{
 		
 		this.plugins = pluginset;
@@ -63,7 +63,7 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 		{
 			if (!test(loadedClass)) { return null; } 
 			
-			BoltPluginController<T> plugin = new IBoltPluginController<>(target, loadedClass, source);
+			BoltPluginController<T> plugin = new IBoltJavaPluginController<>(target, loadedClass, source);
 			
 			if (plugin.isEnabled()) {
 				plugins.addPlugin(plugin);
@@ -146,34 +146,20 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	public void register(File file)
 	{
 		File[] files;
-		if (file.isDirectory())
-		{
+		if (file.isDirectory())	{
 			files = file.listFiles((dir, name) -> name.toLowerCase().endsWith(".jar"));
-		}
-		else
-		{
+		} else {
 			files = new File[1];
 			files[0] = file;
 		}
 		
-		for (int i = 0; i < files.length; i++)
-		{
-			try
-			{
+		for (int i = 0; i < files.length; i++) {
+			try	{
 				register(files[i].toURI().toURL());
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				Bolt.logger().log(Level.WARNING, "Unable to load plugin at " + files[i], e);
 			}
 		}
@@ -186,10 +172,9 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 		URLClassLoader urlLoader = new URLClassLoader(new URL[]{url});
 		ServiceLoader<T> loader = ServiceLoader.load(target, urlLoader);
 		loader.reload();
-		
+			
 		try {
-			for (T t : loader)
-			{
+			for (T t : loader) {
 				registerPlugin((Class<? extends T>) t.getClass(), url);
 			}
 		} catch (ServiceConfigurationError | NoClassDefFoundError e) {
@@ -199,12 +184,9 @@ public class BoltPluginLoader<T extends BoltJavaPlugin>
 	
 	public void register()
 	{
-		if (BoltJar.isClassInJar(target))
-		{
+		if (BoltJar.isClassInJar(target)) {
 			register(BoltJar.getJarForClass(target).getParentFile());
-		}
-		else
-		{
+		} else {
 			register(new File(".").getAbsoluteFile());
 		}
 	}

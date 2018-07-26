@@ -6,14 +6,14 @@ import java.util.logging.Level;
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 
-public class IBoltPluginController<T extends BoltJavaPlugin> implements BoltPluginController<T> {
+public class IBoltJavaPluginController<T extends BoltJavaPlugin> implements BoltPluginController<T> {
 
 	private Class<T> pluginClass;
 	private Class<? extends T> implClass;
 	private URL source;
 	private T instance;
 	
-	public IBoltPluginController(Class<T> pluginClass, Class<? extends T> implClass, URL source) {
+	public IBoltJavaPluginController(Class<T> pluginClass, Class<? extends T> implClass, URL source) {
 		this.pluginClass = pluginClass;
 		this.implClass = implClass;
 		this.source = source;
