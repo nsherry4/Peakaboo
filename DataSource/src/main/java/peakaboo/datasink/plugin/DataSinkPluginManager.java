@@ -1,9 +1,7 @@
 package peakaboo.datasink.plugin;
 
-import java.io.File;
 import java.util.logging.Level;
 
-import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
@@ -18,34 +16,35 @@ public class DataSinkPluginManager extends PluginManager<DataSinkPlugin>
 
 	public static DataSinkPluginManager SYSTEM = new DataSinkPluginManager();
 	
+	public DataSinkPluginManager() {
+		super(Configuration.appDir("Plugins/DataSink"));
+	}
 
 	@Override
-	protected void loadPlugins() {
+	protected void loadCustomPlugins() {
 		try {
 			
-			BoltJavaPluginLoader<JavaDataSinkPlugin> javaLoader = new BoltJavaPluginLoader<JavaDataSinkPlugin>(getPlugins(), JavaDataSinkPlugin.class);  
+			BoltJavaPluginLoader<JavaDataSinkPlugin> javaLoader = javaLoader();
 			
-			//load local jars
-			javaLoader.register();
-			
-			//load jars in the app data directory
-			File appDataDir = Configuration.appDir("Plugins/DataSink");
-			appDataDir.mkdirs();
-			javaLoader.register(appDataDir);
-				
 			//register built-in plugins
 			javaLoader.registerPlugin(CSV.class);
-			
-			
-			//Load plugins
-			IBoltScriptPluginLoader<JavaScriptDataSinkPlugin> jsLoader = new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptDataSinkPlugin.class);
-			jsLoader.scanDirectory(appDataDir, ".js");
+
 			
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load Data Sink plugins", e);
 		}  
 		
 
+	}
+
+	@Override
+	protected BoltJavaPluginLoader<JavaDataSinkPlugin> javaLoader() throws ClassInheritanceException {
+		return new BoltJavaPluginLoader<JavaDataSinkPlugin>(getPlugins(), JavaDataSinkPlugin.class);
+	}
+
+	@Override
+	protected IBoltScriptPluginLoader<? extends DataSinkPlugin> scriptLoader() {
+		return new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptDataSinkPlugin.class);
 	}
 	
 

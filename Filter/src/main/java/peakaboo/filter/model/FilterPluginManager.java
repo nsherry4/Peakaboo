@@ -1,6 +1,5 @@
 package peakaboo.filter.model;
 
-import java.io.File;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
@@ -39,12 +38,16 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 
 	public static FilterPluginManager SYSTEM = new FilterPluginManager();
 	
+	public FilterPluginManager() {
+		super(Configuration.appDir("Plugins/Filter"));
+	}
+	
 	@Override
-	protected void loadPlugins() {
+	protected void loadCustomPlugins() {
 		
 		
 		try {
-			BoltJavaPluginLoader<JavaFilterPlugin> newPluginLoader = new BoltJavaPluginLoader<JavaFilterPlugin>(getPlugins(), JavaFilterPlugin.class);
+			BoltJavaPluginLoader<JavaFilterPlugin> newPluginLoader = javaLoader();
 			
 
 			//register built-in plugins
@@ -69,21 +72,7 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 			newPluginLoader.registerPlugin(SpringNoiseFilter.class);
 			newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
 			newPluginLoader.registerPlugin(LowStatisticsNoiseFilter.class);
-			
-			
-			
-			//load plugins from local
-			newPluginLoader.register();
-			
-			//load plugins from the application data directory
-			File appDataDir = Configuration.appDir("Plugins/Filter");
-			appDataDir.mkdirs();
-			newPluginLoader.register(appDataDir);
 
-
-			
-			IBoltScriptPluginLoader<JavaScriptFilterPlugin> jsLoader = new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptFilterPlugin.class);
-			jsLoader.scanDirectory(appDataDir, ".js");
 			
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load Filter plugins", e);
@@ -94,7 +83,7 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 	
 	public synchronized void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
 		try {
-			BoltJavaPluginLoader<JavaFilterPlugin> javaLoader = new BoltJavaPluginLoader<JavaFilterPlugin>(super.getPlugins(), JavaFilterPlugin.class);
+			BoltJavaPluginLoader<JavaFilterPlugin> javaLoader = javaLoader();
 			BoltPluginController<JavaFilterPlugin> plugin = javaLoader.registerPlugin(clazz);
 			if (plugin != null) {
 				PeakabooLog.get().info("Registered Filter Plugin " + plugin.getName() + " from " + plugin.getSource());
@@ -103,6 +92,16 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.WARNING, "Error registering filter plugin " + clazz.getName(), e);
 		}
+	}
+
+	@Override
+	protected BoltJavaPluginLoader<JavaFilterPlugin> javaLoader() throws ClassInheritanceException {
+		return new BoltJavaPluginLoader<JavaFilterPlugin>(getPlugins(), JavaFilterPlugin.class);
+	}
+
+	@Override
+	protected IBoltScriptPluginLoader<? extends FilterPlugin> scriptLoader() {
+		return new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptFilterPlugin.class);
 	}
 	
 	

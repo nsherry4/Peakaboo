@@ -1,6 +1,5 @@
 package peakaboo.datasource.plugin;
 
-import java.io.File;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
@@ -18,29 +17,21 @@ public class DataSourcePluginManager extends PluginManager<DataSourcePlugin>
 
 	public static DataSourcePluginManager SYSTEM = new DataSourcePluginManager();
 	
-	protected synchronized void loadPlugins() {
+	public DataSourcePluginManager() {
+		super(Configuration.appDir("Plugins/DataSource"));
+	}
+	
+	protected synchronized void loadCustomPlugins() {
 
 		
-		BoltJavaPluginLoader<JavaDataSourcePlugin> javaLoader;
+		;
 		try {
 						
-			javaLoader = new BoltJavaPluginLoader<JavaDataSourcePlugin>(getPlugins(), JavaDataSourcePlugin.class);
+			BoltJavaPluginLoader<JavaDataSourcePlugin> javaLoader = javaLoader();
 					
-			//load local jars
-			javaLoader.register();
-			
-			//load jars in the app data directory
-			File appDataDir = Configuration.appDir("Plugins/DataSource");
-			appDataDir.mkdirs();
-			javaLoader.register(appDataDir);
-
 			//register built-in plugins
 			javaLoader.registerPlugin(PlainText.class);
-			
-			//Loads JS plugins
-			IBoltScriptPluginLoader<JavaScriptDataSourcePlugin> jsLoader = new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptDataSourcePlugin.class);
-			jsLoader.scanDirectory(appDataDir, ".js");
-					
+
 			//Log info for plugins
 			for (BoltPluginController<? extends DataSourcePlugin> plugin : getPlugins().getAll()) {
 				PeakabooLog.get().info("Found DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
@@ -66,6 +57,16 @@ public class DataSourcePluginManager extends PluginManager<DataSourcePlugin>
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.WARNING, "Error registering data source plugin " + clazz.getName(), e);
 		}
+	}
+
+	@Override
+	protected BoltJavaPluginLoader<JavaDataSourcePlugin> javaLoader() throws ClassInheritanceException {
+		return new BoltJavaPluginLoader<JavaDataSourcePlugin>(getPlugins(), JavaDataSourcePlugin.class);
+	}
+
+	@Override
+	protected IBoltScriptPluginLoader<? extends DataSourcePlugin> scriptLoader() {
+		return new IBoltScriptPluginLoader<>(getPlugins(), JavaScriptDataSourcePlugin.class);
 	}
 	
 
