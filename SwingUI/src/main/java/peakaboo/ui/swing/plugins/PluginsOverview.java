@@ -29,6 +29,7 @@ import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
+import peakaboo.ui.swing.plotting.FileDrop;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
@@ -54,27 +55,9 @@ public class PluginsOverview extends JPanel {
 				
 		JButton close = HeaderBox.button("Close", () -> parent.popModalComponent());
 		
-		JButton reload = HeaderBox.button(StockIcon.ACTION_REFRESH, "Reload Plugins", () -> {
-			DataSourcePluginManager.SYSTEM.reload();
-			DataSinkPluginManager.SYSTEM.reload();
-			FilterPluginManager.SYSTEM.reload();
-			tree.setModel(buildTreeModel());
-		});
-		JButton browse = HeaderBox.button(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", () -> {
-			File appDataDir = Configuration.appDir("Plugins");
-			appDataDir.mkdirs();
-			Desktop desktop = Desktop.getDesktop();
-			try {
-				desktop.open(appDataDir);
-			} catch (IOException e1) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
-			}
-			System.out.println(reload.getSize());
-			System.out.println(close.getSize());
-		});
-		JButton download = HeaderBox.button(StockIcon.GO_DOWN, "Get More Plugins", () -> {
-			Apps.browser("https://github.com/nsherry4/PeakabooPlugins");	
-		});
+		JButton reload = HeaderBox.button(StockIcon.ACTION_REFRESH, "Reload Plugins", this::reload);
+		JButton browse = HeaderBox.button(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", this::browse);
+		JButton download = HeaderBox.button(StockIcon.GO_DOWN, "Get More Plugins", this::download);
 		
 		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
 		left.setOpaque(false);
@@ -85,10 +68,42 @@ public class PluginsOverview extends JPanel {
 		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(left, "Manage Plugins", close), body);
 		
 		this.add(main, BorderLayout.CENTER);
+		
+		new FileDrop(this, files -> {
+			for (File file : files) {
+				addPlugin(file);
+			}
+		});
 
 		
 	}
+		
 	
+	private void addPlugin(File jar) {
+		System.out.println(jar);
+	}
+	
+	private void reload() {
+		DataSourcePluginManager.SYSTEM.reload();
+		DataSinkPluginManager.SYSTEM.reload();
+		FilterPluginManager.SYSTEM.reload();
+		tree.setModel(buildTreeModel());
+	}
+	
+	private void browse() {
+		File appDataDir = Configuration.appDir("Plugins");
+		appDataDir.mkdirs();
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			desktop.open(appDataDir);
+		} catch (IOException e1) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
+		}
+	}
+	
+	private void download() {
+		Apps.browser("https://github.com/nsherry4/PeakabooPlugins");
+	}
 	
 	private TreeModel buildTreeModel() {
 		
