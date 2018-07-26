@@ -54,7 +54,7 @@ public class PluginsOverview extends JPanel {
 		body.add(details, BorderLayout.CENTER);
 				
 		JButton close = HeaderBox.button("Close", () -> parent.popModalComponent());
-		
+				
 		JButton reload = HeaderBox.button(StockIcon.ACTION_REFRESH, "Reload Plugins", this::reload);
 		JButton browse = HeaderBox.button(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", this::browse);
 		JButton download = HeaderBox.button(StockIcon.GO_DOWN, "Get More Plugins", this::download);
@@ -80,7 +80,16 @@ public class PluginsOverview extends JPanel {
 		
 	
 	private void addPlugin(File jar) {
-		System.out.println(jar);
+		
+		boolean added = false;
+		
+		added |= DataSourcePluginManager.SYSTEM.importJar(jar);
+		added |= DataSinkPluginManager.SYSTEM.importJar(jar);
+		added |= FilterPluginManager.SYSTEM.importJar(jar);
+		
+		if (added) {
+			this.reload();
+		}
 	}
 	
 	private void reload() {

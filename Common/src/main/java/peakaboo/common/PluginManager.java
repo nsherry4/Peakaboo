@@ -1,6 +1,8 @@
 package peakaboo.common;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
@@ -17,10 +19,10 @@ public abstract class PluginManager<P extends BoltPlugin> {
 	private boolean loaded = false;
 	private BoltPluginSet<P> plugins = new IBoltPluginSet<>();
 
-	private File[] directories = new File[0];
+	private File directory = null;
 	
-	public PluginManager(File... directories) {
-		this.directories = directories;
+	public PluginManager(File directories) {
+		this.directory = directories;
 	}
 	
 	public synchronized final void reload() {
@@ -45,7 +47,7 @@ public abstract class PluginManager<P extends BoltPlugin> {
 				javaLoader.register();
 				
 				//load plugins from the application plugin dir(s)
-				for (File directory : directories) {
+				if (directory != null) {
 					directory.mkdirs();
 					javaLoader.register(directory);	
 				}
@@ -56,7 +58,7 @@ public abstract class PluginManager<P extends BoltPlugin> {
 
 			IBoltScriptPluginLoader<? extends P> scriptLoader = scriptLoader(plugins);
 			//load script plugins from the application plugin dir(s)
-			for (File directory : directories) {
+			if (directory != null) {
 				directory.mkdirs();
 				scriptLoader.scanDirectory(directory, ".js");
 			}
@@ -74,6 +76,10 @@ public abstract class PluginManager<P extends BoltPlugin> {
 	}
 
 	
+	/**
+	 * Does the provided jar contain plugins which can be loaded by this {@link PluginManager}
+	 * @param jar the jar file to inspect
+	 */
 	public boolean jarContainsPlugins(File jar) {
 		try {
 			//Create a new pluginset and load the jar. 
@@ -89,6 +95,38 @@ public abstract class PluginManager<P extends BoltPlugin> {
 			return false;
 		}
 	}
+	
+	
+	/**
+	 * Imports the given jar file to the directory that plugins are stored. 
+	 * This will not perform a refresh of the plugins, that must be done separately.
+	 * If the jar does not contain any valid plugins, or if a plugin with the same 
+	 * filename already exists, the import will fail.
+	 * @param jar the Jar file to import
+	 * @return true if the jar was imported, false otherwise
+	 */
+	public boolean importJar(File jar) {
+		if (!jarContainsPlugins(jar)) {
+			PeakabooLog.get().log(Level.INFO, "Importing " + jar.getAbsolutePath() + " failed, it does not contain any plugins");
+			return false;
+		}
+		
+		File newFilename = new File(directory.getAbsolutePath() + File.separator + jar.getName());
+		if (newFilename.exists()) {
+			PeakabooLog.get().log(Level.INFO, "Importing " + jar.getAbsolutePath() + " failed, file already exists");
+			return false;
+		}
+		
+		try {
+			Files.copy(jar.toPath(), newFilename.toPath());
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.WARNING, "Importing " + jar.getAbsolutePath() + " failed", e);
+		}
+		
+		return true;
+				
+	}
+	
 	
 
 	protected abstract void loadCustomPlugins();
