@@ -12,6 +12,9 @@ public interface BoltPluginController<T extends BoltPlugin> {
 
 	Class<? extends T> getImplementationClass();
 
+	/**
+	 * Gets the base class that all plugins of this type must implement or extend
+	 */
 	Class<T> getPluginClass();
 
 	T create();
