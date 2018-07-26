@@ -133,9 +133,14 @@ public class PluginsOverview extends JPanel {
 		tree.addTreeSelectionListener(tse -> {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			details.removeAll();
-			if (node == null || !node.isLeaf()) { return; }
-			details.add(new PluginView((BoltPluginController<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
+			if (node == null || !node.isLeaf()) { 
+				details.add(new JPanel(), BorderLayout.CENTER);
+			} else {
+				details.add(new PluginView((BoltPluginController<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
+			}
+			details.revalidate();
 		});
+		
 		
 		JScrollPane scroller = new JScrollPane(tree);
 		scroller.setPreferredSize(new Dimension(200, 300));
