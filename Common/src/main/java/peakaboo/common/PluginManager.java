@@ -76,6 +76,22 @@ public abstract class PluginManager<P extends BoltPlugin> {
 	}
 
 	
+	public BoltPluginSet<P> pluginsInJar(File jar) {
+		try {
+			//Create a new pluginset and load the jar. 
+			//Any plugins in this set after loading will have come from this jar
+			BoltPluginSet<P> dummySet = new IBoltPluginSet<>();
+			BoltJavaPluginLoader<? extends P> javaLoader = javaLoader(dummySet);
+			javaLoader.register(jar);
+			
+			return dummySet;
+			
+		} catch (ClassInheritanceException e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to inspect jar", e);
+			return new IBoltPluginSet<>();
+		}
+	}
+	
 	/**
 	 * Does the provided jar contain plugins which can be loaded by this {@link PluginManager}
 	 * @param jar the jar file to inspect
@@ -116,21 +132,17 @@ public abstract class PluginManager<P extends BoltPlugin> {
 	}
 	
 	
-	public BoltPluginSet<P> pluginsInJar(File jar) {
+	public boolean removeJar(File jar) {
 		try {
-			//Create a new pluginset and load the jar. 
-			//Any plugins in this set after loading will have come from this jar
-			BoltPluginSet<P> dummySet = new IBoltPluginSet<>();
-			BoltJavaPluginLoader<? extends P> javaLoader = javaLoader(dummySet);
-			javaLoader.register(jar);
-			
-			return dummySet;
-			
-		} catch (ClassInheritanceException e) {
-			PeakabooLog.get().log(Level.WARNING, "Failed to inspect jar", e);
-			return new IBoltPluginSet<>();
+			Files.delete(jar.toPath());
+			return true;
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to delete plugin jar", e);
+			return false;
 		}
 	}
+	
+
 	
 	
 
@@ -139,6 +151,8 @@ public abstract class PluginManager<P extends BoltPlugin> {
 	protected abstract BoltJavaPluginLoader<? extends P> javaLoader(BoltPluginSet<P> pluginset) throws ClassInheritanceException ;
 	
 	protected abstract IBoltScriptPluginLoader<? extends P> scriptLoader(BoltPluginSet<P> pluginset);
+
+
 
 	
 	
