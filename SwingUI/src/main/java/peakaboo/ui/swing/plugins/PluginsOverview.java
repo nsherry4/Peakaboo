@@ -272,9 +272,11 @@ public class PluginsOverview extends JPanel {
 
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
+		renderer.setBorder(Spacing.bSmall());
 		tree.setCellRenderer(renderer);
 		
 		tree.setRootVisible(false);
+		
 		
 		tree.addTreeSelectionListener(tse -> {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
