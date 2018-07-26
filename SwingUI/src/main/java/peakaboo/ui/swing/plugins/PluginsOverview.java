@@ -19,6 +19,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
 import commonenvironment.Apps;
+import commonenvironment.Env;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
@@ -30,9 +31,12 @@ import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.ui.swing.plotting.FileDrop;
+import swidget.dialogues.fileio.SimpleFileExtension;
+import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.Spacing;
@@ -42,10 +46,12 @@ public class PluginsOverview extends JPanel {
 
 	JPanel details;
 	JTree tree;
+	TabbedInterfacePanel parent;
 	
 	public PluginsOverview(TabbedInterfacePanel parent) {
 		super(new BorderLayout());
 		
+		this.parent = parent;
 		
 		JPanel body = new JPanel(new BorderLayout());
 		setPreferredSize(new Dimension(800, 350));
@@ -54,14 +60,20 @@ public class PluginsOverview extends JPanel {
 		body.add(details, BorderLayout.CENTER);
 				
 		JButton close = HeaderBox.button("Close", () -> parent.popModalComponent());
-				
+		
+		JButton add = HeaderBox.button(StockIcon.EDIT_ADD, "Import Plugins", this::add);
+		JButton remove = HeaderBox.button(StockIcon.EDIT_REMOVE, "Remove Plugins", this::remove);
+		
 		JButton reload = HeaderBox.button(StockIcon.ACTION_REFRESH, "Reload Plugins", this::reload);
 		JButton browse = HeaderBox.button(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", this::browse);
 		JButton download = HeaderBox.button(StockIcon.GO_DOWN, "Get More Plugins", this::download);
 		
 		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
 		left.setOpaque(false);
+		left.addLeft(add);
+		left.addLeft(remove);
 		left.addLeft(reload);
+		left.addLeft(new ClearPanel()); //spacing
 		left.addLeft(browse);
 		left.addLeft(download);
 		
@@ -77,7 +89,21 @@ public class PluginsOverview extends JPanel {
 
 		
 	}
-		
+	
+	private void add() {
+		SwidgetFilePanels.openFile(parent, "Import Plugins", Env.homeDirectory(), new SimpleFileExtension("Peakaboo Plugin", "jar"), result -> {
+			if (!result.isPresent()) {
+				return;
+			}
+			
+			addPlugin(result.get());
+			
+		});
+	}
+	
+	private void remove() {
+		//TODO
+	}
 	
 	private void addPlugin(File jar) {
 		

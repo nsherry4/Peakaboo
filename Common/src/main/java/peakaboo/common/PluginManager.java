@@ -81,19 +81,7 @@ public abstract class PluginManager<P extends BoltPlugin> {
 	 * @param jar the jar file to inspect
 	 */
 	public boolean jarContainsPlugins(File jar) {
-		try {
-			//Create a new pluginset and load the jar. 
-			//Any plugins in this set after loading will have come from this jar
-			BoltPluginSet<P> dummySet = new IBoltPluginSet<>();
-			BoltJavaPluginLoader<? extends P> javaLoader = javaLoader(dummySet);
-			javaLoader.register(jar);
-			
-			return (dummySet.getAll().size() > 0);
-			
-		} catch (ClassInheritanceException e) {
-			PeakabooLog.get().log(Level.WARNING, "Failed to inspect jar", e);
-			return false;
-		}
+		return (pluginsInJar(jar).getAll().size() > 0);	
 	}
 	
 	
@@ -125,6 +113,23 @@ public abstract class PluginManager<P extends BoltPlugin> {
 		
 		return true;
 				
+	}
+	
+	
+	public BoltPluginSet<P> pluginsInJar(File jar) {
+		try {
+			//Create a new pluginset and load the jar. 
+			//Any plugins in this set after loading will have come from this jar
+			BoltPluginSet<P> dummySet = new IBoltPluginSet<>();
+			BoltJavaPluginLoader<? extends P> javaLoader = javaLoader(dummySet);
+			javaLoader.register(jar);
+			
+			return dummySet;
+			
+		} catch (ClassInheritanceException e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to inspect jar", e);
+			return new IBoltPluginSet<>();
+		}
 	}
 	
 	
