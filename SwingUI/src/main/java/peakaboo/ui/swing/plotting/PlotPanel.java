@@ -86,16 +86,17 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasink.model.DataSink;
-import peakaboo.datasink.plugin.DataSinkLoader;
+import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.plugin.DataSourceLoader;
+import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.display.plot.ChannelCompositeMode;
+import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.mapping.MapperFrame;
@@ -695,7 +696,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		exportSinks = new JMenu("Raw Data");
 		
-		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkLoader.getPluginSet().getAll()) {
+		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
 			exportSinks.add(createMenuItem(
 					plugin.getName(), null, null,
 					e -> actionExportData(plugin.create()),
@@ -739,12 +740,17 @@ public class PlotPanel extends TabbedInterfacePanel
 				"Status", null, "Shows information about loaded plugins",
 				e -> actionShowPlugins(),
 				null, null
+		));
+		
+		plugins.add(createMenuItem(
+				"Reload", null, "Reloads plugins",
+				e -> actionReloadPlugins(),
+				null, null
 		));	
 		
 		plugins.add(createMenuItem(
 				"Open Folder", null, "Opens the plugins folder to add or remove plugin files",
 				e -> actionOpenPluginFolder(),null, null));
-		
 
 		plugins.add(createMenuItem(
 				"Get Plugins", null, "Opens a web page with more information on Peakaboo Plugins",
@@ -1209,7 +1215,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		BoltPluginSet<DataSourcePlugin> plugins = DataSourceLoader.getPluginSet();
+		BoltPluginSet<DataSourcePlugin> plugins = DataSourcePluginManager.SYSTEM.getPlugins();
 		for (DataSourcePlugin p : plugins.newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
@@ -1227,7 +1233,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			return;
 		}
 
-		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
+		List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
 		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
 		
 		if (formats.size() > 1)
@@ -1768,12 +1774,15 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 	private void actionShowPlugins() {
-			
-		JButton close = HeaderBox.button("Close", () -> popModalComponent());
-		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(null, "Plugin Status", close), new PluginsOverview());
 		
-		pushModalComponent(main);
+		pushModalComponent(new PluginsOverview(this));
 		
+	}
+	
+	private void actionReloadPlugins() {
+		DataSourcePluginManager.SYSTEM.reload();
+		DataSinkPluginManager.SYSTEM.reload();
+		FilterPluginManager.SYSTEM.reload();
 	}
 	
 	private void actionOpenPluginFolder() {

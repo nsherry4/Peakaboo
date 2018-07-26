@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plugins;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,27 +14,42 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
-import peakaboo.datasink.plugin.DataSinkLoader;
+import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.DataSinkPlugin;
-import peakaboo.datasource.plugin.DataSourceLoader;
+import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.DataSourcePlugin;
-import peakaboo.filter.model.FilterLoader;
+import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
+import swidget.widgets.ButtonBox;
+import swidget.widgets.HeaderBox;
+import swidget.widgets.HeaderBoxPanel;
+import swidget.widgets.Spacing;
+import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 
 public class PluginsOverview extends JPanel {
 
 	JPanel details;
 	
-	public PluginsOverview() {
+	public PluginsOverview(TabbedInterfacePanel parent) {
 		super(new BorderLayout());
-		setPreferredSize(new Dimension(800, 300));
 		
-		add(pluginTree(), BorderLayout.WEST);
 		
+		JPanel body = new JPanel(new BorderLayout());
+		setPreferredSize(new Dimension(800, 350));
+		body.add(pluginTree(), BorderLayout.WEST);
 		details = new JPanel(new BorderLayout());
-		add(details, BorderLayout.CENTER);
+		body.add(details, BorderLayout.CENTER);
+				
+		JButton close = HeaderBox.button("Close", () -> parent.popModalComponent());
+		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
+		
+		
+		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(null, "Plugin Status", close), body);
+		
+		this.add(main, BorderLayout.CENTER);
+
 		
 	}
 	
@@ -43,21 +59,21 @@ public class PluginsOverview extends JPanel {
 				
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode("Data Sources");
 		plugins.add(sourcesNode);
-		for (BoltPluginController<? extends DataSourcePlugin> source :  DataSourceLoader.getPluginSet().getAll()) {
+		for (BoltPluginController<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sourcesNode.add(node);
 		}
 		
 		DefaultMutableTreeNode sinksNode = new DefaultMutableTreeNode("Data Sinks");
 		plugins.add(sinksNode);
-		for (BoltPluginController<? extends DataSinkPlugin> source :  DataSinkLoader.getPluginSet().getAll()) {
+		for (BoltPluginController<? extends DataSinkPlugin> source :  DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sinksNode.add(node);
 		}
 		
 		DefaultMutableTreeNode filtersNode = new DefaultMutableTreeNode("Filters");
 		plugins.add(filtersNode);
-		for (BoltPluginController<? extends FilterPlugin> source :  FilterLoader.getPluginSet().getAll()) {
+		for (BoltPluginController<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			filtersNode.add(node);
 		}

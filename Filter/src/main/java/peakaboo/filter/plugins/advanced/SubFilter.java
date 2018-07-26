@@ -14,7 +14,7 @@ import net.sciencestudio.autodialog.model.style.SimpleStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import peakaboo.filter.model.AbstractFilter;
 import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterLoader;
+import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.model.FilterType;
 import peakaboo.filter.model.SerializedFilter;
 import scidraw.drawing.painters.PainterData;
@@ -33,7 +33,7 @@ public class SubFilter extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		List<Filter> filters = FilterLoader.getPluginSet().newInstances().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
+		List<Filter> filters = FilterPluginManager.SYSTEM.getPlugins().newInstances().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
 		filters.add(0, new IdentityFilter());
 		
 		for (Filter f : filters)

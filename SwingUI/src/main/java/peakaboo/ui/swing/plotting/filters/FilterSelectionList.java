@@ -15,7 +15,7 @@ import javax.swing.tree.TreeSelectionModel;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterLoader;
+import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.model.FilterType;
 import peakaboo.filter.plugins.FilterPlugin;
 import swidget.icons.IconSize;
@@ -98,7 +98,7 @@ class FilterSelectionList extends ClearPanel
 					@SuppressWarnings("unchecked")
 					BoltPluginController<? extends FilterPlugin> plugin = (BoltPluginController<? extends FilterPlugin>) child;
 					
-					return FilterLoader.getPluginSet().getAll().indexOf(plugin);
+					return FilterPluginManager.SYSTEM.getPlugins().getAll().indexOf(plugin);
 					
 
 				} else if (parent instanceof String) {
@@ -119,7 +119,7 @@ class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (BoltPluginController<? extends FilterPlugin> plugin : FilterLoader.getPluginSet().getAll()) {
+					for (BoltPluginController<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 					}
 					return typeCount;
@@ -141,7 +141,7 @@ class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (BoltPluginController<? extends FilterPlugin> plugin : FilterLoader.getPluginSet().getAll()) {
+					for (BoltPluginController<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 						if (typeCount == index) return plugin;
 					}
