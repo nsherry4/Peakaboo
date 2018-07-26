@@ -1,7 +1,11 @@
 package peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -11,10 +15,15 @@ import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 
+import commonenvironment.Apps;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
+import peakaboo.common.Configuration;
+import peakaboo.common.PeakabooLog;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.DataSourcePlugin;
@@ -31,6 +40,7 @@ import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 public class PluginsOverview extends JPanel {
 
 	JPanel details;
+	JTree tree;
 	
 	public PluginsOverview(TabbedInterfacePanel parent) {
 		super(new BorderLayout());
@@ -43,20 +53,47 @@ public class PluginsOverview extends JPanel {
 		body.add(details, BorderLayout.CENTER);
 				
 		JButton close = HeaderBox.button("Close", () -> parent.popModalComponent());
+		
+		JButton reload = HeaderBox.button(StockIcon.ACTION_REFRESH, "Reload Plugins", () -> {
+			DataSourcePluginManager.SYSTEM.reload();
+			DataSinkPluginManager.SYSTEM.reload();
+			FilterPluginManager.SYSTEM.reload();
+			tree.setModel(buildTreeModel());
+		});
+		JButton browse = HeaderBox.button(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", () -> {
+			File appDataDir = Configuration.appDir("Plugins");
+			appDataDir.mkdirs();
+			Desktop desktop = Desktop.getDesktop();
+			try {
+				desktop.open(appDataDir);
+			} catch (IOException e1) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
+			}
+			System.out.println(reload.getSize());
+			System.out.println(close.getSize());
+		});
+		JButton download = HeaderBox.button(StockIcon.GO_DOWN, "Get More Plugins", () -> {
+			Apps.browser("https://github.com/nsherry4/PeakabooPlugins");	
+		});
+		
 		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
+		left.setOpaque(false);
+		left.addLeft(reload);
+		left.addLeft(browse);
+		left.addLeft(download);
 		
-		
-		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(null, "Plugin Status", close), body);
+		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(left, "Manage Plugins", close), body);
 		
 		this.add(main, BorderLayout.CENTER);
 
 		
 	}
 	
+	
+	private TreeModel buildTreeModel() {
 		
-	private JComponent pluginTree() {
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
-				
+		
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode("Data Sources");
 		plugins.add(sourcesNode);
 		for (BoltPluginController<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
@@ -78,9 +115,14 @@ public class PluginsOverview extends JPanel {
 			filtersNode.add(node);
 		}
 		
-			
 		
-		JTree tree = new JTree(plugins);
+		return new DefaultTreeModel(plugins);
+		
+	}
+	
+	private JComponent pluginTree() {	
+			
+		tree = new JTree(buildTreeModel());
 
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));

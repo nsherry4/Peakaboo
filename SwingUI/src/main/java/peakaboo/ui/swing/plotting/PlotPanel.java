@@ -733,32 +733,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		mainMenu.add(export);
 		
-		
-		JMenu plugins = new JMenu("Plugins");
-
-		plugins.add(createMenuItem(
-				"Status", null, "Shows information about loaded plugins",
-				e -> actionShowPlugins(),
-				null, null
-		));
-		
-		plugins.add(createMenuItem(
-				"Reload", null, "Reloads plugins",
-				e -> actionReloadPlugins(),
-				null, null
-		));	
-		
-		plugins.add(createMenuItem(
-				"Open Folder", null, "Opens the plugins folder to add or remove plugin files",
-				e -> actionOpenPluginFolder(),null, null));
-
-		plugins.add(createMenuItem(
-				"Get Plugins", null, "Opens a web page with more information on Peakaboo Plugins",
-				e -> actionGetPlugins(),null, null));
-		
-		
-		
-		mainMenu.add(plugins);
+				
 
 		mainMenu.addSeparator();
 
@@ -780,6 +755,13 @@ public class PlotPanel extends TabbedInterfacePanel
 		mainMenu.addSeparator();
 
 		//HELP Menu
+		
+		JMenuItem plugins = createMenuItem(
+				"Plugins", null, "Shows information about Peakaboo's plugins",
+				e -> actionShowPlugins(),
+				null, null
+			);
+		mainMenu.add(plugins);
 		
 		JMenuItem logs = createMenuItem(
 				"Logs", null, null,
@@ -1774,31 +1756,10 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 	private void actionShowPlugins() {
-		
 		pushModalComponent(new PluginsOverview(this));
-		
 	}
-	
-	private void actionReloadPlugins() {
-		DataSourcePluginManager.SYSTEM.reload();
-		DataSinkPluginManager.SYSTEM.reload();
-		FilterPluginManager.SYSTEM.reload();
-	}
-	
-	private void actionOpenPluginFolder() {
-		File appDataDir = Configuration.appDir("Plugins");
-		appDataDir.mkdirs();
-		Desktop desktop = Desktop.getDesktop();
-		try {
-			desktop.open(appDataDir);
-		} catch (IOException e1) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
-		}
-	}
-	
-	private void actionGetPlugins() {
-		Apps.browser("https://github.com/nsherry4/PeakabooPlugins");
-	}
+
+
 	
 	
 	private void actionShowLogs() {
