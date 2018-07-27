@@ -64,7 +64,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 			//load script plugins from the application plugin dir(s)
 			if (directory != null) {
 				directory.mkdirs();
-				scriptLoader.scanDirectory(directory, ".js");
+				scriptLoader.scanDirectory(directory);
 			}
 			
 			
