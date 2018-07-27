@@ -19,7 +19,6 @@
     <module>Display</module>
     <module>UIController</module>
     <module>SwingUI</module>
-    <module>JavaFXUI</module>
     <module>PeakabooSDK</module>
   </modules>
   

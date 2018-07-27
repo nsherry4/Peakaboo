@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -79,21 +80,23 @@ import peakaboo.common.Version;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
+import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasink.model.DataSink;
-import peakaboo.datasink.plugin.DataSinkLoader;
+import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.plugin.DataSourceLoader;
+import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.display.plot.ChannelCompositeMode;
+import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.mapping.MapperFrame;
@@ -131,6 +134,7 @@ import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
@@ -692,7 +696,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		exportSinks = new JMenu("Raw Data");
 		
-		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkLoader.getPluginSet().getAll()) {
+		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
 			exportSinks.add(createMenuItem(
 					plugin.getName(), null, null,
 					e -> actionExportData(plugin.create()),
@@ -729,27 +733,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		mainMenu.add(export);
 		
-		
-		JMenu plugins = new JMenu("Plugins");
-
-		plugins.add(createMenuItem(
-				"Status", null, "Shows information about loaded plugins",
-				e -> actionShowPlugins(),
-				null, null
-		));	
-		
-		plugins.add(createMenuItem(
-				"Open Folder", null, "Opens the plugins folder to add or remove plugin files",
-				e -> actionOpenPluginFolder(),null, null));
-		
-
-		plugins.add(createMenuItem(
-				"Get Plugins", null, "Opens a web page with more information on Peakaboo Plugins",
-				e -> actionGetPlugins(),null, null));
-		
-		
-		
-		mainMenu.add(plugins);
+				
 
 		mainMenu.addSeparator();
 
@@ -771,6 +755,13 @@ public class PlotPanel extends TabbedInterfacePanel
 		mainMenu.addSeparator();
 
 		//HELP Menu
+		
+		JMenuItem plugins = createMenuItem(
+				"Plugins", null, "Shows information about Peakaboo's plugins",
+				e -> actionShowPlugins(),
+				null, null
+			);
+		mainMenu.add(plugins);
 		
 		JMenuItem logs = createMenuItem(
 				"Logs", null, null,
@@ -1012,7 +1003,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		channelLabel.setBorder(Spacing.bSmall());
 		bottomPanel.add(channelLabel, BorderLayout.CENTER);
 
-		JPanel zoomPanel = createZoomPanel();
+		JComponent zoomPanel = createZoomPanel();
 		bottomPanel.add(zoomPanel, BorderLayout.EAST);
 
 		scanSelector = new ClearPanel();
@@ -1061,12 +1052,14 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	private JPanel createZoomPanel()
+	private JComponent createZoomPanel()
 	{
 		
-		JPanel zoomPanel = new JPanel(new BorderLayout());
+		JPanel zoomPanel = new ClearPanel(new BorderLayout());
+		zoomPanel.setBorder(Spacing.bMedium());
 		
 		zoomSlider = new ZoomSlider(10, 1000, 10);
+		zoomSlider.setOpaque(false);
 		zoomSlider.setValue(100);
 		zoomSlider.addListener(new EventfulListener() {
 			
@@ -1085,7 +1078,15 @@ public class PlotPanel extends TabbedInterfacePanel
 		});
 		zoomPanel.add(lockHorizontal, BorderLayout.EAST);
 		
-		return zoomPanel;
+		JPopupMenu zoomMenu = new JPopupMenu();
+		zoomMenu.setBorder(Spacing.bNone());
+		zoomMenu.add(zoomPanel);
+		ImageButton zoomButton = new ImageButton(StockIcon.FIND, "Zoom", Layout.IMAGE, false);
+		zoomButton.addActionListener(e -> {
+			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
+		});
+		
+		return zoomButton;
 	}
 	
 
@@ -1097,7 +1098,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", datasetFolder, extensions, files -> {
 			if (!files.isPresent()) return;
 			datasetFolder = files.get().get(0).getParentFile();
-			loadFiles(files.get().stream().map(File::toPath).collect(Collectors.toList()));
+			loadFiles(files.get().stream().map(File::toPath).collect(Collectors.toList()), null);
 		});
 	}
 
@@ -1196,7 +1197,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		BoltPluginSet<DataSourcePlugin> plugins = DataSourceLoader.getPluginSet();
+		BoltPluginSet<DataSourcePlugin> plugins = DataSourcePluginManager.SYSTEM.getPlugins();
 		for (DataSourcePlugin p : plugins.newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
@@ -1209,16 +1210,18 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 
-	void loadFiles(List<Path> paths)
-	{
+	void loadFiles(List<Path> paths, Runnable after) {
+		if (paths.size() == 0) {
+			return;
+		}
 
-		List<DataSourcePlugin> candidates =  DataSourceLoader.getPluginSet().newInstances();
+		List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
 		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
 		
 		if (formats.size() > 1)
 		{
 			DataSourceSelection selection = new DataSourceSelection();
-			selection.pickDSP(this, formats, dsp -> parameterPrompt(paths, dsp));
+			selection.pickDSP(this, formats, dsp -> parameterPrompt(paths, dsp, after));
 		}
 		else if (formats.size() == 0)
 		{
@@ -1232,12 +1235,12 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		else
 		{
-			parameterPrompt(paths, formats.get(0));
+			parameterPrompt(paths, formats.get(0), after);
 		}
 		
 	}
 	
-	private void parameterPrompt(List<Path> files, DataSource dsp) {
+	private void parameterPrompt(List<Path> files, DataSource dsp, Runnable after) {
 		Optional<Group> parameters = dsp.getParameters(files);
 		//If this data source required any additional input, get it for it now
 		if (parameters.isPresent()) {
@@ -1254,7 +1257,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK, "OK", true);
 			ok.addActionListener(e -> {
 				this.popModalComponent();
-				loadFiles(files, dsp);
+				loadFiles(files, dsp, after);
 			});
 			
 			ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
@@ -1273,55 +1276,53 @@ public class PlotPanel extends TabbedInterfacePanel
 			this.pushModalComponent(paramPanel);
 			
 		} else {
-			loadFiles(files, dsp);
+			loadFiles(files, dsp, after);
 		}
 	}
 	
-	private void loadFiles(List<Path> paths, DataSource dsp)
+
+	private void loadFiles(List<Path> paths, DataSource dsp, Runnable after)
 	{
 		if (paths != null)
 		{
 			
-			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(paths, dsp);
+			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(paths, dsp, result -> {
+				javax.swing.SwingUtilities.invokeLater(() -> {
+						
+					if (result == null || result.status == ReadStatus.FAILED)
+					{
+						if (result == null) {
+							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
+						} else if (result.problem != null) {
+							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
+						} else {
+							new TabbedInterfaceDialog(
+									"Open Failed", 
+									"Peakaboo could not open this dataset.\n" + result.message, 
+									JOptionPane.ERROR_MESSAGE,
+									JOptionPane.DEFAULT_OPTION,
+									v -> {}
+								).showIn(this);
+						}
+					}
+
+					// set some controls based on the fact that we have just loaded a
+					// new data set
+					controller.data().setDataPaths(paths);
+					savedSessionFileName = null;
+					canvas.updateCanvasSize();
+					popModalComponent();
+					if (after != null) {
+						after.run();
+					}
+					
+							
+				});
+			});
 			
 			
 			
 			ExecutorSetView execPanel = new ExecutorSetView(reading); 
-			Mutable<Boolean> finished = new Mutable<Boolean>(false);
-			reading.addListener(() -> {
-				javax.swing.SwingUtilities.invokeLater(() -> {
-					if (reading.isAborted() || reading.getCompleted()){
-						if (finished.get()) { return; }
-						finished.set(true);
-						
-						DatasetReadResult result = reading.getResult();
-						if (result == null || result.status == ReadStatus.FAILED)
-						{
-							if (result == null) {
-								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
-							} else if (result.problem != null) {
-								PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
-							} else {
-								new TabbedInterfaceDialog(
-										"Open Failed", 
-										"Peakaboo could not open this dataset.\n" + result.message, 
-										JOptionPane.ERROR_MESSAGE,
-										JOptionPane.DEFAULT_OPTION,
-										v -> {}
-									).showIn(this);
-							}
-						}
-
-						// set some controls based on the fact that we have just loaded a
-						// new data set
-						savedSessionFileName = null;
-						canvas.updateCanvasSize();
-						popModalComponent();
-						
-					}			
-				});
-			});
-			
 			pushModalComponent(execPanel);
 			reading.startWorking();
 			
@@ -1609,7 +1610,43 @@ public class PlotPanel extends TabbedInterfacePanel
 				return;
 			}
 			try {
-				controller.loadSessionSettings(StringInput.contents(file.get()));
+				SavedSession session = controller.readSavedSettings(StringInput.contents(file.get()));
+				
+				List<Path> currentPaths = controller.data().getDataPaths();
+				List<Path> sessionPaths = session.data.filesAsDataPaths();
+				
+				boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
+				
+				//If the data files in the saved session are different, offer to load the data set from the new session
+				if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
+					new TabbedInterfaceDialog(
+							"Open Associated Data Set?", 
+							"This session is associated with another data set.\nDo you want to open that data set now?", 
+							JOptionPane.QUESTION_MESSAGE, 
+							JOptionPane.YES_NO_OPTION, 
+							result -> {
+								if (result == (Integer)JOptionPane.YES_OPTION) {
+									//they said yes, load the new data, and then apply the session
+									//this needs to be done this way b/c loading a new dataset wipes out
+									//things like calibration info
+									this.loadFiles(sessionPaths, () -> {
+										controller.loadSessionSettings(session);	
+										savedSessionFileName = file.get();
+									});
+
+								} else {
+									//load the settings w/o the data, then set the file paths back to the current values
+									controller.loadSessionSettings(session);
+									//they said no, reset the stored paths to the old ones
+									controller.data().setDataPaths(currentPaths);
+								}
+							}
+						).showIn(this);
+				} else {
+					//just load the session, as there is either no data associated with it, or it's the same data
+					controller.loadSessionSettings(session);
+				}
+				
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
 			}
@@ -1719,28 +1756,10 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 	
 	private void actionShowPlugins() {
-			
-		JButton close = HeaderBox.button("Close", () -> popModalComponent());
-		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(null, "Plugin Status", close), new PluginsOverview());
-		
-		pushModalComponent(main);
-		
+		pushModalComponent(new PluginsOverview(this));
 	}
-	
-	private void actionOpenPluginFolder() {
-		File appDataDir = Configuration.appDir("Plugins");
-		appDataDir.mkdirs();
-		Desktop desktop = Desktop.getDesktop();
-		try {
-			desktop.open(appDataDir);
-		} catch (IOException e1) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
-		}
-	}
-	
-	private void actionGetPlugins() {
-		Apps.browser("https://github.com/nsherry4/PeakabooPlugins");
-	}
+
+
 	
 	
 	private void actionShowLogs() {

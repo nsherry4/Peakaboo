@@ -9,9 +9,33 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 public interface PeakTable {
 
 	static final DelegatingPeakTable SYSTEM = new DelegatingPeakTable(
-			new CombinedPeakTable(
-					new XrayLibPeakTable(), 
-					new KrausPeakTable()
+			new FilteringPeakTable(
+				new CombinedPeakTable(
+						new XrayLibPeakTable(), 
+						new KrausePeakTable()
+				),
+				Element.H,
+				Element.He,
+				Element.Li,
+				Element.Ne,
+				Element.Kr,
+				Element.Tc,
+				Element.Xe,
+				Element.Po,
+				Element.At,
+				Element.Rn,
+				Element.Fr,
+				Element.Ra,
+				Element.Pa,
+				Element.Np,
+				Element.Pu,
+				Element.Am,
+				Element.Cm,
+				Element.Bk,
+				Element.Cf,
+				Element.Es,
+				Element.Fm,
+				Element.Nb
 			)
 	);
 	

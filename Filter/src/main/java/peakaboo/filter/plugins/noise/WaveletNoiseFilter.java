@@ -37,6 +37,12 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 	}
 
 	@Override
+	public String pluginUUID() {
+		return "0cb3b1d9-1ab6-46c0-adb7-72634c6ee595";
+	}
+	
+	
+	@Override
 	public void initialize()
 	{
 		passes = new Parameter<>("Passes to Transform", new IntegerStyle(), 1, this::validate);

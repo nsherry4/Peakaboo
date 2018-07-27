@@ -53,7 +53,23 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Add Fitting");
 		fittingDataInvalidated();
 	}
-
+	
+	
+	public void moveTransitionSeries(int from, int to) {
+		//we'll be removing the item from the list, so if the 
+		//destination is greater than the source, decrement it 
+		//to make up the difference
+		if (to > from) { to--; }
+		
+		TransitionSeries ts = fittingModel.selections.getFittedTransitionSeries().get(from);
+		fittingModel.selections.remove(ts);
+		fittingModel.selections.insertTransitionSeries(to, ts);
+		
+		setUndoPoint("Move Fitting");
+		fittingDataInvalidated();
+		
+	}
+	
 	public void addAllTransitionSeries(List<TransitionSeries> tss)
 	{
 		for (TransitionSeries ts : tss)
@@ -85,12 +101,12 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections.getFittedTransitionSeries();
 	}
 
-	public List<TransitionSeries> getUnfittedTransitionSeries(final TransitionSeriesType tst)
+	public List<TransitionSeries> getUnfittedTransitionSeries()
 	{
 		final List<TransitionSeries> fitted = getFittedTransitionSeries();
-		return PeakTable.SYSTEM.getAll().stream().filter(ts -> (!fitted.contains(ts)) && tst.equals(ts.type)).collect(toList());
+		return PeakTable.SYSTEM.getAll().stream().filter(ts -> (!fitted.contains(ts))).collect(toList());
 	}
-
+	
 	public void setTransitionSeriesVisibility(TransitionSeries e, boolean show)
 	{
 		fittingModel.selections.setTransitionSeriesVisibility(e, show);

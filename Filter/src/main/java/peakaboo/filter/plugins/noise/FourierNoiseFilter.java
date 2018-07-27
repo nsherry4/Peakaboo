@@ -44,6 +44,11 @@ public final class FourierNoiseFilter extends AbstractSimpleFilter
 	}
 
 	@Override
+	public String pluginUUID() {
+		return "68867e94-4e20-40a9-ba82-d7b1ad5a8af7";
+	}
+	
+	@Override
 	public void initialize()
 	{
 		

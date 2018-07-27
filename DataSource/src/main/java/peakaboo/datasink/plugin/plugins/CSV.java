@@ -34,6 +34,11 @@ public class CSV implements JavaDataSinkPlugin {
 	}
 
 	@Override
+	public String pluginUUID() {
+		return "b0727d75-2c00-43df-9205-e83cd699be91";
+	}
+	
+	@Override
 	public void write(DataSource source, Path destination) throws IOException {
 		Writer writer = new OutputStreamWriter(Files.newOutputStream(destination));
 		for (ReadOnlySpectrum s : source.getScanData()) {

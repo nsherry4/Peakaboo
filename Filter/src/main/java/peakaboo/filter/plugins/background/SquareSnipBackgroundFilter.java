@@ -101,4 +101,9 @@ public class SquareSnipBackgroundFilter extends AbstractBackgroundFilter {
 		return true;
 	}
 
+	@Override
+	public String pluginUUID() {
+		return "65095dca-eed3-48f1-9ce6-8480280c760a";
+	}
+	
 }

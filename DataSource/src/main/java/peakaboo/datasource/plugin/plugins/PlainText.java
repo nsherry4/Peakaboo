@@ -58,6 +58,10 @@ public class PlainText extends AbstractDataSource
 		return "1.0";
 	}
 
+	@Override
+	public String pluginUUID() {
+		return "15d6d0ba-bf38-46b2-bdf7-baddb8e8a277";
+	}
 	
 	
 	

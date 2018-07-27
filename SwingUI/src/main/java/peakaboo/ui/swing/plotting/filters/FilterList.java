@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DropMode;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -21,6 +22,7 @@ import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControls;
+import swidget.widgets.listcontrols.ReorderTransferHandler;
 
 
 class FilterList extends ClearPanel {
@@ -171,6 +173,16 @@ class FilterList extends ClearPanel {
 		
 		t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
+		t.setDragEnabled(true);
+		t.setDropMode(DropMode.INSERT_ROWS);
+		t.setTransferHandler(new ReorderTransferHandler(t) {
+			
+			@Override
+			public void move(int from, int to) {
+				controller.moveFilter(from, to);
+			}
+		});
+		
 		ToolTipManager.sharedInstance().registerComponent(t);
 		
 		return t;
@@ -180,7 +192,7 @@ class FilterList extends ClearPanel {
 
 	private JPanel createControlPanel(){
 		
-		controls = new ListControls() {
+		controls = new ListControls(null, null, false, false) {
 		
 			@Override
 			public void up()

@@ -6,13 +6,11 @@ import java.awt.Component;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
-import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import swidget.widgets.Spacing;
 
@@ -48,43 +46,35 @@ class LookupRenderer extends DefaultTreeCellRenderer
 		Component c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 		
 		
-		if (selected)
-		{
-			
-			
-			
+		if (selected) {
+
 			tswidget.setBackground(getBackgroundSelectionColor());
 			tswidget.setForeground(getTextSelectionColor());
 			tswidget.setOpaque(true);
 
-		}
-		else
-		{
+		} else {
 			tswidget.setBackground(getBackgroundNonSelectionColor());
 			tswidget.setForeground(getTextNonSelectionColor());
 			tswidget.setOpaque(false);
 		}
 
-		Element e;
 
 		if (value instanceof TransitionSeries)
 		{
 			TransitionSeries ts = (TransitionSeries) value;
-			e = ts.element;
-			tswidget.setName(e.atomicNumber() + ": " + ts.element.name() + " (" + ts.element + ")");
+			tswidget.setName(ts.type.toString());
 
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			// element.setPreferredSize(new Dimension(0, element.getPreferredSize().height));
 
-			tswidget.setBorder(new EmptyBorder(2, 2, 2, 2));
+			tswidget.setBorder(Spacing.bTiny());
 			
 			return tswidget;
 		}
-		else if (value instanceof TransitionSeriesType)
+		else if (value instanceof Element)
 		{
-			TransitionSeriesType tst = (TransitionSeriesType) value;
-			
-			tstLabel.setText(tst.toString());
+			Element element = (Element) value;
+			tstLabel.setText(element.atomicNumber() + " " + element.toString() + " (" + element.name() + ")");
 			
 			tstLabel.setBackground(getBackgroundSelectionColor());
 			
@@ -97,7 +87,7 @@ class LookupRenderer extends DefaultTreeCellRenderer
 				tstLabel.setOpaque(false);
 			}
 			
-			tstLabel.setBorder(new EmptyBorder(4, 4, 4, 4));
+			tstLabel.setBorder(Spacing.bSmall());
 						
 			return tstLabel;
 		}

@@ -79,4 +79,9 @@ public class DerivativeMathFilter extends AbstractSimpleFilter
 		
 	}
 
+	@Override
+	public String pluginUUID() {
+		return "779ca35d-0f68-4ea9-b3f4-4aef46977477";
+	}
+	
 }

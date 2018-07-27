@@ -225,4 +225,9 @@ public final class LinearTrimBackgroundFilter extends AbstractBackgroundFilter
 	}
 	
 	
+	@Override
+	public String pluginUUID() {
+		return "727a2e80-d01a-4d33-b5ad-37c9da7e3d0b";
+	}
+	
 }

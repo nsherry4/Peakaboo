@@ -191,5 +191,11 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter
 		return result;
 
 	}
+	
+	@Override
+	public String pluginUUID() {
+		return "e9bfddb8-a8f0-490c-b01f-e2202581e809";
+	}
+	
 
 }

@@ -95,6 +95,14 @@ public class JavaScriptDataSinkPlugin implements DataSinkPlugin, BoltScriptPlugi
 	}
 
 
+	
+	/*
+	 * JS plugins get a pass from UUIDs since we want to keep them as simple as possible.
+	 */
+	@Override
+	public String pluginUUID() {
+		return scriptFile.getAbsolutePath();
+	}
 
 
 }

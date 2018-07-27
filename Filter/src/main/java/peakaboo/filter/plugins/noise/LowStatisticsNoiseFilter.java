@@ -25,6 +25,11 @@ public class LowStatisticsNoiseFilter extends AbstractSimpleFilter {
 	}
 
 	@Override
+	public String pluginUUID() {
+		return "c47f0fa9-ce68-4224-b190-2ee452049ee1";
+	}
+	
+	@Override
 	//TODO: Technically, the window size should be a multiple of the FWHM here, but we don't have access to that information. Maybe..?
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {
 		Spectrum out = new ISpectrum(data.size());

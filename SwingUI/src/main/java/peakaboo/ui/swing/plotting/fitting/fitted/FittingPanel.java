@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.DropMode;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -33,6 +34,7 @@ import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControls;
+import swidget.widgets.listcontrols.ReorderTransferHandler;
 
 
 
@@ -68,7 +70,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 				"Clear all fittings",
 				"Move the selected fittings up",
 				"Move the selected fittings down" };
-		controls = new ListControls(tooltips, addMenu, true) {
+		controls = new ListControls(tooltips, addMenu, true, false) {
 
 			@Override
 			public void up()
@@ -347,7 +349,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 		column.setPreferredWidth(40);
 		column.setMaxWidth(100);
 
-		fitTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		fitTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 
 		//On selection change or focus change, update the controller's list of highlighted fits
 		fitTable.getSelectionModel().addListSelectionListener(e -> {
@@ -369,6 +372,18 @@ public class FittingPanel extends ClearPanel implements Changeable
 			}
 		});
 		
+		
+		fitTable.setDragEnabled(true);
+		fitTable.setDropMode(DropMode.INSERT_ROWS);
+		fitTable.setTransferHandler(new ReorderTransferHandler(fitTable) {
+			
+			@Override
+			public void move(int from, int to) {
+				controller.moveTransitionSeries(from, to);
+			}
+		});
+		
+
 		JScrollPane scroll = new JScrollPane(fitTable);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));

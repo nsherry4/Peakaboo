@@ -139,6 +139,11 @@ public class CSVDataSource extends AbstractDataSource
 	public String pluginVersion() {
 		return "1.0";
 	}
+	
+	@Override
+	public String pluginUUID() {
+		return "e9e25ff5-1e58-4e93-8fe5-df867a1b2d6c";
+	}
 
 	@Override
 	public Optional<Group> getParameters(List<Path> paths) {

@@ -71,4 +71,10 @@ public class AdditionMathFilter extends AbstractSimpleFilter
 	}
 
 	
+	@Override
+	public String pluginUUID() {
+		return "76b1f0cc-a825-44ec-aeac-d4b1bc38382a";
+	}
+	
+	
 }

@@ -36,7 +36,7 @@ public class PluginView extends JPanel {
 		c.ipady = Spacing.large;
 		
 		
-		String source = "Unknown";
+		String source = "Built-In";
 		if (plugin.getSource() != null) {
 			source = plugin.getSource().toString();
 		}
@@ -46,6 +46,7 @@ public class PluginView extends JPanel {
 		properties.put("Enabled", "" + plugin.isEnabled());
 		properties.put("Type", plugin.getPluginClass().getSimpleName());
 		properties.put("Source", source);
+		properties.put("UUID", plugin.getUUID());
 		PropertyViewPanel propertyPanel = new PropertyViewPanel(properties, plugin.getName(), true);
 		
 		

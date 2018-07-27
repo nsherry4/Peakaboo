@@ -23,11 +23,12 @@ import commonenvironment.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.curvefit.peak.table.CombinedPeakTable;
-import peakaboo.curvefit.peak.table.KrausPeakTable;
+import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.table.XrayLibPeakTable;
-import peakaboo.datasource.plugin.DataSourceLoader;
-import peakaboo.filter.model.FilterLoader;
+import peakaboo.datasink.plugin.DataSinkPluginManager;
+import peakaboo.datasource.plugin.DataSourcePluginManager;
+import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
@@ -209,12 +210,11 @@ public class Peakaboo
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			PeakTable.SYSTEM.setSource(
-					new CombinedPeakTable(
-							new XrayLibPeakTable(), 
-							new KrausPeakTable()));
-			DataSourceLoader.load();
-			FilterLoader.load();
+			//warm up the peak table, which is lazy
+			PeakTable.SYSTEM.getAll();
+			DataSourcePluginManager.SYSTEM.load();
+			FilterPluginManager.SYSTEM.load();
+			DataSinkPluginManager.SYSTEM.load();
 			runPeakaboo();
 		});
 		

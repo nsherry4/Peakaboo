@@ -4,17 +4,11 @@ require 'fileutils'
 #function to extract the jar file
 
 
-def doSetup(jarfile, path, resources, unzip=true)
+def doSetup(jarfile, path, resources)
 
-	if unzip
-		FileUtils.mkdir_p(path)
-		`rm -rf #{path}`
-		FileUtils.mkdir_p(path)
-		`unzip "#{jarfile}" -d "#{path}"`
-	else
-		FileUtils.mkdir_p(path)
-		`cp "#{jarfile}" "#{path}"`
-	end
+	FileUtils.mkdir_p(path)
+	`cp "#{jarfile}" "#{path}"`
+
 
 	resources.each{|res|
 		source, target = res
@@ -23,7 +17,7 @@ def doSetup(jarfile, path, resources, unzip=true)
 	}
 end
 
-def import()
+def import(version)
 	puts ""
 	puts "Importing JAR File..."
 
@@ -40,18 +34,26 @@ def import()
 	puts "DONE\n\n"
 	`rm -rf ./build/`
 	`mkdir ./build/`
+	`cp Peakaboo.jar "./build/Peakaboo #{version}.jar"`
 
 	return jarfile
 
 end
 
-def deb(jarfile, version)
+def deb_old(jarfile, version)
+
+	builddir = "./deb/build"
+	`mkdir #{builddir}`
+
+	pkgdir = "#{builddir}/package/"
+
 	#Deb Package
-	dapppath = "./deb/#{version}/usr/share/Peakaboo/"
-	dbinpath = "./deb/#{version}/usr/bin/"
-	dconpath = "./deb/#{version}/DEBIAN/"
-	resources = [["shared/icon.png", dapppath], ["shared/logo.png", dapppath], ["linux/peakaboo", dbinpath], ["linux/control", dconpath], ["linux/Peakaboo.desktop", "./deb/#{version}/usr/share/applications/"]]
-	doSetup(jarfile, dapppath, resources, false)
+	apppath = "#{pkgdir}/usr/share/Peakaboo/"
+	binpath = "#{pkgdir}/usr/bin/"
+	conpath = "#{pkgdir}/DEBIAN/"
+	appspath = "#{pkgdir}/usr/share/applications/"
+	resources = [["shared/icon.png", apppath], ["shared/logo.png", apppath], ["linux/peakaboo", binpath], ["linux/control", conpath], ["linux/Peakaboo.desktop", appspath]]
+	doSetup(jarfile, dapppath, resources)
 
 	puts "Building Debian Package..."
 	`cd ./deb && ./generate.sh`
@@ -61,67 +63,106 @@ def deb(jarfile, version)
 end
 
 
+def deb(jarfile, version)
+
+	builddir = "./deb/build/"
+	`mkdir #{builddir}`
+
+	pkgdir = "#{builddir}/package/"
+
+	#DEB Package
+	apppath = "#{pkgdir}/usr/share/Peakaboo"
+	binpath = "#{pkgdir}/usr/bin/"
+	resources = [["shared/icon.png", apppath], ["shared/logo.png", apppath], ["linux/peakaboo", binpath], ["linux/Peakaboo.desktop", "#{pkgdir}/usr/share/applications/"]]
+	doSetup(jarfile, apppath, resources)
+
+	puts "Building Debian Package..."
+	`cd ./deb && ./generate.sh #{version}`
+	`cp -f ./deb/build/*.deb ./build/`
+	puts "DONE\n\n"
+
+	`rm -rf #{builddir}`
+
+end
+
+
 
 def rpm(jarfile, version)
+
+	builddir = "./rpm/build/"
+	`mkdir #{builddir}`
+
+	pkgdir = "#{builddir}/package/"
+
 	#RPM Package
-	apppath = "./rpm/#{version}/usr/share/Peakaboo"
-	binpath = "./rpm/#{version}/usr/bin/"
-	resources = [["shared/icon.png", apppath], ["shared/logo.png", apppath], ["linux/peakaboo", binpath], ["linux/Peakaboo.desktop", "./rpm/#{version}/usr/share/applications/"]]
-	doSetup(jarfile, apppath, resources, false)
+	apppath = "#{pkgdir}/usr/share/Peakaboo"
+	binpath = "#{pkgdir}/usr/bin/"
+	resources = [["shared/icon.png", apppath], ["shared/logo.png", apppath], ["linux/peakaboo", binpath], ["linux/Peakaboo.desktop", "#{pkgdir}/usr/share/applications/"]]
+	doSetup(jarfile, apppath, resources)
 
 	puts "Building Red Hat Package..."
-	`cd ./rpm && ./generate.sh`
-	`cp -f ./rpm/Peakaboo*.rpm ./build/`
+	`cd ./rpm && ./generate.sh #{version}`
+	`cp -f ./rpm/build/*.rpm ./build/`
 	puts "DONE\n\n"
+
+	`rm -rf #{builddir}`
 
 end
 
 
 def windows(jarfile, version)
-	#Win32 Package
-	#winpath = "./windows/Peakaboo/"
-	#resources = [["windows/Logo.ico", winpath], ["windows/peakaboo.vbs", winpath], ["windows/Peakaboo.exe", winpath]]
-	##doSetup(jarfile, winpath, resources)
-	#doSetup(jarfile, winpath, resources, false)
 
+	#create the build directory
+	winpath= "./windows/build/"
+	`mkdir #{winpath}`
 
-	winpath= "./windows-launch4j/"
+	#copy jarfile, resources
 	resources = [["windows/Logo.ico", winpath]]
-	doSetup(jarfile, winpath, resources, false)
+	doSetup(jarfile, winpath, resources)
 
+	#Build windows exe and copy it out to the final build dir
 	puts "Building Windows Package..."
-	#`rm -rf ./windows/_win32/_win32/*.exe`
-	#`cd ./windows/_win32/ && ./buildWindowsInstaller.sh`
-	#`cp ./windows/_win32/_win32/*.exe ./build/`
-	`rm -rf ./windows-launch4j/*.exe`
-	`cd ./windows-launch4j/ && ./build.sh`
-	`cp ./windows-launch4j/*.exe ./build/`
+	`cd ./windows/ && ./build.sh #{version}`
+	`cp ./windows/build/*.exe ./build/`
 	puts "DONE\n\n"
 
+	`rm -rf #{winpath}`
+
 end
 
 
-def macos(jarfile, version)
+def macos(jarfile, version, shortversion)
+
+	builddir = "./mac/build/"
+	`mkdir #{builddir}`
+
 	#Mac OS Package
-	macpath = "./mac/Peakaboo/Peakaboo.app/Contents/Resources/Java"
-	resources = []
-	doSetup(jarfile, macpath, resources, false)
+	macpath = "./mac"
+	resources = [["mac/peakaboo.icns", builddir]]
+	doSetup(jarfile, builddir, resources)
 
 	puts "Building Mac Package..."
-	`cd ./mac && sudo ./dir2dmg.sh ./Peakaboo/ Peakaboo-#{version}.dmg Peakaboo5`
-	`cp -rf ./mac/Peakaboo-#{version}.dmg ./build/`
+	`cd ./mac && ./build.sh #{version} #{shortversion}`
+	`cp -rf #{builddir}/Peakaboo*.dmg ./build/`
+
+	`rm -rf #{builddir}`
 end
 
 
 
+if ARGV.length == 0
+	puts "Need version number argument"
+	exit 0
+end
 
+version = ARGV[0]
+shortversion = version.split(".")[0]
 
-version = "5.0.0"
-jarfile = import()
-#deb jarfile
-#rpm jarfile
-#windows jarfile
-macos jarfile, version
+jarfile = import version
+deb jarfile, version
+rpm jarfile, version
+windows jarfile, version
+macos jarfile, version, shortversion
 
 
 

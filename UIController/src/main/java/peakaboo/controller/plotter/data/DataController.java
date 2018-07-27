@@ -1,8 +1,10 @@
 package peakaboo.controller.plotter.data;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import eventful.Eventful;
@@ -41,6 +43,7 @@ public class DataController extends Eventful
 	private DataSet 			dataModel;
 	private PlotController		plot;
 	private Discards			discards;
+	private List<Path>			dataPaths;
 	
 	
 	public DataController(PlotController plotController)
@@ -48,6 +51,7 @@ public class DataController extends Eventful
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();
 		discards = new DiscardsList(plot);
+		dataPaths = new ArrayList<>();
 	}
 
 	
@@ -61,7 +65,7 @@ public class DataController extends Eventful
 	// =============================================
 	
 
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, DataSource dsp)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, DataSource dsp, Consumer<DatasetReadResult> onResult)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
@@ -72,29 +76,33 @@ public class DataController extends Eventful
 		
 		EventfulListener datasetListener = new EventfulListener() {
 
-			boolean loadedNewDataSet = false;
+			boolean finished = false;
 			
-			public void change()
+			public synchronized void change()
 			{
 				if (!readTasks.getCompleted()) { return; }
+				if (finished) { return; }
+				finished = true;
 				
-				switch (readTasks.getResult().status) {
+				DatasetReadResult result = readTasks.getResult();
+				
+				switch (result.status) {
 				case SUCCESS:
-					if (dataset.getAnalysis().channelsPerScan() > 0 && !loadedNewDataSet) {
-						DatasetReadResult result = readTasks.getResult();
-						if (result.status == ReadStatus.SUCCESS) {
-							setDataSetProvider(dataset);
-							loadedNewDataSet = true;
-						}
+					
+					if (dataset.getAnalysis().channelsPerScan() > 0) {
+						setDataSetProvider(dataset);
 					}
+					onResult.accept(result);
 					return;
 					
 				case FAILED:
 					//Error reporting is handled at the UI level in this case. 
 					//Just don't try to read the result.
+					onResult.accept(result);
 					return;
 					
 				case CANCELLED:
+					onResult.accept(result);
 					return;
 				}
 				
@@ -215,5 +223,17 @@ public class DataController extends Eventful
 		
 	}
 
+
+	public List<Path> getDataPaths() {
+		return dataPaths;
+	}
+
+
+	public void setDataPaths(List<Path> dataPaths) {
+		this.dataPaths = dataPaths;
+	}
+
+	
+	
 	
 }

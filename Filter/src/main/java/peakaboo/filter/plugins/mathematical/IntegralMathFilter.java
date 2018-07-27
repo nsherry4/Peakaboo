@@ -82,5 +82,10 @@ public class IntegralMathFilter extends AbstractSimpleFilter
 	}
 
 
+	@Override
+	public String pluginUUID() {
+		return "c49d30f9-481a-41cb-ab32-23f4207e07bb";
+	}
+	
 
 }
