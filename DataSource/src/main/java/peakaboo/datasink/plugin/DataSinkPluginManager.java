@@ -47,7 +47,7 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends DataSinkPlugin> scriptLoader(BoltPluginSet<DataSinkPlugin> pluginset) {
-		return new IBoltScriptPluginLoader<>(pluginset, JavaScriptDataSinkPlugin.class);
+		return new IBoltScriptPluginLoader<>(pluginset, ".js", JavaScriptDataSinkPlugin.class);
 	}
 	
 

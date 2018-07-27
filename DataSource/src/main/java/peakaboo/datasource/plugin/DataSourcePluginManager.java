@@ -69,7 +69,7 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends DataSourcePlugin> scriptLoader(BoltPluginSet<DataSourcePlugin> pluginset) {
-		return new IBoltScriptPluginLoader<>(pluginset, JavaScriptDataSourcePlugin.class);
+		return new IBoltScriptPluginLoader<>(pluginset, ".js", JavaScriptDataSourcePlugin.class);
 	}
 	
 

@@ -104,7 +104,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends FilterPlugin> scriptLoader(BoltPluginSet<FilterPlugin> pluginset) {
-		return new IBoltScriptPluginLoader<>(pluginset, JavaScriptFilterPlugin.class);
+		return new IBoltScriptPluginLoader<>(pluginset, ".js", JavaScriptFilterPlugin.class);
 	}
 	
 	
