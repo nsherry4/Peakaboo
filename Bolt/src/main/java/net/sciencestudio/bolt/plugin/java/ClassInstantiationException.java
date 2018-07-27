@@ -1,16 +1,16 @@
 package net.sciencestudio.bolt.plugin.java;
 
-public class ClassInstantiationException extends Exception
-{
+import net.sciencestudio.bolt.plugin.core.exceptions.BoltException;
 
-	public ClassInstantiationException()
-	{
-		super();
+public class ClassInstantiationException extends BoltException {
+
+	public ClassInstantiationException(String message) {
+		super(message);
 	}
 	
-	public ClassInstantiationException(Throwable cause)
-	{
-		super(cause);
+	public ClassInstantiationException(String message, Throwable cause) {
+		super(message, cause);
 	}
+
 	
 }

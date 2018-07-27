@@ -6,19 +6,19 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
+import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 
 
 
 
-public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
+public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClassloaderPluginLoader<T>
 {
 
 	private BoltPluginSet<? super T>		plugins;
@@ -32,7 +32,7 @@ public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 	 * @param target
 	 * @throws ClassInheritanceException
 	 */
-	public BoltJavaPluginLoader(BoltPluginSet<? super T> pluginset, final Class<T> target) throws ClassInheritanceException
+	public IBoltJavaPluginLoader(BoltPluginSet<? super T> pluginset, final Class<T> target) throws ClassInheritanceException
 	{
 		
 		this.plugins = pluginset;
@@ -40,12 +40,16 @@ public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 		isTargetInterface = Modifier.isInterface(target.getModifiers());
 		
 		if (!checkImplementsInterface(target, BoltJavaPlugin.class)) {
-			throw new ClassInheritanceException();
+			throw new ClassInheritanceException("Does not implement plugin interface");
 		}
 		
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#registerPlugin(java.lang.Class)
+	 */
+	@Override
 	public BoltPluginController<T>  registerPlugin(Class<? extends T> loadedClass) throws ClassInstantiationException
 	{
 		URL url = null;
@@ -56,6 +60,10 @@ public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 		return registerPlugin(loadedClass, url);
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#registerPlugin(java.lang.Class, java.net.URL)
+	 */
+	@Override
 	public BoltPluginController<T> registerPlugin(Class<? extends T> loadedClass, URL source) throws ClassInstantiationException
 	{
 		
@@ -76,7 +84,7 @@ public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 		catch (ServiceConfigurationError e)
 		{
 			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
-			throw new ClassInstantiationException(e);
+			throw new ClassInstantiationException("Unable to load plugin", e);
 		}
 	}
 	
@@ -146,6 +154,10 @@ public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#register(java.io.File)
+	 */
+	@Override
 	public void register(File file)
 	{
 		File[] files;
@@ -166,6 +178,10 @@ public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#register(java.net.URL)
+	 */
+	@Override
 	public void register(URL url) throws ClassInstantiationException
 	{
 		
@@ -182,6 +198,10 @@ public class BoltJavaPluginLoader<T extends BoltJavaPlugin>
 		} 
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#register()
+	 */
+	@Override
 	public void register()
 	{
 		if (BoltJar.isClassInJar(target)) {
