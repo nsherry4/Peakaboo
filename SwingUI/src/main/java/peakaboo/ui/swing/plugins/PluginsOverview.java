@@ -6,7 +6,10 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -25,11 +28,13 @@ import commonenvironment.Env;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
+import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
-import peakaboo.common.PluginManager;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.JavaDataSourcePlugin;
@@ -91,7 +96,7 @@ public class PluginsOverview extends JPanel {
 		
 		this.add(main, BorderLayout.CENTER);
 		
-		new FileDrop(this, files -> {
+		new FileDrop(body, files -> {
 			for (File file : files) {
 				addJar(file);
 			}
@@ -140,7 +145,7 @@ public class PluginsOverview extends JPanel {
 		 * remove the jar file and all plugins that it contains.
 		 */
 		
-		PluginManager<? extends BoltPlugin> manager = managerForPlugin(plugin);
+		BoltPluginManager<? extends BoltPlugin> manager = managerForPlugin(plugin);
 		if (manager == null) {
 			return;
 		}
@@ -165,8 +170,7 @@ public class PluginsOverview extends JPanel {
 		
 		new TabbedInterfaceDialog(
 				"Delete Plugin Archive?", 
-				"Are you sure you want to delete the archive containing the plugins:\n\n" +
-						set.getAll().stream().map(p -> p.toString()).reduce((a, b) -> a + "\n" + b).get(), 
+				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
 				JOptionPane.QUESTION_MESSAGE,
 				JOptionPane.YES_NO_OPTION,
 				v -> {
@@ -181,7 +185,17 @@ public class PluginsOverview extends JPanel {
 		
 	}
 	
-	private PluginManager<? extends BoltPlugin> managerForPlugin(BoltPluginController<? extends BoltPlugin> plugin) {
+	private String listToUL(List<?> stuff) {
+		StringBuffer buff = new StringBuffer();
+		buff.append("<ul>");
+		for (Object o : stuff) {
+			buff.append("<li>" + o.toString() + "</li>");
+		}
+		buff.append("</ul>");
+		return buff.toString();
+	}
+	
+	private BoltPluginManager<? extends BoltPlugin> managerForPlugin(BoltPluginController<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == JavaDataSourcePlugin.class) {
@@ -204,13 +218,55 @@ public class PluginsOverview extends JPanel {
 		
 		boolean added = false;
 		
-		added |= DataSourcePluginManager.SYSTEM.importJar(jar);
-		added |= DataSinkPluginManager.SYSTEM.importJar(jar);
-		added |= FilterPluginManager.SYSTEM.importJar(jar);
+		try {
+			added |= addJarToManager(jar, DataSourcePluginManager.SYSTEM);
+			added |= addJarToManager(jar, DataSinkPluginManager.SYSTEM);
+			added |= addJarToManager(jar, FilterPluginManager.SYSTEM);		
+		} catch (BoltImportException e) {
 		
-		if (added) {
-			this.reload();
+			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
+			new TabbedInterfaceDialog(
+					"Import Failed", 
+					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
+					JOptionPane.ERROR_MESSAGE, 
+					JOptionPane.DEFAULT_OPTION, 
+					result -> {}).showIn(parent);
+			added = true;
 		}
+		
+		if (!added) {
+			new TabbedInterfaceDialog(
+					"No Plugins Found", 
+					"Peakboo could not fint any plugins in the file(s) provided", 
+					JOptionPane.ERROR_MESSAGE, 
+					JOptionPane.DEFAULT_OPTION, 
+					result -> {}).showIn(parent);
+		}
+		
+		reload();
+		
+		
+
+	}
+	
+	private boolean addJarToManager(File jar, BoltPluginManager<? extends BoltPlugin> manager) throws BoltImportException {
+		
+		if (!manager.jarContainsPlugins(jar)) {
+			return false;
+		}
+		BoltPluginSet<? extends BoltPlugin> plugins = manager.importJar(jar);
+		
+		this.reload();
+		new TabbedInterfaceDialog(
+				"Imported New Plugins", 
+				"Peakboo successfully imported the following plugin(s):\n" + listToUL(plugins.getAll()), 
+				JOptionPane.INFORMATION_MESSAGE, 
+				JOptionPane.DEFAULT_OPTION, 
+				result -> {}).showIn(parent);
+
+		return true;
+
+
 	}
 	
 	

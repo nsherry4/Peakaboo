@@ -2,15 +2,17 @@ package peakaboo.filter.model;
 
 import java.util.logging.Level;
 
+import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
+import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader;
+import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
+import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
-import peakaboo.common.PluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.filter.plugins.JavaScriptFilterPlugin;
@@ -34,7 +36,7 @@ import peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
 
-public class FilterPluginManager extends PluginManager<FilterPlugin> {
+public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
 
 	public static FilterPluginManager SYSTEM = new FilterPluginManager();
@@ -48,7 +50,7 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 		
 		
 		try {
-			BoltJavaPluginLoader<JavaFilterPlugin> newPluginLoader = javaLoader(getPlugins());
+			BoltClassloaderPluginLoader<JavaFilterPlugin> newPluginLoader = javaLoader(getPlugins());
 			
 
 			//register built-in plugins
@@ -84,7 +86,7 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 	
 	public synchronized void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
 		try {
-			BoltJavaPluginLoader<JavaFilterPlugin> javaLoader = javaLoader(getPlugins());
+			BoltClassloaderPluginLoader<JavaFilterPlugin> javaLoader = javaLoader(getPlugins());
 			BoltPluginController<JavaFilterPlugin> plugin = javaLoader.registerPlugin(clazz);
 			if (plugin != null) {
 				PeakabooLog.get().info("Registered Filter Plugin " + plugin.getName() + " from " + plugin.getSource());
@@ -96,12 +98,12 @@ public class FilterPluginManager extends PluginManager<FilterPlugin> {
 	}
 
 	@Override
-	protected BoltJavaPluginLoader<JavaFilterPlugin> javaLoader(BoltPluginSet<FilterPlugin> pluginset) throws ClassInheritanceException {
-		return new BoltJavaPluginLoader<JavaFilterPlugin>(pluginset, JavaFilterPlugin.class);
+	protected BoltClassloaderPluginLoader<JavaFilterPlugin> javaLoader(BoltPluginSet<FilterPlugin> pluginset) throws ClassInheritanceException {
+		return new IBoltJavaPluginLoader<JavaFilterPlugin>(pluginset, JavaFilterPlugin.class);
 	}
 
 	@Override
-	protected IBoltScriptPluginLoader<? extends FilterPlugin> scriptLoader(BoltPluginSet<FilterPlugin> pluginset) {
+	protected BoltFilesytstemPluginLoader<? extends FilterPlugin> scriptLoader(BoltPluginSet<FilterPlugin> pluginset) {
 		return new IBoltScriptPluginLoader<>(pluginset, JavaScriptFilterPlugin.class);
 	}
 	

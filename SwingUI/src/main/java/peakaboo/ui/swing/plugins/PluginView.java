@@ -36,7 +36,7 @@ public class PluginView extends JPanel {
 		c.ipady = Spacing.large;
 		
 		
-		String source = "Unknown";
+		String source = "Built-In";
 		if (plugin.getSource() != null) {
 			source = plugin.getSource().toString();
 		}
