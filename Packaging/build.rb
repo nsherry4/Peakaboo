@@ -150,10 +150,14 @@ end
 
 
 
+if ARGV.length == 0
+	puts "Need version number argument"
+	exit 0
+end
 
+version = ARGV[0]
+shortversion = version.split(".")[0]
 
-version = "5.0.0"
-shortversion = "5"
 jarfile = import version
 deb jarfile, version
 rpm jarfile, version

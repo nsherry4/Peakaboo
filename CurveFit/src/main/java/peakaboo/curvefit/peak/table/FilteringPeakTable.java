@@ -27,7 +27,6 @@ public class FilteringPeakTable implements PeakTable {
 	@Override
 	public synchronized List<TransitionSeries> getAll() {
 		if (all == null) {
-			System.out.println("getall");
 			all = backing.getAll().stream().filter(ts -> !elements.contains(ts.element)).collect(Collectors.toList());
 		}
 		return all;
