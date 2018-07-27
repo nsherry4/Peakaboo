@@ -22,6 +22,7 @@ import javax.swing.tree.TreePath;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -39,7 +40,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 	private JTree					unfitTree;
 	private JTextField				search;
 	private String					query = "";
-	private List<Element>			filtered = Arrays.asList(Element.values());
+	private List<Element>			filtered = null;
 	
 	private FittingController		controller;
 
@@ -50,7 +51,9 @@ public class LookupPanel extends ClearPanel implements Changeable
 	{
 
 		this.controller = controller;
-
+		//generate initial "filtered" list with no search query
+		filter();
+		
 		selControls = new SelectionListControls("Fittings") {
 
 			@Override
@@ -123,11 +126,18 @@ public class LookupPanel extends ClearPanel implements Changeable
 	}
 	
 	private boolean match(Element e) {
+			
+		if (PeakTable.SYSTEM.getForElement(e).size() == 0) return false;
+		
+		if (query.length() == 0) {
+			return true;
+		}
+		
 		if ((e.name().toLowerCase()).contains(query)) return true;
 		if ((e.toString().toLowerCase()).contains(query)) return true;
 		if ((e.atomicNumber()+"").toLowerCase().contains(query)) return true;
-		
 		return false;
+		
 	}
 
 	private void filter() {

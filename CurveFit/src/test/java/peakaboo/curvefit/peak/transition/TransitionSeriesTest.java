@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.KrausPeakTable;
+import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
 
 public class TransitionSeriesTest {
@@ -15,7 +15,7 @@ public class TransitionSeriesTest {
 	@Test
 	public void equality() {
 		
-		PeakTable table = new KrausPeakTable();
+		PeakTable table = new KrausePeakTable();
 		
 		TransitionSeries ask1 = table.get(Element.As, TransitionSeriesType.K);
 		TransitionSeries ask2 = table.get(Element.As, TransitionSeriesType.K);

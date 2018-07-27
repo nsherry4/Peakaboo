@@ -22,7 +22,7 @@ public class PeakTableTest {
 		
 		
 		//Kraus has poorer coverage of a smaller number of elements
-		PeakTable kraus = new KrausPeakTable();
+		PeakTable kraus = new KrausePeakTable();
 		Assert.assertTrue(kraus.get(Element.H, TransitionSeriesType.K) != null);
 		Assert.assertTrue(kraus.get(Element.Au, TransitionSeriesType.K) != null);
 		Assert.assertTrue(kraus.get(Element.Fe, TransitionSeriesType.K).getTransitionCount() == 3);

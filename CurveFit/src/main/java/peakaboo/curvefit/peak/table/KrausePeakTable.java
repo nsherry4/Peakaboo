@@ -14,11 +14,11 @@ import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
-public class KrausPeakTable implements PeakTable {
+public class KrausePeakTable implements PeakTable {
 
 	private List<TransitionSeries> series = new ArrayList<>();
 	
-	public KrausPeakTable() {
+	public KrausePeakTable() {
 		readPeakTableManual();
 	}
 	
