@@ -34,8 +34,7 @@ public interface PeakTable {
 				Element.Bk,
 				Element.Cf,
 				Element.Es,
-				Element.Fm,
-				Element.Nb
+				Element.Fm
 			)
 	);
 	

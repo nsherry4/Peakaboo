@@ -91,7 +91,7 @@
 \newcommand{\tocsubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
 
 \title{Peakaboo 5}
-\date{December 15, 2017}
+\date{July 27th, 2018}
 \author{Nathaniel Sherry, Marina Suominen Fuller}
         
 
@@ -145,7 +145,7 @@ Out of the box, Peakaboo provides support for XRF data in a plain-text format.
 Peakaboo Plain-Text is a simple XRF format comprised of rows of space-separated 
 numbers. Each row represents a single spectrum.
 
-Because of the wide variety of data formats, Peakaboo also makes it easy to create plug-ins for supporting additional data formats. Some examples of file formats supported by plug-ins include Amptek, Sigray, and Inca Emsa.
+Because of the wide variety of data formats, Peakaboo also makes it easy to create plug-ins for supporting additional data formats. Some examples of file formats supported by plug-ins include Amptek, Sigray, and Inca Emsa. See the section on ``Plugins'' for more information.
 
 Peakaboo also allows users who are familiar with the Java or JavaScript programming languages to add support for new file formats. See the section on ``Extending Peakaboo'' for more information.
 
@@ -420,6 +420,32 @@ Peakaboo also allows you to view spectra from selected regions within your map. 
 \screenshot{plot-subset}{Plotting window showing data for a subset of the original data set}
 
 
+\tocchapter{Plugins}
+
+Plugins can add new filters or new file format support to Peakaboo. You can manage Peakaboo's plugins by selecting \command{\button{main-menu}{Menu} \menu\ Plugins}.
+
+\screenshot{plugins}{Peakaboo's plugin management screen}
+
+\tocsection{Managing Plugins}
+
+
+\tocsubsection{Importing Plugins}
+
+You can import new plugins to Peakaboo in three ways. 
+
+\begin{description}
+
+\item [Import Plugins Button] Clicking the \button{edit-add}{Import Plugins} button will open up a file browser so that you may select the plugin archive that you wish to import. 
+
+\item [Drag and Drop] If you drag and drop plugin archives onto the plugin management screen, Peakaboo will import them for you automatically.
+
+\item [Manually] If you click the \button{document-open}{Open Plugins Folder} button, Peakaboo will open its plugins folder in a file browser. You can manage your plugins manually by adding or removing files. Be sure to update Peakaboo by clicking the \command{Reload Plugins} button after you're done.
+
+\end{description}
+
+\tocsubsection{Removing Plugins}
+
+To remove a plugin, select it in the plugins list on the left side of the plugin management screen, then click the \button{edit-remove}{Remove Plugins} button. Be aware that if the plugin is contained in an archive along with other plugins, those other plugins will be removed as well.
 
 \cleardoublepage
 \appendix
