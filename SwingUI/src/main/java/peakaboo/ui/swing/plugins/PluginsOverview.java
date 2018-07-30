@@ -49,6 +49,7 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.HButton;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.Spacing;
@@ -74,14 +75,14 @@ public class PluginsOverview extends JPanel {
 		details = new JPanel(new BorderLayout());
 		body.add(details, BorderLayout.CENTER);
 				
-		close = HeaderBox.button("Close", () -> parent.popModalComponent());
+		close = new HButton("Close", () -> parent.popModalComponent());
 		
-		add = HeaderBox.button(StockIcon.EDIT_ADD, "Import Plugins", this::add);
-		remove = HeaderBox.button(StockIcon.EDIT_REMOVE, "Remove Plugins", this::removeSelected);
+		add = new HButton(StockIcon.EDIT_ADD, "Import Plugins", this::add);
+		remove = new HButton(StockIcon.EDIT_REMOVE, "Remove Plugins", this::removeSelected);
 		
-		reload = HeaderBox.button(StockIcon.ACTION_REFRESH, "Reload Plugins", this::reload);
-		browse = HeaderBox.button(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", this::browse);
-		download = HeaderBox.button(StockIcon.GO_DOWN, "Get More Plugins", this::download);
+		reload = new HButton(StockIcon.ACTION_REFRESH, "Reload Plugins", this::reload);
+		browse = new HButton(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", this::browse);
+		download = new HButton(StockIcon.GO_DOWN, "Get More Plugins", this::download);
 		
 		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
 		left.setOpaque(false);
@@ -172,14 +173,11 @@ public class PluginsOverview extends JPanel {
 				"Delete Plugin Archive?", 
 				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
 				JOptionPane.QUESTION_MESSAGE,
-				JOptionPane.YES_NO_OPTION,
-				v -> {
-					if (v != (Integer)JOptionPane.YES_OPTION) {
-						return;
-					}
+				new HButton("Yes", () -> {
 					manager.removeJar(jar);
 					this.reload();
-				}
+				}),
+				new HButton("No")
 			).showIn(parent);
 		
 		
@@ -228,9 +226,7 @@ public class PluginsOverview extends JPanel {
 			new TabbedInterfaceDialog(
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
-					JOptionPane.ERROR_MESSAGE, 
-					JOptionPane.DEFAULT_OPTION, 
-					result -> {}).showIn(parent);
+					JOptionPane.ERROR_MESSAGE).showIn(parent);
 			added = true;
 		}
 		
@@ -238,9 +234,7 @@ public class PluginsOverview extends JPanel {
 			new TabbedInterfaceDialog(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
-					JOptionPane.ERROR_MESSAGE, 
-					JOptionPane.DEFAULT_OPTION, 
-					result -> {}).showIn(parent);
+					JOptionPane.ERROR_MESSAGE).showIn(parent);
 		}
 		
 		reload();
@@ -260,9 +254,7 @@ public class PluginsOverview extends JPanel {
 		new TabbedInterfaceDialog(
 				"Imported New Plugins", 
 				"Peakboo successfully imported the following plugin(s):\n" + listToUL(plugins.getAll()), 
-				JOptionPane.INFORMATION_MESSAGE, 
-				JOptionPane.DEFAULT_OPTION, 
-				result -> {}).showIn(parent);
+				JOptionPane.INFORMATION_MESSAGE).showIn(parent);
 
 		return true;
 

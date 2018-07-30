@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import peakaboo.datasource.model.DataSource;
+import swidget.widgets.HButton;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
@@ -68,13 +69,13 @@ public class DataSourceSelection extends JPanel
 		
 		
 		
-		JButton ok = HeaderBox.button("OK", () -> {
+		JButton ok = new HButton("OK", () -> {
 			parent.popModalComponent();
 			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
 			onSelect.accept(selected);
 		});
 		
-		JButton cancel = HeaderBox.button("Cancel", () -> {
+		JButton cancel = new HButton("Cancel", () -> {
 			parent.popModalComponent();
 		});
 		

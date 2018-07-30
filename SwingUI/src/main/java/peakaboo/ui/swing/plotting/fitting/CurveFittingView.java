@@ -126,9 +126,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			new TabbedInterfaceDialog(
 					"Missing Data Set or Energy Calibration", 
 					"Guided fitting cannot proceed without a data set and energy calibration.", 
-					JOptionPane.WARNING_MESSAGE, 
-					JOptionPane.DEFAULT_OPTION, 
-					result -> {}
+					JOptionPane.WARNING_MESSAGE
 				).showIn(plotPanel);
 			
 		}
@@ -145,10 +143,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			new TabbedInterfaceDialog(
 					"Misisng Data Set or Energy Calibration", 
 					"Automatic fitting cannot proceed without a data set and energy calibration.", 
-					JOptionPane.WARNING_MESSAGE, 
-					JOptionPane.DEFAULT_OPTION, 
-					result -> {}
-				).showIn(plotPanel);
+					JOptionPane.WARNING_MESSAGE).showIn(plotPanel);
 			
 		}
 	}

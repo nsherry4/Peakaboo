@@ -31,6 +31,7 @@ import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import swidget.widgets.HButton;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.SettingsPanel;
 import swidget.widgets.SettingsPanel.LabelPosition;
@@ -50,7 +51,7 @@ public class AdvancedOptionsPanel extends JPanel {
 		
 		
 		
-		JButton close = HeaderBox.button("Close", () -> parent.popModalComponent());
+		JButton close = new HButton("Close", () -> parent.popModalComponent());
 		HeaderBox box = new HeaderBox(null, "Advanced Options", close);
 		
 		this.add(box, BorderLayout.NORTH);
