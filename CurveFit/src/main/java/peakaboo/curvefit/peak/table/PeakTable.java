@@ -13,29 +13,30 @@ public interface PeakTable {
 				new CombinedPeakTable(
 						new XrayLibPeakTable(), 
 						new KrausePeakTable()
-				),
-				Element.H,
-				Element.He,
-				Element.Li,
-				Element.Ne,
-				Element.Kr,
-				Element.Tc,
-				Element.Xe,
-				Element.Po,
-				Element.At,
-				Element.Rn,
-				Element.Fr,
-				Element.Ra,
-				Element.Pa,
-				Element.Np,
-				Element.Pu,
-				Element.Am,
-				Element.Cm,
-				Element.Bk,
-				Element.Cf,
-				Element.Es,
-				Element.Fm
+				)
 			)
+			.filter(Element.H)
+			.filter(Element.He)
+			.filter(Element.Li)
+			.filter(Element.Ne)
+			.filter(Element.Kr)
+			.filter(Element.Tc)
+			.filter(Element.Xe)
+			.filter(Element.Po)
+			.filter(Element.At)
+			.filter(Element.Rn)
+			.filter(Element.Fr)
+			.filter(Element.Ra)
+			.filter(Element.Pa)
+			.filter(Element.Np)
+			.filter(Element.Pu)
+			.filter(Element.Am)
+			.filter(Element.Cm)
+			.filter(Element.Bk)
+			.filter(Element.Cf)
+			.filter(Element.Es)
+			.filter(Element.Fm)
+			.filter(Element.F, TransitionSeriesType.K)
 	);
 	
 	default TransitionSeries get(Element e, TransitionSeriesType tst) {
