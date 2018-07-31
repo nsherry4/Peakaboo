@@ -705,7 +705,6 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
 		final FilterSet filters = controller.filtering().getActiveFilters();
-		System.out.println(filters.getFilters());
 
 		SimpleFileExtension text = new SimpleFileExtension("Text File", "txt");
 		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", saveFilesFolder, text, saveFile -> {

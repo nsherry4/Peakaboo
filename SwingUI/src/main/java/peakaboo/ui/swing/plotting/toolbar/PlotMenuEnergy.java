@@ -88,7 +88,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		advanced.setOpaque(false);
 		advanced.setBorder(Spacing.bMedium());
 		JButton advancedButton = new ImageButton("Advanced Options")
-				.wittButtonSize(ButtonSize.COMPACT)
+				.withButtonSize(ButtonSize.COMPACT)
 				.withAction(() -> {
 					this.setVisible(false);
 					plot.actionShowAdvancedOptions();		

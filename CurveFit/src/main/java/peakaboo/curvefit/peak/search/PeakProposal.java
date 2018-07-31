@@ -25,6 +25,8 @@ import peakaboo.curvefit.peak.search.scoring.PileupSourceScorer;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import plural.executor.DummyExecutor;
+import plural.executor.ExecutorSet;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
@@ -40,7 +42,7 @@ public class PeakProposal
 
 
 	
-	public static List<TransitionSeries> search(
+	public static ExecutorSet<List<TransitionSeries>> search(
 			final ReadOnlySpectrum data,
 			PeakSearcher searcher,
 			FittingSet fits,
@@ -49,77 +51,118 @@ public class PeakProposal
 		) {
 		
 		
-		EnergyCalibration calibration = fits.getFittingParameters().getCalibration();
+		DummyExecutor firstStage = new DummyExecutor(true);
+		DummyExecutor secondStage = new DummyExecutor();
+		firstStage.advanceState();
 		
-		//Proposals fitting set to store proposals in with same parameters
-		FittingSet proposals = new FittingSet(fits);
-		proposals.clear();
-		
-		
-		//Generate list of peaks
-		List<Integer> peaks = searcher.search(data);
-		
-		
-		//remove any peaks within the FWHM of an existing Transitions in fits
-		for (int peak : new ArrayList<>(peaks)) {
-			for (TransitionSeries ts : fits.getFittedTransitionSeries()) {
-				for (Transition t : ts) {
-					float hwhm = fits.getFittingParameters().getFWHM(t)/2f;
-					float min = t.energyValue - hwhm;
-					float max = t.energyValue + hwhm;
-					float energy = calibration.energyFromChannel(peak);
-					if (min < energy && energy < max) {
-						peaks.remove(new Integer(peak));
+		ExecutorSet<List<TransitionSeries>> exec = new ExecutorSet<List<TransitionSeries>>("Automatic Peak Fitting") {
+
+			@Override
+			protected List<TransitionSeries> execute() {
+				
+				//FIRST STAGE
+				EnergyCalibration calibration = fits.getFittingParameters().getCalibration();
+				
+				//Proposals fitting set to store proposals in with same parameters
+				FittingSet proposals = new FittingSet(fits);
+				proposals.clear();
+				
+				
+				//Generate list of peaks
+				List<Integer> peaks = searcher.search(data);
+				
+				
+				//remove any peaks within the FWHM of an existing Transitions in fits
+				for (int peak : new ArrayList<>(peaks)) {
+					for (TransitionSeries ts : fits.getFittedTransitionSeries()) {
+						for (Transition t : ts) {
+							float hwhm = fits.getFittingParameters().getFWHM(t)/2f;
+							float min = t.energyValue - hwhm;
+							float max = t.energyValue + hwhm;
+							float energy = calibration.energyFromChannel(peak);
+							if (min < energy && energy < max) {
+								peaks.remove(new Integer(peak));
+							}
+						}
 					}
 				}
-			}
-		}
-		
-		
-		
-		//Generate lists of guesses for all peaks
-		Map<Integer, List<TransitionSeries>> guesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
-		
-		
-		/*
-		 * Go peak by peak from strongest to weakest.
-		 * Take the best guess for that peak.
-		 * Find other peaks which also have that guess as part of their list of guesses
-		 * Remove those other peaks from future consideration 
-		 */
-		List<TransitionSeries> newFits = new ArrayList<>();
-		for (int channel : peaks) {
-			if (!guesses.containsKey(channel)) { continue; }
-			
-
-			//Get the best guess from the list
-			TransitionSeries guess = guesses.get(channel).get(0);
-			
-			
-			//If the existing fits doesn't contain this, add it
-			if (!fits.getFittedTransitionSeries().contains(guess)) {
-				newFits.add(guess);
-				proposals.addTransitionSeries(guess);
-			}
-			
-			
-			//remove all peaks which contain this guess
-			for (int match : new ArrayList<>(guesses.keySet())) {
-				if (guesses.get(match).contains(guess)) { 
-					guesses.remove(match);
-					
+				
+				if (this.isAbortRequested()) {
+					this.aborted();
+					return null;
 				}
+				
+				//Generate lists of guesses for all peaks
+				Map<Integer, List<TransitionSeries>> guesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
+	
+				firstStage.advanceState();
+				
+				
+				
+				
+				
+				
+				//SECOND STAGE
+				secondStage.setWorkUnits(guesses.size());
+				secondStage.advanceState();
+				
+				
+				/*
+				 * Go peak by peak from strongest to weakest.
+				 * Take the best guess for that peak.
+				 * Find other peaks which also have that guess as part of their list of guesses
+				 * Remove those other peaks from future consideration 
+				 */
+				List<TransitionSeries> newFits = new ArrayList<>();
+				for (int channel : peaks) {
+					if (this.isAbortRequested()) {
+						this.aborted();
+						return null;
+					}
+					
+					if (!guesses.containsKey(channel)) { continue; }
+					
+
+					//Get the best guess from the list
+					TransitionSeries guess = guesses.get(channel).get(0);
+					
+					
+					//If the existing fits doesn't contain this, add it
+					if (!fits.getFittedTransitionSeries().contains(guess)) {
+						newFits.add(guess);
+						proposals.addTransitionSeries(guess);
+					}
+					
+					
+					//remove all peaks which contain this guess
+					for (int match : new ArrayList<>(guesses.keySet())) {
+						if (guesses.get(match).contains(guess)) { 
+							guesses.remove(match);
+							secondStage.workUnitCompleted();
+						}
+					}
+					
+					
+					//Regenerate new guesses for remaining peaks based on combined 
+					//fittingset so that pileup is considered in future iterations
+					guesses = makeGuesses(data, guesses.keySet(), fits, proposals, fitter, solver);
+					
+					secondStage.workUnitCompleted();
+				}
+				
+				secondStage.advanceState();
+				
+				
+				
+				return newFits;
 			}
-			
-			
-			//Regenerate new guesses for remaining peaks based on combined 
-			//fittingset so that pileup is considered in future iterations
-			guesses = makeGuesses(data, guesses.keySet(), fits, proposals, fitter, solver);
-			
-			
-		}
+		}; 
 		
-		return newFits;
+		
+		exec.addExecutor(firstStage, "Finding Peaks");
+		exec.addExecutor(secondStage, "Identifying Fittings");
+
+		return exec;
 		
 
 		

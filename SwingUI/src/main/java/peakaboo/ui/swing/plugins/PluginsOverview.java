@@ -52,6 +52,7 @@ import swidget.widgets.ClearPanel;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
@@ -77,12 +78,12 @@ public class PluginsOverview extends JPanel {
 				
 		close = new ImageButton("Close").withAction(() -> parent.popModalComponent());
 		
-		add = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Import Plugins").withAction(this::add);
-		remove = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Import Plugins").withAction(this::add);
+		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Remove Plugins").withAction(this::removeSelected);
 		
-		reload = new ImageButton(StockIcon.ACTION_REFRESH).withTooltip("Reload Plugins").withAction(this::reload);
-		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new ImageButton(StockIcon.GO_DOWN).withTooltip("Get More Plugins").withAction(this::download);
+		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Reload Plugins").withAction(this::reload);
+		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
 		left.setOpaque(false);

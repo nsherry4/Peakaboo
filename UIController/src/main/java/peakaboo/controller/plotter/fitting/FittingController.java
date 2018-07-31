@@ -3,6 +3,7 @@ package peakaboo.controller.plotter.fitting;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
@@ -19,7 +20,9 @@ import peakaboo.curvefit.peak.search.PeakProposal;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import plural.executor.ExecutorSet;
 import scitypes.ReadOnlySpectrum;
+import scitypes.util.Mutable;
 
 
 public class FittingController extends EventfulType<Boolean>
@@ -383,22 +386,32 @@ public class FittingController extends EventfulType<Boolean>
 		fittingDataInvalidated();
 	}
 
-	public void autodetectPeaks() {
+	public ExecutorSet<List<TransitionSeries>> autodetectPeaks() {
 		DerivativePeakSearcher searcher = new DerivativePeakSearcher();
 		ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
-		List<TransitionSeries> results = PeakProposal.search(
+		ExecutorSet<List<TransitionSeries>> exec = PeakProposal.search(
 				data, 
 				searcher, 
 				getFittingSelections(), 
 				getCurveFitter(), 
 				getFittingSolver()
 			);
-				
-		for (TransitionSeries ts : results) {
-			getFittingSelections().addTransitionSeries(ts);
-		}
 		
-		fittingDataInvalidated();
+
+		Mutable<Boolean> ran = new Mutable<>(false);
+		exec.addListener(() -> {
+			if (!exec.getCompleted()) return;
+			if (ran.get()) return;
+			ran.set(true);
+			for (TransitionSeries ts : exec.getResult()) {
+				getFittingSelections().addTransitionSeries(ts);
+			}
+			fittingDataInvalidated();
+		});
+		
+		
+		return exec;
+
 		
 	}
 	

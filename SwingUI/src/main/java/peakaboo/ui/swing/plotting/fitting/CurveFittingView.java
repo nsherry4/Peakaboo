@@ -4,6 +4,7 @@ package peakaboo.ui.swing.plotting.fitting;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
@@ -12,12 +13,16 @@ import javax.swing.JPanel;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.FittingController;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
 import peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
+import plural.executor.ExecutorSet;
+import plural.swing.ExecutorSetView;
+import scitypes.util.Mutable;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 
@@ -137,8 +142,26 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	public void autoAdd() {
 		
 		if (plotController.data().hasDataSet() && plotController.fitting().getMaxEnergy() > 0f) {
-			controller.autodetectPeaks();
-			changed();
+			ExecutorSet<List<TransitionSeries>> exec = controller.autodetectPeaks();
+			ExecutorSetView execPanel = new ExecutorSetView(exec); 
+			
+			Mutable<Boolean> ran = new Mutable<>(false);
+			exec.addListener(() -> {
+				if (exec.getCompleted() && !ran.get()) {
+					ran.set(true);
+					plotPanel.popModalComponent();
+					changed();
+				} else if (exec.isAborted() && !ran.get()) {
+					ran.set(true);
+					plotPanel.popModalComponent();
+				}
+			});		
+			
+			
+			
+			plotPanel.pushModalComponent(execPanel);
+			exec.startWorking();
+			
 		} else {
 			new TabbedInterfaceDialog(
 					"Misisng Data Set or Energy Calibration", 
