@@ -50,24 +50,18 @@ public class PlotToolbar extends JToolBar {
 		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
-		ImageButton ibutton = new ToolbarImageButton("document-open", "Open", "Open a new data set");
+		ImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set");
 		ibutton.addActionListener(e -> plot.actionOpenData());
 		this.add(ibutton, c);
 
 		// controls.add(button);
 
-		toolbarSnapshot = new ToolbarImageButton(
-			StockIcon.DEVICE_CAMERA,
-			"Save Image",
-			"Save a picture of the current plot");
+		toolbarSnapshot = new ToolbarImageButton("Save Image", StockIcon.DEVICE_CAMERA).withTooltip("Save a picture of the current plot");
 		toolbarSnapshot.addActionListener(e -> plot.actionSavePicture());
 		c.gridx += 1;
 		this.add(toolbarSnapshot, c);
 
-		toolbarInfo = new ToolbarImageButton(
-			StockIcon.BADGE_INFO,
-			"Scan Info",
-			"Displays extended information about this data set");
+		toolbarInfo = new ToolbarImageButton("Scan Info", StockIcon.BADGE_INFO).withTooltip("Displays extended information about this data set");
 		toolbarInfo.addActionListener(e -> plot.actionShowInfo());
 		c.gridx += 1;
 		toolbarInfo.setEnabled(false);
@@ -120,21 +114,21 @@ public class PlotToolbar extends JToolBar {
 	
 
 	private ToolbarImageButton createEnergyMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton("menu-energy", "Energy & Peak Calibration");
+		ToolbarImageButton menuButton = new ToolbarImageButton().withIcon("menu-energy").withTooltip("Energy & Peak Calibration");
 		energyMenu = new PlotMenuEnergy(plot, controller);
 		menuButton.addActionListener(e -> energyMenu.show(menuButton, (int)(menuButton.getWidth() - energyMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
 	
 	private ToolbarImageButton createMainMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_MAIN, "Main Menu");
+		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_MAIN).withTooltip("Main Menu");
 		mainMenu = new PlotMenuMain(plot, controller);
 		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
 
 	private ToolbarImageButton createViewMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton("menu-view", "Plot Settings Menu");
+		ToolbarImageButton menuButton = new ToolbarImageButton().withIcon("menu-view").withTooltip("Plot Settings Menu");
 		viewMenu = new PlotMenuView(plot, controller);
 		menuButton.addActionListener(e -> viewMenu.show(menuButton, (int)(menuButton.getWidth() - viewMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
