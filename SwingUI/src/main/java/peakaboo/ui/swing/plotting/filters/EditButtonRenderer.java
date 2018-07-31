@@ -25,7 +25,7 @@ class EditButtonRenderer implements TableCellRenderer
 	public EditButtonRenderer()
 	{
 
-		edit = new ImageButton(StockIcon.MISC_PREFERENCES, "…", "Edit Filter", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
+		edit = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(Layout.IMAGE).withBordered(false);
 		edit.setOpaque(false);
 				
 		container = new JPanel();

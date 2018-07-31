@@ -147,12 +147,10 @@ class GuidedFittingWidget extends TSSelectorGroup
 	private ImageButton createEditButton(final TSSelector selector, final int index)
 	{
 
-		final ImageButton edit = new ImageButton(
-			StockIcon.EDIT_EDIT,
-			"Edit",
-			"Edit this fitting",
-			Layout.IMAGE,
-			IconSize.BUTTON);
+		final ImageButton edit = new ImageButton(StockIcon.EDIT_EDIT, IconSize.BUTTON)
+				.withTooltip("Edit this fitting")
+				.withLayout(Layout.IMAGE)
+				.withBordered(false);
 
 		edit.addActionListener(new ActionListener() {
 

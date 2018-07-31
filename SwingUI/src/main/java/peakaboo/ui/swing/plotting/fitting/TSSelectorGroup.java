@@ -37,7 +37,11 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		
 		setLayout(new GridBagLayout());
 		
-		addButton = new ImageButton(StockIcon.EDIT_ADD, "Add", Layout.IMAGE, IconSize.BUTTON);
+		addButton = new ImageButton()
+				.withIcon(StockIcon.EDIT_ADD, IconSize.BUTTON)
+				.withTooltip("Add")
+				.withLayout(Layout.IMAGE)
+				.withBordered(false);
 		addButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -90,7 +94,11 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	protected ImageButton createRemoveButton(final TSSelector tss)
 	{
-		ImageButton remove = new ImageButton(StockIcon.EDIT_REMOVE, "Remove", Layout.IMAGE, IconSize.BUTTON);
+		ImageButton remove = new ImageButton()
+				.withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON)
+				.withTooltip("Remove")
+				.withLayout(Layout.IMAGE)
+				.withBordered(false);
 
 		remove.addActionListener(new ActionListener() {
 

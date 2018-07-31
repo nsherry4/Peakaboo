@@ -467,13 +467,13 @@ public class PlotPanel extends TabbedInterfacePanel
 			sap.setBorder(Spacing.bMedium());
 			
 			ButtonBox bbox = new ButtonBox();
-			ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK, "OK", true);
+			ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
 			ok.addActionListener(e -> {
 				this.popModalComponent();
 				loadFiles(files, dsp, after);
 			});
 			
-			ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
+			ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
 			cancel.addActionListener(e -> {
 				this.popModalComponent();
 				return;
@@ -904,7 +904,9 @@ public class PlotPanel extends TabbedInterfacePanel
 		panel.add(propPanel, BorderLayout.CENTER);
 		
 		ButtonBox box = new ButtonBox(true);
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
+		ImageButton close = new ImageButton()
+				.withText("Close")
+				.withIcon(StockIcon.WINDOW_CLOSE);
 		box.addRight(close);
 		close.addActionListener(e -> {
 			this.popModalComponent();

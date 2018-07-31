@@ -74,7 +74,10 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarInfo, c);
 	
 		
-		toolbarMap = new ImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", ToolbarImageButton.significantLayout, IconSize.TOOLBAR_SMALL);
+		toolbarMap = new ImageButton("Map Fittings")
+				.withIcon("map", IconSize.TOOLBAR_SMALL)
+				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
+				.withLayout(ToolbarImageButton.significantLayout);
 		toolbarMap.addActionListener(e -> plot.actionMap());
 		
 		c.gridx += 1;

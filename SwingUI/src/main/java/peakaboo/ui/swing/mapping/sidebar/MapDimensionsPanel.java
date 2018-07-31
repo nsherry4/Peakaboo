@@ -74,7 +74,11 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		if (!controller.mapsController.hasOriginalDataDimensions()) {
-			ImageButton magic = new ImageButton("auto", "Guess Dimensions", "Try to detect the map's dimensions.", Layout.IMAGE_ON_SIDE, IconSize.TOOLBAR_SMALL);
+			ImageButton magic = new ImageButton("Guess Dimensions")
+					.withIcon("auto", IconSize.TOOLBAR_SMALL)
+					.withTooltip("Try to detect the map's dimensions.")
+					.withLayout(Layout.IMAGE_ON_SIDE)
+					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;
 			c.gridy += 1;
@@ -109,7 +113,10 @@ public class MapDimensionsPanel extends JPanel {
 			});
 			this.add(magic, c);
 		} else {
-			ImageButton reset = new ImageButton(StockIcon.ACTION_REFRESH, "", "Reset the dimensions to those given in the data set.", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
+			ImageButton reset = new ImageButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
+					.withTooltip("Reset the dimensions to those given in the data set.")
+					.withLayout(Layout.IMAGE)
+					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;
 			c.gridy += 1;

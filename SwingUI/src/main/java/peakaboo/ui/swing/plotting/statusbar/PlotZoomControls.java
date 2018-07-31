@@ -21,7 +21,10 @@ public class PlotZoomControls extends ImageButton {
 	private ClearPanel zoomPanel;
 	
 	public PlotZoomControls(PlotController controller) {
-		super(StockIcon.FIND, "Zoom", Layout.IMAGE, false);
+		super(StockIcon.FIND);
+		super.withTooltip("Zoom")
+			.withLayout(Layout.IMAGE)
+			.withBordered(false);
 		
 		this.controller = controller;
 		

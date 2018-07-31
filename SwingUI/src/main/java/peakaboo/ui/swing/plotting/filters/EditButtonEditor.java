@@ -2,6 +2,8 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
@@ -52,14 +54,8 @@ class EditButtonEditor extends DefaultCellEditor
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		button = new ImageButton(StockIcon.MISC_PREFERENCES, "…", "Edit Filter", Layout.IMAGE, IconSize.TOOLBAR_SMALL);
-		button.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				fireEditingStopped();
-			}
-		});
+		button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(Layout.IMAGE).withBordered(false);
+		button.addActionListener(e -> fireEditingStopped());
 		button.setOpaque(false);
 		
 		container = new JPanel();
