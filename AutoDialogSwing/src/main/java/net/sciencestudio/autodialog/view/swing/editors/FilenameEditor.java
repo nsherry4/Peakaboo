@@ -99,7 +99,7 @@ class FileSelector extends JPanel
 	
 	public FileSelector(final FilenameEditor parent) {
 		super(new BorderLayout());
-		open = new ImageButton(StockIcon.DOCUMENT_OPEN, "Browse for Files", Layout.IMAGE);
+		open = new ImageButton().withIcon(StockIcon.DOCUMENT_OPEN).withTooltip("Browse for Files").withLayout(Layout.IMAGE);
 		
 		filenameField = new JTextField(10);
 		filenameField.setEditable(false);
