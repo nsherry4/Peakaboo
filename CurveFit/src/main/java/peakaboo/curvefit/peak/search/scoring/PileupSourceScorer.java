@@ -12,12 +12,12 @@ import scitypes.ReadOnlySpectrum;
  * @author NAS
  *
  */
-public class ProportionalPileupScorer implements FittingScorer {
+public class PileupSourceScorer implements FittingScorer {
 
 	private ReadOnlySpectrum data;
 	private EnergyCalibration calibration;
 	
-	public ProportionalPileupScorer(ReadOnlySpectrum data, EnergyCalibration calibration) {
+	public PileupSourceScorer(ReadOnlySpectrum data, EnergyCalibration calibration) {
 		this.data = data;
 		this.calibration = calibration;
 	}
@@ -26,35 +26,34 @@ public class ProportionalPileupScorer implements FittingScorer {
 	public float score(TransitionSeries ts) {
 		
 		if (ts.type != TransitionSeriesType.COMPOSITE) { return 1; }
-		
-		float sum = sumTransitionSeries(ts);
-		
-		float baseSum = 0f;
-		for (TransitionSeries baseTS : ts.getBaseTransitionSeries()) {
-			baseSum += sumTransitionSeries(baseTS);
-		}
-		baseSum /= ts.getBaseTransitionSeries().size();
-
-		//if the summation takes up more signal than the average base ts sum, score it lower
-		if (sum  > baseSum) {
-			return 0.1f;
-		} else {
-			return 1f;
-		}
-		
-	}
 	
-	private float sumTransitionSeries(TransitionSeries ts) {
-		float sum = 0f;
-		for (Transition t : ts) {
-			int channel = calibration.channelFromEnergy(t.energyValue);
-			if (channel > 0 && channel < data.size()) {
-				sum += data.get(channel);
-			}
+		float sourceScore = 0;
+		float tsCount = 0;
+		for (TransitionSeries ots : ts.getBaseTransitionSeries()) {
+			sourceScore += tsHeight(ots);
+			tsCount++;
 		}
-		return sum;
+		sourceScore /= tsCount;
+		sourceScore /= data.max();
+		
+		float score = (float) Math.sqrt(Math.sqrt(sourceScore));
+		return score;
+		
+		
+
+		
 	}
 
+	private float tsHeight(TransitionSeries ts) {
+		float height = 0;
+		for (Transition t : ts.getAllTransitions()) {
+			int channel = calibration.channelFromEnergy(t.energyValue);
+			if (channel >= data.size()) continue;
+			if (channel < 0) continue;
+			height = Math.max(data.get(channel), height);
+		}
+		return height;
+	}
 	
 	
 }

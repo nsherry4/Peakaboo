@@ -13,12 +13,15 @@ import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
+import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
+import peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
 import peakaboo.curvefit.peak.search.scoring.FastFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.NoComplexPileupScorer;
-import peakaboo.curvefit.peak.search.scoring.ProportionalPileupScorer;
+import peakaboo.curvefit.peak.search.scoring.PileupSourceScorer;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -104,6 +107,7 @@ public class PeakProposal
 			for (int match : new ArrayList<>(guesses.keySet())) {
 				if (guesses.get(match).contains(guess)) { 
 					guesses.remove(match);
+					
 				}
 			}
 			
@@ -186,7 +190,7 @@ public class PeakProposal
 		FittingResultSet proposedResults = solver.solve(fitResults.getResidual(), proposed, fitter);
 		
 		
-		final ReadOnlySpectrum s = proposedResults.getResidual();
+		final ReadOnlySpectrum residualSpectrum = proposedResults.getResidual();
 		
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		
@@ -231,21 +235,33 @@ public class PeakProposal
 		
 	
 		
-		CompoundFittingScorer compoundScorer = new CompoundFittingScorer();
-		compoundScorer.add(new EnergyProximityScorer(energy, fits.getFittingParameters()), 10f);
-		compoundScorer.add(new FastFittingScorer(s, fits.getFittingParameters()), 10f);
-		compoundScorer.add(new NoComplexPileupScorer(), 2f);
-		compoundScorer.add(new ProportionalPileupScorer(data, calibration), 1f);
+		CompoundFittingScorer fastCompoundScorer = new CompoundFittingScorer();
+		fastCompoundScorer.add(new EnergyProximityScorer(energy, fits.getFittingParameters()), 10f);
+		fastCompoundScorer.add(new FastFittingScorer(residualSpectrum, fits.getFittingParameters()), 10f);
+		fastCompoundScorer.add(new NoComplexPileupScorer(), 2f);
+		fastCompoundScorer.add(new PileupSourceScorer(data, calibration), 1f);
+
 		
+		//Good scorer also adds a very slow curve fitting scorer to make sure that we actually evaluate the curve at some point
+		CompoundFittingScorer goodCompoundScorer = new CompoundFittingScorer();	
+		goodCompoundScorer.add(fastCompoundScorer, 1f);
+		goodCompoundScorer.add(new CurveFittingScorer(residualSpectrum, fits.getFittingParameters(), fitter), 10f);
 
 		
 		
 		//now sort by score
 		tss = tss.stream()
-			.map(ts -> new Pair<>(ts, -compoundScorer.score(ts)))
+			//fast scorer to shrink downthe list
+			.map(ts -> new Pair<>(ts, -fastCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
-			.limit(15)
+			.limit(10)
 			.map(p -> p.first)
+			
+			//good scorer to put them in the best order
+			.map(ts -> new Pair<>(ts, -goodCompoundScorer.score(ts)))
+			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
+			.map(p -> p.first)
+			
 			.collect(Collectors.toList());
 
 		
