@@ -95,7 +95,6 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
-import swidget.widgets.HButton;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
@@ -834,7 +833,7 @@ public class PlotPanel extends TabbedInterfacePanel
 							"Open Associated Data Set?", 
 							"This session is associated with another data set.\nDo you want to open that data set now?", 
 							JOptionPane.QUESTION_MESSAGE, 
-							new HButton("Yes", () -> {
+							new ImageButton("Yes").withAction(() -> {
 								//they said yes, load the new data, and then apply the session
 								//this needs to be done this way b/c loading a new dataset wipes out
 								//things like calibration info
@@ -843,7 +842,7 @@ public class PlotPanel extends TabbedInterfacePanel
 									savedSessionFileName = file.get();
 								});
 							}),
-							new HButton("No", () -> {
+							new ImageButton("No").withAction(() -> {
 								//load the settings w/o the data, then set the file paths back to the current values
 								controller.loadSessionSettings(session);
 								//they said no, reset the stored paths to the old ones

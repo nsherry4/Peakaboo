@@ -12,7 +12,9 @@ import javax.swing.SwingConstants;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.icons.IconSize;
 import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
@@ -67,7 +69,10 @@ public class PlotMenuEnergy extends JPopupMenu {
 		});
 		energy.addSetting(maxEnergy, "Maximum");
 
-		energyGuess = new ImageButton("Guess Calibration", "auto").withTooltip("Try to detect the correct max energy value by matching fittings to strong signal. Use with care.").withBordered(false);
+		energyGuess = new ImageButton("Guess Calibration")
+				.withIcon("auto", IconSize.TOOLBAR_SMALL)
+				.withTooltip("Try to detect the correct max energy value by matching fittings to strong signal. Use with care.")
+				.withBordered(false);
 		energyGuess.addActionListener(e -> {
 			//custom controls in a menu don't hide the menu when activated
 			this.setVisible(false);
@@ -82,12 +87,13 @@ public class PlotMenuEnergy extends JPopupMenu {
 		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
 		advanced.setOpaque(false);
 		advanced.setBorder(Spacing.bMedium());
-		JButton advancedButton = new JButton("Advanced Options");
-		advancedButton.addActionListener(e -> {
-			this.setVisible(false);
-			plot.actionShowAdvancedOptions();
-		});
-				//new JLabel("<html><div style='text-align: center;'>Peak Model<br /><span style='color: red'>WARNING: ADVANCED</span></div></html>");
+		JButton advancedButton = new ImageButton("Advanced Options")
+				.wittButtonSize(ButtonSize.COMPACT)
+				.withAction(() -> {
+					this.setVisible(false);
+					plot.actionShowAdvancedOptions();		
+				});
+
 		advancedButton.setHorizontalAlignment(SwingConstants.CENTER);
 		advancedButton.setFont(advancedButton.getFont().deriveFont(Font.BOLD));
 		advanced.addSetting(advancedButton);

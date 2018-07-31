@@ -49,9 +49,9 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.HButton;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
@@ -75,14 +75,14 @@ public class PluginsOverview extends JPanel {
 		details = new JPanel(new BorderLayout());
 		body.add(details, BorderLayout.CENTER);
 				
-		close = new HButton("Close", () -> parent.popModalComponent());
+		close = new ImageButton("Close").withAction(() -> parent.popModalComponent());
 		
-		add = new HButton(StockIcon.EDIT_ADD, "Import Plugins", this::add);
-		remove = new HButton(StockIcon.EDIT_REMOVE, "Remove Plugins", this::removeSelected);
+		add = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Import Plugins").withAction(this::add);
+		remove = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Plugins").withAction(this::removeSelected);
 		
-		reload = new HButton(StockIcon.ACTION_REFRESH, "Reload Plugins", this::reload);
-		browse = new HButton(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", this::browse);
-		download = new HButton(StockIcon.GO_DOWN, "Get More Plugins", this::download);
+		reload = new ImageButton(StockIcon.ACTION_REFRESH).withTooltip("Reload Plugins").withAction(this::reload);
+		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new ImageButton(StockIcon.GO_DOWN).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
 		left.setOpaque(false);
@@ -173,11 +173,11 @@ public class PluginsOverview extends JPanel {
 				"Delete Plugin Archive?", 
 				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
 				JOptionPane.QUESTION_MESSAGE,
-				new HButton("Yes", () -> {
+				new ImageButton("Yes").withAction(() -> {
 					manager.removeJar(jar);
 					this.reload();
 				}),
-				new HButton("No")
+				new ImageButton("No")
 			).showIn(parent);
 		
 		

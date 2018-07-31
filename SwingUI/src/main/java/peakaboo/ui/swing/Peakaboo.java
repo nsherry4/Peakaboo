@@ -36,7 +36,7 @@ import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.HButton;
+import swidget.widgets.ImageButton;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 
 
@@ -92,7 +92,7 @@ public class Peakaboo
 			String title = "Development Build of Peakaboo";
 			JOptionPane optionPane = new TabbedInterfaceDialog(title, message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, v-> {}).getComponent();
 			JDialog dialog = optionPane.createDialog(title);
-			optionPane.setOptions(new Object[] {new HButton("OK", () -> dialog.setVisible(false))});
+			optionPane.setOptions(new Object[] {new ImageButton("OK").withAction(() -> dialog.setVisible(false))});
 			dialog.setAlwaysOnTop(true);
 			dialog.setVisible(true);
 		}
@@ -107,7 +107,7 @@ public class Peakaboo
 			String title = "Low Memory";
 			JOptionPane optionPane = new TabbedInterfaceDialog(title, message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, v-> {}).getComponent();
 			JDialog dialog = optionPane.createDialog(title);
-			optionPane.setOptions(new Object[] {new HButton("OK", () -> dialog.setVisible(false))});
+			optionPane.setOptions(new Object[] {new ImageButton("OK").withAction(() -> dialog.setVisible(false))});
 			dialog.setAlwaysOnTop(true);
 			dialog.setVisible(true);
 		}
