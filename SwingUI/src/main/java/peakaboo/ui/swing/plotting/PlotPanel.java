@@ -95,6 +95,7 @@ import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
+import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
@@ -897,19 +898,20 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		JPanel panel = new JPanel(new BorderLayout());
-		PropertyViewPanel propPanel = new PropertyViewPanel(properties, "Dataset Information");
+		PropertyViewPanel propPanel = new PropertyViewPanel(properties);
 		propPanel.setBorder(Spacing.bHuge());
 		panel.add(propPanel, BorderLayout.CENTER);
 		
-		ButtonBox box = new ButtonBox(true);
+		
 		ImageButton close = new ImageButton()
 				.withText("Close")
-				.withIcon(StockIcon.WINDOW_CLOSE);
-		box.addRight(close);
-		close.addActionListener(e -> {
-			this.popModalComponent();
-		});
-		panel.add(box, BorderLayout.SOUTH);
+				.withIcon(StockIcon.WINDOW_CLOSE)
+				.withAction(this::popModalComponent);
+		
+		HeaderBox header = new HeaderBox(null, "Dataset Information", close);
+		
+		
+		panel.add(header, BorderLayout.NORTH);
 		
 		this.pushModalComponent(panel);
 		
