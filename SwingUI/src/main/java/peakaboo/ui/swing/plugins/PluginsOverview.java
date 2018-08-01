@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plugins;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,10 +14,13 @@ import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -43,6 +47,9 @@ import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.ui.swing.plotting.FileDrop;
+import stratus.StratusLookAndFeel;
+import stratus.theme.DarkTheme;
+import stratus.theme.LightTheme;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconSize;
@@ -85,7 +92,7 @@ public class PluginsOverview extends JPanel {
 		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Open Plugins Folder").withAction(this::browse);
 		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Get More Plugins").withAction(this::download);
 		
-		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
+		ButtonBox left = new ButtonBox(Spacing.tiny, false);
 		left.setOpaque(false);
 		left.addLeft(add);
 		left.addLeft(remove);
@@ -345,6 +352,45 @@ public class PluginsOverview extends JPanel {
 		scroller.setPreferredSize(new Dimension(200, 300));
 		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
 		return scroller;
+		
+	}
+	
+	public static void main(String[] args) throws UnsupportedLookAndFeelException {
+		
+		UIManager.setLookAndFeel(new StratusLookAndFeel(new LightTheme()));
+		
+		JFrame frame = new JFrame();
+		frame.setPreferredSize(new Dimension(640, 480));
+		
+		ImageButton b1 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
+		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+
+		ImageButton b3 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
+		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		
+		ImageButton b5 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
+		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		
+		ButtonBox box = new ButtonBox();
+		
+		box.addLeft(b1);
+		box.addLeft(b2);
+		
+		box.addCentre(b3);
+		box.addCentre(b4);
+		
+		box.addRight(b5);
+		box.addRight(b6);
+		
+		
+		System.out.println(frame.getContentPane().getLayout());
+		frame.getContentPane().setLayout(new BorderLayout());
+		frame.getContentPane().add(box, BorderLayout.SOUTH);
+		
+		frame.pack();
+		
+		frame.setVisible(true);
+				
 		
 	}
 	
