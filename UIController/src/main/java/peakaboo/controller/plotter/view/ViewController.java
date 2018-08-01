@@ -264,6 +264,9 @@ public class ViewController extends Eventful
 	 */
 	public void loadPersistentSettings() {
 		File file = new File(Configuration.appDir() + "/settings.yaml");
+		if (!file.exists()) {
+			savePersistentSettings();
+		}
 		try {
 			
 			byte[] bytes = Files.readAllBytes(file.toPath());
