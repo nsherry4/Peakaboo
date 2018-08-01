@@ -63,6 +63,7 @@ import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
+import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
 
 public class PluginsOverview extends JPanel {
 
@@ -180,13 +181,14 @@ public class PluginsOverview extends JPanel {
 		new TabbedInterfaceDialog(
 				"Delete Plugin Archive?", 
 				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
-				JOptionPane.QUESTION_MESSAGE,
+				MessageType.QUESTION)
+			.addRight(
 				new ImageButton("Yes").withAction(() -> {
 					manager.removeJar(jar);
 					this.reload();
-				}),
-				new ImageButton("No")
-			).showIn(parent);
+				}))
+			.addLeft(new ImageButton("No"))
+			.showIn(parent);
 		
 		
 	}
@@ -234,7 +236,7 @@ public class PluginsOverview extends JPanel {
 			new TabbedInterfaceDialog(
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
-					JOptionPane.ERROR_MESSAGE).showIn(parent);
+					MessageType.ERROR).showIn(parent);
 			added = true;
 		}
 		
@@ -242,7 +244,7 @@ public class PluginsOverview extends JPanel {
 			new TabbedInterfaceDialog(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
-					JOptionPane.ERROR_MESSAGE).showIn(parent);
+					MessageType.ERROR).showIn(parent);
 		}
 		
 		reload();
@@ -262,7 +264,7 @@ public class PluginsOverview extends JPanel {
 		new TabbedInterfaceDialog(
 				"Imported New Plugins", 
 				"Peakboo successfully imported the following plugin(s):\n" + listToUL(plugins.getAll()), 
-				JOptionPane.INFORMATION_MESSAGE).showIn(parent);
+				MessageType.INFO).showIn(parent);
 
 		return true;
 

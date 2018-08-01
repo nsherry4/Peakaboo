@@ -38,6 +38,7 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
+import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
 
 
 
@@ -90,11 +91,9 @@ public class Peakaboo
 		if (!Version.release){
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
-			JOptionPane optionPane = new TabbedInterfaceDialog(title, message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, v-> {}).getComponent();
-			JDialog dialog = optionPane.createDialog(title);
-			optionPane.setOptions(new Object[] {new ImageButton("OK").withAction(() -> dialog.setVisible(false))});
-			dialog.setAlwaysOnTop(true);
-			dialog.setVisible(true);
+			
+			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInFrame(null, true);
+			
 		}
 	}
 	
@@ -105,11 +104,11 @@ public class Peakaboo
 			String message = "This system's Java VM is only allocated " + Env.heapSize()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
-			JOptionPane optionPane = new TabbedInterfaceDialog(title, message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, v-> {}).getComponent();
-			JDialog dialog = optionPane.createDialog(title);
-			optionPane.setOptions(new Object[] {new ImageButton("OK").withAction(() -> dialog.setVisible(false))});
-			dialog.setAlwaysOnTop(true);
-			dialog.setVisible(true);
+						
+			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInFrame(null, true);
+			
+			//dialog.setAlwaysOnTop(true);
+			//dialog.setVisible(true);
 		}
 	}
 	

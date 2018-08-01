@@ -102,6 +102,7 @@ import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.properties.PropertyViewPanel;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
 import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
+import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
 
 
 
@@ -443,7 +444,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			new TabbedInterfaceDialog(
 					"Open Failed", 
 					"Could not determine the data format of the selected file(s)", 
-					JOptionPane.ERROR_MESSAGE
+					MessageType.ERROR
 				).showIn(this);
 		}
 		else
@@ -512,7 +513,7 @@ public class PlotPanel extends TabbedInterfacePanel
 							new TabbedInterfaceDialog(
 									"Open Failed", 
 									"Peakaboo could not open this dataset.\n" + result.message, 
-									JOptionPane.ERROR_MESSAGE
+									MessageType.ERROR
 								).showIn(this);
 						}
 					}
@@ -832,7 +833,8 @@ public class PlotPanel extends TabbedInterfacePanel
 					new TabbedInterfaceDialog(
 							"Open Associated Data Set?", 
 							"This session is associated with another data set.\nDo you want to open that data set now?", 
-							JOptionPane.QUESTION_MESSAGE, 
+							MessageType.QUESTION)
+						.addRight(
 							new ImageButton("Yes").withAction(() -> {
 								//they said yes, load the new data, and then apply the session
 								//this needs to be done this way b/c loading a new dataset wipes out
@@ -841,14 +843,15 @@ public class PlotPanel extends TabbedInterfacePanel
 									controller.loadSessionSettings(session);	
 									savedSessionFileName = file.get();
 								});
-							}),
+							}))
+						.addLeft(
 							new ImageButton("No").withAction(() -> {
 								//load the settings w/o the data, then set the file paths back to the current values
 								controller.loadSessionSettings(session);
 								//they said no, reset the stored paths to the old ones
 								controller.data().setDataPaths(currentPaths);
-							})
-						).showIn(this);
+							}))
+						.showIn(this);
 				} else {
 					//just load the session, as there is either no data associated with it, or it's the same data
 					controller.loadSessionSettings(session);
@@ -925,7 +928,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			new TabbedInterfaceDialog(
 					"Cannot Detect Energy Calibration", 
 					"Detecting energy calibration requires that at least two elements be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
-					JOptionPane.WARNING_MESSAGE
+					MessageType.WARNING
 				).showIn(this);
 			return;
 		}

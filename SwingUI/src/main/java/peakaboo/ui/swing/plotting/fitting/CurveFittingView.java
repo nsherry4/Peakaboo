@@ -25,6 +25,7 @@ import plural.swing.ExecutorSetView;
 import scitypes.util.Mutable;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
+import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
 
 
 
@@ -131,7 +132,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			new TabbedInterfaceDialog(
 					"Missing Data Set or Energy Calibration", 
 					"Guided fitting cannot proceed without a data set and energy calibration.", 
-					JOptionPane.WARNING_MESSAGE
+					MessageType.WARNING
 				).showIn(plotPanel);
 			
 		}
@@ -166,7 +167,8 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			new TabbedInterfaceDialog(
 					"Misisng Data Set or Energy Calibration", 
 					"Automatic fitting cannot proceed without a data set and energy calibration.", 
-					JOptionPane.WARNING_MESSAGE).showIn(plotPanel);
+					MessageType.WARNING
+				).showIn(plotPanel);
 			
 		}
 	}
