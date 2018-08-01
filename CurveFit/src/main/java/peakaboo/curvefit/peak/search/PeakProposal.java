@@ -53,12 +53,14 @@ public class PeakProposal
 		
 		DummyExecutor firstStage = new DummyExecutor(true);
 		DummyExecutor secondStage = new DummyExecutor();
-		firstStage.advanceState();
+		
 		
 		ExecutorSet<List<TransitionSeries>> exec = new ExecutorSet<List<TransitionSeries>>("Automatic Peak Fitting") {
 
 			@Override
 			protected List<TransitionSeries> execute() {
+				
+				firstStage.advanceState();
 				
 				//FIRST STAGE
 				EnergyCalibration calibration = fits.getFittingParameters().getCalibration();
@@ -106,7 +108,7 @@ public class PeakProposal
 				secondStage.setWorkUnits(guesses.size());
 				secondStage.advanceState();
 				
-				
+								
 				/*
 				 * Go peak by peak from strongest to weakest.
 				 * Take the best guess for that peak.
@@ -120,12 +122,14 @@ public class PeakProposal
 						return null;
 					}
 					
-					if (!guesses.containsKey(channel)) { continue; }
+					if (!guesses.containsKey(channel)) { 
+						secondStage.workUnitCompleted();
+						continue; 
+					}
 					
 
 					//Get the best guess from the list
 					TransitionSeries guess = guesses.get(channel).get(0);
-					
 					
 					//If the existing fits doesn't contain this, add it
 					if (!fits.getFittedTransitionSeries().contains(guess)) {
@@ -138,7 +142,6 @@ public class PeakProposal
 					for (int match : new ArrayList<>(guesses.keySet())) {
 						if (guesses.get(match).contains(guess)) { 
 							guesses.remove(match);
-							secondStage.workUnitCompleted();
 						}
 					}
 					
@@ -146,14 +149,13 @@ public class PeakProposal
 					//Regenerate new guesses for remaining peaks based on combined 
 					//fittingset so that pileup is considered in future iterations
 					guesses = makeGuesses(data, guesses.keySet(), fits, proposals, fitter, solver);
-					
+
+										
 					secondStage.workUnitCompleted();
 				}
 				
 				secondStage.advanceState();
-				
-				
-				
+								
 				return newFits;
 			}
 		}; 
@@ -179,7 +181,7 @@ public class PeakProposal
 		) {
 		Map<Integer, List<TransitionSeries>> guesses = new LinkedHashMap<>();
 		for (int channel : peaks) {
-			guesses.put(channel, fromChannel(data, fits, proposals, fitter, solver, channel, null));
+			guesses.put(channel, fromChannel(data, fits, proposals, fitter, solver, channel, null, 5));
 		}
 		return guesses;
 	}
@@ -196,7 +198,8 @@ public class PeakProposal
 			CurveFitter fitter,
 			FittingSolver solver,
 			final int channel, 
-			TransitionSeries currentTS
+			TransitionSeries currentTS,
+			int guessCount
 		) {
 		
 		
@@ -297,7 +300,7 @@ public class PeakProposal
 			//fast scorer to shrink downthe list
 			.map(ts -> new Pair<>(ts, -fastCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
-			.limit(10)
+			.limit(guessCount)
 			.map(p -> p.first)
 			
 			//good scorer to put them in the best order

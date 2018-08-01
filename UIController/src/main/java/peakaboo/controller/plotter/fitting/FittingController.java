@@ -238,7 +238,8 @@ public class FittingController extends EventfulType<Boolean>
 				this.getCurveFitter(),
 				this.getFittingSolver(),
 				channel,
-				currentTS	
+				currentTS,
+				10
 		);
 	}
 

@@ -3,6 +3,9 @@ package peakaboo.curvefit.peak.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sciencestudio.autodialog.model.Value;
+import peakaboo.filter.model.Filter;
+import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -13,10 +16,16 @@ public class DerivativePeakSearcher implements PeakSearcher {
 	@Override
 	public List<Integer> search(ReadOnlySpectrum data) {
 		
+		Filter filter = new WeightedAverageNoiseFilter();
+		filter.initialize();
+		Value<Integer> width = (Value<Integer>) filter.getParameters().get(0);
+		width.setValue(new Integer(10));
+		
 		//aggressive smoothing to get just the most significant peaks
 		ReadOnlySpectrum smoothed = new ISpectrum(data);
-		for (int i = 0; i < 2; i++) {
-			smoothed = smooth(smoothed, 10);
+		
+		for (int i = 0; i < 3; i++) {
+			smoothed = filter.filter(smoothed, false);
 		}
 		
 				
@@ -33,19 +42,50 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		//First derivative crossing from positive to negative indicates a peak top
 		List<Integer> channels = new ArrayList<>();
 		int nonnegative = 0;
-		for (int i = 1; i < data.size(); i++) {
-			float value = d1.get(i);
+		int negative = 0;
+		boolean gap = false;
+		int bestChannel = 0;
+		float bestValue = 0;
+		
+		
+		for (int i = 0; i < data.size(); i++) {
+			float value = d2.get(i);
 			
 			if (value >= 0) {
-				nonnegative++;
-			} else  {
-				if (nonnegative > 10 && d2.get(i) < -d2threshold) {
-					channels.add(i);
+				
+				//If we had been tracking a possible peak, and it looks good
+				if (gap && negative >= 5 && bestValue <= -d2threshold) {
+					channels.add(bestChannel);
+					gap = false;
 				}
+				
+				nonnegative++;
+				//Clear any negative-related values
+				negative = 0;
+				bestChannel = 0;
+				bestValue = 0;
+				
+				//If we've gone 10 channels without a negative value, mark as having had a 
+				//good sized gap between peaks
+				if (nonnegative >= 5) {
+					gap = true;
+				}
+				
+			} else  {
+				negative++;
 				nonnegative = 0;
-			}
 
+				//Start tracking the best point incase this turns out to be good
+				if (d2.get(i) < bestValue) {
+					bestValue = d2.get(i);
+					bestChannel = i;
+				}
+				
+			}
+			
 		}
+		
+		//System.exit(0);
 		
 		channels.sort((a, b) -> {
 			return Float.compare(data.get(b), data.get(a));
@@ -55,29 +95,5 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		
 	}
 	
-	private Spectrum smooth(ReadOnlySpectrum data, int windowSpan) {
-		
-		Spectrum smoothed = new ISpectrum(data.size());
-		
-		int start, stop;
-		float sum;
-		for (int i = 0; i < data.size(); i++) {
-
-			// exact same as in last loop
-			start = Math.max(0,  i - windowSpan);
-			stop = Math.min(data.size()-1, i + windowSpan + 1);
-			
-			sum = 0;
-			for (int p = start; p < stop; p++) {
-				sum += data.get(p);
-			}
-
-			smoothed.set(i, sum);
-
-		}
-
-
-		return smoothed;
-	}
 	
 }

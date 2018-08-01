@@ -192,7 +192,7 @@ class FilterList extends ClearPanel {
 
 	private JPanel createControlPanel(){
 		
-		controls = new ListControls(null, null, false, false) {
+		controls = new ListControls(new String[] {"Add Filter", "Remove Filter", "Clear Filters", "", ""}, null, false, false) {
 		
 			@Override
 			public void up()
