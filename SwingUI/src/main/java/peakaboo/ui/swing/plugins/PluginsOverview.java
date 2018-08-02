@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -197,7 +198,12 @@ public class PluginsOverview extends JPanel {
 		StringBuffer buff = new StringBuffer();
 		buff.append("<ul>");
 		for (Object o : stuff) {
-			buff.append("<li>" + o.toString() + "</li>");
+			String name = o.toString();
+			if (o instanceof BoltPluginController<?>) {
+				BoltPluginController<?> plugin = (BoltPluginController<?>) o;
+				name = plugin.getName() + " (v" + plugin.getVersion() + ")";
+			}
+			buff.append("<li>" + name + "</li>");
 		}
 		buff.append("</ul>");
 		return buff.toString();
@@ -258,6 +264,13 @@ public class PluginsOverview extends JPanel {
 		if (!manager.jarContainsPlugins(jar)) {
 			return false;
 		}
+		
+		Optional<File> upgradeTarget = manager.jarUpgradeTarget(jar);
+		//looks like this jar is an upgrade for an existing jar
+		if (upgradeTarget.isPresent()) {
+			manager.removeJar(upgradeTarget.get());
+		}
+		
 		BoltPluginSet<? extends BoltPlugin> plugins = manager.importJar(jar);
 		
 		this.reload();
