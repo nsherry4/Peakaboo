@@ -52,21 +52,21 @@ public interface BoltPluginController<T extends BoltPlugin> {
 
 	/**
 	 * Returns true if (and only if) the UUID of the other plugin matches 
-	 * this one, but the version is lower than this one 
+	 * this one, and the version of this plugin is the same or greater than the other one 
 	 * @param other the plugin to test against
-	 * @return true if this plugin is newer than the other one, false if this plugin is older or the same version, or if the UUIDs don't match
+	 * @return true if this plugin's version is newer or the same, false if this plugin version is older, or if the UUIDs don't match
 	 */
-	default boolean isNewerVersionOf(BoltPluginController<?> other) {
+	default boolean isUpgradeFor(BoltPluginController<?> other) {
 		if (getUUID() != other.getUUID()) {
 			return false;
 		}
 		int cmp = new AlphaNumericComparitor(false).compare(getVersion(), other.getVersion());
-		if (cmp <= 0) {
-			//we're older or the same version
-			return false;
-		} else {
-			//newer version
+		if (cmp >= 0) {
+			//this plugin is an older (or same) version of the given one, so it's an upgrade
 			return true;
+		} else {
+			//this is the newer version
+			return false;
 		}
 	}
 	

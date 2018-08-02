@@ -32,7 +32,7 @@ public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 			//we have to choose which of these to load
 			BoltPluginController<? extends T> existingPlugin = this.getByUUID(uuid);
 			
-			if (plugin.isNewerVersionOf(existingPlugin)) {
+			if (plugin.isUpgradeFor(existingPlugin)) {
 				plugins.remove(existingPlugin);
 				plugins.add(plugin);
 			}

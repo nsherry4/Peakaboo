@@ -3,8 +3,11 @@ package net.sciencestudio.bolt.plugin.core;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
@@ -27,6 +30,9 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 	
 	public BoltPluginManager(File directories) {
 		this.directory = directories;
+		if (this.directory == null) {
+			throw new IllegalArgumentException("directory cannot be null");
+		}
 	}
 	
 	public synchronized final void reload() {
@@ -51,22 +57,16 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 				javaLoader.register();
 				
 				//load plugins from the application plugin dir(s)
-				if (directory != null) {
-					directory.mkdirs();
-					javaLoader.register(directory);	
-				}
-				
+				ensureManagedDirectory();
+				javaLoader.register(directory);
+								
 			} catch (ClassInheritanceException e) {
 				Bolt.logger().log(Level.SEVERE, "Failed to load plugins", e);
 			}
 
 			BoltFilesytstemPluginLoader<? extends P> scriptLoader = scriptLoader(plugins);
-			//load script plugins from the application plugin dir(s)
-			if (directory != null) {
-				directory.mkdirs();
-				scriptLoader.scanDirectory(directory);
-			}
-			
+			ensureManagedDirectory();
+			scriptLoader.scanDirectory(directory);
 			
 			
 			//custom work
@@ -114,25 +114,25 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 	 * @return a {@link Optional} containing a {@link BoltPluginSet} if the jar was imported, or empty otherwise
 	 */
 	public BoltPluginSet<P> importJar(File jar) throws BoltImportException {
+		ensureManagedDirectory();
 		
 		BoltPluginSet<P> plugins = pluginsInJar(jar);
 		
 		
-		if (plugins.getAll().size() == 0) {
+		if (plugins.size() == 0) {
 			String msg = "Importing " + jar.getAbsolutePath() + " failed, it does not contain any plugins";
 			Bolt.logger().log(Level.INFO, msg);
 			throw new BoltImportException("msg");
 		}
 		
-		File newFilename = new File(directory.getAbsolutePath() + File.separator + jar.getName());
-		if (newFilename.exists()) {
+		if (hasJar(jar)) {
 			String msg = "Importing " + jar.getAbsolutePath() + " failed, file already exists";
 			Bolt.logger().log(Level.INFO, msg);
 			throw new BoltImportException(msg);
 		}
 		
 		try {
-			Files.copy(jar.toPath(), newFilename.toPath());
+			Files.copy(jar.toPath(), importJarPath(jar).toPath());
 		} catch (IOException e) {
 			String msg = "Importing " + jar.getAbsolutePath() + " failed";
 			Bolt.logger().log(Level.WARNING, msg, e);
@@ -144,8 +144,73 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 	}
 	
 	
+	private File importJarPath(File jar) {
+		ensureManagedDirectory();
+		return new File(directory.getAbsolutePath() + File.separator + jar.getName());
+	}
+	
+	/**
+	 * Checks to see if the new jar file is an upgrade for the old jar 
+	 * in the plugins directory. It does this by making sure that all plugins 
+	 * contained in the original jar are contained in the new jar, and that their 
+	 * versions are the same or newer.
+	 * @param jar the jar to examine
+	 * @return true if the given jar is an upgrade for an existing managed jar, false otherwise
+	 */
+	private boolean jarIsUpgradeFor(File newJar, File oldJar) {
+		System.out.println(newJar + ", " + oldJar);
+		BoltPluginSet<P> oldSet = pluginsInJar(oldJar);
+		BoltPluginSet<P> newSet = pluginsInJar(newJar);
+		
+		boolean match = newSet.isUpgradeFor(oldSet);
+		return match;
+	}
+	
+	/**
+	 * Tests if the given jar is an upgrade for any of the existing managed jars.
+	 * @param jar the jar to test
+	 * @return the File for the upgradable jar if there is a match, or empty otherwise
+	 */
+	public Optional<File> jarUpgradeTarget(File jar) {
+		for (File managedJar : managedJars()) {
+			boolean isUpgrade = jarIsUpgradeFor(jar, managedJar);
+			if (isUpgrade) {
+				return Optional.of(managedJar);
+			}
+		}
+
+		return Optional.empty();
+	}
+	
+	/**
+	 * Returns a list of managed jars from the managed plugin directory
+	 */
+	private List<File> managedJars() {
+		ensureManagedDirectory();
+		try {
+			return Files.list(directory.toPath())
+					.filter(path -> path.toString().toLowerCase().endsWith(".jar"))
+					.map(path -> path.toFile())
+					.collect(Collectors.toList());
+		} catch (IOException e) {
+			Bolt.logger().log(Level.WARNING, "Cannot list managed plugin directory contents", e);
+		}
+		return new ArrayList<>();
+	}
+	
+	/**
+	 * Checks the name (not the path) of the given jar, and checks to see if an 
+	 * identically named jar is in the managed plugins folder
+	 * @param jar the jar to examine
+	 * @return true if the managed plugins folder already contains a jar with this name, false otherwise
+	 */
+	public boolean hasJar(File jar) {
+		File newFilename = importJarPath(jar);
+		return newFilename.exists();
+	}
 	
 	public boolean removeJar(File jar) {
+		ensureManagedDirectory();
 		try {
 			Files.delete(jar.toPath());
 			return true;
@@ -155,6 +220,9 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 		}
 	}
 	
+	private boolean ensureManagedDirectory() {
+		return directory.mkdirs();
+	}
 
 	
 	

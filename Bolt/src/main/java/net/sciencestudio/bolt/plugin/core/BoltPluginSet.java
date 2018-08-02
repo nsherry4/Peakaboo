@@ -1,6 +1,7 @@
 package net.sciencestudio.bolt.plugin.core;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Tracks a set of plugins and provides operations such as looking plugins 
@@ -30,6 +31,34 @@ public interface BoltPluginSet<T extends BoltPlugin> {
 	
 	default int size() {
 		return getAll().size();
+	}
+	
+	/**
+	 * Checks this set against the given one to determine if this 
+	 * set is a proper upgrade for the given set. This is only true
+	 * if this set contains the other set, and all matching elements 
+	 * have version numbers greater than or equal to their 
+	 * counterparts in the other set. 
+	 * @param other the other set to compare against
+	 * @return true if this set is a proper upgrade for the other, false otherwise
+	 */
+	default boolean isUpgradeFor(BoltPluginSet<T> other) {
+		//get all the UUIDs from the other plugin set
+		List<String> otherUUIDs = other.getAll().stream().map(p -> p.getUUID()).collect(Collectors.toList());
+				
+		//if this set is missing any of the UUIDs, it's not an upgrade
+		for (String otherUUID : otherUUIDs) {
+			if (!this.hasUUID(otherUUID)) {
+				return false;
+			}
+			boolean isUpgrade = this.getByUUID(otherUUID).isUpgradeFor(other.getByUUID(otherUUID));
+			if (!isUpgrade) {
+				return false;
+			}
+		}
+		
+		return true;		
+		
 	}
 	
 }
