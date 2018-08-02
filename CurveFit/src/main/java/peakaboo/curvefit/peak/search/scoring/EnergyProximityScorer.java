@@ -63,7 +63,10 @@ public class EnergyProximityScorer implements FittingScorer {
 		}
 		
 		//the closer the better, so we accent this
-		return (float)Math.log1p(score);		
+		//score = (float)Math.log1p(score);
+		score *= score;
+		return score;
+		
 		
 		
 	}

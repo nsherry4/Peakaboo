@@ -12,11 +12,13 @@ public class CurveFittingScorer implements FittingScorer {
 	private ThreadLocal<Curve> curve;
 	private ReadOnlySpectrum data;
 	private CurveFitter fitter;
+	private float max;
 	
 	public CurveFittingScorer(ReadOnlySpectrum data, FittingParameters parameters, CurveFitter fitter) {
 		this.data = data;
 		this.fitter = fitter;
 		this.curve = ThreadLocal.withInitial(() -> new Curve(null, parameters));
+		this.max = data.max();
 	}
 	
 	@Override
@@ -24,7 +26,10 @@ public class CurveFittingScorer implements FittingScorer {
 		
 		curve.get().setTransitionSeries(ts);
 		FittingResult result = fitter.fit(data, curve.get());
-		return result.getFit().sum();
+		float score = result.getCurveScale() / max;
+		score = (float) Math.sqrt(score);
+		//float score = result.getFit().sum();
+		return score;
 		
 	}
 

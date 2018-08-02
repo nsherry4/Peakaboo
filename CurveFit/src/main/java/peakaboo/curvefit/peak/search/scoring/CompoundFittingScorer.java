@@ -8,16 +8,19 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 public class CompoundFittingScorer implements FittingScorer {
 
 	private Map<FittingScorer, Float> scorers = new HashMap<>();
+	private float totalWeight = 0f;
 	
 	public void add(FittingScorer scorer, float weight) {
 		scorers.put(scorer, weight);
+		totalWeight += weight;
 	}
 	
 	@Override
 	public float score(TransitionSeries ts) {
 		float score = 1f;
 		for (FittingScorer scorer : scorers.keySet()) {
-			score *= scorer.score(ts) * scorers.get(scorer);
+			float weight = scorers.get(scorer);
+			score *= scorer.score(ts) * (weight / totalWeight);
 		}
 		return score;
 	}

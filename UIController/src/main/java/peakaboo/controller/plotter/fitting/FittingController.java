@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
@@ -21,6 +22,7 @@ import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import plural.executor.ExecutorSet;
+import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 import scitypes.util.Mutable;
 
@@ -240,7 +242,7 @@ public class FittingController extends EventfulType<Boolean>
 				channel,
 				currentTS,
 				10
-		);
+		).stream().map(guess -> guess.first).collect(Collectors.toList());
 	}
 
 	public boolean canMap()

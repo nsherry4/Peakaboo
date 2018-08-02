@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
@@ -95,7 +97,7 @@ public class PeakProposal
 				}
 				
 				//Generate lists of guesses for all peaks
-				Map<Integer, List<TransitionSeries>> guesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
+				Map<Integer, List<Pair<TransitionSeries, Float>>> guesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
 	
 				firstStage.advanceState();
 				
@@ -117,31 +119,40 @@ public class PeakProposal
 				 */
 				List<TransitionSeries> newFits = new ArrayList<>();
 				for (int channel : peaks) {
+					
+					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
+					
 					if (this.isAbortRequested()) {
 						this.aborted();
 						return null;
 					}
 					
 					if (!guesses.containsKey(channel)) { 
+						PeakabooLog.get().log(Level.FINE, "Channel is missing, skipping");
+						PeakabooLog.get().log(Level.FINE, "----------------------------");
 						secondStage.workUnitCompleted();
 						continue; 
 					}
 					
 
 					//Get the best guess from the list
-					TransitionSeries guess = guesses.get(channel).get(0);
-					
+					Pair<TransitionSeries, Float> guess = guesses.get(channel).get(0);
+									
 					//If the existing fits doesn't contain this, add it
 					if (!fits.getFittedTransitionSeries().contains(guess)) {
-						newFits.add(guess);
-						proposals.addTransitionSeries(guess);
+						newFits.add(guess.first);
+						proposals.addTransitionSeries(guess.first);
+						PeakabooLog.get().log(Level.FINE, "Channel " + channel + " guess: " + guess.show());
+						guesses.remove(channel);
 					}
 					
 					
-					//remove all peaks which contain this guess
+					//remove all peaks which contain the first guess
 					for (int match : new ArrayList<>(guesses.keySet())) {
-						if (guesses.get(match).contains(guess)) { 
+						//if (guesses.get(match).get(0).first.equals(guess.first)) {
+						if (guesses.get(match).stream().map(g -> g.first).collect(Collectors.toList()).contains(guess.first)) {
 							guesses.remove(match);
+							PeakabooLog.get().log(Level.FINE, "Removing Channel " + match);
 						}
 					}
 					
@@ -151,6 +162,8 @@ public class PeakProposal
 					guesses = makeGuesses(data, guesses.keySet(), fits, proposals, fitter, solver);
 
 										
+					PeakabooLog.get().log(Level.FINE, "----------------------------");
+					
 					secondStage.workUnitCompleted();
 				}
 				
@@ -171,7 +184,7 @@ public class PeakProposal
 	}
 
 	
-	private static Map<Integer, List<TransitionSeries>> makeGuesses(
+	private static Map<Integer, List<Pair<TransitionSeries, Float>>> makeGuesses(
 			ReadOnlySpectrum data, 
 			Collection<Integer> peaks, 
 			FittingSet fits,
@@ -179,7 +192,7 @@ public class PeakProposal
 			CurveFitter fitter, 
 			FittingSolver solver
 		) {
-		Map<Integer, List<TransitionSeries>> guesses = new LinkedHashMap<>();
+		Map<Integer, List<Pair<TransitionSeries, Float>>> guesses = new LinkedHashMap<>();
 		for (int channel : peaks) {
 			guesses.put(channel, fromChannel(data, fits, proposals, fitter, solver, channel, null, 5));
 		}
@@ -191,7 +204,7 @@ public class PeakProposal
 	 * Generates a list of {@link TransitionSeries} which are good fits for the given data at the given channel index
 	 * @return an ordered list of {@link TransitionSeries} which are good fits for the given data at the given channel
 	 */
-	public static List<TransitionSeries> fromChannel(
+	public static List<Pair<TransitionSeries, Float>> fromChannel(
 			final ReadOnlySpectrum data, 
 			FittingSet fits,
 			FittingSet proposed,
@@ -290,13 +303,13 @@ public class PeakProposal
 		
 		//Good scorer also adds a very slow curve fitting scorer to make sure that we actually evaluate the curve at some point
 		CompoundFittingScorer goodCompoundScorer = new CompoundFittingScorer();	
-		goodCompoundScorer.add(fastCompoundScorer, 1f);
+		goodCompoundScorer.add(fastCompoundScorer, 23f);
 		goodCompoundScorer.add(new CurveFittingScorer(residualSpectrum, fits.getFittingParameters(), fitter), 10f);
 
 		
 		
 		//now sort by score
-		tss = tss.stream()
+		List<Pair<TransitionSeries, Float>> scoredGuesses = tss.stream()
 			//fast scorer to shrink downthe list
 			.map(ts -> new Pair<>(ts, -fastCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
@@ -306,13 +319,12 @@ public class PeakProposal
 			//good scorer to put them in the best order
 			.map(ts -> new Pair<>(ts, -goodCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
-			.map(p -> p.first)
 			
 			.collect(Collectors.toList());
 
 		
 		//take the best in sorted order based on score
-		return tss;
+		return scoredGuesses;
 	}
 
 

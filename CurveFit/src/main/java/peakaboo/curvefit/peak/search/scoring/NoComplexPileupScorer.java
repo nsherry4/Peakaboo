@@ -12,7 +12,13 @@ public class NoComplexPileupScorer implements FittingScorer {
 	@Override
 	public float score(TransitionSeries ts) {
 		int count = ts.getBaseTransitionSeries().size();
-		return 1000f / (999f+(float) Math.pow(count, 3));
+		switch (count) {
+			case 1: return 1f;
+			case 2: return 0.98f;
+			case 3: return 0.25f;
+			case 4: return 0.01f;
+			default: return 0f;
+		}
 	}
 
 }
