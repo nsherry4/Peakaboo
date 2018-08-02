@@ -26,10 +26,21 @@ public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 		if (plugins.contains(plugin)) {
 			return;
 		}
-		if (this.hasUUID(plugin.getUUID())) {
-			return;
+		String uuid = plugin.getUUID();
+		if (this.hasUUID(uuid)) {
+			//there is already a plugin with the same UUID.
+			//we have to choose which of these to load
+			BoltPluginController<? extends T> existingPlugin = this.getByUUID(uuid);
+			
+			if (plugin.isNewerVersionOf(existingPlugin)) {
+				plugins.remove(existingPlugin);
+				plugins.add(plugin);
+			}
+			
+		} else {
+			plugins.add(plugin);	
 		}
-		plugins.add(plugin);
+		
 	}
 
 	@Override
