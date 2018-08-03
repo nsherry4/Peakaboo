@@ -134,6 +134,9 @@ public class PluginsOverview extends JPanel {
 	private BoltPluginController<? extends BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
+		if (node == null) {
+			return null;
+		}
 		if (!(node.getUserObject() instanceof BoltPluginController<?>)) {
 			return null;
 		}
