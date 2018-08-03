@@ -92,7 +92,7 @@ public class Peakaboo
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
 			
-			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInFrame(null, true);
+			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInWindow(null, true);
 			
 		}
 	}
@@ -105,7 +105,7 @@ public class Peakaboo
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
 						
-			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInFrame(null, true);
+			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInWindow(null, true);
 			
 			//dialog.setAlwaysOnTop(true);
 			//dialog.setVisible(true);
