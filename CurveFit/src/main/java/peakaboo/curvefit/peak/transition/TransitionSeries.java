@@ -353,9 +353,15 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 	public List<Transition> escape(EscapePeakType type) {
+		if (! type.get().hasOffset()) {
+			return new ArrayList<>();
+		}
+		
 		List<Transition> escapePeaks = new ArrayList<>();
 		for (Transition t : this) {
-			escapePeaks.addAll(t.escape(type));
+			for (Transition o : type.get().offset()) {
+				escapePeaks.add(new Transition(t.energyValue - o.energyValue, t.relativeIntensity * o.relativeIntensity * EscapePeak.intensity(this.element), t.name + " Escape"));
+			}
 		}
 		return escapePeaks;
 	}

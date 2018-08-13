@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 
 /**
@@ -68,16 +69,6 @@ public class Transition implements Serializable, Comparable<Transition>{
 		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity, "(" + this.name + " + " + other.name + ")");
 	}
 
-	public List<Transition> escape(EscapePeakType type) {
-		if (!type.get().hasOffset()) {
-			return new ArrayList<>();
-		}
-		List<Transition> escapes = new ArrayList<>();
-		for (Transition other : type.get().offset()) {
-			escapes.add(new Transition(energyValue - other.energyValue, relativeIntensity * other.relativeIntensity, this.name + " Escape"));
-		}
-		return escapes;
-	}
 	
 	@Override
 	public String toString()
