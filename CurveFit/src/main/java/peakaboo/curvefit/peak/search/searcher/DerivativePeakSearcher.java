@@ -19,12 +19,12 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		Filter filter = new WeightedAverageNoiseFilter();
 		filter.initialize();
 		Value<Integer> width = (Value<Integer>) filter.getParameters().get(0);
-		width.setValue(new Integer(10));
+		width.setValue(new Integer(5));
 		
 		//aggressive smoothing to get just the most significant peaks
 		ReadOnlySpectrum smoothed = new ISpectrum(data);
 		
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 10; i++) {
 			smoothed = filter.filter(smoothed, false);
 		}
 		
