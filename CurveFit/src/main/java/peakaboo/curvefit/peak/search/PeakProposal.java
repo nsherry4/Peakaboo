@@ -1,6 +1,8 @@
 package peakaboo.curvefit.peak.search;
 
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -70,7 +72,7 @@ public class PeakProposal
 				
 				//Proposals fitting set to store proposals in with same parameters
 				FittingSet proposals = new FittingSet(fits);
-				proposals.clear();
+				proposals.clear();		
 				
 				
 				//Generate list of peaks
@@ -98,19 +100,16 @@ public class PeakProposal
 					return null;
 				}
 				
-				//Generate lists of guesses for all peaks
-				Map<Integer, List<Pair<TransitionSeries, Float>>> guesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
-	
+				Map<Integer, List<Pair<TransitionSeries, Float>>> allRawGuesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
+				
 				firstStage.advanceState();
 				
 				
-				
-				
-				
-				
 				//SECOND STAGE
-				secondStage.setWorkUnits(guesses.size());
+
+				//Generate lists of guesses for all peaks
 				secondStage.advanceState();
+				secondStage.setWorkUnits(peaks.size());
 				
 								
 				/*
@@ -121,49 +120,34 @@ public class PeakProposal
 				 */
 				List<TransitionSeries> newFits = new ArrayList<>();
 				for (int channel : peaks) {
+					List<Pair<TransitionSeries, Float>> rawGuesses = allRawGuesses.get(channel);
+					List<Pair<TransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
 					
 					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
+					
+					//if this list of guesses contains a TransitionSeries we've already proposed
+					//we assume that this peak is also caused by that TransitionSeries and skip it
+					if (proposalsContainsGuess(newFits, rawGuesses)) {
+						PeakabooLog.get().log(Level.FINE, "Guesses contains previously proposed TransitionSeries, skipping");
+						continue;
+					}
 					
 					if (this.isAbortRequested()) {
 						this.aborted();
 						return null;
 					}
-					
-					if (!guesses.containsKey(channel)) { 
-						PeakabooLog.get().log(Level.FINE, "Channel is missing, skipping");
-						PeakabooLog.get().log(Level.FINE, "----------------------------");
-						secondStage.workUnitCompleted();
-						continue; 
-					}
-					
+							
 
-					//Get the best guess from the list
-					Pair<TransitionSeries, Float> guess = guesses.get(channel).get(0);
+
+					Pair<TransitionSeries, Float> guess = guesses.get(0);
 									
 					//If the existing fits doesn't contain this, add it
 					if (!fits.getFittedTransitionSeries().contains(guess)) {
 						newFits.add(guess.first);
 						proposals.addTransitionSeries(guess.first);
 						PeakabooLog.get().log(Level.FINE, "Channel " + channel + " guess: " + guess.show());
-						guesses.remove(channel);
 					}
-					
-					
-					//remove all peaks which contain the first guess
-					for (int match : new ArrayList<>(guesses.keySet())) {
-						//if (guesses.get(match).get(0).first.equals(guess.first)) {
-						if (guesses.get(match).stream().map(g -> g.first).collect(Collectors.toList()).contains(guess.first)) {
-							guesses.remove(match);
-							PeakabooLog.get().log(Level.FINE, "Removing Channel " + match);
-						}
-					}
-					
-					
-					//Regenerate new guesses for remaining peaks based on combined 
-					//fittingset so that pileup is considered in future iterations
-					guesses = makeGuesses(data, guesses.keySet(), fits, proposals, fitter, solver);
-
-										
+				
 					PeakabooLog.get().log(Level.FINE, "----------------------------");
 					
 					secondStage.workUnitCompleted();
@@ -183,6 +167,15 @@ public class PeakProposal
 		
 
 		
+	}
+	
+	private static boolean proposalsContainsGuess(List<TransitionSeries> proposals, List<Pair<TransitionSeries, Float>> guesses) {
+		for (Pair<TransitionSeries, Float> guess : guesses) {
+			if (proposals.contains(guess.first)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	

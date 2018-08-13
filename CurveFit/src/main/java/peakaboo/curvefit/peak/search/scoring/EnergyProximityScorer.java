@@ -43,7 +43,10 @@ public class EnergyProximityScorer implements FittingScorer {
 		for (Transition t : transitions) {
 			score += proxScore(t, maxRel, calibration);
 		}
-
+//		for (Transition t : ts.escape(parameters.getEscapeType())) {
+//			score += proxScore(t, maxRel, calibration);
+//		}
+		
 		//the closer the better, so we accent this
 		//score = (float)Math.log1p(score);
 		score *= score;
