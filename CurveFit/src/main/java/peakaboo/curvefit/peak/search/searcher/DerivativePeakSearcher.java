@@ -87,11 +87,23 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		
 		//System.exit(0);
 		
+		float dataMax = data.max();
+		float d2Max = SpectrumCalculations.abs(d2).max();
 		channels.sort((a, b) -> {
-			return Float.compare(-d2.get(b), -d2.get(a));
+			return Float.compare(
+					scorePeak(b, data, dataMax, d2, d2Max),
+					scorePeak(a, data, dataMax, d2, d2Max)
+				);
 		});
 		
 		return channels;
+		
+	}
+	
+	private float scorePeak(int channel, ReadOnlySpectrum data, float dataMax, ReadOnlySpectrum d2, float d2Max) {
+		float dataPercent = data.get(channel) / dataMax; 
+		float d2Percent = (-d2.get(channel)) / d2Max;
+		return dataPercent + d2Percent;
 		
 	}
 	
