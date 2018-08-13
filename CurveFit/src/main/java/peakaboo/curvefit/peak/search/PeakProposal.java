@@ -24,6 +24,7 @@ import peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
 import peakaboo.curvefit.peak.search.scoring.FastFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.NoComplexPileupScorer;
 import peakaboo.curvefit.peak.search.scoring.PileupSourceScorer;
+import peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -74,12 +75,13 @@ public class PeakProposal
 				
 				//Generate list of peaks
 				List<Integer> peaks = searcher.search(data);
-				
+												
 				
 				//remove any peaks within the FWHM of an existing Transitions in fits
 				for (int peak : new ArrayList<>(peaks)) {
 					for (TransitionSeries ts : fits.getFittedTransitionSeries()) {
 						for (Transition t : ts) {
+							if (t.relativeIntensity < 0.1) continue; 
 							float hwhm = fits.getFittingParameters().getFWHM(t)/2f;
 							float min = t.energyValue - hwhm;
 							float max = t.energyValue + hwhm;

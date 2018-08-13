@@ -44,7 +44,6 @@ import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
 
 public class Peakaboo
 {
-	private static final Logger LOGGER = PeakabooLog.get();
 	private static Timer gcTimer;
 	
 
@@ -98,7 +97,7 @@ public class Peakaboo
 	}
 	
 	private static void warnLowMemory() {
-		LOGGER.log(Level.INFO, "Max heap size = " + Env.heapSize());
+		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.heapSize());
 		
 		if (Env.heapSize() <= 128){
 			String message = "This system's Java VM is only allocated " + Env.heapSize()
@@ -132,7 +131,7 @@ public class Peakaboo
 	}
 	
 	private static void errorHook() {
-		PeakabooLog.get().addHandler(new Handler() {
+		PeakabooLog.getRoot().addHandler(new Handler() {
 			
 			@Override
 			public void publish(LogRecord record) {
@@ -200,7 +199,7 @@ public class Peakaboo
 		
 		
 		
-		LOGGER.log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
+		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		setAppTitle("Peakaboo 5");

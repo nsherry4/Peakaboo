@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.search;
+package peakaboo.curvefit.peak.search.searcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		//System.exit(0);
 		
 		channels.sort((a, b) -> {
-			return Float.compare(data.get(b), data.get(a));
+			return Float.compare(-d2.get(b), -d2.get(a));
 		});
 		
 		return channels;
