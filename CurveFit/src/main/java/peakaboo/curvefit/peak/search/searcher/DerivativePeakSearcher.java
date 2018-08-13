@@ -54,7 +54,7 @@ public class DerivativePeakSearcher implements PeakSearcher {
 			if (value >= 0) {
 				
 				//If we had been tracking a possible peak, and it looks good
-				if (gap && negative >= 5 && bestValue <= -d2threshold) {
+				if (gap && negative >= 10 && bestValue <= -d2threshold) {
 					channels.add(bestChannel);
 					gap = false;
 				}
