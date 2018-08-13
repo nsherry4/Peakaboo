@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
+import peakaboo.curvefit.peak.escape.EscapePeak;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.table.Element;
 import scitypes.util.ListOps;
 
@@ -350,7 +352,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
-
+	public List<Transition> escape(EscapePeakType type) {
+		List<Transition> escapePeaks = new ArrayList<>();
+		for (Transition t : this) {
+			escapePeaks.addAll(t.escape(type));
+		}
+		return escapePeaks;
+	}
+	
 
 	public int compareTo(TransitionSeries otherTS)
 	{
