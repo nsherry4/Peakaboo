@@ -2,6 +2,7 @@ package peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -9,10 +10,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import scitypes.util.Mutable;
 import swidget.icons.StockIcon;
 
 public class PlotMenuMain extends JPopupMenu {
@@ -131,6 +134,21 @@ public class PlotMenuMain extends JPopupMenu {
 			);
 		this.add(logs);
 
+		Mutable<Boolean> isDebug = new Mutable<>(false);
+		JMenuItem debugLog = PlotMenuUtils.createMenuCheckItem(plot,
+				"Debug", null, "Generates extra logging information for troubleshooting purposes",
+				b -> {
+					isDebug.set(!isDebug.get());
+					if (isDebug.get()) {
+						PeakabooLog.getRoot().setLevel(Level.FINE);
+					} else {
+						PeakabooLog.getRoot().setLevel(Level.INFO);
+					}
+				},
+				null, null
+		);
+		this.add(debugLog);
+		
 		JMenuItem bugreport = PlotMenuUtils.createMenuItem(plot,
 				"Report a Bug", null, null,
 				e -> plot.actionReportBug(),
