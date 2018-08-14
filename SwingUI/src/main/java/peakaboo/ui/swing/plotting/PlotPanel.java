@@ -14,10 +14,17 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -36,11 +43,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import commonenvironment.Apps;
 import commonenvironment.Env;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
+import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
@@ -132,6 +143,8 @@ public class PlotPanel extends LayerPanel
 	private JScrollPane					scrolledCanvas;
 
 
+	private static boolean newVersionNotified = false;
+	
 	public PlotPanel(TabbedPlotterManager container)
 	{
 		this.container = container;
@@ -149,12 +162,60 @@ public class PlotPanel extends LayerPanel
 
 		controller.addListener(msg -> setWidgetsState());
 		setWidgetsState();
+		
+		
+		doVersionCheck();
 
-		this.pushLayer(new ToastLayer(this, "A new version of Peakaboo is available", () -> {
-			Apps.browser("https://github.com/nsherry4/Peakaboo/releases");
-		}));
-
-
+	}
+	
+	private void doVersionCheck() {
+		if (!newVersionNotified) {
+			newVersionNotified = true;
+			
+			Thread versionCheck = new Thread(() -> {
+							
+				String thisVersion = Version.longVersionNo;
+				String otherVersion = "";
+				boolean hasNewVersion = false;
+				
+				try {
+					
+					URL website = new URL("https://raw.githubusercontent.com/nsherry4/Peakaboo/master/version");
+					URLConnection conn = website.openConnection();
+					conn.setConnectTimeout(5000);
+					conn.setReadTimeout(5000);
+					
+					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					String inputLine;
+			        while ((inputLine = in.readLine()) != null) {
+			        	otherVersion += inputLine + "\n";
+			        }
+			        otherVersion = otherVersion.trim();
+			        in.close();
+		
+			        System.out.println(thisVersion);
+			        System.out.println(otherVersion);
+			        
+					AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
+					hasNewVersion = cmp.compare(thisVersion, otherVersion) > 0;
+					
+				} catch (IOException e) {
+					PeakabooLog.get().log(Level.WARNING, "Could not check for new version", e);
+					e.printStackTrace(System.out);
+				}
+				
+				if (hasNewVersion) {
+					SwingUtilities.invokeLater(() -> {
+						this.pushLayer(new ToastLayer(this, "A new version of Peakaboo is available", () -> {
+							Apps.browser("https://github.com/nsherry4/Peakaboo/releases");
+						}));	
+					});
+				}
+				
+			}); //thread
+			versionCheck.setDaemon(true);
+			versionCheck.start();
+		}
 	}
 	
 	public String getProgramTitle()
