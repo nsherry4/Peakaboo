@@ -99,14 +99,14 @@ import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
+import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.LayerDialogs;
+import swidget.widgets.layerpanel.LayerDialogs.MessageType;
 import swidget.widgets.properties.PropertyViewPanel;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
-import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
 
 
 
-public class PlotPanel extends TabbedInterfacePanel
+public class PlotPanel extends LayerPanel
 {
 
 	private TabbedPlotterManager 	container;
@@ -441,7 +441,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		else if (formats.size() == 0)
 		{
-			new TabbedInterfaceDialog(
+			new LayerDialogs(
 					"Open Failed", 
 					"Could not determine the data format of the selected file(s)", 
 					MessageType.ERROR
@@ -510,7 +510,7 @@ public class PlotPanel extends TabbedInterfacePanel
 						} else if (result.problem != null) {
 							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
 						} else {
-							new TabbedInterfaceDialog(
+							new LayerDialogs(
 									"Open Failed", 
 									"Peakaboo could not open this dataset.\n" + result.message, 
 									MessageType.ERROR
@@ -830,7 +830,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				
 				//If the data files in the saved session are different, offer to load the data set from the new session
 				if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
-					new TabbedInterfaceDialog(
+					new LayerDialogs(
 							"Open Associated Data Set?", 
 							"This session is associated with another data set.\nDo you want to open that data set now?", 
 							MessageType.QUESTION)
@@ -925,7 +925,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
-			new TabbedInterfaceDialog(
+			new LayerDialogs(
 					"Cannot Detect Energy Calibration", 
 					"Detecting energy calibration requires that at least two elements be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
 					MessageType.WARNING

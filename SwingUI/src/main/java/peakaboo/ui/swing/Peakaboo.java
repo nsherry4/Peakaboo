@@ -37,8 +37,8 @@ import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
+import swidget.widgets.layerpanel.LayerDialogs;
+import swidget.widgets.layerpanel.LayerDialogs.MessageType;
 
 
 
@@ -91,7 +91,7 @@ public class Peakaboo
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
 			
-			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInWindow(null, true);
+			new LayerDialogs(title, message, MessageType.INFO).showInWindow(null, true);
 			
 		}
 	}
@@ -104,7 +104,7 @@ public class Peakaboo
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
 						
-			new TabbedInterfaceDialog(title, message, MessageType.INFO).showInWindow(null, true);
+			new LayerDialogs(title, message, MessageType.INFO).showInWindow(null, true);
 			
 			//dialog.setAlwaysOnTop(true);
 			//dialog.setVisible(true);
@@ -211,7 +211,6 @@ public class Peakaboo
 		//running init job
 		Thread peakLoader = new Thread(() -> PeakTable.SYSTEM.getAll());
 		peakLoader.start();
-		
 		
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);

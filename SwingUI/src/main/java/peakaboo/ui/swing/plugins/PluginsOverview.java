@@ -61,20 +61,20 @@ import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.ButtonSize;
+import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.LayerDialogs;
+import swidget.widgets.layerpanel.LayerDialogs.MessageType;
 import swidget.widgets.Spacing;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
-import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog.MessageType;
 
 public class PluginsOverview extends JPanel {
 
 	JPanel details;
 	JTree tree;
-	TabbedInterfacePanel parent;
+	LayerPanel parent;
 	
 	JButton close, add, remove, reload, browse, download;
 	
-	public PluginsOverview(TabbedInterfacePanel parent) {
+	public PluginsOverview(LayerPanel parent) {
 		super(new BorderLayout());
 		
 		this.parent = parent;
@@ -182,7 +182,7 @@ public class PluginsOverview extends JPanel {
 			return;
 		}
 		
-		new TabbedInterfaceDialog(
+		new LayerDialogs(
 				"Delete Plugin Archive?", 
 				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
 				MessageType.QUESTION)
@@ -242,7 +242,7 @@ public class PluginsOverview extends JPanel {
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
-			new TabbedInterfaceDialog(
+			new LayerDialogs(
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
 					MessageType.ERROR).showIn(parent);
@@ -250,7 +250,7 @@ public class PluginsOverview extends JPanel {
 		}
 		
 		if (!added) {
-			new TabbedInterfaceDialog(
+			new LayerDialogs(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
 					MessageType.ERROR).showIn(parent);
@@ -277,7 +277,7 @@ public class PluginsOverview extends JPanel {
 		BoltPluginSet<? extends BoltPlugin> plugins = manager.importJar(jar);
 		
 		this.reload();
-		new TabbedInterfaceDialog(
+		new LayerDialogs(
 				"Imported New Plugins", 
 				"Peakboo successfully imported the following plugin(s):\n" + listToUL(plugins.getAll()), 
 				MessageType.INFO).showIn(parent);

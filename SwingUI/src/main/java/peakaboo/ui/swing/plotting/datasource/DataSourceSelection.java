@@ -18,7 +18,7 @@ import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
-import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
+import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.toggle.ItemToggleButton;
 import swidget.widgets.toggle.ToggleGroup;
 
@@ -33,7 +33,7 @@ public class DataSourceSelection extends JPanel
 		super(new BorderLayout());
 	}
 	
-	public void pickDSP(TabbedInterfacePanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {	
+	public void pickDSP(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {	
 		
 		toggleMap = new HashMap<ItemToggleButton, DataSource>();
 		
