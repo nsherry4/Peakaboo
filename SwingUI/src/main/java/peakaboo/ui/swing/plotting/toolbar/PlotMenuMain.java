@@ -127,16 +127,20 @@ public class PlotMenuMain extends JPopupMenu {
 			);
 		this.add(plugins);
 		
+		
+		JMenu debug = new JMenu("Debug");
+		
+		
 		JMenuItem logs = PlotMenuUtils.createMenuItem(plot,
-				"Logs", null, null,
+				"Show Logs", null, null,
 				e -> plot.actionShowLogs(),
 				null, null
 			);
-		this.add(logs);
+		debug.add(logs);
 
 		Mutable<Boolean> isDebug = new Mutable<>(false);
 		JMenuItem debugLog = PlotMenuUtils.createMenuCheckItem(plot,
-				"Debug", null, "Generates extra logging information for troubleshooting purposes",
+				"Verbose Logging", null, "Generates extra logging information for troubleshooting purposes",
 				b -> {
 					isDebug.set(!isDebug.get());
 					if (isDebug.get()) {
@@ -147,14 +151,18 @@ public class PlotMenuMain extends JPopupMenu {
 				},
 				null, null
 		);
-		this.add(debugLog);
+		debug.add(debugLog);
 		
 		JMenuItem bugreport = PlotMenuUtils.createMenuItem(plot,
 				"Report a Bug", null, null,
 				e -> plot.actionReportBug(),
 				null, null
 			);
-		this.add(bugreport);
+		debug.add(bugreport);
+		
+		
+		this.add(debug);
+		
 		
 		JMenuItem help = PlotMenuUtils.createMenuItem(plot,
 			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
