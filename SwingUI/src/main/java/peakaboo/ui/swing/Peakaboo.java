@@ -203,7 +203,16 @@ public class Peakaboo
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		setAppTitle("Peakaboo 5");
-			
+		
+		
+		//warm up the peak table, which is lazy
+		//do this in a separate thread so that it proceeds in parallel 
+		//with all the other tasks, since this is usually the longest 
+		//running init job
+		Thread peakLoader = new Thread(() -> PeakTable.SYSTEM.getAll());
+		peakLoader.start();
+		
+		
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);
 			PeakabooLog.init();
@@ -211,11 +220,14 @@ public class Peakaboo
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			//warm up the peak table, which is lazy
-			PeakTable.SYSTEM.getAll();
 			DataSourcePluginManager.SYSTEM.load();
 			FilterPluginManager.SYSTEM.load();
 			DataSinkPluginManager.SYSTEM.load();
+			try {
+				peakLoader.join();
+			} catch (InterruptedException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to load peak table", e);
+			}
 			runPeakaboo();
 		});
 		
