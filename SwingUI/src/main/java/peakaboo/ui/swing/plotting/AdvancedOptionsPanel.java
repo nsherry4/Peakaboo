@@ -51,7 +51,7 @@ public class AdvancedOptionsPanel extends JPanel {
 		
 		
 		
-		JButton close = new ImageButton("Close").withAction(() -> parent.popModalComponent());
+		JButton close = new ImageButton("Close").withAction(() -> parent.popLayer());
 		HeaderBox box = new HeaderBox(null, "Advanced Options", close);
 		
 		this.add(box, BorderLayout.NORTH);

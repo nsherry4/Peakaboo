@@ -20,6 +20,7 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.Spacing;
 
 public class MapDimensionsPanel extends JPanel {
@@ -91,11 +92,11 @@ public class MapDimensionsPanel extends JPanel {
 				guessTask.addListener(event -> {
 					SwingUtilities.invokeLater(() -> {
 						if (event == Event.ABORTED) {
-							tabPanel.popModalComponent();
+							tabPanel.popLayer();
 						}
 						if (event == Event.COMPLETED) {
 						
-							tabPanel.popModalComponent();
+							tabPanel.popLayer();
 							
 							Coord<Integer> guess = guessTask.getResult().orElse(null);
 							if (guess != null) {
@@ -107,7 +108,7 @@ public class MapDimensionsPanel extends JPanel {
 						}
 					});
 				});
-				tabPanel.pushModalComponent(panel);
+				tabPanel.pushLayer(new ModalLayer(tabPanel, panel));
 				guessTask.start();				
 
 			});

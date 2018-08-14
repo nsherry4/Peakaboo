@@ -100,6 +100,8 @@ import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.ModalLayer;
+import swidget.widgets.layerpanel.ToastLayer;
 import swidget.widgets.layerpanel.LayerDialogs;
 import swidget.widgets.layerpanel.LayerDialogs.MessageType;
 import swidget.widgets.properties.PropertyViewPanel;
@@ -148,6 +150,9 @@ public class PlotPanel extends LayerPanel
 		controller.addListener(msg -> setWidgetsState());
 		setWidgetsState();
 
+		this.pushLayer(new ToastLayer(this, "A new version of Peakaboo is available", () -> {
+			Apps.browser("https://github.com/nsherry4/Peakaboo/releases");
+		}));
 
 
 	}
@@ -470,13 +475,13 @@ public class PlotPanel extends LayerPanel
 			ButtonBox bbox = new ButtonBox();
 			ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
 			ok.addActionListener(e -> {
-				this.popModalComponent();
+				this.popLayer();
 				loadFiles(files, dsp, after);
 			});
 			
 			ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
 			cancel.addActionListener(e -> {
-				this.popModalComponent();
+				this.popLayer();
 				return;
 			});
 			
@@ -487,7 +492,7 @@ public class PlotPanel extends LayerPanel
 			paramPanel.add(sap, BorderLayout.CENTER);
 			paramPanel.add(bbox, BorderLayout.SOUTH);
 
-			this.pushModalComponent(paramPanel);
+			this.pushLayer(new ModalLayer(this, paramPanel));
 			
 		} else {
 			loadFiles(files, dsp, after);
@@ -523,7 +528,7 @@ public class PlotPanel extends LayerPanel
 					controller.data().setDataPaths(paths);
 					savedSessionFileName = null;
 					canvas.updateCanvasSize();
-					popModalComponent();
+					popLayer();
 					if (after != null) {
 						after.run();
 					}
@@ -535,7 +540,7 @@ public class PlotPanel extends LayerPanel
 			
 			
 			ExecutorSetView execPanel = new ExecutorSetView(reading); 
-			pushModalComponent(execPanel);
+			pushLayer(new ModalLayer(this, execPanel));
 			reading.startWorking();
 			
 			
@@ -556,7 +561,7 @@ public class PlotPanel extends LayerPanel
 			protected Boolean execute() {
 				getController().data().setDataSource(ds, progress, this::isAborted);
 				getController().loadSettings(settings, false);
-				popModalComponent();
+				popLayer();
 				return true;
 			}}; 
 			
@@ -564,7 +569,7 @@ public class PlotPanel extends LayerPanel
 		exec.addExecutor(progress, "Calculating Values");
 			
 		ExecutorSetView view = new ExecutorSetView(exec);
-		pushModalComponent(view);
+		pushLayer(new ModalLayer(this, view));
 		exec.startWorking();
 		
 	}
@@ -608,7 +613,7 @@ public class PlotPanel extends LayerPanel
 			if (event == Event.PROGRESS) { return; }
 			
 			//hide the task panel since this is either COMPLETED or ABORTED
-			popModalComponent();
+			popLayer();
 			
 			//If this task was aborted instead of completed, exit early
 			if (event == Event.ABORTED) { return; }
@@ -653,7 +658,7 @@ public class PlotPanel extends LayerPanel
 		});
 		
 		
-		pushModalComponent(taskPanel);
+		pushLayer(new ModalLayer(this, taskPanel));
 		mapTask.start();
 
 
@@ -753,7 +758,7 @@ public class PlotPanel extends LayerPanel
 			streamexec.addListener(event -> {
 				//if not just a progress event, hide the modal panel
 				if (event != Event.PROGRESS) {
-					popModalComponent();
+					popLayer();
 				}
 				//remove the output file if the task was aborted
 				if (event == Event.ABORTED) {
@@ -761,7 +766,7 @@ public class PlotPanel extends LayerPanel
 				}
 			});
 			
-			pushModalComponent(panel);
+			pushLayer(new ModalLayer(this, panel));
 			streamexec.start();
 			
 			
@@ -909,14 +914,14 @@ public class PlotPanel extends LayerPanel
 		ImageButton close = new ImageButton()
 				.withText("Close")
 				.withIcon(StockIcon.WINDOW_CLOSE)
-				.withAction(this::popModalComponent);
+				.withAction(this::popLayer);
 		
 		HeaderBox header = new HeaderBox(null, "Dataset Information", close);
 		
 		
 		panel.add(header, BorderLayout.NORTH);
 		
-		this.pushModalComponent(panel);
+		this.pushLayer(new ModalLayer(this, panel));
 		
 
 	}
@@ -947,7 +952,7 @@ public class PlotPanel extends LayerPanel
 		energyTask.last().addListener(event -> {
 			//if event is not progress, then its either COMPLETED or ABORTED, so hide the panel
 			if (event != Event.PROGRESS) {
-				popModalComponent();
+				popLayer();
 			}
 			
 			//if the last executor completed successfully, then set the calibration
@@ -960,14 +965,14 @@ public class PlotPanel extends LayerPanel
 			}
 		});
 		
-		pushModalComponent(panel);
+		pushLayer(new ModalLayer(this, panel));
 		energyTask.start();
 
 		
 	}
 	
 	public void actionShowPlugins() {
-		pushModalComponent(new PluginsOverview(this));
+		pushLayer(new ModalLayer(this, new PluginsOverview(this)));
 	}
 
 
@@ -990,7 +995,7 @@ public class PlotPanel extends LayerPanel
 
 	public void actionShowAdvancedOptions() {
 		AdvancedOptionsPanel advancedPanel = new AdvancedOptionsPanel(this, controller);
-		this.pushModalComponent(advancedPanel);
+		this.pushLayer(new ModalLayer(this, advancedPanel));
 	}
 
 }

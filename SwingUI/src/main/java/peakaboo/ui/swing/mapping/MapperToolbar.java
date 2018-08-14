@@ -40,6 +40,7 @@ import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.properties.PropertyViewPanel;
 
 class MapperToolbar extends JToolBar {
@@ -139,14 +140,14 @@ class MapperToolbar extends JToolBar {
 				
 				public void actionPerformed(ActionEvent e)
 				{
-					panel.popModalComponent();
+					panel.popLayer();
 				}
 			});
 			bbox.addRight(close);
 			corrections.add(bbox, BorderLayout.SOUTH);
 			
 			
-			panel.pushModalComponent(corrections);
+			panel.pushLayer(new ModalLayer(panel, corrections));
 			
 				
 				

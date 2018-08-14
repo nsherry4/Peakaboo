@@ -19,6 +19,7 @@ import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.toggle.ItemToggleButton;
 import swidget.widgets.toggle.ToggleGroup;
 
@@ -70,13 +71,13 @@ public class DataSourceSelection extends JPanel
 		
 		
 		JButton ok = new ImageButton("OK").withAction(() -> {
-			parent.popModalComponent();
+			parent.popLayer();
 			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
 			onSelect.accept(selected);
 		});
 		
 		JButton cancel = new ImageButton("Cancel").withAction(() -> {
-			parent.popModalComponent();
+			parent.popLayer();
 		});
 		
 		HeaderBox box = new HeaderBox(cancel, "Please Select Data Format", ok);
@@ -86,7 +87,7 @@ public class DataSourceSelection extends JPanel
 		add(box, BorderLayout.NORTH);
 		add(body, BorderLayout.CENTER);
 		
-		parent.pushModalComponent(this);
+		parent.pushLayer(new ModalLayer(parent, this));
 		
 
 		

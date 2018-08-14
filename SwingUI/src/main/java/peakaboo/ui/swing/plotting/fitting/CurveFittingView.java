@@ -26,6 +26,7 @@ import scitypes.util.Mutable;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.layerpanel.LayerDialogs;
 import swidget.widgets.layerpanel.LayerDialogs.MessageType;
+import swidget.widgets.layerpanel.ModalLayer;
 
 
 
@@ -150,17 +151,17 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			exec.addListener(() -> {
 				if (exec.getCompleted() && !ran.get()) {
 					ran.set(true);
-					plotPanel.popModalComponent();
+					plotPanel.popLayer();
 					changed();
 				} else if (exec.isAborted() && !ran.get()) {
 					ran.set(true);
-					plotPanel.popModalComponent();
+					plotPanel.popLayer();
 				}
 			});		
 			
 			
 			
-			plotPanel.pushModalComponent(execPanel);
+			plotPanel.pushLayer(new ModalLayer(plotPanel, execPanel));
 			exec.startWorking();
 			
 		} else {

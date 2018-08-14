@@ -53,6 +53,7 @@ public class Peakaboo
 	
 	private static void showError(Throwable e, String message, String text)
 	{
+		
 		SwingUtilities.invokeLater(() -> {
 			TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
 			errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
@@ -210,6 +211,7 @@ public class Peakaboo
 		//with all the other tasks, since this is usually the longest 
 		//running init job
 		Thread peakLoader = new Thread(() -> PeakTable.SYSTEM.getAll());
+		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
