@@ -192,12 +192,9 @@ public class PlotPanel extends LayerPanel
 			        }
 			        otherVersion = otherVersion.trim();
 			        in.close();
-		
-			        System.out.println(thisVersion);
-			        System.out.println(otherVersion);
 			        
 					AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
-					hasNewVersion = cmp.compare(thisVersion, otherVersion) > 0;
+					hasNewVersion = cmp.compare(thisVersion, otherVersion) < 0;
 					
 				} catch (IOException e) {
 					PeakabooLog.get().log(Level.WARNING, "Could not check for new version", e);
