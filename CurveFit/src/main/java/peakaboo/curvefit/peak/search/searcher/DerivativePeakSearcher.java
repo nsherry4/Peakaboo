@@ -14,25 +14,27 @@ import scitypes.SpectrumCalculations;
 public class DerivativePeakSearcher implements PeakSearcher {
 
 	@Override
-	public List<Integer> search(ReadOnlySpectrum data) {
+	public List<Integer> search(ReadOnlySpectrum rawdata) {
 		
 		Filter filter = new WeightedAverageNoiseFilter();
 		filter.initialize();
 		Value<Integer> width = (Value<Integer>) filter.getParameters().get(0);
-		width.setValue(new Integer(5));
+		width.setValue(new Integer(8));
 		
 		//aggressive smoothing to get just the most significant peaks
-		ReadOnlySpectrum smoothed = new ISpectrum(data);
+		ReadOnlySpectrum smoothed = new ISpectrum(rawdata);
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 3; i++) {
 			smoothed = filter.filter(smoothed, false);
 		}
-		
+		ReadOnlySpectrum data = smoothed;
 				
 		//first and second derivatives.
-		Spectrum d1 = SpectrumCalculations.derivative(smoothed);
+		Spectrum d1 = SpectrumCalculations.derivative(data);
 		Spectrum d2 = SpectrumCalculations.derivative(d1);
-
+		float dataMax = data.max();
+		float d2Max = SpectrumCalculations.abs(d2).max();
+		
 		//Any detected peak for which the second derivative doesn't 
 		//exceed 0.1% of the max-abs of the second derivative spectrum
 		//will be discarted
@@ -53,10 +55,15 @@ public class DerivativePeakSearcher implements PeakSearcher {
 			
 			if (value >= 0) {
 				
+				
 				//If we had been tracking a possible peak, and it looks good
-				if (gap && negative >= 10 && bestValue <= -d2threshold) {
-					channels.add(bestChannel);
-					gap = false;
+				if (gap && negative >= 10) {
+					float score = score(bestChannel, data, dataMax, d2, d2Max);
+					if (score > 0.001) {
+						channels.add(bestChannel);
+						gap = false;
+					}
+					
 				}
 				
 				nonnegative++;
@@ -87,12 +94,11 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		
 		//System.exit(0);
 		
-		float dataMax = data.max();
-		float d2Max = SpectrumCalculations.abs(d2).max();
+
 		channels.sort((a, b) -> {
 			return Float.compare(
-					scorePeak(b, data, dataMax, d2, d2Max),
-					scorePeak(a, data, dataMax, d2, d2Max)
+					score(b, data, dataMax, d2, d2Max),
+					score(a, data, dataMax, d2, d2Max)
 				);
 		});
 		
@@ -103,7 +109,29 @@ public class DerivativePeakSearcher implements PeakSearcher {
 	private float scorePeak(int channel, ReadOnlySpectrum data, float dataMax, ReadOnlySpectrum d2, float d2Max) {
 		float dataPercent = data.get(channel) / dataMax; 
 		float d2Percent = (-d2.get(channel)) / d2Max;
-		return dataPercent + d2Percent;
+		return (dataPercent + d2Percent) / 2f;
+	}
+	
+	private float score(int channel, ReadOnlySpectrum data, float dataMax, ReadOnlySpectrum d2, float d2Max) {
+		int range = 1;
+		while (range < 20) {
+			if (d2.get(channel - range) < d2.get(channel - range + 1)) break;
+			if (d2.get(channel + range) < d2.get(channel + range - 1)) break;
+			range++;
+		}
+		float bpre = data.get(channel - range);
+		float bpost = data.get(channel + range);
+		float bdelta = (bpost - bpre) / (float)(range * 2);
+				
+		//generate a peak with linear background removed
+		Spectrum peak = new ISpectrum(data.subSpectrum(channel - range, channel + range));
+		for (int i = 0; i < range*2+1; i++) {
+			peak.set(i, peak.get(i) - bpre - bdelta*i);
+		}
+				
+		Spectrum d2sub = new ISpectrum(d2.subSpectrum(channel - range, channel + range));
+		
+		return scorePeak(range, peak, dataMax, d2sub, d2Max);
 		
 	}
 	
