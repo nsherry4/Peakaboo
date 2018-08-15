@@ -14,12 +14,15 @@ import java.util.stream.Collectors;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.peak.escape.EscapePeak;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
@@ -77,21 +80,11 @@ public class PeakProposal
 				
 				//Generate list of peaks
 				List<Integer> peaks = searcher.search(data);
-												
 				
 				//remove any peaks within the FWHM of an existing Transitions in fits
 				for (int peak : new ArrayList<>(peaks)) {
-					for (TransitionSeries ts : fits.getFittedTransitionSeries()) {
-						for (Transition t : ts) {
-							if (t.relativeIntensity < 0.1) continue; 
-							float hwhm = fits.getFittingParameters().getFWHM(t)/2f;
-							float min = t.energyValue - hwhm;
-							float max = t.energyValue + hwhm;
-							float energy = calibration.energyFromChannel(peak);
-							if (min < energy && energy < max) {
-								peaks.remove(new Integer(peak));
-							}
-						}
+					if (peakOverlap(fits.getFittedTransitionSeries(), peak, fits.getFittingParameters())) {
+						peaks.remove(new Integer(peak));
 					}
 				}
 				
@@ -100,7 +93,6 @@ public class PeakProposal
 					return null;
 				}
 				
-				Map<Integer, List<Pair<TransitionSeries, Float>>> allRawGuesses = makeGuesses(data, peaks, fits, proposals, fitter, solver);
 				
 				firstStage.advanceState();
 				
@@ -120,14 +112,14 @@ public class PeakProposal
 				 */
 				List<TransitionSeries> newFits = new ArrayList<>();
 				for (int channel : peaks) {
-					List<Pair<TransitionSeries, Float>> rawGuesses = allRawGuesses.get(channel);
-					List<Pair<TransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
+					List<TransitionSeries> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
 					
 					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
 					
+					
 					//if this list of guesses contains a TransitionSeries we've already proposed
 					//we assume that this peak is also caused by that TransitionSeries and skip it
-					if (proposalsContainsGuess(newFits, rawGuesses)) {
+					if (peakOverlap(newFits, channel, fits.getFittingParameters())) {
 						PeakabooLog.get().log(Level.FINE, "Guesses contains previously proposed TransitionSeries, skipping");
 						continue;
 					}
@@ -139,13 +131,13 @@ public class PeakProposal
 							
 
 
-					Pair<TransitionSeries, Float> guess = guesses.get(0);
+					TransitionSeries guess = guesses.get(0);
 									
 					//If the existing fits doesn't contain this, add it
 					if (!fits.getFittedTransitionSeries().contains(guess)) {
-						newFits.add(guess.first);
-						proposals.addTransitionSeries(guess.first);
-						PeakabooLog.get().log(Level.FINE, "Channel " + channel + " guess: " + guess.show());
+						newFits.add(guess);
+						proposals.addTransitionSeries(guess);
+						PeakabooLog.get().log(Level.FINE, "Channel " + channel + " guess: " + guess);
 					}
 				
 					PeakabooLog.get().log(Level.FINE, "----------------------------");
@@ -169,37 +161,38 @@ public class PeakProposal
 		
 	}
 	
-	private static boolean proposalsContainsGuess(List<TransitionSeries> proposals, List<Pair<TransitionSeries, Float>> guesses) {
-		for (Pair<TransitionSeries, Float> guess : guesses) {
-			if (proposals.contains(guess.first)) {
-				return true;
+
+	//given the energy level of a peak and a list of existing new fits, check to 
+	//see if the given peak can be explained by an existing fit
+	private static boolean peakOverlap(List<TransitionSeries> newfits, int channel, FittingParameters parameters) {
+		float energy = parameters.getCalibration().energyFromChannel(channel);
+		for (TransitionSeries ts : newfits) {
+			for (Transition t : ts) {
+				if (transitionOverlap(t, energy, 0.1f, parameters)) return true;
 			}
+			for (Transition t : ts.escape(parameters.getEscapeType())) {
+				if (transitionOverlap(t, energy, 0.1f * EscapePeak.intensity(ts.element), parameters)) return true;
+			}
+		}
+		return false;
+	}
+	private static boolean transitionOverlap(Transition t, float energy, float cutoff, FittingParameters parameters) {
+		if (t.relativeIntensity < cutoff) return false; 
+		float hwhm = parameters.getFWHM(t)/2f;
+		float min = t.energyValue - hwhm;
+		float max = t.energyValue + hwhm;
+		if (min < energy && energy < max) {
+			return true;
 		}
 		return false;
 	}
 
 	
-	private static Map<Integer, List<Pair<TransitionSeries, Float>>> makeGuesses(
-			ReadOnlySpectrum data, 
-			Collection<Integer> peaks, 
-			FittingSet fits,
-			FittingSet proposals,
-			CurveFitter fitter, 
-			FittingSolver solver
-		) {
-		Map<Integer, List<Pair<TransitionSeries, Float>>> guesses = new LinkedHashMap<>();
-		for (int channel : peaks) {
-			guesses.put(channel, fromChannel(data, fits, proposals, fitter, solver, channel, null, 5));
-		}
-		return guesses;
-	}
-	
-	
 	/**
 	 * Generates a list of {@link TransitionSeries} which are good fits for the given data at the given channel index
 	 * @return an ordered list of {@link TransitionSeries} which are good fits for the given data at the given channel
 	 */
-	public static List<Pair<TransitionSeries, Float>> fromChannel(
+	public static List<TransitionSeries> fromChannel(
 			final ReadOnlySpectrum data, 
 			FittingSet fits,
 			FittingSet proposed,
@@ -291,7 +284,7 @@ public class PeakProposal
 		
 		CompoundFittingScorer fastCompoundScorer = new CompoundFittingScorer();
 		fastCompoundScorer.add(new EnergyProximityScorer(energy, fits.getFittingParameters()), 10f);
-		fastCompoundScorer.add(new FastFittingScorer(residualSpectrum, fits.getFittingParameters()), 10f);
+		fastCompoundScorer.add(new FastFittingScorer(energy, residualSpectrum, fits.getFittingParameters()), 10f);
 		fastCompoundScorer.add(new NoComplexPileupScorer(), 2f);
 		fastCompoundScorer.add(new PileupSourceScorer(data, calibration), 1f);
 
@@ -304,7 +297,7 @@ public class PeakProposal
 		
 		
 		//now sort by score
-		List<Pair<TransitionSeries, Float>> scoredGuesses = tss.stream()
+		List<TransitionSeries> scoredGuesses = tss.stream()
 			//fast scorer to shrink downthe list
 			.map(ts -> new Pair<>(ts, -fastCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
@@ -314,6 +307,7 @@ public class PeakProposal
 			//good scorer to put them in the best order
 			.map(ts -> new Pair<>(ts, -goodCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
+			.map(p -> p.first)
 			
 			.collect(Collectors.toList());
 
