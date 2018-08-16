@@ -187,11 +187,12 @@ public class PluginsOverview extends JPanel {
 				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
 				MessageType.QUESTION)
 			.addRight(
-				new ImageButton("Yes").withAction(() -> {
+				new ImageButton("Delete").withAction(() -> {
 					manager.removeJar(jar);
 					this.reload();
-				}))
-			.addLeft(new ImageButton("No"))
+				}).withStateCritical()
+				)
+			.addLeft(new ImageButton("Cancel"))
 			.showIn(parent);
 		
 		

@@ -70,11 +70,11 @@ public class DataSourceSelection extends JPanel
 		
 		
 		
-		JButton ok = new ImageButton("OK").withAction(() -> {
+		JButton ok = new ImageButton("Select").withAction(() -> {
 			parent.popLayer();
 			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
 			onSelect.accept(selected);
-		});
+		}).withStateDefault();
 		
 		JButton cancel = new ImageButton("Cancel").withAction(() -> {
 			parent.popLayer();
