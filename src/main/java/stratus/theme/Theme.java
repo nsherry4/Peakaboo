@@ -29,6 +29,11 @@ public interface Theme {
 	
 	public Color getScrollHandle();
 	
+	Color getWidgetBorderAlpha();
+	Color getWidgetDashAlpha();
+	Color getShadow();
+	
+	
 	
 	
 	

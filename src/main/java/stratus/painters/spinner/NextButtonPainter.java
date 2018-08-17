@@ -9,6 +9,7 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JComponent;
 
 import stratus.Stratus.ButtonState;
+import stratus.painters.BorderPainter;
 import stratus.painters.ButtonPainter;
 import stratus.theme.Theme;
 
@@ -19,7 +20,7 @@ public class NextButtonPainter extends ButtonPainter {
 	}
 	
 	@Override
-    public void paint(Graphics2D g, JComponent object, int width, int height) {
+    public void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
@@ -30,7 +31,7 @@ public class NextButtonPainter extends ButtonPainter {
     	
     	
     	//Border
-    	g.setPaint(borderColor);
+    	g.setPaint(palette.border);
     	Shape border = new RoundRectangle2D.Float(lpad, tpad, width-pad-lpad, height+radius, radius, radius);     
     	g.fill(border);
     	
@@ -50,7 +51,7 @@ public class NextButtonPainter extends ButtonPainter {
     	bpad += borderWidth;
     	tpad += borderWidth;
     	Shape fillArea = new RoundRectangle2D.Float(lpad, tpad+bevelTop, width-pad-lpad, height+radius, radius, radius);
-    	g.setPaint(new LinearGradientPaint(0, tpad, 0, (height-tpad + height-bpad), points, colours));
+    	g.setPaint(new LinearGradientPaint(0, tpad, 0, (height-tpad + height-bpad), palette.fillPoints, palette.fillArray));
     	g.fill(fillArea);
 
 	}

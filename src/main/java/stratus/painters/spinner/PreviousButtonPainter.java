@@ -19,7 +19,7 @@ public class PreviousButtonPainter extends ButtonPainter {
 	}
 	
 	@Override
-    public void paint(Graphics2D g, JComponent object, int width, int height) {
+    public void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
@@ -34,7 +34,7 @@ public class PreviousButtonPainter extends ButtonPainter {
     	g.fill(bevel);
     	
     	//Border
-    	g.setPaint(borderColor);
+    	g.setPaint(palette.border);
     	Shape border = new RoundRectangle2D.Float(lpad, tpad-radius, width-pad-lpad, height-pad-bpad+radius, radius, radius);     
     	g.fill(border);
     	
@@ -46,14 +46,14 @@ public class PreviousButtonPainter extends ButtonPainter {
     	bpad += borderWidth;
     	tpad += borderWidth;
     	Shape fillArea = new RoundRectangle2D.Float(lpad, tpad-radius, width-pad-lpad, height-pad-bpad+radius, radius, radius);
-    	g.setPaint(new LinearGradientPaint(0, -(height-(pad+1)), 0, height-bpad, points, colours));
+    	g.setPaint(new LinearGradientPaint(0, -(height-(pad+1)), 0, height-bpad, palette.fillPoints, palette.fillArray));
     	g.fill(fillArea);
 
 
     	
     	//Restore border at top after mail fill was overextended
     	//Border
-    	g.setPaint(borderColor);
+    	g.setPaint(palette.border);
     	//g.drawLine(0, 0, (int)(width-pad), 0);
     	
 	}

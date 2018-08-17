@@ -10,10 +10,14 @@ public class LightTheme implements Theme {
 	private Color control = new Color(0xe9e9e9);
 	private Color controlText = new Color(0x202020);
 	private Color controlTextDisabled = new Color(0x999999);
-	private Color border = new Color(0xBABABA);
+	private Color border = new Color(0xB7B7B7);
 	
 	private Color widget = Stratus.darken(getControl(), 0.08f);
 	private Color widgetBevel = Stratus.lighten(getWidget(), 0.2f);
+	
+	private Color dashAlpha = new Color(0x30000000, true);
+	private Color borderAlpha = new Color(0x40000000, true);
+	private Color shadowAlpha = new Color(0x1C000000, true);
 	
 	private Color menuControl = new Color(0xffffff);
 	private Color menuControlText = controlText;
@@ -46,6 +50,17 @@ public class LightTheme implements Theme {
 	public Color getWidgetBorder() {
 		return border;
 	}
+	
+	@Override
+	public Color getWidgetBorderAlpha() {
+		return borderAlpha;
+	}
+	
+	@Override
+	public Color getWidgetDashAlpha() {
+		return dashAlpha;
+	}
+	
 
 	@Override
 	public Color getMenu() {
@@ -72,6 +87,7 @@ public class LightTheme implements Theme {
 	public Color getWidgetBevel() {
 		return widgetBevel;
 	}
+	
 
 	@Override
 	public Color getRecessedControl() {
@@ -96,6 +112,11 @@ public class LightTheme implements Theme {
 	@Override
 	public Color getScrollHandle() {
 		return scrollHandle;
+	}
+
+	@Override
+	public Color getShadow() {
+		return shadowAlpha;
 	}
 
 	

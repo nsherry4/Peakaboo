@@ -12,6 +12,10 @@ public class DarkTheme implements Theme {
 	private Color controlTextDisabled = new Color(0x666666);
 	private Color border = new Color(0x212424);
 	
+	private Color dashAlpha = new Color(0x30000000, true);
+	private Color borderAlpha = new Color(0x40000000, true);
+	private Color shadowAlpha = new Color(0x1C000000, true);
+	
 	private Color widget = Stratus.darken(control, 0.08f);
 	private Color widgetBevel = Stratus.lighten(control, 0.1f);
 	
@@ -96,6 +100,21 @@ public class DarkTheme implements Theme {
 	@Override
 	public Color getScrollHandle() {
 		return scrollHandle;
+	}
+
+	@Override
+	public Color getWidgetBorderAlpha() {
+		return borderAlpha;
+	}
+
+	@Override
+	public Color getWidgetDashAlpha() {
+		return dashAlpha;
+	}
+
+	@Override
+	public Color getShadow() {
+		return shadowAlpha;
 	}
 
 

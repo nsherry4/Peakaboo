@@ -8,7 +8,9 @@ import java.awt.Paint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Arrays;
 
 import javax.swing.JComponent;
 
@@ -19,14 +21,39 @@ import stratus.theme.Theme;
 //Fills the area of button style controls (no borders, etc)
 public class ButtonPainter extends StatefulPainter {
 
-	protected Color c1, c2, cBevel, cDash;
-	protected Color[] colours;
-    protected Color borderColor;
-    
-    protected float[] points = new float[] {0f, 1.0f};
+	public static class ButtonPalette {
+		
+		public Color fillTop, fillBottom;
+		public Color[] fillArray;
+		public Color bevel, dash, gloss, border, shadow;
+		public Color text;
+		public float[] fillPoints = new float[] {0f, 1.0f};
+		
+		public ButtonPalette() {
+			// TODO Auto-generated constructor stub
+		}
+		
+		public ButtonPalette(ButtonPalette copy) {
+			this.fillTop = copy.fillTop;
+			this.fillBottom = copy.fillBottom;
+			this.fillArray = Arrays.copyOf(copy.fillArray, copy.fillArray.length);
+			this.fillPoints = Arrays.copyOf(copy.fillPoints, copy.fillPoints.length);
+			this.bevel = copy.bevel;
+			this.dash = copy.dash;
+			this.gloss = copy.gloss;
+			this.border = copy.border;
+			this.shadow = copy.shadow;
+			this.text = copy.text;
+			
+			
+		}
+		
+	}
+	
+	private ButtonPalette palette = new ButtonPalette();
+	    
     protected float radius = Stratus.borderRadius;
     protected float borderWidth = 1;
-    
     protected int margin = 1;
     
     
@@ -38,11 +65,11 @@ public class ButtonPainter extends StatefulPainter {
     
     public ButtonPainter(Theme theme, int margin, ButtonState... buttonStates) {
     	super(theme, buttonStates);
-    	setColours();
+    	basePalette();
     	this.margin = margin;
     }
     
-    private void setColours() {
+    private void basePalette() {
     	   	
     	
     	Color base = getTheme().getWidget();
@@ -51,88 +78,188 @@ public class ButtonPainter extends StatefulPainter {
     	}
     	
     	//ENABLED is default
-    	this.c1 = Stratus.lighten(base, 0.06f);
-    	this.c2 = Stratus.darken(base, 0.06f);
-    	this.cBevel = getTheme().getWidgetBevel();
-    	Color text = getTheme().getControlText();
-    	this.cDash = new Color(text.getRed(), text.getGreen(), text.getBlue(), 50);
-    	this.borderColor = getTheme().getWidgetBorder();
+    	palette.fillTop = Stratus.lighten(base, 0.06f);
+    	palette.fillBottom = Stratus.darken(base, 0.06f);
+    	palette.bevel = Stratus.lighten(palette.fillTop, 0.1f);
+    	palette.text = getTheme().getControlText();
+    	palette.dash = getTheme().getWidgetDashAlpha();
+    	palette.border = getTheme().getWidgetBorderAlpha();
+    	palette.shadow = getTheme().getShadow();
     	
     	if (isPressed() || isSelected()) {
-    		this.c1 = Stratus.darken(base, 0.06f);
-    		this.c2 = Stratus.darken(base, 0.00f);
-        	this.borderColor = getTheme().getWidgetBorder();
+    		palette.fillTop = Stratus.darken(base, 0.06f);
+    		palette.fillBottom = Stratus.darken(base, 0.00f);
     	}
 
     	
     	if (isDisabled()) {
-    		this.c1 = getTheme().getControl();
-    		this.c2 = getTheme().getControl();
-    		this.borderColor = getTheme().getWidgetBorder();
+    		palette.fillTop = getTheme().getControl();
+    		palette.fillBottom = getTheme().getControl();
     		
     		//Disabled and selected, like toggle button
         	if (isSelected()) {
-        		this.c1 = Stratus.darken(c1, 0.06f);
-        		this.c2 = Stratus.darken(c2, 0.06f);
-            	this.borderColor = getTheme().getWidgetBorder();
+        		palette.fillTop = Stratus.darken(palette.fillTop, 0.06f);
+        		palette.fillBottom = Stratus.darken(palette.fillBottom, 0.06f);
         	}
     		
     	}
     	
-		this.colours = new Color[] {c1, c2};
-		this.points = new float[] {0, 1f};
+		palette.fillArray = new Color[] {palette.fillTop, palette.fillBottom};
+		palette.fillPoints = new float[] {0, 1f};
     }
     
-
-    @Override
-    public void paint(Graphics2D g, JComponent object, int width, int height) {
-   	
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+    
+    /**
+     * Makes a ButtonPalette object for this component. If there is nothing 
+     * special about it, it will return the stock ButtonPalette instance.
+     * The object may be null to retrieve the default ButtonPalette.
+     */
+    protected ButtonPalette makePalette(JComponent object) {
     	
-    	float pad = margin;
-    	float bevelTop = 0;
-    	
-    	//Bevel under button
-    	g.setPaint(cBevel);
-    	Shape bevel = new RoundRectangle2D.Float(pad, pad+1, width-pad*2, height-pad*2, radius, radius);     
-    	//g.fill(bevel);
-    	
-    	//Border
-    	//Border should be darker at the bottom when not pressed (bit of a shadow?)
-    	Paint borderGradient = new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.5f, 1f}, new Color[] {borderColor, Stratus.darken(borderColor, 0.15f)});
-    	g.setPaint(isPressed() || isSelected() ? borderColor : borderGradient);
-    	Shape border = new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2, radius, radius);     
-    	g.fill(border);
-    	
-    	
-    	//Bevel at top of button unless pressed
-    	if (!(isPressed() || isSelected()) && !(isDisabled())) {
-	    	g.setPaint(cBevel);
-	    	bevel = new RoundRectangle2D.Float(pad+1, pad+1, width-pad*2-2, height-pad*2-2, radius, radius);     
-	    	g.fill(bevel);
-	    	bevelTop += 1;
+    	if (object == null) {
+    		return palette;
     	}
     	
+    	boolean isCustomColour = object.getBackground().getClass().getName().equals("java.awt.Color"); 
     	
-    	//Main fill
-    	pad = margin + borderWidth;
-    	Shape fillArea = new RoundRectangle2D.Float(pad, pad+bevelTop, width-pad*2, height-pad*2-bevelTop, radius, radius);
-    	g.setPaint(new LinearGradientPaint(0, pad, 0, height-pad, points, colours));
-    	g.fill(fillArea);
-    	
-    	//Focus dash if focused but not pressed
-    	pad += 1;
-    	if (isFocused() && !isPressed()) {
-        	g.setPaint(cDash);
-        	Shape focus = new RoundRectangle2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, radius, radius);
-        	Stroke old = g.getStroke();
-        	g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[] {2, 2}, 0f));
-        	g.draw(focus);
-        	g.setStroke(old);
+    	if (isCustomColour) {
+    		System.out.println(object);
+    		ButtonPalette custom = new ButtonPalette(palette);
+    		custom.fillTop = Stratus.lighten(object.getBackground(), 0.06f);
+    		custom.fillBottom = Stratus.darken(object.getBackground(), 0.06f);
+    		custom.fillArray = new Color[] {custom.fillTop, custom.fillBottom};
+    		custom.bevel = Stratus.lighten(custom.fillTop, 0.15f);
+    		return custom;
     	}
     	
-    	
+    	return palette;
     }
 
+    @Override
+    public final void paint(Graphics2D g, JComponent object, int width, int height) {
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		
+		paint(g, object, width, height, makePalette(object));
+		
+    }
+    
+    
+
+
+    
+    protected void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {
+    	    	
+    	float pad = margin;
+
+    	drawBorder(width, height, pad, g, palette);
+    	drawMain(width, height, pad, g, palette);
+    	drawShadow(width, height, pad, g, palette);
+    	drawBevel(width, height, pad, g, palette);
+    	drawDash(width, height, pad, g, palette);
+	
+    }
+
+    
+
+	protected Shape fillShape(float width, float height, float pad) {
+    	float p = pad+1;
+    	return new RoundRectangle2D.Float(p, p, width-p*2, height-p*2, radius, radius);
+    }
+    
+    protected Shape borderShape(float width, float height, float pad) {
+    	return new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2, radius, radius);
+    }
+    
+    protected Shape shadowShape(float width, float height, float pad) {
+    	GeneralPath path = new GeneralPath();
+    	float y = (int)(height-(pad)*2);
+    	float startx = pad+2;
+    	float endx = width-(pad+1)*2;
+    	path.moveTo(startx, y);
+    	path.lineTo(endx, y);
+    	return path;
+    }
+    
+    protected Shape bevelShape(float width, float height, float pad) {
+    	GeneralPath path = new GeneralPath();
+    	path.moveTo(pad+2, pad+1);
+    	path.lineTo(width-(pad+1)*2, pad+1);
+    	return path;
+    }
+    
+    protected Shape dashShape(float width, float height, float pad) {
+    	return new RoundRectangle2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, radius, radius);
+    }
+    
+    
+    
+    
+    protected void drawBorder(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    	//Border should be darker at the bottom when not pressed (bit of a shadow?)
+    	g.setPaint(borderPaint(width, height, pad, palette));
+    	g.fill(borderShape(width, height, pad));
+    }
+    
+    protected void drawMain(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    	g.setPaint(mainPaint(width, height, pad, palette));
+    	g.fill(fillShape(width, height, pad));
+	}
+
+    protected void drawBevel(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    	//Bevel at top of button unless pressed
+    	if (!(isPressed() || isSelected()) && !(isDisabled())) {
+	    	g.setPaint(bevelPaint(width, height, pad, palette));
+	    	g.draw(bevelShape(width, height, pad));
+    	}
+    }
+    
+    protected void drawShadow(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    	//Shadow at bottom of button unless pressed
+    	if (!(isPressed() || isSelected()) && !(isDisabled())) {
+	    	g.setPaint(shadowPaint(width, height, pad, palette));
+	    	g.draw(shadowShape(width, height, pad));
+    	}
+    }
+    
+    protected void drawDash(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    	//Focus dash if focused but not pressed
+    	pad += 2;
+    	if (isFocused() && !isPressed()) {
+        	g.setPaint(dashPaint(width, height, pad, palette));
+        	Stroke old = g.getStroke();
+        	g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {2, 1}, 0f));
+        	g.draw(dashShape(width, height, pad));
+        	g.setStroke(old);
+    	}
+    }
+    
+    
+    
+    
+    protected Paint shadowPaint(float width, float height, float pad, ButtonPalette palette) {
+    	return palette.shadow;
+    }
+
+    protected Paint bevelPaint(float width, float height, float pad, ButtonPalette palette) {
+    	return palette.bevel;
+    }
+    
+    protected Paint mainPaint(float width, float height, float pad, ButtonPalette palette) {
+    	return new LinearGradientPaint(0, pad, 0, height-pad, palette.fillPoints, palette.fillArray);
+    }
+    
+    protected Paint borderPaint(float width, float height, float pad, ButtonPalette palette) {
+    	return palette.border;
+    }
+    
+    protected Paint dashPaint(float width, float height, float pad, ButtonPalette palette) {
+    	return palette.dash;
+    }
+    
+    
+    
 }
+
+
+
