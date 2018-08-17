@@ -65,14 +65,13 @@ public class ButtonPainter extends StatefulPainter {
     
     public ButtonPainter(Theme theme, int margin, ButtonState... buttonStates) {
     	super(theme, buttonStates);
-    	basePalette();
+    	setupPalette(palette, getTheme().getWidget());
     	this.margin = margin;
     }
     
-    private void basePalette() {
+    private void setupPalette(ButtonPalette palette, Color base) {
     	   	
     	
-    	Color base = getTheme().getWidget();
     	if (isMouseOver()) {
     		base = Stratus.lighten(base);
     	}
@@ -123,12 +122,10 @@ public class ButtonPainter extends StatefulPainter {
     	boolean isCustomColour = object.getBackground().getClass().getName().equals("java.awt.Color"); 
     	
     	if (isCustomColour) {
-    		System.out.println(object);
+    		Color base = object.getBackground();
     		ButtonPalette custom = new ButtonPalette(palette);
-    		custom.fillTop = Stratus.lighten(object.getBackground(), 0.06f);
-    		custom.fillBottom = Stratus.darken(object.getBackground(), 0.06f);
-    		custom.fillArray = new Color[] {custom.fillTop, custom.fillBottom};
-    		custom.bevel = Stratus.lighten(custom.fillTop, 0.15f);
+    		setupPalette(custom, base);
+    		custom.border = Stratus.darken(object.getBackground(), 0.1f);
     		return custom;
     	}
     	
@@ -152,6 +149,8 @@ public class ButtonPainter extends StatefulPainter {
     	    	
     	float pad = margin;
 
+
+    	
     	drawBorder(width, height, pad, g, palette);
     	drawMain(width, height, pad, g, palette);
     	drawShadow(width, height, pad, g, palette);
