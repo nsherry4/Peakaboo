@@ -24,12 +24,12 @@ public class RadioButtonPainter extends ButtonPainter {
 		super(theme, buttonStates);
 		
 		palette = super.makePalette(null);
+		palette.shadow = Stratus.lessTransparent(palette.shadow, 0.15f);
 		palette.border = Stratus.lessTransparent(palette.border);
 		palette.fillArray = new Color[] {Stratus.lighten(palette.fillArray[0]), palette.fillArray[0], palette.fillArray[1]};
 		palette.fillPoints = new float[] {0, 0.2f, 1f};
 		
 		this.selected = selected;
-		this.radius += 20;
 		
 
 	}
@@ -87,7 +87,7 @@ public class RadioButtonPainter extends ButtonPainter {
     }
 
     protected Paint bevelPaint(float width, float height, float pad, ButtonPalette palette) {
-    	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.1f, 0.5f}, new Color[] {palette.bevel, new Color(0x0000000, true)});
+    	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.075f, 0.5f}, new Color[] {palette.bevel, new Color(0x0000000, true)});
     }
     
 	
