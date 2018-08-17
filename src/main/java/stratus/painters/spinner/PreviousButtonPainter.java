@@ -1,12 +1,11 @@
 package stratus.painters.spinner;
 
-import java.awt.Graphics2D;
+import java.awt.Color;
 import java.awt.LinearGradientPaint;
-import java.awt.RenderingHints;
+import java.awt.Paint;
 import java.awt.Shape;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
-
-import javax.swing.JComponent;
 
 import stratus.Stratus.ButtonState;
 import stratus.painters.ButtonPainter;
@@ -14,49 +13,42 @@ import stratus.theme.Theme;
 
 public class PreviousButtonPainter extends ButtonPainter {
 
+	private ButtonPalette palette;
+	
 	public PreviousButtonPainter(Theme theme, ButtonState... buttonStates) {
 		super(theme, buttonStates);
-	}
-	
-	@Override
-    public void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {
 		
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-    	
-    	float pad = margin, lpad = 0, bpad = 0, tpad=0;
-    	
-    	
-    	
-    	//Bevel under button
-    	g.setPaint(getTheme().getWidgetBevel());
-    	Shape bevel = new RoundRectangle2D.Float(lpad, tpad+1, width-pad-lpad, height-pad-bpad, radius, radius);     
-    	g.fill(bevel);
-    	
-    	//Border
-    	g.setPaint(palette.border);
-    	Shape border = new RoundRectangle2D.Float(lpad, tpad-radius, width-pad-lpad, height-pad-bpad+radius, radius, radius);     
-    	g.fill(border);
-    	
-    	
-    	
-    	//Main fill
-    	pad += borderWidth;
-    	lpad += borderWidth;
-    	bpad += borderWidth;
-    	tpad += borderWidth;
-    	Shape fillArea = new RoundRectangle2D.Float(lpad, tpad-radius, width-pad-lpad, height-pad-bpad+radius, radius, radius);
-    	g.setPaint(new LinearGradientPaint(0, -(height-(pad+1)), 0, height-bpad, palette.fillPoints, palette.fillArray));
-    	g.fill(fillArea);
-
-
-    	
-    	//Restore border at top after mail fill was overextended
-    	//Border
-    	g.setPaint(palette.border);
-    	//g.drawLine(0, 0, (int)(width-pad), 0);
-    	
+		palette = super.makePalette(null);
+		palette.bevel = new Color(0x00000000, true);	
 	}
+  
+	protected Shape fillShape(float width, float height, float pad) {
+		pad++;
+		Shape fillArea = new RoundRectangle2D.Float(1, 1-radius, width-pad-1, height-pad+radius, radius, radius);
+		return fillArea;
+    }
+    
+    protected Shape borderShape(float width, float height, float pad) {
+    	Shape border = new RoundRectangle2D.Float(0, 0-radius, width-pad, height-0+radius, radius, radius);
+    	return border;
+    }
+    
+    protected Shape shadowShape(float width, float height, float pad) {
+    	GeneralPath path = new GeneralPath();
+    	float y = (int)(height-(pad));
+    	float startx = 2;
+    	float endx = width-(pad+1)*2;
+    	path.moveTo(startx, y);
+    	path.lineTo(endx, y);
+    	return path;
+    }
+
+    protected Shape dashShape(float width, float height, float pad) {
+    	return new RoundRectangle2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, radius, radius);
+    }
 	
+    protected Paint mainPaint(float width, float height, float pad, ButtonPalette palette) {
+    	return new LinearGradientPaint(0, -(height-pad), 0, height-pad, palette.fillPoints, palette.fillArray);
+    }
 	
 }
