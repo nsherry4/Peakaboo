@@ -57,7 +57,7 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
     	float borderStroke = 1;
     	if (isSelected() || isFocused()) {
     		g.setPaint(getTheme().getHighlight());
-    		borderStroke = 2;
+    		borderStroke = 3;
     	} else {
     		g.setPaint(getTheme().getWidgetBorder());
     	}
