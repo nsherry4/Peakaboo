@@ -62,8 +62,8 @@ import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.LayerDialogs;
-import swidget.widgets.layerpanel.LayerDialogs.MessageType;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.Spacing;
 
 public class PluginsOverview extends JPanel {
@@ -182,7 +182,7 @@ public class PluginsOverview extends JPanel {
 			return;
 		}
 		
-		new LayerDialogs(
+		new LayerDialog(
 				"Delete Plugin Archive?", 
 				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
 				MessageType.QUESTION)
@@ -243,7 +243,7 @@ public class PluginsOverview extends JPanel {
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
-			new LayerDialogs(
+			new LayerDialog(
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
 					MessageType.ERROR).showIn(parent);
@@ -251,7 +251,7 @@ public class PluginsOverview extends JPanel {
 		}
 		
 		if (!added) {
-			new LayerDialogs(
+			new LayerDialog(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
 					MessageType.ERROR).showIn(parent);
@@ -278,7 +278,7 @@ public class PluginsOverview extends JPanel {
 		BoltPluginSet<? extends BoltPlugin> plugins = manager.importJar(jar);
 		
 		this.reload();
-		new LayerDialogs(
+		new LayerDialog(
 				"Imported New Plugins", 
 				"Peakboo successfully imported the following plugin(s):\n" + listToUL(plugins.getAll()), 
 				MessageType.INFO).showIn(parent);

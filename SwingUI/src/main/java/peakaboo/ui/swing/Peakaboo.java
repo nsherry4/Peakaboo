@@ -37,8 +37,8 @@ import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
-import swidget.widgets.layerpanel.LayerDialogs;
-import swidget.widgets.layerpanel.LayerDialogs.MessageType;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 
 
 
@@ -92,7 +92,7 @@ public class Peakaboo
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
 			
-			new LayerDialogs(title, message, MessageType.INFO).showInWindow(null, true);
+			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
 			
 		}
 	}
@@ -105,7 +105,7 @@ public class Peakaboo
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
 						
-			new LayerDialogs(title, message, MessageType.INFO).showInWindow(null, true);
+			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
 			
 			//dialog.setAlwaysOnTop(true);
 			//dialog.setVisible(true);

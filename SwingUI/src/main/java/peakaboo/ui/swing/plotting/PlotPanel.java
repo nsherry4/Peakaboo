@@ -113,8 +113,8 @@ import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.ToastLayer;
-import swidget.widgets.layerpanel.LayerDialogs;
-import swidget.widgets.layerpanel.LayerDialogs.MessageType;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.properties.PropertyViewPanel;
 
 
@@ -504,7 +504,7 @@ public class PlotPanel extends LayerPanel
 		}
 		else if (formats.size() == 0)
 		{
-			new LayerDialogs(
+			new LayerDialog(
 					"Open Failed", 
 					"Could not determine the data format of the selected file(s)", 
 					MessageType.ERROR
@@ -573,7 +573,7 @@ public class PlotPanel extends LayerPanel
 						} else if (result.problem != null) {
 							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
 						} else {
-							new LayerDialogs(
+							new LayerDialog(
 									"Open Failed", 
 									"Peakaboo could not open this dataset.\n" + result.message, 
 									MessageType.ERROR
@@ -893,7 +893,7 @@ public class PlotPanel extends LayerPanel
 				
 				//If the data files in the saved session are different, offer to load the data set from the new session
 				if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
-					new LayerDialogs(
+					new LayerDialog(
 							"Open Associated Data Set?", 
 							"This session is associated with another data set.\nDo you want to open that data set now?", 
 							MessageType.QUESTION)
@@ -906,7 +906,7 @@ public class PlotPanel extends LayerPanel
 									controller.loadSessionSettings(session);	
 									savedSessionFileName = file.get();
 								});
-							}))
+							}).withStateDefault())
 						.addLeft(
 							new ImageButton("No").withAction(() -> {
 								//load the settings w/o the data, then set the file paths back to the current values
@@ -988,7 +988,7 @@ public class PlotPanel extends LayerPanel
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
-			new LayerDialogs(
+			new LayerDialog(
 					"Cannot Detect Energy Calibration", 
 					"Detecting energy calibration requires that at least two elements be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
 					MessageType.WARNING

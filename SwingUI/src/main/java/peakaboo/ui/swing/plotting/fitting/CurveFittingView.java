@@ -24,8 +24,8 @@ import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
 import scitypes.util.Mutable;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.layerpanel.LayerDialogs;
-import swidget.widgets.layerpanel.LayerDialogs.MessageType;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layerpanel.ModalLayer;
 
 
@@ -130,7 +130,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			card.show(cardPanel, SMART);
 			changed();
 		} else {
-			new LayerDialogs(
+			new LayerDialog(
 					"Missing Data Set or Energy Calibration", 
 					"Guided fitting cannot proceed without a data set and energy calibration.", 
 					MessageType.WARNING
@@ -165,7 +165,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			exec.startWorking();
 			
 		} else {
-			new LayerDialogs(
+			new LayerDialog(
 					"Misisng Data Set or Energy Calibration", 
 					"Automatic fitting cannot proceed without a data set and energy calibration.", 
 					MessageType.WARNING
