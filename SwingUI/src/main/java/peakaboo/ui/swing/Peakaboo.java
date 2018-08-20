@@ -139,6 +139,11 @@ public class Peakaboo
 				if (record.getLevel() == Level.SEVERE) {
 					Throwable t = record.getThrown();
 					String m = record.getMessage();
+					
+					if (t == null && m.startsWith("\tat ")) {
+						return;
+					}
+					
 					showError(t, m);
 				}
 			}
