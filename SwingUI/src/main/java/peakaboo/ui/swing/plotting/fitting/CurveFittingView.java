@@ -153,9 +153,11 @@ public class CurveFittingView extends ClearPanel implements Changeable
 					ran.set(true);
 					plotPanel.popLayer();
 					changed();
+					exec.discard();
 				} else if (exec.isAborted() && !ran.get()) {
 					ran.set(true);
 					plotPanel.popLayer();
+					exec.discard();
 				}
 			});		
 			

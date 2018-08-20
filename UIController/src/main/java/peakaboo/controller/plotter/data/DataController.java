@@ -80,7 +80,7 @@ public class DataController extends Eventful
 			
 			public synchronized void change()
 			{
-				if (!readTasks.getCompleted()) { return; }
+				if (!readTasks.getCompleted() && !readTasks.isResultSet()) { return; }
 				if (finished) { return; }
 				finished = true;
 				
