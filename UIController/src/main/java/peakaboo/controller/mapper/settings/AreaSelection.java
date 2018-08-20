@@ -46,6 +46,12 @@ public class AreaSelection extends EventfulType<String> {
 		this.start = dragStart;
 		
 		updateListeners(UpdateType.AREA_SELECTION.toString());
+		
+		map.addListener(type -> {
+			if (type == UpdateType.DATA_OPTIONS.toString()) {
+				trimSelectionToBounds();
+			}
+		});
 	}
 
 	
@@ -75,6 +81,7 @@ public class AreaSelection extends EventfulType<String> {
 	 * generate a list of indexes in the map which are selected
 	 */
 	public List<Integer> getPoints() {
+		trimSelectionToBounds();
 		List<Integer> indexes = new ArrayList<>();
 		
 		final int xstart = getStart().x;
@@ -82,7 +89,7 @@ public class AreaSelection extends EventfulType<String> {
 		
 		final int xend = getEnd().x;
 		final int yend = getEnd().y;
-				
+
 		final GridPerspective<Float> grid = new GridPerspective<Float>(
 				map.getSettings().getView().getDataWidth(), 
 				map.getSettings().getView().getDataHeight(), 
@@ -119,4 +126,20 @@ public class AreaSelection extends EventfulType<String> {
 		setHasBoundingRegion(false);
 	}
 	
+	
+	public void trimSelectionToBounds() {
+				
+		int x = map.getSettings().getView().viewDimensions.x;
+		int y = map.getSettings().getView().viewDimensions.y;
+		
+		if (start != null) {
+			if (start.x >= x) start.x = x-1;
+			if (start.y >= y) start.y = y-1;
+		}
+		if (end != null) {
+			if (end.x >= x) end.x = x-1;
+			if (end.y >= y) end.y = y-1;
+		}
+		
+	}
 }
