@@ -32,11 +32,12 @@ public class ProgressBarForegroundPainter extends SimpleThemed implements Painte
 		this.enabled = enabled;
 		this.mode = mode;
 		
-		c1 = Stratus.saturate(Stratus.lighten(getTheme().getHighlight(), 0.2f), 0.05f);
-		c2 = Stratus.saturate(getTheme().getHighlight(), 0.05f);
-		c3 = Stratus.saturate(Stratus.darken(getTheme().getHighlight(), 0.2f), 0.05f);
-		c4 = Stratus.desaturate(Stratus.lighten(getTheme().getHighlight(), 0.05f), 0.04f);
-		c5 = Stratus.desaturate(Stratus.lighten(getTheme().getHighlight(), 0.2f), 0.2f);
+		c1 = Stratus.lighten(getTheme().getHighlight(), 0.2f);
+		c2 = getTheme().getHighlight();
+		c3 = Stratus.darken(getTheme().getHighlight(), 0.2f);
+		c4 = Stratus.lighten(getTheme().getHighlight(), 0.05f);
+		c5 = Stratus.lighten(getTheme().getHighlight(), 0.2f);
+		
 	}
 	
 	
