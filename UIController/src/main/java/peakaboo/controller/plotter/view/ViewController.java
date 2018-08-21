@@ -172,6 +172,17 @@ public class ViewController extends Eventful
 	{
 		return viewModel.persistent.monochrome;
 	}
+	
+	public void setConsistentScale(Boolean consistent) {
+		viewModel.persistent.consistentScale = consistent;
+		savePersistentSettings();
+		setUndoPoint("Consistent Scale");
+		updateListeners();
+	}
+	
+	public boolean getConsistentScale() {
+		return viewModel.persistent.consistentScale;
+	}
 
 	public void setShowElementTitles(boolean show)
 	{

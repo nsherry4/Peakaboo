@@ -15,6 +15,7 @@ public class PlotData {
 
 	public ReadOnlySpectrum raw;
 	public ReadOnlySpectrum filtered;
+	public boolean consistentScale = true;
 	public DataSet dataset;
 	
 	public EnergyCalibration calibration;

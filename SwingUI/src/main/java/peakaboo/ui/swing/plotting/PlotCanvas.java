@@ -252,6 +252,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 			PlotData data = new PlotData();
 			
+			
+			//TODO: Can this whole block be moved to the controller, since it just calls into controller a bunch?
 			data.selectionResults = controller.fitting().getFittingSelectionResults();
 			data.proposedResults = controller.fitting().getFittingProposalResults();
 			data.calibration = controller.fitting().getEnergyCalibration();
@@ -265,6 +267,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			
 			data.filtered = dataForPlot.first;
 			data.raw = dataForPlot.second;
+			data.consistentScale = controller.view().getConsistentScale();
+			
 			
 			
 
