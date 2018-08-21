@@ -12,6 +12,7 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.display.plot.ChannelCompositeMode;
+import peakaboo.display.plot.PlotSettings;
 import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
@@ -172,6 +173,17 @@ public class ViewController extends Eventful
 	{
 		return viewModel.persistent.monochrome;
 	}
+	
+	public void setConsistentScale(Boolean consistent) {
+		viewModel.persistent.consistentScale = consistent;
+		savePersistentSettings();
+		setUndoPoint("Consistent Scale");
+		updateListeners();
+	}
+	
+	public boolean getConsistentScale() {
+		return viewModel.persistent.consistentScale;
+	}
 
 	public void setShowElementTitles(boolean show)
 	{
@@ -297,6 +309,23 @@ public class ViewController extends Eventful
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.WARNING, "Could not save persistent settings", e);
 		}
+	}
+
+	public PlotSettings setPlotSettings() {
+		
+		PlotSettings settings = new PlotSettings();
+		
+		settings.backgroundShowOriginal = getShowRawData();
+		settings.monochrome = getMonochrome();
+		settings.showAxes = getShowAxes();
+		settings.showElementFitIntensities = getShowElementIntensities();
+		settings.showElementFitMarkers = getShowElementMarkers();
+		settings.showElementFitTitles = getShowElementTitles();
+		settings.showIndividualFittings = getShowIndividualSelections();
+		settings.showPlotTitle = getShowTitle();
+		settings.viewTransform = getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
+		
+		return settings;
 	}
 
 

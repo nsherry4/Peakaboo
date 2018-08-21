@@ -81,8 +81,6 @@ public class PlotMenuView extends JPopupMenu {
 		this.add(title);
 		this.add(monochrome);
 		
-		this.addSeparator();
-		
 		this.add(raw);
 		this.add(fittings);
 
@@ -125,6 +123,19 @@ public class PlotMenuView extends JPopupMenu {
 		this.add(elementDrawing);
 
 
+		this.addSeparator();
+		
+		JCheckBoxMenuItem consistentScale = PlotMenuUtils.createMenuCheckItem(plot,
+				"Use Consistent Scale", null, "Each spectra will be displayed with a consisntent scale per dataset",
+				b -> {
+					controller.view().setConsistentScale(b);
+				},
+				null, null
+		);
+		consistentScale.setSelected(controller.view().getConsistentScale());
+		this.add(consistentScale);
+		
+		
 		this.addSeparator();
 		
 

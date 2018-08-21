@@ -250,36 +250,9 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			}
 			
 
-			PlotData data = new PlotData();
-			
-			data.selectionResults = controller.fitting().getFittingSelectionResults();
-			data.proposedResults = controller.fitting().getFittingProposalResults();
-			data.calibration = controller.fitting().getEnergyCalibration();
-			data.escape = controller.fitting().getEscapeType();
-			data.highlightedTransitionSeries = controller.fitting().getHighlightedTransitionSeries();
-			data.proposedTransitionSeries = controller.fitting().getProposedTransitionSeries();
-			
-			data.dataset = controller.data().getDataSet();
-			
-			data.filters = controller.filtering().getActiveFilters();
-			
-			data.filtered = dataForPlot.first;
-			data.raw = dataForPlot.second;
-			
-			
+			PlotData data = controller.getPlotData();
+			PlotSettings settings = controller.view().setPlotSettings();
 
-			PlotSettings settings = new PlotSettings();
-			
-			settings.backgroundShowOriginal = controller.view().getShowRawData();
-			settings.monochrome = controller.view().getMonochrome();
-			settings.showAxes = controller.view().getShowAxes();
-			settings.showElementFitIntensities = controller.view().getShowElementIntensities();
-			settings.showElementFitMarkers = controller.view().getShowElementMarkers();
-			settings.showElementFitTitles = controller.view().getShowElementTitles();
-			settings.showIndividualFittings = controller.view().getShowIndividualSelections();
-			settings.showPlotTitle = controller.view().getShowTitle();
-			settings.viewTransform = controller.view().getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
-			
 			
 			Plotter plotObject = new Plotter();
 			plotDrawing = plotObject.draw(data, settings, context, size);

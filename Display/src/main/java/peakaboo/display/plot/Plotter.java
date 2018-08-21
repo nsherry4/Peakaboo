@@ -52,7 +52,7 @@ public class Plotter {
 		
 
 		if (data.filtered == null) {
-			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (filtered) was null");
+			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, data (filtered) was null");
 			return null;
 		};
 		
@@ -115,6 +115,11 @@ public class Plotter {
 		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
 		float maxIntensity = Math.max(data.dataset.getAnalysis().maximumIntensity(), data.filtered.max());
+		
+		//when not using the consistent scale, scale each spectra against itself
+		if (!data.consistentScale) {
+			maxIntensity = data.filtered.max();
+		}
 		
 		
 		
