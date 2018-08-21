@@ -482,7 +482,11 @@ public class PlotPanel extends LayerPanel
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);
 		}
-
+		
+		//Add session file ext.
+		SimpleFileExtension session = new SimpleFileExtension("Peakaboo Session Files", "peakaboo");
+		exts.add(session);
+		
 		openNewDataset(exts);
 		
 		
@@ -494,6 +498,12 @@ public class PlotPanel extends LayerPanel
 			return;
 		}
 
+		//check if it's a peakaboo session file first
+		if (paths.size() == 1 && paths.get(0).toString().toLowerCase().endsWith(".peakaboo")) {
+			loadSession(paths.get(0).toFile());
+			return;
+		}
+		
 		List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
 		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
 		
@@ -883,50 +893,54 @@ public class PlotPanel extends LayerPanel
 			if (!file.isPresent()) {
 				return;
 			}
-			try {
-				SavedSession session = controller.readSavedSettings(StringInput.contents(file.get()));
-				
-				List<Path> currentPaths = controller.data().getDataPaths();
-				List<Path> sessionPaths = session.data.filesAsDataPaths();
-				
-				boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
-				
-				//If the data files in the saved session are different, offer to load the data set from the new session
-				if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
-					new LayerDialog(
-							"Open Associated Data Set?", 
-							"This session is associated with another data set.\nDo you want to open that data set now?", 
-							MessageType.QUESTION)
-						.addRight(
-							new ImageButton("Yes").withAction(() -> {
-								//they said yes, load the new data, and then apply the session
-								//this needs to be done this way b/c loading a new dataset wipes out
-								//things like calibration info
-								this.loadFiles(sessionPaths, () -> {
-									controller.loadSessionSettings(session);	
-									savedSessionFileName = file.get();
-								});
-							}).withStateDefault())
-						.addLeft(
-							new ImageButton("No").withAction(() -> {
-								//load the settings w/o the data, then set the file paths back to the current values
-								controller.loadSessionSettings(session);
-								//they said no, reset the stored paths to the old ones
-								controller.data().setDataPaths(currentPaths);
-							}))
-						.showIn(this);
-				} else {
-					//just load the session, as there is either no data associated with it, or it's the same data
-					controller.loadSessionSettings(session);
-				}
-				
-			} catch (IOException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
-			}
+			loadSession(file.get());
 		});
 
 	}
 
+	private void loadSession(File file) {
+		try {
+			SavedSession session = controller.readSavedSettings(StringInput.contents(file));
+			
+			List<Path> currentPaths = controller.data().getDataPaths();
+			List<Path> sessionPaths = session.data.filesAsDataPaths();
+			
+			boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
+			
+			//If the data files in the saved session are different, offer to load the data set from the new session
+			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
+				new LayerDialog(
+						"Open Associated Data Set?", 
+						"This session is associated with another data set.\nDo you want to open that data set now?", 
+						MessageType.QUESTION)
+					.addRight(
+						new ImageButton("Yes").withAction(() -> {
+							//they said yes, load the new data, and then apply the session
+							//this needs to be done this way b/c loading a new dataset wipes out
+							//things like calibration info
+							this.loadFiles(sessionPaths, () -> {
+								controller.loadSessionSettings(session);	
+								savedSessionFileName = file;
+							});
+						}).withStateDefault())
+					.addLeft(
+						new ImageButton("No").withAction(() -> {
+							//load the settings w/o the data, then set the file paths back to the current values
+							controller.loadSessionSettings(session);
+							//they said no, reset the stored paths to the old ones
+							controller.data().setDataPaths(currentPaths);
+						}))
+					.showIn(this);
+			} else {
+				//just load the session, as there is either no data associated with it, or it's the same data
+				controller.loadSessionSettings(session);
+			}
+			
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
+		}
+	}
+	
 	public void actionShowInfo()
 	{
 		
