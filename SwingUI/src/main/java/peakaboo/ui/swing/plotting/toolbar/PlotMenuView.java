@@ -126,7 +126,7 @@ public class PlotMenuView extends JPopupMenu {
 		this.addSeparator();
 		
 		JCheckBoxMenuItem consistentScale = PlotMenuUtils.createMenuCheckItem(plot,
-				"Use Consistent Scale", null, "Each spectra will be displayed with a consisntent scale per dataset",
+				"Use Consistent Scale", null, "All spectra in a dataset will be displayed with a consisntent scale",
 				b -> {
 					controller.view().setConsistentScale(b);
 				},
