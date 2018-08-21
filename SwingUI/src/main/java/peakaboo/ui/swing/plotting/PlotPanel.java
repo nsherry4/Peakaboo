@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
@@ -198,7 +199,6 @@ public class PlotPanel extends LayerPanel
 					
 				} catch (IOException e) {
 					PeakabooLog.get().log(Level.WARNING, "Could not check for new version", e);
-					e.printStackTrace(System.out);
 				}
 				
 				if (hasNewVersion) {
