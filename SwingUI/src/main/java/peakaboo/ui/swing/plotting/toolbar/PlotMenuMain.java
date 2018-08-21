@@ -128,7 +128,7 @@ public class PlotMenuMain extends JPopupMenu {
 		this.add(plugins);
 		
 		
-		JMenu debug = new JMenu("Debug");
+		JMenu debug = new JMenu("Logs & Bugs");
 		
 		
 		JMenuItem logs = PlotMenuUtils.createMenuItem(plot,
