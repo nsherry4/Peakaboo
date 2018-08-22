@@ -387,7 +387,14 @@ public class PlotPanel extends LayerPanel
 
 		int channel = canvas.channelFromCoordinate(x);
 		float energy = controller.view().getEnergyForChannel(channel);
-		Pair<Float, Float> values = controller.view().getValueForChannel(channel);
+		
+		Pair<Float, Float> values;
+		if (channel < 0 || channel >= controller.data().getDataSet().getAnalysis().channelsPerScan()) {
+			//out of bounds
+			values = null;
+		} else {
+			values = controller.view().getValueForChannel(channel);
+		}
 
 		StringBuilder sb = new StringBuilder();
 		String sep = ",  ";
