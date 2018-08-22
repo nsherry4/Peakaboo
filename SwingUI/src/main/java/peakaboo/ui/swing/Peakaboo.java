@@ -20,8 +20,10 @@ import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
 import commonenvironment.Env;
+import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
+import peakaboo.common.MemoryProfile.Size;
 import peakaboo.curvefit.peak.table.CombinedPeakTable;
 import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
@@ -100,7 +102,7 @@ public class Peakaboo
 	private static void warnLowMemory() {
 		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.heapSize());
 		
-		if (Env.heapSize() <= 128){
+		if (MemoryProfile.size == Size.SMALL){
 			String message = "This system's Java VM is only allocated " + Env.heapSize()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
