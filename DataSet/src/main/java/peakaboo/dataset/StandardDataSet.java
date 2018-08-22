@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 import commonenvironment.AlphaNumericComparitor;
+import peakaboo.common.PeakabooLog;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.dataset.analysis.Analysis;
 import peakaboo.dataset.analysis.DataSourceAnalysis;
@@ -129,7 +131,9 @@ public class StandardDataSet implements DataSet
 	
 
 					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
-					dataSource.read(paths);
+					dataSource.read(paths);	
+	
+					
 					
 	
 					
@@ -167,8 +171,10 @@ public class StandardDataSet implements DataSet
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
 					
-					
-				} catch (Exception e) {
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return new DatasetReadResult(e);
+				} catch (Throwable e) {
 					return new DatasetReadResult(e);
 				}
 				
