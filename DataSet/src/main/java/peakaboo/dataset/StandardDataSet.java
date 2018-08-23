@@ -108,7 +108,10 @@ public class StandardDataSet implements DataSet
 			{
 				
 				try {
-						
+					
+					long t1 = System.currentTimeMillis();
+					PeakabooLog.get().log(Level.INFO, "Starting Data Set Open");
+					
 					final int scanCount;
 					
 					opening.advanceState();
@@ -167,6 +170,9 @@ public class StandardDataSet implements DataSet
 					//we're done
 					applying.workUnitCompleted();
 					applying.advanceState();
+					
+					long t2 = System.currentTimeMillis();
+					PeakabooLog.get().log(Level.INFO, "Opened a Data Set in " + ((t2-t1)/1000) + " Seconds");
 					
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
