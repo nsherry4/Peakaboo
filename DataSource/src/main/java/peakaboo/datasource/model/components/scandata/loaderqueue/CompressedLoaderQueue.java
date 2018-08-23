@@ -28,7 +28,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 		this(data, 1000);
 	}
 	public CompressedLoaderQueue(SimpleScanData data, int depth) {
-		this.encoder = new CompoundEncoder<>(Serializers.fst(ISpectrum.class), Compressors.lz4fast());
+		this.encoder = new CompoundEncoder<>(Serializers.fstUnsafe(ISpectrum.class), Compressors.lz4fast());
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {
