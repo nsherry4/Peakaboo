@@ -20,7 +20,11 @@ public class CompoundFittingScorer implements FittingScorer {
 		float score = 1f;
 		for (FittingScorer scorer : scorers.keySet()) {
 			float weight = scorers.get(scorer);
-			score *= scorer.score(ts) * (weight / totalWeight);
+			float thisScore = scorer.score(ts);
+			if (Float.isNaN(thisScore)) {
+				thisScore = 0;
+			}
+			score *= thisScore * (weight / totalWeight);
 		}
 		return score;
 	}
