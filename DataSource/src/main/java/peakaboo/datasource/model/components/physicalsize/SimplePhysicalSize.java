@@ -33,7 +33,8 @@ public class SimplePhysicalSize implements PhysicalSize {
 		if (MemoryProfile.size == Size.SMALL) {
 			//Physical coordinates on large maps can eat up ~10MB, which is enough to 
 			//warrant disk-based storage when we're low on memory 
-			
+			//We use fst instead of fstUnsafe since there seems to be a bug somewhere 
+			//when using unsafe for different lists with different contents?
 			ScratchEncoder<?> fst = Serializers.fst(Coord.class);
 			ScratchEncoder<byte[]> lz4 = Compressors.lz4fast();
 			scratch = (List<Coord<Number>>) ScratchLists.tryDiskBacked(new CompoundEncoder<>(fst, lz4));
