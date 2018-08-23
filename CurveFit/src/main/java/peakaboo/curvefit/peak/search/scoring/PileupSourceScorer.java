@@ -7,8 +7,8 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import scitypes.ReadOnlySpectrum;
 
 /**
- * Scores primary {@link TransitionSeries} as 1, penalizes pileup if 
- * it's signal is stronger than the originating base {@link TransitionSeries}
+ * Prefers pileup peaks which are a small percent of the 
+ * strength of their source peaks.
  * @author NAS
  *
  */
@@ -36,11 +36,17 @@ public class PileupSourceScorer implements FittingScorer {
 		sourceScore /= tsCount;
 		sourceScore /= data.max();
 		
-		float score = (float) Math.sqrt(Math.sqrt(sourceScore));
+		float thisScore = tsHeight(ts);
+		thisScore /= data.max();
+		
+		
+		float score = 1f - (thisScore / sourceScore);
+		score = Math.max(1f, Math.min(0f, score));
+		
+		
+		score = sourceScore;
+		score = (float) Math.pow(sourceScore, 2);
 		return score;
-		
-		
-
 		
 	}
 

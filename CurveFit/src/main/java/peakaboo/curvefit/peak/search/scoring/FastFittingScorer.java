@@ -41,7 +41,7 @@ public class FastFittingScorer implements FittingScorer {
 		if (transitions.size() == 0) { return 1; }
 		
 		for (Transition t : transitions) {
-			
+			if (t.relativeIntensity == 0) { continue; }
 			
 			int channel = parameters.getCalibration().channelFromEnergy(t.energyValue);
 			if (channel >= data.size()) continue;
@@ -75,6 +75,7 @@ public class FastFittingScorer implements FittingScorer {
 			
 		}
 		
+		if (count == 0) { return 0; }
 		snugness /= (float)count;
 		snugness = (float)(Math.sqrt(snugness));
 			

@@ -32,7 +32,7 @@ public class EnergyProximityScorer implements FittingScorer {
 		
 		List<Transition> transitions = new ArrayList<>(ts.getAllTransitions());
 		
-		float maxRel = 0f;
+		float maxRel = Float.MIN_VALUE;
 		for (Transition t : transitions) {
 			maxRel = (float) Math.max(maxRel, t.relativeIntensity);
 		}
