@@ -69,7 +69,7 @@ public class EnergyProximityScorer implements FittingScorer {
 		proxScore = Math.max(proxScore, calibration.energyPerChannel()*2f);
 		
 		//Because larger scores are better
-		proxScore = calibration.energyPerChannel()*25 - proxScore;
+		proxScore = calibration.energyPerChannel()*10 - proxScore;
 		if (proxScore <= 0) {
 			return 0;
 		}
