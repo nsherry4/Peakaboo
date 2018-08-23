@@ -65,6 +65,8 @@ public class PeakProposal
 		
 		ExecutorSet<List<TransitionSeries>> exec = new ExecutorSet<List<TransitionSeries>>("Automatic Peak Fitting") {
 
+			float firstGuessScore = 0;
+			
 			@Override
 			protected List<TransitionSeries> execute() {
 				
@@ -112,7 +114,7 @@ public class PeakProposal
 				 */
 				List<TransitionSeries> newFits = new ArrayList<>();
 				for (int channel : peaks) {
-					List<TransitionSeries> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
+					List<Pair<TransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
 					
 					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
 					
@@ -128,11 +130,18 @@ public class PeakProposal
 						this.aborted();
 						return null;
 					}
-							
+					
 
+					TransitionSeries guess = guesses.get(0).first;
+					float guessScore = guesses.get(0).second;
+					if (firstGuessScore == 0) {
+						firstGuessScore = guessScore;
+					}
 
-					TransitionSeries guess = guesses.get(0);
-									
+					if (guessScore < firstGuessScore / 25f) {
+						continue;
+					}
+										
 					//If the existing fits doesn't contain this, add it
 					if (!fits.getFittedTransitionSeries().contains(guess)) {
 						newFits.add(guess);
@@ -192,7 +201,7 @@ public class PeakProposal
 	 * Generates a list of {@link TransitionSeries} which are good fits for the given data at the given channel index
 	 * @return an ordered list of {@link TransitionSeries} which are good fits for the given data at the given channel
 	 */
-	public static List<TransitionSeries> fromChannel(
+	public static List<Pair<TransitionSeries, Float>> fromChannel(
 			final ReadOnlySpectrum data, 
 			FittingSet fits,
 			FittingSet proposed,
@@ -297,17 +306,17 @@ public class PeakProposal
 		
 		
 		//now sort by score
-		List<TransitionSeries> scoredGuesses = tss.stream()
+		List<Pair<TransitionSeries, Float>> scoredGuesses = tss.stream()
 			//fast scorer to shrink downthe list
-			.map(ts -> new Pair<>(ts, -fastCompoundScorer.score(ts)))
-			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
+			.map(ts -> new Pair<>(ts, fastCompoundScorer.score(ts)))
+			.sorted((p1, p2) -> p2.second.compareTo(p1.second))
 			.limit(guessCount)
 			.map(p -> p.first)
 			
 			//good scorer to put them in the best order
-			.map(ts -> new Pair<>(ts, -goodCompoundScorer.score(ts)))
-			.sorted((p1, p2) -> p1.second.compareTo(p2.second))
-			.map(p -> p.first)
+			.map(ts -> new Pair<>(ts, goodCompoundScorer.score(ts)))
+			.sorted((p1, p2) -> p2.second.compareTo(p1.second))
+			//.map(p -> p.first)
 			
 			.collect(Collectors.toList());
 

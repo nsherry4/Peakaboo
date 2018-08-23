@@ -242,7 +242,7 @@ public class FittingController extends EventfulType<Boolean>
 				channel,
 				currentTS,
 				10
-		);
+		).stream().map(p -> p.first).collect(Collectors.toList());
 	}
 
 	public boolean canMap()
