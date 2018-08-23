@@ -14,7 +14,13 @@ public class Serializers {
 		return new KryoSerializingEncoder<>(clazz, others);
 	}
 	
-	public static <T> ScratchEncoder<T> fst(Class<? extends T> clazz, Class<?>... classes) {
-		return new FSTSerializingEncoder<>(clazz, classes);
+	public static <T> ScratchEncoder<T> fstUnsafe(Class<? extends T> clazz, Class<?>... classes) {
+		return new FSTUnsafeSerializingEncoder<>(clazz, classes);
 	}
+	
+	public static <T> ScratchEncoder<T> fst(Class<? extends T> clazz, Class<?>... classes) {
+		return new FSTDefaultSerializingEncoder<>(clazz, classes);
+	}
+	
 }
+

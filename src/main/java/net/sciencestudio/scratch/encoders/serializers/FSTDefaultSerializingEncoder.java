@@ -5,11 +5,11 @@ import org.nustaq.serialization.FSTConfiguration;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.ScratchException;
 
-public class FSTSerializingEncoder<T> implements ScratchEncoder<T>{
+public class FSTDefaultSerializingEncoder<T> implements ScratchEncoder<T>{
 
-	private FSTConfiguration conf = FSTConfiguration.createUnsafeBinaryConfiguration();
+	private FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
 	
-	public FSTSerializingEncoder(Class<? extends T> clazz, Class<?>... classes) {
+	public FSTDefaultSerializingEncoder(Class<? extends T> clazz, Class<?>... classes) {
 		conf.registerClass(clazz);
 		conf.registerClass(classes);
 	}

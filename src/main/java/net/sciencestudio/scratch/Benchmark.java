@@ -43,12 +43,12 @@ public class Benchmark {
 		System.out.println(s);
 		System.out.println(s.get(10));
 		
-		System.out.println(Serializers.fst(clazz).encode(s).length);
+		System.out.println(Serializers.fstUnsafe(clazz).encode(s).length);
 		System.out.println(Serializers.kryo(clazz).encode(s).length);
 		
-		System.out.println(Serializers.fst(clazz).then(Compressors.snappy()).encode(s).length);
-		System.out.println(Serializers.fst(clazz).then(Compressors.lz4fast()).encode(s).length);
-		System.out.println(Serializers.fst(clazz).then(Compressors.lz4good()).encode(s).length);
+		System.out.println(Serializers.fstUnsafe(clazz).then(Compressors.snappy()).encode(s).length);
+		System.out.println(Serializers.fstUnsafe(clazz).then(Compressors.lz4fast()).encode(s).length);
+		System.out.println(Serializers.fstUnsafe(clazz).then(Compressors.lz4good()).encode(s).length);
 		//roundtrip();
 		encoder();
 	}
@@ -81,6 +81,11 @@ public class Benchmark {
 		bench_encoder(Serializers.kryo(clazz).then(Compressors.snappy()));
 		bench_encoder(Serializers.kryo(clazz).then(Compressors.lz4fast()));
 		bench_encoder(Serializers.kryo(clazz).then(Compressors.lz4good()));
+		
+		bench_encoder(Serializers.fstUnsafe(clazz));
+		bench_encoder(Serializers.fstUnsafe(clazz).then(Compressors.snappy()));
+		bench_encoder(Serializers.fstUnsafe(clazz).then(Compressors.lz4fast()));
+		bench_encoder(Serializers.fstUnsafe(clazz).then(Compressors.lz4good()));
 		
 		bench_encoder(Serializers.fst(clazz));
 		bench_encoder(Serializers.fst(clazz).then(Compressors.snappy()));
@@ -143,10 +148,10 @@ public class Benchmark {
 		bench_roundtrip(Serializers.kryo(clazz).then(Compressors.lz4fast()));
 		bench_roundtrip(Serializers.kryo(clazz).then(Compressors.lz4good()));
 
-		bench_roundtrip(Serializers.fst(clazz));
-		bench_roundtrip(Serializers.fst(clazz).then(Compressors.snappy()));
-		bench_roundtrip(Serializers.fst(clazz).then(Compressors.lz4fast()));
-		bench_roundtrip(Serializers.fst(clazz).then(Compressors.lz4good()));
+		bench_roundtrip(Serializers.fstUnsafe(clazz));
+		bench_roundtrip(Serializers.fstUnsafe(clazz).then(Compressors.snappy()));
+		bench_roundtrip(Serializers.fstUnsafe(clazz).then(Compressors.lz4fast()));
+		bench_roundtrip(Serializers.fstUnsafe(clazz).then(Compressors.lz4good()));
 		
 	}
 	

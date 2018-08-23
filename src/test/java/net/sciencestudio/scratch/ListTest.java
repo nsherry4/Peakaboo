@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import net.sciencestudio.scratch.encoders.CompoundEncoder;
+import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.list.ScratchLists;
 
@@ -36,5 +38,26 @@ public class ListTest{
 		Assert.assertEquals(list.size(), 3);
 	}
 	
+
+	@Test
+	public void twolists() throws IOException {
+		List<String> l1 = ScratchLists.diskBacked(new CompoundEncoder<>(Serializers.fstUnsafe(String.class), Compressors.lz4fast()));
+		
+		l1.add("A");
+		l1.add("B");
+		
+		List<Integer> l2 = ScratchLists.diskBacked(new CompoundEncoder<>(Serializers.fstUnsafe(Integer.class), Compressors.lz4fast()));
+		
+		l2.add(1);
+		l2.add(2);
+		
+		l1.add("E");
+		l1.add("F");
+			
+		Assert.assertEquals(l1.get(0), "A");
+		Assert.assertEquals(l2.get(1), new Integer(2));
+		Assert.assertEquals(l1.get(3), "F");
+		
+	}
 	
 }
