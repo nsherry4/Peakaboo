@@ -114,6 +114,12 @@ public class PeakProposal
 				 */
 				List<TransitionSeries> newFits = new ArrayList<>();
 				for (int channel : peaks) {
+					
+					//no fitting below 1keV
+					if (calibration.energyFromChannel(channel) < 1f) {
+						continue;
+					}
+					
 					List<Pair<TransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
 					
 					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
