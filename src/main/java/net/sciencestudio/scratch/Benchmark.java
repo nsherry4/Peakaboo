@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.list.ScratchLists;
-import scitypes.ISpectrum;
-import scitypes.Pair;
 
 public class Benchmark {
 
@@ -30,18 +28,18 @@ public class Benchmark {
 
 	private static void spectrum() throws IOException {
 		Random r = new Random();
-		clazz = ISpectrum.class;
-		ISpectrum s = null;
+		clazz = float[].class;
+		float[] s = null;
 		for (int i = 0; i < 10000; i++) {
-			s = new ISpectrum(2048);
+			s = new float[2048];
 			for (int j = 0; j < 2048; j++) {
-				s.set(j, j/10); //some repetition
+				s[j] = j/10; //some repetition
 			}
 			data.add(s);
 		}
 		
 		System.out.println(s);
-		System.out.println(s.get(10));
+		System.out.println(s[10]);
 		
 		System.out.println(Serializers.fstUnsafe(clazz).encode(s).length);
 		System.out.println(Serializers.kryo(clazz).encode(s).length);
@@ -162,7 +160,7 @@ public class Benchmark {
 		
 		long w=0, r=0;
 		for (int i = 0; i < 20; i++) {
-			Pair<Long, Long> results = bench_roundtrip1(encoder);
+			Result results = bench_roundtrip1(encoder);
 			w += results.first;
 			r += results.second;
 		}
@@ -172,7 +170,7 @@ public class Benchmark {
 		
 	}
 	
-	private static Pair<Long, Long> bench_roundtrip1(ScratchEncoder<Serializable> encoder) throws IOException {
+	private static Result bench_roundtrip1(ScratchEncoder<Serializable> encoder) throws IOException {
 		
 		List<Serializable> list;
 		if (encoder == null) {
@@ -193,8 +191,15 @@ public class Benchmark {
 		
 		long t3 = System.currentTimeMillis();
 		
-		return new Pair<>(t2-t1, t3-t2);
+		Result r = new Result();
+		r.first = t2-t1;
+		r.second = t3-t2;
+		return r;
 		
 	}
 	
+}
+
+class Result {
+	long first, second;
 }
