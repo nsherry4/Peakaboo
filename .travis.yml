@@ -3,6 +3,8 @@ install:
   - cd -
   - git clone https://github.com/nsherry4/Eventful.git /tmp/eventful && cd /tmp/eventful && mvn install
   - cd -
+  - git clone https://github.com/nsherry4/Swidget.git /tmp/swidget && cd /tmp/swidget && mvn install
+  - cd -
   - git clone https://github.com/nsherry4/Libraries.git /tmp/libraries && cd /tmp/libraries && mvn install
   - cd -
   - git clone https://github.com/nsherry4/AutoDialog.git /tmp/autodialog && cd /tmp/autodialog && mvn install
