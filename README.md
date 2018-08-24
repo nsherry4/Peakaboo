@@ -35,3 +35,16 @@ Peakaboo allows users who are comfortable with Java programming to extend Peakab
 - Data Sinks
 
 To get started creating your own filters or file format support, all you need is the Peakaboo JAR to build against. For more information on creating plugins, see the user manual.
+
+
+# Building
+
+Peakaboo builds and manages its dependencies with maven, however it does also depend on several other libraries on GitHub which are not in maven. These are:
+
+ - **[nsherry4/Libraries](https://github.com/nsherry4/Libraries)** Collection of small libraries not yet broken out into separate repositories
+ - **[nsherry4/Scratch](https://github.com/nsherry4/Scratch)**  Tools for working with large amounts of data in small amounts of memory 
+ - **[nsherry4/Stratus](https://github.com/nsherry4/Stratus)**  Stratus Look and Feel for Java Swing 
+ - **[nsherry4/Bolt](https://github.com/nsherry4/Bolt)** Java library for loading, compiling, and interpreting plug-ins. 
+ - **[nsherry4/AutoDialog](https://github.com/nsherry4/AutoDialog)** Model+Hint based simple UI auto-generation 
+
+Building Peakaboo will require these projects as well, all of which are also managed and built with maven.
