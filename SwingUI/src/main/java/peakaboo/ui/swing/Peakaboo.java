@@ -19,7 +19,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
-import commonenvironment.Env;
+import peakaboo.common.Env;
 import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
@@ -100,10 +100,10 @@ public class Peakaboo
 	}
 	
 	private static void warnLowMemory() {
-		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.heapSize());
+		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap());
 		
 		if (MemoryProfile.size == Size.SMALL){
-			String message = "This system's Java VM is only allocated " + Env.heapSize()
+			String message = "This system's Java VM is only allocated " + Env.maxHeap()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
 						

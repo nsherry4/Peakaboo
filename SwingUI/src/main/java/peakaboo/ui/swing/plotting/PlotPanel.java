@@ -48,13 +48,13 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
-import commonenvironment.Apps;
-import commonenvironment.Env;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import peakaboo.common.Apps;
 import peakaboo.common.Configuration;
+import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.data.MapSetController;
@@ -459,7 +459,7 @@ public class PlotPanel extends LayerPanel
 		AboutDialogue.Contents contents = new AboutDialogue.Contents();
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
-		contents.linkref = "https://github.com/nsherry4/Peakaboo";
+		contents.linkAction = () -> Apps.browser("https://github.com/nsherry4/Peakaboo");
 		contents.linktext = "Website";
 		contents.copyright = "2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));

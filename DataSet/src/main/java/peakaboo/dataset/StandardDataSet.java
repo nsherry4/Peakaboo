@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-import commonenvironment.AlphaNumericComparitor;
+import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import peakaboo.common.PeakabooLog;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.dataset.analysis.Analysis;

@@ -28,8 +28,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import commonenvironment.Apps;
-import commonenvironment.Env;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
@@ -38,7 +36,9 @@ import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import peakaboo.common.Apps;
 import peakaboo.common.Configuration;
+import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
