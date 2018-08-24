@@ -241,7 +241,7 @@ public class FittingController extends EventfulType<Boolean>
 				this.getFittingSolver(),
 				channel,
 				currentTS,
-				10
+				6
 		).stream().map(p -> p.first).collect(Collectors.toList());
 	}
 
