@@ -1,0 +1,10 @@
+install:
+  - git clone https://github.com/nsherry4/Eventful.git /tmp/eventful && cd /tmp/eventful && mvn install
+  - cd -
+  - git clone https://github.com/nsherry4/Swidget.git /tmp/swidget && cd /tmp/swidget && mvn install
+  - cd -
+
+
+language: java
+sudo: false
+script: mvn clean install
