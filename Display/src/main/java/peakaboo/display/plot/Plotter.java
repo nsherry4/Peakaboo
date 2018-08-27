@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
@@ -160,22 +161,34 @@ public class Plotter {
 			}
 		}
 
+		////////////////////////////////////////////
+		// Draw Curve Fitting
+		////////////////////////////////////////////
 		
-		// draw curve fitting
-		if (data.selectionResults != null) {
-			if (settings.showIndividualFittings)
-			{
-				plotPainters.add(new FittingPainter(data.selectionResults, fittingStroke, fitting));
-				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum));
-			}
-			else
-			{			
-				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum, fitting));
-			}
+		FittingResultSet highlightedResults = data.selectionResults.subsetIntersect(data.highlightedTransitionSeries);
+		FittingResultSet unhighlightedResults = data.selectionResults.subsetDifference(data.highlightedTransitionSeries);
+		
+		//plot
+		if (settings.showIndividualFittings)
+		{
+			//draw the selected & highlighted results here, since we always draw the highlight
+			//on top of the black curve to be consistent
+			plotPainters.add(new FittingPainter(data.selectionResults, fittingStroke, fitting));
+			plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum));
+		}
+		else
+		{			
+			plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum, fitting));
 		}
 		
+		//highlighted fittings
+		if (!highlightedResults.isEmpty()) {
+			plotPainters.add(new FittingPainter(highlightedResults, selectedStroke, selected));
+		}
+		
+		
 		//draw curve fitting for proposed fittings
-		if (data.proposedTransitionSeries != null && data.proposedTransitionSeries.size() > 0)
+		if (data.proposedTransitionSeries.size() > 0)
 		{
 			if (settings.showIndividualFittings) {
 				plotPainters.add(new FittingPainter(data.proposedResults, proposedStroke, proposed));
@@ -193,20 +206,13 @@ public class Plotter {
 		}
 		
 
-		//highlighted fittings
-		List<TransitionSeries> selectedFits = data.highlightedTransitionSeries;
-		if (!selectedFits.isEmpty()) {
-			List<FittingResult> selectedFitResults = data.selectionResults.getFits()
-					.stream()
-					.filter(r -> selectedFits.contains(r.getTransitionSeries()))
-					.collect(Collectors.toList());
-			plotPainters.add(new FittingPainter(selectedFitResults, selectedStroke, selected));
-		}
 		
 		
+		
+		//Titles
 		if (data.selectionResults != null) {
 			plotPainters.add(new FittingTitlePainter(
-					data.selectionResults,
+					unhighlightedResults,
 					settings.showElementFitTitles,
 					settings.showElementFitIntensities,
 					fittingStroke
@@ -224,13 +230,28 @@ public class Plotter {
 			);
 		}
 		
+		if (!highlightedResults.isEmpty()) {
+			plotPainters.add(new FittingTitlePainter(
+					highlightedResults,
+					settings.showElementFitTitles,
+					settings.showElementFitIntensities,
+					selectedStroke
+				)
+			);
+		}
 		
+		
+		
+		//Markings
 		if (settings.showElementFitMarkers) {
-			if (data.selectionResults != null) {
-				plotPainters.add(new FittingMarkersPainter(data.selectionResults, data.escape, fittingStroke));
+			if (unhighlightedResults.isEmpty()) {
+				plotPainters.add(new FittingMarkersPainter(unhighlightedResults, data.escape, fittingStroke));
 			}
 			if (data.proposedResults != null) {
 				plotPainters.add(new FittingMarkersPainter(data.proposedResults, data.escape, proposedStroke));
+			}
+			if (!highlightedResults.getFits().isEmpty()) {
+				plotPainters.add(new FittingMarkersPainter(highlightedResults, data.escape, selectedStroke));
 			}
 		}
 		
