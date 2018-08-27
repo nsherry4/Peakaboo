@@ -1,7 +1,9 @@
 package peakaboo.controller.plotter.fitting;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
@@ -40,6 +42,8 @@ public class FittingModel
 	
 	List<TransitionSeries> highlighted;
 	
+	Map<TransitionSeries, String> annotations;
+	
 	/**
 	 * {@link CurveFitter} to use for all fitting of single curves to data
 	 */
@@ -62,6 +66,7 @@ public class FittingModel
 		highlighted = new ArrayList<>();
 		curveFitter = new UnderCurveFitter();
 		fittingSolver = new GreedyFittingSolver();
+		annotations = new HashMap<>();
 	}
 	
 }

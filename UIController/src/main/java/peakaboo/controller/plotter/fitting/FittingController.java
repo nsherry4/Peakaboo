@@ -417,7 +417,26 @@ public class FittingController extends EventfulType<Boolean>
 
 		
 	}
+
+	public boolean hasAnnotation(TransitionSeries selected) {
+		if (!fittingModel.annotations.containsKey(selected)) {
+			return false;
+		}
+		String annotation = getAnnotation(selected);
+		if (annotation == null || annotation.trim().length() == 0) {
+			return false;
+		}
+		return true;
+	}
 	
+	public String getAnnotation(TransitionSeries selected) {
+		return fittingModel.annotations.get(selected);
+	}
+	
+	public void setAnnotation(TransitionSeries selected, String annotation) {
+		fittingModel.annotations.put(selected, annotation);
+		updateListeners(false);
+	}
 	
 	
 	

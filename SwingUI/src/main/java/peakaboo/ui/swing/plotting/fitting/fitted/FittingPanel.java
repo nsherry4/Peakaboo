@@ -401,14 +401,14 @@ public class FittingPanel extends ClearPanel implements Changeable
 				//annotation
 				TransitionSeries selected = controller.getFittedTransitionSeries().get(fitTable.getSelectedRow());
 				
-				Mutable<String> annotation = new Mutable<>("");
 				JTextField textfield = new JTextField(20);
+				textfield.setText(controller.getAnnotation(selected));
 				LayerDialog dialog = new LayerDialog("Annotate " + selected.getDescription(), textfield, MessageType.QUESTION);
 				dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
 					plotPanel.popLayer();
 				}));
 				dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
-					annotation.set(textfield.getText());
+					controller.setAnnotation(selected, textfield.getText());
 					plotPanel.popLayer();
 				}));
 				dialog.showIn(plotPanel);
