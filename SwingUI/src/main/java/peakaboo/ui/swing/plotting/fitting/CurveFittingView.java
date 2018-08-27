@@ -66,7 +66,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 
 		setPreferredSize(new Dimension(200, getPreferredSize().height));
 
-		fittedPanel = new FittingPanel(controller, this);
+		fittedPanel = new FittingPanel(controller, this, plotPanel);
 		proposalPanel = new LookupPanel(controller, this);
 		summationPanel = new SummationPanel(controller, this);
 		smartPanel = new GuidedFittingPanel(controller, this, canvas);

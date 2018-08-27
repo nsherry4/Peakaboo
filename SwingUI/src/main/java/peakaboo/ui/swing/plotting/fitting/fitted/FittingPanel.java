@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +23,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -28,11 +31,16 @@ import javax.swing.table.TableColumn;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
+import scitypes.util.Mutable;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ReorderTransferHandler;
 
@@ -48,13 +56,15 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 	private CurveFittingView			owner;
 	private FittingController			controller;
+	private PlotPanel 					plotPanel;
 
 
-	public FittingPanel(final FittingController controller, final CurveFittingView owner)
+	public FittingPanel(final FittingController controller, final CurveFittingView owner, PlotPanel plotPanel)
 	{
 
 		this.owner = owner;
 		this.controller = controller;
+		this.plotPanel = plotPanel;
 		
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
@@ -383,6 +393,29 @@ public class FittingPanel extends ClearPanel implements Changeable
 			}
 		});
 		
+		fitTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				//only for double-clicks
+				if (e.getClickCount() != 2) { return; }
+				
+				//annotation
+				TransitionSeries selected = controller.getFittedTransitionSeries().get(fitTable.getSelectedRow());
+				
+				Mutable<String> annotation = new Mutable<>("");
+				JTextField textfield = new JTextField(20);
+				LayerDialog dialog = new LayerDialog("Annotate " + selected.getDescription(), textfield, MessageType.QUESTION);
+				dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
+					plotPanel.popLayer();
+				}));
+				dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
+					annotation.set(textfield.getText());
+					plotPanel.popLayer();
+				}));
+				dialog.showIn(plotPanel);
+				
+				
+			}
+		});
 
 		JScrollPane scroll = new JScrollPane(fitTable);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
