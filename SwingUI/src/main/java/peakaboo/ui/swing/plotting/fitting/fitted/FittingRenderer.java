@@ -80,7 +80,9 @@ class FittingRenderer extends DefaultTableCellRenderer
 			
 			tswidget.setSelected(controller.getTransitionSeriesVisibility(ts));
 			tswidget.setMinimumSize(new Dimension(0, 100));
-						
+			
+			tswidget.setToolTipText(e.toString());
+			
 			return tswidget;
 		} 
 		
