@@ -100,7 +100,7 @@ public class Peakaboo
 	}
 	
 	private static void warnLowMemory() {
-		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap());
+		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
 		if (MemoryProfile.size == Size.SMALL){
 			String message = "This system's Java VM is only allocated " + Env.maxHeap()

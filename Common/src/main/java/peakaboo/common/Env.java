@@ -68,7 +68,7 @@ public class Env
 	 */
 	public static long maxHeap()
 	{
-		return (long)(maxHeapBytes() << 20);
+		return (long)(maxHeapBytes() >> 20);
 	}
 	
 	/**
