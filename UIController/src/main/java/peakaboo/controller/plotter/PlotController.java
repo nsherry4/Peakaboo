@@ -160,6 +160,8 @@ public class PlotController extends EventfulType<String>
 		data.raw = dataForPlot.second;
 		data.consistentScale = view().getConsistentScale();
 		
+		data.annotations = fitting().getAnnotations();
+		
 		return data;
 	}
 	

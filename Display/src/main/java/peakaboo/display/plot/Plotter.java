@@ -213,6 +213,7 @@ public class Plotter {
 		if (data.selectionResults != null) {
 			plotPainters.add(new FittingTitlePainter(
 					unhighlightedResults,
+					data.annotations,
 					settings.showElementFitTitles,
 					settings.showElementFitIntensities,
 					fittingStroke
@@ -223,6 +224,7 @@ public class Plotter {
 		if (data.proposedResults != null) {
 			plotPainters.add(new FittingTitlePainter(
 					data.proposedResults,
+					data.annotations,
 					settings.showElementFitTitles,
 					settings.showElementFitIntensities,
 					proposedStroke
@@ -233,6 +235,7 @@ public class Plotter {
 		if (!highlightedResults.isEmpty()) {
 			plotPainters.add(new FittingTitlePainter(
 					highlightedResults,
+					data.annotations,
 					settings.showElementFitTitles,
 					settings.showElementFitIntensities,
 					selectedStroke

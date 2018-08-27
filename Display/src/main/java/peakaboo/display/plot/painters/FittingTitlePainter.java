@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -32,6 +33,7 @@ public class FittingTitlePainter extends PlotPainter
 	//private List<TransitionSeries> tsList;
 	//private List<Element> visibleElements;
 	private FittingResultSet fittings;
+	private Map<TransitionSeries, String> annotations;
 	private boolean drawMaxIntensities;
 	private boolean drawElementNames;
 	
@@ -47,11 +49,18 @@ public class FittingTitlePainter extends PlotPainter
 	 * @param drawMaxIntensities flag to indicate if the heights of {@link TransitionSeries} should be drawn
 	 * @param colour the {@link Color} that should be used to draw the titles
 	 */
-	public FittingTitlePainter(FittingResultSet fittings, boolean drawTSNames, boolean drawMaxIntensities, Color colour){
+	public FittingTitlePainter(
+			FittingResultSet fittings, 
+			Map<TransitionSeries, String> annotations, 
+			boolean drawTSNames, 
+			boolean drawMaxIntensities, 
+			Color colour
+		){
 		
 		//this.tsList = tsList;
 		//this.visibleElements = visibleElements;
 		this.fittings = fittings;
+		this.annotations = annotations;
 		this.drawMaxIntensities = drawMaxIntensities;
 		this.drawElementNames = drawTSNames;
 		
@@ -75,7 +84,8 @@ public class FittingTitlePainter extends PlotPainter
 			
 			for (FittingResult fit : fittings.getFits()){
 		
-				titleName = fit.getTransitionSeries().getDescription();
+				TransitionSeries ts = fit.getTransitionSeries();
+				titleName = ts.getDescription();
 	
 				
 				titleHeight = SigDigits.roundFloatTo(fit.getCurveScale(), 1);
@@ -86,10 +96,13 @@ public class FittingTitlePainter extends PlotPainter
 				if (drawMaxIntensities) title += titleHeight;
 				if (drawElementNames && drawMaxIntensities) title += ")";
 				
+				if (annotations.containsKey(ts)) {
+					title += ": " + annotations.get(ts);
+				}
 			
 
 				//TransitionType type = TransitionType.a1;
-				t = fit.getTransitionSeries().getStrongestTransition();
+				t = ts.getStrongestTransition();
 				
 				if (t != null) {
 					

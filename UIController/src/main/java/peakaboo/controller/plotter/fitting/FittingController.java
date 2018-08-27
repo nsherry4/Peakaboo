@@ -2,7 +2,9 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -418,24 +420,32 @@ public class FittingController extends EventfulType<Boolean>
 		
 	}
 
-	public boolean hasAnnotation(TransitionSeries selected) {
-		if (!fittingModel.annotations.containsKey(selected)) {
+	public boolean hasAnnotation(TransitionSeries ts) {
+		if (!fittingModel.annotations.containsKey(ts)) {
 			return false;
 		}
-		String annotation = getAnnotation(selected);
+		String annotation = getAnnotation(ts);
 		if (annotation == null || annotation.trim().length() == 0) {
 			return false;
 		}
 		return true;
 	}
 	
-	public String getAnnotation(TransitionSeries selected) {
-		return fittingModel.annotations.get(selected);
+	public String getAnnotation(TransitionSeries ts) {
+		return fittingModel.annotations.get(ts);
 	}
 	
-	public void setAnnotation(TransitionSeries selected, String annotation) {
-		fittingModel.annotations.put(selected, annotation);
+	public void setAnnotation(TransitionSeries ts, String annotation) {
+		if (annotation.trim().length() == 0) {
+			fittingModel.annotations.remove(ts);
+		} else {
+			fittingModel.annotations.put(ts, annotation);
+		}
 		updateListeners(false);
+	}
+
+	public Map<TransitionSeries, String> getAnnotations() {
+		return new HashMap<>(fittingModel.annotations);
 	}
 	
 	
