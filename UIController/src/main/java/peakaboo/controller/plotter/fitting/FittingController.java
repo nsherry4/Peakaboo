@@ -447,6 +447,11 @@ public class FittingController extends EventfulType<Boolean>
 	public Map<TransitionSeries, String> getAnnotations() {
 		return new HashMap<>(fittingModel.annotations);
 	}
+
+	public void clearAnnotations() {
+		fittingModel.annotations.clear();
+		updateListeners(false);
+	}
 	
 	
 	
