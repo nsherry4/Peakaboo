@@ -31,6 +31,10 @@ public class Swidget
 		}
 	}
 	
+	public static void initialize(String appName) {
+		initialize(() -> {}, appName);
+	}
+	
 	public static void initialize(Runnable startupTasks, String appName)
 	{
 		initialize(null, null, appName, startupTasks);
