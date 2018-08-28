@@ -265,15 +265,18 @@ public class FittingTitlePainter extends PlotPainter
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
 		TransitionSeries ts = label.fit.getTransitionSeries();
 		Transition t = ts.getStrongestTransition();
+		
+		float centreChannel = calibration.fractionalChannelFromEnergy(t.energyValue);
 		int endChannel = calibration.channelFromEnergy(t.energyValue);
 		
-		float x = ((label.position.x.start + label.position.x.end) / 2f) * channelSize;
+		float xPeak = centreChannel * channelSize;
+		float xLabel = ((label.position.x.start + label.position.x.end) / 2f) * channelSize;
 		float yStart = p.plotSize.y - label.position.y.start;
 		float yEnd = p.plotSize.y - p.originalHeights.get(endChannel);
 		
-		p.context.moveTo(x, yStart);
+		p.context.moveTo(xLabel, yStart);
 		
-		p.context.lineTo(x, yEnd);
+		p.context.lineTo(xPeak, yEnd);
 		p.context.stroke();
 	}
 	
