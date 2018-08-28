@@ -70,26 +70,39 @@ public class Plotter {
 		////////////////////////////////////////////////////////////////////
 		// Colour Selections
 		////////////////////////////////////////////////////////////////////
-		Color fitting, fittingStroke, fittingSum;
-		Color proposed, proposedStroke, proposedSum;
-		Color selected, selectedStroke;
+		Color fitting, fittingStroke, fittingSum, fittingLabel;
+		Color proposed, proposedStroke, proposedSum, proposedLabel;
+		Color selected, selectedStroke, selectedLabel;
 
-		fitting = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-		fittingStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
-		fittingSum = new Color(0.0f, 0.0f, 0.0f, 0.8f);
 
+		
 		// Colour/Monochrome colours for curve fittings
+		if (settings.monochrome) {
+			fitting = new Color(0.0f, 0.0f, 0.0f, 0.3f);
+			fittingStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+			fittingSum = new Color(0.0f, 0.0f, 0.0f, 0.8f);
+			fittingLabel = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		} else {
+			fitting = new Color(0.0f, 0.0f, 0.0f, 0.3f);
+			fittingStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+			fittingSum = new Color(0.0f, 0.0f, 0.0f, 0.8f);
+			fittingLabel = fittingStroke;
+		}
+		
+		
 		if (settings.monochrome)
 		{
 			proposed = new Color(0x50ffffff, true);
 			proposedStroke = new Color(0x80ffffff, true);
 			proposedSum = new Color(0xD0ffffff, true);
+			proposedLabel = new Color(0xFF777777, true);;
 		}
 		else
 		{
 			proposed = new Color(0x80D32F2F, true);
 			proposedStroke = new Color(0x80B71C1C, true);
 			proposedSum = new Color(0xD0B71C1C, true);
+			proposedLabel = proposedStroke;
 		}
 		
 		// Colour/Monochrome colours for highlighted/selected fittings
@@ -97,11 +110,13 @@ public class Plotter {
 		{
 			selected = new Color(0x50ffffff, true);
 			selectedStroke = new Color(0x80ffffff, true);
+			selectedLabel = new Color(0xFF777777, true);
 		}
 		else
 		{
 			selected = new Color(0x800288D1, true);
 			selectedStroke = new Color(0xff01579B, true);
+			selectedLabel = selectedStroke;
 		}
 
 		
@@ -212,14 +227,14 @@ public class Plotter {
 		List<FittingLabel> fitLabels = new ArrayList<>();
 		for (FittingResult fit : data.selectionResults.getFits()) {
 			if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
-				fitLabels.add(new FittingLabel(fit, selectedStroke, data.annotations.get(fit.getTransitionSeries())));		
+				fitLabels.add(new FittingLabel(fit, selectedLabel, data.annotations.get(fit.getTransitionSeries())));		
 			} else {
-				fitLabels.add(new FittingLabel(fit, fittingStroke, data.annotations.get(fit.getTransitionSeries())));
+				fitLabels.add(new FittingLabel(fit, fittingLabel, data.annotations.get(fit.getTransitionSeries())));
 			}
 			
 		}
 		for (FittingResult fit : data.proposedResults.getFits()) {
-			fitLabels.add(new FittingLabel(fit, proposedStroke, data.annotations.get(fit.getTransitionSeries())));
+			fitLabels.add(new FittingLabel(fit, proposedLabel, data.annotations.get(fit.getTransitionSeries())));
 		}
 		
 		if (data.selectionResults != null) {
