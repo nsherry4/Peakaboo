@@ -240,7 +240,7 @@ public class FittingTitlePainter extends PlotPainter
 	 */
 	protected void drawTextLabel(PainterData p, FittingLabel label, boolean resetColour) {
 			
-		if (label.title == null) { return; }
+		if (label.title == null || label.title.length() == 0) { return; }
 		
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
 		float xStart = label.position.x.start * channelSize;
@@ -263,6 +263,8 @@ public class FittingTitlePainter extends PlotPainter
 	}
 	
 	protected void drawTextLine(PainterData p, FittingLabel label) {
+		if (label.title == null || label.title.length() == 0) { return; }
+		
 		Color semitransparent = new Color(label.colour.getRed(), label.colour.getGreen(), label.colour.getBlue(), 64);
 		p.context.setSource(semitransparent);
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
@@ -284,23 +286,26 @@ public class FittingTitlePainter extends PlotPainter
 	}
 	
 	private String getTitle(FittingLabel label) {
+		StringBuilder sb = new StringBuilder();
 		TransitionSeries ts = label.fit.getTransitionSeries();
 		String titleName = ts.getDescription();
 
 		
 		String titleHeight = SigDigits.roundFloatTo(label.fit.getCurveScale(), 1);
 
-		String title = "";
-		if (drawElementNames) title += titleName;
-		if (drawElementNames && drawMaxIntensities) title += " (";
-		if (drawMaxIntensities) title += titleHeight;
-		if (drawElementNames && drawMaxIntensities) title += ")";
+		if (drawElementNames) sb.append(titleName);
+		if (drawElementNames && drawMaxIntensities) sb.append(" (");
+		if (drawMaxIntensities) sb.append(titleHeight);
+		if (drawElementNames && drawMaxIntensities) sb.append(")");
 		
 		if (label.annotation != null) {
-			title += ": " + label.annotation;
+			if (sb.length() > 0) {
+				sb.append(": ");
+			}
+			sb.append(label.annotation);
 		}
 		
-		return title;
+		return sb.toString();
 	}
 
 	private void configureLabel(FittingLabel label, PainterData p) {
