@@ -1,6 +1,12 @@
 package peakaboo.curvefit.peak.transition;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import peakaboo.curvefit.peak.escape.EscapePeak;
+import peakaboo.curvefit.peak.escape.EscapePeakType;
 
 /**
  * 

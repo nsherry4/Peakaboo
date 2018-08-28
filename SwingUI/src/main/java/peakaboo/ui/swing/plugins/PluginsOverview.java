@@ -3,28 +3,31 @@ package peakaboo.ui.swing.plugins;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import commonenvironment.Apps;
-import commonenvironment.Env;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
@@ -33,7 +36,9 @@ import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import peakaboo.common.Apps;
 import peakaboo.common.Configuration;
+import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
@@ -43,6 +48,9 @@ import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.ui.swing.plotting.FileDrop;
+import stratus.StratusLookAndFeel;
+import stratus.theme.DarkTheme;
+import stratus.theme.LightTheme;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconSize;
@@ -51,19 +59,22 @@ import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
+import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.ButtonSize;
+import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.Spacing;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
-import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 
 public class PluginsOverview extends JPanel {
 
 	JPanel details;
 	JTree tree;
-	TabbedInterfacePanel parent;
+	LayerPanel parent;
 	
 	JButton close, add, remove, reload, browse, download;
 	
-	public PluginsOverview(TabbedInterfacePanel parent) {
+	public PluginsOverview(LayerPanel parent) {
 		super(new BorderLayout());
 		
 		this.parent = parent;
@@ -74,16 +85,16 @@ public class PluginsOverview extends JPanel {
 		details = new JPanel(new BorderLayout());
 		body.add(details, BorderLayout.CENTER);
 				
-		close = HeaderBox.button("Close", () -> parent.popModalComponent());
+		close = new ImageButton("Close").withAction(() -> parent.popLayer());
 		
-		add = HeaderBox.button(StockIcon.EDIT_ADD, "Import Plugins", this::add);
-		remove = HeaderBox.button(StockIcon.EDIT_REMOVE, "Remove Plugins", this::removeSelected);
+		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Import Plugins").withAction(this::add);
+		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Remove Plugins").withAction(this::removeSelected);
 		
-		reload = HeaderBox.button(StockIcon.ACTION_REFRESH, "Reload Plugins", this::reload);
-		browse = HeaderBox.button(StockIcon.PLACE_FOLDER_OPEN, "Open Plugins Folder", this::browse);
-		download = HeaderBox.button(StockIcon.GO_DOWN, "Get More Plugins", this::download);
+		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Reload Plugins").withAction(this::reload);
+		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Get More Plugins").withAction(this::download);
 		
-		ButtonBox left = new ButtonBox(Spacing.bNone(), Spacing.medium, false);
+		ButtonBox left = new ButtonBox(Spacing.tiny, false);
 		left.setOpaque(false);
 		left.addLeft(add);
 		left.addLeft(remove);
@@ -123,6 +134,9 @@ public class PluginsOverview extends JPanel {
 	private BoltPluginController<? extends BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
+		if (node == null) {
+			return null;
+		}
 		if (!(node.getUserObject() instanceof BoltPluginController<?>)) {
 			return null;
 		}
@@ -168,19 +182,18 @@ public class PluginsOverview extends JPanel {
 			return;
 		}
 		
-		new TabbedInterfaceDialog(
+		new LayerDialog(
 				"Delete Plugin Archive?", 
 				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
-				JOptionPane.QUESTION_MESSAGE,
-				JOptionPane.YES_NO_OPTION,
-				v -> {
-					if (v != (Integer)JOptionPane.YES_OPTION) {
-						return;
-					}
+				MessageType.QUESTION)
+			.addRight(
+				new ImageButton("Delete").withAction(() -> {
 					manager.removeJar(jar);
 					this.reload();
-				}
-			).showIn(parent);
+				}).withStateCritical()
+				)
+			.addLeft(new ImageButton("Cancel"))
+			.showIn(parent);
 		
 		
 	}
@@ -189,7 +202,12 @@ public class PluginsOverview extends JPanel {
 		StringBuffer buff = new StringBuffer();
 		buff.append("<ul>");
 		for (Object o : stuff) {
-			buff.append("<li>" + o.toString() + "</li>");
+			String name = o.toString();
+			if (o instanceof BoltPluginController<?>) {
+				BoltPluginController<?> plugin = (BoltPluginController<?>) o;
+				name = plugin.getName() + " (v" + plugin.getVersion() + ")";
+			}
+			buff.append("<li>" + name + "</li>");
 		}
 		buff.append("</ul>");
 		return buff.toString();
@@ -225,22 +243,18 @@ public class PluginsOverview extends JPanel {
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
-			new TabbedInterfaceDialog(
+			new LayerDialog(
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
-					JOptionPane.ERROR_MESSAGE, 
-					JOptionPane.DEFAULT_OPTION, 
-					result -> {}).showIn(parent);
+					MessageType.ERROR).showIn(parent);
 			added = true;
 		}
 		
 		if (!added) {
-			new TabbedInterfaceDialog(
+			new LayerDialog(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
-					JOptionPane.ERROR_MESSAGE, 
-					JOptionPane.DEFAULT_OPTION, 
-					result -> {}).showIn(parent);
+					MessageType.ERROR).showIn(parent);
 		}
 		
 		reload();
@@ -254,15 +268,20 @@ public class PluginsOverview extends JPanel {
 		if (!manager.jarContainsPlugins(jar)) {
 			return false;
 		}
+		
+		Optional<File> upgradeTarget = manager.jarUpgradeTarget(jar);
+		//looks like this jar is an upgrade for an existing jar
+		if (upgradeTarget.isPresent()) {
+			manager.removeJar(upgradeTarget.get());
+		}
+		
 		BoltPluginSet<? extends BoltPlugin> plugins = manager.importJar(jar);
 		
 		this.reload();
-		new TabbedInterfaceDialog(
+		new LayerDialog(
 				"Imported New Plugins", 
 				"Peakboo successfully imported the following plugin(s):\n" + listToUL(plugins.getAll()), 
-				JOptionPane.INFORMATION_MESSAGE, 
-				JOptionPane.DEFAULT_OPTION, 
-				result -> {}).showIn(parent);
+				MessageType.INFO).showIn(parent);
 
 		return true;
 
@@ -289,7 +308,7 @@ public class PluginsOverview extends JPanel {
 	}
 	
 	private void download() {
-		Apps.browser("https://github.com/nsherry4/PeakabooPlugins");
+		Apps.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
 	}
 	
 	private TreeModel buildTreeModel() {
@@ -352,6 +371,45 @@ public class PluginsOverview extends JPanel {
 		scroller.setPreferredSize(new Dimension(200, 300));
 		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
 		return scroller;
+		
+	}
+	
+	public static void main(String[] args) throws UnsupportedLookAndFeelException {
+		
+		UIManager.setLookAndFeel(new StratusLookAndFeel(new LightTheme()));
+		
+		JFrame frame = new JFrame();
+		frame.setPreferredSize(new Dimension(640, 480));
+		
+		ImageButton b1 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
+		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+
+		ImageButton b3 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
+		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		
+		ImageButton b5 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
+		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		
+		ButtonBox box = new ButtonBox();
+		
+		box.addLeft(b1);
+		box.addLeft(b2);
+		
+		box.addCentre(b3);
+		box.addCentre(b4);
+		
+		box.addRight(b5);
+		box.addRight(b6);
+		
+		
+		System.out.println(frame.getContentPane().getLayout());
+		frame.getContentPane().setLayout(new BorderLayout());
+		frame.getContentPane().add(box, BorderLayout.SOUTH);
+		
+		frame.pack();
+		
+		frame.setVisible(true);
+				
 		
 	}
 	

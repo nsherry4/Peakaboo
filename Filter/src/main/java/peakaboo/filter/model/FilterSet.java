@@ -4,8 +4,12 @@ package peakaboo.filter.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
+import peakaboo.common.PeakabooLog;
+import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
 
 /**
  * 
@@ -135,10 +139,33 @@ public class FilterSet implements Iterable<Filter>
 				data = f.filter(data, filtersShouldCache);
 			}
 		}
+		
+		//Replace Inf/NaN with 0
+		data = correctNonFinite(data);
 
 		return data;
 	}
 	
+	//Scan the Spectrum for Infinity and NaN values, and replace them with 0 if found
+	private ReadOnlySpectrum correctNonFinite(ReadOnlySpectrum data) {
+		//Scan the results for Infinity and NaN values, and replace them with 0 if found
+		Spectrum corrected = null;
+		for (int i = 0; i < data.size(); i++) {
+			float v = data.get(i);
+			if (Float.isInfinite(v) || Float.isNaN(v)) {
+				//only incur the copy penalty if needed
+				if (corrected == null) {
+					corrected = new ISpectrum(data);
+				}
+				corrected.set(i, 0);
+			}
+		}
+		if (corrected != null) {
+			PeakabooLog.get().log(Level.WARNING, "Filtered data contained NaN or Infinity");
+			data = corrected;
+		}
+		return data;
+	}
 
 	public Iterator<Filter> iterator()
 	{

@@ -15,9 +15,11 @@ import javax.swing.JPanel;
 
 import peakaboo.datasource.model.DataSource;
 import swidget.widgets.HeaderBox;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
-import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
+import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.toggle.ItemToggleButton;
 import swidget.widgets.toggle.ToggleGroup;
 
@@ -32,7 +34,7 @@ public class DataSourceSelection extends JPanel
 		super(new BorderLayout());
 	}
 	
-	public void pickDSP(TabbedInterfacePanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {	
+	public void pickDSP(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {	
 		
 		toggleMap = new HashMap<ItemToggleButton, DataSource>();
 		
@@ -68,14 +70,14 @@ public class DataSourceSelection extends JPanel
 		
 		
 		
-		JButton ok = HeaderBox.button("OK", () -> {
-			parent.popModalComponent();
+		JButton ok = new ImageButton("Select").withAction(() -> {
+			parent.popLayer();
 			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
 			onSelect.accept(selected);
-		});
+		}).withStateDefault();
 		
-		JButton cancel = HeaderBox.button("Cancel", () -> {
-			parent.popModalComponent();
+		JButton cancel = new ImageButton("Cancel").withAction(() -> {
+			parent.popLayer();
 		});
 		
 		HeaderBox box = new HeaderBox(cancel, "Please Select Data Format", ok);
@@ -85,7 +87,7 @@ public class DataSourceSelection extends JPanel
 		add(box, BorderLayout.NORTH);
 		add(body, BorderLayout.CENTER);
 		
-		parent.pushModalComponent(this);
+		parent.pushLayer(new ModalLayer(parent, this));
 		
 
 		

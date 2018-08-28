@@ -3,7 +3,9 @@ package peakaboo.curvefit.curve.fitting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -60,7 +62,54 @@ public class FittingResultSet
 		return parameters;
 	}
 	
+	/**
+	 * Generates a subset containing the intersection of this FittingResultSet's
+	 * fits and the given list of {@link TransitionSeries}. Methods like
+	 * {@link FittingResultSet#getTotalFit()} and
+	 * {@link FittingResultSet#getResidual()} will return the result for the entire
+	 * set (ie not just the subset).
+	 * 
+	 * @param tss the list of {@link TransitionSeries} to consider
+	 */
+	public FittingResultSet subsetIntersect(List<TransitionSeries> tss) {
+		
+		FittingResultSet subset = new FittingResultSet(totalFit.size());
+		subset.totalFit = new ISpectrum(this.totalFit);
+		subset.residual = new ISpectrum(this.residual);
+		subset.parameters = this.parameters.copy();
+		subset.fits = this.fits.stream().filter(f -> tss.contains(f.getTransitionSeries())).collect(Collectors.toList());
+		
+		return subset;
+		
+	}
+
+	/**
+	 * Generates a subset containing the difference of this FittingResultSet's fits
+	 * and the given list of {@link TransitionSeries}. Methods like
+	 * {@link FittingResultSet#getTotalFit()} and
+	 * {@link FittingResultSet#getResidual()} will return the result for the entire
+	 * set (ie not just the subset).
+	 * 
+	 * @param tss the list of {@link TransitionSeries} to consider
+	 */
+	public FittingResultSet subsetDifference(List<TransitionSeries> tss) {
+		
+		FittingResultSet subset = new FittingResultSet(totalFit.size());
+		subset.totalFit = new ISpectrum(this.totalFit);
+		subset.residual = new ISpectrum(this.residual);
+		subset.parameters = this.parameters.copy();
+		subset.fits = this.fits.stream().filter(f -> !tss.contains(f.getTransitionSeries())).collect(Collectors.toList());
+		
+		return subset;
+	}
 	
+	public int size() {
+		return getFits().size();
+	}
+	
+	public boolean isEmpty( ) {
+		return size() == 0;
+	}
 	
 	
 	

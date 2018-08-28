@@ -1,7 +1,9 @@
 package peakaboo.display.plot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -15,6 +17,7 @@ public class PlotData {
 
 	public ReadOnlySpectrum raw;
 	public ReadOnlySpectrum filtered;
+	public boolean consistentScale = true;
 	public DataSet dataset;
 	
 	public EnergyCalibration calibration;
@@ -26,5 +29,7 @@ public class PlotData {
 	
 	public List<TransitionSeries> highlightedTransitionSeries = new ArrayList<>();
 	public List<TransitionSeries> proposedTransitionSeries = new ArrayList<>();
+	
+	public Map<TransitionSeries, String> annotations = new HashMap<>();
 	
 }

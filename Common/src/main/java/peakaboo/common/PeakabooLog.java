@@ -7,6 +7,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -19,6 +21,7 @@ import org.apache.commons.io.output.TeeOutputStream;
 public class PeakabooLog {
 
 	private final static String format = "%1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
+	private final static Map<String, Logger> loggers = new HashMap<>();
 	
 	public static void init() {
 		try {
@@ -26,7 +29,7 @@ public class PeakabooLog {
 			configFileHandler();
 			configStdErr();
 		} catch (SecurityException | IOException e) {
-			Logger.getLogger("").log(Level.WARNING, "Cannot create Peakaboo log file", e);
+			getRoot().log(Level.WARNING, "Cannot create Peakaboo log file", e);
 		}
 	}
 
@@ -44,29 +47,40 @@ public class PeakabooLog {
 		
 		FileHandler handler = new FileHandler(filename, 16*1024*1024, 1, true);
 		handler.setFormatter(new CustomFormatter(format));
-		Logger.getLogger("").addHandler(handler);
+		getRoot().addHandler(handler);
 	}
 	
 	
 	//All stderr goes to the log and real stderr
 	private static void configStdErr() throws FileNotFoundException {
-		OutputStream loggingOS = new LoggingOutputStream(Logger.getLogger(""), Level.SEVERE);
+		OutputStream loggingOS = new LoggingOutputStream(getRoot(), Level.SEVERE);
 		System.setErr(new PrintStream(new TeeOutputStream(System.err, loggingOS)));
 	}
 	
 	//Logger doesn't print to stderr, stderr prints to the log
 	private static void removeDefaultHandlers() {
-		Logger rootLogger = Logger.getLogger("");
+		Logger rootLogger = getRoot();
 		for (Handler handler : rootLogger.getHandlers()) {
 			rootLogger.removeHandler(handler);
 		}
 	}
 	
 	
+	public static Logger getRoot() {
+		return get("");
+	}
+	
 	public static Logger get() {
 		StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-		Logger logger = Logger.getLogger( stElements[0].getClassName() );
-		return logger;
+		String name = stElements[2].getClassName();
+		return get(name);
+	}
+	
+	private static Logger get(String name) {
+		if (!loggers.containsKey(name)) {
+			loggers.put(name, Logger.getLogger(name));
+		}
+		return loggers.get(name);
 	}
 	
 }

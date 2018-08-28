@@ -35,13 +35,13 @@ import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
+import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterface;
-import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
 
 
 
-public class MapperPanel extends TabbedInterfacePanel
+public class MapperPanel extends LayerPanel
 {
 
 	private MapCanvas				canvas;

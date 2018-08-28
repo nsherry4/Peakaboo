@@ -1,7 +1,5 @@
-# Peakaboo
+# Peakaboo [![Build Status](https://travis-ci.org/nsherry4/Peakaboo.svg?branch=master)](https://travis-ci.org/nsherry4/Peakaboo)
 XRF Visualization Software
-
-[![Build Status](https://travis-ci.org/nsherry4/Peakaboo.svg?branch=master)](https://travis-ci.org/nsherry4/Peakaboo)
 
 Peakaboo allows users to identify the spectral origins of the XRF spectrum using a technique that fits all components of the K, L, or M spectrum including escape peaks and pileup peaks, and then plots their spatial intensity distributions as maps.
 
@@ -35,3 +33,19 @@ Peakaboo allows users who are comfortable with Java programming to extend Peakab
 - Data Sinks
 
 To get started creating your own filters or file format support, all you need is the Peakaboo JAR to build against. For more information on creating plugins, see the user manual.
+
+
+# Building
+
+Peakaboo builds and manages its dependencies with maven, however it does also depend on several other libraries on GitHub which are not in maven. These are:
+
+ - **[nsherry4/Libraries](https://github.com/nsherry4/Libraries)** Collection of small libraries not yet broken out into separate repositories
+  - **[nsherry4/Eventful](https://github.com/nsherry4/Eventful)**  Simple, UI Friendly Event Library
+  - **[nsherry4/Swidget](https://github.com/nsherry4/Swidget)**  Mixed Collection of Swing UI components 
+  - **[nsherry4/Plural](https://github.com/nsherry4/Plural)**   Library to help parallelize tasks, show progress, and allow user cancel 
+ - **[nsherry4/Scratch](https://github.com/nsherry4/Scratch)**  Tools for working with large amounts of data in small amounts of memory 
+ - **[nsherry4/Stratus](https://github.com/nsherry4/Stratus)**  Stratus Look and Feel for Java Swing 
+ - **[nsherry4/Bolt](https://github.com/nsherry4/Bolt)** Java library for loading, compiling, and interpreting plug-ins. 
+ - **[nsherry4/AutoDialog](https://github.com/nsherry4/AutoDialog)** Model+Hint based simple UI auto-generation 
+
+Building Peakaboo will require these projects as well, all of which are also managed and built with maven.

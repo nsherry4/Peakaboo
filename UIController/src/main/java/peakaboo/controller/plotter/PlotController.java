@@ -10,6 +10,7 @@ import peakaboo.controller.plotter.undo.UndoController;
 import peakaboo.controller.plotter.view.ViewController;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.display.plot.ChannelCompositeMode;
+import peakaboo.display.plot.PlotData;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 import scidraw.drawing.painters.axis.AxisPainter;
@@ -136,8 +137,34 @@ public class PlotController extends EventfulType<String>
 	
 
 	/**
-	 * Returns a pair of spectra. The first one is the filtered data, the second is the original
+	 * Returns a PlotData object, which contains settins for the plot to be displayed with
 	 */
+	public PlotData getPlotData() {
+		
+		PlotData data = new PlotData();
+		Pair<ReadOnlySpectrum, ReadOnlySpectrum> dataForPlot = getDataForPlot();
+		
+		//TODO: Can this whole block be moved to the controller, since it just calls into controller a bunch?
+		data.selectionResults = fitting().getFittingSelectionResults();
+		data.proposedResults = fitting().getFittingProposalResults();
+		data.calibration = fitting().getEnergyCalibration();
+		data.escape = fitting().getEscapeType();
+		data.highlightedTransitionSeries = fitting().getHighlightedTransitionSeries();
+		data.proposedTransitionSeries = fitting().getProposedTransitionSeries();
+		
+		data.dataset = data().getDataSet();
+		
+		data.filters = filtering().getActiveFilters();
+		
+		data.filtered = dataForPlot.first;
+		data.raw = dataForPlot.second;
+		data.consistentScale = view().getConsistentScale();
+		
+		data.annotations = fitting().getAnnotations();
+		
+		return data;
+	}
+	
 	public Pair<ReadOnlySpectrum, ReadOnlySpectrum> getDataForPlot()
 	{
 
@@ -153,7 +180,7 @@ public class PlotController extends EventfulType<String>
 		
 		return new Pair<ReadOnlySpectrum, ReadOnlySpectrum>(filteringController.getFilteredPlot(), originalData);
 	}
-
+	
 
 	/**
 	 * In order to prevent high cpu use every time calculated data such as averaged, filtered, or 

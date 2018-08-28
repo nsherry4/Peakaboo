@@ -77,10 +77,17 @@ class FittingRenderer extends DefaultTableCellRenderer
 				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1) + ", Atomic #" + (e.atomicNumber());
 			}
 			tswidget.setDescription(desc);
+			tswidget.setFlag(controller.hasAnnotation(ts));
 			
 			tswidget.setSelected(controller.getTransitionSeriesVisibility(ts));
 			tswidget.setMinimumSize(new Dimension(0, 100));
-						
+			
+			String tooltip = e.toString();
+			if (controller.hasAnnotation(ts)) {
+				tooltip += " - " + controller.getAnnotation(ts);
+			}
+			tswidget.setToolTipText(tooltip);
+			
 			return tswidget;
 		} 
 		

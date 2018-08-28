@@ -10,14 +10,14 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
+import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
@@ -52,7 +52,7 @@ public class Plotter {
 		
 
 		if (data.filtered == null) {
-			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, dataForPlot (filtered) was null");
+			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, data (filtered) was null");
 			return null;
 		};
 		
@@ -116,6 +116,11 @@ public class Plotter {
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
 		float maxIntensity = Math.max(data.dataset.getAnalysis().maximumIntensity(), data.filtered.max());
 		
+		//when not using the consistent scale, scale each spectra against itself
+		if (!data.consistentScale) {
+			maxIntensity = data.filtered.max();
+		}
+		
 		
 		
 		dr.imageHeight = (float) size.getHeight();
@@ -155,22 +160,34 @@ public class Plotter {
 			}
 		}
 
+		////////////////////////////////////////////
+		// Draw Curve Fitting
+		////////////////////////////////////////////
 		
-		// draw curve fitting
-		if (data.selectionResults != null) {
-			if (settings.showIndividualFittings)
-			{
-				plotPainters.add(new FittingPainter(data.selectionResults, fittingStroke, fitting));
-				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum));
-			}
-			else
-			{			
-				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum, fitting));
-			}
+		FittingResultSet highlightedResults = data.selectionResults.subsetIntersect(data.highlightedTransitionSeries);
+		FittingResultSet unhighlightedResults = data.selectionResults.subsetDifference(data.highlightedTransitionSeries);
+		
+		//plot
+		if (settings.showIndividualFittings)
+		{
+			//draw the selected & highlighted results here, since we always draw the highlight
+			//on top of the black curve to be consistent
+			plotPainters.add(new FittingPainter(data.selectionResults, fittingStroke, fitting));
+			plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum));
+		}
+		else
+		{			
+			plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum, fitting));
 		}
 		
+		//highlighted fittings
+		if (!highlightedResults.isEmpty()) {
+			plotPainters.add(new FittingPainter(highlightedResults, selectedStroke, selected));
+		}
+		
+		
 		//draw curve fitting for proposed fittings
-		if (data.proposedTransitionSeries != null && data.proposedTransitionSeries.size() > 0)
+		if (data.proposedTransitionSeries.size() > 0)
 		{
 			if (settings.showIndividualFittings) {
 				plotPainters.add(new FittingPainter(data.proposedResults, proposedStroke, proposed));
@@ -188,45 +205,38 @@ public class Plotter {
 		}
 		
 
-		//highlighted fittings
-		List<TransitionSeries> selectedFits = data.highlightedTransitionSeries;
-		if (!selectedFits.isEmpty()) {
-			List<FittingResult> selectedFitResults = data.selectionResults.getFits()
-					.stream()
-					.filter(r -> selectedFits.contains(r.getTransitionSeries()))
-					.collect(Collectors.toList());
-			plotPainters.add(new FittingPainter(selectedFitResults, selectedStroke, selected));
-		}
 		
+		
+		
+		//Titles
+		List<FittingLabel> fitLabels = new ArrayList<>();
+		for (FittingResult fit : data.selectionResults.getFits()) {
+			if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
+				fitLabels.add(new FittingLabel(fit, selectedStroke, data.annotations.get(fit.getTransitionSeries())));		
+			} else {
+				fitLabels.add(new FittingLabel(fit, fittingStroke, data.annotations.get(fit.getTransitionSeries())));
+			}
+			
+		}
+		for (FittingResult fit : data.proposedResults.getFits()) {
+			fitLabels.add(new FittingLabel(fit, proposedStroke, data.annotations.get(fit.getTransitionSeries())));
+		}
 		
 		if (data.selectionResults != null) {
 			plotPainters.add(new FittingTitlePainter(
-					data.selectionResults,
+					data.selectionResults.getParameters().getCalibration(),
+					fitLabels,
 					settings.showElementFitTitles,
-					settings.showElementFitIntensities,
-					fittingStroke
-				)
-			);
-		}
-		
-		if (data.proposedResults != null) {
-			plotPainters.add(new FittingTitlePainter(
-					data.proposedResults,
-					settings.showElementFitTitles,
-					settings.showElementFitIntensities,
-					proposedStroke
+					settings.showElementFitIntensities
 				)
 			);
 		}
 		
 		
+		
+		//Markings
 		if (settings.showElementFitMarkers) {
-			if (data.selectionResults != null) {
-				plotPainters.add(new FittingMarkersPainter(data.selectionResults, data.escape, fittingStroke));
-			}
-			if (data.proposedResults != null) {
-				plotPainters.add(new FittingMarkersPainter(data.proposedResults, data.escape, proposedStroke));
-			}
+			plotPainters.add(new FittingMarkersPainter(data.selectionResults.getParameters(), fitLabels, data.escape));
 		}
 		
 		

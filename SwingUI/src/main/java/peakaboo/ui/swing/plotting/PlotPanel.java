@@ -7,24 +7,25 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -33,48 +34,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.SwingUtilities;
 
-import commonenvironment.Apps;
-import commonenvironment.Env;
-import eventful.EventfulListener;
-import eventful.EventfulTypeListener;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import peakaboo.common.Apps;
 import peakaboo.common.Configuration;
+import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.data.MapSetController;
@@ -86,24 +66,22 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasink.model.DataSink;
-import peakaboo.datasink.plugin.DataSinkPluginManager;
-import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
-import peakaboo.display.plot.ChannelCompositeMode;
-import peakaboo.filter.model.FilterPluginManager;
+import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
+import peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
+import peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
 import peakaboo.ui.swing.plugins.PluginsOverview;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -125,34 +103,27 @@ import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
-import swidget.widgets.ClearPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.HeaderBox;
-import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
-import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
-import swidget.widgets.ToolbarImageButton;
-import swidget.widgets.ZoomSlider;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
+import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.ModalLayer;
+import swidget.widgets.layerpanel.ToastLayer;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.properties.PropertyViewPanel;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
-import swidget.widgets.tabbedinterface.TabbedInterfacePanel;
-import swidget.widgets.toggle.ImageToggleButton;
-import swidget.widgets.toggle.ItemToggleButton;
 
 
 
-public class PlotPanel extends TabbedInterfacePanel
+public class PlotPanel extends LayerPanel
 {
 
 	private TabbedPlotterManager 	container;
-
 
 	//Non-UI
 	private PlotController				controller;
@@ -163,40 +134,18 @@ public class PlotPanel extends TabbedInterfacePanel
 	private File						datasetFolder;
 	private String                      programTitle;
 
-	
-	
-	//===MAIN MENU WIDGETS===
-	
-	//FILE
-	private JMenuItem					snapshotMenuItem;
-	private JMenuItem					exportFittingsMenuItem;
-	private JMenuItem					exportFilteredDataMenuItem;
-	private JMenu 						exportSinks;
-
-	//EDIT
-	private JMenuItem					undo, redo;
 
 
-	private JSpinner					scanNo;
-	private JLabel						scanLabel;
-	private JToggleButton				scanBlock;
-	private JLabel						channelLabel;
+
 
 	//===TOOLBAR WIDGETS===
-	private JToolBar                    toolBar;
-	
-	//===PLOTTING UI WIDGETS===
-	private JSpinner					minEnergy, maxEnergy;
-	private ImageButton					toolbarSnapshot;
-	private ImageButton					toolbarMap;
-	private ImageButton					toolbarInfo;
-	private ImageButton					energyGuess;
-	private ZoomSlider					zoomSlider;
-	private JPanel						bottomPanel;
-	private JPanel						scanSelector;
+	private PlotToolbar                 toolBar;
+	private PlotStatusBar				statusBar;
 	private JScrollPane					scrolledCanvas;
 
 
+	private static boolean newVersionNotified = false;
+	
 	public PlotPanel(TabbedPlotterManager container)
 	{
 		this.container = container;
@@ -212,18 +161,58 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		initGUI();
 
-		controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String message)
-			{
-				setWidgetsState();
-			}
-		});
-
+		controller.addListener(msg -> setWidgetsState());
 		setWidgetsState();
+		
+		
+		doVersionCheck();
 
-
-
+	}
+	
+	private void doVersionCheck() {
+		if (!newVersionNotified) {
+			newVersionNotified = true;
+			
+			Thread versionCheck = new Thread(() -> {
+							
+				String thisVersion = Version.longVersionNo;
+				String otherVersion = "";
+				boolean hasNewVersion = false;
+				
+				try {
+					
+					URL website = new URL("https://raw.githubusercontent.com/nsherry4/Peakaboo/master/version");
+					URLConnection conn = website.openConnection();
+					conn.setConnectTimeout(5000);
+					conn.setReadTimeout(5000);
+					
+					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					String inputLine;
+			        while ((inputLine = in.readLine()) != null) {
+			        	otherVersion += inputLine + "\n";
+			        }
+			        otherVersion = otherVersion.trim();
+			        in.close();
+			        
+					AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
+					hasNewVersion = cmp.compare(thisVersion, otherVersion) < 0;
+					
+				} catch (IOException e) {
+					PeakabooLog.get().log(Level.WARNING, "Could not check for new version", e);
+				}
+				
+				if (hasNewVersion) {
+					SwingUtilities.invokeLater(() -> {
+						this.pushLayer(new ToastLayer(this, "A new version of Peakaboo is available", () -> {
+							Apps.browser("https://github.com/nsherry4/Peakaboo/releases");
+						}));	
+					});
+				}
+				
+			}); //thread
+			versionCheck.setDaemon(true);
+			versionCheck.start();
+		}
 	}
 	
 	public String getProgramTitle()
@@ -247,49 +236,14 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		boolean hasData = controller.data().hasDataSet();
 		
-		bottomPanel.setEnabled(hasData);
-		snapshotMenuItem.setEnabled(hasData);
-		exportFittingsMenuItem.setEnabled(hasData);
-		exportFilteredDataMenuItem.setEnabled(hasData);
-		toolbarSnapshot.setEnabled(hasData);
-		exportSinks.setEnabled(hasData);
-		energyGuess.setEnabled(hasData);
-		toolbarInfo.setEnabled(hasData);
-		
-		if (hasData) {
-			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());
-			setEnergySpinners();
-
-			if (controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE) {
-				scanNo.setValue(controller.view().getScanNumber() + 1);
-				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.view().getScanNumber()));
-				scanSelector.setEnabled(true);
-			} else {
-				scanSelector.setEnabled(false);
-			}
-
-		}
-
-
-		undo.setEnabled(controller.history().canUndo());
-		redo.setEnabled(controller.history().canRedo());
-		undo.setText("Undo " + controller.history().getNextUndo());
-		redo.setText("Redo " + controller.history().getNextRedo());
-
-		zoomSlider.setValueEventless((int)(controller.view().getZoom()*100));
 		setTitleBar();
 
+		toolBar.setWidgetState(hasData);
+		statusBar.setWidgetState(hasData);
+		
 		container.getWindow().validate();
 		container.getWindow().repaint();
 
-	}
-
-
-	private void setEnergySpinners()
-	{
-		//dont let the listeners get wind of this change		
-		minEnergy.setValue((double) controller.fitting().getMinEnergy());
-		maxEnergy.setValue((double) controller.fitting().getMaxEnergy());
 	}
 
 
@@ -299,11 +253,6 @@ public class PlotPanel extends TabbedInterfacePanel
 		canvas = new PlotCanvas(controller, this);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		
-
-		channelLabel = new JLabel("");
-		channelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		channelLabel.setFont(channelLabel.getFont().deriveFont(Font.PLAIN));
-
 		canvas.addMouseMotionListener(new MouseMotionListener() {
 
 			public void mouseDragged(MouseEvent e){}
@@ -332,9 +281,8 @@ public class PlotPanel extends TabbedInterfacePanel
 		c.weightx = 1.0;
 		c.weighty = 0.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		toolBar = new JToolBar();
-		toolBar.setFloatable(false);
-		populateToolbar(toolBar);
+		
+		toolBar = new PlotToolbar(this, controller);
 		pane.add(toolBar, c);
 
 		JPanel p = new JPanel();
@@ -349,9 +297,12 @@ public class PlotPanel extends TabbedInterfacePanel
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas, Buttons.LEFT, Buttons.MIDDLE);
 
+		
+		statusBar = new PlotStatusBar(controller);
+		
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);
-		canvasPanel.add(createBottomBar(), BorderLayout.SOUTH);
+		canvasPanel.add(statusBar, BorderLayout.SOUTH);
 		canvasPanel.setPreferredSize(new Dimension(600, 300));
 
 		canvasPanel.addComponentListener(new ComponentListener() {
@@ -385,9 +336,6 @@ public class PlotPanel extends TabbedInterfacePanel
 		split.setBorder(Spacing.bNone());
 		pane.add(split, c);
 
-		
-		//createMenu();
-
 
 	}
 
@@ -417,677 +365,8 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 
 
-	private void populateToolbar(JToolBar toolbar)
-	{
-
-		toolbar.setLayout(new GridBagLayout());
-
-		GridBagConstraints c = new GridBagConstraints();
-
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.insets = new Insets(2, 2, 2, 2);
-		c.fill = GridBagConstraints.NONE;
-
-		ImageButton ibutton = new ToolbarImageButton("document-open", "Open", "Open a new data set");
-		ibutton.addActionListener(e -> actionOpenData());
-		toolbar.add(ibutton, c);
-
-		// controls.add(button);
-
-		toolbarSnapshot = new ToolbarImageButton(
-			StockIcon.DEVICE_CAMERA,
-			"Save Image",
-			"Save a picture of the current plot");
-		toolbarSnapshot.addActionListener(e -> actionSavePicture());
-		c.gridx += 1;
-		toolbar.add(toolbarSnapshot, c);
-
-		toolbarInfo = new ToolbarImageButton(
-			StockIcon.BADGE_INFO,
-			"Scan Info",
-			"Displays extended information about this data set");
-		toolbarInfo.addActionListener(e -> actionShowInfo());
-		c.gridx += 1;
-		toolbarInfo.setEnabled(false);
-		toolbar.add(toolbarInfo, c);
-	
-		
-		toolbarMap = new ImageButton("map", "Map Fittings", "Display a 2D map of the relative intensities of the fitted elements", ToolbarImageButton.significantLayout, IconSize.TOOLBAR_SMALL);
-		toolbarMap.addActionListener(e -> actionMap());
-		
-		c.gridx += 1;
-		toolbarMap.setEnabled(false);
-		toolbar.add(toolbarMap, c);
-
-		c.gridx += 1;
-		c.weightx = 1.0;
-		toolbar.add(Box.createHorizontalGlue(), c);
-		c.weightx = 0.0;
-
-
-		c.gridx++;
-		toolbar.add(createEnergyMenuButton(), c);
-				
-		c.gridx++;
-		toolbar.add(createViewMenuButton(), c);
-		
-		c.gridx++;
-		toolbar.add(createMainMenuButton(), c);
-		
-
-	}
-
 	
 	
-	private JCheckBoxMenuItem createMenuCheckItem(String title, ImageIcon icon, String description, Consumer<Boolean> listener, KeyStroke key, Integer mnemonic)
-	{
-		
-		JCheckBoxMenuItem menuItem;
-		if (icon != null) {
-			menuItem = new JCheckBoxMenuItem(title, icon);
-		} else {
-			menuItem = new JCheckBoxMenuItem(title);
-		}
-		
-		Consumer<ActionEvent> checkListener = e -> {
-			boolean orig = menuItem.isSelected();
-			boolean state = !orig;
-			if (e.getSource() == menuItem) {
-				state = orig;
-			}
-			menuItem.setSelected(state);
-			listener.accept(state);
-		};
-		
-		configureMenuItem(menuItem, description, checkListener, key, mnemonic);
-		
-		return menuItem;
-		
-	}
-	
-	private JRadioButtonMenuItem createMenuRadioItem(String title, ImageIcon icon, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
-	{
-		
-		JRadioButtonMenuItem menuItem;
-		if (icon != null) {
-			menuItem = new JRadioButtonMenuItem(title, icon);
-		} else {
-			menuItem = new JRadioButtonMenuItem(title);
-		}
-		
-		Consumer<ActionEvent> checkListener = e -> {
-			menuItem.setSelected(true);
-			listener.accept(e);
-		};
-		
-		configureMenuItem(menuItem, description, checkListener, key, mnemonic);
-		
-		return menuItem;
-		
-	}
-	
-	private JMenuItem createMenuItem(String title, ImageIcon icon, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
-	{
-		JMenuItem menuItem;
-		if (icon != null) {
-			menuItem = new JMenuItem(title, icon);
-		} else {
-			menuItem = new JMenuItem(title);
-		}
-		
-		configureMenuItem(menuItem, description, listener, key, mnemonic);
-		
-		return menuItem;
-		
-	}
-	
-	private void configureMenuItem(JMenuItem menuItem, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
-	{
-		
-		
-			
-		Action action = new AbstractAction() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				listener.accept(e);
-			}
-		};
-
-			
-		//You'd think this would fail with tabs because they'd both try to handle the
-		//key event, but it actually works perfectly. Maybe the tab component itself 
-		//redirects input to only the focused tab?
-		if (key != null) {
-			this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(key, key.toString());
-			this.getActionMap().put(key.toString(), action);
-		}
-		
-		
-		
-		//Even though this isn't how actions are performed anymore, we still want it to show up
-		if (key != null) menuItem.setAccelerator(key);
-		
-		if (mnemonic != null) menuItem.setMnemonic(mnemonic);
-		if (description != null) menuItem.getAccessibleContext().setAccessibleDescription(description);
-		if (description != null) menuItem.setToolTipText(description);
-		if (listener != null) menuItem.addActionListener(e -> listener.accept(e));
-	}
-	
-
-	
-	private ToolbarImageButton createEnergyMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton("menu-energy", "Energy & Peak Calibration");
-		JPopupMenu mainMenu = new JPopupMenu();
-
-		
-		
-		SettingsPanel energy = new SettingsPanel(Spacing.iTiny());
-		energy.setOpaque(false);
-		energy.setBorder(Spacing.bMedium());
-		JLabel energyTitle = new JLabel("Energy Calibration (keV)");
-		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
-		energy.addSetting(energyTitle);
-		
-		
-		
-		minEnergy = new JSpinner();
-		minEnergy.setModel(new SpinnerNumberModel(0.0, -20.48, 20.48, 0.01));
-		minEnergy.getEditor().setPreferredSize(new Dimension(72, (int)minEnergy.getPreferredSize().getHeight()));
-		minEnergy.getEditor().setOpaque(false);
-		minEnergy.addChangeListener(e -> {
-			float min = ((Number) minEnergy.getValue()).floatValue();
-			if (min > controller.fitting().getMaxEnergy()) {
-				min = controller.fitting().getMaxEnergy() - 0.01f;
-				minEnergy.setValue(min);
-			} 
-			controller.fitting().setMinEnergy(min);	
-		});
-		energy.addSetting(minEnergy, "Minimum");
-		
-		
-		maxEnergy = new JSpinner();
-		maxEnergy.setModel(new SpinnerNumberModel(20.48, 0.0, 204.8, 0.01));
-		maxEnergy.getEditor().setPreferredSize(new Dimension(72, (int)maxEnergy.getPreferredSize().getHeight()));
-		maxEnergy.getEditor().setOpaque(false);
-		maxEnergy.addChangeListener(e -> {
-			float max = ((Number) maxEnergy.getValue()).floatValue();
-			if (max < controller.fitting().getMinEnergy()) {
-				max = controller.fitting().getMinEnergy() + 0.01f;
-				maxEnergy.setValue(max);
-			} 
-			controller.fitting().setMaxEnergy(max);
-		});
-		energy.addSetting(maxEnergy, "Maximum");
-
-		energyGuess = new ToolbarImageButton("auto", "Guess Calibration", "Try to detect the correct max energy value by matching fittings to strong signal. Use with care.", true);
-		energyGuess.addActionListener(e -> {
-			//custom controls in a menu don't hide the menu when activated
-			mainMenu.setVisible(false);
-			actionGuessMaxEnergy();	
-		});
-		energy.addSetting(energyGuess);
-		
-		
-		
-		
-		
-		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
-		advanced.setOpaque(false);
-		advanced.setBorder(Spacing.bMedium());
-		JButton advancedButton = new JButton("Advanced Options");
-		advancedButton.addActionListener(e -> {
-			AdvancedOptionsPanel advancedPanel = new AdvancedOptionsPanel(this, controller);
-			mainMenu.setVisible(false);
-			pushModalComponent(advancedPanel);
-		});
-				//new JLabel("<html><div style='text-align: center;'>Peak Model<br /><span style='color: red'>WARNING: ADVANCED</span></div></html>");
-		advancedButton.setHorizontalAlignment(SwingConstants.CENTER);
-		advancedButton.setFont(advancedButton.getFont().deriveFont(Font.BOLD));
-		advanced.addSetting(advancedButton);
-
-
-		
-		
-		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
-
-		outer.addSetting(energy);
-		outer.addSetting(advanced);
-		outer.setOpaque(false);
-		mainMenu.add(outer);
-		
-		
-		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
-		return menuButton;
-	}
-	
-	private ToolbarImageButton createMainMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_MAIN, "Main Menu");
-		JPopupMenu mainMenu = new JPopupMenu();
-
-		
-		
-		mainMenu.add(createMenuItem(
-				"Open Data\u2026", StockIcon.DOCUMENT_OPEN.toMenuIcon(), "Opens new data sets.",
-				e -> actionOpenData(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), KeyEvent.VK_O
-		));
-		
-		
-		mainMenu.add(createMenuItem(
-				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
-				e -> actionSaveSession(),
-				null, null
-		));
-		
-		mainMenu.add(createMenuItem(
-				"Load Session", null, null,
-				e -> actionLoadSession(),
-				null, null
-		));
-		
-
-		
-		JMenu export = new JMenu("Export");
-		
-		exportSinks = new JMenu("Raw Data");
-		
-		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
-			exportSinks.add(createMenuItem(
-					plugin.getName(), null, null,
-					e -> actionExportData(plugin.create()),
-					null, null
-			));
-		}
-		
-		export.add(exportSinks);
-		
-
-		
-		snapshotMenuItem = createMenuItem(
-				"Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
-				e -> actionSavePicture(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
-		);
-		export.add(snapshotMenuItem);
-		
-		
-		exportFilteredDataMenuItem = createMenuItem(
-				"Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
-				e -> actionSaveFilteredData(),
-				null, null
-		);
-		export.add(exportFilteredDataMenuItem);
-		
-		exportFittingsMenuItem = createMenuItem(
-				"Fittings as Text", null, "Saves the current fitting data to a text file",
-				e -> actionSaveFittingInformation(),
-				null, null
-		);
-		export.add(exportFittingsMenuItem);
-
-
-		mainMenu.add(export);
-		
-				
-
-		mainMenu.addSeparator();
-
-		
-		undo = createMenuItem(
-				"Undo", StockIcon.EDIT_UNDO.toMenuIcon(), "Undoes a previous action",
-				e -> controller.history().undo(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK), KeyEvent.VK_U
-		);
-		mainMenu.add(undo);
-
-		redo = createMenuItem(
-				"Redo", StockIcon.EDIT_REDO.toMenuIcon(), "Redoes a previously undone action",
-				e -> controller.history().redo(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), KeyEvent.VK_R
-		);
-		mainMenu.add(redo);
-
-		mainMenu.addSeparator();
-
-		//HELP Menu
-		
-		JMenuItem plugins = createMenuItem(
-				"Plugins", null, "Shows information about Peakaboo's plugins",
-				e -> actionShowPlugins(),
-				null, null
-			);
-		mainMenu.add(plugins);
-		
-		JMenuItem logs = createMenuItem(
-				"Logs", null, null,
-				e -> actionShowLogs(),
-				null, null
-			);
-		mainMenu.add(logs);
-
-		JMenuItem bugreport = createMenuItem(
-				"Report a Bug", null, null,
-				e -> actionReportBug(),
-				null, null
-			);
-		mainMenu.add(bugreport);
-		
-		JMenuItem help = createMenuItem(
-			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
-			e -> actionHelp(),
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
-		);
-		mainMenu.add(help);
-		
-		JMenuItem about = createMenuItem(
-			"About", StockIcon.MISC_ABOUT.toMenuIcon(), null,
-			e -> actionAbout(),
-			null, null
-		);
-		mainMenu.add(about);
-		
-
-		
-		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
-		return menuButton;
-	}
-
-	private ToolbarImageButton createViewMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton("menu-view", "Plot Settings Menu");
-		JPopupMenu mainMenu = new JPopupMenu();
-
-		
-
-
-		final JMenuItem logPlot, axes, monochrome, title, raw, fittings;
-
-		
-		logPlot = createMenuCheckItem(
-				"Logarithmic Scale", null, "Toggles the plot between a linear and logarithmic scale",
-				b -> {
-					controller.view().setViewLog(b);
-				},
-				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), KeyEvent.VK_L
-		);
-		logPlot.setSelected(controller.view().getViewLog());
-		
-		axes = createMenuCheckItem(
-				"Axes", null, "Toggles display of axes and grid lines",
-				b -> {
-					controller.view().setShowAxes(b);
-				},
-				null, null
-		);
-		axes.setSelected(controller.view().getShowAxes());
-
-		title = createMenuCheckItem(
-				"Title", null, "Toggles display of the current data set's title",
-				b -> {
-					controller.view().setShowTitle(b);
-				},
-				null, null
-		);
-
-		monochrome = createMenuCheckItem(
-				"Monochrome", null, "Toggles the monochrome colour palette",
-				b -> {
-					controller.view().setMonochrome(b);
-				},
-				null, KeyEvent.VK_M
-		);
-		
-		
-
-		raw = createMenuCheckItem(
-				"Raw Data Outline", null, "Toggles an outline of the original raw data",
-				b -> {
-					controller.view().setShowRawData(b);
-				},
-				null, KeyEvent.VK_O
-		);
-		
-		fittings = createMenuCheckItem(
-				"Individual Fittings", null, "Switches between showing all fittings as a single curve and showing all fittings individually",
-				b -> {
-					controller.view().setShowIndividualSelections(b);
-				},
-				null, KeyEvent.VK_O
-		);	
-		
-		mainMenu.add(logPlot);
-		mainMenu.add(axes);
-		mainMenu.add(title);
-		mainMenu.add(monochrome);
-		
-		mainMenu.addSeparator();
-		
-		mainMenu.add(raw);
-		mainMenu.add(fittings);
-
-
-		// Element Drawing submenu
-		JMenu elementDrawing = new JMenu("Curve Fit");
-		final JCheckBoxMenuItem etitles, emarkings, eintensities;
-
-		
-		etitles = createMenuCheckItem(
-				"Element Names", null, "Label fittings with the names of their elements",
-				b -> {
-					controller.view().setShowElementTitles(b);
-				},
-				null, null
-		);
-		elementDrawing.add(etitles);
-
-		
-		emarkings = createMenuCheckItem(
-				"Markings", null, "Label fittings with lines denoting their energies",
-				b -> {
-					controller.view().setShowElementMarkers(b);
-				},
-				null, null
-		);
-		elementDrawing.add(emarkings);
-
-		
-		eintensities = createMenuCheckItem(
-				"Heights", null, "Label fittings with their heights",
-				b -> {
-					controller.view().setShowElementIntensities(b);
-				},
-				null, null
-		);
-		elementDrawing.add(eintensities);
-
-		
-		mainMenu.add(elementDrawing);
-
-
-		mainMenu.addSeparator();
-		
-
-
-		final JRadioButtonMenuItem individual, average, maximum;
-
-		ButtonGroup viewGroup = new ButtonGroup();
-
-		individual = createMenuRadioItem(
-				ChannelCompositeMode.NONE.show(), 
-				null, null, 
-				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.NONE), 
-				KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), 
-				KeyEvent.VK_I
-			);
-		individual.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE);
-		viewGroup.add(individual);
-		mainMenu.add(individual);
-		
-
-		average = createMenuRadioItem(
-				ChannelCompositeMode.AVERAGE.show(), 
-				null, null, 
-				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE), 
-				KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), 
-				KeyEvent.VK_M
-			);
-		average.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE);
-		viewGroup.add(average);
-		mainMenu.add(average);
-		
-
-		maximum = createMenuRadioItem(
-				ChannelCompositeMode.MAXIMUM.show(), 
-				null, null, 
-				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM),
-				KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), 
-				KeyEvent.VK_T
-			);
-		maximum.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM);
-		viewGroup.add(maximum);
-		mainMenu.add(maximum);
-		
-
-		
-		controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String s)
-			{
-
-				logPlot.setSelected(controller.view().getViewLog());
-				axes.setSelected(controller.view().getShowAxes());
-				title.setSelected(controller.view().getShowTitle());
-				monochrome.setSelected(controller.view().getMonochrome());
-
-				etitles.setSelected(controller.view().getShowElementTitles());
-				emarkings.setSelected(controller.view().getShowElementMarkers());
-				eintensities.setSelected(controller.view().getShowElementIntensities());
-
-				switch (controller.view().getChannelCompositeMode())
-				{
-
-					case NONE:
-						individual.setSelected(true);
-						break;
-					case AVERAGE:
-						average.setSelected(true);
-						break;
-					case MAXIMUM:
-						maximum.setSelected(true);
-						break;
-
-				}
-
-				raw.setSelected(controller.view().getShowRawData());
-				fittings.setSelected(controller.view().getShowIndividualSelections());
-
-			}
-		});
-		
-		
-		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
-		return menuButton;
-	}
-	
-
-	private JPanel createBottomBar()
-	{
-		bottomPanel = new ClearPanel();
-		bottomPanel.setBorder(Spacing.bTiny());
-		bottomPanel.setLayout(new BorderLayout());
-
-		channelLabel.setBorder(Spacing.bSmall());
-		bottomPanel.add(channelLabel, BorderLayout.CENTER);
-
-		JComponent zoomPanel = createZoomPanel();
-		bottomPanel.add(zoomPanel, BorderLayout.EAST);
-
-		scanSelector = new ClearPanel();
-		scanSelector.setLayout(new BoxLayout(scanSelector, BoxLayout.X_AXIS));
-
-		scanNo = new JSpinner();
-		scanNo.getEditor().setPreferredSize(new Dimension(50, 0));
-		scanLabel = new JLabel("Scan");
-		scanLabel.setBorder(Spacing.bSmall());
-		scanBlock = new ItemToggleButton(
-			StockIcon.CHOOSE_CANCEL,
-			"Flag this scan to exclude it and extrapolate it from neighbouring points in maps", "");
-
-		scanSelector.add(scanLabel);
-		scanSelector.add(Box.createHorizontalStrut(2));
-		scanSelector.add(scanNo);
-		scanSelector.add(Box.createHorizontalStrut(4));
-		scanSelector.add(scanBlock);
-		scanSelector.add(Box.createHorizontalStrut(4));
-
-		scanNo.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e)
-			{
-				JSpinner scan = (JSpinner) e.getSource();
-				int value = (Integer) ((scan).getValue());
-				controller.view().setScanNumber(value - 1);
-			}
-		});
-		bottomPanel.add(scanSelector, BorderLayout.WEST);
-
-		scanBlock.setFocusable(false);
-		scanBlock.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				if (scanBlock.isSelected()) {
-					controller.data().getDiscards().discard(controller.view().getScanNumber());
-				} else {
-					controller.data().getDiscards().undiscard(controller.view().getScanNumber());
-				}
-			}
-		});
-
-		return bottomPanel;
-
-	}
-
-	private JComponent createZoomPanel()
-	{
-		
-		JPanel zoomPanel = new ClearPanel(new BorderLayout());
-		zoomPanel.setBorder(Spacing.bMedium());
-		
-		zoomSlider = new ZoomSlider(10, 1000, 10);
-		zoomSlider.setOpaque(false);
-		zoomSlider.setValue(100);
-		zoomSlider.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				controller.view().setZoom(zoomSlider.getValue() / 100f);
-			}
-		});
-		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
-
-		
-		final ImageToggleButton lockHorizontal = new ImageToggleButton(StockIcon.MISC_LOCKED, "", "Lock Vertical Zoom to Window Size");
-		lockHorizontal.setSelected(true);
-		lockHorizontal.addActionListener(e -> {
-			controller.view().setLockPlotHeight(lockHorizontal.isSelected());
-		});
-		zoomPanel.add(lockHorizontal, BorderLayout.EAST);
-		
-		JPopupMenu zoomMenu = new JPopupMenu();
-		zoomMenu.setBorder(Spacing.bNone());
-		zoomMenu.add(zoomPanel);
-		ImageButton zoomButton = new ImageButton(StockIcon.FIND, "Zoom", Layout.IMAGE, false);
-		zoomButton.addActionListener(e -> {
-			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
-		});
-		
-		return zoomButton;
-	}
 	
 
 	// prompts the user with a file selection dialogue
@@ -1108,7 +387,14 @@ public class PlotPanel extends TabbedInterfacePanel
 
 		int channel = canvas.channelFromCoordinate(x);
 		float energy = controller.view().getEnergyForChannel(channel);
-		Pair<Float, Float> values = controller.view().getValueForChannel(channel);
+		
+		Pair<Float, Float> values;
+		if (channel < 0 || channel >= controller.data().getDataSet().getAnalysis().channelsPerScan()) {
+			//out of bounds
+			values = null;
+		} else {
+			values = controller.view().getValueForChannel(channel);
+		}
 
 		StringBuilder sb = new StringBuilder();
 		String sep = ",  ";
@@ -1147,7 +433,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			
 		}
 		
-		channelLabel.setText(sb.toString());
+		statusBar.setChannelText(sb.toString());
 		
 	}
 
@@ -1164,7 +450,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	// UI ACTIONS
 	// ////////////////////////////////////////////////////////
 
-	private void actionAbout()
+	public void actionAbout()
 	{
 		ImageIcon logo = IconFactory.getImageIcon( Version.logo );
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
@@ -1173,7 +459,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		AboutDialogue.Contents contents = new AboutDialogue.Contents();
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
-		contents.linkref = "https://github.com/nsherry4/Peakaboo";
+		contents.linkAction = () -> Apps.browser("https://github.com/nsherry4/Peakaboo");
 		contents.linktext = "Website";
 		contents.copyright = "2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
@@ -1187,12 +473,12 @@ public class PlotPanel extends TabbedInterfacePanel
 		new AboutDialogue(container.getWindow(), contents);
 	}
 	
-	private void actionHelp()
+	public void actionHelp()
 	{
 		Apps.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
 	}
 	
-	private void actionOpenData()
+	public void actionOpenData()
 	{		
 		
 		
@@ -1203,18 +489,28 @@ public class PlotPanel extends TabbedInterfacePanel
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);
 		}
-
+		
+		//Add session file ext.
+		SimpleFileExtension session = new SimpleFileExtension("Peakaboo Session Files", "peakaboo");
+		exts.add(session);
+		
 		openNewDataset(exts);
 		
 		
 	}
 	
 
-	void loadFiles(List<Path> paths, Runnable after) {
+	public void loadFiles(List<Path> paths, Runnable after) {
 		if (paths.size() == 0) {
 			return;
 		}
 
+		//check if it's a peakaboo session file first
+		if (paths.size() == 1 && paths.get(0).toString().toLowerCase().endsWith(".peakaboo")) {
+			loadSession(paths.get(0).toFile());
+			return;
+		}
+		
 		List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
 		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
 		
@@ -1225,12 +521,10 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 		else if (formats.size() == 0)
 		{
-			new TabbedInterfaceDialog(
+			new LayerDialog(
 					"Open Failed", 
 					"Could not determine the data format of the selected file(s)", 
-					JOptionPane.ERROR_MESSAGE, 
-					JOptionPane.DEFAULT_OPTION, 
-					v -> {}
+					MessageType.ERROR
 				).showIn(this);
 		}
 		else
@@ -1254,15 +548,15 @@ public class PlotPanel extends TabbedInterfacePanel
 			sap.setBorder(Spacing.bMedium());
 			
 			ButtonBox bbox = new ButtonBox();
-			ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK, "OK", true);
+			ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
 			ok.addActionListener(e -> {
-				this.popModalComponent();
+				this.popLayer();
 				loadFiles(files, dsp, after);
 			});
 			
-			ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL, "Cancel", true);
+			ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
 			cancel.addActionListener(e -> {
-				this.popModalComponent();
+				this.popLayer();
 				return;
 			});
 			
@@ -1273,7 +567,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			paramPanel.add(sap, BorderLayout.CENTER);
 			paramPanel.add(bbox, BorderLayout.SOUTH);
 
-			this.pushModalComponent(paramPanel);
+			this.pushLayer(new ModalLayer(this, paramPanel));
 			
 		} else {
 			loadFiles(files, dsp, after);
@@ -1296,12 +590,10 @@ public class PlotPanel extends TabbedInterfacePanel
 						} else if (result.problem != null) {
 							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
 						} else {
-							new TabbedInterfaceDialog(
+							new LayerDialog(
 									"Open Failed", 
 									"Peakaboo could not open this dataset.\n" + result.message, 
-									JOptionPane.ERROR_MESSAGE,
-									JOptionPane.DEFAULT_OPTION,
-									v -> {}
+									MessageType.ERROR
 								).showIn(this);
 						}
 					}
@@ -1311,7 +603,7 @@ public class PlotPanel extends TabbedInterfacePanel
 					controller.data().setDataPaths(paths);
 					savedSessionFileName = null;
 					canvas.updateCanvasSize();
-					popModalComponent();
+					popLayer();
 					if (after != null) {
 						after.run();
 					}
@@ -1323,7 +615,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			
 			
 			ExecutorSetView execPanel = new ExecutorSetView(reading); 
-			pushModalComponent(execPanel);
+			pushLayer(new ModalLayer(this, execPanel));
 			reading.startWorking();
 			
 			
@@ -1344,7 +636,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			protected Boolean execute() {
 				getController().data().setDataSource(ds, progress, this::isAborted);
 				getController().loadSettings(settings, false);
-				popModalComponent();
+				popLayer();
 				return true;
 			}}; 
 			
@@ -1352,7 +644,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		exec.addExecutor(progress, "Calculating Values");
 			
 		ExecutorSetView view = new ExecutorSetView(exec);
-		pushModalComponent(view);
+		pushLayer(new ModalLayer(this, view));
 		exec.startWorking();
 		
 	}
@@ -1360,7 +652,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	
 	
 
-	private void actionExportData(DataSink sink) {
+	public void actionExportData(DataSink sink) {
 		DataSource source = controller.data().getDataSet().getDataSource();
 
 		SimpleFileExtension ext = new SimpleFileExtension(sink.getFormatName(), sink.getFormatExtension());
@@ -1378,7 +670,7 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	private void actionMap()
+	public void actionMap()
 	{
 
 		if (!controller.data().hasDataSet()) return;
@@ -1396,7 +688,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			if (event == Event.PROGRESS) { return; }
 			
 			//hide the task panel since this is either COMPLETED or ABORTED
-			popModalComponent();
+			popLayer();
 			
 			//If this task was aborted instead of completed, exit early
 			if (event == Event.ABORTED) { return; }
@@ -1441,14 +733,14 @@ public class PlotPanel extends TabbedInterfacePanel
 		});
 		
 		
-		pushModalComponent(taskPanel);
+		pushLayer(new ModalLayer(this, taskPanel));
 		mapTask.start();
 
 
 	}
 
 
-	private void actionSaveSession()
+	public void actionSaveSession()
 	{
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
@@ -1471,7 +763,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 
 
-	private void actionSavePicture()
+	public void actionSavePicture()
 	{
 		if (saveFilesFolder == null) {
 			saveFilesFolder = datasetFolder;
@@ -1486,7 +778,7 @@ public class PlotPanel extends TabbedInterfacePanel
 	}
 
 
-	private void actionSaveFilteredData()
+	public void actionSaveFilteredData()
 	{
 		if (saveFilesFolder == null) {
 			saveFilesFolder = datasetFolder;
@@ -1495,7 +787,6 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
 		final FilterSet filters = controller.filtering().getActiveFilters();
-		System.out.println(filters.getFilters());
 
 		SimpleFileExtension text = new SimpleFileExtension("Text File", "txt");
 		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", saveFilesFolder, text, saveFile -> {
@@ -1542,7 +833,7 @@ public class PlotPanel extends TabbedInterfacePanel
 			streamexec.addListener(event -> {
 				//if not just a progress event, hide the modal panel
 				if (event != Event.PROGRESS) {
-					popModalComponent();
+					popLayer();
 				}
 				//remove the output file if the task was aborted
 				if (event == Event.ABORTED) {
@@ -1550,7 +841,7 @@ public class PlotPanel extends TabbedInterfacePanel
 				}
 			});
 			
-			pushModalComponent(panel);
+			pushLayer(new ModalLayer(this, panel));
 			streamexec.start();
 			
 			
@@ -1558,7 +849,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 	}
 	
-	private void actionSaveFittingInformation()
+	public void actionSaveFittingInformation()
 	{
 
 		if (saveFilesFolder == null) {
@@ -1602,59 +893,62 @@ public class PlotPanel extends TabbedInterfacePanel
 
 	}
 
-	private void actionLoadSession() {
+	public void actionLoadSession() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
 		SwidgetFilePanels.openFile(this, "Load Session Data", savedSessionFileName, peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
-			try {
-				SavedSession session = controller.readSavedSettings(StringInput.contents(file.get()));
-				
-				List<Path> currentPaths = controller.data().getDataPaths();
-				List<Path> sessionPaths = session.data.filesAsDataPaths();
-				
-				boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
-				
-				//If the data files in the saved session are different, offer to load the data set from the new session
-				if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
-					new TabbedInterfaceDialog(
-							"Open Associated Data Set?", 
-							"This session is associated with another data set.\nDo you want to open that data set now?", 
-							JOptionPane.QUESTION_MESSAGE, 
-							JOptionPane.YES_NO_OPTION, 
-							result -> {
-								if (result == (Integer)JOptionPane.YES_OPTION) {
-									//they said yes, load the new data, and then apply the session
-									//this needs to be done this way b/c loading a new dataset wipes out
-									//things like calibration info
-									this.loadFiles(sessionPaths, () -> {
-										controller.loadSessionSettings(session);	
-										savedSessionFileName = file.get();
-									});
-
-								} else {
-									//load the settings w/o the data, then set the file paths back to the current values
-									controller.loadSessionSettings(session);
-									//they said no, reset the stored paths to the old ones
-									controller.data().setDataPaths(currentPaths);
-								}
-							}
-						).showIn(this);
-				} else {
-					//just load the session, as there is either no data associated with it, or it's the same data
-					controller.loadSessionSettings(session);
-				}
-				
-			} catch (IOException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
-			}
+			loadSession(file.get());
 		});
 
 	}
 
-	private void actionShowInfo()
+	private void loadSession(File file) {
+		try {
+			SavedSession session = controller.readSavedSettings(StringInput.contents(file));
+			
+			List<Path> currentPaths = controller.data().getDataPaths();
+			List<Path> sessionPaths = session.data.filesAsDataPaths();
+			
+			boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
+			
+			//If the data files in the saved session are different, offer to load the data set from the new session
+			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
+				new LayerDialog(
+						"Open Associated Data Set?", 
+						"This session is associated with another data set.\nDo you want to open that data set now?", 
+						MessageType.QUESTION)
+					.addRight(
+						new ImageButton("Yes").withAction(() -> {
+							//they said yes, load the new data, and then apply the session
+							//this needs to be done this way b/c loading a new dataset wipes out
+							//things like calibration info
+							this.loadFiles(sessionPaths, () -> {
+								controller.loadSessionSettings(session);	
+								savedSessionFileName = file;
+							});
+						}).withStateDefault())
+					.addLeft(
+						new ImageButton("No").withAction(() -> {
+							//load the settings w/o the data, then set the file paths back to the current values
+							controller.loadSessionSettings(session);
+							//they said no, reset the stored paths to the old ones
+							controller.data().setDataPaths(currentPaths);
+						}))
+					.showIn(this);
+			} else {
+				//just load the session, as there is either no data associated with it, or it's the same data
+				controller.loadSessionSettings(session);
+			}
+			
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
+		}
+	}
+	
+	public void actionShowInfo()
 	{
 		
 		Map<String, String> properties;
@@ -1691,33 +985,34 @@ public class PlotPanel extends TabbedInterfacePanel
 		
 		
 		JPanel panel = new JPanel(new BorderLayout());
-		PropertyViewPanel propPanel = new PropertyViewPanel(properties, "Dataset Information");
+		PropertyViewPanel propPanel = new PropertyViewPanel(properties);
 		propPanel.setBorder(Spacing.bHuge());
 		panel.add(propPanel, BorderLayout.CENTER);
 		
-		ButtonBox box = new ButtonBox(true);
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", true);
-		box.addRight(close);
-		close.addActionListener(e -> {
-			this.popModalComponent();
-		});
-		panel.add(box, BorderLayout.SOUTH);
 		
-		this.pushModalComponent(panel);
+		ImageButton close = new ImageButton()
+				.withText("Close")
+				.withIcon(StockIcon.WINDOW_CLOSE)
+				.withAction(this::popLayer);
+		
+		HeaderBox header = new HeaderBox(null, "Dataset Information", close);
+		
+		
+		panel.add(header, BorderLayout.NORTH);
+		
+		this.pushLayer(new ModalLayer(this, panel));
 		
 
 	}
 	
-	private void actionGuessMaxEnergy() {
+	public void actionGuessMaxEnergy() {
 		
 		if (controller == null) return;
 		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
-			new TabbedInterfaceDialog(
+			new LayerDialog(
 					"Cannot Detect Energy Calibration", 
 					"Detecting energy calibration requires that at least two elements be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
-					JOptionPane.WARNING_MESSAGE,
-					JOptionPane.DEFAULT_OPTION,
-					v -> {}
+					MessageType.WARNING
 				).showIn(this);
 			return;
 		}
@@ -1736,7 +1031,7 @@ public class PlotPanel extends TabbedInterfacePanel
 		energyTask.last().addListener(event -> {
 			//if event is not progress, then its either COMPLETED or ABORTED, so hide the panel
 			if (event != Event.PROGRESS) {
-				popModalComponent();
+				popLayer();
 			}
 			
 			//if the last executor completed successfully, then set the calibration
@@ -1749,20 +1044,20 @@ public class PlotPanel extends TabbedInterfacePanel
 			}
 		});
 		
-		pushModalComponent(panel);
+		pushLayer(new ModalLayer(this, panel));
 		energyTask.start();
 
 		
 	}
 	
-	private void actionShowPlugins() {
-		pushModalComponent(new PluginsOverview(this));
+	public void actionShowPlugins() {
+		pushLayer(new ModalLayer(this, new PluginsOverview(this)));
 	}
 
 
 	
 	
-	private void actionShowLogs() {
+	public void actionShowLogs() {
 		File appDataDir = Configuration.appDir("Logging");
 		appDataDir.mkdirs();
 		Desktop desktop = Desktop.getDesktop();
@@ -1773,8 +1068,13 @@ public class PlotPanel extends TabbedInterfacePanel
 		}
 	}
 	
-	private void actionReportBug() {
-		Apps.browser("https://github.com/nsherry4/Peakaboo/issues");
+	public void actionReportBug() {
+		Apps.browser("https://github.com/nsherry4/Peakaboo/issues/new/choose");
+	}
+
+	public void actionShowAdvancedOptions() {
+		AdvancedOptionsPanel advancedPanel = new AdvancedOptionsPanel(this, controller);
+		this.pushLayer(new ModalLayer(this, advancedPanel));
 	}
 
 }

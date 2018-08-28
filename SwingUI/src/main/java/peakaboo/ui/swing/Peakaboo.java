@@ -19,9 +19,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
-import commonenvironment.Env;
+import peakaboo.common.Env;
+import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
+import peakaboo.common.MemoryProfile.Size;
 import peakaboo.curvefit.peak.table.CombinedPeakTable;
 import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
@@ -36,13 +38,14 @@ import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.tabbedinterface.TabbedInterfaceDialog;
+import swidget.widgets.ImageButton;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 
 
 
 public class Peakaboo
 {
-	private static final Logger LOGGER = PeakabooLog.get();
 	private static Timer gcTimer;
 	
 
@@ -52,6 +55,7 @@ public class Peakaboo
 	
 	private static void showError(Throwable e, String message, String text)
 	{
+		
 		SwingUtilities.invokeLater(() -> {
 			TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
 			errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
@@ -89,24 +93,24 @@ public class Peakaboo
 		if (!Version.release){
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
-			JOptionPane optionPane = new TabbedInterfaceDialog(title, message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, v-> {}).getComponent();
-			JDialog dialog = optionPane.createDialog(title);
-			dialog.setAlwaysOnTop(true);
-			dialog.setVisible(true);
+			
+			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
+			
 		}
 	}
 	
 	private static void warnLowMemory() {
-		LOGGER.log(Level.INFO, "Max heap size = " + Env.heapSize());
+		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
-		if (Env.heapSize() <= 128){
-			String message = "This system's Java VM is only allocated " + Env.heapSize()
+		if (MemoryProfile.size == Size.SMALL){
+			String message = "This system's Java VM is only allocated " + Env.maxHeap()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
-			JOptionPane optionPane = new TabbedInterfaceDialog(title, message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, v-> {}).getComponent();
-			JDialog dialog = optionPane.createDialog(title);
-			dialog.setAlwaysOnTop(true);
-			dialog.setVisible(true);
+						
+			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
+			
+			//dialog.setAlwaysOnTop(true);
+			//dialog.setVisible(true);
 		}
 	}
 	
@@ -130,13 +134,18 @@ public class Peakaboo
 	}
 	
 	private static void errorHook() {
-		PeakabooLog.get().addHandler(new Handler() {
+		PeakabooLog.getRoot().addHandler(new Handler() {
 			
 			@Override
 			public void publish(LogRecord record) {
 				if (record.getLevel() == Level.SEVERE) {
 					Throwable t = record.getThrown();
 					String m = record.getMessage();
+					
+					if (t == null && m.startsWith("\tat ")) {
+						return;
+					}
+					
 					showError(t, m);
 				}
 			}
@@ -198,11 +207,20 @@ public class Peakaboo
 		
 		
 		
-		LOGGER.log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
+		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		setAppTitle("Peakaboo 5");
-			
+		
+		
+		//warm up the peak table, which is lazy
+		//do this in a separate thread so that it proceeds in parallel 
+		//with all the other tasks, since this is usually the longest 
+		//running init job
+		Thread peakLoader = new Thread(() -> PeakTable.SYSTEM.getAll());
+		peakLoader.setDaemon(true);
+		peakLoader.start();
+		
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);
 			PeakabooLog.init();
@@ -210,11 +228,14 @@ public class Peakaboo
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			//warm up the peak table, which is lazy
-			PeakTable.SYSTEM.getAll();
 			DataSourcePluginManager.SYSTEM.load();
 			FilterPluginManager.SYSTEM.load();
 			DataSinkPluginManager.SYSTEM.load();
+			try {
+				peakLoader.join();
+			} catch (InterruptedException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to load peak table", e);
+			}
 			runPeakaboo();
 		});
 		

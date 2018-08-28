@@ -26,11 +26,6 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>net.sciencestudio</groupId>
-			<artifactId>envi</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>

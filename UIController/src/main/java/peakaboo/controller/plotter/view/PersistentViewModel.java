@@ -11,6 +11,7 @@ public class PersistentViewModel {
 	public boolean				showAxes;
 	
 	public boolean				monochrome;
+	public boolean				consistentScale = true;
 	
 	
 	public PersistentViewModel() {
@@ -28,6 +29,7 @@ public class PersistentViewModel {
 		showAxes = copy.showAxes;
 		
 		monochrome = copy.monochrome;
+		consistentScale = copy.consistentScale;
 		
 	}
 	

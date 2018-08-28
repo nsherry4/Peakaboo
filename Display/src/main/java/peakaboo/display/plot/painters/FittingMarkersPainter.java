@@ -1,6 +1,7 @@
 package peakaboo.display.plot.painters;
 
 import java.awt.Color;
+import java.util.List;
 
 import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.curve.fitting.FittingResult;
@@ -28,9 +29,9 @@ import scitypes.Spectrum;
 public class FittingMarkersPainter extends PlotPainter
 {
 
-	private FittingResultSet	fitResults;
+	private FittingParameters 	parameters;
+	private List<FittingLabel> labels;
 	private EscapePeakType		escapeType;
-	private Color				colour;
 
 	/**
 	 * Create a FittingMarkersPainter
@@ -38,11 +39,11 @@ public class FittingMarkersPainter extends PlotPainter
 	 * @param escapeType the {@link EscapePeakType} used to generate the {@link FittingResultSet}
 	 * @param c the {@link Color} to use when drawing the markings
 	 */
-	public FittingMarkersPainter(FittingResultSet fitResults, EscapePeakType escapeType, Color c)
+	public FittingMarkersPainter(FittingParameters parameters, List<FittingLabel> labels, EscapePeakType escapeType)
 	{
-		this.fitResults = fitResults;
+		this.parameters = parameters;
+		this.labels = labels;
 		this.escapeType = escapeType;
-		this.colour = new Color(c.getRed(), c.getGreen(), c.getBlue());
 	}
 
 
@@ -55,27 +56,26 @@ public class FittingMarkersPainter extends PlotPainter
 
 		p.context.save();
 		p.context.setLineWidth(1.0f);
-		p.context.setSource(colour);
 		
-		for (FittingResult fit : fitResults.getFits()) {
+		
+		for (FittingLabel label : labels) {
 
-			
+			p.context.setSource(label.colour);	
 			for (int i = 0; i < p.dr.dataWidth; i++) {
 				markerHeights.set(i, 0.0f);
 			}
 
-			TransitionSeries ts = fit.getTransitionSeries();
+			TransitionSeries ts = label.fit.getTransitionSeries();
 			for (Transition t : ts) {
 
-				channel = fitResults.getParameters().getCalibration().fractionalChannelFromEnergy(t.energyValue);
+				channel = parameters.getCalibration().fractionalChannelFromEnergy(t.energyValue);
 				if (channel >= p.dr.dataWidth || channel < 0) continue;
 				
-				FittingParameters parameters = fitResults.getParameters();
 				FittingFunction fitFn = parameters.forTransition(t, ts.type);
 
 				
 				//get a height value from the fitting function, then apply the same transformation as the fitting did
-				markerHeight = fitFn.forEnergy(t.energyValue) * fit.getTotalScale();
+				markerHeight = fitFn.forEnergy(t.energyValue) * label.fit.getTotalScale();
 							
 				//markerHeights.set((int) channel, markerHeight);
 				
@@ -91,13 +91,13 @@ public class FittingMarkersPainter extends PlotPainter
 				{
 					for (Transition esc : escapeType.get().offset()) {
 					
-						channel = fitResults.getParameters().getCalibration().fractionalChannelFromEnergy(t.energyValue - esc.energyValue);
+						channel = parameters.getCalibration().fractionalChannelFromEnergy(t.energyValue - esc.energyValue);
 						if (channel < 0) continue;
 						
 						positionX = getXForChannel(p, channel);
 						
 						FittingFunction escFn = parameters.forEscape(t, esc, ts.element, ts.type);
-						markerHeight = escFn.forEnergy(t.energyValue) * fit.getTotalScale();
+						markerHeight = escFn.forEnergy(t.energyValue) * label.fit.getTotalScale();
 						//markerHeight *= Curve.escapeIntensity(fit.getTransitionSeries().element);
 						//markerHeight *= esc.relativeIntensity;
 						markerHeight = transformValueForPlot(p.dr, markerHeight);

@@ -19,7 +19,9 @@ import eventful.EventfulListener;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ReorderTransferHandler;
@@ -192,54 +194,21 @@ class FilterList extends ClearPanel {
 
 	private JPanel createControlPanel(){
 		
-		controls = new ListControls(null, null, false, false) {
+		ImageButton addButton = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Add Filter").withAction(() -> {
+			owner.showSelectPane();
+		});
 		
-			@Override
-			public void up()
-			{
-				if (t.getSelectedRow() == -1) return;
-				
-				Filter selection = controller.getActiveFilter(t.getSelectedRow());
-				controller.moveFilterUp(t.getSelectedRow());
-				int selRow = controller.filterIndex(selection);
-				t.addRowSelectionInterval(selRow, selRow);
-			}
+		ImageButton removeButton = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Filter").withAction(() -> {
+			if (t.getSelectedRow() == -1) return;
+			controller.removeFilter(t.getSelectedRow());
+		});
 		
-			
-			@Override
-			public void down()
-			{
-				if (t.getSelectedRow() == -1) return;
-				
-				Filter selection = controller.getActiveFilter(t.getSelectedRow());
-				controller.moveFilterDown(t.getSelectedRow());
-				int selRow = controller.filterIndex(selection);
-				t.addRowSelectionInterval(selRow, selRow);
-			}
-			
-			
-			@Override
-			public void remove()
-			{
-				if (t.getSelectedRow() == -1) return;
-				
-				controller.removeFilter(t.getSelectedRow());
-			}
+		ImageButton clearButton = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Filters").withAction(() -> {
+			controller.clearFilters();
+		});
 		
-
-			@Override
-			public void clear()
-			{
-				controller.clearFilters();
-			}
+		controls = new ListControls(addButton, removeButton, clearButton);
 		
-		
-			@Override
-			public void add()
-			{
-				owner.showSelectPane();
-			}
-		};
 		
 		return controls;
 		

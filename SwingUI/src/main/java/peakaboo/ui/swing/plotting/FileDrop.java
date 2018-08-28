@@ -32,7 +32,6 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 import peakaboo.common.PeakabooLog;
-import peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
 
 /**
  * This class makes it easy to drag and drop files from the operating

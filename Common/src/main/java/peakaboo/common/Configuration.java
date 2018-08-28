@@ -2,8 +2,6 @@ package peakaboo.common;
 
 import java.io.File;
 
-import commonenvironment.Env;
-
 public class Configuration {
 
 	public static File appDir() {

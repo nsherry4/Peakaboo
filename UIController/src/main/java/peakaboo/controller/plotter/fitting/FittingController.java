@@ -2,7 +2,11 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
@@ -14,12 +18,15 @@ import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.search.DerivativePeakSearcher;
 import peakaboo.curvefit.peak.search.PeakProposal;
+import peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import plural.executor.ExecutorSet;
+import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
+import scitypes.util.Mutable;
 
 
 public class FittingController extends EventfulType<Boolean>
@@ -235,8 +242,9 @@ public class FittingController extends EventfulType<Boolean>
 				this.getCurveFitter(),
 				this.getFittingSolver(),
 				channel,
-				currentTS	
-		);
+				currentTS,
+				6
+		).stream().map(p -> p.first).collect(Collectors.toList());
 	}
 
 	public boolean canMap()
@@ -383,25 +391,67 @@ public class FittingController extends EventfulType<Boolean>
 		fittingDataInvalidated();
 	}
 
-	public void autodetectPeaks() {
+	public ExecutorSet<List<TransitionSeries>> autodetectPeaks() {
 		DerivativePeakSearcher searcher = new DerivativePeakSearcher();
 		ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
-		List<TransitionSeries> results = PeakProposal.search(
+		ExecutorSet<List<TransitionSeries>> exec = PeakProposal.search(
 				data, 
 				searcher, 
 				getFittingSelections(), 
 				getCurveFitter(), 
 				getFittingSolver()
 			);
-				
-		for (TransitionSeries ts : results) {
-			getFittingSelections().addTransitionSeries(ts);
-		}
 		
-		fittingDataInvalidated();
+
+		Mutable<Boolean> ran = new Mutable<>(false);
+		exec.addListener(() -> {
+			if (!exec.getCompleted()) return;
+			if (ran.get()) return;
+			ran.set(true);
+			for (TransitionSeries ts : exec.getResult()) {
+				getFittingSelections().addTransitionSeries(ts);
+			}
+			fittingDataInvalidated();
+		});
+		
+		
+		return exec;
+
 		
 	}
+
+	public boolean hasAnnotation(TransitionSeries ts) {
+		if (!fittingModel.annotations.containsKey(ts)) {
+			return false;
+		}
+		String annotation = getAnnotation(ts);
+		if (annotation == null || annotation.trim().length() == 0) {
+			return false;
+		}
+		return true;
+	}
 	
+	public String getAnnotation(TransitionSeries ts) {
+		return fittingModel.annotations.get(ts);
+	}
+	
+	public void setAnnotation(TransitionSeries ts, String annotation) {
+		if (annotation.trim().length() == 0) {
+			fittingModel.annotations.remove(ts);
+		} else {
+			fittingModel.annotations.put(ts, annotation);
+		}
+		updateListeners(false);
+	}
+
+	public Map<TransitionSeries, String> getAnnotations() {
+		return new HashMap<>(fittingModel.annotations);
+	}
+
+	public void clearAnnotations() {
+		fittingModel.annotations.clear();
+		updateListeners(false);
+	}
 	
 	
 	

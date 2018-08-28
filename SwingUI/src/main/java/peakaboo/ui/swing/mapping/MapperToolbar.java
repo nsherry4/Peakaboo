@@ -40,6 +40,7 @@ import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.properties.PropertyViewPanel;
 
 class MapperToolbar extends JToolBar {
@@ -63,13 +64,13 @@ class MapperToolbar extends JToolBar {
 		c.weighty = 0;
 		c.insets = new Insets(4, 4, 4, 4);
 		
-		ToolbarImageButton savePicture = new ToolbarImageButton(StockIcon.DEVICE_CAMERA, "Save Image", "Save the current map as an image");
+		ToolbarImageButton savePicture = new ToolbarImageButton("Save Image", StockIcon.DEVICE_CAMERA).withTooltip("Save the current map as an image");
 		savePicture.addActionListener(e -> panel.actionSavePicture());
 		this.add(savePicture, c);
 		c.gridx++;
 		
 		
-		ToolbarImageButton saveText = new ToolbarImageButton(StockIcon.DOCUMENT_EXPORT, "Export as Text", "Export the current map as a comma separated value file");
+		ToolbarImageButton saveText = new ToolbarImageButton("Export as Text", StockIcon.DOCUMENT_EXPORT).withTooltip("Export the current map as a comma separated value file");
 		saveText.addActionListener(e -> panel.actionSaveCSV());
 		this.add(saveText, c);
 		c.gridx++;
@@ -78,7 +79,7 @@ class MapperToolbar extends JToolBar {
 		this.addSeparator();
 		
 		
-		readIntensities = new ToolbarImageButton(StockIcon.BADGE_INFO, "Get Intensities", "Get fitting intensities for the selection", true);
+		readIntensities = new ToolbarImageButton("Get Intensities", StockIcon.BADGE_INFO).withTooltip("Get fitting intensities for the selection").withSignificance(true);
 		readIntensities.addActionListener(e -> {
 			Map<String, String> fittings = new HashMap<String, String>();
 			
@@ -133,20 +134,20 @@ class MapperToolbar extends JToolBar {
 			contentPanel.add(correctionsPanel, BorderLayout.CENTER);
 			contentPanel.setBorder(Spacing.bHuge());
 			
-			ButtonBox bbox = new ButtonBox(Spacing.bHuge());
-			ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE, "Close", "Close this window", true);
+			ButtonBox bbox = new ButtonBox();
+			ImageButton close = new ImageButton("Close").withIcon(StockIcon.WINDOW_CLOSE).withTooltip("Close this window").withBordered(true);
 			close.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e)
 				{
-					panel.popModalComponent();
+					panel.popLayer();
 				}
 			});
 			bbox.addRight(close);
 			corrections.add(bbox, BorderLayout.SOUTH);
 			
 			
-			panel.pushModalComponent(corrections);
+			panel.pushLayer(new ModalLayer(panel, corrections));
 			
 				
 				
@@ -155,7 +156,9 @@ class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		examineSubset =  new ToolbarImageButton("view-subset", "Plot Selection", "Plot the selection as a new data set", true);
+		examineSubset = new ToolbarImageButton("Plot Selection", "view-subset");
+		examineSubset.withSignificance(true).withTooltip("Plot the selection as a new data set");
+		
 		examineSubset.addActionListener(e -> {
 			
 			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
@@ -228,7 +231,8 @@ class MapperToolbar extends JToolBar {
 
 	private ToolbarImageButton createOptionsButton(MappingController controller) {
 		
-		ToolbarImageButton opts = new ToolbarImageButton("menu-view", "Map Settings Menu");
+		ToolbarImageButton opts = new ToolbarImageButton();
+		opts.withIcon("menu-view").withTooltip("Map Settings Menu");
 		
 		JPopupMenu menu = new JPopupMenu();
 		

@@ -19,10 +19,15 @@ public class FastFittingScorer implements FittingScorer {
 
 	private ReadOnlySpectrum data;
 	private FittingParameters parameters;
+	private float energy;
+	private float max;
 	
-	public FastFittingScorer(ReadOnlySpectrum data, FittingParameters parameters) {
+	
+	public FastFittingScorer(float energy, ReadOnlySpectrum data, FittingParameters parameters) {
 		this.data = data;
 		this.parameters = parameters;
+		this.energy = energy;
+		this.max = data.max();
 	}
 	
 	
@@ -36,7 +41,7 @@ public class FastFittingScorer implements FittingScorer {
 		if (transitions.size() == 0) { return 1; }
 		
 		for (Transition t : transitions) {
-			
+			if (t.relativeIntensity == 0) { continue; }
 			
 			int channel = parameters.getCalibration().channelFromEnergy(t.energyValue);
 			if (channel >= data.size()) continue;
@@ -56,38 +61,38 @@ public class FastFittingScorer implements FittingScorer {
 		//scale each transition by the lowest mult, and find out how "snugly" 
 		//each transition fits the data.
 		float snugness = 0;
-		float signal = 0;
 		int count = 0;
 		for (Transition t : transitions) {			
+			if (Math.abs(t.energyValue - energy) > 0.25f) {
+				continue;
+			}
 			
-			float fit = t.relativeIntensity * lowestMult;
+			//snugness/correctness of fit
+			float fit = t.relativeIntensity * lowestMult;			
+			snugness += fitPercent(fit, t.energyValue);
 			
-			int channel = 1+parameters.getCalibration().channelFromEnergy(t.energyValue);
-			if (channel >= data.size()) continue;
-			if (channel < 0) continue;
-			//add 1 for a little wiggle room, and to prevent /0 errors
-			float channelHeight = 1+Math.max(0, data.get(channel));
-			
-			//we calculate how good the fit is
-			snugness += fit / (float)channelHeight;
-			signal += fit;
 			count++;
 			
 		}
-				
+		
+		if (count == 0) { return 0; }
 		snugness /= (float)count;
-		signal /= (float)count;
-				
-		float result = signal * snugness;
-		if (signal < 0 && snugness < 0) {
-			//both terms being negative would turn it positive, which would
-			//give a misleadingly good result;
-			result = -result;
-		}
-		return 1+result;
+		snugness = (float)(Math.sqrt(snugness));
+			
+
+		return Math.abs(snugness);
 
 	}
 
+	private float fitPercent(float fit, float energy) {
+		int channel = parameters.getCalibration().channelFromEnergy(energy);
+		if (channel >= data.size()) return 1f;
+		if (channel < 0) return 1f;
+		
+		float channelHeight = 1+Math.max(0, data.get(channel));
+		float fitPercent = fit / (float)channelHeight;
+		return fitPercent;
+	}
 
 
 }

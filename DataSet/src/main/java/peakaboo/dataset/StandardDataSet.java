@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
-import commonenvironment.AlphaNumericComparitor;
+import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
+import peakaboo.common.PeakabooLog;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.dataset.analysis.Analysis;
 import peakaboo.dataset.analysis.DataSourceAnalysis;
@@ -106,7 +108,10 @@ public class StandardDataSet implements DataSet
 			{
 				
 				try {
-						
+					
+					long t1 = System.currentTimeMillis();
+					PeakabooLog.get().log(Level.INFO, "Starting Data Set Open");
+					
 					final int scanCount;
 					
 					opening.advanceState();
@@ -129,7 +134,9 @@ public class StandardDataSet implements DataSet
 	
 
 					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
-					dataSource.read(paths);
+					dataSource.read(paths);	
+	
+					
 					
 	
 					
@@ -164,11 +171,16 @@ public class StandardDataSet implements DataSet
 					applying.workUnitCompleted();
 					applying.advanceState();
 					
+					long t2 = System.currentTimeMillis();
+					PeakabooLog.get().log(Level.INFO, "Opened a Data Set in " + ((t2-t1)/1000) + " Seconds");
+					
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
 					
-					
-				} catch (Exception e) {
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return new DatasetReadResult(e);
+				} catch (Throwable e) {
 					return new DatasetReadResult(e);
 				}
 				

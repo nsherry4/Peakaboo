@@ -3,6 +3,9 @@ package peakaboo.ui.swing.plotting.fitting;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.GeneralPath;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -18,6 +21,7 @@ public class TSWidget extends ClearPanel
 	private JLabel elementName;
 	private JLabel elementDetail;
 	private JCheckBox elementCheck;
+	private boolean flagged = false;
 	
 	public TSWidget(boolean large)
 	{
@@ -41,11 +45,14 @@ public class TSWidget extends ClearPanel
 		//elementContents.setBorder(Spacing.bSmall());
 		elementCheck = new JCheckBox(); elementCheck.setOpaque(false);
 		if (!large) add(elementCheck, BorderLayout.WEST);
-		
+				
 		elementName.setOpaque(false);
 		elementDetail.setOpaque(false);
 		if (large) elementName.setFont(elementName.getFont().deriveFont(elementName.getFont().getSize() * 1.4f).deriveFont(Font.BOLD));
 		if (large) elementDetail.setFont(elementDetail.getFont().deriveFont(Font.PLAIN));
+		
+		
+		
 	}
 	
 	public boolean isSelected()
@@ -66,6 +73,10 @@ public class TSWidget extends ClearPanel
 	{
 		elementDetail.setText(description);
 	}
+	
+	public void setFlag(boolean flag) {
+		flagged = flag;
+	}
 
 	
 	@Override
@@ -80,5 +91,32 @@ public class TSWidget extends ClearPanel
 	{
 		return elementCheck;
 	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (flagged) {
+			drawFlag(g);
+		}
+	}
+	
+	private void drawFlag(Graphics g) {
+				
+		int size = Math.min(10, Math.min(getWidth(), getHeight()));
+		int x = getWidth() - size;
+		int y = 0;
+		
+		GeneralPath path = new GeneralPath();
+		path.moveTo(x, y);
+		path.lineTo(x+size, y);
+		path.lineTo(x+size, y+size);
+		path.lineTo(x, y);
+		
+		
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setColor(new Color(0xffF9A825, true));
+		g2d.fill(path);
+		
+	}
+	
 	
 }

@@ -11,16 +11,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DropMode;
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -28,11 +34,17 @@ import javax.swing.table.TableColumn;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
+import scitypes.util.Mutable;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.layerpanel.LayerDialog;
+import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ReorderTransferHandler;
 
@@ -48,13 +60,15 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 	private CurveFittingView			owner;
 	private FittingController			controller;
+	private PlotPanel 					plotPanel;
 
 
-	public FittingPanel(final FittingController controller, final CurveFittingView owner)
+	public FittingPanel(final FittingController controller, final CurveFittingView owner, PlotPanel plotPanel)
 	{
 
 		this.owner = owner;
 		this.controller = controller;
+		this.plotPanel = plotPanel;
 		
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
@@ -70,78 +84,31 @@ public class FittingPanel extends ClearPanel implements Changeable
 				"Clear all fittings",
 				"Move the selected fittings up",
 				"Move the selected fittings down" };
-		controls = new ListControls(tooltips, addMenu, true, false) {
-
-			@Override
-			public void up()
-			{
-
-				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
-					
-				if (tss.size() == 0) return;
+		
+		ImageButton addButton = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Add Fittings");
+		addButton.withAction(() -> {
+			addMenu.show(addButton, 0, addButton.getHeight());
+		});
+		
+		ImageButton removeButton = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Fittings").withAction(() -> {
+			int rows[] = fitTable.getSelectedRows();
+			List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 				
-				controller.moveTransitionSeriesUp(tss);
-				owner.changed();
-				for (TransitionSeries ts : tss) {
-					int row = controller.getFittedTransitionSeries().indexOf(ts);
-					fitTable.addRowSelectionInterval(row, row);
-				}
-			}
-
-
-			@Override
-			public void remove()
+			if (tss.size() == 0) return;
+			for (TransitionSeries ts : tss)
 			{
-				
-				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
-					
-				if (tss.size() == 0) return;
-				for (TransitionSeries ts : tss)
-				{
-					controller.removeTransitionSeries(ts);
-				}
-				owner.changed();
-					
+				controller.removeTransitionSeries(ts);
 			}
+			owner.changed();
+		});
+		
+		ImageButton clearButton = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Fittings").withAction(() -> {
+			controller.clearTransitionSeries();
+			owner.changed();
+		});
+		
+		controls = new ListControls(addButton, removeButton, clearButton);
 
-
-			@Override
-			public void down()
-			{
-				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
-					
-				if (tss.size() == 0) return;
-				
-				controller.moveTransitionSeriesDown(tss);
-				owner.changed();
-				for (TransitionSeries ts : tss) {
-					int row = controller.getFittedTransitionSeries().indexOf(ts);
-					fitTable.addRowSelectionInterval(row, row);
-				}
-			}
-
-
-			@Override
-			public void clear()
-			{
-				controller.clearTransitionSeries();
-				owner.changed();
-			}
-
-
-			@Override
-			public void add()
-			{
-				//Not used when the add button it set to show it's popup menu
-				//owner.smartAdd();
-			}
-
-		};
-
-	
 		
 		this.add(controls, BorderLayout.NORTH);
 
@@ -383,6 +350,45 @@ public class FittingPanel extends ClearPanel implements Changeable
 			}
 		});
 		
+		fitTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				//only for double-clicks
+				if (e.getClickCount() != 2) { return; }
+				
+				//annotation
+				TransitionSeries selected = controller.getFittedTransitionSeries().get(fitTable.getSelectedRow());
+				
+				
+				
+				JTextField textfield = new JTextField(20);
+				textfield.addActionListener(ae -> {
+					controller.setAnnotation(selected, textfield.getText());
+					plotPanel.popLayer();
+				});
+				textfield.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+							plotPanel.popLayer();
+						}
+					}
+				});
+				textfield.setText(controller.getAnnotation(selected));
+				LayerDialog dialog = new LayerDialog("Annotation for " + selected.getDescription(), textfield, MessageType.QUESTION);
+				dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
+					plotPanel.popLayer();
+				}));
+				dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
+					controller.setAnnotation(selected, textfield.getText());
+					plotPanel.popLayer();
+				}));
+				dialog.showIn(plotPanel);
+				textfield.grabFocus();
+				
+				
+				
+			}
+		});
 
 		JScrollPane scroll = new JScrollPane(fitTable);
 		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

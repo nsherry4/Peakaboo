@@ -296,6 +296,13 @@ Changing the order of fittings can reveal and correct these problems. Select a f
 
 \end{description}
 
+\tocsection{Annotations}
+
+Each fitting you add can be annotated to track important context or caveats for your work. Annotations will be displayed with the fitting's \command{Element Name} in the plot, and in tool tips in the \command{Peak Fitting} sidebar.
+
+To add an annotation, double-click on the fitting in the \command{Peak Fitting} sidebar. A prompt will appear which will let you add an annotation to the selected fitting. It can be cleared by double-clicking the entry again and setting the
+
+
 
 \tocsection{Details of Peak Fitting}
 
@@ -426,10 +433,7 @@ Plugins can add new filters or new file format support to Peakaboo. You can mana
 
 \screenshot{plugins}{Peakaboo's plugin management screen}
 
-\tocsection{Managing Plugins}
-
-
-\tocsubsection{Importing Plugins}
+\tocsection{Importing New Plugins}
 
 You can import new plugins to Peakaboo in three ways. 
 
@@ -439,13 +443,19 @@ You can import new plugins to Peakaboo in three ways.
 
 \item [Drag and Drop] If you drag and drop plugin archives onto the plugin management screen, Peakaboo will import them for you automatically.
 
-\item [Manually] If you click the \button{document-open}{Open Plugins Folder} button, Peakaboo will open its plugins folder in a file browser. You can manage your plugins manually by adding or removing files. Be sure to update Peakaboo by clicking the \command{Reload Plugins} button after you're done.
+\item [Manually] If you click the \button{document-open}{Open Plugins Folder} button, Peakaboo will open its plugins folder in a file browser. You can manage your plugins manually by adding or removing files. Be sure to update Peakaboo by clicking the \button{action-refresh}{Reload Plugins} button after you're done.
 
 \end{description}
 
-\tocsubsection{Removing Plugins}
+\tocsection{Removing Existing Plugins}
 
 To remove a plugin, select it in the plugins list on the left side of the plugin management screen, then click the \button{edit-remove}{Remove Plugins} button. Be aware that if the plugin is contained in an archive along with other plugins, those other plugins will be removed as well.
+
+\tocsection{Updating to Newer Versions}
+
+You can install updates to existing plugins the same way as you would install a new plugin. If Peakaboo detects that the new plugin is an upgrade, or that the filename matches an existing plugin archive, it will prompt you to replace, rather than add, the plugin.
+
+Sometimes having two version of a plugin may be unavoidable. When Peakaboo detects two versions of a plugin, it will use the version which has the higher version number.
 
 \cleardoublepage
 \appendix
