@@ -109,9 +109,6 @@ public class FittingTitlePainter extends PlotPainter
 	
 	// Calculates the minimum height the label can be drawn at based on the spectral data being displayed
 	private float baseHeightFromData(PainterData p, FittingLabel label, float energy) {
-		return baseHeightFromData(p, label, energy, p.dataHeights);
-	}
-	private float baseHeightFromData(PainterData p, FittingLabel label, float energy, ReadOnlySpectrum heights) {
 		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, label, energy);
 		
 		//minimum height based on data
@@ -120,7 +117,7 @@ public class FittingTitlePainter extends PlotPainter
 		if (baselineStart >= baselineEnd) {
 			return 0;
 		}
-		float baseline = heights.subSpectrum(baselineStart, baselineEnd).max();
+		float baseline = p.dataHeights.subSpectrum(baselineStart, baselineEnd).max() + label.penWidth;
 		return baseline;
 	}
 	
@@ -128,11 +125,11 @@ public class FittingTitlePainter extends PlotPainter
 	private float baseHeightForTitle(PainterData p, FittingLabel label, float energy)
 	{
 			
-		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, label, energy);
+		Coord<Bounds<Float>> position = getTextLabelDimensions(p, label, energy);
 		
 		//minimum height based on data
 		float baseline = baseHeightFromData(p, label, energy);
-		float currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
+		float currentLabelHeight = position.y.end - position.y.start;
 		
 		
 		
@@ -140,12 +137,17 @@ public class FittingTitlePainter extends PlotPainter
 		
 		List<FittingLabel> labelsInRange = new ArrayList<>();
 		
-		//get a list of all labels which might get in the way of this one
+		//get a list of all labels which might get in the way of this one based on x coords
 		for (FittingLabel pastLabel : configuredLabels) {
 			if (
-					(pastLabel.position.x.start <= currentLabel.x.end && pastLabel.position.x.start >= currentLabel.x.start)
-					|| 
-					(pastLabel.position.x.end <= currentLabel.x.end && pastLabel.position.x.end >= currentLabel.x.start)
+					//if the other's start point is within our start->end range
+					(pastLabel.position.x.start <= position.x.end && pastLabel.position.x.start >= position.x.start)
+					||
+					//if the other's end point is within our start->end range
+					(pastLabel.position.x.end <= position.x.end && pastLabel.position.x.end >= position.x.start)
+					||
+					//if the other starts before us, and ends after us
+					(pastLabel.position.x.start <= position.x.start && pastLabel.position.x.end >= position.x.end)
 			){
 				labelsInRange.add(pastLabel);
 			}
@@ -162,16 +164,18 @@ public class FittingTitlePainter extends PlotPainter
 			}
 
 		});
-		
-		for (FittingLabel labelInRange : labelsInRange)
-		{
 			
+		for (FittingLabel labelInRange : labelsInRange) {
+
 			//if there is enough room for the label, we've found the right baseline
 			if (labelInRange.position.y.start - baseline > currentLabelHeight){
 				break;
-			} else {
-				if (labelInRange.position.y.end > baseline) baseline = labelInRange.position.y.end;
 			}
+			
+			if (labelInRange.position.y.end > baseline) {
+				baseline = labelInRange.position.y.end;
+			}
+			
 			
 		}
 		
@@ -322,8 +326,8 @@ public class FittingTitlePainter extends PlotPainter
 			return;
 		}
 		float baseHeightForTitle = baseHeightForTitle(p, label, t.energyValue);
-		label.position.y.start += baseHeightForTitle + (label.penWidth*2);
-		label.position.y.end += baseHeightForTitle + (label.penWidth*2);
+		label.position.y.start += baseHeightForTitle;
+		label.position.y.end += baseHeightForTitle;
 
 		return;
 	}
