@@ -108,12 +108,11 @@ public class FittingTitlePainter extends PlotPainter
 	}
 	
 	// Calculates the minimum height the label can be drawn at based on the spectral data being displayed
-	private float baseHeightFromData(PainterData p, FittingLabel label, float energy) {
-		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, label, energy);
+	private float baseHeightFromData(PainterData p, FittingLabel label, Coord<Bounds<Float>> position) {
 		
 		//minimum height based on data
-		int baselineStart = currentLabel.x.start.intValue();
-		int baselineEnd = currentLabel.x.end.intValue();
+		int baselineStart = position.x.start.intValue();
+		int baselineEnd = position.x.end.intValue();
 		if (baselineStart >= baselineEnd) {
 			return 0;
 		}
@@ -128,7 +127,7 @@ public class FittingTitlePainter extends PlotPainter
 		Coord<Bounds<Float>> position = getTextLabelDimensions(p, label, energy);
 		
 		//minimum height based on data
-		float baseline = baseHeightFromData(p, label, energy);
+		float baseline = baseHeightFromData(p, label, position);
 		float currentLabelHeight = position.y.end - position.y.start;
 		
 		
