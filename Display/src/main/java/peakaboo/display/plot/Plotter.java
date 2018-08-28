@@ -209,7 +209,6 @@ public class Plotter {
 		
 		
 		//Titles
-		//TODO: Ordering?
 		List<FittingTitleLabel> fitLabels = new ArrayList<>();
 		for (FittingResult fit : data.selectionResults.getFits()) {
 			if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
@@ -237,15 +236,7 @@ public class Plotter {
 		
 		//Markings
 		if (settings.showElementFitMarkers) {
-			if (!unhighlightedResults.isEmpty()) {
-				plotPainters.add(new FittingMarkersPainter(unhighlightedResults, data.escape, fittingStroke));
-			}
-			if (data.proposedResults != null) {
-				plotPainters.add(new FittingMarkersPainter(data.proposedResults, data.escape, proposedStroke));
-			}
-			if (!highlightedResults.getFits().isEmpty()) {
-				plotPainters.add(new FittingMarkersPainter(highlightedResults, data.escape, selectedStroke));
-			}
+			plotPainters.add(new FittingMarkersPainter(data.selectionResults.getParameters(), fitLabels, data.escape));
 		}
 		
 		

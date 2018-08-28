@@ -13,7 +13,7 @@ public class FittingTitleLabel {
 	String annotation;
 	Color colour;
 
-	//derived
+	//derived by painters
 	String title;
 	Coord<Bounds<Float>> position;
 	boolean viable = true;

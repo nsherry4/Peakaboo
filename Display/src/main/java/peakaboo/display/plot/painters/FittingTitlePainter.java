@@ -81,11 +81,13 @@ public class FittingTitlePainter extends PlotPainter
 
 			//draw lines from the label to the peak
 			for (FittingTitleLabel label : labels) {
+				if (!label.viable) continue;
 				drawTextLine(p, label);
 			}
 			
 			//draw the label
 			for (FittingTitleLabel label : labels){
+				if (!label.viable) continue;
 				drawTextLabel(p, label, false);
 			}
 
@@ -287,7 +289,6 @@ public class FittingTitlePainter extends PlotPainter
 		TransitionSeries ts = label.fit.getTransitionSeries();
 		label.title = getTitle(label);
 		
-		//TransitionType type = TransitionType.a1;
 		Transition t = ts.getStrongestTransition();
 		
 		if (t == null) {
@@ -302,7 +303,6 @@ public class FittingTitlePainter extends PlotPainter
 			label.viable = false;
 			return;
 		}
-		float baseHeightFromData = baseHeightFromData(p, label, t.energyValue, p.originalHeights);
 		float baseHeightForTitle = baseHeightForTitle(p, label, t.energyValue);
 		label.position.y.start += baseHeightForTitle;
 		label.position.y.end += baseHeightForTitle;
