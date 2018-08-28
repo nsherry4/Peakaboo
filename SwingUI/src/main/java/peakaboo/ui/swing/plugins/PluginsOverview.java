@@ -308,7 +308,7 @@ public class PluginsOverview extends JPanel {
 	}
 	
 	private void download() {
-		Apps.browser("https://github.com/nsherry4/PeakabooPlugins");
+		Apps.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
 	}
 	
 	private TreeModel buildTreeModel() {
