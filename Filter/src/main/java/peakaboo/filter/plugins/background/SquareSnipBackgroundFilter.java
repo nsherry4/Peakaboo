@@ -47,7 +47,9 @@ public class SquareSnipBackgroundFilter extends AbstractBackgroundFilter {
 		Spectrum buffer2 = new ISpectrum(data);
 		
 		for (int i = 0; i < buffer1.size(); i++) {
-			buffer1.set(i, (float) Math.sqrt(Math.sqrt(buffer1.get(i))));
+			float v = Math.max(0, buffer1.get(i));
+			v = (float) Math.sqrt(Math.sqrt(v));
+			buffer1.set(i, v);
 		}
 		
 		Spectrum source = null, target = null;
