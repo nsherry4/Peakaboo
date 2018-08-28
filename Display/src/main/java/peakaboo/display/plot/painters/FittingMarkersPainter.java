@@ -30,7 +30,7 @@ public class FittingMarkersPainter extends PlotPainter
 {
 
 	private FittingParameters 	parameters;
-	private List<FittingTitleLabel> labels;
+	private List<FittingLabel> labels;
 	private EscapePeakType		escapeType;
 
 	/**
@@ -39,7 +39,7 @@ public class FittingMarkersPainter extends PlotPainter
 	 * @param escapeType the {@link EscapePeakType} used to generate the {@link FittingResultSet}
 	 * @param c the {@link Color} to use when drawing the markings
 	 */
-	public FittingMarkersPainter(FittingParameters parameters, List<FittingTitleLabel> labels, EscapePeakType escapeType)
+	public FittingMarkersPainter(FittingParameters parameters, List<FittingLabel> labels, EscapePeakType escapeType)
 	{
 		this.parameters = parameters;
 		this.labels = labels;
@@ -58,7 +58,7 @@ public class FittingMarkersPainter extends PlotPainter
 		p.context.setLineWidth(1.0f);
 		
 		
-		for (FittingTitleLabel label : labels) {
+		for (FittingLabel label : labels) {
 
 			p.context.setSource(label.colour);	
 			for (int i = 0; i < p.dr.dataWidth; i++) {

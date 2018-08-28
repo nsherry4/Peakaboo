@@ -17,7 +17,7 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
-import peakaboo.display.plot.painters.FittingTitleLabel;
+import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
@@ -209,17 +209,17 @@ public class Plotter {
 		
 		
 		//Titles
-		List<FittingTitleLabel> fitLabels = new ArrayList<>();
+		List<FittingLabel> fitLabels = new ArrayList<>();
 		for (FittingResult fit : data.selectionResults.getFits()) {
 			if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
-				fitLabels.add(new FittingTitleLabel(fit, selectedStroke, data.annotations.get(fit.getTransitionSeries())));		
+				fitLabels.add(new FittingLabel(fit, selectedStroke, data.annotations.get(fit.getTransitionSeries())));		
 			} else {
-				fitLabels.add(new FittingTitleLabel(fit, fittingStroke, data.annotations.get(fit.getTransitionSeries())));
+				fitLabels.add(new FittingLabel(fit, fittingStroke, data.annotations.get(fit.getTransitionSeries())));
 			}
 			
 		}
 		for (FittingResult fit : data.proposedResults.getFits()) {
-			fitLabels.add(new FittingTitleLabel(fit, proposedStroke, data.annotations.get(fit.getTransitionSeries())));
+			fitLabels.add(new FittingLabel(fit, proposedStroke, data.annotations.get(fit.getTransitionSeries())));
 		}
 		
 		if (data.selectionResults != null) {

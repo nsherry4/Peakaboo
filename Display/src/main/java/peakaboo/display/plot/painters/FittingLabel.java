@@ -6,7 +6,7 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import scitypes.Bounds;
 import scitypes.Coord;
 
-public class FittingTitleLabel {
+public class FittingLabel {
 	
 	//passed in
 	FittingResult fit;
@@ -19,7 +19,7 @@ public class FittingTitleLabel {
 	boolean viable = true;
 	float penWidth = 1f;
 	
-	public FittingTitleLabel(FittingResult fit, Color colour, String annotation) {
+	public FittingLabel(FittingResult fit, Color colour, String annotation) {
 		this.fit = fit;
 		this.annotation = annotation;
 		this.colour = colour;

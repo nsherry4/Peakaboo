@@ -34,11 +34,11 @@ public class FittingTitlePainter extends PlotPainter
 	//private List<TransitionSeries> tsList;
 	//private List<Element> visibleElements;
 	private EnergyCalibration calibration;
-	private List<FittingTitleLabel> labels;
+	private List<FittingLabel> labels;
 	private boolean drawMaxIntensities;
 	private boolean drawElementNames;
 		
-	private List<FittingTitleLabel> configuredLabels = new ArrayList<>();
+	private List<FittingLabel> configuredLabels = new ArrayList<>();
 	
 	/**
 	 * Create a FittingTitlePainter which draws in the given {@link Color}
@@ -49,7 +49,7 @@ public class FittingTitlePainter extends PlotPainter
 	 */
 	public FittingTitlePainter(
 			EnergyCalibration calibration,
-			List<FittingTitleLabel> labels, 
+			List<FittingLabel> labels, 
 			boolean drawTSNames, 
 			boolean drawMaxIntensities
 		){
@@ -73,27 +73,27 @@ public class FittingTitlePainter extends PlotPainter
 			p.context.setFontSize(p.context.getFontSize() + 2);
 					
 			//calculate derived label info
-			for (FittingTitleLabel label : labels){
+			for (FittingLabel label : labels){
 				configureLabel(label, p);
 				configuredLabels.add(label);
 			}
 			
 
 			//draw lines from the label to the peak
-			for (FittingTitleLabel label : labels) {
+			for (FittingLabel label : labels) {
 				if (!label.viable) continue;
 				drawTextLine(p, label);
 			}
 			
 			//draw the label
-			for (FittingTitleLabel label : labels){
+			for (FittingLabel label : labels){
 				if (!label.viable) continue;
 				drawTextLabel(p, label, false);
 			}
 
 			
 			//update the channel height data to reflect the addition of text labels
-			for (FittingTitleLabel label : labels)
+			for (FittingLabel label : labels)
 			{
 				for (int i = label.position.x.start.intValue(); i <= label.position.x.end; i++){
 					
@@ -108,10 +108,10 @@ public class FittingTitlePainter extends PlotPainter
 	}
 	
 	// Calculates the minimum height the label can be drawn at based on the spectral data being displayed
-	private float baseHeightFromData(PainterData p, FittingTitleLabel label, float energy) {
+	private float baseHeightFromData(PainterData p, FittingLabel label, float energy) {
 		return baseHeightFromData(p, label, energy, p.dataHeights);
 	}
-	private float baseHeightFromData(PainterData p, FittingTitleLabel label, float energy, ReadOnlySpectrum heights) {
+	private float baseHeightFromData(PainterData p, FittingLabel label, float energy, ReadOnlySpectrum heights) {
 		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, label, energy);
 		
 		//minimum height based on data
@@ -125,7 +125,7 @@ public class FittingTitlePainter extends PlotPainter
 	}
 	
 	//calculates the minimum height the label can be drawn at based on spectral data AND previous labels in the way
-	private float baseHeightForTitle(PainterData p, FittingTitleLabel label, float energy)
+	private float baseHeightForTitle(PainterData p, FittingLabel label, float energy)
 	{
 			
 		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, label, energy);
@@ -138,10 +138,10 @@ public class FittingTitlePainter extends PlotPainter
 		
 		//go over all previous labels-in-range in order of bottom y coordinate
 		
-		List<FittingTitleLabel> labelsInRange = new ArrayList<>();
+		List<FittingLabel> labelsInRange = new ArrayList<>();
 		
 		//get a list of all labels which might get in the way of this one
-		for (FittingTitleLabel pastLabel : configuredLabels) {
+		for (FittingLabel pastLabel : configuredLabels) {
 			if (
 					(pastLabel.position.x.start <= currentLabel.x.end && pastLabel.position.x.start >= currentLabel.x.start)
 					|| 
@@ -152,9 +152,9 @@ public class FittingTitlePainter extends PlotPainter
 		}
 		
 		//sort the elements by order of bottom y position
-		Collections.sort(labelsInRange, new Comparator<FittingTitleLabel>() {
+		Collections.sort(labelsInRange, new Comparator<FittingLabel>() {
 
-			public int compare(FittingTitleLabel o1, FittingTitleLabel o2)
+			public int compare(FittingLabel o1, FittingLabel o2)
 			{
 				if (o1.position.y.start < o2.position.y.start) return -1;
 				if (o1.position.y.start > o2.position.y.start) return 1;
@@ -163,7 +163,7 @@ public class FittingTitlePainter extends PlotPainter
 
 		});
 		
-		for (FittingTitleLabel labelInRange : labelsInRange)
+		for (FittingLabel labelInRange : labelsInRange)
 		{
 			
 			//if there is enough room for the label, we've found the right baseline
@@ -184,7 +184,7 @@ public class FittingTitlePainter extends PlotPainter
 
 
 	
-	protected Coord<Bounds<Float>> getTextLabelDimensions(PainterData p, FittingTitleLabel label, float energy)
+	protected Coord<Bounds<Float>> getTextLabelDimensions(PainterData p, FittingLabel label, float energy)
 	{
 		DrawingRequest dr = p.dr;
 
@@ -220,7 +220,7 @@ public class FittingTitlePainter extends PlotPainter
 	 * @param title the title of the label
 	 * @param energy the energy value at which to centre the label
 	 */
-	protected void drawTextLabel(PainterData p, FittingTitleLabel label, boolean resetColour) {
+	protected void drawTextLabel(PainterData p, FittingLabel label, boolean resetColour) {
 			
 		if (label.title == null) { return; }
 		
@@ -244,7 +244,7 @@ public class FittingTitlePainter extends PlotPainter
 
 	}
 	
-	protected void drawTextLine(PainterData p, FittingTitleLabel label) {
+	protected void drawTextLine(PainterData p, FittingLabel label) {
 		Color semitransparent = new Color(label.colour.getRed(), label.colour.getGreen(), label.colour.getBlue(), 64);
 		p.context.setSource(semitransparent);
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
@@ -262,7 +262,7 @@ public class FittingTitlePainter extends PlotPainter
 		p.context.stroke();
 	}
 	
-	private String getTitle(FittingTitleLabel label) {
+	private String getTitle(FittingLabel label) {
 		TransitionSeries ts = label.fit.getTransitionSeries();
 		String titleName = ts.getDescription();
 
@@ -282,7 +282,7 @@ public class FittingTitlePainter extends PlotPainter
 		return title;
 	}
 
-	private void configureLabel(FittingTitleLabel label, PainterData p) {
+	private void configureLabel(FittingLabel label, PainterData p) {
 
 		label.viable = true;
 		
