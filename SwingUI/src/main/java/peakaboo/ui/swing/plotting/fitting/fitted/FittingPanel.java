@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DropMode;
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -38,6 +39,7 @@ import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import scitypes.util.Mutable;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
@@ -82,78 +84,31 @@ public class FittingPanel extends ClearPanel implements Changeable
 				"Clear all fittings",
 				"Move the selected fittings up",
 				"Move the selected fittings down" };
-		controls = new ListControls(tooltips, addMenu, true, false) {
-
-			@Override
-			public void up()
-			{
-
-				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
-					
-				if (tss.size() == 0) return;
+		
+		ImageButton addButton = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Add Fittings");
+		addButton.withAction(() -> {
+			addMenu.show(addButton, 0, addButton.getHeight());
+		});
+		
+		ImageButton removeButton = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Fittings").withAction(() -> {
+			int rows[] = fitTable.getSelectedRows();
+			List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 				
-				controller.moveTransitionSeriesUp(tss);
-				owner.changed();
-				for (TransitionSeries ts : tss) {
-					int row = controller.getFittedTransitionSeries().indexOf(ts);
-					fitTable.addRowSelectionInterval(row, row);
-				}
-			}
-
-
-			@Override
-			public void remove()
+			if (tss.size() == 0) return;
+			for (TransitionSeries ts : tss)
 			{
-				
-				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
-					
-				if (tss.size() == 0) return;
-				for (TransitionSeries ts : tss)
-				{
-					controller.removeTransitionSeries(ts);
-				}
-				owner.changed();
-					
+				controller.removeTransitionSeries(ts);
 			}
+			owner.changed();
+		});
+		
+		ImageButton clearButton = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Fittings").withAction(() -> {
+			controller.clearTransitionSeries();
+			owner.changed();
+		});
+		
+		controls = new ListControls(addButton, removeButton, clearButton);
 
-
-			@Override
-			public void down()
-			{
-				int rows[] = fitTable.getSelectedRows();
-				List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
-					
-				if (tss.size() == 0) return;
-				
-				controller.moveTransitionSeriesDown(tss);
-				owner.changed();
-				for (TransitionSeries ts : tss) {
-					int row = controller.getFittedTransitionSeries().indexOf(ts);
-					fitTable.addRowSelectionInterval(row, row);
-				}
-			}
-
-
-			@Override
-			public void clear()
-			{
-				controller.clearTransitionSeries();
-				owner.changed();
-			}
-
-
-			@Override
-			public void add()
-			{
-				//Not used when the add button it set to show it's popup menu
-				//owner.smartAdd();
-			}
-
-		};
-
-	
 		
 		this.add(controls, BorderLayout.NORTH);
 
