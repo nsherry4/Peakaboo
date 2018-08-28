@@ -2,6 +2,7 @@ package swidget.widgets;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -33,35 +34,40 @@ public class DropdownImageButton extends EventfulEnumPanel<DropdownImageButton.A
 	
 	public DropdownImageButton(String filename, String text, String tooltip, JPopupMenu menu)
 	{
-		init(filename, text, tooltip, IconSize.TOOLBAR_SMALL, ToolbarImageButton.defaultLayout, menu);
+		init(filename, text, tooltip, IconSize.TOOLBAR_SMALL, ToolbarImageButton.defaultLayout, menu, true);
 	}
 	
 	public DropdownImageButton(String filename, String text, String tooltip, IconSize size, JPopupMenu menu)
 	{
-		init(filename, text, tooltip, size, ToolbarImageButton.defaultLayout, menu);
+		init(filename, text, tooltip, size, ToolbarImageButton.defaultLayout, menu, true);
 	}
 
 	public DropdownImageButton(String filename, String text, String tooltip, IconSize size,  Layout layout, JPopupMenu menu)
 	{
-		init(filename, text, tooltip, size, layout, menu);
+		init(filename, text, tooltip, size, layout, menu, true);
 	}
 	
 	public DropdownImageButton(StockIcon stock, String text, String tooltip, JPopupMenu menu)
 	{
-		init(stock.toIconName(), text, tooltip, IconSize.TOOLBAR_SMALL, ToolbarImageButton.defaultLayout, menu);
+		init(stock.toIconName(), text, tooltip, IconSize.TOOLBAR_SMALL, ToolbarImageButton.defaultLayout, menu, true);
 	}
 	
 	public DropdownImageButton(StockIcon stock, String text, String tooltip, IconSize size, JPopupMenu menu)
 	{
-		init(stock.toIconName(), text, tooltip, size, ToolbarImageButton.defaultLayout, menu);
+		init(stock.toIconName(), text, tooltip, size, ToolbarImageButton.defaultLayout, menu, true);
 	}
 
 	public DropdownImageButton(StockIcon stock, String text, String tooltip, IconSize size,  Layout layout, JPopupMenu menu)
 	{
-		init(stock.toIconName(), text, tooltip, size, layout, menu);
+		init(stock.toIconName(), text, tooltip, size, layout, menu, true);
 	}
 	
-	private void init(String filename, String text, String tooltip, IconSize size, Layout layout, final JPopupMenu menu)
+	public DropdownImageButton(StockIcon stock, String text, String tooltip, IconSize size,  Layout layout, JPopupMenu menu, boolean showArrow)
+	{
+		init(stock.toIconName(), text, tooltip, size, layout, menu, showArrow);
+	}
+	
+	private void init(String filename, String text, String tooltip, IconSize size, Layout layout, final JPopupMenu menu, boolean showArrow)
 	{
 		this.menu = menu;
 		eventful = new EventfulEnum<Actions>(); 
@@ -82,35 +88,7 @@ public class DropdownImageButton extends EventfulEnumPanel<DropdownImageButton.A
 				updateListeners(Actions.MAIN);
 			}
 		});
-		button.addMouseListener(new MouseListener() {
-			
-			public void mouseReleased(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-		
-			public void mousePressed(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-		
-			public void mouseExited(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-		
-			public void mouseEntered(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
+		button.addMouseListener(new MouseAdapter() {
 		
 			public void mouseClicked(MouseEvent e)
 			{
@@ -127,32 +105,23 @@ public class DropdownImageButton extends EventfulEnumPanel<DropdownImageButton.A
 		
 		add(button, BorderLayout.CENTER);
 
-				
-		String dropdownText = "▾";
-		String imageName = "";
-		
-//		boolean isTextArrow = button.getFont().canDisplay(dropdownText.charAt(0)) && !(Env.isMac());
-//		
-//		if (! isTextArrow)
-//		{
-//			dropdownText = "";
-//			imageName = "downarrow";
-//		}
-		
-		
-		
-		dropdown = new ImageButton(dropdownText.toString(), imageName)
-				.withTooltip("Show additional options")
-				//.withLayout(isTextArrow ? Layout.TEXT : Layout.IMAGE)
-				.withLayout(Layout.TEXT)
-				.withBordered(false)
-				.withBorder(Spacing.bMedium())
-				.withButtonSize(ButtonSize.COMPACT);
 
-		dropdown.addActionListener(e -> showMenu());
-		
-		
-		if (menu != null) add(dropdown, BorderLayout.EAST);
+		if (menu != null && showArrow) {
+			String dropdownText = "▾";
+			String imageName = "";
+			
+			dropdown = new ImageButton(dropdownText.toString(), imageName)
+					.withTooltip("Show additional options")
+					//.withLayout(isTextArrow ? Layout.TEXT : Layout.IMAGE)
+					.withLayout(Layout.TEXT)
+					.withBordered(false)
+					.withBorder(Spacing.bMedium())
+					.withButtonSize(ButtonSize.COMPACT);
+	
+			dropdown.addActionListener(e -> showMenu());
+			
+			add(dropdown, BorderLayout.EAST);
+		}
 		
 		setBorder(Spacing.bNone());
 		
@@ -167,7 +136,9 @@ public class DropdownImageButton extends EventfulEnumPanel<DropdownImageButton.A
 	@Override
 	public void setEnabled(boolean enabled)
 	{
-		dropdown.setEnabled(enabled);
+		if (dropdown != null) {
+			dropdown.setEnabled(enabled);
+		}
 		button.setEnabled(enabled);
 	}
 	

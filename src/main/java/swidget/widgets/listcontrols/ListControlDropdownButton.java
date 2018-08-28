@@ -14,7 +14,7 @@ public abstract class ListControlDropdownButton extends DropdownImageButton impl
 
 	public ListControlDropdownButton(StockIcon stock, String tooltip, JPopupMenu menu)
 	{
-		super(stock, "", tooltip, IconSize.BUTTON, Layout.IMAGE, menu);
+		super(stock, "", tooltip, IconSize.BUTTON, Layout.IMAGE, menu, false);
 	}
 	
 	public abstract void setEnableState(ElementCount ec);
