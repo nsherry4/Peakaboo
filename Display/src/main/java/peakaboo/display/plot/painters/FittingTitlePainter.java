@@ -205,8 +205,23 @@ public class FittingTitlePainter extends PlotPainter
 		float width = textWidth + penWidth * 4;
 		float farRight = farLeft + width;
 
-		float leftChannel = (float)Math.max(0, Math.floor(farLeft / channelSize));
-		float rightChannel = (float)Math.min(p.dr.dataWidth-1, Math.ceil(farRight / channelSize));
+		float leftChannel = (float) Math.floor(farLeft / channelSize);
+		float rightChannel = (float) Math.ceil(farRight / channelSize);
+		float rightMax = p.dr.dataWidth-1;
+		
+		//if one of the sides is out of bounds, first try shifting the label
+		if (leftChannel < 0) {
+			rightChannel -= leftChannel;
+			leftChannel = 0;
+		}
+		if (rightChannel > rightMax) {
+			leftChannel -= (rightChannel - rightMax);
+			rightChannel = rightMax;
+		}
+		
+		//finally, make sure both edges are in bounds
+		leftChannel = (float)Math.max(0, leftChannel);
+		rightChannel = (float)Math.min(rightMax, rightChannel);
 		
 		
 		
@@ -304,11 +319,9 @@ public class FittingTitlePainter extends PlotPainter
 			return;
 		}
 		float baseHeightForTitle = baseHeightForTitle(p, label, t.energyValue);
-		label.position.y.start += baseHeightForTitle;
-		label.position.y.end += baseHeightForTitle;
-		
-		
-		
+		label.position.y.start += baseHeightForTitle + (label.penWidth*2);
+		label.position.y.end += baseHeightForTitle + (label.penWidth*2);
+
 		return;
 	}
 	
