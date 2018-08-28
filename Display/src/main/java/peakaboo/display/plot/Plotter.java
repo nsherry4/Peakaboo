@@ -10,15 +10,14 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
+import peakaboo.display.plot.painters.FittingTitleLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
@@ -210,35 +209,26 @@ public class Plotter {
 		
 		
 		//Titles
+		//TODO: Ordering?
+		List<FittingTitleLabel> fitLabels = new ArrayList<>();
+		for (FittingResult fit : data.selectionResults.getFits()) {
+			if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
+				fitLabels.add(new FittingTitleLabel(fit, selectedStroke, data.annotations.get(fit.getTransitionSeries())));		
+			} else {
+				fitLabels.add(new FittingTitleLabel(fit, fittingStroke, data.annotations.get(fit.getTransitionSeries())));
+			}
+			
+		}
+		for (FittingResult fit : data.proposedResults.getFits()) {
+			fitLabels.add(new FittingTitleLabel(fit, proposedStroke, data.annotations.get(fit.getTransitionSeries())));
+		}
+		
 		if (data.selectionResults != null) {
 			plotPainters.add(new FittingTitlePainter(
-					unhighlightedResults,
-					data.annotations,
+					data.selectionResults.getParameters().getCalibration(),
+					fitLabels,
 					settings.showElementFitTitles,
-					settings.showElementFitIntensities,
-					fittingStroke
-				)
-			);
-		}
-		
-		if (data.proposedResults != null) {
-			plotPainters.add(new FittingTitlePainter(
-					data.proposedResults,
-					data.annotations,
-					settings.showElementFitTitles,
-					settings.showElementFitIntensities,
-					proposedStroke
-				)
-			);
-		}
-		
-		if (!highlightedResults.isEmpty()) {
-			plotPainters.add(new FittingTitlePainter(
-					highlightedResults,
-					data.annotations,
-					settings.showElementFitTitles,
-					settings.showElementFitIntensities,
-					selectedStroke
+					settings.showElementFitIntensities
 				)
 			);
 		}
@@ -247,7 +237,7 @@ public class Plotter {
 		
 		//Markings
 		if (settings.showElementFitMarkers) {
-			if (unhighlightedResults.isEmpty()) {
+			if (!unhighlightedResults.isEmpty()) {
 				plotPainters.add(new FittingMarkersPainter(unhighlightedResults, data.escape, fittingStroke));
 			}
 			if (data.proposedResults != null) {

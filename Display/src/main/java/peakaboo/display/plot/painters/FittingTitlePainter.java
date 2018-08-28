@@ -1,13 +1,13 @@
 package peakaboo.display.plot.painters;
 
 import java.awt.Color;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
-import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -16,6 +16,7 @@ import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
 
 
@@ -32,15 +33,12 @@ public class FittingTitlePainter extends PlotPainter
 
 	//private List<TransitionSeries> tsList;
 	//private List<Element> visibleElements;
-	private FittingResultSet fittings;
-	private Map<TransitionSeries, String> annotations;
+	private EnergyCalibration calibration;
+	private List<FittingTitleLabel> labels;
 	private boolean drawMaxIntensities;
 	private boolean drawElementNames;
-	
-	private List<Coord<Bounds<Float>>> previousLabels;
-	
-	private Color colour;
-	
+		
+	private List<FittingTitleLabel> configuredLabels = new ArrayList<>();
 	
 	/**
 	 * Create a FittingTitlePainter which draws in the given {@link Color}
@@ -50,86 +48,55 @@ public class FittingTitlePainter extends PlotPainter
 	 * @param colour the {@link Color} that should be used to draw the titles
 	 */
 	public FittingTitlePainter(
-			FittingResultSet fittings, 
-			Map<TransitionSeries, String> annotations, 
+			EnergyCalibration calibration,
+			List<FittingTitleLabel> labels, 
 			boolean drawTSNames, 
-			boolean drawMaxIntensities, 
-			Color colour
+			boolean drawMaxIntensities
 		){
 		
 		//this.tsList = tsList;
 		//this.visibleElements = visibleElements;
-		this.fittings = fittings;
-		this.annotations = annotations;
+		this.calibration = calibration;
+		this.labels = labels;
 		this.drawMaxIntensities = drawMaxIntensities;
 		this.drawElementNames = drawTSNames;
-		
-		this.previousLabels = new ArrayList<Coord<Bounds<Float>>>();
-		
-		this.colour = new Color(colour.getRed(), colour.getGreen(), colour.getBlue());
-		
+				
 	}
 	
 
 	@Override
 	public void drawElement(PainterData p)
 	{
-		String titleName, titleHeight, title;
-		Transition t;
 		
 		p.context.save();
 			
-			p.context.setSource(colour);
 			p.context.setFontSize(p.context.getFontSize() + 2);
-			
-			for (FittingResult fit : fittings.getFits()){
-		
-				TransitionSeries ts = fit.getTransitionSeries();
-				titleName = ts.getDescription();
-	
-				
-				titleHeight = SigDigits.roundFloatTo(fit.getCurveScale(), 1);
-	
-				title = "";
-				if (drawElementNames) title += titleName;
-				if (drawElementNames && drawMaxIntensities) title += " (";
-				if (drawMaxIntensities) title += titleHeight;
-				if (drawElementNames && drawMaxIntensities) title += ")";
-				
-				if (annotations.containsKey(ts)) {
-					title += ": " + annotations.get(ts);
-				}
+					
+			//calculate derived label info
+			for (FittingTitleLabel label : labels){
+				configureLabel(label, p);
+				configuredLabels.add(label);
+			}
 			
 
-				//TransitionType type = TransitionType.a1;
-				t = ts.getStrongestTransition();
-				
-				if (t != null) {
-					
-					Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, t.energyValue);
-					if (currentLabel.x.start.intValue() > p.dr.dataWidth) continue;
-					float baseHeightForTitle = baseHeightForTitle(p, title, t.energyValue);
-					currentLabel.y.start += baseHeightForTitle;
-					currentLabel.y.end += baseHeightForTitle;
-					float channelSize = p.plotSize.x / p.dr.dataWidth;
-					
-					drawTextLabel(p, title, t.energyValue, currentLabel.x.start * channelSize, currentLabel.y.start, false);
-					
-					previousLabels.add(currentLabel);
-				}
-
+			//draw lines from the label to the peak
+			for (FittingTitleLabel label : labels) {
+				drawTextLine(p, label);
+			}
 			
-				
-				
-			}// for all transitionseries
+			//draw the label
+			for (FittingTitleLabel label : labels){
+				drawTextLabel(p, label, false);
+			}
+
 			
 			//update the channel height data to reflect the addition of text labels
-			for (Coord<Bounds<Float>> label : previousLabels)
+			for (FittingTitleLabel label : labels)
 			{
-				for (int i = label.x.start.intValue(); i <= label.x.end; i++){
+				for (int i = label.position.x.start.intValue(); i <= label.position.x.end; i++){
 					
 					if (i < 0 || i > p.dr.dataWidth) continue;
-					if (p.dataHeights.get(i) < label.y.end) p.dataHeights.set(i, label.y.end);
+					if (p.dataHeights.get(i) < label.position.y.end) p.dataHeights.set(i, label.position.y.end);
 					
 				}
 			}
@@ -138,55 +105,70 @@ public class FittingTitlePainter extends PlotPainter
 			
 	}
 	
-	
-	private float baseHeightForTitle(PainterData p, String title, float energy)
-	{
-			
-		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, title, energy);
-		List<Coord<Bounds<Float>>> labelsInRange = new ArrayList<Coord<Bounds<Float>>>();
+	// Calculates the minimum height the label can be drawn at based on the spectral data being displayed
+	private float baseHeightFromData(PainterData p, FittingTitleLabel label, float energy) {
+		return baseHeightFromData(p, label, energy, p.dataHeights);
+	}
+	private float baseHeightFromData(PainterData p, FittingTitleLabel label, float energy, ReadOnlySpectrum heights) {
+		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, label, energy);
 		
-		//get a list of all labels which might get in the way of this one
-		for (Coord<Bounds<Float>> label : previousLabels)
-		{
-			if (
-					(label.x.start <= currentLabel.x.end && label.x.start >= currentLabel.x.start)
-					|| 
-					(label.x.end <= currentLabel.x.end && label.x.end >= currentLabel.x.start)
-			){
-				labelsInRange.add(label);
-			}
-		}
-		
-		//sort the elements by order of bottom y position
-		Collections.sort(labelsInRange, new Comparator<Coord<Bounds<Float>>>() {
-
-			public int compare(Coord<Bounds<Float>> o1, Coord<Bounds<Float>> o2)
-			{
-				if (o1.y.start < o2.y.start) return -1;
-				if (o1.y.start > o2.y.start) return 1;
-				return 0;
-			}
-
-		});
-		
-		
+		//minimum height based on data
 		int baselineStart = currentLabel.x.start.intValue();
 		int baselineEnd = currentLabel.x.end.intValue();
 		if (baselineStart >= baselineEnd) {
 			return 0;
 		}
-		float baseline = p.dataHeights.subSpectrum(baselineStart, baselineEnd).max();
+		float baseline = heights.subSpectrum(baselineStart, baselineEnd).max();
+		return baseline;
+	}
+	
+	//calculates the minimum height the label can be drawn at based on spectral data AND previous labels in the way
+	private float baseHeightForTitle(PainterData p, FittingTitleLabel label, float energy)
+	{
+			
+		Coord<Bounds<Float>> currentLabel = getTextLabelDimensions(p, label, energy);
+		
+		//minimum height based on data
+		float baseline = baseHeightFromData(p, label, energy);
 		float currentLabelHeight = currentLabel.y.end - currentLabel.y.start;
 		
-		//go over all previous labels in order of bottom y coordinate
-		for (Coord<Bounds<Float>> label : labelsInRange)
+		
+		
+		//go over all previous labels-in-range in order of bottom y coordinate
+		
+		List<FittingTitleLabel> labelsInRange = new ArrayList<>();
+		
+		//get a list of all labels which might get in the way of this one
+		for (FittingTitleLabel pastLabel : configuredLabels) {
+			if (
+					(pastLabel.position.x.start <= currentLabel.x.end && pastLabel.position.x.start >= currentLabel.x.start)
+					|| 
+					(pastLabel.position.x.end <= currentLabel.x.end && pastLabel.position.x.end >= currentLabel.x.start)
+			){
+				labelsInRange.add(pastLabel);
+			}
+		}
+		
+		//sort the elements by order of bottom y position
+		Collections.sort(labelsInRange, new Comparator<FittingTitleLabel>() {
+
+			public int compare(FittingTitleLabel o1, FittingTitleLabel o2)
+			{
+				if (o1.position.y.start < o2.position.y.start) return -1;
+				if (o1.position.y.start > o2.position.y.start) return 1;
+				return 0;
+			}
+
+		});
+		
+		for (FittingTitleLabel labelInRange : labelsInRange)
 		{
 			
 			//if there is enough room for the label, we've found the right baseline
-			if (label.y.start - baseline > currentLabelHeight){
+			if (labelInRange.position.y.start - baseline > currentLabelHeight){
 				break;
 			} else {
-				if (label.y.end > baseline) baseline = label.y.end;
+				if (labelInRange.position.y.end > baseline) baseline = labelInRange.position.y.end;
 			}
 			
 		}
@@ -200,21 +182,21 @@ public class FittingTitlePainter extends PlotPainter
 
 
 	
-	protected Coord<Bounds<Float>> getTextLabelDimensions(PainterData p, String title, float energy)
+	protected Coord<Bounds<Float>> getTextLabelDimensions(PainterData p, FittingTitleLabel label, float energy)
 	{
 		DrawingRequest dr = p.dr;
 
-		float textWidth = p.context.getTextWidth(title);
+		float textWidth = p.context.getTextWidth(label.title);
 
 		float channelSize = p.plotSize.x / dr.dataWidth;
-		float centreChannel = fittings.getParameters().getCalibration().fractionalChannelFromEnergy(energy);
+		float centreChannel = calibration.fractionalChannelFromEnergy(energy);
 
 		float titleStart = centreChannel * channelSize;
 		titleStart -= (textWidth / 2.0);
 
 
 		float titleHeight = p.context.getFontHeight();
-		float penWidth = getPenWidth(getBaseUnitSize(dr), dr);
+		float penWidth = label.penWidth;
 		float totalHeight = (titleHeight + penWidth * 2);
 		
 		float farLeft = titleStart - penWidth * 2;
@@ -236,23 +218,102 @@ public class FittingTitlePainter extends PlotPainter
 	 * @param title the title of the label
 	 * @param energy the energy value at which to centre the label
 	 */
-	protected void drawTextLabel(PainterData p, String title, float energy, float xStart, float yStart)
-	{
-		drawTextLabel(p, title, energy, xStart, yStart, true);
-	}
-	protected void drawTextLabel(PainterData p, String title, float energy, float xStart, float yStart, boolean resetColour)
-	{
+	protected void drawTextLabel(PainterData p, FittingTitleLabel label, boolean resetColour) {
+			
+		if (label.title == null) { return; }
+		
+		float channelSize = p.plotSize.x / p.dr.dataWidth;
+		float xStart = label.position.x.start * channelSize;
+		float xTextStart = xStart + label.penWidth*2;
+		float yTextStart = label.position.y.start + p.context.getFontDescent();
 		if (xStart > p.plotSize.x) return;
-
-		if (title != null) {
-
-			if (resetColour) p.context.setSource(0.0f, 0.0f, 0.0f);
-			p.context.writeText(title, xStart, p.plotSize.y - yStart);
-		}
+		
+		float w = (label.position.x.end - label.position.x.start) * channelSize;
+		float h = label.position.y.end - label.position.y.start;
+				
+		p.context.setSource(Color.WHITE);
+		p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
+		p.context.fill();
+		p.context.setSource(label.colour);
+		p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
+		p.context.stroke();
+		p.context.writeText(label.title, xTextStart, p.plotSize.y - yTextStart);
+		
 
 	}
 	
+	protected void drawTextLine(PainterData p, FittingTitleLabel label) {
+		Color semitransparent = new Color(label.colour.getRed(), label.colour.getGreen(), label.colour.getBlue(), 64);
+		p.context.setSource(semitransparent);
+		float channelSize = p.plotSize.x / p.dr.dataWidth;
+		TransitionSeries ts = label.fit.getTransitionSeries();
+		Transition t = ts.getStrongestTransition();
+		int endChannel = calibration.channelFromEnergy(t.energyValue);
+		
+		float x = ((label.position.x.start + label.position.x.end) / 2f) * channelSize;
+		float yStart = p.plotSize.y - label.position.y.start;
+		float yEnd = p.plotSize.y - p.originalHeights.get(endChannel);
+		
+		p.context.moveTo(x, yStart);
+		
+		p.context.lineTo(x, yEnd);
+		p.context.stroke();
+	}
 	
+	private String getTitle(FittingTitleLabel label) {
+		TransitionSeries ts = label.fit.getTransitionSeries();
+		String titleName = ts.getDescription();
 
+		
+		String titleHeight = SigDigits.roundFloatTo(label.fit.getCurveScale(), 1);
+
+		String title = "";
+		if (drawElementNames) title += titleName;
+		if (drawElementNames && drawMaxIntensities) title += " (";
+		if (drawMaxIntensities) title += titleHeight;
+		if (drawElementNames && drawMaxIntensities) title += ")";
+		
+		if (label.annotation != null) {
+			title += ": " + label.annotation;
+		}
+		
+		return title;
+	}
+
+	private void configureLabel(FittingTitleLabel label, PainterData p) {
+
+		label.viable = true;
+		
+		TransitionSeries ts = label.fit.getTransitionSeries();
+		label.title = getTitle(label);
+		
+		//TransitionType type = TransitionType.a1;
+		Transition t = ts.getStrongestTransition();
+		
+		if (t == null) {
+			label.viable = false;
+			return; 
+		}
+		
+		label.penWidth = getPenWidth(getBaseUnitSize(p.dr), p.dr);
+		
+		label.position = getTextLabelDimensions(p, label, t.energyValue);
+		if (label.position.x.start.intValue() > p.dr.dataWidth) {
+			label.viable = false;
+			return;
+		}
+		float baseHeightFromData = baseHeightFromData(p, label, t.energyValue, p.originalHeights);
+		float baseHeightForTitle = baseHeightForTitle(p, label, t.energyValue);
+		label.position.y.start += baseHeightForTitle;
+		label.position.y.end += baseHeightForTitle;
+		
+		
+		
+		return;
+	}
+	
 
 }
+
+
+
