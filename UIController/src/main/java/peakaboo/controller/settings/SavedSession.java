@@ -1,5 +1,6 @@
 package peakaboo.controller.settings;
 
+import peakaboo.common.Version;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.SavedDataSession;
 import peakaboo.controller.plotter.filtering.SavedFilteringSession;
@@ -20,6 +21,7 @@ public class SavedSession {
 	public SavedFilteringSession filtering;
 	public SavedFittingSession fitting;
 	public SessionViewModel view;
+	public String version = Version.longVersionNo;
 	
 	
 	/**
