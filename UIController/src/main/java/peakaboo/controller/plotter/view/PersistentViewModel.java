@@ -17,6 +17,8 @@ public class PersistentViewModel {
 	public PersistentViewModel() {
 		showElementFitTitles = true;
 		showAxes = true;
+		showElementFitMarkers = true;
+		showIndividualFittings = true;
 	}
 	
 	public PersistentViewModel(PersistentViewModel copy) {
