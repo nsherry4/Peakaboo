@@ -42,26 +42,6 @@ public class PlotMenuView extends JPopupMenu {
 		);
 		axes.setSelected(controller.view().getShowAxes());
 
-		JCheckBoxMenuItem consistentScale = PlotMenuUtils.createMenuCheckItem(plot,
-				"Consistent Scale", null, "All spectra in a dataset will be displayed with a consisntent scale",
-				b -> {
-					controller.view().setConsistentScale(b);
-				},
-				null, null
-		);
-		consistentScale.setSelected(controller.view().getConsistentScale());
-		
-		
-		this.add(logPlot);
-		this.add(axes);
-		this.add(consistentScale);
-
-
-		// Element Drawing submenu
-		JMenu moreView = new JMenu("More\u2026");
-		final JCheckBoxMenuItem etitles, emarkings, eintensities;
-
-		
 		title = PlotMenuUtils.createMenuCheckItem(plot,
 				"Title", null, "Toggles display of the current data set's title",
 				b -> {
@@ -78,6 +58,8 @@ public class PlotMenuView extends JPopupMenu {
 				null, KeyEvent.VK_M
 		);
 		
+		
+
 		raw = PlotMenuUtils.createMenuCheckItem(plot,
 				"Raw Data Outline", null, "Toggles an outline of the original raw data",
 				b -> {
@@ -85,7 +67,6 @@ public class PlotMenuView extends JPopupMenu {
 				},
 				null, KeyEvent.VK_O
 		);
-		
 		
 		fittings = PlotMenuUtils.createMenuCheckItem(plot,
 				"Individual Fittings", null, "Switches between showing all fittings as a single curve and showing all fittings individually",
@@ -95,6 +76,20 @@ public class PlotMenuView extends JPopupMenu {
 				null, KeyEvent.VK_O
 		);	
 		
+		this.add(logPlot);
+		this.add(axes);
+		this.add(title);
+		this.add(monochrome);
+		
+		this.add(raw);
+		this.add(fittings);
+
+
+		// Element Drawing submenu
+		JMenu elementDrawing = new JMenu("Curve Fit");
+		final JCheckBoxMenuItem etitles, emarkings, eintensities;
+
+		
 		etitles = PlotMenuUtils.createMenuCheckItem(plot,
 				"Element Names", null, "Label fittings with the names of their elements",
 				b -> {
@@ -102,35 +97,43 @@ public class PlotMenuView extends JPopupMenu {
 				},
 				null, null
 		);
+		elementDrawing.add(etitles);
+
 		
 		emarkings = PlotMenuUtils.createMenuCheckItem(plot,
-				"Transition Markings", null, "Label fittings with lines denoting their energies",
+				"Markings", null, "Label fittings with lines denoting their energies",
 				b -> {
 					controller.view().setShowElementMarkers(b);
 				},
 				null, null
 		);
+		elementDrawing.add(emarkings);
+
 		
 		eintensities = PlotMenuUtils.createMenuCheckItem(plot,
-				"Fitting Heights", null, "Label fittings with their heights",
+				"Heights", null, "Label fittings with their heights",
 				b -> {
 					controller.view().setShowElementIntensities(b);
 				},
 				null, null
 		);
-		
+		elementDrawing.add(eintensities);
 
 		
-		moreView.add(title);
-		moreView.add(monochrome);
-		moreView.add(raw);
-		moreView.add(fittings);
-		moreView.add(eintensities);
-		moreView.add(emarkings);
-		moreView.add(etitles);
-		
-		this.add(moreView);
+		this.add(elementDrawing);
 
+
+		this.addSeparator();
+		
+		JCheckBoxMenuItem consistentScale = PlotMenuUtils.createMenuCheckItem(plot,
+				"Use Consistent Scale", null, "All spectra in a dataset will be displayed with a consisntent scale",
+				b -> {
+					controller.view().setConsistentScale(b);
+				},
+				null, null
+		);
+		consistentScale.setSelected(controller.view().getConsistentScale());
+		this.add(consistentScale);
 		
 		
 		this.addSeparator();
