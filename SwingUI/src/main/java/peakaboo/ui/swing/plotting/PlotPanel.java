@@ -465,7 +465,7 @@ public class PlotPanel extends LayerPanel
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/peakaboo/credits.txt"));
 		contents.logo = logo;
-		contents.version = Integer.toString(Version.versionNoMajor);
+		contents.version = Version.versionNoMajor + "." + Version.versionNoMinor;
 		contents.longVersion = Version.longVersionNo;
 		contents.releaseDescription = Version.releaseDescription;
 		contents.date = Version.buildDate;
