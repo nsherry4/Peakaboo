@@ -3,6 +3,7 @@ package peakaboo.ui.swing.plotting;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -45,6 +46,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.MatteBorder;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -105,6 +108,7 @@ import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconFactory;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.HeaderBox;
@@ -330,9 +334,18 @@ public class PlotPanel extends LayerPanel
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.BOTH;
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabs, canvasPanel);
-		split.setResizeWeight(0);
-		split.setOneTouchExpandable(true);
+		
+		
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		tabs.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
+		ClearPanel split = new ClearPanel(new BorderLayout());
+		tabs.setPreferredSize(new Dimension(225, tabs.getPreferredSize().height));
+		split.add(tabs, BorderLayout.WEST);
+		split.add(canvasPanel, BorderLayout.CENTER);
+				
 		split.setBorder(Spacing.bNone());
 		pane.add(split, c);
 
