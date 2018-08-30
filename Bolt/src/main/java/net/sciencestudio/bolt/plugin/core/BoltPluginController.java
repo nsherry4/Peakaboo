@@ -60,7 +60,7 @@ public interface BoltPluginController<T extends BoltPlugin> {
 		if (getUUID() != other.getUUID()) {
 			return false;
 		}
-		int cmp = new AlphaNumericComparitor(false).compare(getVersion(), other.getVersion());
+		int cmp = AlphaNumericComparitor.compareVersions(getVersion(), other.getVersion());
 		if (cmp >= 0) {
 			//this plugin is an older (or same) version of the given one, so it's an upgrade
 			return true;

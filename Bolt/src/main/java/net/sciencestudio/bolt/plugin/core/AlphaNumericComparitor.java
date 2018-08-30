@@ -39,6 +39,9 @@ public class AlphaNumericComparitor implements Comparator<String> {
 	}
 	
 	
+	public static int compareVersions(String versionString0, String versionString1) {
+		return new AlphaNumericComparitor(false).compare(versionString0, versionString1);
+	}
 	
 	public int compare(String string0, String string1) {	
 		
