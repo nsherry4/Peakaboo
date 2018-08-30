@@ -158,6 +158,7 @@ class FilterList extends ClearPanel {
 		t.setShowVerticalLines(false);
 		t.setShowHorizontalLines(false);
 		t.setShowGrid(false);
+		t.setTableHeader(null);
 		
 		//USE column
 		TableColumn column = t.getColumnModel().getColumn(0);

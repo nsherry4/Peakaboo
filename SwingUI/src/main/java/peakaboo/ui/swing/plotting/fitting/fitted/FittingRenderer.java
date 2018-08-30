@@ -11,14 +11,14 @@ import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-import peakaboo.ui.swing.plotting.fitting.TSWidget;
+import peakaboo.ui.swing.plotting.fitting.lookup.LookupWidget;
 import scitypes.SigDigits;
 
 
 class FittingRenderer extends DefaultTableCellRenderer
 {
 
-	private TSWidget tswidget;
+	private FittedWidget tswidget;
 	private FittingController controller;
 
 	
@@ -29,7 +29,7 @@ class FittingRenderer extends DefaultTableCellRenderer
 		
 		this.controller = controller;
 		
-		tswidget = new TSWidget(true);		
+		tswidget = new FittedWidget();		
 	}
 
 	@Override
@@ -69,17 +69,12 @@ class FittingRenderer extends DefaultTableCellRenderer
 			intensity = controller.getTransitionSeriesIntensity(ts);
 			tswidget.setName(ts.getDescription());
 			
-			String desc;
-			if (ts.mode == TransitionSeriesMode.SUMMATION)
-			{
-				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1);
-			} else {
-				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1) + ", Atomic #" + (e.atomicNumber());
-			}
-			tswidget.setDescription(desc);
+			tswidget.setIntensity(SigDigits.roundFloatTo(intensity, 1));
 			tswidget.setFlag(controller.hasAnnotation(ts));
+			if (ts.mode != TransitionSeriesMode.SUMMATION){
+				tswidget.setAtomicNumber(e.atomicNumber());
+			}
 			
-			tswidget.setSelected(controller.getTransitionSeriesVisibility(ts));
 			tswidget.setMinimumSize(new Dimension(0, 100));
 			
 			String tooltip = e.toString();

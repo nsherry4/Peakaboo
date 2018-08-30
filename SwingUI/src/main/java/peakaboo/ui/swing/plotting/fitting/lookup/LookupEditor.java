@@ -16,7 +16,6 @@ import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import swidget.widgets.Spacing;
 
 
@@ -24,7 +23,7 @@ import swidget.widgets.Spacing;
 class LookupEditor extends DefaultTreeCellEditor
 {
 
-	private TSWidget	tswidget;
+	private LookupWidget	tswidget;
 	private JLabel						tstLabel;
 	private FittingController			controller;
 	private DefaultTreeCellRenderer		cellRenderer;
@@ -39,7 +38,7 @@ class LookupEditor extends DefaultTreeCellEditor
 		this.cellRenderer = renderer;
 		this.controller = controller;
 
-		tswidget = new TSWidget(false);
+		tswidget = new LookupWidget();
 		tswidget.setOpaque(true);
 		
 

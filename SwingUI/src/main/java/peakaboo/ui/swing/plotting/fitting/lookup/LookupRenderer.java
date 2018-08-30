@@ -11,7 +11,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.ui.swing.plotting.fitting.TSWidget;
 import swidget.widgets.Spacing;
 
 
@@ -19,7 +18,7 @@ import swidget.widgets.Spacing;
 class LookupRenderer extends DefaultTreeCellRenderer
 {
 
-	private TSWidget			tswidget;
+	private LookupWidget			tswidget;
 	private FittingController	controller;
 	private JLabel				tstLabel;
 
@@ -28,7 +27,7 @@ class LookupRenderer extends DefaultTreeCellRenderer
 
 		this.controller = controller;
 
-		tswidget = new TSWidget(false);
+		tswidget = new LookupWidget();
 		
 		tstLabel = new JLabel();
 		tstLabel.setOpaque(true);
