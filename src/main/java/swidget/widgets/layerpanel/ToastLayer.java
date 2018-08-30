@@ -2,6 +2,7 @@ package swidget.widgets.layerpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
@@ -23,7 +26,7 @@ public class ToastLayer implements Layer {
 
 	private JPanel toast = new ClearPanel();
 	private final JLayer<JPanel> toastJLayer;
-	private JLabel label;
+	private JComponent label;
 	private float alpha = 0f, delta = 0.1f;
 	private int stage = 0;
 	
@@ -39,7 +42,7 @@ public class ToastLayer implements Layer {
 		toast.setLayout(new FlowLayout());
 
 
-		label = new JLabel(message) {
+		JPanel messagePanel = new ClearPanel(new BorderLayout()){
 			
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -50,8 +53,6 @@ public class ToastLayer implements Layer {
 				
 				
 				Color bg = new Color(0f, 0f, 0f, alpha * 0.67f);
-				Color fg = new Color(1f, 1f, 1f, alpha);
-				this.setForeground(fg);
 				g.setColor(bg);
 				g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 10, 10);
 				super.paintComponent(g);
@@ -59,22 +60,50 @@ public class ToastLayer implements Layer {
 			
 
 		};
-		label.setBorder(Spacing.bHuge());
-		label.setFocusable(false);
-		toast.setFocusable(false);
-		label.addMouseListener(new MouseAdapter() {
+		messagePanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				onClick.run();
 			}
 		});
-				
-		toast.add(label, BorderLayout.CENTER);
+		
+		if (message.contains("\n")) {
+			label = new ClearPanel();
+			BoxLayout layout = new BoxLayout(label, BoxLayout.Y_AXIS);
+			label.setLayout(layout);
+			String[] lines = message.split("\n");
+			for (String line : lines) {
+				System.out.println(">" + line);
+				JLabel lineLabel = makeLabel(line);
+				lineLabel.setBorder(Spacing.bTiny());
+				label.add(lineLabel);
+			}
+		} else {
+			label = makeLabel(message);
+		}
+		label.setBorder(Spacing.bHuge());
+		
+		
+		toast.setFocusable(false);
+		messagePanel.add(label, BorderLayout.CENTER);
+		toast.add(messagePanel, BorderLayout.CENTER);
 		
 		
 		toastJLayer = new JLayer<JPanel>(toast);
 		toastJLayer.setFocusable(false);
 		
+	}
+	
+	private JLabel makeLabel(String message) {
+		JLabel label = new JLabel(message);
+		label.setBorder(Spacing.bTiny());
+		label.setFocusable(false);
+		label.setOpaque(false);
+		label.setForeground(Color.WHITE);
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		return label;
 	}
 	
 	@Override

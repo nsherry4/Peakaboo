@@ -88,9 +88,10 @@ public class LayerDialog {
 	
 	private void showInLayer(LayerPanel owner) {
 		JPanel panel = buildPanel(header);
-		owner.pushLayer(new ModalLayer(owner, panel));
+		Layer layer = new ModalLayer(owner, panel);
+		owner.pushLayer(layer);
 		if (defaultButton != null) { defaultButton.grabFocus(); }
-		hider = () -> owner.popLayer();
+		hider = () -> owner.removeLayer(layer);
 	}
 	
 	private JPanel buildPanel(boolean selfcontained) {
