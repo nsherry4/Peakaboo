@@ -53,39 +53,37 @@ public class Peakaboo
 		showError(e, message, null);
 	}
 	
-	private static void showError(Throwable e, String message, String text)
-	{
+	
+	private static void showError(Throwable e, String message, String text) {
+		TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
+		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
+		errorDialog.setInstruction(message);
 		
-		SwingUtilities.invokeLater(() -> {
-			TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
-			errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-			errorDialog.setInstruction(message);
-			
-			String realText = text;
-			
-			if (realText != null) {
-				realText += "\n";
-			} else if (e != null) {
-				if (e.getMessage() != null) {
-					realText = e.getMessage() + "\n";
-				}
-				realText += "The problem is of type " + e.getClass().getSimpleName();
-			}
-			
-			errorDialog.setText(realText);
+		String realText = text;
 				
-			JTextArea stacktrace = new JTextArea();
-			stacktrace.setEditable(false);
-			stacktrace.setText((e != null) ? Strings.stackStraceAsString(e) : "No additional information available");
+		if (realText != null) {
+			realText += "<br />";
+		} else if (e != null) {
+			if (e.getMessage() != null) {
+				realText = e.getMessage() + "<br/>";
+			} else {
+				realText = "";
+			}
+			realText += "The problem is of type " + e.getClass().getSimpleName();
+		}
+		realText = "<html>" + realText + "</html>";
+		errorDialog.setText(realText);
 			
-			JScrollPane scroller = new JScrollPane(stacktrace);
-			scroller.setPreferredSize(new Dimension(500, 200));
-			errorDialog.getDetails().setExpandableComponent(scroller);
-			errorDialog.getDetails().setExpanded(true);
+		JTextArea stacktrace = new JTextArea();
+		stacktrace.setEditable(false);
+		stacktrace.setText((e != null) ? Strings.stackStraceAsString(e) : "No additional information available");
 		
-			errorDialog.show();
-		});
-			
+		JScrollPane scroller = new JScrollPane(stacktrace);
+		scroller.setPreferredSize(new Dimension(500, 200));
+		errorDialog.getDetails().setExpandableComponent(scroller);
+		errorDialog.getDetails().setExpanded(true);
+	
+		errorDialog.show();
 	}
 	
 
@@ -121,14 +119,9 @@ public class Peakaboo
 		//to the user and printed to standard out.
 		try {
 			new TabbedPlotterFrame();
-		} catch (Exception e) {
-			
-			PeakabooLog.get().log(Level.SEVERE, "Critical Error in Peakaboo", e);
-			
-			//if the user chooses to close rather than restart, break out of the loop
-			showError(e, "Peakaboo has encountered a problem and must exit");
+		} catch (Throwable e) {
+			PeakabooLog.get().log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
 			System.exit(1);
-			
 		}
 		
 	}
