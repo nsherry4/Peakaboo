@@ -930,28 +930,34 @@ public class PlotPanel extends LayerPanel
 			
 			//If the data files in the saved session are different, offer to load the data set from the new session
 			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
+				
+				ImageButton buttonYes = new ImageButton("Yes").withAction(() -> {
+					//they said yes, load the new data, and then apply the session
+					//this needs to be done this way b/c loading a new dataset wipes out
+					//things like calibration info
+					this.loadFiles(sessionPaths, () -> {
+						controller.loadSessionSettings(session);	
+						savedSessionFileName = file;
+					});
+				}).withStateDefault();
+				
+				ImageButton buttonNo = new ImageButton("No").withAction(() -> {
+					//load the settings w/o the data, then set the file paths back to the current values
+					controller.loadSessionSettings(session);
+					//they said no, reset the stored paths to the old ones
+					controller.data().setDataPaths(currentPaths);
+				});
+				
 				new LayerDialog(
 						"Open Associated Data Set?", 
 						"This session is associated with another data set.\nDo you want to open that data set now?", 
 						MessageType.QUESTION)
-					.addRight(
-						new ImageButton("Yes").withAction(() -> {
-							//they said yes, load the new data, and then apply the session
-							//this needs to be done this way b/c loading a new dataset wipes out
-							//things like calibration info
-							this.loadFiles(sessionPaths, () -> {
-								controller.loadSessionSettings(session);	
-								savedSessionFileName = file;
-							});
-						}).withStateDefault())
-					.addLeft(
-						new ImageButton("No").withAction(() -> {
-							//load the settings w/o the data, then set the file paths back to the current values
-							controller.loadSessionSettings(session);
-							//they said no, reset the stored paths to the old ones
-							controller.data().setDataPaths(currentPaths);
-						}))
+					.addRight(buttonYes)
+					.addLeft(buttonNo)
 					.showIn(this);
+				
+				buttonYes.grabFocus();
+				
 			} else {
 				//just load the session, as there is either no data associated with it, or it's the same data
 				controller.loadSessionSettings(session);
