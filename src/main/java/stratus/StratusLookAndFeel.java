@@ -112,7 +112,34 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		reg(ret, "text", theme.getControlText());
 		reg(ret, "menu", theme.getMenu());
 		reg(ret, "control", theme.getControl());
-
+		
+		
+		//Stratus specific values
+		reg(ret, "stratus-highlight", theme.getHighlight());
+		reg(ret, "stratus-highlight-text", theme.getHighlightText());
+		
+		reg(ret, "stratus-control", theme.getControl());
+		reg(ret, "stratus-control-text", theme.getControlText());
+		reg(ret, "stratus-control-text-disabled", theme.getControlTextDisabled());
+		
+		reg(ret, "stratus-menu", theme.getMenu());
+		reg(ret, "stratus-menu-text", theme.getMenuText());
+		
+		reg(ret, "stratus-widget", theme.getWidget());
+		reg(ret, "stratus-widget-bevel", theme.getWidgetBevel());
+		reg(ret, "stratus-widget-border", theme.getWidgetBorder());
+		
+		reg(ret, "stratus-recessed-control", theme.getRecessedControl());
+		reg(ret, "stratus-recessed-text", theme.getRecessedText());
+		
+		reg(ret, "stratus-table-header", theme.getTableHeader());
+		reg(ret, "stratus-table-header-text", theme.getTableHeaderText());
+		
+		reg(ret, "stratus-scroll-handle", theme.getScrollHandle());
+		
+		
+		
+		
 		
 //		//Fonts
 		if (DISABLE_FONT_HINTING) {
