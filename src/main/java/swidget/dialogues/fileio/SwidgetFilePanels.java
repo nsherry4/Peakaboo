@@ -45,22 +45,25 @@ public class SwidgetFilePanels {
 			});
 			
 			
-			HeaderBoxPanel dialog = new HeaderBoxPanel(new HeaderBox(null, title, null), chooser);
+			chooser.setControlButtonsAreShown(false);
+			ImageButton affirmative = new ImageButton(chooser.getApproveButtonText())
+					.withStateDefault()
+					.withAction(() -> {
+						tabPanel.popLayer();
+						onAccept.run();
+					});
+			ImageButton negative = new ImageButton("Cancel")
+					.withAction(() -> {
+						tabPanel.popLayer();
+						onCancel.run();
+					});
+			HeaderBox header = new HeaderBox(negative, title, affirmative);
+			
+			HeaderBoxPanel dialog = new HeaderBoxPanel(header, chooser);
 			
 			tabPanel.pushLayer(new ModalLayer(tabPanel, dialog));
 			chooser.requestFocus();
-			chooser.addActionListener(e -> {
-				 if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
-					 tabPanel.popLayer();
-					 onAccept.run();
-				 }
-				 
-				 if (e.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)) {
-					 tabPanel.popLayer();
-					 onCancel.run();
-				 }
-				 
-			});
+
 		} else {
 			int result = chooser.showSaveDialog(parent);
 			if (result == JFileChooser.APPROVE_OPTION) {
