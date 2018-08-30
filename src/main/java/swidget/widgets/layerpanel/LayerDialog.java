@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import swidget.icons.IconSize;
@@ -34,6 +35,7 @@ public class LayerDialog {
 	private List<JButton> leftButtons = new ArrayList<>(), rightButtons = new ArrayList<>();
 	private Runnable hider = () -> {};
 	private boolean header = false;
+	private ImageButton defaultButton;
 	
 	public LayerDialog(String title, String body, MessageType messageType) {
 		this(title, buildBodyComponent(body), messageType);
@@ -87,6 +89,7 @@ public class LayerDialog {
 	private void showInLayer(LayerPanel owner) {
 		JPanel panel = buildPanel(header);
 		owner.pushLayer(new ModalLayer(owner, panel));
+		if (defaultButton != null) { defaultButton.grabFocus(); }
 		hider = () -> owner.popLayer();
 	}
 	
@@ -138,7 +141,8 @@ public class LayerDialog {
 		}
 		
 		if (leftButtons.size() == 0 && rightButtons.size() == 0) {
-			box.addRight(new ImageButton("OK").withAction(() -> hide()));
+			defaultButton = new ImageButton("OK").withAction(() -> hide());
+			box.addRight(defaultButton);
 		}
 		
 		return box;
@@ -172,7 +176,8 @@ public class LayerDialog {
 		}
 		
 		if (left == null && right == null) {
-			right = new ImageButton("OK").withAction(() -> hide());
+			defaultButton = new ImageButton("OK").withAction(() -> hide());
+			right = defaultButton;
 		}
 		
 		HeaderBox box = new HeaderBox(left, this.title, right);
