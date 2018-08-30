@@ -85,7 +85,7 @@ public class PluginsOverview extends JPanel {
 		details = new JPanel(new BorderLayout());
 		body.add(details, BorderLayout.CENTER);
 				
-		close = new ImageButton("Close").withAction(() -> parent.popLayer());
+		close = HeaderBox.closeButton().withAction(() -> parent.popLayer());
 		
 		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Import Plugins").withAction(this::add);
 		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Remove Plugins").withAction(this::removeSelected);

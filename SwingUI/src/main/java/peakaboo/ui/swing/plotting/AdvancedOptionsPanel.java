@@ -32,7 +32,6 @@ import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import swidget.widgets.HeaderBox;
-import swidget.widgets.ImageButton;
 import swidget.widgets.SettingsPanel;
 import swidget.widgets.SettingsPanel.LabelPosition;
 import swidget.widgets.Spacing;
@@ -51,7 +50,7 @@ public class AdvancedOptionsPanel extends JPanel {
 		
 		
 		
-		JButton close = new ImageButton("Close").withAction(() -> parent.popLayer());
+		JButton close = HeaderBox.closeButton().withAction(() -> parent.popLayer());
 		HeaderBox box = new HeaderBox(null, "Advanced Options", close);
 		
 		this.add(box, BorderLayout.NORTH);

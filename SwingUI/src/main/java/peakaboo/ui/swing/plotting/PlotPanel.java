@@ -113,6 +113,7 @@ import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
+import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.layerpanel.LayerPanel;
@@ -1003,10 +1004,7 @@ public class PlotPanel extends LayerPanel
 		panel.add(propPanel, BorderLayout.CENTER);
 		
 		
-		ImageButton close = new ImageButton()
-				.withText("Close")
-				.withIcon(StockIcon.WINDOW_CLOSE)
-				.withAction(this::popLayer);
+		ImageButton close = HeaderBox.closeButton().withAction(this::popLayer);
 		
 		HeaderBox header = new HeaderBox(null, "Dataset Information", close);
 		
