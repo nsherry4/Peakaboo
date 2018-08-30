@@ -20,6 +20,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import swidget.icons.StockIcon;
+import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.gradientpanel.PaintedPanel;
 
 public class HeaderBox extends PaintedPanel {
@@ -82,6 +84,14 @@ public class HeaderBox extends PaintedPanel {
     	return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
     }
 
+	public static ImageButton closeButton() {
+		ImageButton close = new ImageButton()
+				.withTooltip("Close")
+				.withIcon(StockIcon.WINDOW_CLOSE)
+				.withButtonSize(ButtonSize.LARGE)
+				.withBordered(false);
+		return close;
+	}
 	
 	private class HeaderLayout implements LayoutManager2 {
 
