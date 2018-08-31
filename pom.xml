@@ -10,16 +10,8 @@
   <url>http://maven.apache.org</url>
   
   <modules>
-    <module>Common</module>
-    <module>CurveFit</module>
-    <module>DataSet</module>
-    <module>DataSource</module>
-    <module>Filter</module>
-    <module>Mapping</module>
-    <module>Display</module>
     <module>UIController</module>
     <module>SwingUI</module>
-    <module>PeakabooSDK</module>
   </modules>
   
   <build>
