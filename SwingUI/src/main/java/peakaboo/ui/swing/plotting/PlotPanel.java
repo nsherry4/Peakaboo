@@ -923,6 +923,15 @@ public class PlotPanel extends LayerPanel
 		try {
 			SavedSession session = controller.readSavedSettings(StringInput.contents(file));
 			
+			
+			//chech if the session is from a newer version of Peakaboo, and warn if it is
+			Runnable warnVersion = () -> {
+				if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) > 0) {
+					ToastLayer warning = new ToastLayer(this, "Session is from a newer version of Peakaboo.\nSome settings may not load correctly.");
+					this.pushLayer(warning);
+				}
+			};
+			
 			List<Path> currentPaths = controller.data().getDataPaths();
 			List<Path> sessionPaths = session.data.filesAsDataPaths();
 			
@@ -938,6 +947,7 @@ public class PlotPanel extends LayerPanel
 					this.loadFiles(sessionPaths, () -> {
 						controller.loadSessionSettings(session);	
 						savedSessionFileName = file;
+						warnVersion.run();
 					});
 				}).withStateDefault();
 				
@@ -946,6 +956,7 @@ public class PlotPanel extends LayerPanel
 					controller.loadSessionSettings(session);
 					//they said no, reset the stored paths to the old ones
 					controller.data().setDataPaths(currentPaths);
+					warnVersion.run();
 				});
 				
 				new LayerDialog(
@@ -961,7 +972,10 @@ public class PlotPanel extends LayerPanel
 			} else {
 				//just load the session, as there is either no data associated with it, or it's the same data
 				controller.loadSessionSettings(session);
+				warnVersion.run();
 			}
+			
+
 			
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
