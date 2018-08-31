@@ -39,6 +39,7 @@ import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
+import swidget.widgets.TextWrapping;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 
@@ -57,7 +58,7 @@ public class Peakaboo
 	private static void showError(Throwable e, String message, String text) {
 		TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
 		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-		errorDialog.setInstruction(message);
+		errorDialog.setInstruction(TextWrapping.wrapTextForMultiline(message));
 		
 		String realText = text;
 				
@@ -70,7 +71,10 @@ public class Peakaboo
 				realText = "";
 			}
 			realText += "The problem is of type " + e.getClass().getSimpleName();
+		} else {
+			realText = "";
 		}
+
 		realText = "<html>" + realText + "</html>";
 		errorDialog.setText(realText);
 			
