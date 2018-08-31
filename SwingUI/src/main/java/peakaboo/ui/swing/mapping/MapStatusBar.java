@@ -1,11 +1,14 @@
 package peakaboo.ui.swing.mapping;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.UIManager;
+import javax.swing.border.MatteBorder;
 
 import peakaboo.controller.mapper.MappingController;
 import scitypes.Coord;
@@ -56,6 +59,13 @@ class MapStatusBar extends JPanel {
 		zoom.addListener(() -> {
 			controller.getSettings().getView().setZoom(zoom.getValue()/10f);
 		});
+		
+		
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		this.setBorder(new MatteBorder(1, 0, 0, 0, dividerColour));
 		
 		
 		

@@ -1,10 +1,13 @@
 package peakaboo.ui.swing.plotting.statusbar;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.MatteBorder;
 
 import peakaboo.controller.plotter.PlotController;
 import swidget.widgets.ClearPanel;
@@ -36,6 +39,12 @@ public class PlotStatusBar extends ClearPanel {
 		this.add(scanSelector, BorderLayout.WEST);
 
 
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		this.setBorder(new MatteBorder(1, 0, 0, 0, dividerColour));
+		
 
 	}
 	

@@ -4,6 +4,7 @@ package peakaboo.ui.swing.mapping;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
@@ -21,7 +22,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
@@ -33,6 +36,7 @@ import scidraw.swing.SavePicture;
 import scitypes.Coord;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.layerpanel.LayerPanel;
@@ -94,11 +98,28 @@ public class MapperPanel extends LayerPanel
 		JPanel contentLayer = this.getContentLayer();
 		contentLayer.setLayout(new BorderLayout());
 		
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new MapperSidebar(this, controller), createCanvasPanel());
-		split.setResizeWeight(0);
-		split.setOneTouchExpandable(true);
-		split.setBorder(Spacing.bNone());
-		contentLayer.add(split, BorderLayout.CENTER);	
+		JPanel sidebar = new MapperSidebar(this, controller);
+		JPanel mapCanvas = createCanvasPanel();
+		
+		
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		sidebar.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
+		ClearPanel split = new ClearPanel(new BorderLayout());
+		sidebar.setPreferredSize(new Dimension(225, sidebar.getPreferredSize().height));
+		split.add(sidebar, BorderLayout.WEST);
+		split.add(mapCanvas, BorderLayout.CENTER);
+		
+		contentLayer.add(split, BorderLayout.CENTER);
+		
+		
+//		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, mapCanvas);
+//		split.setResizeWeight(0);
+//		split.setOneTouchExpandable(true);
+//		split.setBorder(Spacing.bNone());
+//		contentLayer.add(split, BorderLayout.CENTER);
 		
 		toolbar = new MapperToolbar(this, controller);
 		contentLayer.add(toolbar, BorderLayout.NORTH);
