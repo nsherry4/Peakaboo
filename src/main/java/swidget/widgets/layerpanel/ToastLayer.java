@@ -75,13 +75,12 @@ public class ToastLayer implements Layer {
 			for (String line : lines) {
 				System.out.println(">" + line);
 				JLabel lineLabel = makeLabel(line);
-				lineLabel.setBorder(Spacing.bTiny());
 				label.add(lineLabel);
 			}
 		} else {
 			label = makeLabel(message);
 		}
-		label.setBorder(Spacing.bHuge());
+		label.setBorder(Spacing.bLarge());
 		
 		
 		toast.setFocusable(false);
@@ -96,7 +95,7 @@ public class ToastLayer implements Layer {
 	
 	private JLabel makeLabel(String message) {
 		JLabel label = new JLabel(message);
-		label.setBorder(Spacing.bTiny());
+		label.setBorder(Spacing.bSmall());
 		label.setFocusable(false);
 		label.setOpaque(false);
 		label.setForeground(Color.WHITE);
