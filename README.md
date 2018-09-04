@@ -34,6 +34,10 @@ Peakaboo allows users who are comfortable with Java programming to extend Peakab
 
 To get started creating your own filters or file format support, all you need is the Peakaboo JAR to build against. For more information on creating plugins, see the user manual.
 
+# Library and Plugins
+
+Peakaboo can also be used as a library. This is also the easiest target to build custom plugins against. [Read more about Peakaboo as a library without the GUI](Documentation/github/LibPeakaboo.md).
+
 
 # Building
 
