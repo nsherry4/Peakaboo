@@ -34,9 +34,9 @@ public interface DataSource
 
 		
 	/**
-	 * Reads the given files as a whole dataset. This method, collectively with 
-	 * {@link DataSource#read(Path)}, will be called either 0 or 1 times 
-	 * throughout the lifetime of this DataSource object.
+	 * Reads the given files as a whole dataset. This method will be called either 0
+	 * or 1 times throughout the lifetime of this DataSource object.
+	 * 
 	 * @throws Exception
 	 */
 	void read(List<Path> paths) throws Exception;
