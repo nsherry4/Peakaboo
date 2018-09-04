@@ -4,7 +4,7 @@
 
 	<groupId>net.sciencestudio.peakaboo</groupId>
 	<artifactId>SwingUI</artifactId>
-	<version>5-SNAPSHOT</version>
+	<version>5.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>SwingUI</name>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>net.sciencestudio.peakaboo</groupId>
 			<artifactId>UIController</artifactId>
-			<version>5-SNAPSHOT</version>
+			<version>5.0-SNAPSHOT</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.ezware.oxbow/TaskDialog -->
 		<dependency>
@@ -42,6 +42,11 @@
 			<groupId>net.sciencestudio</groupId>
 			<artifactId>stratus</artifactId>
 			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sciencestudio.peakaboo</groupId>
+			<artifactId>Display</artifactId>
+			<version>5.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
