@@ -26,11 +26,13 @@ import scidraw.drawing.backends.DrawingSurfaceFactory;
 import scidraw.drawing.backends.SaveableSurface;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.SurfaceType;
+import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.LineAxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;
+import scidraw.drawing.plot.painters.SpectrumPainter;
 import scidraw.drawing.plot.painters.axis.GridlinePainter;
 import scidraw.drawing.plot.painters.axis.TickMarkAxisPainter;
 import scidraw.drawing.plot.painters.plot.OriginalDataPainter;
@@ -164,17 +166,42 @@ public class Plotter {
 		
 		
 		// get any painters that the filters might want to add to the mix
+		// note that this style is now deprecated, and should be removed
+		// TODO: Remove in Peakaboo 6 
 		PlotPainter filterPainter;
 		for (Filter f : data.filters)
 		{
-			filterPainter = f.getPainter();
-			
-			if (filterPainter != null && f.isEnabled()) {
-				filterPainter.setSourceName(f.getFilterName());
-				plotPainters.add(filterPainter);
+			Object painterObject = f.getPainter();
+			if (painterObject instanceof PlotPainter) {
+				filterPainter = (PlotPainter) painterObject;
+				
+				if (filterPainter != null && f.isEnabled()) {
+					filterPainter.setSourceName(f.getFilterName());
+					plotPainters.add(filterPainter);
+				}
 			}
 		}
 
+		//New way of drawing filter previews
+		for (Filter f : data.filters) {
+			if (!f.isPreviewOnly()) { continue; }
+			
+			filterPainter = new SpectrumPainter(data.deltas.get(f)) {
+
+				@Override
+				public void drawElement(PainterData p)
+				{
+					traceData(p);
+					p.context.setSource(0.36f, 0.21f, 0.4f);
+					p.context.stroke();
+
+				}
+			};
+			plotPainters.add(filterPainter);
+			
+		}
+		
+		
 		////////////////////////////////////////////
 		// Draw Curve Fitting
 		////////////////////////////////////////////

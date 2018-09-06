@@ -1,6 +1,7 @@
 package peakaboo.controller.plotter;
 
 import java.util.List;
+import java.util.Map;
 
 import eventful.EventfulType;
 import peakaboo.controller.plotter.data.DataController;
@@ -11,6 +12,7 @@ import peakaboo.controller.plotter.view.ViewController;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.display.plot.ChannelCompositeMode;
 import peakaboo.display.plot.PlotData;
+import peakaboo.filter.model.Filter;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 import scidraw.drawing.painters.axis.AxisPainter;
@@ -142,7 +144,7 @@ public class PlotController extends EventfulType<String>
 	public PlotData getPlotData() {
 		
 		PlotData data = new PlotData();
-		Pair<ReadOnlySpectrum, ReadOnlySpectrum> dataForPlot = getDataForPlot();
+		PlotSpectra dataForPlot = getDataForPlot();
 		
 		//TODO: Can this whole block be moved to the controller, since it just calls into controller a bunch?
 		data.selectionResults = fitting().getFittingSelectionResults();
@@ -151,21 +153,31 @@ public class PlotController extends EventfulType<String>
 		data.escape = fitting().getEscapeType();
 		data.highlightedTransitionSeries = fitting().getHighlightedTransitionSeries();
 		data.proposedTransitionSeries = fitting().getProposedTransitionSeries();
+		data.annotations = fitting().getAnnotations();
+		
+		data.consistentScale = view().getConsistentScale();
 		
 		data.dataset = data().getDataSet();
 		
 		data.filters = filtering().getActiveFilters();
 		
-		data.filtered = dataForPlot.first;
-		data.raw = dataForPlot.second;
-		data.consistentScale = view().getConsistentScale();
+		data.filtered = dataForPlot.filtered;
+		data.raw = dataForPlot.raw;
+		data.deltas = dataForPlot.deltas;
+
 		
-		data.annotations = fitting().getAnnotations();
 		
 		return data;
 	}
 	
-	public Pair<ReadOnlySpectrum, ReadOnlySpectrum> getDataForPlot()
+	
+	public static class PlotSpectra {
+		public ReadOnlySpectrum raw;
+		public ReadOnlySpectrum filtered;
+		public Map<Filter, ReadOnlySpectrum> deltas;
+	}
+	
+	public PlotSpectra getDataForPlot()
 	{
 
 		ReadOnlySpectrum originalData = null;
@@ -178,7 +190,12 @@ public class PlotController extends EventfulType<String>
 
 		regenerateCahcedData();
 		
-		return new Pair<ReadOnlySpectrum, ReadOnlySpectrum>(filteringController.getFilteredPlot(), originalData);
+		PlotSpectra spectra = new PlotSpectra();
+		spectra.raw = originalData;
+		spectra.filtered = filteringController.getFilteredPlot();
+		spectra.deltas = filteringController.getFilterDeltas();
+		
+		return spectra;
 	}
 	
 

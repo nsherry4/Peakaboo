@@ -4,9 +4,6 @@ import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.SeparatorStyle;
-import scidraw.drawing.painters.PainterData;
-import scidraw.drawing.plot.painters.PlotPainter;
-import scidraw.drawing.plot.painters.SpectrumPainter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -108,33 +105,18 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	@Override
 	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache)
 	{
-		if (!preview.getValue() == true) {
-
-			ReadOnlySpectrum background = getBackground(data);
-			return SpectrumCalculations.subtractLists(data, background);
-		}
-
-		if (cache) setPreviewCache(data);
-		return data;
+		ReadOnlySpectrum background = getBackground(data);
+		return SpectrumCalculations.subtractLists(data, background);
+	}
+		
+	public boolean isPreviewOnly() {
+		return preview.getValue();
 	}
 	
 	@Override
-	public final PlotPainter getPainter()
+	public final Object getPainter()
 	{
-		if (!preview.getValue() == true) return null;
-
-		return new SpectrumPainter(getBackground(previewCache)) {
-
-			@Override
-			public void drawElement(PainterData p)
-			{
-				traceData(p);
-				p.context.setSource(0.36f, 0.21f, 0.4f);
-				p.context.stroke();
-
-			}
-		};
-
+		return null;
 	}
 	
 }

@@ -1,5 +1,7 @@
 package peakaboo.controller.plotter.filtering;
 
+import java.util.Map;
+
 import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.model.Filter;
@@ -106,6 +108,7 @@ public class FilteringController extends Eventful
 	public void calculateFilteredData(ReadOnlySpectrum data)
 	{
 		filteringModel.filteredPlot = filteringModel.filters.applyFilters(data, true);
+		filteringModel.filterDeltas = filteringModel.filters.calculateDeltas(data);
 		updateListeners();
 	}
 
@@ -127,6 +130,10 @@ public class FilteringController extends Eventful
 	public ReadOnlySpectrum getFilteredPlot()
 	{
 		return filteringModel.filteredPlot;
+	}
+	
+	public Map<Filter, ReadOnlySpectrum> getFilterDeltas() {
+		return filteringModel.filterDeltas;
 	}
 
 

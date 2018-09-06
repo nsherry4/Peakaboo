@@ -2,14 +2,18 @@ package peakaboo.filter.model;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 /**
  * 
@@ -135,7 +139,7 @@ public class FilterSet implements Iterable<Filter>
 	{
 
 		for (Filter f : filters) {
-			if (f != null && f.isEnabled()) {
+			if (f != null && f.isEnabled() && !f.isPreviewOnly()) {
 				data = f.filter(data, filtersShouldCache);
 			}
 		}
@@ -177,6 +181,33 @@ public class FilterSet implements Iterable<Filter>
 
 	public synchronized List<Filter> getFilters() {
 		return new ArrayList<>(filters);
+	}
+
+
+	public Map<Filter, ReadOnlySpectrum> calculateDeltas(ReadOnlySpectrum data) {
+		
+		Map<Filter, ReadOnlySpectrum> deltas = new LinkedHashMap<>();
+		
+		ReadOnlySpectrum last = data;
+		ReadOnlySpectrum current = null;
+		ReadOnlySpectrum delta = null;
+		
+		for (Filter f : filters) {
+			if (f != null && f.isEnabled()) {
+				current = f.filter(last, false);
+				current = correctNonFinite(current);
+				delta = SpectrumCalculations.subtractLists(last, current, 0f);
+				deltas.put(f, delta);
+				
+				//only commit this filter's results for the next round if this filter is not in preview mode.
+				if (!f.isPreviewOnly()) {
+					last = current;
+				}
+			}
+		}
+		
+		return deltas;
+		
 	}
 
 

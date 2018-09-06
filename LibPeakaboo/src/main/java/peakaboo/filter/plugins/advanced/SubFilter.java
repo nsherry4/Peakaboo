@@ -17,8 +17,6 @@ import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.model.FilterType;
 import peakaboo.filter.model.SerializedFilter;
-import scidraw.drawing.painters.PainterData;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -104,26 +102,9 @@ public class SubFilter extends AbstractFilter
 	}
 
 	@Override
-	public PlotPainter getPainter()
+	public Object getPainter()
 	{
-		
-		if (filter.getValue().getPainter() == null) return null;
-		
-		return new PlotPainter() {
-
-			@Override
-			public void drawElement(PainterData p)
-			{			
-				p.context.save();
-				
-					float pointWidth = p.plotSize.x / p.dr.dataWidth;
-					p.context.translate(pointWidth*begin.getValue(), 0f);
-					filter.getValue().getPainter().draw(p);
-					
-				p.context.restore();
-			}
-		};
-		
+		return filter.getValue().getPainter();		
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.Value;
 import peakaboo.common.PeakabooLog;
 import peakaboo.filter.plugins.JavaFilterPlugin;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
@@ -104,6 +103,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 		for (Parameter<?> param : params) { addParameter(param); }
 	}
 	
+	@Deprecated
 	protected final void setPreviewCache(ReadOnlySpectrum data)
 	{
 		this.previewCache = new ISpectrum(data);
@@ -120,7 +120,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	 * @see peakaboo.filter.model.Filter#getPainter()
 	 */
 	@Override
-	public abstract PlotPainter getPainter();
+	public abstract Object getPainter();
 	
 
 	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache);

@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.model.Value;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
@@ -48,7 +47,23 @@ public interface Filter {
 	 */
 	void initialize();
 
-	PlotPainter getPainter();
+	/**
+	 * Returns an object describing how to paint a preview of this filter. This used
+	 * to be a SciDraw PlotPainter, but was changed to Object so that awt/swing was
+	 * not used.
+	 */
+	@Deprecated
+	Object getPainter();
+	
+	
+	/**
+	 * Indicates that this filter should not be applied, but that any UI should show
+	 * a preview of the filter.
+	 */
+	default boolean isPreviewOnly() {
+		return false;
+	}
+	
 
 //	/**
 //	 * Forces a check to ensure the Fitler's Parameters are valid.

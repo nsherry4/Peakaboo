@@ -17,6 +17,7 @@ import javax.swing.Scrollable;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;
@@ -244,7 +245,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			
 	
 			// calculates filters and fittings if needed
-			Pair<ReadOnlySpectrum, ReadOnlySpectrum> dataForPlot = controller.getDataForPlot();
+			PlotSpectra dataForPlot = controller.getDataForPlot();
 			if (dataForPlot == null) {
 				return;
 			}

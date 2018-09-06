@@ -9,6 +9,7 @@ import eventful.Eventful;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.display.plot.ChannelCompositeMode;
@@ -252,10 +253,10 @@ public class ViewController extends Eventful
 		if (channel == -1) return null;
 		if (channel >= plot.data().getDataSet().getAnalysis().channelsPerScan()) return null;
 
-		Pair<ReadOnlySpectrum, ReadOnlySpectrum> scans = plot.getDataForPlot();
+		PlotSpectra scans = plot.getDataForPlot();
 		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
 
-		return new Pair<Float, Float>(scans.first.get(channel), scans.second.get(channel));
+		return new Pair<Float, Float>(scans.filtered.get(channel), scans.raw.get(channel));
 	}
 
 	
