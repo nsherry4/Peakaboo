@@ -88,7 +88,7 @@ public class FXAutoDialogTest extends Application {
 
 	
 	public static void main(String[] args) {
-		EventfulConfig.runThread = Platform::runLater;
+		EventfulConfig.uiThreadRunner = Platform::runLater;
 		launch(args);	
 	}
 	
