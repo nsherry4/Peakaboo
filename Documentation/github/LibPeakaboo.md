@@ -4,6 +4,8 @@ LibPeakaboo is the Java XRF analysis library behind [Peakaboo](https://github.co
 
 # Examples
 
+These examples use the Display package from Peakaboo to render the output. This code is not included in the LibPeakaboo project for portability reasons.
+
 ## Basic Plot
 Below is a basic example of how to load an XRF dataset from a single file and produce a plot showing the averaged spectrum. The input file is in tsv (tab separated value) format.
 
