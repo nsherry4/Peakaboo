@@ -1,9 +1,11 @@
-package peakaboo.common;
+package peakaboo.ui.swing.environment;
 
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import peakaboo.common.Env;
 
 
 

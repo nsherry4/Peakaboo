@@ -11,6 +11,7 @@
   
   <modules>
     <module>LibPeakaboo</module>
+    <module>Display</module>
     <module>UIController</module>
     <module>SwingUI</module>
   </modules>
