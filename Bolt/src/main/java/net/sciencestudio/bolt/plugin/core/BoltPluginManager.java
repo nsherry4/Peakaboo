@@ -65,8 +65,10 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 			}
 
 			BoltFilesytstemPluginLoader<? extends P> scriptLoader = scriptLoader(plugins);
-			ensureManagedDirectory();
-			scriptLoader.scanDirectory(directory);
+			if (scriptLoader != null) {
+				ensureManagedDirectory();
+				scriptLoader.scanDirectory(directory);
+			}
 			
 			
 			//custom work

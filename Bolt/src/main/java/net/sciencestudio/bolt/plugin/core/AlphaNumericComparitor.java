@@ -157,8 +157,8 @@ public class AlphaNumericComparitor implements Comparator<String> {
 	
 	private int compareNumericStrings(String s0, String s1) {
 		//we were in numeric mode, and both numbers are the same number of digits long
-		long number0 = Long.parseLong(s0);
-		long number1 = Long.parseLong(s1);
+		long number0 = str2long(s0);
+		long number1 = str2long(s1);
 		
 		if (number0 == number1){
 			//these numbers are the same
@@ -167,6 +167,14 @@ public class AlphaNumericComparitor implements Comparator<String> {
 			//these numbers are not the same, so we return the difference.
 			//given 3 and 7, 3 is less than 7, so we return 3-7=-4 which is <0 so is 'less than'
 			return (int)(number0-number1);
+		}
+	}
+	
+	private long str2long(String s) {
+		try {
+			return Long.parseLong(s);
+		} catch (NumberFormatException e) {
+			return 0;
 		}
 	}
 
