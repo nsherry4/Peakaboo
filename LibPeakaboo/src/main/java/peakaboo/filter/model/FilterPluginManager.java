@@ -10,12 +10,10 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
-import peakaboo.filter.plugins.JavaScriptFilterPlugin;
 import peakaboo.filter.plugins.advanced.IdentityFilter;
 import peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
 import peakaboo.filter.plugins.advanced.SubFilter;
@@ -104,7 +102,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends FilterPlugin> scriptLoader(BoltPluginSet<FilterPlugin> pluginset) {
-		return new IBoltScriptPluginLoader<>(pluginset, ".js", JavaScriptFilterPlugin.class);
+		return null;
 	}
 	
 	

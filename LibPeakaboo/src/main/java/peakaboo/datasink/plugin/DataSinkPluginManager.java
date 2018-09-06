@@ -9,7 +9,6 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasink.plugin.plugins.CSV;
@@ -47,7 +46,7 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends DataSinkPlugin> scriptLoader(BoltPluginSet<DataSinkPlugin> pluginset) {
-		return new IBoltScriptPluginLoader<>(pluginset, ".js", JavaScriptDataSinkPlugin.class);
+		return null;
 	}
 	
 

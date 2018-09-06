@@ -10,7 +10,6 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginLoader;
 import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.plugin.plugins.PlainText;
@@ -69,7 +68,7 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends DataSourcePlugin> scriptLoader(BoltPluginSet<DataSourcePlugin> pluginset) {
-		return new IBoltScriptPluginLoader<>(pluginset, ".js", JavaScriptDataSourcePlugin.class);
+		return null;
 	}
 	
 
