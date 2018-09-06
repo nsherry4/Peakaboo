@@ -15,8 +15,6 @@ install:
   - cd -
   - git clone https://github.com/nsherry4/Scratch.git /tmp/scratch && cd /tmp/scratch && mvn install
   - cd -
-  - git clone https://github.com/nsherry4/LibPeakaboo.git /tmp/libpeakaboo && cd /tmp/libpeakaboo && mvn install
-  - cd -
 
 
 cache:
