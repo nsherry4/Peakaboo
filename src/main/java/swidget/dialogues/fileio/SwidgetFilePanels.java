@@ -30,7 +30,13 @@ public class SwidgetFilePanels {
 	private static void showChooser(Component parent, JFileChooser chooser, Runnable onAccept, Runnable onCancel, String title) {
 		if (parent instanceof LayerPanel) {
 			LayerPanel tabPanel = (LayerPanel) parent;
+			chooser.setControlButtonsAreShown(false);
+			ImageButton affirmative = new ImageButton(chooser.getApproveButtonText()).withStateDefault();
+			ImageButton negative = new ImageButton("Cancel");
 			
+			HeaderBox header = new HeaderBox(negative, title, affirmative);
+			HeaderBoxPanel dialog = new HeaderBoxPanel(header, chooser);
+			ModalLayer layer = new ModalLayer(tabPanel, dialog);
 			
 			KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 			chooser.getInputMap(JComponent.WHEN_FOCUSED).put(key, key.toString());
@@ -39,29 +45,31 @@ public class SwidgetFilePanels {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					tabPanel.popLayer();
+					tabPanel.removeLayer(layer);
 					onCancel.run();
 				}
 			});
 			
+			chooser.addActionListener(action -> {
+				String command = action.getActionCommand();
+				//something like double-clicking a file may trigger this
+				if (command.equals("ApproveSelection")) {
+					tabPanel.removeLayer(layer);
+					onAccept.run();
+				}
+			});
 			
-			chooser.setControlButtonsAreShown(false);
-			ImageButton affirmative = new ImageButton(chooser.getApproveButtonText())
-					.withStateDefault()
-					.withAction(() -> {
-						tabPanel.popLayer();
-						onAccept.run();
-					});
-			ImageButton negative = new ImageButton("Cancel")
-					.withAction(() -> {
-						tabPanel.popLayer();
-						onCancel.run();
-					});
-			HeaderBox header = new HeaderBox(negative, title, affirmative);
+			negative.withAction(() -> {
+				tabPanel.removeLayer(layer);
+				onCancel.run();
+			});
 			
-			HeaderBoxPanel dialog = new HeaderBoxPanel(header, chooser);
+			affirmative.withAction(() -> {
+				tabPanel.removeLayer(layer);
+				onAccept.run();
+			});
 			
-			tabPanel.pushLayer(new ModalLayer(tabPanel, dialog));
+			tabPanel.pushLayer(layer);
 			chooser.requestFocus();
 
 		} else {
