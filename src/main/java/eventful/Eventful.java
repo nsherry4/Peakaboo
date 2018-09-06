@@ -37,7 +37,7 @@ public class Eventful implements IEventful
 	//Done on the event thread on purpose
 	public synchronized void removeListener(final EventfulListener l)
 	{
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(Eventful.this) { 
 					listeners.remove(l);
 			}
@@ -47,7 +47,7 @@ public class Eventful implements IEventful
 	//Done on the event thread on purpose
 	public synchronized void removeAllListeners()
 	{
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(Eventful.this) { 
 					listeners.clear();
 			}
@@ -63,7 +63,7 @@ public class Eventful implements IEventful
 
 		if (listeners.size() == 0) return;
 
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(Eventful.this) {
 				for (EventfulListener l : listeners) {
 					l.change();

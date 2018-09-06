@@ -22,7 +22,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	//Done on the event thread on purpose
 	public synchronized void removeListener(final EventfulEnumListener<T> l)
 	{
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(EventfulEnum.this) { 
 					listeners.remove(l);
 			}
@@ -32,7 +32,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	//Done on the event thread on purpose
 	public synchronized void removeAllListeners()
 	{
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(EventfulEnum.this) { 
 					listeners.clear();
 			}
@@ -45,7 +45,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 
 		if (listeners.size() == 0) return;
 
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(EventfulEnum.this) {	
 				for (EventfulEnumListener<T> l : listeners) {		
 					l.change(message);

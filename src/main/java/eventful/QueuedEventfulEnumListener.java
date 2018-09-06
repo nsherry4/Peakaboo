@@ -89,7 +89,7 @@ public abstract class QueuedEventfulEnumListener<T extends Enum<T>> implements E
 	
 	private void deliverMessages(final List<T> messages)
 	{
-		EventfulConfig.runThread.accept(new Runnable() {
+		EventfulConfig.uiThreadRunner.accept(new Runnable() {
 			public void run()	{
 				changes(messages);
 			}

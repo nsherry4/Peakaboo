@@ -2,10 +2,10 @@ package eventful;
 
 import java.util.function.Consumer;
 
-import javax.swing.SwingUtilities;
-
 public class EventfulConfig {
 
-	public static Consumer<Runnable> runThread = SwingUtilities::invokeLater;
+	public static Consumer<Runnable> uiThreadRunner = r -> {
+		throw new RuntimeException("Eventful UI Hook has not been configured");
+	};
 	
 }

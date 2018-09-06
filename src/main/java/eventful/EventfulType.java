@@ -24,7 +24,7 @@ public class EventfulType<T> implements IEventfulType<T>
 	//Done on the event thread on purpose
 	public synchronized void removeListener(final EventfulTypeListener<T> l)
 	{
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(EventfulType.this) { 
 				listeners.remove(l);
 			}
@@ -35,7 +35,7 @@ public class EventfulType<T> implements IEventfulType<T>
 	//Done on the event thread on purpose
 	public synchronized void removeAllListeners()
 	{
-		EventfulConfig.runThread.accept(() -> { 
+		EventfulConfig.uiThreadRunner.accept(() -> { 
 			synchronized(EventfulType.this) { 
 				listeners.clear();
 			}
@@ -49,7 +49,7 @@ public class EventfulType<T> implements IEventfulType<T>
 
 		if (listeners.size() == 0) return;
 
-		EventfulConfig.runThread.accept(() -> {
+		EventfulConfig.uiThreadRunner.accept(() -> {
 			synchronized(EventfulType.this){
 				for (EventfulTypeListener<T> l : listeners) {
 					l.change(message);

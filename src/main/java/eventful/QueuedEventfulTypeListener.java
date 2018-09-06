@@ -89,7 +89,7 @@ public abstract class QueuedEventfulTypeListener<T> implements EventfulTypeListe
 	
 	private void deliverMessages(final List<T> messages)
 	{
-		EventfulConfig.runThread.accept(new Runnable() {
+		EventfulConfig.uiThreadRunner.accept(new Runnable() {
 			public void run()	{
 				changes(messages);
 			}
