@@ -4,25 +4,25 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import eventful.swing.EventfulPanel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton.Layout;
 
 
-public class ZoomSlider extends EventfulPanel
+public class ZoomSlider extends JPanel
 {
 
 	private JSlider zoomSlider;
 	private ImageButton in, out;
 	private ChangeListener zoomSliderListener;
-
 	
-	public ZoomSlider(int start, int end, final int step)
+	public ZoomSlider(int start, int end, final int step, Consumer<Integer> onChange)
 	{
 
 		setLayout(new BorderLayout());
@@ -43,7 +43,7 @@ public class ZoomSlider extends EventfulPanel
 
 			public void stateChanged(ChangeEvent e)
 			{
-				updateListeners();
+				onChange.accept(getValue());
 			}
 		};
 		
