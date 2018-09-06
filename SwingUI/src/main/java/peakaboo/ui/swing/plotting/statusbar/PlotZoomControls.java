@@ -31,16 +31,11 @@ public class PlotZoomControls extends ImageButton {
 		zoomPanel = new ClearPanel();
 		zoomPanel.setBorder(Spacing.bMedium());
 		
-		zoomSlider = new ZoomSlider(10, 1000, 10);
+		zoomSlider = new ZoomSlider(10, 1000, 10, value -> {
+			controller.view().setZoom(value / 100f);
+		});
 		zoomSlider.setOpaque(false);
 		zoomSlider.setValue(100);
-		zoomSlider.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				controller.view().setZoom(zoomSlider.getValue() / 100f);
-			}
-		});
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
 
 		

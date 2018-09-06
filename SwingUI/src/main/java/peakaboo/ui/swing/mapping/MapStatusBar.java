@@ -43,7 +43,9 @@ class MapStatusBar extends JPanel {
 		
 		
 		//zoom controls
-		ZoomSlider zoom = new ZoomSlider(10, 100, 1);
+		ZoomSlider zoom = new ZoomSlider(10, 100, 1, value -> {
+			controller.getSettings().getView().setZoom(value / 10f);
+		});
 		zoom.setOpaque(false);
 		zoom.setBorder(Spacing.bMedium());
 		
@@ -56,10 +58,7 @@ class MapStatusBar extends JPanel {
 		});
 		
 		add(zoomButton, BorderLayout.EAST);
-		zoom.addListener(() -> {
-			controller.getSettings().getView().setZoom(zoom.getValue()/10f);
-		});
-		
+
 		
 		Color dividerColour = UIManager.getColor("stratus-widget-border");
 		if (dividerColour == null) {

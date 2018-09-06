@@ -19,6 +19,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
+import eventful.EventfulConfig;
 import peakaboo.common.Env;
 import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
@@ -220,6 +221,7 @@ public class Peakaboo
 		
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);
+			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			PeakabooLog.init();
 			errorHook();
 			startGCTimer();

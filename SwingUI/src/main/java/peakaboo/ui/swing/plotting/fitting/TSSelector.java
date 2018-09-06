@@ -8,13 +8,38 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import eventful.swing.EventfulPanel;
+import eventful.Eventful;
+import eventful.EventfulListener;
+import eventful.IEventful;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 
 
-public class TSSelector extends EventfulPanel
+public class TSSelector extends JPanel implements IEventful
 {
+	//EVENTFUL
+	private Eventful listenee;
+	
+	public void addListener(EventfulListener l) {
+		listenee.addListener(l);
+	}
+
+	public void removeAllListeners() {
+		listenee.removeAllListeners();
+	}
+
+	public void removeListener(EventfulListener l) {
+		listenee.removeListener(l);
+	}
+
+	public void updateListeners() {
+		listenee.updateListeners();
+	}
+	
+	
+	
+	
 	
 	private JComboBox<TransitionSeries> tsCombo;
 	private JLabel tsLabel;
@@ -23,7 +48,7 @@ public class TSSelector extends EventfulPanel
 	
 	public TSSelector()
 	{
-
+		listenee = new Eventful();
 		setLayout(new BorderLayout());
 
 		tsCombo = new JComboBox<TransitionSeries>();
