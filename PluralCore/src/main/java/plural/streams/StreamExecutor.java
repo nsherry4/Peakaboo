@@ -16,9 +16,6 @@ import java.util.stream.StreamSupport;
 import javax.swing.JFrame;
 
 import eventful.EventfulEnum;
-import plural.streams.swing.StreamExecutorPanel;
-import plural.streams.swing.StreamExecutorView;
-import swidget.Swidget;
 
 public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implements Predicate<Object>{
 
@@ -261,98 +258,5 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 		return result;
 	}
 	
-
-	public static void main(String[] args) throws InterruptedException {
-		
-		Swidget.initialize(() -> {
-			int size = 10000;
-			
-			List<Integer> ints = new ArrayList<>();
-			for (int i = 0; i < size; i++) {
-				ints.add(i);
-			}
-			System.out.println("Starting...");
-			
-			
-			StreamExecutor<List<Integer>> e1 = new StreamExecutor<>("s1");
-			e1.setSize(size);
-			
-			e1.addListener((event) -> {
-				if (event == Event.PROGRESS) {
-					System.out.println("E1 Processed: " + e1.getCount());
-				}
-				
-				if (event == Event.COMPLETED) {
-					System.out.println("E1 Done!");
-				}
-			});
-			
-			e1.setTask(() -> {
-				return e1.observe(ints.stream()).map(v -> {
-					float f = v;
-					for (int i = 0; i < 100000; i++) {
-						f = (int)Math.pow(f, 1.0001);
-					}
-					return (int)f;
-				}).collect(Collectors.toList());
-			});
-			
-	
-			
-			
-			StreamExecutor<List<Integer>> e2 = new StreamExecutor<>("s2");
-			e2.setSize(size);
-			
-			e2.addListener((event) -> {
-				if (event == Event.PROGRESS) {
-					System.out.println("E2 Processed: " + e2.getCount());
-				}
-				
-				if (event == Event.COMPLETED) {
-					System.out.println("E2 Done!");
-				}
-			});
-			
-			e2.setTask(() -> {
-				return e2.observe(e1.getResult().get().stream()).map(v -> {
-					float f = v;
-					for (int i = 0; i < 100000; i++) {
-						f = (int)Math.pow(f, 1.0001);
-					}
-					return (int)f;
-				}).collect(Collectors.toList());
-			});
-			
-			e1.then(e2);
-			
-			
-			StreamExecutorView v1 = new StreamExecutorView(e1);
-			StreamExecutorView v2 = new StreamExecutorView(e2);
-			
-			JFrame frame = new JFrame();
-			StreamExecutorPanel panel = new StreamExecutorPanel("Two Tasks", v1, v2);
-			frame.getContentPane().setLayout(new BorderLayout());
-			frame.getContentPane().add(panel, BorderLayout.CENTER);
-	
-			e2.addListener((event) -> {
-				if (event != Event.PROGRESS) {
-					frame.setVisible(false);
-				}
-			});
-			
-		
-			frame.pack();
-			frame.setVisible(true);
-			
-			e1.start();
-		}, "Test");
-
-		
-
-		
-		
-		Thread.currentThread().sleep(5000);
-		
-	}
 	
 }
