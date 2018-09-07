@@ -19,7 +19,7 @@ public class MapSettings {
 	public boolean showMapTitle = false;
 	public String mapTitle = "";
 	
-	public ViewTransform transform = ViewTransform.LINEAR;
+	public boolean logTransform = false;
 	public MapScaleMode scalemode = MapScaleMode.ABSOLUTE;
 	public boolean monochrome = false;
 	public boolean contours = false;

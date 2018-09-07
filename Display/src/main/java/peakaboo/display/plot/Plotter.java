@@ -142,7 +142,7 @@ public class Plotter {
 		
 		dr.imageHeight = (float) size.getHeight();
 		dr.imageWidth = (float) size.getWidth();
-		dr.viewTransform = settings.viewTransform;
+		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.unitSize = (data.calibration.getMaxEnergy() - data.calibration.getMinEnergy()) / (float)data.calibration.getDataWidth();
 		dr.drawToVectorSurface = context.isVectorSurface();
 		

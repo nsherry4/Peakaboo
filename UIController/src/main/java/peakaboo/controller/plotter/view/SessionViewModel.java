@@ -1,7 +1,6 @@
 package peakaboo.controller.plotter.view;
 
 import peakaboo.display.plot.ChannelCompositeMode;
-import scidraw.drawing.ViewTransform;
 
 public class SessionViewModel {
 
@@ -10,7 +9,7 @@ public class SessionViewModel {
 	public boolean				backgroundShowOriginal;
 	public float				zoom;
 	public boolean				lockPlotHeight;
-	public ViewTransform		viewTransform;
+	public boolean				logTransform;
 	
 	public SessionViewModel() {
 
@@ -19,7 +18,7 @@ public class SessionViewModel {
 		backgroundShowOriginal = false;
 		zoom = 1.0f;
 		lockPlotHeight = true;
-		viewTransform = ViewTransform.LOG;
+		logTransform = true;
 		
 	}
 	

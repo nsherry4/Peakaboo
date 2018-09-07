@@ -193,7 +193,7 @@ public class Mapper {
 		dr.uninterpolatedHeight = settings.dataHeight;
 		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
 		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
-		dr.viewTransform = settings.transform;
+		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 
 		
 		if (settings.scalemode == MapScaleMode.RELATIVE)
@@ -432,7 +432,7 @@ public class Mapper {
 		dr.uninterpolatedHeight = settings.dataHeight;
 		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
 		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
-		dr.viewTransform = settings.transform;
+		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 		
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;

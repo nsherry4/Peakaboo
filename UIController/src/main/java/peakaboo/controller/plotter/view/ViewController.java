@@ -14,9 +14,7 @@ import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.display.plot.ChannelCompositeMode;
 import peakaboo.display.plot.PlotSettings;
-import scidraw.drawing.ViewTransform;
 import scitypes.Pair;
-import scitypes.ReadOnlySpectrum;
 
 
 public class ViewController extends Eventful
@@ -70,21 +68,14 @@ public class ViewController extends Eventful
 	
 	public void setViewLog(boolean log)
 	{
-		if (log)
-		{
-			viewModel.session.viewTransform = ViewTransform.LOG;
-		}
-		else
-		{
-			viewModel.session.viewTransform = ViewTransform.LINEAR;
-		}
+		viewModel.session.logTransform = log;
 		setUndoPoint("Log View");
 		updateListeners();
 	}
 
 	public boolean getViewLog()
 	{
-		return viewModel.session.viewTransform == ViewTransform.LOG;
+		return viewModel.session.logTransform;
 	}
 
 	public void setChannelCompositeMode(ChannelCompositeMode mode)
@@ -322,7 +313,7 @@ public class ViewController extends Eventful
 		settings.showElementFitTitles = getShowElementTitles();
 		settings.showIndividualFittings = getShowIndividualSelections();
 		settings.showPlotTitle = getShowTitle();
-		settings.viewTransform = getViewLog() ? ViewTransform.LOG : ViewTransform.LINEAR;
+		settings.logTransform = getViewLog();
 		
 		return settings;
 	}

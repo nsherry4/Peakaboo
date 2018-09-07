@@ -192,7 +192,7 @@ class MapCanvas extends GraphicsPanel
 		settings.showMapTitle = viewSettings.getShowTitle();
 		settings.mapTitle = controller.getSettings().getMapFittings().mapLongTitle();
 		
-		settings.transform = controller.getSettings().getMapFittings().isLogView() ? ViewTransform.LOG : ViewTransform.LINEAR;
+		settings.logTransform = controller.getSettings().getMapFittings().isLogView();
 		settings.scalemode = controller.getSettings().getMapFittings().getMapScaleMode();
 		settings.monochrome = viewSettings.getMonochrome();
 		settings.contours = viewSettings.getContours();
