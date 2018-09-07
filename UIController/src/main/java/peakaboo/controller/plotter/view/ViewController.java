@@ -138,7 +138,6 @@ public class ViewController extends Eventful
 	{
 		viewModel.persistent.showAxes = axes;
 		savePersistentSettings();
-		plot.setAxisPainters(null);
 		setUndoPoint("Axes");
 		updateListeners();
 	}
@@ -157,7 +156,6 @@ public class ViewController extends Eventful
 	{
 		viewModel.persistent.showPlotTitle = show;
 		savePersistentSettings();
-		plot.setAxisPainters(null);
 		setUndoPoint("Title");
 		updateListeners();
 	}

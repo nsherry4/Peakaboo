@@ -1,6 +1,5 @@
 package peakaboo.controller.plotter;
 
-import java.util.List;
 import java.util.Map;
 
 import eventful.EventfulType;
@@ -15,8 +14,6 @@ import peakaboo.display.plot.PlotData;
 import peakaboo.filter.model.Filter;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
-import scidraw.drawing.painters.axis.AxisPainter;
-import scitypes.Pair;
 import scitypes.ReadOnlySpectrum;
 
 
@@ -30,10 +27,7 @@ import scitypes.ReadOnlySpectrum;
 
 public class PlotController extends EventfulType<String> 
 {
-	
-	public List<AxisPainter>				axisPainters;
-
-	
+		
 	private UndoController					undoController;
 	private DataController					dataController;
 	private FilteringController				filteringController;
@@ -273,17 +267,6 @@ public class PlotController extends EventfulType<String>
 	public ViewController view()
 	{
 		return viewController;
-	}
-
-	public List<AxisPainter> getAxisPainters()
-	{
-		return axisPainters;
-	}
-
-	public void setAxisPainters(List<AxisPainter> axisPainters)
-	{
-		this.axisPainters = axisPainters;
-	}
-	
+	}	
 	
 }
