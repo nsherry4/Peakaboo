@@ -1,6 +1,7 @@
 package peakaboo.ui.swing;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -20,14 +21,17 @@ import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
 import eventful.EventfulConfig;
+import peakaboo.common.Configuration;
 import peakaboo.common.Env;
 import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.common.MemoryProfile.Size;
 import peakaboo.curvefit.peak.table.CombinedPeakTable;
+import peakaboo.curvefit.peak.table.DelegatingPeakTable;
 import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.table.SerializedPeakTable;
 import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
@@ -215,7 +219,17 @@ public class Peakaboo
 		//do this in a separate thread so that it proceeds in parallel 
 		//with all the other tasks, since this is usually the longest 
 		//running init job
-		Thread peakLoader = new Thread(() -> PeakTable.SYSTEM.getAll());
+		Thread peakLoader = new Thread(() -> {
+			PeakTable original = PeakTable.SYSTEM.getSource();
+			String filename;
+			if (Version.release) {
+				filename = "derived-peakfile-" + Version.longVersionNo + ".yaml";
+			} else {
+				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".yaml";
+			}
+			File peakfile = new File(Configuration.appDir() + "/" + filename);
+			PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
+		});
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		

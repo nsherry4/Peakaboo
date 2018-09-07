@@ -16,6 +16,10 @@ public class DelegatingPeakTable implements PeakTable {
 		this.backing = table;
 	}
 	
+	public PeakTable getSource() {
+		return backing;
+	}
+	
 	@Override
 	public List<TransitionSeries> getAll() {
 		return backing.getAll();
