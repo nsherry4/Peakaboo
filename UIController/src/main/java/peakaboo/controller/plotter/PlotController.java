@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter;
 
+import java.io.File;
 import java.util.Map;
 
 import eventful.EventfulType;
@@ -34,6 +35,7 @@ public class PlotController extends EventfulType<String>
 	private FittingController				fittingController;
 	private ViewController					viewController;
 
+	private File configDir;
 
 	public static enum UpdateType
 	{
@@ -41,9 +43,10 @@ public class PlotController extends EventfulType<String>
 	}
 	
 	
-	public PlotController()
+	public PlotController(File configDir)
 	{
 		super();
+		this.configDir = configDir;
 		initPlotController();
 	}
 
@@ -267,6 +270,10 @@ public class PlotController extends EventfulType<String>
 	public ViewController view()
 	{
 		return viewController;
+	}
+
+	public File getConfigDir() {
+		return configDir;
 	}	
 	
 }

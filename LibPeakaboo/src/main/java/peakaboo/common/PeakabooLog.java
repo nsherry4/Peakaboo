@@ -23,10 +23,10 @@ public class PeakabooLog {
 	private final static String format = "%1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
 	private final static Map<String, Logger> loggers = new HashMap<>();
 	
-	public static void init() {
+	public static void init(File logDir) {
 		try {
 			removeDefaultHandlers();
-			configFileHandler();
+			configFileHandler(logDir);
 			configStdErr();
 		} catch (SecurityException | IOException e) {
 			getRoot().log(Level.WARNING, "Cannot create Peakaboo log file", e);
@@ -35,14 +35,13 @@ public class PeakabooLog {
 
 	
 	
-	private static void configFileHandler() throws IOException {
+	private static void configFileHandler(File logDir) throws IOException {
 	
-		File appDir = Configuration.appDir("Logging");
-		appDir.mkdirs();
-		String filename = appDir.getPath() + "/Peakaboo.log";
+		logDir.mkdirs();
+		String filename = logDir.getPath() + "/Peakaboo.log";
 				
 		//Workaround for JDK-8189953
-		new File(appDir.getPath() + "/Peakaboo.log").createNewFile();
+		new File(logDir.getPath() + "/Peakaboo.log").createNewFile();
 		////////////////////////////
 		
 		FileHandler handler = new FileHandler(filename, 16*1024*1024, 1, true);

@@ -1,5 +1,6 @@
 package peakaboo.datasource.plugin;
 
+import java.io.File;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
@@ -10,17 +11,21 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.plugin.plugins.PlainText;
 
 public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 {
 
-	public static DataSourcePluginManager SYSTEM = new DataSourcePluginManager();
+	public static DataSourcePluginManager SYSTEM;
 	
-	public DataSourcePluginManager() {
-		super(Configuration.appDir("Plugins/DataSource"));
+	public static void init(File dataSourceDir) {
+		SYSTEM = new DataSourcePluginManager(dataSourceDir);
+		SYSTEM.load();
+	}
+	
+	public DataSourcePluginManager(File dataSourceDir) {
+		super(dataSourceDir);
 	}
 	
 	protected synchronized void loadCustomPlugins() {

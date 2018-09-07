@@ -94,9 +94,10 @@ public class Env
 	{
 		switch (getOS())
 		{
+			case ANDROID: throw new UnsupportedOperationException("Function not supported on Android"); 	
 			case WINDOWS: return new File(System.getenv("APPDATA") + "\\" + appname + "\\" + subpath);
 			case MAC: return new File(homeDirectory() + "/Library/Application Support/" + appname + "/" + subpath);
-			
+					
 			case OTHER:
 			case UNIX:
 			default:

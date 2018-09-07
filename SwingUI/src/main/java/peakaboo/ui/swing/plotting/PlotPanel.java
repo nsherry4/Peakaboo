@@ -55,7 +55,6 @@ import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import peakaboo.common.Configuration;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
@@ -78,6 +77,7 @@ import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.environment.Apps;
+import peakaboo.ui.swing.environment.Configuration;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
@@ -161,7 +161,7 @@ public class PlotPanel extends LayerPanel
 		
 		datasetFolder = Env.homeDirectory();
 
-		controller = new PlotController();
+		controller = new PlotController(Configuration.appDir());
 				
 
 		initGUI();

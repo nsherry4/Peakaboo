@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.util.logging.Level;
 
 import eventful.Eventful;
-import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.PlotSpectra;
@@ -263,7 +262,7 @@ public class ViewController extends Eventful
 	 * from disk and does not create an undo point.
 	 */
 	public void loadPersistentSettings() {
-		File file = new File(Configuration.appDir() + "/settings.yaml");
+		File file = new File(plot.getConfigDir() + "/settings.yaml");
 		if (!file.exists()) {
 			savePersistentSettings();
 		}
@@ -286,7 +285,7 @@ public class ViewController extends Eventful
 	
 	
 	private void savePersistentSettings() {
-		File file = new File(Configuration.appDir() + "/settings.yaml");
+		File file = new File(plot.getConfigDir() + "/settings.yaml");
 		try {
 			
 			SavedPersistence saved = SavedPersistence.storeFrom(plot);

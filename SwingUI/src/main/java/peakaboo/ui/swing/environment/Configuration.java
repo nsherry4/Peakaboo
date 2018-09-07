@@ -1,6 +1,9 @@
-package peakaboo.common;
+package peakaboo.ui.swing.environment;
 
 import java.io.File;
+
+import peakaboo.common.Env;
+import peakaboo.common.Version;
 
 public class Configuration {
 

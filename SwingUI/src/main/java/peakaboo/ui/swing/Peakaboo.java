@@ -21,7 +21,6 @@ import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
 import eventful.EventfulConfig;
-import peakaboo.common.Configuration;
 import peakaboo.common.Env;
 import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
@@ -36,6 +35,7 @@ import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
+import peakaboo.ui.swing.environment.Configuration;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
@@ -236,14 +236,16 @@ public class Peakaboo
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
-			PeakabooLog.init();
+			PeakabooLog.init(Configuration.appDir("Logging"));
 			errorHook();
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			DataSourcePluginManager.SYSTEM.load();
-			FilterPluginManager.SYSTEM.load();
-			DataSinkPluginManager.SYSTEM.load();
+			
+			FilterPluginManager.init(Configuration.appDir("Plugins/Filter"));
+			DataSourcePluginManager.init(Configuration.appDir("Plugins/DataSource"));
+			DataSinkPluginManager.init(Configuration.appDir("Plugins/DataSink"));
+			
 			try {
 				peakLoader.join();
 			} catch (InterruptedException e) {

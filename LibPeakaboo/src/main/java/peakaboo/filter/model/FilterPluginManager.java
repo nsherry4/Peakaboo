@@ -1,5 +1,6 @@
 package peakaboo.filter.model;
 
+import java.io.File;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
@@ -10,7 +11,6 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import peakaboo.common.Configuration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
@@ -37,10 +37,15 @@ import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
 
-	public static FilterPluginManager SYSTEM = new FilterPluginManager();
+	public static FilterPluginManager SYSTEM;
 	
-	public FilterPluginManager() {
-		super(Configuration.appDir("Plugins/Filter"));
+	public static void init(File filterDir) {
+		SYSTEM = new FilterPluginManager(filterDir);
+		SYSTEM.load();
+	}
+	
+	public FilterPluginManager(File filterDir) {
+		super(filterDir);
 	}
 	
 	@Override
