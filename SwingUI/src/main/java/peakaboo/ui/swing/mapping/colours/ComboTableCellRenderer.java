@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import peakaboo.common.Version;
-import peakaboo.display.map.OverlayColour;
+import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.display.map.RatioColour;
 import swidget.widgets.Spacing;
 
@@ -35,7 +35,7 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		if ((value != null) && (value instanceof OverlayColour))
 		{
 			//Overlay Mode
-			Color c = ((OverlayColour) value).toColor();
+			Color c = new Color(((OverlayColour) value).toRGB());
 			renderer.setIcon(new SquareIcon( c ));
 			renderer.setText("");
 			renderer.setBackground( c );

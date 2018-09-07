@@ -26,11 +26,6 @@
 			<artifactId>libpeakaboo</artifactId>
 			<version>5-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>net.sciencestudio.peakaboo</groupId>
-			<artifactId>Display</artifactId>
-			<version>5-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 

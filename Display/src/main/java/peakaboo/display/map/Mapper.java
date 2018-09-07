@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Function;
 
+import peakaboo.controller.mapper.settings.MapDisplayMode;
+import peakaboo.controller.mapper.settings.MapScaleMode;
+import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
@@ -457,10 +460,10 @@ public class Mapper {
 				.map(TransitionSeries::toString)
 				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
 		
-		if (redSpectrum != null) 	colours.add(new Pair<>(OverlayColour.RED.toColor(), tsFormatter.apply(OverlayColour.RED)));
-		if (yellowSpectrum != null) colours.add(new Pair<>(OverlayColour.YELLOW.toColor(), tsFormatter.apply(OverlayColour.YELLOW)));
-		if (greenSpectrum != null) 	colours.add(new Pair<>(OverlayColour.GREEN.toColor(), tsFormatter.apply(OverlayColour.GREEN)));
-		if (blueSpectrum != null) 	colours.add(new Pair<>(OverlayColour.BLUE.toColor(), tsFormatter.apply(OverlayColour.BLUE)));
+		if (redSpectrum != null) 	colours.add(new Pair<>(color(OverlayColour.RED), tsFormatter.apply(OverlayColour.RED)));
+		if (yellowSpectrum != null) colours.add(new Pair<>(color(OverlayColour.YELLOW), tsFormatter.apply(OverlayColour.YELLOW)));
+		if (greenSpectrum != null) 	colours.add(new Pair<>(color(OverlayColour.GREEN), tsFormatter.apply(OverlayColour.GREEN)));
+		if (blueSpectrum != null) 	colours.add(new Pair<>(color(OverlayColour.BLUE), tsFormatter.apply(OverlayColour.BLUE)));
 		
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
@@ -509,41 +512,41 @@ public class Mapper {
 		
 		if (redSpectrum != null){
 			if (overlayMapPainterRed == null) {
-				overlayMapPainterRed = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColor()), redSpectrum);
+				overlayMapPainterRed = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.RED)), redSpectrum);
 				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterRed.setData(redSpectrum);
-			overlayMapPainterRed.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColor()));
+			overlayMapPainterRed.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.RED)));
 			painters.add(overlayMapPainterRed);
 		}
 			
 		if (greenSpectrum != null) {
 			if (overlayMapPainterGreen == null) {
-				overlayMapPainterGreen = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColor()), greenSpectrum);
+				overlayMapPainterGreen = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.GREEN)), greenSpectrum);
 				overlayMapPainterGreen.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterGreen.setData(greenSpectrum);
-			overlayMapPainterGreen.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColor()));
+			overlayMapPainterGreen.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.GREEN)));
 			painters.add(overlayMapPainterGreen);
 		}
 		
 		if (blueSpectrum != null) {
 			if (overlayMapPainterBlue == null) {
-				overlayMapPainterBlue = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()), blueSpectrum);
+				overlayMapPainterBlue = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.BLUE)), blueSpectrum);
 				overlayMapPainterBlue.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterBlue.setData(blueSpectrum);
-			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColor()));
+			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.BLUE)));
 			painters.add(overlayMapPainterBlue);
 		}
 		
 		if (yellowSpectrum != null) {
 			if (overlayMapPainterYellow == null) {
-				overlayMapPainterYellow = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColor()), yellowSpectrum);
+				overlayMapPainterYellow = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.YELLOW)), yellowSpectrum);
 				overlayMapPainterYellow.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterYellow.setData(yellowSpectrum);
-			overlayMapPainterYellow.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColor()));
+			overlayMapPainterYellow.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.YELLOW)));
 			painters.add(overlayMapPainterYellow);
 		}
 		
@@ -565,6 +568,9 @@ public class Mapper {
 		
 	}
 	
+	private Color color(OverlayColour oc) {
+		return new Color(oc.toRGB());
+	}
 	
 	
 	

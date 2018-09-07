@@ -8,7 +8,6 @@ import java.util.Set;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.display.map.MapDisplayMode;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.Pair;

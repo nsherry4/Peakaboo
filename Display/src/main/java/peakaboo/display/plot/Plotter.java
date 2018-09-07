@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
+import peakaboo.controller.plotter.view.PlotData;
+import peakaboo.controller.plotter.view.PlotSettings;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingMarkersPainter;

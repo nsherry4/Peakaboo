@@ -18,17 +18,14 @@ import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.PlotSpectra;
-import peakaboo.display.plot.PlotData;
-import peakaboo.display.plot.PlotSettings;
+import peakaboo.controller.plotter.view.PlotData;
+import peakaboo.controller.plotter.view.PlotSettings;
 import peakaboo.display.plot.Plotter;
-import scidraw.drawing.ViewTransform;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.plot.PlotDrawing;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.Pair;
-import scitypes.ReadOnlySpectrum;
 
 
 

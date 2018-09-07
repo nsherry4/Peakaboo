@@ -13,7 +13,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.display.plot.ChannelCompositeMode;
+import peakaboo.controller.plotter.view.ChannelCompositeMode;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;

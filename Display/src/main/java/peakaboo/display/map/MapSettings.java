@@ -3,6 +3,8 @@ package peakaboo.display.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import peakaboo.controller.mapper.settings.MapDisplayMode;
+import peakaboo.controller.mapper.settings.MapScaleMode;
 import scidraw.drawing.ViewTransform;
 import scidraw.drawing.map.painters.MapPainter;
 import scitypes.Coord;

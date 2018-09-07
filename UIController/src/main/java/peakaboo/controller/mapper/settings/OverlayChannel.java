@@ -1,4 +1,4 @@
-package peakaboo.display.map;
+package peakaboo.controller.mapper.settings;
 
 import java.util.List;
 

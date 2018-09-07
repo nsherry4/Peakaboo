@@ -13,7 +13,7 @@ import javax.swing.KeyStroke;
 
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.display.plot.ChannelCompositeMode;
+import peakaboo.controller.plotter.view.ChannelCompositeMode;
 import peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {
