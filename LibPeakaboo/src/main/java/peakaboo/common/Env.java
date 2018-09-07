@@ -14,6 +14,7 @@ public class Env
 		WINDOWS,
 		MAC,
 		UNIX,
+		ANDROID,
 		OTHER;
 		
 		
@@ -42,8 +43,12 @@ public class Env
 
 			String os = System.getProperty("os.name").toLowerCase();
 			// linux or unix
-			return (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0);
+			return (!isAndroid()) && (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0);
 
+		}
+		
+		public static boolean isAndroid() {
+			return System.getProperty("java.vendor").equals("The Android Project");
 		}
 
 		
@@ -60,6 +65,7 @@ public class Env
 		if (OS.isWindows()) return OS.WINDOWS;
 		if (OS.isMac()) return OS.MAC;
 		if (OS.isUnix()) return OS.UNIX;
+		if (OS.isAndroid()) return OS.ANDROID;
 		return OS.OTHER;
 	}
 	
