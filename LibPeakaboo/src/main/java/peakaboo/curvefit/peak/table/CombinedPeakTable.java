@@ -9,9 +9,15 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 
 public class CombinedPeakTable implements PeakTable {
 
-	List<TransitionSeries> series = new ArrayList<>();
+	List<TransitionSeries> series;
+	PeakTable[] members;
 	
 	public CombinedPeakTable(PeakTable... members) {
+		this.members = members;
+	}
+	
+	private void load() {
+		series = new ArrayList<>();
 		
 		Set<TransitionSeries> merged = new HashSet<>();
 		for (PeakTable member : members) {
@@ -35,6 +41,9 @@ public class CombinedPeakTable implements PeakTable {
 
 	@Override
 	public List<TransitionSeries> getAll() {
+		if (series == null) {
+			load();
+		}
 		
 		List<TransitionSeries> copy = new ArrayList<>();
 		for (TransitionSeries ts : series) {

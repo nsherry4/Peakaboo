@@ -22,6 +22,7 @@ public class FilteringPeakTable implements PeakTable {
 	private PeakTable backing;
 	
 	private Set<Element> filteredElements = new LinkedHashSet<>();
+	//TODO: This causes eager loading of backing peak table by having to look up TransitionSeries
 	private Set<TransitionSeries> filteredTransitionSeries = new LinkedHashSet<>();
 	
 	public FilteringPeakTable(PeakTable backing) {

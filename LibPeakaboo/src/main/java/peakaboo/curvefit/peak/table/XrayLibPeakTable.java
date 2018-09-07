@@ -14,11 +14,9 @@ import scitypes.RangeSet;
 
 public class XrayLibPeakTable implements PeakTable {
 
-	private List<TransitionSeries> series = new ArrayList<>();
+	private List<TransitionSeries> series;
 	
-	public XrayLibPeakTable() {
-		readPeakTableXraylib();
-	}
+	public XrayLibPeakTable() {}
 	
 	private void add(TransitionSeries ts) {
 		if (ts.getTransitionCount() == 0) return;
@@ -28,6 +26,9 @@ public class XrayLibPeakTable implements PeakTable {
 
 	@Override
 	public List<TransitionSeries> getAll() {
+		if (series == null) {
+			readPeakTableXraylib();
+		}
 		
 		List<TransitionSeries> copy = new ArrayList<>();
 		for (TransitionSeries ts : series) {
@@ -40,7 +41,7 @@ public class XrayLibPeakTable implements PeakTable {
 
 	
 	public void readPeakTableXraylib() {
-		//PeakTable.clearSeries();
+		series = new ArrayList<>();
 		
 		RangeSet kLines = new RangeSet();
 		kLines.addRange(new Range(-29, -1));

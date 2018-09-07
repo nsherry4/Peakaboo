@@ -37,7 +37,7 @@ public interface PeakTable {
 			.filter(Element.Es)
 			.filter(Element.Fm)
 			.filter(Element.Ac)
-			.filter(Element.F, TransitionSeriesType.K)
+			.filter(Element.F)
 	);
 	
 	default TransitionSeries get(Element e, TransitionSeriesType tst) {
