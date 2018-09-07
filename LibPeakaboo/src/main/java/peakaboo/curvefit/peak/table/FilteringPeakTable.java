@@ -1,5 +1,6 @@
 package peakaboo.curvefit.peak.table;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +55,15 @@ public class FilteringPeakTable implements PeakTable {
 					.filter(ts -> !filteredTransitionSeries.contains(ts))
 					.collect(Collectors.toList());
 		}
-		return all;
+		
+
+		List<TransitionSeries> copy = new ArrayList<>();
+		for (TransitionSeries ts : all) {
+			copy.add(new TransitionSeries(ts));
+		}
+		return copy;
+			
+		
 	}
 
 }

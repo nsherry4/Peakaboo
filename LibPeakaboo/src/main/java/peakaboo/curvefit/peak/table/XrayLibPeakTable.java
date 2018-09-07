@@ -28,7 +28,13 @@ public class XrayLibPeakTable implements PeakTable {
 
 	@Override
 	public List<TransitionSeries> getAll() {
-		return new ArrayList<>(series);
+		
+		List<TransitionSeries> copy = new ArrayList<>();
+		for (TransitionSeries ts : series) {
+			copy.add(new TransitionSeries(ts));
+		}
+		return copy;
+		
 	}
 
 
