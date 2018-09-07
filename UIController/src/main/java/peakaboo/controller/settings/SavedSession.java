@@ -1,6 +1,7 @@
 package peakaboo.controller.settings;
 
 import peakaboo.common.Version;
+import peakaboo.common.YamlSerializer;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.SavedDataSession;
 import peakaboo.controller.plotter.filtering.SavedFilteringSession;
@@ -28,13 +29,13 @@ public class SavedSession {
 	 * Decodes a serialized data object from yaml
 	 */
 	public static SavedSession deserialize(String yaml) {
-		return SettingsSerializer.deserialize(yaml);
+		return YamlSerializer.deserialize(yaml);
 	}
 	/**
 	 * Encodes the serialized data as yaml
 	 */
 	public String serialize() {
-		return SettingsSerializer.serialize(this);
+		return YamlSerializer.serialize(this);
 	}
 
 	

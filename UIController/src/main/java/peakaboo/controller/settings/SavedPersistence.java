@@ -1,6 +1,7 @@
 package peakaboo.controller.settings;
 
 
+import peakaboo.common.YamlSerializer;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.view.PersistentViewModel;
 
@@ -18,13 +19,13 @@ public class SavedPersistence {
 	 * Decodes a serialized data object from yaml
 	 */
 	public static SavedPersistence deserialize(String yaml) {
-		return SettingsSerializer.deserialize(yaml);
+		return YamlSerializer.deserialize(yaml);
 	}
 	/**
 	 * Encodes the serialized data as yaml
 	 */
 	public String serialize() {
-		return SettingsSerializer.serialize(this);
+		return YamlSerializer.serialize(this);
 	}
 	
 	

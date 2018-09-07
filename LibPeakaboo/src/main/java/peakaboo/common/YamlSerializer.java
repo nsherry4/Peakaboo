@@ -1,11 +1,11 @@
-package peakaboo.controller.settings;
+package peakaboo.common;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
-public class SettingsSerializer {
+public class YamlSerializer {
 
 	/**
 	 * Decodes a serialized data object from yaml
