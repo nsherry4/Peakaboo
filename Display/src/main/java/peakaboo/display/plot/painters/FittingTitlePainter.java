@@ -68,6 +68,11 @@ public class FittingTitlePainter extends PlotPainter
 	public void drawElement(PainterData p)
 	{
 		
+		//Don't draw without energy calibration
+		if (calibration.isZero()) {
+			return;
+		}
+		
 		p.context.save();
 			
 			p.context.setFontSize(p.context.getFontSize() + 2);

@@ -50,6 +50,11 @@ public class FittingMarkersPainter extends PlotPainter
 	@Override
 	public void drawElement(PainterData p)
 	{
+		//Don't draw without energy calibration
+		if (parameters.getCalibration().isZero()) {
+			return;
+		}
+		
 		DrawingRequest dr = p.dr;
 		float channel, markerHeight;
 		Spectrum markerHeights = new ISpectrum(dr.dataWidth);

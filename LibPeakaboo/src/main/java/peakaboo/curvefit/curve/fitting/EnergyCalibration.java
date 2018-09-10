@@ -41,6 +41,9 @@ public class EnergyCalibration {
 	}
 
 
+	public boolean isZero() {
+		return (minEnergy == 0f && maxEnergy == 0f) || (maxEnergy - minEnergy <= 0f);
+	}
 
 
 	/**
