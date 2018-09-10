@@ -158,9 +158,11 @@ public class PlotController extends EventfulType<String>
 		
 		data.filters = filtering().getActiveFilters();
 		
-		data.filtered = dataForPlot.filtered;
-		data.raw = dataForPlot.raw;
-		data.deltas = dataForPlot.deltas;
+		if (dataForPlot != null) {
+			data.filtered = dataForPlot.filtered;
+			data.raw = dataForPlot.raw;
+			data.deltas = dataForPlot.deltas;
+		}
 
 		
 		
@@ -185,7 +187,7 @@ public class PlotController extends EventfulType<String>
 		// get the original data
 		originalData = currentScan();
 
-		regenerateCahcedData();
+		regenerateCachedData();
 		
 		PlotSpectra spectra = new PlotSpectra();
 		spectra.raw = originalData;
@@ -201,7 +203,7 @@ public class PlotController extends EventfulType<String>
 	 * fitted plots are requested, the calculated data is cached. When a setting is changed such 
 	 * that the cached data would no longer match freshly calculated data, the cache must be cleared.
 	 */
-	public void regenerateCahcedData()
+	public void regenerateCachedData()
 	{
 
 		// Regenerate Filtered Data

@@ -133,7 +133,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public float getTransitionSeriesIntensity(TransitionSeries ts)
 	{
-		plot.regenerateCahcedData();
+		plot.regenerateCachedData();
 
 		if (fittingModel.selectionResults == null) return 0.0f;
 
