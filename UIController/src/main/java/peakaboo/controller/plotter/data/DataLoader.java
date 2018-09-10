@@ -51,13 +51,18 @@ public abstract class DataLoader {
 					
 				if (result == null || result.status == ReadStatus.FAILED)
 				{
-					if (result == null) {
-						PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
-					} else if (result.problem != null) {
-						PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
-					} else {
-						onFail(paths, "Peakaboo could not open this dataset.\n" + result.message);
+					String message = "Peakaboo could not open this dataset";
+					message = "\nSource: " + dsp.getFileFormat().getFormatName();
+					
+					if (result != null && result.message != null) {
+						message += "\nMessage: " + result.message;
 					}
+					if (result != null && result.problem != null) {
+						message += "\nProblem: " + result.problem;
+					}
+					
+					PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", message);
+					onFail(paths, message);
 					
 				} else {
 					sessionCallback.run();
