@@ -31,10 +31,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -60,6 +63,7 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.data.DataLoader;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
@@ -391,8 +395,125 @@ public class PlotPanel extends LayerPanel
 		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", datasetFolder, extensions, files -> {
 			if (!files.isPresent()) return;
 			datasetFolder = files.get().get(0).getParentFile();
-			loadFiles(files.get().stream().map(File::toPath).collect(Collectors.toList()), null);
+			
+			load(files.get());
+			
 		});
+	}
+	
+	void load(List<File> files) {
+		Mutable<ModalLayer> loadingLayer = new Mutable<>(null);
+		
+		DataLoader loader = new DataLoader(controller, files.stream().map(File::toPath).collect(Collectors.toList())) {
+
+			@Override
+			public void onLoading(ExecutorSet<DatasetReadResult> job) {
+				ExecutorSetView execPanel = new ExecutorSetView(job); 
+				loadingLayer.set(new ModalLayer(PlotPanel.this, execPanel));
+				PlotPanel.this.pushLayer(loadingLayer.get());
+			}
+			
+			@Override
+			public void onSuccess(List<Path> paths) {
+				// set some controls based on the fact that we have just loaded a
+				// new data set
+				controller.data().setDataPaths(paths);
+				//TODO: Should this be cleared even when we load a session?
+				savedSessionFileName = null;
+				canvas.updateCanvasSize();
+				removeLayer(loadingLayer.get());
+			}
+
+			@Override
+			public void onFail(List<Path> paths, String message) {
+				new LayerDialog(
+						"Open Failed", 
+						message, 
+						MessageType.ERROR
+					).showIn(PlotPanel.this);
+			}
+
+			@Override
+			public void onParameters(Group parameters, Consumer<Boolean> finished) {
+				JPanel paramPanel = new JPanel(new BorderLayout());
+				ModalLayer layer = new ModalLayer(PlotPanel.this, paramPanel);
+				
+				TitlePaintedPanel title = new TitlePaintedPanel("Additional Information Required", false);
+				title.setBorder(Spacing.bMedium());
+				
+				
+				SwingAutoPanel sap = new SwingAutoPanel(parameters);
+				sap.setBorder(Spacing.bMedium());
+				
+				ButtonBox bbox = new ButtonBox();
+				ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
+				ok.addActionListener(e -> {
+					PlotPanel.this.removeLayer(layer);
+					finished.accept(true);
+				});
+				
+				ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
+				cancel.addActionListener(e -> {
+					PlotPanel.this.removeLayer(layer);
+					finished.accept(false);
+				});
+				
+				bbox.addRight(0, cancel);
+				bbox.addRight(0, ok);
+				
+				paramPanel.add(title, BorderLayout.NORTH);
+				paramPanel.add(sap, BorderLayout.CENTER);
+				paramPanel.add(bbox, BorderLayout.SOUTH);
+				
+				PlotPanel.this.pushLayer(layer);
+			}
+
+
+
+
+			@Override
+			public void onSelection(List<DataSource> datasources, Consumer<DataSource> selected) {
+				DataSourceSelection selection = new DataSourceSelection();
+				selection.pickDSP(PlotPanel.this, datasources, selected);
+			}
+
+
+
+			@Override
+			public void onSessionNewer() {
+				ToastLayer warning = new ToastLayer(PlotPanel.this, "Session is from a newer version of Peakaboo.\nSome settings may not load correctly.");
+				PlotPanel.this.pushLayer(warning);
+			}
+			
+			@Override
+			public void onSessionHasData(File sessionFile, Consumer<Boolean> load) {
+				ImageButton buttonYes = new ImageButton("Yes")
+						.withStateDefault()
+						.withAction(() -> {
+							savedSessionFileName = sessionFile;
+							load.accept(true);
+						});
+				
+				ImageButton buttonNo = new ImageButton("No")
+						.withAction(() -> {
+							load.accept(false);
+						});
+				
+				new LayerDialog(
+						"Open Associated Data Set?", 
+						"This session is associated with another data set.\nDo you want to open that data set now?", 
+						MessageType.QUESTION)
+					.addRight(buttonYes)
+					.addLeft(buttonNo)
+					.showIn(PlotPanel.this);
+				
+				buttonYes.grabFocus();
+			}
+			
+		};
+		
+		
+		loader.load();
 	}
 
 
@@ -514,130 +635,7 @@ public class PlotPanel extends LayerPanel
 	}
 	
 
-	public void loadFiles(List<Path> paths, Runnable after) {
-		if (paths.size() == 0) {
-			return;
-		}
 
-		//check if it's a peakaboo session file first
-		if (paths.size() == 1 && paths.get(0).toString().toLowerCase().endsWith(".peakaboo")) {
-			loadSession(paths.get(0).toFile());
-			return;
-		}
-		
-		List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
-		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
-		
-		if (formats.size() > 1)
-		{
-			DataSourceSelection selection = new DataSourceSelection();
-			selection.pickDSP(this, formats, dsp -> parameterPrompt(paths, dsp, after));
-		}
-		else if (formats.size() == 0)
-		{
-			new LayerDialog(
-					"Open Failed", 
-					"Could not determine the data format of the selected file(s)", 
-					MessageType.ERROR
-				).showIn(this);
-		}
-		else
-		{
-			parameterPrompt(paths, formats.get(0), after);
-		}
-		
-	}
-	
-	private void parameterPrompt(List<Path> files, DataSource dsp, Runnable after) {
-		Optional<Group> parameters = dsp.getParameters(files);
-		//If this data source required any additional input, get it for it now
-		if (parameters.isPresent()) {
-			JPanel paramPanel = new JPanel(new BorderLayout());
-					
-			TitlePaintedPanel title = new TitlePaintedPanel("Additional Information Required", false);
-			title.setBorder(Spacing.bMedium());
-			
-			
-			SwingAutoPanel sap = new SwingAutoPanel(parameters.get());
-			sap.setBorder(Spacing.bMedium());
-			
-			ButtonBox bbox = new ButtonBox();
-			ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
-			ok.addActionListener(e -> {
-				this.popLayer();
-				loadFiles(files, dsp, after);
-			});
-			
-			ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
-			cancel.addActionListener(e -> {
-				this.popLayer();
-				return;
-			});
-			
-			bbox.addRight(0, cancel);
-			bbox.addRight(0, ok);
-			
-			paramPanel.add(title, BorderLayout.NORTH);
-			paramPanel.add(sap, BorderLayout.CENTER);
-			paramPanel.add(bbox, BorderLayout.SOUTH);
-
-			this.pushLayer(new ModalLayer(this, paramPanel));
-			
-		} else {
-			loadFiles(files, dsp, after);
-		}
-	}
-	
-
-	private void loadFiles(List<Path> paths, DataSource dsp, Runnable after)
-	{
-		if (paths != null)
-		{
-			
-			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(paths, dsp, result -> {
-				javax.swing.SwingUtilities.invokeLater(() -> {
-						
-					if (result == null || result.status == ReadStatus.FAILED)
-					{
-						if (result == null) {
-							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", "Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName());
-						} else if (result.problem != null) {
-							PeakabooLog.get().log(Level.SEVERE, "Error Opening Data: Peakaboo could not open this dataset from " + dsp.getFileFormat().getFormatName(), result.problem);
-						} else {
-							new LayerDialog(
-									"Open Failed", 
-									"Peakaboo could not open this dataset.\n" + result.message, 
-									MessageType.ERROR
-								).showIn(this);
-						}
-					}
-
-					// set some controls based on the fact that we have just loaded a
-					// new data set
-					controller.data().setDataPaths(paths);
-					savedSessionFileName = null;
-					canvas.updateCanvasSize();
-					popLayer();
-					if (after != null) {
-						after.run();
-					}
-					
-							
-				});
-			});
-			
-			
-			
-			ExecutorSetView execPanel = new ExecutorSetView(reading); 
-			pushLayer(new ModalLayer(this, execPanel));
-			reading.startWorking();
-			
-			
-			
-
-
-		}
-	}
 	
 	
 	public void loadExistingDataSource(DataSource ds, String settings) {
@@ -914,73 +912,11 @@ public class PlotPanel extends LayerPanel
 			if (!file.isPresent()) {
 				return;
 			}
-			loadSession(file.get());
+			load(Collections.singletonList(file.get()));
 		});
 
 	}
 
-	private void loadSession(File file) {
-		try {
-			SavedSession session = controller.readSavedSettings(StringInput.contents(file));
-			
-			
-			//chech if the session is from a newer version of Peakaboo, and warn if it is
-			Runnable warnVersion = () -> {
-				if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) > 0) {
-					ToastLayer warning = new ToastLayer(this, "Session is from a newer version of Peakaboo.\nSome settings may not load correctly.");
-					this.pushLayer(warning);
-				}
-			};
-			
-			List<Path> currentPaths = controller.data().getDataPaths();
-			List<Path> sessionPaths = session.data.filesAsDataPaths();
-			
-			boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
-			
-			//If the data files in the saved session are different, offer to load the data set from the new session
-			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
-				
-				ImageButton buttonYes = new ImageButton("Yes").withAction(() -> {
-					//they said yes, load the new data, and then apply the session
-					//this needs to be done this way b/c loading a new dataset wipes out
-					//things like calibration info
-					this.loadFiles(sessionPaths, () -> {
-						controller.loadSessionSettings(session);	
-						savedSessionFileName = file;
-						warnVersion.run();
-					});
-				}).withStateDefault();
-				
-				ImageButton buttonNo = new ImageButton("No").withAction(() -> {
-					//load the settings w/o the data, then set the file paths back to the current values
-					controller.loadSessionSettings(session);
-					//they said no, reset the stored paths to the old ones
-					controller.data().setDataPaths(currentPaths);
-					warnVersion.run();
-				});
-				
-				new LayerDialog(
-						"Open Associated Data Set?", 
-						"This session is associated with another data set.\nDo you want to open that data set now?", 
-						MessageType.QUESTION)
-					.addRight(buttonYes)
-					.addLeft(buttonNo)
-					.showIn(this);
-				
-				buttonYes.grabFocus();
-				
-			} else {
-				//just load the session, as there is either no data associated with it, or it's the same data
-				controller.loadSessionSettings(session);
-				warnVersion.run();
-			}
-			
-
-			
-		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
-		}
-	}
 	
 	public void actionShowInfo()
 	{
