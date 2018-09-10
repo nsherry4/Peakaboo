@@ -19,9 +19,11 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 
 	public static DataSourcePluginManager SYSTEM;
 	
-	public static void init(File dataSourceDir) {
-		SYSTEM = new DataSourcePluginManager(dataSourceDir);
-		SYSTEM.load();
+	public synchronized static void init(File dataSourceDir) {
+		if (SYSTEM == null) {
+			SYSTEM = new DataSourcePluginManager(dataSourceDir);
+			SYSTEM.load();
+		}
 	}
 	
 	public DataSourcePluginManager(File dataSourceDir) {

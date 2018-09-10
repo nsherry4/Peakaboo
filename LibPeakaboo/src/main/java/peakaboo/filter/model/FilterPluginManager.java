@@ -40,8 +40,10 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	public static FilterPluginManager SYSTEM;
 	
 	public static void init(File filterDir) {
-		SYSTEM = new FilterPluginManager(filterDir);
-		SYSTEM.load();
+		if (SYSTEM == null) {
+			SYSTEM = new FilterPluginManager(filterDir);
+			SYSTEM.load();
+		}
 	}
 	
 	public FilterPluginManager(File filterDir) {

@@ -19,8 +19,10 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 	public static DataSinkPluginManager SYSTEM;
 	
 	public static void init(File dataSinkDir) {
-		SYSTEM = new DataSinkPluginManager(dataSinkDir);
-		SYSTEM.load();
+		if (SYSTEM == null) {
+			SYSTEM = new DataSinkPluginManager(dataSinkDir);
+			SYSTEM.load();
+		}
 	}
 	
 	public DataSinkPluginManager(File dataSinkDir) {
