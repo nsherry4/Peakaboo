@@ -22,10 +22,16 @@ public class PeakabooLog {
 
 	private final static String format = "%1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
 	private final static Map<String, Logger> loggers = new HashMap<>();
+	private static boolean initted = false;
 	
-	public static void init(File logDir) {
+	public synchronized static void init(File logDir) {
+		if (initted == true) {
+			return;
+		}
+		initted = true;
+		
 		try {
-			removeDefaultHandlers();
+			//removeDefaultHandlers();
 			configFileHandler(logDir);
 			configStdErr();
 		} catch (SecurityException | IOException e) {

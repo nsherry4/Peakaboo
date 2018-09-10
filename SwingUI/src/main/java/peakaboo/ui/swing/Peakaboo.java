@@ -207,7 +207,7 @@ public class Peakaboo
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		
+		PeakabooLog.init(Configuration.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
@@ -236,7 +236,6 @@ public class Peakaboo
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
-			PeakabooLog.init(Configuration.appDir("Logging"));
 			errorHook();
 			startGCTimer();
 			warnLowMemory();
