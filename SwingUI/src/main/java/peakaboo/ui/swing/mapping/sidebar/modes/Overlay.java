@@ -59,7 +59,7 @@ public class Overlay extends JPanel {
 	
 	private void createElementsList() {
 
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
 
 		// elements list
 		add(createTransitionSeriesList(), BorderLayout.CENTER);

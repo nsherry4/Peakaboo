@@ -38,8 +38,6 @@ public class Composite extends JPanel {
 		this.controller = _controller;
 		this.mapFittings = _controller.getMapFittings();
 		
-		this.setBackground(Color.RED);
-		
 		createElementsList();
 		
 	}
@@ -48,7 +46,7 @@ public class Composite extends JPanel {
 	private void createElementsList()
 	{
 				
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
 				
 		//elements list
 		add(createTransitionSeriesList(), BorderLayout.CENTER);

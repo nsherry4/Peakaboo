@@ -73,7 +73,7 @@ public class Ratio extends JPanel {
 	private JPanel createElementsList() {
 
 		JPanel elementsPanel = new JPanel();
-		elementsPanel.setLayout(new BorderLayout());
+		elementsPanel.setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
 
 		// elements list
 		elementsPanel.add(createTransitionSeriesList(), BorderLayout.CENTER);
