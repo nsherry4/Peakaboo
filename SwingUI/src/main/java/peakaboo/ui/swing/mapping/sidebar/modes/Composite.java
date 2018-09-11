@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
@@ -20,28 +21,26 @@ import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.mapping.results.MapResult;
+import peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
+import peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 import swidget.widgets.Spacing;
 
 public class Composite extends JPanel {
 	
 	private MapFittingSettings mapFittings;
+	private MapSettingsController controller;
 	
-	private JRadioButton 		relativeScale;
-	private JRadioButton 		absoluteScale;
-	private JCheckBox			logView;
+	private ScaleModeWidget scaleMode;
 	
 	
 	public Composite(MapSettingsController _controller) {
 		
+		this.controller = _controller;
 		this.mapFittings = _controller.getMapFittings();
 		
-		createElementsList();
+		this.setBackground(Color.RED);
 		
-		_controller.addListener(s -> {
-			absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-			relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
-			logView.setSelected(mapFittings.isLogView());
-		});
+		createElementsList();
 		
 	}
 	
@@ -60,46 +59,9 @@ public class Composite extends JPanel {
 	
 	
 	
-	private JPanel createScaleOptions()
-	{
-		JPanel viewFrame = new JPanel(new BorderLayout());
-		
-		logView = new JCheckBox("Logarithmic Scale");
-		logView.setSelected(mapFittings.isLogView());
-		logView.addActionListener(e -> {
-			mapFittings.setLogView(logView.isSelected());
-		});
-		viewFrame.add(logView, BorderLayout.NORTH);
-		
-		
-		JPanel modeFrame = new JPanel();
-		
-		TitledBorder titleBorder = new TitledBorder("Scale Intensities by:");
-		titleBorder.setBorder(Spacing.bNone());
-		
-		modeFrame.setBorder(titleBorder);
-		modeFrame.setLayout(new BoxLayout(modeFrame, BoxLayout.Y_AXIS));
-		
-		
-		
-		
-		relativeScale = new JRadioButton("Visible Fittings");
-		absoluteScale = new JRadioButton("All Fittings");
-		ButtonGroup scaleGroup = new ButtonGroup();
-		scaleGroup.add(relativeScale);
-		scaleGroup.add(absoluteScale);
-		absoluteScale.setSelected(true);
-		
-		relativeScale.addActionListener(e -> mapFittings.setMapScaleMode(MapScaleMode.RELATIVE));
-		absoluteScale.addActionListener(e -> mapFittings.setMapScaleMode(MapScaleMode.ABSOLUTE));
-		
-		modeFrame.add(relativeScale);
-		modeFrame.add(absoluteScale);
-		
-		viewFrame.add(modeFrame, BorderLayout.CENTER);
-		
-		return viewFrame;
-		
+	private JPanel createScaleOptions() {
+		scaleMode = new ScaleModeWidget(controller, "Visible", "All", false);
+		return scaleMode;
 	}
 	
 
@@ -143,7 +105,7 @@ public class Composite extends JPanel {
 
 				} else {
 
-					return ts.toElementString();
+					return ts;
 				}
 
 			}
@@ -171,7 +133,7 @@ public class Composite extends JPanel {
 			public Class<?> getColumnClass(int columnIndex)
 			{
 				if (columnIndex == 0) return Boolean.class;
-				return MapResult.class;
+				return TransitionSeries.class;
 			}
 
 
@@ -183,15 +145,26 @@ public class Composite extends JPanel {
 		};
 
 		JTable table = new JTable(m);
-
+		table.setTableHeader(null);
+		table.setShowVerticalLines(false);
+		table.setShowHorizontalLines(false);
+		table.setFillsViewportHeight(true);
+		
+		MapFittingRenderer renderer = new MapFittingRenderer();
+		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
+		table.setRowHeight(renderer.getPreferredSize().height);
+		
 		TableColumn column = null;
 		column = table.getColumnModel().getColumn(0);
 		column.setResizable(false);
 		column.setPreferredWidth(45);
 		column.setMaxWidth(45);
+		
+		
 
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));
+		scroll.setBorder(Spacing.bNone());
 		
 
 		return scroll;
@@ -199,3 +172,5 @@ public class Composite extends JPanel {
 	}
 	
 }
+
+

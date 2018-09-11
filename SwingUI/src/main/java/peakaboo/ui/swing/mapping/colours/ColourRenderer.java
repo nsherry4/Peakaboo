@@ -14,28 +14,26 @@ import java.awt.Polygon;
 import javax.swing.Icon;
 
 
-class SquareIcon implements Icon
+class ColourRenderer implements Icon
 {
 
 	private Color				color;
-	private boolean				selected;
 	private int					width;
 	private int					height;
 	private Polygon				poly;
-	private static final int	DEFAULT_WIDTH	= 10;
-	private static final int	DEFAULT_HEIGHT	= 10;
+	private static final int	DEFAULT_WIDTH	= 20;
+	private static final int	DEFAULT_HEIGHT	= 20;
 
 
-	public SquareIcon(Color color)
+	public ColourRenderer(Color color)
 	{
-		this(color, true, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		this(color, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
 
-	private SquareIcon(Color color, boolean selected, int width, int height)
+	private ColourRenderer(Color color, int width, int height)
 	{
 		this.color = color;
-		this.selected = selected;
 		this.width = width;
 		this.height = height;
 		initPolygon();
@@ -67,15 +65,6 @@ class SquareIcon implements Icon
 	public void paintIcon(Component c, Graphics g, int x, int y)
 	{
 		g.setColor(color);
-		g.translate(x, y);
-		if (selected)
-		{
-			g.fillPolygon(poly);
-		}
-		else
-		{
-			g.drawPolygon(poly);
-		}
-		g.translate(-x, -y);
+		g.fillRect(0, 0, 1000, 1000);
 	}
 }

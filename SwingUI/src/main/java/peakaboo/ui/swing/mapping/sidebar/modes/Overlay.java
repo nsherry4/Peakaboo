@@ -26,6 +26,8 @@ import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
+import peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
+import peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -35,90 +37,24 @@ import swidget.widgets.Spacing;
 public class Overlay extends JPanel {
 
 	private MapFittingSettings mapFittings;
+	private MapSettingsController controller;
 	
-	private JRadioButton 		relativeScale;
-	private JRadioButton 		absoluteScale;
-	private JCheckBox			logView;
+	private ScaleModeWidget scaleMode;
 	
 	public Overlay(MapSettingsController _controller) {
 
+		this.controller = _controller;
 		this.mapFittings = _controller.getMapFittings();
 		
 		createElementsList();
-
-		_controller.addListener(s -> {
-			absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-			relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
-			logView.setSelected(mapFittings.isLogView());
-		});
 		
 	}
 
 	
 
-	private JPanel createScaleOptions()
-	{
-		JPanel viewFrame = new JPanel(new BorderLayout());
-		
-		logView = new JCheckBox("Logarithmic Scale");
-		logView.setSelected(mapFittings.isLogView());
-		logView.addActionListener(e -> {
-			mapFittings.setLogView(logView.isSelected());
-		});
-		viewFrame.add(logView, BorderLayout.NORTH);
-		
-				
-		JPanel modeFrame = new JPanel();
-		
-		TitledBorder titleBorder = new TitledBorder("Scale Colours:");
-		titleBorder.setBorder(Spacing.bNone());
-		
-		modeFrame.setBorder(titleBorder);
-		modeFrame.setLayout(new BorderLayout());
-		
-		JPanel visibleElementsPanel = new ClearPanel();
-		visibleElementsPanel.setLayout(new BorderLayout());
-		
-		relativeScale = new JRadioButton("Separately (Qualitative)");
-		JLabel warning = new JLabel( StockIcon.BADGE_WARNING.toImageIcon(IconSize.BUTTON) );
-		visibleElementsPanel.add(relativeScale, BorderLayout.WEST);
-		visibleElementsPanel.add(warning, BorderLayout.EAST);
-		
-		relativeScale.setToolTipText("Warning: This option gives qualitative results only. Scaling each colour group independantly may lead to better looking graphs, but they will not be accurate.");
-		warning.setToolTipText("Warning: This option gives qualitative results only. Scaling each colour group independantly may lead to better looking graphs, but they will not be accurate.");
-		
-		absoluteScale = new JRadioButton("As a Group");
-		
-		
-		
-		ButtonGroup scaleGroup = new ButtonGroup();
-		scaleGroup.add(relativeScale);
-		scaleGroup.add(absoluteScale);
-		absoluteScale.setSelected(true);
-		
-		relativeScale.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				mapFittings.setMapScaleMode(MapScaleMode.RELATIVE);
-			}
-		});
-		absoluteScale.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				mapFittings.setMapScaleMode(MapScaleMode.ABSOLUTE);
-			}
-		});
-		
-		
-		modeFrame.add(visibleElementsPanel, BorderLayout.NORTH);
-		modeFrame.add(absoluteScale, BorderLayout.SOUTH);
-		
-		
-		
-		viewFrame.add(modeFrame, BorderLayout.CENTER);
-		
-		return viewFrame;
-		
+	private JPanel createScaleOptions() {
+		scaleMode = new ScaleModeWidget(controller, "Colour", "All", true);
+		return scaleMode;
 	}
 	
 	private void createElementsList() {
@@ -178,7 +114,7 @@ public class Overlay extends JPanel {
 				switch (columnIndex) {
 
 					case 0: return mapFittings.getTransitionSeriesVisibility(ts);
-					case 1: return ts.toElementString();
+					case 1: return ts;
 					case 2: return mapFittings.getOverlayColour(ts);
 				}
 
@@ -210,7 +146,7 @@ public class Overlay extends JPanel {
 				switch (columnIndex)
 				{
 					case 0:	return Boolean.class;
-					case 1: return String.class;
+					case 1: return TransitionSeries.class;
 					case 2: return OverlayColour.class;
 				}
 				return Object.class;
@@ -223,7 +159,15 @@ public class Overlay extends JPanel {
 		};
 
 		JTable table = new JTable(m);
-
+		table.setTableHeader(null);
+		table.setShowVerticalLines(false);
+		table.setShowHorizontalLines(false);
+		table.setFillsViewportHeight(true);
+		
+		MapFittingRenderer fitRenderer = new MapFittingRenderer();
+		table.getColumnModel().getColumn(1).setCellRenderer(fitRenderer);
+		table.setRowHeight(fitRenderer.getPreferredSize().height);
+		
 		
 		TableColumn column = null;
 		column = table.getColumnModel().getColumn(0);
@@ -235,20 +179,23 @@ public class Overlay extends JPanel {
 		
 
 				
-		ComboTableCellRenderer<OverlayColour> renderer = new ComboTableCellRenderer<>();
+		ComboTableCellRenderer<OverlayColour> colourRenderer = new ComboTableCellRenderer<>();
 		JComboBox<OverlayColour> comboBox = new JComboBox<>(OverlayColour.values());
-		comboBox.setRenderer(renderer);
+		comboBox.setRenderer(colourRenderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
 		
 		column = table.getColumnModel().getColumn(2);
-		column.setCellRenderer(renderer);
+		column.setCellRenderer(colourRenderer);
 		column.setCellEditor(editor);
+		column.setPreferredWidth(45);
+		column.setMaxWidth(45);
 		
 		
 		
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));
-
+		scroll.setBorder(Spacing.bNone());
+		
 		return scroll;
 
 	}

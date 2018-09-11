@@ -2,6 +2,7 @@ package peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,12 +31,12 @@ public class MapDimensionsPanel extends JPanel {
 	
 	public MapDimensionsPanel(MapperPanel tabPanel, MappingController controller) {
 				
-		this.setBorder(new TitledBorder("Dimensions"));
+		setName("Dimensions");
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = Spacing.iTiny();
+		c.insets = new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.tiny);
 		c.ipadx = 0;
 		c.ipady = 0;
 

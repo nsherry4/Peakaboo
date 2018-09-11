@@ -36,7 +36,7 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		{
 			//Overlay Mode
 			Color c = new Color(((OverlayColour) value).toRGB());
-			renderer.setIcon(new SquareIcon( c ));
+			renderer.setIcon(new ColourRenderer( c ));
 			renderer.setText("");
 			renderer.setBackground( c );
 		} 
@@ -44,7 +44,7 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		{
 			//Ratio Mode
 			Color c = RatioColour.values()[((Integer)value) - 1].toColor();
-			renderer.setIcon(new SquareIcon( c ));
+			renderer.setIcon(new ColourRenderer( c ));
 			renderer.setText("");
 			renderer.setBackground( c );
 		}
@@ -57,7 +57,8 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		}
 	}
 
-
+	//For combobox editor
+	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 			boolean cellHasFocus)
 	{
@@ -73,6 +74,8 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 	}
 
 
+	//For table renderer
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 			int row, int column)
 	{
@@ -83,7 +86,7 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 			hasFocus,
 			row,
 			column);
-		
+				
 		configureRenderer(tableRenderer, value);
 		return tableRenderer;
 	}

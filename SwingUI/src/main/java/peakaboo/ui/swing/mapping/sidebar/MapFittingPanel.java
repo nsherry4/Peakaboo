@@ -20,6 +20,7 @@ import peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 
 
 public class MapFittingPanel extends ClearPanel
@@ -52,24 +53,27 @@ public class MapFittingPanel extends ClearPanel
 		
 		
 		//create combobox
-		final JComboBox<MapDisplayMode> modeSelect = new JComboBox<>(MapDisplayMode.values());
-		modeSelect.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-		modeSelect.addActionListener(new ActionListener() {
+		final JComboBox<MapDisplayMode> modeSelectBox = new JComboBox<>(MapDisplayMode.values());
+		modeSelectBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+		modeSelectBox.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				MapDisplayMode mode = (MapDisplayMode)modeSelect.getSelectedItem();
+				MapDisplayMode mode = (MapDisplayMode)modeSelectBox.getSelectedItem();
 				controller.getMapFittings().setMapDisplayMode(mode);
 				card.show(cardPanel, mode.toString());
 			}
 		});
+		JPanel modeSelectPanel = new ClearPanel(new BorderLayout());
+		modeSelectPanel.add(modeSelectBox, BorderLayout.CENTER);
+		modeSelectPanel.setBorder(Spacing.bSmall());
 		
 		
 		//add the two components to this panel
 		setLayout(new BorderLayout());
 		add(cardPanel, BorderLayout.CENTER);
-		add(modeSelect, BorderLayout.NORTH);
-		setBorder(new TitledBorder("Fittings"));
+		add(modeSelectPanel, BorderLayout.NORTH);
+		
 		
 		
 	}

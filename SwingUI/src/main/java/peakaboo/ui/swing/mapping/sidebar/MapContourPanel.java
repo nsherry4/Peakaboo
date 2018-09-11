@@ -2,6 +2,7 @@ package peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -20,13 +21,12 @@ public class MapContourPanel extends JPanel {
 	
 	public MapContourPanel(MappingController controller) {
 		
-		
-		this.setBorder(new TitledBorder("Appearance"));
+		setName("Appearance");
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = Spacing.iTiny();
+		c.insets = new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.tiny);
 		c.ipadx = 0;
 		c.ipady = 0;
 
