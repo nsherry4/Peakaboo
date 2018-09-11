@@ -298,7 +298,7 @@ public class ViewController extends Eventful
 		}
 	}
 
-	public PlotSettings setPlotSettings() {
+	public PlotSettings getPlotSettings() {
 		
 		PlotSettings settings = new PlotSettings();
 		

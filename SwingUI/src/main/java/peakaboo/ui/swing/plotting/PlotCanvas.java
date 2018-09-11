@@ -249,7 +249,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			
 
 			PlotData data = controller.getPlotData();
-			PlotSettings settings = controller.view().setPlotSettings();
+			PlotSettings settings = controller.view().getPlotSettings();
 
 			
 			Plotter plotObject = new Plotter();
