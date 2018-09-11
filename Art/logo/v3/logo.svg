@@ -14,7 +14,7 @@
    height="683.38818"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    version="1.0"
    sodipodi:docname="logo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -440,16 +440,16 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70710682"
-     inkscape:cx="230.39986"
-     inkscape:cy="340.96178"
+     inkscape:zoom="0.40111394"
+     inkscape:cx="-12.551451"
+     inkscape:cy="420.00628"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer6"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     inkscape:window-x="1920"
-     inkscape:window-y="0"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      fit-margin-top="64"
      fit-margin-left="64"
@@ -471,7 +471,7 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="Title Border"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <rect
        transform="translate(161.89871,10.426315)"
@@ -505,7 +505,7 @@
      id="layer11"
      inkscape:label="Icon Border"
      sodipodi:insensitive="true"
-     style="display:none">
+     style="display:inline">
     <rect
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:10.66699982;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        id="rect4410"
@@ -523,11 +523,10 @@
      style="display:none">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:31.25px;line-height:125%;font-family:Springsteel;-inkscape-font-specification:'Springsteel, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:0%;font-family:Springsteel;-inkscape-font-specification:'Springsteel, Light';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="417.31888"
        y="657.6897"
-       id="text4227"
-       sodipodi:linespacing="125%"><tspan
+       id="text4227"><tspan
          sodipodi:role="line"
          id="tspan4229"
          x="417.31888"
@@ -538,15 +537,15 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Text"
-     style="display:inline"
+     style="display:none"
      transform="translate(161.89871,10.426315)">
     <text
        id="text2841"
        y="607.40936"
        x="252.83072"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:155.25012207px;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';text-align:center;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';text-align:center;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';text-align:center;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:155.25012207px;line-height:1.25;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';text-align:center;text-anchor:middle;fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          y="607.40936"
          x="252.8307"
          id="tspan2843"
@@ -560,7 +559,7 @@
      transform="translate(161.89871,10.426315)">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:313.63000488px;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        x="488.8873"
        y="372.04352"
        id="text3701"><tspan
@@ -568,13 +567,13 @@
          id="tspan3703"
          x="488.8873"
          y="372.04352"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:313.63000488px;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">Peakaboo 5</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:313.63000488px;line-height:1.25;font-family:Springsteel;-inkscape-font-specification:'Springsteel Bold';fill:#404040;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">Peakaboo 5</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Release Curve"
-     style="display:inline"
+     style="display:none"
      transform="translate(161.89871,10.426315)">
     <g
        style="display:inline"
@@ -586,6 +585,23 @@
          id="path2905"
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="ccczzccccccccc" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="Android White Curve"
+     style="display:inline">
+    <g
+       id="g911"
+       transform="matrix(0.87322183,0,0,0.87322183,194.35392,24.180123)"
+       style="display:inline;fill:#ffffff;fill-opacity:1">
+      <path
+         sodipodi:nodetypes="ccczzccccccccc"
+         inkscape:connector-curvature="0"
+         id="path909"
+         d="m 182.84375,45.626193 c -16.29861,1.142333 -26.23315,16.501335 -33.5,29.375 -19.98234,39.320647 -29.41166,83.100067 -39.0625,125.906247 -16.155723,82.81213 -50.293791,215.83409 3.19045,269.31833 53.48425,53.48425 231.59687,50.51374 282.11062,0 50.51374,-50.51375 30.06714,-125.53931 19.12952,-177.43847 -8.5536,-36.7393 -16.96361,-74.48217 -35.33684,-107.66106 -6.83572,-11.75705 -17.99633,-25.00061 -33.09375,-23 -18.1292,1.96431 -28.99802,19.01541 -36.39096,33.92253 -7.5802,13.52367 -11.99944,29.6977 -24.07779,40.01497 -3.79707,3.14244 -9.39091,2.47401 -12,-1.90625 C 260.29164,216.07686 254.50716,193.81065 246.96707,172.73933 234.7123,136.87558 225.8666,99.355182 208.28125,65.719943 202.87023,56.387589 195.06463,44.995209 182.84375,45.626193 Z"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none" />
     </g>
   </g>
   <g
