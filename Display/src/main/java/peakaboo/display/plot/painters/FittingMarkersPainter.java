@@ -65,7 +65,7 @@ public class FittingMarkersPainter extends PlotPainter
 		
 		for (FittingLabel label : labels) {
 
-			p.context.setSource(label.colour);	
+			p.context.setSource(label.palette.markings);	
 			for (int i = 0; i < p.dr.dataWidth; i++) {
 				markerHeights.set(i, 0.0f);
 			}

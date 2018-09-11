@@ -6,6 +6,7 @@ import java.util.List;
 
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.PlotDrawing;
 import scidraw.drawing.plot.painters.PlotPainter;
@@ -23,8 +24,7 @@ public class FittingPainter extends PlotPainter
 {
 
 	private List<FittingResult>	data;
-	private Color				stroke;
-	private Color				fill;
+	private PlotPalette palette;
 
 
 
@@ -36,9 +36,9 @@ public class FittingPainter extends PlotPainter
 	 * @param stroke the {@link Color} to stroke the data with
 	 * @param fill the {@link Color} to fill the data with
 	 */
-	public FittingPainter(FittingResultSet data, Color stroke, Color fill)
+	public FittingPainter(FittingResultSet data, PlotPalette palette)
 	{
-		this(data.getFits(), stroke, fill);
+		this(data.getFits(), palette);
 	}
 	
 	
@@ -50,10 +50,9 @@ public class FittingPainter extends PlotPainter
 	 * @param stroke the {@link Color} to stroke the data with
 	 * @param fill the {@link Color} to fill the data with
 	 */
-	public FittingPainter(List<FittingResult> data, Color stroke, Color fill) {
+	public FittingPainter(List<FittingResult> data, PlotPalette palette) {
 		this.data = data;
-		this.stroke = stroke;
-		this.fill = fill;
+		this.palette = palette;
 	}
 
 
@@ -66,10 +65,10 @@ public class FittingPainter extends PlotPainter
 
 			traceData(p, fitResult.getFit());
 
-			p.context.setSource(fill);
+			p.context.setSource(palette.fitFill);
 			p.context.fillPreserve();
 
-			p.context.setSource(stroke);
+			p.context.setSource(palette.fitStroke);
 			p.context.stroke();
 		}
 		

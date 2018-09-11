@@ -8,10 +8,22 @@ import scitypes.Coord;
 
 public class FittingLabel {
 	
+	public static class PlotPalette {
+		public Color labelText;
+		public Color labelBackground;
+		public Color labelStroke;
+		
+		public Color fitFill;
+		public Color fitStroke;
+		public Color sumStroke;
+		
+		public Color markings;
+	}
+	
 	//passed in
 	FittingResult fit;
 	String annotation;
-	Color colour;
+	PlotPalette palette;
 
 	//derived by painters
 	String title;
@@ -19,10 +31,10 @@ public class FittingLabel {
 	boolean viable = true;
 	float penWidth = 1f;
 	
-	public FittingLabel(FittingResult fit, Color colour, String annotation) {
+	public FittingLabel(FittingResult fit, PlotPalette palette, String annotation) {
 		this.fit = fit;
 		this.annotation = annotation;
-		this.colour = colour;
+		this.palette = palette;
 	}
 	
 	

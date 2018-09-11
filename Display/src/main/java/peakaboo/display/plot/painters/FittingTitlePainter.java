@@ -256,12 +256,13 @@ public class FittingTitlePainter extends PlotPainter
 		float w = (label.position.x.end - label.position.x.start) * channelSize;
 		float h = label.position.y.end - label.position.y.start;
 				
-		p.context.setSource(Color.WHITE);
+		p.context.setSource(label.palette.labelBackground);
 		p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.fill();
-		p.context.setSource(label.colour);
+		p.context.setSource(label.palette.labelStroke);
 		p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.stroke();
+		p.context.setSource(label.palette.labelText);
 		p.context.writeText(label.title, xTextStart, p.plotSize.y - yTextStart);
 		
 
@@ -270,7 +271,8 @@ public class FittingTitlePainter extends PlotPainter
 	protected void drawTextLine(PainterData p, FittingLabel label) {
 		if (label.title == null || label.title.length() == 0) { return; }
 		
-		Color semitransparent = new Color(label.colour.getRed(), label.colour.getGreen(), label.colour.getBlue(), 64);
+		Color stroke = label.palette.labelStroke;
+		Color semitransparent = new Color(stroke.getRed(), stroke.getGreen(), stroke.getBlue(), 64);
 		p.context.setSource(semitransparent);
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
 		TransitionSeries ts = label.fit.getTransitionSeries();

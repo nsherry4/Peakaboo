@@ -21,6 +21,7 @@ import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
 import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
+import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 import peakaboo.filter.model.Filter;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
@@ -74,53 +75,76 @@ public class Plotter {
 		////////////////////////////////////////////////////////////////////
 		// Colour Selections
 		////////////////////////////////////////////////////////////////////
-		Color fitting, fittingStroke, fittingSum, fittingLabel;
-		Color proposed, proposedStroke, proposedSum, proposedLabel;
-		Color selected, selectedStroke, selectedLabel;
+		PlotPalette fittedPalette = new PlotPalette();
+		PlotPalette proposedPalette = new PlotPalette();
+		PlotPalette selectedPalette = new PlotPalette();
+//		Color fitting, fittingStroke, fittingSum, fittingLabel, fittingLabelBg;
+//		Color proposed, proposedStroke, proposedSum, proposedLabel, proposedLabelBg;
+//		Color selected, selectedStroke, selectedLabel, selectedLabelBg;
 
 
 		
 		// Colour/Monochrome colours for curve fittings
 		if (settings.monochrome) {
-			fitting = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-			fittingStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
-			fittingSum = new Color(0.0f, 0.0f, 0.0f, 0.8f);
-			fittingLabel = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+			fittedPalette.fitFill = new Color(0.0f, 0.0f, 0.0f, 0.3f);
+			fittedPalette.fitStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+			fittedPalette.sumStroke = new Color(0.0f, 0.0f, 0.0f, 0.8f);
+			fittedPalette.labelText = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+			fittedPalette.labelBackground = Color.WHITE;
+			fittedPalette.labelStroke = fittedPalette.labelText;
+			fittedPalette.markings = fittedPalette.fitStroke;
 		} else {
-			fitting = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-			fittingStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
-			fittingSum = new Color(0.0f, 0.0f, 0.0f, 0.8f);
-			fittingLabel = fittingStroke;
+			fittedPalette.fitFill = new Color(0.0f, 0.0f, 0.0f, 0.3f);
+			fittedPalette.fitStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+			fittedPalette.sumStroke = new Color(0.0f, 0.0f, 0.0f, 0.8f);
+			fittedPalette.labelText = fittedPalette.fitStroke;
+			fittedPalette.labelBackground = Color.WHITE;
+			fittedPalette.labelStroke = fittedPalette.labelText;
+			fittedPalette.markings = fittedPalette.fitStroke;
 		}
 		
 		
 		if (settings.monochrome)
 		{
-			proposed = new Color(0x50ffffff, true);
-			proposedStroke = new Color(0x80ffffff, true);
-			proposedSum = new Color(0xD0ffffff, true);
-			proposedLabel = new Color(0xFF777777, true);;
+			proposedPalette.fitFill = new Color(0x50ffffff, true);
+			proposedPalette.fitStroke = new Color(0x80ffffff, true);
+			proposedPalette.sumStroke = new Color(0xD0ffffff, true);
+			proposedPalette.labelText = new Color(0xFF777777, true);
+			proposedPalette.labelBackground = Color.WHITE;
+			proposedPalette.labelStroke = proposedPalette.labelText;
+			proposedPalette.markings = proposedPalette.fitStroke;
 		}
 		else
 		{
-			proposed = new Color(0x80D32F2F, true);
-			proposedStroke = new Color(0x80B71C1C, true);
-			proposedSum = new Color(0xD0B71C1C, true);
-			proposedLabel = proposedStroke;
+			proposedPalette.fitFill = new Color(0xA0D32F2F, true);
+			proposedPalette.fitStroke = new Color(0xA0B71C1C, true);
+			proposedPalette.sumStroke = new Color(0xD0B71C1C, true);
+			proposedPalette.labelText = Color.WHITE;
+			proposedPalette.labelBackground = proposedPalette.fitStroke;
+			proposedPalette.labelStroke = proposedPalette.labelBackground;
+			proposedPalette.markings = proposedPalette.fitStroke;
 		}
 		
 		// Colour/Monochrome colours for highlighted/selected fittings
 		if (settings.monochrome)
 		{
-			selected = new Color(0x50ffffff, true);
-			selectedStroke = new Color(0x80ffffff, true);
-			selectedLabel = new Color(0xFF777777, true);
+			selectedPalette.fitFill = new Color(0x50ffffff, true);
+			selectedPalette.fitStroke = new Color(0x80ffffff, true);
+			selectedPalette.sumStroke = new Color(0xFF777777, true);
+			selectedPalette.labelText = Color.WHITE;
+			selectedPalette.labelBackground = new Color(0x80000000, true);
+			selectedPalette.labelStroke = new Color(0xA0000000, true);
+			selectedPalette.markings = selectedPalette.fitStroke;
 		}
 		else
 		{
-			selected = new Color(0x800288D1, true);
-			selectedStroke = new Color(0xff01579B, true);
-			selectedLabel = selectedStroke;
+			selectedPalette.fitFill = new Color(0x800288D1, true);
+			selectedPalette.fitStroke = new Color(0xff01579B, true);
+			selectedPalette.sumStroke = new Color(0xff01579B, true);
+			selectedPalette.labelText = Color.WHITE;
+			selectedPalette.labelBackground = new Color(0xA001579B, true);;
+			selectedPalette.labelStroke = selectedPalette.fitStroke;
+			selectedPalette.markings = selectedPalette.fitStroke;
 		}
 
 		
@@ -215,18 +239,18 @@ public class Plotter {
 			{
 				//draw the selected & highlighted results here, since we always draw the highlight
 				//on top of the black curve to be consistent
-				plotPainters.add(new FittingPainter(data.selectionResults, fittingStroke, fitting));
-				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum));
+				plotPainters.add(new FittingPainter(data.selectionResults, fittedPalette));
+				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittedPalette, false));
 			}
 			else
 			{			
-				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittingSum, fitting));
+				plotPainters.add(new FittingSumPainter(data.selectionResults.getTotalFit(), fittedPalette, true));
 			}
 			
 			//highlighted fittings
 			if (data.selectionResults != null && data.selectionResults.size() > 0) {
 				FittingResultSet highlightedResults = data.selectionResults.subsetIntersect(data.highlightedTransitionSeries);
-				plotPainters.add(new FittingPainter(highlightedResults, selectedStroke, selected));
+				plotPainters.add(new FittingPainter(highlightedResults, selectedPalette));
 			}
 		}
 		
@@ -235,16 +259,16 @@ public class Plotter {
 		if (data.proposedTransitionSeries.size() > 0)
 		{
 			if (settings.showIndividualFittings) {
-				plotPainters.add(new FittingPainter(data.proposedResults, proposedStroke, proposed));
+				plotPainters.add(new FittingPainter(data.proposedResults, proposedPalette));
 			} else {
-				plotPainters.add(new FittingSumPainter(data.proposedResults.getTotalFit(), proposedStroke, proposed));
+				plotPainters.add(new FittingSumPainter(data.proposedResults.getTotalFit(), proposedPalette, true));
 			}
 
 			plotPainters.add(
 
 				new FittingSumPainter(SpectrumCalculations.addLists(
 						data.proposedResults.getTotalFit(),
-						data.selectionResults.getTotalFit()), proposedSum)
+						data.selectionResults.getTotalFit()), proposedPalette, false)
 
 			);
 		}
@@ -258,16 +282,16 @@ public class Plotter {
 		if (data.selectionResults != null) {
 			for (FittingResult fit : data.selectionResults.getFits()) {
 				if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
-					fitLabels.add(new FittingLabel(fit, selectedLabel, data.annotations.get(fit.getTransitionSeries())));		
+					fitLabels.add(new FittingLabel(fit, selectedPalette, data.annotations.get(fit.getTransitionSeries())));		
 				} else {
-					fitLabels.add(new FittingLabel(fit, fittingLabel, data.annotations.get(fit.getTransitionSeries())));
+					fitLabels.add(new FittingLabel(fit, fittedPalette, data.annotations.get(fit.getTransitionSeries())));
 				}
 				
 			}
 		}
 		if (data.proposedResults != null) {
 			for (FittingResult fit : data.proposedResults.getFits()) {
-				fitLabels.add(new FittingLabel(fit, proposedLabel, data.annotations.get(fit.getTransitionSeries())));
+				fitLabels.add(new FittingLabel(fit, proposedPalette, data.annotations.get(fit.getTransitionSeries())));
 			}
 		}
 		
