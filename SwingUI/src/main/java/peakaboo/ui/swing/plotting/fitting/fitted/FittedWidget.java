@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,8 +34,8 @@ public class FittedWidget extends ClearPanel
 		elementName = new JLabel("");
 		elementNumber = new JLabel("");
 		elementIntensity = new JLabel("");
-		elementNumber.setHorizontalAlignment(JLabel.RIGHT);
-		elementIntensity.setHorizontalAlignment(JLabel.RIGHT);
+		//elementNumber.setHorizontalAlignment(JLabel.RIGHT);
+		//elementIntensity.setHorizontalAlignment(JLabel.RIGHT);
 		
 		elementContents.add(elementName, BorderLayout.CENTER);
 		elementContents.setBorder(Spacing.bLarge());
@@ -49,10 +50,10 @@ public class FittedWidget extends ClearPanel
 		elementNumber.setFont(elementNumber.getFont().deriveFont(elementNumber.getFont().getSize() * 0.9f));
 		elementIntensity.setFont(elementIntensity.getFont().deriveFont(elementIntensity.getFont().getSize() * 0.9f));
 		
-		JPanel details = new ClearPanel(new BorderLayout());
-		details.add(elementIntensity, BorderLayout.NORTH);
-		details.add(elementNumber, BorderLayout.SOUTH);
-		elementContents.add(details, BorderLayout.EAST);
+		JPanel details = new ClearPanel(new BorderLayout(8, 0));
+		details.add(elementIntensity, BorderLayout.WEST);
+		details.add(elementNumber, BorderLayout.CENTER);
+		elementContents.add(details, BorderLayout.SOUTH);
 
 		
 		
@@ -117,7 +118,12 @@ public class FittedWidget extends ClearPanel
 	}
 
 	public void setAtomicNumber(int atomicNumber) {
-		elementNumber.setText("Atomic# " + atomicNumber);
+		elementNumber.setText("Z: " + atomicNumber);
+	}
+
+	public void setAtomicNumbers(List<Integer> atomicNumbers) {
+		String zstring = atomicNumbers.stream().map(i -> i.toString()).reduce((a, b) -> a + ", " + b).get();
+		elementNumber.setText("Z: " + zstring);
 	}
 	
 	

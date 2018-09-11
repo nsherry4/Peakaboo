@@ -2,6 +2,8 @@ package peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
@@ -56,7 +58,6 @@ class FittingRenderer extends DefaultTableCellRenderer
 			
 		}
 		
-		Element e;
 		float intensity;
 		
 		if (table.getRowHeight() < tswidget.getPreferredSize().height) {
@@ -65,24 +66,26 @@ class FittingRenderer extends DefaultTableCellRenderer
 		
 		if (value instanceof TransitionSeries){
 			TransitionSeries ts = (TransitionSeries)value;
-			e = ts.element; 
 			intensity = controller.getTransitionSeriesIntensity(ts);
 			tswidget.setName(ts.getDescription());
 			
 			tswidget.setIntensity(SigDigits.roundFloatTo(intensity, 1));
 			tswidget.setFlag(controller.hasAnnotation(ts));
+			String tooltip = "";
 			if (ts.mode != TransitionSeriesMode.SUMMATION){
-				tswidget.setAtomicNumber(e.atomicNumber());
+				tswidget.setAtomicNumber(ts.element.atomicNumber());
+				tooltip = ts.element.toString();
+			} else {
+				List<Element> elements = ts.getBaseTransitionSeries().stream().map(t -> t.element).collect(Collectors.toList());
+				tswidget.setAtomicNumbers(elements.stream().map(Element::atomicNumber).collect(Collectors.toList()));
+				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
 			}
-			
-			tswidget.setMinimumSize(new Dimension(0, 100));
-			
-			String tooltip = e.toString();
 			if (controller.hasAnnotation(ts)) {
 				tooltip += " - " + controller.getAnnotation(ts);
 			}
 			tswidget.setToolTipText(tooltip);
 			
+			tswidget.setMinimumSize(new Dimension(0, 100));
 			return tswidget;
 		} 
 		

@@ -78,13 +78,6 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		JPopupMenu addMenu = createAddMenu();
 
-		String tooltips[] = {
-				"Add fittings",
-				"Remove the selected fittings",
-				"Clear all fittings",
-				"Move the selected fittings up",
-				"Move the selected fittings down" };
-		
 		ImageButton addButton = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Add Fittings");
 		addButton.withAction(() -> {
 			addMenu.show(addButton, 0, addButton.getHeight());
