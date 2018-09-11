@@ -1,6 +1,7 @@
 package peakaboo.controller.mapper.settings;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eventful.EventfulType;
@@ -83,6 +84,10 @@ public class AreaSelection extends EventfulType<String> {
 	public List<Integer> getPoints() {
 		trimSelectionToBounds();
 		List<Integer> indexes = new ArrayList<>();
+		
+		if (getStart() == null || getEnd() == null) {
+			return Collections.emptyList();
+		}
 		
 		final int xstart = getStart().x;
 		final int ystart = getStart().y;
