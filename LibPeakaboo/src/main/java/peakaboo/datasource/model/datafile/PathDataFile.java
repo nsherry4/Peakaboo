@@ -29,4 +29,9 @@ public class PathDataFile implements DataFile {
 		return path;
 	}
 
+	@Override
+	public void close() throws Exception {
+		//NOOP
+	}
+
 }
