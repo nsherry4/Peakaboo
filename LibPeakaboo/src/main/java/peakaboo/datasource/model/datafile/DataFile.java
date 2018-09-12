@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-import javax.activation.DataSource;
+import peakaboo.datasource.model.DataSource;
 
 public interface DataFile extends AutoCloseable {
 
