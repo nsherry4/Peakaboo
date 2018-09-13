@@ -1,5 +1,6 @@
 package peakaboo.curvefit.peak.table;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,26 @@ public interface PeakTable {
 			throw new RuntimeException("Found more than one TransitionSeries for the given Element and TransitionSeriesType");
 		}
 		return tss.get(0);
+	}
+	
+	default TransitionSeries get(String identifier) {
+		if (identifier.contains("+")) {
+			List<TransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(this::get).collect(Collectors.toList());
+			if (tss.contains(null)) {
+				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
+			}
+			return TransitionSeries.summation(tss);
+		}
+		String[] parts = identifier.split(":", 2);
+		if (parts.length != 2) {
+			return null;
+		}
+		Element e = Element.valueOf(parts[0]);
+		TransitionSeriesType tst = TransitionSeriesType.fromTypeString(parts[1].trim());
+		if (e == null || tst == null) {
+			return null;
+		}
+		return get(e, tst);
 	}
 	
 	List<TransitionSeries> getAll();

@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -279,6 +280,18 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 	
 
+	/**
+	 * Generates an identifier string of the form He:K which can be used to uniquely
+	 * identify the TransitionSeries.
+	 */
+	public String toIdentifierString() {
+		if (type == TransitionSeriesType.COMPOSITE) {
+			return componentSeries.stream().map(TransitionSeries::toIdentifierString).reduce((a, b) -> a + "+" + b).get();
+		}
+		
+		return element.name() + ":" + type.name();
+		
+	}
 
 	/**
 	 * Accepts a list of {@link TransitionSeries} and generates a composite TransitionSeries representing the occasional simultaneous detection of all of the given {@link TransitionSeries}
@@ -307,6 +320,13 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		TransitionSeries result = pileups.stream().reduce(tsSum).get();
 		return result;
 
+	}
+	
+	/**
+	 * Convenience method for {@link #summation(List)}
+	 */
+	public static TransitionSeries summation(TransitionSeries... tss) {
+		return summation(Arrays.asList(tss));
 	}
 
 	/**

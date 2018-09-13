@@ -44,6 +44,12 @@ public class PeakTableTest {
 		Assert.assertEquals(series.get(0).element, Element.Au);
 		Assert.assertEquals(series.get(0).type, TransitionSeriesType.K);
 		
+		//Testing identifier string lookup
+		TransitionSeries FeK = combined.get(Element.Fe, TransitionSeriesType.K);
+		TransitionSeries ZnK = combined.get(Element.Zn, TransitionSeriesType.K);
+		Assert.assertEquals(combined.get("Fe:K"), FeK);
+		Assert.assertEquals(combined.get("Fe:K+Zn:K"), TransitionSeries.summation(FeK, ZnK));
+		
 	}
 	
 }
