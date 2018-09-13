@@ -75,7 +75,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		if (mapController.mapsController.getOriginalDataDimensions() != null) {
 			viewDimensions = new Coord<>(mapController.mapsController.getOriginalDataWidth(), mapController.mapsController.getOriginalDataHeight());
 		} else {
-			viewDimensions = new Coord<Integer>(mapController.mapsController.getMapResultSet().getMap(0).data.size(), 1);
+			viewDimensions = new Coord<Integer>(mapController.mapsController.getMapResultSet().getMap(0).size(), 1);
 		}
 	}
 

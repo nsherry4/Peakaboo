@@ -38,12 +38,11 @@ public class Mapping
 			FilterSet filters, 
 			FittingSet fittings, 
 			CurveFitter fitter, 
-			FittingSolver solver,
-			CalibrationProfile calibration
+			FittingSolver solver
 		) {
 		
 		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount(), calibration);
+		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
 		
 		//Math.max(1, dataset.getScanData().scanCount())
 		StreamExecutor<MapResultSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", 1);

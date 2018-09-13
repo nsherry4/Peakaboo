@@ -3,7 +3,9 @@ package peakaboo.mapping.results;
 
 
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import scitypes.ISpectrum;
+import scitypes.ReadOnlySpectrum;
 import scitypes.Spectrum;
 
 /**
@@ -20,7 +22,7 @@ import scitypes.Spectrum;
 public class MapResult implements Cloneable
 {
 
-	public Spectrum		data;
+	private Spectrum data;
 	public TransitionSeries	transitionSeries;
 
 
@@ -35,6 +37,12 @@ public class MapResult implements Cloneable
 		this.transitionSeries = ts;
 		this.data = data;
 	}
+	
+	
+	public ReadOnlySpectrum getData(CalibrationProfile profile) {
+		return profile.calibrateMap(data, transitionSeries);
+	}
+	
 
 	@Override
 	public MapResult clone()
@@ -47,6 +55,14 @@ public class MapResult implements Cloneable
 	public String toString()
 	{
 		return transitionSeries.element.name() + " (" + transitionSeries.type + ")";
+	}
+
+	public int size() {
+		return data.size();
+	}
+
+	void setData(int index, float intensity) {
+		data.set(index, intensity);
 	}
 
 }

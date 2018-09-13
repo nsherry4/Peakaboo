@@ -30,6 +30,7 @@ import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
@@ -81,6 +82,7 @@ class MapperToolbar extends JToolBar {
 		
 		readIntensities = new ToolbarImageButton("Get Intensities", StockIcon.BADGE_INFO).withTooltip("Get fitting intensities for the selection").withSignificance(true);
 		readIntensities.addActionListener(e -> {
+			
 			Map<String, String> fittings = new HashMap<String, String>();
 			
 			final Corrections corr = CorrectionsManager.getCorrections("WL");
@@ -101,7 +103,9 @@ class MapperToolbar extends JToolBar {
 			List<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().stream().map((MapResult r) -> {
 				float sum = 0;
 				for (int index : indexes) {
-					sum += r.data.get(index);
+					//TODO: This is an older form of the calibration feature, we don't want to double-calibrate so we use an empty calibration profile here
+					//until we will eventually just remove this feature alltogether.
+					sum += r.getData(new CalibrationProfile()).get(index);
 				}
 				return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / indexes.size());
 			}).collect(toList());

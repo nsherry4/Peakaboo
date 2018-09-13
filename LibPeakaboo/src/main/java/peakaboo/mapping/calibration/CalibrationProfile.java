@@ -8,6 +8,9 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import scitypes.ReadOnlySpectrum;
+import scitypes.Spectrum;
+import scitypes.SpectrumCalculations;
 
 public class CalibrationProfile {
 
@@ -43,6 +46,14 @@ public class CalibrationProfile {
 		return new HashMap<>(calibrations);
 	}
 
+	public boolean contains(TransitionSeries ts) {
+		return calibrations.keySet().contains(ts);
+	}
+	
+	public float getCalibration(TransitionSeries ts) {
+		return calibrations.get(ts);
+	}
+	
 	public CalibrationReference getReference() {
 		return reference;
 	}
@@ -60,6 +71,14 @@ public class CalibrationProfile {
 		} else {
 			return value;
 		}
+	}
+	
+	public ReadOnlySpectrum calibrateMap(ReadOnlySpectrum data, TransitionSeries ts) {
+		if (!contains(ts)) {
+			return data;
+		}
+		float calibration = getCalibration(ts);
+		return SpectrumCalculations.multiplyBy(data, calibration);
 	}
 	
 	public boolean isEmpty() {
@@ -93,6 +112,8 @@ public class CalibrationProfile {
 		
 		return profile;
 	}
+
+
 	
 	
 	

@@ -183,9 +183,7 @@ public class DataController extends Eventful
 	
 	public StreamExecutor<MapResultSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver)
 	{
-		//TODO: This is a placeholder
-		CalibrationProfile calibration = new CalibrationProfile();
-		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver, calibration);
+		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver);
 	}
 	
 	

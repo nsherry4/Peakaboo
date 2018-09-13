@@ -29,7 +29,6 @@ public class MapResultSet implements Cloneable
 
 	private List<MapResult>	maps;
 	private int				mapSize;
-	private CalibrationProfile calibration;
 
 
 	/**
@@ -39,9 +38,8 @@ public class MapResultSet implements Cloneable
 	 * @param transitionSeries list of {@link TransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
 	 * @param mapSize the size of the map data in each of the {@link MapResult}s
 	 */
-	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize, CalibrationProfile calibration)
+	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
 	{
-		this.calibration = calibration;
 		maps = new ArrayList<MapResult>();
 		for (TransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));
@@ -151,8 +149,7 @@ public class MapResultSet implements Cloneable
 		MapResult m = getMap(ts);
 		if (m == null) return;
 
-		intensity = calibration.calibrate(intensity, ts);
-		m.data.set(index, intensity);
+		m.setData(index, intensity);
 
 	}
 
@@ -162,10 +159,9 @@ public class MapResultSet implements Cloneable
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
-	public Spectrum sumAllTransitionSeriesMaps()
+	public Spectrum sumAllTransitionSeriesMaps(CalibrationProfile profile)
 	{
-		return sumGivenTransitionSeriesMaps(getAllTransitionSeries());
-
+		return sumGivenTransitionSeriesMaps(getAllTransitionSeries(), profile);
 	}
 
 	
@@ -175,13 +171,13 @@ public class MapResultSet implements Cloneable
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
-	public Spectrum sumGivenTransitionSeriesMaps(Collection<TransitionSeries> list)
+	public Spectrum sumGivenTransitionSeriesMaps(Collection<TransitionSeries> list, CalibrationProfile profile)
 	{
 		
-		Spectrum sums = new ISpectrum(maps.get(0).data.size(), 0.0f);
+		Spectrum sums = new ISpectrum(maps.get(0).size(), 0.0f);
 
 		for (MapResult map : maps) {
-			if (list.contains(map.transitionSeries)) SpectrumCalculations.addLists_inplace(sums, map.data);
+			if (list.contains(map.transitionSeries)) SpectrumCalculations.addLists_inplace(sums, map.getData(profile));
 		}
 
 		return sums;

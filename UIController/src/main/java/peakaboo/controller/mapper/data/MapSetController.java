@@ -1,11 +1,14 @@
 package peakaboo.controller.mapper.data;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController.UpdateType;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 import scitypes.Bounds;
@@ -88,7 +91,8 @@ public class MapSetController extends EventfulType<String>
 	
 	
 	public StreamExecutor<Coord<Integer>> guessDataDimensions() {
-		Spectrum all = mapModel.mapResults.sumAllTransitionSeriesMaps();
+		//We don't need the real calibration profile just to guess the dimensions
+		Spectrum all = mapModel.mapResults.sumAllTransitionSeriesMaps(new CalibrationProfile());
 
 		
 		//find the highest average edge delta
@@ -253,8 +257,5 @@ public class MapSetController extends EventfulType<String>
 		return mapModel.mapResults;
 	}
 
-
-
-	
 	
 }

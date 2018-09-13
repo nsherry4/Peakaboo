@@ -17,6 +17,7 @@ import peakaboo.controller.mapper.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import scitypes.Coord;
 import scitypes.GridPerspective;
 import scitypes.ISpectrum;
@@ -41,6 +42,8 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 	private MapDisplayMode displayMode;
 	private boolean logView;
+	
+	private CalibrationProfile calibrationProfile = new CalibrationProfile();
 	
 	
 	public MapFittingSettings(MappingController map){
@@ -589,7 +592,7 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	public Spectrum sumGivenTransitionSeriesMaps(List<TransitionSeries> list)
 	{
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list);
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list, calibrationProfile);
 	}
 	
 
@@ -597,19 +600,19 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		List<TransitionSeries> tss = new ArrayList<TransitionSeries>();
 		tss.add(ts);
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss);
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss, calibrationProfile);
 	}
 	
 
 	public Spectrum sumVisibleTransitionSeriesMaps()
 	{	
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries());
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries(), calibrationProfile);
 	}
 	
 
 	public synchronized Spectrum sumAllTransitionSeriesMaps()
 	{		
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visibility.keySet());
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visibility.keySet(), calibrationProfile);
 	}
 
 
@@ -667,6 +670,20 @@ public class MapFittingSettings extends EventfulType<String> {
 	}
 
 
+
+	public CalibrationProfile getCalibrationProfile() {
+		return calibrationProfile;
+	}
+
+
+
+	public void setCalibrationProfile(CalibrationProfile calibrationProfile) {
+		this.calibrationProfile = calibrationProfile;
+		updateListeners(UpdateType.DATA_OPTIONS.toString());
+	}
+
+
+	
 
 	
 }
