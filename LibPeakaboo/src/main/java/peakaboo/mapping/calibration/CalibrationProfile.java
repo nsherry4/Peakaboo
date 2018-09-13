@@ -3,8 +3,10 @@ package peakaboo.mapping.calibration;
 import java.util.HashMap;
 import java.util.Map;
 
+import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 
 public class CalibrationProfile {
@@ -12,15 +14,29 @@ public class CalibrationProfile {
 	private CalibrationReference reference;
 	private Map<TransitionSeries, Float> calibrations;
 	
+	/**
+	 * Create an empty CalibrationProfile
+	 */
 	public CalibrationProfile() {
-		this.reference = new CalibrationReference();
+		this.reference = CalibrationReferenceManager.empty();
 		calibrations = new HashMap<>();
 	}
 	
 	public CalibrationProfile(CalibrationReference reference, FittingResultSet sample) {
 		this.reference = reference;
 		calibrations = new HashMap<>();
-		//TODO: Generage calibration profile from reference and sample
+		
+		//Build profile
+		for (FittingResult fit : sample) {
+			TransitionSeries ts = fit.getTransitionSeries();
+			if (! reference.contains(ts)) { continue; }
+			//TODO: Is this the right way to measure sample intensity
+			float sampleIntensity = fit.getFit().sum();
+			float referenceValue = reference.getConcentration(ts);
+			float calibration = (sampleIntensity / referenceValue) * 1000f;
+			calibrations.put(ts, calibration);
+		}
+		
 	}
 	
 	public Map<TransitionSeries, Float> getCalibrations() {
@@ -46,6 +62,46 @@ public class CalibrationProfile {
 		}
 	}
 	
+	public boolean isEmpty() {
+		return calibrations.size() == 0;
+	}
+	
+	
+	public static String save(CalibrationProfile profile) {
+		SerializedCalibrationProfile serialized = new SerializedCalibrationProfile();
+		serialized.referenceUUID = profile.reference.getUuid();
+		serialized.referenceName = profile.reference.getName();
+		for (TransitionSeries ts : profile.calibrations.keySet()) {
+			serialized.calibrations.put(ts.toIdentifierString(), profile.calibrations.get(ts));
+		}
+		return YamlSerializer.serialize(serialized);
+	}
+	
+	
+	public static CalibrationProfile load(String yaml) {
+		CalibrationProfile profile = new CalibrationProfile();
+		SerializedCalibrationProfile serialized = YamlSerializer.deserialize(yaml);
+		for (String tsidentifier : serialized.calibrations.keySet()) {
+			TransitionSeries ts = PeakTable.SYSTEM.get(tsidentifier);
+			profile.calibrations.put(ts, serialized.calibrations.get(tsidentifier));
+		}
+		
+		profile.reference = CalibrationReferenceManager.byUUID(serialized.referenceUUID);
+		if (profile.reference == null) {
+			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
+		}
+		
+		return profile;
+	}
+	
 	
 	
 }
+
+
+class SerializedCalibrationProfile {
+	public String referenceUUID = null;
+	public String referenceName = null;
+	public Map<String, Float> calibrations = new HashMap<>();
+}
+ 
