@@ -6,6 +6,16 @@ import java.nio.file.Path;
 
 import peakaboo.datasource.model.DataSource;
 
+/**
+ * A DataFile is a representation of data that does not necessarily exist on
+ * disk in an accessible location. The data can either be accessed through an
+ * {@link InputStream}, or through a {@link Path}. The InputStream should be
+ * preferred, as the file referenced by the {@link Path} may be created on
+ * demand as a temporary file copied from the InputStream.
+ * 
+ * @author NAS
+ *
+ */
 public interface DataFile extends AutoCloseable {
 
 	/**
