@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
@@ -28,6 +29,7 @@ public class MapResultSet implements Cloneable
 
 	private List<MapResult>	maps;
 	private int				mapSize;
+	private CalibrationProfile calibration;
 
 
 	/**
@@ -37,9 +39,9 @@ public class MapResultSet implements Cloneable
 	 * @param transitionSeries list of {@link TransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
 	 * @param mapSize the size of the map data in each of the {@link MapResult}s
 	 */
-	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
+	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize, CalibrationProfile calibration)
 	{
-		
+		this.calibration = calibration;
 		maps = new ArrayList<MapResult>();
 		for (TransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));
@@ -133,18 +135,23 @@ public class MapResultSet implements Cloneable
 	
 	/**
 	 * 
-	 * Places a value at a given index for the {@link MapResult} data associated with the given {@link TransitionSeries}
+	 * Places a value at a given index for the {@link MapResult} data associated
+	 * with the given {@link TransitionSeries}. This method will apply the
+	 * {@link CalibrationProfile} to the added values.
 	 * 
 	 * @param intensity the intensity value to place in the {@link MapResult} data
-	 * @param ts the {@link TransitionSeries} associated with the desired {@link MapResult}
-	 * @param index the index in the map data at which to place the new value
+	 * @param ts        the {@link TransitionSeries} associated with the desired
+	 *                  {@link MapResult}
+	 * @param index     the index in the map data at which to place the new value
 	 */
 	public void putIntensityInMapAtPoint(float intensity, TransitionSeries ts, int index)
 	{	
 		
+		
 		MapResult m = getMap(ts);
 		if (m == null) return;
 
+		intensity = calibration.calibrate(intensity, ts);
 		m.data.set(index, intensity);
 
 	}
@@ -185,5 +192,7 @@ public class MapResultSet implements Cloneable
 	{
 		return maps.iterator();
 	}
+	
+	
 	
 }

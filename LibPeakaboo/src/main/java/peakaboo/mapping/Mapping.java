@@ -43,7 +43,7 @@ public class Mapping
 		) {
 		
 		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
+		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount(), calibration);
 		
 		//Math.max(1, dataset.getScanData().scanCount())
 		StreamExecutor<MapResultSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", 1);
@@ -58,7 +58,7 @@ public class Mapping
 				FittingResultSet frs = solver.solve(data, fittings, fitter);
 				
 				for (FittingResult result : frs.getFits()) {
-					maps.putIntensityInMapAtPoint(calibration.calibratedSum(result), result.getTransitionSeries(), index);
+					maps.putIntensityInMapAtPoint(result.getFit().sum(), result.getTransitionSeries(), index);
 				}
 				
 			});
