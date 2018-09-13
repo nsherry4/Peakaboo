@@ -2,6 +2,7 @@ package peakaboo.curvefit.curve.fitting;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ import scitypes.Spectrum;
  * 
  */
 
-public class FittingResultSet
+public class FittingResultSet implements Iterable<FittingResult>
 {
 
 	Spectrum			totalFit;
@@ -110,6 +111,12 @@ public class FittingResultSet
 	public boolean isEmpty( ) {
 		return size() == 0;
 	}
+
+	@Override
+	public Iterator<FittingResult> iterator() {
+		return fits.iterator();
+	}
+	
 	
 	
 	
