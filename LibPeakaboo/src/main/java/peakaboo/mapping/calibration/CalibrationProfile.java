@@ -9,7 +9,6 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
 
 public class CalibrationProfile {
@@ -34,7 +33,8 @@ public class CalibrationProfile {
 			TransitionSeries ts = fit.getTransitionSeries();
 			if (! reference.contains(ts)) { continue; }
 			//TODO: Is this the right way to measure sample intensity
-			float sampleIntensity = fit.getFit().sum();
+			int channel = sample.getParameters().getCalibration().channelFromEnergy(ts.getStrongestTransition().energyValue);
+			float sampleIntensity = fit.getFit().get(channel);
 			float referenceValue = reference.getConcentration(ts);
 			float calibration = (sampleIntensity / referenceValue) * 1000f;
 			calibrations.put(ts, calibration);

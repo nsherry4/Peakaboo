@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -67,6 +68,8 @@ import peakaboo.controller.plotter.data.DataLoader;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
@@ -79,6 +82,9 @@ import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
+import peakaboo.mapping.calibration.CalibrationProfile;
+import peakaboo.mapping.calibration.CalibrationReference;
+import peakaboo.mapping.calibration.CalibrationReferenceManager;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.environment.Apps;
 import peakaboo.ui.swing.environment.Configuration;
@@ -903,6 +909,32 @@ public class PlotPanel extends LayerPanel
 			
 		});
 
+	}
+	
+	
+	public void actionSaveCalibrationProfile() {
+		//TODO: Let user choose reference
+		CalibrationReference reference = CalibrationReferenceManager.getAll().get(0);
+		FittingResultSet sample = controller.fitting().getFittingSelectionResults();
+		CalibrationProfile profile = new CalibrationProfile(reference, sample);
+		String yaml = CalibrationProfile.save(profile);
+		
+		SimpleFileExtension ext = new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp");
+		SwidgetFilePanels.saveFile(this, "Save Calibration Profile", saveFilesFolder, ext, file -> {
+			if (!file.isPresent()) { return; }
+			File f = file.get();
+			FileWriter writer;
+			try {
+				writer = new FileWriter(f);
+				writer.write(yaml);
+				writer.close();
+			} catch (IOException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to save calibration file", e);
+			}
+
+		});
+		
+		
 	}
 
 	public void actionLoadSession() {
