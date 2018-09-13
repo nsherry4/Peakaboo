@@ -3,10 +3,8 @@ package peakaboo.controller.settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 
 public class SerializedTransitionSeries
@@ -38,21 +36,15 @@ public class SerializedTransitionSeries
 	public TransitionSeries toTS()
 	{
 		
-		
-		
-		String parts[];
 		List<TransitionSeries> tss = new ArrayList<TransitionSeries>();
 		TransitionSeries created;
 		
 		for (String tsd : components)
 		{
-			parts = tsd.split(":", 2);
-			Element e = Element.valueOf(parts[0]);
-			TransitionSeriesType tst = TransitionSeriesType.fromTypeString(parts[1]);
-			
-			created = PeakTable.SYSTEM.get(e, tst);
-			
-			tss.add(created);
+			created = PeakTable.SYSTEM.get(tsd);
+			if (created != null) {
+				tss.add(created);
+			}
 		}
 		
 		TransitionSeries ts = TransitionSeries.summation(tss);
