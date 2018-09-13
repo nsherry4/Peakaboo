@@ -25,6 +25,8 @@ import peakaboo.datasource.model.internal.CroppedDataSource;
 import peakaboo.datasource.model.internal.SelectionDataSource;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.Mapping;
+import peakaboo.mapping.calibration.CalibrationProfile;
+import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.results.MapResultSet;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -183,7 +185,9 @@ public class DataController extends Eventful
 	
 	public StreamExecutor<MapResultSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver)
 	{
-		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver);
+		//TODO: This is a placeholder
+		CalibrationProfile calibration = new CalibrationProfile();
+		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver, calibration);
 	}
 	
 	

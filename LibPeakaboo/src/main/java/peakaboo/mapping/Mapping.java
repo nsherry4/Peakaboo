@@ -10,6 +10,7 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 import scitypes.Range;
@@ -37,7 +38,8 @@ public class Mapping
 			FilterSet filters, 
 			FittingSet fittings, 
 			CurveFitter fitter, 
-			FittingSolver solver
+			FittingSolver solver,
+			CalibrationProfile calibration
 		) {
 		
 		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
@@ -56,7 +58,7 @@ public class Mapping
 				FittingResultSet frs = solver.solve(data, fittings, fitter);
 				
 				for (FittingResult result : frs.getFits()) {
-					maps.putIntensityInMapAtPoint(result.getFit().sum(), result.getTransitionSeries(), index);
+					maps.putIntensityInMapAtPoint(calibration.calibratedSum(result), result.getTransitionSeries(), index);
 				}
 				
 			});
