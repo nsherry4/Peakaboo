@@ -14,6 +14,7 @@ import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.exceptions.BoltException;
 
 
 
@@ -160,12 +161,25 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 	@Override
 	public void register(File file)
 	{
+	
+		//Something went wrong.
+		if (!file.exists()) {
+			Bolt.logger().log(Level.WARNING, "File " + file + " does not exist");
+			return;
+		}
+		
 		File[] files;
 		if (file.isDirectory())	{
 			files = file.listFiles((dir, name) -> name.toLowerCase().endsWith(".jar"));
 		} else {
 			files = new File[1];
 			files[0] = file;
+		}
+		
+		//Something went wrong.
+		if (files == null) {
+			Bolt.logger().log(Level.WARNING, "File " + file + " could not be loaded");
+			return;
 		}
 		
 		for (int i = 0; i < files.length; i++) {

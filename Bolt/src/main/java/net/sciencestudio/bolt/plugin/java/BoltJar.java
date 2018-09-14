@@ -2,6 +2,7 @@ package net.sciencestudio.bolt.plugin.java;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 
 public class BoltJar {
@@ -9,7 +10,9 @@ public class BoltJar {
 	public static boolean isClassInJar(Class<?> classInJar)
 	{
 		String className = classInJar.getName().replace('.', '/');
-		String classJar = BoltJar.class.getResource("/" + className + ".class").toString();
+		URL jar = BoltJar.class.getResource("/" + className + ".class");
+		if (jar == null) { return false; }
+		String classJar = jar.toString();
 		return classJar.startsWith("jar:");
 	}
 	
