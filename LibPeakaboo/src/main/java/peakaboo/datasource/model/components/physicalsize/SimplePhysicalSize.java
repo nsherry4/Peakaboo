@@ -5,8 +5,8 @@ import java.util.List;
 
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
-import peakaboo.common.MemoryProfile;
-import peakaboo.common.MemoryProfile.Size;
+import peakaboo.common.PeakabooConfiguration;
+import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.datasource.model.PeakabooLists;
 import scitypes.Bounds;
 import scitypes.Coord;
@@ -25,7 +25,7 @@ public class SimplePhysicalSize implements PhysicalSize {
 		this.units = units;
 		
 		List<Coord<Number>> scratch = new ArrayList<>();
-		if (MemoryProfile.size == Size.SMALL) {
+		if (PeakabooConfiguration.memorySize == MemorySize.SMALL) {
 			//Physical coordinates on large maps can eat up ~10MB, which is enough to 
 			//warrant disk-based storage when we're low on memory 
 			//We use fst instead of fstUnsafe since there seems to be a bug somewhere 

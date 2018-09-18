@@ -2,8 +2,8 @@ package peakaboo.datasource.model.components.scandata;
 
 import java.util.List;
 
-import peakaboo.common.MemoryProfile;
-import peakaboo.common.MemoryProfile.Size;
+import peakaboo.common.PeakabooConfiguration;
+import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.datasource.model.PeakabooLists;
 import peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
@@ -94,7 +94,7 @@ public class SimpleScanData implements ScanData {
 	}
 	
 	public LoaderQueue createLoaderQueue(int capacity) {
-		if (MemoryProfile.size == Size.LARGE) {
+		if (PeakabooConfiguration.memorySize == MemorySize.LARGE) {
 			return new SimpleLoaderQueue(this, capacity);
 		} else {
 			return new CompressedLoaderQueue(this, capacity);

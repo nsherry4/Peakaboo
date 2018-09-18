@@ -22,10 +22,10 @@ import com.ezware.dialog.task.TaskDialog;
 
 import eventful.EventfulConfig;
 import peakaboo.common.Env;
-import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.common.MemoryProfile.Size;
+import peakaboo.common.PeakabooConfiguration;
+import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.curvefit.peak.table.CombinedPeakTable;
 import peakaboo.curvefit.peak.table.DelegatingPeakTable;
 import peakaboo.curvefit.peak.table.KrausePeakTable;
@@ -109,7 +109,7 @@ public class Peakaboo
 	private static void warnLowMemory() {
 		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
-		if (MemoryProfile.size == Size.SMALL){
+		if (PeakabooConfiguration.memorySize == MemorySize.SMALL){
 			String message = "This system's Java VM is only allocated " + Env.maxHeap()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
@@ -207,6 +207,8 @@ public class Peakaboo
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
+		peakaboo.common.PeakabooConfiguration.compression = true;
+		peakaboo.common.PeakabooConfiguration.diskstore = true;
 		PeakabooLog.init(Configuration.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
