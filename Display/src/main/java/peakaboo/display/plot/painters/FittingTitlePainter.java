@@ -263,7 +263,7 @@ public class FittingTitlePainter extends PlotPainter
 		p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.stroke();
 		p.context.setSource(label.palette.labelText);
-		p.context.writeText(label.title, xTextStart, p.plotSize.y - yTextStart);
+		p.context.writeText(label.title, xTextStart+1, p.plotSize.y - yTextStart+1);
 		
 
 	}
