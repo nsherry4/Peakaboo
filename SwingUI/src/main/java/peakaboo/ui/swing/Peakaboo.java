@@ -229,7 +229,10 @@ public class Peakaboo
 			} else {
 				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".yaml";
 			}
-			File peakfile = new File(DesktopApp.appDir() + "/" + filename);
+			File peakdir = DesktopApp.appDir("PeakTable");
+			peakdir.mkdirs();
+			File peakfile = new File(DesktopApp.appDir("PeakTable") + "/" + filename);
+			
 			PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
 		});
 		peakLoader.setDaemon(true);
