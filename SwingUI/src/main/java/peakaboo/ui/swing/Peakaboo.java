@@ -35,7 +35,7 @@ import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
-import peakaboo.ui.swing.environment.Configuration;
+import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
@@ -209,7 +209,7 @@ public class Peakaboo
 		
 		peakaboo.common.PeakabooConfiguration.compression = true;
 		peakaboo.common.PeakabooConfiguration.diskstore = true;
-		PeakabooLog.init(Configuration.appDir("Logging"));
+		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
@@ -229,7 +229,7 @@ public class Peakaboo
 			} else {
 				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".yaml";
 			}
-			File peakfile = new File(Configuration.appDir() + "/" + filename);
+			File peakfile = new File(DesktopApp.appDir() + "/" + filename);
 			PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
 		});
 		peakLoader.setDaemon(true);
@@ -243,9 +243,9 @@ public class Peakaboo
 			warnLowMemory();
 			warnDevRelease();
 			
-			FilterPluginManager.init(Configuration.appDir("Plugins/Filter"));
-			DataSourcePluginManager.init(Configuration.appDir("Plugins/DataSource"));
-			DataSinkPluginManager.init(Configuration.appDir("Plugins/DataSink"));
+			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
+			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
 			
 			try {
 				peakLoader.join();

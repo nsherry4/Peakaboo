@@ -45,8 +45,7 @@ import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
-import peakaboo.ui.swing.environment.Apps;
-import peakaboo.ui.swing.environment.Configuration;
+import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.FileDrop;
 import stratus.StratusLookAndFeel;
 import stratus.theme.DarkTheme;
@@ -297,7 +296,7 @@ public class PluginsOverview extends JPanel {
 	}
 	
 	private void browse() {
-		File appDataDir = Configuration.appDir("Plugins");
+		File appDataDir = DesktopApp.appDir("Plugins");
 		appDataDir.mkdirs();
 		Desktop desktop = Desktop.getDesktop();
 		try {
@@ -308,7 +307,7 @@ public class PluginsOverview extends JPanel {
 	}
 	
 	private void download() {
-		Apps.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
+		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
 	}
 	
 	private TreeModel buildTreeModel() {
