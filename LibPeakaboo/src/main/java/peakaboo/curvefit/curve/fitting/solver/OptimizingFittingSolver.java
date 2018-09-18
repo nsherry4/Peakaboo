@@ -14,7 +14,10 @@ import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
+import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.MultiDirectionalSimplex;
+import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.NelderMeadSimplex;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizer;
+import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
 
 import peakaboo.curvefit.curve.fitting.Curve;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
@@ -79,20 +82,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 				
 				ReadOnlySpectrum residual = test(point, context);
 				
-				float score = 0;
-				for (int i : intenseChannels) {
-					float channel = residual.get(i);
-					
-					//Negative values mean that we've fit more signal than exists
-					//We penalize this to prevent making up data where none exists.
-					if (channel < 0) {
-						channel = Math.abs(channel);
-						channel *= 5;
-					}
-					score += channel;
-				}
+				return score(point, intenseChannels, residual);
 				
-				return score;
 			}
 		};
 		
@@ -104,9 +95,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 			guess[i] = guessFittingResult.getCurveScale();
 		}
 				
-		
-		
-		
+			
 		//1358 reps on test session
 		//optimizer = new SimplexOptimizer(-1d, 1d);
 		
@@ -116,18 +105,18 @@ public class OptimizingFittingSolver implements FittingSolver {
 		//265 reps on test session but occasionally dies?
 		//optimizer = new BOBYQAOptimizer(Math.max(size+2, size*2));
 		
-		PointValuePair result = new PowellOptimizer(0.001d, 1d).optimize(
+		PointValuePair result = new SimplexOptimizer(0.0001d, 1d).optimize(
 				new ObjectiveFunction(cost), 
 				new InitialGuess(guess),
-				new MaxIter(10000),
-				new MaxEval(10000),
+				new MaxIter(100000),
+				new MaxEval(100000),
 				new NonNegativeConstraint(true), 
-				GoalType.MINIMIZE);
-
-
+				GoalType.MINIMIZE,
+				new MultiDirectionalSimplex(guess)
+				);
+		
 		
 		double[] scalings = result.getPoint();
-		
 		return evaluate(scalings, context);
 		
 		
@@ -141,12 +130,34 @@ public class OptimizingFittingSolver implements FittingSolver {
 		for (Curve curve : context.curves) {
 			float scale = (float) point[index++];
 			curve.scaleInto(scale, context.scratch);
-			fits.add(new FittingResult(context.scratch, curve, scale));
+			fits.add(new FittingResult(new ISpectrum(context.scratch), curve, scale));
 			SpectrumCalculations.addLists_inplace(context.total, context.scratch);
 		}
 		Spectrum residual = SpectrumCalculations.subtractLists(context.data, context.total);
 		
 		return residual;
+	}
+	
+	private float score(double[] point, Set<Integer> intenseChannels, ReadOnlySpectrum residual) {
+		float score = 0;
+		for (int i : intenseChannels) {
+			float channel = residual.get(i);
+			
+			//Negative values mean that we've fit more signal than exists
+			//We penalize this to prevent making up data where none exists.
+			if (channel < 0) {
+				channel = Math.abs(channel);
+				channel *= 5;
+			}
+			score += channel;
+		}
+		
+//		for (double p : point) {
+//			System.out.print(p + ", ");
+//		}
+//		System.out.println("");
+//		System.out.println(score);
+		return score;
 	}
 	
 	private FittingResultSet evaluate(double[] point, EvaluationContext context) {

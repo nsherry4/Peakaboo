@@ -2,6 +2,7 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 	}
 	
-	public void addAllTransitionSeries(List<TransitionSeries> tss)
+	public void addAllTransitionSeries(Collection<TransitionSeries> tss)
 	{
 		for (TransitionSeries ts : tss)
 		{
