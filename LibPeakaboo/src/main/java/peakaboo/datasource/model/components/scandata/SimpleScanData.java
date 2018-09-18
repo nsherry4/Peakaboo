@@ -4,7 +4,7 @@ import java.util.List;
 
 import peakaboo.common.MemoryProfile;
 import peakaboo.common.MemoryProfile.Size;
-import peakaboo.datasource.model.SpectrumList;
+import peakaboo.datasource.model.PeakabooLists;
 import peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
@@ -22,7 +22,7 @@ public class SimpleScanData implements ScanData {
 	
 	public SimpleScanData(String name) {
 		this.name = name;
-		this.spectra = SpectrumList.create(name);		
+		this.spectra = PeakabooLists.create();
 	}
 		
 	public SimpleScanData(String name, List<Spectrum> backingList) {
