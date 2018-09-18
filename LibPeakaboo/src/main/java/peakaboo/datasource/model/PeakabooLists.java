@@ -1,11 +1,14 @@
 package peakaboo.datasource.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.CompoundEncoder;
 import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.list.ScratchLists;
+import peakaboo.common.PeakabooConfiguration;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
 
@@ -21,7 +24,7 @@ import scitypes.Spectrum;
  * retrieved a second time, the second copy retrieved will lack the 
  * modifications made to the first copy.
  * 
- * To create a new SpectrumList, call {@link SpectrumList#create(String)}.
+ * To create a new SpectrumList, call {@link PeakabooLists#create(String)}.
  * If the SpectrumList cannot be created for whatever reason, a memory-based
  * list will be created instead.
  * <br/><br/>
@@ -31,13 +34,33 @@ import scitypes.Spectrum;
  *
  */
 
-public final class SpectrumList {
+public final class PeakabooLists {
 
 	
 	@SuppressWarnings("unchecked")
-	public static List<Spectrum> create(String name)
-	{
-		return ScratchLists.tryDiskBacked(new CompoundEncoder<>(Serializers.fstUnsafe(ISpectrum.class), Compressors.lz4fast()));
+	public static List<Spectrum> create() {
+		return create(Serializers.fstUnsafe(ISpectrum.class));
 	}
+	
+	
+	public static <T> List<T> create(ScratchEncoder<T> serializer) {
+		if (PeakabooConfiguration.diskstore == false && PeakabooConfiguration.compression == false) {
+			return new ArrayList<>();
+		}
+		
+		//Config for compression
+		ScratchEncoder<T> encoder = serializer;
+		if (PeakabooConfiguration.compression) {
+			encoder = new CompoundEncoder<>(encoder, Compressors.lz4fast());
+		}
+		
+		//Config for disk-backed
+		if (PeakabooConfiguration.diskstore) {
+			return ScratchLists.tryDiskBacked(encoder);
+		} else {
+			return ScratchLists.memoryBacked(encoder);
+		}
+	}
+	
 	
 }

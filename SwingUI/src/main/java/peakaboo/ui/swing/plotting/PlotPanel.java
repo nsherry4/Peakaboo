@@ -86,8 +86,7 @@ import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.calibration.CalibrationReferenceManager;
 import peakaboo.mapping.results.MapResultSet;
-import peakaboo.ui.swing.environment.Apps;
-import peakaboo.ui.swing.environment.Configuration;
+import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
@@ -171,7 +170,7 @@ public class PlotPanel extends LayerPanel
 		
 		datasetFolder = Env.homeDirectory();
 
-		controller = new PlotController(Configuration.appDir());
+		controller = new PlotController(DesktopApp.appDir());
 				
 
 		initGUI();
@@ -219,7 +218,7 @@ public class PlotPanel extends LayerPanel
 				if (hasNewVersion) {
 					SwingUtilities.invokeLater(() -> {
 						this.pushLayer(new ToastLayer(this, "A new version of Peakaboo is available", () -> {
-							Apps.browser("https://github.com/nsherry4/Peakaboo/releases");
+							DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases");
 						}));	
 					});
 				}
@@ -600,7 +599,7 @@ public class PlotPanel extends LayerPanel
 		AboutDialogue.Contents contents = new AboutDialogue.Contents();
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
-		contents.linkAction = () -> Apps.browser("https://github.com/nsherry4/Peakaboo");
+		contents.linkAction = () -> DesktopApp.browser("https://github.com/nsherry4/Peakaboo");
 		contents.linktext = "Website";
 		contents.copyright = "2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
@@ -616,7 +615,7 @@ public class PlotPanel extends LayerPanel
 	
 	public void actionHelp()
 	{
-		Apps.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
+		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
 	}
 	
 	public void actionOpenData()
@@ -1065,7 +1064,7 @@ public class PlotPanel extends LayerPanel
 	
 	
 	public void actionShowLogs() {
-		File appDataDir = Configuration.appDir("Logging");
+		File appDataDir = DesktopApp.appDir("Logging");
 		appDataDir.mkdirs();
 		Desktop desktop = Desktop.getDesktop();
 		try {
@@ -1076,7 +1075,7 @@ public class PlotPanel extends LayerPanel
 	}
 	
 	public void actionReportBug() {
-		Apps.browser("https://github.com/nsherry4/Peakaboo/issues/new/choose");
+		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/issues/new/choose");
 	}
 
 	public void actionShowAdvancedOptions() {

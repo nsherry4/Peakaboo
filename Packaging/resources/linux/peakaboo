@@ -49,18 +49,39 @@ vercomp () {
     return
 }
 
+function heapsize() {
+
+	# Total memory in KB
+	local totalMemKB=$(awk '/MemTotal:/ { print $2 }' /proc/meminfo)
+
+	# Percentage of memory to use for Java heap
+	local usagePercent=25
+
+	# heap size in KB
+	let heapKB=$totalMemKB*$usagePercent/100
+
+	# heap size in MB
+	let heapMB=$heapKB/1024
+
+	echo $(($heapMB>128?$heapMB:128))
+
+}
+
 
 version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
 #version="11.0.0"
 vercomp $version "1.9"
 
 
+heapMB=$(heapsize)
+echo $heapMB
+
 if [[ $comp == 2 ]]; then
     #If version is less than 1.9
-    java -Xmx1024m -jar /usr/share/Peakaboo/Peakaboo.jar
+    java -Xmx${heapMB}m -jar /usr/share/Peakaboo/Peakaboo.jar
 else
     #version is 1.9 or greater (eg 1.9, 9.0, 10.0, etc)
-    java -Xmx1024m --illegal-access=permit -jar /usr/share/Peakaboo/Peakaboo.jar
+    java -Xmx${heapMB}m --illegal-access=permit -jar /usr/share/Peakaboo/Peakaboo.jar
 fi
 
 

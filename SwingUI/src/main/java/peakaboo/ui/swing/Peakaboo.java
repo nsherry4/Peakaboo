@@ -22,10 +22,10 @@ import com.ezware.dialog.task.TaskDialog;
 
 import eventful.EventfulConfig;
 import peakaboo.common.Env;
-import peakaboo.common.MemoryProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.common.MemoryProfile.Size;
+import peakaboo.common.PeakabooConfiguration;
+import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.curvefit.peak.table.CombinedPeakTable;
 import peakaboo.curvefit.peak.table.DelegatingPeakTable;
 import peakaboo.curvefit.peak.table.KrausePeakTable;
@@ -35,7 +35,7 @@ import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
-import peakaboo.ui.swing.environment.Configuration;
+import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
@@ -109,7 +109,7 @@ public class Peakaboo
 	private static void warnLowMemory() {
 		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
-		if (MemoryProfile.size == Size.SMALL){
+		if (PeakabooConfiguration.memorySize == MemorySize.SMALL){
 			String message = "This system's Java VM is only allocated " + Env.maxHeap()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
@@ -207,7 +207,9 @@ public class Peakaboo
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		PeakabooLog.init(Configuration.appDir("Logging"));
+		peakaboo.common.PeakabooConfiguration.compression = true;
+		peakaboo.common.PeakabooConfiguration.diskstore = true;
+		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
@@ -227,7 +229,10 @@ public class Peakaboo
 			} else {
 				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".yaml";
 			}
-			File peakfile = new File(Configuration.appDir() + "/" + filename);
+			File peakdir = DesktopApp.appDir("PeakTable");
+			peakdir.mkdirs();
+			File peakfile = new File(DesktopApp.appDir("PeakTable") + "/" + filename);
+			
 			PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
 		});
 		peakLoader.setDaemon(true);
@@ -241,9 +246,9 @@ public class Peakaboo
 			warnLowMemory();
 			warnDevRelease();
 			
-			FilterPluginManager.init(Configuration.appDir("Plugins/Filter"));
-			DataSourcePluginManager.init(Configuration.appDir("Plugins/DataSource"));
-			DataSinkPluginManager.init(Configuration.appDir("Plugins/DataSink"));
+			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
+			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
 			
 			try {
 				peakLoader.join();

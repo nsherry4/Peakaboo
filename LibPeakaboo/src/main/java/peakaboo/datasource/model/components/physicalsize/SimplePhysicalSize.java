@@ -1,20 +1,15 @@
 package peakaboo.datasource.model.components.physicalsize;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.sciencestudio.scratch.ScratchEncoder;
-import net.sciencestudio.scratch.encoders.CompoundEncoder;
-import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
-import net.sciencestudio.scratch.list.ScratchLists;
-import peakaboo.common.MemoryProfile;
-import peakaboo.common.MemoryProfile.Size;
+import peakaboo.common.PeakabooConfiguration;
+import peakaboo.common.PeakabooConfiguration.MemorySize;
+import peakaboo.datasource.model.PeakabooLists;
 import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.ISpectrum;
 import scitypes.SISize;
 import scitypes.SparsedList;
 
@@ -30,14 +25,13 @@ public class SimplePhysicalSize implements PhysicalSize {
 		this.units = units;
 		
 		List<Coord<Number>> scratch = new ArrayList<>();
-		if (MemoryProfile.size == Size.SMALL) {
+		if (PeakabooConfiguration.memorySize == MemorySize.SMALL) {
 			//Physical coordinates on large maps can eat up ~10MB, which is enough to 
 			//warrant disk-based storage when we're low on memory 
 			//We use fst instead of fstUnsafe since there seems to be a bug somewhere 
 			//when using unsafe for different lists with different contents?
 			ScratchEncoder<?> fst = Serializers.fst(Coord.class);
-			ScratchEncoder<byte[]> lz4 = Compressors.lz4fast();
-			scratch = (List<Coord<Number>>) ScratchLists.tryDiskBacked(new CompoundEncoder<>(fst, lz4));
+			scratch = (List<Coord<Number>>) PeakabooLists.create(fst);
 		}
 		points = new SparsedList<>(scratch);
 	}

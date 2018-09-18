@@ -341,6 +341,15 @@ public class FittingPanel extends ClearPanel implements Changeable
 			@Override
 			public void move(int from, int to) {
 				controller.moveTransitionSeries(from, to);
+				
+				//update selection
+				int index = -1;
+				if (from > to) {
+					index = to;
+				} else {
+					index = to-1;
+				}
+				fitTable.getSelectionModel().setSelectionInterval(index, index);
 			}
 		});
 		

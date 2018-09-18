@@ -1,15 +1,17 @@
 package peakaboo.ui.swing.environment;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import peakaboo.common.Env;
+import peakaboo.common.Version;
 
 
 
-public class Apps
+public class DesktopApp
 {
 
 	public static void browser(String _url)
@@ -66,6 +68,13 @@ public class Apps
 			
 		}
 
+	}
+	
+	public static File appDir() {
+		return Env.appDataDirectory(Version.program_name + Version.versionNoMajor);
+	}
+	public static File appDir(String subdir) {
+		return Env.appDataDirectory(Version.program_name + Version.versionNoMajor, subdir);
 	}
 	
 }
