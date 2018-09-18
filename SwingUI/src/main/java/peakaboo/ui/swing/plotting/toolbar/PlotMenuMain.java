@@ -22,14 +22,14 @@ public class PlotMenuMain extends JPopupMenu {
 
 	private PlotController controller;
 	
-	//FILE
 	private JMenuItem					snapshotMenuItem;
 	private JMenuItem					exportFittingsMenuItem;
 	private JMenuItem					exportFilteredDataMenuItem;
-	private JMenuItem					exportCalibrationProfile;
 	private JMenu 						exportSinks;
+	
+	private JMenuItem					selectCalibrationReference;
+	private JMenuItem					saveCalibrationProfile;
 
-	//EDIT
 	private JMenuItem					undo, redo;
 	
 	public PlotMenuMain(PlotPanel plot, PlotController controller) {
@@ -95,16 +95,27 @@ public class PlotMenuMain extends JPopupMenu {
 		);
 		export.add(exportFittingsMenuItem);
 
+		this.add(export);
 		
-		exportCalibrationProfile = PlotMenuUtils.createMenuItem(plot,
-				"Calibration Profile", null, "Saves the current fitting data against a known reference",
+		
+		
+		
+		JMenu calibration = new JMenu("Calibration");
+
+		selectCalibrationReference = PlotMenuUtils.createMenuItem(plot,
+				"Create Profile", null, "Starts the process of creating a calibration profile",
+				e -> plot.actionCreateCalibrationProfile(),
+				null, null
+		);
+		calibration.add(selectCalibrationReference);
+		
+		saveCalibrationProfile = PlotMenuUtils.createMenuItem(plot,
+				"Save Profile", null, "Saves the current fitting data against a known reference",
 				e -> plot.actionSaveCalibrationProfile(),
 				null, null
 		);
-		export.add(exportCalibrationProfile);
-		
-
-		this.add(export);
+		calibration.add(saveCalibrationProfile);
+		this.add(calibration);
 		
 				
 
@@ -193,7 +204,7 @@ public class PlotMenuMain extends JPopupMenu {
 		snapshotMenuItem.setEnabled(hasData);
 		exportFittingsMenuItem.setEnabled(hasData);
 		exportFilteredDataMenuItem.setEnabled(hasData);
-		exportCalibrationProfile.setEnabled(hasData);
+		saveCalibrationProfile.setEnabled(hasData);
 		exportSinks.setEnabled(hasData);
 				
 		undo.setEnabled(controller.history().canUndo());

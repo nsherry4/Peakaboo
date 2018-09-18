@@ -936,6 +936,14 @@ public class PlotPanel extends LayerPanel
 		
 		
 	}
+	
+	public void actionCreateCalibrationProfile() {
+		CalibrationReference reference = CalibrationReferenceManager.getAll().get(0);
+		controller.fitting().clearTransitionSeries();
+		List<TransitionSeries> tss = new ArrayList<>(reference.getConcentrations().keySet());
+		tss.sort((a, b) -> a.element.compareTo(b.element));
+		controller.fitting().addAllTransitionSeries(tss);
+	}
 
 	public void actionLoadSession() {
 
