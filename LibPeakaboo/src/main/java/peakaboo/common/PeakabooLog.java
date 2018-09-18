@@ -15,6 +15,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.logging.MemoryHandler;
 
 import org.apache.commons.io.output.TeeOutputStream;
 
@@ -23,6 +24,8 @@ public class PeakabooLog {
 	private final static String format = "%1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
 	private final static Map<String, Logger> loggers = new HashMap<>();
 	private static boolean initted = false;
+	
+	private static String logfilename;
 	
 	public synchronized static void init(File logDir) {
 		if (initted == true) {
@@ -39,18 +42,18 @@ public class PeakabooLog {
 		}
 	}
 
-	
-	
+
+
 	private static void configFileHandler(File logDir) throws IOException {
 	
 		logDir.mkdirs();
-		String filename = logDir.getPath() + "/Peakaboo.log";
+		logfilename = logDir.getPath() + "/Peakaboo.log";
 				
 		//Workaround for JDK-8189953
 		new File(logDir.getPath() + "/Peakaboo.log").createNewFile();
 		////////////////////////////
 		
-		FileHandler handler = new FileHandler(filename, 16*1024*1024, 1, true);
+		FileHandler handler = new FileHandler(logfilename, 16*1024*1024, 1, true);
 		handler.setFormatter(new CustomFormatter(format));
 		getRoot().addHandler(handler);
 	}
@@ -87,6 +90,14 @@ public class PeakabooLog {
 		}
 		return loggers.get(name);
 	}
+
+
+
+	public static String getLogFilename() {
+		return logfilename;
+	}
+	
+	
 	
 }
 
