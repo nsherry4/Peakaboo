@@ -175,7 +175,7 @@ public class Plotter {
 
 		// if axes are shown, also draw horizontal grid lines
 		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
-		if (settings.showAxes) plotPainters.add(new GridlinePainter(new Bounds<Float>(
+		plotPainters.add(new GridlinePainter(new Bounds<Float>(
 			0.0f,
 			maxIntensity)));
 
@@ -332,20 +332,17 @@ public class Plotter {
 			axisPainters.add(new TitleAxisPainter(1.0f, null, null, data.dataset.getScanData().datasetName(), null));
 		}
 
-		if (settings.showAxes)
-		{
 
-			axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
-			axisPainters.add(new TickMarkAxisPainter(
-				new Bounds<Float>(0.0f, maxIntensity),
-				new Bounds<Float>(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()),
-				null,
-				new Bounds<Float>(0.0f, maxIntensity),
-				dr.viewTransform == ViewTransform.LOG,
-				dr.viewTransform == ViewTransform.LOG));
-			axisPainters.add(new LineAxisPainter(true, true, settings.showPlotTitle, true));
+		axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
+		axisPainters.add(new TickMarkAxisPainter(
+			new Bounds<Float>(0.0f, maxIntensity),
+			new Bounds<Float>(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()),
+			null,
+			new Bounds<Float>(0.0f, maxIntensity),
+			dr.viewTransform == ViewTransform.LOG,
+			dr.viewTransform == ViewTransform.LOG));
+		axisPainters.add(new LineAxisPainter(true, true, settings.showPlotTitle, true));
 
-		}
 
 
 		

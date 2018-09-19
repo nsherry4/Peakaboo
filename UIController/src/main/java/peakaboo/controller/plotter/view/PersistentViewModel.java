@@ -8,7 +8,6 @@ public class PersistentViewModel {
 	public boolean				showElementFitIntensities;
 	public boolean				showIndividualFittings;
 	public boolean				showPlotTitle;
-	public boolean				showAxes;
 	
 	public boolean				monochrome;
 	public boolean				consistentScale = true;
@@ -16,7 +15,6 @@ public class PersistentViewModel {
 	
 	public PersistentViewModel() {
 		showElementFitTitles = true;
-		showAxes = true;
 		showElementFitMarkers = true;
 		showIndividualFittings = true;
 	}
@@ -28,7 +26,6 @@ public class PersistentViewModel {
 		showElementFitIntensities = copy.showElementFitIntensities;
 		showIndividualFittings = copy.showIndividualFittings;
 		showPlotTitle = copy.showPlotTitle;
-		showAxes = copy.showAxes;
 		
 		monochrome = copy.monochrome;
 		consistentScale = copy.consistentScale;

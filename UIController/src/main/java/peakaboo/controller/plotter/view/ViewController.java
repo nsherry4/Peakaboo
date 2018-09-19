@@ -122,19 +122,6 @@ public class ViewController extends Eventful
 		return viewModel.session.scanNumber;
 	}
 
-	public void setShowAxes(boolean axes)
-	{
-		viewModel.persistent.showAxes = axes;
-		savePersistentSettings();
-		setUndoPoint("Axes");
-		updateListeners();
-	}
-
-	public boolean getShowAxes()
-	{
-		return viewModel.persistent.showAxes;
-	}
-
 	public boolean getShowTitle()
 	{
 		return viewModel.persistent.showPlotTitle;
@@ -304,7 +291,6 @@ public class ViewController extends Eventful
 		
 		settings.backgroundShowOriginal = getShowRawData();
 		settings.monochrome = getMonochrome();
-		settings.showAxes = getShowAxes();
 		settings.showElementFitIntensities = getShowElementIntensities();
 		settings.showElementFitMarkers = getShowElementMarkers();
 		settings.showElementFitTitles = getShowElementTitles();

@@ -21,7 +21,7 @@ public class PlotMenuView extends JPopupMenu {
 	public PlotMenuView(PlotPanel plot, PlotController controller) {
 	
 
-		final JMenuItem logPlot, axes, monochrome, title, raw, fittings;
+		final JMenuItem logPlot, monochrome, title, raw, fittings;
 
 		
 		logPlot = PlotMenuUtils.createMenuCheckItem(plot,
@@ -33,14 +33,6 @@ public class PlotMenuView extends JPopupMenu {
 		);
 		logPlot.setSelected(controller.view().getViewLog());
 		
-		axes = PlotMenuUtils.createMenuCheckItem(plot,
-				"Axes", null, "Toggles display of axes and grid lines",
-				b -> {
-					controller.view().setShowAxes(b);
-				},
-				null, null
-		);
-		axes.setSelected(controller.view().getShowAxes());
 
 		title = PlotMenuUtils.createMenuCheckItem(plot,
 				"Title", null, "Toggles display of the current data set's title",
@@ -77,7 +69,6 @@ public class PlotMenuView extends JPopupMenu {
 		);	
 		
 		this.add(logPlot);
-		this.add(axes);
 		this.add(title);
 		this.add(monochrome);
 		
@@ -187,7 +178,6 @@ public class PlotMenuView extends JPopupMenu {
 			{
 
 				logPlot.setSelected(controller.view().getViewLog());
-				axes.setSelected(controller.view().getShowAxes());
 				title.setSelected(controller.view().getShowTitle());
 				monochrome.setSelected(controller.view().getMonochrome());
 
