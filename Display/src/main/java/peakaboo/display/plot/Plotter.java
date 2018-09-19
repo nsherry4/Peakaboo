@@ -327,10 +327,7 @@ public class Plotter {
 		//{
 		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 
-		if (settings.showPlotTitle)
-		{
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, data.dataset.getScanData().datasetName(), null));
-		}
+		
 
 
 		axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
@@ -341,7 +338,7 @@ public class Plotter {
 			new Bounds<Float>(0.0f, maxIntensity),
 			dr.viewTransform == ViewTransform.LOG,
 			dr.viewTransform == ViewTransform.LOG));
-		axisPainters.add(new LineAxisPainter(true, true, settings.showPlotTitle, true));
+		axisPainters.add(new LineAxisPainter(true, true, false, true));
 
 
 

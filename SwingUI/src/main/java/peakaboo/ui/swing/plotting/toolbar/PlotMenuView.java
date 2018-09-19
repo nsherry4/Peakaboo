@@ -21,7 +21,7 @@ public class PlotMenuView extends JPopupMenu {
 	public PlotMenuView(PlotPanel plot, PlotController controller) {
 	
 
-		final JMenuItem logPlot, monochrome, title, raw, fittings;
+		final JMenuItem logPlot, monochrome, raw, fittings;
 
 		
 		logPlot = PlotMenuUtils.createMenuCheckItem(plot,
@@ -33,14 +33,6 @@ public class PlotMenuView extends JPopupMenu {
 		);
 		logPlot.setSelected(controller.view().getViewLog());
 		
-
-		title = PlotMenuUtils.createMenuCheckItem(plot,
-				"Title", null, "Toggles display of the current data set's title",
-				b -> {
-					controller.view().setShowTitle(b);
-				},
-				null, null
-		);
 
 		monochrome = PlotMenuUtils.createMenuCheckItem(plot,
 				"Monochrome", null, "Toggles the monochrome colour palette",
@@ -69,7 +61,6 @@ public class PlotMenuView extends JPopupMenu {
 		);	
 		
 		this.add(logPlot);
-		this.add(title);
 		this.add(monochrome);
 		
 		this.add(raw);
@@ -178,7 +169,6 @@ public class PlotMenuView extends JPopupMenu {
 			{
 
 				logPlot.setSelected(controller.view().getViewLog());
-				title.setSelected(controller.view().getShowTitle());
 				monochrome.setSelected(controller.view().getMonochrome());
 
 				etitles.setSelected(controller.view().getShowElementTitles());

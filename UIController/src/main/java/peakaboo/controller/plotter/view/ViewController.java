@@ -122,19 +122,6 @@ public class ViewController extends Eventful
 		return viewModel.session.scanNumber;
 	}
 
-	public boolean getShowTitle()
-	{
-		return viewModel.persistent.showPlotTitle;
-	}
-
-	public void setShowTitle(boolean show)
-	{
-		viewModel.persistent.showPlotTitle = show;
-		savePersistentSettings();
-		setUndoPoint("Title");
-		updateListeners();
-	}
-
 	public void setMonochrome(boolean mono)
 	{
 		viewModel.persistent.monochrome = mono;
@@ -295,7 +282,6 @@ public class ViewController extends Eventful
 		settings.showElementFitMarkers = getShowElementMarkers();
 		settings.showElementFitTitles = getShowElementTitles();
 		settings.showIndividualFittings = getShowIndividualSelections();
-		settings.showPlotTitle = getShowTitle();
 		settings.logTransform = getViewLog();
 		
 		return settings;
