@@ -23,7 +23,11 @@ public class Serializers {
 	}
 	
 	public static <T> ScratchEncoder<T> fst(Class<? extends T> clazz, Class<?>... classes) {
-		return new FSTDefaultSerializingEncoder<>(clazz, classes);
+		if (isAndroid()) {
+			return new FSTDefaultSerializingEncoder<>(clazz, classes);
+		} else {
+			return new FSTAndroidSerializingEncoder<>(clazz, classes);
+		}
 	}
 	
 	private static boolean isAndroid() {
