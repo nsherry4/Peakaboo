@@ -68,31 +68,27 @@ public class PlotMenuView extends JPopupMenu {
 
 
 		// Element Drawing submenu
-		JMenu elementDrawing = new JMenu("Curve Fit");
 		final JCheckBoxMenuItem emarkings, eintensities;
 
 		
 		emarkings = PlotMenuUtils.createMenuCheckItem(plot,
-				"Markings", null, "Label fittings with lines denoting their energies",
+				"Transition Markings", null, "Label fittings with lines denoting their transition energies",
 				b -> {
 					controller.view().setShowElementMarkers(b);
 				},
 				null, null
 		);
-		elementDrawing.add(emarkings);
+		this.add(emarkings);
 
 		
 		eintensities = PlotMenuUtils.createMenuCheckItem(plot,
-				"Heights", null, "Label fittings with their heights",
+				"Fitting Intensities", null, "Label fittings with their intensities",
 				b -> {
 					controller.view().setShowElementIntensities(b);
 				},
 				null, null
 		);
-		elementDrawing.add(eintensities);
-
-		
-		this.add(elementDrawing);
+		this.add(eintensities);
 
 
 		this.addSeparator();
