@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -23,6 +24,7 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -368,7 +370,12 @@ public class PluginsOverview extends JPanel {
 		
 		JScrollPane scroller = new JScrollPane(tree);
 		scroller.setPreferredSize(new Dimension(200, 300));
-		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		scroller.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
 		return scroller;
 		
 	}
