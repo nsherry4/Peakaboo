@@ -86,17 +86,17 @@ public class Plotter {
 		
 		// Colour/Monochrome colours for curve fittings
 		if (settings.monochrome) {
-			fittedPalette.fitFill = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-			fittedPalette.fitStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
-			fittedPalette.sumStroke = new Color(0.0f, 0.0f, 0.0f, 0.8f);
-			fittedPalette.labelText = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+			fittedPalette.fitFill = new Color(0x50000000, true);
+			fittedPalette.fitStroke = new Color(0x80000000, true);
+			fittedPalette.sumStroke = new Color(0xD0000000, true);
+			fittedPalette.labelText = new Color(0xFF000000, true);
 			fittedPalette.labelBackground = Color.WHITE;
 			fittedPalette.labelStroke = fittedPalette.labelText;
 			fittedPalette.markings = fittedPalette.fitStroke;
 		} else {
-			fittedPalette.fitFill = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-			fittedPalette.fitStroke = new Color(0.0f, 0.0f, 0.0f, 0.5f);
-			fittedPalette.sumStroke = new Color(0.0f, 0.0f, 0.0f, 0.8f);
+			fittedPalette.fitFill = new Color(0x50000000, true);
+			fittedPalette.fitStroke = new Color(0x80000000, true);
+			fittedPalette.sumStroke = new Color(0xD0000000, true);
 			fittedPalette.labelText = fittedPalette.fitStroke;
 			fittedPalette.labelBackground = Color.WHITE;
 			fittedPalette.labelStroke = fittedPalette.labelText;
@@ -232,6 +232,27 @@ public class Plotter {
 		// Draw Curve Fitting
 		////////////////////////////////////////////
 		
+		//Colour palettes for fittings
+		List<FittingLabel> fitLabels = new ArrayList<>();
+		if (data.selectionResults != null) {
+			for (FittingResult fit : data.selectionResults.getFits()) {
+				if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
+					fitLabels.add(new FittingLabel(fit, selectedPalette, data.annotations.get(fit.getTransitionSeries())));		
+				} else {
+					fitLabels.add(new FittingLabel(fit, fittedPalette, data.annotations.get(fit.getTransitionSeries())));
+				}
+				
+			}
+		}
+		
+		
+		//Markings
+		if (data.selectionResults != null) {
+			if (settings.showElementFitMarkers) {
+				plotPainters.add(new FittingMarkersPainter(data.selectionResults.getParameters(), fitLabels, data.escape));
+			}
+		}
+		
 		
 		//plot
 		if (data.selectionResults != null) {
@@ -278,17 +299,6 @@ public class Plotter {
 		
 		
 		//Titles
-		List<FittingLabel> fitLabels = new ArrayList<>();
-		if (data.selectionResults != null) {
-			for (FittingResult fit : data.selectionResults.getFits()) {
-				if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
-					fitLabels.add(new FittingLabel(fit, selectedPalette, data.annotations.get(fit.getTransitionSeries())));		
-				} else {
-					fitLabels.add(new FittingLabel(fit, fittedPalette, data.annotations.get(fit.getTransitionSeries())));
-				}
-				
-			}
-		}
 		if (data.proposedResults != null) {
 			for (FittingResult fit : data.proposedResults.getFits()) {
 				fitLabels.add(new FittingLabel(fit, proposedPalette, data.annotations.get(fit.getTransitionSeries())));
@@ -307,12 +317,7 @@ public class Plotter {
 		
 		
 		
-		//Markings
-		if (data.selectionResults != null) {
-			if (settings.showElementFitMarkers) {
-				plotPainters.add(new FittingMarkersPainter(data.selectionResults.getParameters(), fitLabels, data.escape));
-			}
-		}
+
 		
 		
 		
@@ -327,8 +332,6 @@ public class Plotter {
 		//{
 		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 
-		
-
 
 		axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
 		axisPainters.add(new TickMarkAxisPainter(
@@ -341,8 +344,6 @@ public class Plotter {
 		axisPainters.add(new LineAxisPainter(true, true, false, true));
 
 
-
-		
 		dr.maxYIntensity = maxIntensity;
 		dr.dataWidth = data.calibration.getDataWidth();
 		
