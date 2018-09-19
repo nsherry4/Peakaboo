@@ -122,32 +122,6 @@ public class ViewController extends Eventful
 		return viewModel.session.scanNumber;
 	}
 
-	public void setShowAxes(boolean axes)
-	{
-		viewModel.persistent.showAxes = axes;
-		savePersistentSettings();
-		setUndoPoint("Axes");
-		updateListeners();
-	}
-
-	public boolean getShowAxes()
-	{
-		return viewModel.persistent.showAxes;
-	}
-
-	public boolean getShowTitle()
-	{
-		return viewModel.persistent.showPlotTitle;
-	}
-
-	public void setShowTitle(boolean show)
-	{
-		viewModel.persistent.showPlotTitle = show;
-		savePersistentSettings();
-		setUndoPoint("Title");
-		updateListeners();
-	}
-
 	public void setMonochrome(boolean mono)
 	{
 		viewModel.persistent.monochrome = mono;
@@ -172,14 +146,6 @@ public class ViewController extends Eventful
 		return viewModel.persistent.consistentScale;
 	}
 
-	public void setShowElementTitles(boolean show)
-	{
-		viewModel.persistent.showElementFitTitles = show;
-		savePersistentSettings();
-		setUndoPoint("Fitting Titles");
-		updateListeners();
-	}
-
 	public void setShowElementMarkers(boolean show)
 	{
 		viewModel.persistent.showElementFitMarkers = show;
@@ -194,11 +160,6 @@ public class ViewController extends Eventful
 		savePersistentSettings();
 		setUndoPoint("Fitting Heights");
 		updateListeners();
-	}
-
-	public boolean getShowElementTitles()
-	{
-		return viewModel.persistent.showElementFitTitles;
 	}
 
 	public boolean getShowElementMarkers()
@@ -304,12 +265,9 @@ public class ViewController extends Eventful
 		
 		settings.backgroundShowOriginal = getShowRawData();
 		settings.monochrome = getMonochrome();
-		settings.showAxes = getShowAxes();
 		settings.showElementFitIntensities = getShowElementIntensities();
 		settings.showElementFitMarkers = getShowElementMarkers();
-		settings.showElementFitTitles = getShowElementTitles();
 		settings.showIndividualFittings = getShowIndividualSelections();
-		settings.showPlotTitle = getShowTitle();
 		settings.logTransform = getViewLog();
 		
 		return settings;

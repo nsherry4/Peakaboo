@@ -36,7 +36,6 @@ public class FittingTitlePainter extends PlotPainter
 	private EnergyCalibration calibration;
 	private List<FittingLabel> labels;
 	private boolean drawMaxIntensities;
-	private boolean drawElementNames;
 		
 	private List<FittingLabel> configuredLabels = new ArrayList<>();
 	
@@ -50,7 +49,6 @@ public class FittingTitlePainter extends PlotPainter
 	public FittingTitlePainter(
 			EnergyCalibration calibration,
 			List<FittingLabel> labels, 
-			boolean drawTSNames, 
 			boolean drawMaxIntensities
 		){
 		
@@ -59,7 +57,6 @@ public class FittingTitlePainter extends PlotPainter
 		this.calibration = calibration;
 		this.labels = labels;
 		this.drawMaxIntensities = drawMaxIntensities;
-		this.drawElementNames = drawTSNames;
 				
 	}
 	
@@ -300,10 +297,10 @@ public class FittingTitlePainter extends PlotPainter
 		
 		String titleHeight = SigDigits.roundFloatTo(label.fit.getCurveScale(), 1);
 
-		if (drawElementNames) sb.append(titleName);
-		if (drawElementNames && drawMaxIntensities) sb.append(" (");
-		if (drawMaxIntensities) sb.append(titleHeight);
-		if (drawElementNames && drawMaxIntensities) sb.append(")");
+		sb.append(titleName);
+		if (drawMaxIntensities) {
+			sb.append(" (" + titleHeight + ")");
+		}
 		
 		if (label.annotation != null) {
 			if (sb.length() > 0) {
