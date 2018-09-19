@@ -146,14 +146,6 @@ public class ViewController extends Eventful
 		return viewModel.persistent.consistentScale;
 	}
 
-	public void setShowElementTitles(boolean show)
-	{
-		viewModel.persistent.showElementFitTitles = show;
-		savePersistentSettings();
-		setUndoPoint("Fitting Titles");
-		updateListeners();
-	}
-
 	public void setShowElementMarkers(boolean show)
 	{
 		viewModel.persistent.showElementFitMarkers = show;
@@ -168,11 +160,6 @@ public class ViewController extends Eventful
 		savePersistentSettings();
 		setUndoPoint("Fitting Heights");
 		updateListeners();
-	}
-
-	public boolean getShowElementTitles()
-	{
-		return viewModel.persistent.showElementFitTitles;
 	}
 
 	public boolean getShowElementMarkers()
@@ -280,7 +267,6 @@ public class ViewController extends Eventful
 		settings.monochrome = getMonochrome();
 		settings.showElementFitIntensities = getShowElementIntensities();
 		settings.showElementFitMarkers = getShowElementMarkers();
-		settings.showElementFitTitles = getShowElementTitles();
 		settings.showIndividualFittings = getShowIndividualSelections();
 		settings.logTransform = getViewLog();
 		

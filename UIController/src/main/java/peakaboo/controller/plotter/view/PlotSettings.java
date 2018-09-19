@@ -2,7 +2,6 @@ package peakaboo.controller.plotter.view;
 
 public class PlotSettings {
 	
-	public boolean				showElementFitTitles = true;
 	public boolean				showElementFitMarkers = false;
 	public boolean				showElementFitIntensities = false;
 	public boolean				showIndividualFittings = false;

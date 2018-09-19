@@ -309,7 +309,6 @@ public class Plotter {
 			plotPainters.add(new FittingTitlePainter(
 					data.selectionResults.getParameters().getCalibration(),
 					fitLabels,
-					settings.showElementFitTitles,
 					settings.showElementFitIntensities
 				)
 			);

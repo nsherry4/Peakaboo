@@ -69,17 +69,7 @@ public class PlotMenuView extends JPopupMenu {
 
 		// Element Drawing submenu
 		JMenu elementDrawing = new JMenu("Curve Fit");
-		final JCheckBoxMenuItem etitles, emarkings, eintensities;
-
-		
-		etitles = PlotMenuUtils.createMenuCheckItem(plot,
-				"Element Names", null, "Label fittings with the names of their elements",
-				b -> {
-					controller.view().setShowElementTitles(b);
-				},
-				null, null
-		);
-		elementDrawing.add(etitles);
+		final JCheckBoxMenuItem emarkings, eintensities;
 
 		
 		emarkings = PlotMenuUtils.createMenuCheckItem(plot,
@@ -171,7 +161,6 @@ public class PlotMenuView extends JPopupMenu {
 				logPlot.setSelected(controller.view().getViewLog());
 				monochrome.setSelected(controller.view().getMonochrome());
 
-				etitles.setSelected(controller.view().getShowElementTitles());
 				emarkings.setSelected(controller.view().getShowElementMarkers());
 				eintensities.setSelected(controller.view().getShowElementIntensities());
 
