@@ -14,7 +14,9 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Function;
 
+import peakaboo.controller.mapper.data.MapRenderData;
 import peakaboo.controller.mapper.settings.MapDisplayMode;
+import peakaboo.controller.mapper.settings.MapRenderSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -25,12 +27,12 @@ import scidraw.drawing.backends.SaveableSurface;
 import scidraw.drawing.backends.Surface;
 import scidraw.drawing.backends.Surface.CompositeModes;
 import scidraw.drawing.backends.SurfaceType;
-import scidraw.drawing.common.Spectrums;
 import scidraw.drawing.map.MapDrawing;
 import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
 import scidraw.drawing.map.painters.MapTechniqueFactory;
 import scidraw.drawing.map.painters.RasterSpectrumMapPainter;
+import scidraw.drawing.map.painters.SelectionMaskPainter;
 import scidraw.drawing.map.painters.SpectrumMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
@@ -39,6 +41,7 @@ import scidraw.drawing.map.palettes.OverlayPalette;
 import scidraw.drawing.map.palettes.RatioPalette;
 import scidraw.drawing.map.palettes.SaturationPalette;
 import scidraw.drawing.map.palettes.ThermalScalePalette;
+import scidraw.drawing.painters.Painter;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scitypes.Coord;
@@ -46,6 +49,8 @@ import scitypes.Pair;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
+import scitypes.palette.PaletteColour;
+import scitypes.palette.Spectrums;
 
 public class Mapper {
 
@@ -61,7 +66,7 @@ public class Mapper {
 	}
 	
 	
-	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
+	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
 		
 		size = this.setDimensions(settings, size);
 		
@@ -71,7 +76,7 @@ public class Mapper {
 		
 	}
 	
-	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
+	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
 		
 		size = this.setDimensions(settings, size);
 		
@@ -82,10 +87,10 @@ public class Mapper {
 	}
 	
 	
-	private Dimension setDimensions(MapSettings settings, Dimension size) {
+	private Dimension setDimensions(MapRenderSettings settings, Dimension size) {
 		
 		if (settings == null) {
-			settings = new MapSettings();
+			settings = new MapRenderSettings();
 		}
 
 		
@@ -127,10 +132,10 @@ public class Mapper {
 	}
 	
 	
-	public MapDrawing draw(MapData data, MapSettings settings, Surface context, boolean vector, Dimension size) {
+	public MapDrawing draw(MapRenderData data, MapRenderSettings settings, Surface context, boolean vector, Dimension size) {
 	
 		if (settings == null) {
-			settings = new MapSettings();
+			settings = new MapRenderSettings();
 		}
 
 		size = this.setDimensions(settings, size);
@@ -183,7 +188,7 @@ public class Mapper {
 	 * @param vector is this a vector-based backend
 	 * @param spectrumSteps how many steps should our legeng spectrum have
 	 */
-	private void drawBackendComposite(MapData data, MapSettings settings, Surface backend, boolean vector, int spectrumSteps)
+	private void drawBackendComposite(MapRenderData data, MapRenderSettings settings, Surface backend, boolean vector, int spectrumSteps)
 	{
 		
 		AbstractPalette palette 			=		new ThermalScalePalette(spectrumSteps, settings.monochrome);
@@ -262,7 +267,9 @@ public class Mapper {
 		mapPainters.add(contourMapPainter);
 		
 		
-		mapPainters.addAll(settings.painters);
+		//Selection Painter
+		MapPainter selection = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		mapPainters.add(selection);
 			
 		
 		map.setPainters(mapPainters);
@@ -279,7 +286,7 @@ public class Mapper {
 	 * @param vector is this a vector-based backend
 	 * @param spectrumSteps how many steps should our legeng spectrum have
 	 */
-	private void drawBackendRatio(MapData data, MapSettings settings, Surface backend, boolean vector, int spectrumSteps)
+	private void drawBackendRatio(MapRenderData data, MapRenderSettings settings, Surface backend, boolean vector, int spectrumSteps)
 	{
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
@@ -402,11 +409,13 @@ public class Mapper {
 		});
 		
 
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(Color.gray, new Color(0,0,0,0)), invalidPoints, false, 0);
+		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), invalidPoints, false, 0);
 		mapPainters.add(invalidPainter);
 		
 		
-		mapPainters.addAll(settings.painters);
+		//Selection Painter
+		MapPainter selection = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		mapPainters.add(selection);
 		
 		
 		map.setPainters(mapPainters);
@@ -423,7 +432,7 @@ public class Mapper {
 	 * @param vector is this a vector-based backend
 	 * @param spectrumSteps how many steps should our legeng spectrum have
 	 */
-	private void drawBackendOverlay(MapData dlata, MapSettings settings, Surface backend, boolean vector, int spectrumSteps)
+	private void drawBackendOverlay(MapRenderData data, MapRenderSettings settings, Surface backend, boolean vector, int spectrumSteps)
 	{
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
@@ -440,10 +449,10 @@ public class Mapper {
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
 		
-		Spectrum redSpectrum = dlata.overlayData.get(OverlayColour.RED).data;
-		Spectrum greenSpectrum = dlata.overlayData.get(OverlayColour.GREEN).data;
-		Spectrum blueSpectrum = dlata.overlayData.get(OverlayColour.BLUE).data;
-		Spectrum yellowSpectrum = dlata.overlayData.get(OverlayColour.YELLOW).data;
+		Spectrum redSpectrum = data.overlayData.get(OverlayColour.RED).data;
+		Spectrum greenSpectrum = data.overlayData.get(OverlayColour.GREEN).data;
+		Spectrum blueSpectrum = data.overlayData.get(OverlayColour.BLUE).data;
+		Spectrum yellowSpectrum = data.overlayData.get(OverlayColour.YELLOW).data;
 		
 		
 		if (redSpectrum != null ) redMax = redSpectrum.max();
@@ -455,15 +464,15 @@ public class Mapper {
 		dr.maxYIntensity = Math.max(Math.max(redMax, yellowMax), Math.max(greenMax, blueMax));
 
 
-		List<Pair<Color, String>> 	colours = new ArrayList<>();
-		Function<OverlayColour, String> tsFormatter = colour -> dlata.overlayData.get(colour).elements.stream()
+		List<Pair<PaletteColour, String>> 	colours = new ArrayList<>();
+		Function<OverlayColour, String> tsFormatter = colour -> data.overlayData.get(colour).elements.stream()
 				.map(TransitionSeries::toString)
 				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
 		
-		if (redSpectrum != null) 	colours.add(new Pair<>(color(OverlayColour.RED), tsFormatter.apply(OverlayColour.RED)));
-		if (yellowSpectrum != null) colours.add(new Pair<>(color(OverlayColour.YELLOW), tsFormatter.apply(OverlayColour.YELLOW)));
-		if (greenSpectrum != null) 	colours.add(new Pair<>(color(OverlayColour.GREEN), tsFormatter.apply(OverlayColour.GREEN)));
-		if (blueSpectrum != null) 	colours.add(new Pair<>(color(OverlayColour.BLUE), tsFormatter.apply(OverlayColour.BLUE)));
+		if (redSpectrum != null) 	colours.add(new Pair<>(OverlayColour.RED.toColour(), tsFormatter.apply(OverlayColour.RED)));
+		if (yellowSpectrum != null) colours.add(new Pair<>(OverlayColour.YELLOW.toColour(), tsFormatter.apply(OverlayColour.YELLOW)));
+		if (greenSpectrum != null) 	colours.add(new Pair<>(OverlayColour.GREEN.toColour(), tsFormatter.apply(OverlayColour.GREEN)));
+		if (blueSpectrum != null) 	colours.add(new Pair<>(OverlayColour.BLUE.toColour(), tsFormatter.apply(OverlayColour.BLUE)));
 		
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
@@ -512,53 +521,55 @@ public class Mapper {
 		
 		if (redSpectrum != null){
 			if (overlayMapPainterRed == null) {
-				overlayMapPainterRed = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.RED)), redSpectrum);
+				overlayMapPainterRed = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour()), redSpectrum);
 				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterRed.setData(redSpectrum);
-			overlayMapPainterRed.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.RED)));
+			overlayMapPainterRed.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour()));
 			painters.add(overlayMapPainterRed);
 		}
 			
 		if (greenSpectrum != null) {
 			if (overlayMapPainterGreen == null) {
-				overlayMapPainterGreen = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.GREEN)), greenSpectrum);
+				overlayMapPainterGreen = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour()), greenSpectrum);
 				overlayMapPainterGreen.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterGreen.setData(greenSpectrum);
-			overlayMapPainterGreen.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.GREEN)));
+			overlayMapPainterGreen.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour()));
 			painters.add(overlayMapPainterGreen);
 		}
 		
 		if (blueSpectrum != null) {
 			if (overlayMapPainterBlue == null) {
-				overlayMapPainterBlue = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.BLUE)), blueSpectrum);
+				overlayMapPainterBlue = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour()), blueSpectrum);
 				overlayMapPainterBlue.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterBlue.setData(blueSpectrum);
-			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.BLUE)));
+			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour()));
 			painters.add(overlayMapPainterBlue);
 		}
 		
 		if (yellowSpectrum != null) {
 			if (overlayMapPainterYellow == null) {
-				overlayMapPainterYellow = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, color(OverlayColour.YELLOW)), yellowSpectrum);
+				overlayMapPainterYellow = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour()), yellowSpectrum);
 				overlayMapPainterYellow.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterYellow.setData(yellowSpectrum);
-			overlayMapPainterYellow.setPalette(new OverlayPalette(spectrumSteps, color(OverlayColour.YELLOW)));
+			overlayMapPainterYellow.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour()));
 			painters.add(overlayMapPainterYellow);
 		}
 		
 		//need to paint the background black first
 		painters.add(
 				0, 
-				new FloodMapPainter(Color.black)
+				new FloodMapPainter(new PaletteColour(0xff000000))
 		);
 		
 		
 		
-		painters.addAll(settings.painters);
+		//Selection Painter
+		MapPainter selection = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		painters.add(selection);
 
 		
 		
@@ -567,11 +578,7 @@ public class Mapper {
 		map.draw();
 		
 	}
-	
-	private Color color(OverlayColour oc) {
-		return new Color(oc.toRGB());
-	}
-	
+
 	
 	
 	

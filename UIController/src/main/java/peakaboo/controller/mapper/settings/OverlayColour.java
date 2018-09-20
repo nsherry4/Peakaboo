@@ -1,38 +1,43 @@
 package peakaboo.controller.mapper.settings;
 
+import scitypes.palette.PaletteColour;
 
 public enum OverlayColour {
 	
 	RED {
 		@Override
-		public int toRGB(){return 0xcc0000;}
+		public int toARGB(){return 0xffcc0000;}
 		@Override
 		public String toString(){return "Red";}
 	},
 	GREEN {
 		@Override
-		public int toRGB(){return 0x73d216;}
+		public int toARGB(){return 0xff73d216;}
 		@Override
 		public String toString(){return "Green";}
 	},
 	BLUE {
 		@Override
-		public int toRGB(){return 0x3465a4;}
+		public int toARGB(){return 0xff3465a4;}
 		@Override
 		public String toString(){return "Blue";}
 	},
 	YELLOW {
 		@Override
-		public int toRGB(){return 0xedd400;}
+		public int toARGB(){return 0xffedd400;}
 		@Override
 		public String toString(){return "Yellow";}
 	};
 	
 	
-	public int toRGB()
+	public int toARGB()
 	{
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	public PaletteColour toColour() {
+		return new PaletteColour(toARGB());
 	}
 	
 }
