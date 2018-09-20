@@ -8,10 +8,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.Box;
@@ -23,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
@@ -36,6 +40,8 @@ import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
 import scitypes.Pair;
 import scitypes.SigDigits;
+import swidget.dialogues.fileio.SimpleFileExtension;
+import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
@@ -207,7 +213,7 @@ class MapperToolbar extends JToolBar {
 		c.weightx = 0.0;
 		c.gridx++;
 		
-		this.add(createOptionsButton(controller), c);
+		this.add(createOptionsButton(panel, controller), c);
 		c.gridx++;
 		
 		
@@ -236,7 +242,7 @@ class MapperToolbar extends JToolBar {
 	}
 	
 
-	private ToolbarImageButton createOptionsButton(MappingController controller) {
+	private ToolbarImageButton createOptionsButton(MapperPanel panel, MappingController controller) {
 		
 		ToolbarImageButton opts = new ToolbarImageButton();
 		opts.withIcon("menu-view").withTooltip("Map Settings Menu");
@@ -263,6 +269,30 @@ class MapperToolbar extends JToolBar {
 		monochrome.addActionListener(e -> viewSettings.setMonochrome(monochrome.isSelected()));
 		logview.addActionListener(e -> controller.getSettings().getMapFittings().setLogView(logview.isSelected()));
 		
+		JMenuItem loadCalibration = new JMenuItem("Load Calibration");
+		loadCalibration.addActionListener(e -> {
+			SwidgetFilePanels.openFile(panel, "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
+				if (!result.isPresent()) {
+					return;
+				}
+				
+				
+				try {
+					CalibrationProfile profile = CalibrationProfile.load(new String(Files.readAllBytes(result.get().toPath())));
+					controller.getSettings().getMapFittings().setCalibrationProfile(profile);
+				} catch (IOException e1) {
+					PeakabooLog.get().log(Level.SEVERE, "Could not load calibration profile", e1);
+				}
+			});
+			
+		});
+		
+		JMenuItem clearCalibration = new JMenuItem("Clear Calibration");
+		clearCalibration.addActionListener(e -> {
+			controller.getSettings().getMapFittings().setCalibrationProfile(new CalibrationProfile());
+		});
+		
+		
 		menu.add(title);
 		menu.add(dstitle);
 		menu.add(spectrum);
@@ -270,6 +300,9 @@ class MapperToolbar extends JToolBar {
 		menu.addSeparator();
 		menu.add(logview);
 		menu.add(monochrome);
+		menu.addSeparator();
+		menu.add(loadCalibration);
+		menu.add(clearCalibration);
 		
 		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
 		
