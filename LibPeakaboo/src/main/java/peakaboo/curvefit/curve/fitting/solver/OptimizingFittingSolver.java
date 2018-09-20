@@ -105,7 +105,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 		//265 reps on test session but occasionally dies?
 		//optimizer = new BOBYQAOptimizer(Math.max(size+2, size*2));
 		
-		PointValuePair result = new SimplexOptimizer(0.0001d, 1d).optimize(
+		//-1 for rel means don't use rel, just use abs difference
+		PointValuePair result = new SimplexOptimizer(-1d, 1d).optimize(
 				new ObjectiveFunction(cost), 
 				new InitialGuess(guess),
 				new MaxIter(100000),
