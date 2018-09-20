@@ -35,7 +35,7 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		if ((value != null) && (value instanceof OverlayColour))
 		{
 			//Overlay Mode
-			Color c = new Color(((OverlayColour) value).toRGB());
+			Color c = new Color(((OverlayColour) value).toARGB());
 			renderer.setIcon(new ColourRenderer( c ));
 			renderer.setText("");
 			renderer.setBackground( c );
