@@ -14,7 +14,9 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Function;
 
+import peakaboo.controller.mapper.data.MapRenderData;
 import peakaboo.controller.mapper.settings.MapDisplayMode;
+import peakaboo.controller.mapper.settings.MapRenderSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -31,6 +33,7 @@ import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
 import scidraw.drawing.map.painters.MapTechniqueFactory;
 import scidraw.drawing.map.painters.RasterSpectrumMapPainter;
+import scidraw.drawing.map.painters.SelectionMaskPainter;
 import scidraw.drawing.map.painters.SpectrumMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
@@ -39,6 +42,7 @@ import scidraw.drawing.map.palettes.OverlayPalette;
 import scidraw.drawing.map.palettes.RatioPalette;
 import scidraw.drawing.map.palettes.SaturationPalette;
 import scidraw.drawing.map.palettes.ThermalScalePalette;
+import scidraw.drawing.painters.Painter;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scitypes.Coord;
@@ -61,7 +65,7 @@ public class Mapper {
 	}
 	
 	
-	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
+	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
 		
 		size = this.setDimensions(settings, size);
 		
@@ -71,7 +75,7 @@ public class Mapper {
 		
 	}
 	
-	public void write(MapData data, MapSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
+	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
 		
 		size = this.setDimensions(settings, size);
 		
@@ -82,10 +86,10 @@ public class Mapper {
 	}
 	
 	
-	private Dimension setDimensions(MapSettings settings, Dimension size) {
+	private Dimension setDimensions(MapRenderSettings settings, Dimension size) {
 		
 		if (settings == null) {
-			settings = new MapSettings();
+			settings = new MapRenderSettings();
 		}
 
 		
@@ -127,10 +131,10 @@ public class Mapper {
 	}
 	
 	
-	public MapDrawing draw(MapData data, MapSettings settings, Surface context, boolean vector, Dimension size) {
+	public MapDrawing draw(MapRenderData data, MapRenderSettings settings, Surface context, boolean vector, Dimension size) {
 	
 		if (settings == null) {
-			settings = new MapSettings();
+			settings = new MapRenderSettings();
 		}
 
 		size = this.setDimensions(settings, size);
@@ -183,7 +187,7 @@ public class Mapper {
 	 * @param vector is this a vector-based backend
 	 * @param spectrumSteps how many steps should our legeng spectrum have
 	 */
-	private void drawBackendComposite(MapData data, MapSettings settings, Surface backend, boolean vector, int spectrumSteps)
+	private void drawBackendComposite(MapRenderData data, MapRenderSettings settings, Surface backend, boolean vector, int spectrumSteps)
 	{
 		
 		AbstractPalette palette 			=		new ThermalScalePalette(spectrumSteps, settings.monochrome);
@@ -262,7 +266,9 @@ public class Mapper {
 		mapPainters.add(contourMapPainter);
 		
 		
-		mapPainters.addAll(settings.painters);
+		//Selection Painter
+		MapPainter selection = new SelectionMaskPainter(Color.white, settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		mapPainters.add(selection);
 			
 		
 		map.setPainters(mapPainters);
@@ -279,7 +285,7 @@ public class Mapper {
 	 * @param vector is this a vector-based backend
 	 * @param spectrumSteps how many steps should our legeng spectrum have
 	 */
-	private void drawBackendRatio(MapData data, MapSettings settings, Surface backend, boolean vector, int spectrumSteps)
+	private void drawBackendRatio(MapRenderData data, MapRenderSettings settings, Surface backend, boolean vector, int spectrumSteps)
 	{
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
@@ -406,7 +412,9 @@ public class Mapper {
 		mapPainters.add(invalidPainter);
 		
 		
-		mapPainters.addAll(settings.painters);
+		//Selection Painter
+		MapPainter selection = new SelectionMaskPainter(Color.white, settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		mapPainters.add(selection);
 		
 		
 		map.setPainters(mapPainters);
@@ -423,7 +431,7 @@ public class Mapper {
 	 * @param vector is this a vector-based backend
 	 * @param spectrumSteps how many steps should our legeng spectrum have
 	 */
-	private void drawBackendOverlay(MapData dlata, MapSettings settings, Surface backend, boolean vector, int spectrumSteps)
+	private void drawBackendOverlay(MapRenderData dlata, MapRenderSettings settings, Surface backend, boolean vector, int spectrumSteps)
 	{
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
@@ -558,7 +566,9 @@ public class Mapper {
 		
 		
 		
-		painters.addAll(settings.painters);
+		//Selection Painter
+		MapPainter selection = new SelectionMaskPainter(Color.white, settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		painters.add(selection);
 
 		
 		

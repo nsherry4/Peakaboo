@@ -1,16 +1,12 @@
-package peakaboo.display.map;
+package peakaboo.controller.mapper.settings;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.controller.mapper.settings.MapDisplayMode;
-import peakaboo.controller.mapper.settings.MapScaleMode;
-import scidraw.drawing.ViewTransform;
-import scidraw.drawing.map.painters.MapPainter;
 import scitypes.Coord;
 import scitypes.SISize;
 
-public class MapSettings {
+public class MapRenderSettings {
 
 	public int dataWidth, dataHeight;
 	public int interpolatedWidth, interpolatedHeight;
@@ -39,8 +35,7 @@ public class MapSettings {
 	public int spectrumHeight = 15;
 	public String spectrumTitle = "";
 	
-	
-	public List<MapPainter> painters = new ArrayList<>();
+	public List<Integer> selectedPoints = new ArrayList<>();
 	
 	
 }
