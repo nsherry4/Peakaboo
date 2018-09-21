@@ -36,11 +36,6 @@ import scidraw.drawing.map.painters.SelectionMaskPainter;
 import scidraw.drawing.map.painters.SpectrumMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
-import scidraw.drawing.map.palettes.AbstractPalette;
-import scidraw.drawing.map.palettes.OverlayPalette;
-import scidraw.drawing.map.palettes.RatioPalette;
-import scidraw.drawing.map.palettes.SaturationPalette;
-import scidraw.drawing.map.palettes.ThermalScalePalette;
 import scidraw.drawing.painters.Painter;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
@@ -49,8 +44,13 @@ import scitypes.Pair;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import scitypes.palette.PaletteColour;
-import scitypes.palette.Spectrums;
+import scitypes.palette.base.PaletteColour;
+import scitypes.palette.base.Spectrums;
+import scitypes.palette.palettes.AbstractPalette;
+import scitypes.palette.palettes.OverlayPalette;
+import scitypes.palette.palettes.RatioPalette;
+import scitypes.palette.palettes.SaturationPalette;
+import scitypes.palette.palettes.ThermalScalePalette;
 
 public class Mapper {
 
