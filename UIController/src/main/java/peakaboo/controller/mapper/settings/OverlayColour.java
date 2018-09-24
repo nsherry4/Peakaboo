@@ -32,7 +32,6 @@ public enum OverlayColour {
 	
 	public int toARGB()
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
