@@ -1,8 +1,6 @@
 package peakaboo.display.plot.painters;
 
 
-import java.awt.Color;
-
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 import scidraw.drawing.painters.PainterData;

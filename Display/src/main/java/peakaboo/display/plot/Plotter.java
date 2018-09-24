@@ -23,12 +23,9 @@ import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 import peakaboo.filter.model.Filter;
+import scidraw.backend.awt.AwtDrawingSurfaceFactory;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
-import scidraw.drawing.backends.DrawingSurfaceFactory;
-import scidraw.drawing.backends.SaveableSurface;
-import scidraw.drawing.backends.Surface;
-import scidraw.drawing.backends.SurfaceType;
 import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.LineAxisPainter;
@@ -43,6 +40,10 @@ import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scitypes.Bounds;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
+import scitypes.visualization.SaveableSurface;
+import scitypes.visualization.Surface;
+import scitypes.visualization.SurfaceType;
+import scitypes.visualization.palette.PaletteColour;
 
 public class Plotter {
 
@@ -67,7 +68,7 @@ public class Plotter {
 		
 		//white background
 		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
-		context.setSource(Color.white);
+		context.setSource(new PaletteColour(0xffffffff));
 		context.fill();
 
 		
@@ -86,19 +87,19 @@ public class Plotter {
 		
 		// Colour/Monochrome colours for curve fittings
 		if (settings.monochrome) {
-			fittedPalette.fitFill = new Color(0x50000000, true);
-			fittedPalette.fitStroke = new Color(0x80000000, true);
-			fittedPalette.sumStroke = new Color(0xD0000000, true);
-			fittedPalette.labelText = new Color(0xFF000000, true);
-			fittedPalette.labelBackground = Color.WHITE;
+			fittedPalette.fitFill = new PaletteColour(0x50000000);
+			fittedPalette.fitStroke = new PaletteColour(0x80000000);
+			fittedPalette.sumStroke = new PaletteColour(0xD0000000);
+			fittedPalette.labelText = new PaletteColour(0xFF000000);
+			fittedPalette.labelBackground = new PaletteColour(0xffffffff);
 			fittedPalette.labelStroke = fittedPalette.labelText;
 			fittedPalette.markings = fittedPalette.fitStroke;
 		} else {
-			fittedPalette.fitFill = new Color(0x50000000, true);
-			fittedPalette.fitStroke = new Color(0x80000000, true);
-			fittedPalette.sumStroke = new Color(0xD0000000, true);
+			fittedPalette.fitFill = new PaletteColour(0x50000000);
+			fittedPalette.fitStroke = new PaletteColour(0x80000000);
+			fittedPalette.sumStroke = new PaletteColour(0xD0000000);
 			fittedPalette.labelText = fittedPalette.fitStroke;
-			fittedPalette.labelBackground = Color.WHITE;
+			fittedPalette.labelBackground = new PaletteColour(0xffffffff);
 			fittedPalette.labelStroke = fittedPalette.labelText;
 			fittedPalette.markings = fittedPalette.fitStroke;
 		}
@@ -106,20 +107,20 @@ public class Plotter {
 		
 		if (settings.monochrome)
 		{
-			proposedPalette.fitFill = new Color(0x50ffffff, true);
-			proposedPalette.fitStroke = new Color(0x80ffffff, true);
-			proposedPalette.sumStroke = new Color(0xD0ffffff, true);
-			proposedPalette.labelText = new Color(0xFF777777, true);
-			proposedPalette.labelBackground = Color.WHITE;
+			proposedPalette.fitFill = new PaletteColour(0x50ffffff);
+			proposedPalette.fitStroke = new PaletteColour(0x80ffffff);
+			proposedPalette.sumStroke = new PaletteColour(0xD0ffffff);
+			proposedPalette.labelText = new PaletteColour(0xFF777777);
+			proposedPalette.labelBackground = new PaletteColour(0xffffffff);
 			proposedPalette.labelStroke = proposedPalette.labelText;
 			proposedPalette.markings = proposedPalette.fitStroke;
 		}
 		else
 		{
-			proposedPalette.fitFill = new Color(0xA0D32F2F, true);
-			proposedPalette.fitStroke = new Color(0xA0B71C1C, true);
-			proposedPalette.sumStroke = new Color(0xD0B71C1C, true);
-			proposedPalette.labelText = Color.WHITE;
+			proposedPalette.fitFill = new PaletteColour(0xA0D32F2F);
+			proposedPalette.fitStroke = new PaletteColour(0xA0B71C1C);
+			proposedPalette.sumStroke = new PaletteColour(0xD0B71C1C);
+			proposedPalette.labelText = new PaletteColour(0xffffffff);
 			proposedPalette.labelBackground = proposedPalette.fitStroke;
 			proposedPalette.labelStroke = proposedPalette.labelBackground;
 			proposedPalette.markings = proposedPalette.fitStroke;
@@ -128,21 +129,21 @@ public class Plotter {
 		// Colour/Monochrome colours for highlighted/selected fittings
 		if (settings.monochrome)
 		{
-			selectedPalette.fitFill = new Color(0x50ffffff, true);
-			selectedPalette.fitStroke = new Color(0x80ffffff, true);
-			selectedPalette.sumStroke = new Color(0xFF777777, true);
-			selectedPalette.labelText = Color.WHITE;
-			selectedPalette.labelBackground = new Color(0x80000000, true);
-			selectedPalette.labelStroke = new Color(0xA0000000, true);
+			selectedPalette.fitFill = new PaletteColour(0x50ffffff);
+			selectedPalette.fitStroke = new PaletteColour(0x80ffffff);
+			selectedPalette.sumStroke = new PaletteColour(0xFF777777);
+			selectedPalette.labelText = new PaletteColour(0xffffffff);
+			selectedPalette.labelBackground = new PaletteColour(0x80000000);
+			selectedPalette.labelStroke = new PaletteColour(0xA0000000);
 			selectedPalette.markings = selectedPalette.fitStroke;
 		}
 		else
 		{
-			selectedPalette.fitFill = new Color(0x800288D1, true);
-			selectedPalette.fitStroke = new Color(0xff01579B, true);
-			selectedPalette.sumStroke = new Color(0xff01579B, true);
-			selectedPalette.labelText = Color.WHITE;
-			selectedPalette.labelBackground = new Color(0xA001579B, true);;
+			selectedPalette.fitFill = new PaletteColour(0x800288D1);
+			selectedPalette.fitStroke = new PaletteColour(0xff01579B);
+			selectedPalette.sumStroke = new PaletteColour(0xff01579B);
+			selectedPalette.labelText = new PaletteColour(0xffffffff);
+			selectedPalette.labelBackground = new PaletteColour(0xA001579B);
 			selectedPalette.labelStroke = selectedPalette.fitStroke;
 			selectedPalette.markings = selectedPalette.fitStroke;
 		}
@@ -357,7 +358,7 @@ public class Plotter {
 	
 	public void write(PlotData data, PlotSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
 		
-		SaveableSurface s = DrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
+		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
 		this.draw(data, settings, s, size);
 		s.write(out);
 		

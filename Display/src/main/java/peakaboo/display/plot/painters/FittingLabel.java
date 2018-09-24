@@ -1,23 +1,22 @@
 package peakaboo.display.plot.painters;
 
-import java.awt.Color;
-
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.visualization.palette.PaletteColour;
 
 public class FittingLabel {
 	
 	public static class PlotPalette {
-		public Color labelText;
-		public Color labelBackground;
-		public Color labelStroke;
+		public PaletteColour labelText;
+		public PaletteColour labelBackground;
+		public PaletteColour labelStroke;
 		
-		public Color fitFill;
-		public Color fitStroke;
-		public Color sumStroke;
+		public PaletteColour fitFill;
+		public PaletteColour fitStroke;
+		public PaletteColour sumStroke;
 		
-		public Color markings;
+		public PaletteColour markings;
 	}
 	
 	//passed in

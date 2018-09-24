@@ -20,13 +20,9 @@ import peakaboo.controller.mapper.settings.MapRenderSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import scidraw.backend.awt.AwtDrawingSurfaceFactory;
 import scidraw.drawing.DrawingRequest;
 import scidraw.drawing.ViewTransform;
-import scidraw.drawing.backends.DrawingSurfaceFactory;
-import scidraw.drawing.backends.SaveableSurface;
-import scidraw.drawing.backends.Surface;
-import scidraw.drawing.backends.Surface.CompositeModes;
-import scidraw.drawing.backends.SurfaceType;
 import scidraw.drawing.map.MapDrawing;
 import scidraw.drawing.map.painters.FloodMapPainter;
 import scidraw.drawing.map.painters.MapPainter;
@@ -44,13 +40,17 @@ import scitypes.Pair;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import scitypes.palette.base.PaletteColour;
-import scitypes.palette.base.Spectrums;
-import scitypes.palette.palettes.AbstractPalette;
-import scitypes.palette.palettes.OverlayPalette;
-import scitypes.palette.palettes.RatioPalette;
-import scitypes.palette.palettes.SaturationPalette;
-import scitypes.palette.palettes.ThermalScalePalette;
+import scitypes.visualization.SaveableSurface;
+import scitypes.visualization.Surface;
+import scitypes.visualization.Surface.CompositeModes;
+import scitypes.visualization.SurfaceType;
+import scitypes.visualization.palette.PaletteColour;
+import scitypes.visualization.palette.Spectrums;
+import scitypes.visualization.palette.palettes.AbstractPalette;
+import scitypes.visualization.palette.palettes.OverlayPalette;
+import scitypes.visualization.palette.palettes.RatioPalette;
+import scitypes.visualization.palette.palettes.SaturationPalette;
+import scitypes.visualization.palette.palettes.ThermalScalePalette;
 
 public class Mapper {
 
@@ -70,7 +70,7 @@ public class Mapper {
 		
 		size = this.setDimensions(settings, size);
 		
-		SaveableSurface s = DrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
+		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
 		this.draw(data, settings, s, type == SurfaceType.VECTOR, size);
 		s.write(out);
 		
@@ -147,7 +147,7 @@ public class Mapper {
 		
 		//clear background with white
 		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
-		context.setSource(Color.white);
+		context.setSource(new PaletteColour(0xffffffff));
 		context.fill();
 		
 		switch (settings.mode)

@@ -13,10 +13,10 @@ import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.display.map.Mapper;
-import scidraw.drawing.backends.Surface;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.visualization.Surface;
 
 
 class MapCanvas extends GraphicsPanel

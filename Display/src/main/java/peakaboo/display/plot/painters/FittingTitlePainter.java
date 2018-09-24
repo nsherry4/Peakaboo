@@ -1,6 +1,5 @@
 package peakaboo.display.plot.painters;
 
-import java.awt.Color;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +17,8 @@ import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
+import scitypes.visualization.drawings.RoundedRectangle;
+import scitypes.visualization.palette.PaletteColour;
 
 
 /**
@@ -254,10 +255,12 @@ public class FittingTitlePainter extends PlotPainter
 		float h = label.position.y.end - label.position.y.start;
 				
 		p.context.setSource(label.palette.labelBackground);
-		p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
+		p.context.addShape(new RoundedRectangle(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f));
+		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.fill();
 		p.context.setSource(label.palette.labelStroke);
-		p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
+		p.context.addShape(new RoundedRectangle(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f));
+		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.stroke();
 		p.context.setSource(label.palette.labelText);
 		p.context.writeText(label.title, xTextStart+1, p.plotSize.y - yTextStart+1);
@@ -268,8 +271,8 @@ public class FittingTitlePainter extends PlotPainter
 	protected void drawTextLine(PainterData p, FittingLabel label) {
 		if (label.title == null || label.title.length() == 0) { return; }
 		
-		Color stroke = label.palette.labelStroke;
-		Color semitransparent = new Color(stroke.getRed(), stroke.getGreen(), stroke.getBlue(), 64);
+		PaletteColour stroke = label.palette.labelStroke;
+		PaletteColour semitransparent = new PaletteColour(64, stroke.getRed(), stroke.getGreen(), stroke.getBlue());
 		p.context.setSource(semitransparent);
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
 		TransitionSeries ts = label.fit.getTransitionSeries();
