@@ -259,7 +259,7 @@ public class Mapper {
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (contourMapPainter == null) {
-			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.compositeData, settings.contours, spectrumSteps); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.compositeData, spectrumSteps); 
 		} else {
 			contourMapPainter.setData(data.compositeData);
 			contourMapPainter.setPalettes(paletteList);
@@ -388,7 +388,7 @@ public class Mapper {
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (ratioMapPainter == null) {
-			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, settings.contours, spectrumSteps); 
+			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, spectrumSteps); 
 		} else {
 			ratioMapPainter.setData(ratiodata.first);
 			ratioMapPainter.setPalettes(paletteList);
@@ -409,7 +409,7 @@ public class Mapper {
 		});
 		
 
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), invalidPoints, false, 0);
+		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), invalidPoints, 0);
 		mapPainters.add(invalidPainter);
 		
 		
