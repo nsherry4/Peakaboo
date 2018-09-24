@@ -1,7 +1,5 @@
 package peakaboo.display.plot;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -38,17 +36,19 @@ import scidraw.drawing.plot.painters.axis.TickMarkAxisPainter;
 import scidraw.drawing.plot.painters.plot.OriginalDataPainter;
 import scidraw.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scitypes.Bounds;
+import scitypes.Coord;
 import scitypes.ReadOnlySpectrum;
 import scitypes.SpectrumCalculations;
 import scitypes.visualization.SaveableSurface;
 import scitypes.visualization.Surface;
 import scitypes.visualization.SurfaceType;
+import scitypes.visualization.drawings.Rectangle;
 import scitypes.visualization.palette.PaletteColour;
 
 public class Plotter {
 
 
-	public PlotDrawing draw(PlotData data, PlotSettings settings, Surface context, Dimension size) {
+	public PlotDrawing draw(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
 		
 		if (settings == null) {
 			settings = new PlotSettings();
@@ -67,7 +67,7 @@ public class Plotter {
 		
 		
 		//white background
-		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
+		context.addShape(new Rectangle(0, 0, (float)size.x, (float)size.y));
 		context.setSource(new PaletteColour(0xffffffff));
 		context.fill();
 
@@ -167,8 +167,8 @@ public class Plotter {
 		
 		
 		
-		dr.imageHeight = (float) size.getHeight();
-		dr.imageWidth = (float) size.getWidth();
+		dr.imageWidth = (float) size.x;
+		dr.imageHeight = (float) size.y;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.unitSize = (data.calibration.getMaxEnergy() - data.calibration.getMinEnergy()) / (float)data.calibration.getDataWidth();
 		dr.drawToVectorSurface = context.isVectorSurface();
@@ -356,15 +356,15 @@ public class Plotter {
 		
 	}
 	
-	public void write(PlotData data, PlotSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
+	public void write(PlotData data, PlotSettings settings, SurfaceType type, Coord<Integer> size, OutputStream out) throws IOException {
 		
-		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
+		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
 		this.draw(data, settings, s, size);
 		s.write(out);
 		
 	}
 	
-	public void write(PlotData data, PlotSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
+	public void write(PlotData data, PlotSettings settings, SurfaceType type, Coord<Integer> size, Path destination) throws IOException {
 		
 		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 		this.write(data, settings, type, size, stream);

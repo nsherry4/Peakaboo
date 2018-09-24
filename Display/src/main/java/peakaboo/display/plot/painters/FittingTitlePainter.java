@@ -1,6 +1,5 @@
 package peakaboo.display.plot.painters;
 
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,7 +14,6 @@ import scidraw.drawing.painters.PainterData;
 import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.ReadOnlySpectrum;
 import scitypes.SigDigits;
 import scitypes.visualization.drawings.RoundedRectangle;
 import scitypes.visualization.palette.PaletteColour;

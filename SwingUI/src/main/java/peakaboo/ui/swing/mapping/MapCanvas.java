@@ -38,7 +38,7 @@ class MapCanvas extends GraphicsPanel
 	}
 	
 	@Override
-	protected void drawGraphics(Surface backend, boolean vector, Dimension size)
+	protected void drawGraphics(Surface backend, boolean vector, Coord<Integer> size)
 	{
 		try {
 			drawMap(backend, vector, size);
@@ -140,7 +140,7 @@ class MapCanvas extends GraphicsPanel
 
 	
 	
-	private void drawMap(Surface context, boolean vector, Dimension size)
+	private void drawMap(Surface context, boolean vector, Coord<Integer> size)
 	{
 		
 		//TODO: Why is this here, instead of in the controller 

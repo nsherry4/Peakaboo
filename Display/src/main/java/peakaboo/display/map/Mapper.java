@@ -1,8 +1,6 @@
 package peakaboo.display.map;
 
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -32,7 +30,6 @@ import scidraw.drawing.map.painters.SelectionMaskPainter;
 import scidraw.drawing.map.painters.SpectrumMapPainter;
 import scidraw.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scidraw.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
-import scidraw.drawing.painters.Painter;
 import scidraw.drawing.painters.axis.AxisPainter;
 import scidraw.drawing.painters.axis.TitleAxisPainter;
 import scitypes.Coord;
@@ -43,6 +40,7 @@ import scitypes.SpectrumCalculations;
 import scitypes.visualization.SaveableSurface;
 import scitypes.visualization.Surface;
 import scitypes.visualization.Surface.CompositeModes;
+import scitypes.visualization.drawings.Rectangle;
 import scitypes.visualization.SurfaceType;
 import scitypes.visualization.palette.PaletteColour;
 import scitypes.visualization.palette.Spectrums;
@@ -66,17 +64,17 @@ public class Mapper {
 	}
 	
 	
-	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Dimension size, OutputStream out) throws IOException {
+	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Coord<Integer> size, OutputStream out) throws IOException {
 		
 		size = this.setDimensions(settings, size);
 		
-		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.getWidth(), (int)size.getHeight());
+		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
 		this.draw(data, settings, s, type == SurfaceType.VECTOR, size);
 		s.write(out);
 		
 	}
 	
-	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Dimension size, Path destination) throws IOException {
+	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Coord<Integer> size, Path destination) throws IOException {
 		
 		size = this.setDimensions(settings, size);
 		
@@ -87,7 +85,7 @@ public class Mapper {
 	}
 	
 	
-	private Dimension setDimensions(MapRenderSettings settings, Dimension size) {
+	private Coord<Integer> setDimensions(MapRenderSettings settings, Coord<Integer> size) {
 		
 		if (settings == null) {
 			settings = new MapRenderSettings();
@@ -98,41 +96,41 @@ public class Mapper {
 		double height = 0;
 		
 		if (size != null) {
-			width = size.getWidth();
-			height = size.getHeight();
+			width = size.x;
+			height = size.y;
 		}
 		
 		//Auto-detect dimensions
-		if (size == null || (size.getWidth() == 0 && size.getHeight() == 0)) {
+		if (size == null || (size.x == 0 && size.y == 0)) {
 			dr.imageWidth = 1000;
 			dr.imageHeight = 1000;
 			Coord<Float> newsize = map.calcTotalSize();
 			width = newsize.x;
 			height = newsize.y;
 		}
-		else if (size.getWidth() == 0) {
+		else if (size.x == 0) {
 			dr.imageWidth = dr.imageHeight * 10;
 			width = map.calcTotalSize().x;
 			
 		}
-		else if (size.getHeight() == 0) {
+		else if (size.y == 0) {
 			dr.imageHeight = dr.imageWidth * 10;
 			height = map.calcTotalSize().y;
 		}
 		
-		size = new Dimension((int)Math.round(width), (int)Math.round(height));
+		size = new Coord<Integer>((int)Math.round(width), (int)Math.round(height));
 		
 		dr.dataHeight = settings.dataHeight;
 		dr.dataWidth = settings.dataWidth;
-		dr.imageWidth = (float)size.getWidth();
-		dr.imageHeight = (float)size.getHeight();
+		dr.imageWidth = (float)size.x;
+		dr.imageHeight = (float)size.y;
 		
 		return size;
 		
 	}
 	
 	
-	public MapDrawing draw(MapRenderData data, MapRenderSettings settings, Surface context, boolean vector, Dimension size) {
+	public MapDrawing draw(MapRenderData data, MapRenderSettings settings, Surface context, boolean vector, Coord<Integer> size) {
 	
 		if (settings == null) {
 			settings = new MapRenderSettings();
@@ -146,7 +144,7 @@ public class Mapper {
 		final int spectrumSteps = (settings.contours) ? settings.contourSteps : Spectrums.DEFAULT_STEPS;
 		
 		//clear background with white
-		context.rectangle(0, 0, (float)size.getWidth(), (float)size.getHeight());
+		context.addShape(new Rectangle(0, 0, (float)size.x, (float)size.y));
 		context.setSource(new PaletteColour(0xffffffff));
 		context.fill();
 		

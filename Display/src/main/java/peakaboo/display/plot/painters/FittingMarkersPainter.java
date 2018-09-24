@@ -3,7 +3,6 @@ package peakaboo.display.plot.painters;
 import java.util.List;
 
 import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
