@@ -9,14 +9,14 @@ import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scidraw.drawing.DrawingRequest;
-import scidraw.drawing.painters.PainterData;
-import scidraw.drawing.plot.painters.PlotPainter;
+import scitypes.drawing.DrawingRequest;
+import scitypes.drawing.painters.PainterData;
+import scitypes.drawing.plot.painters.PlotPainter;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.SigDigits;
-import scitypes.visualization.drawings.RoundedRectangle;
 import scitypes.visualization.palette.PaletteColour;
+import scitypes.visualization.template.RoundedRectangle;
 
 
 /**

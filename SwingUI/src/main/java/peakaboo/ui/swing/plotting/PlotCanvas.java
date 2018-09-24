@@ -21,10 +21,10 @@ import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.controller.plotter.view.PlotData;
 import peakaboo.controller.plotter.view.PlotSettings;
 import peakaboo.display.plot.Plotter;
-import scidraw.drawing.plot.PlotDrawing;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
+import scitypes.drawing.plot.PlotDrawing;
 import scitypes.visualization.Surface;
 
 

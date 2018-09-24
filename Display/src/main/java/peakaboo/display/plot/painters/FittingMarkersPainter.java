@@ -8,12 +8,11 @@ import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scidraw.drawing.DrawingRequest;
-import scidraw.drawing.painters.PainterData;
-import scidraw.drawing.plot.PlotDrawing;
-import scidraw.drawing.plot.painters.PlotPainter;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
+import scitypes.drawing.DrawingRequest;
+import scitypes.drawing.painters.PainterData;
+import scitypes.drawing.plot.painters.PlotPainter;
 
 
 /**
