@@ -24,8 +24,8 @@ import peakaboo.display.plot.Plotter;
 import scidraw.swing.GraphicsPanel;
 import scitypes.Bounds;
 import scitypes.Coord;
-import scitypes.drawing.plot.PlotDrawing;
 import scitypes.visualization.Surface;
+import scitypes.visualization.drawing.plot.PlotDrawing;
 
 
 

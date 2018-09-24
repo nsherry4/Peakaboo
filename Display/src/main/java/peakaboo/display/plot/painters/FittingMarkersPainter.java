@@ -10,9 +10,9 @@ import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import scitypes.ISpectrum;
 import scitypes.Spectrum;
-import scitypes.drawing.DrawingRequest;
-import scitypes.drawing.painters.PainterData;
-import scitypes.drawing.plot.painters.PlotPainter;
+import scitypes.visualization.drawing.DrawingRequest;
+import scitypes.visualization.drawing.painters.PainterData;
+import scitypes.visualization.drawing.plot.painters.PlotPainter;
 
 
 /**

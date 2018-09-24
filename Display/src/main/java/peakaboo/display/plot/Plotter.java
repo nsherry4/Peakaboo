@@ -17,24 +17,11 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
+import peakaboo.display.Display;
 import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 import peakaboo.filter.model.Filter;
-import scidraw.backend.awt.AwtDrawingSurfaceFactory;
-import scitypes.drawing.DrawingRequest;
-import scitypes.drawing.ViewTransform;
-import scitypes.drawing.painters.PainterData;
-import scitypes.drawing.painters.axis.AxisPainter;
-import scitypes.drawing.painters.axis.LineAxisPainter;
-import scitypes.drawing.painters.axis.TitleAxisPainter;
-import scitypes.drawing.plot.PlotDrawing;
-import scitypes.drawing.plot.painters.PlotPainter;
-import scitypes.drawing.plot.painters.SpectrumPainter;
-import scitypes.drawing.plot.painters.axis.GridlinePainter;
-import scitypes.drawing.plot.painters.axis.TickMarkAxisPainter;
-import scitypes.drawing.plot.painters.plot.OriginalDataPainter;
-import scitypes.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scitypes.Bounds;
 import scitypes.Coord;
 import scitypes.ReadOnlySpectrum;
@@ -42,6 +29,19 @@ import scitypes.SpectrumCalculations;
 import scitypes.visualization.SaveableSurface;
 import scitypes.visualization.Surface;
 import scitypes.visualization.SurfaceType;
+import scitypes.visualization.drawing.DrawingRequest;
+import scitypes.visualization.drawing.ViewTransform;
+import scitypes.visualization.drawing.painters.PainterData;
+import scitypes.visualization.drawing.painters.axis.AxisPainter;
+import scitypes.visualization.drawing.painters.axis.LineAxisPainter;
+import scitypes.visualization.drawing.painters.axis.TitleAxisPainter;
+import scitypes.visualization.drawing.plot.PlotDrawing;
+import scitypes.visualization.drawing.plot.painters.PlotPainter;
+import scitypes.visualization.drawing.plot.painters.SpectrumPainter;
+import scitypes.visualization.drawing.plot.painters.axis.GridlinePainter;
+import scitypes.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
+import scitypes.visualization.drawing.plot.painters.plot.OriginalDataPainter;
+import scitypes.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import scitypes.visualization.palette.PaletteColour;
 import scitypes.visualization.template.Rectangle;
 
@@ -358,7 +358,10 @@ public class Plotter {
 	
 	public void write(PlotData data, PlotSettings settings, SurfaceType type, Coord<Integer> size, OutputStream out) throws IOException {
 		
-		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
+		if (Display.surfaceFactory == null) {
+			throw new RuntimeException("No Drawing Surface Factory Specified");
+		}
+		SaveableSurface s = Display.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
 		this.draw(data, settings, s, size);
 		s.write(out);
 		

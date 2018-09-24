@@ -6,9 +6,9 @@ import java.util.List;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
-import scitypes.drawing.painters.PainterData;
-import scitypes.drawing.plot.PlotDrawing;
-import scitypes.drawing.plot.painters.PlotPainter;
+import scitypes.visualization.drawing.painters.PainterData;
+import scitypes.visualization.drawing.plot.PlotDrawing;
+import scitypes.visualization.drawing.plot.painters.PlotPainter;
 
 
 /**

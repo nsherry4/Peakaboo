@@ -3,10 +3,10 @@ package peakaboo.display.plot.painters;
 
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
-import scitypes.drawing.painters.PainterData;
-import scitypes.drawing.plot.PlotDrawing;
-import scitypes.drawing.plot.painters.PlotPainter;
 import scitypes.Spectrum;
+import scitypes.visualization.drawing.painters.PainterData;
+import scitypes.visualization.drawing.plot.PlotDrawing;
+import scitypes.visualization.drawing.plot.painters.PlotPainter;
 
 /**
  * 

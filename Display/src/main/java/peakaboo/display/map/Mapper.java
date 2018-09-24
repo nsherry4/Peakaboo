@@ -18,20 +18,7 @@ import peakaboo.controller.mapper.settings.MapRenderSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scidraw.backend.awt.AwtDrawingSurfaceFactory;
-import scitypes.drawing.DrawingRequest;
-import scitypes.drawing.ViewTransform;
-import scitypes.drawing.map.MapDrawing;
-import scitypes.drawing.map.painters.FloodMapPainter;
-import scitypes.drawing.map.painters.MapPainter;
-import scitypes.drawing.map.painters.MapTechniqueFactory;
-import scitypes.drawing.map.painters.RasterSpectrumMapPainter;
-import scitypes.drawing.map.painters.SelectionMaskPainter;
-import scitypes.drawing.map.painters.SpectrumMapPainter;
-import scitypes.drawing.map.painters.axis.LegendCoordsAxisPainter;
-import scitypes.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
-import scitypes.drawing.painters.axis.AxisPainter;
-import scitypes.drawing.painters.axis.TitleAxisPainter;
+import peakaboo.display.Display;
 import scitypes.Coord;
 import scitypes.Pair;
 import scitypes.Ratios;
@@ -40,6 +27,19 @@ import scitypes.SpectrumCalculations;
 import scitypes.visualization.SaveableSurface;
 import scitypes.visualization.Surface;
 import scitypes.visualization.Surface.CompositeModes;
+import scitypes.visualization.drawing.DrawingRequest;
+import scitypes.visualization.drawing.ViewTransform;
+import scitypes.visualization.drawing.map.MapDrawing;
+import scitypes.visualization.drawing.map.painters.FloodMapPainter;
+import scitypes.visualization.drawing.map.painters.MapPainter;
+import scitypes.visualization.drawing.map.painters.MapTechniqueFactory;
+import scitypes.visualization.drawing.map.painters.RasterSpectrumMapPainter;
+import scitypes.visualization.drawing.map.painters.SelectionMaskPainter;
+import scitypes.visualization.drawing.map.painters.SpectrumMapPainter;
+import scitypes.visualization.drawing.map.painters.axis.LegendCoordsAxisPainter;
+import scitypes.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
+import scitypes.visualization.drawing.painters.axis.AxisPainter;
+import scitypes.visualization.drawing.painters.axis.TitleAxisPainter;
 import scitypes.visualization.SurfaceType;
 import scitypes.visualization.palette.PaletteColour;
 import scitypes.visualization.palette.Spectrums;
@@ -68,7 +68,10 @@ public class Mapper {
 		
 		size = this.setDimensions(settings, size);
 		
-		SaveableSurface s = AwtDrawingSurfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
+		if (Display.surfaceFactory == null) {
+			throw new RuntimeException("No Drawing Surface Factory Specified");
+		}
+		SaveableSurface s = Display.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
 		this.draw(data, settings, s, type == SurfaceType.VECTOR, size);
 		s.write(out);
 		
