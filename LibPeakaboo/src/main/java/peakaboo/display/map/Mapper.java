@@ -107,7 +107,7 @@ public class Mapper {
 	}
 	
 	
-	public MapDrawing draw(MapRenderData data, MapRenderSettings settings, Surface context, boolean vector, Coord<Integer> size) {
+	public MapDrawing draw(MapRenderData data, MapRenderSettings settings, Surface context, Coord<Integer> size) {
 	
 		if (settings == null) {
 			settings = new MapRenderSettings();
@@ -128,15 +128,15 @@ public class Mapper {
 		switch (settings.mode)
 		{
 			case COMPOSITE:
-				drawBackendComposite(data, settings, context, vector, spectrumSteps);
+				drawBackendComposite(data, settings, context, context.isVectorSurface(), spectrumSteps);
 				break;
 				
 			case OVERLAY:
-				drawBackendOverlay(data, settings, context, vector, spectrumSteps);
+				drawBackendOverlay(data, settings, context, context.isVectorSurface(), spectrumSteps);
 				break;
 				
 			case RATIO:
-				drawBackendRatio(data, settings, context, vector, spectrumSteps);
+				drawBackendRatio(data, settings, context, context.isVectorSurface(), spectrumSteps);
 				break;
 				
 		}
