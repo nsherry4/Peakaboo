@@ -1,4 +1,4 @@
-package net.sciencestudio.libs.SciTypes;
+package cyclops;
 
 import java.util.ArrayList;
 

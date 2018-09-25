@@ -81,7 +81,7 @@ public abstract class GraphicsPanel extends JPanel
 	private void draw(Object drawContext, Coord<Integer> size)
 	{
 		Surface surface = AwtSurfaceFactory.createScreenSurface(drawContext);
-		drawGraphics(surface, false, size);
+		drawGraphics(surface, size);
 	}
 
 
@@ -104,13 +104,9 @@ public abstract class GraphicsPanel extends JPanel
 
 
 	private void write(SurfaceType type, OutputStream out, Coord<Integer> size) throws IOException
-	{
-
-		boolean vector = false;
-		if (type == SurfaceType.PDF || type == SurfaceType.VECTOR) vector = true;
-		
+	{		
 		SaveableSurface surface = AwtSurfaceFactory.createSaveableSurface(type, size.x, size.y);
-		drawGraphics(surface, vector, size);
+		drawGraphics(surface, size);
 		surface.write(out);
 	}
 
@@ -123,7 +119,7 @@ public abstract class GraphicsPanel extends JPanel
 	 * @param size The dimensions of the image to draw. This is not the same as 
 	 * the dimensions of the surface to draw on (eg window size)
 	 */
-	protected abstract void drawGraphics(Surface backend, boolean vector, Coord<Integer> size);
+	protected abstract void drawGraphics(Surface backend, Coord<Integer> size);
 
 
 	/**

@@ -443,7 +443,7 @@ public class SavePicture extends JPanel
 			}
 			
 			@Override
-			protected void drawGraphics(Surface backend, boolean vector, Coord<Integer> size) {
+			protected void drawGraphics(Surface backend, Coord<Integer> size) {
 				// TODO Auto-generated method stub
 				
 			}
