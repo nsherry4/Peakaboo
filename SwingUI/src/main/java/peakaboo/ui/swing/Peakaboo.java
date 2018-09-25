@@ -34,11 +34,10 @@ import peakaboo.curvefit.peak.table.SerializedPeakTable;
 import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
-import peakaboo.display.Display;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
-import scidraw.backend.awt.AwtSurfaceFactory;
+import scitypes.visualization.backend.awt.AwtSurfaceFactory;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
 import swidget.Swidget;
@@ -248,7 +247,10 @@ public class Peakaboo
 			warnLowMemory();
 			warnDevRelease();
 			
-			Display.surfaceFactory = new AwtSurfaceFactory();
+			//Render using java.awt
+			PeakabooConfiguration.surfaceFactory = new AwtSurfaceFactory();
+			
+			//Init plugins
 			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
 			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));

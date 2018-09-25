@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Function;
 
+import peakaboo.common.PeakabooConfiguration;
 import peakaboo.controller.mapper.data.MapRenderData;
 import peakaboo.controller.mapper.settings.MapDisplayMode;
 import peakaboo.controller.mapper.settings.MapRenderSettings;
 import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.display.Display;
 import scitypes.Coord;
 import scitypes.Pair;
 import scitypes.Ratios;
@@ -68,10 +68,10 @@ public class Mapper {
 		
 		size = this.setDimensions(settings, size);
 		
-		if (Display.surfaceFactory == null) {
+		if (PeakabooConfiguration.surfaceFactory == null) {
 			throw new RuntimeException("No Drawing Surface Factory Specified");
 		}
-		SaveableSurface s = Display.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
+		SaveableSurface s = PeakabooConfiguration.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
 		this.draw(data, settings, s, type == SurfaceType.VECTOR, size);
 		s.write(out);
 		

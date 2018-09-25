@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import peakaboo.common.PeakabooConfiguration;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.view.PlotData;
 import peakaboo.controller.plotter.view.PlotSettings;
@@ -17,7 +18,6 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
-import peakaboo.display.Display;
 import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
@@ -358,10 +358,10 @@ public class Plotter {
 	
 	public void write(PlotData data, PlotSettings settings, SurfaceType type, Coord<Integer> size, OutputStream out) throws IOException {
 		
-		if (Display.surfaceFactory == null) {
+		if (PeakabooConfiguration.surfaceFactory == null) {
 			throw new RuntimeException("No Drawing Surface Factory Specified");
 		}
-		SaveableSurface s = Display.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
+		SaveableSurface s = PeakabooConfiguration.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
 		this.draw(data, settings, s, size);
 		s.write(out);
 		
