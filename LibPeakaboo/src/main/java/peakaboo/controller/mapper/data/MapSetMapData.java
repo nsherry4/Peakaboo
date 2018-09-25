@@ -25,7 +25,6 @@ public class MapSetMapData
 	
 	public MapResultSet				mapResults			= null;
 	public String					datasetTitle		= "";
-	public Coord<Number>			topRightCoord, topLeftCoord, bottomRightCoord, bottomLeftCoord;
 	
 	public List<Integer>			badPoints			= new ArrayList<Integer>();
 	

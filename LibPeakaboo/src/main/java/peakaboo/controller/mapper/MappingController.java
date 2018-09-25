@@ -107,10 +107,10 @@ public class MappingController extends EventfulType<String>
 		
 		
 		settings.drawCoord = this.display.getView().getDrawCoords();
-		settings.coordTL = this.mapsController.getTopLeftCoord();
-		settings.coordTR = this.mapsController.getTopRightCoord();
-		settings.coordBL = this.mapsController.getBottomLeftCoord();
-		settings.coordBR = this.mapsController.getBottomRightCoord();
+		settings.coordTL = this.getSettings().getView().getTopLeftCoord();
+		settings.coordTR = this.getSettings().getView().getTopRightCoord();
+		settings.coordBL = this.getSettings().getView().getBottomLeftCoord();
+		settings.coordBR = this.getSettings().getView().getBottomRightCoord();
 		settings.physicalUnits = this.mapsController.getRealDimensionUnits();
 		settings.physicalCoord = this.mapsController.getRealDimensions() != null;
 		

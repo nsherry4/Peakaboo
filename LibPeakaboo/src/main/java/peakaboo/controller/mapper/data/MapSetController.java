@@ -208,35 +208,9 @@ public class MapSetController extends EventfulType<String>
 	}
 
 
-	public void setMapCoords(Coord<Number> tl, Coord<Number> tr, Coord<Number> bl, Coord<Number> br)
-	{
-		mapModel.topLeftCoord = tl;
-		mapModel.topRightCoord = tr;
-		mapModel.bottomLeftCoord = bl;
-		mapModel.bottomRightCoord = br;
-	}
-
-
 	public Coord<Bounds<Number>> getRealDimensions()
 	{
 		return mapModel.realDimensions;
-	}
-
-	public Coord<Number> getTopLeftCoord()
-	{
-		return mapModel.topLeftCoord;
-	}
-	public Coord<Number> getTopRightCoord()
-	{
-		return mapModel.topRightCoord;
-	}
-	public Coord<Number> getBottomLeftCoord()
-	{
-		return mapModel.bottomLeftCoord;
-	}
-	public Coord<Number> getBottomRightCoord()
-	{
-		return mapModel.bottomRightCoord;
 	}
 	
 	
@@ -245,8 +219,6 @@ public class MapSetController extends EventfulType<String>
 		return mapModel.realDimensionsUnits;
 	}
 	
-
-
 
 	public MapResultSet getMapResultSet()
 	{

@@ -5,6 +5,7 @@ import java.io.File;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
+import scitypes.Bounds;
 import scitypes.Coord;
 
 /**
@@ -316,5 +317,46 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		return width;
 		
 	}
+	
+	
+
+	public Coord<Number> getTopLeftCoord() {
+		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		if (realDims != null) {
+			return new Coord<Number>(realDims.x.start, realDims.y.end);
+		} else {
+			return new Coord<Number>(1, mapController.getSettings().getView().getDataHeight());
+		}
+	}
+	public Coord<Number> getTopRightCoord()
+	{
+		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		if (realDims != null) {
+			return new Coord<Number>( realDims.x.end, 		realDims.y.end);
+		} else {
+			return new Coord<Number>(mapController.getSettings().getView().getDataWidth(), mapController.getSettings().getView().getDataHeight());
+		}
+	}
+	public Coord<Number> getBottomLeftCoord()
+	{
+		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		if (realDims != null) {
+			return new Coord<Number>( realDims.x.start,	realDims.y.start);
+		} else {
+			return new Coord<Number>(1, 1);
+		}
+	}
+	public Coord<Number> getBottomRightCoord()
+	{
+		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		if (realDims != null) {
+			return new Coord<Number>( realDims.x.end,		realDims.y.start);
+		} else {
+			return new Coord<Number>(mapController.getSettings().getView().getDataWidth(), 1);
+		}
+	}
+	
+
+	
 	
 }
