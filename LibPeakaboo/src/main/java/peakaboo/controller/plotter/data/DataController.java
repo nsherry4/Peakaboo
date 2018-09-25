@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import cyclops.Coord;
+import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.PlotController;
@@ -29,8 +31,6 @@ import peakaboo.mapping.results.MapResultSet;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
-import scitypes.Coord;
-import scitypes.ReadOnlySpectrum;
 
 
 /**

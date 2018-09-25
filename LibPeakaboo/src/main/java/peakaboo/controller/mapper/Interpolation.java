@@ -3,10 +3,10 @@ package peakaboo.controller.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import scitypes.GridPerspective;
-import scitypes.ISpectrum;
-import scitypes.Pair;
-import scitypes.Spectrum;
+import cyclops.GridPerspective;
+import cyclops.ISpectrum;
+import cyclops.Pair;
+import cyclops.Spectrum;
 
 /**
  * 

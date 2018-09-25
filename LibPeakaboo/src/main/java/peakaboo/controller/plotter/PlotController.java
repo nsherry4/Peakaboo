@@ -3,6 +3,7 @@ package peakaboo.controller.plotter;
 import java.io.File;
 import java.util.Map;
 
+import cyclops.ReadOnlySpectrum;
 import eventful.EventfulType;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
@@ -15,7 +16,6 @@ import peakaboo.controller.settings.SavedSession;
 import peakaboo.filter.model.Filter;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
-import scitypes.ReadOnlySpectrum;
 
 
 

@@ -1,11 +1,11 @@
 package peakaboo.filter.plugins.mathematical;
 
 
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
 public class IntegralMathFilter extends AbstractSimpleFilter

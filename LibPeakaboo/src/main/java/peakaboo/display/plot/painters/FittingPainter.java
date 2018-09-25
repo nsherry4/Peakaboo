@@ -3,12 +3,12 @@ package peakaboo.display.plot.painters;
 
 import java.util.List;
 
+import cyclops.visualization.drawing.painters.PainterData;
+import cyclops.visualization.drawing.plot.PlotDrawing;
+import cyclops.visualization.drawing.plot.painters.PlotPainter;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
-import scitypes.visualization.drawing.painters.PainterData;
-import scitypes.visualization.drawing.plot.PlotDrawing;
-import scitypes.visualization.drawing.plot.painters.PlotPainter;
 
 
 /**

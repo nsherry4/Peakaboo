@@ -1,6 +1,6 @@
 package peakaboo.controller.mapper.settings;
 
-import scitypes.visualization.palette.PaletteColour;
+import cyclops.visualization.palette.PaletteColour;
 
 public enum OverlayColour {
 	

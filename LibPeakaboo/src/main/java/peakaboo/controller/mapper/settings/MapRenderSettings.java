@@ -3,8 +3,8 @@ package peakaboo.controller.mapper.settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import scitypes.Coord;
-import scitypes.SISize;
+import cyclops.Coord;
+import cyclops.SISize;
 
 public class MapRenderSettings {
 

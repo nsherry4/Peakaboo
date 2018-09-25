@@ -9,13 +9,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
+import cyclops.util.Mutable;
 import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.ui.swing.plotting.PlotPanel;
-import scitypes.util.Mutable;
 import swidget.icons.StockIcon;
 
 public class PlotMenuMain extends JPopupMenu {

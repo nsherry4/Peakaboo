@@ -13,12 +13,12 @@ import org.apache.commons.math3.optim.univariate.UnivariateObjectiveFunction;
 import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
 import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
 import peakaboo.curvefit.curve.fitting.Curve;
 import peakaboo.curvefit.curve.fitting.FittingResult;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 public class OptimizingCurveFitter implements CurveFitter {
 

@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cyclops.Coord;
+import cyclops.GridPerspective;
+import cyclops.Pair;
+import cyclops.Range;
+import cyclops.Spectrum;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import scitypes.Coord;
-import scitypes.GridPerspective;
-import scitypes.Pair;
-import scitypes.Range;
-import scitypes.Spectrum;
 
 /**
  * Represents a selection of points, which may not be contiguous 

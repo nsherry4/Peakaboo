@@ -5,18 +5,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.SigDigits;
+import cyclops.visualization.drawing.DrawingRequest;
+import cyclops.visualization.drawing.painters.PainterData;
+import cyclops.visualization.drawing.plot.painters.PlotPainter;
+import cyclops.visualization.palette.PaletteColour;
+import cyclops.visualization.template.RoundedRectangle;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.SigDigits;
-import scitypes.visualization.drawing.DrawingRequest;
-import scitypes.visualization.drawing.painters.PainterData;
-import scitypes.visualization.drawing.plot.painters.PlotPainter;
-import scitypes.visualization.palette.PaletteColour;
-import scitypes.visualization.template.RoundedRectangle;
 
 
 /**

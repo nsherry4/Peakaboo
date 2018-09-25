@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import cyclops.Pair;
 import eventful.Eventful;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import scitypes.Pair;
 
 
 public class ViewController extends Eventful

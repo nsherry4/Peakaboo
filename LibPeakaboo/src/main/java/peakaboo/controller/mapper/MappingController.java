@@ -4,6 +4,7 @@ package peakaboo.controller.mapper;
 
 import java.util.List;
 
+import cyclops.Coord;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.data.MapRenderData;
 import peakaboo.controller.mapper.data.MapSetController;
@@ -17,7 +18,6 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.datasource.model.internal.CroppedDataSource;
 import peakaboo.datasource.model.internal.SelectionDataSource;
-import scitypes.Coord;
 
 
 public class MappingController extends EventfulType<String>

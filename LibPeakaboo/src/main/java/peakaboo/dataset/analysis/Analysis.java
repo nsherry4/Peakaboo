@@ -1,6 +1,6 @@
 package peakaboo.dataset.analysis;
 
-import scitypes.ReadOnlySpectrum;
+import cyclops.ReadOnlySpectrum;
 
 /**
  * Peakaboo derives a number of measurements from a Data Set which are not

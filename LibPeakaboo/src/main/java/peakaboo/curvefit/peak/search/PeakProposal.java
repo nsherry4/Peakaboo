@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import cyclops.Pair;
+import cyclops.ReadOnlySpectrum;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
@@ -35,8 +37,6 @@ import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
-import scitypes.Pair;
-import scitypes.ReadOnlySpectrum;
 
 
 /**

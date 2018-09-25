@@ -2,15 +2,15 @@ package peakaboo.datasource.model.components.scandata;
 
 import java.util.List;
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import peakaboo.common.PeakabooConfiguration;
 import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.datasource.model.PeakabooLists;
 import peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 public class SimpleScanData implements ScanData {
 

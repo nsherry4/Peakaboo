@@ -3,9 +3,9 @@ package peakaboo.datasource.model.components.scandata.loaderqueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
+import cyclops.Spectrum;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.model.components.scandata.SimpleScanData;
-import scitypes.Spectrum;
 
 public class SimpleLoaderQueue implements LoaderQueue {
 	

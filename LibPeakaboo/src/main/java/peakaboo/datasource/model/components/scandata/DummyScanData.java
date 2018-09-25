@@ -1,7 +1,7 @@
 package peakaboo.datasource.model.components.scandata;
 
 
-import scitypes.ReadOnlySpectrum;
+import cyclops.ReadOnlySpectrum;
 
 public class DummyScanData implements ScanData {
 

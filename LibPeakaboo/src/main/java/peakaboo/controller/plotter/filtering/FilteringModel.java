@@ -2,9 +2,9 @@ package peakaboo.controller.plotter.filtering;
 
 import java.util.Map;
 
+import cyclops.ReadOnlySpectrum;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
-import scitypes.ReadOnlySpectrum;
 
 
 public class FilteringModel

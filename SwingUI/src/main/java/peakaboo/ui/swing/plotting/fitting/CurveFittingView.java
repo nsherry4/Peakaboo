@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import cyclops.util.Mutable;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.FittingController;
@@ -22,7 +23,6 @@ import peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
-import scitypes.util.Mutable;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;

@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 

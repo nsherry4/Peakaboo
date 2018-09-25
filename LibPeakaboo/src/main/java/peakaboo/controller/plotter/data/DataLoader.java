@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+import cyclops.util.StringInput;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import peakaboo.common.PeakabooLog;
@@ -24,7 +25,6 @@ import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import plural.executor.ExecutorSet;
-import scitypes.util.StringInput;
 
 
 

@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import cyclops.Pair;
+import cyclops.ReadOnlySpectrum;
+import cyclops.util.Mutable;
 import eventful.EventfulType;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
@@ -25,9 +28,6 @@ import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import plural.executor.ExecutorSet;
-import scitypes.Pair;
-import scitypes.ReadOnlySpectrum;
-import scitypes.util.Mutable;
 
 
 public class FittingController extends EventfulType<Boolean>

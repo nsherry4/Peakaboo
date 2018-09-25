@@ -2,11 +2,11 @@ package peakaboo.controller.mapper.settings;
 
 import java.io.File;
 
+import cyclops.Bounds;
+import cyclops.Coord;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import scitypes.Bounds;
-import scitypes.Coord;
 
 /**
  * Settings for a map view which are not directly dependent on the contents 

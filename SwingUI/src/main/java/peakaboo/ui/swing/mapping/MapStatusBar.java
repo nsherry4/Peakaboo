@@ -10,8 +10,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
+import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
-import scitypes.Coord;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;

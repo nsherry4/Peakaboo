@@ -50,7 +50,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.sciencestudio</groupId>
-			<artifactId>scidraw</artifactId>
+			<artifactId>cyclops-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

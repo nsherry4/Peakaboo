@@ -2,13 +2,13 @@ package peakaboo.filter.plugins.background;
 
 
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import peakaboo.filter.model.AbstractBackgroundFilter;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 /**
  * 

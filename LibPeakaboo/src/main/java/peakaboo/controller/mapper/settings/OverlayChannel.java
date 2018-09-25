@@ -2,8 +2,8 @@ package peakaboo.controller.mapper.settings;
 
 import java.util.List;
 
+import cyclops.Spectrum;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.Spectrum;
 
 public class OverlayChannel {
 	public Spectrum data;

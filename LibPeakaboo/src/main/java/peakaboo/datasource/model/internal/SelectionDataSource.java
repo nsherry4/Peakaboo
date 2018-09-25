@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import cyclops.ReadOnlySpectrum;
 import net.sciencestudio.autodialog.model.Group;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -12,7 +13,6 @@ import peakaboo.datasource.model.components.interaction.Interaction;
 import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.model.components.scandata.ScanData;
-import scitypes.ReadOnlySpectrum;
 
 /**
  * Represents a random selection of data points from another DataSource

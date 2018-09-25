@@ -2,10 +2,10 @@ package peakaboo.controller.mapper.data;
 
 import java.util.Map;
 
+import cyclops.Pair;
+import cyclops.Spectrum;
 import peakaboo.controller.mapper.settings.OverlayChannel;
 import peakaboo.controller.mapper.settings.OverlayColour;
-import scitypes.Pair;
-import scitypes.Spectrum;
 
 public class MapRenderData {
 

@@ -12,19 +12,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import cyclops.Coord;
+import cyclops.GridPerspective;
+import cyclops.ISpectrum;
+import cyclops.Pair;
+import cyclops.Ratios;
+import cyclops.SigDigits;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.Coord;
-import scitypes.GridPerspective;
-import scitypes.ISpectrum;
-import scitypes.Pair;
-import scitypes.Ratios;
-import scitypes.SigDigits;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 
 public class MapFittingSettings extends EventfulType<String> {

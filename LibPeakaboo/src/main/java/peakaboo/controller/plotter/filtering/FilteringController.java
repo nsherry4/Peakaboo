@@ -2,11 +2,11 @@ package peakaboo.controller.plotter.filtering;
 
 import java.util.Map;
 
+import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
-import scitypes.ReadOnlySpectrum;
 
 
 public class FilteringController extends Eventful

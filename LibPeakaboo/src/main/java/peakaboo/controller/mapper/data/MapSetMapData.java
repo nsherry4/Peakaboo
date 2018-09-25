@@ -4,10 +4,10 @@ package peakaboo.controller.mapper.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.SISize;
 import peakaboo.mapping.results.MapResultSet;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.SISize;
 
 
 

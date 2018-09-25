@@ -1,11 +1,11 @@
 package peakaboo.filter.plugins.mathematical;
 
+import cyclops.ReadOnlySpectrum;
+import cyclops.SpectrumCalculations;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
-import scitypes.ReadOnlySpectrum;
-import scitypes.SpectrumCalculations;
 
 
 

@@ -1,11 +1,11 @@
 package peakaboo.dataset.analysis;
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
 import peakaboo.dataset.DataSet;
 import peakaboo.datasource.model.DataSource;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
 
 public class DataSourceAnalysis implements Analysis {
 

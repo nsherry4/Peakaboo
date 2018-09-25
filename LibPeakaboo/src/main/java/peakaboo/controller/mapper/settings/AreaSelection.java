@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cyclops.Coord;
+import cyclops.GridPerspective;
+import cyclops.Range;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import scitypes.Coord;
-import scitypes.GridPerspective;
-import scitypes.Range;
 
 /**
  * Represents a box-style selection over an area

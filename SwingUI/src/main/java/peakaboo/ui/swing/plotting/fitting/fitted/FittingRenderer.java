@@ -9,12 +9,12 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import cyclops.SigDigits;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.lookup.LookupWidget;
-import scitypes.SigDigits;
 
 
 class FittingRenderer extends DefaultTableCellRenderer

@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
+import cyclops.util.ListOps;
 import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.table.Element;
-import scitypes.util.ListOps;
 
 
 

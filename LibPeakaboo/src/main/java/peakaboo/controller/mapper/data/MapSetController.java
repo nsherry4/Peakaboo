@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.ISpectrum;
+import cyclops.Pair;
+import cyclops.SISize;
+import cyclops.Spectrum;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.ISpectrum;
-import scitypes.Pair;
-import scitypes.SISize;
-import scitypes.Spectrum;
 
 
 public class MapSetController extends EventfulType<String>

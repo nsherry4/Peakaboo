@@ -2,9 +2,9 @@ package peakaboo.mapping.results;
 
 
 
+import cyclops.ISpectrum;
+import cyclops.Spectrum;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.ISpectrum;
-import scitypes.Spectrum;
 
 /**
  * 

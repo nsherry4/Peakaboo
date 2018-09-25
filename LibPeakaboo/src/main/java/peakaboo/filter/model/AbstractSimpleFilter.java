@@ -1,7 +1,7 @@
 package peakaboo.filter.model;
 
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 
 public abstract class AbstractSimpleFilter extends AbstractFilter
 {

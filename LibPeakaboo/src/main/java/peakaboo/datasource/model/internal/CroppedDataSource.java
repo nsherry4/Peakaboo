@@ -4,6 +4,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.GridPerspective;
+import cyclops.Range;
+import cyclops.ReadOnlySpectrum;
+import cyclops.SISize;
+import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Group;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.datasize.DataSize;
@@ -12,13 +19,6 @@ import peakaboo.datasource.model.components.interaction.Interaction;
 import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.model.components.scandata.ScanData;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.GridPerspective;
-import scitypes.Range;
-import scitypes.ReadOnlySpectrum;
-import scitypes.SISize;
-import scitypes.Spectrum;
 
 
 public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSize, ScanData

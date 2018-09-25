@@ -1,9 +1,9 @@
 package peakaboo.display.plot.painters;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.visualization.palette.PaletteColour;
 import peakaboo.curvefit.curve.fitting.FittingResult;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.visualization.palette.PaletteColour;
 
 public class FittingLabel {
 	

@@ -1,12 +1,12 @@
 package peakaboo.display.plot.painters;
 
 
+import cyclops.Spectrum;
+import cyclops.visualization.drawing.painters.PainterData;
+import cyclops.visualization.drawing.plot.PlotDrawing;
+import cyclops.visualization.drawing.plot.painters.PlotPainter;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
-import scitypes.Spectrum;
-import scitypes.visualization.drawing.painters.PainterData;
-import scitypes.visualization.drawing.plot.PlotDrawing;
-import scitypes.visualization.drawing.plot.painters.PlotPainter;
 
 /**
  * 

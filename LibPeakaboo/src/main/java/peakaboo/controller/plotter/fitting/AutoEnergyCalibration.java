@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import cyclops.Pair;
+import cyclops.Range;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
@@ -14,10 +18,6 @@ import peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;
-import scitypes.Pair;
-import scitypes.Range;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 public class AutoEnergyCalibration {
 
