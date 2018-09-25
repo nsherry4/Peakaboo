@@ -16,6 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.plaf.basic.BasicFileChooserUI;
 
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
@@ -38,36 +39,28 @@ public class SwidgetFilePanels {
 			HeaderBoxPanel dialog = new HeaderBoxPanel(header, chooser);
 			ModalLayer layer = new ModalLayer(tabPanel, dialog);
 			
-			KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-			chooser.getInputMap(JComponent.WHEN_FOCUSED).put(key, key.toString());
-			chooser.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(key, key.toString());
-			chooser.getActionMap().put(key.toString(), new AbstractAction() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
+			
+			chooser.addActionListener(action -> {
+				String command = action.getActionCommand();
+				//something like double-clicking a file may trigger this
+				if (command.equals(JFileChooser.APPROVE_SELECTION)) {
+					tabPanel.removeLayer(layer);
+					onAccept.run();
+				}
+				if (command.equals(JFileChooser.CANCEL_SELECTION)) {
 					tabPanel.removeLayer(layer);
 					onCancel.run();
 				}
 			});
 			
-			chooser.addActionListener(action -> {
-				String command = action.getActionCommand();
-				//something like double-clicking a file may trigger this
-				if (command.equals("ApproveSelection")) {
-					tabPanel.removeLayer(layer);
-					onAccept.run();
-				}
-			});
-			
-			negative.withAction(() -> {
-				tabPanel.removeLayer(layer);
-				onCancel.run();
-			});
-			
-			affirmative.withAction(() -> {
-				tabPanel.removeLayer(layer);
-				onAccept.run();
-			});
+			/*
+			 * Can this really be the only way to get the file chooser to perform the same action as 
+			 * the standard control buttons? Calling chooser.approveSelection() just returns the files
+			 * selected in the list control without considering text typed into the filename box.
+			 */
+			BasicFileChooserUI ui = (BasicFileChooserUI) chooser.getUI();
+			affirmative.addActionListener(ui.getApproveSelectionAction());
+			negative.addActionListener(ui.getCancelSelectionAction());
 			
 			tabPanel.pushLayer(layer);
 			chooser.requestFocus();

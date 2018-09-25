@@ -73,7 +73,6 @@ public class ToastLayer implements Layer {
 			label.setLayout(layout);
 			String[] lines = message.split("\n");
 			for (String line : lines) {
-				System.out.println(">" + line);
 				JLabel lineLabel = makeLabel(line);
 				label.add(lineLabel);
 			}
