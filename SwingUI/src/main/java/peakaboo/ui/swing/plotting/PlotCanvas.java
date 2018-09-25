@@ -235,7 +235,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	// GraphicsPanel extension
 	//**************************************************************
 	@Override
-	protected void drawGraphics(Surface context, boolean vector, Coord<Integer> size)
+	protected void drawGraphics(Surface context, Coord<Integer> size)
 	{
 				
 		try {

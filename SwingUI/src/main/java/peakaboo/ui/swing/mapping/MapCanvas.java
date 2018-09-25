@@ -38,10 +38,10 @@ class MapCanvas extends GraphicsPanel
 	}
 	
 	@Override
-	protected void drawGraphics(Surface backend, boolean vector, Coord<Integer> size)
+	protected void drawGraphics(Surface backend, Coord<Integer> size)
 	{
 		try {
-			drawMap(backend, vector, size);
+			drawMap(backend, size);
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Unable to draw map", e);
 		}
@@ -140,11 +140,11 @@ class MapCanvas extends GraphicsPanel
 
 	
 	
-	private void drawMap(Surface context, boolean vector, Coord<Integer> size) {
+	private void drawMap(Surface context, Coord<Integer> size) {
 				
 		MapRenderSettings settings = controller.getRenderSettings();
 		MapRenderData data = controller.getMapRenderData();
-		mapper.draw(data, settings, context, vector, size);
+		mapper.draw(data, settings, context, size);
 		
 	}
 	
