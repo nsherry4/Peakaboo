@@ -3,14 +3,14 @@ package peakaboo.datasource.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import cyclops.ISpectrum;
+import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.CompoundEncoder;
 import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.list.ScratchLists;
 import peakaboo.common.PeakabooConfiguration;
-import scitypes.ISpectrum;
-import scitypes.Spectrum;
 
 /**
  * SpectrumList is an implementation of the List interface which writes 

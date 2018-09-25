@@ -2,6 +2,8 @@ package peakaboo.mapping;
 
 import java.util.List;
 
+import cyclops.Range;
+import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
@@ -13,8 +15,6 @@ import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
-import scitypes.Range;
-import scitypes.ReadOnlySpectrum;
 
 /**
  * This class contains logic for generating maps for a {@link AbstractDataSet}, so that functionality does not have to be duplicated across various implementations

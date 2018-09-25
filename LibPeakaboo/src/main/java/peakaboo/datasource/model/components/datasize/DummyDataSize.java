@@ -1,7 +1,7 @@
 package peakaboo.datasource.model.components.datasize;
 
+import cyclops.Coord;
 import peakaboo.datasource.model.DataSource;
-import scitypes.Coord;
 
 public class DummyDataSize implements DataSize {
 	

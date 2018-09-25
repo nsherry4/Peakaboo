@@ -10,13 +10,13 @@ import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
+import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.MapperPanel;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.Event;
 import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
-import scitypes.Coord;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;

@@ -3,15 +3,15 @@ package peakaboo.datasource.model.components.physicalsize;
 import java.util.ArrayList;
 import java.util.List;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.SISize;
+import cyclops.SparsedList;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import peakaboo.common.PeakabooConfiguration;
 import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.datasource.model.PeakabooLists;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.SISize;
-import scitypes.SparsedList;
 
 public class SimplePhysicalSize implements PhysicalSize {
 

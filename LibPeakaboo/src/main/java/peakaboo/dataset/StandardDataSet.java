@@ -10,6 +10,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+import cyclops.Coord;
+import cyclops.ReadOnlySpectrum;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import peakaboo.common.PeakabooLog;
 import peakaboo.dataset.DatasetReadResult.ReadStatus;
@@ -25,8 +27,6 @@ import peakaboo.datasource.model.components.scandata.DummyScanData;
 import peakaboo.datasource.model.components.scandata.ScanData;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
-import scitypes.Coord;
-import scitypes.ReadOnlySpectrum;
 
 
 

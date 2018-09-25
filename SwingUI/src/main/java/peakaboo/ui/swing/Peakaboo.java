@@ -245,7 +245,8 @@ public class Peakaboo
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			
+
+			//Init plugins
 			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
 			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));

@@ -4,6 +4,10 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.logging.Level;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.visualization.Surface;
+import cyclops.visualization.backend.awt.GraphicsPanel;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.data.MapRenderData;
@@ -13,10 +17,6 @@ import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.display.map.Mapper;
-import scidraw.drawing.backends.Surface;
-import scidraw.swing.GraphicsPanel;
-import scitypes.Bounds;
-import scitypes.Coord;
 
 
 class MapCanvas extends GraphicsPanel
@@ -38,7 +38,7 @@ class MapCanvas extends GraphicsPanel
 	}
 	
 	@Override
-	protected void drawGraphics(Surface backend, boolean vector, Dimension size)
+	protected void drawGraphics(Surface backend, boolean vector, Coord<Integer> size)
 	{
 		try {
 			drawMap(backend, vector, size);
@@ -140,46 +140,11 @@ class MapCanvas extends GraphicsPanel
 
 	
 	
-	private void drawMap(Surface context, boolean vector, Dimension size)
-	{
-		
-		//TODO: Why is this here, instead of in the controller 
-		//along with all the settings it's accessing? Does it need
-		//to get run with every draw?
-		if (controller.mapsController.getRealDimensions() != null)
-		{
-
-			Coord<Bounds<Number>> realDims = controller.mapsController.getRealDimensions();
-			
-			controller.mapsController.setMapCoords(
-					new Coord<Number>( realDims.x.start, 	realDims.y.end),
-					new Coord<Number>( realDims.x.end, 		realDims.y.end), 
-					new Coord<Number>( realDims.x.start,	realDims.y.start), 
-					new Coord<Number>( realDims.x.end,		realDims.y.start) 
-					
-					
-				);
-
-		}
-		else
-		{
-
-			controller.mapsController.setMapCoords(
-					new Coord<Number>(1, viewSettings.getDataHeight()),
-					new Coord<Number>(viewSettings.getDataWidth(), viewSettings.getDataHeight()),
-					new Coord<Number>(1, 1), 
-					new Coord<Number>(viewSettings.getDataWidth(), 1)					
-				);
-		}
-		
-		
+	private void drawMap(Surface context, boolean vector, Coord<Integer> size) {
+				
 		MapRenderSettings settings = controller.getRenderSettings();
 		MapRenderData data = controller.getMapRenderData();
-		
 		mapper.draw(data, settings, context, vector, size);
-		
-		
-		return;
 		
 	}
 	

@@ -1,8 +1,8 @@
 package peakaboo.curvefit.curve.fitting;
 
 
+import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.ReadOnlySpectrum;
 
 /**
  * 

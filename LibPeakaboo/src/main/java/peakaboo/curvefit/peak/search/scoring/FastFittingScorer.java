@@ -3,10 +3,10 @@ package peakaboo.curvefit.peak.search.scoring;
 import java.util.ArrayList;
 import java.util.List;
 
+import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.ReadOnlySpectrum;
 
 /**
  * Scores a TransitionSeries based on how well a rough, 

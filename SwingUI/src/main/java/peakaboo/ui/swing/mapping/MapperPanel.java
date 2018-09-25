@@ -26,14 +26,14 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import cyclops.Coord;
+import cyclops.visualization.backend.awt.SavePicture;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapDisplayMode;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
-import scidraw.swing.SavePicture;
-import scitypes.Coord;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.ClearPanel;

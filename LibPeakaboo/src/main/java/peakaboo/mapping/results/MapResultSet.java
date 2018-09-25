@@ -9,11 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import cyclops.ISpectrum;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.mapping.calibration.CalibrationProfile;
-import scitypes.ISpectrum;
-import scitypes.Spectrum;
-import scitypes.SpectrumCalculations;
+
 
 /**
  * 

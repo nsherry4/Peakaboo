@@ -1,7 +1,7 @@
 package peakaboo.dataset.analysis;
 
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 
 public class DummyAnalysis implements Analysis {
 

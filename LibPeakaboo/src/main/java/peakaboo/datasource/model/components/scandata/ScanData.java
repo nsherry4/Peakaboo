@@ -3,7 +3,7 @@ package peakaboo.datasource.model.components.scandata;
 
 import java.util.Iterator;
 
-import scitypes.ReadOnlySpectrum;
+import cyclops.ReadOnlySpectrum;
 
 
 

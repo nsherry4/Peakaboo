@@ -7,7 +7,7 @@ install:
   - cd -
   - git clone https://github.com/nsherry4/Plural.git /tmp/plural && cd /tmp/plural && mvn install
   - cd -
-  - git clone https://github.com/nsherry4/Libraries.git /tmp/libraries && cd /tmp/libraries && mvn install
+  - git clone https://github.com/nsherry4/Cyclops.git /tmp/cyclops && cd /tmp/cyclops && mvn install
   - cd -
   - git clone https://github.com/nsherry4/AutoDialog.git /tmp/autodialog && cd /tmp/autodialog && mvn install
   - cd -

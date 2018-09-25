@@ -2,7 +2,7 @@ package peakaboo.curvefit.peak.search.searcher;
 
 import java.util.List;
 
-import scitypes.ReadOnlySpectrum;
+import cyclops.ReadOnlySpectrum;
 
 public interface PeakSearcher {
 

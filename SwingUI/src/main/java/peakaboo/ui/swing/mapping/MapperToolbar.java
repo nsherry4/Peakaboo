@@ -27,6 +27,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import peakaboo.common.PeakabooLog;
+import cyclops.Pair;
+import cyclops.SigDigits;
+
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
@@ -38,8 +41,6 @@ import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
-import scitypes.Pair;
-import scitypes.SigDigits;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.StockIcon;

@@ -3,13 +3,13 @@ package peakaboo.mapping.calibration;
 import java.util.HashMap;
 import java.util.Map;
 
+import cyclops.ReadOnlySpectrum;
+import cyclops.SpectrumCalculations;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import scitypes.ReadOnlySpectrum;
-import scitypes.SpectrumCalculations;
 
 public class CalibrationProfile {
 

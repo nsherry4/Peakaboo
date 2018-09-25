@@ -40,12 +40,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.sciencestudio.plural</groupId>
-			<artifactId>core</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sciencestudio</groupId>
-			<artifactId>scitypes</artifactId>
+			<artifactId>plural-core</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -72,6 +67,11 @@
 			<groupId>net.sf.jsci</groupId>
 			<artifactId>jsci</artifactId>
 			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>cyclops</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

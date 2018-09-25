@@ -1,8 +1,8 @@
 package peakaboo.datasource.model.components.physicalsize;
 
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.SISize;
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.SISize;
 
 public interface PhysicalSize {
 

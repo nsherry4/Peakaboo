@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.Value;
 import peakaboo.common.PeakabooLog;
 import peakaboo.filter.plugins.JavaFilterPlugin;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 

@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 import JSci.maths.Complex;
 import JSci.maths.FourierMath;
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
@@ -13,9 +16,6 @@ import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import peakaboo.filter.model.AbstractSimpleFilter;
 import peakaboo.filter.model.FilterType;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 /**
  * 

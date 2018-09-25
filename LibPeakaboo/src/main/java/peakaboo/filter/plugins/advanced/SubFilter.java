@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.Yaml;
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.model.classinfo.ClassInfo;
@@ -17,9 +20,6 @@ import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.model.FilterType;
 import peakaboo.filter.model.SerializedFilter;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 public class SubFilter extends AbstractFilter
 {

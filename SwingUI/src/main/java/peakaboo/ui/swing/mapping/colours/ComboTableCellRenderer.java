@@ -16,7 +16,7 @@ import javax.swing.table.TableCellRenderer;
 
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.settings.OverlayColour;
-import peakaboo.display.map.RatioColour;
+import peakaboo.controller.mapper.settings.RatioColour;
 import swidget.widgets.Spacing;
 
 
@@ -43,7 +43,7 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		else if (value != null && value instanceof Integer) 
 		{
 			//Ratio Mode
-			Color c = RatioColour.values()[((Integer)value) - 1].toColor();
+			Color c = new Color(RatioColour.values()[((Integer)value) - 1].toARGB(), true);
 			renderer.setIcon(new ColourRenderer( c ));
 			renderer.setText("");
 			renderer.setBackground( c );

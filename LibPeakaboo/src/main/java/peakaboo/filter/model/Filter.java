@@ -2,10 +2,10 @@ package peakaboo.filter.model;
 
 import java.util.List;
 
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.model.Value;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
 
 public interface Filter {
 

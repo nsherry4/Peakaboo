@@ -21,11 +21,6 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>net.sciencestudio.peakaboo</groupId>
-			<artifactId>UIController</artifactId>
-			<version>5-SNAPSHOT</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.ezware.oxbow/TaskDialog -->
 		<dependency>
 			<groupId>com.ezware.oxbow</groupId>
@@ -50,13 +45,13 @@
 		</dependency>
 		<dependency>
 			<groupId>net.sciencestudio.plural</groupId>
-			<artifactId>swing</artifactId>
+			<artifactId>plural-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.peakaboo</groupId>
-			<artifactId>Display</artifactId>
-			<version>5-SNAPSHOT</version>
+			<groupId>net.sciencestudio</groupId>
+			<artifactId>cyclops-swing</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

@@ -2,11 +2,12 @@ package peakaboo.mapping.results;
 
 
 
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.mapping.calibration.CalibrationProfile;
-import scitypes.ISpectrum;
-import scitypes.ReadOnlySpectrum;
-import scitypes.Spectrum;
+
 
 /**
  * 

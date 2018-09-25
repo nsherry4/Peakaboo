@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 
 import javax.swing.Scrollable;
 
+import cyclops.Bounds;
+import cyclops.Coord;
+import cyclops.visualization.Surface;
+import cyclops.visualization.backend.awt.GraphicsPanel;
+import cyclops.visualization.drawing.plot.PlotDrawing;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
@@ -21,11 +26,6 @@ import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.controller.plotter.view.PlotData;
 import peakaboo.controller.plotter.view.PlotSettings;
 import peakaboo.display.plot.Plotter;
-import scidraw.drawing.backends.Surface;
-import scidraw.drawing.plot.PlotDrawing;
-import scidraw.swing.GraphicsPanel;
-import scitypes.Bounds;
-import scitypes.Coord;
 
 
 
@@ -235,7 +235,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	// GraphicsPanel extension
 	//**************************************************************
 	@Override
-	protected void drawGraphics(Surface context, boolean vector, Dimension size)
+	protected void drawGraphics(Surface context, boolean vector, Coord<Integer> size)
 	{
 				
 		try {
