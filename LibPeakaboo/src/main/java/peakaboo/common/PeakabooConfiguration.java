@@ -1,13 +1,11 @@
 package peakaboo.common;
 
-import scitypes.visualization.SurfaceFactory;
 
 public class PeakabooConfiguration {
 
 	public static boolean compression = true;
 	public static boolean diskstore = true;
 	public static MemorySize memorySize = calcMemoryFootprint();
-	public static SurfaceFactory surfaceFactory = null;
 
 	public enum MemorySize {
 		SMALL, MEDIUM, LARGE;

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Function;
 
-import peakaboo.common.PeakabooConfiguration;
 import peakaboo.controller.mapper.data.MapRenderData;
 import peakaboo.controller.mapper.settings.MapDisplayMode;
 import peakaboo.controller.mapper.settings.MapRenderSettings;
@@ -24,7 +23,6 @@ import scitypes.Pair;
 import scitypes.Ratios;
 import scitypes.Spectrum;
 import scitypes.SpectrumCalculations;
-import scitypes.visualization.SaveableSurface;
 import scitypes.visualization.Surface;
 import scitypes.visualization.Surface.CompositeModes;
 import scitypes.visualization.drawing.DrawingRequest;
@@ -40,7 +38,6 @@ import scitypes.visualization.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import scitypes.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import scitypes.visualization.drawing.painters.axis.AxisPainter;
 import scitypes.visualization.drawing.painters.axis.TitleAxisPainter;
-import scitypes.visualization.SurfaceType;
 import scitypes.visualization.palette.PaletteColour;
 import scitypes.visualization.palette.Spectrums;
 import scitypes.visualization.palette.palettes.AbstractPalette;
@@ -63,29 +60,6 @@ public class Mapper {
 		map = new MapDrawing(null, dr);
 	}
 	
-	
-	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Coord<Integer> size, OutputStream out) throws IOException {
-		
-		size = this.setDimensions(settings, size);
-		
-		if (PeakabooConfiguration.surfaceFactory == null) {
-			throw new RuntimeException("No Drawing Surface Factory Specified");
-		}
-		SaveableSurface s = PeakabooConfiguration.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
-		this.draw(data, settings, s, type == SurfaceType.VECTOR, size);
-		s.write(out);
-		
-	}
-	
-	public void write(MapRenderData data, MapRenderSettings settings, SurfaceType type, Coord<Integer> size, Path destination) throws IOException {
-		
-		size = this.setDimensions(settings, size);
-		
-		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
-		this.write(data, settings, type, size, stream);
-		stream.close();
-		
-	}
 	
 	
 	private Coord<Integer> setDimensions(MapRenderSettings settings, Coord<Integer> size) {

@@ -356,24 +356,5 @@ public class Plotter {
 		
 	}
 	
-	public void write(PlotData data, PlotSettings settings, SurfaceType type, Coord<Integer> size, OutputStream out) throws IOException {
-		
-		if (PeakabooConfiguration.surfaceFactory == null) {
-			throw new RuntimeException("No Drawing Surface Factory Specified");
-		}
-		SaveableSurface s = PeakabooConfiguration.surfaceFactory.createSaveableSurface(type, (int)size.x, (int)size.y);
-		this.draw(data, settings, s, size);
-		s.write(out);
-		
-	}
-	
-	public void write(PlotData data, PlotSettings settings, SurfaceType type, Coord<Integer> size, Path destination) throws IOException {
-		
-		OutputStream stream = Files.newOutputStream(destination, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
-		this.write(data, settings, type, size, stream);
-		stream.flush();
-		stream.close();
-		
-	}
 	
 }

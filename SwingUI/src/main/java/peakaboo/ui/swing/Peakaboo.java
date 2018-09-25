@@ -37,7 +37,6 @@ import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
-import scitypes.visualization.backend.awt.AwtSurfaceFactory;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
 import swidget.Swidget;
@@ -246,10 +245,7 @@ public class Peakaboo
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			
-			//Render using java.awt
-			PeakabooConfiguration.surfaceFactory = new AwtSurfaceFactory();
-			
+
 			//Init plugins
 			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
 			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
