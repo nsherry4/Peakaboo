@@ -1,15 +1,20 @@
 package peakaboo.mapping.calibration;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 public class CalibrationProfile {
 
@@ -21,12 +26,12 @@ public class CalibrationProfile {
 	 */
 	public CalibrationProfile() {
 		this.reference = CalibrationReferenceManager.empty();
-		calibrations = new HashMap<>();
+		calibrations = new LinkedHashMap<>();
 	}
 	
 	public CalibrationProfile(CalibrationReference reference, FittingResultSet sample) {
 		this.reference = reference;
-		calibrations = new HashMap<>();
+		calibrations = new LinkedHashMap<>();
 		
 		//Build profile
 		for (FittingResult fit : sample) {
@@ -37,11 +42,19 @@ public class CalibrationProfile {
 			float sampleIntensity = fit.getFit().get(channel);
 			float referenceValue = reference.getConcentration(ts);
 			float calibration = (sampleIntensity / referenceValue) * 1000f;
+			//don't add if element is being completely suppressed, this only seems 
+			//to happen when the fitting solver algorithm incorrectly completely hides it 
+			//we'll interpolate it later
+			if (calibration < 1f) { continue; }
 			calibrations.put(ts, calibration);
 		}
 		
+		CalibrationInterpolator interpolator = new LinearCalibrationInterpolator();
+		interpolator.interpolate(calibrations);
+		
 	}
 	
+
 	public Map<TransitionSeries, Float> getCalibrations() {
 		return new HashMap<>(calibrations);
 	}
@@ -113,6 +126,11 @@ public class CalibrationProfile {
 		return profile;
 	}
 
+	public static void main(String[] args) {
+		
+		
+		
+	}
 
 	
 	
