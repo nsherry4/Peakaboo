@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.view;
+package peakaboo.display.plot;
 
 public class PlotSettings {
 	

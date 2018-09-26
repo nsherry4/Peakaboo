@@ -11,8 +11,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
-import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.MapSettingsController;
+import peakaboo.display.map.MapScaleMode;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.Spacing;
 

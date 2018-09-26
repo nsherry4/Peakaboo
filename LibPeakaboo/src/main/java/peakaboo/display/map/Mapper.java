@@ -1,11 +1,6 @@
 package peakaboo.display.map;
 
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,12 +35,9 @@ import cyclops.visualization.palette.palettes.RatioPalette;
 import cyclops.visualization.palette.palettes.SaturationPalette;
 import cyclops.visualization.palette.palettes.ThermalScalePalette;
 import cyclops.visualization.template.Rectangle;
-import peakaboo.controller.mapper.data.MapRenderData;
-import peakaboo.controller.mapper.settings.MapDisplayMode;
-import peakaboo.controller.mapper.settings.MapRenderSettings;
-import peakaboo.controller.mapper.settings.MapScaleMode;
-import peakaboo.controller.mapper.settings.OverlayColour;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.display.map.modes.MapDisplayMode;
+import peakaboo.display.map.modes.OverlayColour;
 
 public class Mapper {
 

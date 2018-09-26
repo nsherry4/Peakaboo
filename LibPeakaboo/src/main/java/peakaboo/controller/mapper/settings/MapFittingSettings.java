@@ -25,6 +25,10 @@ import peakaboo.controller.mapper.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.display.map.MapScaleMode;
+import peakaboo.display.map.modes.MapDisplayMode;
+import peakaboo.display.map.modes.OverlayChannel;
+import peakaboo.display.map.modes.OverlayColour;
 import peakaboo.mapping.calibration.CalibrationProfile;
 
 

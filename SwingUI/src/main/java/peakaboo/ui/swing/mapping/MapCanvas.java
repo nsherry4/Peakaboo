@@ -10,12 +10,12 @@ import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.data.MapRenderData;
 import peakaboo.controller.mapper.settings.AreaSelection;
-import peakaboo.controller.mapper.settings.MapRenderSettings;
-import peakaboo.controller.mapper.settings.MapScaleMode;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
+import peakaboo.display.map.MapRenderData;
+import peakaboo.display.map.MapRenderSettings;
+import peakaboo.display.map.MapScaleMode;
 import peakaboo.display.map.Mapper;
 
 

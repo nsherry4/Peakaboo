@@ -1,10 +1,11 @@
-package peakaboo.controller.mapper.settings;
+package peakaboo.display.map;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cyclops.Coord;
 import cyclops.SISize;
+import peakaboo.display.map.modes.MapDisplayMode;
 
 public class MapRenderSettings {
 

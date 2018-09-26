@@ -13,6 +13,7 @@ import cyclops.Spectrum;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
+import peakaboo.display.map.modes.MapDisplayMode;
 
 /**
  * Represents a selection of points, which may not be contiguous 

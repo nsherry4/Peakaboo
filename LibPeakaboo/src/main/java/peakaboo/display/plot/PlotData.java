@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.view;
+package peakaboo.display.plot;
 
 import java.util.ArrayList;
 import java.util.HashMap;

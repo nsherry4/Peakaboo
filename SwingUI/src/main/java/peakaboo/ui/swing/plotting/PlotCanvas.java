@@ -23,8 +23,8 @@ import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.PlotSpectra;
-import peakaboo.controller.plotter.view.PlotData;
-import peakaboo.controller.plotter.view.PlotSettings;
+import peakaboo.display.plot.PlotData;
+import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;
 
 
@@ -38,10 +38,9 @@ import peakaboo.display.plot.Plotter;
 public class PlotCanvas extends GraphicsPanel implements Scrollable
 {
 
-	private PlotDrawing				plotDrawing;
 	private PlotController			controller;
 	private Consumer<Integer>		grabChannelFromClickCallback;
-
+	private Plotter plotter;
 
 	PlotCanvas(final PlotController controller, final PlotPanel parent)
 	{
@@ -50,6 +49,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		this.setFocusable(true);
 
 		this.controller = controller;
+		this.plotter = new Plotter();
 		this.setMinimumSize(new Dimension(100, 100));
 
 		//setCanvasSize();
@@ -195,7 +195,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	int channelFromCoordinate(int x)
 	{
-
+		PlotDrawing plotDrawing = plotter.getLastPlotDrawing();
 		if (plotDrawing == null) return -1;
 
 		Coord<Bounds<Float>> axesSize;
@@ -240,20 +240,14 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 				
 		try {
 			
-	
-			// calculates filters and fittings if needed
-			PlotSpectra dataForPlot = controller.getDataForPlot();
-			if (dataForPlot == null) {
+			PlotData data = controller.getPlotData();
+			if (data.filtered == null) {
+				//No Data
 				return;
 			}
-			
-
-			PlotData data = controller.getPlotData();
 			PlotSettings settings = controller.view().getPlotSettings();
-
 			
-			Plotter plotObject = new Plotter();
-			plotDrawing = plotObject.draw(data, settings, context, size);
+			plotter.draw(data, settings, context, size);
 	
 			
 		} catch (Exception e) {
