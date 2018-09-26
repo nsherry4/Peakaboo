@@ -12,6 +12,7 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.controller.settings.SavedPersistence;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.display.plot.PlotSettings;
 
 
 public class ViewController extends Eventful

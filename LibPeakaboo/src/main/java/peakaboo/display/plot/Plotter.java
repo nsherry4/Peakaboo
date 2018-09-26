@@ -1,10 +1,5 @@
 package peakaboo.display.plot;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -13,9 +8,7 @@ import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
-import cyclops.visualization.SaveableSurface;
 import cyclops.visualization.Surface;
-import cyclops.visualization.SurfaceType;
 import cyclops.visualization.drawing.DrawingRequest;
 import cyclops.visualization.drawing.ViewTransform;
 import cyclops.visualization.drawing.painters.PainterData;
@@ -31,10 +24,7 @@ import cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.template.Rectangle;
-import peakaboo.common.PeakabooConfiguration;
 import peakaboo.common.PeakabooLog;
-import peakaboo.controller.plotter.view.PlotData;
-import peakaboo.controller.plotter.view.PlotSettings;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
@@ -48,6 +38,12 @@ import peakaboo.filter.model.Filter;
 public class Plotter {
 
 
+	private PlotDrawing plotDrawing;
+	private int spectrumSize = 2048;
+	
+	public Plotter() {
+	}
+	
 	public PlotDrawing draw(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
 		
 		if (settings == null) {
@@ -59,8 +55,10 @@ public class Plotter {
 
 		if (data.filtered == null) {
 			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, data (filtered) was null");
+			plotDrawing = null;
 			return null;
 		};
+		spectrumSize = data.filtered.size();
 		
 		
 		
@@ -348,12 +346,37 @@ public class Plotter {
 		dr.dataWidth = data.calibration.getDataWidth();
 		
 		
-		PlotDrawing plot = new PlotDrawing(context, dr, plotPainters, axisPainters);
-		plot.draw();
+		plotDrawing = new PlotDrawing(context, dr, plotPainters, axisPainters);
+		plotDrawing.draw();
 				
-		return plot;
+		return plotDrawing;
 
 		
+	}
+	
+	public PlotDrawing getLastPlotDrawing() {
+		return plotDrawing;
+	}
+	
+
+	int channelFromCoordinate(int x) {
+		if (plotDrawing == null) return -1;
+
+		Coord<Bounds<Float>> axesSize;
+		int channel;
+
+		// Plot p = new Plot(this.toyContext, model.dr);
+		axesSize = plotDrawing.getPlotOffsetFromBottomLeft();
+
+		float plotWidth = axesSize.x.end - axesSize.x.start; // width - axesSize.x;
+		// x -= axesSize.x;
+		x -= axesSize.x.start;
+
+		if (x < 0) return -1;
+
+		channel = (int) ((x / plotWidth) * spectrumSize);
+		return channel;
+
 	}
 	
 	
