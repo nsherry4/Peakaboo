@@ -354,12 +354,12 @@ public class Plotter {
 		
 	}
 	
-	public PlotDrawing getLastPlotDrawing() {
+	public PlotDrawing getPlot() {
 		return plotDrawing;
 	}
 	
 
-	int channelFromCoordinate(int x) {
+	public int getChannel(int x) {
 		if (plotDrawing == null) return -1;
 
 		Coord<Bounds<Float>> axesSize;

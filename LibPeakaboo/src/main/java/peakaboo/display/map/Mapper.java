@@ -141,6 +141,13 @@ public class Mapper {
 		return map;
 	}
 	
+	public Coord<Integer> getCoordinate(float x, float y, boolean allowOutOfBounds) {
+
+		if (map == null) return null;
+		return map.getMapCoordinateAtPoint(x, y, allowOutOfBounds);
+
+	}
+
 	
 	
 

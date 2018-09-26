@@ -6,23 +6,18 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import javax.swing.Scrollable;
 
-import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
-import cyclops.visualization.drawing.plot.PlotDrawing;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;
@@ -98,7 +93,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			public void mouseClicked(MouseEvent e)
 			{
 				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
-					grabChannelFromClickCallback.accept(channelFromCoordinate(e.getX()));
+					grabChannelFromClickCallback.accept(plotter.getChannel(e.getX()));
 				}
 				//Make the plot canvas focusable
 				if (!PlotCanvas.this.hasFocus()) {
@@ -193,28 +188,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	}
 
 
-	int channelFromCoordinate(int x)
-	{
-		PlotDrawing plotDrawing = plotter.getLastPlotDrawing();
-		if (plotDrawing == null) return -1;
-
-		Coord<Bounds<Float>> axesSize;
-		int channel;
-
-		// Plot p = new Plot(this.toyContext, model.dr);
-		axesSize = plotDrawing.getPlotOffsetFromBottomLeft();
-
-		float plotWidth = axesSize.x.end - axesSize.x.start; // width - axesSize.x;
-		// x -= axesSize.x;
-		x -= axesSize.x.start;
-
-		if (x < 0 || !controller.data().hasDataSet()) return -1;
-
-		channel = (int) ((x / plotWidth) * controller.data().getDataSet().getAnalysis().channelsPerScan());
-		return channel;
-
+	int channelFromCoordinate(int x) {
+		return plotter.getChannel(x);
 	}
-	
+
 
 
 	

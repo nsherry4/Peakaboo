@@ -79,7 +79,7 @@ class MapCanvas extends GraphicsPanel
 	{
 
 		if (mapper == null) return null;
-		return mapper.getMap().getMapCoordinateAtPoint(x, y, allowOutOfBounds);
+		return mapper.getCoordinate(x, y, allowOutOfBounds);
 
 	}
 
