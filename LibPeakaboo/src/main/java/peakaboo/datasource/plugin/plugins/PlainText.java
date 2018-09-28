@@ -79,6 +79,9 @@ public class PlainText extends AbstractDataSource
 		
 		Path file = files.get(0);
 		
+		int fileSize = (int) Files.size(file);
+		int lineEstimate = -1;
+		
 		scandata = new SimpleScanData(file.getFileName().toString());
 		
 		Iterator<String> lines = Files.lines(file).iterator();
@@ -86,6 +89,10 @@ public class PlainText extends AbstractDataSource
 		while (lines.hasNext())
 		{
 			String line = lines.next();
+			if (lineEstimate == -1) {
+				lineEstimate = fileSize / line.length();
+				getInteraction().notifyScanCount(lineEstimate);
+			}
 			
 			if (line == null || getInteraction().checkReadAborted()) break;
 			
