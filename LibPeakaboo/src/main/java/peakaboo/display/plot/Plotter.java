@@ -23,7 +23,6 @@ import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
-import cyclops.visualization.template.Rectangle;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -65,7 +64,7 @@ public class Plotter {
 		
 		
 		//white background
-		context.addShape(new Rectangle(0, 0, (float)size.x, (float)size.y));
+		context.rectAt(0, 0, (float)size.x, (float)size.y);
 		context.setSource(new PaletteColour(0xffffffff));
 		context.fill();
 

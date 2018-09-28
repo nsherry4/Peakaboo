@@ -34,7 +34,6 @@ import cyclops.visualization.palette.palettes.OverlayPalette;
 import cyclops.visualization.palette.palettes.RatioPalette;
 import cyclops.visualization.palette.palettes.SaturationPalette;
 import cyclops.visualization.palette.palettes.ThermalScalePalette;
-import cyclops.visualization.template.Rectangle;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.display.map.modes.OverlayColour;
@@ -113,7 +112,7 @@ public class Mapper {
 		final int spectrumSteps = (settings.contours) ? settings.contourSteps : Spectrums.DEFAULT_STEPS;
 		
 		//clear background with white
-		context.addShape(new Rectangle(0, 0, (float)size.x, (float)size.y));
+		context.rectAt(0, 0, (float)size.x, (float)size.y);
 		context.setSource(new PaletteColour(0xffffffff));
 		context.fill();
 		
