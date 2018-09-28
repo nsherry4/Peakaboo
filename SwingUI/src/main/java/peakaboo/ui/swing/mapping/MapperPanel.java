@@ -31,6 +31,7 @@ import cyclops.visualization.backend.awt.SavePicture;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
@@ -65,9 +66,17 @@ public class MapperPanel extends LayerPanel
 		this.parentPlotter = parentPlotter;
 
 		this.controller.addListener(s -> {
-			if (! s.equals(MappingController.UpdateType.AREA_SELECTION.toString())) setNeedsRedraw();
-			if (! s.equals(MappingController.UpdateType.POINT_SELECTION.toString())) setNeedsRedraw();
-				
+			boolean needsRedraw = true;
+			if (s.equals(UpdateType.AREA_SELECTION.toString())) {
+				needsRedraw = false;
+			}
+			if (s.equals(UpdateType.POINT_SELECTION.toString())) {
+				needsRedraw = false;
+			}
+			if (needsRedraw) {
+				setNeedsRedraw();
+			}
+
 			owner.setTabTitle(this, getTitle());
 			
 			canvas.updateCanvasSize();
