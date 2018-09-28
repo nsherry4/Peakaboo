@@ -20,7 +20,6 @@ import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.drawing.painters.axis.AxisPainter;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
 import cyclops.visualization.drawing.plot.painters.plot.LinePainter;
-import cyclops.visualization.template.Rectangle;
 
 /**
  * 
@@ -176,7 +175,7 @@ public class PlotDrawing extends Drawing
 			context.translate(availableX.start, availableY.start);
 	
 			// clip the region so that we can't draw outside of it
-			context.addShape(new Rectangle(0, 0, plotSize.x, plotSize.y));
+			context.rectAt(0, 0, plotSize.x, plotSize.y);
 			//context.rectangle(0, 0, availableX.end - availableX.start, availableY.end - availableY.start);
 			context.clip();
 	

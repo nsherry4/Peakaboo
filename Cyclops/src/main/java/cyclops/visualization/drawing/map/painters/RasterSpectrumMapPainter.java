@@ -9,7 +9,6 @@ import cyclops.visualization.Buffer;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.palettes.AbstractPalette;
-import cyclops.visualization.template.Rectangle;
 
 /**
  * 
@@ -105,7 +104,7 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 
 				c = getColourFromRules(intensity, maxIntensity, p.dr.viewTransform);
 
-				p.context.addShape(new Rectangle(x * cellSize, y * cellSize, cellSize + 1, cellSize + 1));
+				p.context.rectAt(x * cellSize, y * cellSize, cellSize + 1, cellSize + 1);
 
 				p.context.setSource(c);
 				p.context.fill();

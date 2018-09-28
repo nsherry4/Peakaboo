@@ -4,7 +4,6 @@ package cyclops.visualization.drawing.map.painters;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.palettes.SingleColourPalette;
-import cyclops.visualization.template.Rectangle;
 
 
 /**
@@ -36,7 +35,7 @@ public class FloodMapPainter extends MapPainter
 	
 			p.context.setSource(c);
 			
-			p.context.addShape(new Rectangle(0, 0, p.dr.dataWidth * cellSize, p.dr.dataHeight * cellSize));
+			p.context.rectAt(0, 0, p.dr.dataWidth * cellSize, p.dr.dataHeight * cellSize);
 			p.context.fill();
 
 		p.context.restore();

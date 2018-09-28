@@ -13,7 +13,6 @@ import cyclops.visualization.drawing.ViewTransform;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.palettes.AbstractPalette;
-import cyclops.visualization.template.Rectangle;
 
 
 
@@ -157,7 +156,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		for (int i = (negativeValues ? -steps : 0); i < steps; i++)
 		{
 
-			p.context.addShape(new Rectangle(spectrumPosition, offsetY, increment + 1.0f, keyHeight));
+			p.context.rectAt(spectrumPosition, offsetY, increment + 1.0f, keyHeight);
 			p.context.setSource(getColourFromRules(((float)i/(float)steps)*p.dr.maxYIntensity, p.dr.maxYIntensity, p.dr.viewTransform));
 			p.context.fill();
 			spectrumPosition += increment;

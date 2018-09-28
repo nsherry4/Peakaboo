@@ -10,7 +10,6 @@ import cyclops.Pair;
 import cyclops.SISize;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
-import cyclops.visualization.template.Rectangle;
 
 
 public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
@@ -82,7 +81,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		
 		float position = startX;
 		for (Pair<PaletteColour, String> entry : entries) {
-			p.context.addShape(new Rectangle(position, textBaseline, keyHeight, -keyHeight));
+			p.context.rectAt(position, textBaseline, keyHeight, -keyHeight);
 			p.context.setSource(entry.first);
 			p.context.fillPreserve();
 			p.context.setSource(new PaletteColour(0xff000000));

@@ -13,6 +13,8 @@ import java.awt.Shape;
 import java.awt.font.TextLayout;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -22,7 +24,6 @@ import cyclops.visualization.Buffer;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.composite.BlendComposite;
 import cyclops.visualization.palette.PaletteColour;
-import cyclops.visualization.template.SurfaceTemplate;
 
 /**
  * @author Nathaniel Sherry, 2009
@@ -110,17 +111,13 @@ abstract class AbstractGraphicsSurface implements Surface
 		path.moveTo(x, y);
 	}
 	
-	@Override
-	public void arcTo(float x, float y, float w, float h, float start, float extent) {
-		Arc2D.Float arc = new Arc2D.Float(x, y, w, h, start, extent, Arc2D.OPEN);
-		path.append(arc, true);
+	
+	public void rectAt(float x, float y, float width, float height) {
+		path.append(new Rectangle2D.Float(x, y, width, height), false);
 	}
 	
-	
-	@Override
-	public void addShape(SurfaceTemplate s)
-	{
-		s.apply(this);
+	public void roundRectAt(float x, float y, float width, float height, float xradius, float yradius) {
+		path.append(new RoundRectangle2D.Float(x, y, width, height, xradius*2, yradius*2), false);
 	}
 
 

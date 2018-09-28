@@ -8,7 +8,6 @@ import cyclops.visualization.Buffer;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.palettes.SingleColourPalette;
-import cyclops.visualization.template.Rectangle;
 
 /**
  * 
@@ -85,7 +84,7 @@ public class RasterColorMapPainter extends MapPainter
 
 		p.context.save();
 
-		p.context.addShape(new Rectangle(0, 0, p.plotSize.x, p.plotSize.y));
+		p.context.rectAt(0, 0, p.plotSize.x, p.plotSize.y);
 		p.context.clip();
 		
 		// draw the map
@@ -95,7 +94,7 @@ public class RasterColorMapPainter extends MapPainter
 
 
 				int index = y * p.dr.dataWidth + x;
-				p.context.addShape(new Rectangle(x * cellSize, y * cellSize, cellSize + 1, cellSize + 1));
+				p.context.rectAt(x * cellSize, y * cellSize, cellSize + 1, cellSize + 1);
 				p.context.setSource(data.get(index));
 				p.context.fill();
 

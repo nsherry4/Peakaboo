@@ -1,7 +1,6 @@
 package cyclops.visualization;
 
 import cyclops.visualization.palette.PaletteColour;
-import cyclops.visualization.template.SurfaceTemplate;
 
 /**
  * A Surface is something which can be drawn to. This includes things such as raster images, SVG documents, sections of
@@ -55,10 +54,9 @@ public interface Surface
 	void moveTo(float x, float y);
 
 	
-	public void arcTo(float x, float y, float w, float h, float start, float extent);
+	void rectAt(float x, float y, float width, float height);
 	
-
-	void addShape(SurfaceTemplate sd);
+	void roundRectAt(float x, float y, float width, float height, float xradius, float yradius);
 	
 	
 	/**

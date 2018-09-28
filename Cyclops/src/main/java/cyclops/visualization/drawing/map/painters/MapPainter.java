@@ -15,7 +15,6 @@ import cyclops.visualization.drawing.painters.Painter;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.palettes.AbstractPalette;
-import cyclops.visualization.template.Rectangle;
 
 /**
  * 
@@ -97,7 +96,7 @@ public abstract class MapPainter extends Painter
 			float rawCellSize = MapDrawing.calcUninterpolatedCellSize(p.plotSize.x, p.plotSize.y, p.dr);
 	
 			// clip the region
-			p.context.addShape(new Rectangle(0, 0, p.dr.dataWidth * cellSize, p.dr.dataHeight * cellSize));
+			p.context.rectAt(0, 0, p.dr.dataWidth * cellSize, p.dr.dataHeight * cellSize);
 			p.context.clip();
 			
 			drawMap(p, cellSize, rawCellSize);
