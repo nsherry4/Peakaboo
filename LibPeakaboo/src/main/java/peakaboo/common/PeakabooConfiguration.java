@@ -1,10 +1,17 @@
 package peakaboo.common;
 
+import java.util.function.Supplier;
+
+import cyclops.Spectrum;
+import net.sciencestudio.scratch.ScratchEncoder;
 
 public class PeakabooConfiguration {
 
 	public static boolean compression = true;
 	public static boolean diskstore = true;
+	public static Supplier<ScratchEncoder<Spectrum>> overrideSpectrumSerializer = null;
+	public static Supplier<ScratchEncoder<byte[]>> overrideSpectrumCompressor = null;
+	
 	public static MemorySize memorySize = calcMemoryFootprint();
 
 	public enum MemorySize {

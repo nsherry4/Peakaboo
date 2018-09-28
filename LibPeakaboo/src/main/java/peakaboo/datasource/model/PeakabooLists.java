@@ -37,9 +37,9 @@ import peakaboo.common.PeakabooConfiguration;
 public final class PeakabooLists {
 
 	
-	@SuppressWarnings("unchecked")
 	public static List<Spectrum> create() {
-		return create(Serializers.fstUnsafe(ISpectrum.class));
+		ScratchEncoder<Spectrum> serializer = getSpectrumSerializer();
+		return create(serializer);
 	}
 	
 	
@@ -51,7 +51,7 @@ public final class PeakabooLists {
 		//Config for compression
 		ScratchEncoder<T> encoder = serializer;
 		if (PeakabooConfiguration.compression) {
-			encoder = new CompoundEncoder<>(encoder, Compressors.lz4fast());
+			encoder = new CompoundEncoder<>(encoder, getSpectrumCompressor());
 		}
 		
 		//Config for disk-backed
@@ -60,6 +60,34 @@ public final class PeakabooLists {
 		} else {
 			return ScratchLists.memoryBacked(encoder);
 		}
+	}
+	
+	
+	
+	public static ScratchEncoder<Spectrum> getSpectrumSerializer() {
+		if (PeakabooConfiguration.overrideSpectrumSerializer != null) {
+			return PeakabooConfiguration.overrideSpectrumSerializer.get();
+		} else {
+			return Serializers.fstUnsafe(ISpectrum.class);
+		}
+	}
+	
+	public static ScratchEncoder<byte[]> getSpectrumCompressor() {
+		if (PeakabooConfiguration.overrideSpectrumCompressor != null) {
+			return PeakabooConfiguration.overrideSpectrumCompressor.get();
+		} else {
+			return Compressors.lz4fast();
+		}
+	}
+	
+	public static ScratchEncoder<Spectrum> getSpectrumEncoder() {
+		ScratchEncoder<Spectrum> encoder = getSpectrumSerializer();
+		
+		if (PeakabooConfiguration.compression) {
+			encoder = new CompoundEncoder<>(encoder, getSpectrumCompressor());
+		}
+		
+		return encoder;
 	}
 	
 	

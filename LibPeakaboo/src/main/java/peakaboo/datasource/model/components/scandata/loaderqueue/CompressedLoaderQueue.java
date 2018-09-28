@@ -3,14 +3,11 @@ package peakaboo.datasource.model.components.scandata.loaderqueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
-import cyclops.ISpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
-import net.sciencestudio.scratch.encoders.CompoundEncoder;
-import net.sciencestudio.scratch.encoders.compressors.Compressors;
-import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import net.sciencestudio.scratch.single.Compressed;
 import peakaboo.common.PeakabooLog;
+import peakaboo.datasource.model.PeakabooLists;
 import peakaboo.datasource.model.components.scandata.SimpleScanData;
 
 public class CompressedLoaderQueue implements LoaderQueue {
@@ -28,7 +25,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 		this(data, 1000);
 	}
 	public CompressedLoaderQueue(SimpleScanData data, int depth) {
-		this.encoder = new CompoundEncoder<>(Serializers.fstUnsafe(ISpectrum.class), Compressors.lz4fast());
+		this.encoder = PeakabooLists.getSpectrumEncoder();
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {
