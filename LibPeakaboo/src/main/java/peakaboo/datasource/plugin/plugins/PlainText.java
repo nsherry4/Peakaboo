@@ -99,10 +99,20 @@ public class PlainText extends AbstractDataSource
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new ISpectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
-				try { return Float.parseFloat(s); } 
-				catch (Exception e) { return 0f; }
-			}).collect(toList()));
+			String[] entries = line.trim().split("[, \\t]+");
+			Spectrum scan = new ISpectrum(entries.length);
+			for (String entry : entries) {
+				try {
+					scan.add(Float.parseFloat(entry));
+				} catch (Exception e) {
+					//some kind of error
+					scan.add(0f);
+				}
+			}
+//			Spectrum scan = new ISpectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
+//				try { return Float.parseFloat(s); } 
+//				catch (Exception e) { return 0f; }
+//			}).collect(toList()));
 			
 			
 			if (size > 0 && scan.size() != scanSize) 
