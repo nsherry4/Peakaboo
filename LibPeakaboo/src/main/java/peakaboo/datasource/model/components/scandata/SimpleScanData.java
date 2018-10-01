@@ -103,7 +103,11 @@ public class SimpleScanData implements ScanData {
 		 * is stored in the queue. This saves order of 10s of MBs, but slows down the 
 		 * DataSource thread, since it now handles the compression.
 		 */
-		if (PeakabooConfiguration.memorySize == MemorySize.SMALL || capacity > 5000) {
+		if (
+				(PeakabooConfiguration.memorySize == MemorySize.SMALL && capacity > 100) || //0.8 - 1.6 MB
+				(PeakabooConfiguration.memorySize == MemorySize.MEDIUM && capacity > 1000) || //8 - 16 MB
+				(PeakabooConfiguration.memorySize == MemorySize.LARGE && capacity > 20000) //160 - 320 MB
+			) {
 			return new CompressedLoaderQueue(this, capacity);
 		} else {
 			return new SimpleLoaderQueue(this, capacity);			
