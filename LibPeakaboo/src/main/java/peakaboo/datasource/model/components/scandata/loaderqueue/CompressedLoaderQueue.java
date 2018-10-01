@@ -6,10 +6,16 @@ import java.util.logging.Level;
 import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.single.Compressed;
+import peakaboo.common.PeakabooConfiguration;
 import peakaboo.common.PeakabooLog;
-import peakaboo.datasource.model.PeakabooLists;
 import peakaboo.datasource.model.components.scandata.SimpleScanData;
 
+/**
+ * CompressedLoaderQueue moves the compression into the submit call, 
+ * meaning that it's not performed on the queue thread.
+ * @author NAS
+ *
+ */
 public class CompressedLoaderQueue implements LoaderQueue {
 
 	class SpectrumIndex {
@@ -25,7 +31,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 		this(data, 1000);
 	}
 	public CompressedLoaderQueue(SimpleScanData data, int depth) {
-		this.encoder = PeakabooLists.getSpectrumEncoder();
+		this.encoder = PeakabooConfiguration.spectrumEncoder;
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {
@@ -34,9 +40,9 @@ public class CompressedLoaderQueue implements LoaderQueue {
 					SpectrumIndex struct = queue.take();
 					if (struct.spectrum != null) {
 						if (struct.index == -1) {
-							data.add(struct.spectrum.get());
+							data.add(struct.spectrum);
 						} else {
-							data.set(struct.index, struct.spectrum.get());
+							data.set(struct.index, struct.spectrum);
 						}
 					} else {
 						return;

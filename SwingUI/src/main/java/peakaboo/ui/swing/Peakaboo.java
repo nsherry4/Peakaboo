@@ -207,7 +207,6 @@ public class Peakaboo
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		peakaboo.common.PeakabooConfiguration.compression = true;
 		peakaboo.common.PeakabooConfiguration.diskstore = true;
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
