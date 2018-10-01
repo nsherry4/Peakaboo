@@ -1,12 +1,13 @@
 package net.sciencestudio.scratch.list.array;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.list.ScratchList;
+import net.sciencestudio.scratch.single.Compressed;
 
-public class ScratchArrayList<T> extends AbstractList<T>{
+public class ScratchArrayList<T> extends ScratchList<T>{
 
 	private List<byte[]> backing;
 	protected ScratchEncoder<T> encoder;
@@ -37,10 +38,24 @@ public class ScratchArrayList<T> extends AbstractList<T>{
 		return t;
 	}
 	
+	public void setCompressed(int index, Compressed<T> compressed) {
+		if (!compressed.getEncoder().equals(encoder)) {
+			throw new RuntimeException("Cannot add Compressed element with different ScratchEncoder");
+		}
+		backing.set(index, compressed.getBytes());
+	}
+	
 
 	@Override
 	public void add(int index, T element) {
 		backing.add(index, encoder.encode(element));
+	}
+	
+	public void addCompressed(int index, Compressed<T> compressed) {
+		if (!compressed.getEncoder().equals(encoder)) {
+			throw new RuntimeException("Cannot add Compressed element with different ScratchEncoder");
+		}
+		backing.add(index, compressed.getBytes());
 	}
 	
 	@Override
