@@ -1,10 +1,10 @@
 package peakaboo.datasource.model.components.scandata;
 
-import java.util.List;
-
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
+import net.sciencestudio.scratch.list.ScratchList;
+import net.sciencestudio.scratch.single.Compressed;
 import peakaboo.common.PeakabooConfiguration;
 import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.datasource.model.PeakabooLists;
@@ -15,7 +15,7 @@ import peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQue
 public class SimpleScanData implements ScanData {
 
 	
-	private List<Spectrum> spectra;
+	private ScratchList<Spectrum> spectra;
 	private float maxEnergy;
 	private float minEnergy = 0;
 	private String name;
@@ -25,10 +25,6 @@ public class SimpleScanData implements ScanData {
 		this.spectra = PeakabooLists.create();
 	}
 		
-	public SimpleScanData(String name, List<Spectrum> backingList) {
-		this.name = name; 
-		this.spectra = backingList;
-	}
 
 	@Override
 	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
@@ -47,6 +43,10 @@ public class SimpleScanData implements ScanData {
 		add(new ISpectrum(spectrum));
 	}
 	
+	public void add(Compressed<Spectrum> compressed) {
+		spectra.addCompressed(compressed);
+	}
+	
 	public void set(int index, Spectrum spectrum) {
 		spectra.set(index, spectrum);
 	}
@@ -60,6 +60,10 @@ public class SimpleScanData implements ScanData {
 		set(index, new ISpectrum(spectrum));
 	}
 	
+	
+	public void set(int index, Compressed<Spectrum> compressed) {
+		spectra.setCompressed(index, compressed);
+	}
 	@Override
 	public int scanCount() {
 		return spectra.size();
@@ -94,10 +98,19 @@ public class SimpleScanData implements ScanData {
 	}
 	
 	public LoaderQueue createLoaderQueue(int capacity) {
-		if (PeakabooConfiguration.memorySize == MemorySize.LARGE) {
-			return new SimpleLoaderQueue(this, capacity);
-		} else {
+		/*
+		 * CompressedLoaderQueue will move compression up to before the point the Spectrum
+		 * is stored in the queue. This saves order of 10s of MBs, but slows down the 
+		 * DataSource thread, since it now handles the compression.
+		 */
+		if (
+				(PeakabooConfiguration.memorySize == MemorySize.SMALL && capacity > 100) || //0.8 - 1.6 MB
+				(PeakabooConfiguration.memorySize == MemorySize.MEDIUM && capacity > 1000) || //8 - 16 MB
+				(PeakabooConfiguration.memorySize == MemorySize.LARGE && capacity > 20000) //160 - 320 MB
+			) {
 			return new CompressedLoaderQueue(this, capacity);
+		} else {
+			return new SimpleLoaderQueue(this, capacity);			
 		}
 	}
 

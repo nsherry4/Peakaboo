@@ -1,10 +1,18 @@
 package peakaboo.common;
 
+import cyclops.ISpectrum;
+import cyclops.Spectrum;
+import net.sciencestudio.scratch.ScratchEncoder;
+import net.sciencestudio.scratch.encoders.CompoundEncoder;
+import net.sciencestudio.scratch.encoders.compressors.Compressors;
+import net.sciencestudio.scratch.encoders.serializers.Serializers;
 
 public class PeakabooConfiguration {
 
-	public static boolean compression = true;
 	public static boolean diskstore = true;
+	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(Serializers.fstUnsafe(ISpectrum.class), Compressors.lz4fast());
+
+	
 	public static MemorySize memorySize = calcMemoryFootprint();
 
 	public enum MemorySize {

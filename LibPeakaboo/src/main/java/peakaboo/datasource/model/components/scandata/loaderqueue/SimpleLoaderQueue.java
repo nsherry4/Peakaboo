@@ -7,6 +7,7 @@ import cyclops.Spectrum;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.model.components.scandata.SimpleScanData;
 
+
 public class SimpleLoaderQueue implements LoaderQueue {
 	
 	class SpectrumIndex {

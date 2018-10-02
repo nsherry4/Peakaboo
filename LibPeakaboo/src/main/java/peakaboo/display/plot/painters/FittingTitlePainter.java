@@ -12,7 +12,6 @@ import cyclops.visualization.drawing.DrawingRequest;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
 import cyclops.visualization.palette.PaletteColour;
-import cyclops.visualization.template.RoundedRectangle;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.transition.Transition;
@@ -253,11 +252,11 @@ public class FittingTitlePainter extends PlotPainter
 		float h = label.position.y.end - label.position.y.start;
 				
 		p.context.setSource(label.palette.labelBackground);
-		p.context.addShape(new RoundedRectangle(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f));
+		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
 		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.fill();
 		p.context.setSource(label.palette.labelStroke);
-		p.context.addShape(new RoundedRectangle(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f));
+		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
 		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.stroke();
 		p.context.setSource(label.palette.labelText);

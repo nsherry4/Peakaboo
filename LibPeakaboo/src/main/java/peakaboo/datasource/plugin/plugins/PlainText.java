@@ -19,6 +19,7 @@ import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.model.components.scandata.ScanData;
 import peakaboo.datasource.model.components.scandata.SimpleScanData;
+import peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import peakaboo.datasource.plugin.AbstractDataSource;
 
 
@@ -79,23 +80,35 @@ public class PlainText extends AbstractDataSource
 		
 		Path file = files.get(0);
 		
+		int fileSize = (int) Files.size(file);
+		int lineEstimate = -1;
+		
 		scandata = new SimpleScanData(file.getFileName().toString());
+		//LoaderQueue will push compression off onto the queue thread
+		LoaderQueue queue = scandata.createLoaderQueue(10);
+		
 		
 		Iterator<String> lines = Files.lines(file).iterator();
 
 		while (lines.hasNext())
 		{
 			String line = lines.next();
+			if (lineEstimate == -1) {
+				lineEstimate = fileSize / line.length();
+				getInteraction().notifyScanCount(lineEstimate);
+			}
 			
 			if (line == null || getInteraction().checkReadAborted()) break;
 			
 			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
 						
 			//split on all non-digit characters
-			Spectrum scan = new ISpectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
-				try { return Float.parseFloat(s); } 
-				catch (Exception e) { return 0f; }
-			}).collect(toList()));
+			String[] entries = line.trim().split("[, \\t]+");
+			Spectrum scan = parseLine(entries);
+//			Spectrum scan = new ISpectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
+//				try { return Float.parseFloat(s); } 
+//				catch (Exception e) { return 0f; }
+//			}).collect(toList()));
 			
 			
 			if (size > 0 && scan.size() != scanSize) 
@@ -108,16 +121,32 @@ public class PlainText extends AbstractDataSource
 			}
 			
 			
-			scandata.add(scan);
+			//scandata.add(scan);
+			queue.submit(scan);
 			size++;
 			
 			getInteraction().notifyScanRead(1);
 			
 		}
 		
+		queue.finish();
+		
 
 	}
 
+	private Spectrum parseLine(String[] entries) {
+		Spectrum scan = new ISpectrum(entries.length);
+		for (String entry : entries) {
+			try {
+				scan.add(Float.parseFloat(entry));
+			} catch (Exception e) {
+				//some kind of error
+				scan.add(0f);
+			}
+		}
+		return scan;
+	}
+	
 
 	@Override
 	public FileFormat getFileFormat() {

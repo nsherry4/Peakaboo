@@ -9,6 +9,7 @@ import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.CompoundEncoder;
 import net.sciencestudio.scratch.encoders.compressors.Compressors;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
+import net.sciencestudio.scratch.list.ScratchList;
 import net.sciencestudio.scratch.list.ScratchLists;
 import peakaboo.common.PeakabooConfiguration;
 
@@ -37,23 +38,12 @@ import peakaboo.common.PeakabooConfiguration;
 public final class PeakabooLists {
 
 	
-	@SuppressWarnings("unchecked")
-	public static List<Spectrum> create() {
-		return create(Serializers.fstUnsafe(ISpectrum.class));
+	public static ScratchList<Spectrum> create() {
+		return create(PeakabooConfiguration.spectrumEncoder);
 	}
 	
 	
-	public static <T> List<T> create(ScratchEncoder<T> serializer) {
-		if (PeakabooConfiguration.diskstore == false && PeakabooConfiguration.compression == false) {
-			return new ArrayList<>();
-		}
-		
-		//Config for compression
-		ScratchEncoder<T> encoder = serializer;
-		if (PeakabooConfiguration.compression) {
-			encoder = new CompoundEncoder<>(encoder, Compressors.lz4fast());
-		}
-		
+	public static <T> ScratchList<T> create(ScratchEncoder<T> encoder) {
 		//Config for disk-backed
 		if (PeakabooConfiguration.diskstore) {
 			return ScratchLists.tryDiskBacked(encoder);
@@ -61,6 +51,8 @@ public final class PeakabooLists {
 			return ScratchLists.memoryBacked(encoder);
 		}
 	}
+	
+
 	
 	
 }
