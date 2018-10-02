@@ -17,6 +17,10 @@ public class CalibrationReferenceManager {
 	
 	static {
 		read("NIST610");
+		read("Fake001");
+		read("Fake002");
+		read("Fake003");
+		read("Fake004");
 	}
 	
 	public static List<CalibrationReference> getAll() {

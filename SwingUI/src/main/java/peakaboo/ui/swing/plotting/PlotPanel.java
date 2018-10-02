@@ -94,6 +94,7 @@ import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.calibration.CalibrationReferenceManager;
 import peakaboo.mapping.results.MapResultSet;
+import peakaboo.ui.swing.calibration.ReferencePickerBox;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
@@ -937,13 +938,27 @@ public class PlotPanel extends LayerPanel
 	}
 	
 	public void actionCreateCalibrationProfile() {
-		CalibrationReference reference = CalibrationReferenceManager.getAll().get(0);
-		controller.fitting().clearTransitionSeries();
-		List<TransitionSeries> tss = new ArrayList<>(reference.getConcentrations().keySet());
-		tss.sort((a, b) -> a.element.compareTo(b.element));
-		controller.fitting().addAllTransitionSeries(tss);
+		
+		
+		ReferencePickerBox picker = new ReferencePickerBox();
+		ModalLayer layer = new ModalLayer(this, picker);
+		
+		picker.setOnOK(ref -> {
+			controller.fitting().clearTransitionSeries();
+			List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
+			tss.sort((a, b) -> a.element.compareTo(b.element));
+			controller.fitting().addAllTransitionSeries(tss);
+			PlotPanel.this.removeLayer(layer);
+		});
+		
+		picker.setOnCancel(() -> {
+			PlotPanel.this.removeLayer(layer);
+		});
+		
+		this.pushLayer(layer);
+		
 	}
-
+	
 	public void actionLoadSession() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");

@@ -1,6 +1,6 @@
 !!peakaboo.mapping.calibration.SerializedCalibrationReference
-name: NIST 610
-uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
+name: Fake 002
+uuid: 002
 desc: Trace elements in glass
 concentrations:
   Cr:K: 400.0

@@ -17,12 +17,14 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 public class CalibrationReference {
 
 	private String name;
+	private String desc;
 	private String uuid;
 	private Map<TransitionSeries, Float> concentrations;
 	
 	CalibrationReference() {
 		name = null;
 		uuid = null;
+		desc = null;
 		concentrations = new HashMap<>();
 	}
 	
@@ -37,6 +39,10 @@ public class CalibrationReference {
 
 	public String getUuid() {
 		return uuid;
+	}
+	
+	public String getDescription() {
+		return desc;
 	}
 
 	public String toString() {
@@ -59,6 +65,7 @@ public class CalibrationReference {
 		CalibrationReference empty = new CalibrationReference();
 		empty.name = "Empty Calibration Reference";
 		empty.uuid = "a3da5ff9-c6c5-4633-a40b-b576efe89da8";
+		empty.desc = "Empty Description Field";
 		return empty;
 	}
 	
@@ -67,6 +74,7 @@ public class CalibrationReference {
 		SerializedCalibrationReference serialized = new SerializedCalibrationReference();
 		serialized.name = reference.name;
 		serialized.uuid = reference.uuid;
+		serialized.desc = reference.desc;
 		for (TransitionSeries ts : reference.concentrations.keySet()) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
@@ -78,6 +86,7 @@ public class CalibrationReference {
 		CalibrationReference reference = new CalibrationReference();
 		reference.name = serialized.name;
 		reference.uuid = serialized.uuid;
+		reference.desc = serialized.desc;
 		for (String tsidentifier : serialized.concentrations.keySet()) {
 			reference.concentrations.put(PeakTable.SYSTEM.get(tsidentifier), serialized.concentrations.get(tsidentifier));
 		}
@@ -90,6 +99,7 @@ public class CalibrationReference {
 		
 		reference.name = lines.remove(0);
 		reference.uuid = lines.remove(0);
+		reference.desc = lines.remove(0);
 		
 		for (String line : lines) {
 			String[] parts = line.split(",");
@@ -111,20 +121,28 @@ public class CalibrationReference {
 		return reference;
 	}
 	
-	public static void main(String[] args) {
-		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610Reference.csv");
-		try {
-			Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
-			if (s.hasNext()) {
-				CalibrationReference reference = fromCSV(s.next());
-				System.out.println(CalibrationReference.save(reference));
-				CalibrationReference reference2 = CalibrationReference.load(CalibrationReference.save(reference));
-				System.out.println(reference2.getConcentration(PeakTable.SYSTEM.get("Cr:K")));
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws IOException {
+		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610.yaml");
+		Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
+		String yaml = s.next();
+		s.close();
+		CalibrationReference ref = CalibrationReference.load(yaml);
+		
+		yaml = CalibrationReference.save(ref);
+		System.out.println(yaml);
+//		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610Reference.csv");
+//		try {
+//			Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
+//			if (s.hasNext()) {
+//				CalibrationReference reference = fromCSV(s.next());
+//				System.out.println(CalibrationReference.save(reference));
+//				CalibrationReference reference2 = CalibrationReference.load(CalibrationReference.save(reference));
+//				System.out.println(reference2.getConcentration(PeakTable.SYSTEM.get("Cr:K")));
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 }
@@ -132,5 +150,6 @@ public class CalibrationReference {
 class SerializedCalibrationReference {
 	public String name;
 	public String uuid;
+	public String desc;
 	public Map<String, Float> concentrations = new HashMap<>();
 }
