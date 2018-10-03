@@ -53,21 +53,23 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 			try {
 				BoltClassloaderPluginLoader<? extends P> javaLoader = javaLoader(plugins);
 				
-				//load plugins from local
-				javaLoader.register();
-				
-				//load plugins from the application plugin dir(s)
-				ensureManagedDirectory();
-				javaLoader.register(directory);
+				if (javaLoader != null) {
+					//load plugins from local
+					javaLoader.register();
+					
+					//load plugins from the application plugin dir(s)
+					ensureManagedDirectory();
+					javaLoader.register(directory);
+				}
 								
 			} catch (ClassInheritanceException e) {
 				Bolt.logger().log(Level.SEVERE, "Failed to load plugins", e);
 			}
 
-			BoltFilesytstemPluginLoader<? extends P> scriptLoader = scriptLoader(plugins);
-			if (scriptLoader != null) {
+			BoltFilesytstemPluginLoader<? extends P> filesystemLoader = filesystemLoader(plugins);
+			if (filesystemLoader != null) {
 				ensureManagedDirectory();
-				scriptLoader.scanDirectory(directory);
+				filesystemLoader.scanDirectory(directory);
 			}
 			
 			
@@ -233,7 +235,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 	
 	protected abstract BoltClassloaderPluginLoader<? extends P> javaLoader(BoltPluginSet<P> pluginset) throws ClassInheritanceException ;
 	
-	protected abstract BoltFilesytstemPluginLoader<? extends P> scriptLoader(BoltPluginSet<P> pluginset);
+	protected abstract BoltFilesytstemPluginLoader<? extends P> filesystemLoader(BoltPluginSet<P> pluginset);
 
 
 	

@@ -11,12 +11,12 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginController;
 
 public class IBoltScriptPluginController<T extends BoltScriptPlugin> implements BoltPluginController<T> {
 
-	private File scriptFile;
+	private URL scriptFile;
 	private Class<T> runnerClass;
 	private T instance;
 	
-	public IBoltScriptPluginController(File file, Class<T> runner) {
-		this.scriptFile = file;
+	public IBoltScriptPluginController(URL url, Class<T> runner) {
+		this.scriptFile = url;
 		this.runnerClass = runner;
 		instance = create();
 	}
@@ -89,12 +89,7 @@ public class IBoltScriptPluginController<T extends BoltScriptPlugin> implements 
 
 	@Override
 	public URL getSource() {
-		try {
-			return scriptFile.toURI().toURL();
-		} catch (MalformedURLException e) {
-			Bolt.logger().log(Level.SEVERE, "Invalid script source", e);
-			return null;
-		}
+		return scriptFile;
 	}
 
 	@Override

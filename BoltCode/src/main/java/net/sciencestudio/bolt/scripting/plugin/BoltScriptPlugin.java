@@ -1,6 +1,6 @@
 package net.sciencestudio.bolt.scripting.plugin;
 
-import java.io.File;
+import java.net.URL;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 
@@ -33,6 +33,6 @@ public interface BoltScriptPlugin extends BoltPlugin {
 	String pluginVersion();
 	
 	
-	void setScriptFile(File file);
+	void setScriptFile(URL url);
 	
 }
