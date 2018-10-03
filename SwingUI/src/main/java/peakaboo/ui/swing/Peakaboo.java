@@ -136,6 +136,10 @@ public class Peakaboo
 	}
 	
 	private static void errorHook() {
+		
+
+		
+		//Set error handler that shows a popup
 		PeakabooLog.getRoot().addHandler(new Handler() {
 			
 			@Override

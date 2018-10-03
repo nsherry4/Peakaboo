@@ -615,7 +615,6 @@ public class PlotPanel extends LayerPanel
 	public void actionOpenData()
 	{		
 		
-		
 		List<SimpleFileExtension> exts = new ArrayList<>();
 		BoltPluginSet<DataSourcePlugin> plugins = DataSourcePluginManager.SYSTEM.getPlugins();
 		for (DataSourcePlugin p : plugins.newInstances()) {
