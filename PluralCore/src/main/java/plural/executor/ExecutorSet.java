@@ -137,6 +137,10 @@ public abstract class ExecutorSet<T> extends Eventful implements Iterable<Plural
 		return executors.iterator();
 	}
 
+	public synchronized ArrayList<PluralExecutor> toList() {
+		return new ArrayList<>(executors);
+	}
+	
 
 	/**
 	 * Gets the description for this TaskList
