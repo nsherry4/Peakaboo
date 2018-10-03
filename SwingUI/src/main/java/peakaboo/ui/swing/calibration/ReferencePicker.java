@@ -11,12 +11,12 @@ import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.ImageButton;
 
-public class ReferencePickerBox extends JPanel {
+public class ReferencePicker extends JPanel {
 
 	private Consumer<CalibrationReference> onOK;
 	private Runnable onCancel;
 	
-	public ReferencePickerBox() {
+	public ReferencePicker() {
 		setLayout(new BorderLayout());
 		
 		ReferenceList reflist = new ReferenceList();

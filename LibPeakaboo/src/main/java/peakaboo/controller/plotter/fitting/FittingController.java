@@ -2,6 +2,7 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,8 @@ import peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.mapping.calibration.CalibrationProfile;
+import peakaboo.mapping.calibration.CalibrationReference;
 import plural.executor.ExecutorSet;
 
 
@@ -452,6 +455,29 @@ public class FittingController extends EventfulType<Boolean>
 	public void clearAnnotations() {
 		fittingModel.annotations.clear();
 		updateListeners(false);
+	}
+
+	public void loadCalibrationReference(CalibrationReference ref) {
+		fittingModel.calibrationReference = ref;
+		clearTransitionSeries();
+		List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
+		tss.sort((a, b) -> a.element.compareTo(b.element));
+		addAllTransitionSeries(tss);
+		updateListeners(false);
+	}
+	
+	public CalibrationReference getCalibrationReference() {
+		return fittingModel.calibrationReference;
+	}
+
+	public CalibrationProfile generateCalibrationProfile() {
+		CalibrationReference reference = getCalibrationReference();
+		if (reference == null) {
+			return null;
+		}
+		FittingResultSet sample = getFittingSelectionResults();
+		CalibrationProfile profile = new CalibrationProfile(reference, sample);
+		return profile;
 	}
 	
 	

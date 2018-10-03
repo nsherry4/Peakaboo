@@ -47,6 +47,7 @@ import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ReorderTransferHandler;
+import swidget.widgets.listcontrols.ListControls.ElementCount;
 
 
 
@@ -88,8 +89,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			List<TransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 				
 			if (tss.size() == 0) return;
-			for (TransitionSeries ts : tss)
-			{
+			for (TransitionSeries ts : tss)	{
 				controller.removeTransitionSeries(ts);
 			}
 			owner.changed();
@@ -101,7 +101,20 @@ public class FittingPanel extends ClearPanel implements Changeable
 		});
 		
 		controls = new ListControls(addButton, removeButton, clearButton);
-
+		
+		
+		/*
+		 * We need to add an extra listener here: Normally we don't update controls when
+		 * changes are made because changes are either made locally, or will be updated
+		 * automatically (eg TableModel backed by controller). ListControls aren't like
+		 * that; when changes are made by something else, we need to update the
+		 * controls. Updating the table as well would just cause lost selections, scroll
+		 * positions, etc.
+		 */
+		controller.addListener(t -> {
+			updateListControls();
+		});
+		
 		
 		this.add(controls, BorderLayout.NORTH);
 
@@ -116,29 +129,29 @@ public class FittingPanel extends ClearPanel implements Changeable
 		return selected;
 	}
 
-	public void changed()
-	{
+	public void changed() {
 		tm.fireChangeEvent();
-		
+		updateListControls();
+	}
+
+	private void updateListControls() {
 		int elements = controller.getFittedTransitionSeries().size();
-		if (elements == 0)
-		{
-			controls.setElementCount(ListControls.ElementCount.NONE);
+		ElementCount count;
+		if (elements == 0) {
+			count = ElementCount.NONE;
 		}
-		else if (elements == 1)
-		{
-			controls.setElementCount(ListControls.ElementCount.ONE);
+		else if (elements == 1) {
+			count = ListControls.ElementCount.ONE;
 		}
-		else
-		{
-			controls.setElementCount(ListControls.ElementCount.MANY);
+		else {
+			count = ListControls.ElementCount.MANY;
 		}
 		
+		controls.setElementCount(count);
 	}
 	
-	
-	private JPopupMenu createAddMenu()
-	{
+	private JPopupMenu createAddMenu() {
+		
 		JPopupMenu menu = new JPopupMenu();
 
 		JMenuItem elementalAddItem = new JMenuItem("Element Lookup");
@@ -190,8 +203,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 	}
 
 
-	private JScrollPane createFittedTable()
-	{
+	private JScrollPane createFittedTable()	{
 
 		fitTable = new JTable();
 

@@ -13,6 +13,7 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.mapping.calibration.CalibrationReference;
 
 
 
@@ -53,6 +54,10 @@ public class FittingModel
 	 * {@link FittingSolver} to use for solving for the intensities of competing curves
 	 */
 	public FittingSolver fittingSolver;
+	
+	//Transient, not serialized
+	//TODO: Is not serializing the way to go?
+	public CalibrationReference calibrationReference = null;
 	
 	
 	public FittingModel()

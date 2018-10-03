@@ -30,14 +30,10 @@ public class CalibrationPluginManager extends BoltPluginManager<CalibrationRefer
 
 	@Override
 	protected void loadCustomPlugins() {
-		
-		System.out.println("LOADING!!!");
-		
+				
 		BoltFilesytstemPluginLoader<? extends CalibrationReference> loader = filesystemLoader(getPlugins());
 		loader.registerURL(getClass().getResource("/peakaboo/mapping/references/NIST610.yaml"));
-		
-		System.out.println(getPlugins().getAll().size());
-		
+				
 	}
 
 	@Override

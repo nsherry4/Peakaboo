@@ -27,7 +27,7 @@ public class PlotMenuMain extends JPopupMenu {
 	private JMenuItem					exportFilteredDataMenuItem;
 	private JMenu 						exportSinks;
 	
-	private JMenuItem					selectCalibrationReference;
+	private JMenuItem					loadCalibrationReference;
 	private JMenuItem					saveCalibrationProfile;
 
 	private JMenuItem					undo, redo;
@@ -102,15 +102,15 @@ public class PlotMenuMain extends JPopupMenu {
 		
 		JMenu calibration = new JMenu("Calibration");
 
-		selectCalibrationReference = PlotMenuUtils.createMenuItem(plot,
-				"Create Profile", null, "Starts the process of creating a calibration profile",
-				e -> plot.actionCreateCalibrationProfile(),
+		loadCalibrationReference = PlotMenuUtils.createMenuItem(plot,
+				"Load Reference", null, "Loads fittings for a reference material",
+				e -> plot.actionLoadCalibrationReference(),
 				null, null
 		);
-		calibration.add(selectCalibrationReference);
+		calibration.add(loadCalibrationReference);
 		
 		saveCalibrationProfile = PlotMenuUtils.createMenuItem(plot,
-				"Save Profile", null, "Saves the current fitting data against a known reference",
+				"Save Profile", null, "Saves the current fitting data against the loaded reference",
 				e -> plot.actionSaveCalibrationProfile(),
 				null, null
 		);
@@ -206,6 +206,7 @@ public class PlotMenuMain extends JPopupMenu {
 		exportFilteredDataMenuItem.setEnabled(hasData);
 		saveCalibrationProfile.setEnabled(hasData);
 		exportSinks.setEnabled(hasData);
+		saveCalibrationProfile.setEnabled(controller.fitting().getCalibrationReference() != null);
 				
 		undo.setEnabled(controller.history().canUndo());
 		redo.setEnabled(controller.history().canRedo());

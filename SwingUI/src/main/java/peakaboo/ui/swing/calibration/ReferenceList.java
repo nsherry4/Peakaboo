@@ -103,13 +103,12 @@ public class ReferenceList extends JPanel {
 		table.setGridColor(border);
 		table.setTableHeader(null);
 		
-		table.setBorder(new MatteBorder(1, 1, 1, 1, border));
+		
 		
 		
 		JScrollPane scroller = new JScrollPane(table);
 		scroller.setPreferredSize(new Dimension(scroller.getPreferredSize().width, 250));
-		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
-		
+		scroller.setBorder(new MatteBorder(1, 1, 1, 1, border));
 				
 		setLayout(new BorderLayout());
 		setBorder(Spacing.bHuge());

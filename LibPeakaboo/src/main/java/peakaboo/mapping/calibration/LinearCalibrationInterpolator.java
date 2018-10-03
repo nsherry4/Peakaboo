@@ -32,13 +32,10 @@ public class LinearCalibrationInterpolator implements CalibrationInterpolator {
 				previous = known;
 				continue;
 			}
-			
-			System.out.println(known.element.ordinal());
-			
+						
 			//all missing entries between previous and known
 			for (int i = previous.element.ordinal()+1; i < known.element.ordinal(); i++) {
 				TransitionSeries inter = PeakTable.SYSTEM.get(Element.values()[i], tst);
-				System.out.println(inter);
 				if (inter != null) {
 					calibrations.put(inter, interpolate(calibrations, inter, previous, known));	
 				}
@@ -50,9 +47,7 @@ public class LinearCalibrationInterpolator implements CalibrationInterpolator {
 	}
 	
 	private float interpolate(Map<TransitionSeries, Float> calibrations, TransitionSeries current, TransitionSeries previous, TransitionSeries next) {
-		
-		System.out.println("Interpolating " + current.toIdentifierString() + " between " + previous.toIdentifierString() + " and " + next.toIdentifierString());
-		
+				
 		float pv = calibrations.get(previous);
 		float nv = calibrations.get(next);
 		

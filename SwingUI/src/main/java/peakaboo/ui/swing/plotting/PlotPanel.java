@@ -94,7 +94,7 @@ import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.results.MapResultSet;
-import peakaboo.ui.swing.calibration.ReferencePickerBox;
+import peakaboo.ui.swing.calibration.ReferencePicker;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
@@ -913,10 +913,14 @@ public class PlotPanel extends LayerPanel
 	
 	
 	public void actionSaveCalibrationProfile() {
-		//TODO: Let user choose reference
-		CalibrationReference reference = (CalibrationReference) CalibrationPluginManager.SYSTEM.getPlugins().getAll().get(0);
-		FittingResultSet sample = controller.fitting().getFittingSelectionResults();
-		CalibrationProfile profile = new CalibrationProfile(reference, sample);
+		
+		CalibrationProfile profile = controller.fitting().generateCalibrationProfile();
+		if (profile == null) {
+			LayerDialog layer = new LayerDialog("Failed to Generate Profile", "Peakaboo could not generate a calibration profile", MessageType.ERROR);
+			layer.showIn(this);
+			return;
+		}
+
 		String yaml = CalibrationProfile.save(profile);
 		
 		SimpleFileExtension ext = new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp");
@@ -937,17 +941,13 @@ public class PlotPanel extends LayerPanel
 		
 	}
 	
-	public void actionCreateCalibrationProfile() {
+	public void actionLoadCalibrationReference() {
 		
-		
-		ReferencePickerBox picker = new ReferencePickerBox();
+		ReferencePicker picker = new ReferencePicker();
 		ModalLayer layer = new ModalLayer(this, picker);
 		
 		picker.setOnOK(ref -> {
-			controller.fitting().clearTransitionSeries();
-			List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
-			tss.sort((a, b) -> a.element.compareTo(b.element));
-			controller.fitting().addAllTransitionSeries(tss);
+			controller.fitting().loadCalibrationReference(ref);
 			PlotPanel.this.removeLayer(layer);
 		});
 		
