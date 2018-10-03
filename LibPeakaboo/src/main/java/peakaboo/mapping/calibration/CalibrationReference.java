@@ -2,7 +2,6 @@ package peakaboo.mapping.calibration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,28 +9,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 
-public class CalibrationReference {
+public class CalibrationReference implements BoltConfigPlugin {
 
 	private String name;
 	private String desc;
 	private String uuid;
+	private String rev;
 	private Map<TransitionSeries, Float> concentrations;
 	
-	CalibrationReference() {
+	protected CalibrationReference() {
 		name = null;
 		uuid = null;
 		desc = null;
+		rev = null;
 		concentrations = new HashMap<>();
 	}
 	
-	public CalibrationReference(Path referenceFile) {
-		concentrations = new HashMap<>();
-		//TODO: Read some kind of reference file
-	}
+	
 
 	public String getName() {
 		return name;
@@ -45,8 +44,12 @@ public class CalibrationReference {
 		return desc;
 	}
 
+	public String getRevision() {
+		return rev;
+	}
+	
 	public String toString() {
-		return "<CalibrationReference " + getName() + " (" + getUuid() + ")>"; 
+		return getName();
 	}
 	
 	public Map<TransitionSeries, Float> getConcentrations() {
@@ -66,6 +69,7 @@ public class CalibrationReference {
 		empty.name = "Empty Calibration Reference";
 		empty.uuid = "a3da5ff9-c6c5-4633-a40b-b576efe89da8";
 		empty.desc = "Empty Description Field";
+		empty.rev = "1.0";
 		return empty;
 	}
 	
@@ -75,6 +79,7 @@ public class CalibrationReference {
 		serialized.name = reference.name;
 		serialized.uuid = reference.uuid;
 		serialized.desc = reference.desc;
+		serialized.rev = reference.rev;
 		for (TransitionSeries ts : reference.concentrations.keySet()) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
@@ -87,6 +92,7 @@ public class CalibrationReference {
 		reference.name = serialized.name;
 		reference.uuid = serialized.uuid;
 		reference.desc = serialized.desc;
+		reference.rev = serialized.rev;
 		for (String tsidentifier : serialized.concentrations.keySet()) {
 			reference.concentrations.put(PeakTable.SYSTEM.get(tsidentifier), serialized.concentrations.get(tsidentifier));
 		}
@@ -100,6 +106,7 @@ public class CalibrationReference {
 		reference.name = lines.remove(0);
 		reference.uuid = lines.remove(0);
 		reference.desc = lines.remove(0);
+		reference.rev = lines.remove(0);
 		
 		for (String line : lines) {
 			String[] parts = line.split(",");
@@ -145,11 +152,42 @@ public class CalibrationReference {
 //		}
 	}
 	
+	
+	//////////////////////////////////////////////
+	// PLUGIN METHODS
+	//////////////////////////////////////////////
+	
+	@Override
+	public boolean pluginEnabled() {
+		return true;
+	}
+
+	@Override
+	public String pluginName() {
+		return getName();
+	}
+
+	@Override
+	public String pluginDescription() {
+		return getDescription();
+	}
+
+	@Override
+	public String pluginVersion() {
+		return getRevision();
+	}
+
+	@Override
+	public String pluginUUID() {
+		return getUuid();
+	}
+	
 }
 
 class SerializedCalibrationReference {
 	public String name;
 	public String uuid;
 	public String desc;
+	public String rev;
 	public Map<String, Float> concentrations = new HashMap<>();
 }

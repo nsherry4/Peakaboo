@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
+import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -25,7 +26,7 @@ public class CalibrationProfile {
 	 * Create an empty CalibrationProfile
 	 */
 	public CalibrationProfile() {
-		this.reference = CalibrationReferenceManager.empty();
+		this.reference = CalibrationReference.empty();
 		calibrations = new LinkedHashMap<>();
 	}
 	
@@ -118,7 +119,8 @@ public class CalibrationProfile {
 			profile.calibrations.put(ts, serialized.calibrations.get(tsidentifier));
 		}
 		
-		profile.reference = CalibrationReferenceManager.byUUID(serialized.referenceUUID);
+		BoltPluginSet<CalibrationReference> plugins = CalibrationPluginManager.SYSTEM.getPlugins();
+		profile.reference = (CalibrationReference) plugins.getByUUID(serialized.referenceUUID);
 		if (profile.reference == null) {
 			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
 		}

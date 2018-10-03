@@ -35,6 +35,7 @@ import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
+import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
 import stratus.StratusLookAndFeel;
@@ -249,6 +250,7 @@ public class Peakaboo
 			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
 			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
+			CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
 			
 			try {
 				peakLoader.join();

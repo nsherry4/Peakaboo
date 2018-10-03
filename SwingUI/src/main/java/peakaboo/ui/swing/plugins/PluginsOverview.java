@@ -47,6 +47,8 @@ import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
+import peakaboo.mapping.calibration.CalibrationPluginManager;
+import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.FileDrop;
 import stratus.StratusLookAndFeel;
@@ -240,7 +242,7 @@ public class PluginsOverview extends JPanel {
 		try {
 			added |= addJarToManager(jar, DataSourcePluginManager.SYSTEM);
 			added |= addJarToManager(jar, DataSinkPluginManager.SYSTEM);
-			added |= addJarToManager(jar, FilterPluginManager.SYSTEM);		
+			added |= addJarToManager(jar, FilterPluginManager.SYSTEM);
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
@@ -335,6 +337,13 @@ public class PluginsOverview extends JPanel {
 		for (BoltPluginController<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			filtersNode.add(node);
+		}
+		
+		DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode("Calibration References");
+		plugins.add(calibrationsNode);
+		for (BoltPluginController<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins().getAll()) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
+			calibrationsNode.add(node);
 		}
 		
 		

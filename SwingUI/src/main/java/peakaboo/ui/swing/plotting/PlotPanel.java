@@ -90,9 +90,9 @@ import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
+import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
-import peakaboo.mapping.calibration.CalibrationReferenceManager;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.calibration.ReferencePickerBox;
 import peakaboo.ui.swing.environment.DesktopApp;
@@ -914,7 +914,7 @@ public class PlotPanel extends LayerPanel
 	
 	public void actionSaveCalibrationProfile() {
 		//TODO: Let user choose reference
-		CalibrationReference reference = CalibrationReferenceManager.getAll().get(0);
+		CalibrationReference reference = (CalibrationReference) CalibrationPluginManager.SYSTEM.getPlugins().getAll().get(0);
 		FittingResultSet sample = controller.fitting().getFittingSelectionResults();
 		CalibrationProfile profile = new CalibrationProfile(reference, sample);
 		String yaml = CalibrationProfile.save(profile);

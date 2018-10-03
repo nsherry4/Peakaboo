@@ -28,8 +28,8 @@ import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationReference;
-import peakaboo.mapping.calibration.CalibrationReferenceManager;
 import stratus.StratusLookAndFeel;
 import swidget.widgets.Spacing;
 
@@ -40,7 +40,7 @@ public class ReferenceList extends JPanel {
 	
 	public ReferenceList() {
 		
-		refs = CalibrationReferenceManager.getAll();
+		refs = CalibrationPluginManager.SYSTEM.getPlugins().newInstances();
 		
 		TableModel model = new TableModel() {
 			
