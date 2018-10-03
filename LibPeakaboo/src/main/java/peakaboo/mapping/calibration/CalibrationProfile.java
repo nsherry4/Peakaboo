@@ -120,7 +120,7 @@ public class CalibrationProfile {
 		}
 		
 		BoltPluginSet<CalibrationReference> plugins = CalibrationPluginManager.SYSTEM.getPlugins();
-		profile.reference = (CalibrationReference) plugins.getByUUID(serialized.referenceUUID);
+		profile.reference = plugins.getByUUID(serialized.referenceUUID).create();
 		if (profile.reference == null) {
 			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
 		}
