@@ -1,23 +1,17 @@
 package peakaboo.common;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.MemoryHandler;
 
-import org.apache.commons.io.output.TeeOutputStream;
 
 public class PeakabooLog {
 
@@ -33,46 +27,36 @@ public class PeakabooLog {
 		}
 		initted = true;
 		
+		//Set default behaviour for uncaught errors to here
+		Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e) -> {
+			get().log(Level.SEVERE, "Uncaught Exception", e);
+		});
+		
+		//Set up log file
+		configFileHandler(logDir);
+
+	}
+
+
+
+	private static void configFileHandler(File logDir) {
+	
 		try {
-			//removeDefaultHandlers();
-			configFileHandler(logDir);
-			configStdErr();
+			logDir.mkdirs();
+			logfilename = logDir.getPath() + "/Peakaboo.log";
+					
+			//Workaround for JDK-8189953
+			new File(logDir.getPath() + "/Peakaboo.log").createNewFile();
+			////////////////////////////
+			
+			FileHandler handler = new FileHandler(logfilename, 16*1024*1024, 1, true);
+			handler.setFormatter(new CustomFormatter(format));
+			getRoot().addHandler(handler);
 		} catch (SecurityException | IOException e) {
 			getRoot().log(Level.WARNING, "Cannot create Peakaboo log file", e);
 		}
 	}
-
-
-
-	private static void configFileHandler(File logDir) throws IOException {
-	
-		logDir.mkdirs();
-		logfilename = logDir.getPath() + "/Peakaboo.log";
-				
-		//Workaround for JDK-8189953
-		new File(logDir.getPath() + "/Peakaboo.log").createNewFile();
-		////////////////////////////
 		
-		FileHandler handler = new FileHandler(logfilename, 16*1024*1024, 1, true);
-		handler.setFormatter(new CustomFormatter(format));
-		getRoot().addHandler(handler);
-	}
-	
-	
-	//All stderr goes to the log and real stderr
-	private static void configStdErr() throws FileNotFoundException {
-		OutputStream loggingOS = new LoggingOutputStream(getRoot(), Level.SEVERE);
-		System.setErr(new PrintStream(new TeeOutputStream(System.err, loggingOS)));
-	}
-	
-	//Logger doesn't print to stderr, stderr prints to the log
-	private static void removeDefaultHandlers() {
-		Logger rootLogger = getRoot();
-		for (Handler handler : rootLogger.getHandlers()) {
-			rootLogger.removeHandler(handler);
-		}
-	}
-	
 	
 	public static Logger getRoot() {
 		return get("");
@@ -98,38 +82,6 @@ public class PeakabooLog {
 	}
 	
 	
-	
-}
-
-
-// from http://blog.adeel.io/2017/05/06/redirecting-all-stdout-and-stderr-to-logger-in-java/
-class LoggingOutputStream extends OutputStream {
-	
-	Logger logger;
-	Level level;
-	StringBuilder stringBuilder;
-
-	public LoggingOutputStream(Logger logger, Level level) {
-		this.logger = logger;
-		this.level = level;
-		this.stringBuilder = new StringBuilder();
-	}
-
-	@Override
-	public final void write(int i) throws IOException {
-
-		// then out to the logger
-		char c = (char) i;
-		if (c == '\r' || c == '\n') {
-			if (stringBuilder.length() > 0) {
-				logger.log(level, stringBuilder.toString());
-				stringBuilder = new StringBuilder();
-			}
-		} else {
-			stringBuilder.append(c);
-		}
-		
-	}
 	
 }
 
