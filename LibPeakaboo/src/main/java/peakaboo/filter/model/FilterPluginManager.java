@@ -108,7 +108,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	}
 
 	@Override
-	protected BoltFilesytstemPluginLoader<? extends FilterPlugin> scriptLoader(BoltPluginSet<FilterPlugin> pluginset) {
+	protected BoltFilesytstemPluginLoader<? extends FilterPlugin> filesystemLoader(BoltPluginSet<FilterPlugin> pluginset) {
 		return null;
 	}
 	
