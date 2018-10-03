@@ -52,7 +52,7 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 	}
 
 	@Override
-	protected BoltFilesytstemPluginLoader<? extends DataSinkPlugin> scriptLoader(BoltPluginSet<DataSinkPlugin> pluginset) {
+	protected BoltFilesytstemPluginLoader<? extends DataSinkPlugin> filesystemLoader(BoltPluginSet<DataSinkPlugin> pluginset) {
 		return null;
 	}
 	

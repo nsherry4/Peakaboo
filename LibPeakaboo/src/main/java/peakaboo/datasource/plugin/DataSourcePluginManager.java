@@ -74,7 +74,7 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	}
 
 	@Override
-	protected BoltFilesytstemPluginLoader<? extends DataSourcePlugin> scriptLoader(BoltPluginSet<DataSourcePlugin> pluginset) {
+	protected BoltFilesytstemPluginLoader<? extends DataSourcePlugin> filesystemLoader(BoltPluginSet<DataSourcePlugin> pluginset) {
 		return null;
 	}
 	
