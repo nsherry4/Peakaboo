@@ -20,7 +20,9 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.search.PeakProposal;
@@ -463,6 +465,9 @@ public class FittingController extends EventfulType<Boolean>
 		List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
 		tss.sort((a, b) -> a.element.compareTo(b.element));
 		addAllTransitionSeries(tss);
+		//TODO: Should we be doing this, or should the user be doing it?
+		setFittingSolver(new OptimizingFittingSolver());
+		setCurveFitter(new OptimizingCurveFitter());
 		updateListeners(false);
 	}
 	
