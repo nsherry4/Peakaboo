@@ -9,8 +9,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -21,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DropMode;
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -32,7 +29,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
-import cyclops.util.Mutable;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.ui.swing.plotting.PlotPanel;
@@ -120,13 +116,21 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 	}
 
-	private List<TransitionSeries> getSelected() {		
-		if (! fitTable.hasFocus()) { return Collections.emptyList(); }
-		List<TransitionSeries> selected = new ArrayList<>();
-		for (int i : fitTable.getSelectedRows()) {
-			selected.add(controller.getFittedTransitionSeries().get(i));
+	private TransitionSeries getSelected() {		
+		int row = fitTable.getSelectedRow();
+		if (row == -1) {
+			return null;
 		}
-		return selected;
+		return controller.getFittedTransitionSeries().get(row);
+	}
+	
+	private List<TransitionSeries> getSelectedList() {
+		TransitionSeries selected = getSelected();
+		if (selected == null) {
+			return Collections.emptyList();
+		} else {
+			return Collections.singletonList(selected);
+		}
 	}
 
 	public void changed() {
@@ -134,7 +138,9 @@ public class FittingPanel extends ClearPanel implements Changeable
 		updateListControls();
 	}
 
-	private void updateListControls() {
+	private void updateListControls() {	
+		
+		//Which list control buttons to enable?
 		int elements = controller.getFittedTransitionSeries().size();
 		ElementCount count;
 		if (elements == 0) {
@@ -146,8 +152,26 @@ public class FittingPanel extends ClearPanel implements Changeable
 		else {
 			count = ListControls.ElementCount.MANY;
 		}
-		
 		controls.setElementCount(count);
+		
+		
+		//Update list selection to match controller selection
+		List<TransitionSeries> modelSelected = controller.getHighlightedTransitionSeries();
+		List<TransitionSeries> viewSelected = getSelectedList();
+		if (!modelSelected.equals(viewSelected)) {
+			if (modelSelected.size() == 0) {
+				fitTable.getSelectionModel().clearSelection();
+			} else {
+				//Single selection mode
+				TransitionSeries ts = modelSelected.get(0);
+				int index = controller.getFittingSelections().getFittedTransitionSeries().indexOf(ts);
+				fitTable.getSelectionModel().setSelectionInterval(index, index);
+			}
+		}
+		
+		
+		
+		
 	}
 	
 	private JPopupMenu createAddMenu() {
@@ -328,24 +352,9 @@ public class FittingPanel extends ClearPanel implements Changeable
 		//On selection change or focus change, update the controller's list of highlighted fits
 		fitTable.getSelectionModel().addListSelectionListener(e -> {
 			if (e.getValueIsAdjusting()) { return; }
-			controller.setHighlightedTransitionSeries(getSelected());
+			controller.setHighlightedTransitionSeries(getSelectedList());
 		});
-		fitTable.addFocusListener(new FocusListener() {
-			
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (e.isTemporary()) { return; }
-				controller.setHighlightedTransitionSeries(getSelected());
-			}
-			
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (e.isTemporary()) { return; }
-				controller.setHighlightedTransitionSeries(getSelected());
-			}
-		});
-		
-		
+
 		fitTable.setDragEnabled(true);
 		fitTable.setDropMode(DropMode.INSERT_ROWS);
 		fitTable.setTransferHandler(new ReorderTransferHandler(fitTable) {

@@ -350,6 +350,10 @@ public class FittingController extends EventfulType<Boolean>
 	}
 	
 	public void setHighlightedTransitionSeries(List<TransitionSeries> highlighted) {
+		//If the highlight already matches, don't bother
+		if (fittingModel.highlighted != null && fittingModel.highlighted.equals(highlighted)) {
+			return;
+		}
 		fittingModel.highlighted = highlighted;
 		updateListeners(false);
 	}
