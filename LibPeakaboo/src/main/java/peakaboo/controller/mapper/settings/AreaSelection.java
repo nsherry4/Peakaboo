@@ -27,7 +27,9 @@ public class AreaSelection extends EventfulType<String> {
 		this.map = map;
 	}
 	
-	
+	private boolean isInterpolated( ) {
+		return map.getSettings().getView().interpolation > 0;
+	}
 	
 	public Coord<Integer> getStart()
 	{
@@ -112,7 +114,7 @@ public class AreaSelection extends EventfulType<String> {
 	
 	public boolean hasSelection()
 	{
-		return hasSelection;
+		return hasSelection && !isInterpolated();
 			
 	}
 

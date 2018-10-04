@@ -34,8 +34,12 @@ public class PointsSelection extends EventfulType<String>{
 		this.map = map;
 	}
 	
+	private boolean isInterpolated( ) {
+		return map.getSettings().getView().interpolation > 0;
+	}
+	
 	public boolean hasSelection() {
-		return indexes.size() > 0;
+		return indexes.size() > 0 && !isInterpolated();
 	}
 	
 	public void clearSelection() {
