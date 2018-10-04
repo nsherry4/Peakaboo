@@ -27,9 +27,7 @@ public class PlotFrame extends JFrame
 
 			@Override
 			protected PlotPanel createComponent() {
-				PlotPanel plot =  new PlotPanel(this);
-				plot.setProgramTitle("");
-				return plot;
+				return new PlotPanel(this);
 			}
 
 			@Override

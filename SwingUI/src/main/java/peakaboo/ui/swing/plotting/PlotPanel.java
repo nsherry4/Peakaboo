@@ -15,19 +15,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownHostException;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,22 +28,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -64,7 +50,6 @@ import cyclops.util.StringInput;
 import cyclops.visualization.backend.awt.SavePicture;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
-import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
@@ -73,17 +58,14 @@ import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataLoader;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
-import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
-import peakaboo.dataset.DatasetReadResult.ReadStatus;
 import peakaboo.datasink.model.DataSink;
 import peakaboo.datasource.model.DataSource;
 import peakaboo.datasource.model.components.fileformat.FileFormat;
 import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.plugin.DataSourceLookup;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
@@ -115,10 +97,8 @@ import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
-import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.ToastLayer;
 import swidget.widgets.layerpanel.LayerDialog;
@@ -139,10 +119,6 @@ public class PlotPanel extends TabbedLayerPanel
 	private File						savedSessionFileName;
 	private File						exportedDataFileName;
 	private File						datasetFolder;
-	private String                      programTitle;
-
-
-
 
 
 	//===TOOLBAR WIDGETS===
@@ -155,9 +131,7 @@ public class PlotPanel extends TabbedLayerPanel
 	
 	public PlotPanel(TabbedInterface<TabbedLayerPanel> container) {
 		super(container);
-		
-		this.programTitle = " - " + Version.title;
-		
+			
 		savedSessionFileName = null;
 		exportedDataFileName = null;
 		
@@ -181,34 +155,7 @@ public class PlotPanel extends TabbedLayerPanel
 			newVersionNotified = true;
 			
 			Thread versionCheck = new Thread(() -> {
-							
-				String thisVersion = Version.longVersionNo;
-				String otherVersion = "";
-				boolean hasNewVersion = false;
-				
-				try {
-					
-					URL website = new URL("https://raw.githubusercontent.com/nsherry4/Peakaboo/master/version");
-					URLConnection conn = website.openConnection();
-					conn.setConnectTimeout(5000);
-					conn.setReadTimeout(5000);
-					
-					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-					String inputLine;
-			        while ((inputLine = in.readLine()) != null) {
-			        	otherVersion += inputLine + "\n";
-			        }
-			        otherVersion = otherVersion.trim();
-			        in.close();
-			        
-					AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
-					hasNewVersion = cmp.compare(thisVersion, otherVersion) < 0;
-					
-				} catch (IOException e) {
-					PeakabooLog.get().log(Level.WARNING, "Could not check for new version", e);
-				}
-				
-				if (hasNewVersion) {
+				if (Version.hasNewVersion()) {
 					SwingUtilities.invokeLater(() -> {
 						this.pushLayer(new ToastLayer(this, "A new version of Peakaboo is available", () -> {
 							DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases");
@@ -222,16 +169,6 @@ public class PlotPanel extends TabbedLayerPanel
 		}
 	}
 	
-	public String getProgramTitle()
-	{
-		return programTitle;
-	}
-	
-	public void setProgramTitle(String title)
-	{
-		programTitle = title;
-	}
-
 	public PlotController getController()
 	{
 		return controller;
@@ -373,10 +310,8 @@ public class PlotPanel extends TabbedLayerPanel
 		if (controller.data().hasDataSet())
 		{
 			titleString.append(controller.data().getDataSet().getScanData().datasetName());
-			titleString.append(programTitle);
 		} else {
 			titleString.append("No Data");
-			titleString.append(programTitle);
 		}
 
 		
