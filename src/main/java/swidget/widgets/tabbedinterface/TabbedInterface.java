@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.util.function.Function;
 
 import javax.swing.Icon;
+import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import swidget.icons.IconSize;
@@ -14,24 +15,22 @@ import swidget.widgets.ClearPanel;
 public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 {
 
+	private JFrame window;
+	
 	private Function<T, String> titleFunction;
 	private boolean working = false;
 	private int tabWidth = 150;
 	
 	private T lastSelectedTab = null;
 	
-	public TabbedInterface(Function<T, String> titleFunction) {
-		this(titleFunction, 150);
+	public TabbedInterface(JFrame window, Function<T, String> titleFunction) {
+		this(window, titleFunction, 150);
 	}
 	
-	public TabbedInterface(Function<T, String> titleFunction, int tabWidth)
-	{
+	public TabbedInterface(JFrame window, Function<T, String> titleFunction, int tabWidth) {
 		this.titleFunction = titleFunction;
 		this.tabWidth = tabWidth;
-		//tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-		//this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		
-		
+		this.window = window;
 	}
 	
 	public void init() {
@@ -97,11 +96,15 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 		setTabTitle(component, titleFunction.apply(component));
 	}
 	
+	public void addActiveTab(T component) {
+		addTab(component);
+		setActiveTab(component);
+	}
+	
 	public T newTab()
 	{
 		T component = createComponent();
-		addTab(component);
-		setActiveTab(component);
+		addActiveTab(component);
 		return component;
 	}
 	
@@ -166,7 +169,12 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 			titleChanged(title);
 		}
 	}
+
 	
+	public JFrame getWindow() {
+		return window;
+	}
+
 	protected abstract T createComponent();
 	protected abstract void destroyComponent(T component);
 	protected abstract void titleChanged(String title);	
