@@ -2,6 +2,7 @@ package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import javax.swing.table.TableColumn;
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
@@ -38,7 +40,7 @@ class FilterList extends ClearPanel {
 	
 	private ListControls controls;
 	
-	FilterList(FilteringController _controller, Container windowOwner, FiltersetViewer _owner){
+	FilterList(FilteringController _controller, Window ownerWindow, FiltersetViewer _owner){
 		
 		super();
 		
@@ -47,7 +49,7 @@ class FilterList extends ClearPanel {
 		
 		setLayout(new BorderLayout());
 		
-		JTable table = createFilterTable(windowOwner);
+		JTable table = createFilterTable(ownerWindow);
 		JScrollPane scroller = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.setBorder(Spacing.bNone());
 		
@@ -80,7 +82,7 @@ class FilterList extends ClearPanel {
 		
 	}
 	
-	private JTable createFilterTable(Container owner){
+	private JTable createFilterTable(Window owner){
 		
 		m = new MutableTableModel() {
 		

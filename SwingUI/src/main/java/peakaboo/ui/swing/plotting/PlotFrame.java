@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.tabbed;
+package peakaboo.ui.swing.plotting;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -6,35 +6,34 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 import peakaboo.common.Version;
-import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconFactory;
 import swidget.widgets.tabbedinterface.TabbedInterface;
+import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
-public class TabbedPlotterFrame extends JFrame
+public class PlotFrame extends JFrame
 {
 
 	
-	private TabbedInterface<PlotPanel> tabControl;
+	private TabbedInterface<TabbedLayerPanel> tabControl;
 	private static int openWindows = 0;
 	
-	public TabbedPlotterFrame() {
+	public PlotFrame() {
 	
 		openWindows++;
 		//containers = new HashMap<PlotPanel, TabbedContainer>();
 		
-		tabControl = new TabbedInterface<PlotPanel>(p -> "No Data", 150) {
+		tabControl = new TabbedInterface<TabbedLayerPanel>(this, p -> "No Data", 150) {
 
 			@Override
 			protected PlotPanel createComponent() {
-				TabbedPlotterManager container = new TabbedPlotterManager(TabbedPlotterFrame.this);
-				PlotPanel plot =  new PlotPanel(container);
+				PlotPanel plot =  new PlotPanel(this);
 				plot.setProgramTitle("");
 				return plot;
 			}
 
 			@Override
-			protected void destroyComponent(PlotPanel component){}
+			protected void destroyComponent(TabbedLayerPanel component){}
 
 			@Override
 			protected void titleChanged(String title) {}
@@ -85,7 +84,7 @@ public class TabbedPlotterFrame extends JFrame
 	
 
 
-	public TabbedInterface<PlotPanel> getTabControl() {
+	public TabbedInterface<TabbedLayerPanel> getTabControl() {
 		return tabControl;
 	}
 

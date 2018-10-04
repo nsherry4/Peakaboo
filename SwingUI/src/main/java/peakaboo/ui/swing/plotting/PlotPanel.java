@@ -94,7 +94,6 @@ import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
-import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
 import peakaboo.ui.swing.plugins.PluginsOverview;
 import plural.executor.DummyExecutor;
@@ -125,13 +124,13 @@ import swidget.widgets.layerpanel.ToastLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.properties.PropertyViewPanel;
+import swidget.widgets.tabbedinterface.TabbedInterface;
+import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
 
-public class PlotPanel extends LayerPanel
+public class PlotPanel extends TabbedLayerPanel
 {
-
-	private TabbedPlotterManager 	container;
 
 	//Non-UI
 	private PlotController				controller;
@@ -154,9 +153,9 @@ public class PlotPanel extends LayerPanel
 
 	private static boolean newVersionNotified = false;
 	
-	public PlotPanel(TabbedPlotterManager container)
-	{
-		this.container = container;
+	public PlotPanel(TabbedInterface<TabbedLayerPanel> container) {
+		super(container);
+		
 		this.programTitle = " - " + Version.title;
 		
 		savedSessionFileName = null;
@@ -249,8 +248,8 @@ public class PlotPanel extends LayerPanel
 		toolBar.setWidgetState(hasData);
 		statusBar.setWidgetState(hasData);
 		
-		container.getWindow().validate();
-		container.getWindow().repaint();
+		getTabbedInterface().validate();
+		getTabbedInterface().repaint();
 
 	}
 
@@ -329,7 +328,7 @@ public class PlotPanel extends LayerPanel
 		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
-		tabs.add(new FiltersetViewer(controller.filtering(), container.getWindow()), 1);
+		tabs.add(new FiltersetViewer(controller.filtering(), getTabbedInterface().getWindow()), 1);
 		
 		
 		c.gridx = 0;
@@ -359,11 +358,14 @@ public class PlotPanel extends LayerPanel
 
 	private void setTitleBar()
 	{
-		container.setTitle(this, getTitleBarString());
+		String title = getTabTitle();
+		if (title.trim().length() == 0) title = "No Data";
+		getTabbedInterface().setTabTitle(this, title);
 	}
 
 
-	private String getTitleBarString()
+	@Override
+	public String getTabTitle()
 	{
 		StringBuffer titleString;
 		titleString = new StringBuffer();
@@ -604,7 +606,7 @@ public class PlotPanel extends LayerPanel
 		contents.releaseDescription = Version.releaseDescription;
 		contents.date = Version.buildDate;
 		
-		new AboutDialogue(container.getWindow(), contents);
+		new AboutDialogue(getTabbedInterface().getWindow(), contents);
 	}
 	
 	public void actionHelp()
@@ -666,7 +668,7 @@ public class PlotPanel extends LayerPanel
 		DataSource source = controller.data().getDataSet().getDataSource();
 
 		SimpleFileExtension ext = new SimpleFileExtension(sink.getFormatName(), sink.getFormatExtension());
-		SwidgetFilePanels.saveFile(container.getWindow(), "Export Scan Data", exportedDataFileName, ext, file -> {
+		SwidgetFilePanels.saveFile(this, "Export Scan Data", exportedDataFileName, ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
@@ -736,7 +738,7 @@ public class PlotPanel extends LayerPanel
 				);
 			
 			
-			mapperWindow = new MapperFrame(container, mapData, null, controller);
+			mapperWindow = new MapperFrame(getTabbedInterface(), mapData, null, controller);
 
 			mapperWindow.setVisible(true);
 
