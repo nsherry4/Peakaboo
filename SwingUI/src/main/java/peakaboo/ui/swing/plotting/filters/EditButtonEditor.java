@@ -21,6 +21,7 @@ import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ImageButton;
@@ -35,7 +36,7 @@ class EditButtonEditor extends DefaultCellEditor
 	private ImageButton				button;
 	private JPanel 					container;
 	
-	private Container				owner;
+	private Window					owner;
 
 	private Filter					filter;
 	private FilteringController		controller;
@@ -46,7 +47,7 @@ class EditButtonEditor extends DefaultCellEditor
 	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
 
-	public EditButtonEditor(FilteringController controller, Container owner)
+	public EditButtonEditor(FilteringController controller, Window owner)
 	{
 		super(new JCheckBox());
 
@@ -100,12 +101,7 @@ class EditButtonEditor extends DefaultCellEditor
 
 			if (!settingsDialogs.containsKey(filter)) {
 				
-				if (owner instanceof Window) {
-					dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, (Window)owner);	
-				} else {
-					dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, null);
-				}
-				
+				dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, owner);	
 				dialog.setHelpMessage(filter.getFilterDescription());
 				dialog.setHelpTitle(filter.getFilterName());
 				settingsDialogs.put(filter, dialog);

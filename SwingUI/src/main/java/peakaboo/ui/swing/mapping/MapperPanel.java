@@ -34,7 +34,6 @@ import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.display.map.modes.MapDisplayMode;
-import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.ClearPanel;
@@ -43,25 +42,25 @@ import swidget.widgets.DraggingScrollPaneListener.Buttons;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterface;
+import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
 
-public class MapperPanel extends LayerPanel
-{
+public class MapperPanel extends TabbedLayerPanel {
 
 	private MapCanvas				canvas;
 	
 	protected MappingController		controller;
-	protected TabbedPlotterManager 	parentPlotter;
+	TabbedInterface<TabbedLayerPanel> parentPlotter;
 	
 	private JLabel					warnOnTooSmallDataset;
 	private MapStatusBar			statusBar;
 	
 	private MapperToolbar			toolbar;
 
-	MapperPanel(MappingController controller, TabbedPlotterManager parentPlotter, TabbedInterface<MapperPanel> owner)
-	{
-
+	public MapperPanel(MappingController controller, TabbedInterface<TabbedLayerPanel> parentPlotter, TabbedInterface<TabbedLayerPanel> owner) {
+		super(owner);
+		
 		this.controller = controller;
 		this.parentPlotter = parentPlotter;
 
@@ -77,7 +76,7 @@ public class MapperPanel extends LayerPanel
 				setNeedsRedraw();
 			}
 
-			owner.setTabTitle(this, getTitle());
+			owner.setTabTitle(this, getTabTitle());
 			
 			canvas.updateCanvasSize();
 			repaint();
@@ -89,14 +88,14 @@ public class MapperPanel extends LayerPanel
 			}
 		});
 
-		owner.setTabTitle(this, getTitle());
+		owner.setTabTitle(this, getTabTitle());
 		
 
 		init();
 
 	}
 	
-	public String getTitle() {
+	public String getTabTitle() {
 		return controller.getSettings().getMapFittings().mapLongTitle();
 	}
 

@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -43,6 +44,7 @@ import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ImageButton;
@@ -192,7 +194,9 @@ class MapperToolbar extends JToolBar {
 					.collect(Collectors.toList()
 				);
 		
-			panel.parentPlotter.newTab(sds, settings.serialize());
+			PlotPanel subplot = new PlotPanel(panel.parentPlotter);
+			subplot.loadExistingDataSource(sds, settings.serialize());
+			panel.parentPlotter.addActiveTab(subplot);
 			//Focus and un-minimize
 			JFrame plotWindow = panel.parentPlotter.getWindow();
 			plotWindow.toFront();

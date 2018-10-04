@@ -1,9 +1,17 @@
 package peakaboo.common;
 
+import static java.util.stream.Collectors.toList;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Properties;
 import java.util.logging.Level;
+
+import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 
 public class Version {
 
@@ -45,6 +53,32 @@ public class Version {
 	public final static String title = program_name + " " + (release ? versionNoMajor : longVersionNo) + titleReleaseDescription;
 	
 
+	public static boolean hasNewVersion() {
+		
+		String thisVersion = longVersionNo;
+		String otherVersion = "";
+		
+		try {
+			URL website = new URL("https://raw.githubusercontent.com/nsherry4/Peakaboo/master/version");
+			URLConnection conn = website.openConnection();
+			conn.setConnectTimeout(5000);
+			conn.setReadTimeout(5000);
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+	        while ((inputLine = in.readLine()) != null) {
+	        	otherVersion += inputLine + "\n";
+	        }
+	        otherVersion = otherVersion.trim();
+	        in.close();
+	        
+			AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
+			return cmp.compare(thisVersion, otherVersion) < 0;
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.WARNING, "Could not check for new version", e);
+			return false;
+		}
+	}
 	
 	
 	

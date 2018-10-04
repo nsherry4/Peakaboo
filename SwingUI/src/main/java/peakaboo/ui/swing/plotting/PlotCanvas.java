@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -18,6 +19,7 @@ import cyclops.visualization.backend.awt.GraphicsPanel;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;
@@ -94,7 +96,32 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			{
 				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
 					grabChannelFromClickCallback.accept(plotter.getChannel(e.getX()));
+				} else if (controller.data().hasDataSet()) {
+					int channel = plotter.getChannel(e.getX());
+			        
+			        float bestValue = 1f;
+			        FittingResult bestFit = null;
+
+			        if (controller.fitting().getFittingSelectionResults() == null) {
+			            return;
+			        }
+			        
+					for (FittingResult fit : controller.fitting().getFittingSelectionResults()) {
+			            float value = fit.getFit().get(channel);
+			            if (value > bestValue) {
+			                bestValue = value;
+			                bestFit = fit;
+			            }
+			        }
+					
+			        controller.fitting().clearProposedTransitionSeries();
+			        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
+			        if (bestFit != null) {
+			            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit.getTransitionSeries()));
+			        }
+					
 				}
+				
 				//Make the plot canvas focusable
 				if (!PlotCanvas.this.hasFocus()) {
 					PlotCanvas.this.requestFocus();
