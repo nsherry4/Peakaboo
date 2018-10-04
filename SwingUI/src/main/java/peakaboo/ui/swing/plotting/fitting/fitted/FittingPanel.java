@@ -381,36 +381,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 				
 				//annotation
 				TransitionSeries selected = controller.getFittedTransitionSeries().get(fitTable.getSelectedRow());
-				
-				
-				
-				JTextField textfield = new JTextField(20);
-				textfield.addActionListener(ae -> {
-					controller.setAnnotation(selected, textfield.getText());
-					plotPanel.popLayer();
-				});
-				textfield.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyPressed(KeyEvent e) {
-						if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-							plotPanel.popLayer();
-						}
-					}
-				});
-				textfield.setText(controller.getAnnotation(selected));
-				LayerDialog dialog = new LayerDialog("Annotation for " + selected.getDescription(), textfield, MessageType.QUESTION);
-				dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
-					plotPanel.popLayer();
-				}));
-				dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
-					controller.setAnnotation(selected, textfield.getText());
-					plotPanel.popLayer();
-				}));
-				dialog.showIn(plotPanel);
-				textfield.grabFocus();
-				
-				
-				
+				plotPanel.actionAddAnnotation(selected);
+
 			}
 		});
 

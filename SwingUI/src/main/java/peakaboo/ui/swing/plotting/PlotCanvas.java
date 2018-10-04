@@ -37,6 +37,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	private PlotController			controller;
 	private Consumer<Integer>		grabChannelFromClickCallback;
+	private PlotPanel plotPanel;
 	private Plotter plotter;
 
 	PlotCanvas(final PlotController controller, final PlotPanel parent)
@@ -47,6 +48,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 		this.controller = controller;
 		this.plotter = new Plotter();
+		this.plotPanel = parent;
 		this.setMinimumSize(new Dimension(100, 100));
 
 		//setCanvasSize();
@@ -97,29 +99,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
 					grabChannelFromClickCallback.accept(plotter.getChannel(e.getX()));
 				} else if (controller.data().hasDataSet()) {
-					int channel = plotter.getChannel(e.getX());
-			        
-			        float bestValue = 1f;
-			        FittingResult bestFit = null;
-
-			        if (controller.fitting().getFittingSelectionResults() == null) {
-			            return;
-			        }
-			        
-					for (FittingResult fit : controller.fitting().getFittingSelectionResults()) {
-			            float value = fit.getFit().get(channel);
-			            if (value > bestValue) {
-			                bestValue = value;
-			                bestFit = fit;
-			            }
-			        }
-					
-			        controller.fitting().clearProposedTransitionSeries();
-			        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
-			        if (bestFit != null) {
-			            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit.getTransitionSeries()));
-			        }
-					
+					if (e.getClickCount() == 1) {
+						onSingleClick(e);
+					} else if (e.getClickCount() == 2)					 {
+						onDoubleClick(e);
+					}
 				}
 				
 				//Make the plot canvas focusable
@@ -130,7 +114,46 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		});
 
 	}
+	
+	private void onSingleClick(MouseEvent e) {
 
+        FittingResult bestFit = getBestFitAtPoint(e.getX());
+        controller.fitting().clearProposedTransitionSeries();
+        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
+        if (bestFit != null) {
+            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit.getTransitionSeries()));
+        }
+	}
+
+	private void onDoubleClick(MouseEvent e) {
+		FittingResult bestFit = getBestFitAtPoint(e.getX());
+		if (bestFit == null) {
+			return;
+		}
+		plotPanel.actionAddAnnotation(bestFit.getTransitionSeries());
+	}
+	
+	private FittingResult getBestFitAtPoint(int px) {
+		int channel = plotter.getChannel(px);
+        
+        float bestValue = 1f;
+        FittingResult bestFit = null;
+
+        if (controller.fitting().getFittingSelectionResults() == null) {
+            return null;
+        }
+        
+		for (FittingResult fit : controller.fitting().getFittingSelectionResults()) {
+            float value = fit.getFit().get(channel);
+            if (value > bestValue) {
+                bestValue = value;
+                bestFit = fit;
+            }
+        }
+		
+		return bestFit;
+	}
+	
 
 	public void grabChannelFromClick(Consumer<Integer> callback)
 	{

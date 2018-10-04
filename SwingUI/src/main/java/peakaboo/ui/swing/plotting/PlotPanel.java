@@ -13,6 +13,8 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
@@ -36,6 +38,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -1032,6 +1035,36 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionShowAdvancedOptions() {
 		AdvancedOptionsPanel advancedPanel = new AdvancedOptionsPanel(this, controller);
 		this.pushLayer(new ModalLayer(this, advancedPanel));
+	}
+
+	public void actionAddAnnotation(TransitionSeries selected) {
+		if (!controller.fitting().getFittingSelections().getFittedTransitionSeries().contains(selected)) {
+			return;
+		}
+		JTextField textfield = new JTextField(20);
+		textfield.addActionListener(ae -> {
+			controller.fitting().setAnnotation(selected, textfield.getText());
+			this.popLayer();
+		});
+		textfield.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+					PlotPanel.this.popLayer();
+				}
+			}
+		});
+		textfield.setText(controller.fitting().getAnnotation(selected));
+		LayerDialog dialog = new LayerDialog("Annotation for " + selected.getDescription(), textfield, MessageType.QUESTION);
+		dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
+			this.popLayer();
+		}));
+		dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
+			controller.fitting().setAnnotation(selected, textfield.getText());
+			this.popLayer();
+		}));
+		dialog.showIn(this);
+		textfield.grabFocus();
 	}
 
 }
