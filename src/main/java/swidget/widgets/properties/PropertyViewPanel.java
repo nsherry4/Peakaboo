@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -23,6 +24,7 @@ public class PropertyViewPanel extends JPanel
 	GridBagConstraints c;
 	private boolean centered;
 	private int minWidth;
+	private JLabel icon;
 
 	public PropertyViewPanel(Map<String, String> properties)
 	{
@@ -68,7 +70,7 @@ public class PropertyViewPanel extends JPanel
 		c.weightx = 0;
 		
 		if (showBadge) {
-			JLabel icon = new JLabel(StockIcon.BADGE_INFO.toImageIcon(IconSize.ICON));
+			icon = new JLabel(StockIcon.BADGE_INFO.toImageIcon(IconSize.ICON));
 			icon.setBorder(new EmptyBorder(0, 0, 0, Spacing.huge));
 			add(icon, c);
 		}
@@ -119,5 +121,9 @@ public class PropertyViewPanel extends JPanel
 		c.gridx = 0;
 		
 		
+	}
+
+	public void setBadge(ImageIcon imageIcon) {
+		icon.setIcon(imageIcon);
 	}
 }
