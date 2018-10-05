@@ -14,7 +14,6 @@ import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.exceptions.BoltException;
 
 
 
@@ -70,7 +69,7 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 		
 		try 
 		{
-			if (!test(loadedClass)) { return null; } 
+			if (!checkPluginCriteria(loadedClass)) { return null; } 
 			
 			BoltPluginPrototype<T> plugin = new IBoltJavaPluginPrototype<>(target, loadedClass, source);
 			
@@ -89,9 +88,9 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 		}
 	}
 	
-	private boolean test(Class<? extends T> clazz) {
+	private boolean checkPluginCriteria(Class<? extends T> clazz) {
 		//make sure its not an interface or an abstract class
-		if (!isActualPlugin(clazz)) return false;
+		if (!checkIsActualPlugin(clazz)) return false;
 						
 		//if target is an interface, c must implement it
 		if (isTargetInterface)
@@ -140,7 +139,7 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 		
 	}
 	
-	private boolean isActualPlugin(Class<?> c)
+	private boolean checkIsActualPlugin(Class<?> c)
 	{
 		if (c.isInterface()) return false;
 		if (c.isAnnotation()) return false;
@@ -149,54 +148,12 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 		return true;
 	}
 	
-	
-	
-	
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#register(java.io.File)
-	 */
-	@Override
-	public void register(File file)
-	{
-	
-		//Something went wrong.
-		if (!file.exists()) {
-			Bolt.logger().log(Level.WARNING, "File " + file + " does not exist");
-			return;
-		}
-		
-		File[] files;
-		if (file.isDirectory())	{
-			files = file.listFiles((dir, name) -> name.toLowerCase().endsWith(".jar"));
-		} else {
-			files = new File[1];
-			files[0] = file;
-		}
-		
-		//Something went wrong.
-		if (files == null) {
-			Bolt.logger().log(Level.WARNING, "File " + file + " could not be loaded");
-			return;
-		}
-		
-		for (int i = 0; i < files.length; i++) {
-			try	{
-				register(files[i].toURI().toURL());
-			} catch (Exception e) {
-				Bolt.logger().log(Level.WARNING, "Unable to load plugin at " + files[i], e);
-			}
-		}
-		
-	}
-	
+
 	/* (non-Javadoc)
 	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#register(java.net.URL)
 	 */
 	@Override
-	public void register(URL url) throws ClassInstantiationException
+	public void registerURL(URL url)
 	{
 		
 		URLClassLoader urlLoader = new URLClassLoader(new URL[]{url});
@@ -207,7 +164,7 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 			for (T t : loader) {
 				registerPlugin((Class<? extends T>) t.getClass(), url);
 			}
-		} catch (ServiceConfigurationError | NoClassDefFoundError e) {
+		} catch (ServiceConfigurationError | NoClassDefFoundError | ClassInstantiationException e) {
 			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
 		} 
 	}
@@ -216,7 +173,7 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#register()
 	 */
 	@Override
-	public void register()
+	public void registerBuiltIn()
 	{
 		if (BoltJar.isClassInJar(target)) {
 			register(BoltJar.getJarForClass(target).getParentFile());

@@ -56,13 +56,13 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 			BoltClassloaderPluginLoader<? extends P> classpathLoader = classpathLoader(plugins);
 			BoltDirectoryManager<? extends P> classpathManager = classloaderDirectoryManager();
 			
-			if (classpathLoader != null) {
+			if (classpathLoader != null && classpathManager != null) {
 				//load plugins from local
-				classpathLoader.register();
+				classpathLoader.registerBuiltIn();
 				
 				//load plugins from the application plugin dir(s)
 				classpathManager.ensure();
-				classpathLoader.register(directory);
+				classpathLoader.scanDirectory(directory);
 			}
 							
 		} catch (ClassInheritanceException e) {
@@ -72,7 +72,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 	
 	private void loadFilesystem() {
 		BoltFilesytstemPluginLoader<? extends P> filesystemLoader = filesystemLoader(plugins);
-		BoltDirectoryManager<? extends P> filesystemManager = filesystemDirectoryManager();
+		BoltDirectoryManager<P> filesystemManager = filesystemDirectoryManager();
 		if (filesystemLoader != null && filesystemManager != null) {
 			filesystemManager.ensure();
 			filesystemLoader.scanDirectory(directory);

@@ -36,11 +36,8 @@ public class IBoltConfigPluginLoader<T extends BoltConfigPlugin> implements Bolt
 		
 	@Override
 	public void registerURL(URL url) {
-		System.out.println(url);
 		IBoltConfigPluginPrototype<T> plugin = new IBoltConfigPluginPrototype<T>(builder, pluginClass, url);
-		System.out.println(plugin);
 		plugins.addPlugin(plugin);
-		System.out.println(plugins.size());
 	}
 	
 	

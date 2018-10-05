@@ -24,7 +24,6 @@ public class BoltFilesystemDirectoryManager<P extends BoltPlugin> extends BoltDi
 		//Any plugins in this set after loading will have come from this jar
 		BoltPluginSet<P> dummySet = new IBoltPluginSet<>();
 		BoltFilesytstemPluginLoader<? extends P> loader = parent.filesystemLoader(dummySet);
-		System.out.println(loader);
 		if (loader == null) {
 			return dummySet;
 		}
