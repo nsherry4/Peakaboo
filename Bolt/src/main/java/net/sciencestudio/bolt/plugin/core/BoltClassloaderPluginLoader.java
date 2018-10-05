@@ -8,9 +8,9 @@ import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 
 public interface BoltClassloaderPluginLoader<T extends BoltJavaPlugin> {
 
-	BoltPluginController<T> registerPlugin(Class<? extends T> loadedClass) throws ClassInstantiationException;
+	BoltPluginPrototype<T> registerPlugin(Class<? extends T> loadedClass) throws ClassInstantiationException;
 
-	BoltPluginController<T> registerPlugin(Class<? extends T> loadedClass, URL source)
+	BoltPluginPrototype<T> registerPlugin(Class<? extends T> loadedClass, URL source)
 			throws ClassInstantiationException;
 
 	void register(File file);

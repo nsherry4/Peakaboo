@@ -8,20 +8,19 @@ import java.util.function.Function;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 
-public class IBoltConfigPluginController<T extends BoltConfigPlugin> implements BoltPluginController<T> {
+public class IBoltConfigPluginPrototype<T extends BoltConfigPlugin> implements BoltPluginPrototype<T> {
 
 	private Function<String, T> builder;
 	private Class<T> pluginClass;
 	private T reference;
 	private URL source;
 	
-	public IBoltConfigPluginController(Function<String, T> builder, Class<T> pluginClass, URL source) {
+	public IBoltConfigPluginPrototype(Function<String, T> builder, Class<T> pluginClass, URL source) {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
 		this.source = source;
-		System.out.println(source);
 		this.reference = create();
 	}
 	

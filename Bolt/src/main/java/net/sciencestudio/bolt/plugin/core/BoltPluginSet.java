@@ -1,5 +1,6 @@
 package net.sciencestudio.bolt.plugin.core;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,10 +14,10 @@ import java.util.stream.Collectors;
 public interface BoltPluginSet<T extends BoltPlugin> {
 
 	
-	List<BoltPluginController<? extends T>> getAll();
+	List<BoltPluginPrototype<? extends T>> getAll();
 
 	
-	BoltPluginController<? extends T> getByUUID(String uuid);
+	BoltPluginPrototype<? extends T> getByUUID(String uuid);
 	
 	
 	default boolean hasUUID(String uuid) {
@@ -27,7 +28,8 @@ public interface BoltPluginSet<T extends BoltPlugin> {
 	List<T> newInstances();
 	
 	
-	void addPlugin(BoltPluginController<? extends T> plugin);
+	void addPlugin(BoltPluginPrototype<? extends T> plugin);
+
 	
 	default int size() {
 		return getAll().size();

@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 
 public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 
-	private ArrayList<BoltPluginController<? extends T>> plugins = new ArrayList<>();
+	private ArrayList<BoltPluginPrototype<? extends T>> plugins = new ArrayList<>();
 	
 	@Override
-	public List<BoltPluginController<? extends T>> getAll() {
+	public List<BoltPluginPrototype<? extends T>> getAll() {
 		return new ArrayList<>(plugins);
 	}
 
@@ -22,7 +22,7 @@ public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 	}
 
 	@Override
-	public void addPlugin(BoltPluginController<? extends T> plugin) {
+	public void addPlugin(BoltPluginPrototype<? extends T> plugin) {
 		if (plugins.contains(plugin)) {
 			return;
 		}
@@ -30,7 +30,7 @@ public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 		if (this.hasUUID(uuid)) {
 			//there is already a plugin with the same UUID.
 			//we have to choose which of these to load
-			BoltPluginController<? extends T> existingPlugin = this.getByUUID(uuid);
+			BoltPluginPrototype<? extends T> existingPlugin = this.getByUUID(uuid);
 			
 			if (plugin.isUpgradeFor(existingPlugin)) {
 				plugins.remove(existingPlugin);
@@ -44,8 +44,8 @@ public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 	}
 
 	@Override
-	public BoltPluginController<? extends T> getByUUID(String uuid) {
-		for (BoltPluginController<? extends T> plugin : plugins) {
+	public BoltPluginPrototype<? extends T> getByUUID(String uuid) {
+		for (BoltPluginPrototype<? extends T> plugin : plugins) {
 			if (plugin.getUUID().equals(uuid)) {
 				return plugin;
 			}

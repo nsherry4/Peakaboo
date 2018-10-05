@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.exceptions.BoltException;
 
@@ -51,7 +51,7 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#registerPlugin(java.lang.Class)
 	 */
 	@Override
-	public BoltPluginController<T>  registerPlugin(Class<? extends T> loadedClass) throws ClassInstantiationException
+	public BoltPluginPrototype<T>  registerPlugin(Class<? extends T> loadedClass) throws ClassInstantiationException
 	{
 		URL url = null;
 		try {
@@ -65,14 +65,14 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 	 * @see net.sciencestudio.bolt.plugin.java.BoltJavaPluginLoader#registerPlugin(java.lang.Class, java.net.URL)
 	 */
 	@Override
-	public BoltPluginController<T> registerPlugin(Class<? extends T> loadedClass, URL source) throws ClassInstantiationException
+	public BoltPluginPrototype<T> registerPlugin(Class<? extends T> loadedClass, URL source) throws ClassInstantiationException
 	{
 		
 		try 
 		{
 			if (!test(loadedClass)) { return null; } 
 			
-			BoltPluginController<T> plugin = new IBoltJavaPluginController<>(target, loadedClass, source);
+			BoltPluginPrototype<T> plugin = new IBoltJavaPluginPrototype<>(target, loadedClass, source);
 			
 			if (plugin.isEnabled()) {
 				plugins.addPlugin(plugin);

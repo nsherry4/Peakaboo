@@ -8,7 +8,7 @@ import java.net.URL;
  *
  * @param <T>
  */
-public interface BoltPluginController<T extends BoltPlugin> {
+public interface BoltPluginPrototype<T extends BoltPlugin> {
 
 	Class<? extends T> getImplementationClass();
 
@@ -56,7 +56,7 @@ public interface BoltPluginController<T extends BoltPlugin> {
 	 * @param other the plugin to test against
 	 * @return true if this plugin's version is newer or the same, false if this plugin version is older, or if the UUIDs don't match
 	 */
-	default boolean isUpgradeFor(BoltPluginController<?> other) {
+	default boolean isUpgradeFor(BoltPluginPrototype<?> other) {
 		if (getUUID() != other.getUUID()) {
 			return false;
 		}

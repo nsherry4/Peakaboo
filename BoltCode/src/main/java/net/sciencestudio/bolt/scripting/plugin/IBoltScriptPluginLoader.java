@@ -37,7 +37,7 @@ public class IBoltScriptPluginLoader<T extends BoltScriptPlugin> implements Bolt
 
 	@Override
 	public void registerURL(URL url) {
-		IBoltScriptPluginController<T> plugin = new IBoltScriptPluginController<>(url, runner);
+		IBoltScriptPluginPrototype<T> plugin = new IBoltScriptPluginPrototype<>(url, runner);
 		plugins.addPlugin(plugin);
 	}
 	

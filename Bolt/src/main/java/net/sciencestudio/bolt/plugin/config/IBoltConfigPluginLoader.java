@@ -27,24 +27,20 @@ public class IBoltConfigPluginLoader<T extends BoltConfigPlugin> implements Bolt
 	}
 	
 	@Override
-	public void scanDirectory(File directory) {
-		System.out.println(directory);
-		
+	public void scanDirectory(File directory) {	
 		for (File file : directory.listFiles()) {
 			if (! file.getName().endsWith(ext)) continue;
-			try {
-				registerURL(file.toURI().toURL());
-			} catch (MalformedURLException e) {
-				Bolt.logger().log(Level.WARNING, "Failed to load plugin " + file.toString(), e);
-			}
+			register(file);
 		}
 	}
-
-
+		
 	@Override
 	public void registerURL(URL url) {
-		IBoltConfigPluginController<T> plugin = new IBoltConfigPluginController<T>(builder, pluginClass, url);
+		System.out.println(url);
+		IBoltConfigPluginPrototype<T> plugin = new IBoltConfigPluginPrototype<T>(builder, pluginClass, url);
+		System.out.println(plugin);
 		plugins.addPlugin(plugin);
+		System.out.println(plugins.size());
 	}
 	
 	
