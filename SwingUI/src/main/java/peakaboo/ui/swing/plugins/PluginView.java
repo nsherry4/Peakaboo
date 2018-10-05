@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -12,6 +13,18 @@ import org.apache.batik.ext.swing.GridBagConstants;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import peakaboo.datasink.plugin.DataSinkPluginManager;
+import peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import peakaboo.datasource.plugin.DataSourcePlugin;
+import peakaboo.datasource.plugin.DataSourcePluginManager;
+import peakaboo.datasource.plugin.JavaDataSourcePlugin;
+import peakaboo.filter.model.FilterPluginManager;
+import peakaboo.filter.plugins.JavaFilterPlugin;
+import peakaboo.mapping.calibration.CalibrationPluginManager;
+import peakaboo.mapping.calibration.CalibrationReference;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
+import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 import swidget.widgets.properties.PropertyViewPanel;
@@ -47,6 +60,7 @@ public class PluginView extends JPanel {
 		properties.put("Source", source);
 		properties.put("UUID", plugin.getUUID());
 		PropertyViewPanel propertyPanel = new PropertyViewPanel(properties, plugin.getName(), true);
+		propertyPanel.setBadge(getIcon(plugin));
 		
 		
 		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription(), 450));
@@ -61,4 +75,26 @@ public class PluginView extends JPanel {
 		
 	}
 
+	private ImageIcon getIcon(BoltPluginPrototype<? extends BoltPlugin> plugin) {
+		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
+		
+		if (pluginBaseClass == JavaDataSourcePlugin.class) {
+			return StockIcon.DOCUMENT_IMPORT.toImageIcon(IconSize.ICON);
+		}
+		
+		if (pluginBaseClass == JavaDataSinkPlugin.class) {
+			return StockIcon.DOCUMENT_EXPORT.toImageIcon(IconSize.ICON);
+		}
+		
+		if (pluginBaseClass == JavaFilterPlugin.class) {
+			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.ICON);
+		}
+		
+		if (pluginBaseClass == CalibrationReference.class) {
+			return IconFactory.getImageIcon("calibration", IconSize.ICON);
+		}
+		
+		return null;
+	}
+	
 }

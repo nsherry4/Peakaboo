@@ -361,7 +361,7 @@ public class PluginsOverview extends JPanel {
 			
 		tree = new JTree(buildTreeModel());
 
-		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+		DefaultTreeCellRenderer renderer = new PluginTreeRenderer();
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
 		renderer.setBorder(Spacing.bSmall());
 		tree.setCellRenderer(renderer);
