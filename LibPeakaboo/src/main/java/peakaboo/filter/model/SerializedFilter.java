@@ -2,7 +2,7 @@ package peakaboo.filter.model;
 
 import java.util.List;
 
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import peakaboo.filter.plugins.FilterPlugin;
 
 /**
@@ -54,7 +54,7 @@ public class SerializedFilter {
 	public Filter getFilter() {
 		if (filter != null) { return filter; }
 			
-		for (BoltPluginController<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
 				filter = plugin.create();
 				filter.initialize();

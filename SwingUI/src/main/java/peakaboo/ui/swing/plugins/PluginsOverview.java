@@ -30,8 +30,9 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
+import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
@@ -112,7 +113,7 @@ public class PluginsOverview extends JPanel {
 		
 		new FileDrop(body, files -> {
 			for (File file : files) {
-				addJar(file);
+				addPluginFile(file);
 			}
 		});
 
@@ -125,37 +126,37 @@ public class PluginsOverview extends JPanel {
 				return;
 			}
 			
-			addJar(result.get());
-			
+			addPluginFile(result.get());
+
 		});
 	}
 	
-	private boolean isRemovable(BoltPluginController<? extends BoltPlugin> plugin) {
+	private boolean isRemovable(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		return plugin.getSource() != null;
 	}
 	
-	private BoltPluginController<? extends BoltPlugin> selectedPlugin() {
+	private BoltPluginPrototype<? extends BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
 		if (node == null) {
 			return null;
 		}
-		if (!(node.getUserObject() instanceof BoltPluginController<?>)) {
+		if (!(node.getUserObject() instanceof BoltPluginPrototype<?>)) {
 			return null;
 		}
 		
-		BoltPluginController<? extends BoltPlugin> plugin = (BoltPluginController<? extends BoltPlugin>) node.getUserObject();
+		BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>) node.getUserObject();
 		return plugin;
 	}
 	
 	private void removeSelected() {	
-		BoltPluginController<? extends BoltPlugin> plugin = selectedPlugin();
+		BoltPluginPrototype<? extends BoltPlugin> plugin = selectedPlugin();
 		if (plugin != null) {
 			remove(plugin);	
 		}
 	}
 	
-	private void remove(BoltPluginController<? extends BoltPlugin> plugin) {
+	private void remove(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		/*
 		 * This is a little tricky. There's no rule that says that each plugin is in 
 		 * it's own jar file. We need to confirm with the user that they want to 
@@ -171,11 +172,11 @@ public class PluginsOverview extends JPanel {
 			return;
 		}
 		
-		File jar;
+		File file;
 		BoltPluginSet<? extends BoltPlugin> set;
 		try {
-			jar = new File(plugin.getSource().toURI());
-			set = manager.pluginsInJar(jar);
+			file = new File(plugin.getSource().toURI());
+			set = manager.pluginsInFile(file);
 		} catch (URISyntaxException e) {
 			PeakabooLog.get().log(Level.WARNING, "Cannot lookup jar for plugin", e);
 			return;
@@ -191,7 +192,7 @@ public class PluginsOverview extends JPanel {
 				MessageType.QUESTION)
 			.addRight(
 				new ImageButton("Delete").withAction(() -> {
-					manager.removeJar(jar);
+					manager.removeFile(file);
 					this.reload();
 				}).withStateCritical()
 				)
@@ -206,8 +207,8 @@ public class PluginsOverview extends JPanel {
 		buff.append("<ul>");
 		for (Object o : stuff) {
 			String name = o.toString();
-			if (o instanceof BoltPluginController<?>) {
-				BoltPluginController<?> plugin = (BoltPluginController<?>) o;
+			if (o instanceof BoltPluginPrototype<?>) {
+				BoltPluginPrototype<?> plugin = (BoltPluginPrototype<?>) o;
 				name = plugin.getName() + " (v" + plugin.getVersion() + ")";
 			}
 			buff.append("<li>" + name + "</li>");
@@ -216,7 +217,7 @@ public class PluginsOverview extends JPanel {
 		return buff.toString();
 	}
 	
-	private BoltPluginManager<? extends BoltPlugin> managerForPlugin(BoltPluginController<? extends BoltPlugin> plugin) {
+	private BoltPluginManager<? extends BoltPlugin> managerForPlugin(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == JavaDataSourcePlugin.class) {
@@ -231,18 +232,27 @@ public class PluginsOverview extends JPanel {
 			return FilterPluginManager.SYSTEM;
 		}
 		
+		if (pluginBaseClass == CalibrationReference.class) {
+			return CalibrationPluginManager.SYSTEM;
+		}
+		
 		return null;
 		
 	}
 	
-	private void addJar(File jar) {
+
+	/**
+	 * Add a jar file containing plugins
+	 */
+	private void addPluginFile(File file) {
 		
-		boolean added = false;
+		boolean handled = false;
 		
 		try {
-			added |= addJarToManager(jar, DataSourcePluginManager.SYSTEM);
-			added |= addJarToManager(jar, DataSinkPluginManager.SYSTEM);
-			added |= addJarToManager(jar, FilterPluginManager.SYSTEM);
+			handled |= addFileToManager(file, DataSourcePluginManager.SYSTEM);
+			handled |= addFileToManager(file, DataSinkPluginManager.SYSTEM);
+			handled |= addFileToManager(file, FilterPluginManager.SYSTEM);
+			handled |= addFileToManager(file, CalibrationPluginManager.SYSTEM);
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
@@ -250,10 +260,10 @@ public class PluginsOverview extends JPanel {
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
 					MessageType.ERROR).showIn(parent);
-			added = true;
+			handled = true;
 		}
 		
-		if (!added) {
+		if (!handled) {
 			new LayerDialog(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
@@ -261,24 +271,19 @@ public class PluginsOverview extends JPanel {
 		}
 		
 		reload();
-		
-		
 
 	}
 	
-	private boolean addJarToManager(File jar, BoltPluginManager<? extends BoltPlugin> manager) throws BoltImportException {
+	/**
+	 * Try adding a jar to a specific plugin manager. Return true if the given manager accepted the jar
+	 */
+	private boolean addFileToManager(File file, BoltPluginManager<? extends BoltPlugin> manager) throws BoltImportException {
 		
-		if (!manager.jarContainsPlugins(jar)) {
+		if (!manager.fileContainsPlugins(file)) {
 			return false;
 		}
-		
-		Optional<File> upgradeTarget = manager.jarUpgradeTarget(jar);
-		//looks like this jar is an upgrade for an existing jar
-		if (upgradeTarget.isPresent()) {
-			manager.removeJar(upgradeTarget.get());
-		}
-		
-		BoltPluginSet<? extends BoltPlugin> plugins = manager.importJar(jar);
+
+		BoltPluginSet<? extends BoltPlugin> plugins = manager.importOrUpgradeFile(file);
 		
 		this.reload();
 		new LayerDialog(
@@ -296,6 +301,7 @@ public class PluginsOverview extends JPanel {
 		DataSourcePluginManager.SYSTEM.reload();
 		DataSinkPluginManager.SYSTEM.reload();
 		FilterPluginManager.SYSTEM.reload();
+		CalibrationPluginManager.SYSTEM.reload();
 		tree.setModel(buildTreeModel());
 	}
 	
@@ -320,28 +326,28 @@ public class PluginsOverview extends JPanel {
 		
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode("Data Sources");
 		plugins.add(sourcesNode);
-		for (BoltPluginController<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sourcesNode.add(node);
 		}
 		
 		DefaultMutableTreeNode sinksNode = new DefaultMutableTreeNode("Data Sinks");
 		plugins.add(sinksNode);
-		for (BoltPluginController<? extends DataSinkPlugin> source :  DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends DataSinkPlugin> source :  DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sinksNode.add(node);
 		}
 		
 		DefaultMutableTreeNode filtersNode = new DefaultMutableTreeNode("Filters");
 		plugins.add(filtersNode);
-		for (BoltPluginController<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			filtersNode.add(node);
 		}
 		
 		DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode("Calibration References");
 		plugins.add(calibrationsNode);
-		for (BoltPluginController<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			calibrationsNode.add(node);
 		}
@@ -370,7 +376,7 @@ public class PluginsOverview extends JPanel {
 				details.add(new JPanel(), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else {
-				details.add(new PluginView((BoltPluginController<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
+				details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
 				remove.setEnabled(isRemovable(selectedPlugin()));
 			}
 			details.revalidate();

@@ -12,7 +12,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterPluginManager;
@@ -74,7 +74,7 @@ class FilterSelectionList extends ClearPanel
 
 			public boolean isLeaf(Object node)
 			{
-				if (node instanceof BoltPluginController<?>) {
+				if (node instanceof BoltPluginPrototype<?>) {
 					return true;
 				}
 				return false;
@@ -96,7 +96,7 @@ class FilterSelectionList extends ClearPanel
 
 					ft = (FilterType) parent;
 					@SuppressWarnings("unchecked")
-					BoltPluginController<? extends FilterPlugin> plugin = (BoltPluginController<? extends FilterPlugin>) child;
+					BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
 					
 					return FilterPluginManager.SYSTEM.getPlugins().getAll().indexOf(plugin);
 					
@@ -119,7 +119,7 @@ class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (BoltPluginController<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 					}
 					return typeCount;
@@ -141,7 +141,7 @@ class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (BoltPluginController<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 						if (typeCount == index) return plugin;
 					}
@@ -202,9 +202,9 @@ class FilterSelectionList extends ClearPanel
 				
 				Object leaf = path.getLastPathComponent();
 
-				if (leaf instanceof BoltPluginController<?>) {
+				if (leaf instanceof BoltPluginPrototype<?>) {
 					@SuppressWarnings("unchecked")
-					BoltPluginController<? extends FilterPlugin> plugin = (BoltPluginController<? extends FilterPlugin>) leaf;
+					BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) leaf;
 					Filter filter = plugin.create();
 					filter.initialize();
 					controller.addFilter(filter);

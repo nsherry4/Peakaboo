@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import org.apache.batik.ext.swing.GridBagConstants;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 import swidget.widgets.properties.PropertyViewPanel;
@@ -20,7 +20,7 @@ public class PluginView extends JPanel {
 	
 	private JLabel description;
 	
-	public PluginView(BoltPluginController<? extends BoltPlugin> plugin) {
+	public PluginView(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		super(new GridBagLayout());
 		setBorder(Spacing.bHuge());
 

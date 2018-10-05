@@ -5,6 +5,9 @@ import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
+import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltFilesystemDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
@@ -33,7 +36,7 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 	protected void loadCustomPlugins() {
 		try {
 			
-			BoltClassloaderPluginLoader<JavaDataSinkPlugin> javaLoader = javaLoader(getPlugins());
+			BoltClassloaderPluginLoader<JavaDataSinkPlugin> javaLoader = classpathLoader(getPlugins());
 			
 			//register built-in plugins
 			javaLoader.registerPlugin(CSV.class);
@@ -47,7 +50,7 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 	}
 
 	@Override
-	protected BoltClassloaderPluginLoader<JavaDataSinkPlugin> javaLoader(BoltPluginSet<DataSinkPlugin> pluginset) throws ClassInheritanceException {
+	protected BoltClassloaderPluginLoader<JavaDataSinkPlugin> classpathLoader(BoltPluginSet<DataSinkPlugin> pluginset) throws ClassInheritanceException {
 		return new IBoltJavaPluginLoader<JavaDataSinkPlugin>(pluginset, JavaDataSinkPlugin.class);
 	}
 
@@ -55,8 +58,18 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 	protected BoltFilesytstemPluginLoader<? extends DataSinkPlugin> filesystemLoader(BoltPluginSet<DataSinkPlugin> pluginset) {
 		return null;
 	}
-	
 
+
+	@Override
+	protected BoltDirectoryManager<DataSinkPlugin> classloaderDirectoryManager() {
+		return new BoltClassloaderDirectoryManager<>(this, getDirectory());
+	}
+
+	@Override
+	protected BoltDirectoryManager<DataSinkPlugin> filesystemDirectoryManager() {
+		return null;
+	}
+	
 
 		
 }

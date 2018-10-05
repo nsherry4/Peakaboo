@@ -10,7 +10,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import cyclops.util.Mutable;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasink.plugin.DataSinkPlugin;
@@ -61,7 +61,7 @@ public class PlotMenuMain extends JPopupMenu {
 		
 		exportSinks = new JMenu("Raw Data");
 		
-		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
 			exportSinks.add(PlotMenuUtils.createMenuItem(plot,
 					plugin.getName(), null, null,
 					e -> plot.actionExportData(plugin.create()),

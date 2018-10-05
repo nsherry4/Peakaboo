@@ -4,8 +4,11 @@ import java.io.File;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
+import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltFilesystemDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
@@ -36,13 +39,13 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 		;
 		try {
 						
-			BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader = javaLoader(getPlugins());
+			BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader = classpathLoader(getPlugins());
 					
 			//register built-in plugins
 			javaLoader.registerPlugin(PlainText.class);
 
 			//Log info for plugins
-			for (BoltPluginController<? extends DataSourcePlugin> plugin : getPlugins().getAll()) {
+			for (BoltPluginPrototype<? extends DataSourcePlugin> plugin : getPlugins().getAll()) {
 				PeakabooLog.get().info("Found DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
 			}
 			
@@ -57,8 +60,8 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	
 	public synchronized void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
 		try {
-			BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader = javaLoader(getPlugins());
-			BoltPluginController<JavaDataSourcePlugin> plugin = javaLoader.registerPlugin(clazz);
+			BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader = classpathLoader(getPlugins());
+			BoltPluginPrototype<JavaDataSourcePlugin> plugin = javaLoader.registerPlugin(clazz);
 			if (plugin != null) {
 				PeakabooLog.get().info("Registered DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
 			}
@@ -69,12 +72,22 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	}
 
 	@Override
-	protected BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader(BoltPluginSet<DataSourcePlugin> pluginset) throws ClassInheritanceException {
+	protected BoltClassloaderPluginLoader<JavaDataSourcePlugin> classpathLoader(BoltPluginSet<DataSourcePlugin> pluginset) throws ClassInheritanceException {
 		return new IBoltJavaPluginLoader<JavaDataSourcePlugin>(pluginset, JavaDataSourcePlugin.class);
 	}
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends DataSourcePlugin> filesystemLoader(BoltPluginSet<DataSourcePlugin> pluginset) {
+		return null;
+	}
+	
+	@Override
+	protected BoltDirectoryManager<DataSourcePlugin> classloaderDirectoryManager() {
+		return new BoltClassloaderDirectoryManager<>(this, getDirectory());
+	}
+
+	@Override
+	protected BoltDirectoryManager<DataSourcePlugin> filesystemDirectoryManager() {
 		return null;
 	}
 	

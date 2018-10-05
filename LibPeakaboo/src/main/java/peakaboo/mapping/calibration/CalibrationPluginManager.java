@@ -4,11 +4,12 @@ import java.io.File;
 
 import net.sciencestudio.bolt.plugin.config.IBoltConfigPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
+import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltFilesystemDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
-import peakaboo.curvefit.peak.table.PeakTable;
 
 public class CalibrationPluginManager extends BoltPluginManager<CalibrationReference> {
 
@@ -37,7 +38,7 @@ public class CalibrationPluginManager extends BoltPluginManager<CalibrationRefer
 	}
 
 	@Override
-	protected BoltClassloaderPluginLoader<? extends CalibrationReference> javaLoader(
+	protected BoltClassloaderPluginLoader<? extends CalibrationReference> classpathLoader(
 			BoltPluginSet<CalibrationReference> pluginset) throws ClassInheritanceException {
 		// TODO Auto-generated method stub
 		return null;
@@ -47,7 +48,17 @@ public class CalibrationPluginManager extends BoltPluginManager<CalibrationRefer
 	protected BoltFilesytstemPluginLoader<? extends CalibrationReference> filesystemLoader(
 			BoltPluginSet<CalibrationReference> pluginset) {
 		// TODO Auto-generated method stub
-		return new IBoltConfigPluginLoader<CalibrationReference>(getPlugins(), CalibrationReference.class, "yaml", CalibrationReference::load);
+		return new IBoltConfigPluginLoader<CalibrationReference>(pluginset, CalibrationReference.class, "yaml", CalibrationReference::load);
+	}
+	
+	@Override
+	protected BoltDirectoryManager<CalibrationReference> classloaderDirectoryManager() {
+		return null;
+	}
+
+	@Override
+	protected BoltDirectoryManager<CalibrationReference> filesystemDirectoryManager() {
+		return new BoltFilesystemDirectoryManager<>(this, getDirectory());
 	}
 
 }

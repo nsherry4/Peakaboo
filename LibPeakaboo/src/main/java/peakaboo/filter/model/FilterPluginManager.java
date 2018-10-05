@@ -4,8 +4,11 @@ import java.io.File;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
+import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltFilesystemDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
@@ -55,7 +58,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		
 		
 		try {
-			BoltClassloaderPluginLoader<JavaFilterPlugin> newPluginLoader = javaLoader(getPlugins());
+			BoltClassloaderPluginLoader<JavaFilterPlugin> newPluginLoader = classpathLoader(getPlugins());
 			
 
 			//register built-in plugins
@@ -91,8 +94,8 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	
 	public synchronized void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
 		try {
-			BoltClassloaderPluginLoader<JavaFilterPlugin> javaLoader = javaLoader(getPlugins());
-			BoltPluginController<JavaFilterPlugin> plugin = javaLoader.registerPlugin(clazz);
+			BoltClassloaderPluginLoader<JavaFilterPlugin> javaLoader = classpathLoader(getPlugins());
+			BoltPluginPrototype<JavaFilterPlugin> plugin = javaLoader.registerPlugin(clazz);
 			if (plugin != null) {
 				PeakabooLog.get().info("Registered Filter Plugin " + plugin.getName() + " from " + plugin.getSource());
 			}
@@ -103,12 +106,22 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	}
 
 	@Override
-	protected BoltClassloaderPluginLoader<JavaFilterPlugin> javaLoader(BoltPluginSet<FilterPlugin> pluginset) throws ClassInheritanceException {
+	protected BoltClassloaderPluginLoader<JavaFilterPlugin> classpathLoader(BoltPluginSet<FilterPlugin> pluginset) throws ClassInheritanceException {
 		return new IBoltJavaPluginLoader<JavaFilterPlugin>(pluginset, JavaFilterPlugin.class);
 	}
 
 	@Override
 	protected BoltFilesytstemPluginLoader<? extends FilterPlugin> filesystemLoader(BoltPluginSet<FilterPlugin> pluginset) {
+		return null;
+	}
+	
+	@Override
+	protected BoltDirectoryManager<FilterPlugin> classloaderDirectoryManager() {
+		return new BoltClassloaderDirectoryManager<>(this, getDirectory());
+	}
+
+	@Override
+	protected BoltDirectoryManager<FilterPlugin> filesystemDirectoryManager() {
 		return null;
 	}
 	
