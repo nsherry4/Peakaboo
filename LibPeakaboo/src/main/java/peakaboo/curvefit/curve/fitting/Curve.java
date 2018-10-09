@@ -50,7 +50,7 @@ public class Curve
 	private static final float		DEFAULT_RANGE_MULT = 0.5f; //HWHM is default significant area
 	private float					rangeMultiplier;
 	
-	//Areas where the curve is strong enough that we need to consider it.
+	//Areas (in channels) where the curve is strong enough that we need to consider it.
 	private RangeSet				intenseRanges;
 	
 	//how large a footprint this curve has, used in scoring fittings
@@ -151,7 +151,10 @@ public class Curve
 		
 	}
 	
-
+	/**
+	 * Returns a RangeSet containing the channels for which this Curve is intense or
+	 * significant.
+	 */
 	public RangeSet getIntenseRanges() {
 		return intenseRanges;
 	}
@@ -186,9 +189,11 @@ public class Curve
 
 			start = calibration.channelFromEnergy(mean - range);
 			stop = calibration.channelFromEnergy(mean + range);
-			if (start < 0) start = 0;
-			if (stop > calibration.getDataWidth() - 1) stop = calibration.getDataWidth() - 1;
-			if (start > calibration.getDataWidth() - 1) start = calibration.getDataWidth() - 1;
+			int max = calibration.getDataWidth() - 1;
+			int min = 0;
+			if (stop < min || start > max) { continue; }
+			if (start < min) start = min;
+			if (stop > max) stop = max;
 
 			baseSize += stop - start + 1;
 			

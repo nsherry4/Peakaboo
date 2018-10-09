@@ -277,6 +277,11 @@ public class FittingTitlePainter extends PlotPainter
 		
 		float centreChannel = calibration.fractionalChannelFromEnergy(t.energyValue);
 		int endChannel = calibration.channelFromEnergy(t.energyValue);
+		/*
+		 * if this is out of range of the dataset, just cram it into the edges of the plot
+		 */
+		if (endChannel < 0) { endChannel = 0; }
+		if (endChannel >= p.originalHeights.size()) { endChannel = p.originalHeights.size()-1; }
 		
 		float xPeak = centreChannel * channelSize;
 		float xLabel = ((label.position.x.start + label.position.x.end) / 2f) * channelSize;
