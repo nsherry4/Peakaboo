@@ -6,6 +6,7 @@ import java.util.List;
 import cyclops.Coord;
 import cyclops.SISize;
 import peakaboo.display.map.modes.MapDisplayMode;
+import peakaboo.mapping.calibration.CalibrationProfile;
 
 public class MapRenderSettings {
 
@@ -37,6 +38,8 @@ public class MapRenderSettings {
 	public String spectrumTitle = "";
 	
 	public List<Integer> selectedPoints = new ArrayList<>();
+	
+	public CalibrationProfile calibrationProfile = new CalibrationProfile();
 	
 	
 }

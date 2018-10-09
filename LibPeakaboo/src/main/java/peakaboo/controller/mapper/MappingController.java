@@ -117,6 +117,7 @@ public class MappingController extends EventfulType<String>
 		settings.showSpectrum = this.display.getView().getShowSpectrum();
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
 		
+		settings.calibrationProfile = this.getSettings().getMapFittings().getCalibrationProfile();
 
 		
 		

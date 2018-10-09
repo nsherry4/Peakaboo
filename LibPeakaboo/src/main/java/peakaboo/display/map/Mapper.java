@@ -192,11 +192,11 @@ public class Mapper {
 		
 
 		if (settings.showDatasetTitle) {
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, settings.datasetTitle, null));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
 		}
 
 		if (settings.showMapTitle) {
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, settings.mapTitle));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, settings.mapTitle));
 		}
 		
 		
@@ -215,7 +215,7 @@ public class Mapper {
 			paletteList,
 
 			settings.physicalCoord,
-			settings.spectrumTitle
+			settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()
 		);
 		axisPainters.add(spectrumCoordPainter);
 
@@ -315,14 +315,14 @@ public class Mapper {
 		//if we're showing a dataset title, add a title axis painter to put a title on the top
 		if (settings.showDatasetTitle)
 		{
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, settings.datasetTitle, null));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
 		}
 
 		//if we're map title, add a title axis painter to put a title on the bottom
 		if (settings.showMapTitle)
 		{
 			String mapTitle = settings.mapTitle;
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
 		}
 		
 
@@ -342,7 +342,7 @@ public class Mapper {
 			paletteList,
 
 			settings.physicalCoord,
-			settings.spectrumTitle,
+			settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName(),
 			1,
 			settings.mode == MapDisplayMode.RATIO,
 			spectrumMarkers
@@ -460,7 +460,7 @@ public class Mapper {
 			settings.spectrumHeight,
 
 			settings.physicalCoord,
-			settings.spectrumTitle,
+			settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName(),
 
 			colours
 			
@@ -470,13 +470,13 @@ public class Mapper {
 
 		if (settings.showDatasetTitle)
 		{
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, settings.datasetTitle, null));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
 		}
 
 		if (settings.showMapTitle)
 		{
 			String mapTitle = settings.mapTitle;
-			axisPainters.add(new TitleAxisPainter(1.0f, null, null, null, mapTitle));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
 		}
 
 		axisPainters.add(spectrumCoordPainter);

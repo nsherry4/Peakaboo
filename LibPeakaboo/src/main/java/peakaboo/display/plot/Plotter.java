@@ -330,7 +330,7 @@ public class Plotter {
 		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 
 
-		axisPainters.add(new TitleAxisPainter(1.0f, "Relative Intensity", null, null, "Energy (keV)"));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, "Relative Intensity", null, null, "Energy (keV)"));
 		axisPainters.add(new TickMarkAxisPainter(
 			new Bounds<Float>(0.0f, maxIntensity),
 			new Bounds<Float>(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()),
