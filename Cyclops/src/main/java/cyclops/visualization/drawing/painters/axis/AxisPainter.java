@@ -26,7 +26,8 @@ public abstract class AxisPainter extends Painter
 
 	public static final int	FONTSIZE_TICK	= 10;
 	public static final int	FONTSIZE_TITLE	= 22;
-
+	public static final int FONTSIZE_TEXT	= 12;
+	
 	protected AxesData		axesData;
 
 
@@ -71,7 +72,7 @@ public abstract class AxisPainter extends Painter
 	{
 		float height;
 		context.save();
-		context.setFontSize(FONTSIZE_TITLE * titleScale);
+		context.setFontSize(FONTSIZE_TEXT * titleScale);
 		height = context.getFontHeight() + context.getFontLeading();
 		context.restore();
 		return height;

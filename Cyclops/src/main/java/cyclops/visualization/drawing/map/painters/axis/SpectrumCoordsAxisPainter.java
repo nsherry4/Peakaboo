@@ -52,60 +52,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	}
 
-	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
-			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided, String descriptor, int decimalPoints)
-	{
-		super(
-			drawCoords,
-			topLeftCoord,
-			topRightCoord,
-			bottomLeftCoord,
-			bottomRightCoord,
-			coordinateUnits,
-			drawSpectrum,
-			spectrumHeight,
-			realDimensionsProvided,
-			descriptor);
 
-		this.markings = null;
-		this.negativeValues = false;
-		
-		this.spectrumSteps = spectrumSteps;
-		this.colourRules = palettes;
-		
-		this.decimalPoints = decimalPoints;
-
-	}
-	
-	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
-			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided, String descriptor, int decimalPoints, boolean negativeValues)
-	{
-		super(
-			drawCoords,
-			topLeftCoord,
-			topRightCoord,
-			bottomLeftCoord,
-			bottomRightCoord,
-			coordinateUnits,
-			drawSpectrum,
-			spectrumHeight,
-			realDimensionsProvided,
-			descriptor);
-
-		this.markings = null;
-		this.negativeValues = negativeValues;
-		
-		this.spectrumSteps = spectrumSteps;
-		this.colourRules = palettes;
-		
-		this.decimalPoints = decimalPoints;
-		
-	}
-	
 	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
@@ -170,15 +117,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 		if (markings == null)
 		{
-			
-			//float maxIntensityFloat = p.dr.maxYIntensity;
-			String maxIntensity;
-			//if (maxIntensityFloat < 1)
-			//{
-				maxIntensity = SigDigits.roundFloatTo(p.dr.maxYIntensity, decimalPoints);
-			//} else  {
-			//	maxIntensity = String.valueOf((int) p.dr.maxYIntensity);
-			//}
+			String maxIntensity = SigDigits.roundFloatTo(p.dr.maxYIntensity, decimalPoints);
 			String minIntensity = negativeValues ? "-" + maxIntensity : "0";
 
 			while (width > 0.0 && fontSize > 1.0)
@@ -198,22 +137,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		}
 		else
 		{
-			
-
-			//concatenate the list of strings to display so we can check the width of the total string
-			/*
-			String longestMarking = foldr(map(markings, Functions.<Float, String>second()), new FnFold<String, String>() {
-
-				public String f(String s1, String s2)
-				{
-					Float l1 = p.context.getTextWidth(s1);
-					Float l2 = p.context.getTextWidth(s2);
-					if (l1 > l2) return s1;
-					return s2;
-				}}
-			);
-			*/
-			
+					
 			
 			String longestMarking = markings.stream().map(e -> e.second).reduce("", (s1, s2) -> {
 				Float l1 = p.context.getTextWidth(s1);

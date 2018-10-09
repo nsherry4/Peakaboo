@@ -20,7 +20,7 @@ public class AxisFactory
 
 		List<AxisPainter> painters = new ArrayList<AxisPainter>();
 
-		painters.add(new TitleAxisPainter(1.0f, titleX, null, null, titleY));
+		painters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, titleX, null, null, titleY));
 		
 		painters.add(new TickMarkAxisPainter(rightValueBounds, bottomValueBounds, topValueBounds, leftValueBounds,
 				yLeftLog, yRightLog));

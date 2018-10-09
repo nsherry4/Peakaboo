@@ -16,6 +16,9 @@ public class TitleAxisPainter extends AxisPainter
 	private String leftTitle, rightTitle, topTitle, bottomTitle;
 	private float titleScale;
 	
+	public static float SCALE_TITLE = 1.83f;
+	public static float SCALE_TEXT = 1.0f;
+	
 	public TitleAxisPainter(float titleScale, String leftTitle, String rightTitle, String topTitle, String bottomTitle)
 	{
 		
@@ -34,7 +37,6 @@ public class TitleAxisPainter extends AxisPainter
 	public void drawElement(PainterData p)
 	{
 		Pair<Float, Float> otherAxis;
-
 	
 		/*==============================================
 		 * X Axis
@@ -54,11 +56,11 @@ public class TitleAxisPainter extends AxisPainter
 				
 				titleFitting = 1.0f;
 				while (true){
-					p.context.setFontSize(FONTSIZE_TITLE * titleScale * titleFitting);
+					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(topTitle);
 					if (titleWidth < plotWidth) break;
 					titleFitting -= 0.05;
-					if (titleFitting * titleScale * FONTSIZE_TITLE <= 1.0) break;
+					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
 				centrepoint = (plotWidth - titleWidth) / 2.0f;
@@ -72,11 +74,11 @@ public class TitleAxisPainter extends AxisPainter
 	
 				titleFitting = 1.0f;
 				while (true){
-					p.context.setFontSize(FONTSIZE_TITLE * titleScale * titleFitting);
+					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(bottomTitle);
 					if (titleWidth < plotWidth) break;
 					titleFitting -= 0.05;
-					if (titleFitting * titleScale * FONTSIZE_TITLE <= 1.0) break;
+					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
 				titleWidth = p.context.getTextWidth(bottomTitle);
@@ -99,7 +101,7 @@ public class TitleAxisPainter extends AxisPainter
 				
 				p.context.setSource(0.0f, 0.0f, 0.0f);
 				p.context.useSansFont();
-				p.context.setFontSize(FONTSIZE_TITLE * titleScale);
+				p.context.setFontSize(FONTSIZE_TEXT * titleScale);
 		
 				p.context.rotate(-3.141592653589793238f / 2.0f);
 		
@@ -111,11 +113,11 @@ public class TitleAxisPainter extends AxisPainter
 				titleFitting = 1.0f;
 				
 				while (true){
-					p.context.setFontSize(FONTSIZE_TITLE * titleScale * titleFitting);
+					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(leftTitle);
 					if (titleWidth < plotHeight) break;
 					titleFitting -= 0.05;
-					if (titleFitting * titleScale * FONTSIZE_TITLE <= 1.0) break;
+					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
 				titleStart = (plotHeight + titleWidth) / 2.0f + otherAxis.first;
@@ -136,7 +138,7 @@ public class TitleAxisPainter extends AxisPainter
 				
 				p.context.setSource(0.0f, 0.0f, 0.0f);
 				p.context.useSansFont();
-				p.context.setFontSize(FONTSIZE_TITLE * titleScale);
+				p.context.setFontSize(FONTSIZE_TEXT * titleScale);
 		
 				p.context.rotate(3.141592653589793238f / 2.0f);
 		
@@ -146,11 +148,11 @@ public class TitleAxisPainter extends AxisPainter
 				
 				titleFitting = 1.0f;
 				while (true){
-					p.context.setFontSize(FONTSIZE_TITLE * titleScale * titleFitting);
+					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(rightTitle);
 					if (titleWidth < plotHeight) break;
 					titleFitting -= 0.05;
-					if (titleFitting * titleScale * FONTSIZE_TITLE <= 1.0) break;
+					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
 				titleStart = (plotHeight - titleWidth) / 2.0f + otherAxis.first + axesData.yPositionBounds.start;
@@ -170,14 +172,14 @@ public class TitleAxisPainter extends AxisPainter
 	@Override
 	public Pair<Float,Float> getAxisSizeX(PainterData p)
 	{
-		float titleHeight = getTitleFontHeight(p.context, p.dr, titleScale) + p.context.getFontLeading();
+		float titleHeight = getTitleFontHeight(p.context, p.dr, titleScale);
 		return new Pair<Float,Float>(leftTitle != null ? titleHeight : 0.0f, rightTitle != null ? titleHeight : 0.0f);
 	}
 
 	@Override
 	public Pair<Float,Float> getAxisSizeY(PainterData p)
 	{
-		float titleHeight = getTitleFontHeight(p.context, p.dr, titleScale) + p.context.getFontLeading();
+		float titleHeight = getTitleFontHeight(p.context, p.dr, titleScale);
 		return new Pair<Float,Float>(topTitle != null ? titleHeight : 0.0f, bottomTitle != null ? titleHeight : 0.0f);
 	}
 

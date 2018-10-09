@@ -91,18 +91,6 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 			position = position + p.context.getTextWidth(entry.second) + keyHeight * 2.5f;
 		}
-		
-//		entries.foldr(startX, (Pair<Color, String> entry, Float position) -> {
-//			p.context.rectangle(position, textBaseline, keyHeight, -keyHeight);
-//			p.context.setSource(entry.first);
-//			p.context.fillPreserve();
-//			p.context.setSource(Color.black);
-//			p.context.stroke();
-//
-//			p.context.writeText(entry.second, position + keyHeight * 1.5f, textBaseline);
-//
-//			return position + p.context.getTextWidth(entry.second) + keyHeight * 2.5f;
-//		});
 
 		float centerWidth = p.context.getTextWidth(descriptor);
 		p.context.writeText(descriptor, offsetX + (width - centerWidth) / 2.0f, textBaseline + textLineHeight*(drawCoords ? 2.0f : 1.25f));
