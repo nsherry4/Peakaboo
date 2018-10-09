@@ -155,6 +155,19 @@ public class RangeSet implements Serializable, Iterable<Integer>
 		
 	}
 	
+	/**
+	 * Calculates the number of distinct elements in this RangeSet. Note that
+	 * because constituent ranges may contain duplicate elements, this method takes
+	 * O(n) time.
+	 */
+	public int size() {
+		int size = 0;
+		for (int i : this) {
+			size++;
+		}
+		return size;
+	}
+	
 	//TODO: this could be faster
 	public boolean contains(int value) {
 		for (int i : this) {
