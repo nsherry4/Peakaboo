@@ -19,7 +19,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	public LegendCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, String descriptor, List<Pair<PaletteColour, String>> entries)
+			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, List<Pair<PaletteColour, String>> entries)
 	{
 		super(
 			drawCoords,
@@ -30,8 +30,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided,
-			descriptor);
+			realDimensionsProvided);
 
 		this.entries = entries;
 
@@ -81,19 +80,16 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		
 		float position = startX;
 		for (Pair<PaletteColour, String> entry : entries) {
-			p.context.rectAt(position, textBaseline, keyHeight, -keyHeight);
+			p.context.rectAt(position, textBaseline-keyHeight+p.context.getFontDescent(), keyHeight, keyHeight);
 			p.context.setSource(entry.first);
 			p.context.fillPreserve();
 			p.context.setSource(new PaletteColour(0xff000000));
 			p.context.stroke();
-
+			
 			p.context.writeText(entry.second, position + keyHeight * 1.5f, textBaseline);
 
 			position = position + p.context.getTextWidth(entry.second) + keyHeight * 2.5f;
 		}
-
-		float centerWidth = p.context.getTextWidth(descriptor);
-		p.context.writeText(descriptor, offsetX + (width - centerWidth) / 2.0f, textBaseline + textLineHeight*(drawCoords ? 2.0f : 1.25f));
 
 		p.context.restore();
 

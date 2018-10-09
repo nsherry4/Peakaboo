@@ -20,12 +20,11 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 	protected boolean				drawCoords, drawKey, realDimensionsProvided;
 	protected int					keyHeight;
-	protected String				descriptor;
 
 
 	public AbstractKeyCoordAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
-			boolean drawKey, int keyHeight, boolean realDimensionsProvided, String descriptor)
+			boolean drawKey, int keyHeight, boolean realDimensionsProvided)
 	{
 		super();
 
@@ -40,8 +39,6 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		this.keyHeight = keyHeight;
 
 		this.realDimensionsProvided = realDimensionsProvided;
-
-		this.descriptor = descriptor;
 		
 	}
 
@@ -269,11 +266,11 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		if (drawCoords)
 		{
-			return new Coord<Float>(0.0f, keyHeight * 3.0f + textHeight + textHeight);
+			return new Coord<Float>(0.0f, keyHeight * 2.0f + textHeight);
 		}
 		else
 		{
-			return new Coord<Float>(0.0f, keyHeight + textHeight + textHeight);
+			return new Coord<Float>(0.0f, keyHeight * 1.5f + textHeight);
 		}
 
 	}

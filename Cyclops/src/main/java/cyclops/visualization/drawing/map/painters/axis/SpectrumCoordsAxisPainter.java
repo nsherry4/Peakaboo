@@ -28,7 +28,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided, String descriptor)
+			boolean realDimensionsProvided)
 	{
 		super(
 			drawCoords,
@@ -39,8 +39,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided,
-			descriptor);
+			realDimensionsProvided);
 
 		this.markings = null;
 		this.negativeValues = false;
@@ -56,7 +55,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided, String descriptor, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
+			boolean realDimensionsProvided, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
 	{
 		super(
 			drawCoords,
@@ -67,8 +66,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided,
-			descriptor);
+			realDimensionsProvided);
 
 		this.markings = new ArrayList<>(markings);
 		this.negativeValues = negativeValues;
@@ -97,7 +95,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		float increment = width / (steps * (negativeValues ? 2 : 1));
 
 		float offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
-		if (drawCoords) offsetY += keyHeight;
+		if (drawCoords) offsetY += 0.5f*keyHeight;
 
 		float spectrumPosition = position;
 		for (int i = (negativeValues ? -steps : 0); i < steps; i++)
@@ -112,7 +110,6 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		p.context.setSource(0, 0, 0);
 
 		final float textBaseline = offsetY + keyHeight + p.context.getFontLeading() + p.context.getFontAscent();
-		float textLineHeight = p.context.getFontHeight();
 		float fontSize = p.context.getFontSize();
 
 		if (markings == null)
@@ -123,7 +120,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			while (width > 0.0 && fontSize > 1.0)
 			{
 
-				float expectedTextWidth = p.context.getTextWidth(minIntensity + " " + descriptor + " " + maxIntensity);
+				float expectedTextWidth = p.context.getTextWidth(minIntensity + " " + maxIntensity);
 				if (expectedTextWidth < width) break;
 				fontSize *= (width/expectedTextWidth) * 0.95;
 				p.context.setFontSize(fontSize);
@@ -166,9 +163,6 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 
 		}
-		
-		float centerWidth = p.context.getTextWidth(descriptor);
-		p.context.writeText(descriptor, position + (width - centerWidth) / 2.0f, textBaseline + textLineHeight);
 
 		p.context.restore();
 
