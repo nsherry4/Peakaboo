@@ -200,6 +200,8 @@ public class Mapper {
 		}
 		
 		
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()));
+		
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter (
 
 			settings.drawCoord,
@@ -214,8 +216,7 @@ public class Mapper {
 			spectrumSteps,
 			paletteList,
 
-			settings.physicalCoord,
-			settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()
+			settings.physicalCoord
 		);
 		axisPainters.add(spectrumCoordPainter);
 
@@ -325,6 +326,7 @@ public class Mapper {
 			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
 		}
 		
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()));
 
 		//create a new coordinate/axis painter using the values in the model
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter
@@ -342,7 +344,6 @@ public class Mapper {
 			paletteList,
 
 			settings.physicalCoord,
-			settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName(),
 			1,
 			settings.mode == MapDisplayMode.RATIO,
 			spectrumMarkers
@@ -447,6 +448,8 @@ public class Mapper {
 		if (greenSpectrum != null) 	colours.add(new Pair<>(OverlayColour.GREEN.toColour(), tsFormatter.apply(OverlayColour.GREEN)));
 		if (blueSpectrum != null) 	colours.add(new Pair<>(OverlayColour.BLUE.toColour(), tsFormatter.apply(OverlayColour.BLUE)));
 		
+		
+		
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
 			settings.drawCoord,
@@ -460,8 +463,6 @@ public class Mapper {
 			settings.spectrumHeight,
 
 			settings.physicalCoord,
-			settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName(),
-
 			colours
 			
 		);
@@ -479,6 +480,8 @@ public class Mapper {
 			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
 		}
 
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()));
+		
 		axisPainters.add(spectrumCoordPainter);
 
 		dr.drawToVectorSurface = vector;
