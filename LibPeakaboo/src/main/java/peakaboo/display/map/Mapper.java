@@ -26,6 +26,7 @@ import cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import cyclops.visualization.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import cyclops.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import cyclops.visualization.drawing.painters.axis.AxisPainter;
+import cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
 import cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.Spectrums;
@@ -147,6 +148,14 @@ public class Mapper {
 
 	}
 
+	private AxisPainter getDescriptionPainter(MapRenderSettings settings) {
+		String title = settings.spectrumTitle;
+		if (!settings.calibrationProfile.isEmpty()) {
+			title += " calibrated against " + settings.calibrationProfile.getReference().getName();	
+		}
+		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, title);
+	}
+
 	
 	
 
@@ -199,8 +208,8 @@ public class Mapper {
 			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, settings.mapTitle));
 		}
 		
-		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()));
+		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
+		axisPainters.add(getDescriptionPainter(settings));
 		
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter (
 
@@ -254,6 +263,9 @@ public class Mapper {
 	}
 	
 	
+
+
+
 	/**
 	 * Drawing logic for the ratio view
 	 * @param backend surface to draw to
@@ -326,7 +338,8 @@ public class Mapper {
 			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
 		}
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()));
+		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
+		axisPainters.add(getDescriptionPainter(settings));
 
 		//create a new coordinate/axis painter using the values in the model
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter
@@ -480,7 +493,8 @@ public class Mapper {
 			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
 		}
 
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, settings.spectrumTitle + " - " + settings.calibrationProfile.getReference().getName()));
+		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
+		axisPainters.add(getDescriptionPainter(settings));
 		
 		axisPainters.add(spectrumCoordPainter);
 
