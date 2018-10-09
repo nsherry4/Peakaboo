@@ -266,11 +266,11 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		if (drawCoords)
 		{
-			return new Coord<Float>(0.0f, keyHeight * 2.0f + textHeight);
+			return new Coord<Float>(0.0f, keyHeight * 1.6f + textHeight);
 		}
 		else
 		{
-			return new Coord<Float>(0.0f, keyHeight * 1.5f + textHeight);
+			return new Coord<Float>(0.0f, keyHeight * 1.3f + textHeight);
 		}
 
 	}

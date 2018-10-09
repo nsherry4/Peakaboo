@@ -95,7 +95,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		float increment = width / (steps * (negativeValues ? 2 : 1));
 
 		float offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
-		if (drawCoords) offsetY += 0.5f*keyHeight;
+		if (drawCoords) offsetY += 0.3f*keyHeight;
 
 		float spectrumPosition = position;
 		for (int i = (negativeValues ? -steps : 0); i < steps; i++)

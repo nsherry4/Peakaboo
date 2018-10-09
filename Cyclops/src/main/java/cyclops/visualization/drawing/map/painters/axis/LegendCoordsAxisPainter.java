@@ -49,7 +49,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		final float width = axesData.xPositionBounds.end - axesData.xPositionBounds.start - spectrumBoundsX.second
 				- spectrumBoundsX.first;
 		float offsetY = axesData.yPositionBounds.end - getKeyBorderSize(p.context).y;
-		if (drawCoords) offsetY += keyHeight;
+		if (drawCoords) offsetY += 0.3f*keyHeight;
 		final float textLineHeight = p.context.getFontHeight();
 		final float textBaseline = offsetY + keyHeight + (drawCoords ? 0.0f : textLineHeight/2.0f);
 		float fontSize = p.context.getFontSize();
