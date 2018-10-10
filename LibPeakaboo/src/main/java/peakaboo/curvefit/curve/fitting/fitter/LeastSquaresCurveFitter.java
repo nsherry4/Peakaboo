@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.fitter;
+package peakaboo.curvefit.curve.fitting.fitter;
 
 public class LeastSquaresCurveFitter extends OptimizingCurveFitter {
 

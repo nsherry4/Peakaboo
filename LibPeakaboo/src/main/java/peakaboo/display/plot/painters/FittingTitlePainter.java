@@ -12,8 +12,8 @@ import cyclops.visualization.drawing.DrawingRequest;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
 import cyclops.visualization.palette.PaletteColour;
-import peakaboo.curvefit.curve.EnergyCalibration;
-import peakaboo.curvefit.curve.FittingResultSet;
+import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 

@@ -9,8 +9,8 @@ import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.settings.SerializedTransitionSeries;
-import peakaboo.curvefit.curve.fitter.CurveFitter;
-import peakaboo.curvefit.curve.solver.FittingSolver;
+import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.transition.TransitionSeries;

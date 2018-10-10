@@ -3,7 +3,7 @@ package peakaboo.display.plot.painters;
 import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.visualization.palette.PaletteColour;
-import peakaboo.curvefit.curve.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResult;
 
 public class FittingLabel {
 	

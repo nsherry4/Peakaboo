@@ -19,7 +19,7 @@ import cyclops.visualization.backend.awt.GraphicsPanel;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.curve.FittingResult;
+import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;

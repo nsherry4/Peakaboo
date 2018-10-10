@@ -1,10 +1,10 @@
-package peakaboo.curvefit.curve.fitter;
+package peakaboo.curvefit.curve.fitting.fitter;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import peakaboo.curvefit.curve.Curve;
-import peakaboo.curvefit.curve.FittingResult;
-import peakaboo.curvefit.curve.solver.GreedyFittingSolver;
+import peakaboo.curvefit.curve.fitting.Curve;
+import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 
 /**
  * Defines a method by which a single {@link Curve} is fitted against a

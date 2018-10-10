@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.curve.EnergyCalibration;
-import peakaboo.curvefit.curve.FittingResultSet;
+import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DataSet;
