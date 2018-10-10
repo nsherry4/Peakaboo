@@ -17,6 +17,12 @@ public interface ReadOnlySpectrum extends Serializable, Iterable<Float> {
 	 */
 	int size();
 
+	default boolean inBounds(int index) {
+		if (index < 0) return false;
+		if (index >= size()) return false;
+		return true;
+	}
+	
 	/**
 	 * Returns a copy of the data as an array
 	 */
