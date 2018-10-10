@@ -1,7 +1,7 @@
 package peakaboo.curvefit.peak.search.scoring;
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 

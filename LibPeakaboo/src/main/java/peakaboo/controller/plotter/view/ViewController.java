@@ -11,7 +11,7 @@ import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.PlotSpectra;
 import peakaboo.controller.settings.SavedPersistence;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import peakaboo.curvefit.curve.EnergyCalibration;
 import peakaboo.display.plot.PlotSettings;
 
 

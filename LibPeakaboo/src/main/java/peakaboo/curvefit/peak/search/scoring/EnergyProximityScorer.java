@@ -3,8 +3,8 @@ package peakaboo.curvefit.peak.search.scoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.curve.fitting.FittingParameters;
+import peakaboo.curvefit.curve.EnergyCalibration;
+import peakaboo.curvefit.curve.FittingParameters;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 

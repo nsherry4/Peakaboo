@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import peakaboo.common.YamlSerializer;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 
@@ -20,6 +21,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 	private String desc;
 	private String uuid;
 	private String rev;
+	private TransitionSeries anchor;
 	private Map<TransitionSeries, Float> concentrations;
 	
 	protected CalibrationReference() {
@@ -27,6 +29,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		uuid = null;
 		desc = null;
 		rev = null;
+		anchor = null;
 		concentrations = new HashMap<>();
 	}
 	
@@ -46,6 +49,10 @@ public class CalibrationReference implements BoltConfigPlugin {
 
 	public String getRevision() {
 		return rev;
+	}
+	
+	public TransitionSeries getAnchor() {
+		return this.anchor;
 	}
 	
 	public String toString() {
@@ -80,6 +87,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		serialized.uuid = reference.uuid;
 		serialized.desc = reference.desc;
 		serialized.rev = reference.rev;
+		serialized.anchor = reference.anchor.toIdentifierString();
 		for (TransitionSeries ts : reference.concentrations.keySet()) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
@@ -93,6 +101,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.uuid = serialized.uuid;
 		reference.desc = serialized.desc;
 		reference.rev = serialized.rev;
+		System.out.println(serialized.anchor);
+		reference.anchor = PeakTable.SYSTEM.get(serialized.anchor);
 		for (String tsidentifier : serialized.concentrations.keySet()) {
 			reference.concentrations.put(PeakTable.SYSTEM.get(tsidentifier), serialized.concentrations.get(tsidentifier));
 		}
@@ -129,14 +139,18 @@ public class CalibrationReference implements BoltConfigPlugin {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610.yaml");
-		Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
-		String yaml = s.next();
-		s.close();
-		CalibrationReference ref = CalibrationReference.load(yaml);
+
 		
-		yaml = CalibrationReference.save(ref);
-		System.out.println(yaml);
+//		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610.yaml");
+//		Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
+//		String yaml = s.next();
+//		s.close();
+//		CalibrationReference ref = CalibrationReference.load(yaml);
+//		
+//		yaml = CalibrationReference.save(ref);
+//		System.out.println(yaml);
+		
+		
 //		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610Reference.csv");
 //		try {
 //			Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
@@ -189,5 +203,6 @@ class SerializedCalibrationReference {
 	public String uuid;
 	public String desc;
 	public String rev;
+	public String anchor;
 	public Map<String, Float> concentrations = new HashMap<>();
 }

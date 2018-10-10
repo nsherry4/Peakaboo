@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.fitting.fitter;
+package peakaboo.curvefit.curve.fitter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -17,8 +17,8 @@ import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.Curve;
+import peakaboo.curvefit.curve.FittingResult;
 
 public class OptimizingCurveFitter implements CurveFitter {
 

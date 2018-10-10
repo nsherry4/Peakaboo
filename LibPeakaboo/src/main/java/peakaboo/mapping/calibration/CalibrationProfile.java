@@ -2,20 +2,22 @@ package peakaboo.mapping.calibration;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.YamlSerializer;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.curve.FittingResult;
+import peakaboo.curvefit.curve.FittingResultSet;
+import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.mapping.calibration.processor.CalibrationNormalizer;
+import peakaboo.mapping.calibration.processor.CalibrationProcessor;
+import peakaboo.mapping.calibration.processor.CalibrationSmoother;
+import peakaboo.mapping.calibration.processor.LinearCalibrationInterpolator;
 
 public class CalibrationProfile {
 
@@ -50,11 +52,23 @@ public class CalibrationProfile {
 			calibrations.put(ts, calibration);
 		}
 		
-		CalibrationInterpolator interpolator = new LinearCalibrationInterpolator();
-		interpolator.interpolate(calibrations);
+		//interpolate missing elements
+		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
+		interpolator.process(reference, calibrations);
+		
+		//normalize against anchor
+		CalibrationProcessor normalizer = new CalibrationNormalizer();
+		normalizer.process(reference, calibrations);
+		
+		//smooth calibrations
+		CalibrationProcessor smoothing = new CalibrationSmoother();
+		smoothing.process(reference, calibrations);
+		
+		
 		
 	}
 	
+
 
 	public Map<TransitionSeries, Float> getCalibrations() {
 		return new HashMap<>(calibrations);
@@ -81,7 +95,7 @@ public class CalibrationProfile {
 	public float calibrate(float value, TransitionSeries ts) {
 		if (calibrations.keySet().contains(ts)) {
 			float calibration = calibrations.get(ts);
-			return value * calibration;
+			return value / calibration;
 		} else {
 			return value;
 		}
@@ -92,7 +106,7 @@ public class CalibrationProfile {
 			return data;
 		}
 		float calibration = getCalibration(ts);
-		return SpectrumCalculations.multiplyBy(data, calibration);
+		return SpectrumCalculations.divideBy(data, calibration);
 	}
 	
 	public boolean isEmpty() {
@@ -130,7 +144,9 @@ public class CalibrationProfile {
 
 	public static void main(String[] args) {
 		
-		
+		System.out.println(PeakTable.SYSTEM.get("Kr:K"));
+		PeakTable pt = new KrausePeakTable();
+		System.out.println(pt.get("Kr:K"));
 		
 	}
 
@@ -143,6 +159,6 @@ public class CalibrationProfile {
 class SerializedCalibrationProfile {
 	public String referenceUUID = null;
 	public String referenceName = null;
-	public Map<String, Float> calibrations = new HashMap<>();
+	public Map<String, Float> calibrations = new LinkedHashMap<>();
 }
  

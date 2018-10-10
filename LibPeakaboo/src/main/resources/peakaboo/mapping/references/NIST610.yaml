@@ -3,6 +3,7 @@ name: NIST 610
 uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
 desc: Trace elements in glass
 rev: 1.0
+anchor: Fe:K
 concentrations:
   Cr:K: 400.0
   Ti:K: 450.0

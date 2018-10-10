@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.fitting.solver;
+package peakaboo.curvefit.curve.solver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,12 +23,12 @@ import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.curve.Curve;
+import peakaboo.curvefit.curve.FittingParameters;
+import peakaboo.curvefit.curve.FittingResult;
+import peakaboo.curvefit.curve.FittingResultSet;
+import peakaboo.curvefit.curve.FittingSet;
+import peakaboo.curvefit.curve.fitter.CurveFitter;
 
 public class OptimizingFittingSolver implements FittingSolver {
 

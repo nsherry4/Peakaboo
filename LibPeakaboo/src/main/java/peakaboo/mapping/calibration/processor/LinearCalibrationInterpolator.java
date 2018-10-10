@@ -1,4 +1,4 @@
-package peakaboo.mapping.calibration;
+package peakaboo.mapping.calibration.processor;
 
 import java.util.List;
 import java.util.Map;
@@ -8,13 +8,15 @@ import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.mapping.calibration.CalibrationReference;
 
-public class LinearCalibrationInterpolator implements CalibrationInterpolator {
+public class LinearCalibrationInterpolator implements CalibrationProcessor {
 
 	@Override
-	public void interpolate(Map<TransitionSeries, Float> calibrations) {
+	public void process(CalibrationReference reference, Map<TransitionSeries, Float> calibrations) {
 		interpolate(calibrations, TransitionSeriesType.K);
 		interpolate(calibrations, TransitionSeriesType.L);
+		interpolate(calibrations, TransitionSeriesType.M);
 	}
 	
 	private void interpolate(Map<TransitionSeries, Float> calibrations, TransitionSeriesType tst) {

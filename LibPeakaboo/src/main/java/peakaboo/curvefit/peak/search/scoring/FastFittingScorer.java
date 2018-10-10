@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.curve.fitting.FittingParameters;
+import peakaboo.curvefit.curve.FittingParameters;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 

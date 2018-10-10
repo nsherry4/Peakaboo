@@ -21,6 +21,7 @@ public class CombinedPeakTable implements PeakTable {
 		
 		Set<TransitionSeries> merged = new HashSet<>();
 		for (PeakTable member : members) {
+			//add if not already present
 			merged.addAll(member.getAll());
 		}
 		

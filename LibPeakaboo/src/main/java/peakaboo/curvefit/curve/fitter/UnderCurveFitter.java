@@ -1,8 +1,8 @@
-package peakaboo.curvefit.curve.fitting.fitter;
+package peakaboo.curvefit.curve.fitter;
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.curve.Curve;
+import peakaboo.curvefit.curve.FittingResult;
 
 public class UnderCurveFitter implements CurveFitter {
 

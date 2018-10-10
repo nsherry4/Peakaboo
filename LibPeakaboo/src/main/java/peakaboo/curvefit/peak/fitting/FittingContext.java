@@ -1,6 +1,6 @@
 package peakaboo.curvefit.peak.fitting;
 
-import peakaboo.curvefit.curve.fitting.FittingParameters;
+import peakaboo.curvefit.curve.FittingParameters;
 import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.Transition;
