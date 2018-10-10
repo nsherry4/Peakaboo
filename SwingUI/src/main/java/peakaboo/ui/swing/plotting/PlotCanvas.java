@@ -20,6 +20,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;
@@ -117,43 +118,22 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 	private void onSingleClick(MouseEvent e) {
 
-        FittingResult bestFit = getBestFitAtPoint(e.getX());
+		TransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
         controller.fitting().clearProposedTransitionSeries();
         controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
         if (bestFit != null) {
-            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit.getTransitionSeries()));
+            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit));
         }
 	}
 
 	private void onDoubleClick(MouseEvent e) {
-		FittingResult bestFit = getBestFitAtPoint(e.getX());
+		TransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
 		if (bestFit == null) {
 			return;
 		}
-		plotPanel.actionAddAnnotation(bestFit.getTransitionSeries());
+		plotPanel.actionAddAnnotation(bestFit);
 	}
-	
-	private FittingResult getBestFitAtPoint(int px) {
-		int channel = plotter.getChannel(px);
-        
-        float bestValue = 1f;
-        FittingResult bestFit = null;
-
-        if (controller.fitting().getFittingSelectionResults() == null) {
-            return null;
-        }
-        
-		for (FittingResult fit : controller.fitting().getFittingSelectionResults()) {
-            float value = fit.getFit().get(channel);
-            if (value > bestValue) {
-                bestValue = value;
-                bestFit = fit;
-            }
-        }
 		
-		return bestFit;
-	}
-	
 
 	public void grabChannelFromClick(Consumer<Integer> callback)
 	{

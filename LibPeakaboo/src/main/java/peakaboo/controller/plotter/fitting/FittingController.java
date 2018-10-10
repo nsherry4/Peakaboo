@@ -253,6 +253,34 @@ public class FittingController extends EventfulType<Boolean>
 		).stream().map(p -> p.first).collect(Collectors.toList());
 	}
 
+	/**
+	 * Given a channel, return the existing FittingResult which makes most sense to
+	 * 'select' for that channel, or null if there are no good fits.
+	 */
+	public TransitionSeries selectTransitionSeriesAtChannel(int channel) {      
+        float bestValue = 1f;
+        FittingResult bestFit = null;
+
+        if (getFittingSelectionResults() == null) {
+            return null;
+        }
+        
+		for (FittingResult fit : getFittingSelectionResults()) {
+			if (!fit.getFit().inBounds(channel)) {
+				continue;
+			}
+            float value = fit.getFit().get(channel);
+            if (value > bestValue) {
+                bestValue = value;
+                bestFit = fit;
+            }
+        }
+		if (bestFit == null) {
+			return null;
+		}
+		return bestFit.getTransitionSeries();
+	}
+	
 	public boolean canMap()
 	{
 		return ! (getVisibleTransitionSeries().size() == 0 || plot.data().getDataSet().getScanData().scanCount() == 0);
