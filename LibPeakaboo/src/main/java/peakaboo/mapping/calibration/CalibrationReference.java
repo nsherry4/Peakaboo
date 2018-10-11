@@ -1,5 +1,7 @@
 package peakaboo.mapping.calibration;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 	private String desc;
 	private String uuid;
 	private String rev;
+	private String notes;
+	private List<String> citations;
 	private TransitionSeries anchor;
 	private Map<TransitionSeries, Float> concentrations;
 	
@@ -54,7 +58,16 @@ public class CalibrationReference implements BoltConfigPlugin {
 	public TransitionSeries getAnchor() {
 		return this.anchor;
 	}
-	
+		
+	public String getNotes() {
+		return notes;
+	}
+
+	public List<String> getCitations() {
+		if (citations == null) { return new ArrayList<>(); }
+		return new ArrayList<>(citations);
+	}
+
 	public String toString() {
 		return getName();
 	}
@@ -77,6 +90,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 		empty.uuid = "a3da5ff9-c6c5-4633-a40b-b576efe89da8";
 		empty.desc = "Empty Description Field";
 		empty.rev = "1.0";
+		empty.notes = "";
+		empty.citations = new ArrayList<>();
 		return empty;
 	}
 	
@@ -87,6 +102,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 		serialized.uuid = reference.uuid;
 		serialized.desc = reference.desc;
 		serialized.rev = reference.rev;
+		serialized.notes = reference.notes;
+		serialized.citations = reference.citations;
 		serialized.anchor = reference.anchor.toIdentifierString();
 		for (TransitionSeries ts : reference.concentrations.keySet()) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
@@ -101,7 +118,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.uuid = serialized.uuid;
 		reference.desc = serialized.desc;
 		reference.rev = serialized.rev;
-		System.out.println(serialized.anchor);
+		reference.notes = serialized.notes;
+		reference.citations = serialized.citations;
 		reference.anchor = PeakTable.SYSTEM.get(serialized.anchor);
 		for (String tsidentifier : serialized.concentrations.keySet()) {
 			reference.concentrations.put(PeakTable.SYSTEM.get(tsidentifier), serialized.concentrations.get(tsidentifier));
@@ -117,6 +135,10 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.uuid = lines.remove(0);
 		reference.desc = lines.remove(0);
 		reference.rev = lines.remove(0);
+		reference.notes = lines.remove(0);
+		String[] citations = lines.remove(0).split("\\|");
+		reference.citations = new ArrayList<>(Arrays.asList(citations));
+		reference.anchor = PeakTable.SYSTEM.get(lines.remove(0));
 		
 		for (String line : lines) {
 			String[] parts = line.split(",");
@@ -151,19 +173,18 @@ public class CalibrationReference implements BoltConfigPlugin {
 //		System.out.println(yaml);
 		
 		
-//		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610Reference.csv");
-//		try {
-//			Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
-//			if (s.hasNext()) {
-//				CalibrationReference reference = fromCSV(s.next());
-//				System.out.println(CalibrationReference.save(reference));
-//				CalibrationReference reference2 = CalibrationReference.load(CalibrationReference.save(reference));
-//				System.out.println(reference2.getConcentration(PeakTable.SYSTEM.get("Cr:K")));
-//			}
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		//URL url = PeakTable.class.getResource();
+		File file = new File("/home/nathaniel/Desktop/NIST610ReferenceRevised.csv");
+		try {
+			Scanner s = new Scanner(new FileInputStream(file)).useDelimiter("\\A");
+			if (s.hasNext()) {
+				CalibrationReference reference = fromCSV(s.next());
+				System.out.println(CalibrationReference.save(reference));
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -183,7 +204,39 @@ public class CalibrationReference implements BoltConfigPlugin {
 
 	@Override
 	public String pluginDescription() {
-		return getDescription();
+		String desc = getDescription();
+		if (desc == null) { desc = ""; }
+		desc = desc.trim();
+		if (desc.length() > 0) { desc = "<b>Description</b><br/>" + desc; }
+		
+		String notes = getNotes();
+		if (notes == null) { notes = ""; }
+		notes = notes.trim();
+		if (notes.length() > 0) { notes = "<b>Notes</b><br/>" + notes; }
+		
+		List<String> citelist = getCitations();
+		if (citelist == null) { citelist = new ArrayList<>(); }
+		String cites = "";
+		if (citelist.size() > 0) {
+			cites = "<b>Citations</b><ul>" + getCitations().stream().map(s -> "<li>" + s + "</li>").reduce("", (a, b) -> a+b) + "</ul>";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		if (desc.length() > 0) {
+			sb.append(desc);
+			sb.append("<br/><br/>");
+		}
+		
+		if (notes.length() > 0) {
+			sb.append(notes);
+			sb.append("<br/><br/>");
+		}
+		
+		if (cites.length() > 0) {
+			sb.append(cites);
+		}
+		
+		return sb.toString();
 	}
 
 	@Override
@@ -204,5 +257,7 @@ class SerializedCalibrationReference {
 	public String desc;
 	public String rev;
 	public String anchor;
+	public List<String> citations;
+	public String notes;
 	public Map<String, Float> concentrations = new HashMap<>();
 }

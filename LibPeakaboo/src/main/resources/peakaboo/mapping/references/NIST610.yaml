@@ -1,17 +1,27 @@
 !!peakaboo.mapping.calibration.SerializedCalibrationReference
-name: NIST 610
-uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
-desc: Trace elements in glass
-rev: 1.0
 anchor: Fe:K
+citations:
+- N.J.G. Pearce, W.T. Perkins, J.A. Westgate, M.T. Gorton, S.E. Jackson, C.R Neal
+  and S.P.Chenery, Geostandards Newsletter, Journal of Geostandards and Analysis,
+  21 115 (1997).
+desc: Trace elements in glass
+name: NIST 610
+notes: Na, Si, and Ca removed from reference because they were too concentrated.
+  Minimum detection of the Integrated Intensity is conservatively estimated to
+  be six units and this is used in the calculation of the minimum detection limit
+  (MDL).
+rev: '1.0'
+uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
 concentrations:
   Cr:K: 400.0
   Ti:K: 450.0
+  Nb:K: 440.0
   Zr:K: 440.0
   Eu:L: 450.0
   La:L: 440.0
   Rb:K: 460.0
   Ag:L: 200.0
+  Tm:L: 460.0
   Cd:L: 250.0
   Nd:L: 430.0
   Zn:K: 420.0
@@ -24,29 +34,24 @@ concentrations:
   Sn:L: 300.0
   Gd:L: 440.0
   Mg:K: 460.0
-  Mo:L: 440.0
   Sr:K: 480.0
   Mo:K: 440.0
   Ta:L: 320.0
   Au:L: 226.0
   Cl:K: 470.0
   As:K: 300.0
-  Na:K: 13800.0
   Pb:L: 370.0
   Th:L: 445.0
   Cs:L: 390.0
   Al:K: 2100.0
   Cu:K: 440.0
-  Tb:L: 460.0
+  Tb:L: 450.0
   Ni:K: 475.0
   Ce:L: 440.0
-  Tl:L: 60.0
-  Ca:K: 11450.0
   Fe:K: 480.0
   Hf:L: 420.0
-  Pr:L: 450.0
+  Pr:L: 440.0
   K:K: 450.0
-  Si:K: 72200.0
   Sc:K: 450.0
   Bi:L: 380.0
   U:L: 445.0

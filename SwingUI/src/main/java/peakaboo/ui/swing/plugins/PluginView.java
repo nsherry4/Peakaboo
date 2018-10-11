@@ -1,5 +1,6 @@
 package peakaboo.ui.swing.plugins;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
@@ -8,6 +9,8 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import org.apache.batik.ext.swing.GridBagConstants;
 
@@ -63,14 +66,18 @@ public class PluginView extends JPanel {
 		propertyPanel.setBadge(getIcon(plugin));
 		
 		
-		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription(), 450));
-		
-		
+		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription(), 420));
+		description.setVerticalAlignment(SwingConstants.TOP);
+		JScrollPane scroller = new JScrollPane(description);
+		scroller.setBorder(Spacing.bLarge());
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				
 		this.add(propertyPanel, c);
 
 		c.gridy++;
 		c.weighty=1f;
-		this.add(description, c);
+		c.fill = GridBagConstraints.BOTH;
+		this.add(scroller, c);
 		
 		
 	}
