@@ -23,7 +23,7 @@ public class StratusComboBoxUI extends SynthComboBoxUI {
     	
     	Color control = (Color) UIManager.get("control");
     	p.setBorder(new LineBorder(control, 1));
-    	p.setLightWeightPopupEnabled(!StratusLookAndFeel.HEAvYWEIGHT_POPUPS);
+    	p.setLightWeightPopupEnabled(!StratusLookAndFeel.HEAVYWEIGHT_POPUPS);
         return p;
     }
     

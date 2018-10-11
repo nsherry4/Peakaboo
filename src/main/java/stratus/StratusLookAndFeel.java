@@ -61,7 +61,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 	public static boolean DISABLE_FONT_HINTING = true;
 	public static boolean REPLACE_PAINTERS = true;
 	public static boolean REPLACE_ICONS = true;
-	public static boolean HEAvYWEIGHT_POPUPS = true;
+	public static boolean HEAVYWEIGHT_POPUPS = true;
 	
 	private Theme theme;
 	
@@ -72,11 +72,6 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 	
 	public StratusLookAndFeel(Theme theme) {
 		this.theme = theme;
-		if (HEAvYWEIGHT_POPUPS) {
-			//Force all menus to be heavyweight components to get that nice OS-composited drop shadow.
-			JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-			ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-		}
 		
 		System.setProperty("swing.aatext", "true");
 		
@@ -87,6 +82,14 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			//up?) on oracle jvms.
 			System.setProperty("awt.useSystemAAFontSettings", "gasp");
 		}
+		
+		if (HEAVYWEIGHT_POPUPS) {
+			//Force all menus to be heavyweight components to get that nice OS-composited drop shadow.
+			JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+			ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+		}
+		
+
 	}
 	
 	@Override
