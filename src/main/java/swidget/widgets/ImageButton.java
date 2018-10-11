@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,6 +29,9 @@ import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
+import swidget.widgets.ImageButton.ButtonConfig;
+import swidget.widgets.ImageButton.ButtonSize;
+import swidget.widgets.ImageButton.Layout;
 
 
 public class ImageButton extends JButton
@@ -156,15 +160,19 @@ public class ImageButton extends JButton
 		return this;
 	}
 	
+	protected void makeButton() {
+		ButtonDesigner.makeButton(this, config);
+	}
+	
 	public ImageButton withLayout(Layout layout) {
 		config.layout = layout;
-		makeButton();
+		ButtonDesigner.makeButton(this, config);
 		return this;
 	}
 	
 	public ImageButton withButtonSize(ButtonSize buttonSize) {
 		config.buttonSize = buttonSize;
-		makeButton();
+		ButtonDesigner.makeButton(this, config);
 		return this;
 	}
 	
@@ -264,111 +272,112 @@ public class ImageButton extends JButton
 		});
 		
 	}
+//	
+//	protected void makeButton() {
+//				
+//		isNimbus = Swidget.isNumbusDerivedLaF();
+//		
+//		this.setContentAreaFilled(config.bordered);
+//		this.setBorderPainted(config.bordered);
+//		
+//		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
+//		
+//		
+//		Layout mode = config.layout;
+//		if (mode == null) {
+//			mode = guessLayout();
+//		}
+//
+//		ButtonSize buttonSize = config.buttonSize;
+//		if(buttonSize == null) {
+//			buttonSize = guessButtonSize(mode);
+//		}
+//		
+//		
+//		String text = config.text;
+//		String tooltip = config.tooltip;
+//		
+//		this.setIcon(null);
+//		this.setText("");
+//		this.setToolTipText(null);
+//		
+//		
+//		switch (mode) {
+//
+//			case IMAGE:
+//
+//				if (isNimbus) { 
+//					super.setBorder(buttonSize == ButtonSize.COMPACT ? Spacing.bMedium() : Spacing.bLarge());
+//				} else {
+//					this.setMargin(Spacing.iSmall());
+//				}
+//				
+//								
+//				this.setIcon(image);
+//				if (tooltip == null || "".equals(tooltip)) {
+//					tooltip = text;
+//				}
+//
+//				break;
+//
+//			case TEXT:
+//
+//				if (isNimbus) { 
+//					super.setBorder(Spacing.bLarge());
+//				} else {
+//					this.setMargin(Spacing.iSmall());
+//				}
+//				
+//				this.setText(text);
+//				break;
+//
+//			case IMAGE_ON_TOP:
+//
+//				if (isNimbus) { 
+//					super.setBorder(Spacing.bLarge());
+//				} else {
+//					super.setMargin(Spacing.iSmall());
+//				}
+//				
+//				this.setIcon(image);
+//				this.setText(text);
+//
+//				this.setVerticalTextPosition(SwingConstants.BOTTOM);
+//				this.setHorizontalTextPosition(SwingConstants.CENTER);
+//
+//				break;
+//
+//			case IMAGE_ON_SIDE:
+//
+//				if (isNimbus) { 
+//					super.setBorder(Spacing.bLarge());
+//				} else {
+//					super.setMargin(Spacing.iSmall());
+//				}
+//				
+//				this.setIcon(image);
+//				this.setText(text);
+//
+//				break;
+//
+//		}
+//		
+//		if (isNimbus && config.border != null) super.setBorder(config.border);
+//		if (tooltip != null) this.setToolTipText(tooltip);
+//		
+//	}
+//	
 	
-	protected void makeButton() {
-				
-		isNimbus = Swidget.isNumbusDerivedLaF();
-		
-		this.setContentAreaFilled(config.bordered);
-		this.setBorderPainted(config.bordered);
-		
-		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
-		
-		
-		Layout mode = config.layout;
-		if (mode == null) {
-			mode = guessLayout();
-		}
-
-		ButtonSize buttonSize = config.buttonSize;
-		if(buttonSize == null) {
-			buttonSize = guessButtonSize(mode);
-		}
-		
-		
-		String text = config.text;
-		String tooltip = config.tooltip;
-		
-		this.setIcon(null);
-		this.setText("");
-		this.setToolTipText(null);
-		
-		
-		switch (mode) {
-
-			case IMAGE:
-
-				if (isNimbus) { 
-					super.setBorder(buttonSize == ButtonSize.COMPACT ? Spacing.bMedium() : Spacing.bLarge());
-				} else {
-					this.setMargin(Spacing.iSmall());
-				}
-				
-								
-				this.setIcon(image);
-				if (tooltip == null || "".equals(tooltip)) {
-					tooltip = text;
-				}
-
-				break;
-
-			case TEXT:
-
-				if (isNimbus) { 
-					super.setBorder(Spacing.bLarge());
-				} else {
-					this.setMargin(Spacing.iSmall());
-				}
-				
-				this.setText(text);
-				break;
-
-			case IMAGE_ON_TOP:
-
-				if (isNimbus) { 
-					super.setBorder(Spacing.bLarge());
-				} else {
-					super.setMargin(Spacing.iSmall());
-				}
-				
-				this.setIcon(image);
-				this.setText(text);
-
-				this.setVerticalTextPosition(SwingConstants.BOTTOM);
-				this.setHorizontalTextPosition(SwingConstants.CENTER);
-
-				break;
-
-			case IMAGE_ON_SIDE:
-
-				if (isNimbus) { 
-					super.setBorder(Spacing.bLarge());
-				} else {
-					super.setMargin(Spacing.iSmall());
-				}
-				
-				this.setIcon(image);
-				this.setText(text);
-
-				break;
-
-		}
-		
-		if (isNimbus && config.border != null) super.setBorder(config.border);
-		if (tooltip != null) this.setToolTipText(tooltip);
-		
-	}
-	
-	protected Layout guessLayout() {
-		Layout mode = Layout.IMAGE_ON_SIDE;
-		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
-		if (config.imagename == null || image.getIconHeight() == -1) {
-			mode = Layout.TEXT;
-		} else if (config.text == null || "".equals(config.text)) {
-			mode = Layout.IMAGE;
-		}
-		return mode;
-	}
+//	protected Layout guessLayout() {
+//		Layout mode = Layout.IMAGE_ON_SIDE;
+//		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
+//		if (config.imagename == null || image.getIconHeight() == -1) {
+//			mode = Layout.TEXT;
+//		} else if (config.text == null || "".equals(config.text)) {
+//			mode = Layout.IMAGE;
+//		}
+//		return mode;
+//	}
 	
 	protected void setButtonBorder()
 	{
@@ -402,12 +411,12 @@ public class ImageButton extends JButton
 		
 		Layout mode = config.layout;
 		if (mode == null) {
-			mode = guessLayout();
+			mode = ButtonDesigner.guessLayout(this, config);
 		}
 		
 		ButtonSize buttonSize = config.buttonSize;
 		if (buttonSize == null) {
-			buttonSize = guessButtonSize(mode);
+			buttonSize = ButtonDesigner.guessButtonSize(mode);
 		}
 		
 		int prefHeight = 32, prefWidth = 80;
@@ -432,13 +441,13 @@ public class ImageButton extends JButton
 		
 	}
 	
-	protected ButtonSize guessButtonSize(Layout mode) {
-		if (mode == Layout.IMAGE) {
-			return ButtonSize.COMPACT;
-		}
-		return ButtonSize.LARGE;
-		
-	}
+//	protected ButtonSize guessButtonSize(Layout mode) {
+//		if (mode == Layout.IMAGE) {
+//			return ButtonSize.COMPACT;
+//		}
+//		return ButtonSize.LARGE;
+//		
+//	}
 
 	@Override
 	public Dimension getMinimumSize() {
@@ -491,4 +500,123 @@ public class ImageButton extends JButton
 	}
 
 
+}
+
+
+class ButtonDesigner {
+	
+
+	public static void makeButton(AbstractButton button, ButtonConfig config) {
+				
+		boolean isNimbus = Swidget.isNumbusDerivedLaF();
+		
+		button.setContentAreaFilled(config.bordered);
+		button.setBorderPainted(config.bordered);
+		
+		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
+		
+		
+		Layout mode = config.layout;
+		if (mode == null) {
+			mode = guessLayout(button, config);
+		}
+
+		ButtonSize buttonSize = config.buttonSize;
+		if(buttonSize == null) {
+			buttonSize = guessButtonSize(mode);
+		}
+		
+		
+		String text = config.text;
+		String tooltip = config.tooltip;
+		
+		button.setIcon(null);
+		button.setText("");
+		button.setToolTipText(null);
+		
+		
+		switch (mode) {
+
+			case IMAGE:
+
+				if (isNimbus) { 
+					button.setBorder(buttonSize == ButtonSize.COMPACT ? Spacing.bMedium() : Spacing.bLarge());
+				} else {
+					button.setMargin(Spacing.iSmall());
+				}
+				
+								
+				button.setIcon(image);
+				if (tooltip == null || "".equals(tooltip)) {
+					tooltip = text;
+				}
+
+				break;
+
+			case TEXT:
+
+				if (isNimbus) { 
+					button.setBorder(Spacing.bLarge());
+				} else {
+					button.setMargin(Spacing.iSmall());
+				}
+				
+				button.setText(text);
+				break;
+
+			case IMAGE_ON_TOP:
+
+				if (isNimbus) { 
+					button.setBorder(Spacing.bLarge());
+				} else {
+					button.setMargin(Spacing.iSmall());
+				}
+				
+				button.setIcon(image);
+				button.setText(text);
+
+				button.setVerticalTextPosition(SwingConstants.BOTTOM);
+				button.setHorizontalTextPosition(SwingConstants.CENTER);
+
+				break;
+
+			case IMAGE_ON_SIDE:
+
+				if (isNimbus) { 
+					button.setBorder(Spacing.bLarge());
+				} else {
+					button.setMargin(Spacing.iSmall());
+				}
+				
+				button.setIcon(image);
+				button.setText(text);
+
+				break;
+
+		}
+		
+		if (isNimbus && config.border != null) button.setBorder(config.border);
+		if (tooltip != null) button.setToolTipText(tooltip);
+		
+	}
+	
+	protected static Layout guessLayout(AbstractButton button, ButtonConfig config) {
+		Layout mode = Layout.IMAGE_ON_SIDE;
+		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
+		if (config.imagename == null || image.getIconHeight() == -1) {
+			mode = Layout.TEXT;
+		} else if (config.text == null || "".equals(config.text)) {
+			mode = Layout.IMAGE;
+		}
+		return mode;
+	}
+	
+	protected static ButtonSize guessButtonSize(Layout mode) {
+		if (mode == Layout.IMAGE) {
+			return ButtonSize.COMPACT;
+		}
+		return ButtonSize.LARGE;
+		
+	}
+	
 }

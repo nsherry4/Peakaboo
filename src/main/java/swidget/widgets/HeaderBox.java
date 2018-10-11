@@ -30,7 +30,6 @@ public class HeaderBox extends PaintedPanel {
 	
 	public HeaderBox(Component left, String title, Component right) {
 		super(true);
-		base = getBackground();
 		JLabel label = new JLabel(title);
 		if (left != null || right != null) {
 			label.setBorder(new EmptyBorder(0, Spacing.huge, 0, Spacing.huge));
@@ -52,7 +51,7 @@ public class HeaderBox extends PaintedPanel {
 	
 	private void init(Component left, Component centre, Component right) {
 		
-
+		base = getBackground();
 		
 		setBorder(Spacing.bMedium());
 		setLayout(new BorderLayout());
