@@ -79,6 +79,7 @@ import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.results.MapResultSet;
+import peakaboo.ui.swing.calibration.ProfileViewPanel;
 import peakaboo.ui.swing.calibration.ReferencePicker;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
@@ -113,6 +114,7 @@ import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.ToastLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
+import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.properties.PropertyViewPanel;
 import swidget.widgets.tabbedinterface.TabbedInterface;
 import swidget.widgets.tabbedinterface.TabbedLayerPanel;
@@ -853,6 +855,7 @@ public class PlotPanel extends TabbedLayerPanel
 	
 	public void actionSaveCalibrationProfile() {
 		
+		//generate profile
 		CalibrationProfile profile = controller.fitting().generateCalibrationProfile();
 		if (profile == null) {
 			LayerDialog layer = new LayerDialog("Failed to Generate Profile", "Peakaboo could not generate a calibration profile", MessageType.ERROR);
@@ -860,22 +863,42 @@ public class PlotPanel extends TabbedLayerPanel
 			return;
 		}
 
-		String yaml = CalibrationProfile.save(profile);
 		
-		SimpleFileExtension ext = new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp");
-		SwidgetFilePanels.saveFile(this, "Save Calibration Profile", saveFilesFolder, ext, file -> {
-			if (!file.isPresent()) { return; }
-			File f = file.get();
-			FileWriter writer;
-			try {
-				writer = new FileWriter(f);
-				writer.write(yaml);
-				writer.close();
-			} catch (IOException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to save calibration file", e);
-			}
+		Mutable<ModalLayer> modal = new Mutable<>(null);
+		
+		//show it to the user to get their approval
+		ProfileViewPanel profileView = new ProfileViewPanel(profile, 
+				() -> { //accept
+					this.removeLayer(modal.get());
+					
+					String yaml = CalibrationProfile.save(profile);
+					
+					SimpleFileExtension ext = new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp");
+					SwidgetFilePanels.saveFile(this, "Save Calibration Profile", saveFilesFolder, ext, file -> {
+						if (!file.isPresent()) { return; }
+						File f = file.get();
+						FileWriter writer;
+						try {
+							writer = new FileWriter(f);
+							writer.write(yaml);
+							writer.close();
+						} catch (IOException e) {
+							PeakabooLog.get().log(Level.SEVERE, "Failed to save calibration file", e);
+						}
 
-		});
+					});
+					
+				}, 
+				() -> { //cancel
+					this.removeLayer(modal.get());
+				});
+		
+		 
+		modal.set(new ModalLayer(this, profileView));
+		this.pushLayer(modal.get());
+		
+		
+
 		
 		
 	}

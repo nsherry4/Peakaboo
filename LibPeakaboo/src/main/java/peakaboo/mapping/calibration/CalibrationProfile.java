@@ -1,8 +1,14 @@
 package peakaboo.mapping.calibration;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
@@ -10,6 +16,7 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -49,6 +56,7 @@ public class CalibrationProfile {
 			//to happen when the fitting solver algorithm incorrectly completely hides it 
 			//we'll interpolate it later
 			if (calibration < 1f) { continue; }
+			if (Float.isInfinite(calibration) || Float.isNaN(calibration)) { continue; }
 			calibrations.put(ts, calibration);
 		}
 		
@@ -113,6 +121,19 @@ public class CalibrationProfile {
 		return calibrations.size() == 0;
 	}
 	
+	/**
+	 * returns a sorted list of TransitionSeries in this profile 
+	 */
+	public List<TransitionSeries> getTransitionSeries(TransitionSeriesType tst) {
+		List<TransitionSeries> tss = calibrations
+				.keySet()
+				.stream()
+				.filter(ts -> ts.type == tst)
+				.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+				.collect(Collectors.toList());
+		return tss;
+	}
+	
 	
 	public static String save(CalibrationProfile profile) {
 		SerializedCalibrationProfile serialized = new SerializedCalibrationProfile();
@@ -124,6 +145,10 @@ public class CalibrationProfile {
 		return YamlSerializer.serialize(serialized);
 	}
 	
+	
+	public static CalibrationProfile load(Path path) throws IOException {
+		return load(new String(Files.readAllBytes(path)));
+	}
 	
 	public static CalibrationProfile load(String yaml) {
 		CalibrationProfile profile = new CalibrationProfile();
@@ -142,11 +167,23 @@ public class CalibrationProfile {
 		return profile;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
-		System.out.println(PeakTable.SYSTEM.get("Kr:K"));
-		PeakTable pt = new KrausePeakTable();
-		System.out.println(pt.get("Kr:K"));
+		CalibrationPluginManager.init(new File("/home/nathaniel/Desktop/PBCP/"));
+		CalibrationProfile p = CalibrationProfile.load(new File("/home/nathaniel/Desktop/nist610sigray-14.pbcp").toPath());
+		
+		for (TransitionSeriesType tst : TransitionSeriesType.values()) {
+			System.out.println(tst);
+			for (Element e : Element.values()) {
+				TransitionSeries ts = PeakTable.SYSTEM.get(e, tst);
+				if (!p.contains(ts)) { continue; }
+				System.out.println(e.atomicNumber() + ", " + p.getCalibration(ts));
+			}
+		}
+//		
+//		System.out.println(PeakTable.SYSTEM.get("Kr:K"));
+//		PeakTable pt = new KrausePeakTable();
+//		System.out.println(pt.get("Kr:K"));
 		
 	}
 

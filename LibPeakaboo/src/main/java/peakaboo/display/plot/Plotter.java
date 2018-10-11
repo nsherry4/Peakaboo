@@ -20,12 +20,14 @@ import cyclops.visualization.drawing.plot.painters.PlotPainter;
 import cyclops.visualization.drawing.plot.painters.SpectrumPainter;
 import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
+import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
@@ -332,10 +334,10 @@ public class Plotter {
 
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, "Relative Intensity", null, null, "Energy (keV)"));
 		axisPainters.add(new TickMarkAxisPainter(
-			new Bounds<Float>(0.0f, maxIntensity),
-			new Bounds<Float>(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()),
+			new TickFormatter(0.0f, maxIntensity),
+			new TickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()),
 			null,
-			new Bounds<Float>(0.0f, maxIntensity),
+			new TickFormatter(0.0f, maxIntensity),
 			dr.viewTransform == ViewTransform.LOG,
 			dr.viewTransform == ViewTransform.LOG));
 		axisPainters.add(new LineAxisPainter(true, true, false, true));

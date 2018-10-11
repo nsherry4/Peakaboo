@@ -3,19 +3,24 @@ package peakaboo.mapping.calibration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+import com.google.common.base.Function;
+
+import cyclops.ISpectrum;
+import cyclops.Spectrum;
 import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 public class CalibrationReference implements BoltConfigPlugin {
 
@@ -27,6 +32,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 	private List<String> citations;
 	private TransitionSeries anchor;
 	private Map<TransitionSeries, Float> concentrations;
+	
 	
 	protected CalibrationReference() {
 		name = null;
@@ -76,6 +82,19 @@ public class CalibrationReference implements BoltConfigPlugin {
 		return new HashMap<>(concentrations);
 	}
 	
+	/**
+	 * returns a sorted list of TransitionSeries in this reference 
+	 */
+	public List<TransitionSeries> getTransitionSeries(TransitionSeriesType tst) {
+		List<TransitionSeries> tss = concentrations
+				.keySet()
+				.stream()
+				.filter(ts -> ts.type == tst)
+				.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+				.collect(Collectors.toList());
+		return tss;
+	}
+	
 	public boolean contains(TransitionSeries ts) {
 		return concentrations.containsKey(ts);
 	}
@@ -94,7 +113,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		empty.citations = new ArrayList<>();
 		return empty;
 	}
-	
+		
 	
 	public static String save(CalibrationReference reference) {
 		SerializedCalibrationReference serialized = new SerializedCalibrationReference();
@@ -159,6 +178,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		
 		return reference;
 	}
+	
 	
 	public static void main(String[] args) throws IOException {
 
