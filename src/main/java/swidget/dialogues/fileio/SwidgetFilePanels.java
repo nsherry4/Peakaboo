@@ -18,13 +18,13 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
-import swidget.widgets.HeaderBox;
-import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
+import swidget.widgets.layout.HeaderBox;
+import swidget.widgets.layout.HeaderBoxPanel;
 
 public class SwidgetFilePanels {
 

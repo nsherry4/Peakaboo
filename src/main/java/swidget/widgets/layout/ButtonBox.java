@@ -1,4 +1,4 @@
-package swidget.widgets;
+package swidget.widgets.layout;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -10,6 +10,9 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+
+import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 
 
 public class ButtonBox extends JPanel

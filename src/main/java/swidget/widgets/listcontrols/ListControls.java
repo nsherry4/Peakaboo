@@ -5,10 +5,10 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 
-import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.layout.ButtonBox;
 
 
 

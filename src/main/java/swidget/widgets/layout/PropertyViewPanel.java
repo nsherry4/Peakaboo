@@ -1,4 +1,4 @@
-package swidget.widgets.properties;
+package swidget.widgets.layout;
 
 import java.awt.Color;
 import java.awt.Dimension;

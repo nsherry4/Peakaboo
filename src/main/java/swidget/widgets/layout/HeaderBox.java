@@ -1,4 +1,4 @@
-package swidget.widgets;
+package swidget.widgets.layout;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,6 +21,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import swidget.icons.StockIcon;
+import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.gradientpanel.PaintedPanel;

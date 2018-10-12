@@ -1,4 +1,4 @@
-package swidget.widgets;
+package swidget.widgets.layout;
 
 import java.awt.BorderLayout;
 

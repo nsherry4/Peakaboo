@@ -1,4 +1,4 @@
-package swidget.widgets;
+package swidget.widgets.layout;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -10,6 +10,8 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import swidget.widgets.Spacing;
 
 public class SettingsPanel extends JPanel {
 

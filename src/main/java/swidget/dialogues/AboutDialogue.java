@@ -28,12 +28,12 @@ import javax.swing.border.EmptyBorder;
 
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
-import swidget.widgets.properties.PropertyViewPanel;
+import swidget.widgets.layout.ButtonBox;
+import swidget.widgets.layout.PropertyViewPanel;
 
 
 public class AboutDialogue extends JDialog

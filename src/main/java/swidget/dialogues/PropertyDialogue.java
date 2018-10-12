@@ -14,11 +14,11 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.properties.PropertyViewPanel;
+import swidget.widgets.layout.ButtonBox;
+import swidget.widgets.layout.PropertyViewPanel;
 
 
 public class PropertyDialogue extends JDialog
