@@ -106,10 +106,11 @@ public class LayerPanel extends JLayeredPane {
 	 * than one modal dialog at a time.
 	 */
 	public void pushLayer(Layer layer) {
+		layer.getComponent().setFocusCycleRoot(true);
 		layers.push(layer);
 		
 		this.add(layer.getJLayer(), new StackConstraints(layers.size()+200, "modal-layer-" + layers.size()));
-				
+		
 		layer.getJLayer().requestFocus();
 		this.revalidate();
 		this.repaint();
@@ -137,7 +138,7 @@ public class LayerPanel extends JLayeredPane {
 		this.repaint();
 
 	}
-	
+
 	
 	public JPanel getContentLayer() {
 		return contentLayer.getComponent();
