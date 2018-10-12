@@ -19,10 +19,10 @@ import plural.executor.ExecutorSet;
 import plural.executor.ExecutorState;
 import plural.executor.PluralExecutor;
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
-import swidget.widgets.HeaderBox;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.layout.ButtonBox;
+import swidget.widgets.layout.HeaderBox;
 
 public class ExecutorSetView extends JPanel
 {
