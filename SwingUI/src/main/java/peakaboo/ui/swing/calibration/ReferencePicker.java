@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import peakaboo.mapping.calibration.CalibrationReference;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
-import swidget.widgets.ImageButton;
+import swidget.widgets.buttons.ImageButton;
 
 public class ReferencePicker extends JPanel {
 

@@ -19,9 +19,9 @@ import peakaboo.mapping.calibration.CalibrationProfile;
 import stratus.StratusLookAndFeel;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.HeaderBox;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
-import swidget.widgets.toggle.ImageToggleButton;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageToggleButton;
 
 public class ProfileViewPanel extends JPanel {
 

@@ -16,8 +16,8 @@ import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 public abstract class TSSelectorGroup extends JPanel implements Scrollable
@@ -40,7 +40,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		addButton = new ImageButton()
 				.withIcon(StockIcon.EDIT_ADD, IconSize.BUTTON)
 				.withTooltip("Add")
-				.withLayout(Layout.IMAGE)
+				.withLayout(ImageButtonLayout.IMAGE)
 				.withBordered(false);
 		addButton.addActionListener(new ActionListener() {
 
@@ -97,7 +97,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		ImageButton remove = new ImageButton()
 				.withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON)
 				.withTooltip("Remove")
-				.withLayout(Layout.IMAGE)
+				.withLayout(ImageButtonLayout.IMAGE)
 				.withBordered(false);
 
 		remove.addActionListener(new ActionListener() {

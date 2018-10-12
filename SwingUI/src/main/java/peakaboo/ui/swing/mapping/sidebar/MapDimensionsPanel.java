@@ -19,10 +19,10 @@ import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 public class MapDimensionsPanel extends JPanel {
 
@@ -79,7 +79,7 @@ public class MapDimensionsPanel extends JPanel {
 			ImageButton magic = new ImageButton("Guess Dimensions")
 					.withIcon("auto", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Try to detect the map's dimensions.")
-					.withLayout(Layout.IMAGE_ON_SIDE)
+					.withLayout(ImageButtonLayout.IMAGE_ON_SIDE)
 					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;
@@ -117,7 +117,7 @@ public class MapDimensionsPanel extends JPanel {
 		} else {
 			ImageButton reset = new ImageButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
 					.withTooltip("Reset the dimensions to those given in the data set.")
-					.withLayout(Layout.IMAGE)
+					.withLayout(ImageButtonLayout.IMAGE)
 					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;

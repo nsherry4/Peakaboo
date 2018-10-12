@@ -24,9 +24,9 @@ import peakaboo.filter.model.Filter;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 
@@ -55,7 +55,7 @@ class EditButtonEditor extends DefaultCellEditor
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(Layout.IMAGE).withBordered(false);
+		button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
 		button.addActionListener(e -> fireEditingStopped());
 		button.setOpaque(false);
 		

@@ -8,10 +8,11 @@ import eventful.EventfulListener;
 import peakaboo.controller.plotter.PlotController;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
-import swidget.widgets.toggle.ImageToggleButton;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
+import swidget.widgets.buttons.ImageToggleButton;
 
 public class PlotZoomControls extends ImageButton {
 	
@@ -23,7 +24,7 @@ public class PlotZoomControls extends ImageButton {
 	public PlotZoomControls(PlotController controller) {
 		super(StockIcon.FIND);
 		super.withTooltip("Zoom")
-			.withLayout(Layout.IMAGE)
+			.withLayout(ImageButtonLayout.IMAGE)
 			.withBordered(false);
 		
 		this.controller = controller;

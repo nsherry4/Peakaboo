@@ -5,23 +5,24 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JToolBar;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ToolbarImageButton;
 
 public class PlotToolbar extends JToolBar {
 
 	private PlotController controller;
 	private PlotPanel plot;
 	
-	private ImageButton toolbarSnapshot;
-	private ImageButton toolbarMap;
-	private ImageButton toolbarInfo;
+	private ToolbarImageButton toolbarSnapshot;
+	private ToolbarImageButton toolbarMap;
+	private ToolbarImageButton toolbarInfo;
 
 	
 	private PlotMenuEnergy energyMenu;
@@ -50,7 +51,7 @@ public class PlotToolbar extends JToolBar {
 		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
-		ImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set");
+		ToolbarImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set");
 		ibutton.addActionListener(e -> plot.actionOpenData());
 		this.add(ibutton, c);
 
@@ -68,10 +69,10 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarInfo, c);
 	
 		
-		toolbarMap = new ImageButton("Map Fittings")
+		toolbarMap = new ToolbarImageButton("Map Fittings")
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
-				.withLayout(ToolbarImageButton.significantLayout);
+				.withSignificance(true);
 		toolbarMap.addActionListener(e -> plot.actionMap());
 		
 		c.gridx += 1;

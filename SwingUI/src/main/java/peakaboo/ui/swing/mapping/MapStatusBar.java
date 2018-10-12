@@ -13,10 +13,10 @@ import javax.swing.border.MatteBorder;
 import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 class MapStatusBar extends JPanel {
 
@@ -52,7 +52,7 @@ class MapStatusBar extends JPanel {
 		JPopupMenu zoomMenu = new JPopupMenu();
 		zoomMenu.setBorder(Spacing.bNone());
 		zoomMenu.add(zoom);
-		ImageButton zoomButton = new ImageButton(StockIcon.FIND).withTooltip("Zoom").withLayout(Layout.IMAGE).withBordered(false);
+		ImageButton zoomButton = new ImageButton(StockIcon.FIND).withTooltip("Zoom").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
 		zoomButton.addActionListener(e -> {
 			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
 		});

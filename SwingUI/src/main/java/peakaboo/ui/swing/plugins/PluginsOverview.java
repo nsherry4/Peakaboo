@@ -63,12 +63,12 @@ import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonSize;
 
 public class PluginsOverview extends JPanel {
 
@@ -91,12 +91,12 @@ public class PluginsOverview extends JPanel {
 				
 		close = HeaderBox.closeButton().withAction(() -> parent.popLayer());
 		
-		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Import Plugins").withAction(this::add);
-		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Import Plugins").withAction(this::add);
+		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Remove Plugins").withAction(this::removeSelected);
 		
-		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Reload Plugins").withAction(this::reload);
-		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Get More Plugins").withAction(this::download);
+		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Reload Plugins").withAction(this::reload);
+		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonBox left = new ButtonBox(Spacing.tiny, false);
 		left.setOpaque(false);
@@ -402,14 +402,14 @@ public class PluginsOverview extends JPanel {
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(640, 480));
 		
-		ImageButton b1 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
-		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		ImageButton b1 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
+		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
 
-		ImageButton b3 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
-		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		ImageButton b3 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
+		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
 		
-		ImageButton b5 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
-		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		ImageButton b5 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
+		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
 		
 		ButtonBox box = new ButtonBox();
 		

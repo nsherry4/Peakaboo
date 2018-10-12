@@ -17,8 +17,8 @@ import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 
@@ -149,7 +149,7 @@ class GuidedFittingWidget extends TSSelectorGroup
 
 		final ImageButton edit = new ImageButton(StockIcon.EDIT_EDIT, IconSize.BUTTON)
 				.withTooltip("Edit this fitting")
-				.withLayout(Layout.IMAGE)
+				.withLayout(ImageButtonLayout.IMAGE)
 				.withBordered(false);
 
 		edit.addActionListener(new ActionListener() {

@@ -47,9 +47,9 @@ import swidget.dialogues.fileio.SwidgetFilePanels;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
-import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.properties.PropertyViewPanel;
 

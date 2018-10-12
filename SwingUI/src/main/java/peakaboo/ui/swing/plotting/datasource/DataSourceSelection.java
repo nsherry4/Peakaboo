@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 
 import peakaboo.datasource.model.DataSource;
 import swidget.widgets.HeaderBox;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;

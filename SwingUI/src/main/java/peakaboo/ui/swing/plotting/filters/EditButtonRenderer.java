@@ -10,9 +10,9 @@ import javax.swing.table.TableCellRenderer;
 import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 class EditButtonRenderer implements TableCellRenderer
@@ -25,7 +25,7 @@ class EditButtonRenderer implements TableCellRenderer
 	public EditButtonRenderer()
 	{
 
-		edit = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(Layout.IMAGE).withBordered(false);
+		edit = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
 		edit.setOpaque(false);
 				
 		container = new JPanel();

@@ -23,8 +23,8 @@ import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listcontrols.ReorderTransferHandler;
 

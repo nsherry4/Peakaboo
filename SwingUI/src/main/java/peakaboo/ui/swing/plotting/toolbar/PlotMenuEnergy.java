@@ -13,11 +13,11 @@ import javax.swing.SwingConstants;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.ButtonSize;
 import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
-import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonSize;
+import swidget.widgets.buttons.ToolbarImageButton;
 
 public class PlotMenuEnergy extends JPopupMenu {
 
@@ -88,7 +88,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		advanced.setOpaque(false);
 		advanced.setBorder(Spacing.bMedium());
 		JButton advancedButton = new ImageButton("Advanced Options")
-				.withButtonSize(ButtonSize.COMPACT)
+				.withButtonSize(ImageButtonSize.COMPACT)
 				.withAction(() -> {
 					this.setVisible(false);
 					plot.actionShowAdvancedOptions();		
