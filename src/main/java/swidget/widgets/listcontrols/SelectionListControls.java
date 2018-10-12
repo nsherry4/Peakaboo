@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
 
 
 

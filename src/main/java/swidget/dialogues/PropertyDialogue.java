@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.properties.PropertyViewPanel;
 
 

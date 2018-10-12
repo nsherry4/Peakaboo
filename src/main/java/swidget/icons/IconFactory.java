@@ -5,7 +5,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import swidget.widgets.ImageButton;
+import swidget.widgets.buttons.ImageButton;
 
 
 public class IconFactory {

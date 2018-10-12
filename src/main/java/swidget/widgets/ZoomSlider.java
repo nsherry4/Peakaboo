@@ -12,7 +12,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 public class ZoomSlider extends JPanel
@@ -27,8 +28,8 @@ public class ZoomSlider extends JPanel
 
 		setLayout(new BorderLayout());
 
-		out = new ImageButton().withIcon(StockIcon.ZOOM_OUT).withTooltip("Zoom Out").withLayout(Layout.IMAGE).withBordered(false);
-		in = new ImageButton().withIcon(StockIcon.ZOOM_IN).withTooltip("Zoom In").withLayout(Layout.IMAGE).withBordered(false);
+		out = new ImageButton().withIcon(StockIcon.ZOOM_OUT).withTooltip("Zoom Out").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
+		in = new ImageButton().withIcon(StockIcon.ZOOM_IN).withTooltip("Zoom In").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
 
 
 		zoomSlider = new JSlider(start, end);

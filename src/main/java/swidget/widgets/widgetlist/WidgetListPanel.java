@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 public class WidgetListPanel<T extends Component> extends JPanel {
 
@@ -66,7 +66,7 @@ public class WidgetListPanel<T extends Component> extends JPanel {
 
 	private ImageButton createRemoveButton(final T component)
 	{
-		ImageButton remove = new ImageButton().withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON).withTooltip("Remove").withLayout(Layout.IMAGE);
+		ImageButton remove = new ImageButton().withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON).withTooltip("Remove").withLayout(ImageButtonLayout.IMAGE);
 
 		remove.addActionListener(new ActionListener() {
 
@@ -84,7 +84,7 @@ public class WidgetListPanel<T extends Component> extends JPanel {
 	private ImageButton createEditButton(final T component)
 	{
 
-		final ImageButton edit = new ImageButton(StockIcon.EDIT_EDIT, IconSize.BUTTON).withTooltip("Edit this " + controller.getComponentName()).withLayout(Layout.IMAGE);
+		final ImageButton edit = new ImageButton(StockIcon.EDIT_EDIT, IconSize.BUTTON).withTooltip("Edit this " + controller.getComponentName()).withLayout(ImageButtonLayout.IMAGE);
 
 		edit.addActionListener(new ActionListener() {
 
@@ -100,7 +100,7 @@ public class WidgetListPanel<T extends Component> extends JPanel {
 	
 	private ImageButton createAddButton()
 	{
-		ImageButton add = new ImageButton().withIcon(StockIcon.EDIT_ADD, IconSize.BUTTON).withTooltip("Add").withLayout(Layout.IMAGE);
+		ImageButton add = new ImageButton().withIcon(StockIcon.EDIT_ADD, IconSize.BUTTON).withTooltip("Add").withLayout(ImageButtonLayout.IMAGE);
 		
 		add.addActionListener(new ActionListener() {
 			

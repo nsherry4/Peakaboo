@@ -1,4 +1,4 @@
-package swidget.widgets.toggle;
+package swidget.widgets.buttons;
 
 
 import java.awt.Component;
@@ -27,7 +27,6 @@ import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 
 
@@ -458,7 +457,7 @@ public class ImageToggleButton extends JToggleButton
 	@Override
 	public void setToolTipText(String text)
 	{
-		super.setToolTipText(ImageButton.getWrappingTooltipText(this, text));
+		super.setToolTipText(ImageButtonConfigurator.getWrappingTooltipText(this, text));
 	}
 	
 	@Override

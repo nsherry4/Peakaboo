@@ -20,7 +20,7 @@ import javax.swing.plaf.basic.BasicFileChooserUI;
 
 import swidget.widgets.HeaderBox;
 import swidget.widgets.HeaderBoxPanel;
-import swidget.widgets.ImageButton;
+import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.LayerDialog;

@@ -21,7 +21,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton.ButtonSize;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.gradientpanel.PaintedPanel;
 
 public class HeaderBox extends PaintedPanel {
@@ -87,7 +88,7 @@ public class HeaderBox extends PaintedPanel {
 		ImageButton close = new ImageButton()
 				.withTooltip("Close")
 				.withIcon(StockIcon.WINDOW_CLOSE)
-				.withButtonSize(ButtonSize.LARGE)
+				.withButtonSize(ImageButtonSize.LARGE)
 				.withBordered(false);
 		return close;
 	}
