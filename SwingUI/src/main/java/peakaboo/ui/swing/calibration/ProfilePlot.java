@@ -19,6 +19,7 @@ import cyclops.visualization.drawing.painters.axis.LineAxisPainter;
 import cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import cyclops.visualization.drawing.plot.PlotDrawing;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
+import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
@@ -61,12 +62,15 @@ public class ProfilePlot extends GraphicsPanel {
 		dr.unitSize = 1f;
 		dr.viewTransform = ViewTransform.LINEAR;
 		
+		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, data.max()*100f)));
+		
 		plotPainters.add(new AreaPainter(data, 
 				new PaletteColour(0xff00897B), 
 				new PaletteColour(0xff00796B), 
 				new PaletteColour(0xff004D40)
 			));
 		
+	
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Sensitivity versus " + profile.getReference().getAnchor().element.toString(), null, null, "Element"));
 		Function<Integer, String> sensitivityFormatter = i -> i + "%";
 		axisPainters.add(new TickMarkAxisPainter(
