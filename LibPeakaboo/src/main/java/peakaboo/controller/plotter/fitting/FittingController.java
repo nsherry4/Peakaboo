@@ -496,6 +496,11 @@ public class FittingController extends EventfulType<Boolean>
 		clearTransitionSeries();
 		List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
 		tss.sort((a, b) -> a.element.compareTo(b.element));
+		
+		//CalibrationReferences use blank TransitionSeries so it's not limited by the peaktable data
+		//we have to convert here
+		//TODO: Should the controller convert all added transitionseries to ones from the PeakTable?
+		tss = tss.stream().map(ts -> PeakTable.SYSTEM.get(ts)).filter(ts -> ts != null).collect(Collectors.toList());
 		addAllTransitionSeries(tss);
 		//TODO: Should we be doing this, or should the user be doing it?
 		setFittingSolver(new OptimizingFittingSolver());

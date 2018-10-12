@@ -25,7 +25,6 @@ import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.display.plot.PlotData;
@@ -125,7 +124,7 @@ public class ProfilePlot extends GraphicsPanel {
 		Spectrum spectrum = new ISpectrum(stopOrdinal - startOrdinal + 1);
 		float value = 0;
 		for (int ordinal = startOrdinal; ordinal <= stopOrdinal; ordinal++) {
-			TransitionSeries ts = PeakTable.SYSTEM.get(Element.values()[ordinal], tst);
+			TransitionSeries ts = new TransitionSeries(Element.values()[ordinal], tst);
 			if (ts != null && values.containsKey(ts)) {
 				value = values.get(ts);
 			} else {

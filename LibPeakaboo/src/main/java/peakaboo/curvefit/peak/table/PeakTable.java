@@ -53,24 +53,25 @@ public interface PeakTable {
 		return tss.get(0);
 	}
 	
+	/**
+	 * Gets the equivalent TransitionSeries from this PeakTable. This is a
+	 * convenience method for {@link PeakTable#get(Element, TransitionSeriesType)}
+	 */
+	default TransitionSeries get(TransitionSeries other) {
+		return get(other.element, other.type);
+	}
+	
+	/**
+	 * Reads the identifier string and returns the appropriate TransitionSeries from
+	 * the PeakTable, or null if the identifier string is invalid, or the
+	 * TransitionSeries is not listed in this PeakTable.
+	 */
 	default TransitionSeries get(String identifier) {
-		if (identifier.contains("+")) {
-			List<TransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(this::get).collect(Collectors.toList());
-			if (tss.contains(null)) {
-				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
-			}
-			return TransitionSeries.summation(tss);
-		}
-		String[] parts = identifier.split(":", 2);
-		if (parts.length != 2) {
+		TransitionSeries ts = TransitionSeries.get(identifier);
+		if (ts == null) {
 			return null;
 		}
-		Element e = Element.valueOf(parts[0]);
-		TransitionSeriesType tst = TransitionSeriesType.fromTypeString(parts[1].trim());
-		if (e == null || tst == null) {
-			return null;
-		}
-		return get(e, tst);
+		return get(ts);
 	}
 	
 	List<TransitionSeries> getAll();

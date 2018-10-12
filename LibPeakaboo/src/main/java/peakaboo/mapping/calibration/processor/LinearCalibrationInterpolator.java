@@ -38,13 +38,25 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 			//all missing entries between previous and known
 			for (int i = previous.element.ordinal()+1; i < known.element.ordinal(); i++) {
 				TransitionSeries inter = PeakTable.SYSTEM.get(Element.values()[i], tst);
-				if (inter != null) {
-					calibrations.put(inter, interpolate(calibrations, inter, previous, known));	
+
+				//If we can't find it in the peak table, create it.
+				//This is generally a bad idea, but we won't ever be using these 
+				//dummy TransitionSeries for any real work
+				if (inter == null) {
+					inter = new TransitionSeries(Element.values()[i], tst);
 				}
+				
+				System.out.println(inter.element.name() + " between " + previous.element.name() + " and " + known.element.name());
+				System.out.println(inter.element.atomicNumber());
+				System.out.println(interpolate(calibrations, inter, previous, known));
+				System.out.println("------------------");
+				
+				calibrations.put(inter, interpolate(calibrations, inter, previous, known));
 			}
 			
 			previous = known;
 		}
+		
 		
 	}
 	

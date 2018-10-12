@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 
 import cyclops.util.ListOps;
 import peakaboo.curvefit.peak.escape.EscapePeak;
@@ -110,7 +111,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	
 
 	/**
-	 * Creates a new TransitionSeries based on the given parameters
+	 * Creates a new blank TransitionSeries based on the given parameters
 	 * 
 	 * @param element the {@link Element} that this {@link TransitionSeries} represents (eg H, He, ...)
 	 * @param seriesType the {@link TransitionSeriesType} that this {@link TransitionSeries} represents (eg K, L, ...)
@@ -538,6 +539,27 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
+	/**
+	 * Reads the identifier string and returns a new blank TransitionSeries, or null
+	 * if the identifier string is invalid.
+	 */
+	public static TransitionSeries get(String identifier) {
+		if (identifier.contains("+")) {
+			List<TransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(TransitionSeries::get).collect(Collectors.toList());
+			if (tss.contains(null)) {
+				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
+			}
+			return TransitionSeries.summation(tss);
+		}
+		String[] parts = identifier.split(":", 2);
+		if (parts.length != 2) {
+			return null;
+		}
+		Element e = Element.valueOf(parts[0]);
+		TransitionSeriesType tst = TransitionSeriesType.fromTypeString(parts[1].trim());
+		
+		return new TransitionSeries(e, tst);
+	}
 
 
 }

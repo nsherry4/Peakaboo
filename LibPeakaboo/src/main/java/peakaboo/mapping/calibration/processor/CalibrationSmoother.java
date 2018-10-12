@@ -44,6 +44,14 @@ public class CalibrationSmoother implements CalibrationProcessor {
 		float value = 0;
 		for (int ordinal = lowest.ordinal(); ordinal <= highest.ordinal(); ordinal++) {
 			TransitionSeries ts = PeakTable.SYSTEM.get(Element.values()[ordinal], tst);
+			
+			//If we can't find it in the peak table, create it.
+			//This is generally a bad idea, but we won't ever be using these 
+			//dummy TransitionSeries for any real work
+			if (ts == null) {
+				ts = new TransitionSeries(Element.values()[ordinal], tst);
+			}
+			
 			if (ts != null && calibrations.containsKey(ts)) {
 				value = calibrations.get(ts);
 			} else {

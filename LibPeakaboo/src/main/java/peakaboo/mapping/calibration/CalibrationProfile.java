@@ -17,8 +17,6 @@ import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.KrausePeakTable;
-import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.mapping.calibration.processor.CalibrationNormalizer;
@@ -26,6 +24,11 @@ import peakaboo.mapping.calibration.processor.CalibrationProcessor;
 import peakaboo.mapping.calibration.processor.CalibrationSmoother;
 import peakaboo.mapping.calibration.processor.LinearCalibrationInterpolator;
 
+/*
+ * NOTE: Calibration does not use PeakTable TransitionSeries, 
+ * it uses blank ones. This is so that the PeakTable does not 
+ * limit which transition series it can represent. 
+ */
 public class CalibrationProfile {
 
 	private CalibrationReference reference;
@@ -45,13 +48,21 @@ public class CalibrationProfile {
 		
 		//Build profile
 		for (FittingResult fit : sample) {
+			
 			TransitionSeries ts = fit.getTransitionSeries();
-			if (! reference.contains(ts)) { continue; }
-			//TODO: Is this the right way to measure sample intensity
 			int channel = sample.getParameters().getCalibration().channelFromEnergy(ts.getStrongestTransition().energyValue);
+			
+			//we look up the transitionseries, but ultimately use a blank one.
+			//we have to use all blanks, otherwise equality/contains cheks will fail
+			ts = new TransitionSeries(ts.element, ts.type);
+			if (! reference.contains(ts)) { continue; }
+			
+			//TODO: Is this the right way to measure sample intensity
+			
 			float sampleIntensity = fit.getFit().get(channel);
 			float referenceValue = reference.getConcentration(ts);
 			float calibration = (sampleIntensity / referenceValue) * 1000f;
+			
 			//don't add if element is being completely suppressed, this only seems 
 			//to happen when the fitting solver algorithm incorrectly completely hides it 
 			//we'll interpolate it later
@@ -154,7 +165,7 @@ public class CalibrationProfile {
 		CalibrationProfile profile = new CalibrationProfile();
 		SerializedCalibrationProfile serialized = YamlSerializer.deserialize(yaml);
 		for (String tsidentifier : serialized.calibrations.keySet()) {
-			TransitionSeries ts = PeakTable.SYSTEM.get(tsidentifier);
+			TransitionSeries ts = TransitionSeries.get(tsidentifier);
 			profile.calibrations.put(ts, serialized.calibrations.get(tsidentifier));
 		}
 		
@@ -175,7 +186,7 @@ public class CalibrationProfile {
 		for (TransitionSeriesType tst : TransitionSeriesType.values()) {
 			System.out.println(tst);
 			for (Element e : Element.values()) {
-				TransitionSeries ts = PeakTable.SYSTEM.get(e, tst);
+				TransitionSeries ts = new TransitionSeries(e, tst);
 				if (!p.contains(ts)) { continue; }
 				System.out.println(e.atomicNumber() + ", " + p.getCalibration(ts));
 			}

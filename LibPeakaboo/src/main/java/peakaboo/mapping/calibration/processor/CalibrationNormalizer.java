@@ -22,9 +22,6 @@ public class CalibrationNormalizer implements CalibrationProcessor {
 			if (ts.type != tst) { continue; }
 			
 			float value = calibrations.get(ts);
-			System.out.println(value);
-			System.out.println(calibrations);
-			System.out.println(against);
 			calibrations.put(ts, value/against);			
 		}
 	}

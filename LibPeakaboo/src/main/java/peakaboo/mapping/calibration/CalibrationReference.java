@@ -11,17 +11,16 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Function;
-
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
 import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import peakaboo.common.YamlSerializer;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
+/*
+ * NOTE: Calibration does not use PeakTable TransitionSeries, 
+ * it uses blank ones. This is so that the PeakTable does not 
+ * limit which transition series it can represent. 
+ */
 public class CalibrationReference implements BoltConfigPlugin {
 
 	private String name;
@@ -139,9 +138,9 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.rev = serialized.rev;
 		reference.notes = serialized.notes;
 		reference.citations = serialized.citations;
-		reference.anchor = PeakTable.SYSTEM.get(serialized.anchor);
+		reference.anchor = TransitionSeries.get(serialized.anchor);
 		for (String tsidentifier : serialized.concentrations.keySet()) {
-			reference.concentrations.put(PeakTable.SYSTEM.get(tsidentifier), serialized.concentrations.get(tsidentifier));
+			reference.concentrations.put(TransitionSeries.get(tsidentifier), serialized.concentrations.get(tsidentifier));
 		}
 		return reference;
 	}
@@ -157,14 +156,14 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.notes = lines.remove(0);
 		String[] citations = lines.remove(0).split("\\|");
 		reference.citations = new ArrayList<>(Arrays.asList(citations));
-		reference.anchor = PeakTable.SYSTEM.get(lines.remove(0));
+		reference.anchor = TransitionSeries.get(lines.remove(0));
 		
 		for (String line : lines) {
 			String[] parts = line.split(",");
 			TransitionSeries ts = null;
 			Float concentration = null;
 			try {
-				ts = PeakTable.SYSTEM.get(parts[0]);
+				ts = TransitionSeries.get(parts[0]);
 				concentration = Float.parseFloat(parts[1]);
 			} catch (NumberFormatException e) {
 				continue;
