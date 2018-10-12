@@ -21,8 +21,8 @@ import plural.executor.PluralExecutor;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.HeaderBox;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
 
 public class ExecutorSetView extends JPanel
 {

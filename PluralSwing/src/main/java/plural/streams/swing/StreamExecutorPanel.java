@@ -21,8 +21,8 @@ import plural.streams.StreamExecutor;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
 import swidget.widgets.HeaderBox;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
 
 public class StreamExecutorPanel extends JPanel {
 
