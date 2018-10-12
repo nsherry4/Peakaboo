@@ -1,4 +1,5 @@
 package peakaboo.ui.swing.plotting;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -7,11 +8,12 @@ import javax.swing.JFrame;
 
 import peakaboo.common.Version;
 import swidget.icons.IconFactory;
+import swidget.widgets.LiveFrame;
 import swidget.widgets.tabbedinterface.TabbedInterface;
 import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
-public class PlotFrame extends JFrame
+public class PlotFrame extends LiveFrame
 {
 
 	
@@ -71,7 +73,9 @@ public class PlotFrame extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tabControl.init();
 		
-		add(tabControl);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(tabControl, BorderLayout.CENTER);
+		
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -85,6 +89,8 @@ public class PlotFrame extends JFrame
 	public TabbedInterface<TabbedLayerPanel> getTabControl() {
 		return tabControl;
 	}
+
+	
 
 	
 	

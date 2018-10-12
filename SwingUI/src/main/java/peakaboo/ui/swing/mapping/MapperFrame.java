@@ -5,14 +5,13 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 
-import javax.swing.JFrame;
-
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import swidget.icons.IconFactory;
+import swidget.widgets.LiveFrame;
 import swidget.widgets.tabbedinterface.TabbedInterface;
 import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
@@ -24,7 +23,7 @@ import swidget.widgets.tabbedinterface.TabbedLayerPanel;
  * @author Nathaniel Sherry, 2009
  */
 
-public class MapperFrame extends JFrame
+public class MapperFrame extends LiveFrame
 {
 
 	private TabbedInterface<TabbedLayerPanel> tabs;
