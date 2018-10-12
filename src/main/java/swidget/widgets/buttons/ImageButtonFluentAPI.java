@@ -32,8 +32,6 @@ interface ImageButtonFluentAPI<B extends AbstractButton> {
 	ImageButtonConfigurator getConfigurator();
 	
 	
-	void setOnAction(Runnable r);
-	Runnable getOnAction();
 	void setForeground(Color c);
 	void setBackground(Color c);
 	
@@ -98,7 +96,7 @@ interface ImageButtonFluentAPI<B extends AbstractButton> {
 	}
 	
 	default B withAction(Runnable action) {
-		this.setOnAction(action);
+		getImageButtonConfig().onAction = action;
 		return getSelf();
 	}
 	

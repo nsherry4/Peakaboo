@@ -15,7 +15,6 @@ import swidget.icons.StockIcon;
 public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<ToolbarImageButton>{
 
 	private ToolbarImageButtonConfigurator configurator;
-	private Runnable onAction;
 	
 	private void firstconfig() {
 		config().size = IconSize.TOOLBAR_SMALL;
@@ -126,16 +125,6 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 	@Override
 	public ToolbarImageButton getSelf() {
 		return this;
-	}
-	
-	@Override
-	public void setOnAction(Runnable r) {
-		onAction = r;
-	}
-
-	@Override
-	public Runnable getOnAction() {
-		return onAction;
 	}
 	
 	private void init() {

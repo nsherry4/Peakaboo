@@ -13,7 +13,6 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 	
 	private ImageButtonConfigurator configurator;
 	
-	private Runnable onAction = null;
 
 	public ImageButton() {
 		init();
@@ -100,15 +99,6 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 		return this;
 	}
 	
-	@Override
-	public void setOnAction(Runnable r) {
-		onAction = r;
-	}
-
-	@Override
-	public Runnable getOnAction() {
-		return onAction;
-	}
 	
 	private void init() {
 		getConfigurator().init(this::setButtonBorder);

@@ -40,8 +40,8 @@ public class ImageButtonConfigurator {
 	void init(Runnable updateBorder) {
 		
 		button.addActionListener(e -> {
-			if (api.getOnAction() != null) {
-				api.getOnAction().run();
+			if (config.onAction != null) {
+				config.onAction.run();
 			}
 		});
 		

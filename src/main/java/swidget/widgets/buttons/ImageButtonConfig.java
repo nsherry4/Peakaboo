@@ -13,4 +13,5 @@ public class ImageButtonConfig {
 	IconSize size = IconSize.BUTTON;
 	Border border = null;
 	ImageButtonSize buttonSize = null;
+	Runnable onAction = null;
 }
