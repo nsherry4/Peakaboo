@@ -17,11 +17,11 @@ import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.layouts.SwingLayoutFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonLayout;
+import swidget.widgets.layout.ButtonBox;
 
 
 public class SwingAutoDialog extends JDialog
