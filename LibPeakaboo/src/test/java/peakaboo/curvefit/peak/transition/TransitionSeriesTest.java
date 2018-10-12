@@ -33,6 +33,16 @@ public class TransitionSeriesTest {
 		Assert.assertTrue(map.containsKey(ask1));
 		Assert.assertTrue(map.containsKey(ask2));
 		
+		TransitionSeries id1 = TransitionSeries.get("Fe:K");
+		TransitionSeries id2 = TransitionSeries.get("Zn:K");
+		Assert.assertFalse(id1.equals(id2));
+		Assert.assertEquals(id1, new TransitionSeries(Element.Fe, TransitionSeriesType.K));
+		Assert.assertEquals(id2, new TransitionSeries(Element.Zn, TransitionSeriesType.K));
+		
+		TransitionSeries ids = TransitionSeries.get("Fe:K+Zn:K");
+		Assert.assertEquals(ids, TransitionSeries.summation(id1, id2));
+		
+		
 		
 	}
 	

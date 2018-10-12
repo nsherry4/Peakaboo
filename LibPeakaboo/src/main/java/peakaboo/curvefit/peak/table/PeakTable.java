@@ -58,7 +58,12 @@ public interface PeakTable {
 	 * convenience method for {@link PeakTable#get(Element, TransitionSeriesType)}
 	 */
 	default TransitionSeries get(TransitionSeries other) {
-		return get(other.element, other.type);
+		if (other.type == TransitionSeriesType.COMPOSITE) {
+			List<TransitionSeries> members = other.getBaseTransitionSeries().stream().map(ts -> get(ts.element, ts.type)).filter(ts -> ts != null).collect(Collectors.toList());
+			return TransitionSeries.summation(members);
+		} else {
+			return get(other.element, other.type);
+		}
 	}
 	
 	/**

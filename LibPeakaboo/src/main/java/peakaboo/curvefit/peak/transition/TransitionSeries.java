@@ -309,14 +309,13 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		//group the TransitionSeries by equality
 		List<List<TransitionSeries>> tsGroups = ListOps.group(tss);
 
-
 		//function for summing two TransitionSeries
 		final BinaryOperator<TransitionSeries> tsSum = (ts1, ts2) -> ts1.summation(ts2);
 
 
 		//turn the groups of primary transitionseries into a list of pile-up transitionseries
-		List<TransitionSeries> pileups = tsGroups.stream().map(tsList -> tsList.stream().reduce((ts1, ts2) -> ts1.summation(ts2)).get()).collect(toList());
-
+		List<TransitionSeries> pileups = tsGroups.stream().map(tsList -> tsList.stream().reduce(tsSum).get()).collect(toList());
+	
 		//sum the pileups
 		TransitionSeries result = pileups.stream().reduce(tsSum).get();
 		return result;
@@ -337,10 +336,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 */
 	public TransitionSeries summation(final TransitionSeries other)
 	{
-
-		//one of these should be a primary TS
-		//if (mode != TransitionSeriesMode.PRIMARY && other.mode != TransitionSeriesMode.PRIMARY) return null;
-
+		
 		TransitionSeriesMode newmode = TransitionSeriesMode.SUMMATION;
 
 		if (this.equals(other)) newmode = TransitionSeriesMode.PILEUP;
@@ -353,19 +349,19 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			TransitionSeriesType.COMPOSITE,
 			newmode);
 		
-		if (transitions.size() == 0) return newTransitionSeries;
-
-		//For each transition in the outer map, map the list transitionList to a list of pileup values
-		List<List<Transition>> allPileupLists = transitions.stream()
-				.map(t1 -> other.transitions.stream().map(t2 ->t1.summation(t2)).collect(toList()))
-				.collect(toList());
-
-		List<Transition> allPileups = new ArrayList<>();
-		for (List<Transition> l : allPileupLists) {
-			allPileups.addAll(l);
+		if (transitions.size() > 0 && other.transitions.size() > 0) {
+			//For each transition in the outer map, map the list transitionList to a list of pileup values
+			List<List<Transition>> allPileupLists = transitions.stream()
+					.map(t1 -> other.transitions.stream().map(t2 ->t1.summation(t2)).collect(toList()))
+					.collect(toList());
+	
+			List<Transition> allPileups = new ArrayList<>();
+			for (List<Transition> l : allPileupLists) {
+				allPileups.addAll(l);
+			}
+			allPileups.forEach(newTransitionSeries::setTransition);
 		}
-		allPileups.forEach(newTransitionSeries::setTransition);
-
+		
 		newTransitionSeries.componentSeries.add(this);
 		newTransitionSeries.componentSeries.add(other);
 
@@ -549,7 +545,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			if (tss.contains(null)) {
 				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
 			}
-			return TransitionSeries.summation(tss);
+			TransitionSeries sum = TransitionSeries.summation(tss);
+			return sum;
 		}
 		String[] parts = identifier.split(":", 2);
 		if (parts.length != 2) {
