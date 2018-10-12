@@ -7,6 +7,7 @@ import cyclops.Pair;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.drawing.plot.PlotDrawing;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
+import cyclops.visualization.palette.PaletteColour;
 
 
 public class GridlinePainter extends PlotPainter
@@ -31,7 +32,7 @@ public class GridlinePainter extends PlotPainter
 		List<Pair<Float, Integer>> tickData = AxisMarkGenerator.getAxisMarkList(maxTicks, p.plotSize.y, 1, valueRangeStart, valueRangeEnd);
 		
 		p.context.save();
-		p.context.setSource(0.0f, 0.0f, 0.0f, 0.1f);
+		p.context.setSource(new PaletteColour(0x20000000));
 		
 		float tickPercent;
 		float yPos;

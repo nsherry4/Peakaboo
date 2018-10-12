@@ -34,13 +34,13 @@ import swidget.Swidget;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.HeaderBox;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
+import swidget.widgets.layout.ButtonBox;
+import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.toggle.ItemToggleButton;
 import swidget.widgets.toggle.ToggleGroup;
 
