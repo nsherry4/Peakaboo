@@ -3,7 +3,6 @@ package peakaboo.ui.swing.calibration;
 import java.awt.BorderLayout;
 import java.util.function.Consumer;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import peakaboo.mapping.calibration.CalibrationReference;
@@ -15,11 +14,12 @@ public class ReferencePicker extends JPanel {
 
 	private Consumer<CalibrationReference> onOK;
 	private Runnable onCancel;
+	private ReferenceList reflist;
 	
 	public ReferencePicker() {
 		setLayout(new BorderLayout());
 		
-		ReferenceList reflist = new ReferenceList();
+		reflist = new ReferenceList(ref -> onOK.accept(ref));
 		
 		ImageButton ok = new ImageButton("OK").withStateDefault().withAction(() -> onOK.accept(reflist.getSelectedReference()));
 		ImageButton cancel = new ImageButton("Cancel").withAction(() -> onCancel.run());
@@ -29,8 +29,7 @@ public class ReferencePicker extends JPanel {
 		HeaderBoxPanel panel = new HeaderBoxPanel(header, reflist);
 		this.add(panel, BorderLayout.CENTER);
 		
-		ok.requestFocus();
-		ok.grabFocus();
+		reflist.focusTable();
 		
 	}
 
@@ -43,6 +42,9 @@ public class ReferencePicker extends JPanel {
 	}
 	
 	
+	public void focus() {
+		reflist.focusTable();
+	}
 	
 	
 	

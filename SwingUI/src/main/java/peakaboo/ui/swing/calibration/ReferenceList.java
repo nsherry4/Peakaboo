@@ -4,33 +4,27 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.ScrollPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.function.Consumer;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTree;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationReference;
-import stratus.StratusLookAndFeel;
 import swidget.widgets.Spacing;
 
 public class ReferenceList extends JPanel {
@@ -39,6 +33,10 @@ public class ReferenceList extends JPanel {
 	private List<CalibrationReference> refs;
 	
 	public ReferenceList() {
+		this(ref -> {});
+	}
+	
+	public ReferenceList(Consumer<CalibrationReference> onSelect) {
 		
 		refs = CalibrationPluginManager.SYSTEM.getPlugins().newInstances();
 		
@@ -103,7 +101,25 @@ public class ReferenceList extends JPanel {
 		table.setGridColor(border);
 		table.setTableHeader(null);
 		
+		table.addMouseListener(new MouseAdapter() {
+	
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					onSelect.accept(getSelectedReference());
+				}
+			}
+		});
 		
+		table.addKeyListener(new KeyAdapter() {
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					onSelect.accept(getSelectedReference());
+				}
+			}
+		});
 		
 		
 		JScrollPane scroller = new JScrollPane(table);
@@ -114,12 +130,20 @@ public class ReferenceList extends JPanel {
 		setBorder(Spacing.bHuge());
 		add(scroller, BorderLayout.CENTER);
 		
+		focusTable();
+		
 	}
 	
 	public CalibrationReference getSelectedReference() {
 		return refs.get(table.getSelectedRow());
 	}
 	
+	public void focusTable() {
+		SwingUtilities.invokeLater(() -> {
+			table.requestFocus();
+			table.grabFocus();
+		});
+	}
 
 	
 }
