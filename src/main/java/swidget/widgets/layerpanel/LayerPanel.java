@@ -6,10 +6,12 @@ import java.awt.Frame;
 import java.awt.event.InputEvent;
 import java.util.Stack;
 
-import javax.swing.JLayer;
+import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import swidget.widgets.LiveFrame;
 
 
 public class LayerPanel extends JLayeredPane {
@@ -85,21 +87,30 @@ public class LayerPanel extends JLayeredPane {
 	}
 
 	/**
-	 * This exists to work around a bug where nothing seems to be able to trigger 
-	 * a paint when the window is minimized, to the point where even after 
-	 * unminimizing it still won't redraw, only redrawing child components on 
-	 * mouseover
+	 * This exists to work around a bug where nothing seems to be able to trigger a
+	 * paint when the window is minimized, to the point where even after
+	 * unminimizing it still won't redraw, only redrawing child components on
+	 * mouseover. The preferred solution is to replace {@link JFrame}s with
+	 * {@link LiveFrame}s, as their sole function is to override this behaviour
 	 */
 	private void updateIfMinimized() {
 		Component croot = SwingUtilities.getRoot(this);
-		if (croot instanceof Frame) {
-			int state = ((Frame) croot).getState();
+		if (croot instanceof JFrame) {
+			JFrame frame = ((JFrame)croot);
+			int state = frame.getState();
 			if (state == Frame.ICONIFIED) {
-				this.update(this.getGraphics());
+				frame.update(frame.getGraphics());
 			}
 		}
 	}
 
+	private void updateScreen() {
+		SwingUtilities.invokeLater(() -> {
+			updateIfMinimized();
+			this.revalidate();
+			this.repaint();
+		});
+	}
 	
 	/**
 	 * Adds a modal component to the top of the modal stack. This allows more 
@@ -112,11 +123,12 @@ public class LayerPanel extends JLayeredPane {
 		this.add(layer.getJLayer(), new StackConstraints(layers.size()+200, "modal-layer-" + layers.size()));
 		
 		layer.getJLayer().requestFocus();
-		this.revalidate();
-		this.repaint();
+		updateScreen();
+
+		
 		
 	}
-	
+
 	/**
 	 * Removes the topmost modal component from the modal stack
 	 */
@@ -135,7 +147,8 @@ public class LayerPanel extends JLayeredPane {
 		layers.remove(layer);
 		this.remove(layer.getJLayer());
 		layer.discard();
-		this.repaint();
+		updateScreen();
+		
 
 	}
 

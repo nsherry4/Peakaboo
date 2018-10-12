@@ -4,11 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-public class SplashScreen extends JFrame {
+import swidget.widgets.LiveFrame;
+
+public class SplashScreen extends LiveFrame {
 
 	public SplashScreen(ImageIcon background, Image icon, String appName) {
 		super(appName);
