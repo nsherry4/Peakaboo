@@ -18,10 +18,10 @@ import net.sciencestudio.autodialog.view.swing.layouts.SwingLayoutFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ButtonBox;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 public class SwingAutoDialog extends JDialog
@@ -124,7 +124,7 @@ public class SwingAutoDialog extends JDialog
 		}
 		
 		
-		info = new ImageButton(StockIcon.BADGE_HELP).withTooltip("Filter Information").withLayout(Layout.IMAGE).withBordered(true);
+		info = new ImageButton(StockIcon.BADGE_HELP).withTooltip("Filter Information").withLayout(ImageButtonLayout.IMAGE).withBordered(true);
 		info.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)

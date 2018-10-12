@@ -13,8 +13,8 @@ import javax.swing.JTextField;
 
 import net.sciencestudio.autodialog.model.Parameter;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 public class FilenameEditor extends AbstractSwingEditor<String> {
 
@@ -99,7 +99,7 @@ class FileSelector extends JPanel
 	
 	public FileSelector(final FilenameEditor parent) {
 		super(new BorderLayout());
-		open = new ImageButton().withIcon(StockIcon.DOCUMENT_OPEN).withTooltip("Browse for Files").withLayout(Layout.IMAGE);
+		open = new ImageButton().withIcon(StockIcon.DOCUMENT_OPEN).withTooltip("Browse for Files").withLayout(ImageButtonLayout.IMAGE);
 		
 		filenameField = new JTextField(10);
 		filenameField.setEditable(false);
