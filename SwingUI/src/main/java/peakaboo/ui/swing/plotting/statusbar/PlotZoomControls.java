@@ -12,7 +12,7 @@ import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonLayout;
-import swidget.widgets.buttons.ImageToggleButton;
+import swidget.widgets.buttons.ToggleImageButton;
 
 public class PlotZoomControls extends ImageButton {
 	
@@ -40,7 +40,7 @@ public class PlotZoomControls extends ImageButton {
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
 
 		
-		final ImageToggleButton lockHorizontal = new ImageToggleButton(StockIcon.MISC_LOCKED, "", "Lock Vertical Zoom to Window Size");
+		final ToggleImageButton lockHorizontal = new ToggleImageButton("", StockIcon.MISC_LOCKED).withTooltip("Lock Vertical Zoom to Window Size");
 		lockHorizontal.setSelected(true);
 		lockHorizontal.addActionListener(e -> {
 			controller.view().setLockPlotHeight(lockHorizontal.isSelected());

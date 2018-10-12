@@ -21,7 +21,7 @@ import swidget.widgets.ButtonBox;
 import swidget.widgets.HeaderBox;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageToggleButton;
+import swidget.widgets.buttons.ToggleImageButton;
 
 public class ProfileViewPanel extends JPanel {
 
@@ -57,19 +57,21 @@ public class ProfileViewPanel extends JPanel {
 		
 		ButtonGroup seriesGroup = new ButtonGroup();
 		
-		JToggleButton kseries = new JToggleButton("K Series");
+		ToggleImageButton kseries = new ToggleImageButton("K Series");
 		kseries.addActionListener((e) -> {
+			System.out.println("K");
 			cardlayout.show(plots, TransitionSeriesType.K.toString());
 		});
 		seriesGroup.add(kseries);
 		
-		JToggleButton lseries = new JToggleButton("L Series");
+		ToggleImageButton lseries = new ToggleImageButton("L Series");
 		lseries.addActionListener((e) -> {
+			System.out.println("L");
 			cardlayout.show(plots, TransitionSeriesType.L.toString());
 		});
 		seriesGroup.add(lseries);
 		
-		JToggleButton mseries = new JToggleButton("M Series");
+		ToggleImageButton mseries = new ToggleImageButton("M Series");
 		mseries.addActionListener((e) -> {
 			cardlayout.show(plots, TransitionSeriesType.M.toString());
 		});
@@ -81,6 +83,9 @@ public class ProfileViewPanel extends JPanel {
 		center.addCentre(mseries);
 		center.setBorder(Spacing.bNone());
 		center.setOpaque(false);
+		
+		cardlayout.show(plots, TransitionSeriesType.K.toString());
+		kseries.setSelected(true);
 		
 		header = new HeaderBox(cancel, center, ok);
 		this.add(header, BorderLayout.NORTH);
