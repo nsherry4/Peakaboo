@@ -6,9 +6,9 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 
 import peakaboo.mapping.calibration.CalibrationReference;
-import swidget.widgets.HeaderBox;
-import swidget.widgets.HeaderBoxPanel;
 import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.layout.HeaderBox;
+import swidget.widgets.layout.HeaderBoxPanel;
 
 public class ReferencePicker extends JPanel {
 

@@ -13,8 +13,8 @@ import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.display.map.MapScaleMode;
-import swidget.widgets.ButtonBox;
 import swidget.widgets.Spacing;
+import swidget.widgets.layout.ButtonBox;
 
 public class ScaleModeWidget extends JPanel {
 

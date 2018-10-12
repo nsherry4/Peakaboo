@@ -16,11 +16,11 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import stratus.StratusLookAndFeel;
-import swidget.widgets.ButtonBox;
-import swidget.widgets.HeaderBox;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToggleImageButton;
+import swidget.widgets.layout.ButtonBox;
+import swidget.widgets.layout.HeaderBox;
 
 public class ProfileViewPanel extends JPanel {
 

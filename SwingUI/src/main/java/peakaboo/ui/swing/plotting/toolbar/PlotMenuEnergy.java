@@ -13,11 +13,11 @@ import javax.swing.SwingConstants;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
-import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.buttons.ToolbarImageButton;
+import swidget.widgets.layout.SettingsPanel;
 
 public class PlotMenuEnergy extends JPopupMenu {
 

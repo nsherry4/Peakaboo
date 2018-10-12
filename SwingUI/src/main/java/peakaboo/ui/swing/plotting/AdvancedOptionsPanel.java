@@ -31,10 +31,10 @@ import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
-import swidget.widgets.HeaderBox;
-import swidget.widgets.SettingsPanel;
-import swidget.widgets.SettingsPanel.LabelPosition;
 import swidget.widgets.Spacing;
+import swidget.widgets.layout.HeaderBox;
+import swidget.widgets.layout.SettingsPanel;
+import swidget.widgets.layout.SettingsPanel.LabelPosition;
 
 public class AdvancedOptionsPanel extends JPanel {
 	

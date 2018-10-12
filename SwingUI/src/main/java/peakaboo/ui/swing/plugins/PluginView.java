@@ -30,7 +30,7 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
-import swidget.widgets.properties.PropertyViewPanel;
+import swidget.widgets.layout.PropertyViewPanel;
 
 public class PluginView extends JPanel {
 	
