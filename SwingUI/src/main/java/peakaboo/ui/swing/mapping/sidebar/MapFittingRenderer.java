@@ -3,6 +3,7 @@ package peakaboo.ui.swing.mapping.sidebar;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.swing.JTable;
@@ -18,11 +19,12 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 {
 
 	private FittedWidget tswidget;
-
+	private Predicate<TransitionSeries> enabled;
 	
 	
-	public MapFittingRenderer(){
-		tswidget = new FittedWidget();		
+	public MapFittingRenderer(Predicate<TransitionSeries> enabled){
+		tswidget = new FittedWidget();	
+		this.enabled = enabled;
 	}
 
 	@Override
@@ -57,6 +59,7 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 		if (value instanceof TransitionSeries){
 			TransitionSeries ts = (TransitionSeries)value;
 			tswidget.setName(ts.getDescription());
+			tswidget.setEnabled(enabled.test(ts));
 			
 			String tooltip = "";
 			if (ts.mode != TransitionSeriesMode.SUMMATION){

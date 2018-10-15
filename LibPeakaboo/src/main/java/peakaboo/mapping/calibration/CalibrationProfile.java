@@ -94,10 +94,12 @@ public class CalibrationProfile {
 	}
 
 	public boolean contains(TransitionSeries ts) {
+		ts = new TransitionSeries(ts.element, ts.type);
 		return calibrations.keySet().contains(ts);
 	}
 	
 	public float getCalibration(TransitionSeries ts) {
+		ts = new TransitionSeries(ts.element, ts.type);
 		return calibrations.get(ts);
 	}
 	
@@ -112,6 +114,7 @@ public class CalibrationProfile {
 	}
 	
 	public float calibrate(float value, TransitionSeries ts) {
+		ts = new TransitionSeries(ts.element, ts.type);
 		if (calibrations.keySet().contains(ts)) {
 			float calibration = calibrations.get(ts);
 			return value / calibration;

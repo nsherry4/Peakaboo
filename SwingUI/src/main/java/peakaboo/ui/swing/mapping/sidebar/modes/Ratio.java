@@ -110,10 +110,11 @@ public class Ratio extends JPanel {
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 				
 				switch (columnIndex) {
 
-					case 0: return true;
+					case 0: return mapFittings.getTransitionSeriesEnabled(ts);
 					case 1: return false;
 					case 2: return true;
 				}
@@ -179,7 +180,7 @@ public class Ratio extends JPanel {
 		table.setShowHorizontalLines(false);
 		table.setFillsViewportHeight(true);
 		
-		MapFittingRenderer fitRenderer = new MapFittingRenderer();
+		MapFittingRenderer fitRenderer = new MapFittingRenderer(mapFittings::getTransitionSeriesEnabled);
 		table.getColumnModel().getColumn(1).setCellRenderer(fitRenderer);
 		table.setRowHeight(fitRenderer.getPreferredSize().height);
 		

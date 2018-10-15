@@ -588,7 +588,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		List<TransitionSeries> visible = new ArrayList<>();
 		for (TransitionSeries ts : getAllTransitionSeries()) {
-			if (this.visibility.get(ts)) {
+			if (getTransitionSeriesVisibility(ts)) {
 				visible.add(ts);
 			}
 		}
@@ -666,15 +666,30 @@ public class MapFittingSettings extends EventfulType<String> {
 		this.ratioSide.put(ts, side);
 	}
 	
+	/**
+	 * Returns if this TransitionSeries is enabled, but returning false regardless
+	 * of setting if {@link #getTransitionSeriesEnabled(TransitionSeries)} returns
+	 * false
+	 */
 	public synchronized boolean getTransitionSeriesVisibility(TransitionSeries ts)
 	{
-		return this.visibility.get(ts);
+		return this.visibility.get(ts) && getTransitionSeriesEnabled(ts);
 	}
 	public synchronized void setTransitionSeriesVisibility(TransitionSeries ts, boolean visible)
 	{
 		this.visibility.put(ts, visible);
 	}
 
+	/**
+	 * Indicates if this TransitionSeries is enabled, or disabled (due to a lack of calibration, for example)
+	 */
+	public boolean getTransitionSeriesEnabled(TransitionSeries ts) {
+		if (calibrationProfile.isEmpty()) {
+			return true;
+		}
+		return calibrationProfile.contains(ts);
+	}
+	
 
 
 	public CalibrationProfile getCalibrationProfile() {

@@ -72,6 +72,7 @@ public class Composite extends JPanel {
 				if (columnIndex == 0) {
 					Boolean bvalue = (Boolean) value;
 					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+
 					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
 					mapFittings.invalidateInterpolation();
 				}
@@ -87,7 +88,10 @@ public class Composite extends JPanel {
 
 			public boolean isCellEditable(int rowIndex, int columnIndex)
 			{
-				if (columnIndex == 0) return true;
+				if (columnIndex == 0) {
+					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					return mapFittings.getTransitionSeriesEnabled(ts);
+				};
 				return false;
 			}
 
@@ -98,11 +102,8 @@ public class Composite extends JPanel {
 				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 				
 				if (columnIndex == 0) {
-
 					return mapFittings.getTransitionSeriesVisibility(ts);
-
 				} else {
-
 					return ts;
 				}
 
@@ -148,7 +149,7 @@ public class Composite extends JPanel {
 		table.setShowHorizontalLines(false);
 		table.setFillsViewportHeight(true);
 		
-		MapFittingRenderer renderer = new MapFittingRenderer();
+		MapFittingRenderer renderer = new MapFittingRenderer(mapFittings::getTransitionSeriesEnabled);
 		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
 		table.setRowHeight(renderer.getPreferredSize().height);
 		
