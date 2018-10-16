@@ -93,6 +93,10 @@ public class OptimizingFittingSolver implements FittingSolver {
 			Curve curve = curves.get(i);
 			FittingResult guessFittingResult = fitter.fit(data, curve);
 			guess[i] = guessFittingResult.getCurveScale();
+			//guesses shouldn't be zero
+			if (guess[i] == 0) {
+				guess[i] = 0.00001d;
+			}
 		}
 				
 			
