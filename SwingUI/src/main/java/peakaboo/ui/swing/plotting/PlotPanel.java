@@ -79,8 +79,8 @@ import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.results.MapResultSet;
-import peakaboo.ui.swing.calibration.ProfileViewPanel;
-import peakaboo.ui.swing.calibration.ReferencePicker;
+import peakaboo.ui.swing.calibration.picker.ReferencePicker;
+import peakaboo.ui.swing.calibration.profileplot.ProfileViewPanel;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
@@ -905,7 +905,7 @@ public class PlotPanel extends TabbedLayerPanel
 	
 	public void actionLoadCalibrationReference() {
 		
-		ReferencePicker picker = new ReferencePicker();
+		ReferencePicker picker = new ReferencePicker(this);
 		ModalLayer layer = new ModalLayer(this, picker);
 		
 		picker.setOnOK(ref -> {

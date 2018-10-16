@@ -442,6 +442,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		valueAtCoord = coord -> {
 			int index = map.getSettings().getView().getDataWidth() * coord.y + coord.x;
+			if (index >= data.size()) return "";
 			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
 		};
 	}

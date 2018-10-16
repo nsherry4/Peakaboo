@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration;
+package peakaboo.ui.swing.calibration.profileplot;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;

@@ -172,7 +172,7 @@ public class StandardDataSet implements DataSet
 					applying.advanceState();
 					
 					long t2 = System.currentTimeMillis();
-					PeakabooLog.get().log(Level.INFO, "Opened a Data Set in " + ((t2-t1)/1000) + " Seconds");
+					PeakabooLog.get().log(Level.INFO, "Opened a " + dataSource.getFileFormat().getFormatName() + " Data Set in " + ((t2-t1)/1000) + " Seconds");
 					
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					

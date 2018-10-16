@@ -1,10 +1,9 @@
-package peakaboo.ui.swing.calibration;
+package peakaboo.ui.swing.calibration.profileplot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -23,16 +22,11 @@ import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
-import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.display.plot.PlotData;
-import peakaboo.display.plot.PlotSettings;
-import peakaboo.display.plot.Plotter;
 import peakaboo.mapping.calibration.CalibrationProfile;
-import peakaboo.mapping.calibration.CalibrationReference;
 
 public class ProfilePlot extends GraphicsPanel {
 
@@ -89,8 +83,7 @@ public class ProfilePlot extends GraphicsPanel {
 	
 	@Override
 	protected void drawGraphics(Surface backend, Coord<Integer> size) {
-		System.out.println("ASDF");
-		
+	
 		backend.setSource(new PaletteColour(0xffffffff));
 		backend.rectAt(0, 0, getWidth(), getHeight());
 		backend.fill();

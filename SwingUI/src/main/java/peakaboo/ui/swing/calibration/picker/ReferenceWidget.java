@@ -1,20 +1,23 @@
-package peakaboo.ui.swing.calibration;
+package peakaboo.ui.swing.calibration.picker;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import peakaboo.mapping.calibration.CalibrationReference;
 import swidget.widgets.Spacing;
+import swidget.widgets.listwidget.ListWidget;
 
-public class ReferenceWidget extends JPanel {
+public class ReferenceWidget extends ListWidget<CalibrationReference> {
 
-	private CalibrationReference reference;
-	private JLabel name, desc, info;
+	private JLabel name, desc;
 	
 	public ReferenceWidget() {
 		setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
@@ -26,23 +29,15 @@ public class ReferenceWidget extends JPanel {
 		
 		desc = new JLabel();
 		add(desc, BorderLayout.SOUTH);
-		
-		info = new JLabel();
-		info.setVerticalAlignment(SwingConstants.TOP);
-		add(info, BorderLayout.EAST);
-		
+
+
 		setBorder(Spacing.bLarge());
 		
 	}
 	
-	public void setReference(CalibrationReference reference) {
-		this.reference = reference;
-			
+	public void setValue(CalibrationReference reference) {
 		name.setText(reference.getName());
 		desc.setText(reference.getDescription());
-		int count = reference.getConcentrations().size();
-		info.setText(count + " Fittings");
-		
 	}
 	
 	@Override
@@ -51,7 +46,6 @@ public class ReferenceWidget extends JPanel {
 			name.setForeground(c);
 			Color cDetail = new Color(c.getRed(), c.getGreen(), c.getBlue(), 192);
 			desc.setForeground(cDetail);
-			info.setForeground(cDetail);
 		}
 	}
 	

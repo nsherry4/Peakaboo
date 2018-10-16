@@ -100,17 +100,17 @@ public class PlotMenuMain extends JPopupMenu {
 		
 		
 		
-		JMenu calibration = new JMenu("Calibration");
+		JMenu calibration = new JMenu("Z-Calibration");
 
 		loadCalibrationReference = PlotMenuUtils.createMenuItem(plot,
-				"Load Reference", null, "Loads fittings for a reference material",
+				"Load Reference", null, "Loads a Z-Calibration reference for a reference material",
 				e -> plot.actionLoadCalibrationReference(),
 				null, null
 		);
 		calibration.add(loadCalibrationReference);
 		
 		saveCalibrationProfile = PlotMenuUtils.createMenuItem(plot,
-				"Save Profile", null, "Saves the current fitting data against the loaded reference",
+				"Save Profile", null, "Saves the current fitting data against the loaded Z-Calibration reference",
 				e -> plot.actionSaveCalibrationProfile(),
 				null, null
 		);

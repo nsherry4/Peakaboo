@@ -1,31 +1,47 @@
-package peakaboo.ui.swing.calibration;
+package peakaboo.ui.swing.calibration.picker;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationReference;
+import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
+import swidget.widgets.listwidget.ListWidget;
+import swidget.widgets.listwidget.ListWidgetCellEditor;
+import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
 public class ReferenceList extends JPanel {
 	
@@ -33,14 +49,16 @@ public class ReferenceList extends JPanel {
 	private List<CalibrationReference> refs;
 	
 	public ReferenceList() {
-		this(ref -> {});
+		this(ref -> {}, ref -> {});
 	}
 	
-	public ReferenceList(Consumer<CalibrationReference> onSelect) {
+	public ReferenceList(Consumer<CalibrationReference> onSelect, Consumer<CalibrationReference> onMore) {
 		
 		refs = CalibrationPluginManager.SYSTEM.getPlugins().newInstances();
 		
 		TableModel model = new TableModel() {
+			
+			private List<TableModelListener> listeners = new ArrayList<>();
 			
 			@Override
 			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
@@ -49,12 +67,12 @@ public class ReferenceList extends JPanel {
 			
 			@Override
 			public void removeTableModelListener(TableModelListener l) {
-				//TODO?			
+				listeners.remove(l);		
 			}
 			
 			@Override
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				return false;
+				return columnIndex == 1;
 			}
 			
 			@Override
@@ -69,12 +87,17 @@ public class ReferenceList extends JPanel {
 			
 			@Override
 			public String getColumnName(int columnIndex) {
-				return "Calibration Reference";
+				if (columnIndex == 0) {
+					return "Reference";
+				} else {
+					return "More";
+				}
+				
 			}
 			
 			@Override
 			public int getColumnCount() {
-				return 1;
+				return 2;
 			}
 			
 			@Override
@@ -84,22 +107,26 @@ public class ReferenceList extends JPanel {
 			
 			@Override
 			public void addTableModelListener(TableModelListener l) {
-				//TODO?
+				listeners.add(l);
 			}
 		};
 		table = new JTable(model);
-		table.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		table.getSelectionModel().setSelectionInterval(0, 0);
-		
+		table.setFillsViewportHeight(true);
 
 		Color border = UIManager.getColor("stratus-widget-border");
 		if (border == null) { border = Color.LIGHT_GRAY; }
 		
-		TableCellRenderer renderer = new ReferenceRenderer();
-		table.setDefaultRenderer(CalibrationReference.class, renderer);
-		table.setShowGrid(true);
+		table.getColumn("Reference").setCellRenderer(new ListWidgetTableCellRenderer<>(new ReferenceWidget()));
+		table.getColumn("More").setCellRenderer(new ListWidgetTableCellRenderer<>(new MoreWidget()));
+		table.getColumn("More").setCellEditor(new ListWidgetCellEditor<>(new MoreWidget(onMore)));
+		table.getColumn("More").setWidth(64);
+		table.getColumn("More").setMinWidth(64);
+		table.getColumn("More").setMaxWidth(64);
+		table.getColumn("More").setResizable(false);
+		table.setShowGrid(false);
 		table.setGridColor(border);
 		table.setTableHeader(null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		table.addMouseListener(new MouseAdapter() {
 	
@@ -145,41 +172,45 @@ public class ReferenceList extends JPanel {
 		});
 	}
 
-	
 }
-class ReferenceRenderer implements TableCellRenderer {
 
-	private ReferenceWidget widget;
+
+class MoreWidget extends ListWidget<CalibrationReference> {
 	
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
+	private JLabel label;
+	
+	public MoreWidget() {
+		this(ref -> {});
+	}
+	
+	
+	public MoreWidget(Consumer<CalibrationReference> onMore) {
+		setLayout(new FlowLayout());
+		label = new JLabel("more...");
+		setLabelColour(getForeground());
+		label.setOpaque(false);
+		add(label, BorderLayout.CENTER);
 		
-		if (widget == null) {
-			Color border = UIManager.getColor("stratus-widget-border");
-			if (border == null) { border = Color.LIGHT_GRAY; }
-			widget = new ReferenceWidget();
-			//widget.setBorder(new MatteBorder(0, 0, 1, 0, border));
-		}
-		
-		widget.setReference((CalibrationReference) value);
-		if (isSelected) {
-			widget.setBackground(table.getSelectionBackground());
-			widget.setForeground(table.getSelectionForeground());
-			widget.setOpaque(true);
-		} else {
-			widget.setBackground(table.getBackground());
-			widget.setForeground(table.getForeground());
-			widget.setOpaque(false);
-		}
-		
-		if (table.getRowHeight() < widget.getPreferredSize().height) {
-			table.setRowHeight(widget.getPreferredSize().height);
-		}
-		
-		return widget;
+		label.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				onMore.accept(getValue());	
+			}
+
+		});
 		
 	}
+	
+	@Override
+	public void setForeground(Color c) {
+		super.setForeground(c);
+		if (label == null) { return; }
+		setLabelColour(c);
+	}
+	
+	private void setLabelColour(Color c) {
+		Color cDetail = new Color(c.getRed(), c.getGreen(), c.getBlue(), 192);
+		label.setForeground(cDetail);
+	}
 }
-
-
