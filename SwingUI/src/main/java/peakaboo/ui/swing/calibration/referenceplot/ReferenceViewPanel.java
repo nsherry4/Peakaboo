@@ -55,7 +55,7 @@ public class ReferenceViewPanel extends JPanel {
 		
 		
 		//header
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withAction(() -> this.onClose.run());
+		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withAction(() -> this.onClose.run());
 		
 		ButtonGroup seriesGroup = new ButtonGroup();
 

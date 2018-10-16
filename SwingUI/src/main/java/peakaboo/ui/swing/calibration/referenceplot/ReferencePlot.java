@@ -68,16 +68,14 @@ public class ReferencePlot extends GraphicsPanel {
 		
 	
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Concentration", null, null, "Element"));
-		NumberFormat formatter = new DecimalFormat("0.0E0");
-		Function<Integer, String> sensitivityFormatter = i -> formatter.format(i);
 		axisPainters.add(new TickMarkAxisPainter(
-				new TickFormatter(0f, data.max()*100f, sensitivityFormatter), 
+				new TickFormatter(0f, data.max()*100f), 
 				new TickFormatter((float)lowest, (float)highest, i -> {  
 					Element element = Element.values()[i];
 					return element.name();
 				}), 
 				null, 
-				new TickFormatter(0f, data.max()*100f, sensitivityFormatter),
+				new TickFormatter(0f, data.max()*100f),
 				false, 
 				false));
 		axisPainters.add(new LineAxisPainter(true, true, false, true));

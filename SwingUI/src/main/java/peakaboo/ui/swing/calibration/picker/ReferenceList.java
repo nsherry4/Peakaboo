@@ -185,11 +185,12 @@ class MoreWidget extends ListWidget<CalibrationReference> {
 	
 	
 	public MoreWidget(Consumer<CalibrationReference> onMore) {
-		setLayout(new FlowLayout());
+		setLayout(new BorderLayout());
+		setBorder(Spacing.bLarge());
 		label = new JLabel("more...");
 		setLabelColour(getForeground());
 		label.setOpaque(false);
-		add(label, BorderLayout.CENTER);
+		add(label, BorderLayout.SOUTH);
 		
 		label.addMouseListener(new MouseAdapter() {
 			
