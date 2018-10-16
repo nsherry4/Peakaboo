@@ -44,9 +44,16 @@ public abstract class AxisPainter extends Painter
 	}
 
 
+	/**
+	 * Returns the size of the axis in the y (vertical) direction. It <i>does
+	 * not</i> get the size of the y-axes
+	 */
 	public abstract Pair<Float, Float> getAxisSizeY(PainterData p);
 
-
+	/**
+	 * Returns the size of the axis in the x (horizontal) direction. It <i>does
+	 * not</i> get the size of the x-axes
+	 */
 	public abstract Pair<Float, Float> getAxisSizeX(PainterData p);
 
 
