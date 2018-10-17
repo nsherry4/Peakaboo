@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -681,7 +682,8 @@ public class PlotPanel extends TabbedLayerPanel
 					controller.data().getDiscards().list(),
 					dataDimensions,
 					physicalDimensions,
-					physicalUnit
+					physicalUnit,
+					controller.fitting().getCalibrationProfile()
 				);
 			
 			
@@ -852,6 +854,21 @@ public class PlotPanel extends TabbedLayerPanel
 
 	}
 	
+	public void actionLoadCalibrationProfile() {
+		SwidgetFilePanels.openFile(this, "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
+			if (!result.isPresent()) {
+				return;
+			}
+			
+			
+			try {
+				CalibrationProfile profile = CalibrationProfile.load(new String(Files.readAllBytes(result.get().toPath())));
+				controller.fitting().setCalibrationProfile(profile);
+			} catch (IOException e1) {
+				PeakabooLog.get().log(Level.SEVERE, "Could not load calibration profile", e1);
+			}
+		});
+	}
 	
 	public void actionSaveCalibrationProfile() {
 		
@@ -863,7 +880,6 @@ public class PlotPanel extends TabbedLayerPanel
 			return;
 		}
 
-		
 		Mutable<ModalLayer> modal = new Mutable<>(null);
 		
 		//show it to the user to get their approval
@@ -896,12 +912,22 @@ public class PlotPanel extends TabbedLayerPanel
 		 
 		modal.set(new ModalLayer(this, profileView));
 		this.pushLayer(modal.get());
+	
+	}
+	
+	public void actionDisplayCalibrationProfile(CalibrationProfile profile) {
+		Mutable<ModalLayer> modal = new Mutable<>(null);
 		
+		//show it to the user to get their approval
+		ProfileViewPanel profileView = new ProfileViewPanel(profile, () -> {
+			this.removeLayer(modal.get());
+		}); 
 		
-
-		
+		modal.set(new ModalLayer(this, profileView));
+		this.pushLayer(modal.get());
 		
 	}
+	
 	
 	public void actionLoadCalibrationReference() {
 		
@@ -1089,5 +1115,7 @@ public class PlotPanel extends TabbedLayerPanel
 		dialog.showIn(this);
 		textfield.grabFocus();
 	}
+
+
 
 }

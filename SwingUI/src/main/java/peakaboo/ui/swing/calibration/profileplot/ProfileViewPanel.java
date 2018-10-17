@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -16,6 +17,7 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import stratus.StratusLookAndFeel;
+import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToggleImageButton;
@@ -27,7 +29,24 @@ public class ProfileViewPanel extends JPanel {
 	private HeaderBox header;
 	private JPanel plots;
 	
+	public ProfileViewPanel(CalibrationProfile profile, Runnable onClose) {
+		
+		ImageButton cancel = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withAction(onClose);
+		
+		init(profile, null, cancel);
+		
+	}
+	
 	public ProfileViewPanel(CalibrationProfile profile, Runnable onAccept, Runnable onReject) {
+		
+		ImageButton ok = new ImageButton("Accept").withStateDefault().withAction(onAccept);
+		ImageButton cancel = new ImageButton("Cancel").withAction(onReject);
+		
+		init(profile, cancel, ok);
+
+	}
+	
+	private void init(CalibrationProfile profile, JComponent left, JComponent right) {
 		
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(700, 350));
@@ -48,11 +67,6 @@ public class ProfileViewPanel extends JPanel {
 		
 		this.add(plots, BorderLayout.CENTER);
 		
-		
-		
-		//header
-		ImageButton ok = new ImageButton("Accept").withStateDefault().withAction(onAccept);
-		ImageButton cancel = new ImageButton("Cancel").withAction(onReject);
 		
 		ButtonGroup seriesGroup = new ButtonGroup();
 		
@@ -86,13 +100,8 @@ public class ProfileViewPanel extends JPanel {
 		cardlayout.show(plots, TransitionSeriesType.K.toString());
 		kseries.setSelected(true);
 		
-		header = new HeaderBox(cancel, center, ok);
+		header = new HeaderBox(left, center, right);
 		this.add(header, BorderLayout.NORTH);
-		
-		
-
-		
-		
 	}
 	
 	public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException {

@@ -521,6 +521,15 @@ public class FittingController extends EventfulType<Boolean>
 		CalibrationProfile profile = new CalibrationProfile(reference, sample);
 		return profile;
 	}
+
+	public CalibrationProfile getCalibrationProfile() {
+		return this.fittingModel.calibrationProfile;
+	}
+	
+	public void setCalibrationProfile(CalibrationProfile zprofile) {
+		this.fittingModel.calibrationProfile = zprofile;
+		updateListeners(false);
+	}
 	
 	
 	

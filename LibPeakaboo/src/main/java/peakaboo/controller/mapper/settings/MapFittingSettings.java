@@ -49,8 +49,6 @@ public class MapFittingSettings extends EventfulType<String> {
 	private MapDisplayMode displayMode;
 	private boolean logView;
 	
-	private CalibrationProfile calibrationProfile = new CalibrationProfile();
-	
 	
 	public MapFittingSettings(MappingController map){
 		this.map = map;
@@ -599,7 +597,7 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	public Spectrum sumGivenTransitionSeriesMaps(List<TransitionSeries> list)
 	{
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list, calibrationProfile);
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list, getCalibrationProfile());
 	}
 	
 
@@ -607,19 +605,19 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		List<TransitionSeries> tss = new ArrayList<TransitionSeries>();
 		tss.add(ts);
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss, calibrationProfile);
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss, getCalibrationProfile());
 	}
 	
 
 	public Spectrum sumVisibleTransitionSeriesMaps()
 	{	
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries(), calibrationProfile);
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries(), getCalibrationProfile());
 	}
 	
 
 	public synchronized Spectrum sumAllTransitionSeriesMaps()
 	{		
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visibility.keySet(), calibrationProfile);
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visibility.keySet(), getCalibrationProfile());
 	}
 
 
@@ -685,27 +683,17 @@ public class MapFittingSettings extends EventfulType<String> {
 	 * Indicates if this TransitionSeries is enabled, or disabled (due to a lack of calibration, for example)
 	 */
 	public boolean getTransitionSeriesEnabled(TransitionSeries ts) {
-		if (calibrationProfile.isEmpty()) {
+		if (getCalibrationProfile().isEmpty()) {
 			return true;
 		}
-		return calibrationProfile.contains(ts);
+		return getCalibrationProfile().contains(ts);
 	}
 	
 
 
 	public CalibrationProfile getCalibrationProfile() {
-		return calibrationProfile;
+		return map.mapsController.getCalibrationProfile();
 	}
-
-
-
-	public void setCalibrationProfile(CalibrationProfile calibrationProfile) {
-		this.calibrationProfile = calibrationProfile;
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
-	}
-
-
-	
 
 	
 }

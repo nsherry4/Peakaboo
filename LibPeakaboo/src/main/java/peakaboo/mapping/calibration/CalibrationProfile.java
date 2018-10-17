@@ -123,6 +123,10 @@ public class CalibrationProfile {
 		}
 	}
 	
+	public float calibrate(FittingResult result) {
+		return calibrate(result.getFit().sum(), result.getTransitionSeries());
+	}
+	
 	public ReadOnlySpectrum calibrateMap(ReadOnlySpectrum data, TransitionSeries ts) {
 		if (!contains(ts)) {
 			return data;

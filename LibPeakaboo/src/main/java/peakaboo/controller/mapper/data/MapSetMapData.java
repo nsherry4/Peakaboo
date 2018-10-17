@@ -7,6 +7,7 @@ import java.util.List;
 import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.SISize;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.results.MapResultSet;
 
 
@@ -27,6 +28,7 @@ public class MapSetMapData
 	public String					datasetTitle		= "";
 	
 	public List<Integer>			badPoints			= new ArrayList<Integer>();
+	public CalibrationProfile 		calibrationProfile	= new CalibrationProfile();
 	
 
 	public int mapSize()

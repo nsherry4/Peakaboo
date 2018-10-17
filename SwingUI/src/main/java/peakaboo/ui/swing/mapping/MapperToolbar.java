@@ -274,29 +274,6 @@ class MapperToolbar extends JToolBar {
 		monochrome.addActionListener(e -> viewSettings.setMonochrome(monochrome.isSelected()));
 		logview.addActionListener(e -> controller.getSettings().getMapFittings().setLogView(logview.isSelected()));
 		
-		JMenuItem loadCalibration = new JMenuItem("Load Calibration");
-		loadCalibration.addActionListener(e -> {
-			SwidgetFilePanels.openFile(panel, "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
-				if (!result.isPresent()) {
-					return;
-				}
-				
-				
-				try {
-					CalibrationProfile profile = CalibrationProfile.load(new String(Files.readAllBytes(result.get().toPath())));
-					controller.getSettings().getMapFittings().setCalibrationProfile(profile);
-				} catch (IOException e1) {
-					PeakabooLog.get().log(Level.SEVERE, "Could not load calibration profile", e1);
-				}
-			});
-			
-		});
-		
-		JMenuItem clearCalibration = new JMenuItem("Clear Calibration");
-		clearCalibration.addActionListener(e -> {
-			controller.getSettings().getMapFittings().setCalibrationProfile(new CalibrationProfile());
-		});
-		
 		
 		menu.add(title);
 		menu.add(dstitle);
@@ -305,10 +282,7 @@ class MapperToolbar extends JToolBar {
 		menu.addSeparator();
 		menu.add(logview);
 		menu.add(monochrome);
-		menu.addSeparator();
-		menu.add(loadCalibration);
-		menu.add(clearCalibration);
-		
+
 		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
 		
 		return opts;

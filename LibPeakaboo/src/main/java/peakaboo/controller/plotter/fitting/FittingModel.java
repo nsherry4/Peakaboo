@@ -13,6 +13,7 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 
 
@@ -60,6 +61,9 @@ public class FittingModel
 	public CalibrationReference calibrationReference = null;
 	
 	
+	public CalibrationProfile calibrationProfile;
+	
+	
 	public FittingModel()
 	{
 		selections = new FittingSet();
@@ -72,6 +76,7 @@ public class FittingModel
 		curveFitter = new UnderCurveFitter();
 		fittingSolver = new GreedyFittingSolver();
 		annotations = new HashMap<>();
+		calibrationProfile = new CalibrationProfile();
 	}
 	
 }

@@ -34,6 +34,7 @@ public class MapSetController extends EventfulType<String>
 
 	/**
 	 * Sets the map's data model. dataDimensions, realDimensions, realDimensionsUnits may be null
+	 * @param calibrationProfile 
 	 */
 	public void setMapData(
 			MapResultSet data,
@@ -41,7 +42,8 @@ public class MapSetController extends EventfulType<String>
 			List<Integer> badPoints,
 			Coord<Integer> dataDimensions,
 			Coord<Bounds<Number>> realDimensions,
-			SISize realDimensionsUnits
+			SISize realDimensionsUnits, 
+			CalibrationProfile calibrationProfile
 			
 	)
 	{
@@ -55,6 +57,7 @@ public class MapSetController extends EventfulType<String>
 		mapModel.originalDimensionsProvided = dataDimensions != null;
 		mapModel.realDimensions = realDimensions;
 		mapModel.realDimensionsUnits = realDimensionsUnits;
+		mapModel.calibrationProfile = calibrationProfile;
 
 		updateListeners(UpdateType.DATA.toString());
 
@@ -229,5 +232,8 @@ public class MapSetController extends EventfulType<String>
 		return mapModel.mapResults;
 	}
 
-	
+	public CalibrationProfile getCalibrationProfile() {
+		return mapModel.calibrationProfile;
+	}
+		
 }
