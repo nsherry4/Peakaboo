@@ -17,9 +17,9 @@ concentrations:
   Ca:K: 0.0 #Too concentrated, but should still be fitted
   Sc:K: 0.0 #Not used, but should still be fitted
   Tl:L: 0.0 #Not used, but should still be fitted
-  P:K: 0.0 #Not used, but should still be fitted
-#  S:K: 0.0 #Not used, but should still be fitted
-#  Ar:K: 0.0 #Not used, but should still be fitted
+  P:K: 0.0 #No value given, but should still be fitted
+  S:K: 0.0 #No value given, but should still be fitted
+  Ar:K: 0.0 #Not part of the sample, but should still be fitted
 
 
 
