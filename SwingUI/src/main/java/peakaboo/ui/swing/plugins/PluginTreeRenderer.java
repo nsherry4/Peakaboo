@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.UIManager;
@@ -24,11 +25,7 @@ import swidget.widgets.Spacing;
 
 public class PluginTreeRenderer extends DefaultTreeCellRenderer {
 	
-	
-	private Color textColour;
-	private Color selColour;
-	JLabel widget;
-
+	private boolean init = false;
 	
     public Component getTreeCellRendererComponent(JTree tree, Object value,
             boolean sel,
@@ -36,37 +33,27 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
             boolean leaf, int row,
             boolean hasFocus) {
     	
+    	super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
     	
-    	if (widget == null) {
-    		widget = new JLabel();
-    		widget.setBorder(Spacing.bSmall());
-    		textColour = widget.getForeground();
-    		selColour = new Color(UIManager.getColor("stratus-highlight-text").getRGB());
-    		if (selColour == null) {
-    			selColour = Color.WHITE;
-    		}
-
+    	if (init == false) {
+    		init = true;
+    		setBorder(Spacing.bSmall());
     	}
     	
     	DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
     	Object object = node.getUserObject();
     	if (object instanceof String) {
     		String string = object.toString();
-    		widget.setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
-    		widget.setText(string);
+    		setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
+    		setText(string);
     	} else {
         	BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>)object;
-        	widget.setText(plugin.getName());
-        	widget.setIcon(getIcon(plugin));	
+        	setText(plugin.getName());
+        	setIcon(getIcon(plugin));	
     	}
     	
-    	if (sel) {
-    		widget.setForeground(selColour);
-    	} else {
-    		widget.setForeground(textColour);
-    	}
-    	
-    	return widget;
+
+    	return this;
     	
     }
     

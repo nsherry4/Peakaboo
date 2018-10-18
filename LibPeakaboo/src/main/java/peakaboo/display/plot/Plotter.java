@@ -173,8 +173,10 @@ public class Plotter {
 		dr.drawToVectorSurface = context.isVectorSurface();
 		
 
-		// if axes are shown, also draw horizontal grid lines
+		
 		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
+		
+		// if axes are shown, also draw horizontal grid lines
 		plotPainters.add(new GridlinePainter(new Bounds<Float>(
 			0.0f,
 			maxIntensity)));
