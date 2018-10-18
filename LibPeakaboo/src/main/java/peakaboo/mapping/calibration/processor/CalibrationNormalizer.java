@@ -11,6 +11,7 @@ public class CalibrationNormalizer implements CalibrationProcessor {
 	@Override
 	public void process(CalibrationReference reference, Map<TransitionSeries, Float> calibrations) {
 		Float anchorValue = calibrations.get(reference.getAnchor());
+		if (anchorValue == null) return;
 		for (TransitionSeriesType tst : TransitionSeriesType.values()) {
 			normalize(calibrations, tst, anchorValue);
 		}

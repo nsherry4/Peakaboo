@@ -41,35 +41,40 @@ public class CalibrationProfile {
 	public CalibrationProfile() {
 		this.reference = CalibrationReference.empty();
 		calibrations = new LinkedHashMap<>();
+		name = reference.getName();
 	}
 	
 	public CalibrationProfile(CalibrationReference reference, FittingResultSet sample) {
 		this.reference = reference;
 		calibrations = new LinkedHashMap<>();
 		
-		//Build profile
-		for (FittingResult fit : sample) {
+		if (!sample.getParameters().getCalibration().isZero()) {
+		
+			//Build profile
+			for (FittingResult fit : sample) {
+				
+				TransitionSeries ts = fit.getTransitionSeries();
+				int channel = sample.getParameters().getCalibration().channelFromEnergy(ts.getStrongestTransition().energyValue);
+				
+				//we look up the transitionseries, but ultimately use a blank one.
+				//we have to use all blanks, otherwise equality/contains cheks will fail
+				ts = new TransitionSeries(ts.element, ts.type);
+				if (! reference.contains(ts)) { continue; }
+				
+				//TODO: Is this the right way to measure sample intensity
+				
+				float sampleIntensity = fit.getFit().get(channel);
+				float referenceValue = reference.getConcentration(ts);
+				float calibration = (sampleIntensity / referenceValue) * 1000f;
+				
+				//don't add if element is being completely suppressed, this only seems 
+				//to happen when the fitting solver algorithm incorrectly completely hides it 
+				//we'll interpolate it later
+				if (calibration < 1f) { continue; }
+				if (Float.isInfinite(calibration) || Float.isNaN(calibration)) { continue; }
+				calibrations.put(ts, calibration);
+			}
 			
-			TransitionSeries ts = fit.getTransitionSeries();
-			int channel = sample.getParameters().getCalibration().channelFromEnergy(ts.getStrongestTransition().energyValue);
-			
-			//we look up the transitionseries, but ultimately use a blank one.
-			//we have to use all blanks, otherwise equality/contains cheks will fail
-			ts = new TransitionSeries(ts.element, ts.type);
-			if (! reference.contains(ts)) { continue; }
-			
-			//TODO: Is this the right way to measure sample intensity
-			
-			float sampleIntensity = fit.getFit().get(channel);
-			float referenceValue = reference.getConcentration(ts);
-			float calibration = (sampleIntensity / referenceValue) * 1000f;
-			
-			//don't add if element is being completely suppressed, this only seems 
-			//to happen when the fitting solver algorithm incorrectly completely hides it 
-			//we'll interpolate it later
-			if (calibration < 1f) { continue; }
-			if (Float.isInfinite(calibration) || Float.isNaN(calibration)) { continue; }
-			calibrations.put(ts, calibration);
 		}
 		
 		//interpolate missing elements
@@ -194,7 +199,7 @@ public class CalibrationProfile {
 		
 		profile.name = serialized.name;
 		if (profile.name == null) {
-			profile.name = "";
+			profile.name = profile.reference.getName();
 		}
 		
 		return profile;
@@ -213,10 +218,6 @@ public class CalibrationProfile {
 				System.out.println(e.atomicNumber() + ", " + p.getCalibration(ts));
 			}
 		}
-//		
-//		System.out.println(PeakTable.SYSTEM.get("Kr:K"));
-//		PeakTable pt = new KrausePeakTable();
-//		System.out.println(pt.get("Kr:K"));
 		
 	}
 

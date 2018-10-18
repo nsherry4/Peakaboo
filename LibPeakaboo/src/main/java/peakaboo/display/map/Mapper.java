@@ -151,7 +151,7 @@ public class Mapper {
 	private AxisPainter getDescriptionPainter(MapRenderSettings settings) {
 		String title = settings.spectrumTitle;
 		if (!settings.calibrationProfile.isEmpty()) {
-			title += " calibrated against " + settings.calibrationProfile.getReference().getName();	
+			title += " calibrated with " + settings.calibrationProfile.getName();	
 		}
 		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, title);
 	}

@@ -837,16 +837,25 @@ public class PlotPanel extends TabbedLayerPanel
 				// get an output stream to write the data to
 				FileOutputStream os = new FileOutputStream(file.get());
 				OutputStreamWriter osw = new OutputStreamWriter(os);
-								
+				CalibrationProfile profile = controller.fitting().getCalibrationProfile();
+				
+				if (profile.isEmpty()) {
+					osw.write("Fitting, Intensity\n");
+				} else {
+					osw.write("Fitting, Intensity (Raw), Intensity (Calibrated with " + profile.getName() + ")\n");
+				}
+				
 				// write out the data
 				float intensity;
-				for (TransitionSeries ts : tss)
-				{
+				for (TransitionSeries ts : tss) {
 
-					if (ts.visible)
-					{
+					if (ts.visible) {
 						intensity = controller.fitting().getTransitionSeriesIntensity(ts);
-						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+						if (profile.contains(ts)) {
+							osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + ", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) + "\n");
+						} else {
+							osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+						}
 					}
 				}
 				osw.close();
@@ -1149,6 +1158,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		//TODO: K and L are treated as different elements
 		//TODO: How to handle uncalibrated elements?
+		//TODO: Exclude pileups/summations
 		Map<TransitionSeries, Float> ppm = new LinkedHashMap<>();
 		for (TransitionSeries ts : tss) {
 			ppm.put(ts, intensities.get(ts) / sum * 1e6f);
