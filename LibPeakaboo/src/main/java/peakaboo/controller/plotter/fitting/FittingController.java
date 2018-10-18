@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ import peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.datasource.model.components.metadata.Metadata;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 import plural.executor.ExecutorSet;
@@ -519,6 +521,26 @@ public class FittingController extends EventfulType<Boolean>
 		}
 		FittingResultSet sample = getFittingSelectionResults();
 		CalibrationProfile profile = new CalibrationProfile(reference, sample);
+		
+		String name = reference.getName();
+		Optional<Metadata> metadata = plot.data().getDataSet().getMetadata();
+		if (metadata.isPresent()) {
+			String lab = metadata.get().getLaboratoryName();
+			if (lab != null && lab.length() > 0) {
+				name += " from " + lab;
+			}
+			String instrument = metadata.get().getInstrumentName();
+			if (instrument != null && instrument.length() > 0) {
+				name += " on " + instrument;
+			}
+			
+			String date = metadata.get().getStartTime();
+			if (date != null && date.length() > 0) {
+				name += " at " + date;
+			}
+		}
+		
+		profile.setName(name);
 		return profile;
 	}
 

@@ -53,7 +53,13 @@ import cyclops.SigDigits;
 import cyclops.util.Mutable;
 import cyclops.util.StringInput;
 import cyclops.visualization.backend.awt.SavePicture;
+import net.sciencestudio.autodialog.AutoDialog;
 import net.sciencestudio.autodialog.model.Group;
+import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.classinfo.ClassInfoDefaults;
+import net.sciencestudio.autodialog.model.classinfo.StringClassInfo;
+import net.sciencestudio.autodialog.model.style.Style;
+import net.sciencestudio.autodialog.model.style.editors.TextBoxStyle;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.common.Env;
@@ -116,6 +122,7 @@ import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.PropertyViewPanel;
+import swidget.widgets.layout.SettingsPanel;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.tabbedinterface.TabbedInterface;
 import swidget.widgets.tabbedinterface.TabbedLayerPanel;
@@ -882,9 +889,21 @@ public class PlotPanel extends TabbedLayerPanel
 
 		Mutable<ModalLayer> modal = new Mutable<>(null);
 		
+		Parameter<String> name = new Parameter<>("Name", new TextBoxStyle().setHorizontalExpand(true), profile.getName(), p -> p.getValue().length() > 0);
+		SwingAutoPanel namePanel = new SwingAutoPanel(name);
+		namePanel.setBorder(Spacing.bLarge());
+		
 		//show it to the user to get their approval
 		ProfileViewPanel profileView = new ProfileViewPanel(profile, 
 				() -> { //accept
+					
+					if (!name.getValidator().apply(name)) {
+						ToastLayer toast = new ToastLayer(this, "Z-Calibration Profile must have a name");
+						this.pushLayer(toast);
+						return;
+					}
+					profile.setName(name.getValue());
+					
 					this.removeLayer(modal.get());
 					
 					String yaml = CalibrationProfile.save(profile);
@@ -908,7 +927,7 @@ public class PlotPanel extends TabbedLayerPanel
 				() -> { //cancel
 					this.removeLayer(modal.get());
 				});
-		
+		profileView.addNorth(namePanel);
 		 
 		modal.set(new ModalLayer(this, profileView));
 		this.pushLayer(modal.get());
@@ -1114,6 +1133,28 @@ public class PlotPanel extends TabbedLayerPanel
 		}));
 		dialog.showIn(this);
 		textfield.grabFocus();
+	}
+
+	public void actionShowConcentrations() {
+		CalibrationProfile p = controller.fitting().getCalibrationProfile();
+		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
+		
+		float sum = 0;
+		Map<TransitionSeries, Float> intensities = new LinkedHashMap<>();
+		for (TransitionSeries ts : tss) {
+			float intensity = p.calibrate(controller.fitting().getTransitionSeriesIntensity(ts), ts);
+			intensities.put(ts, intensity);
+			sum += intensity;
+		}
+		
+		//TODO: K and L are treated as different elements
+		//TODO: How to handle uncalibrated elements?
+		Map<TransitionSeries, Float> ppm = new LinkedHashMap<>();
+		for (TransitionSeries ts : tss) {
+			ppm.put(ts, intensities.get(ts) / sum * 1e6f);
+			System.out.println(ts + ": " + ppm.get(ts));
+		}
+		
 	}
 
 

@@ -32,6 +32,7 @@ public class PlotMenuMain extends JPopupMenu {
 	private JMenuItem					clearCalibrationProfile;
 	private JMenuItem					loadCalibrationReference;
 	private JMenuItem					saveCalibrationProfile;
+	private JMenuItem					showConcentrations;
 
 	private JMenuItem					undo, redo;
 	
@@ -148,6 +149,12 @@ public class PlotMenuMain extends JPopupMenu {
 		);
 		calibration.add(saveCalibrationProfile);
 		
+		showConcentrations = PlotMenuUtils.createMenuItem(plot,
+				"Show Concentrations", null, "Calculated and displays concentration estimates based on the Z-Calibration profile",
+				e -> plot.actionShowConcentrations(),
+				null, null
+		);
+		calibration.add(showConcentrations);
 		
 		
 		

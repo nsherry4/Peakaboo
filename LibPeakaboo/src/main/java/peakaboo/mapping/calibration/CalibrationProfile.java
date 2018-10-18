@@ -33,6 +33,7 @@ public class CalibrationProfile {
 
 	private CalibrationReference reference;
 	private Map<TransitionSeries, Float> calibrations;
+	private String name = "";
 	
 	/**
 	 * Create an empty CalibrationProfile
@@ -75,19 +76,27 @@ public class CalibrationProfile {
 		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
 		interpolator.process(reference, calibrations);
 		
-		//normalize against anchor
-		CalibrationProcessor normalizer = new CalibrationNormalizer();
-		normalizer.process(reference, calibrations);
-		
 		//smooth calibrations
 		CalibrationProcessor smoothing = new CalibrationSmoother();
 		smoothing.process(reference, calibrations);
-		
+
+		//normalize against anchor
+		CalibrationProcessor normalizer = new CalibrationNormalizer();
+		normalizer.process(reference, calibrations);
 		
 		
 	}
 	
 
+	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public Map<TransitionSeries, Float> getCalibrations() {
 		return new HashMap<>(calibrations);
@@ -157,6 +166,7 @@ public class CalibrationProfile {
 		SerializedCalibrationProfile serialized = new SerializedCalibrationProfile();
 		serialized.referenceUUID = profile.reference.getUuid();
 		serialized.referenceName = profile.reference.getName();
+		serialized.name = profile.name;
 		for (TransitionSeries ts : profile.calibrations.keySet()) {
 			serialized.calibrations.put(ts.toIdentifierString(), profile.calibrations.get(ts));
 		}
@@ -182,13 +192,18 @@ public class CalibrationProfile {
 			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
 		}
 		
+		profile.name = serialized.name;
+		if (profile.name == null) {
+			profile.name = "";
+		}
+		
 		return profile;
 	}
 
 	public static void main(String[] args) throws IOException {
 		
 		CalibrationPluginManager.init(new File("/home/nathaniel/Desktop/PBCP/"));
-		CalibrationProfile p = CalibrationProfile.load(new File("/home/nathaniel/Desktop/nist610sigray-14.pbcp").toPath());
+		CalibrationProfile p = CalibrationProfile.load(new File("/home/nathaniel/Desktop/nist610sigray-15.pbcp").toPath());
 		
 		for (TransitionSeriesType tst : TransitionSeriesType.values()) {
 			System.out.println(tst);
@@ -214,6 +229,7 @@ public class CalibrationProfile {
 class SerializedCalibrationProfile {
 	public String referenceUUID = null;
 	public String referenceName = null;
+	public String name = null;
 	public Map<String, Float> calibrations = new LinkedHashMap<>();
 }
  
