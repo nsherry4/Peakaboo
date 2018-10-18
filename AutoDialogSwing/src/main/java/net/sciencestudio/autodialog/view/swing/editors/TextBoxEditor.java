@@ -5,10 +5,13 @@ import java.util.function.Consumer;
 
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import net.sciencestudio.autodialog.model.Parameter;
+import net.sciencestudio.autodialog.model.style.Style;
+import net.sciencestudio.autodialog.model.style.editors.TextBoxStyle;
 
 public class TextBoxEditor extends AbstractSwingEditor<String> {
 
@@ -23,7 +26,7 @@ public class TextBoxEditor extends AbstractSwingEditor<String> {
 	public void initialize(Parameter<String> param)
 	{	
 		this.param = param;
-		
+
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
 		param.getEnabledHook().addListener(e -> setEnabled(e));
@@ -98,7 +101,7 @@ public class TextBoxEditor extends AbstractSwingEditor<String> {
 	
 
 	public void validateFailed() {
-		setFromParameter();
+		SwingUtilities.invokeLater(this::setFromParameter);
 	}
 	
 	@Override

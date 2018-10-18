@@ -1,6 +1,7 @@
 package net.sciencestudio.autodialog.model.style.layouts;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.sciencestudio.autodialog.model.Value;
 import net.sciencestudio.autodialog.model.style.CoreStyle;
@@ -9,6 +10,8 @@ import net.sciencestudio.autodialog.model.style.Style;
 public class SimpleLayoutStyle implements Style<List<Value<?>>> {
 
 	private String style;
+	private Optional<Boolean> vexpand = Optional.empty(), hexpand = Optional.empty();
+
 	
 	public SimpleLayoutStyle(String style) {
 		this.style = style;
@@ -24,4 +27,26 @@ public class SimpleLayoutStyle implements Style<List<Value<?>>> {
 		return null;
 	}
 
+	@Override
+	public Optional<Boolean> getVerticalExpand() {
+		return vexpand;
+	}
+
+	@Override
+	public Style<List<Value<?>>> setVerticalExpand(Optional<Boolean> override) {
+		vexpand = override;
+		return this;
+	}
+
+	@Override
+	public Optional<Boolean> getHorizontalExpand() {
+		return hexpand;
+	}
+
+	@Override
+	public Style<List<Value<?>>> setHorizontalExpand(Optional<Boolean> override) {
+		hexpand = override;
+		return this;
+	}	
+	
 }

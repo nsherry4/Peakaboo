@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Optional;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -44,25 +45,29 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 			JLabel paramLabel = new JLabel(editor.getTitle());
 			paramLabel.setFont(paramLabel.getFont().deriveFont(Font.PLAIN));
 			paramLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+			boolean expandH = expandHorizontal(editor, param);
+			boolean expandV = expandVertical(editor, param);
 			
-			needsVerticalGlue &= (!editor.expandVertical());
-			
-			c.weighty = editor.expandVertical() ? 1f : 0f;
-			c.weightx = editor.expandHorizontal() ? 1f : 0f;
+			needsVerticalGlue &= expandV;
+
+			c.weighty = expandV ? 100f : 0f;
+			c.weightx = expandH ? 100f : 0f;
 			c.gridy += 1;
 			c.gridx = 0;
 			c.fill = GridBagConstraints.BOTH;
 			
 			c.anchor = GridBagConstraints.LINE_START;
-	
+			
 			if (editor.getLabelStyle() == LabelStyle.LABEL_ON_SIDE)
 			{
 				c.weightx = 0;
+				c.fill = GridBagConstraints.BOTH;//expandH ? GridBagConstraints.NONE : GridBagConstraints.BOTH;
 				root.add(paramLabel, c);
 				
-				c.weightx = editor.expandHorizontal() ? 1f : 0f;
+				c.weightx = expandH ? 100f : 0f;
 				c.gridx++;
-				c.fill = GridBagConstraints.NONE;
+				c.fill = expandH ? GridBagConstraints.HORIZONTAL : GridBagConstraints.NONE;
 				c.anchor = GridBagConstraints.LINE_END;
 				
 				root.add(component(editor), c);
@@ -77,7 +82,7 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 	
 				c.gridy++;
 				
-				c.weighty = editor.expandVertical() ? 1f : 0f;
+				c.weighty = expandV ? 100f : 0f;
 				root.add(component(editor), c);
 				
 				c.gridwidth = 1;
@@ -93,13 +98,30 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 		if (needsVerticalGlue)
 		{
 			c.gridy++;
-			c.weighty = 1f;
+			c.weighty = 100f;
 			root.add(Box.createVerticalGlue(), c);
 		}
 		
 		root.doLayout();
 
 	}
+	
+	private boolean expandVertical(SwingView editor, Value<?> value) {
+		Optional<Boolean> override = value.getStyle().getVerticalExpand();
+		if (!override.isPresent()) {
+			return editor.expandVertical();
+		}
+		return override.get();
+	}
+	
+	private boolean expandHorizontal(SwingView editor, Value<?> value) {
+		Optional<Boolean> override = value.getStyle().getHorizontalExpand();
+		if (!override.isPresent()) {
+			return editor.expandHorizontal();
+		}
+		return override.get();
+	}
+
 
 	protected SwingView fromValue(Value<?> value) {
 		if (value instanceof Parameter) {
@@ -111,14 +133,10 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 		}
 	}
 	
+	
 	protected JComponent component(SwingView view) {
 		return view.getComponent();
 	}
-
-
-
-
-
 
 	
 }
