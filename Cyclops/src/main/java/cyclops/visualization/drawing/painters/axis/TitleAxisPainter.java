@@ -38,6 +38,7 @@ public class TitleAxisPainter extends AxisPainter
 	{
 		Pair<Float, Float> otherAxis;
 	
+	
 		/*==============================================
 		 * X Axis
 		 ==============================================*/
@@ -88,7 +89,6 @@ public class TitleAxisPainter extends AxisPainter
 				
 		p.context.restore();
 		
-		
 		/*==============================================
 		 * Y Axis
 		 ==============================================*/
@@ -97,14 +97,12 @@ public class TitleAxisPainter extends AxisPainter
 		
 		if (leftTitle != null) {
 			p.context.save();
-	
 				
 				p.context.setSource(0.0f, 0.0f, 0.0f);
 				p.context.useSansFont();
 				p.context.setFontSize(FONTSIZE_TEXT * titleScale);
 		
-				p.context.rotate(-3.141592653589793238f / 2.0f);
-		
+
 				otherAxis = getAxisSizeY(p);
 				
 				
@@ -123,6 +121,9 @@ public class TitleAxisPainter extends AxisPainter
 				titleStart = (plotHeight + titleWidth) / 2.0f + otherAxis.first;
 				titleHeight = p.context.getFontLeading() + p.context.getFontAscent();
 		
+				//Rotation needs to be after font metrics work because
+				//of JDK-8139178, JDK-8205046
+				p.context.rotate(-3.141592653589793238f / 2.0f);
 				p.context.writeText(leftTitle, -titleStart, titleHeight);
 				
 		
@@ -140,7 +141,7 @@ public class TitleAxisPainter extends AxisPainter
 				p.context.useSansFont();
 				p.context.setFontSize(FONTSIZE_TEXT * titleScale);
 		
-				p.context.rotate(3.141592653589793238f / 2.0f);
+				
 		
 				otherAxis = getAxisSizeY(p);
 	
@@ -158,6 +159,9 @@ public class TitleAxisPainter extends AxisPainter
 				titleStart = (plotHeight - titleWidth) / 2.0f + otherAxis.first + axesData.yPositionBounds.start;
 		
 				float textOffsetX = axesData.xPositionBounds.end - getAxisSizeX(p).second + p.context.getFontLeading() + p.context.getFontDescent();
+				//Rotation needs to be after font metrics work because
+				//of JDK-8139178, JDK-8205046
+				p.context.rotate(3.141592653589793238f / 2.0f);
 				p.context.writeText(rightTitle, titleStart, -textOffsetX);
 				
 		
