@@ -150,16 +150,16 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			try {	
 				GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 				Font f;
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("DejaVuSansUnhinted.ttf"));
+				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansUnhinted.ttf"));
 				ge.registerFont(f);
 				
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("DejaVuSansBoldUnhinted.ttf"));
+				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansBoldUnhinted.ttf"));
 				ge.registerFont(f);
 				
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("DejaVuSansObliqueUnhinted.ttf"));
+				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansObliqueUnhinted.ttf"));
 				ge.registerFont(f);
 				
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("DejaVuSansBoldObliqueUnhinted.ttf"));
+				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansBoldObliqueUnhinted.ttf"));
 				ge.registerFont(f);
 			} catch (FontFormatException | IOException e) {
 				Logger.getLogger("Stratus").log(Level.WARNING, "Failed to configure font", e);
