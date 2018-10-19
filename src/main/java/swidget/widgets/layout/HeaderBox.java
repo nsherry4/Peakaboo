@@ -52,6 +52,13 @@ public class HeaderBox extends PaintedPanel {
 		init(left, centre, right);
 	}
 	
+	public static HeaderBox createYesNo(String title, String yesString, Runnable yesAction, String noString, Runnable noAction) {
+		ImageButton yes = new ImageButton(yesString).withStateDefault().withAction(yesAction);
+		ImageButton no = new ImageButton(noString).withAction(noAction);
+		return new HeaderBox(no, title, yes);
+	}
+	
+	
 	private void init(Component left, Component centre, Component right) {
 		
 		base = getBackground();
