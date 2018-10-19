@@ -133,6 +133,16 @@ public class PlotMenuMain extends JPopupMenu {
 		);
 		calibration.add(clearCalibrationProfile);
 		
+		
+		showConcentrations = PlotMenuUtils.createMenuItem(plot,
+				"Show Concentrations", null, "Calculated and displays concentration estimates based on the Z-Calibration profile",
+				e -> plot.actionShowConcentrations(),
+				null, null
+		);
+		calibration.add(showConcentrations);
+		
+		
+		
 		calibration.addSeparator();
 		
 		loadCalibrationReference = PlotMenuUtils.createMenuItem(plot,
@@ -148,15 +158,6 @@ public class PlotMenuMain extends JPopupMenu {
 				null, null
 		);
 		calibration.add(saveCalibrationProfile);
-		
-		showConcentrations = PlotMenuUtils.createMenuItem(plot,
-				"Show Concentrations", null, "Calculated and displays concentration estimates based on the Z-Calibration profile",
-				e -> plot.actionShowConcentrations(),
-				null, null
-		);
-		calibration.add(showConcentrations);
-		
-		
 		
 		this.add(calibration);
 		
@@ -249,9 +250,10 @@ public class PlotMenuMain extends JPopupMenu {
 		exportFilteredDataMenuItem.setEnabled(hasData);
 		saveCalibrationProfile.setEnabled(hasData);
 		exportSinks.setEnabled(hasData);
-		saveCalibrationProfile.setEnabled(controller.fitting().getCalibrationReference() != null);
+		saveCalibrationProfile.setEnabled(hasData && controller.fitting().getCalibrationReference() != null);
 		viewCalibrationProfile.setEnabled(!controller.fitting().getCalibrationProfile().isEmpty());
 		clearCalibrationProfile.setEnabled(!controller.fitting().getCalibrationProfile().isEmpty());
+		showConcentrations.setEnabled(hasData && !controller.fitting().getCalibrationProfile().isEmpty());
 		
 		undo.setEnabled(controller.history().canUndo());
 		redo.setEnabled(controller.history().canRedo());
