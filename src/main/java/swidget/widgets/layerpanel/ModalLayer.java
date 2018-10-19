@@ -17,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import org.jdesktop.swingx.border.DropShadowBorder;
@@ -145,6 +146,9 @@ public class ModalLayer implements Layer {
 			}
 		};
 		owner.addComponentListener(listener);
+		SwingUtilities.invokeLater(() -> {
+			updateModalContentDimensions(modalScroller);
+		});
 
 		
 	}
