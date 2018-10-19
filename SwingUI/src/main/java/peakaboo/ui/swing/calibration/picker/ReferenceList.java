@@ -214,4 +214,10 @@ class MoreWidget extends ListWidget<CalibrationReference> {
 		Color cDetail = new Color(c.getRed(), c.getGreen(), c.getBlue(), 192);
 		label.setForeground(cDetail);
 	}
+
+
+	@Override
+	protected void onSetValue(CalibrationReference value) {
+		//It always just says "more..."
+	}
 }

@@ -34,12 +34,7 @@ public class ReferenceWidget extends ListWidget<CalibrationReference> {
 		setBorder(Spacing.bLarge());
 		
 	}
-	
-	public void setValue(CalibrationReference reference) {
-		name.setText(reference.getName());
-		desc.setText(reference.getDescription());
-	}
-	
+		
 	@Override
 	public void setForeground(Color c) {
 		if (name != null) {
@@ -47,6 +42,12 @@ public class ReferenceWidget extends ListWidget<CalibrationReference> {
 			Color cDetail = new Color(c.getRed(), c.getGreen(), c.getBlue(), 192);
 			desc.setForeground(cDetail);
 		}
+	}
+
+	@Override
+	protected void onSetValue(CalibrationReference reference) {
+		name.setText(reference.getName());
+		desc.setText(reference.getDescription());
 	}
 	
 }

@@ -744,6 +744,10 @@ public class PlotPanel extends TabbedLayerPanel
 		sp.show();
 		 
 	}
+	
+	public void actionExportArchive() {
+		new ExportPanel(this, canvas, controller);
+	}
 
 
 	public void actionSaveFilteredData()

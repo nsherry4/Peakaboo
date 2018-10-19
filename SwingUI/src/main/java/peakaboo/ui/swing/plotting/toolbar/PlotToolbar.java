@@ -21,6 +21,7 @@ public class PlotToolbar extends JToolBar {
 	private PlotPanel plot;
 	
 	private ToolbarImageButton toolbarSnapshot;
+	private ToolbarImageButton toolbarExport;
 	private ToolbarImageButton toolbarMap;
 	private ToolbarImageButton toolbarInfo;
 
@@ -62,6 +63,11 @@ public class PlotToolbar extends JToolBar {
 		c.gridx += 1;
 		this.add(toolbarSnapshot, c);
 
+		toolbarExport = new ToolbarImageButton("Export", StockIcon.DOCUMENT_EXPORT).withTooltip("Export various data from this session");
+		toolbarExport.addActionListener(e -> plot.actionExportArchive());
+		c.gridx += 1;
+		this.add(toolbarExport, c);
+		
 		toolbarInfo = new ToolbarImageButton("Scan Info", StockIcon.BADGE_INFO).withTooltip("Displays extended information about this data set");
 		toolbarInfo.addActionListener(e -> plot.actionShowInfo());
 		c.gridx += 1;
@@ -99,6 +105,7 @@ public class PlotToolbar extends JToolBar {
 	public void setWidgetState(boolean hasData) {
 		
 		toolbarSnapshot.setEnabled(hasData);
+		toolbarExport.setEnabled(hasData);
 		toolbarInfo.setEnabled(hasData);
 		
 		if (hasData) {
