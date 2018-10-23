@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -8,6 +9,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -36,12 +38,12 @@ public class ExportPanel extends JPanel {
 	
 	private JSpinner spnWidth, spnHeight;
 	
-	private enum PlotFormat {
+	public enum PlotFormat {
 		PNG, SVG, PDF;
 	}
 	private JComboBox<PlotFormat> formats;
 	
-	public ExportPanel(LayerPanel parent, GraphicsPanel canvas, PlotController plot) {
+	public ExportPanel(LayerPanel parent, GraphicsPanel canvas, PlotController plot, Runnable onAccept) {
 		this.plot = plot;
 		this.canvas = canvas;
 		//this.setPreferredSize(new Dimension(500, 350));
@@ -49,8 +51,9 @@ public class ExportPanel extends JPanel {
 		ModalLayer layer = new ModalLayer(parent, this);
 		
 		
-		HeaderBox header = HeaderBox.createYesNo("Export Data", 
+		HeaderBox header = HeaderBox.createYesNo("Export", 
 				"OK", () -> {
+					onAccept.run();
 					parent.removeLayer(layer);
 				}, 
 				"Cancel", () -> {
@@ -62,13 +65,23 @@ public class ExportPanel extends JPanel {
 		
 		JPanel body = new JPanel();
 		body.setBorder(Spacing.bHuge());
-		body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
-		body.add(createDimensionsPane());
-		body.add(createFormatPicker());
+		body.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.NORTHEAST;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		
+		body.add(createDimensionsPane(), c);
+		c.gridy++;
+		body.add(createFormatPicker(), c);
+		c.gridy++;
+		body.add(createDataPane(), c);
+		c.gridy++;
+		
+		this.setBackground(Color.RED);
 		this.add(body, BorderLayout.CENTER);
-		
 		parent.pushLayer(layer);
-		
 		
 	}
 	
@@ -77,6 +90,27 @@ public class ExportPanel extends JPanel {
 
 
 	
+	private JPanel createDataPane() {
+		JPanel panel = new JPanel();
+		
+		panel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.fill = GridBagConstraints.BOTH;
+		c.gridwidth = 1;
+		c.weightx = 100f;
+		
+
+		return panel;
+	}
+
+
+
+
+
+
 	public JComboBox<PlotFormat> createFormatPicker() {
 		formats = new JComboBox<>(new PlotFormat[] {PlotFormat.PNG, PlotFormat.SVG, PlotFormat.PDF});
 		formats.setRenderer(new ListWidgetListCellRenderer<>(new ListWidget<PlotFormat>() {
@@ -104,7 +138,7 @@ public class ExportPanel extends JPanel {
 					break;
 				case SVG:
 					label.setIcon(StockIcon.MIME_SVG.toImageIcon(IconSize.BUTTON));
-					label.setText("Vector Image (SVG)");
+					label.setText("Scalable Vector Image (SVG)");
 					setToolTipText("Vector images use points, lines, and curves to define an image. They can be scaled to any size.");
 					break;
 				
@@ -172,6 +206,17 @@ public class ExportPanel extends JPanel {
 		
 	}
 
+	public PlotFormat getPlotFormat() {
+		return (PlotFormat) formats.getSelectedItem();
+	}
+	
+	public int getImageWidth() {
+		return ((Number)spnWidth.getValue()).intValue();
+	}
+	
+	public int getImageHeight() {
+		return ((Number)spnHeight.getValue()).intValue();
+	}
 	
 }
 

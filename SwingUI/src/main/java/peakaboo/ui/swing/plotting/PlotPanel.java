@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +35,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -90,6 +93,7 @@ import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.calibration.profileplot.ProfileViewPanel;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
+import peakaboo.ui.swing.plotting.ExportPanel.PlotFormat;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -746,7 +750,72 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 	
 	public void actionExportArchive() {
-		new ExportPanel(this, canvas, controller);
+		Mutable<ExportPanel> export = new Mutable<>(null);
+		
+		export.set(new ExportPanel(this, canvas, controller, () -> {
+			
+			SwidgetFilePanels.saveFile(this, "Save Archive", saveFilesFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+				if (file.isEmpty()) {
+					return;
+				}
+				
+				PlotFormat format = export.get().getPlotFormat();
+				int width = export.get().getImageWidth();
+				int height = export.get().getImageHeight();
+				
+				exportArchiveToZip(file.get(), format, width, height);
+				
+				
+			});
+		}));
+	}
+	
+	private void exportArchiveToZip(File file, PlotFormat format, int width, int height) {
+		try {
+			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
+			ZipEntry e = new ZipEntry("plot." + format.toString().toLowerCase());
+			zos.putNextEntry(e);
+			
+			//Save Plot
+			switch (format) {
+			case PDF:
+				canvas.writePDF(zos, new Coord<Integer>(width, height));
+				break;
+			case PNG:
+				canvas.writePNG(zos, new Coord<Integer>(width, height));
+				break;
+			case SVG:
+				canvas.writeSVG(zos, new Coord<Integer>(width, height));	
+				break;					
+			}
+			zos.closeEntry();
+			
+			
+			e = new ZipEntry("fittings.txt");
+			zos.putNextEntry(e);
+			actionSaveFittingInformationToOutputStream(zos);
+			zos.closeEntry();
+			
+			
+			e = new ZipEntry("z-calibration-profile.pbcp");
+			zos.putNextEntry(e);
+			String profileYaml = CalibrationProfile.save(controller.fitting().getCalibrationProfile());
+			zos.write(profileYaml.getBytes());
+			zos.closeEntry();
+			
+			
+			e = new ZipEntry("session.peakaboo");
+			zos.putNextEntry(e);
+			zos.write(controller.getSavedSettings().serialize().getBytes());
+			zos.closeEntry();
+			
+			
+			zos.close();
+			
+			
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Could not save archive", e);
+		}
 	}
 
 
@@ -821,6 +890,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 	}
 	
+	
 	public void actionSaveFittingInformation()
 	{
 
@@ -828,51 +898,61 @@ public class PlotPanel extends TabbedLayerPanel
 			saveFilesFolder = datasetFolder;
 		}
 
-		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
-		
-
-		
 		SimpleFileExtension ext = new SimpleFileExtension("Text File", "txt");
 		SwidgetFilePanels.saveFile(this, "Save Fitting Information to Text File", saveFilesFolder, ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
+			
 			try {
-				// get an output stream to write the data to
 				FileOutputStream os = new FileOutputStream(file.get());
-				OutputStreamWriter osw = new OutputStreamWriter(os);
-				CalibrationProfile profile = controller.fitting().getCalibrationProfile();
-				
-				if (profile.isEmpty()) {
-					osw.write("Fitting, Intensity\n");
-				} else {
-					osw.write("Fitting, Intensity (Raw), Intensity (Calibrated with " + profile.getName() + ")\n");
-				}
-				
-				// write out the data
-				float intensity;
-				for (TransitionSeries ts : tss) {
-
-					if (ts.visible) {
-						intensity = controller.fitting().getTransitionSeriesIntensity(ts);
-						if (profile.contains(ts)) {
-							osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + ", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) + "\n");
-						} else {
-							osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
-						}
-					}
-				}
-				osw.close();
+				actionSaveFittingInformationToOutputStream(os);
 				os.close();
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
 			}
 			
 		});
 
 	}
+	
+	
+	public void actionSaveFittingInformationToOutputStream(OutputStream os) {
+		
+		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
+		
+		try {
+			// get an output stream to write the data to
+			OutputStreamWriter osw = new OutputStreamWriter(os);
+			CalibrationProfile profile = controller.fitting().getCalibrationProfile();
+			
+			if (profile.isEmpty()) {
+				osw.write("Fitting, Intensity\n");
+			} else {
+				osw.write("Fitting, Intensity (Raw), Intensity (Calibrated with " + profile.getName() + ")\n");
+			}
+			
+			// write out the data
+			float intensity;
+			for (TransitionSeries ts : tss) {
+
+				if (ts.visible) {
+					intensity = controller.fitting().getTransitionSeriesIntensity(ts);
+					if (profile.contains(ts)) {
+						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + ", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) + "\n");
+					} else {
+						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+					}
+				}
+			}
+			osw.flush();
+		}
+		catch (IOException e)
+		{
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
+		}
+	}
+	
 	
 	public void actionLoadCalibrationProfile() {
 		SwidgetFilePanels.openFile(this, "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {

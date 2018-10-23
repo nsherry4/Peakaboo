@@ -26,6 +26,7 @@ public class PlotMenuMain extends JPopupMenu {
 	private JMenuItem					snapshotMenuItem;
 	private JMenuItem					exportFittingsMenuItem;
 	private JMenuItem					exportFilteredDataMenuItem;
+	private JMenuItem					exportArchive;
 	private JMenu 						exportSinks;
 	
 	private JMenuItem 					viewCalibrationProfile;
@@ -99,6 +100,14 @@ public class PlotMenuMain extends JPopupMenu {
 		);
 		export.add(exportFittingsMenuItem);
 
+		exportArchive = PlotMenuUtils.createMenuItem(plot,
+				"Archive", null, "Saves the plot, session file, z-calibration and fittings",
+				e -> plot.actionExportArchive(),
+				null, null
+		);
+		export.add(exportArchive);
+		
+		
 		this.add(export);
 		
 		
@@ -248,6 +257,7 @@ public class PlotMenuMain extends JPopupMenu {
 		snapshotMenuItem.setEnabled(hasData);
 		exportFittingsMenuItem.setEnabled(hasData);
 		exportFilteredDataMenuItem.setEnabled(hasData);
+		exportArchive.setEnabled(hasData);
 		saveCalibrationProfile.setEnabled(hasData);
 		exportSinks.setEnabled(hasData);
 		saveCalibrationProfile.setEnabled(hasData && controller.fitting().getCalibrationReference() != null);
