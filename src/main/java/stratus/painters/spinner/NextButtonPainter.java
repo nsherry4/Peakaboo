@@ -23,22 +23,23 @@ public class NextButtonPainter extends ButtonPainter {
 		palette.shadow = new Color(0x00000000, true);
 	}
 	
-    protected ButtonPalette makePalette(JComponent object) {
+	@Override
+	protected ButtonPalette makePalette(JComponent object) {
     	return palette;
     }
 	   
-    
-	protected Shape fillShape(float width, float height, float pad) {
+	@Override
+	protected Shape fillShape(JComponent object, float width, float height, float pad) {
 		pad++;
 		Shape fillArea = new RoundRectangle2D.Float(1, pad, width-pad-1, height+radius, radius, radius);
 		return fillArea;
     }
-    
-    protected Shape borderShape(float width, float height, float pad) {
+	@Override
+    protected Shape borderShape(JComponent object, float width, float height, float pad) {
     	Shape border = new RoundRectangle2D.Float(0, pad, width-pad, height+radius, radius, radius);
     	return border;
     }
-        
+	@Override 
     protected Paint mainPaint(float width, float height, float pad, ButtonPalette palette) {
     	return new LinearGradientPaint(0, pad, 0, (height-pad)*2f, palette.fillPoints, palette.fillArray);
     }

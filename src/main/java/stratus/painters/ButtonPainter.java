@@ -86,8 +86,8 @@ public class ButtonPainter extends StatefulPainter {
     	palette.shadow = getTheme().getShadow();
     	
     	if (isPressed() || isSelected()) {
-    		palette.fillTop = Stratus.darken(base, 0.06f);
-    		palette.fillBottom = Stratus.darken(base, 0.00f);
+    		palette.fillTop = Stratus.darken(base, 0.03f);
+    		palette.fillBottom = Stratus.darken(base, 0.03f);
     	}
 
     	
@@ -151,26 +151,26 @@ public class ButtonPainter extends StatefulPainter {
 
 
     	
-    	drawBorder(width, height, pad, g, palette);
-    	drawMain(width, height, pad, g, palette);
-    	drawShadow(width, height, pad, g, palette);
-    	drawBevel(width, height, pad, g, palette);
-    	drawDash(width, height, pad, g, palette);
+    	drawBorder(object, width, height, pad, g, palette);
+    	drawMain(object, width, height, pad, g, palette);
+    	drawShadow(object, width, height, pad, g, palette);
+    	drawBevel(object, width, height, pad, g, palette);
+    	drawDash(object, width, height, pad, g, palette);
 	
     }
 
     
 
-	protected Shape fillShape(float width, float height, float pad) {
+	protected Shape fillShape(JComponent object, float width, float height, float pad) {
     	float p = pad+1;
     	return new RoundRectangle2D.Float(p, p, width-p*2, height-p*2, radius, radius);
     }
     
-    protected Shape borderShape(float width, float height, float pad) {
+    protected Shape borderShape(JComponent object, float width, float height, float pad) {
     	return new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2, radius, radius);
     }
     
-    protected Shape shadowShape(float width, float height, float pad) {
+    protected Shape shadowShape(JComponent object, float width, float height, float pad) {
     	GeneralPath path = new GeneralPath();
     	float y = (int)(height-(pad)*2);
     	float startx = pad+2;
@@ -180,55 +180,55 @@ public class ButtonPainter extends StatefulPainter {
     	return path;
     }
     
-    protected Shape bevelShape(float width, float height, float pad) {
+    protected Shape bevelShape(JComponent object, float width, float height, float pad) {
     	GeneralPath path = new GeneralPath();
     	path.moveTo(pad+2, pad+1);
     	path.lineTo(width-(pad+1)*2, pad+1);
     	return path;
     }
     
-    protected Shape dashShape(float width, float height, float pad) {
+    protected Shape dashShape(JComponent object, float width, float height, float pad) {
     	return new RoundRectangle2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, radius, radius);
     }
     
     
     
     
-    protected void drawBorder(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    protected void drawBorder(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	//Border should be darker at the bottom when not pressed (bit of a shadow?)
     	g.setPaint(borderPaint(width, height, pad, palette));
-    	g.fill(borderShape(width, height, pad));
+    	g.fill(borderShape(object, width, height, pad));
     }
     
-    protected void drawMain(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    protected void drawMain(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	g.setPaint(mainPaint(width, height, pad, palette));
-    	g.fill(fillShape(width, height, pad));
+    	g.fill(fillShape(object, width, height, pad));
 	}
 
-    protected void drawBevel(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    protected void drawBevel(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	//Bevel at top of button unless pressed
     	if (!(isPressed() || isSelected()) && !(isDisabled())) {
 	    	g.setPaint(bevelPaint(width, height, pad, palette));
-	    	g.draw(bevelShape(width, height, pad));
+	    	g.draw(bevelShape(object, width, height, pad));
     	}
     }
     
-    protected void drawShadow(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    protected void drawShadow(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	//Shadow at bottom of button unless pressed
     	if (!(isPressed() || isSelected()) && !(isDisabled())) {
 	    	g.setPaint(shadowPaint(width, height, pad, palette));
-	    	g.draw(shadowShape(width, height, pad));
+	    	g.draw(shadowShape(object, width, height, pad));
     	}
     }
     
-    protected void drawDash(float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
+    protected void drawDash(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	//Focus dash if focused but not pressed
     	pad += 2;
     	if (isFocused() && !isPressed()) {
         	g.setPaint(dashPaint(width, height, pad, palette));
         	Stroke old = g.getStroke();
         	g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {2, 1}, 0f));
-        	g.draw(dashShape(width, height, pad));
+        	g.draw(dashShape(object, width, height, pad));
         	g.setStroke(old);
     	}
     }

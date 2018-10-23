@@ -17,7 +17,7 @@ public class LightTheme implements Theme {
 	
 	private Color dashAlpha = new Color(0x30000000, true);
 	private Color borderAlpha = new Color(0x40000000, true);
-	private Color shadowAlpha = new Color(0x1C000000, true);
+	private Color shadowAlpha = new Color(0x27000000, true);
 	
 	private Color menuControl = new Color(0xffffff);
 	private Color menuControlText = controlText;

@@ -38,33 +38,39 @@ public class SliderThumbPainter extends ButtonPainter {
 		super.paint(g, object, width, height, palette);		
 	}
 	
+	@Override
 	protected ButtonPalette makePalette(JComponent object) {
 		return palette;
 	}
 	
-    protected Shape fillShape(float width, float height, float pad) {
+	@Override
+    protected Shape fillShape(JComponent object, float width, float height, float pad) {
     	pad++;
     	return new Ellipse2D.Float(pad, pad, width-pad*2, height-pad*2);
     }
     
-    protected Shape borderShape(float width, float height, float pad) {
+	@Override
+    protected Shape borderShape(JComponent object, float width, float height, float pad) {
     	return new Ellipse2D.Float(pad, pad, width-pad*2, height-pad*2);
     }
     
-    protected Shape shadowShape(float width, float height, float pad) {
+	@Override
+    protected Shape shadowShape(JComponent object, float width, float height, float pad) {
     	return new Arc2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, 180, 180, Arc2D.OPEN);
     }
     
-    protected Shape bevelShape(float width, float height, float pad) {
+	@Override
+    protected Shape bevelShape(JComponent object, float width, float height, float pad) {
     	pad++;
     	return new Arc2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, 0, 180, Arc2D.OPEN);
     }
     
-    
+	@Override
     protected Paint shadowPaint(float width, float height, float pad, ButtonPalette palette) {
     	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.5f, 0.9f}, new Color[] {new Color(0x0000000, true), palette.shadow});
     }
 
+	@Override
     protected Paint bevelPaint(float width, float height, float pad, ButtonPalette palette) {
     	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.075f, 0.5f}, new Color[] {palette.bevel, new Color(0x0000000, true)});
     }

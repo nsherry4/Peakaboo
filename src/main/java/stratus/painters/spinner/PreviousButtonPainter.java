@@ -7,6 +7,8 @@ import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 
+import javax.swing.JComponent;
+
 import stratus.Stratus.ButtonState;
 import stratus.painters.ButtonPainter;
 import stratus.theme.Theme;
@@ -22,18 +24,21 @@ public class PreviousButtonPainter extends ButtonPainter {
 		palette.bevel = new Color(0x00000000, true);	
 	}
   
-	protected Shape fillShape(float width, float height, float pad) {
+	@Override
+	protected Shape fillShape(JComponent object, float width, float height, float pad) {
 		pad++;
 		Shape fillArea = new RoundRectangle2D.Float(1, 1-radius, width-pad-1, height-pad+radius, radius, radius);
 		return fillArea;
     }
     
-    protected Shape borderShape(float width, float height, float pad) {
+	@Override
+    protected Shape borderShape(JComponent object, float width, float height, float pad) {
     	Shape border = new RoundRectangle2D.Float(0, 0-radius, width-pad, height-0+radius, radius, radius);
     	return border;
     }
     
-    protected Shape shadowShape(float width, float height, float pad) {
+	@Override
+    protected Shape shadowShape(JComponent object, float width, float height, float pad) {
     	GeneralPath path = new GeneralPath();
     	float y = (int)(height-(pad));
     	float startx = 2;
@@ -43,7 +48,8 @@ public class PreviousButtonPainter extends ButtonPainter {
     	return path;
     }
 
-    protected Shape dashShape(float width, float height, float pad) {
+	@Override
+    protected Shape dashShape(JComponent object, float width, float height, float pad) {
     	return new RoundRectangle2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, radius, radius);
     }
 	

@@ -27,6 +27,7 @@ public class CheckButtonPainter extends ButtonPainter {
 		super.paint(g, object, width, height, palette);
 	}
 	
+	@Override
     protected ButtonPalette makePalette(JComponent object) {
     	return palette;
     }

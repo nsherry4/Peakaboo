@@ -36,6 +36,7 @@ import stratus.painters.ToolTipPainter;
 import stratus.painters.TreeArrowPainter;
 import stratus.painters.checkbutton.CheckButtonPainter;
 import stratus.painters.checkbutton.CheckPainter;
+import stratus.painters.linkedbutton.ToggleButtonPainter;
 import stratus.painters.progressbar.ProgressBarBackgroundPainter;
 import stratus.painters.progressbar.ProgressBarForegroundPainter;
 import stratus.painters.progressbar.ProgressBarForegroundPainter.Mode;
@@ -273,42 +274,42 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "ToggleButton[Disabled].textForeground", 			theme.getControlTextDisabled());
 			reg(ret, "ToggleButton[Default+Pressed].textForeground", 	theme.getControlText());
 	
-			reg(ret, "ToggleButton[Default+Focused+MouseOver].backgroundPainter", 		new ButtonPainter(theme, ButtonState.DEFAULT, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
-			reg(ret, "ToggleButton[Default+Focused+Pressed].backgroundPainter", 		new ButtonPainter(theme, ButtonState.DEFAULT, ButtonState.FOCUSED, ButtonState.PRESSED));
-			reg(ret, "ToggleButton[Default+Focused].backgroundPainter", 				new ButtonPainter(theme, ButtonState.DEFAULT, ButtonState.FOCUSED));
-			reg(ret, "ToggleButton[Default+MouseOver].backgroundPainter", 				new ButtonPainter(theme, ButtonState.DEFAULT, ButtonState.MOUSEOVER));
-			reg(ret, "ToggleButton[Default+Pressed].backgroundPainter", 				new ButtonPainter(theme, ButtonState.DEFAULT, ButtonState.PRESSED));
-			reg(ret, "ToggleButton[Default].backgroundPainter", 						new ButtonPainter(theme, ButtonState.DEFAULT));
-			reg(ret, "ToggleButton[Disabled].backgroundPainter", 						new ButtonPainter(theme, ButtonState.DISABLED));
-			reg(ret, "ToggleButton[Disabled+Selected].backgroundPainter", 				new ButtonPainter(theme, ButtonState.DISABLED, ButtonState.SELECTED));
-			reg(ret, "ToggleButton[Enabled].backgroundPainter", 						new ButtonPainter(theme, ButtonState.ENABLED));
-			reg(ret, "ToggleButton[Focused+MouseOver].backgroundPainter", 				new ButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
-			reg(ret, "ToggleButton[Focused+MouseOver+Selected].backgroundPainter", 		new ButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER, ButtonState.SELECTED));
-			reg(ret, "ToggleButton[Focused+Pressed].backgroundPainter", 				new ButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
-			reg(ret, "ToggleButton[Focused+Pressed+Selected].backgroundPainter", 		new ButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED, ButtonState.SELECTED));
-			reg(ret, "ToggleButton[Focused].backgroundPainter", 						new ButtonPainter(theme, ButtonState.FOCUSED));
-			reg(ret, "ToggleButton[Focused+Selected].backgroundPainter", 				new ButtonPainter(theme, ButtonState.FOCUSED, ButtonState.SELECTED));
-			reg(ret, "ToggleButton[MouseOver].backgroundPainter", 						new ButtonPainter(theme, ButtonState.MOUSEOVER));
-			reg(ret, "ToggleButton[MouseOver+Selected].backgroundPainter", 				new ButtonPainter(theme, ButtonState.MOUSEOVER, ButtonState.SELECTED));
-			reg(ret, "ToggleButton[Pressed].backgroundPainter", 						new ButtonPainter(theme, ButtonState.PRESSED));
-			reg(ret, "ToggleButton[Pressed+Selected].backgroundPainter", 				new ButtonPainter(theme, ButtonState.PRESSED, ButtonState.SELECTED));
-			reg(ret, "ToggleButton[Selected].backgroundPainter", 						new ButtonPainter(theme, ButtonState.SELECTED));
+			reg(ret, "ToggleButton[Default+Focused+MouseOver].backgroundPainter", 		new ToggleButtonPainter(theme, ButtonState.DEFAULT, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
+			reg(ret, "ToggleButton[Default+Focused+Pressed].backgroundPainter", 		new ToggleButtonPainter(theme, ButtonState.DEFAULT, ButtonState.FOCUSED, ButtonState.PRESSED));
+			reg(ret, "ToggleButton[Default+Focused].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.DEFAULT, ButtonState.FOCUSED));
+			reg(ret, "ToggleButton[Default+MouseOver].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.DEFAULT, ButtonState.MOUSEOVER));
+			reg(ret, "ToggleButton[Default+Pressed].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.DEFAULT, ButtonState.PRESSED));
+			reg(ret, "ToggleButton[Default].backgroundPainter", 						new ToggleButtonPainter(theme, ButtonState.DEFAULT));
+			reg(ret, "ToggleButton[Disabled].backgroundPainter", 						new ToggleButtonPainter(theme, ButtonState.DISABLED));
+			reg(ret, "ToggleButton[Disabled+Selected].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.DISABLED, ButtonState.SELECTED));
+			reg(ret, "ToggleButton[Enabled].backgroundPainter", 						new ToggleButtonPainter(theme, ButtonState.ENABLED));
+			reg(ret, "ToggleButton[Focused+MouseOver].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
+			reg(ret, "ToggleButton[Focused+MouseOver+Selected].backgroundPainter", 		new ToggleButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER, ButtonState.SELECTED));
+			reg(ret, "ToggleButton[Focused+Pressed].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
+			reg(ret, "ToggleButton[Focused+Pressed+Selected].backgroundPainter", 		new ToggleButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED, ButtonState.SELECTED));
+			reg(ret, "ToggleButton[Focused].backgroundPainter", 						new ToggleButtonPainter(theme, ButtonState.FOCUSED));
+			reg(ret, "ToggleButton[Focused+Selected].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.FOCUSED, ButtonState.SELECTED));
+			reg(ret, "ToggleButton[MouseOver].backgroundPainter", 						new ToggleButtonPainter(theme, ButtonState.MOUSEOVER));
+			reg(ret, "ToggleButton[MouseOver+Selected].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.MOUSEOVER, ButtonState.SELECTED));
+			reg(ret, "ToggleButton[Pressed].backgroundPainter", 						new ToggleButtonPainter(theme, ButtonState.PRESSED));
+			reg(ret, "ToggleButton[Pressed+Selected].backgroundPainter", 				new ToggleButtonPainter(theme, ButtonState.PRESSED, ButtonState.SELECTED));
+			reg(ret, "ToggleButton[Selected].backgroundPainter", 						new ToggleButtonPainter(theme, ButtonState.SELECTED));
 			
 			
 			
 			//TOGGLE BUTTON on TOOLBAR
-			reg(ret, "ToolBar:ToggleButton[Disabled+Selected].backgroundPainter", 			new ButtonPainter(theme, 3, ButtonState.DISABLED, ButtonState.SELECTED));
-			reg(ret, "ToolBar:ToggleButton[Focused+MouseOver].backgroundPainter", 			new ButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
-			reg(ret, "ToolBar:ToggleButton[Focused+MouseOver+Selected].backgroundPainter", 	new ButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.MOUSEOVER, ButtonState.SELECTED));
-			reg(ret, "ToolBar:ToggleButton[Focused+Pressed].backgroundPainter", 				new ButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.PRESSED));
-			reg(ret, "ToolBar:ToggleButton[Focused+Pressed+Selected].backgroundPainter", 	new ButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.PRESSED, ButtonState.SELECTED));
-			reg(ret, "ToolBar:ToggleButton[Focused].backgroundPainter", 						new ButtonPainter(theme, 3, ButtonState.FOCUSED));
-			reg(ret, "ToolBar:ToggleButton[Focused+Selected].backgroundPainter", 			new ButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.SELECTED));
-			reg(ret, "ToolBar:ToggleButton[MouseOver].backgroundPainter", 					new ButtonPainter(theme, 3, ButtonState.MOUSEOVER));
-			reg(ret, "ToolBar:ToggleButton[MouseOver+Selected].backgroundPainter", 			new ButtonPainter(theme, 3, ButtonState.MOUSEOVER, ButtonState.SELECTED));
-			reg(ret, "ToolBar:ToggleButton[Pressed].backgroundPainter", 						new ButtonPainter(theme, 3, ButtonState.PRESSED));
-			reg(ret, "ToolBar:ToggleButton[Pressed+Selected].backgroundPainter", 			new ButtonPainter(theme, 3, ButtonState.PRESSED, ButtonState.SELECTED));
-			reg(ret, "ToolBar:ToggleButton[Selected].backgroundPainter", 					new ButtonPainter(theme, 3, ButtonState.SELECTED));
+			reg(ret, "ToolBar:ToggleButton[Disabled+Selected].backgroundPainter", 			new ToggleButtonPainter(theme, 3, ButtonState.DISABLED, ButtonState.SELECTED));
+			reg(ret, "ToolBar:ToggleButton[Focused+MouseOver].backgroundPainter", 			new ToggleButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
+			reg(ret, "ToolBar:ToggleButton[Focused+MouseOver+Selected].backgroundPainter", 	new ToggleButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.MOUSEOVER, ButtonState.SELECTED));
+			reg(ret, "ToolBar:ToggleButton[Focused+Pressed].backgroundPainter", 				new ToggleButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.PRESSED));
+			reg(ret, "ToolBar:ToggleButton[Focused+Pressed+Selected].backgroundPainter", 	new ToggleButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.PRESSED, ButtonState.SELECTED));
+			reg(ret, "ToolBar:ToggleButton[Focused].backgroundPainter", 						new ToggleButtonPainter(theme, 3, ButtonState.FOCUSED));
+			reg(ret, "ToolBar:ToggleButton[Focused+Selected].backgroundPainter", 			new ToggleButtonPainter(theme, 3, ButtonState.FOCUSED, ButtonState.SELECTED));
+			reg(ret, "ToolBar:ToggleButton[MouseOver].backgroundPainter", 					new ToggleButtonPainter(theme, 3, ButtonState.MOUSEOVER));
+			reg(ret, "ToolBar:ToggleButton[MouseOver+Selected].backgroundPainter", 			new ToggleButtonPainter(theme, 3, ButtonState.MOUSEOVER, ButtonState.SELECTED));
+			reg(ret, "ToolBar:ToggleButton[Pressed].backgroundPainter", 						new ToggleButtonPainter(theme, 3, ButtonState.PRESSED));
+			reg(ret, "ToolBar:ToggleButton[Pressed+Selected].backgroundPainter", 			new ToggleButtonPainter(theme, 3, ButtonState.PRESSED, ButtonState.SELECTED));
+			reg(ret, "ToolBar:ToggleButton[Selected].backgroundPainter", 					new ToggleButtonPainter(theme, 3, ButtonState.SELECTED));
 			
 			reg(ret, "ToolBar:ToggleButton.contentMargins", new Insets(6, 6, 6, 6));
 			
