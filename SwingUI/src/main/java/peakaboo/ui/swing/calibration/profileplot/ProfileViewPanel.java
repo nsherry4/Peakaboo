@@ -25,6 +25,7 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.mapping.calibration.CalibrationProfile;
 import stratus.StratusLookAndFeel;
+import stratus.controls.ToggleButtonLinker;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
@@ -81,6 +82,7 @@ public class ProfileViewPanel extends JPanel {
 		
 		ButtonGroup seriesGroup = new ButtonGroup();
 		
+		
 		ToggleImageButton kseries = new ToggleImageButton("K Series");
 		kseries.addActionListener((e) -> {
 			System.out.println("K");
@@ -101,12 +103,8 @@ public class ProfileViewPanel extends JPanel {
 		});
 		seriesGroup.add(mseries);
 		
-		ButtonBox center = new ButtonBox(Spacing.small, false);
-		center.addCentre(kseries);
-		center.addCentre(lseries);
-		center.addCentre(mseries);
-		center.setBorder(Spacing.bNone());
-		center.setOpaque(false);
+		
+		ToggleButtonLinker center = new ToggleButtonLinker(kseries, lseries, mseries);
 		
 		cardlayout.show(plots, TransitionSeriesType.K.toString());
 		kseries.setSelected(true);

@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.mapping.calibration.CalibrationReference;
+import stratus.controls.ToggleButtonLinker;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
@@ -83,13 +84,7 @@ public class ReferenceViewPanel extends JPanel {
 		});
 		seriesGroup.add(mseries);
 		
-		ButtonBox center = new ButtonBox(Spacing.small, false);
-		center.addCentre(details);
-		center.addCentre(kseries);
-		center.addCentre(lseries);
-		center.addCentre(mseries);
-		center.setBorder(Spacing.bNone());
-		center.setOpaque(false);
+		ToggleButtonLinker center = new ToggleButtonLinker(kseries, lseries, mseries);
 		
 		cardlayout.show(plots, "info");
 		details.setSelected(true);
