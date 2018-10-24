@@ -11,17 +11,22 @@ import javax.swing.border.EmptyBorder;
 
 public class ToggleButtonLinker extends JComponent {
 
+	private GridBagConstraints c = new GridBagConstraints();
+	
 	public ToggleButtonLinker(AbstractButton... buttons) {
 		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridx = 0;
 		c.gridy = 0;
 		for (AbstractButton button : buttons) {
-			add(button, c);
-			c.gridx++;
+			addButton(button);
 		}
+	}
+	
+	public void addButton(AbstractButton button) {
+		add(button, c);
+		c.gridx++;
 	}
 	
 	public String getUIClassID() {
