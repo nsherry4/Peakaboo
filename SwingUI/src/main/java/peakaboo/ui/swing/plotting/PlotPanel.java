@@ -90,6 +90,7 @@ import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
+import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import peakaboo.ui.swing.calibration.profileplot.ProfileViewPanel;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
@@ -963,7 +964,8 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			try {
 				CalibrationProfile profile = CalibrationProfile.load(new String(Files.readAllBytes(result.get().toPath())));
-				controller.fitting().setCalibrationProfile(profile);
+				controller.fitting().setCalibrationProfile(profile, result.get());
+				
 			} catch (IOException e1) {
 				PeakabooLog.get().log(Level.SEVERE, "Could not load calibration profile", e1);
 			}
@@ -1249,6 +1251,17 @@ public class PlotPanel extends TabbedLayerPanel
 			System.out.println(ts + ": " + ppm.get(ts));
 		}
 		
+	}
+
+	public void actionShowCalibrationProfileManager() {
+		Mutable<ModalLayer> modal = new Mutable<>(null);
+		
+		ProfileManager manager = new ProfileManager(this, controller.fitting(), () -> {
+			this.removeLayer(modal.get());
+		}); 
+
+		modal.set(new ModalLayer(this, manager));
+		this.pushLayer(modal.get());
 	}
 
 

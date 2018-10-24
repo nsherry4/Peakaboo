@@ -1,5 +1,6 @@
 package peakaboo.ui.swing.calibration.profileplot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,55 +31,20 @@ import peakaboo.mapping.calibration.CalibrationProfile;
 
 public class ProfilePlot extends GraphicsPanel {
 
+	private TransitionSeriesType type;
+	
 	private PlotDrawing plotDrawing;
 	private Spectrum data;
 	private DrawingRequest dr = new DrawingRequest();
-	private List<PlotPainter> plotPainters = new ArrayList<>();
-	private List<AxisPainter> axisPainters = new ArrayList<>();
+	private List<PlotPainter> plotPainters;
+	private List<AxisPainter> axisPainters;
 	
-	public ProfilePlot(CalibrationProfile profile, TransitionSeriesType type) {
-		
-		int lowest = 0;
-		int highest = 1;
-		
-		List<TransitionSeries> tss = profile.getTransitionSeries(type);
-		if (tss.size() >= 2) {
-			lowest = tss.get(0).element.ordinal();
-			highest = tss.get(tss.size() - 1).element.ordinal();
-		}
-		
-		data = profileToSpectrum(profile.getCalibrations(), type, lowest, highest);
-		
-		dr.dataHeight = 1;
-		dr.dataWidth = data.size();
-		dr.drawToVectorSurface = false;
-		dr.maxYIntensity = data.max();
-		dr.unitSize = 1f;
-		dr.viewTransform = ViewTransform.LINEAR;
-		
-		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, data.max()*100f)));
-		
-		plotPainters.add(new AreaPainter(data, 
-				new PaletteColour(0xff00897B), 
-				new PaletteColour(0xff00796B), 
-				new PaletteColour(0xff004D40)
-			));
-		
 	
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Sensitivity versus " + profile.getReference().getAnchor().element.toString(), null, null, "Element"));
-		Function<Integer, String> sensitivityFormatter = i -> i + "%";
-		axisPainters.add(new TickMarkAxisPainter(
-				new TickFormatter(0f, data.max()*100f, sensitivityFormatter), 
-				new TickFormatter((float)lowest, (float)highest, i -> {  
-					Element element = Element.values()[i];
-					return element.name();
-				}), 
-				null, 
-				new TickFormatter(0f, data.max()*100f, sensitivityFormatter),
-				false, 
-				false));
-		axisPainters.add(new LineAxisPainter(true, true, false, true));
-		
+	
+	
+	public ProfilePlot(CalibrationProfile profile, File source, TransitionSeriesType type) {
+		this.type = type;
+		setCalibrationProfile(profile, source);
 	}
 	
 	@Override
@@ -115,6 +81,59 @@ public class ProfilePlot extends GraphicsPanel {
 		return getHeight();
 	}
 
+	public void setCalibrationProfile(CalibrationProfile profile, File source) {
+		
+		int lowest = 0;
+		int highest = 1;
+		
+		List<TransitionSeries> tss = profile.getTransitionSeries(type);
+		if (tss.size() >= 2) {
+			lowest = tss.get(0).element.ordinal();
+			highest = tss.get(tss.size() - 1).element.ordinal();
+		}
+		
+		data = profileToSpectrum(profile.getCalibrations(), type, lowest, highest);
+		
+		dr.dataHeight = 1;
+		dr.dataWidth = data.size();
+		dr.drawToVectorSurface = false;
+		dr.maxYIntensity = data.max();
+		dr.unitSize = 1f;
+		dr.viewTransform = ViewTransform.LINEAR;
+		
+		plotPainters = new ArrayList<>();
+		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, data.max()*100f)));
+		
+		plotPainters.add(new AreaPainter(data, 
+				new PaletteColour(0xff00897B), 
+				new PaletteColour(0xff00796B), 
+				new PaletteColour(0xff004D40)
+			));
+		
+	
+		axisPainters = new ArrayList<>();
+		String ylabel = "Sensitivity";
+		if (!profile.isEmpty()) {
+			ylabel = "Sensitivity versus " + profile.getReference().getAnchor().element.toString();
+		}
+		String title = profile.getName();
+		if (source != null) {
+			title += " (" + source.getName() + ")";
+		}
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, ylabel, null, title, "Element"));
+		Function<Integer, String> sensitivityFormatter = i -> i + "%";
+		axisPainters.add(new TickMarkAxisPainter(
+				new TickFormatter(0f, data.max()*100f, sensitivityFormatter), 
+				new TickFormatter((float)lowest, (float)highest, i -> {  
+					Element element = Element.values()[i];
+					return element.name();
+				}), 
+				null, 
+				new TickFormatter(0f, data.max()*100f, sensitivityFormatter),
+				false, 
+				false));
+		axisPainters.add(new LineAxisPainter(true, true, true, true));
+	}
 
 	public static Spectrum profileToSpectrum(Map<TransitionSeries, Float> values, TransitionSeriesType tst, int startOrdinal, int stopOrdinal) {	
 		

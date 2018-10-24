@@ -2,6 +2,7 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -548,11 +549,15 @@ public class FittingController extends EventfulType<Boolean>
 		return this.fittingModel.calibrationProfile;
 	}
 	
-	public void setCalibrationProfile(CalibrationProfile zprofile) {
+	public void setCalibrationProfile(CalibrationProfile zprofile, File source) {
 		this.fittingModel.calibrationProfile = zprofile;
+		this.fittingModel.calibrationProfileFile = source;
 		updateListeners(false);
 	}
-	
+
+	public File getCalibrationProfileFile() {
+		return this.fittingModel.calibrationProfileFile;
+	}
 	
 	
 	

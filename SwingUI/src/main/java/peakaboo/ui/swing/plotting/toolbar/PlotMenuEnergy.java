@@ -11,10 +11,14 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import cyclops.util.Mutable;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.dialogues.fileio.SimpleFileExtension;
+import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconSize;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.FileChooserImageButton;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.buttons.ToolbarImageButton;
@@ -31,6 +35,58 @@ public class PlotMenuEnergy extends JPopupMenu {
 		this.controller = controller;
 		
 		
+		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
+
+		outer.addSetting(energyCalibration(plot));
+		outer.addSetting(zcalibration(plot));
+		outer.addSetting(advanced(plot));
+		outer.setOpaque(false);
+		this.add(outer);
+		
+		
+	}
+	
+	private SettingsPanel zcalibration(PlotPanel plot) {
+		
+		SettingsPanel zcal = new SettingsPanel();
+		zcal.setOpaque(false);
+		zcal.setBorder(Spacing.bMedium());
+
+		JButton button = new ImageButton("Z-Calibration")
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withAction(() -> {
+					this.setVisible(false);
+					plot.actionShowCalibrationProfileManager();		
+				});
+		button.setHorizontalAlignment(SwingConstants.CENTER);
+		button.setFont(button.getFont().deriveFont(Font.BOLD));
+		
+		zcal.addSetting(button);
+		
+		return zcal;
+		
+	}
+	
+	private SettingsPanel advanced(PlotPanel plot) {
+		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
+		advanced.setOpaque(false);
+		advanced.setBorder(Spacing.bMedium());
+		JButton button = new ImageButton("Advanced Options")
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withAction(() -> {
+					this.setVisible(false);
+					plot.actionShowAdvancedOptions();		
+				});
+
+		button.setHorizontalAlignment(SwingConstants.CENTER);
+		button.setFont(button.getFont().deriveFont(Font.BOLD));
+		advanced.addSetting(button);
+
+		return advanced;
+	}
+	
+	private SettingsPanel energyCalibration(PlotPanel plot) {
+
 		SettingsPanel energy = new SettingsPanel(Spacing.iTiny());
 		energy.setOpaque(false);
 		energy.setBorder(Spacing.bMedium());
@@ -82,35 +138,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		});
 		energy.addSetting(energyGuess);
 		
-		
-		
-		
-		
-		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
-		advanced.setOpaque(false);
-		advanced.setBorder(Spacing.bMedium());
-		JButton advancedButton = new ImageButton("Advanced Options")
-				.withButtonSize(ImageButtonSize.COMPACT)
-				.withAction(() -> {
-					this.setVisible(false);
-					plot.actionShowAdvancedOptions();		
-				});
-
-		advancedButton.setHorizontalAlignment(SwingConstants.CENTER);
-		advancedButton.setFont(advancedButton.getFont().deriveFont(Font.BOLD));
-		advanced.addSetting(advancedButton);
-
-
-		
-		
-		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
-
-		outer.addSetting(energy);
-		outer.addSetting(advanced);
-		outer.setOpaque(false);
-		this.add(outer);
-		
-		
+		return energy;
 	}
 
 	public void setWidgetState(boolean hasData) {

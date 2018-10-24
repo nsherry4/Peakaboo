@@ -5,6 +5,8 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.ButtonGroup;
@@ -32,30 +34,38 @@ import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToggleImageButton;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.HeaderBox;
+import swidget.widgets.layout.HeaderTabBuilder;
 
 public class ProfileViewPanel extends JPanel {
 
 	private HeaderBox header;
 	private JPanel body;
+	protected List<ProfilePlot> profileplots = new ArrayList<>();
+
+	protected ProfileViewPanel() {
+		
+	}
 	
 	public ProfileViewPanel(CalibrationProfile profile, Runnable onClose) {
 		
 		ImageButton cancel = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withAction(onClose);
 		
-		init(profile, null, cancel);
+		
+		init(profile, null, null, cancel);
 		
 	}
 	
+	//view-only mode
 	public ProfileViewPanel(CalibrationProfile profile, Runnable onAccept, Runnable onReject) {
 		
 		ImageButton ok = new ImageButton("Accept").withStateDefault().withAction(onAccept);
 		ImageButton cancel = new ImageButton("Cancel").withAction(onReject);
 		
-		init(profile, cancel, ok);
+		init(profile, null, cancel, ok);
 
 	}
 	
-	private void init(CalibrationProfile profile, JComponent left, JComponent right) {
+	protected void init(CalibrationProfile profile, File source, JComponent left, JComponent right) {
 		
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(700, 350));
@@ -64,52 +74,24 @@ public class ProfileViewPanel extends JPanel {
 		this.add(body, BorderLayout.CENTER);
 		
 		//plot views
-		JPanel plots = new JPanel();
-		CardLayout cardlayout = new CardLayout();
-		plots.setLayout(cardlayout);
+		HeaderTabBuilder tabBuilder = new HeaderTabBuilder();
 		
-		ProfilePlot kplot = new ProfilePlot(profile, TransitionSeriesType.K);
-		ProfilePlot lplot = new ProfilePlot(profile, TransitionSeriesType.L);
-		ProfilePlot mplot = new ProfilePlot(profile, TransitionSeriesType.M);
-		
-		plots.add(kplot, TransitionSeriesType.K.toString());
-		plots.add(lplot, TransitionSeriesType.L.toString());
-		plots.add(mplot, TransitionSeriesType.M.toString());
-		cardlayout.show(plots, TransitionSeriesType.K.toString());
-		
-		body.add(plots, BorderLayout.CENTER);
+		ProfilePlot kplot = new ProfilePlot(profile, source, TransitionSeriesType.K);
+		ProfilePlot lplot = new ProfilePlot(profile, source, TransitionSeriesType.L);
+		ProfilePlot mplot = new ProfilePlot(profile, source, TransitionSeriesType.M);
+		profileplots.add(kplot);
+		profileplots.add(lplot);
+		profileplots.add(mplot);
+
 		
 		
-		ButtonGroup seriesGroup = new ButtonGroup();
+		tabBuilder.addTab("K Series", kplot);
+		tabBuilder.addTab("L Series", lplot);
+		tabBuilder.addTab("M Series", mplot);
 		
-		
-		ToggleImageButton kseries = new ToggleImageButton("K Series");
-		kseries.addActionListener((e) -> {
-			System.out.println("K");
-			cardlayout.show(plots, TransitionSeriesType.K.toString());
-		});
-		seriesGroup.add(kseries);
-		
-		ToggleImageButton lseries = new ToggleImageButton("L Series");
-		lseries.addActionListener((e) -> {
-			System.out.println("L");
-			cardlayout.show(plots, TransitionSeriesType.L.toString());
-		});
-		seriesGroup.add(lseries);
-		
-		ToggleImageButton mseries = new ToggleImageButton("M Series");
-		mseries.addActionListener((e) -> {
-			cardlayout.show(plots, TransitionSeriesType.M.toString());
-		});
-		seriesGroup.add(mseries);
-		
-		
-		ToggleButtonLinker center = new ToggleButtonLinker(kseries, lseries, mseries);
-		
-		cardlayout.show(plots, TransitionSeriesType.K.toString());
-		kseries.setSelected(true);
-		
-		header = new HeaderBox(left, center, right);
+		body.add(tabBuilder.getBody(), BorderLayout.CENTER);
+				
+		header = new HeaderBox(left, tabBuilder.getTabStrip(), right);
 		this.add(header, BorderLayout.NORTH);
 	}
 	

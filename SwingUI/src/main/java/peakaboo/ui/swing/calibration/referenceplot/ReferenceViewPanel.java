@@ -19,22 +19,17 @@ import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToggleImageButton;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.HeaderBox;
+import swidget.widgets.layout.HeaderTabBuilder;
 
 public class ReferenceViewPanel extends JPanel {
 
 	private HeaderBox header;
-	private JPanel plots;
 	private Runnable onClose;
 	
 	public ReferenceViewPanel(CalibrationReference reference) {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(700, 350));
-		
-		//plot views
-		plots = new JPanel();
-		CardLayout cardlayout = new CardLayout();
-		plots.setLayout(cardlayout);
-		
+
 		
 		JPanel infopanel = new JPanel(new BorderLayout());
 		JLabel info = new JLabel("<html>" + reference.pluginDescription() + "</html>");
@@ -45,51 +40,19 @@ public class ReferenceViewPanel extends JPanel {
 		ReferencePlot lplot = new ReferencePlot(reference, TransitionSeriesType.L);
 		ReferencePlot mplot = new ReferencePlot(reference, TransitionSeriesType.M);
 		
-		plots.add(infopanel, "info");
-		plots.add(kplot, TransitionSeriesType.K.toString());
-		plots.add(lplot, TransitionSeriesType.L.toString());
-		plots.add(mplot, TransitionSeriesType.M.toString());
-		cardlayout.show(plots, TransitionSeriesType.K.toString());
+		HeaderTabBuilder tabBuilder = new HeaderTabBuilder();
+		tabBuilder.addTab("Details", infopanel);
+		tabBuilder.addTab("K Series", kplot);
+		tabBuilder.addTab("L Series", lplot);
+		tabBuilder.addTab("M Series", mplot);
+
 		
-		this.add(plots, BorderLayout.CENTER);
-		
-		
+		this.add(tabBuilder.getBody(), BorderLayout.CENTER);
 		
 		//header
 		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withAction(() -> this.onClose.run());
 		
-		ButtonGroup seriesGroup = new ButtonGroup();
-
-		ToggleImageButton details = new ToggleImageButton("Details");
-		details.addActionListener((e) -> {
-			cardlayout.show(plots, "info");
-		});
-		seriesGroup.add(details);
-		
-		ToggleImageButton kseries = new ToggleImageButton("K Series");
-		kseries.addActionListener((e) -> {
-			cardlayout.show(plots, TransitionSeriesType.K.toString());
-		});
-		seriesGroup.add(kseries);
-		
-		ToggleImageButton lseries = new ToggleImageButton("L Series");
-		lseries.addActionListener((e) -> {
-			cardlayout.show(plots, TransitionSeriesType.L.toString());
-		});
-		seriesGroup.add(lseries);
-		
-		ToggleImageButton mseries = new ToggleImageButton("M Series");
-		mseries.addActionListener((e) -> {
-			cardlayout.show(plots, TransitionSeriesType.M.toString());
-		});
-		seriesGroup.add(mseries);
-		
-		ToggleButtonLinker center = new ToggleButtonLinker(details, kseries, lseries, mseries);
-		
-		cardlayout.show(plots, "info");
-		details.setSelected(true);
-		
-		header = new HeaderBox(null, center, close);
+		header = new HeaderBox(null, tabBuilder.getTabStrip(), close);
 		this.add(header, BorderLayout.NORTH);
 
 		

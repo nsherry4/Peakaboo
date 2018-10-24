@@ -104,7 +104,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 	
 	public static CalibrationReference empty() {
 		CalibrationReference empty = new CalibrationReference();
-		empty.name = "Empty Calibration Reference";
+		empty.name = "Empty Z-Calibration Reference";
 		empty.uuid = "a3da5ff9-c6c5-4633-a40b-b576efe89da8";
 		empty.desc = "Empty Description Field";
 		empty.rev = "1.0";

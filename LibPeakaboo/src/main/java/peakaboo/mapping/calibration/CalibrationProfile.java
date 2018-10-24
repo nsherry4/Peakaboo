@@ -41,7 +41,7 @@ public class CalibrationProfile {
 	public CalibrationProfile() {
 		this.reference = CalibrationReference.empty();
 		calibrations = new LinkedHashMap<>();
-		name = reference.getName();
+		name = "Empty Z-Calibration Profile";
 	}
 	
 	public CalibrationProfile(CalibrationReference reference, FittingResultSet sample) {

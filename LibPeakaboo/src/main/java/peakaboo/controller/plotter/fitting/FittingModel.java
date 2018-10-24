@@ -1,5 +1,6 @@
 package peakaboo.controller.plotter.fitting;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,9 @@ public class FittingModel
 	
 	
 	public CalibrationProfile calibrationProfile;
+
+	//TODO: Should this be saved with the profile?
+	public File calibrationProfileFile;
 	
 	
 	public FittingModel()

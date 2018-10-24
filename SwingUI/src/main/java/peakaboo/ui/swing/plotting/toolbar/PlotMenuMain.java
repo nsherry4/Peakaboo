@@ -137,7 +137,7 @@ public class PlotMenuMain extends JPopupMenu {
 				"Clear Profile", 
 				null, 
 				"Clears the current Z-Calibration profile", 
-				e -> controller.fitting().setCalibrationProfile(new CalibrationProfile()),
+				e -> controller.fitting().setCalibrationProfile(new CalibrationProfile(), null),
 				null, null
 		);
 		calibration.add(clearCalibrationProfile);
