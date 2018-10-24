@@ -84,7 +84,7 @@ public class ReferenceViewPanel extends JPanel {
 		});
 		seriesGroup.add(mseries);
 		
-		ToggleButtonLinker center = new ToggleButtonLinker(kseries, lseries, mseries);
+		ToggleButtonLinker center = new ToggleButtonLinker(details, kseries, lseries, mseries);
 		
 		cardlayout.show(plots, "info");
 		details.setSelected(true);

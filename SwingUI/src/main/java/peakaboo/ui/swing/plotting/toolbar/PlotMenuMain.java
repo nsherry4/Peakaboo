@@ -155,14 +155,14 @@ public class PlotMenuMain extends JPopupMenu {
 		calibration.addSeparator();
 		
 		loadCalibrationReference = PlotMenuUtils.createMenuItem(plot,
-				"Load Reference", null, "Loads a Z-Calibration reference for a reference material",
+				"Create Profile", null, "Loads a Z-Calibration reference for a reference material",
 				e -> plot.actionLoadCalibrationReference(),
 				null, null
 		);
 		calibration.add(loadCalibrationReference);
 		
 		saveCalibrationProfile = PlotMenuUtils.createMenuItem(plot,
-				"Create Profile", null, "Saves the current fitting data against the loaded Z-Calibration reference",
+				"Save Profile", null, "Saves the current fitting data against the loaded Z-Calibration reference",
 				e -> plot.actionSaveCalibrationProfile(),
 				null, null
 		);

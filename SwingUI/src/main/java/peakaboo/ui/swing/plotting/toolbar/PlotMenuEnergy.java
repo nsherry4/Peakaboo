@@ -9,6 +9,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
@@ -36,6 +37,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		JLabel energyTitle = new JLabel("Energy Calibration (keV)");
 		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
+		energyTitle.setBorder(new EmptyBorder(0, 0, Spacing.small, 0));
 		energy.addSetting(energyTitle);
 		
 		
