@@ -755,7 +755,7 @@ public class PlotPanel extends TabbedLayerPanel
 		export.set(new ExportPanel(this, canvas, controller, () -> {
 			
 			SwidgetFilePanels.saveFile(this, "Save Archive", saveFilesFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
-				if (file.isEmpty()) {
+				if (!file.isPresent()) {
 					return;
 				}
 				
