@@ -43,7 +43,7 @@ Peakaboo can also be used as a library. This is also the easiest target to build
 
 Peakaboo builds and manages its dependencies with maven, however it does also depend on several other libraries on GitHub which are not in maven. These are:
 
- - **[nsherry4/Libraries](https://github.com/nsherry4/Libraries)** Collection of small libraries not yet broken out into separate repositories
+  - **[nsherry4/Cyclops](https://github.com/nsherry4/Cyclops)** Scientific Data Type & Visualisation Library 
   - **[nsherry4/Eventful](https://github.com/nsherry4/Eventful)**  Simple, UI Friendly Event Library
   - **[nsherry4/Swidget](https://github.com/nsherry4/Swidget)**  Mixed Collection of Swing UI components 
   - **[nsherry4/Plural](https://github.com/nsherry4/Plural)**   Library to help parallelize tasks, show progress, and allow user cancel 
