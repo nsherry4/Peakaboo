@@ -157,6 +157,19 @@ public class LayerPanel extends JLayeredPane {
 		return contentLayer.getComponent();
 	}
 	
+	/**
+	 * Tests if this component either <i>is</i>, or is <i>contained in</i> a LayerPanel.
+	 * @return true if this component or one of its transitive parents is a LayerPanel, false otherwise.
+	 */
+	public static boolean contains(Component c) {
+		while (c != null) {
+			if (c instanceof LayerPanel) {
+				return true;
+			}
+			c = c.getParent();
+		}
+		return false;
+	}
 	
 
 }
