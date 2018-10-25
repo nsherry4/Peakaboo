@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
+import swidget.Swidget;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 
@@ -135,7 +136,7 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 		if (text == null) {
 			super.setToolTipText(null);
 		} else {
-			super.setToolTipText(ImageButtonConfigurator.getWrappingTooltipText(this, text));
+			super.setToolTipText(Swidget.lineWrapTooltip(this, text));
 		}
 	}
 

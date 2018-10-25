@@ -171,6 +171,16 @@ public class LayerPanel extends JLayeredPane {
 		return false;
 	}
 	
+	public static LayerPanel parent(Component c) {
+		while (c != null) {
+			if (c instanceof LayerPanel) {
+				return (LayerPanel) c;
+			}
+			c = c.getParent();
+		}
+		return null;
+	}
+	
 
 }
 

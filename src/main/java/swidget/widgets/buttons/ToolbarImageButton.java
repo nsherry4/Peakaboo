@@ -6,6 +6,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -162,7 +163,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 		if (text == null) {
 			super.setToolTipText(null);
 		} else {
-			super.setToolTipText(ImageButtonConfigurator.getWrappingTooltipText(this, text));
+			super.setToolTipText(Swidget.lineWrapTooltip(this, text));
 		}
 	}
 

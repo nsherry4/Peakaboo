@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JToggleButton;
 
+import swidget.Swidget;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 
@@ -148,7 +149,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 		if (text == null) {
 			super.setToolTipText(null);
 		} else {
-			super.setToolTipText(ImageButtonConfigurator.getWrappingTooltipText(this, text));
+			super.setToolTipText(Swidget.lineWrapTooltip(this, text));
 		}
 	}
 

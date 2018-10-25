@@ -1,6 +1,14 @@
 package swidget;
 
 
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 
@@ -83,6 +91,49 @@ public class Swidget
 		
 	}
 	
+	public static String lineWrap(Component c, String text) {
+		return lineWrap(c, text, 400);
+	}
+	
+	public static String lineWrap(Component c, String text, int width) {
+		
+		List<String> lines = new ArrayList<String>();
+		
+		Font font = c.getFont();
+		FontMetrics metrics = c.getFontMetrics(font);
+				
+		String line = "";
+		Graphics g = c.getGraphics();
+		
+		List<String> words = new ArrayList<String>(Arrays.asList(text.split(" ")));
+		
+		
+		lines.clear();
+		while (words.size() > 0)
+		{
+		
+			while ( metrics.getStringBounds(line, g).getWidth() < width )
+			{
+				if (words.size() == 0) break;
+				if (!line.equals("")) line += " ";
+				line = line + words.remove(0);
+			}
+			
+			lines.add(line);
+			line = "";
+			
+		}
+		
+		Optional<String> str = lines.stream().reduce((a, b) -> a + "\n" + b);
+		return str.orElse("");
+	}
+	
+	
+	public static String lineWrapTooltip(Component c, String text) {
+		return "<html>" + lineWrap(c, text).replace("\n", "<br/>") + "</html>";
+	}
+	
+	
 	
 	public static void main(String[] args)
 	{
@@ -94,7 +145,8 @@ public class Swidget
 		Logger logger = Logger.getLogger( stElements[0].getClassName() );
 		return logger;
 	}
-	
+
+
 	
 }
 

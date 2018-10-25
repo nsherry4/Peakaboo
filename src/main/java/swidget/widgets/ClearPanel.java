@@ -5,8 +5,8 @@ import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
+import swidget.Swidget;
 import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonConfigurator;
 
 
 public class ClearPanel extends JPanel
@@ -53,7 +53,7 @@ public class ClearPanel extends JPanel
 	@Override
 	public void setToolTipText(String text)
 	{
-		super.setToolTipText(ImageButtonConfigurator.getWrappingTooltipText(this, text));
+		super.setToolTipText(Swidget.lineWrapTooltip(this, text));
 	}
 
 }

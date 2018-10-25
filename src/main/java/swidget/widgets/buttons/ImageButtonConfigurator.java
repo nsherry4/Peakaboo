@@ -1,6 +1,5 @@
 package swidget.widgets.buttons;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -263,41 +262,6 @@ public class ImageButtonConfigurator {
 		return preferred;
 		
 	}
-	
-	public static String getWrappingTooltipText(Component c, String text)
-	{
-		int width = 400;
-		List<String> lines = new ArrayList<String>();
-		
-		Font font = c.getFont();
-		FontMetrics metrics = c.getFontMetrics(font);
-				
-		String line = "";
-		Graphics g = c.getGraphics();
-		
-		List<String> words = new ArrayList<String>(Arrays.asList(text.split(" ")));
-		
-		
-		lines.clear();
-		while (words.size() > 0)
-		{
-		
-			while ( metrics.getStringBounds(line, g).getWidth() < width )
-			{
-				if (words.size() == 0) break;
-				if (!line.equals("")) line += " ";
-				line = line + words.remove(0);
-			}
-			
-			lines.add(line);
-			line = "";
-			
-		}
-		
-		Optional<String> str = lines.stream().reduce((a, b) -> a + "<br>" + b);
-		return "<html>" + str.orElse("") + "</html>";
-	}
-	
 	
 	void setButtonBorder(boolean forceBorder) {
 		ButtonModel m = button.getModel();
