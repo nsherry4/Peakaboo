@@ -41,6 +41,7 @@ import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonConfigurator;
+import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.ModalLayer;
@@ -96,7 +97,7 @@ public class ProfileManager extends JPanel {
 		controller.addListener(listener);
 		
 		
-		ImageButton cancel = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withAction(() -> {
+		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			controller.removeListener(listener);
 			onClose.run();
 		});
@@ -104,26 +105,24 @@ public class ProfileManager extends JPanel {
 		ButtonBox box = new ButtonBox(Spacing.tiny, false);
 		box.setOpaque(false);
 		
-		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration").withBordered(false).withAction(() -> {
+		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			promptCreateProfile(this::actionLoadCalibrationReference);
-			
-			
 		});
 		box.addLeft(create);
 		
-		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration").withBordered(false).withAction(() -> {
+		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			controller.calibration().clearCalibrationReference();
 			actionLoadCalibrationProfile();
 		});
 		box.addLeft(open);
 		
-		clear = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration").withBordered(false).withAction(() -> {
+		clear = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			controller.calibration().setCalibrationProfile(new CalibrationProfile(), null);
 			
 		});
 		box.addLeft(clear);
 		
-		save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration").withBordered(false).withAction(() -> {
+		save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			actionSaveCalibrationProfile();
 		});
 		box.addLeft(save);
@@ -133,7 +132,7 @@ public class ProfileManager extends JPanel {
 		
 
 		
-		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), box, cancel);
+		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), box, close);
 		
 	}
 	

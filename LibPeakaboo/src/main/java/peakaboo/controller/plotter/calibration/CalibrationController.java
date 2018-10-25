@@ -133,7 +133,7 @@ public class CalibrationController extends Eventful {
 	}
 
 	public File getCalibrationProfileFile() {
-		if (hasCalibrationReference()) {
+		if (!hasCalibrationReference()) {
 			return this.model.calibrationProfileFile;
 		} else {
 			return null;

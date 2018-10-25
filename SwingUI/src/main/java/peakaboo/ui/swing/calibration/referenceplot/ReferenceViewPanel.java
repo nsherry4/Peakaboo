@@ -16,6 +16,7 @@ import stratus.controls.ToggleButtonLinker;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.buttons.ToggleImageButton;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.HeaderBox;
@@ -50,7 +51,7 @@ public class ReferenceViewPanel extends JPanel {
 		this.add(tabBuilder.getBody(), BorderLayout.CENTER);
 		
 		//header
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withAction(() -> this.onClose.run());
+		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> this.onClose.run());
 		
 		header = new HeaderBox(null, tabBuilder.getTabStrip(), close);
 		this.add(header, BorderLayout.NORTH);
