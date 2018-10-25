@@ -138,10 +138,10 @@ public class ProfileManager extends JPanel {
 	}
 	
 	private void promptCreateProfile(Runnable onAccept) {
-		String text = Swidget.lineWrap(parent, "This will replace any existing work with the settings and fittings needed to create a new Z-Calibration Profile. Proceed?");
+		String text = Swidget.lineWrap(parent, "This will replace any existing work with the settings and fittings needed to create a new Z-Calibration Profile.");
 		System.out.println(text);
-		LayerDialog dialog = new LayerDialog("Create Z-Calibration", text, MessageType.WARNING);
-		ImageButton ok = new ImageButton("OK").withAction(onAccept);
+		LayerDialog dialog = new LayerDialog("Create Z-Calibration", text, MessageType.QUESTION);
+		ImageButton ok = new ImageButton("OK").withAction(onAccept).withStateDefault();
 		ImageButton cancel = new ImageButton("Cancel");
 		dialog.addLeft(cancel);
 		dialog.addRight(ok);

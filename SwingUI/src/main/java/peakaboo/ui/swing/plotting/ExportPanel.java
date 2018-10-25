@@ -51,7 +51,7 @@ public class ExportPanel extends JPanel {
 		ModalLayer layer = new ModalLayer(parent, this);
 		
 		
-		HeaderBox header = HeaderBox.createYesNo("Export", 
+		HeaderBox header = HeaderBox.createYesNo("Export Archive", 
 				"OK", () -> {
 					onAccept.run();
 					parent.removeLayer(layer);
