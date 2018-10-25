@@ -21,6 +21,7 @@ import cyclops.SigDigits;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import eventful.EventfulType;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.controller.mapper.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
@@ -29,7 +30,6 @@ import peakaboo.display.map.MapScaleMode;
 import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.display.map.modes.OverlayChannel;
 import peakaboo.display.map.modes.OverlayColour;
-import peakaboo.mapping.calibration.CalibrationProfile;
 
 
 

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import cyclops.ReadOnlySpectrum;
 import eventful.EventfulType;
+import peakaboo.controller.plotter.calibration.CalibrationController;
+import peakaboo.controller.plotter.calibration.SavedCalibrationSession;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;
@@ -34,12 +36,13 @@ public class PlotController extends EventfulType<String>
 	private FilteringController				filteringController;
 	private FittingController				fittingController;
 	private ViewController					viewController;
+	private CalibrationController			calibrationController;
 
 	private File configDir;
 
 	public static enum UpdateType
 	{
-		DATA, FITTING, FILTER, UNDO, UI
+		DATA, FITTING, FILTER, UNDO, UI, CALIBRATION
 	}
 	
 	
@@ -57,14 +60,17 @@ public class PlotController extends EventfulType<String>
 		dataController = new DataController(this);
 		filteringController = new FilteringController(this);
 		fittingController = new FittingController(this);
+		calibrationController = new CalibrationController(this);
 		viewController = new ViewController(this);
 		viewController.loadPersistentSettings();
+		
 		
 		undoController.addListener(() -> updateListeners(UpdateType.UNDO.toString()));
 		dataController.addListener(() -> updateListeners(UpdateType.DATA.toString()));
 		filteringController.addListener(() -> updateListeners(UpdateType.FILTER.toString()));		
 		fittingController.addListener(b -> updateListeners(UpdateType.FITTING.toString()));
 		viewController.addListener(() -> updateListeners(UpdateType.UI.toString()));
+		calibrationController.addListener(() -> updateListeners(UpdateType.CALIBRATION.toString()));
 		
 		undoController.setUndoPoint("");
 	}
@@ -74,37 +80,26 @@ public class PlotController extends EventfulType<String>
 		return SavedSession.storeFrom(this);
 	}
 	
-
-
-	public void loadSettings(String data, boolean isUndoAction)
-	{
-		SavedSession saved = SavedSession.deserialize(data);
-		saved.loadInto(this);
-		
-		if (!isUndoAction) undoController.setUndoPoint("Load Session");
-		
-		filteringController.filteredDataInvalidated();
-		fittingController.fittingDataInvalidated();
-		fittingController.fittingProposalsInvalidated();
-		viewController.updateListeners();
-		
-		//fire an update message from the fittingcontroller with a boolean flag
-		//indicating that the change is not comming from inside the fitting controller
-		fittingController.updateListeners(true);
-		
-	}
 	
 	public SavedSession readSavedSettings(String yaml) {
 		return SavedSession.deserialize(yaml);
 	}
+
 	
-	public void loadSessionSettings(SavedSession saved) {
+	public void loadSettings(String data, boolean isUndoAction) {
+		SavedSession saved = SavedSession.deserialize(data);
+		loadSessionSettings(saved, isUndoAction);		
+	}
+	
+	public void loadSessionSettings(SavedSession saved, boolean isUndoAction) {
+		if (!isUndoAction) undoController.setUndoPoint("Load Session");
 		saved.loadInto(this);
 		
 		filteringController.filteredDataInvalidated();
 		fittingController.fittingDataInvalidated();
 		fittingController.fittingProposalsInvalidated();
 		viewController.updateListeners();
+		calibrationController.updateListeners();
 		
 		//fire an update message from the fittingcontroller with a boolean flag
 		//indicating that the change is not comming from inside the fitting controller
@@ -276,6 +271,10 @@ public class PlotController extends EventfulType<String>
 
 	public File getConfigDir() {
 		return configDir;
+	}
+
+	public CalibrationController calibration() {
+		return calibrationController;
 	}	
 	
 }

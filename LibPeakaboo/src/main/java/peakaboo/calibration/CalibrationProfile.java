@@ -1,4 +1,4 @@
-package peakaboo.mapping.calibration;
+package peakaboo.calibration;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,16 +13,16 @@ import java.util.stream.Collectors;
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import peakaboo.calibration.processor.CalibrationNormalizer;
+import peakaboo.calibration.processor.CalibrationProcessor;
+import peakaboo.calibration.processor.CalibrationSmoother;
+import peakaboo.calibration.processor.LinearCalibrationInterpolator;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.mapping.calibration.processor.CalibrationNormalizer;
-import peakaboo.mapping.calibration.processor.CalibrationProcessor;
-import peakaboo.mapping.calibration.processor.CalibrationSmoother;
-import peakaboo.mapping.calibration.processor.LinearCalibrationInterpolator;
 
 /*
  * NOTE: Calibration does not use PeakTable TransitionSeries, 
@@ -47,7 +47,7 @@ public class CalibrationProfile {
 	public CalibrationProfile(CalibrationReference reference, FittingResultSet sample) {
 		this.reference = reference;
 		calibrations = new LinkedHashMap<>();
-		
+				
 		if (!sample.getParameters().getCalibration().isZero()) {
 		
 			//Build profile

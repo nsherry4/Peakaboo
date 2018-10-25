@@ -11,11 +11,11 @@ import javax.swing.KeyStroke;
 
 import cyclops.util.Mutable;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
-import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.StockIcon;
 
@@ -28,12 +28,6 @@ public class PlotMenuMain extends JPopupMenu {
 	private JMenuItem					exportFilteredDataMenuItem;
 	private JMenuItem					exportArchive;
 	private JMenu 						exportSinks;
-	
-	private JMenuItem 					viewCalibrationProfile;
-	private JMenuItem					clearCalibrationProfile;
-	private JMenuItem					loadCalibrationReference;
-	private JMenuItem					saveCalibrationProfile;
-	private JMenuItem					showConcentrations;
 
 	private JMenuItem					undo, redo;
 	
@@ -110,67 +104,7 @@ public class PlotMenuMain extends JPopupMenu {
 		
 		this.add(export);
 		
-		
-		
-		
-		JMenu calibration = new JMenu("Z-Calibration");
 
-		JMenuItem loadCalibrationProfile = PlotMenuUtils.createMenuItem(plot, 
-				"Load Profile", 
-				null, 
-				"Loads a Z-Calibration profile to correct relative element sensitivity", 
-				e -> plot.actionLoadCalibrationProfile(), 
-				null, null
-		);
-		calibration.add(loadCalibrationProfile);
-		
-		viewCalibrationProfile = PlotMenuUtils.createMenuItem(plot, 
-				"View Profile", 
-				null, 
-				"Displays the current Z-Calibration profile", 
-				e -> plot.actionDisplayCalibrationProfile(controller.fitting().getCalibrationProfile()), 
-				null, null
-		);
-		calibration.add(viewCalibrationProfile);
-		
-		clearCalibrationProfile = PlotMenuUtils.createMenuItem(plot, 
-				"Clear Profile", 
-				null, 
-				"Clears the current Z-Calibration profile", 
-				e -> controller.fitting().setCalibrationProfile(new CalibrationProfile(), null),
-				null, null
-		);
-		calibration.add(clearCalibrationProfile);
-		
-		
-		showConcentrations = PlotMenuUtils.createMenuItem(plot,
-				"Show Concentrations", null, "Calculated and displays concentration estimates based on the Z-Calibration profile",
-				e -> plot.actionShowConcentrations(),
-				null, null
-		);
-		calibration.add(showConcentrations);
-		
-		
-		
-		calibration.addSeparator();
-		
-		loadCalibrationReference = PlotMenuUtils.createMenuItem(plot,
-				"Create Profile", null, "Loads a Z-Calibration reference for a reference material",
-				e -> plot.actionLoadCalibrationReference(),
-				null, null
-		);
-		calibration.add(loadCalibrationReference);
-		
-		saveCalibrationProfile = PlotMenuUtils.createMenuItem(plot,
-				"Save Profile", null, "Saves the current fitting data against the loaded Z-Calibration reference",
-				e -> plot.actionSaveCalibrationProfile(),
-				null, null
-		);
-		calibration.add(saveCalibrationProfile);
-		
-		this.add(calibration);
-		
-				
 
 		this.addSeparator();
 
@@ -258,12 +192,8 @@ public class PlotMenuMain extends JPopupMenu {
 		exportFittingsMenuItem.setEnabled(hasData);
 		exportFilteredDataMenuItem.setEnabled(hasData);
 		exportArchive.setEnabled(hasData);
-		saveCalibrationProfile.setEnabled(hasData);
 		exportSinks.setEnabled(hasData);
-		saveCalibrationProfile.setEnabled(hasData && controller.fitting().getCalibrationReference() != null);
-		viewCalibrationProfile.setEnabled(!controller.fitting().getCalibrationProfile().isEmpty());
-		clearCalibrationProfile.setEnabled(!controller.fitting().getCalibrationProfile().isEmpty());
-		showConcentrations.setEnabled(hasData && !controller.fitting().getCalibrationProfile().isEmpty());
+
 		
 		undo.setEnabled(controller.history().canUndo());
 		redo.setEnabled(controller.history().canRedo());

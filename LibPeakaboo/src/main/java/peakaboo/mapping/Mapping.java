@@ -4,6 +4,7 @@ import java.util.List;
 
 import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
@@ -12,7 +13,6 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 

@@ -24,10 +24,10 @@ import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import cyclops.visualization.palette.PaletteColour;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.mapping.calibration.CalibrationProfile;
 
 public class ProfilePlot extends GraphicsPanel {
 
@@ -85,7 +85,7 @@ public class ProfilePlot extends GraphicsPanel {
 		
 		int lowest = 0;
 		int highest = 1;
-		
+				
 		List<TransitionSeries> tss = profile.getTransitionSeries(type);
 		if (tss.size() >= 2) {
 			lowest = tss.get(0).element.ordinal();

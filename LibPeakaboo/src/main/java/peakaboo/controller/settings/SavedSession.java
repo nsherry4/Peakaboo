@@ -3,6 +3,7 @@ package peakaboo.controller.settings;
 import peakaboo.common.Version;
 import peakaboo.common.YamlSerializer;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.calibration.SavedCalibrationSession;
 import peakaboo.controller.plotter.data.SavedDataSession;
 import peakaboo.controller.plotter.filtering.SavedFilteringSession;
 import peakaboo.controller.plotter.fitting.SavedFittingSession;
@@ -22,6 +23,7 @@ public class SavedSession {
 	public SavedFilteringSession filtering;
 	public SavedFittingSession fitting;
 	public SessionViewModel view;
+	public SavedCalibrationSession calibration;
 	public String version = Version.longVersionNo;
 	
 	
@@ -57,9 +59,12 @@ public class SavedSession {
 		//store fittings
 		saved.fitting = new SavedFittingSession().storeFrom(plotController.fitting());
 		
+		//store calibration
+		saved.calibration = new SavedCalibrationSession().storeFrom(plotController.calibration());
 		
 		//store view settings -- this is done differently, since view's session settings is itself serializable
 		saved.view = plotController.view().getViewModel().session;
+		
 		
 
 		return saved;
@@ -78,6 +83,9 @@ public class SavedSession {
 		
 		//restore fitting settings
 		this.fitting.loadInto(plotController.fitting());
+		
+		//restore calibration information
+		this.calibration.loadInto(plotController.calibration());
 		
 		//restore view settings directly, since it's model is serializable
 		plotController.view().getViewModel().session = this.view;

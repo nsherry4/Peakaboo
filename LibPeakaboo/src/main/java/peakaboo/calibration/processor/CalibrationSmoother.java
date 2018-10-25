@@ -1,4 +1,4 @@
-package peakaboo.mapping.calibration.processor;
+package peakaboo.calibration.processor;
 
 import java.util.List;
 import java.util.Map;
@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -14,7 +15,6 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
-import peakaboo.mapping.calibration.CalibrationReference;
 
 public class CalibrationSmoother implements CalibrationProcessor {
 

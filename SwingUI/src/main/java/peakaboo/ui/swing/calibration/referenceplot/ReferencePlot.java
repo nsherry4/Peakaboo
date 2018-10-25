@@ -25,10 +25,10 @@ import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import cyclops.visualization.palette.PaletteColour;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.mapping.calibration.CalibrationReference;
 
 public class ReferencePlot extends GraphicsPanel {
 

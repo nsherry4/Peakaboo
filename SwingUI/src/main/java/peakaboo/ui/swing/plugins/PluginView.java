@@ -16,6 +16,8 @@ import org.apache.batik.ext.swing.GridBagConstants;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import peakaboo.calibration.CalibrationPluginManager;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import peakaboo.datasource.plugin.DataSourcePlugin;
@@ -23,8 +25,6 @@ import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.JavaFilterPlugin;
-import peakaboo.mapping.calibration.CalibrationPluginManager;
-import peakaboo.mapping.calibration.CalibrationReference;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

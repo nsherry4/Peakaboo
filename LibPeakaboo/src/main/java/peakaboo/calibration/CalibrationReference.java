@@ -1,4 +1,4 @@
-package peakaboo.mapping.calibration;
+package peakaboo.calibration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,6 +79,10 @@ public class CalibrationReference implements BoltConfigPlugin {
 	
 	public Map<TransitionSeries, Float> getConcentrations() {
 		return new HashMap<>(concentrations);
+	}
+	
+	public boolean isEmpty() {
+		return concentrations.isEmpty();
 	}
 	
 	/**

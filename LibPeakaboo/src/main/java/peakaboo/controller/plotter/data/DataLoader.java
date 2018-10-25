@@ -154,13 +154,13 @@ public abstract class DataLoader {
 						//things like calibration info
 						this.paths = sessionPaths;
 						sessionCallback = () -> {
-							controller.loadSessionSettings(session);	
+							controller.loadSessionSettings(session, true);	
 							warnVersion.run();
 						};
 						load();
 					} else {
 						//load the settings w/o the data, then set the file paths back to the current values
-						controller.loadSessionSettings(session);
+						controller.loadSessionSettings(session, true);
 						//they said no, reset the stored paths to the old ones
 						controller.data().setDataPaths(currentPaths);
 						warnVersion.run();
@@ -170,7 +170,7 @@ public abstract class DataLoader {
 								
 			} else {
 				//just load the session, as there is either no data associated with it, or it's the same data
-				controller.loadSessionSettings(session);
+				controller.loadSessionSettings(session, true);
 				warnVersion.run();
 			}
 			

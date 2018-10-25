@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 import cyclops.ISpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.mapping.calibration.CalibrationProfile;
 
 
 /**

@@ -1,4 +1,4 @@
-!!peakaboo.mapping.calibration.SerializedCalibrationReference
+!!peakaboo.calibration.SerializedCalibrationReference
 anchor: Fe:K
 citations:
 - N.J.G. Pearce, W.T. Perkins, J.A. Westgate, M.T. Gorton, S.E. Jackson, C.R Neal

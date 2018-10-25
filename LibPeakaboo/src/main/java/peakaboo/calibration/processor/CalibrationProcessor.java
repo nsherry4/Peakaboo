@@ -1,9 +1,9 @@
-package peakaboo.mapping.calibration.processor;
+package peakaboo.calibration.processor;
 
 import java.util.Map;
 
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.mapping.calibration.CalibrationReference;
 
 public interface CalibrationProcessor {
 

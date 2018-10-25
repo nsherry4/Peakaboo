@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
-import peakaboo.mapping.calibration.CalibrationReference;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.ui.swing.calibration.referenceplot.ReferenceViewPanel;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerPanel;

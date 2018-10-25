@@ -14,10 +14,10 @@ import javax.swing.tree.TreeNode;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
-import peakaboo.mapping.calibration.CalibrationReference;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

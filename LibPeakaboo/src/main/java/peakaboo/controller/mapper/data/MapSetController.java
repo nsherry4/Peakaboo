@@ -13,8 +13,8 @@ import cyclops.Pair;
 import cyclops.SISize;
 import cyclops.Spectrum;
 import eventful.EventfulType;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 

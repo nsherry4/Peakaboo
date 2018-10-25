@@ -10,8 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.mapping.calibration.CalibrationReference;
 import stratus.controls.ToggleButtonLinker;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;

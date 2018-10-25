@@ -21,6 +21,7 @@ import com.ezware.common.Strings;
 import com.ezware.dialog.task.TaskDialog;
 
 import eventful.EventfulConfig;
+import peakaboo.calibration.CalibrationPluginManager;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
@@ -35,7 +36,6 @@ import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
-import peakaboo.mapping.calibration.CalibrationPluginManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.PlotFrame;
 import stratus.StratusLookAndFeel;

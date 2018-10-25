@@ -1,4 +1,4 @@
-package peakaboo.mapping.calibration;
+package peakaboo.calibration;
 
 import java.io.File;
 
@@ -33,7 +33,7 @@ public class CalibrationPluginManager extends BoltPluginManager<CalibrationRefer
 	protected void loadCustomPlugins() {
 				
 		BoltFilesytstemPluginLoader<? extends CalibrationReference> loader = filesystemLoader(getPlugins());
-		loader.registerURL(getClass().getResource("/peakaboo/mapping/references/NIST610.yaml"));
+		loader.registerURL(getClass().getResource("/peakaboo/calibration/references/NIST610.yaml"));
 				
 	}
 

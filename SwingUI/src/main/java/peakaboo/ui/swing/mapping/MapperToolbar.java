@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.common.PeakabooLog;
 import cyclops.Pair;
 import cyclops.SigDigits;
@@ -38,7 +39,6 @@ import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
-import peakaboo.mapping.calibration.CalibrationProfile;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;

@@ -7,7 +7,7 @@ import java.util.List;
 import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.SISize;
-import peakaboo.mapping.calibration.CalibrationProfile;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.mapping.results.MapResultSet;
 
 

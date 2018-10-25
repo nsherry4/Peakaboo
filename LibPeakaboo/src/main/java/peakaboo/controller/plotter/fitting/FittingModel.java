@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import peakaboo.calibration.CalibrationProfile;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
@@ -14,8 +16,6 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.mapping.calibration.CalibrationProfile;
-import peakaboo.mapping.calibration.CalibrationReference;
 
 
 
@@ -57,16 +57,6 @@ public class FittingModel
 	 */
 	public FittingSolver fittingSolver;
 	
-	//Transient, not serialized
-	//TODO: Is not serializing the way to go?
-	public CalibrationReference calibrationReference = null;
-	
-	
-	public CalibrationProfile calibrationProfile;
-
-	//TODO: Should this be saved with the profile?
-	public File calibrationProfileFile;
-	
 	
 	public FittingModel()
 	{
@@ -80,7 +70,6 @@ public class FittingModel
 		curveFitter = new UnderCurveFitter();
 		fittingSolver = new GreedyFittingSolver();
 		annotations = new HashMap<>();
-		calibrationProfile = new CalibrationProfile();
 	}
 	
 }

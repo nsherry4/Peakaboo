@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -65,6 +66,9 @@ import net.sciencestudio.autodialog.model.style.Style;
 import net.sciencestudio.autodialog.model.style.editors.TextBoxStyle;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import peakaboo.calibration.CalibrationPluginManager;
+import peakaboo.calibration.CalibrationProfile;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
@@ -75,6 +79,7 @@ import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasink.model.DataSink;
@@ -85,13 +90,9 @@ import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.calibration.CalibrationPluginManager;
-import peakaboo.mapping.calibration.CalibrationProfile;
-import peakaboo.mapping.calibration.CalibrationReference;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
-import peakaboo.ui.swing.calibration.profileplot.ProfileViewPanel;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.ExportPanel.PlotFormat;
@@ -140,7 +141,7 @@ public class PlotPanel extends TabbedLayerPanel
 	//Non-UI
 	private PlotController				controller;
 	private PlotCanvas					canvas;
-	private File						saveFilesFolder;
+	public File							saveFilesFolder;
 	private File						savedSessionFileName;
 	private File						exportedDataFileName;
 	private File						datasetFolder;
@@ -695,7 +696,7 @@ public class PlotPanel extends TabbedLayerPanel
 					dataDimensions,
 					physicalDimensions,
 					physicalUnit,
-					controller.fitting().getCalibrationProfile()
+					controller.calibration().getCalibrationProfile()
 				);
 			
 			
@@ -797,12 +798,13 @@ public class PlotPanel extends TabbedLayerPanel
 			actionSaveFittingInformationToOutputStream(zos);
 			zos.closeEntry();
 			
-			
-			e = new ZipEntry("z-calibration-profile.pbcp");
-			zos.putNextEntry(e);
-			String profileYaml = CalibrationProfile.save(controller.fitting().getCalibrationProfile());
-			zos.write(profileYaml.getBytes());
-			zos.closeEntry();
+			if (controller.calibration().hasCalibrationProfile()) {
+				e = new ZipEntry("z-calibration-profile.pbcp");
+				zos.putNextEntry(e);
+				String profileYaml = CalibrationProfile.save(controller.calibration().getCalibrationProfile());
+				zos.write(profileYaml.getBytes());
+				zos.closeEntry();
+			}
 			
 			
 			e = new ZipEntry("session.peakaboo");
@@ -925,9 +927,9 @@ public class PlotPanel extends TabbedLayerPanel
 		try {
 			// get an output stream to write the data to
 			OutputStreamWriter osw = new OutputStreamWriter(os);
-			CalibrationProfile profile = controller.fitting().getCalibrationProfile();
+			CalibrationProfile profile = controller.calibration().getCalibrationProfile();
 			
-			if (profile.isEmpty()) {
+			if (!controller.calibration().hasCalibrationProfile()) {
 				osw.write("Fitting, Intensity\n");
 			} else {
 				osw.write("Fitting, Intensity (Raw), Intensity (Calibrated with " + profile.getName() + ")\n");
@@ -954,112 +956,8 @@ public class PlotPanel extends TabbedLayerPanel
 		}
 	}
 	
-	
-	public void actionLoadCalibrationProfile() {
-		SwidgetFilePanels.openFile(this, "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
-			if (!result.isPresent()) {
-				return;
-			}
-			
-			
-			try {
-				CalibrationProfile profile = CalibrationProfile.load(new String(Files.readAllBytes(result.get().toPath())));
-				controller.fitting().setCalibrationProfile(profile, result.get());
-				
-			} catch (IOException e1) {
-				PeakabooLog.get().log(Level.SEVERE, "Could not load calibration profile", e1);
-			}
-		});
-	}
-	
-	public void actionSaveCalibrationProfile() {
-		
-		//generate profile
-		CalibrationProfile profile = controller.fitting().generateCalibrationProfile();
-		if (profile == null) {
-			LayerDialog layer = new LayerDialog("Failed to Generate Profile", "Peakaboo could not generate a calibration profile", MessageType.ERROR);
-			layer.showIn(this);
-			return;
-		}
 
-		Mutable<ModalLayer> modal = new Mutable<>(null);
-		
-		Parameter<String> name = new Parameter<>("Name", new TextBoxStyle().setHorizontalExpand(true), profile.getName(), p -> p.getValue().length() > 0);
-		SwingAutoPanel namePanel = new SwingAutoPanel(name);
-		namePanel.setBorder(Spacing.bLarge());
-		
-		//show it to the user to get their approval
-		ProfileViewPanel profileView = new ProfileViewPanel(profile, 
-				() -> { //accept
-					
-					if (!name.getValidator().apply(name)) {
-						ToastLayer toast = new ToastLayer(this, "Z-Calibration Profile must have a name");
-						this.pushLayer(toast);
-						return;
-					}
-					profile.setName(name.getValue());
-					
-					this.removeLayer(modal.get());
-					
-					String yaml = CalibrationProfile.save(profile);
-					
-					SimpleFileExtension ext = new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp");
-					SwidgetFilePanels.saveFile(this, "Save Calibration Profile", saveFilesFolder, ext, file -> {
-						if (!file.isPresent()) { return; }
-						File f = file.get();
-						FileWriter writer;
-						try {
-							writer = new FileWriter(f);
-							writer.write(yaml);
-							writer.close();
-						} catch (IOException e) {
-							PeakabooLog.get().log(Level.SEVERE, "Failed to save calibration file", e);
-						}
 
-					});
-					
-				}, 
-				() -> { //cancel
-					this.removeLayer(modal.get());
-				});
-		profileView.addNorth(namePanel);
-		 
-		modal.set(new ModalLayer(this, profileView));
-		this.pushLayer(modal.get());
-	
-	}
-	
-	public void actionDisplayCalibrationProfile(CalibrationProfile profile) {
-		Mutable<ModalLayer> modal = new Mutable<>(null);
-		
-		//show it to the user to get their approval
-		ProfileViewPanel profileView = new ProfileViewPanel(profile, () -> {
-			this.removeLayer(modal.get());
-		}); 
-		
-		modal.set(new ModalLayer(this, profileView));
-		this.pushLayer(modal.get());
-		
-	}
-	
-	
-	public void actionLoadCalibrationReference() {
-		
-		ReferencePicker picker = new ReferencePicker(this);
-		ModalLayer layer = new ModalLayer(this, picker);
-		
-		picker.setOnOK(ref -> {
-			controller.fitting().loadCalibrationReference(ref);
-			PlotPanel.this.removeLayer(layer);
-		});
-		
-		picker.setOnCancel(() -> {
-			PlotPanel.this.removeLayer(layer);
-		});
-		
-		this.pushLayer(layer);
-		
-	}
 	
 	public void actionLoadSession() {
 
@@ -1231,7 +1129,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 	public void actionShowConcentrations() {
-		CalibrationProfile p = controller.fitting().getCalibrationProfile();
+		CalibrationProfile p = controller.calibration().getCalibrationProfile();
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
 		
 		float sum = 0;
@@ -1245,18 +1143,23 @@ public class PlotPanel extends TabbedLayerPanel
 		//TODO: K and L are treated as different elements
 		//TODO: How to handle uncalibrated elements?
 		//TODO: Exclude pileups/summations
-		Map<TransitionSeries, Float> ppm = new LinkedHashMap<>();
+		StringBuilder sb = new StringBuilder();
+		Map<Element, Float> ppm = new LinkedHashMap<>();
 		for (TransitionSeries ts : tss) {
-			ppm.put(ts, intensities.get(ts) / sum * 1e6f);
-			System.out.println(ts + ": " + ppm.get(ts));
+			ppm.put(ts.element, intensities.get(ts) / sum * 1e6f);
+			float percent = ppm.get(ts)/10000;
+			NumberFormat format = new DecimalFormat("0.0");
+			sb.append(ts + ": " + format.format(percent) + "%\n");
 		}
+		
+		new LayerDialog("Concentrations", sb.toString(), MessageType.INFO).showIn(this);
 		
 	}
 
 	public void actionShowCalibrationProfileManager() {
 		Mutable<ModalLayer> modal = new Mutable<>(null);
 		
-		ProfileManager manager = new ProfileManager(this, controller.fitting(), () -> {
+		ProfileManager manager = new ProfileManager(this, controller, () -> {
 			this.removeLayer(modal.get());
 		}); 
 

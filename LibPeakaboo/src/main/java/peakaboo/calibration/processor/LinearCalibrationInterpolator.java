@@ -1,14 +1,14 @@
-package peakaboo.mapping.calibration.processor;
+package peakaboo.calibration.processor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.mapping.calibration.CalibrationReference;
 
 public class LinearCalibrationInterpolator implements CalibrationProcessor {
 

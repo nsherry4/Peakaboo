@@ -5,8 +5,8 @@ package peakaboo.mapping.results;
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
+import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.mapping.calibration.CalibrationProfile;
 
 
 /**

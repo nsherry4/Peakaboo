@@ -16,6 +16,8 @@ import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.Mutable;
 import eventful.EventfulType;
+import peakaboo.calibration.CalibrationProfile;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
@@ -33,8 +35,6 @@ import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.datasource.model.components.metadata.Metadata;
-import peakaboo.mapping.calibration.CalibrationProfile;
-import peakaboo.mapping.calibration.CalibrationReference;
 import plural.executor.ExecutorSet;
 
 
@@ -494,71 +494,6 @@ public class FittingController extends EventfulType<Boolean>
 		updateListeners(false);
 	}
 
-	public void loadCalibrationReference(CalibrationReference ref) {
-		fittingModel.calibrationReference = ref;
-		clearTransitionSeries();
-		List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
-		tss.sort((a, b) -> a.element.compareTo(b.element));
-		
-		//CalibrationReferences use blank TransitionSeries so it's not limited by the peaktable data
-		//we have to convert here
-		//TODO: Should the controller convert all added transitionseries to ones from the PeakTable?
-		tss = tss.stream().map(ts -> PeakTable.SYSTEM.get(ts)).filter(ts -> ts != null).collect(Collectors.toList());
-		addAllTransitionSeries(tss);
-		//TODO: Should we be doing this, or should the user be doing it?
-		setFittingSolver(new OptimizingFittingSolver());
-		setCurveFitter(new OptimizingCurveFitter());
-		updateListeners(false);
-	}
-	
-	public CalibrationReference getCalibrationReference() {
-		return fittingModel.calibrationReference;
-	}
-
-	public CalibrationProfile generateCalibrationProfile() {
-		CalibrationReference reference = getCalibrationReference();
-		if (reference == null) {
-			return null;
-		}
-		FittingResultSet sample = getFittingSelectionResults();
-		CalibrationProfile profile = new CalibrationProfile(reference, sample);
-		
-		String name = reference.getName();
-		Optional<Metadata> metadata = plot.data().getDataSet().getMetadata();
-		if (metadata.isPresent()) {
-			String lab = metadata.get().getLaboratoryName();
-			if (lab != null && lab.length() > 0) {
-				name += " from " + lab;
-			}
-			String instrument = metadata.get().getInstrumentName();
-			if (instrument != null && instrument.length() > 0) {
-				name += " on " + instrument;
-			}
-			
-			String date = metadata.get().getStartTime();
-			if (date != null && date.length() > 0) {
-				name += " at " + date;
-			}
-		}
-		
-		profile.setName(name);
-		return profile;
-	}
-
-	public CalibrationProfile getCalibrationProfile() {
-		return this.fittingModel.calibrationProfile;
-	}
-	
-	public void setCalibrationProfile(CalibrationProfile zprofile, File source) {
-		this.fittingModel.calibrationProfile = zprofile;
-		this.fittingModel.calibrationProfileFile = source;
-		updateListeners(false);
-	}
-
-	public File getCalibrationProfileFile() {
-		return this.fittingModel.calibrationProfileFile;
-	}
-	
 	
 	
 	

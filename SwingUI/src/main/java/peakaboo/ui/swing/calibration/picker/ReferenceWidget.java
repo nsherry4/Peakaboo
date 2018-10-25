@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import peakaboo.mapping.calibration.CalibrationReference;
+import peakaboo.calibration.CalibrationReference;
 import swidget.widgets.Spacing;
 import swidget.widgets.listwidget.ListWidget;
 

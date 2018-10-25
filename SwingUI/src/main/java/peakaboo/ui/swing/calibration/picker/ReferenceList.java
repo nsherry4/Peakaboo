@@ -34,8 +34,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import peakaboo.mapping.calibration.CalibrationPluginManager;
-import peakaboo.mapping.calibration.CalibrationReference;
+import peakaboo.calibration.CalibrationPluginManager;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
