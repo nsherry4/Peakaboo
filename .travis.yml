@@ -1,6 +1,8 @@
 install:
   - git clone https://github.com/nsherry4/Eventful.git /tmp/eventful && cd /tmp/eventful && mvn install
   - cd -
+  - git clone https://github.com/nsherry4/Stratus.git /tmp/stratus && cd /tmp/stratus && mvn install
+  - cd -
   - git clone https://github.com/nsherry4/Swidget.git /tmp/swidget && cd /tmp/swidget && mvn install
   - cd -
 
