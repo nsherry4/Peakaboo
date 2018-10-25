@@ -34,11 +34,13 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.Swidget;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonConfigurator;
 import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.ModalLayer;
@@ -103,7 +105,9 @@ public class ProfileManager extends JPanel {
 		box.setOpaque(false);
 		
 		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration").withBordered(false).withAction(() -> {
-			actionLoadCalibrationReference();
+			promptCreateProfile(this::actionLoadCalibrationReference);
+			
+			
 		});
 		box.addLeft(create);
 		
@@ -131,6 +135,17 @@ public class ProfileManager extends JPanel {
 		
 		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), box, cancel);
 		
+	}
+	
+	private void promptCreateProfile(Runnable onAccept) {
+		String text = Swidget.lineWrap(parent, "This will replace any existing work with the settings and fittings needed to create a new Z-Calibration Profile. Proceed?");
+		System.out.println(text);
+		LayerDialog dialog = new LayerDialog("Create Z-Calibration", text, MessageType.WARNING);
+		ImageButton ok = new ImageButton("OK").withAction(onAccept);
+		ImageButton cancel = new ImageButton("Cancel");
+		dialog.addLeft(cancel);
+		dialog.addRight(ok);
+		dialog.showIn(parent);
 	}
 	
 
