@@ -1,27 +1,52 @@
 package peakaboo.display.plot.painters;
 
-import cyclops.Bounds;
-import cyclops.Coord;
+import cyclops.SigDigits;
+import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
+import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 
-public class FittingLabel {
-	
-	//passed in
-	FittingResult fit;
-	String annotation;
-	PlotPalette palette;
+public class FittingLabel extends DataLabel {
 
-	//derived by painters
-	String title;
-	Coord<Bounds<Float>> position;
-	boolean viable = true;
-	float penWidth = 1f;
+	protected FittingResult fit;
+	protected boolean drawMaxIntensities;
+	protected String annotation;
 	
-	public FittingLabel(FittingResult fit, PlotPalette palette, String annotation) {
+	public FittingLabel(FittingResult fit, PlotPalette palette, EnergyCalibration ecal, String annotation, boolean drawMaxIntensities) {
+		super(palette, 0, "");
 		this.fit = fit;
+		this.drawMaxIntensities = drawMaxIntensities;
 		this.annotation = annotation;
-		this.palette = palette;
+		
+		TransitionSeries ts = fit.getTransitionSeries();
+		index = ecal.channelFromEnergy(ts.getStrongestTransition().energyValue);
+		super.title = getTitle();
+		
+		
+	}
+	
+	private String getTitle() {
+		StringBuilder sb = new StringBuilder();
+		TransitionSeries ts = fit.getTransitionSeries();
+		String titleName = ts.getDescription();
+
+		
+		String titleHeight = SigDigits.roundFloatTo(fit.getCurveScale(), 1);
+
+		sb.append(titleName);
+		if (drawMaxIntensities) {
+			sb.append(" (" + titleHeight + ")");
+		}
+		
+		if (annotation != null) {
+			if (sb.length() > 0) {
+				sb.append(": ");
+			}
+			sb.append(annotation);
+		}
+		
+		return sb.toString();
 	}
 	
 	

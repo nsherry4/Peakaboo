@@ -27,6 +27,10 @@ public class CalibrationController extends Eventful {
 		this.plotController = plotController;
 	}
 	
+	/**
+	 * Replaces fittings and settings with those used to create a new calibration
+	 * profile based on the given calibration reference
+	 */
 	public void loadCalibrationReference(CalibrationReference ref) {
 		plotController.fitting().clearTransitionSeries();
 		List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
@@ -41,8 +45,11 @@ public class CalibrationController extends Eventful {
 		plotController.fitting().setFittingSolver(new OptimizingFittingSolver());
 		plotController.fitting().setCurveFitter(new OptimizingCurveFitter());
 		
+		setCalibrationReference(ref);
+	}
+	
+	public void setCalibrationReference(CalibrationReference ref) {
 		model.calibrationReference = ref;
-		
 		updateListeners();
 	}
 	
@@ -139,6 +146,8 @@ public class CalibrationController extends Eventful {
 			return null;
 		}
 	}
+
+
 	
 	
 }

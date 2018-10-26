@@ -85,7 +85,11 @@ public class SavedSession {
 		this.fitting.loadInto(plotController.fitting());
 		
 		//restore calibration information
+		if (this.calibration == null) {
+			this.calibration = new SavedCalibrationSession();
+		}
 		this.calibration.loadInto(plotController.calibration());
+		
 		
 		//restore view settings directly, since it's model is serializable
 		plotController.view().getViewModel().session = this.view;

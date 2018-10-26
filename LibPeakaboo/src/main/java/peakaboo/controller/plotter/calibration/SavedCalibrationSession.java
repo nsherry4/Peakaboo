@@ -38,6 +38,8 @@ public class SavedCalibrationSession {
 		
 		if (profileYaml != null) {
 			controller.setCalibrationProfile(CalibrationProfile.load(profileYaml), new File(profileFilename));
+		} else {
+			controller.setCalibrationProfile(new CalibrationProfile(), null);
 		}
 		
 		if (referenceUUID != null) {
@@ -47,7 +49,9 @@ public class SavedCalibrationSession {
 			} else {
 				reference = CalibrationReference.load(referenceYaml);
 			}
-			controller.loadCalibrationReference(reference);
+			controller.setCalibrationReference(reference);
+		} else {
+			controller.setCalibrationReference(CalibrationReference.empty());
 		}
 		return this;
 	}

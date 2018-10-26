@@ -21,6 +21,7 @@ import cyclops.visualization.drawing.plot.painters.SpectrumPainter;
 import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
+import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
 import cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
@@ -28,12 +29,10 @@ import cyclops.visualization.palette.PaletteColour;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.peak.table.Element;
+import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingMarkersPainter;
 import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
-import peakaboo.display.plot.painters.FittingLabel;
-import peakaboo.display.plot.painters.FittingTitlePainter;
 import peakaboo.filter.model.Filter;
 
 public class Plotter {
@@ -239,9 +238,9 @@ public class Plotter {
 		if (data.selectionResults != null) {
 			for (FittingResult fit : data.selectionResults.getFits()) {
 				if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
-					fitLabels.add(new FittingLabel(fit, selectedPalette, data.annotations.get(fit.getTransitionSeries())));		
+					fitLabels.add(new FittingLabel(fit, selectedPalette, data.calibration, data.annotations.get(fit.getTransitionSeries()), settings.showElementFitIntensities));		
 				} else {
-					fitLabels.add(new FittingLabel(fit, fittedPalette, data.annotations.get(fit.getTransitionSeries())));
+					fitLabels.add(new FittingLabel(fit, fittedPalette, data.calibration, data.annotations.get(fit.getTransitionSeries()), settings.showElementFitIntensities));
 				}
 				
 			}
@@ -303,16 +302,12 @@ public class Plotter {
 		//Titles
 		if (data.proposedResults != null) {
 			for (FittingResult fit : data.proposedResults.getFits()) {
-				fitLabels.add(new FittingLabel(fit, proposedPalette, data.annotations.get(fit.getTransitionSeries())));
+				fitLabels.add(new FittingLabel(fit, proposedPalette, data.calibration, data.annotations.get(fit.getTransitionSeries()), settings.showElementFitIntensities));
 			}
 		}
 		
 		if (data.selectionResults != null) {
-			plotPainters.add(new FittingTitlePainter(
-					data.selectionResults.getParameters().getCalibration(),
-					fitLabels,
-					settings.showElementFitIntensities
-				)
+			plotPainters.add(new DataLabelPainter(fitLabels)
 			);
 		}
 		
