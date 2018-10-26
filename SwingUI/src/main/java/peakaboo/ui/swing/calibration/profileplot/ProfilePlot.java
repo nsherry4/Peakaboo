@@ -26,12 +26,7 @@ public class ProfilePlot extends GraphicsPanel {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				
-				Element element = null;
-				
-				TransitionSeries ts = plot.getTransitionSeries(plot.getIndex(e.getX()));
-				if (ts != null) {
-					element = ts.element;
-				}
+				Element element = plot.getElement(plot.getIndex(e.getX()));
 								
 				boolean changed = plot.setHighlighted(element);
 				if (changed) {

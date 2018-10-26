@@ -147,12 +147,17 @@ public abstract class ZCalibrationPlot {
 		return true;
 	}
 		
-	public TransitionSeries getTransitionSeries(int index) {
+	public Element getElement(int index) {
 		List<TransitionSeries> keys = getKeys(type);
-		if (index >= keys.size() || index < 0) {
+		if (keys.size() == 0) {
+			return null;
+		}
+		int lowest = keys.get(0).element.ordinal();
+		int highest = keys.get(keys.size()-1).element.ordinal();
+		if (index < 0 || lowest + index > highest) {
 			return null;
 		} else {
-			return keys.get(index);
+			return Element.values()[lowest + index];
 		}
 	}
 	

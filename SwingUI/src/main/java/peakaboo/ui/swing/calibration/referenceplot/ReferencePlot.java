@@ -1,9 +1,14 @@
 package peakaboo.ui.swing.calibration.referenceplot;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
 import peakaboo.calibration.CalibrationReference;
+import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.display.calibration.CalibrationReferencePlot;
 
@@ -13,6 +18,22 @@ public class ReferencePlot extends GraphicsPanel {
 	
 	public ReferencePlot(CalibrationReference reference, TransitionSeriesType type) {
 		plot = new CalibrationReferencePlot(reference, type);
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				
+				Element element = plot.getElement(plot.getIndex(e.getX()));
+								
+				boolean changed = plot.setHighlighted(element);
+				if (changed) {
+					ReferencePlot.this.repaint();
+				}
+			}
+
+		});
+		
 	}
 	
 	@Override
