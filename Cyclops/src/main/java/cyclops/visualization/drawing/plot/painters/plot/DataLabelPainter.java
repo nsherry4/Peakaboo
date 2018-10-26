@@ -27,14 +27,14 @@ public class DataLabelPainter extends PlotPainter
 	public static class DataLabel {
 		
 		//passed in
-		float index;
-		PlotPalette palette;
+		public float index;
+		public PlotPalette palette;
 
 		//derived by painters
-		String title;
-		Coord<Bounds<Float>> position;
-		boolean viable = true;
-		float penWidth = 1f;
+		public String title;
+		public Coord<Bounds<Float>> position;
+		public boolean viable = true;
+		public float penWidth = 1f;
 		
 		public DataLabel(PlotPalette palette, float index, String text) {
 			this.title = text;
@@ -48,15 +48,15 @@ public class DataLabelPainter extends PlotPainter
 	private List<DataLabel> configuredLabels = new ArrayList<>();
 	private float xoffset;
 	
-	public DataLabelPainter(List<DataLabel> labels){
+	public DataLabelPainter(List<? extends DataLabel> labels){
 		this(labels, 0f);
 	}
 	
 	/**
 	 * Create a FittingTitlePainter which draws in the given {@link Color}
 	 */
-	public DataLabelPainter(List<DataLabel> labels, float xoffset){
-		this.labels = labels;
+	public DataLabelPainter(List<? extends DataLabel> labels, float xoffset){
+		this.labels = (List<DataLabel>) labels;
 		this.xoffset = xoffset;
 	}
 	
