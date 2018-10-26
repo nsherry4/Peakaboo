@@ -22,7 +22,7 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	public void setData(CalibrationProfile profile, File source) {
 		this.profile = profile;
 		this.source = source;
-		super.initialize();
+		super.configure();
 	}
 	
 	@Override

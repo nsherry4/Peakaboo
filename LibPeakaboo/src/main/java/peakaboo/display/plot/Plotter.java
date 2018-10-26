@@ -22,6 +22,7 @@ import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
+import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.common.PeakabooLog;
@@ -33,7 +34,6 @@ import peakaboo.display.plot.painters.FittingPainter;
 import peakaboo.display.plot.painters.FittingSumPainter;
 import peakaboo.display.plot.painters.FittingLabel;
 import peakaboo.display.plot.painters.FittingTitlePainter;
-import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 import peakaboo.filter.model.Filter;
 
 public class Plotter {

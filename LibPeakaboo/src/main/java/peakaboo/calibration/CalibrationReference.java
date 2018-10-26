@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -39,7 +40,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		desc = null;
 		rev = null;
 		anchor = null;
-		concentrations = new HashMap<>();
+		concentrations = new LinkedHashMap<>();
 	}
 	
 	
@@ -77,8 +78,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 		return getName();
 	}
 	
-	public Map<TransitionSeries, Float> getConcentrations() {
-		return new HashMap<>(concentrations);
+	public LinkedHashMap<TransitionSeries, Float> getConcentrations() {
+		return new LinkedHashMap<>(concentrations);
 	}
 	
 	public boolean isEmpty() {

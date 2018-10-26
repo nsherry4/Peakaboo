@@ -1,30 +1,13 @@
 package peakaboo.ui.swing.calibration.profileplot;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
-import cyclops.Bounds;
 import cyclops.Coord;
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
-import cyclops.visualization.drawing.DrawingRequest;
-import cyclops.visualization.drawing.ViewTransform;
-import cyclops.visualization.drawing.painters.axis.AxisPainter;
-import cyclops.visualization.drawing.painters.axis.LineAxisPainter;
-import cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
-import cyclops.visualization.drawing.plot.PlotDrawing;
-import cyclops.visualization.drawing.plot.painters.PlotPainter;
-import cyclops.visualization.drawing.plot.painters.PlotPainter.TraceType;
-import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
-import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
-import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
-import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
-import cyclops.visualization.palette.PaletteColour;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -37,6 +20,27 @@ public class ProfilePlot extends GraphicsPanel {
 
 	public ProfilePlot(CalibrationProfile profile, File source, TransitionSeriesType type) {
 		plot = new CalibrationProfilePlot(profile, type, source);
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				
+				Element element = null;
+				
+				TransitionSeries ts = plot.getTransitionSeries(plot.getIndex(e.getX()));
+				if (ts != null) {
+					element = ts.element;
+				}
+								
+				boolean changed = plot.setHighlighted(element);
+				if (changed) {
+					ProfilePlot.this.repaint();
+				}
+			}
+
+		});
+		
 	}
 	
 	public void setCalibrationProfile(CalibrationProfile profile, File source) {

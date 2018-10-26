@@ -15,7 +15,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 	public CalibrationReferencePlot(CalibrationReference ref, TransitionSeriesType type) {
 		super(type);
 		this.ref = ref;
-		super.initialize();
+		super.configure();
 	}
 	
 	@Override

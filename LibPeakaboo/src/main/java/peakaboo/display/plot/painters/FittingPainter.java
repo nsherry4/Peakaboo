@@ -6,9 +6,9 @@ import java.util.List;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.drawing.plot.PlotDrawing;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
+import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 
 
 /**

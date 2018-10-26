@@ -5,8 +5,8 @@ import cyclops.Spectrum;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.drawing.plot.PlotDrawing;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
+import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.display.plot.painters.FittingLabel.PlotPalette;
 
 /**
  * 

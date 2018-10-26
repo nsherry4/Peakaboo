@@ -103,8 +103,8 @@ public class CalibrationProfile {
 		this.name = name;
 	}
 
-	public Map<TransitionSeries, Float> getCalibrations() {
-		return new HashMap<>(calibrations);
+	public LinkedHashMap<TransitionSeries, Float> getCalibrations() {
+		return new LinkedHashMap<>(calibrations);
 	}
 
 	public boolean contains(TransitionSeries ts) {

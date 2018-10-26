@@ -1,6 +1,7 @@
 package peakaboo.display.calibration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -22,6 +23,9 @@ import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
+import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
+import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
+import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -37,11 +41,13 @@ public abstract class ZCalibrationPlot {
 	private List<PlotPainter> plotPainters;
 	private List<AxisPainter> axisPainters;
 	
+	private Element highlighted;
+	
 	public ZCalibrationPlot(TransitionSeriesType type) {
 		this.type = type;
 	}
 	
-	protected void initialize() {
+	protected void configure() {
 		
 		int lowest = 0;
 		int highest = 0;
@@ -70,7 +76,13 @@ public abstract class ZCalibrationPlot {
 				new PaletteColour(0xff004D40)
 			).withTraceType(TraceType.BAR));
 		
-	
+		
+		if (highlighted != null) {
+			DataLabel label = new DataLabel(PlotPalette.blackOnWhite(), highlighted.ordinal() - lowest, highlighted.toString());
+			plotPainters.add(new DataLabelPainter(Collections.singletonList(label), 0.5f));
+		}
+		
+		
 		axisPainters = new ArrayList<>();
 		
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, getYAxisTitle(), null, getTitle(), "Element"));
@@ -120,6 +132,50 @@ public abstract class ZCalibrationPlot {
 		return spectrum;
 	}
 	
+	
+	
+	public Element getHighlighted() {
+		return highlighted;
+	}
+
+	public boolean setHighlighted(Element highlighted) {
+		if (highlighted == this.highlighted) {
+			return false;
+		}
+		this.highlighted = highlighted;
+		configure();
+		return true;
+	}
+		
+	public TransitionSeries getTransitionSeries(int index) {
+		List<TransitionSeries> keys = getKeys(type);
+		if (index >= keys.size() || index < 0) {
+			return null;
+		} else {
+			return keys.get(index);
+		}
+	}
+	
+	public int getIndex(int xpos) {
+		if (plotDrawing == null) return -1;
+
+		Coord<Bounds<Float>> axesSize;
+		int channel;
+
+		// Plot p = new Plot(this.toyContext, model.dr);
+		axesSize = plotDrawing.getPlotOffsetFromBottomLeft();
+
+		float plotWidth = axesSize.x.end - axesSize.x.start; // width - axesSize.x;
+		// x -= axesSize.x;
+		xpos -= axesSize.x.start;
+
+		if (xpos < 0) return -1;
+
+		channel = (int) ((xpos / plotWidth) * data.size());
+		return channel;
+
+	}
+
 	protected abstract List<TransitionSeries> getKeys(TransitionSeriesType type);
 	protected abstract Map<TransitionSeries, Float> getData();
 	protected abstract boolean isEmpty();

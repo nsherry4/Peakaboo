@@ -2,22 +2,10 @@ package peakaboo.display.plot.painters;
 
 import cyclops.Bounds;
 import cyclops.Coord;
-import cyclops.visualization.palette.PaletteColour;
+import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 
 public class FittingLabel {
-	
-	public static class PlotPalette {
-		public PaletteColour labelText;
-		public PaletteColour labelBackground;
-		public PaletteColour labelStroke;
-		
-		public PaletteColour fitFill;
-		public PaletteColour fitStroke;
-		public PaletteColour sumStroke;
-		
-		public PaletteColour markings;
-	}
 	
 	//passed in
 	FittingResult fit;
