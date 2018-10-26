@@ -159,11 +159,5 @@ public abstract class PlotPainter extends Painter{
 		return dr.imageHeight / 350.0f;
 	}
 	
-	protected float getPenWidth(float baseSize, DrawingRequest dr)
-	{
-		float width;
-		width = baseSize;
-		return width;
-	}
 	
 }
