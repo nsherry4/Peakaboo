@@ -104,7 +104,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			int currentValue = startingValue;
 			float percentAlongAxis, position;
 	
-			while (currentValue < this.xBottomValueBounds.end)
+			while (currentValue <= this.xBottomValueBounds.end)
 			{
 				
 				percentAlongAxis = (currentValue - this.xBottomValueBounds.start)  / valueRange;
@@ -181,7 +181,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			if (showTickMarks) {
 	
 				float percentAlongAxis, position;
-				while (currentValue < this.xTopValueBounds.end)
+				while (currentValue <= this.xTopValueBounds.end)
 				{
 					
 					percentAlongAxis = (currentValue - this.xTopValueBounds.start)  / valueRange;
