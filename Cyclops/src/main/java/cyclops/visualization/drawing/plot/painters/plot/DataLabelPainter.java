@@ -203,7 +203,7 @@ public class DataLabelPainter extends PlotPainter
 		float farLeft = titleStart - penWidth * 2;
 		float width = textWidth + penWidth * 6;
 		float farRight = farLeft + width;
-
+		
 		float leftChannel = (farLeft / channelSize);
 		float rightChannel = (farRight / channelSize);
 		float rightMax = p.dr.dataWidth-1;
@@ -289,7 +289,7 @@ public class DataLabelPainter extends PlotPainter
 	private void configureLabel(DataLabel label, PainterData p) {
 
 		label.viable = true;
-		label.penWidth = getPenWidth(getBaseUnitSize(p.dr), p.dr);
+		label.penWidth = 1f;
 		
 		label.position = getTextLabelDimensions(p, label);
 		if (label.position.x.start.intValue() > p.dr.dataWidth) {
