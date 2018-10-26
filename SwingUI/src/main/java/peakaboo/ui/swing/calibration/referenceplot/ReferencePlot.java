@@ -20,6 +20,7 @@ import cyclops.visualization.drawing.painters.axis.LineAxisPainter;
 import cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import cyclops.visualization.drawing.plot.PlotDrawing;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
+import cyclops.visualization.drawing.plot.painters.PlotPainter.TraceType;
 import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
@@ -41,10 +42,10 @@ public class ReferencePlot extends GraphicsPanel {
 	public ReferencePlot(CalibrationReference reference, TransitionSeriesType type) {
 		
 		int lowest = 0;
-		int highest = 1;
+		int highest = 0;
 		
 		List<TransitionSeries> tss = reference.getTransitionSeries(type);
-		if (tss.size() >= 2) {
+		if (tss.size() >= 1) {
 			lowest = tss.get(0).element.ordinal();
 			highest = tss.get(tss.size() - 1).element.ordinal();
 		}
@@ -64,13 +65,13 @@ public class ReferencePlot extends GraphicsPanel {
 				new PaletteColour(0xff00897B), 
 				new PaletteColour(0xff00796B), 
 				new PaletteColour(0xff004D40)
-			));
+			).withTraceType(TraceType.BAR));
 		
 	
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Concentration", null, null, "Element"));
 		axisPainters.add(new TickMarkAxisPainter(
 				new TickFormatter(0f, data.max()*100f), 
-				new TickFormatter((float)lowest, (float)highest, i -> {  
+				new TickFormatter((float)lowest-0.5f, (float)highest-0.5f+0.999f, i -> {  
 					Element element = Element.values()[i];
 					return element.name();
 				}), 
