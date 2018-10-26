@@ -10,8 +10,7 @@ public class LinePainter extends SpectrumPainter
 {
 
 	protected PaletteColour colour;
-	
-	
+		
 	public LinePainter(ReadOnlySpectrum data, PaletteColour colour)
 	{
 		super(data);
@@ -27,9 +26,10 @@ public class LinePainter extends SpectrumPainter
 	@Override
 	public void drawElement(PainterData p)
 	{
-		traceData(p, TraceType.CONNECTED);
+		traceData(p, traceType);
 		p.context.setSource(colour);
 		p.context.stroke();
 	}
-
+	
+	
 }

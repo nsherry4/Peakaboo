@@ -33,7 +33,7 @@ public class AreaPainter extends SpectrumPainter
 	public void drawElement(PainterData p)
 	{
 
-		traceData(p);
+		traceData(p, traceType);
 
 		if (p.dr.drawToVectorSurface) {
 			// fill with flat green - this is due to a bug with pdf rendering in
