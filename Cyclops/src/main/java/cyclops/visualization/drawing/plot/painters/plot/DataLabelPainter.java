@@ -63,6 +63,8 @@ public class DataLabelPainter extends PlotPainter
 
 	@Override
 	public void drawElement(PainterData p) {
+		
+		configuredLabels.clear();
 				
 		p.context.save();
 			
