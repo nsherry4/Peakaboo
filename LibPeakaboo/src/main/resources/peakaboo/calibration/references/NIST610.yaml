@@ -11,20 +11,18 @@ notes: Minimum detection of the Integrated Intensity is conservatively estimated
   (MDL).
 rev: '1.0'
 uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
+
+fitted:
+  Na:K: Omitted, Too Concentrated
+  Si:K: Omitted, Too Concentrated
+  Ca:K: Omitted, Too Concentrated
+  Sc:K: No Value Available
+  Tl:L: No Value Available
+  P:K: No Value Available
+  S:K: No Value Available
+  Ar:K: Fitted, Not in Sample
+
 concentrations:
-  Na:K: 0.0 #Too concentrated, but should still be fitted
-  Si:K: 0.0 #Too concentrated, but should still be fitted
-  Ca:K: 0.0 #Too concentrated, but should still be fitted
-  Sc:K: 0.0 #Not used, but should still be fitted
-  Tl:L: 0.0 #Not used, but should still be fitted
-  P:K: 0.0 #No value given, but should still be fitted
-  S:K: 0.0 #No value given, but should still be fitted
-  Ar:K: 0.0 #Not part of the sample, but should still be fitted
-
-
-
-
-
   Cr:K: 400.0
   Ti:K: 450.0
   Nb:K: 440.0

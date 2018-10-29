@@ -32,6 +32,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 	private List<String> citations;
 	private TransitionSeries anchor;
 	private Map<TransitionSeries, Float> concentrations;
+	private Map<TransitionSeries, String> extraFittings;
 	
 	
 	protected CalibrationReference() {
@@ -41,6 +42,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		rev = null;
 		anchor = null;
 		concentrations = new LinkedHashMap<>();
+		extraFittings = new LinkedHashMap<>();
 	}
 	
 	
@@ -90,13 +92,21 @@ public class CalibrationReference implements BoltConfigPlugin {
 	 * returns a sorted list of TransitionSeries in this reference 
 	 */
 	public List<TransitionSeries> getTransitionSeries(TransitionSeriesType tst) {
-		List<TransitionSeries> tss = concentrations
-				.keySet()
-				.stream()
-				.filter(ts -> ts.type == tst)
-				.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
-				.collect(Collectors.toList());
+		List<TransitionSeries> tss = new ArrayList<>();
+		tss.addAll(concentrations.keySet());
+		tss.addAll(extraFittings.keySet());
+		tss = tss.stream()
+			.filter(ts -> ts.type == tst)
+			.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+			.collect(Collectors.toList());
 		return tss;
+	}
+	
+	public String getAnnotation(TransitionSeries ts) {
+		if (extraFittings.containsKey(ts)) {
+			return extraFittings.get(ts);
+		}
+		return "";
 	}
 	
 	public boolean contains(TransitionSeries ts) {
@@ -104,6 +114,9 @@ public class CalibrationReference implements BoltConfigPlugin {
 	}
 	
 	public float getConcentration(TransitionSeries ts) {
+		if (!concentrations.containsKey(ts)) {
+			return 0f;
+		}
 		return concentrations.get(ts);
 	}
 	
@@ -131,6 +144,9 @@ public class CalibrationReference implements BoltConfigPlugin {
 		for (TransitionSeries ts : reference.concentrations.keySet()) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
+		for (TransitionSeries ts : reference.extraFittings.keySet()) {
+			serialized.fitted.put(ts.toIdentifierString(), reference.extraFittings.get(ts));
+		}
 		return YamlSerializer.serialize(serialized);
 	}
 	
@@ -146,6 +162,9 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.anchor = TransitionSeries.get(serialized.anchor);
 		for (String tsidentifier : serialized.concentrations.keySet()) {
 			reference.concentrations.put(TransitionSeries.get(tsidentifier), serialized.concentrations.get(tsidentifier));
+		}
+		for (String tsidentifier : serialized.fitted.keySet()) {
+			reference.extraFittings.put(TransitionSeries.get(tsidentifier), serialized.fitted.get(tsidentifier));
 		}
 		return reference;
 	}
@@ -283,5 +302,6 @@ class SerializedCalibrationReference {
 	public String anchor;
 	public List<String> citations;
 	public String notes;
-	public Map<String, Float> concentrations = new HashMap<>();
+	public Map<String, Float> concentrations = new LinkedHashMap<>();
+	public Map<String, String> fitted = new LinkedHashMap<>();
 }

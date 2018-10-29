@@ -77,11 +77,8 @@ public abstract class ZCalibrationPlot {
 			).withTraceType(TraceType.BAR));
 		
 		
-		if (highlighted != null) {
-			DataLabel label = new DataLabel(PlotPalette.blackOnWhite(), highlighted.ordinal() - lowest, highlighted.toString());
-			plotPainters.add(new DataLabelPainter(Collections.singletonList(label), 0.5f));
-		}
-		
+		plotPainters.add(new DataLabelPainter(getLabels(lowest, highest), 0.5f));
+	
 		
 		axisPainters = new ArrayList<>();
 		
@@ -123,7 +120,7 @@ public abstract class ZCalibrationPlot {
 			if (ts != null && values.containsKey(ts)) {
 				value = values.get(ts);
 			} else {
-				//use last value
+				value = 0f;
 			}
 			int index = ordinal;
 			spectrum.set(index - startOrdinal, value);
@@ -180,6 +177,12 @@ public abstract class ZCalibrationPlot {
 		return channel;
 
 	}
+	
+	
+
+	public TransitionSeriesType getType() {
+		return type;
+	}
 
 	protected abstract List<TransitionSeries> getKeys(TransitionSeriesType type);
 	protected abstract Map<TransitionSeries, Float> getData();
@@ -187,6 +190,8 @@ public abstract class ZCalibrationPlot {
 	protected abstract String getYAxisTitle();
 	protected abstract String getTitle();
 	protected abstract Function<Integer, String> getYAxisFormatter();
+	protected abstract String getHighlightText(TransitionSeries ts);
+	protected abstract List<DataLabel> getLabels(int lowest, int highest);
 	
 	
 }
