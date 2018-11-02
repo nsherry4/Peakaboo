@@ -47,6 +47,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import cyclops.Bounds;
@@ -81,6 +82,8 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasink.model.DataSink;
 import peakaboo.datasource.model.DataSource;
@@ -1132,27 +1135,45 @@ public class PlotPanel extends TabbedLayerPanel
 		CalibrationProfile p = controller.calibration().getCalibrationProfile();
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
 		
+		//find best TransitionSeries per element to measure
+		Map<Element, TransitionSeries> elements = new LinkedHashMap<>();
+		for (TransitionSeriesType type : new TransitionSeriesType[] {TransitionSeriesType.M, TransitionSeriesType.L, TransitionSeriesType.K}) {
+			for (TransitionSeries ts : tss) {
+				if (ts.type != type) { continue; }
+				elements.put(ts.element, ts);
+			}
+		}
+		
+		//calculate calibrated intensities per element and sum total intensity
 		float sum = 0;
-		Map<TransitionSeries, Float> intensities = new LinkedHashMap<>();
-		for (TransitionSeries ts : tss) {
+		Map<Element, Float> intensities = new LinkedHashMap<>();
+		for (Element element : elements.keySet()) {
+			TransitionSeries ts = elements.get(element);
 			float intensity = p.calibrate(controller.fitting().getTransitionSeriesIntensity(ts), ts);
-			intensities.put(ts, intensity);
+			intensities.put(ts.element, intensity);
 			sum += intensity;
 		}
 		
-		//TODO: K and L are treated as different elements
 		//TODO: How to handle uncalibrated elements?
-		//TODO: Exclude pileups/summations
 		StringBuilder sb = new StringBuilder();
 		Map<Element, Float> ppm = new LinkedHashMap<>();
-		for (TransitionSeries ts : tss) {
-			ppm.put(ts.element, intensities.get(ts) / sum * 1e6f);
-			float percent = ppm.get(ts)/10000;
-			NumberFormat format = new DecimalFormat("0.0");
-			sb.append(ts + ": " + format.format(percent) + "%\n");
+		for (Element element : intensities.keySet()) {
+			ppm.put(element, intensities.get(element) / sum * 1e6f);
 		}
 		
-		new LayerDialog("Concentrations", sb.toString(), MessageType.INFO).showIn(this);
+		Map<String, String> asText = new LinkedHashMap<>();
+		for (Element element : ppm.keySet()) {
+			float percent = ppm.get(element)/10000;
+			NumberFormat format = new DecimalFormat("0.0");
+			asText.put(element.toString(), format.format(percent) + "%");
+		}
+		
+		PropertyViewPanel panel = new PropertyViewPanel(asText, false);
+		JScrollPane scroller = new JScrollPane(panel);
+		scroller.setPreferredSize(new Dimension(400, 175));
+		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		
+		new LayerDialog("Concentrations", scroller, MessageType.INFO).showIn(this);
 		
 	}
 
