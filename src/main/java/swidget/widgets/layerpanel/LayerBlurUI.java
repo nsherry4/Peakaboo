@@ -48,8 +48,13 @@ public class LayerBlurUI<T extends Component> extends LayerUI<T> {
 			if (mOffscreenImage == null || mOffscreenImage.getWidth() != w || mOffscreenImage.getHeight() != h) {
 				mOffscreenImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 			}
-	
+
 			Graphics2D ig2 = mOffscreenImage.createGraphics();
+			ig2.setBackground(new Color(0, 0, 0, 0));
+			ig2.clearRect(0, 0, c.getWidth(), c.getHeight());
+			ig2.dispose();
+			
+			ig2 = mOffscreenImage.createGraphics();
 			ig2.setClip(g.getClip());
 			super.paint(ig2, c);
 			ig2.dispose();
