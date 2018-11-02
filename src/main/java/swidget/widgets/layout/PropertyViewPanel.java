@@ -38,7 +38,7 @@ public class PropertyViewPanel extends JPanel
 	
 	public PropertyViewPanel(Map<String, String> properties, boolean showBadge)
 	{
-		this(properties, null, true);
+		this(properties, null, showBadge);
 	}
 
 	public PropertyViewPanel(Map<String, String> properties, String caption, boolean showBadge)
