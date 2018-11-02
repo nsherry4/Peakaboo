@@ -102,6 +102,10 @@ public class CalibrationReference implements BoltConfigPlugin {
 		return tss;
 	}
 	
+	public boolean hasAnnotation(TransitionSeries ts) {
+		return getAnnotation(ts).trim().length() > 0;
+	}
+	
 	public String getAnnotation(TransitionSeries ts) {
 		if (extraFittings.containsKey(ts)) {
 			return extraFittings.get(ts);

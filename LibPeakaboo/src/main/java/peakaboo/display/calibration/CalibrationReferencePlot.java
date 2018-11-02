@@ -1,6 +1,7 @@
 package peakaboo.display.calibration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -63,41 +64,10 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 
 	@Override
 	protected List<DataLabel> getLabels(int lowest, int highest) {
-		DataLabel highlightLabel = null;
-		if (getHighlighted() != null) {
-			highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new TransitionSeries(getHighlighted(), getType())));
+		if (getHighlighted() == null) {
+			return Collections.emptyList();
 		}
-		
-		List<DataLabel> labels = new ArrayList<>();
-		boolean addedHighlight = false;
-		
-		for (TransitionSeries ts : ref.getTransitionSeries(getType())) {
-
-			String annotation = ref.getAnnotation(ts);
-			if (annotation.trim().length() == 0) {
-				continue;
-			}
-			
-			if (ts.element == getHighlighted() && highlightLabel != null) {
-				labels.add(highlightLabel);
-				addedHighlight = true;
-				continue;
-			} else {
-				DataLabel label = new DataLabel(PlotPalette.blackOnWhite(), ts.element.ordinal() - lowest, getHighlightText(new TransitionSeries(ts.element, getType())));
-				labels.add(label);				
-			}
-			
-			
-
-			
-		}
-		
-		if (!addedHighlight && highlightLabel != null) {
-			labels.add(highlightLabel);
-		}
-		
-		return labels;
-		
+		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new TransitionSeries(getHighlighted(), getType())));
+		return Collections.singletonList(highlightLabel);
 	}
-
 }
