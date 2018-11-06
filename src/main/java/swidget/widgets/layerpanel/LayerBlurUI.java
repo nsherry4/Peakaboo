@@ -31,7 +31,7 @@ public class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	@Override
 	public void paint(Graphics g, JComponent c) {
 		Layer layer = parent.layerForComponent(this.component);
-		
+			
 		if (!parent.isLayerBlocked(layer)) {
 			super.paint(g, c);
 			
@@ -55,11 +55,11 @@ public class LayerBlurUI<T extends Component> extends LayerUI<T> {
 			ig2.dispose();
 			
 			ig2 = mOffscreenImage.createGraphics();
-			ig2.setClip(g.getClip());
 			super.paint(ig2, c);
 			ig2.dispose();
 	
 			Graphics2D g2 = (Graphics2D) g.create();
+			g2.setClip(g.getClip());
 			g2.drawImage(mOffscreenImage, mOperation, 0, 0);
 			
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
