@@ -96,6 +96,15 @@ public class Swidget
 	}
 	
 	public static String lineWrap(Component c, String text, int width) {
+		if (text.contains("\n")) {
+			String[] lines = text.split("\n");
+			StringBuilder sb = new StringBuilder();
+			for (String line : lines) {
+				sb.append(lineWrap(c, line, width));
+				sb.append("\n");
+			}
+			return sb.toString();
+		}
 		
 		List<String> lines = new ArrayList<String>();
 		
