@@ -111,7 +111,6 @@ public class ProfileManager extends JPanel {
 		box.addLeft(create);
 		
 		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
-			controller.calibration().clearCalibrationReference();
 			actionLoadCalibrationProfile();
 		});
 		box.addLeft(open);
@@ -259,14 +258,15 @@ public class ProfileManager extends JPanel {
 			if (!result.isPresent()) {
 				return;
 			}
-			
 			actionLoadCalibrationProfileFromFile(result.get());
 		});
 	}
 	
 	public void actionLoadCalibrationProfileFromFile(File file) {
 		try {
+
 			CalibrationProfile profile = CalibrationProfile.load(new String(Files.readAllBytes(file.toPath())));
+			controller.calibration().clearCalibrationReference();
 			controller.calibration().setCalibrationProfile(profile, file);
 			
 		} catch (IOException e1) {

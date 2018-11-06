@@ -33,7 +33,7 @@ public class CalibrationController extends Eventful {
 	 */
 	public void loadCalibrationReference(CalibrationReference ref) {
 		plotController.fitting().clearTransitionSeries();
-		List<TransitionSeries> tss = new ArrayList<>(ref.getConcentrations().keySet());
+		List<TransitionSeries> tss = new ArrayList<>(ref.getTransitionSeries());
 		tss.sort((a, b) -> a.element.compareTo(b.element));
 		
 		//CalibrationReferences use blank TransitionSeries so it's not limited by the peaktable data
@@ -63,7 +63,7 @@ public class CalibrationController extends Eventful {
 	}
 
 	public boolean hasCalibrationReference() {
-		if (model.calibrationReference == null || model.calibrationReference.isEmpty()) {
+		if (model.calibrationReference == null || model.calibrationReference.hasConcentrations()) {
 			return false;
 		}		
 		return true;

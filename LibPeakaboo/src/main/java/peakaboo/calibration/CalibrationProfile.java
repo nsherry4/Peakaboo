@@ -59,7 +59,7 @@ public class CalibrationProfile {
 				//we look up the transitionseries, but ultimately use a blank one.
 				//we have to use all blanks, otherwise equality/contains cheks will fail
 				ts = new TransitionSeries(ts.element, ts.type);
-				if (! reference.contains(ts)) { continue; }
+				if (! reference.hasConcentration(ts)) { continue; }
 				
 				//TODO: Is this the right way to measure sample intensity
 				

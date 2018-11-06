@@ -34,7 +34,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 
 	@Override
 	protected boolean isEmpty() {
-		return ref.isEmpty();
+		return ref.hasConcentrations();
 	}
 
 	@Override

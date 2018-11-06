@@ -80,12 +80,46 @@ public class CalibrationReference implements BoltConfigPlugin {
 		return getName();
 	}
 	
+	
+	////////////////////////////////////////////
+	// Concentrations
+	////////////////////////////////////////////
+	
 	public LinkedHashMap<TransitionSeries, Float> getConcentrations() {
 		return new LinkedHashMap<>(concentrations);
 	}
 	
-	public boolean isEmpty() {
+	public boolean hasConcentration(TransitionSeries ts) {
+		return concentrations.containsKey(ts);
+	}
+	
+	public float getConcentration(TransitionSeries ts) {
+		if (!concentrations.containsKey(ts)) {
+			return 0f;
+		}
+		return concentrations.get(ts);
+	}
+	
+	public boolean hasConcentrations() {
 		return concentrations.isEmpty();
+	}
+
+	
+	////////////////////////////////////////////
+	// TransitionSeries - Concentrations & Extra Fittings
+	////////////////////////////////////////////
+	
+	/**
+	 * returns a sorted list of TransitionSeries in this reference 
+	 */
+	public List<TransitionSeries> getTransitionSeries() {
+		List<TransitionSeries> tss = new ArrayList<>();
+		tss.addAll(concentrations.keySet());
+		tss.addAll(extraFittings.keySet());
+		tss = tss.stream()
+			.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+			.collect(Collectors.toList());
+		return tss;
 	}
 	
 	/**
@@ -102,6 +136,11 @@ public class CalibrationReference implements BoltConfigPlugin {
 		return tss;
 	}
 	
+	
+	////////////////////////////////////////////
+	// Annotations
+	////////////////////////////////////////////
+	
 	public boolean hasAnnotation(TransitionSeries ts) {
 		return getAnnotation(ts).trim().length() > 0;
 	}
@@ -113,16 +152,11 @@ public class CalibrationReference implements BoltConfigPlugin {
 		return "";
 	}
 	
-	public boolean contains(TransitionSeries ts) {
-		return concentrations.containsKey(ts);
-	}
 	
-	public float getConcentration(TransitionSeries ts) {
-		if (!concentrations.containsKey(ts)) {
-			return 0f;
-		}
-		return concentrations.get(ts);
-	}
+	
+
+	
+	
 	
 	public static CalibrationReference empty() {
 		CalibrationReference empty = new CalibrationReference();
@@ -209,16 +243,6 @@ public class CalibrationReference implements BoltConfigPlugin {
 	
 	public static void main(String[] args) throws IOException {
 
-		
-//		URL url = PeakTable.class.getResource("/peakaboo/mapping/references/NIST610.yaml");
-//		Scanner s = new Scanner(url.openStream()).useDelimiter("\\A");
-//		String yaml = s.next();
-//		s.close();
-//		CalibrationReference ref = CalibrationReference.load(yaml);
-//		
-//		yaml = CalibrationReference.save(ref);
-//		System.out.println(yaml);
-		
 		
 		//URL url = PeakTable.class.getResource();
 		File file = new File("/home/nathaniel/Desktop/NIST610ReferenceRevised.csv");
