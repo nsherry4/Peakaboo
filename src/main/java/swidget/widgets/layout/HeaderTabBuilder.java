@@ -6,21 +6,21 @@ import java.awt.Component;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 
-import stratus.controls.ToggleButtonLinker;
+import stratus.controls.ButtonLinker;
 import swidget.widgets.buttons.ToggleImageButton;
 
 public class HeaderTabBuilder {
 
 	private JPanel body;
 	private ButtonGroup group;
-	private ToggleButtonLinker linker;
+	private ButtonLinker linker;
 	private CardLayout layout;
 	
 	public HeaderTabBuilder() {
 		layout = new CardLayout();
 		body = new JPanel(layout);
 		group = new ButtonGroup();
-		linker = new ToggleButtonLinker();
+		linker = new ButtonLinker();
 	}
 	
 	public void addTab(String title, Component component) {
@@ -43,7 +43,7 @@ public class HeaderTabBuilder {
 		return body;
 	}
 	
-	public ToggleButtonLinker getTabStrip() {
+	public ButtonLinker getTabStrip() {
 		return linker;
 	}
 	
