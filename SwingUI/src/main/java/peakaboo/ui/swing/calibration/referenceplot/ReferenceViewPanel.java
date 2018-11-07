@@ -29,7 +29,7 @@ import javax.swing.tree.DefaultTreeModel;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import stratus.controls.ToggleButtonLinker;
+import stratus.controls.ButtonLinker;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;

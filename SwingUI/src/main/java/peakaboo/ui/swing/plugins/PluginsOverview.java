@@ -53,6 +53,7 @@ import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.FileDrop;
 import stratus.StratusLookAndFeel;
+import stratus.controls.ButtonLinker;
 import stratus.theme.DarkTheme;
 import stratus.theme.LightTheme;
 import swidget.dialogues.fileio.SimpleFileExtension;
@@ -91,21 +92,22 @@ public class PluginsOverview extends JPanel {
 				
 		close = HeaderBox.closeButton().withAction(() -> parent.popLayer());
 		
-		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Import Plugins").withAction(this::add);
-		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
+		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
 		
-		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Reload Plugins").withAction(this::reload);
-		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withBordered(false).withTooltip("Get More Plugins").withAction(this::download);
+		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonBox left = new ButtonBox(Spacing.tiny, false);
 		left.setOpaque(false);
-		left.addLeft(add);
-		left.addLeft(remove);
-		left.addLeft(reload);
+		
+		ButtonLinker edits = new ButtonLinker(add, remove, reload);
+		ButtonLinker tools = new ButtonLinker(browse, download);
+		
+		left.addLeft(edits);
 		left.addLeft(new ClearPanel()); //spacing
-		left.addLeft(browse);
-		left.addLeft(download);
+		left.addLeft(tools);
 		
 		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(left, "Manage Plugins", close), body);
 		

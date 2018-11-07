@@ -34,6 +34,7 @@ import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import stratus.controls.ButtonLinker;
 import swidget.Swidget;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
@@ -102,36 +103,33 @@ public class ProfileManager extends JPanel {
 			onClose.run();
 		});
 		
-		ButtonBox box = new ButtonBox(Spacing.tiny, false);
-		box.setOpaque(false);
+
 		
-		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		
+		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			promptCreateProfile(this::actionLoadCalibrationReference);
 		});
-		box.addLeft(create);
 		
-		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			actionLoadCalibrationProfile();
 		});
-		box.addLeft(open);
 		
-		clear = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		clear = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			controller.calibration().setCalibrationProfile(new CalibrationProfile(), null);
 			
 		});
-		box.addLeft(clear);
 		
-		save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			actionSaveCalibrationProfile();
 		});
-		box.addLeft(save);
 		
+		ButtonLinker buttons = new ButtonLinker(create, open, clear, save);
 		
 		makeNamePanel();
 		
 
 		
-		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), box, close);
+		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), buttons, close);
 		
 	}
 	
