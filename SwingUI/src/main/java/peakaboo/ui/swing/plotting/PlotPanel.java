@@ -216,6 +216,8 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		getTabbedInterface().validate();
 		getTabbedInterface().repaint();
+		
+		setNeedsRedraw();
 
 	}
 
@@ -1187,7 +1189,12 @@ public class PlotPanel extends TabbedLayerPanel
 		modal.set(new ModalLayer(this, manager));
 		this.pushLayer(modal.get());
 	}
+	
+	
 
 
+	public void setNeedsRedraw() {
+		canvas.setNeedsRedraw();
+	}
 
 }

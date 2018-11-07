@@ -8,6 +8,7 @@ import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
+import cyclops.visualization.Buffer;
 import cyclops.visualization.Surface;
 import cyclops.visualization.drawing.DrawingRequest;
 import cyclops.visualization.drawing.ViewTransform;
@@ -38,8 +39,11 @@ import peakaboo.filter.model.Filter;
 public class Plotter {
 
 
-	private PlotDrawing plotDrawing;
+	
 	private int spectrumSize = 2048;
+	
+	private Buffer buffer;
+	private PlotDrawing plotDrawing;
 	
 	public Plotter() {
 	}
@@ -49,8 +53,6 @@ public class Plotter {
 		if (settings == null) {
 			settings = new PlotSettings();
 		}
-		
-		DrawingRequest dr = new DrawingRequest();
 		
 
 		if (data.filtered == null) {
@@ -62,6 +64,24 @@ public class Plotter {
 		
 		
 		
+		if (buffer == null || plotDrawing == null) {
+			buffer = context.getImageBuffer(size.x, size.y);
+			
+			drawToBuffer(data, settings, buffer, size);
+			
+		}
+		
+		context.compose(buffer, 0, 0, 1f);
+		
+		return plotDrawing;
+
+		
+	}
+	
+	public PlotDrawing drawToBuffer(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
+		
+
+		DrawingRequest dr = new DrawingRequest();
 		
 		
 		//white background
@@ -312,12 +332,6 @@ public class Plotter {
 		}
 		
 		
-		
-
-		
-		
-		
-		
 
 		
 		////////////////////////////////////////////////////////////////////
@@ -348,9 +362,9 @@ public class Plotter {
 		plotDrawing.draw();
 				
 		return plotDrawing;
-
 		
 	}
+	
 	
 	public PlotDrawing getPlot() {
 		return plotDrawing;
@@ -377,5 +391,10 @@ public class Plotter {
 
 	}
 	
+	
+	public void setNeedsRedraw() {
+		buffer = null;
+		plotDrawing = null;
+	}
 	
 }

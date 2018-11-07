@@ -55,7 +55,7 @@ public class ViewController extends Eventful
 		viewModel.persistent.showIndividualFittings = showIndividualSelections;
 		savePersistentSettings();
 		setUndoPoint("Individual Fittings");
-		plot.fitting().fittingDataInvalidated();
+		updateListeners();
 	}
 
 	public boolean getShowIndividualSelections()

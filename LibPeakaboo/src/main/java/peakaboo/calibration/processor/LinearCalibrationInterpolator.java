@@ -46,11 +46,6 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 					inter = new TransitionSeries(Element.values()[i], tst);
 				}
 				
-				System.out.println(inter.element.name() + " between " + previous.element.name() + " and " + known.element.name());
-				System.out.println(inter.element.atomicNumber());
-				System.out.println(interpolate(calibrations, inter, previous, known));
-				System.out.println("------------------");
-				
 				calibrations.put(inter, interpolate(calibrations, inter, previous, known));
 			}
 			
