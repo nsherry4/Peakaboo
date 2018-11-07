@@ -13,23 +13,23 @@ import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 
 import stratus.Stratus.ButtonState;
-import stratus.controls.ToggleButtonLinker;
+import stratus.controls.ButtonLinker;
 import stratus.painters.ButtonPainter;
 import stratus.theme.Theme;
 
-public class ToggleButtonPainter extends ButtonPainter {
+public class LinkedButtonPainter extends ButtonPainter {
 
-    public ToggleButtonPainter(Theme theme, ButtonState... buttonStates) {
+    public LinkedButtonPainter(Theme theme, ButtonState... buttonStates) {
     	this(theme, 1, buttonStates);
     }
 	
-	public ToggleButtonPainter(Theme theme, int margin, ButtonState... buttonStates) {
+	public LinkedButtonPainter(Theme theme, int margin, ButtonState... buttonStates) {
 		super(theme, margin, buttonStates);
 	}
 
 	private boolean isLinked(JComponent object) {
 		Container container = object.getParent();
-		return container instanceof ToggleButtonLinker;
+		return container instanceof ButtonLinker;
 	}
 	
 	private boolean isFirst(JComponent object) {

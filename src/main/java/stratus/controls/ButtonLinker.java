@@ -1,5 +1,6 @@
 package stratus.controls;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -9,12 +10,13 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.border.EmptyBorder;
 
-public class ToggleButtonLinker extends JComponent {
+public class ButtonLinker extends JComponent {
 
 	private GridBagConstraints c = new GridBagConstraints();
 	
-	public ToggleButtonLinker(AbstractButton... buttons) {
+	public ButtonLinker(AbstractButton... buttons) {
 		setLayout(new GridBagLayout());
+		setOpaque(false);
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridx = 0;
