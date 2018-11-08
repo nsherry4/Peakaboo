@@ -1,14 +1,20 @@
 package peakaboo.common;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
@@ -18,8 +24,8 @@ public class PeakabooLog {
 	private final static String format = "%1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
 	private final static Map<String, Logger> loggers = new HashMap<>();
 	private static boolean initted = false;
-	
 	private static String logfilename;
+	private static Level logLevel;
 	
 	public synchronized static void init(File logDir) {
 		if (initted == true) {
@@ -27,14 +33,43 @@ public class PeakabooLog {
 		}
 		initted = true;
 		
+		String logLevelString = "INFO";
+		logLevelString = System.getProperty("java.util.logging.loglevel", logLevelString);
+		logLevel = Level.parse(logLevelString);
+		
+		Properties props = new Properties();
+		props.setProperty("java.util.logging.loglevel", logLevelString);
+		props.setProperty("java.util.logging.ConsoleHandler.level", logLevelString);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(512);
+		try {
+			System.out.println(new String(bos.toByteArray()));
+			props.store(bos, "No Comment");
+			bos.flush();
+			LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(bos.toByteArray()));
+		} catch (IOException e1) {
+			get().log(Level.SEVERE, "Failed to configure logging", e1);
+		}
+		
+		
 		//Set default behaviour for uncaught errors to here
 		Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e) -> {
 			get().log(Level.SEVERE, "Uncaught Exception", e);
 		});
 		
-		//Set up log file
+		//remove default handlers
+		for (Handler handler : getRoot().getHandlers()) {
+			getRoot().removeHandler(handler);
+		}
+		
+		//add console handler
+		ConsoleHandler consoleHandler = new ConsoleHandler();
+		consoleHandler.setLevel(logLevel);
+		
+		//Set up log file handler
 		configFileHandler(logDir);
 
+
+		
 	}
 
 
@@ -51,6 +86,7 @@ public class PeakabooLog {
 			
 			FileHandler handler = new FileHandler(logfilename, 16*1024*1024, 1, true);
 			handler.setFormatter(new CustomFormatter(format));
+			handler.setLevel(logLevel);
 			getRoot().addHandler(handler);
 		} catch (SecurityException | IOException e) {
 			getRoot().log(Level.WARNING, "Cannot create Peakaboo log file", e);
@@ -70,7 +106,9 @@ public class PeakabooLog {
 	
 	private static Logger get(String name) {
 		if (!loggers.containsKey(name)) {
-			loggers.put(name, Logger.getLogger(name));
+			Logger logger = Logger.getLogger(name);
+			logger.setLevel(logLevel);
+			loggers.put(name, logger);
 		}
 		return loggers.get(name);
 	}
