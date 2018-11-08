@@ -25,7 +25,7 @@ public class SimplePhysicalSize implements PhysicalSize {
 		this.units = units;
 		
 		List<Coord<Number>> scratch = new ArrayList<>();
-		if (PeakabooConfiguration.memorySize == MemorySize.SMALL) {
+		if (PeakabooConfiguration.memorySize == MemorySize.TINY) {
 			//Physical coordinates on large maps can eat up ~10MB, which is enough to 
 			//warrant disk-based storage when we're low on memory 
 			//We use fst instead of fstUnsafe since there seems to be a bug somewhere 

@@ -64,6 +64,7 @@ public class PeakabooLog {
 		//add console handler
 		ConsoleHandler consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(logLevel);
+		getRoot().addHandler(consoleHandler);
 		
 		//Set up log file handler
 		configFileHandler(logDir);

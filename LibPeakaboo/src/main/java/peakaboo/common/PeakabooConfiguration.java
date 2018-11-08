@@ -16,7 +16,7 @@ public class PeakabooConfiguration {
 	public static MemorySize memorySize = calcMemoryFootprint();
 
 	public enum MemorySize {
-		SMALL, MEDIUM, LARGE;
+		TINY, SMALL, MEDIUM, LARGE;
 	}
 
 	private static MemorySize calcMemoryFootprint() {
@@ -24,6 +24,8 @@ public class PeakabooConfiguration {
 		long maxHeap = Env.maxHeap();
 		
 		if (maxHeap < 128) {
+			return MemorySize.TINY;
+		} else if (maxHeap < 256) {
 			return MemorySize.SMALL;
 		} else if (maxHeap < 1024) {
 			return MemorySize.MEDIUM;
@@ -32,5 +34,5 @@ public class PeakabooConfiguration {
 		}
 		
 	}
-	
+		
 }
