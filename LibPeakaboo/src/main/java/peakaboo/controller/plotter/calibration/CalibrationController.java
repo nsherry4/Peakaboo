@@ -70,7 +70,6 @@ public class CalibrationController extends Eventful {
 	}
 	
 	public CalibrationProfile generateCalibrationProfile() {
-		plotController.regenerateCachedData();
 		
 		CalibrationReference reference = getCalibrationReference();
 		FittingResultSet sample = plotController.fitting().getFittingSelectionResults();

@@ -3,23 +3,16 @@ package peakaboo.controller.plotter.filtering;
 import java.util.Map;
 
 import cyclops.ReadOnlySpectrum;
+import eventful.EventfulCache;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
 
-
-public class FilteringModel
-{
+public class FilteringModel {
 
 	// Data related to applying filters. Filters manipulate the dataset
-	public FilterSet			filters;
-	public ReadOnlySpectrum		filteredPlot;
-	public Map<Filter, ReadOnlySpectrum> filterDeltas;
+	FilterSet filters = new FilterSet();
 	
-	public FilteringModel()
-	{
-		filters = new FilterSet();
-		filteredPlot = null;
-		filterDeltas = null;
-	}
-	
+	EventfulCache<ReadOnlySpectrum> filteredPlot;
+	EventfulCache<Map<Filter, ReadOnlySpectrum>> filterDeltas;
+
 }

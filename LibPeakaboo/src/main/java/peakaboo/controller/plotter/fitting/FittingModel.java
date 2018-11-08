@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eventful.EventfulCache;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -30,7 +31,7 @@ public class FittingModel
 	/**
 	 * Results of fitting existing selections
 	 */
-	public FittingResultSet		selectionResults;
+	public EventfulCache<FittingResultSet>		selectionResults;
 	
 	/**
 	 * Proposed TransitionSeries and their Fitting against data after already being fit against current selections
@@ -40,7 +41,7 @@ public class FittingModel
 	/**
 	 * Results of fitting proposed selections.
 	 */
-	public FittingResultSet		proposalResults;
+	public EventfulCache<FittingResultSet>		proposalResults;
 	
 	
 	List<TransitionSeries> highlighted;

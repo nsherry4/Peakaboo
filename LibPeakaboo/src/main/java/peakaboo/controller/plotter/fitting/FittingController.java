@@ -15,10 +15,13 @@ import java.util.stream.Collectors;
 import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.Mutable;
+import eventful.EventfulCache;
+import eventful.EventfulEnumListener;
 import eventful.EventfulType;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -49,6 +52,36 @@ public class FittingController extends EventfulType<Boolean>
 	{
 		this.plot = plotController;
 		fittingModel = new FittingModel();
+		
+		EventfulEnumListener<EventfulCache.CacheEvents> cacheListener = event -> {
+			if (event == EventfulCache.CacheEvents.INVALIDATED) {
+				updateListeners(false);
+			}
+		};
+		
+		fittingModel.selectionResults = new EventfulCache<>(() -> {
+			ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
+			if (!plot.data().hasDataSet() || data == null) {
+				return null;
+			}
+			System.out.println("fittings pre-solve");
+			return getFittingSolver().solve(data, fittingModel.selections, getCurveFitter());
+		});
+		
+		fittingModel.proposalResults = new EventfulCache<>(() -> {
+			if (!plot.data().hasDataSet() || plot.currentScan() == null) {
+				return null;
+			}
+			System.out.println("proposals pre-solve");
+			return getFittingSolver().solve(getFittingSelectionResults().getResidual(), fittingModel.proposals, getCurveFitter());
+		});
+		
+		fittingModel.selectionResults.addDependency(plot.filtering().getFilteredPlotCache());
+		fittingModel.proposalResults.addDependency(fittingModel.selectionResults);
+		
+		fittingModel.proposalResults.addListener(cacheListener);
+		
+		
 	}
 	
 	public FittingModel getFittingModel()
@@ -142,11 +175,9 @@ public class FittingController extends EventfulType<Boolean>
 
 	public float getTransitionSeriesIntensity(TransitionSeries ts)
 	{
-		plot.regenerateCachedData();
+		if (getFittingSelectionResults() == null) return 0.0f;
 
-		if (fittingModel.selectionResults == null) return 0.0f;
-
-		for (FittingResult result : fittingModel.selectionResults.getFits())
+		for (FittingResult result : getFittingSelectionResults().getFits())
 		{
 			if (result.getTransitionSeries() == ts) {
 				float max = result.getFit().max();
@@ -178,7 +209,7 @@ public class FittingController extends EventfulType<Boolean>
 	public void fittingDataInvalidated()
 	{
 		// Clear cached values, since they now have to be recalculated
-		fittingModel.selectionResults = null;
+		fittingModel.selectionResults.invalidate();
 
 		// this will call update listener for us
 		fittingProposalsInvalidated();
@@ -219,8 +250,7 @@ public class FittingController extends EventfulType<Boolean>
 	public void fittingProposalsInvalidated()
 	{
 		// Clear cached values, since they now have to be recalculated
-		fittingModel.proposalResults = null;
-		updateListeners(false);
+		fittingModel.proposalResults.invalidate();
 	}
 
 	public void setEscapeType(EscapePeakType type)
@@ -331,29 +361,16 @@ public class FittingController extends EventfulType<Boolean>
 	public EnergyCalibration getEnergyCalibration() {
 		return fittingModel.selections.getFittingParameters().getCalibration();
 	}
-	
-	
-	
-	
 
-	public void calculateProposalFittings()
-	{
-		fittingModel.proposalResults = getFittingSolver().solve(fittingModel.selectionResults.getResidual(), fittingModel.proposals, getCurveFitter());
-	}
-
-	public void calculateSelectionFittings(ReadOnlySpectrum data)
-	{
-		fittingModel.selectionResults = getFittingSolver().solve(data, fittingModel.selections, getCurveFitter());
-	}
-
+	
 	public boolean hasProposalFitting()
 	{
-		return fittingModel.proposalResults != null;
+		return fittingModel.proposalResults.getValue() != null;
 	}
 
 	public boolean hasSelectionFitting()
 	{
-		return fittingModel.selectionResults != null;
+		return fittingModel.selectionResults.getValue() != null;
 	}
 
 	public FittingSet getFittingSelections()
@@ -368,12 +385,12 @@ public class FittingController extends EventfulType<Boolean>
 	
 	public FittingResultSet getFittingProposalResults()
 	{
-		return fittingModel.proposalResults;
+		return fittingModel.proposalResults.getValue();
 	}
 
 	public FittingResultSet getFittingSelectionResults()
 	{
-		return fittingModel.selectionResults;
+		return fittingModel.selectionResults.getValue();
 	}
 
 	public List<TransitionSeries> getHighlightedTransitionSeries() {

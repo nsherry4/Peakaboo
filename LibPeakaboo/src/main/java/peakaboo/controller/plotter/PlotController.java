@@ -113,7 +113,7 @@ public class PlotController extends EventfulType<String>
 	 * raw data supplied by the data controller.
 	 * @return a Spectrum which contains a scan
 	 */
-	private ReadOnlySpectrum currentScan()
+	public ReadOnlySpectrum currentScan()
 	{
 		ReadOnlySpectrum originalData = null;
 		
@@ -181,8 +181,6 @@ public class PlotController extends EventfulType<String>
 		
 		// get the original data
 		originalData = currentScan();
-
-		regenerateCachedData();
 		
 		PlotSpectra spectra = new PlotSpectra();
 		spectra.raw = originalData;
@@ -193,40 +191,6 @@ public class PlotController extends EventfulType<String>
 	}
 	
 
-	/**
-	 * In order to prevent high cpu use every time calculated data such as averaged, filtered, or 
-	 * fitted plots are requested, the calculated data is cached. When a setting is changed such 
-	 * that the cached data would no longer match freshly calculated data, the cache must be cleared.
-	 */
-	public void regenerateCachedData()
-	{
-
-		// Regenerate Filtered Data
-		if (dataController.hasDataSet() && currentScan() != null)
-		{
-
-			
-			if (filteringController.getFilteredPlot() == null)
-			{
-				filteringController.calculateFilteredData(currentScan());
-			}
-
-			// Fitting Selections
-			if (!fittingController.hasSelectionFitting())
-			{
-				fittingController.calculateSelectionFittings(filteringController.getFilteredPlot());
-			}
-
-			// Fitting Proposals
-			if (!fittingController.hasProposalFitting())
-			{
-				fittingController.calculateProposalFittings();
-			}
-
-		}
-
-	}
-	
 	
 	/**
 	 * Returns an {@link StreamExecutor} which will generate a map based on the user's current 

@@ -4,6 +4,8 @@ import java.util.Map;
 
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
+import eventful.EventfulCache;
+import eventful.EventfulEnumListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
@@ -19,6 +21,27 @@ public class FilteringController extends Eventful
 	{
 		this.plot = plotController;
 		filteringModel = new FilteringModel();
+		
+		filteringModel.filteredPlot = new EventfulCache<>(() -> {
+			System.out.println("filtering");
+			if (!plot.data().hasDataSet() || plot.currentScan() == null) {
+				return null;
+			}
+			return filteringModel.filters.applyFilters(plot.currentScan(), true);
+		});
+		
+		filteringModel.filterDeltas = new EventfulCache<>(() -> { 
+			return filteringModel.filters.calculateDeltas(plot.currentScan());
+		});
+		
+		EventfulEnumListener<EventfulCache.CacheEvents> cacheListener = event -> {
+			if (event == EventfulCache.CacheEvents.INVALIDATED) {
+				updateListeners();
+			}
+		};
+		
+		filteringModel.filteredPlot.addListener(cacheListener);
+		filteringModel.filterDeltas.addListener(cacheListener);
 	}
 
 	public FilteringModel getFilteringModel()
@@ -105,21 +128,10 @@ public class FilteringController extends Eventful
 	}
 
 
-	public void calculateFilteredData(ReadOnlySpectrum data)
-	{
-		filteringModel.filteredPlot = filteringModel.filters.applyFilters(data, true);
-		filteringModel.filterDeltas = filteringModel.filters.calculateDeltas(data);
-		updateListeners();
-	}
-
 	public void filteredDataInvalidated()
 	{
 		// Clear cached values, since they now have to be recalculated
-		filteringModel.filteredPlot = null;
-
-		plot.fitting().fittingDataInvalidated();
-		updateListeners();
-
+		filteringModel.filteredPlot.invalidate();
 	}
 
 	public FilterSet getActiveFilters()
@@ -127,13 +139,16 @@ public class FilteringController extends Eventful
 		return filteringModel.filters;
 	}
 
-	public ReadOnlySpectrum getFilteredPlot()
-	{
+	public ReadOnlySpectrum getFilteredPlot() {
+		return filteringModel.filteredPlot.getValue();
+	}
+	
+	public EventfulCache<ReadOnlySpectrum> getFilteredPlotCache() {
 		return filteringModel.filteredPlot;
 	}
 	
 	public Map<Filter, ReadOnlySpectrum> getFilterDeltas() {
-		return filteringModel.filterDeltas;
+		return filteringModel.filterDeltas.getValue();
 	}
 
 
