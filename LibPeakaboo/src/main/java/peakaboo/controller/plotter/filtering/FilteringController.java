@@ -1,11 +1,13 @@
 package peakaboo.controller.plotter.filtering;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulCache;
 import eventful.EventfulEnumListener;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;
@@ -23,8 +25,7 @@ public class FilteringController extends Eventful
 		filteringModel = new FilteringModel();
 		
 		filteringModel.filteredPlot = new EventfulCache<>(() -> {
-			System.out.println("filtering");
-			if (!plot.data().hasDataSet() || plot.currentScan() == null) {
+			if (plot.currentScan() == null) {
 				return null;
 			}
 			return filteringModel.filters.applyFilters(plot.currentScan(), true);
@@ -33,15 +34,9 @@ public class FilteringController extends Eventful
 		filteringModel.filterDeltas = new EventfulCache<>(() -> { 
 			return filteringModel.filters.calculateDeltas(plot.currentScan());
 		});
-		
-		EventfulEnumListener<EventfulCache.CacheEvents> cacheListener = event -> {
-			if (event == EventfulCache.CacheEvents.INVALIDATED) {
-				updateListeners();
-			}
-		};
-		
-		filteringModel.filteredPlot.addListener(cacheListener);
-		filteringModel.filterDeltas.addListener(cacheListener);
+				
+		filteringModel.filteredPlot.addListener(this::updateListeners);
+		filteringModel.filterDeltas.addListener(this::updateListeners);
 	}
 
 	public FilteringModel getFilteringModel()
@@ -130,6 +125,7 @@ public class FilteringController extends Eventful
 
 	public void filteredDataInvalidated()
 	{
+		PeakabooLog.get().log(Level.FINE, "Filter Data Invalidated");
 		// Clear cached values, since they now have to be recalculated
 		filteringModel.filteredPlot.invalidate();
 	}

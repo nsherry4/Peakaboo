@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import cyclops.Pair;
@@ -17,9 +18,11 @@ import cyclops.ReadOnlySpectrum;
 import cyclops.util.Mutable;
 import eventful.EventfulCache;
 import eventful.EventfulEnumListener;
+import eventful.EventfulListener;
 import eventful.EventfulType;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.calibration.CalibrationReference;
+import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
@@ -53,33 +56,26 @@ public class FittingController extends EventfulType<Boolean>
 		this.plot = plotController;
 		fittingModel = new FittingModel();
 		
-		EventfulEnumListener<EventfulCache.CacheEvents> cacheListener = event -> {
-			if (event == EventfulCache.CacheEvents.INVALIDATED) {
-				updateListeners(false);
-			}
-		};
 		
 		fittingModel.selectionResults = new EventfulCache<>(() -> {
 			ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
-			if (!plot.data().hasDataSet() || data == null) {
+			if (data == null) {
 				return null;
 			}
-			System.out.println("fittings pre-solve");
 			return getFittingSolver().solve(data, fittingModel.selections, getCurveFitter());
 		});
 		
 		fittingModel.proposalResults = new EventfulCache<>(() -> {
-			if (!plot.data().hasDataSet() || plot.currentScan() == null) {
+			if (plot.currentScan() == null) {
 				return null;
 			}
-			System.out.println("proposals pre-solve");
 			return getFittingSolver().solve(getFittingSelectionResults().getResidual(), fittingModel.proposals, getCurveFitter());
 		});
 		
 		fittingModel.selectionResults.addDependency(plot.filtering().getFilteredPlotCache());
 		fittingModel.proposalResults.addDependency(fittingModel.selectionResults);
 		
-		fittingModel.proposalResults.addListener(cacheListener);
+		fittingModel.proposalResults.addListener(() -> updateListeners(false));
 		
 		
 	}
@@ -208,6 +204,9 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void fittingDataInvalidated()
 	{
+		
+		PeakabooLog.get().log(Level.FINE, "Fitting Data Invalidated");
+		
 		// Clear cached values, since they now have to be recalculated
 		fittingModel.selectionResults.invalidate();
 

@@ -142,10 +142,24 @@ public class PlotMenuEnergy extends JPopupMenu {
 	}
 
 	public void setWidgetState(boolean hasData) {
-		minEnergy.setEnabled(hasData);
+		
+		
 		maxEnergy.setEnabled(hasData);
-		minEnergy.setValue((double) controller.fitting().getMinEnergy());
-		maxEnergy.setValue((double) controller.fitting().getMaxEnergy());
+		float modelMax = controller.fitting().getMaxEnergy();
+		float viewMax = ((Number) maxEnergy.getValue()).floatValue();
+		if (modelMax != viewMax) {
+			maxEnergy.setValue((double) modelMax);
+		}
+		
+
+		minEnergy.setEnabled(hasData);
+		float modelMin = controller.fitting().getMinEnergy();
+		float viewMin = ((Number) minEnergy.getValue()).floatValue();
+		if (modelMin != viewMin) {
+			minEnergy.setValue((double) modelMin);
+		}
+
+		
 		energyGuess.setEnabled(hasData);
 	}
 	

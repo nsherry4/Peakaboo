@@ -115,6 +115,10 @@ public class PlotController extends EventfulType<String>
 	 */
 	public ReadOnlySpectrum currentScan()
 	{
+		if (!dataController.hasDataSet()) {
+			return null;
+		}
+		
 		ReadOnlySpectrum originalData = null;
 		
 		if (viewController.getChannelCompositeMode() == ChannelCompositeMode.AVERAGE) {
