@@ -17,14 +17,25 @@ public class EventfulCache<T> extends Eventful {
 	private boolean hasValue = false;
 	private Supplier<T> supplier;
 	
+	private Eventful deps;
+	
 	
 	public EventfulCache(Supplier<T> supplier) {
 		this.supplier = supplier;
+		this.deps = new Eventful();
+		/*
+		 * events usually get pushed out on the UI's event thread/queue, but this can
+		 * cause problems if the data invalidation events haven't propagated to the
+		 * downstream caches when some other event accesses them. Instead, we run the
+		 * invalidation events eagerly
+		 */ 
+		deps.setUIThreadRunnerOverride(runnable -> runnable.run());
 	}
 	
 	public synchronized void invalidate() {
 		value = null;
 		hasValue = false;
+		deps.updateListeners();
 		updateListeners();
 	}
 	
@@ -39,11 +50,14 @@ public class EventfulCache<T> extends Eventful {
 	/**
 	 * Mark this cached value as dependant (eg derived from) the given cached value.
 	 * When the given cached value is invalidated, this value will be invalidated as
-	 * well.
+	 * well. Note that unlike regular listeners, the dependency invalidation is done
+	 * immediately, rather than on the ui event thread.
 	 */
-	public void addDependency(EventfulCache<?> dependency) {
-		dependency.addListener(this::invalidate);
+	public void addUpstreamDependency(EventfulCache<?> dependency) {
+		dependency.deps.addListener(this::invalidate);
 	}
+	
+	
 	
 	
 	

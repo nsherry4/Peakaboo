@@ -2,12 +2,13 @@ package eventful;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 {
 
 	protected final List<EventfulEnumListener<T>>	listeners;
-	
+	private Consumer<Runnable> uiThreadRunnerOverride = null;
 	
 	public EventfulEnum() {
 		listeners = new LinkedList<EventfulEnumListener<T>>();
@@ -22,7 +23,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	//Done on the event thread on purpose
 	public synchronized void removeListener(final EventfulEnumListener<T> l)
 	{
-		EventfulConfig.uiThreadRunner.accept(() -> { 
+		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulEnum.this) { 
 					listeners.remove(l);
 			}
@@ -32,7 +33,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	//Done on the event thread on purpose
 	public synchronized void removeAllListeners()
 	{
-		EventfulConfig.uiThreadRunner.accept(() -> { 
+		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulEnum.this) { 
 					listeners.clear();
 			}
@@ -45,7 +46,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 
 		if (listeners.size() == 0) return;
 
-		EventfulConfig.uiThreadRunner.accept(() -> { 
+		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulEnum.this) {	
 				for (EventfulEnumListener<T> l : listeners) {		
 					l.change(message);
@@ -53,6 +54,21 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 			}
 		});
 
+	}
+	
+	private Consumer<Runnable> getUIThreadRunner() {
+		if (uiThreadRunnerOverride == null) {
+			return EventfulConfig.uiThreadRunner;
+		}
+		return uiThreadRunnerOverride;
+	}
+	
+	/**
+	 * Sets a thread runner to override {@link EventfulConfig#uiThreadRunner} for
+	 * this Eventful object only.
+	 */
+	public void setUIThreadRunnerOverride(Consumer<Runnable> override) {
+		uiThreadRunnerOverride = override;
 	}
 	
 }

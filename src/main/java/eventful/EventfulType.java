@@ -2,12 +2,13 @@ package eventful;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class EventfulType<T> implements IEventfulType<T>
 {
 
 	protected final List<EventfulTypeListener<T>>	listeners;
-	
+	private Consumer<Runnable> uiThreadRunnerOverride = null;
 	
 	public EventfulType() {
 		
@@ -24,7 +25,7 @@ public class EventfulType<T> implements IEventfulType<T>
 	//Done on the event thread on purpose
 	public synchronized void removeListener(final EventfulTypeListener<T> l)
 	{
-		EventfulConfig.uiThreadRunner.accept(() -> { 
+		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulType.this) { 
 				listeners.remove(l);
 			}
@@ -35,7 +36,7 @@ public class EventfulType<T> implements IEventfulType<T>
 	//Done on the event thread on purpose
 	public synchronized void removeAllListeners()
 	{
-		EventfulConfig.uiThreadRunner.accept(() -> { 
+		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulType.this) { 
 				listeners.clear();
 			}
@@ -49,7 +50,7 @@ public class EventfulType<T> implements IEventfulType<T>
 
 		if (listeners.size() == 0) return;
 
-		EventfulConfig.uiThreadRunner.accept(() -> {
+		getUIThreadRunner().accept(() -> {
 			synchronized(EventfulType.this){
 				for (EventfulTypeListener<T> l : listeners) {
 					l.change(message);
@@ -57,6 +58,21 @@ public class EventfulType<T> implements IEventfulType<T>
 			}
 		});
 
+	}
+	
+	private Consumer<Runnable> getUIThreadRunner() {
+		if (uiThreadRunnerOverride == null) {
+			return EventfulConfig.uiThreadRunner;
+		}
+		return uiThreadRunnerOverride;
+	}
+	
+	/**
+	 * Sets a thread runner to override {@link EventfulConfig#uiThreadRunner} for
+	 * this Eventful object only.
+	 */
+	public void setUIThreadRunnerOverride(Consumer<Runnable> override) {
+		uiThreadRunnerOverride = override;
 	}
 	
 }
