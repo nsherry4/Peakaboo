@@ -10,33 +10,22 @@ import java.util.function.Supplier;
  * invalidation and dependency handling; when data involved in the calculation
  * of this cached value changes, this value will automatically be invalidated.
  */
-public class EventfulCache<T> extends EventfulEnum<EventfulCache.CacheEvents> {
-
-	public static enum CacheEvents {
-		INVALIDATED;
-	}
+public class EventfulCache<T> extends Eventful {
 	
 	// When empty, indicates an invalidaed value
 	private T value = null;
 	private boolean hasValue = false;
 	private Supplier<T> supplier;
-	private EventfulEnumListener<EventfulCache.CacheEvents> listener;
 	
 	
 	public EventfulCache(Supplier<T> supplier) {
 		this.supplier = supplier;
-
-		listener = event -> {
-			if (event == CacheEvents.INVALIDATED) {
-				invalidate();
-			}
-		};
 	}
 	
 	public synchronized void invalidate() {
 		value = null;
 		hasValue = false;
-		updateListeners(CacheEvents.INVALIDATED);
+		updateListeners();
 	}
 	
 	public synchronized T getValue() {
@@ -53,7 +42,7 @@ public class EventfulCache<T> extends EventfulEnum<EventfulCache.CacheEvents> {
 	 * well.
 	 */
 	public void addDependency(EventfulCache<?> dependency) {
-		dependency.addListener(listener);
+		dependency.addListener(this::invalidate);
 	}
 	
 	
