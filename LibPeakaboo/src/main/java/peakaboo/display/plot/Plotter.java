@@ -43,6 +43,7 @@ public class Plotter {
 	private int spectrumSize = 2048;
 	
 	private Buffer buffer;
+	private Coord<Integer> bufferSize;
 	private PlotDrawing plotDrawing;
 	
 	public Plotter() {
@@ -64,9 +65,9 @@ public class Plotter {
 		
 		
 		
-		if (buffer == null || plotDrawing == null) {
+		if (buffer == null || plotDrawing == null || bufferSize == null || !bufferSize.equals(size)) {
 			buffer = context.getImageBuffer(size.x, size.y);
-			
+			bufferSize = size;
 			drawToBuffer(data, settings, buffer, size);
 			
 		}
