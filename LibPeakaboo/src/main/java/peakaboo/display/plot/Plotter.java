@@ -27,6 +27,8 @@ import cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
+import peakaboo.common.PeakabooConfiguration;
+import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -64,15 +66,41 @@ public class Plotter {
 		spectrumSize = data.filtered.size();
 		
 		
+		System.out.println(size.x + "x" + size.y);
+		boolean doBuffer = true;
 		
-		if (buffer == null || plotDrawing == null || bufferSize == null || !bufferSize.equals(size)) {
-			buffer = context.getImageBuffer(size.x, size.y);
-			bufferSize = size;
-			drawToBuffer(data, settings, buffer, size);
-			
+		
+		//buffer space in MB
+		int bufferSpace = (int)(((long)size.x * (long)size.y * 4) >> 20);
+		if (bufferSpace > 10 && PeakabooConfiguration.memorySize == MemorySize.TINY) {
+			doBuffer = false;
+		}
+		if (bufferSpace > 20 && PeakabooConfiguration.memorySize == MemorySize.SMALL) {
+			doBuffer = false;
+		}
+		if (bufferSpace > 50 && PeakabooConfiguration.memorySize == MemorySize.MEDIUM) {
+			doBuffer = false;
+		}
+		if (bufferSpace > 500 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
+			doBuffer = false;
 		}
 		
-		context.compose(buffer, 0, 0, 1f);
+		System.out.println(doBuffer);
+		if (doBuffer) {
+			if (buffer == null || plotDrawing == null || bufferSize == null || bufferSize.x < size.x || bufferSize.y < size.y) {
+				buffer = context.getImageBuffer((int)(size.x*1.2f), (int)(size.y*1.2f));
+				bufferSize = size;
+				drawToBuffer(data, settings, buffer, size);
+			}
+			
+			context.rectAt(0, 0, size.x, size.y);
+			context.clip();
+			context.compose(buffer, 0, 0, 1f);
+		} else {
+			buffer = null;
+			bufferSize = null;
+			drawToBuffer(data, settings, context, size);
+		}
 		
 		return plotDrawing;
 
