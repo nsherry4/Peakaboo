@@ -66,30 +66,32 @@ public class Plotter {
 		spectrumSize = data.filtered.size();
 		
 		
-		System.out.println(size.x + "x" + size.y);
-		boolean doBuffer = true;
+		
 		
 		
 		//buffer space in MB
-		int bufferSpace = (int)(((long)size.x * (long)size.y * 4) >> 20);
+		boolean doBuffer = true;
+		int bufferSpace = (int)((size.x * 1.2f * size.y * 1.2f * 4) / 1024f / 1024f);
 		if (bufferSpace > 10 && PeakabooConfiguration.memorySize == MemorySize.TINY) {
 			doBuffer = false;
 		}
 		if (bufferSpace > 20 && PeakabooConfiguration.memorySize == MemorySize.SMALL) {
 			doBuffer = false;
 		}
-		if (bufferSpace > 50 && PeakabooConfiguration.memorySize == MemorySize.MEDIUM) {
+		if (bufferSpace > 40 && PeakabooConfiguration.memorySize == MemorySize.MEDIUM) {
 			doBuffer = false;
 		}
-		if (bufferSpace > 500 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
+		if (bufferSpace > 250 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
 			doBuffer = false;
 		}
 		
-		System.out.println(doBuffer);
 		if (doBuffer) {
 			if (buffer == null || plotDrawing == null || bufferSize == null || bufferSize.x < size.x || bufferSize.y < size.y) {
 				buffer = context.getImageBuffer((int)(size.x*1.2f), (int)(size.y*1.2f));
 				bufferSize = size;
+				drawToBuffer(data, settings, buffer, size);
+			} else if (!bufferSize.equals(size)) {
+				//buffer exists, but size has changed, requiring redraw.
 				drawToBuffer(data, settings, buffer, size);
 			}
 			
