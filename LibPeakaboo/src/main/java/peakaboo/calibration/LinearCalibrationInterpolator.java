@@ -1,26 +1,24 @@
-package peakaboo.calibration.processor;
+package peakaboo.calibration;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 
 public class LinearCalibrationInterpolator implements CalibrationProcessor {
 
 	@Override
-	public void process(CalibrationReference reference, Map<TransitionSeries, Float> calibrations) {
-		interpolate(calibrations, TransitionSeriesType.K);
-		interpolate(calibrations, TransitionSeriesType.L);
-		interpolate(calibrations, TransitionSeriesType.M);
+	public void process(CalibrationReference reference, CalibrationProfile profile) {
+		interpolate(profile, TransitionSeriesType.K);
+		interpolate(profile, TransitionSeriesType.L);
+		interpolate(profile, TransitionSeriesType.M);
 	}
 	
-	private void interpolate(Map<TransitionSeries, Float> calibrations, TransitionSeriesType tst) {
-		List<TransitionSeries> knowns = calibrations
+	private void interpolate(CalibrationProfile profile, TransitionSeriesType tst) {
+		List<TransitionSeries> knowns = profile.calibrations
 				.keySet()
 				.stream()
 				.filter(ts -> ts.type == tst)
@@ -37,16 +35,9 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 						
 			//all missing entries between previous and known
 			for (int i = previous.element.ordinal()+1; i < known.element.ordinal(); i++) {
-				TransitionSeries inter = PeakTable.SYSTEM.get(Element.values()[i], tst);
-
-				//If we can't find it in the peak table, create it.
-				//This is generally a bad idea, but we won't ever be using these 
-				//dummy TransitionSeries for any real work
-				if (inter == null) {
-					inter = new TransitionSeries(Element.values()[i], tst);
-				}
-				
-				calibrations.put(inter, interpolate(calibrations, inter, previous, known));
+				TransitionSeries inter = new TransitionSeries(Element.values()[i], tst);				
+				profile.calibrations.put(inter, interpolate(profile.calibrations, inter, previous, known));
+				profile.interpolated.add(inter);
 			}
 			
 			previous = known;
@@ -70,6 +61,11 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 		return value;
 		
 		
+	}
+
+	@Override
+	public void process(CalibrationReference reference, Map<TransitionSeries, Float> calibrations) {
+		//Not Used
 	}
 	
 	

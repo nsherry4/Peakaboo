@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,10 +14,6 @@ import java.util.stream.Collectors;
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import peakaboo.calibration.processor.CalibrationNormalizer;
-import peakaboo.calibration.processor.CalibrationProcessor;
-import peakaboo.calibration.processor.CalibrationSmoother;
-import peakaboo.calibration.processor.LinearCalibrationInterpolator;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -32,8 +29,9 @@ import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 public class CalibrationProfile {
 
 	private CalibrationReference reference;
-	private Map<TransitionSeries, Float> calibrations;
+	Map<TransitionSeries, Float> calibrations;
 	private String name = "";
+	List<TransitionSeries> interpolated;
 	
 	/**
 	 * Create an empty CalibrationProfile
@@ -41,12 +39,14 @@ public class CalibrationProfile {
 	public CalibrationProfile() {
 		this.reference = CalibrationReference.empty();
 		calibrations = new LinkedHashMap<>();
+		interpolated = new ArrayList<>();
 		name = "Empty Z-Calibration Profile";
 	}
 	
 	public CalibrationProfile(CalibrationReference reference, FittingResultSet sample) {
 		this.reference = reference;
 		calibrations = new LinkedHashMap<>();
+		interpolated = new ArrayList<>();
 				
 		if (!sample.getParameters().getCalibration().isZero()) {
 		
@@ -61,8 +61,7 @@ public class CalibrationProfile {
 				ts = new TransitionSeries(ts.element, ts.type);
 				if (! reference.hasConcentration(ts)) { continue; }
 				
-				//TODO: Is this the right way to measure sample intensity
-				
+				//TODO: Is this the right way to measure sample intensity? Measuring strongestTS height rather than area sum?
 				float sampleIntensity = fit.getFit().get(channel);
 				float referenceValue = reference.getConcentration(ts);
 				float calibration = (sampleIntensity / referenceValue) * 1000f;
@@ -79,15 +78,15 @@ public class CalibrationProfile {
 		
 		//interpolate missing elements
 		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
-		interpolator.process(reference, calibrations);
+		interpolator.process(reference, this);
 		
 		//smooth calibrations
 		CalibrationProcessor smoothing = new CalibrationSmoother();
-		smoothing.process(reference, calibrations);
+		smoothing.process(reference, this);
 
 		//normalize against anchor
 		CalibrationProcessor normalizer = new CalibrationNormalizer();
-		normalizer.process(reference, calibrations);
+		normalizer.process(reference, this);
 		
 		
 	}
@@ -166,6 +165,10 @@ public class CalibrationProfile {
 		return tss;
 	}
 	
+	public List<TransitionSeries> getInterpolated() {
+		return new ArrayList<>(this.interpolated);
+	}
+	
 	
 	public static String save(CalibrationProfile profile) {
 		SerializedCalibrationProfile serialized = new SerializedCalibrationProfile();
@@ -174,6 +177,9 @@ public class CalibrationProfile {
 		serialized.name = profile.name;
 		for (TransitionSeries ts : profile.calibrations.keySet()) {
 			serialized.calibrations.put(ts.toIdentifierString(), profile.calibrations.get(ts));
+		}
+		for (TransitionSeries ts : profile.interpolated) {
+			serialized.interpolated.add(ts.toIdentifierString());
 		}
 		return YamlSerializer.serialize(serialized);
 	}
@@ -189,6 +195,10 @@ public class CalibrationProfile {
 		for (String tsidentifier : serialized.calibrations.keySet()) {
 			TransitionSeries ts = TransitionSeries.get(tsidentifier);
 			profile.calibrations.put(ts, serialized.calibrations.get(tsidentifier));
+		}
+		for (String tsidentifier : serialized.interpolated) {
+			TransitionSeries ts = TransitionSeries.get(tsidentifier);
+			profile.interpolated.add(ts);
 		}
 		
 		BoltPluginSet<CalibrationReference> plugins = CalibrationPluginManager.SYSTEM.getPlugins();
@@ -232,5 +242,6 @@ class SerializedCalibrationProfile {
 	public String referenceName = null;
 	public String name = null;
 	public Map<String, Float> calibrations = new LinkedHashMap<>();
+	public List<String> interpolated = new ArrayList<>();
 }
  
