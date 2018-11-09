@@ -2,6 +2,7 @@ package peakaboo.display.calibration;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -35,7 +36,30 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 
 	@Override
 	protected Map<TransitionSeries, Float> getData() {
-		return profile.getCalibrations();
+		Map<TransitionSeries, Float> cals = profile.getCalibrations();
+		List<TransitionSeries> interpolated = profile.getInterpolated();
+		
+		Map<TransitionSeries, Float> data = new LinkedHashMap<>();
+		for (TransitionSeries ts : cals.keySet()) {
+			if (!interpolated.contains(ts)) {
+				data.put(ts, cals.get(ts));
+			}
+		}
+		return data;
+	}
+	
+	@Override
+	protected Map<TransitionSeries, Float> getFadedData() {
+		Map<TransitionSeries, Float> cals = profile.getCalibrations();
+		List<TransitionSeries> interpolated = profile.getInterpolated();
+		
+		Map<TransitionSeries, Float> faded = new LinkedHashMap<>();
+		for (TransitionSeries ts : cals.keySet()) {
+			if (interpolated.contains(ts)) {
+				faded.put(ts, cals.get(ts));
+			}
+		}
+		return faded;
 	}
 
 	@Override
@@ -68,6 +92,9 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	
 	@Override
 	protected String getHighlightText(TransitionSeries ts) {
+		if (profile.getInterpolated().contains(ts)) {
+			return ts.element.toString() + " (Interpolated)";
+		}
 		return ts.element.toString();
 	}
 	
@@ -79,6 +106,8 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new TransitionSeries(getHighlighted(), getType())));
 		return Collections.singletonList(highlightLabel);
 	}
+
+
 
 	
 }

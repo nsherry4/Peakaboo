@@ -36,7 +36,7 @@ public abstract class ZCalibrationPlot {
 	private TransitionSeriesType type;
 	
 	private PlotDrawing plotDrawing;
-	private Spectrum data;
+	private Spectrum data, fadedData;
 	private DrawingRequest dr = new DrawingRequest();
 	private List<PlotPainter> plotPainters;
 	private List<AxisPainter> axisPainters;
@@ -59,22 +59,31 @@ public abstract class ZCalibrationPlot {
 		}
 		
 		data = profileToSpectrum(getData(), type, lowest, highest);
+		fadedData = profileToSpectrum(getFadedData(), type, lowest, highest);
 		
 		dr.dataHeight = 1;
-		dr.dataWidth = data.size();
+		dr.dataWidth = highest - lowest + 1;
 		dr.drawToVectorSurface = false;
-		dr.maxYIntensity = data.max();
+		dr.maxYIntensity = Math.max(data.max(), fadedData.max());
 		dr.unitSize = 1f;
 		dr.viewTransform = ViewTransform.LINEAR;
 		
 		plotPainters = new ArrayList<>();
-		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, data.max()*100f)));
+		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, dr.maxYIntensity*100f)));
+
+		plotPainters.add(new AreaPainter(fadedData, 
+				new PaletteColour(0xff6AA39D), 
+				new PaletteColour(0xff5E918B), 
+				new PaletteColour(0xff004D40)
+			).withTraceType(TraceType.BAR));
 		
 		plotPainters.add(new AreaPainter(data, 
 				new PaletteColour(0xff00897B), 
 				new PaletteColour(0xff00796B), 
 				new PaletteColour(0xff004D40)
 			).withTraceType(TraceType.BAR));
+		
+
 		
 		
 		plotPainters.add(new DataLabelPainter(getLabels(lowest, highest), 0.5f));
@@ -85,13 +94,13 @@ public abstract class ZCalibrationPlot {
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, getYAxisTitle(), null, getTitle(), "Element"));
 		Function<Integer, String> sensitivityFormatter = getYAxisFormatter();
 		axisPainters.add(new TickMarkAxisPainter(
-				new TickFormatter(0f, data.max()*100f, sensitivityFormatter), 
+				new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter), 
 				new TickFormatter((float)lowest-0.5f, (float)highest-0.5f+0.999f, i -> {  
 					Element element = Element.values()[i];
 					return element.name();
 				}), 
 				null, 
-				new TickFormatter(0f, data.max()*100f, sensitivityFormatter),
+				new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter),
 				false, 
 				false));
 		axisPainters.add(new LineAxisPainter(true, true, true, true));
@@ -186,6 +195,7 @@ public abstract class ZCalibrationPlot {
 
 	protected abstract List<TransitionSeries> getKeys(TransitionSeriesType type);
 	protected abstract Map<TransitionSeries, Float> getData();
+	protected abstract Map<TransitionSeries, Float> getFadedData();
 	protected abstract boolean isEmpty();
 	protected abstract String getYAxisTitle();
 	protected abstract String getTitle();

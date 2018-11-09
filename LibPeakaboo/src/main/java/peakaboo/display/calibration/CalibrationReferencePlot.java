@@ -2,6 +2,7 @@ package peakaboo.display.calibration;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -69,5 +70,10 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 		}
 		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new TransitionSeries(getHighlighted(), getType())));
 		return Collections.singletonList(highlightLabel);
+	}
+
+	@Override
+	protected Map<TransitionSeries, Float> getFadedData() {
+		return new HashMap<>();
 	}
 }
