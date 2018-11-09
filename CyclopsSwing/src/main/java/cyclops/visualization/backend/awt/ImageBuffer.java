@@ -12,7 +12,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 
 	private BufferedImage	image;
 	
-	private boolean 		dirty;
+	private boolean 		dirty = false;
 	private int[]			datasource;
 
  
@@ -25,12 +25,10 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 	{
 		super((Graphics2D) image.getGraphics());
 		this.image = image;
-		init();
 	}
 	private void init()
 	{
 		datasource = image.getRaster().getPixels(0, 0, image.getWidth(), image.getHeight(), datasource); 
-		dirty = false;
 	}
 
 
@@ -42,7 +40,9 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 
 	private void commitChanges()
 	{
-		if (dirty) image.getRaster().setPixels(0, 0, image.getWidth(), image.getHeight(), datasource);
+		if (dirty) {
+			image.getRaster().setPixels(0, 0, image.getWidth(), image.getHeight(), datasource);
+		}
 		dirty = false;
 	}
 
@@ -57,6 +57,10 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 	public void setPixelValue(int offset, PaletteColour c)
 	{
 
+		if (datasource == null) {
+			init();
+		}
+		
 		dirty = true;
 		offset *= 4;
 
@@ -69,13 +73,6 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		datasource[offset + 0] = red;
 		datasource[offset + 1] = green;
 		datasource[offset + 2] = blue;
-
-		/*
-		 * int alpha = 255 << 24; int red = (int)(c.red255)<<16; int green = (int)(c.green255)<<8; int blue =
-		 * (int)(c.blue255);
-		 * 
-		 * d.setElem( offset, alpha + red + green + blue );
-		 */
 
 	}
 
