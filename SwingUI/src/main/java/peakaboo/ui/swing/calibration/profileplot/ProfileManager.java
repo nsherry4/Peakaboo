@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.calibration.profileplot;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 import cyclops.util.Mutable;
 import eventful.EventfulListener;
@@ -278,7 +280,18 @@ public class ProfileManager extends JPanel {
 		ModalLayer layer = new ModalLayer(parent, picker);
 		
 		picker.setOnOK(ref -> {
+			parent.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			controller.calibration().loadCalibrationReference(ref);
+			
+			/*
+			 * force the results to be recalculated eagerly. This is the part of this
+			 * process that introduces the most UI delay, but because the value is cached
+			 * and recalculated lazily after an invalidation, it doesn't get done unless we
+			 * do it explicitly
+			 */
+			controller.fitting().getFittingSelectionResults();
+			
+			parent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			parent.removeLayer(layer);
 		});
 		

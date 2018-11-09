@@ -48,6 +48,7 @@ import swidget.widgets.TextWrapping;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
+import swidget.widgets.layerpanel.LayerPanelConfig;
 
 
 
@@ -110,7 +111,7 @@ public class Peakaboo
 	private static void warnLowMemory() {
 		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
-		if (PeakabooConfiguration.memorySize == MemorySize.SMALL){
+		if (PeakabooConfiguration.memorySize == MemorySize.TINY){
 			String message = "This system's Java VM is only allocated " + Env.maxHeap()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
@@ -204,6 +205,12 @@ public class Peakaboo
 		}
 	}
 	
+	private static void uiPerformanceTune() {
+		if (PeakabooConfiguration.memorySize == MemorySize.TINY || PeakabooConfiguration.memorySize == MemorySize.SMALL) {
+			LayerPanelConfig.blur = false;
+		}
+	}
+	
 	public static void run() {
 		
 		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
@@ -249,6 +256,7 @@ public class Peakaboo
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
+			uiPerformanceTune();
 
 			//Init plugins
 			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
