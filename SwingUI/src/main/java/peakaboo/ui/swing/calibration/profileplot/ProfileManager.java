@@ -108,24 +108,25 @@ public class ProfileManager extends JPanel {
 
 		
 		
-		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			promptCreateProfile(this::actionLoadCalibrationReference);
 		});
 		
-		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			actionLoadCalibrationProfile();
 		});
 		
-		clear = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		clear = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			controller.calibration().setCalibrationProfile(new CalibrationProfile(), null);
 			
 		});
 		
-		save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			actionSaveCalibrationProfile();
 		});
+		save.setEnabled(controller.calibration().hasCalibrationReference());
 		
-		ButtonLinker buttons = new ButtonLinker(create, open, clear, save);
+		ButtonLinker buttons = new ButtonLinker(create, open, save, clear);
 		
 		makeNamePanel();
 		
