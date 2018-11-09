@@ -13,6 +13,8 @@ import java.awt.image.Kernel;
 import javax.swing.JComponent;
 import javax.swing.plaf.LayerUI;
 
+import org.jdesktop.swingx.image.FastBlurFilter;
+
 public class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	private BufferedImage mOffscreenImage;
 	private BufferedImageOp mOperation;
@@ -23,9 +25,7 @@ public class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	public LayerBlurUI(LayerPanel parent, Component component) {
 		this.parent = parent;
 		this.component = component;
-		float ninth = 1.0f / 9.0f;
-		float[] blurKernel = { ninth, ninth, ninth, ninth, ninth, ninth, ninth, ninth, ninth };
-		mOperation = new ConvolveOp(new Kernel(3, 3, blurKernel), ConvolveOp.EDGE_NO_OP, null);
+		mOperation = new FastBlurFilter(1);
 	}
 
 	@Override
@@ -60,7 +60,11 @@ public class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	
 			Graphics2D g2 = (Graphics2D) g.create();
 			g2.setClip(g.getClip());
-			g2.drawImage(mOffscreenImage, mOperation, 0, 0);
+			if (LayerPanelConfig.blur) {
+				g2.drawImage(mOffscreenImage, mOperation, 0, 0);
+			} else {
+				g2.drawImage(mOffscreenImage, null, 0, 0);
+			}
 			
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
 			g2.setColor(Color.BLACK);

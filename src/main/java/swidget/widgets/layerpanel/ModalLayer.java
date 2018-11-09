@@ -18,7 +18,9 @@ import javax.swing.JLayer;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import org.jdesktop.swingx.border.DropShadowBorder;
 
@@ -124,7 +126,12 @@ public class ModalLayer implements Layer {
 
 		
 		wrap.add(modalScroller, BorderLayout.CENTER);
-		DropShadowBorder border = new DropShadowBorder(Color.BLACK, 12, 0.3f, 20, true, true, true, true);
+		Border border;
+		if (LayerPanelConfig.blur) {
+			border = new DropShadowBorder(Color.BLACK, 12, 0.3f, 20, true, true, true, true);
+		} else {
+			border = new MatteBorder(1, 1, 1, 1, Color.BLACK);
+		}
 		wrap.setBorder(border);
 		
 		modalPanel.removeAll();
