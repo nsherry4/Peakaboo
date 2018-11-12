@@ -18,18 +18,18 @@ import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.layout.PropertyViewPanel;
+import swidget.widgets.layout.TitledPanel;
 
 
 public class PropertyDialogue extends JDialog
 {
 
-	public PropertyDialogue(String title, Window owner, PropertyViewPanel... panels)
+	public PropertyDialogue(String title, Window owner, TitledPanel... panels)
 	{
 		this(title, owner, Arrays.asList(panels));
 	}
 	
-	public PropertyDialogue(String title, Window owner, List<PropertyViewPanel> panels)
+	public PropertyDialogue(String title, Window owner, List<TitledPanel> panels)
 	{
 		super(owner, title);
 
@@ -45,7 +45,7 @@ public class PropertyDialogue extends JDialog
 		GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, Spacing.iMedium(), 0, 0);
 		
 		
-		for (PropertyViewPanel propPanel : panels) {
+		for (TitledPanel propPanel : panels) {
 			propPanel.setBorder(Spacing.bHuge());
 			allPropertyPanels.add(propPanel, gbc);
 			gbc.gridy++;

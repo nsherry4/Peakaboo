@@ -33,7 +33,8 @@ import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.layout.PropertyViewPanel;
+import swidget.widgets.layout.PropertyPanel;
+import swidget.widgets.layout.TitledPanel;
 
 
 public class AboutDialogue extends JDialog
@@ -181,7 +182,7 @@ public class AboutDialogue extends JDialog
 						String[] creditParts = credit.split(": ");
 						credits.put(creditParts[0], creditParts[1]);
 					}
-					PropertyViewPanel creditsPanel = new PropertyViewPanel(credits);
+					TitledPanel creditsPanel = new TitledPanel(new PropertyPanel(credits), true);
 					new PropertyDialogue("Credits", AboutDialogue.this, creditsPanel);
 					
 				});
