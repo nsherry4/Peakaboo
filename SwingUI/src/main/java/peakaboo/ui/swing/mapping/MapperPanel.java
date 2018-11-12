@@ -106,7 +106,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		JPanel contentLayer = this.getContentLayer();
 		contentLayer.setLayout(new BorderLayout());
 		
-		JPanel sidebar = new MapperSidebar(this, controller);
+		MapperSidebar sidebar = new MapperSidebar(this, controller);
 		JPanel mapCanvas = createCanvasPanel();
 		
 		
@@ -150,6 +150,7 @@ public class MapperPanel extends TabbedLayerPanel {
 			public void mouseMoved(MouseEvent e)
 			{
 				statusBar.showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
+				sidebar.showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
 			}
 
 			public void mouseClicked(MouseEvent e){

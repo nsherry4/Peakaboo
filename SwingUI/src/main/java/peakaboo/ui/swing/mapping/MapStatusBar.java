@@ -3,6 +3,7 @@ package peakaboo.ui.swing.mapping;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,6 +13,8 @@ import javax.swing.border.MatteBorder;
 
 import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.curvefit.peak.table.Element;
+import peakaboo.mapping.Mapping;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
@@ -84,8 +87,7 @@ class MapStatusBar extends JPanel {
 			return;
 		}
 
-		int index = mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x;
-		index++;
+		int index = (mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x) + 1;
 		
 		if (controller.getSettings().getView().isValidPoint(mapCoord))
 		{

@@ -1,6 +1,9 @@
 package peakaboo.mapping;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
@@ -10,7 +13,9 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesType;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
@@ -67,6 +72,36 @@ public class Mapping
 		
 		return streamer;
 		
+	}
+	
+	public static Map<Element, Float> concentrations(List<TransitionSeries> tss, Function<TransitionSeries, Float> intensityFunction) {
+
+		//find best TransitionSeries per element to measure
+		Map<Element, TransitionSeries> elements = new LinkedHashMap<>();
+		for (TransitionSeriesType type : new TransitionSeriesType[] {TransitionSeriesType.M, TransitionSeriesType.L, TransitionSeriesType.K}) {
+			for (TransitionSeries ts : tss) {
+				if (ts.type != type) { continue; }
+				elements.put(ts.element, ts);
+			}
+		}
+		
+		//calculate calibrated intensities per element and sum total intensity
+		float sum = 0;
+		Map<Element, Float> intensities = new LinkedHashMap<>();
+		for (Element element : elements.keySet()) {
+			TransitionSeries ts = elements.get(element);
+			float intensity = intensityFunction.apply(ts);
+			
+			intensities.put(ts.element, intensity);
+			sum += intensity;
+		}
+		
+		//TODO: How to handle uncalibrated elements?
+		Map<Element, Float> ppm = new LinkedHashMap<>();
+		for (Element element : intensities.keySet()) {
+			ppm.put(element, intensities.get(element) / sum * 1e6f);
+		}
+		return ppm;
 	}
 	
 }

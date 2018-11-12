@@ -30,7 +30,8 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.TextWrapping;
-import swidget.widgets.layout.PropertyViewPanel;
+import swidget.widgets.layout.PropertyPanel;
+import swidget.widgets.layout.TitledPanel;
 
 public class PluginView extends JPanel {
 	
@@ -62,7 +63,7 @@ public class PluginView extends JPanel {
 		properties.put("Enabled", "" + plugin.isEnabled());
 		properties.put("Source", source);
 		properties.put("UUID", plugin.getUUID());
-		PropertyViewPanel propertyPanel = new PropertyViewPanel(properties, plugin.getName(), true);
+		TitledPanel propertyPanel = new TitledPanel(new PropertyPanel(properties), plugin.getName(), true);
 		propertyPanel.setBadge(getIcon(plugin));
 		
 		

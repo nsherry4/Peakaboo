@@ -171,18 +171,15 @@ public class FittingController extends EventfulType<Boolean>
 
 	public float getTransitionSeriesIntensity(TransitionSeries ts)
 	{
-		if (getFittingSelectionResults() == null) return 0.0f;
-
-		for (FittingResult result : getFittingSelectionResults().getFits())
-		{
-			if (result.getTransitionSeries() == ts) {
-				float max = result.getFit().max();
-				if (Float.isNaN(max)) max = 0f;
-				return max;
-			}
+		FittingResult result = getFittingResultForTransitionSeries(ts);
+		if (result == null) {
+			return 0f;
 		}
-		return 0.0f;
 
+		float max = result.getFit().max();
+		if (Float.isNaN(max)) max = 0f;
+		return max;
+		
 	}
 
 
@@ -392,6 +389,18 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selectionResults.getValue();
 	}
 
+	public FittingResult getFittingResultForTransitionSeries(TransitionSeries ts) {
+		if (getFittingSelectionResults() == null) return null;
+
+		for (FittingResult result : getFittingSelectionResults().getFits())
+		{
+			if (result.getTransitionSeries() == ts) {
+				return result;
+			}
+		}
+		return null;
+	}
+	
 	public List<TransitionSeries> getHighlightedTransitionSeries() {
 		return fittingModel.highlighted;
 	}

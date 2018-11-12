@@ -3,6 +3,7 @@ package peakaboo.ui.swing.mapping;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,7 +14,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.ui.swing.mapping.sidebar.ConcentrationsPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapContourPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingPanel;
@@ -27,6 +30,7 @@ class MapperSidebar extends JPanel
 
 	private MappingController		controller;
 	private MapperPanel 			tabPanel;
+	private ConcentrationsPanel concentrations;
 
 
 	MapperSidebar(MapperPanel tabPanel, MappingController controller)
@@ -90,6 +94,24 @@ class MapperSidebar extends JPanel
 		tabs.add("Peak Fittings", tabFittings);
 		
 		
+		if (!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty()) {
+			JPanel outer = new JPanel(new GridBagLayout());
+			outer.setBorder(Spacing.bNone());
+			GridBagConstraints c = new GridBagConstraints();
+			c.anchor = GridBagConstraints.NORTHWEST;
+			c.fill = GridBagConstraints.BOTH;
+			c.gridheight = 1;
+			c.gridwidth = 1;
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weightx = 1f;
+			c.weighty = 1f;
+			
+			concentrations = new ConcentrationsPanel(controller);
+			outer.add(concentrations, c);
+			tabs.add("Concentrations", outer);
+		}
+		
 		
 		
 		setLayout(new BorderLayout());
@@ -111,6 +133,13 @@ class MapperSidebar extends JPanel
 		outer.add(inner, BorderLayout.CENTER);
 		
 		return outer;
+	}
+
+
+	public void showValueAtCoord(Coord<Integer> mapCoordinateAtPoint) {
+		if (concentrations != null) {
+			concentrations.show(mapCoordinateAtPoint);
+		}
 	}
 
 

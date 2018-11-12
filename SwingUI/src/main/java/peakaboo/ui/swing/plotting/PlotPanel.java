@@ -93,6 +93,7 @@ import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
+import peakaboo.mapping.Mapping;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
@@ -130,7 +131,8 @@ import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.HeaderBox;
-import swidget.widgets.layout.PropertyViewPanel;
+import swidget.widgets.layout.PropertyPanel;
+import swidget.widgets.layout.TitledPanel;
 import swidget.widgets.layout.SettingsPanel;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.tabbedinterface.TabbedInterface;
@@ -1014,7 +1016,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		
 		JPanel panel = new JPanel(new BorderLayout());
-		PropertyViewPanel propPanel = new PropertyViewPanel(properties);
+		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties));
 		propPanel.setBorder(Spacing.bHuge());
 		panel.add(propPanel, BorderLayout.CENTER);
 		
@@ -1136,32 +1138,17 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionShowConcentrations() {
 		CalibrationProfile p = controller.calibration().getCalibrationProfile();
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
-		
-		//find best TransitionSeries per element to measure
-		Map<Element, TransitionSeries> elements = new LinkedHashMap<>();
-		for (TransitionSeriesType type : new TransitionSeriesType[] {TransitionSeriesType.M, TransitionSeriesType.L, TransitionSeriesType.K}) {
-			for (TransitionSeries ts : tss) {
-				if (ts.type != type) { continue; }
-				elements.put(ts.element, ts);
+		Map<Element, Float> ppm = Mapping.concentrations(tss, ts -> {
+			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
+			float intensity = 0;
+			if (result == null) { return 0f; }
+			intensity = p.calibrate(result.getFit().sum(), ts);
+			if (Float.isNaN(intensity)) {
+				return 0f;
 			}
-		}
+			return intensity;
+		});
 		
-		//calculate calibrated intensities per element and sum total intensity
-		float sum = 0;
-		Map<Element, Float> intensities = new LinkedHashMap<>();
-		for (Element element : elements.keySet()) {
-			TransitionSeries ts = elements.get(element);
-			float intensity = p.calibrate(controller.fitting().getTransitionSeriesIntensity(ts), ts);
-			intensities.put(ts.element, intensity);
-			sum += intensity;
-		}
-		
-		//TODO: How to handle uncalibrated elements?
-		StringBuilder sb = new StringBuilder();
-		Map<Element, Float> ppm = new LinkedHashMap<>();
-		for (Element element : intensities.keySet()) {
-			ppm.put(element, intensities.get(element) / sum * 1e6f);
-		}
 		
 		Map<String, String> asText = new LinkedHashMap<>();
 		for (Element element : ppm.keySet()) {
@@ -1170,7 +1157,7 @@ public class PlotPanel extends TabbedLayerPanel
 			asText.put(element.toString(), format.format(percent) + "%");
 		}
 		
-		PropertyViewPanel panel = new PropertyViewPanel(asText, false);
+		TitledPanel panel = new TitledPanel(new PropertyPanel(asText), false);
 		JScrollPane scroller = new JScrollPane(panel);
 		scroller.setPreferredSize(new Dimension(400, 175));
 		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));

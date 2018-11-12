@@ -51,7 +51,8 @@ import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.layout.PropertyViewPanel;
+import swidget.widgets.layout.PropertyPanel;
+import swidget.widgets.layout.TitledPanel;
 
 class MapperToolbar extends JToolBar {
 
@@ -136,7 +137,7 @@ class MapperToolbar extends JToolBar {
 				fittings.put(p.first.getDescription(), SigDigits.roundFloatTo(average, 2) + " " + corrected);
 			}
 			
-			PropertyViewPanel correctionsPanel = new PropertyViewPanel(fittings);
+			TitledPanel correctionsPanel = new TitledPanel(new PropertyPanel(fittings));
 			
 			
 			JPanel corrections = new JPanel(new BorderLayout());
