@@ -72,7 +72,11 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
     	//Main fill
     	pad = margin + 1;
     	Shape fillArea = new RoundRectangle2D.Float(pad, pad, width-pad*2+1, height-pad*2+1, radius, radius);
-    	g.setPaint(new LinearGradientPaint(0, pad, 0, height-pad, points, new Color[] {c1, c2}));
+    	try {
+    		g.setPaint(new LinearGradientPaint(0, pad, 0, height-pad, points, new Color[] {c1, c2}));
+    	} catch (IllegalArgumentException e) {
+    		g.setPaint(getTheme().getRecessedControl());
+    	}
     	g.fill(fillArea);
 
 		

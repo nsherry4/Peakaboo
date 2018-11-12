@@ -54,7 +54,11 @@ public class PreviousButtonPainter extends ButtonPainter {
     }
 	
     protected Paint mainPaint(float width, float height, float pad, ButtonPalette palette) {
-    	return new LinearGradientPaint(0, -(height-pad), 0, height-pad, palette.fillPoints, palette.fillArray);
+    	try {
+    		return new LinearGradientPaint(0, -(height-pad), 0, height-pad, palette.fillPoints, palette.fillArray);
+    	} catch (IllegalArgumentException e) {
+    		return super.getTheme().getWidget();
+    	}
     }
 	
 }
