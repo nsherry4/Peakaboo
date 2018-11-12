@@ -56,12 +56,13 @@ public class ConcentrationsPanel extends JPanel {
 		if (controller.getSettings().getView().isValidPoint(mapCoord)) {
 			List<TransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
 			Map<String, String> properties = new LinkedHashMap<>();
-			NumberFormat format = new DecimalFormat("0.0");
+			
 			Map<Element, Float> ppm = Mapping.concentrations(tss, ts -> {
 				return controller.getSettings().getMapFittings().getMapForTransitionSeries(ts).get(index);
 			});
+			NumberFormat format = new DecimalFormat("0.0");
 			for (TransitionSeries ts : tss) {
-				properties.put(ts.element.name(), format.format(ppm.get(ts.element) / 10000) + "%" );
+				properties.put(ts.element.toString(), format.format(ppm.get(ts.element) / 10000) + "%" );
 			}
 			view.setProperties(properties);
 		} else {

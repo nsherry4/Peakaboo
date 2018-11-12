@@ -1,5 +1,6 @@
 package peakaboo.mapping;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,10 @@ public class Mapping
 		
 		//TODO: How to handle uncalibrated elements?
 		Map<Element, Float> ppm = new LinkedHashMap<>();
-		for (Element element : intensities.keySet()) {
+		List<Element> sorted = new ArrayList<>(intensities.keySet());
+		sorted.sort((e1, e2) -> Integer.compare(e1.atomicNumber(), e2.atomicNumber()));
+		
+		for (Element element : sorted) {
 			ppm.put(element, intensities.get(element) / sum * 1e6f);
 		}
 		return ppm;

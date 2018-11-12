@@ -11,10 +11,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -30,6 +34,7 @@ import javax.swing.JToolBar;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.common.PeakabooLog;
 import cyclops.Pair;
+import cyclops.ReadOnlySpectrum;
 import cyclops.SigDigits;
 
 import peakaboo.controller.mapper.MappingController;
@@ -37,18 +42,23 @@ import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
+import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
+import peakaboo.mapping.Mapping;
 import peakaboo.mapping.correction.Corrections;
 import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.icons.IconFactory;
+import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToolbarImageButton;
+import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.PropertyPanel;
@@ -90,13 +100,14 @@ class MapperToolbar extends JToolBar {
 		this.addSeparator();
 		
 		
-		readIntensities = new ToolbarImageButton("Get Intensities", StockIcon.BADGE_INFO).withTooltip("Get fitting intensities for the selection").withSignificance(true);
+		readIntensities = new ToolbarImageButton("Concentrations")
+				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
+				.withTooltip("Get fitting concentrations for the selection")
+				.withSignificance(true);
+		
 		readIntensities.addActionListener(e -> {
 			
 			Map<String, String> fittings = new HashMap<String, String>();
-			
-			final Corrections corr = CorrectionsManager.getCorrections("WL");
-			
 			List<Integer> indexes = new ArrayList<>();
 			
 			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
@@ -107,62 +118,77 @@ class MapperToolbar extends JToolBar {
 			} else if (pointsSelection.hasSelection()) {
 				indexes.addAll(pointsSelection.getPoints());
 			}
-				
 			
-			//generate a list of pairings of TransitionSeries and their intensity values
-			List<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().stream().map((MapResult r) -> {
+			List<TransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
+			Function<TransitionSeries, Float> intensityFunction = ts -> {
+				CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
+				ReadOnlySpectrum data = controller.mapsController.getMapResultSet().getMap(ts).getData(profile);
 				float sum = 0;
 				for (int index : indexes) {
-					//TODO: This is an older form of the calibration feature, we don't want to double-calibrate so we use an empty calibration profile here
-					//until we will eventually just remove this feature alltogether.
-					sum += r.getData(new CalibrationProfile()).get(index);
+					sum += data.get(index);
 				}
-				return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / indexes.size());
-			}).collect(toList());
+				return sum /= indexes.size();
+			};
+			Map<Element, Float> ppm = Mapping.concentrations(tss, intensityFunction);
 			
-			
-			//get the total of all of the corrected values
-			float total = averages.stream().map((Pair<TransitionSeries, Float> p) -> {
-				Float corrFactor = corr.getCorrection(p.first);
-				return (corrFactor == null) ? 0f : p.second * corrFactor;
-			}).reduce(0f, (a, b) -> a + b);
-			
-			for (Pair<TransitionSeries, Float> p : averages)
-			{
-				float average = p.second;
-				Float corrFactor = corr.getCorrection(p.first);
-				String corrected = "(-)";
-				if (corrFactor != null) corrected = "(~" + SigDigits.toIntSigDigit((average*corrFactor/total*100), 1) + "%)";
-				
-				fittings.put(p.first.getDescription(), SigDigits.roundFloatTo(average, 2) + " " + corrected);
+			Map<String, String> properties = new LinkedHashMap<>();
+			NumberFormat format = new DecimalFormat("0.0");
+			for (TransitionSeries ts : tss) {
+				properties.put(ts.element.toString(), format.format(ppm.get(ts.element) / 10000) + "%" );
 			}
 			
-			TitledPanel correctionsPanel = new TitledPanel(new PropertyPanel(fittings));
+			LayerDialog dialog = new LayerDialog("Element Concentrations", new PropertyPanel(properties), LayerDialog.MessageType.INFO);
+			dialog.showIn(panel);
 			
-			
-			JPanel corrections = new JPanel(new BorderLayout());
-			JPanel contentPanel = new JPanel(new BorderLayout());
-			corrections.add(contentPanel, BorderLayout.CENTER);
-			
-			contentPanel.add(new JLabel("Concentrations accurate to a factor of 5", JLabel.CENTER), BorderLayout.SOUTH);
-			contentPanel.add(correctionsPanel, BorderLayout.CENTER);
-			contentPanel.setBorder(Spacing.bHuge());
-			
-			ButtonBox bbox = new ButtonBox();
-			ImageButton close = new ImageButton("Close").withIcon(StockIcon.WINDOW_CLOSE).withTooltip("Close this window").withBordered(true);
-			close.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e)
-				{
-					panel.popLayer();
-				}
-			});
-			bbox.addRight(close);
-			corrections.add(bbox, BorderLayout.SOUTH);
-			
-			
-			panel.pushLayer(new ModalLayer(panel, corrections));
-			
+//			List<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().stream().map((MapResult r) -> {
+//				float sum = 0;
+//				ReadOnlySpectrum data = r.getData(controller.getSettings().getMapFittings().getCalibrationProfile());
+//				for (int index : indexes) {
+//					sum += data.get(index);
+//				}
+//				return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / indexes.size());
+//			}).collect(toList());
+//			
+//			
+//			//get the total of all of the corrected values
+//			float total = averages.stream().map(p -> p.second).reduce(0f, (a, b) -> a + b);
+//			
+//			for (Pair<TransitionSeries, Float> p : averages)
+//			{
+//				float average = p.second;
+//				Float corrFactor = corr.getCorrection(p.first);
+//				String corrected = "(-)";
+//				if (corrFactor != null) corrected = "(~" + SigDigits.toIntSigDigit((average*corrFactor/total*100), 1) + "%)";
+//				
+//				fittings.put(p.first.getDescription(), SigDigits.roundFloatTo(average, 2) + " " + corrected);
+//			}
+//			
+//			TitledPanel correctionsPanel = new TitledPanel(new PropertyPanel(fittings));
+//			
+//			
+//			JPanel corrections = new JPanel(new BorderLayout());
+//			JPanel contentPanel = new JPanel(new BorderLayout());
+//			corrections.add(contentPanel, BorderLayout.CENTER);
+//			
+//			contentPanel.add(new JLabel("Concentrations accurate to a factor of 5", JLabel.CENTER), BorderLayout.SOUTH);
+//			contentPanel.add(correctionsPanel, BorderLayout.CENTER);
+//			contentPanel.setBorder(Spacing.bHuge());
+//			
+//			ButtonBox bbox = new ButtonBox();
+//			ImageButton close = new ImageButton("Close").withIcon(StockIcon.WINDOW_CLOSE).withTooltip("Close this window").withBordered(true);
+//			close.addActionListener(new ActionListener() {
+//				
+//				public void actionPerformed(ActionEvent e)
+//				{
+//					panel.popLayer();
+//				}
+//			});
+//			bbox.addRight(close);
+//			corrections.add(bbox, BorderLayout.SOUTH);
+//			
+//			
+//			panel.pushLayer(new ModalLayer(panel, corrections));
+//			
 				
 				
 		});

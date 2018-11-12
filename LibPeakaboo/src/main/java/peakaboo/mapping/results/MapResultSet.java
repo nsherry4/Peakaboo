@@ -115,7 +115,7 @@ public class MapResultSet implements Cloneable
 	 * @param ts the {@link TransitionSeries} to look up the {@link MapResult} with
 	 * @return the {@link MapResult} for the given {@link TransitionSeries}
 	 */
-	private MapResult getMap(TransitionSeries ts)
+	public MapResult getMap(TransitionSeries ts)
 	{
 		for (MapResult m : maps) {
 			if (m.transitionSeries == ts) return m;
