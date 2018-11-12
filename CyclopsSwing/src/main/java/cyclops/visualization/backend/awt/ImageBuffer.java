@@ -26,9 +26,11 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		super((Graphics2D) image.getGraphics());
 		this.image = image;
 	}
-	private void init()
+	private synchronized void init()
 	{
-		datasource = image.getRaster().getPixels(0, 0, image.getWidth(), image.getHeight(), datasource); 
+		if (datasource == null) {
+			datasource = image.getRaster().getPixels(0, 0, image.getWidth(), image.getHeight(), datasource); 
+		}
 	}
 
 
