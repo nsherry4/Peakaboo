@@ -30,8 +30,8 @@ import swidget.widgets.layout.HeaderBoxPanel;
 public class SwidgetFilePanels {
 
 	private static void showChooser(Component parent, JFileChooser chooser, Runnable onAccept, Runnable onCancel, String title) {
-		if (LayerPanel.contains(parent)) {
-			LayerPanel tabPanel = LayerPanel.parent(parent);
+		if (LayerPanel.parentOf(parent)) {
+			LayerPanel tabPanel = LayerPanel.parentFor(parent);
 			chooser.setControlButtonsAreShown(false);
 			ImageButton affirmative = new ImageButton(chooser.getApproveButtonText()).withStateDefault();
 			ImageButton negative = new ImageButton("Cancel");

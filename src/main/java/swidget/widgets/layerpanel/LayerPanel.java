@@ -163,7 +163,7 @@ public class LayerPanel extends JLayeredPane {
 	 * Tests if this component either <i>is</i>, or is <i>contained in</i> a LayerPanel.
 	 * @return true if this component or one of its transitive parents is a LayerPanel, false otherwise.
 	 */
-	public static boolean contains(Component c) {
+	public static boolean parentOf(Component c) {
 		while (c != null) {
 			if (c instanceof LayerPanel) {
 				return true;
@@ -173,7 +173,11 @@ public class LayerPanel extends JLayeredPane {
 		return false;
 	}
 	
-	public static LayerPanel parent(Component c) {
+	/**
+	 * Starting with the given component, tests each parent component until a LayerPanel component is found
+	 * @return parent LayerPanel if found, null otherwise
+	 */
+	public static LayerPanel parentFor(Component c) {
 		while (c != null) {
 			if (c instanceof LayerPanel) {
 				return (LayerPanel) c;
