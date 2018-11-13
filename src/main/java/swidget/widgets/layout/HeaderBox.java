@@ -31,36 +31,34 @@ public class HeaderBox extends PaintedPanel {
 
 	private Color base;
 	
+	private Component left, centre, right;
+	
+	
 	public HeaderBox(Component left, String title, Component right) {
 		super(true);
-		JLabel label = new JLabel(title);
-		if (left != null || right != null) {
-			label.setBorder(new EmptyBorder(0, Spacing.huge, 0, Spacing.huge));
-		}
-		Font font = label.getFont();
-		font = font.deriveFont(Font.BOLD);
-		font = font.deriveFont(font.getSize() + 1f);
-		label.setFont(font);
-		label.setHorizontalAlignment(JLabel.CENTER);
+		this.left = left;
+		this.right = right;
+		this.centre = makeHeaderTitle(title);
 		
-		init(left, label, right);
-		
+		make();
 	}
 	
 	public HeaderBox(Component left, Component centre, Component right) {
 		super(true);
-		init(left, centre, right);
-	}
-	
-	public static HeaderBox createYesNo(String title, String yesString, Runnable yesAction, String noString, Runnable noAction) {
-		ImageButton yes = new ImageButton(yesString).withStateDefault().withAction(yesAction);
-		ImageButton no = new ImageButton(noString).withAction(noAction);
-		return new HeaderBox(no, title, yes);
-	}
-	
-	
-	private void init(Component left, Component centre, Component right) {
+		this.left = left;
+		this.centre = centre;
+		this.right = right;
 		
+		make();
+	}
+	
+	public HeaderBox() {
+		this(null, "", null);
+	}
+
+	private void make() {
+		
+		removeAll();
 		base = getBackground();
 		
 		setBorder(Spacing.bMedium());
@@ -85,6 +83,80 @@ public class HeaderBox extends PaintedPanel {
 		setBorder(b);
 		
 	}
+
+	
+
+	public void setComponents(Component left, Component centre, Component right) {
+		this.left = left;
+		this.centre = centre;
+		this.right = right;
+		make();
+	}
+	
+	public void setComponents(Component left, String centre, Component right) {
+		this.left = left;
+		this.centre = makeHeaderTitle(centre);
+		this.right = right;
+		make();
+	}
+	
+	public Component getLeft() {
+		return left;
+	}
+
+	public void setLeft(Component left) {
+		this.left = left;
+		make();
+	}
+
+	public Component getCentre() {
+		return centre;
+	}
+
+	public void setCentre(String title) {
+		setCentre(makeHeaderTitle(title));
+	}
+	
+	public void setCentre(Component centre) {
+		this.centre = centre;
+		make();
+	}
+
+	public Component getRight() {
+		return right;
+	}
+
+	public void setRight(Component right) {
+		this.right = right;
+		make();
+	}
+
+	
+	
+	
+	
+	
+	
+	public static JLabel makeHeaderTitle(String title) {
+		JLabel label = new JLabel(title);
+		Font font = label.getFont();
+		font = font.deriveFont(Font.BOLD);
+		font = font.deriveFont(font.getSize() + 1f);
+		label.setFont(font);
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setBorder(new EmptyBorder(0, Spacing.huge, 0, Spacing.huge));
+		return label;
+	}
+	
+
+	
+	public static HeaderBox createYesNo(String title, String yesString, Runnable yesAction, String noString, Runnable noAction) {
+		ImageButton yes = new ImageButton(yesString).withStateDefault().withAction(yesAction);
+		ImageButton no = new ImageButton(noString).withAction(noAction);
+		return new HeaderBox(no, title, yes);
+	}
+	
+	
 	
 	private static Color lighten(Color src, float amount) {
     	float[] hsb = new float[3];

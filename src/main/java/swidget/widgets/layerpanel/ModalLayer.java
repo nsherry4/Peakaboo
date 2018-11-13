@@ -30,7 +30,7 @@ import swidget.widgets.ClearPanel;
 public class ModalLayer implements Layer {
 	private JLayer<JComponent> layer;
 	private JComponent component;
-	private LayerPanel owner;
+	protected LayerPanel owner;
 	
 	private ComponentAdapter listener;
 	
@@ -124,7 +124,7 @@ public class ModalLayer implements Layer {
 		modalScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		modalScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		modalScroller.setBorder(new EmptyBorder(0, 0, 0, 0));
-
+		
 		
 		wrap.add(modalScroller, BorderLayout.CENTER);
 		Border border;
@@ -181,6 +181,10 @@ public class ModalLayer implements Layer {
 	@Override
 	public boolean modal() {
 		return true;
+	}
+	
+	protected void removeLayer() {
+		owner.removeLayer(this);
 	}
 
 
