@@ -32,6 +32,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import peakaboo.calibration.CalibrationProfile;
+import peakaboo.calibration.Concentrations;
 import peakaboo.common.PeakabooLog;
 import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
@@ -51,6 +52,7 @@ import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
+import peakaboo.ui.swing.calibration.concentrations.ConcentrationsView;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -66,7 +68,7 @@ import swidget.widgets.layout.TitledPanel;
 
 class MapperToolbar extends JToolBar {
 
-	private ToolbarImageButton	readIntensities, examineSubset;
+	private ToolbarImageButton	showConcentrations, examineSubset;
 	
 	private JCheckBoxMenuItem	monochrome, logview;
 	private JMenuItem			title, spectrum, coords, dstitle;
@@ -100,14 +102,13 @@ class MapperToolbar extends JToolBar {
 		this.addSeparator();
 		
 		
-		readIntensities = new ToolbarImageButton("Concentrations")
+		showConcentrations = new ToolbarImageButton("Concentrations")
 				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Get fitting concentrations for the selection")
 				.withSignificance(true);
 		
-		readIntensities.addActionListener(e -> {
+		showConcentrations.addActionListener(e -> {
 			
-			Map<String, String> fittings = new HashMap<String, String>();
 			List<Integer> indexes = new ArrayList<>();
 			
 			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
@@ -129,70 +130,15 @@ class MapperToolbar extends JToolBar {
 				}
 				return sum /= indexes.size();
 			};
-			Map<Element, Float> ppm = Mapping.concentrations(tss, intensityFunction);
+			Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
 			
-			Map<String, String> properties = new LinkedHashMap<>();
-			NumberFormat format = new DecimalFormat("0.0");
-			for (TransitionSeries ts : tss) {
-				properties.put(ts.element.toString(), format.format(ppm.get(ts.element) / 10000) + "%" );
-			}
-			
-			LayerDialog dialog = new LayerDialog("Element Concentrations", new PropertyPanel(properties), LayerDialog.MessageType.INFO);
-			dialog.showIn(panel);
-			
-//			List<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().stream().map((MapResult r) -> {
-//				float sum = 0;
-//				ReadOnlySpectrum data = r.getData(controller.getSettings().getMapFittings().getCalibrationProfile());
-//				for (int index : indexes) {
-//					sum += data.get(index);
-//				}
-//				return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / indexes.size());
-//			}).collect(toList());
-//			
-//			
-//			//get the total of all of the corrected values
-//			float total = averages.stream().map(p -> p.second).reduce(0f, (a, b) -> a + b);
-//			
-//			for (Pair<TransitionSeries, Float> p : averages)
-//			{
-//				float average = p.second;
-//				Float corrFactor = corr.getCorrection(p.first);
-//				String corrected = "(-)";
-//				if (corrFactor != null) corrected = "(~" + SigDigits.toIntSigDigit((average*corrFactor/total*100), 1) + "%)";
-//				
-//				fittings.put(p.first.getDescription(), SigDigits.roundFloatTo(average, 2) + " " + corrected);
-//			}
-//			
-//			TitledPanel correctionsPanel = new TitledPanel(new PropertyPanel(fittings));
-//			
-//			
-//			JPanel corrections = new JPanel(new BorderLayout());
-//			JPanel contentPanel = new JPanel(new BorderLayout());
-//			corrections.add(contentPanel, BorderLayout.CENTER);
-//			
-//			contentPanel.add(new JLabel("Concentrations accurate to a factor of 5", JLabel.CENTER), BorderLayout.SOUTH);
-//			contentPanel.add(correctionsPanel, BorderLayout.CENTER);
-//			contentPanel.setBorder(Spacing.bHuge());
-//			
-//			ButtonBox bbox = new ButtonBox();
-//			ImageButton close = new ImageButton("Close").withIcon(StockIcon.WINDOW_CLOSE).withTooltip("Close this window").withBordered(true);
-//			close.addActionListener(new ActionListener() {
-//				
-//				public void actionPerformed(ActionEvent e)
-//				{
-//					panel.popLayer();
-//				}
-//			});
-//			bbox.addRight(close);
-//			corrections.add(bbox, BorderLayout.SOUTH);
-//			
-//			
-//			panel.pushLayer(new ModalLayer(panel, corrections));
-//			
-				
-				
+			ConcentrationsView view = new ConcentrationsView(ppm, panel);
+			ModalLayer layer = new ModalLayer(panel, view);
+			view.setOnClose(() -> panel.removeLayer(layer));
+			panel.pushLayer(layer);
+							
 		});
-		this.add(readIntensities, c);
+		this.add(showConcentrations, c);
 		c.gridx++;
 		
 		
@@ -237,7 +183,7 @@ class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		readIntensities.setEnabled(false);
+		showConcentrations.setEnabled(false);
 		examineSubset.setEnabled(false);
 		
 		c.weightx = 1.0;
@@ -260,10 +206,10 @@ class MapperToolbar extends JToolBar {
 			
 			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
 			{
-				readIntensities.setEnabled(true);
+				showConcentrations.setEnabled(true);
 				examineSubset.setEnabled(true);
 			} else {
-				readIntensities.setEnabled(false);
+				showConcentrations.setEnabled(false);
 				examineSubset.setEnabled(false);
 			}
 

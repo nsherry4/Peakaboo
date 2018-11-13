@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -103,7 +104,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	private void init()
 	{
 
-		JPanel contentLayer = this.getContentLayer();
+		JComponent contentLayer = this.getContentLayer();
 		contentLayer.setLayout(new BorderLayout());
 		
 		MapperSidebar sidebar = new MapperSidebar(this, controller);

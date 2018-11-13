@@ -70,6 +70,7 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.calibration.CalibrationPluginManager;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.calibration.CalibrationReference;
+import peakaboo.calibration.Concentrations;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
@@ -95,6 +96,7 @@ import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.Mapping;
 import peakaboo.mapping.results.MapResultSet;
+import peakaboo.ui.swing.calibration.concentrations.ConcentrationsView;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import peakaboo.ui.swing.environment.DesktopApp;
@@ -1138,7 +1140,7 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionShowConcentrations() {
 		CalibrationProfile p = controller.calibration().getCalibrationProfile();
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
-		Map<Element, Float> ppm = Mapping.concentrations(tss, ts -> {
+		Concentrations ppm = Concentrations.calculate(tss, p, ts -> {
 			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
 			float intensity = 0;
 			if (result == null) { return 0f; }
@@ -1150,20 +1152,11 @@ public class PlotPanel extends TabbedLayerPanel
 		});
 		
 		
-		Map<String, String> asText = new LinkedHashMap<>();
-		for (Element element : ppm.keySet()) {
-			float percent = ppm.get(element)/10000;
-			NumberFormat format = new DecimalFormat("0.0");
-			asText.put(element.toString(), format.format(percent) + "%");
-		}
-		
-		TitledPanel panel = new TitledPanel(new PropertyPanel(asText), false);
-		JScrollPane scroller = new JScrollPane(panel);
-		scroller.setPreferredSize(new Dimension(400, 175));
-		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
-		
-		new LayerDialog("Concentrations", scroller, MessageType.INFO).showIn(this);
-		
+		ConcentrationsView view = new ConcentrationsView(ppm, this);
+		ModalLayer layer = new ModalLayer(this, view);
+		view.setOnClose(() -> this.removeLayer(layer));
+		this.pushLayer(layer);
+
 	}
 
 	public void actionShowCalibrationProfileManager() {
