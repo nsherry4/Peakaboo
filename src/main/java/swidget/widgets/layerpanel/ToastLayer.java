@@ -25,12 +25,13 @@ import swidget.widgets.Spacing;
 public class ToastLayer implements Layer {
 
 	private JPanel toast = new ClearPanel();
-	private final JLayer<JPanel> toastJLayer;
+	private final JLayer<JComponent> toastJLayer;
 	private JComponent label;
 	private float alpha = 0f, delta = 0.1f;
 	private int stage = 0;
 	
 	private LayerPanel parent;
+	private int duration = 5000;
 	
 	public ToastLayer(LayerPanel parent, String message) {
 		this(parent, message, () -> {});
@@ -87,7 +88,7 @@ public class ToastLayer implements Layer {
 		toast.add(messagePanel, BorderLayout.CENTER);
 		
 		
-		toastJLayer = new JLayer<JPanel>(toast);
+		toastJLayer = new JLayer<JComponent>(toast);
 		toastJLayer.setFocusable(false);
 		
 	}
@@ -105,7 +106,7 @@ public class ToastLayer implements Layer {
 	}
 	
 	@Override
-	public JLayer<JPanel> getJLayer() {
+	public JLayer<JComponent> getJLayer() {
 		
 		fadeIn();		
 		return toastJLayer;
@@ -162,7 +163,7 @@ public class ToastLayer implements Layer {
 				stage=2;
 				fadeOut();
 			}
-		}, 5000);
+		}, duration);
 	}
 	
 	@Override
@@ -179,6 +180,16 @@ public class ToastLayer implements Layer {
 	public boolean modal() {
 		return false;
 	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+	
+	
 
 
 }

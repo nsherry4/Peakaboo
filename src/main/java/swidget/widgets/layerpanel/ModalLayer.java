@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 
+import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,13 +28,13 @@ import org.jdesktop.swingx.border.DropShadowBorder;
 import swidget.widgets.ClearPanel;
 
 public class ModalLayer implements Layer {
-	private JLayer<JPanel> layer;
-	private JPanel component;
+	private JLayer<JComponent> layer;
+	private JComponent component;
 	private LayerPanel owner;
 	
 	private ComponentAdapter listener;
 	
-	public ModalLayer(LayerPanel owner, JPanel component) {
+	public ModalLayer(LayerPanel owner, JComponent component) {
 		this.owner = owner;
 		this.component = component;
 		this.layer = makeModalLayer();
@@ -44,7 +45,7 @@ public class ModalLayer implements Layer {
 	 * @see swidget.widgets.tabbedinterface.layer.Layer#getLayer()
 	 */
 	@Override
-	public JLayer<JPanel> getJLayer() {
+	public JLayer<JComponent> getJLayer() {
 		return layer;
 	}
 
@@ -53,7 +54,7 @@ public class ModalLayer implements Layer {
 	 * @see swidget.widgets.tabbedinterface.layer.Layer#getComponent()
 	 */
 	@Override
-	public JPanel getComponent() {
+	public JComponent getComponent() {
 		return component;
 	}
 
@@ -69,7 +70,7 @@ public class ModalLayer implements Layer {
 		owner.removeComponentListener(listener);
 	}
 
-	private JLayer<JPanel> makeModalLayer() {
+	private JLayer<JComponent> makeModalLayer() {
 		
 		JPanel modalPanel = new ClearPanel();
 		
@@ -95,13 +96,13 @@ public class ModalLayer implements Layer {
 		setModalPanelComponent(modalPanel, this.component);
 		
 		//set blur in case another layer is placed on top of this one
-		LayerBlurUI<JPanel> blurUI = new LayerBlurUI<JPanel>(this.owner, this.component) {
+		LayerBlurUI<JComponent> blurUI = new LayerBlurUI<JComponent>(this.owner, this.component) {
 			@Override
-			public void eventDispatched(AWTEvent e, JLayer<? extends JPanel> l) {
+			public void eventDispatched(AWTEvent e, JLayer<? extends JComponent> l) {
 				((InputEvent) e).consume();
 			}
 		};
-		JLayer<JPanel> layer = new JLayer<JPanel>(modalPanel, blurUI);
+		JLayer<JComponent> layer = new JLayer<JComponent>(modalPanel, blurUI);
 		
 		layer.setVisible(true);
 		layer.setOpaque(false);

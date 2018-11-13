@@ -6,6 +6,7 @@ import java.awt.Frame;
 import java.awt.event.InputEvent;
 import java.util.Stack;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -153,7 +154,7 @@ public class LayerPanel extends JLayeredPane {
 	}
 
 	
-	public JPanel getContentLayer() {
+	public JComponent getContentLayer() {
 		return contentLayer.getComponent();
 	}
 	

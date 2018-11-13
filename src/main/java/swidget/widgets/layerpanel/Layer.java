@@ -1,13 +1,14 @@
 package swidget.widgets.layerpanel;
 
+import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
 
 public interface Layer {
 
-	JLayer<JPanel> getJLayer();
+	JLayer<JComponent> getJLayer();
 
-	JPanel getComponent();
+	JComponent getComponent();
 
 	//clean up after we're done with this modal layer.
 	void discard();
