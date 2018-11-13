@@ -183,7 +183,7 @@ public class ModalLayer implements Layer {
 		return true;
 	}
 	
-	protected void removeLayer() {
+	protected void remove() {
 		owner.removeLayer(this);
 	}
 

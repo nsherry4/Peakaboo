@@ -18,25 +18,20 @@ public class HeaderLayer extends ModalLayer {
 	
 	private JComponent body;
 	private HeaderBox header;
-	private Runnable onClose;
 	
+
 	public HeaderLayer(LayerPanel owner) {
-		this(owner, () -> {});
+		this(owner, new JPanel());
 	}
 	
-	public HeaderLayer(LayerPanel owner, Runnable onClose) {
-		this(owner, onClose, new JPanel());
-	}
-	
-	private HeaderLayer(LayerPanel owner,  Runnable onClose, JPanel content) {
+	private HeaderLayer(LayerPanel owner, JPanel content) {
 		super(owner, content);	
 		this.content = content;
-		this.onClose = onClose;
 		content.setLayout(new BorderLayout());
 				
 		//headerbox
 		this.header = new HeaderBox();
-		ImageButton close = HeaderBox.closeButton().withAction(this::removeLayer);
+		ImageButton close = HeaderBox.closeButton().withAction(this::remove);
 		header.setRight(close);
 		content.add(header, BorderLayout.NORTH);
 		
@@ -48,7 +43,7 @@ public class HeaderLayer extends ModalLayer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removeLayer();
+				remove();
 			}
 		});
 		
@@ -74,22 +69,9 @@ public class HeaderLayer extends ModalLayer {
 		}
 	}
 
-	
-	
-	public Runnable getOnClose() {
-		return onClose;
-	}
-
-	public void setOnClose(Runnable onClose) {
-		this.onClose = onClose;
-	}
-
 	@Override
-	protected void removeLayer() {
+	public void remove() {
 		owner.removeLayer(this);
-		if (onClose != null) {
-			onClose.run();
-		}
 	}
 	
 	

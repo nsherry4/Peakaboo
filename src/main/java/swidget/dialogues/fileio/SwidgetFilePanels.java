@@ -21,6 +21,7 @@ import javax.swing.plaf.basic.BasicFileChooserUI;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layout.HeaderBox;
@@ -35,20 +36,19 @@ public class SwidgetFilePanels {
 			ImageButton affirmative = new ImageButton(chooser.getApproveButtonText()).withStateDefault();
 			ImageButton negative = new ImageButton("Cancel");
 			
-			HeaderBox header = new HeaderBox(negative, title, affirmative);
-			HeaderBoxPanel dialog = new HeaderBoxPanel(header, chooser);
-			ModalLayer layer = new ModalLayer(tabPanel, dialog);
-			
+			HeaderLayer layer = new HeaderLayer(tabPanel);
+			layer.getHeader().setComponents(negative, title, affirmative);
+			layer.setBody(chooser);
 			
 			chooser.addActionListener(action -> {
 				String command = action.getActionCommand();
 				//something like double-clicking a file may trigger this
 				if (command.equals(JFileChooser.APPROVE_SELECTION)) {
-					tabPanel.removeLayer(layer);
+					layer.remove();
 					onAccept.run();
 				}
 				if (command.equals(JFileChooser.CANCEL_SELECTION)) {
-					tabPanel.removeLayer(layer);
+					layer.remove();
 					onCancel.run();
 				}
 			});

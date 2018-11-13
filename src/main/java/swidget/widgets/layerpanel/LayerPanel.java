@@ -133,6 +133,7 @@ public class LayerPanel extends JLayeredPane {
 	/**
 	 * Removes the topmost modal component from the modal stack
 	 */
+	@Deprecated
 	public void popLayer() {
 		if (layers.empty()) {
 			return;
