@@ -32,28 +32,21 @@ import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import swidget.widgets.Spacing;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.SettingsPanel;
 import swidget.widgets.layout.SettingsPanel.LabelPosition;
 
-public class AdvancedOptionsPanel extends JPanel {
+public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
-
+		super(parent);
+		getHeader().setCentre("Advanced Options");
+		
 		SettingsPanel master = new SettingsPanel();
 		master.addSetting(peakFitting(controller));
 		master.setBorder(Spacing.bLarge());
-		
-		this.setLayout(new BorderLayout());
-		this.add(master, BorderLayout.CENTER);
-		
-		
-		
-		
-		JButton close = HeaderBox.closeButton().withAction(() -> parent.popLayer());
-		HeaderBox box = new HeaderBox(null, "Advanced Options", close);
-		
-		this.add(box, BorderLayout.NORTH);
+		setBody(master);
 		
 	}
 

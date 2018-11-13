@@ -278,7 +278,6 @@ public class ProfileManager extends JPanel {
 	public void actionLoadCalibrationReference() {
 		
 		ReferencePicker picker = new ReferencePicker(parent);
-		ModalLayer layer = new ModalLayer(parent, picker);
 		
 		picker.setOnOK(ref -> {
 			parent.setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -293,14 +292,11 @@ public class ProfileManager extends JPanel {
 			controller.fitting().getFittingSelectionResults();
 			
 			parent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			parent.removeLayer(layer);
+			parent.removeLayer(picker);
 		});
+
 		
-		picker.setOnCancel(() -> {
-			parent.removeLayer(layer);
-		});
-		
-		parent.pushLayer(layer);
+		parent.pushLayer(picker);
 		
 	}
 	

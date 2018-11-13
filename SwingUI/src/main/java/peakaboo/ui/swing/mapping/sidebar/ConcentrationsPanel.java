@@ -61,7 +61,6 @@ public class ConcentrationsPanel extends JPanel {
 			Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), ts -> {
 				return controller.getSettings().getMapFittings().getMapForTransitionSeries(ts).get(index);
 			});
-			NumberFormat format = new DecimalFormat("0.0");
 			for (TransitionSeries ts : tss) {
 				properties.put(ts.element.toString(), ppm.getPercent(ts.element) );
 			}

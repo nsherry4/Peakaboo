@@ -28,6 +28,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.CellEditorListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -148,6 +150,8 @@ public class ReferenceList extends JPanel {
 			}
 		});
 		
+		table.setRowSelectionInterval(0, 0);
+		
 		
 		JScrollPane scroller = new JScrollPane(table);
 		scroller.setPreferredSize(new Dimension(scroller.getPreferredSize().width, 250));
@@ -160,8 +164,11 @@ public class ReferenceList extends JPanel {
 		focusTable();
 		
 	}
-	
+		
 	public CalibrationReference getSelectedReference() {
+		if (table.getSelectedRow() == -1) {
+			return null;
+		}
 		return refs.get(table.getSelectedRow());
 	}
 	

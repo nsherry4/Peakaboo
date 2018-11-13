@@ -27,40 +27,23 @@ import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonSize;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ToastLayer;
 import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.HeaderTabBuilder;
 
-public class ConcentrationsView extends JPanel {
+public class ConcentrationsView extends HeaderLayer {
 
 	private Concentrations conc;
-	private Runnable onClose;
 	private LayerPanel parent;
 	
 	public ConcentrationsView(Concentrations conc, LayerPanel parent) {
+		super(parent);
 		this.conc = conc;
 		this.parent = parent;
 		
-		this.setLayout(new BorderLayout());
-		this.setPreferredSize(new Dimension(700, 350));
-		
-		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-		this.getInputMap(JComponent.WHEN_FOCUSED).put(key, key.toString());
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(key, key.toString());
-		this.getActionMap().put(key.toString(), new AbstractAction() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClose.run();
-			}
-		});
-		
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE)
-				.withBordered(false)
-				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Close")
-				.withAction(() -> onClose.run());
+		getContentRoot().setPreferredSize(new Dimension(700, 350));
 		
 		
 		ImageButton save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS)
@@ -76,14 +59,13 @@ public class ConcentrationsView extends JPanel {
 		ButtonLinker linker = new ButtonLinker(save, copy);
 		
 		
-		
 		HeaderTabBuilder tabs = new HeaderTabBuilder();
 		tabs.addTab("Chart", buildChart());
 		tabs.addTab("Table", buildTable());
 		
-		HeaderBox header = new HeaderBox(linker, tabs.getTabStrip(), close);
-		this.add(header, BorderLayout.NORTH);
-		this.add(tabs.getBody(), BorderLayout.CENTER);
+		setBody(tabs.getBody());
+		getHeader().setLeft(linker);
+		getHeader().setCentre(tabs.getTabStrip());
 		
 	}
 
@@ -97,10 +79,7 @@ public class ConcentrationsView extends JPanel {
 		return table;
 	}
 
-	public void setOnClose(Runnable onClose) {
-		this.onClose = onClose;
-	}
-	
+
 	private String textData() {
 		List<Element> es = conc.elementsByConcentration();
 		StringBuilder sb = new StringBuilder();

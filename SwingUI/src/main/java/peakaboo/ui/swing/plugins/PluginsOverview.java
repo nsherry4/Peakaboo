@@ -62,6 +62,7 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layout.ButtonBox;
@@ -71,7 +72,7 @@ import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonSize;
 
-public class PluginsOverview extends JPanel {
+public class PluginsOverview extends HeaderLayer {
 
 	JPanel details;
 	JTree tree;
@@ -80,18 +81,24 @@ public class PluginsOverview extends JPanel {
 	JButton close, add, remove, reload, browse, download;
 	
 	public PluginsOverview(LayerPanel parent) {
-		super(new BorderLayout());
-		
+		super(parent);
 		this.parent = parent;
+		getContentRoot().setPreferredSize(new Dimension(800, 350));
 		
+		//body
 		JPanel body = new JPanel(new BorderLayout());
-		setPreferredSize(new Dimension(800, 350));
 		body.add(pluginTree(), BorderLayout.WEST);
 		details = new JPanel(new BorderLayout());
 		body.add(details, BorderLayout.CENTER);
-				
-		close = HeaderBox.closeButton().withAction(() -> parent.popLayer());
+		new FileDrop(body, files -> {
+			for (File file : files) {
+				addPluginFile(file);
+			}
+		});
+		setBody(body);
 		
+		
+		//header controls
 		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
 		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
 		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
@@ -99,26 +106,17 @@ public class PluginsOverview extends JPanel {
 		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
 		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
 		
-		ButtonBox left = new ButtonBox(Spacing.tiny, false);
-		left.setOpaque(false);
-		
 		ButtonLinker edits = new ButtonLinker(add, remove, reload);
 		ButtonLinker tools = new ButtonLinker(browse, download);
-		
+
+		ButtonBox left = new ButtonBox(Spacing.tiny, false);
+		left.setOpaque(false);
 		left.addLeft(edits);
 		left.addLeft(new ClearPanel()); //spacing
 		left.addLeft(tools);
 		
-		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(left, "Manage Plugins", close), body);
-		
-		this.add(main, BorderLayout.CENTER);
-		
-		new FileDrop(body, files -> {
-			for (File file : files) {
-				addPluginFile(file);
-			}
-		});
-
+		getHeader().setLeft(left);
+		getHeader().setCentre("Manage Plugins");
 		
 	}
 	

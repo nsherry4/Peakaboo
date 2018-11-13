@@ -90,14 +90,15 @@ public class MapDimensionsPanel extends JPanel {
 				StreamExecutor<Coord<Integer>> guessTask = controller.mapsController.guessDataDimensions();
 				StreamExecutorView view = new StreamExecutorView(guessTask);
 				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
+				ModalLayer layer = new ModalLayer(tabPanel, panel);
 				guessTask.addListener(event -> {
 					SwingUtilities.invokeLater(() -> {
 						if (event == Event.ABORTED) {
-							tabPanel.popLayer();
+							tabPanel.removeLayer(layer);
 						}
 						if (event == Event.COMPLETED) {
 						
-							tabPanel.popLayer();
+							tabPanel.removeLayer(layer);
 							
 							Coord<Integer> guess = guessTask.getResult().orElse(null);
 							if (guess != null) {
@@ -109,7 +110,7 @@ public class MapDimensionsPanel extends JPanel {
 						}
 					});
 				});
-				tabPanel.pushLayer(new ModalLayer(tabPanel, panel));
+				tabPanel.pushLayer(layer);
 				guessTask.start();				
 
 			});

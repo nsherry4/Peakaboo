@@ -132,10 +132,8 @@ class MapperToolbar extends JToolBar {
 			};
 			Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
 			
-			ConcentrationsView view = new ConcentrationsView(ppm, panel);
-			ModalLayer layer = new ModalLayer(panel, view);
-			view.setOnClose(() -> panel.removeLayer(layer));
-			panel.pushLayer(layer);
+			ConcentrationsView concentrations = new ConcentrationsView(ppm, panel);
+			panel.pushLayer(concentrations);
 							
 		});
 		this.add(showConcentrations, c);

@@ -71,7 +71,7 @@ public class ConcentrationPlot {
 
 		axisPainters = new ArrayList<>();
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Concentration", null, null, "Element"));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Concentration", null, null, "Elements - Calibrated With " + conc.getProfile().getName()));
 		NumberFormat format = new DecimalFormat("0.0");
 		Function<Integer, String> sensitivityFormatter = i -> format.format(  ((float)i/10000f)  ) + "%";
 		axisPainters.add(new TickMarkAxisPainter(

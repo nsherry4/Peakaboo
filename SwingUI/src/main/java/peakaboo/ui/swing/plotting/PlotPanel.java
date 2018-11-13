@@ -129,6 +129,7 @@ import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.ToastLayer;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layout.ButtonBox;
@@ -663,6 +664,7 @@ public class PlotPanel extends TabbedLayerPanel
 
 		StreamExecutorView taskView = new StreamExecutorView(mapTask);
 		StreamExecutorPanel taskPanel = new StreamExecutorPanel("Generating Maps", taskView);
+		ModalLayer layer = new ModalLayer(this, taskPanel);
 		
 		mapTask.addListener(event -> {
 			
@@ -670,7 +672,7 @@ public class PlotPanel extends TabbedLayerPanel
 			if (event == Event.PROGRESS) { return; }
 			
 			//hide the task panel since this is either COMPLETED or ABORTED
-			popLayer();
+			removeLayer(layer);
 			
 			//If this task was aborted instead of completed, exit early
 			if (event == Event.ABORTED) { return; }
@@ -716,7 +718,7 @@ public class PlotPanel extends TabbedLayerPanel
 		});
 		
 		
-		pushLayer(new ModalLayer(this, taskPanel));
+		pushLayer(layer);
 		mapTask.start();
 
 
@@ -882,11 +884,12 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			StreamExecutorView view = new StreamExecutorView(streamexec);
 			StreamExecutorPanel panel = new StreamExecutorPanel("Exporting Data", view);
+			ModalLayer layer = new ModalLayer(this, panel);
 			
 			streamexec.addListener(event -> {
 				//if not just a progress event, hide the modal panel
 				if (event != Event.PROGRESS) {
-					popLayer();
+					removeLayer(layer);
 				}
 				//remove the output file if the task was aborted
 				if (event == Event.ABORTED) {
@@ -894,7 +897,7 @@ public class PlotPanel extends TabbedLayerPanel
 				}
 			});
 			
-			pushLayer(new ModalLayer(this, panel));
+			pushLayer(layer);
 			streamexec.start();
 			
 			
@@ -1016,21 +1019,17 @@ public class PlotPanel extends TabbedLayerPanel
 		}
 		
 		
+
 		
-		JPanel panel = new JPanel(new BorderLayout());
+		
+		
 		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties));
 		propPanel.setBorder(Spacing.bHuge());
-		panel.add(propPanel, BorderLayout.CENTER);
-		
-		
-		ImageButton close = HeaderBox.closeButton().withAction(this::popLayer);
-		
-		HeaderBox header = new HeaderBox(null, "Dataset Information", close);
-		
-		
-		panel.add(header, BorderLayout.NORTH);
-		
-		this.pushLayer(new ModalLayer(this, panel));
+
+		HeaderLayer layer = new HeaderLayer(this);
+		layer.setBody(propPanel);
+		layer.getHeader().setCentre("Dataset Information");
+		this.pushLayer(layer);
 		
 
 	}
@@ -1057,11 +1056,12 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		List<StreamExecutorView> views = energyTask.getExecutors().stream().map(StreamExecutorView::new).collect(Collectors.toList());
 		StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Energy Level", views);
-				
+		ModalLayer layer = new ModalLayer(this, panel);
+		
 		energyTask.last().addListener(event -> {
 			//if event is not progress, then its either COMPLETED or ABORTED, so hide the panel
 			if (event != Event.PROGRESS) {
-				popLayer();
+				removeLayer(layer);
 			}
 			
 			//if the last executor completed successfully, then set the calibration
@@ -1074,14 +1074,14 @@ public class PlotPanel extends TabbedLayerPanel
 			}
 		});
 		
-		pushLayer(new ModalLayer(this, panel));
+		pushLayer(layer);
 		energyTask.start();
 
 		
 	}
 	
 	public void actionShowPlugins() {
-		pushLayer(new ModalLayer(this, new PluginsOverview(this)));
+		pushLayer(new PluginsOverview(this));
 	}
 
 
@@ -1104,7 +1104,7 @@ public class PlotPanel extends TabbedLayerPanel
 
 	public void actionShowAdvancedOptions() {
 		AdvancedOptionsPanel advancedPanel = new AdvancedOptionsPanel(this, controller);
-		this.pushLayer(new ModalLayer(this, advancedPanel));
+		this.pushLayer(advancedPanel);
 	}
 
 	public void actionAddAnnotation(TransitionSeries selected) {
@@ -1152,10 +1152,8 @@ public class PlotPanel extends TabbedLayerPanel
 		});
 		
 		
-		ConcentrationsView view = new ConcentrationsView(ppm, this);
-		ModalLayer layer = new ModalLayer(this, view);
-		view.setOnClose(() -> this.removeLayer(layer));
-		this.pushLayer(layer);
+		ConcentrationsView concentrations = new ConcentrationsView(ppm, this);
+		this.pushLayer(concentrations);
 
 	}
 
