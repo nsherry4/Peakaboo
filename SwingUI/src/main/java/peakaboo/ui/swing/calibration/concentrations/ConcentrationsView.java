@@ -127,7 +127,7 @@ public class ConcentrationsView extends JPanel {
 		
 		//TODO: starting folder
 		SwidgetFilePanels.saveFile(parent, "Save Concentration Data", null, new SimpleFileExtension("Text File", "txt"), result -> {
-			if (result.isEmpty()) {
+			if (!result.isPresent()) {
 				return;
 			}
 			
