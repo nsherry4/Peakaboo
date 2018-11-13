@@ -147,23 +147,25 @@ public class CurveFittingView extends ClearPanel implements Changeable
 			ExecutorSet<List<TransitionSeries>> exec = controller.autodetectPeaks();
 			ExecutorSetView execPanel = new ExecutorSetView(exec); 
 			
+			ModalLayer layer = new ModalLayer(plotPanel, execPanel);
+			
 			Mutable<Boolean> ran = new Mutable<>(false);
 			exec.addListener(() -> {
 				if (exec.getCompleted() && !ran.get()) {
 					ran.set(true);
-					plotPanel.popLayer();
+					plotPanel.removeLayer(layer);
 					changed();
 					exec.discard();
 				} else if (exec.isAborted() && !ran.get()) {
 					ran.set(true);
-					plotPanel.popLayer();
+					plotPanel.removeLayer(layer);
 					exec.discard();
 				}
 			});		
 			
 			
 			
-			plotPanel.pushLayer(new ModalLayer(plotPanel, execPanel));
+			plotPanel.pushLayer(layer);
 			exec.startWorking();
 			
 		} else {

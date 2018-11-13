@@ -27,7 +27,7 @@ public class ReferencePicker extends HeaderLayer {
 				this::showReferencePlot);
 		
 		ok = new ImageButton("OK").withStateDefault().withAction(() -> onOK.accept(reflist.getSelectedReference()));
-		cancel = new ImageButton("Cancel").withAction(() -> removeLayer());
+		cancel = new ImageButton("Cancel").withAction(() -> remove());
 				
 		getHeader().setComponents(cancel, "Select Z-Calibration Reference", ok);
 		setBody(reflist);
@@ -38,10 +38,8 @@ public class ReferencePicker extends HeaderLayer {
 
 	private void showReferencePlot(CalibrationReference reference) {
 		
-		ReferenceViewPanel view = new ReferenceViewPanel(reference);
-		ModalLayer layer = new ModalLayer(this.parent, view);
-		view.setOnClose(() -> parent.removeLayer(layer));
-		parent.pushLayer(layer);
+		ReferenceViewPanel view = new ReferenceViewPanel(parent, reference);
+		parent.pushLayer(view);
 		
 	}
 	

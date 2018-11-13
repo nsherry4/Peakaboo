@@ -445,8 +445,8 @@ public class PlotPanel extends TabbedLayerPanel
 
 			@Override
 			public void onSelection(List<DataSource> datasources, Consumer<DataSource> selected) {
-				DataSourceSelection selection = new DataSourceSelection();
-				selection.pickDSP(PlotPanel.this, datasources, selected);
+				DataSourceSelection selection = new DataSourceSelection(PlotPanel.this, datasources, selected);
+				PlotPanel.this.pushLayer(selection);
 			}
 
 
@@ -1158,14 +1158,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 	public void actionShowCalibrationProfileManager() {
-		Mutable<ModalLayer> modal = new Mutable<>(null);
-		
-		ProfileManager manager = new ProfileManager(this, controller, () -> {
-			this.removeLayer(modal.get());
-		}); 
-
-		modal.set(new ModalLayer(this, manager));
-		this.pushLayer(modal.get());
+		this.pushLayer(new ProfileManager(this, controller));
 	}
 	
 	

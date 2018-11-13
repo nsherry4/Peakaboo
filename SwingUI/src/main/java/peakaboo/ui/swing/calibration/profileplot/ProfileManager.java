@@ -46,6 +46,7 @@ import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonConfigurator;
 import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.buttons.ToolbarImageButton;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.ToastLayer;
@@ -54,7 +55,7 @@ import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.HeaderTabBuilder;
 
-public class ProfileManager extends JPanel {
+public class ProfileManager extends HeaderLayer {
 
 	private PlotController controller;
 	private PlotPanel parent;
@@ -71,8 +72,8 @@ public class ProfileManager extends JPanel {
 	
 	private ImageButton create, open, clear, save;
 	
-	public ProfileManager(PlotPanel parent, PlotController controller, Runnable onClose) {
-		super();
+	public ProfileManager(PlotPanel parent, PlotController controller) {
+		super(parent);
 		this.controller = controller;
 		this.parent = parent;
 		
@@ -102,7 +103,7 @@ public class ProfileManager extends JPanel {
 		
 		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
 			controller.removeListener(listener);
-			onClose.run();
+			remove();
 		});
 		
 
@@ -149,11 +150,11 @@ public class ProfileManager extends JPanel {
 
 	protected void init(CalibrationProfile profile, File source, JComponent left, JComponent right) {
 		
-		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(700, 350));
+		
+		getContentRoot().setPreferredSize(new Dimension(700, 350));
 		
 		body = new JPanel(new BorderLayout());
-		this.add(body, BorderLayout.CENTER);
+		setBody(body);
 		
 		//plot views
 		HeaderTabBuilder tabBuilder = new HeaderTabBuilder();
@@ -172,9 +173,8 @@ public class ProfileManager extends JPanel {
 		tabBuilder.addTab("M Series", mplot);
 		
 		body.add(tabBuilder.getBody(), BorderLayout.CENTER);
-				
-		header = new HeaderBox(left, tabBuilder.getTabStrip(), right);
-		this.add(header, BorderLayout.NORTH);
+		getHeader().setComponents(left, tabBuilder.getTabStrip(), right);
+		
 	}
 
 	
@@ -254,7 +254,7 @@ public class ProfileManager extends JPanel {
 	
 	
 	public void actionLoadCalibrationProfile() {
-		SwidgetFilePanels.openFile(this, "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
+		SwidgetFilePanels.openFile(getContentRoot(), "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}

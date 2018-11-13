@@ -14,9 +14,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import peakaboo.datasource.model.DataSource;
+import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layout.HeaderBox;
@@ -24,17 +26,14 @@ import swidget.widgets.toggle.ItemToggleButton;
 import swidget.widgets.toggle.ToggleGroup;
 
 
-public class DataSourceSelection extends JPanel
+public class DataSourceSelection extends HeaderLayer
 {
 	
 	private Map<ItemToggleButton, DataSource> toggleMap;
 	private DataSource selected;
 	
-	public DataSourceSelection() {
-		super(new BorderLayout());
-	}
-	
-	public void pickDSP(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {	
+	public DataSourceSelection(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {
+		super(parent);
 		
 		toggleMap = new HashMap<ItemToggleButton, DataSource>();
 		
@@ -65,42 +64,22 @@ public class DataSourceSelection extends JPanel
 		
 		body.add(optionPanel, BorderLayout.CENTER);
 		
-		
-		
-		
-		
+
 		
 		JButton ok = new ImageButton("Select").withAction(() -> {
-			parent.popLayer();
+			remove();
 			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
 			onSelect.accept(selected);
 		}).withStateDefault();
 		
 		JButton cancel = new ImageButton("Cancel").withAction(() -> {
-			parent.popLayer();
+			remove();
 		});
 		
-		HeaderBox box = new HeaderBox(cancel, "Please Select Data Format", ok);
-		
-		
-		
-		add(box, BorderLayout.NORTH);
-		add(body, BorderLayout.CENTER);
-		
-		parent.pushLayer(new ModalLayer(parent, this));
-		
-
-		
+		getHeader().setComponents(cancel, "Please Select Data Format", ok);
+		setBody(body);
 		
 	}
 	
-	
-//	public static void main(String[] args) throws UnsupportedLookAndFeelException
-//	{
-//		Swidget.initialize(() -> {}, "Test");
-//		UIManager.setLookAndFeel(new StratusLookAndFeel());
-//
-//		
-//	}
-	
+
 }
