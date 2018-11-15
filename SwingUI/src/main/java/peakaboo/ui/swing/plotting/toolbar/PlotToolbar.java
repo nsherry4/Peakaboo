@@ -81,9 +81,9 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarMap, c);
 
 		
-		toolbarConcentrations = new ToolbarImageButton("Concentrations")
+		toolbarConcentrations = new ToolbarImageButton("Composition")
 				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-				.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
+				.withTooltip("Display composition estimates for the fitted elements. Requires a Z-Calibration Profile.")
 				.withSignificance(true);
 		toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
 		

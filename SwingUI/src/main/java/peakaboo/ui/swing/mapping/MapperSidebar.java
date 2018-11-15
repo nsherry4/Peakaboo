@@ -109,7 +109,7 @@ class MapperSidebar extends JPanel
 //			
 //			concentrations = new ConcentrationsPanel(controller);
 //			outer.add(concentrations, c);
-//			tabs.add("Concentrations", outer);
+//			tabs.add("Composition", outer);
 //		}
 //		
 		

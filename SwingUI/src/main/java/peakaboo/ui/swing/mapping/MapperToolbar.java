@@ -102,9 +102,9 @@ class MapperToolbar extends JToolBar {
 		this.addSeparator();
 		
 		
-		showConcentrations = new ToolbarImageButton("Concentrations")
+		showConcentrations = new ToolbarImageButton("Composition")
 				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-				.withTooltip("Get fitting concentrations for the selection")
+				.withTooltip("Get fitting compositions for the selection")
 				.withSignificance(true);
 		
 		showConcentrations.addActionListener(e -> {
