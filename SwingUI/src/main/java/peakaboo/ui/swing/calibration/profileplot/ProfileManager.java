@@ -88,12 +88,7 @@ public class ProfileManager extends HeaderLayer {
 				plot.setCalibrationProfile(profile, file);
 			}
 			
-			//show the name field if a ref is set, because it means we're creating
-			if (controller.calibration().hasCalibrationReference()) {
-				showNamePanel();				
-			} else {
-				hideNamePanel();
-			}
+			updateNamePanel();
 			
 			save.setEnabled(controller.calibration().hasCalibrationReference());
 			
@@ -137,6 +132,8 @@ public class ProfileManager extends HeaderLayer {
 		
 	}
 	
+
+
 	private void promptCreateProfile(Runnable onAccept) {
 		String text = Swidget.lineWrap(parent, "Z-Calibration Profiles describe and correct the variable elemental sensitivity of an experimental setup. They are a necessary part of determining sample composition.\n\nThis will replace any existing work with the settings and fittings needed to create a new Z-Calibration Profile.\n\nYou should have a reference data set open before proceeding.");
 		LayerDialog dialog = new LayerDialog("Create Z-Calibration Profile?", text, MessageType.QUESTION);
@@ -174,6 +171,7 @@ public class ProfileManager extends HeaderLayer {
 		
 		body.add(tabBuilder.getBody(), BorderLayout.CENTER);
 		getHeader().setComponents(left, tabBuilder.getTabStrip(), right);
+		updateNamePanel();
 		
 	}
 
@@ -229,6 +227,14 @@ public class ProfileManager extends HeaderLayer {
 		body.remove(namePanel);
 	}
 
+	private void updateNamePanel() {
+		//show the name field if a ref is set, because it means we're creating
+		if (controller.calibration().hasCalibrationReference()) {
+			showNamePanel();				
+		} else {
+			hideNamePanel();
+		}
+	}
 
 	private void saveCalibrationProfile(CalibrationProfile profile) {
 		String yaml = CalibrationProfile.save(profile);
