@@ -132,12 +132,12 @@ public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 
 			// exact same as in last loop
 			start = Math.max(0,  i - windowSpan);
-			stop = Math.min(data.size()-1, i + windowSpan + 1);
+			stop = Math.min(data.size()-1, i + windowSpan);
 			
 			totalWeight = 0;
 			pos = 0;
 			sum = 0;
-			for (int p = start; p < stop; p++) {
+			for (int p = start; p <= stop; p++) {
 				totalWeight += weights[pos];
 				sum += (data.get(p) * weights[pos]);
 				pos++;
