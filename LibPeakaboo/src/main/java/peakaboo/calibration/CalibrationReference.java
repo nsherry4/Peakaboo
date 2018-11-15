@@ -179,12 +179,19 @@ public class CalibrationReference implements BoltConfigPlugin {
 		serialized.notes = reference.notes;
 		serialized.citations = reference.citations;
 		serialized.anchor = reference.anchor.toIdentifierString();
-		for (TransitionSeries ts : reference.concentrations.keySet()) {
+		
+		List<TransitionSeries> tss = new ArrayList<>(reference.concentrations.keySet());
+		tss.sort((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()));
+		for (TransitionSeries ts : tss) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
-		for (TransitionSeries ts : reference.extraFittings.keySet()) {
+		
+		tss = new ArrayList<>(reference.extraFittings.keySet());
+		tss.sort((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()));
+		for (TransitionSeries ts : tss) {
 			serialized.fitted.put(ts.toIdentifierString(), reference.extraFittings.get(ts));
 		}
+		
 		return YamlSerializer.serialize(serialized);
 	}
 	
@@ -243,19 +250,23 @@ public class CalibrationReference implements BoltConfigPlugin {
 	
 	public static void main(String[] args) throws IOException {
 
+		CalibrationPluginManager.init(new File("."));
+		CalibrationReference nist = CalibrationPluginManager.SYSTEM.getPlugins().getAll().get(0).create();
+		String yaml = CalibrationReference.save(nist);
+		System.out.println(yaml);
 		
-		//URL url = PeakTable.class.getResource();
-		File file = new File("/home/nathaniel/Desktop/NIST610ReferenceRevised.csv");
-		try {
-			Scanner s = new Scanner(new FileInputStream(file)).useDelimiter("\\A");
-			if (s.hasNext()) {
-				CalibrationReference reference = fromCSV(s.next());
-				System.out.println(CalibrationReference.save(reference));
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		//URL url = PeakTable.class.getResource();
+//		File file = new File("/home/nathaniel/Desktop/NIST610ReferenceRevised.csv");
+//		try {
+//			Scanner s = new Scanner(new FileInputStream(file)).useDelimiter("\\A");
+//			if (s.hasNext()) {
+//				CalibrationReference reference = fromCSV(s.next());
+//				System.out.println(CalibrationReference.save(reference));
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	

@@ -138,8 +138,8 @@ public class ProfileManager extends HeaderLayer {
 	}
 	
 	private void promptCreateProfile(Runnable onAccept) {
-		String text = Swidget.lineWrap(parent, "This will replace any existing work with the settings and fittings needed to create a new Z-Calibration Profile.\n\nYou should have a reference data set open before proceeding.");
-		LayerDialog dialog = new LayerDialog("Create Z-Calibration", text, MessageType.QUESTION);
+		String text = Swidget.lineWrap(parent, "Z-Calibration Profiles describe and correct the variable elemental sensitivity of an experimental setup. They are a necessary part of determining sample composition.\n\nThis will replace any existing work with the settings and fittings needed to create a new Z-Calibration Profile.\n\nYou should have a reference data set open before proceeding.");
+		LayerDialog dialog = new LayerDialog("Create Z-Calibration Profile?", text, MessageType.QUESTION);
 		ImageButton ok = new ImageButton("OK").withAction(onAccept).withStateDefault();
 		ImageButton cancel = new ImageButton("Cancel");
 		dialog.addLeft(cancel);
