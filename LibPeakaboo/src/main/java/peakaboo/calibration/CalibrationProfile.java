@@ -77,16 +77,13 @@ public class CalibrationProfile {
 		}
 		
 		//interpolate missing elements
-		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
-		interpolator.process(reference, this);
+		new SigmoidCalibrationInterpolator().process(reference, this);
 		
 		//smooth calibrations
-		CalibrationProcessor smoothing = new CalibrationSmoother();
-		smoothing.process(reference, this);
-
+		new CalibrationSmoother().process(reference, this);
+		
 		//normalize against anchor
-		CalibrationProcessor normalizer = new CalibrationNormalizer();
-		normalizer.process(reference, this);
+		new CalibrationNormalizer().process(reference, this);
 		
 		
 	}

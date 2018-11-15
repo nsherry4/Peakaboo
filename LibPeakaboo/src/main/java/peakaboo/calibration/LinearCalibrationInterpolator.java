@@ -35,7 +35,8 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 						
 			//all missing entries between previous and known
 			for (int i = previous.element.ordinal()+1; i < known.element.ordinal(); i++) {
-				TransitionSeries inter = new TransitionSeries(Element.values()[i], tst);				
+				System.out.println(Element.values()[i]);
+				TransitionSeries inter = new TransitionSeries(Element.values()[i], tst);		
 				profile.calibrations.put(inter, interpolate(profile.calibrations, inter, previous, known));
 				profile.interpolated.add(inter);
 			}
@@ -50,19 +51,24 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 				
 		float pv = calibrations.get(previous);
 		float nv = calibrations.get(next);
+		float delta = nv - pv;
 		
 		float po = previous.element.ordinal();
 		float no = next.element.ordinal();
 		float co = current.element.ordinal();
 		
-		float percent = (co-po) / (no-po);
-		float value = pv + ((nv - pv) * percent);
+		float percent = curve((co-po) / (no-po));
+		float value = pv + (delta * percent);
 		
 		return value;
 		
 		
 	}
 
+	protected float curve(float percent) {
+		return percent;
+	}
+	
 	@Override
 	public void process(CalibrationReference reference, Map<TransitionSeries, Float> calibrations) {
 		//Not Used
