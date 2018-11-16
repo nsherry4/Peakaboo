@@ -113,8 +113,8 @@ public class KrausePeakTable implements PeakTable {
 			column += elementDataWidth;
 
 
-			ts.setTransition(k1);
-			ts.setTransition(k2);
+			ts.addTransition(k1);
+			ts.addTransition(k2);
 
 
 			// kB
@@ -128,9 +128,9 @@ public class KrausePeakTable implements PeakTable {
 			k2 = createTransition(sections, column);
 			column += elementDataWidth;
 
-			ts.setTransition(k1);
-			ts.setTransition(k2);
-			ts.setTransition(k3);
+			ts.addTransition(k1);
+			ts.addTransition(k2);
+			ts.addTransition(k3);
 
 			add(ts);
 			//table.addSeries(ts.pileup());
@@ -164,17 +164,17 @@ public class KrausePeakTable implements PeakTable {
 			column += elementDataWidth;
 
 
-			ts.setTransition(la);
+			ts.addTransition(la);
 
-			ts.setTransition(lb1);
-			ts.setTransition(lb2);
+			ts.addTransition(lb1);
+			ts.addTransition(lb2);
 
-			ts.setTransition(lg1);
-			ts.setTransition(lg2);
-			ts.setTransition(lg3);
-			ts.setTransition(lg4);
+			ts.addTransition(lg1);
+			ts.addTransition(lg2);
+			ts.addTransition(lg3);
+			ts.addTransition(lg4);
 
-			ts.setTransition(ll);
+			ts.addTransition(ll);
 
 			if (e.atomicNumber() >= 23) add(ts);
 
@@ -210,9 +210,9 @@ public class KrausePeakTable implements PeakTable {
 			column += elementDataWidth;
 
 			
-			ts.setTransition(ma1);
-			ts.setTransition(mb1);
-			ts.setTransition(mg);
+			ts.addTransition(ma1);
+			ts.addTransition(mb1);
+			ts.addTransition(mg);
 
 			if (e.atomicNumber() > 72) add(ts);
 

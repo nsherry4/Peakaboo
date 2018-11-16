@@ -135,19 +135,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 
-	/**
-	 * Returns a list of all {@link Transition}s that this {@link TransitionSeries} is composed of
-	 * @return a list of constituent {@link Transition}s
-	 */
+	
+	@Override
 	public List<Transition> getAllTransitions()
 	{
-		return transitions.stream().map(a -> a).collect(toList());
+		return new ArrayList<>(transitions);
 	}
 	
-	/**
-	 * Returns the strongest {@link Transition} for this {@link TransitionSeries}.
-	 * @return the most intense {@link Transition}
-	 */
+	@Override
 	public Transition getStrongestTransition()
 	{
 
@@ -160,49 +155,26 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
-
-	/**
-	 * Checks to see if this {@link TransitionSeries} is empty
-	 * @return true if this {@link TransitionSeries} is non-empty, false otherwise
-	 */
+	@Override
 	public boolean hasTransitions()
 	{
 		return transitions.size() != 0;
 	}
 
-
-	/**
-	 * Sets the {@link Transition} for the given {@link TransitionType}
-	 * 
-	 * @param type
-	 *            the {@link TransitionType} to fill
-	 * @param t
-	 *            the {@link Transition}
-	 */
-	public void setTransition(Transition t)
+	@Override
+	public void addTransition(Transition t)
 	{
 		if (t == null) return;
 		transitions.add(t);
 	}
 
-
-	/**
-	 * Returns the number of filled {@link Transition}s in this TransitionSeries
-	 * 
-	 * @return the number of {@link Transition}s in this TransitionSeries
-	 */
+	@Override
 	public int getTransitionCount()
 	{
 		return transitions.size();
 	}
-
-
-	/**
-	 * Provides an Iterator of type {@link Transition} for iteration over the list of {@link Transition}s in this
-	 * TransitionSeries
-	 * 
-	 * @return an iterator of type {@link Transition}
-	 */
+	
+	@Override
 	public Iterator<Transition> iterator()
 	{
 		return transitions.iterator();
@@ -351,7 +323,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			for (List<Transition> l : allPileupLists) {
 				allPileups.addAll(l);
 			}
-			allPileups.forEach(newTransitionSeries::setTransition);
+			allPileups.forEach(newTransitionSeries::addTransition);
 		}
 		
 		newTransitionSeries.componentSeries.add(this);
@@ -361,6 +333,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
+	@Override
 	public List<Transition> escape(EscapePeakType type) {
 		if (! type.get().hasOffset()) {
 			return new ArrayList<>();

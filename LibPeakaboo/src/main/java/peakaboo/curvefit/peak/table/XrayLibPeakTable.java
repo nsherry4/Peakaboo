@@ -93,7 +93,7 @@ public class XrayLibPeakTable implements PeakTable {
 			if (rel < maxRel*0.001) { continue; }
 			
 			Transition t = new Transition(value, rel, elem.name() + " " + tstype.name() + " #" + line + " @" + value + " keV x " + rel*100 + "%");
-			ts.setTransition(t);
+			ts.addTransition(t);
 
 		}
 		if (ts.hasTransitions()) {
