@@ -213,10 +213,8 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 
 
 
-	/**
-	 * Generates an identifier string of the form He:K which can be used to uniquely
-	 * identify the TransitionSeries.
-	 */
+
+	@Override
 	public String toIdentifierString() {
 		if (getShell() == TransitionShell.COMPOSITE) {
 			return componentSeries.stream().map(TransitionSeries::toIdentifierString).reduce((a, b) -> a + "+" + b).get();
@@ -397,9 +395,8 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 	
 
 	/**
-	 * Returns a list of all primary {@link TransitionSeries} which compose this {@link TransitionSeries}
-	 * @return a list of all primary {@link TransitionSeries} represented by this
-	 */
+	 * Returns a list of all primary {@link TransitionSeries} which compose this {@link TransitionSeries}. When this TransitionSeries is not a composite, it returns itself in a list.	 */
+	@Deprecated
 	public List<TransitionSeries> getBaseTransitionSeries()
 	{
 		List<TransitionSeries> list = null;
@@ -415,6 +412,11 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 				return list;
 		}
 
+	}
+	
+	@Override
+	public List<TransitionSeriesInterface> getPrimaryTransitionSeries() {
+		return new ArrayList<>(getBaseTransitionSeries());
 	}
 
 	/**

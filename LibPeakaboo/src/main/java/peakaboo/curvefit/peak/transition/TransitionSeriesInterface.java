@@ -1,8 +1,10 @@
 package peakaboo.curvefit.peak.transition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
@@ -31,8 +33,12 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 	
 	Element getElement();
 	
+	
+	
 	/////////////////////////////////////////////////////////////
-	// Transitions
+	//
+	//  TRANSITIONS
+	//
 	/////////////////////////////////////////////////////////////
 	
 	/**
@@ -91,5 +97,21 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 	}
 
 	double getIntensity();
+
+	/**
+	 * Generates an identifier string of the form He:K which can be used to uniquely
+	 * identify the TransitionSeries.
+	 */
+	String toIdentifierString();
+
+	/**
+	 * Returns a list of {@link PrimaryTransitionSeries} which compose this TransitionSeries. If this is a primary transition series, it returns itself within a list.
+	 */
+	List<TransitionSeriesInterface> getPrimaryTransitionSeries();
 	
+	
+	
+	
+	
+
 }
