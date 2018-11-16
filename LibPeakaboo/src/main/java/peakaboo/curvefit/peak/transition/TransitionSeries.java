@@ -29,7 +29,7 @@ import peakaboo.curvefit.peak.table.Element;
  * @author Nathaniel Sherry, 2009-2010
  */
 
-public class TransitionSeries implements Serializable, TransitionSeriesInterface
+public class TransitionSeries implements Serializable, ITransitionSeries
 {
 
 	/**
@@ -293,7 +293,7 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 	}
 
 	@Override
-	public int compareTo(TransitionSeriesInterface o)
+	public int compareTo(ITransitionSeries o)
 	{
 
 		if (!(o instanceof TransitionSeries)) {
@@ -414,7 +414,7 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 	}
 	
 	@Override
-	public List<TransitionSeriesInterface> getPrimaryTransitionSeries() {
+	public List<ITransitionSeries> getPrimaryTransitionSeries() {
 		return new ArrayList<>(getBaseTransitionSeries());
 	}
 
@@ -447,7 +447,7 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 		return type;
 	}
 
-
+	@Override
 	public TransitionSeriesMode getMode() {
 		return mode;
 	}

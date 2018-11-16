@@ -10,7 +10,7 @@ import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.table.Element;
 
-public interface TransitionSeriesInterface extends Iterable<Transition>, Comparable<TransitionSeriesInterface> {
+public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITransitionSeries> {
 
 	/**
 	 * Is this TransitionSeries visible?
@@ -68,6 +68,7 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 	int getTransitionCount();
 	
 	
+	TransitionSeriesMode getMode();
 	
 	
 	
@@ -96,14 +97,14 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 	/**
 	 * Returns a list of {@link PrimaryTransitionSeries} which compose this TransitionSeries. If this is a primary transition series, it returns itself within a list.
 	 */
-	List<TransitionSeriesInterface> getPrimaryTransitionSeries();
+	List<ITransitionSeries> getPrimaryTransitionSeries();
 	
 	
 	
 	/**
 	 * Inspects the type of TransitionSeries given and returns a copy
 	 */
-	static TransitionSeriesInterface copy(TransitionSeriesInterface other) {
+	static ITransitionSeries copy(ITransitionSeries other) {
 		if (other instanceof PrimaryTransitionSeries) {
 			return new PrimaryTransitionSeries((PrimaryTransitionSeries)other);
 		}
@@ -121,9 +122,9 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 	 * Reads the identifier string and returns a new blank TransitionSeries, or null
 	 * if the identifier string is invalid.
 	 */
-	public static TransitionSeriesInterface get(String identifier) {
+	public static ITransitionSeries get(String identifier) {
 		if (identifier.contains("+")) {
-			List<TransitionSeriesInterface> tss = Arrays.asList(identifier.split("\\+")).stream().map(TransitionSeriesInterface::get).collect(Collectors.toList());
+			List<ITransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(ITransitionSeries::get).collect(Collectors.toList());
 			if (tss.contains(null)) {
 				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
 			}
@@ -139,4 +140,6 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 		return new PrimaryTransitionSeries(e, tst);
 	}
 
+	
+	
 }

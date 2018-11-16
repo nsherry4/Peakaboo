@@ -9,23 +9,23 @@ import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.table.Element;
 
-public class PileUpTransitionSeries implements TransitionSeriesInterface {
+public class PileUpTransitionSeries implements ITransitionSeries {
 
-	private List<TransitionSeriesInterface> primaries;
+	private List<ITransitionSeries> primaries;
 	private boolean visible;
 	private List<Transition> transitions = new ArrayList<>();
 	
-	public PileUpTransitionSeries(List<TransitionSeriesInterface> primaries) {
+	public PileUpTransitionSeries(List<ITransitionSeries> primaries) {
 		this.primaries = new ArrayList<>();
 		
 		//just in case this list doesn't just contain primaries, we'll force the issue
-		for (TransitionSeriesInterface primary : primaries) {
+		for (ITransitionSeries primary : primaries) {
 			this.primaries.addAll(primary.getPrimaryTransitionSeries());
 		}
 		
 		//for each primary, we generate new transitions by summing every existing transition against every primary transition
 		//eg {t1, t2} x {t3, t4} = {t1+t3, t1+t4, t2+t3, t2+t4}
-		for (TransitionSeriesInterface primary : primaries) {
+		for (ITransitionSeries primary : primaries) {
 			List<Transition> summed = new ArrayList<>();
 			for (Transition t1 : transitions) {
 				for (Transition t2 : primary.getAllTransitions()) {
@@ -39,11 +39,11 @@ public class PileUpTransitionSeries implements TransitionSeriesInterface {
 	
 	public PileUpTransitionSeries(PileUpTransitionSeries other) {
 		this.visible = other.visible;
-		this.primaries = other.primaries.stream().map(TransitionSeriesInterface::copy).collect(Collectors.toList());
+		this.primaries = other.primaries.stream().map(ITransitionSeries::copy).collect(Collectors.toList());
 		this.transitions = new ArrayList<>(other.transitions);
 	}
 	
-	public PileUpTransitionSeries(TransitionSeriesInterface... primaries) {
+	public PileUpTransitionSeries(ITransitionSeries... primaries) {
 		this(Arrays.asList(primaries));
 	}
 
@@ -53,7 +53,7 @@ public class PileUpTransitionSeries implements TransitionSeriesInterface {
 	}
 
 	@Override
-	public int compareTo(TransitionSeriesInterface o) {
+	public int compareTo(ITransitionSeries o) {
 		if (o.getElement() == getElement())
 		{
 			return -getShell().compareTo(o.getShell());
@@ -116,12 +116,17 @@ public class PileUpTransitionSeries implements TransitionSeriesInterface {
 
 	@Override
 	public String toIdentifierString() {
-		return primaries.stream().map(TransitionSeriesInterface::toIdentifierString).reduce((a, b) -> a + "+" + b).get();
+		return primaries.stream().map(ITransitionSeries::toIdentifierString).reduce((a, b) -> a + "+" + b).get();
 	}
 
 	@Override
-	public List<TransitionSeriesInterface> getPrimaryTransitionSeries() {
+	public List<ITransitionSeries> getPrimaryTransitionSeries() {
 		return new ArrayList<>(primaries);
+	}
+
+	@Override
+	public TransitionSeriesMode getMode() {
+		return TransitionSeriesMode.SUMMATION;
 	}
 	
 	

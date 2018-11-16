@@ -10,7 +10,7 @@ import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.table.Element;
 
-public class PrimaryTransitionSeries implements TransitionSeriesInterface {
+public class PrimaryTransitionSeries implements ITransitionSeries {
 
 	private List<Transition> transitions = new ArrayList<>();
 	private TransitionShell shell;
@@ -45,7 +45,7 @@ public class PrimaryTransitionSeries implements TransitionSeriesInterface {
 	}
 	
 	@Override
-	public int compareTo(TransitionSeriesInterface o) {
+	public int compareTo(ITransitionSeries o) {
 		if (o.getElement() == getElement())
 		{
 			return -getShell().compareTo(o.getShell());
@@ -187,10 +187,15 @@ public class PrimaryTransitionSeries implements TransitionSeriesInterface {
 
 
 	@Override
-	public List<TransitionSeriesInterface> getPrimaryTransitionSeries() {
-		List<TransitionSeriesInterface> list = new ArrayList<>();
+	public List<ITransitionSeries> getPrimaryTransitionSeries() {
+		List<ITransitionSeries> list = new ArrayList<>();
 		list.add(this);
 		return list;
+	}
+
+	@Override
+	public TransitionSeriesMode getMode() {
+		return TransitionSeriesMode.PRIMARY;
 	}
 
 
