@@ -2,84 +2,77 @@ package peakaboo.ui.swing.plotting.datasource;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.Font;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 
 import peakaboo.datasource.model.DataSource;
-import peakaboo.ui.swing.plotting.PlotPanel;
+import swidget.Swidget;
+import swidget.models.ListTableModel;
 import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.gradientpanel.TitlePaintedPanel;
-import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.ModalLayer;
-import swidget.widgets.layout.HeaderBox;
-import swidget.widgets.toggle.ItemToggleButton;
-import swidget.widgets.toggle.ToggleGroup;
+import swidget.widgets.layerpanel.widgets.ListPickerLayer;
+import swidget.widgets.listwidget.ListWidget;
+import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
 
-public class DataSourceSelection extends HeaderLayer
+public class DataSourceSelection extends ListPickerLayer<DataSource>
 {
-	
-	private Map<ItemToggleButton, DataSource> toggleMap;
-	private DataSource selected;
+
 	
 	public DataSourceSelection(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {
-		super(parent);
-		
-		toggleMap = new HashMap<ItemToggleButton, DataSource>();
-		
-		JPanel body = new JPanel(new BorderLayout());
-		
-		TitlePaintedPanel title = new TitlePaintedPanel("Peakaboo can't decide what format this data is in.", true);
-		title.setBackgroundPaint(Color.decode("#FFE082"));
-		body.add(title, BorderLayout.NORTH);
-		
-		JPanel optionPanel = new JPanel();
-		optionPanel.setBorder(Spacing.bHuge());
-		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
-		
-		final List<ItemToggleButton> toggleButtons = new ArrayList<ItemToggleButton>();
-		ItemToggleButton toggle;
-		final ToggleGroup group = new ToggleGroup();
-		for (DataSource dsp : dsps)
-		{
-			toggle = new ItemToggleButton("", dsp.getFileFormat().getFormatName(), dsp.getFileFormat().getFormatDescription());
-			toggleMap.put(toggle, dsp);
-			group.registerButton(toggle);	
-			toggleButtons.add(toggle);
-			
-			optionPanel.add(toggle);
-			optionPanel.add(Box.createVerticalStrut(Spacing.medium));
-		}
-		toggleButtons.get(0).setSelected(true);
-		
-		body.add(optionPanel, BorderLayout.CENTER);
-		
+		super(parent, "Please Select Data Format", dsps, onSelect);		
+	}
 
+	@Override
+	protected JTable getTable(List<DataSource> items) {
+		JTable table = new JTable(new ListTableModel<>(items));
+		TableColumn c = table.getColumnModel().getColumn(0);
+		c.setCellRenderer(new ListWidgetTableCellRenderer<>(new DataSourceWidget()));
+		return table;
+	}
+
+	private static class DataSourceWidget extends ListWidget<DataSource> {
 		
-		JButton ok = new ImageButton("Select").withAction(() -> {
-			remove();
-			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
-			onSelect.accept(selected);
-		}).withStateDefault();
+		private JLabel titleLabel;
+		private JLabel descLabel;
 		
-		JButton cancel = new ImageButton("Cancel").withAction(() -> {
-			remove();
-		});
+		public DataSourceWidget() {
+			setLayout(new BorderLayout(Spacing.tiny, Spacing.tiny));
+			
+			titleLabel = new JLabel("");
+			descLabel = new JLabel("");
+			titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD).deriveFont(titleLabel.getFont().getSize() + 4f));
+			descLabel.setFont(descLabel.getFont().deriveFont(Font.PLAIN));
+
+			add(titleLabel, BorderLayout.NORTH);
+			add(descLabel, BorderLayout.CENTER);
+			
+			setBorder(Spacing.bLarge());
+		}
+
+		@Override
+		protected void onSetValue(DataSource value) {
+			System.out.println("onSetValue");
+			if (titleLabel != null) titleLabel.setText(value.getFileFormat().getFormatName());
+			if (descLabel != null) {
+				String desc = value.getFileFormat().getFormatDescription();
+				desc = Swidget.lineWrapHTML(descLabel, desc, 400);
+				descLabel.setText(desc);
+			}
+		}
 		
-		getHeader().setComponents(cancel, "Please Select Data Format", ok);
-		setBody(body);
+		@Override
+		public void setForeground(Color color) {
+			super.setForeground(color);
+			if (titleLabel != null) titleLabel.setForeground(color);
+			if (descLabel != null) descLabel.setForeground(color);
+		}
 		
 	}
 	
-
 }
