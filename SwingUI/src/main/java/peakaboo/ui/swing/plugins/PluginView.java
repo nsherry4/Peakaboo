@@ -1,6 +1,5 @@
 package peakaboo.ui.swing.plugins;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
@@ -16,20 +15,15 @@ import org.apache.batik.ext.swing.GridBagConstants;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.calibration.CalibrationPluginManager;
 import peakaboo.calibration.CalibrationReference;
-import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
-import peakaboo.datasource.plugin.DataSourcePlugin;
-import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.JavaDataSourcePlugin;
-import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.JavaFilterPlugin;
+import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
-import swidget.widgets.TextWrapping;
 import swidget.widgets.layout.PropertyPanel;
 import swidget.widgets.layout.TitledPanel;
 
@@ -67,7 +61,8 @@ public class PluginView extends JPanel {
 		propertyPanel.setBadge(getIcon(plugin));
 		
 		
-		description = new JLabel(TextWrapping.wrapTextForMultiline(plugin.getDescription(), 420));
+		description = new JLabel();
+		description.setText(Swidget.lineWrapHTML(description, plugin.getDescription(), 420));
 		description.setVerticalAlignment(SwingConstants.TOP);
 		JScrollPane scroller = new JScrollPane(description);
 		scroller.setBorder(Spacing.bLarge());

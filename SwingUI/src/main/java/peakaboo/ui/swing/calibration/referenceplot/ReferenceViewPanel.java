@@ -39,7 +39,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 
 		
 		JPanel infopanel = new JPanel(new BorderLayout());
-		JLabel info = new JLabel("<html>" + reference.pluginDescription() + "</html>");
+		JLabel info = new JLabel("<html>" + reference.longDescription() + "</html>");
 		info.setVerticalAlignment(SwingConstants.TOP);
 		info.setBorder(Spacing.bHuge());
 		infopanel.add(info, BorderLayout.CENTER);

@@ -70,6 +70,17 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarInfo, c);
 	
 		
+		toolbarConcentrations = new ToolbarImageButton("Composition")
+				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
+				.withTooltip("Display composition estimates for the fitted elements. Requires a Z-Calibration Profile.")
+				.withSignificance(false);
+		toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
+		
+		c.gridx += 1;
+		toolbarConcentrations.setEnabled(false);
+		this.add(toolbarConcentrations, c);
+		
+		
 		toolbarMap = new ToolbarImageButton("Map Fittings")
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
@@ -81,15 +92,7 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarMap, c);
 
 		
-		toolbarConcentrations = new ToolbarImageButton("Composition")
-				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-				.withTooltip("Display composition estimates for the fitted elements. Requires a Z-Calibration Profile.")
-				.withSignificance(true);
-		toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
-		
-		c.gridx += 1;
-		toolbarConcentrations.setEnabled(false);
-		this.add(toolbarConcentrations, c);
+
 
 		
 		

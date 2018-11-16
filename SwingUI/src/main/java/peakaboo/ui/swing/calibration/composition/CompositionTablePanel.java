@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.concentrations;
+package peakaboo.ui.swing.calibration.composition;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,23 +10,20 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
-import peakaboo.calibration.Concentrations;
+import peakaboo.calibration.Composition;
 import peakaboo.curvefit.peak.table.Element;
 import swidget.widgets.Spacing;
 
-public class ConcentrationsTablePanel extends JPanel {
+public class CompositionTablePanel extends JPanel {
 	
-	private Concentrations conc;
 	
-	public ConcentrationsTablePanel(Concentrations conc) {
-		this.conc = conc;
+	public CompositionTablePanel(Composition comp) {
 		
 		setLayout(new BorderLayout());
 		setBorder(Spacing.bHuge());
 		
-		List<Element> elements = conc.elementsByConcentration();
+		List<Element> elements = comp.elementsByConcentration();
 		AbstractTableModel dm = new AbstractTableModel() {
 			
 			@Override
@@ -35,7 +32,7 @@ public class ConcentrationsTablePanel extends JPanel {
 				if (columnIndex == 0) {
 					return e.toString();
 				} else {
-					return conc.getPercent(e);
+					return comp.getPercent(e);
 				}
 			}
 			
@@ -53,7 +50,7 @@ public class ConcentrationsTablePanel extends JPanel {
 				if (columnIndex == 0) {
 					return "Element";
 				} else {
-					return "Concentration";
+					return "Composition";
 				}
 			}
 			

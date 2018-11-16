@@ -286,6 +286,10 @@ public class CalibrationReference implements BoltConfigPlugin {
 
 	@Override
 	public String pluginDescription() {
+		return getDescription();
+	}
+	
+	public String longDescription() {
 		String desc = getDescription();
 		if (desc == null) { desc = ""; }
 		desc = desc.trim();

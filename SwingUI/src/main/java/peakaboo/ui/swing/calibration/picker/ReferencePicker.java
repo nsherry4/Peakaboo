@@ -40,6 +40,11 @@ public class ReferencePicker extends ListPickerLayer<CalibrationReference> {
 			public int getColumnCount() {
 				return 2;
 			}
+			
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return columnIndex == 1;
+			}
 
 		};
 		

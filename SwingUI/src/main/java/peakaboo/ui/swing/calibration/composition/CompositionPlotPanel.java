@@ -1,19 +1,17 @@
-package peakaboo.ui.swing.calibration.concentrations;
+package peakaboo.ui.swing.calibration.composition;
 
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
-import peakaboo.calibration.Concentrations;
-import peakaboo.display.calibration.ConcentrationPlot;
+import peakaboo.calibration.Composition;
+import peakaboo.display.calibration.CompositionPlot;
 
-public class ConcentrationsPlotPanel extends GraphicsPanel {
+public class CompositionPlotPanel extends GraphicsPanel {
 
-	private Concentrations conc;
-	private ConcentrationPlot plot;
+	private CompositionPlot plot;
 	
-	public ConcentrationsPlotPanel(Concentrations conc) {
-		this.conc = conc;
-		plot = new ConcentrationPlot(conc);
+	public CompositionPlotPanel(Composition comp) {
+		plot = new CompositionPlot(comp);
 	}
 	
 	@Override

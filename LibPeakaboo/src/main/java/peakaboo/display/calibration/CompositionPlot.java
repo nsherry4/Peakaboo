@@ -29,12 +29,12 @@ import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.palette.PaletteColour;
-import peakaboo.calibration.Concentrations;
+import peakaboo.calibration.Composition;
 import peakaboo.curvefit.peak.table.Element;
 
-public class ConcentrationPlot {
+public class CompositionPlot {
 
-	private Concentrations conc;
+	private Composition comp;
 	
 	private PlotDrawing plotDrawing;
 	private Spectrum data;
@@ -42,8 +42,8 @@ public class ConcentrationPlot {
 	private List<PlotPainter> plotPainters;
 	private List<AxisPainter> axisPainters;
 		
-	public ConcentrationPlot(Concentrations conc) {
-		this.conc = conc;
+	public CompositionPlot(Composition conc) {
+		this.comp = conc;
 		this.data = getData();
 		configure();
 	}
@@ -67,11 +67,11 @@ public class ConcentrationPlot {
 			).withTraceType(TraceType.BAR));
 		
 
-		List<Element> elements = conc.elementsByConcentration();
+		List<Element> elements = comp.elementsByConcentration();
 
 		axisPainters = new ArrayList<>();
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Concentration", null, null, "Elements - Calibrated With " + conc.getProfile().getName()));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Composition", null, null, "Elements - Calibrated With " + comp.getProfile().getName()));
 		NumberFormat format = new DecimalFormat("0.0");
 		Function<Integer, String> sensitivityFormatter = i -> format.format(  ((float)i/10000f)  ) + "%";
 		axisPainters.add(new TickMarkAxisPainter(
@@ -100,10 +100,10 @@ public class ConcentrationPlot {
 	
 	private Spectrum getData() {	
 		
-		List<Element> es = conc.elementsByConcentration();
+		List<Element> es = comp.elementsByConcentration();
 		Spectrum spectrum = new ISpectrum(es.size());
 		for (Element e : es) {
-			spectrum.add(conc.get(e));
+			spectrum.add(comp.get(e));
 		}
 		
 		return spectrum;

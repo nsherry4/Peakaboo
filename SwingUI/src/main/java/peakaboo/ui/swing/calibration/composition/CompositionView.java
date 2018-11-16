@@ -1,24 +1,18 @@
-package peakaboo.ui.swing.calibration.concentrations;
+package peakaboo.ui.swing.calibration.composition;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 
-import peakaboo.calibration.Concentrations;
+import peakaboo.calibration.Composition;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.peak.table.Element;
 import stratus.controls.ButtonLinker;
@@ -30,15 +24,14 @@ import swidget.widgets.buttons.ImageButtonSize;
 import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ToastLayer;
-import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.HeaderTabBuilder;
 
-public class ConcentrationsView extends HeaderLayer {
+public class CompositionView extends HeaderLayer {
 
-	private Concentrations conc;
+	private Composition conc;
 	private LayerPanel parent;
 	
-	public ConcentrationsView(Concentrations conc, LayerPanel parent) {
+	public CompositionView(Composition conc, LayerPanel parent) {
 		super(parent);
 		this.conc = conc;
 		this.parent = parent;
@@ -48,12 +41,12 @@ public class ConcentrationsView extends HeaderLayer {
 		
 		ImageButton save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS)
 				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Save concentrations as text")
+				.withTooltip("Save composition as text")
 				.withAction(this::saveData);
 		
 		ImageButton copy = new ImageButton(StockIcon.EDIT_COPY)
 				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Copy concentrations to clipboard")
+				.withTooltip("Copy composition to clipboard")
 				.withAction(this::copyData);
 		
 		ButtonLinker linker = new ButtonLinker(save, copy);
@@ -70,12 +63,12 @@ public class ConcentrationsView extends HeaderLayer {
 	}
 
 	private JPanel buildChart() {
-		JPanel chart = new ConcentrationsPlotPanel(conc);
+		JPanel chart = new CompositionPlotPanel(conc);
 		return chart;
 	}
 	
 	private JPanel buildTable( ) {
-		JPanel table = new ConcentrationsTablePanel(conc);
+		JPanel table = new CompositionTablePanel(conc);
 		return table;
 	}
 
@@ -105,7 +98,7 @@ public class ConcentrationsView extends HeaderLayer {
 	private void saveData() {
 		
 		//TODO: starting folder
-		SwidgetFilePanels.saveFile(parent, "Save Concentration Data", null, new SimpleFileExtension("Text File", "txt"), result -> {
+		SwidgetFilePanels.saveFile(parent, "Save Composition Data", null, new SimpleFileExtension("Text File", "txt"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}
@@ -116,7 +109,7 @@ public class ConcentrationsView extends HeaderLayer {
 				writer.write(textData());
 				writer.close();
 			} catch (IOException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to save concentration data", e);
+				PeakabooLog.get().log(Level.SEVERE, "Failed to save composition data", e);
 			}
 			
 		});

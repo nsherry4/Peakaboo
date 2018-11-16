@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import cyclops.Coord;
-import peakaboo.calibration.Concentrations;
+import peakaboo.calibration.Composition;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
@@ -58,7 +58,7 @@ public class ConcentrationsPanel extends JPanel {
 			List<TransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
 			Map<String, String> properties = new LinkedHashMap<>();
 			
-			Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), ts -> {
+			Composition ppm = Composition.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), ts -> {
 				return controller.getSettings().getMapFittings().getMapForTransitionSeries(ts).get(index);
 			});
 			for (TransitionSeries ts : tss) {

@@ -32,7 +32,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import peakaboo.calibration.CalibrationProfile;
-import peakaboo.calibration.Concentrations;
+import peakaboo.calibration.Composition;
 import peakaboo.common.PeakabooLog;
 import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
@@ -52,7 +52,7 @@ import peakaboo.mapping.correction.CorrectionsManager;
 import peakaboo.mapping.results.MapResult;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
-import peakaboo.ui.swing.calibration.concentrations.ConcentrationsView;
+import peakaboo.ui.swing.calibration.composition.CompositionView;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -130,9 +130,9 @@ class MapperToolbar extends JToolBar {
 				}
 				return sum /= indexes.size();
 			};
-			Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
+			Composition ppm = Composition.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
 			
-			ConcentrationsView concentrations = new ConcentrationsView(ppm, panel);
+			CompositionView concentrations = new CompositionView(ppm, panel);
 			panel.pushLayer(concentrations);
 							
 		});

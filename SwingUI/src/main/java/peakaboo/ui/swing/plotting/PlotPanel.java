@@ -70,7 +70,7 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.calibration.CalibrationPluginManager;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.calibration.CalibrationReference;
-import peakaboo.calibration.Concentrations;
+import peakaboo.calibration.Composition;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
@@ -96,7 +96,7 @@ import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.Mapping;
 import peakaboo.mapping.results.MapResultSet;
-import peakaboo.ui.swing.calibration.concentrations.ConcentrationsView;
+import peakaboo.ui.swing.calibration.composition.CompositionView;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import peakaboo.ui.swing.environment.DesktopApp;
@@ -1140,7 +1140,7 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionShowConcentrations() {
 		CalibrationProfile p = controller.calibration().getCalibrationProfile();
 		List<TransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
-		Concentrations ppm = Concentrations.calculate(tss, p, ts -> {
+		Composition ppm = Composition.calculate(tss, p, ts -> {
 			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
 			float intensity = 0;
 			if (result == null) { return 0f; }
@@ -1152,7 +1152,7 @@ public class PlotPanel extends TabbedLayerPanel
 		});
 		
 		
-		ConcentrationsView concentrations = new ConcentrationsView(ppm, this);
+		CompositionView concentrations = new CompositionView(ppm, this);
 		this.pushLayer(concentrations);
 
 	}

@@ -5,10 +5,8 @@ import java.io.File;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LookAndFeel;
@@ -23,16 +21,12 @@ import com.ezware.dialog.task.TaskDialog;
 import eventful.EventfulConfig;
 import peakaboo.calibration.CalibrationPluginManager;
 import peakaboo.common.Env;
-import peakaboo.common.PeakabooLog;
-import peakaboo.common.Version;
 import peakaboo.common.PeakabooConfiguration;
 import peakaboo.common.PeakabooConfiguration.MemorySize;
-import peakaboo.curvefit.peak.table.CombinedPeakTable;
-import peakaboo.curvefit.peak.table.DelegatingPeakTable;
-import peakaboo.curvefit.peak.table.KrausePeakTable;
+import peakaboo.common.PeakabooLog;
+import peakaboo.common.Version;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.table.SerializedPeakTable;
-import peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
@@ -44,8 +38,6 @@ import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.TextWrapping;
-import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layerpanel.LayerPanelConfig;
@@ -65,7 +57,7 @@ public class Peakaboo
 	private static void showError(Throwable e, String message, String text) {
 		TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
 		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-		errorDialog.setInstruction(TextWrapping.wrapTextForMultiline(message));
+		errorDialog.setInstruction(Swidget.lineWrapHTML(new JLabel(), message));
 		
 		String realText = text;
 				
