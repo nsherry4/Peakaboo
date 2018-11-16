@@ -29,7 +29,7 @@ public class FittingLabel extends DataLabel {
 	private String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		TransitionSeries ts = fit.getTransitionSeries();
-		String titleName = ts.getDescription();
+		String titleName = ts.toString();
 
 		
 		String titleHeight = SigDigits.roundFloatTo(fit.getCurveScale(), 1);

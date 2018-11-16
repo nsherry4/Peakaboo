@@ -1,12 +1,14 @@
 package peakaboo.curvefit.peak.transition;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.table.Element;
 
-public interface TransitionSeriesInterface extends Iterable<Transition> {
+public interface TransitionSeriesInterface extends Iterable<Transition>, Comparable<TransitionSeriesInterface> {
 
 	/**
 	 * Is this TransitionSeries visible?
@@ -23,11 +25,6 @@ public interface TransitionSeriesInterface extends Iterable<Transition> {
 	void setVisible(boolean visible);
 	
 	
-	/**
-	 * Returns true if the TransitionSeries has no transitions
-	 * @return
-	 */
-	boolean isEmpty();
 	
 	
 	TransitionShell getShell();
@@ -79,6 +76,20 @@ public interface TransitionSeriesInterface extends Iterable<Transition> {
 	
 	
 	
-	List<Transition> escape(EscapePeakType type);
+	default List<Transition> escape(EscapePeakType type) {
+		if (! type.get().hasOffset()) {
+			return new ArrayList<>();
+		}
+		
+		List<Transition> escapePeaks = new ArrayList<>();
+		for (Transition t : this) {
+			for (Transition o : type.get().offset()) {
+				escapePeaks.add(new Transition(t.energyValue - o.energyValue, t.relativeIntensity * o.relativeIntensity * EscapePeak.intensity(this.getElement()), t.name + " Escape"));
+			}
+		}
+		return escapePeaks;
+	}
+
+	double getIntensity();
 	
 }

@@ -1125,7 +1125,7 @@ public class PlotPanel extends TabbedLayerPanel
 			}
 		});
 		textfield.setText(controller.fitting().getAnnotation(selected));
-		LayerDialog dialog = new LayerDialog("Annotation for " + selected.getDescription(), textfield, MessageType.QUESTION);
+		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, MessageType.QUESTION);
 		dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
 			this.popLayer();
 		}));

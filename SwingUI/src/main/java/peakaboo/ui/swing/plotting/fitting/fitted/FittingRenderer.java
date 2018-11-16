@@ -67,7 +67,7 @@ class FittingRenderer extends DefaultTableCellRenderer
 		if (value instanceof TransitionSeries){
 			TransitionSeries ts = (TransitionSeries)value;
 			intensity = controller.getTransitionSeriesIntensity(ts);
-			tswidget.setName(ts.getDescription());
+			tswidget.setName(ts.toString());
 			
 			tswidget.setIntensity(SigDigits.roundFloatTo(intensity, 1));
 			tswidget.setFlag(controller.hasAnnotation(ts));

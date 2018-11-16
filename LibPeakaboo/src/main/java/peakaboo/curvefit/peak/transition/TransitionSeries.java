@@ -31,7 +31,7 @@ import peakaboo.curvefit.peak.table.Element;
  * @author Nathaniel Sherry, 2009-2010
  */
 
-public class TransitionSeries implements Serializable, Iterable<Transition>, Comparable<TransitionSeries>, TransitionSeriesInterface
+public class TransitionSeries implements Serializable, TransitionSeriesInterface
 {
 
 	/**
@@ -180,20 +180,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		return transitions.iterator();
 	}
 
-
-
-
-	/**
-	 * Returns a description of this {@link TransitionSeries}, including the {@link Element} and the {@link TransitionShell}. If the {@link TransitionSeries} is a pile-up or summation, it will be reflected in the description
-	 * @return
-	 */
-	public String getDescription()
-	{
-		return getDescription(true);
-	}
-
-
-	private String getDescription(boolean isShort)
+	
+	private String getDescription()
 	{
 		switch (getMode())
 		{
@@ -207,8 +195,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 			default:
 
-				if (isShort) return getElement().name() + " " + getShell().name();
-				else return getElement().toString() + " " + getShell().name();
+				return getElement().name() + " " + getShell().name();
 
 		}
 
@@ -225,16 +212,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
-	/**
-	 * Alias for getDescription(true)
-	 * 
-	 * @return the element-name string
-	 */
-	public String toElementString()
-	{
-		return getDescription(true);
-	}
-	
 
 	/**
 	 * Generates an identifier string of the form He:K which can be used to uniquely
@@ -319,24 +296,22 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 	@Override
-	public List<Transition> escape(EscapePeakType type) {
-		if (! type.get().hasOffset()) {
-			return new ArrayList<>();
-		}
-		
-		List<Transition> escapePeaks = new ArrayList<>();
-		for (Transition t : this) {
-			for (Transition o : type.get().offset()) {
-				escapePeaks.add(new Transition(t.energyValue - o.energyValue, t.relativeIntensity * o.relativeIntensity * EscapePeak.intensity(this.getElement()), t.name + " Escape"));
-			}
-		}
-		return escapePeaks;
-	}
-	
-
-	public int compareTo(TransitionSeries otherTS)
+	public int compareTo(TransitionSeriesInterface o)
 	{
 
+		if (!(o instanceof TransitionSeries)) {
+			if (o.getElement() == getElement())
+			{
+				return -getShell().compareTo(o.getShell());
+			}
+			else
+			{
+				return -getElement().compareTo(o.getElement());
+			}
+		}
+		
+		TransitionSeries otherTS = (TransitionSeries) o;
+		
 		switch (getMode())
 		{
 
@@ -466,6 +441,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 
+	@Override
 	public double getIntensity() {
 		return intensity;
 	}
@@ -487,10 +463,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		return element;
 	}
 
-	@Override
-	public boolean isEmpty() {
-		return getTransitionCount() == 0;
-	}
 
 
 }

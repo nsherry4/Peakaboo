@@ -58,7 +58,7 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 		
 		if (value instanceof TransitionSeries){
 			TransitionSeries ts = (TransitionSeries)value;
-			tswidget.setName(ts.getDescription());
+			tswidget.setName(ts.toString());
 			tswidget.setEnabled(enabled.test(ts));
 			
 			String tooltip = "";

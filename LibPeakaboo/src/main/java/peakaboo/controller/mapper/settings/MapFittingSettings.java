@@ -566,7 +566,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	private String getDatasetTitle(List<TransitionSeries> list)
 	{
 		
-		List<String> elementNames = list.stream().map(ts -> ts.toElementString()).collect(toList());
+		List<String> elementNames = list.stream().map(ts -> ts.toString()).collect(toList());
 		String title = elementNames.stream().collect(joining(", "));
 		if (title == null) return "-";
 		return title;
