@@ -1,15 +1,12 @@
 package peakaboo.ui.swing.calibration.referenceplot;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,26 +16,15 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import javax.swing.tree.DefaultTreeModel;
 
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import stratus.controls.ButtonLinker;
-import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonSize;
-import swidget.widgets.buttons.ToggleImageButton;
 import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.HeaderTabBuilder;
 import swidget.widgets.listwidget.ListWidget;
 import swidget.widgets.listwidget.ListWidgetTableCellRenderer;

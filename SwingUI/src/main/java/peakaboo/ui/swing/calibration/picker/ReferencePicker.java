@@ -1,39 +1,59 @@
 package peakaboo.ui.swing.calibration.picker;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
+import peakaboo.calibration.CalibrationPluginManager;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.ui.swing.calibration.referenceplot.ReferenceViewPanel;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.layerpanel.HeaderLayer;
+import swidget.models.ListTableModel;
+import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.ModalLayer;
+import swidget.widgets.layerpanel.widgets.ListPickerLayer;
+import swidget.widgets.listwidget.ListWidget;
+import swidget.widgets.listwidget.ListWidgetCellEditor;
+import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
-public class ReferencePicker extends HeaderLayer {
+public class ReferencePicker extends ListPickerLayer<CalibrationReference> {
 
-	private Consumer<CalibrationReference> onOK;
-	private ReferenceList reflist;
 	private LayerPanel parent;
+		
+	public ReferencePicker(LayerPanel parent, Consumer<CalibrationReference> onAccept) {
+		super(parent, "Select Z-Calibration Reference", CalibrationPluginManager.SYSTEM.getPlugins().newInstances(), onAccept);
+		this.parent = parent;		
+	}
 	
-	private ImageButton ok, cancel;
-	
-	public ReferencePicker(LayerPanel parent) {
-		super(parent);
-		this.parent = parent;
+	protected JTable getTable(List<CalibrationReference> items) {
+		
+		TableModel model = new ListTableModel<CalibrationReference>(items) {
+			
+			@Override
+			public int getColumnCount() {
+				return 2;
+			}
 
-		reflist = new ReferenceList(
-				ref -> onOK.accept(ref), 
-				this::showReferencePlot);
+		};
 		
-		ok = new ImageButton("OK").withStateDefault().withAction(() -> onOK.accept(reflist.getSelectedReference()));
-		cancel = new ImageButton("Cancel").withAction(() -> remove());
-				
-		getHeader().setComponents(cancel, "Select Z-Calibration Reference", ok);
-		setBody(reflist);
-		
-		reflist.focusTable();
-		
+		JTable table = new JTable(model);
+		TableColumn cref = table.getColumnModel().getColumn(0);
+		TableColumn cmore = table.getColumnModel().getColumn(1);
+		cref.setCellRenderer(new ListWidgetTableCellRenderer<>(new ReferenceWidget()));
+		cmore.setCellRenderer(new ListWidgetTableCellRenderer<>(new MoreWidget()));
+		cmore.setCellEditor(new ListWidgetCellEditor<>(new MoreWidget(this::showReferencePlot)));
+		cmore.setWidth(64);
+		cmore.setMinWidth(64);
+		cmore.setMaxWidth(64);
+		cmore.setResizable(false);
+		return table;
 	}
 
 	private void showReferencePlot(CalibrationReference reference) {
@@ -42,15 +62,54 @@ public class ReferencePicker extends HeaderLayer {
 		parent.pushLayer(view);
 		
 	}
+
+}
+
+
+
+class MoreWidget extends ListWidget<CalibrationReference> {
 	
-	public void setOnOK(Consumer<CalibrationReference> onOK) {
-		this.onOK = onOK;
-	}	
+	private JLabel label;
 	
-	public void focus() {
-		reflist.focusTable();
+	public MoreWidget() {
+		this(ref -> {});
 	}
 	
 	
+	public MoreWidget(Consumer<CalibrationReference> onMore) {
+		setLayout(new BorderLayout());
+		setBorder(Spacing.bLarge());
+		label = new JLabel("more...");
+		setLabelColour(getForeground());
+		label.setOpaque(false);
+		add(label, BorderLayout.SOUTH);
+		
+		label.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				onMore.accept(getValue());	
+			}
+
+		});
+		
+	}
 	
+	@Override
+	public void setForeground(Color c) {
+		super.setForeground(c);
+		if (label == null) { return; }
+		setLabelColour(c);
+	}
+	
+	private void setLabelColour(Color c) {
+		Color cDetail = new Color(c.getRed(), c.getGreen(), c.getBlue(), 192);
+		label.setForeground(cDetail);
+	}
+
+
+	@Override
+	protected void onSetValue(CalibrationReference value) {
+		//It always just says "more..."
+	}
 }

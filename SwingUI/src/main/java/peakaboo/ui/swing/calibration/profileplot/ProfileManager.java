@@ -283,9 +283,7 @@ public class ProfileManager extends HeaderLayer {
 	
 	public void actionLoadCalibrationReference() {
 		
-		ReferencePicker picker = new ReferencePicker(parent);
-		
-		picker.setOnOK(ref -> {
+		ReferencePicker picker = new ReferencePicker(parent, ref -> {
 			parent.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			controller.calibration().loadCalibrationReference(ref);
 			
@@ -298,10 +296,8 @@ public class ProfileManager extends HeaderLayer {
 			controller.fitting().getFittingSelectionResults();
 			
 			parent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			parent.removeLayer(picker);
 		});
-
-		
+				
 		parent.pushLayer(picker);
 		
 	}
