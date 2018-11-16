@@ -163,7 +163,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 		if (text == null) {
 			super.setToolTipText(null);
 		} else {
-			super.setToolTipText(Swidget.lineWrapTooltip(this, text));
+			super.setToolTipText(Swidget.lineWrapHTML(this, text));
 		}
 	}
 

@@ -138,10 +138,13 @@ public class Swidget
 	}
 	
 	
-	public static String lineWrapTooltip(Component c, String text) {
+	public static String lineWrapHTML(Component c, String text) {
 		return "<html>" + lineWrap(c, text).replace("\n", "<br/>") + "</html>";
 	}
 	
+	public static String lineWrapHTML(Component c, String text, int width) {
+		return "<html>" + lineWrap(c, text, width).replace("\n", "<br/>") + "</html>";
+	}
 	
 	
 	public static void main(String[] args)

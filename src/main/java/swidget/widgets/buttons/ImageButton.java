@@ -136,7 +136,7 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 		if (text == null) {
 			super.setToolTipText(null);
 		} else {
-			super.setToolTipText(Swidget.lineWrapTooltip(this, text));
+			super.setToolTipText(Swidget.lineWrapHTML(this, text));
 		}
 	}
 

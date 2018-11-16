@@ -53,7 +53,7 @@ public class ClearPanel extends JPanel
 	@Override
 	public void setToolTipText(String text)
 	{
-		super.setToolTipText(Swidget.lineWrapTooltip(this, text));
+		super.setToolTipText(Swidget.lineWrapHTML(this, text));
 	}
 
 }

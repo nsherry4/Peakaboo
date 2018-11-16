@@ -149,7 +149,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 		if (text == null) {
 			super.setToolTipText(null);
 		} else {
-			super.setToolTipText(Swidget.lineWrapTooltip(this, text));
+			super.setToolTipText(Swidget.lineWrapHTML(this, text));
 		}
 	}
 
