@@ -158,6 +158,8 @@ public class Swidget
 		return logger;
 	}
 
+	public static final int DEFAULT_TEXTWRAP_WIDTH = 300;
+
 
 	
 }

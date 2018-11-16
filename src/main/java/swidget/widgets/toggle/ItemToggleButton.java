@@ -25,7 +25,6 @@ import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
-import swidget.widgets.TextWrapping;
 
 
 
@@ -38,7 +37,7 @@ public class ItemToggleButton extends JToggleButton
 	private String				title;
 	private JLabel 				icon;
 		
-	private static final int	defaultWidth = TextWrapping.DEFAULT_WIDTH;
+	private static final int	defaultWidth = Swidget.DEFAULT_TEXTWRAP_WIDTH;
 
 	public ItemToggleButton(String imageName, String title, String description)
 	{
@@ -244,7 +243,8 @@ public class ItemToggleButton extends JToggleButton
 		
 		
 		titleLabel = new JLabel(title);
-		descLabel = new JLabel(TextWrapping.wrapTextForMultiline(desc, width));
+		descLabel = new JLabel();
+		descLabel.setText(Swidget.lineWrapHTML(descLabel, desc, width));
 
 		
 		titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD).deriveFont(titleLabel.getFont().getSize() + 4f));
