@@ -32,7 +32,7 @@ import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.PlotController.UpdateType;
 import peakaboo.controller.plotter.calibration.CalibrationController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.plotting.PlotPanel;

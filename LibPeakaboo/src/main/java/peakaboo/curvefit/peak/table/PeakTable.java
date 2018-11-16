@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public interface PeakTable {
@@ -41,8 +41,8 @@ public interface PeakTable {
 			.filter(Element.F)
 	);
 	
-	default TransitionSeries get(Element e, TransitionShell tst) {
-		List<TransitionSeries> tss = getAll()
+	default LegacyTransitionSeries get(Element e, TransitionShell tst) {
+		List<LegacyTransitionSeries> tss = getAll()
 				.stream()
 				.filter(ts -> (ts.getElement() == e) && (ts.getShell() == tst))
 				.collect(Collectors.toList());
@@ -57,10 +57,10 @@ public interface PeakTable {
 	 * Gets the equivalent TransitionSeries from this PeakTable. This is a
 	 * convenience method for {@link PeakTable#get(Element, TransitionShell)}
 	 */
-	default TransitionSeries get(TransitionSeries other) {
+	default LegacyTransitionSeries get(LegacyTransitionSeries other) {
 		if (other.getShell() == TransitionShell.COMPOSITE) {
-			List<TransitionSeries> members = other.getBaseTransitionSeries().stream().map(ts -> get(ts.getElement(), ts.getShell())).filter(ts -> ts != null).collect(Collectors.toList());
-			return TransitionSeries.summation(members);
+			List<LegacyTransitionSeries> members = other.getBaseTransitionSeries().stream().map(ts -> get(ts.getElement(), ts.getShell())).filter(ts -> ts != null).collect(Collectors.toList());
+			return LegacyTransitionSeries.summation(members);
 		} else {
 			return get(other.getElement(), other.getShell());
 		}
@@ -71,17 +71,17 @@ public interface PeakTable {
 	 * the PeakTable, or null if the identifier string is invalid, or the
 	 * TransitionSeries is not listed in this PeakTable.
 	 */
-	default TransitionSeries get(String identifier) {
-		TransitionSeries ts = TransitionSeries.get(identifier);
+	default LegacyTransitionSeries get(String identifier) {
+		LegacyTransitionSeries ts = LegacyTransitionSeries.get(identifier);
 		if (ts == null) {
 			return null;
 		}
 		return get(ts);
 	}
 	
-	List<TransitionSeries> getAll();
+	List<LegacyTransitionSeries> getAll();
 	
-	default List<TransitionSeries> getForElement(Element e) {
+	default List<LegacyTransitionSeries> getForElement(Element e) {
 		return getAll()
 				.stream()
 				.filter(ts -> (ts.getElement() == e))

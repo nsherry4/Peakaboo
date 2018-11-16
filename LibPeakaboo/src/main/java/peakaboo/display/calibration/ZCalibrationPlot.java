@@ -28,7 +28,7 @@ import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLab
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public abstract class ZCalibrationPlot {
@@ -52,7 +52,7 @@ public abstract class ZCalibrationPlot {
 		int lowest = 0;
 		int highest = 0;
 				
-		List<TransitionSeries> tss = getKeys(type);
+		List<LegacyTransitionSeries> tss = getKeys(type);
 		if (tss.size() >= 1) {
 			lowest = tss.get(0).getElement().ordinal();
 			highest = tss.get(tss.size() - 1).getElement().ordinal();
@@ -120,12 +120,12 @@ public abstract class ZCalibrationPlot {
 		return plotDrawing;
 	}
 	
-	private static Spectrum profileToSpectrum(Map<TransitionSeries, Float> values, TransitionShell tst, int startOrdinal, int stopOrdinal) {	
+	private static Spectrum profileToSpectrum(Map<LegacyTransitionSeries, Float> values, TransitionShell tst, int startOrdinal, int stopOrdinal) {	
 		
 		Spectrum spectrum = new ISpectrum(stopOrdinal - startOrdinal + 1);
 		float value = 0;
 		for (int ordinal = startOrdinal; ordinal <= stopOrdinal; ordinal++) {
-			TransitionSeries ts = new TransitionSeries(Element.values()[ordinal], tst);
+			LegacyTransitionSeries ts = new LegacyTransitionSeries(Element.values()[ordinal], tst);
 			if (ts != null && values.containsKey(ts)) {
 				value = values.get(ts);
 			} else {
@@ -154,7 +154,7 @@ public abstract class ZCalibrationPlot {
 	}
 		
 	public Element getElement(int index) {
-		List<TransitionSeries> keys = getKeys(type);
+		List<LegacyTransitionSeries> keys = getKeys(type);
 		if (keys.size() == 0) {
 			return null;
 		}
@@ -193,14 +193,14 @@ public abstract class ZCalibrationPlot {
 		return type;
 	}
 
-	protected abstract List<TransitionSeries> getKeys(TransitionShell type);
-	protected abstract Map<TransitionSeries, Float> getData();
-	protected abstract Map<TransitionSeries, Float> getFadedData();
+	protected abstract List<LegacyTransitionSeries> getKeys(TransitionShell type);
+	protected abstract Map<LegacyTransitionSeries, Float> getData();
+	protected abstract Map<LegacyTransitionSeries, Float> getFadedData();
 	protected abstract boolean isEmpty();
 	protected abstract String getYAxisTitle();
 	protected abstract String getTitle();
 	protected abstract Function<Integer, String> getYAxisFormatter();
-	protected abstract String getHighlightText(TransitionSeries ts);
+	protected abstract String getHighlightText(LegacyTransitionSeries ts);
 	protected abstract List<DataLabel> getLabels(int lowest, int highest);
 	
 	

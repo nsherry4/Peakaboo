@@ -22,7 +22,7 @@ import javax.swing.table.TableModel;
 
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.display.map.MapScaleMode;
 import peakaboo.display.map.modes.OverlayColour;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
@@ -76,14 +76,14 @@ public class Overlay extends JPanel {
 				if (columnIndex == 0) {
 					
 					Boolean bvalue = (Boolean) value;
-					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					LegacyTransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
 					mapFittings.invalidateInterpolation();
 				} 
 				else if (columnIndex == 2)
 				{
-					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					LegacyTransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 					mapFittings.setOverlayColour(ts, (OverlayColour)value);
 					mapFittings.invalidateInterpolation();
 				}
@@ -95,7 +95,7 @@ public class Overlay extends JPanel {
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+				LegacyTransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 				
 				switch (columnIndex) {
 
@@ -110,7 +110,7 @@ public class Overlay extends JPanel {
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
 
-				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+				LegacyTransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
 
@@ -147,7 +147,7 @@ public class Overlay extends JPanel {
 				switch (columnIndex)
 				{
 					case 0:	return Boolean.class;
-					case 1: return TransitionSeries.class;
+					case 1: return LegacyTransitionSeries.class;
 					case 2: return OverlayColour.class;
 				}
 				return Object.class;

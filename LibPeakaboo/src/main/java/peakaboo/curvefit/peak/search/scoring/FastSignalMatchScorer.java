@@ -3,7 +3,7 @@ package peakaboo.curvefit.peak.search.scoring;
 import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
  * Scores a TransitionSeries based on a rough calculation of
@@ -22,7 +22,7 @@ public class FastSignalMatchScorer implements FittingScorer{
 	}
 	
 	@Override
-	public float score(TransitionSeries ts) {
+	public float score(LegacyTransitionSeries ts) {
 		float height = 0;
 		for (Transition t : ts.getAllTransitions()) {
 			

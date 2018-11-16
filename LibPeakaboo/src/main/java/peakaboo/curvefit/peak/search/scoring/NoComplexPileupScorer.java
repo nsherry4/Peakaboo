@@ -1,16 +1,16 @@
 package peakaboo.curvefit.peak.search.scoring;
 
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
- * Penalizes fittings which are too complex, composed of too many base {@link TransitionSeries}
+ * Penalizes fittings which are too complex, composed of too many base {@link LegacyTransitionSeries}
  * @author NAS
  *
  */
 public class NoComplexPileupScorer implements FittingScorer {
 
 	@Override
-	public float score(TransitionSeries ts) {
+	public float score(LegacyTransitionSeries ts) {
 		int count = ts.getBaseTransitionSeries().size();
 		switch (count) {
 			case 1: return 1f;

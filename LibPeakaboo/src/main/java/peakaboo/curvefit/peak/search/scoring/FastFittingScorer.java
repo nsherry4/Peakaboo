@@ -6,7 +6,7 @@ import java.util.List;
 import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
  * Scores a TransitionSeries based on how well a rough, 
@@ -32,7 +32,7 @@ public class FastFittingScorer implements FittingScorer {
 	
 	
 	@Override
-	public float score(TransitionSeries ts) {
+	public float score(LegacyTransitionSeries ts) {
 		
 		List<Transition> transitions = new ArrayList<>(ts.getAllTransitions());	
 		

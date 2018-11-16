@@ -2,7 +2,7 @@ package peakaboo.curvefit.peak.table;
 
 import java.util.List;
 
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class DelegatingPeakTable implements PeakTable {
 
@@ -21,7 +21,7 @@ public class DelegatingPeakTable implements PeakTable {
 	}
 	
 	@Override
-	public List<TransitionSeries> getAll() {
+	public List<LegacyTransitionSeries> getAll() {
 		return backing.getAll();
 	}
 

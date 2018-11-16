@@ -44,7 +44,7 @@ import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
 import peakaboo.mapping.Mapping;
 import peakaboo.mapping.correction.Corrections;
@@ -120,8 +120,8 @@ class MapperToolbar extends JToolBar {
 				indexes.addAll(pointsSelection.getPoints());
 			}
 			
-			List<TransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
-			Function<TransitionSeries, Float> intensityFunction = ts -> {
+			List<LegacyTransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
+			Function<LegacyTransitionSeries, Float> intensityFunction = ts -> {
 				CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
 				ReadOnlySpectrum data = controller.mapsController.getMapResultSet().getMap(ts).getData(profile);
 				float sum = 0;

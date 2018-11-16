@@ -3,7 +3,7 @@ package peakaboo.curvefit.peak.search.scoring;
 import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /**
@@ -23,13 +23,13 @@ public class PileupSourceScorer implements FittingScorer {
 	}
 	
 	@Override
-	public float score(TransitionSeries ts) {
+	public float score(LegacyTransitionSeries ts) {
 		
 		if (ts.getShell() != TransitionShell.COMPOSITE) { return 1; }
 	
 		float sourceScore = 0;
 		float tsCount = 0;
-		for (TransitionSeries ots : ts.getBaseTransitionSeries()) {
+		for (LegacyTransitionSeries ots : ts.getBaseTransitionSeries()) {
 			sourceScore += tsHeight(ots);
 			tsCount++;
 		}
@@ -50,7 +50,7 @@ public class PileupSourceScorer implements FittingScorer {
 		
 	}
 
-	private float tsHeight(TransitionSeries ts) {
+	private float tsHeight(LegacyTransitionSeries ts) {
 		float height = 0;
 		for (Transition t : ts.getAllTransitions()) {
 			int channel = calibration.channelFromEnergy(t.energyValue);

@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittedWidget;
 
@@ -19,10 +19,10 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 {
 
 	private FittedWidget tswidget;
-	private Predicate<TransitionSeries> enabled;
+	private Predicate<LegacyTransitionSeries> enabled;
 	
 	
-	public MapFittingRenderer(Predicate<TransitionSeries> enabled){
+	public MapFittingRenderer(Predicate<LegacyTransitionSeries> enabled){
 		tswidget = new FittedWidget();	
 		this.enabled = enabled;
 	}
@@ -56,8 +56,8 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 			table.setRowHeight(tswidget.getPreferredSize().height);
 		}
 		
-		if (value instanceof TransitionSeries){
-			TransitionSeries ts = (TransitionSeries)value;
+		if (value instanceof LegacyTransitionSeries){
+			LegacyTransitionSeries ts = (LegacyTransitionSeries)value;
 			tswidget.setName(ts.toString());
 			tswidget.setEnabled(enabled.test(ts));
 			

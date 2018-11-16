@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
- * This class acts as a container for a set of {@link TransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 
+ * This class acts as a container for a set of {@link LegacyTransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 
  * @author Nathaniel Sherry, 2009-2010
  *
  */
@@ -19,20 +19,20 @@ public class FittingSet
 
 	private List<Curve>						curves;
 	private boolean							curvesValid = false;
-	private List<TransitionSeries>			fitTransitionSeries;
+	private List<LegacyTransitionSeries>			fitTransitionSeries;
 	
 	private FittingParameters				parameters;
 
 	
 	public FittingSet() {
 		curves = new ArrayList<Curve>();
-		fitTransitionSeries = new ArrayList<TransitionSeries>();
+		fitTransitionSeries = new ArrayList<LegacyTransitionSeries>();
 		this.parameters = new FittingParameters(this);
 	}
 
 	public FittingSet(FittingSet copy) {
 		this();
-		for (TransitionSeries ts : copy.getFittedTransitionSeries()) {
+		for (LegacyTransitionSeries ts : copy.getFittedTransitionSeries()) {
 			addTransitionSeries(ts);
 		}
 		this.parameters = copy.parameters.copy();
@@ -54,7 +54,7 @@ public class FittingSet
 		if (!curvesValid) {
 			synchronized (this) {
 				if (!curvesValid) {
-					for (TransitionSeries ts : fitTransitionSeries) {
+					for (LegacyTransitionSeries ts : fitTransitionSeries) {
 						generateCurve(ts);
 					}
 					curvesValid = true;
@@ -68,7 +68,7 @@ public class FittingSet
 		return getCurves().stream().filter(c -> c.getTransitionSeries().isVisible()).collect(Collectors.toList());
 	}
 	
-	public synchronized void addTransitionSeries(TransitionSeries ts)
+	public synchronized void addTransitionSeries(LegacyTransitionSeries ts)
 	{
 
 		if (fitTransitionSeries.contains(ts)) return;
@@ -77,7 +77,7 @@ public class FittingSet
 
 	}
 	
-	public synchronized void insertTransitionSeries(int index, TransitionSeries ts)
+	public synchronized void insertTransitionSeries(int index, LegacyTransitionSeries ts)
 	{
 
 		if (fitTransitionSeries.contains(ts)) return;
@@ -86,13 +86,13 @@ public class FittingSet
 
 	}
 
-	private synchronized void generateCurve(TransitionSeries ts)
+	private synchronized void generateCurve(LegacyTransitionSeries ts)
 	{
 		curves.add(new Curve(ts, parameters));
 	}
 
 
-	public synchronized void remove(TransitionSeries ts)
+	public synchronized void remove(LegacyTransitionSeries ts)
 	{
 		fitTransitionSeries.remove(ts);
 		invalidateCurves();
@@ -113,11 +113,11 @@ public class FittingSet
 	}
 
 	
-	public synchronized boolean moveTransitionSeriesUp(TransitionSeries e)
+	public synchronized boolean moveTransitionSeriesUp(LegacyTransitionSeries e)
 	{
 		int insertionPoint;
 		boolean movedTS = false;
-		TransitionSeries ts;
+		LegacyTransitionSeries ts;
 
 		for (int i = 0; i < fitTransitionSeries.size(); i++)
 		{
@@ -139,7 +139,7 @@ public class FittingSet
 		return movedTS;
 		
 	}
-	public synchronized void moveTransitionSeriesUp(List<TransitionSeries> tss)
+	public synchronized void moveTransitionSeriesUp(List<LegacyTransitionSeries> tss)
 	{
 		for (int i = 0; i < tss.size(); i++)
 		{
@@ -150,11 +150,11 @@ public class FittingSet
 	}
 
 
-	public synchronized boolean moveTransitionSeriesDown(TransitionSeries e)
+	public synchronized boolean moveTransitionSeriesDown(LegacyTransitionSeries e)
 	{
 		int insertionPoint;
 		boolean movedTS = false;
-		TransitionSeries ts;
+		LegacyTransitionSeries ts;
 
 		for (int i = 0; i < fitTransitionSeries.size(); i++)
 		{
@@ -177,7 +177,7 @@ public class FittingSet
 		
 	}
 
-	public synchronized void moveTransitionSeriesDown(List<TransitionSeries> tss)
+	public synchronized void moveTransitionSeriesDown(List<LegacyTransitionSeries> tss)
 	{
 		for (int i = tss.size()-1; i >= 0; i--)
 		{
@@ -187,16 +187,16 @@ public class FittingSet
 		}
 	}
 
-	public synchronized boolean hasTransitionSeries(TransitionSeries ts)
+	public synchronized boolean hasTransitionSeries(LegacyTransitionSeries ts)
 	{
 		if (fitTransitionSeries.contains(ts)) return true;
 		return false;
 	}
 
 
-	public synchronized void setTransitionSeriesVisibility(TransitionSeries ts, boolean show)
+	public synchronized void setTransitionSeriesVisibility(LegacyTransitionSeries ts, boolean show)
 	{
-		for (TransitionSeries e : fitTransitionSeries)
+		for (LegacyTransitionSeries e : fitTransitionSeries)
 		{
 			if (ts.equals(e))
 			{
@@ -208,18 +208,18 @@ public class FittingSet
 	}
 
 
-	public synchronized List<TransitionSeries> getFittedTransitionSeries()
+	public synchronized List<LegacyTransitionSeries> getFittedTransitionSeries()
 	{
 		return new ArrayList<>(fitTransitionSeries);
 	}
 
 
-	public synchronized List<TransitionSeries> getVisibleTransitionSeries()
+	public synchronized List<LegacyTransitionSeries> getVisibleTransitionSeries()
 	{
 
-		List<TransitionSeries> fittedElements = new ArrayList<TransitionSeries>();
+		List<LegacyTransitionSeries> fittedElements = new ArrayList<LegacyTransitionSeries>();
 
-		for (TransitionSeries e : fitTransitionSeries)
+		for (LegacyTransitionSeries e : fitTransitionSeries)
 		{
 			if (e.isVisible()) fittedElements.add(e);
 		}

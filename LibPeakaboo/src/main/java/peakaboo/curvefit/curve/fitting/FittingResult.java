@@ -2,12 +2,12 @@ package peakaboo.curvefit.curve.fitting;
 
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
  * 
  * This class stores the results of applying a Spectrum to a {@link Curve}, 
- * as well as the {@link TransitionSeries} that generated the curve.
+ * as well as the {@link LegacyTransitionSeries} that generated the curve.
  * 
  * @author Nathaniel Sherry, 2009
  * 
@@ -22,7 +22,7 @@ public class FittingResult
 	private float					curveScale;
 	private float					normalizationScale;
 	
-	private TransitionSeries		transitionSeries;
+	private LegacyTransitionSeries		transitionSeries;
 
 	public FittingResult(ReadOnlySpectrum fit, Curve curve, float curveScale)	{
 		this.fit = fit;
@@ -55,7 +55,7 @@ public class FittingResult
 		return curveScale / normalizationScale;
 	}
 	
-	public TransitionSeries getTransitionSeries() {
+	public LegacyTransitionSeries getTransitionSeries() {
 		return transitionSeries;
 	}
 	

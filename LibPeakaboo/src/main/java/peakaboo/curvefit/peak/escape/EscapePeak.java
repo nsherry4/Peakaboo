@@ -4,7 +4,7 @@ import java.util.List;
 
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public interface EscapePeak {
 	
@@ -13,7 +13,7 @@ public interface EscapePeak {
 	float energyGap();
 	float fanoFactor();
 	String pretty();
-	TransitionSeries transitionSeries();
+	LegacyTransitionSeries transitionSeries();
 	
 	EscapePeakType type();
 	

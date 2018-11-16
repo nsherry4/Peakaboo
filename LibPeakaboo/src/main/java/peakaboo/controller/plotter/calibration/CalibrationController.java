@@ -14,7 +14,7 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.datasource.model.components.metadata.Metadata;
 
 public class CalibrationController extends Eventful {
@@ -33,7 +33,7 @@ public class CalibrationController extends Eventful {
 	 */
 	public void loadCalibrationReference(CalibrationReference ref) {
 		plotController.fitting().clearTransitionSeries();
-		List<TransitionSeries> tss = new ArrayList<>(ref.getTransitionSeries());
+		List<LegacyTransitionSeries> tss = new ArrayList<>(ref.getTransitionSeries());
 		tss.sort((a, b) -> a.getElement().compareTo(b.getElement()));
 		
 		//CalibrationReferences use blank TransitionSeries so it's not limited by the peaktable data

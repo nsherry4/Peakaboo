@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import swidget.widgets.Spacing;
 
@@ -68,10 +68,10 @@ class LookupEditor extends DefaultTreeCellEditor
 
 		Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
 
-		if (value instanceof TransitionSeries)
+		if (value instanceof LegacyTransitionSeries)
 		{
 
-			TransitionSeries ts = (TransitionSeries) value;
+			LegacyTransitionSeries ts = (LegacyTransitionSeries) value;
 			tswidget.setName(ts.getShell().toString());
 
 			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());

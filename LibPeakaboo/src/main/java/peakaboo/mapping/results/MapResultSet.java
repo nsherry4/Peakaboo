@@ -13,7 +13,7 @@ import cyclops.ISpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import peakaboo.calibration.CalibrationProfile;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 /**
@@ -34,15 +34,15 @@ public class MapResultSet implements Cloneable
 
 	/**
 	 * 
-	 * Create a new MapResultSet with MapResult objects for the given {@link TransitionSeries}, and of the given map size
+	 * Create a new MapResultSet with MapResult objects for the given {@link LegacyTransitionSeries}, and of the given map size
 	 *  
-	 * @param transitionSeries list of {@link TransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
+	 * @param transitionSeries list of {@link LegacyTransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
 	 * @param mapSize the size of the map data in each of the {@link MapResult}s
 	 */
-	public MapResultSet(List<TransitionSeries> transitionSeries, int mapSize)
+	public MapResultSet(List<LegacyTransitionSeries> transitionSeries, int mapSize)
 	{
 		maps = new ArrayList<MapResult>();
-		for (TransitionSeries ts : transitionSeries) {
+		for (LegacyTransitionSeries ts : transitionSeries) {
 			maps.add(new MapResult(ts, mapSize));
 		}
 		this.mapSize = mapSize;
@@ -110,12 +110,12 @@ public class MapResultSet implements Cloneable
 
 	/**
 	 * 
-	 * Gets the {@link MapResult} related to the given {@link TransitionSeries}
+	 * Gets the {@link MapResult} related to the given {@link LegacyTransitionSeries}
 	 * 
-	 * @param ts the {@link TransitionSeries} to look up the {@link MapResult} with
-	 * @return the {@link MapResult} for the given {@link TransitionSeries}
+	 * @param ts the {@link LegacyTransitionSeries} to look up the {@link MapResult} with
+	 * @return the {@link MapResult} for the given {@link LegacyTransitionSeries}
 	 */
-	public MapResult getMap(TransitionSeries ts)
+	public MapResult getMap(LegacyTransitionSeries ts)
 	{
 		for (MapResult m : maps) {
 			if (m.transitionSeries == ts) return m;
@@ -127,7 +127,7 @@ public class MapResultSet implements Cloneable
 	/**
 	 * Generates a list of all of the TransitionSeries included in this MapResultSet
 	 */
-	public List<TransitionSeries> getAllTransitionSeries()
+	public List<LegacyTransitionSeries> getAllTransitionSeries()
 	{
 		return maps.stream().map(mr -> mr.transitionSeries).collect(toList());
 	}
@@ -135,15 +135,15 @@ public class MapResultSet implements Cloneable
 	/**
 	 * 
 	 * Places a value at a given index for the {@link MapResult} data associated
-	 * with the given {@link TransitionSeries}. This method will apply the
+	 * with the given {@link LegacyTransitionSeries}. This method will apply the
 	 * {@link CalibrationProfile} to the added values.
 	 * 
 	 * @param intensity the intensity value to place in the {@link MapResult} data
-	 * @param ts        the {@link TransitionSeries} associated with the desired
+	 * @param ts        the {@link LegacyTransitionSeries} associated with the desired
 	 *                  {@link MapResult}
 	 * @param index     the index in the map data at which to place the new value
 	 */
-	public void putIntensityInMapAtPoint(float intensity, TransitionSeries ts, int index)
+	public void putIntensityInMapAtPoint(float intensity, LegacyTransitionSeries ts, int index)
 	{	
 		
 		
@@ -172,7 +172,7 @@ public class MapResultSet implements Cloneable
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
-	public Spectrum sumGivenTransitionSeriesMaps(Collection<TransitionSeries> list, CalibrationProfile profile)
+	public Spectrum sumGivenTransitionSeriesMaps(Collection<LegacyTransitionSeries> list, CalibrationProfile profile)
 	{
 		
 		Spectrum sums = new ISpectrum(maps.get(0).size(), 0.0f);

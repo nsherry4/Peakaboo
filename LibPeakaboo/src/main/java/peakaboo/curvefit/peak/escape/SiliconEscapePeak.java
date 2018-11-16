@@ -5,7 +5,7 @@ import java.util.List;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class SiliconEscapePeak implements EscapePeak {
@@ -47,7 +47,7 @@ public class SiliconEscapePeak implements EscapePeak {
 	}
 	
 	@Override
-	public TransitionSeries transitionSeries() {
+	public LegacyTransitionSeries transitionSeries() {
 		// TODO Auto-generated method stub
 		return PeakTable.SYSTEM.get(Element.Si, TransitionShell.K);
 	}

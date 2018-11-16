@@ -11,27 +11,27 @@ import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class KrausePeakTable implements PeakTable {
 
-	private List<TransitionSeries> series = new ArrayList<>();
+	private List<LegacyTransitionSeries> series = new ArrayList<>();
 	
 	public KrausePeakTable() {
 		readPeakTableManual();
 	}
 	
-	private void add(TransitionSeries ts) {
+	private void add(LegacyTransitionSeries ts) {
 		series.add(ts);
 	}
 	
 	@Override
-	public List<TransitionSeries> getAll() {
+	public List<LegacyTransitionSeries> getAll() {
 		
-		List<TransitionSeries> copy = new ArrayList<>();
-		for (TransitionSeries ts : series) {
-			copy.add(new TransitionSeries(ts));
+		List<LegacyTransitionSeries> copy = new ArrayList<>();
+		for (LegacyTransitionSeries ts : series) {
+			copy.add(new LegacyTransitionSeries(ts));
 		}
 		return copy;
 		
@@ -95,7 +95,7 @@ public class KrausePeakTable implements PeakTable {
 			Element e = Element.values()[atomicNumber];
 						
 			// K
-			TransitionSeries ts = new TransitionSeries(e, TransitionShell.K);
+			LegacyTransitionSeries ts = new LegacyTransitionSeries(e, TransitionShell.K);
 
 			//escape
 			//createTransition(sections, column);
@@ -136,7 +136,7 @@ public class KrausePeakTable implements PeakTable {
 			//table.addSeries(ts.pileup());
 
 
-			ts = new TransitionSeries(e, TransitionShell.L);
+			ts = new LegacyTransitionSeries(e, TransitionShell.L);
 			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
 
 			//escape
@@ -180,7 +180,7 @@ public class KrausePeakTable implements PeakTable {
 
 
 			
-			ts = new TransitionSeries(e, TransitionShell.M);
+			ts = new LegacyTransitionSeries(e, TransitionShell.M);
 			Transition ma1, mb1, mg;
 
 			//escape

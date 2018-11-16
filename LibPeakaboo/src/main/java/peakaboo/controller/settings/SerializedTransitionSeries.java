@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 public class SerializedTransitionSeries
@@ -18,12 +18,12 @@ public class SerializedTransitionSeries
 		components = new ArrayList<String>();
 	}
 	
-	public SerializedTransitionSeries(TransitionSeries ts)
+	public SerializedTransitionSeries(LegacyTransitionSeries ts)
 	{
 		this();
 		
 		components.clear();
-		for (TransitionSeries bt : ts.getBaseTransitionSeries())
+		for (LegacyTransitionSeries bt : ts.getBaseTransitionSeries())
 		{
 			components.add(bt.getElement().name() + ":" + bt.getShell().name());
 		}
@@ -33,11 +33,11 @@ public class SerializedTransitionSeries
 	}
 	
 	
-	public TransitionSeries toTS()
+	public LegacyTransitionSeries toTS()
 	{
 		
-		List<TransitionSeries> tss = new ArrayList<TransitionSeries>();
-		TransitionSeries created;
+		List<LegacyTransitionSeries> tss = new ArrayList<LegacyTransitionSeries>();
+		LegacyTransitionSeries created;
 		
 		for (String tsd : components)
 		{
@@ -47,7 +47,7 @@ public class SerializedTransitionSeries
 			}
 		}
 		
-		TransitionSeries ts = TransitionSeries.summation(tss);
+		LegacyTransitionSeries ts = LegacyTransitionSeries.summation(tss);
 		ts.setVisible(this.visible);
 		
 		return ts;

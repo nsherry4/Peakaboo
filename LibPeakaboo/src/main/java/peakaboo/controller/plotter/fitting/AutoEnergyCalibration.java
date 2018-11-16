@@ -15,7 +15,7 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.peak.search.scoring.FastSignalMatchScorer;
 import peakaboo.curvefit.peak.search.scoring.FittingScorer;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;
 
@@ -33,11 +33,11 @@ public class AutoEnergyCalibration {
 		return energies;
 	}
 	
-	private static FittingSet fitModel(List<TransitionSeries> tsList, int dataWidth) {
+	private static FittingSet fitModel(List<LegacyTransitionSeries> tsList, int dataWidth) {
 		FittingSet fits = new FittingSet();
 		EnergyCalibration old = fits.getFittingParameters().getCalibration();
 		fits.getFittingParameters().setCalibration(old.getMinEnergy(), old.getMaxEnergy(), dataWidth);
-		for (TransitionSeries ts : tsList) {
+		for (LegacyTransitionSeries ts : tsList) {
 			fits.addTransitionSeries(ts);
 		}
 		return fits;
@@ -49,7 +49,7 @@ public class AutoEnergyCalibration {
 	 * and uses the transition series to quickly find any potential good 
 	 * energy calibration values. 
 	 */
-	private static StreamExecutor<List<EnergyCalibration>> roughOptions(List<EnergyCalibration> energies, ReadOnlySpectrum spectrum, List<TransitionSeries> tsList, int dataWidth) {
+	private static StreamExecutor<List<EnergyCalibration>> roughOptions(List<EnergyCalibration> energies, ReadOnlySpectrum spectrum, List<LegacyTransitionSeries> tsList, int dataWidth) {
 		
 		
 		
@@ -103,7 +103,7 @@ public class AutoEnergyCalibration {
 	private static StreamExecutor<EnergyCalibration> chooseFromRoughOptions(
 			Supplier<List<EnergyCalibration>> energies, 
 			ReadOnlySpectrum spectrum, 
-			List<TransitionSeries> tsList,
+			List<LegacyTransitionSeries> tsList,
 			FittingController controller,
 			int dataWidth
 		) {
@@ -154,7 +154,7 @@ public class AutoEnergyCalibration {
 		float score = 0;
 
 		FittingScorer scorer = new FastSignalMatchScorer(spectrum, calibration);		
-		for (TransitionSeries ts : fits.getVisibleTransitionSeries()) {
+		for (LegacyTransitionSeries ts : fits.getVisibleTransitionSeries()) {
 			if (ts.isVisible()) {
 				score += Math.sqrt(scorer.score(ts));
 			}
@@ -189,7 +189,7 @@ public class AutoEnergyCalibration {
 	private static EnergyCalibration fineTune(
 			EnergyCalibration calibration, 
 			ReadOnlySpectrum spectrum, 
-			List<TransitionSeries> tsList, 
+			List<LegacyTransitionSeries> tsList, 
 			FittingController controller,
 			float window
 		) {
@@ -231,7 +231,7 @@ public class AutoEnergyCalibration {
 	
 	public static StreamExecutorSet<EnergyCalibration> propose(
 			ReadOnlySpectrum spectrum, 
-			List<TransitionSeries> tsList, 
+			List<LegacyTransitionSeries> tsList, 
 			FittingController controller, 
 			int dataWidth
 		) {

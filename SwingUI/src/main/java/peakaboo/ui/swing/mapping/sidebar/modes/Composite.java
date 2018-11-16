@@ -18,7 +18,7 @@ import javax.swing.table.TableModel;
 
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.display.map.MapScaleMode;
 import peakaboo.mapping.results.MapResult;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
@@ -71,7 +71,7 @@ public class Composite extends JPanel {
 			{
 				if (columnIndex == 0) {
 					Boolean bvalue = (Boolean) value;
-					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					LegacyTransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
 					mapFittings.invalidateInterpolation();
@@ -89,7 +89,7 @@ public class Composite extends JPanel {
 			public boolean isCellEditable(int rowIndex, int columnIndex)
 			{
 				if (columnIndex == 0) {
-					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					LegacyTransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 					return mapFittings.getTransitionSeriesEnabled(ts);
 				};
 				return false;
@@ -99,7 +99,7 @@ public class Composite extends JPanel {
 			public Object getValueAt(int rowIndex, int columnIndex)
 			{
 				
-				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+				LegacyTransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 				
 				if (columnIndex == 0) {
 					return mapFittings.getTransitionSeriesVisibility(ts);
@@ -132,7 +132,7 @@ public class Composite extends JPanel {
 			public Class<?> getColumnClass(int columnIndex)
 			{
 				if (columnIndex == 0) return Boolean.class;
-				return TransitionSeries.class;
+				return LegacyTransitionSeries.class;
 			}
 
 

@@ -16,7 +16,7 @@ import cyclops.Coord;
 import peakaboo.calibration.Composition;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.mapping.Mapping;
 import swidget.widgets.Spacing;
 import swidget.widgets.layout.PropertyPanel;
@@ -55,13 +55,13 @@ public class ConcentrationsPanel extends JPanel {
 		
 		int index = (mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x) + 1;
 		if (controller.getSettings().getView().isValidPoint(mapCoord)) {
-			List<TransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
+			List<LegacyTransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
 			Map<String, String> properties = new LinkedHashMap<>();
 			
 			Composition ppm = Composition.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), ts -> {
 				return controller.getSettings().getMapFittings().getMapForTransitionSeries(ts).get(index);
 			});
-			for (TransitionSeries ts : tss) {
+			for (LegacyTransitionSeries ts : tss) {
 				properties.put(ts.getElement().toString(), ppm.getPercent(ts.getElement()) );
 			}
 			view.setProperties(properties);
@@ -71,9 +71,9 @@ public class ConcentrationsPanel extends JPanel {
 	}
 	
 	private void showEmpty() {
-		List<TransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
+		List<LegacyTransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
 		Map<String, String> properties = new LinkedHashMap<>();
-		for (TransitionSeries ts : tss) {
+		for (LegacyTransitionSeries ts : tss) {
 			properties.put(ts.getElement().name(), "-");
 		}
 		view.setProperties(properties);

@@ -15,7 +15,7 @@ import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
@@ -47,7 +47,7 @@ public class Mapping
 			FittingSolver solver
 		) {
 		
-		List<TransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
+		List<LegacyTransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
 		
 		//Math.max(1, dataset.getScanData().scanCount())

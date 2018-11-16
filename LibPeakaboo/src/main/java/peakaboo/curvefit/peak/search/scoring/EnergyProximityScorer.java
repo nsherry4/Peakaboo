@@ -6,7 +6,7 @@ import java.util.List;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 /**
@@ -28,7 +28,7 @@ public class EnergyProximityScorer implements FittingScorer {
 	}
 
 	@Override
-	public float score(TransitionSeries ts) {
+	public float score(LegacyTransitionSeries ts) {
 		
 		List<Transition> transitions = new ArrayList<>(ts.getAllTransitions());
 		

@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
@@ -45,7 +45,7 @@ public class SummationPanel extends JPanel
 			protected void approve()
 			{
 				//add all of the transition series that come back from the summation widget
-				summationWidget.getTransitionSeries().forEach((TransitionSeries ts) -> {
+				summationWidget.getTransitionSeries().forEach((LegacyTransitionSeries ts) -> {
 					controller.addTransitionSeries(ts);
 				});
 

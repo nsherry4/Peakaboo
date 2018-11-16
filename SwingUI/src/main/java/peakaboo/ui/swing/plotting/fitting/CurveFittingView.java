@@ -14,7 +14,7 @@ import cyclops.util.Mutable;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
@@ -144,7 +144,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	public void autoAdd() {
 		
 		if (plotController.data().hasDataSet() && plotController.fitting().getMaxEnergy() > 0f) {
-			ExecutorSet<List<TransitionSeries>> exec = controller.autodetectPeaks();
+			ExecutorSet<List<LegacyTransitionSeries>> exec = controller.autodetectPeaks();
 			ExecutorSetView execPanel = new ExecutorSetView(exec); 
 			
 			ModalLayer layer = new ModalLayer(plotPanel, execPanel);

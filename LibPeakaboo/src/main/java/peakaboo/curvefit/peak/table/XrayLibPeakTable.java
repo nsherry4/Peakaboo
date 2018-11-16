@@ -9,30 +9,30 @@ import com.github.tschoonj.xraylib.XraylibException;
 import cyclops.Range;
 import cyclops.RangeSet;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class XrayLibPeakTable implements PeakTable {
 
-	private List<TransitionSeries> series;
+	private List<LegacyTransitionSeries> series;
 	
 	public XrayLibPeakTable() {}
 	
-	private void add(TransitionSeries ts) {
+	private void add(LegacyTransitionSeries ts) {
 		if (ts.getTransitionCount() == 0) return;
 		series.add(ts);
 	}
 
 
 	@Override
-	public List<TransitionSeries> getAll() {
+	public List<LegacyTransitionSeries> getAll() {
 		if (series == null) {
 			readPeakTableXraylib();
 		}
 		
-		List<TransitionSeries> copy = new ArrayList<>();
-		for (TransitionSeries ts : series) {
-			copy.add(new TransitionSeries(ts));
+		List<LegacyTransitionSeries> copy = new ArrayList<>();
+		for (LegacyTransitionSeries ts : series) {
+			copy.add(new LegacyTransitionSeries(ts));
 		}
 		return copy;
 		
@@ -74,7 +74,7 @@ public class XrayLibPeakTable implements PeakTable {
 	}
 	
 	private void readElementShell(RangeSet lines, Element elem, TransitionShell tstype) {
-		TransitionSeries ts = new TransitionSeries(elem, tstype);
+		LegacyTransitionSeries ts = new LegacyTransitionSeries(elem, tstype);
 		
 		//find the strongest transition line, so we can skip anything significantly weaker than it
 		float maxRel = 0f;

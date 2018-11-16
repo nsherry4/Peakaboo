@@ -20,7 +20,7 @@ import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;
@@ -118,7 +118,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 	private void onSingleClick(MouseEvent e) {
 
-		TransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
+		LegacyTransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
         controller.fitting().clearProposedTransitionSeries();
         controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
         if (bestFit != null) {
@@ -127,7 +127,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	}
 
 	private void onDoubleClick(MouseEvent e) {
-		TransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
+		LegacyTransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
 		if (bestFit == null) {
 			return;
 		}

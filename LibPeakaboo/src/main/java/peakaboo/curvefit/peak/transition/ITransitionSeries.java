@@ -42,20 +42,20 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 	/////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a list of all {@link Transition}s that this {@link TransitionSeries} is composed of
+	 * Returns a list of all {@link Transition}s that this {@link LegacyTransitionSeries} is composed of
 	 * @return a list of constituent {@link Transition}s
 	 */
 	List<Transition> getAllTransitions();
 	
 	/**
-	 * Returns the strongest {@link Transition} for this {@link TransitionSeries}.
+	 * Returns the strongest {@link Transition} for this {@link LegacyTransitionSeries}.
 	 * @return the most intense {@link Transition}
 	 */
 	Transition getStrongestTransition();
 	
 	/**
-	 * Checks to see if this {@link TransitionSeries} is empty
-	 * @return true if this {@link TransitionSeries} is non-empty, false otherwise
+	 * Checks to see if this {@link LegacyTransitionSeries} is empty
+	 * @return true if this {@link LegacyTransitionSeries} is non-empty, false otherwise
 	 */
 	boolean hasTransitions();
 	
@@ -111,8 +111,8 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 		if (other instanceof PileUpTransitionSeries) {
 			return new PileUpTransitionSeries((PileUpTransitionSeries)other);
 		}
-		if (other instanceof TransitionSeries) {
-			return new TransitionSeries((TransitionSeries)other);
+		if (other instanceof LegacyTransitionSeries) {
+			return new LegacyTransitionSeries((LegacyTransitionSeries)other);
 		}
 		throw new IllegalArgumentException("Unknown Type of Transition");
 	}

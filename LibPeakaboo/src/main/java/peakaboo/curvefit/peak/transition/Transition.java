@@ -24,7 +24,7 @@ public class Transition implements Serializable, Comparable<Transition>{
 	public final float energyValue;
 	
 	/**
-	 * The relative intensity of this peak compared to the a1 peak of the same {@link TransitionSeries}
+	 * The relative intensity of this peak compared to the a1 peak of the same {@link LegacyTransitionSeries}
 	 */
 	public final float relativeIntensity;
 	

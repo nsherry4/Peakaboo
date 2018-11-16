@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import cyclops.SigDigits;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.lookup.LookupWidget;
 
@@ -64,8 +64,8 @@ class FittingRenderer extends DefaultTableCellRenderer
 			table.setRowHeight(tswidget.getPreferredSize().height);
 		}
 		
-		if (value instanceof TransitionSeries){
-			TransitionSeries ts = (TransitionSeries)value;
+		if (value instanceof LegacyTransitionSeries){
+			LegacyTransitionSeries ts = (LegacyTransitionSeries)value;
 			intensity = controller.getTransitionSeriesIntensity(ts);
 			tswidget.setName(ts.toString());
 			

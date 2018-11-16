@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
  * 
@@ -65,14 +65,14 @@ public class FittingResultSet implements Iterable<FittingResult>
 	
 	/**
 	 * Generates a subset containing the intersection of this FittingResultSet's
-	 * fits and the given list of {@link TransitionSeries}. Methods like
+	 * fits and the given list of {@link LegacyTransitionSeries}. Methods like
 	 * {@link FittingResultSet#getTotalFit()} and
 	 * {@link FittingResultSet#getResidual()} will return the result for the entire
 	 * set (ie not just the subset).
 	 * 
-	 * @param tss the list of {@link TransitionSeries} to consider
+	 * @param tss the list of {@link LegacyTransitionSeries} to consider
 	 */
-	public FittingResultSet subsetIntersect(List<TransitionSeries> tss) {
+	public FittingResultSet subsetIntersect(List<LegacyTransitionSeries> tss) {
 		
 		FittingResultSet subset = new FittingResultSet(totalFit.size());
 		subset.totalFit = new ISpectrum(this.totalFit);
@@ -86,14 +86,14 @@ public class FittingResultSet implements Iterable<FittingResult>
 
 	/**
 	 * Generates a subset containing the difference of this FittingResultSet's fits
-	 * and the given list of {@link TransitionSeries}. Methods like
+	 * and the given list of {@link LegacyTransitionSeries}. Methods like
 	 * {@link FittingResultSet#getTotalFit()} and
 	 * {@link FittingResultSet#getResidual()} will return the result for the entire
 	 * set (ie not just the subset).
 	 * 
-	 * @param tss the list of {@link TransitionSeries} to consider
+	 * @param tss the list of {@link LegacyTransitionSeries} to consider
 	 */
-	public FittingResultSet subsetDifference(List<TransitionSeries> tss) {
+	public FittingResultSet subsetDifference(List<LegacyTransitionSeries> tss) {
 		
 		FittingResultSet subset = new FittingResultSet(totalFit.size());
 		subset.totalFit = new ISpectrum(this.totalFit);

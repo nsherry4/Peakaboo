@@ -20,7 +20,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import peakaboo.calibration.CalibrationReference;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.HeaderLayer;
@@ -65,9 +65,9 @@ public class ReferenceViewPanel extends HeaderLayer {
 		alterations.setBorder(Spacing.bHuge());
 		
 		JTable table = new JTable();
-		List<TransitionSeries> entries = new ArrayList<>();
+		List<LegacyTransitionSeries> entries = new ArrayList<>();
 		for (TransitionShell type : TransitionShell.values()) {
-			for (TransitionSeries ts : reference.getTransitionSeries(type)) {
+			for (LegacyTransitionSeries ts : reference.getTransitionSeries(type)) {
 				if (!reference.hasAnnotation(ts)) { continue; }
 				System.out.println(ts);
 				entries.add(ts);
@@ -80,7 +80,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 			
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				TransitionSeries ts = entries.get(rowIndex);
+				LegacyTransitionSeries ts = entries.get(rowIndex);
 				if (columnIndex == 0) {
 					return ts;
 				} else {
@@ -108,7 +108,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 				switch (columnIndex)
 				{
 					case 0:
-						return TransitionSeries.class;
+						return LegacyTransitionSeries.class;
 					case 1:
 						return String.class;
 					default:
@@ -144,7 +144,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 		column.setMinWidth(80);
 		column.setPreferredWidth(80);
 		column.setMaxWidth(80);
-		column.setCellRenderer(new ListWidgetTableCellRenderer<>(new ListWidget<TransitionSeries>() {
+		column.setCellRenderer(new ListWidgetTableCellRenderer<>(new ListWidget<LegacyTransitionSeries>() {
 
 			private JLabel label;
 			{
@@ -163,7 +163,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 			}
 			
 			@Override
-			protected void onSetValue(TransitionSeries value) {
+			protected void onSetValue(LegacyTransitionSeries value) {
 				label.setText(value.toString());
 			}
 		}));

@@ -12,7 +12,7 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 /**
@@ -67,7 +67,7 @@ public class FittingMarkersPainter extends PlotPainter
 				markerHeights.set(i, 0.0f);
 			}
 
-			TransitionSeries ts = label.fit.getTransitionSeries();
+			LegacyTransitionSeries ts = label.fit.getTransitionSeries();
 			for (Transition t : ts) {
 
 				channel = parameters.getCalibration().fractionalChannelFromEnergy(t.energyValue);

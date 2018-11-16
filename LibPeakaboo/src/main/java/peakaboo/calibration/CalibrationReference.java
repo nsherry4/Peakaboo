@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import peakaboo.common.YamlSerializer;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /*
@@ -30,9 +30,9 @@ public class CalibrationReference implements BoltConfigPlugin {
 	private String rev;
 	private String notes;
 	private List<String> citations;
-	private TransitionSeries anchor;
-	private Map<TransitionSeries, Float> concentrations;
-	private Map<TransitionSeries, String> extraFittings;
+	private LegacyTransitionSeries anchor;
+	private Map<LegacyTransitionSeries, Float> concentrations;
+	private Map<LegacyTransitionSeries, String> extraFittings;
 	
 	
 	protected CalibrationReference() {
@@ -63,7 +63,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		return rev;
 	}
 	
-	public TransitionSeries getAnchor() {
+	public LegacyTransitionSeries getAnchor() {
 		return this.anchor;
 	}
 		
@@ -85,15 +85,15 @@ public class CalibrationReference implements BoltConfigPlugin {
 	// Concentrations
 	////////////////////////////////////////////
 	
-	public LinkedHashMap<TransitionSeries, Float> getConcentrations() {
+	public LinkedHashMap<LegacyTransitionSeries, Float> getConcentrations() {
 		return new LinkedHashMap<>(concentrations);
 	}
 	
-	public boolean hasConcentration(TransitionSeries ts) {
+	public boolean hasConcentration(LegacyTransitionSeries ts) {
 		return concentrations.containsKey(ts);
 	}
 	
-	public float getConcentration(TransitionSeries ts) {
+	public float getConcentration(LegacyTransitionSeries ts) {
 		if (!concentrations.containsKey(ts)) {
 			return 0f;
 		}
@@ -112,8 +112,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 	/**
 	 * returns a sorted list of TransitionSeries in this reference 
 	 */
-	public List<TransitionSeries> getTransitionSeries() {
-		List<TransitionSeries> tss = new ArrayList<>();
+	public List<LegacyTransitionSeries> getTransitionSeries() {
+		List<LegacyTransitionSeries> tss = new ArrayList<>();
 		tss.addAll(concentrations.keySet());
 		tss.addAll(extraFittings.keySet());
 		tss = tss.stream()
@@ -125,8 +125,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 	/**
 	 * returns a sorted list of TransitionSeries in this reference 
 	 */
-	public List<TransitionSeries> getTransitionSeries(TransitionShell tst) {
-		List<TransitionSeries> tss = new ArrayList<>();
+	public List<LegacyTransitionSeries> getTransitionSeries(TransitionShell tst) {
+		List<LegacyTransitionSeries> tss = new ArrayList<>();
 		tss.addAll(concentrations.keySet());
 		tss.addAll(extraFittings.keySet());
 		tss = tss.stream()
@@ -141,11 +141,11 @@ public class CalibrationReference implements BoltConfigPlugin {
 	// Annotations
 	////////////////////////////////////////////
 	
-	public boolean hasAnnotation(TransitionSeries ts) {
+	public boolean hasAnnotation(LegacyTransitionSeries ts) {
 		return getAnnotation(ts).trim().length() > 0;
 	}
 	
-	public String getAnnotation(TransitionSeries ts) {
+	public String getAnnotation(LegacyTransitionSeries ts) {
 		if (extraFittings.containsKey(ts)) {
 			return extraFittings.get(ts);
 		}
@@ -180,15 +180,15 @@ public class CalibrationReference implements BoltConfigPlugin {
 		serialized.citations = reference.citations;
 		serialized.anchor = reference.anchor.toIdentifierString();
 		
-		List<TransitionSeries> tss = new ArrayList<>(reference.concentrations.keySet());
+		List<LegacyTransitionSeries> tss = new ArrayList<>(reference.concentrations.keySet());
 		tss.sort((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()));
-		for (TransitionSeries ts : tss) {
+		for (LegacyTransitionSeries ts : tss) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
 		
 		tss = new ArrayList<>(reference.extraFittings.keySet());
 		tss.sort((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()));
-		for (TransitionSeries ts : tss) {
+		for (LegacyTransitionSeries ts : tss) {
 			serialized.fitted.put(ts.toIdentifierString(), reference.extraFittings.get(ts));
 		}
 		
@@ -204,12 +204,12 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.rev = serialized.rev;
 		reference.notes = serialized.notes;
 		reference.citations = serialized.citations;
-		reference.anchor = TransitionSeries.get(serialized.anchor);
+		reference.anchor = LegacyTransitionSeries.get(serialized.anchor);
 		for (String tsidentifier : serialized.concentrations.keySet()) {
-			reference.concentrations.put(TransitionSeries.get(tsidentifier), serialized.concentrations.get(tsidentifier));
+			reference.concentrations.put(LegacyTransitionSeries.get(tsidentifier), serialized.concentrations.get(tsidentifier));
 		}
 		for (String tsidentifier : serialized.fitted.keySet()) {
-			reference.extraFittings.put(TransitionSeries.get(tsidentifier), serialized.fitted.get(tsidentifier));
+			reference.extraFittings.put(LegacyTransitionSeries.get(tsidentifier), serialized.fitted.get(tsidentifier));
 		}
 		return reference;
 	}
@@ -225,14 +225,14 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.notes = lines.remove(0);
 		String[] citations = lines.remove(0).split("\\|");
 		reference.citations = new ArrayList<>(Arrays.asList(citations));
-		reference.anchor = TransitionSeries.get(lines.remove(0));
+		reference.anchor = LegacyTransitionSeries.get(lines.remove(0));
 		
 		for (String line : lines) {
 			String[] parts = line.split(",");
-			TransitionSeries ts = null;
+			LegacyTransitionSeries ts = null;
 			Float concentration = null;
 			try {
-				ts = TransitionSeries.get(parts[0]);
+				ts = LegacyTransitionSeries.get(parts[0]);
 				concentration = Float.parseFloat(parts[1]);
 			} catch (NumberFormatException e) {
 				continue;

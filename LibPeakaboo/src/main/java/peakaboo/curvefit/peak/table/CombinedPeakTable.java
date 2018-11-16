@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class CombinedPeakTable implements PeakTable {
 
-	List<TransitionSeries> series;
+	List<LegacyTransitionSeries> series;
 	PeakTable[] members;
 	
 	public CombinedPeakTable(PeakTable... members) {
@@ -19,7 +19,7 @@ public class CombinedPeakTable implements PeakTable {
 	private void load() {
 		series = new ArrayList<>();
 		
-		Set<TransitionSeries> merged = new HashSet<>();
+		Set<LegacyTransitionSeries> merged = new HashSet<>();
 		for (PeakTable member : members) {
 			//add if not already present
 			merged.addAll(member.getAll());
@@ -41,14 +41,14 @@ public class CombinedPeakTable implements PeakTable {
 	}
 
 	@Override
-	public List<TransitionSeries> getAll() {
+	public List<LegacyTransitionSeries> getAll() {
 		if (series == null) {
 			load();
 		}
 		
-		List<TransitionSeries> copy = new ArrayList<>();
-		for (TransitionSeries ts : series) {
-			copy.add(new TransitionSeries(ts));
+		List<LegacyTransitionSeries> copy = new ArrayList<>();
+		for (LegacyTransitionSeries ts : series) {
+			copy.add(new LegacyTransitionSeries(ts));
 		}
 		return copy;
 		

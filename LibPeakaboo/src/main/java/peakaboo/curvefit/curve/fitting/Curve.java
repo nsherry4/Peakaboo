@@ -13,14 +13,14 @@ import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 
 
 /**
  * A Curve represents the curve created by applying a {@link FittingFunction} 
- * to a {@link TransitionSeries}. It can then be applied to signal to determine the scale of fit.
+ * to a {@link LegacyTransitionSeries}. It can then be applied to signal to determine the scale of fit.
  * 
  * @author NAS
  */
@@ -29,7 +29,7 @@ public class Curve
 {
 
 	//The {@link TransitionSeries} that this fitting is based on
-	private TransitionSeries		transitionSeries;
+	private LegacyTransitionSeries		transitionSeries;
 		
 	//The details of how we generate our fitting curve
 	private FittingParameters 		parameters;
@@ -63,7 +63,7 @@ public class Curve
 	 * @param ts the TransitionSeries to fit
 	 * @param parameters the fitting parameters to use to model this curve
 	 */
-	public Curve(TransitionSeries ts, FittingParameters parameters)
+	public Curve(LegacyTransitionSeries ts, FittingParameters parameters)
 	{
 
 		this.parameters = parameters;
@@ -76,7 +76,7 @@ public class Curve
 		
 	}
 	
-	public void setTransitionSeries(TransitionSeries ts)
+	public void setTransitionSeries(LegacyTransitionSeries ts)
 	{
 		this.transitionSeries = ts;
 		calculateConstraintMask();
@@ -84,7 +84,7 @@ public class Curve
 		
 	}
 	
-	public TransitionSeries getTransitionSeries() {
+	public LegacyTransitionSeries getTransitionSeries() {
 		return transitionSeries;
 	}
 	

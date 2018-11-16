@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /**
@@ -18,12 +18,12 @@ import peakaboo.curvefit.peak.transition.TransitionShell;
  */
 public class FilteringPeakTable implements PeakTable {
 
-	private List<TransitionSeries> all = null;
+	private List<LegacyTransitionSeries> all = null;
 	private PeakTable backing;
 	
 	private Set<Element> filteredElements = new LinkedHashSet<>();
 	//TODO: This causes eager loading of backing peak table by having to look up TransitionSeries
-	private Set<TransitionSeries> filteredTransitionSeries = new LinkedHashSet<>();
+	private Set<LegacyTransitionSeries> filteredTransitionSeries = new LinkedHashSet<>();
 	
 	public FilteringPeakTable(PeakTable backing) {
 		this.backing = backing;
@@ -41,14 +41,14 @@ public class FilteringPeakTable implements PeakTable {
 		return this;
 	}
 	
-	public FilteringPeakTable filter(TransitionSeries filtered) {
+	public FilteringPeakTable filter(LegacyTransitionSeries filtered) {
 		filteredTransitionSeries.add(filtered);
 		all = null;
 		return this;
 	}
 	
 	@Override
-	public synchronized List<TransitionSeries> getAll() {
+	public synchronized List<LegacyTransitionSeries> getAll() {
 		if (all == null) {
 			all = backing.getAll()
 					.stream()
@@ -58,9 +58,9 @@ public class FilteringPeakTable implements PeakTable {
 		}
 		
 
-		List<TransitionSeries> copy = new ArrayList<>();
-		for (TransitionSeries ts : all) {
-			copy.add(new TransitionSeries(ts));
+		List<LegacyTransitionSeries> copy = new ArrayList<>();
+		for (LegacyTransitionSeries ts : all) {
+			copy.add(new LegacyTransitionSeries(ts));
 		}
 		return copy;
 			

@@ -5,7 +5,7 @@ import peakaboo.curvefit.curve.fitting.Curve;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class CurveFittingScorer implements FittingScorer {
 
@@ -22,7 +22,7 @@ public class CurveFittingScorer implements FittingScorer {
 	}
 	
 	@Override
-	public float score(TransitionSeries ts) {
+	public float score(LegacyTransitionSeries ts) {
 		
 		curve.get().setTransitionSeries(ts);
 		FittingResult result = fitter.fit(data, curve.get());

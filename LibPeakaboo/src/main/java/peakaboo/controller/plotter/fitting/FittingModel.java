@@ -16,7 +16,7 @@ import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 
@@ -44,9 +44,9 @@ public class FittingModel
 	public EventfulCache<FittingResultSet>		proposalResults;
 	
 	
-	List<TransitionSeries> highlighted;
+	List<LegacyTransitionSeries> highlighted;
 	
-	Map<TransitionSeries, String> annotations;
+	Map<LegacyTransitionSeries, String> annotations;
 	
 	/**
 	 * {@link CurveFitter} to use for all fitting of single curves to data

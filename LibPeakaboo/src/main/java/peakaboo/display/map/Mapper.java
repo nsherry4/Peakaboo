@@ -35,7 +35,7 @@ import cyclops.visualization.palette.palettes.OverlayPalette;
 import cyclops.visualization.palette.palettes.RatioPalette;
 import cyclops.visualization.palette.palettes.SaturationPalette;
 import cyclops.visualization.palette.palettes.ThermalScalePalette;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.display.map.modes.OverlayColour;
 
@@ -453,7 +453,7 @@ public class Mapper {
 
 		List<Pair<PaletteColour, String>> 	colours = new ArrayList<>();
 		Function<OverlayColour, String> tsFormatter = colour -> data.overlayData.get(colour).elements.stream()
-				.map(TransitionSeries::toString)
+				.map(LegacyTransitionSeries::toString)
 				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
 		
 		if (redSpectrum != null) 	colours.add(new Pair<>(OverlayColour.RED.toColour(), tsFormatter.apply(OverlayColour.RED)));

@@ -3,7 +3,7 @@ package peakaboo.curvefit.peak.search.scoring;
 import java.util.HashMap;
 import java.util.Map;
 
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class CompoundFittingScorer implements FittingScorer {
 
@@ -16,7 +16,7 @@ public class CompoundFittingScorer implements FittingScorer {
 	}
 	
 	@Override
-	public float score(TransitionSeries ts) {
+	public float score(LegacyTransitionSeries ts) {
 		float score = 1f;
 		for (FittingScorer scorer : scorers.keySet()) {
 			float weight = scorers.get(scorer);

@@ -23,7 +23,7 @@ import javax.swing.tree.TreePath;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.ClearPanel;
@@ -161,9 +161,9 @@ public class LookupPanel extends ClearPanel implements Changeable
 
 			public void valueForPathChanged(TreePath path, Object newValue)
 			{
-				if (path.getLastPathComponent() instanceof TransitionSeries)
+				if (path.getLastPathComponent() instanceof LegacyTransitionSeries)
 				{
-					TransitionSeries ts = (TransitionSeries) path.getLastPathComponent();
+					LegacyTransitionSeries ts = (LegacyTransitionSeries) path.getLastPathComponent();
 					boolean included = (Boolean) newValue;
 
 					if (included)
@@ -195,7 +195,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 			public boolean isLeaf(Object node)
 			{
 
-				if (node instanceof TransitionSeries)
+				if (node instanceof LegacyTransitionSeries)
 				{
 					return true;
 				}
@@ -222,9 +222,9 @@ public class LookupPanel extends ClearPanel implements Changeable
 				}
 				else if (parent instanceof Element)
 				{
-					TransitionSeries ts = (TransitionSeries) child;
+					LegacyTransitionSeries ts = (LegacyTransitionSeries) child;
 					Element e = (Element) parent;
-					List<TransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
+					List<LegacyTransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
 					return ofElement.indexOf(ts);
 										
 				}

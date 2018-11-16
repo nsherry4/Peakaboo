@@ -6,13 +6,13 @@ import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import peakaboo.calibration.CalibrationProfile;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 /**
  * 
  * This class stores the data associated with a single map of a scan. Each map is associated with a single
- * {@link TransitionSeries}, and can be marked as visible or invisible. When generating or displaying data for
+ * {@link LegacyTransitionSeries}, and can be marked as visible or invisible. When generating or displaying data for
  * more than one TransitionSeries, it may be desirable to use a {@link MapResultSet} instead of managing the
  * MapResult objects manually.
  * 
@@ -24,16 +24,16 @@ public class MapResult implements Cloneable
 {
 
 	private Spectrum data;
-	public TransitionSeries	transitionSeries;
+	public LegacyTransitionSeries	transitionSeries;
 
 
-	public MapResult(TransitionSeries ts, int mapSize)
+	public MapResult(LegacyTransitionSeries ts, int mapSize)
 	{
 		this.data = new ISpectrum(mapSize, 0.0f);
 		transitionSeries = ts;
 	}
 	
-	protected MapResult(TransitionSeries ts, Spectrum data)
+	protected MapResult(LegacyTransitionSeries ts, Spectrum data)
 	{
 		this.transitionSeries = ts;
 		this.data = data;

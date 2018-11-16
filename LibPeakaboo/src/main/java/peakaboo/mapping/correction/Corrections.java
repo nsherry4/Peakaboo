@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import cyclops.Pair;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 
@@ -17,12 +17,12 @@ public class Corrections
 {
 
 	private String name;
-	private ArrayList<Pair<TransitionSeries, Float>> correctionPairs;
+	private ArrayList<Pair<LegacyTransitionSeries, Float>> correctionPairs;
 	
 	public Corrections(URL file) throws IOException
 	{
 	
-		correctionPairs = new ArrayList<Pair<TransitionSeries, Float>>();
+		correctionPairs = new ArrayList<Pair<LegacyTransitionSeries, Float>>();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file.openStream()));
 		name = reader.readLine();
@@ -39,13 +39,13 @@ public class Corrections
 			
 			float factor = Float.parseFloat(parts[2]);
 			
-			correctionPairs.add(new Pair<TransitionSeries, Float>(PeakTable.SYSTEM.get(e, tst), factor));
+			correctionPairs.add(new Pair<LegacyTransitionSeries, Float>(PeakTable.SYSTEM.get(e, tst), factor));
 		}
 		
 		
 	}
 	
-	public Float getCorrection(final TransitionSeries ts)
+	public Float getCorrection(final LegacyTransitionSeries ts)
 	{	
 		return correctionPairs.stream().filter(p -> p.first.equals(ts)).findFirst().orElse(new Pair<>()).second;
 	}

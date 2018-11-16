@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import eventful.Eventful;
 import eventful.EventfulListener;
 import eventful.IEventful;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 public class TSSelector extends JPanel implements IEventful
@@ -41,7 +41,7 @@ public class TSSelector extends JPanel implements IEventful
 	
 	
 	
-	private JComboBox<TransitionSeries> tsCombo;
+	private JComboBox<LegacyTransitionSeries> tsCombo;
 	private JLabel tsLabel;
 	
 	private ActionListener tsComboListener;
@@ -51,7 +51,7 @@ public class TSSelector extends JPanel implements IEventful
 		listenee = new Eventful();
 		setLayout(new BorderLayout());
 
-		tsCombo = new JComboBox<TransitionSeries>();
+		tsCombo = new JComboBox<LegacyTransitionSeries>();
 		
 		tsLabel = new JLabel();
 		tsLabel.setPreferredSize(tsCombo.getPreferredSize());
@@ -75,7 +75,7 @@ public class TSSelector extends JPanel implements IEventful
 	}
 
 
-	public void setTransitionSeries(List<TransitionSeries> tss)
+	public void setTransitionSeries(List<LegacyTransitionSeries> tss)
 	{
 		
 		tsCombo.removeActionListener(tsComboListener);
@@ -83,7 +83,7 @@ public class TSSelector extends JPanel implements IEventful
 				
 		if (tss == null) return;
 		
-		for (TransitionSeries ts : tss) { tsCombo.addItem(ts); }
+		for (LegacyTransitionSeries ts : tss) { tsCombo.addItem(ts); }
 		if (tss.size() > 0) tsCombo.setSelectedIndex(0);
 		
 		updateLabelText();
@@ -93,9 +93,9 @@ public class TSSelector extends JPanel implements IEventful
 		
 	}
 	
-	public TransitionSeries getTransitionSeries()
+	public LegacyTransitionSeries getTransitionSeries()
 	{
-		return (TransitionSeries) tsCombo.getSelectedItem();
+		return (LegacyTransitionSeries) tsCombo.getSelectedItem();
 	}
 	
 	

@@ -13,12 +13,12 @@ import java.util.List;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class SerializedPeakTable implements PeakTable {
 
-	private static ScratchEncoder encoder = Serializers.fst(TransitionSeries.class, Transition.class);
-	private List<TransitionSeries> series;
+	private static ScratchEncoder encoder = Serializers.fst(LegacyTransitionSeries.class, Transition.class);
+	private List<LegacyTransitionSeries> series;
 	
 	public SerializedPeakTable(PeakTable fallback, File file) {
 		Path path = file.toPath();
@@ -42,34 +42,34 @@ public class SerializedPeakTable implements PeakTable {
 		
 	}
 	
-	private SerializedPeakTable(TransitionSeries[] tss) {
+	private SerializedPeakTable(LegacyTransitionSeries[] tss) {
 		series = Arrays.asList(tss);
 	}
 	
 	private static void save(PeakTable toStore, Path target) throws IOException {
 		
-		List<TransitionSeries> tslist = toStore.getAll();
-		TransitionSeries[] tss = tslist.toArray(new TransitionSeries[0]);
+		List<LegacyTransitionSeries> tslist = toStore.getAll();
+		LegacyTransitionSeries[] tss = tslist.toArray(new LegacyTransitionSeries[0]);
 		byte[] serialized = encoder.encode(tss);
 		Files.write(target, serialized, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 		
 	}
 	
-	private static TransitionSeries[] load(Path source) throws IOException {
+	private static LegacyTransitionSeries[] load(Path source) throws IOException {
 		
 		byte[] serialized = Files.readAllBytes(source);
-		TransitionSeries[] tss = (TransitionSeries[]) encoder.decode(serialized);
+		LegacyTransitionSeries[] tss = (LegacyTransitionSeries[]) encoder.decode(serialized);
 		return tss;
 		
 	}
 
 
 	@Override
-	public List<TransitionSeries> getAll() {
+	public List<LegacyTransitionSeries> getAll() {
 		
-		List<TransitionSeries> copy = new ArrayList<>();
-		for (TransitionSeries ts : series) {
-			copy.add(new TransitionSeries(ts));
+		List<LegacyTransitionSeries> copy = new ArrayList<>();
+		for (LegacyTransitionSeries ts : series) {
+			copy.add(new LegacyTransitionSeries(ts));
 		}
 		return copy;
 		

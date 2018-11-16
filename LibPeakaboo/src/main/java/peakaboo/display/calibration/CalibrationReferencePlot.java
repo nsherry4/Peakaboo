@@ -10,7 +10,7 @@ import java.util.function.Function;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import peakaboo.calibration.CalibrationReference;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationReferencePlot extends ZCalibrationPlot {
@@ -24,12 +24,12 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 	}
 	
 	@Override
-	protected List<TransitionSeries> getKeys(TransitionShell type) {
+	protected List<LegacyTransitionSeries> getKeys(TransitionShell type) {
 		return ref.getTransitionSeries(type);
 	}
 
 	@Override
-	protected Map<TransitionSeries, Float> getData() {
+	protected Map<LegacyTransitionSeries, Float> getData() {
 		return ref.getConcentrations();
 	}
 
@@ -54,7 +54,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 	}
 
 	@Override
-	protected String getHighlightText(TransitionSeries ts) {
+	protected String getHighlightText(LegacyTransitionSeries ts) {
 		String title = ts.getElement().toString();
 		String annotation = ref.getAnnotation(ts);
 		if (annotation.trim().length() > 0) {
@@ -68,12 +68,12 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 		if (getHighlighted() == null) {
 			return Collections.emptyList();
 		}
-		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new TransitionSeries(getHighlighted(), getType())));
+		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new LegacyTransitionSeries(getHighlighted(), getType())));
 		return Collections.singletonList(highlightLabel);
 	}
 
 	@Override
-	protected Map<TransitionSeries, Float> getFadedData() {
+	protected Map<LegacyTransitionSeries, Float> getFadedData() {
 		return new HashMap<>();
 	}
 }

@@ -18,7 +18,7 @@ import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /*
@@ -29,9 +29,9 @@ import peakaboo.curvefit.peak.transition.TransitionShell;
 public class CalibrationProfile {
 
 	private CalibrationReference reference;
-	Map<TransitionSeries, Float> calibrations;
+	Map<LegacyTransitionSeries, Float> calibrations;
 	private String name = "";
-	List<TransitionSeries> interpolated;
+	List<LegacyTransitionSeries> interpolated;
 	
 	/**
 	 * Create an empty CalibrationProfile
@@ -53,12 +53,12 @@ public class CalibrationProfile {
 			//Build profile
 			for (FittingResult fit : sample) {
 				
-				TransitionSeries ts = fit.getTransitionSeries();
+				LegacyTransitionSeries ts = fit.getTransitionSeries();
 				int channel = sample.getParameters().getCalibration().channelFromEnergy(ts.getStrongestTransition().energyValue);
 				
 				//we look up the transitionseries, but ultimately use a blank one.
 				//we have to use all blanks, otherwise equality/contains cheks will fail
-				ts = new TransitionSeries(ts.getElement(), ts.getShell());
+				ts = new LegacyTransitionSeries(ts.getElement(), ts.getShell());
 				if (! reference.hasConcentration(ts)) { continue; }
 				
 				//TODO: Is this the right way to measure sample intensity? Measuring strongestTS height rather than area sum?
@@ -99,17 +99,17 @@ public class CalibrationProfile {
 		this.name = name;
 	}
 
-	public LinkedHashMap<TransitionSeries, Float> getCalibrations() {
+	public LinkedHashMap<LegacyTransitionSeries, Float> getCalibrations() {
 		return new LinkedHashMap<>(calibrations);
 	}
 
-	public boolean contains(TransitionSeries ts) {
-		ts = new TransitionSeries(ts.getElement(), ts.getShell());
+	public boolean contains(LegacyTransitionSeries ts) {
+		ts = new LegacyTransitionSeries(ts.getElement(), ts.getShell());
 		return calibrations.keySet().contains(ts);
 	}
 	
-	public float getCalibration(TransitionSeries ts) {
-		ts = new TransitionSeries(ts.getElement(), ts.getShell());
+	public float getCalibration(LegacyTransitionSeries ts) {
+		ts = new LegacyTransitionSeries(ts.getElement(), ts.getShell());
 		return calibrations.get(ts);
 	}
 	
@@ -118,13 +118,13 @@ public class CalibrationProfile {
 	}
 	
 	public float calibratedSum(FittingResult fittingResult) {
-		TransitionSeries ts = fittingResult.getTransitionSeries();
+		LegacyTransitionSeries ts = fittingResult.getTransitionSeries();
 		float rawfit = fittingResult.getFit().sum();
 		return calibrate(rawfit, ts);
 	}
 	
-	public float calibrate(float value, TransitionSeries ts) {
-		ts = new TransitionSeries(ts.getElement(), ts.getShell());
+	public float calibrate(float value, LegacyTransitionSeries ts) {
+		ts = new LegacyTransitionSeries(ts.getElement(), ts.getShell());
 		if (calibrations.keySet().contains(ts)) {
 			float calibration = calibrations.get(ts);
 			return value / calibration;
@@ -137,7 +137,7 @@ public class CalibrationProfile {
 		return calibrate(result.getFit().sum(), result.getTransitionSeries());
 	}
 	
-	public ReadOnlySpectrum calibrateMap(ReadOnlySpectrum data, TransitionSeries ts) {
+	public ReadOnlySpectrum calibrateMap(ReadOnlySpectrum data, LegacyTransitionSeries ts) {
 		if (!contains(ts)) {
 			return data;
 		}
@@ -152,8 +152,8 @@ public class CalibrationProfile {
 	/**
 	 * returns a sorted list of TransitionSeries in this profile 
 	 */
-	public List<TransitionSeries> getTransitionSeries(TransitionShell tst) {
-		List<TransitionSeries> tss = calibrations
+	public List<LegacyTransitionSeries> getTransitionSeries(TransitionShell tst) {
+		List<LegacyTransitionSeries> tss = calibrations
 				.keySet()
 				.stream()
 				.filter(ts -> ts.getShell() == tst)
@@ -162,7 +162,7 @@ public class CalibrationProfile {
 		return tss;
 	}
 	
-	public List<TransitionSeries> getInterpolated() {
+	public List<LegacyTransitionSeries> getInterpolated() {
 		return new ArrayList<>(this.interpolated);
 	}
 	
@@ -172,10 +172,10 @@ public class CalibrationProfile {
 		serialized.referenceUUID = profile.reference.getUuid();
 		serialized.referenceName = profile.reference.getName();
 		serialized.name = profile.name;
-		for (TransitionSeries ts : profile.calibrations.keySet()) {
+		for (LegacyTransitionSeries ts : profile.calibrations.keySet()) {
 			serialized.calibrations.put(ts.toIdentifierString(), profile.calibrations.get(ts));
 		}
-		for (TransitionSeries ts : profile.interpolated) {
+		for (LegacyTransitionSeries ts : profile.interpolated) {
 			serialized.interpolated.add(ts.toIdentifierString());
 		}
 		return YamlSerializer.serialize(serialized);
@@ -190,11 +190,11 @@ public class CalibrationProfile {
 		CalibrationProfile profile = new CalibrationProfile();
 		SerializedCalibrationProfile serialized = YamlSerializer.deserialize(yaml);
 		for (String tsidentifier : serialized.calibrations.keySet()) {
-			TransitionSeries ts = TransitionSeries.get(tsidentifier);
+			LegacyTransitionSeries ts = LegacyTransitionSeries.get(tsidentifier);
 			profile.calibrations.put(ts, serialized.calibrations.get(tsidentifier));
 		}
 		for (String tsidentifier : serialized.interpolated) {
-			TransitionSeries ts = TransitionSeries.get(tsidentifier);
+			LegacyTransitionSeries ts = LegacyTransitionSeries.get(tsidentifier);
 			profile.interpolated.add(ts);
 		}
 		
@@ -220,7 +220,7 @@ public class CalibrationProfile {
 		for (TransitionShell tst : TransitionShell.values()) {
 			System.out.println(tst);
 			for (Element e : Element.values()) {
-				TransitionSeries ts = new TransitionSeries(e, tst);
+				LegacyTransitionSeries ts = new LegacyTransitionSeries(e, tst);
 				if (!p.contains(ts)) { continue; }
 				System.out.println(e.atomicNumber() + ", " + p.getCalibration(ts));
 			}
