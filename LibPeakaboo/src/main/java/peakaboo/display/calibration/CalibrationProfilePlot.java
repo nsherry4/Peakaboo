@@ -11,14 +11,14 @@ import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationProfilePlot extends ZCalibrationPlot {
 
 	private CalibrationProfile profile;
 	private File source;
 	
-	public CalibrationProfilePlot(CalibrationProfile profile, TransitionSeriesType type, File source) {
+	public CalibrationProfilePlot(CalibrationProfile profile, TransitionShell type, File source) {
 		super(type);
 		setData(profile, source);
 	}
@@ -30,7 +30,7 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	}
 	
 	@Override
-	protected List<TransitionSeries> getKeys(TransitionSeriesType type) {
+	protected List<TransitionSeries> getKeys(TransitionShell type) {
 		return profile.getTransitionSeries(type);
 	}
 

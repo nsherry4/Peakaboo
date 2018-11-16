@@ -25,7 +25,7 @@ import peakaboo.curvefit.peak.table.Element;
 
 /**
  * This class can represent: 1) a representation of all the {@link Transition}s for a given {@link Element} that fall into a specific
- * {@link TransitionSeriesType}. 2) A representation of all of the {@link TransitionSeries} that are involved in the simultaneous 
+ * {@link TransitionShell}. 2) A representation of all of the {@link TransitionSeries} that are involved in the simultaneous 
  * detection of two or more X-Ray signals
  * 
  * @author Nathaniel Sherry, 2009-2010
@@ -35,9 +35,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 {
 
 	/**
-	 * The {@link TransitionSeriesType} that this TransitionSeries represents
+	 * The {@link TransitionShell} that this TransitionSeries represents
 	 */
-	public final TransitionSeriesType		type;
+	public final TransitionShell		type;
 	
 	/**
 	 * the {@link TransitionSeriesMode} which describes this TransitionSeries.
@@ -59,12 +59,12 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	/**
 	 * The general intensity of this TransitionSeries
 	 */
-	public final double						intensity;
+	private final double						intensity;
 
 	/**
 	 * Toggle for the visibility of this TransitionSeries
 	 */
-	public boolean							visible;
+	private boolean							visible;
 
 
 	/**
@@ -105,8 +105,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 		this.element = other.element;
 		this.transitions = other.transitions;
-		this.intensity = other.intensity;
-		this.visible = other.visible;
+		this.intensity = other.getIntensity();
+		this.setVisible(other.isVisible());
 	}
 	
 
@@ -114,16 +114,16 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 * Creates a new blank TransitionSeries based on the given parameters
 	 * 
 	 * @param element the {@link Element} that this {@link TransitionSeries} represents (eg H, He, ...)
-	 * @param seriesType the {@link TransitionSeriesType} that this {@link TransitionSeries} represents (eg K, L, ...)
+	 * @param seriesType the {@link TransitionShell} that this {@link TransitionSeries} represents (eg K, L, ...)
 	 * @param mode the {@link TransitionSeriesMode} that this {@link TransitionSeries} represents (eg Primary, Pile-Up, ...)
 	 */
-	public TransitionSeries(Element element, TransitionSeriesType seriesType, TransitionSeriesMode mode)
+	public TransitionSeries(Element element, TransitionShell seriesType, TransitionSeriesMode mode)
 	{
 		this.element = element;
 		this.type = seriesType;
 		this.mode = mode;
 		intensity = 1.0;
-		visible = true;
+		setVisible(true);
 
 		transitions = new ArrayList<Transition>();
 		componentSeries = new ArrayList<TransitionSeries>();
@@ -133,9 +133,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 * Creates a new TransitionSeries with a {@link TransitionSeriesMode} of {@link TransitionSeriesMode#PRIMARY}
 	 * 
 	 * @param element the {@link Element} that this {@link TransitionSeries} represents (eg H, He, ...)
-	 * @param seriesType the {@link TransitionSeriesType} that this {@link TransitionSeries} represents (eg K, L, ...)
+	 * @param seriesType the {@link TransitionShell} that this {@link TransitionSeries} represents (eg K, L, ...)
 	 */
-	public TransitionSeries(Element element, TransitionSeriesType seriesType)
+	public TransitionSeries(Element element, TransitionShell seriesType)
 	{
 		this(element, seriesType, TransitionSeriesMode.PRIMARY);
 	}
@@ -220,7 +220,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 	/**
-	 * Returns a description of this {@link TransitionSeries}, including the {@link Element} and the {@link TransitionSeriesType}. If the {@link TransitionSeries} is a pile-up or summation, it will be reflected in the description
+	 * Returns a description of this {@link TransitionSeries}, including the {@link Element} and the {@link TransitionShell}. If the {@link TransitionSeries} is a pile-up or summation, it will be reflected in the description
 	 * @return
 	 */
 	public String getDescription()
@@ -286,7 +286,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 * identify the TransitionSeries.
 	 */
 	public String toIdentifierString() {
-		if (type == TransitionSeriesType.COMPOSITE) {
+		if (type == TransitionShell.COMPOSITE) {
 			return componentSeries.stream().map(TransitionSeries::toIdentifierString).reduce((a, b) -> a + "+" + b).get();
 		}
 		
@@ -346,7 +346,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		// create the new TransitionSeries object
 		final TransitionSeries newTransitionSeries = new TransitionSeries(
 			element,
-			TransitionSeriesType.COMPOSITE,
+			TransitionShell.COMPOSITE,
 			newmode);
 		
 		if (transitions.size() > 0 && other.transitions.size() > 0) {
@@ -431,7 +431,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	@Override
 	public int hashCode()
 	{
-		if (type != TransitionSeriesType.COMPOSITE) 
+		if (type != TransitionShell.COMPOSITE) 
 		{
 			return (1+type.ordinal()) * (1+element.ordinal());
 		}
@@ -450,12 +450,12 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		if (!(oother instanceof TransitionSeries)) return false;
 		TransitionSeries other = (TransitionSeries) oother;
 		
-		if (type != TransitionSeriesType.COMPOSITE && other.element != this.element) return false;
+		if (type != TransitionShell.COMPOSITE && other.element != this.element) return false;
 		
 		if (other.type != this.type) return false;	
 		if (other.mode != this.mode) return false;
 
-		if (type == TransitionSeriesType.COMPOSITE)
+		if (type == TransitionShell.COMPOSITE)
 		{
 			//Don't modify state just for a comparison
 			List<TransitionSeries> mySeries = new ArrayList<>(componentSeries);
@@ -470,6 +470,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	}
 
+	
+	
 
 	/**
 	 * Returns the number of times the base {@link Element} {@link TransitionSeries} appears duplicated in this {@link TransitionSeries}. If this {@link TransitionSeries} is not a pile-up, the result is 1
@@ -496,10 +498,10 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 
 	/**
-	 * Returns the base {@link TransitionSeriesType} for this {@link TransitionSeries}
-	 * @return the base {@link TransitionSeriesType}
+	 * Returns the base {@link TransitionShell} for this {@link TransitionSeries}
+	 * @return the base {@link TransitionShell}
 	 */
-	public TransitionSeriesType getBaseType()
+	public TransitionShell getBaseType()
 	{
 
 		if (mode == TransitionSeriesMode.PILEUP)
@@ -553,9 +555,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			return null;
 		}
 		Element e = Element.valueOf(parts[0]);
-		TransitionSeriesType tst = TransitionSeriesType.fromTypeString(parts[1].trim());
+		TransitionShell tst = TransitionShell.fromTypeString(parts[1].trim());
 		
 		return new TransitionSeries(e, tst);
+	}
+
+
+	public double getIntensity() {
+		return intensity;
 	}
 
 

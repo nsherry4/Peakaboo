@@ -28,7 +28,7 @@ public class SerializedTransitionSeries
 			components.add(bt.element.name() + ":" + bt.type.name());
 		}
 		
-		this.visible = ts.visible;
+		this.visible = ts.isVisible();
 		
 	}
 	
@@ -48,7 +48,7 @@ public class SerializedTransitionSeries
 		}
 		
 		TransitionSeries ts = TransitionSeries.summation(tss);
-		ts.visible = this.visible;
+		ts.setVisible(this.visible);
 		
 		return ts;
 		

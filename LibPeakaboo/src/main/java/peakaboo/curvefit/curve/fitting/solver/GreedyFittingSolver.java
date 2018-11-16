@@ -39,7 +39,7 @@ public class GreedyFittingSolver implements FittingSolver {
 		
 		// calculate the curves
 		for (Curve curve : fittings.getCurves()) {
-			if (!curve.getTransitionSeries().visible) { continue; }
+			if (!curve.getTransitionSeries().isVisible()) { continue; }
 						
 			FittingResult result = fitter.fit(data, curve);
 			data = SpectrumCalculations.subtractLists(data, result.getFit(), 0.0f);

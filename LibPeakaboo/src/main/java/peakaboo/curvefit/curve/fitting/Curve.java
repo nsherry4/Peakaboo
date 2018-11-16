@@ -14,7 +14,7 @@ import cyclops.SpectrumCalculations;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 
 
@@ -80,7 +80,7 @@ public class Curve
 	{
 		this.transitionSeries = ts;
 		calculateConstraintMask();
-		calcUnscaledFit(ts.type != TransitionSeriesType.COMPOSITE);
+		calcUnscaledFit(ts.type != TransitionShell.COMPOSITE);
 		
 	}
 	

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public interface PeakTable {
 
@@ -41,7 +41,7 @@ public interface PeakTable {
 			.filter(Element.F)
 	);
 	
-	default TransitionSeries get(Element e, TransitionSeriesType tst) {
+	default TransitionSeries get(Element e, TransitionShell tst) {
 		List<TransitionSeries> tss = getAll()
 				.stream()
 				.filter(ts -> (ts.element == e) && (ts.type == tst))
@@ -55,10 +55,10 @@ public interface PeakTable {
 	
 	/**
 	 * Gets the equivalent TransitionSeries from this PeakTable. This is a
-	 * convenience method for {@link PeakTable#get(Element, TransitionSeriesType)}
+	 * convenience method for {@link PeakTable#get(Element, TransitionShell)}
 	 */
 	default TransitionSeries get(TransitionSeries other) {
-		if (other.type == TransitionSeriesType.COMPOSITE) {
+		if (other.type == TransitionShell.COMPOSITE) {
 			List<TransitionSeries> members = other.getBaseTransitionSeries().stream().map(ts -> get(ts.element, ts.type)).filter(ts -> ts != null).collect(Collectors.toList());
 			return TransitionSeries.summation(members);
 		} else {

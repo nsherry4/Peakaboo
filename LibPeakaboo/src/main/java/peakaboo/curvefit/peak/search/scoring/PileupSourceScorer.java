@@ -4,7 +4,7 @@ import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /**
  * Prefers pileup peaks which are a small percent of the 
@@ -25,7 +25,7 @@ public class PileupSourceScorer implements FittingScorer {
 	@Override
 	public float score(TransitionSeries ts) {
 		
-		if (ts.type != TransitionSeriesType.COMPOSITE) { return 1; }
+		if (ts.type != TransitionShell.COMPOSITE) { return 1; }
 	
 		float sourceScore = 0;
 		float tsCount = 0;

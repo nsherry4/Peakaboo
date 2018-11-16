@@ -11,20 +11,20 @@ import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationReferencePlot extends ZCalibrationPlot {
 
 	private CalibrationReference ref;
 	
-	public CalibrationReferencePlot(CalibrationReference ref, TransitionSeriesType type) {
+	public CalibrationReferencePlot(CalibrationReference ref, TransitionShell type) {
 		super(type);
 		this.ref = ref;
 		super.configure();
 	}
 	
 	@Override
-	protected List<TransitionSeries> getKeys(TransitionSeriesType type) {
+	protected List<TransitionSeries> getKeys(TransitionShell type) {
 		return ref.getTransitionSeries(type);
 	}
 

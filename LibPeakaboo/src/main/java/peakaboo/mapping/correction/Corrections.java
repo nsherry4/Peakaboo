@@ -10,7 +10,7 @@ import cyclops.Pair;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 
 public class Corrections
@@ -35,7 +35,7 @@ public class Corrections
 			String parts[] = line.split(",");
 			
 			Element e = Element.values()[Integer.parseInt(parts[1])-1];
-			TransitionSeriesType tst = TransitionSeriesType.valueOf(parts[0]);
+			TransitionShell tst = TransitionShell.valueOf(parts[0]);
 			
 			float factor = Float.parseFloat(parts[2]);
 			

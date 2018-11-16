@@ -6,7 +6,7 @@ import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class SiliconEscapePeak implements EscapePeak {
 
@@ -49,7 +49,7 @@ public class SiliconEscapePeak implements EscapePeak {
 	@Override
 	public TransitionSeries transitionSeries() {
 		// TODO Auto-generated method stub
-		return PeakTable.SYSTEM.get(Element.Si, TransitionSeriesType.K);
+		return PeakTable.SYSTEM.get(Element.Si, TransitionShell.K);
 	}
 	
 }

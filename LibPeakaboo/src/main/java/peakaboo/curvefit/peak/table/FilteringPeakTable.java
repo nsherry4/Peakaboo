@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /**
  * Presents a view of a peak table which screens out certain elements. 
@@ -35,7 +35,7 @@ public class FilteringPeakTable implements PeakTable {
 		return this;
 	}
 	
-	public FilteringPeakTable filter(Element e, TransitionSeriesType tst) {
+	public FilteringPeakTable filter(Element e, TransitionShell tst) {
 		filteredTransitionSeries.add(backing.get(e, tst));
 		all = null;
 		return this;

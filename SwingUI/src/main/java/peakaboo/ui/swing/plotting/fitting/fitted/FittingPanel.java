@@ -267,7 +267,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 			{
 				if (columnIndex == 0)
 				{
-					return controller.getFittedTransitionSeries().get(rowIndex).visible;
+					return controller.getFittedTransitionSeries().get(rowIndex).isVisible();
 				}
 				else
 				{

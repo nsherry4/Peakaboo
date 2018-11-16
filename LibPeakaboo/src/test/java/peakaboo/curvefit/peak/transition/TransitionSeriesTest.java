@@ -17,10 +17,10 @@ public class TransitionSeriesTest {
 		
 		PeakTable table = new KrausePeakTable();
 		
-		TransitionSeries ask1 = table.get(Element.As, TransitionSeriesType.K);
-		TransitionSeries ask2 = table.get(Element.As, TransitionSeriesType.K);
-		TransitionSeries ask3 = table.get(Element.As, TransitionSeriesType.L);
-		TransitionSeries ask4 = table.get(Element.Fe, TransitionSeriesType.K);
+		TransitionSeries ask1 = table.get(Element.As, TransitionShell.K);
+		TransitionSeries ask2 = table.get(Element.As, TransitionShell.K);
+		TransitionSeries ask3 = table.get(Element.As, TransitionShell.L);
+		TransitionSeries ask4 = table.get(Element.Fe, TransitionShell.K);
 		
 		
 		Assert.assertEquals(ask1, ask2);
@@ -36,8 +36,8 @@ public class TransitionSeriesTest {
 		TransitionSeries id1 = TransitionSeries.get("Fe:K");
 		TransitionSeries id2 = TransitionSeries.get("Zn:K");
 		Assert.assertFalse(id1.equals(id2));
-		Assert.assertEquals(id1, new TransitionSeries(Element.Fe, TransitionSeriesType.K));
-		Assert.assertEquals(id2, new TransitionSeries(Element.Zn, TransitionSeriesType.K));
+		Assert.assertEquals(id1, new TransitionSeries(Element.Fe, TransitionShell.K));
+		Assert.assertEquals(id2, new TransitionSeries(Element.Zn, TransitionShell.K));
 		
 		TransitionSeries ids = TransitionSeries.get("Fe:K+Zn:K");
 		Assert.assertEquals(ids, TransitionSeries.summation(id1, id2));

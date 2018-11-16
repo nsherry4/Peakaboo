@@ -155,7 +155,7 @@ public class AutoEnergyCalibration {
 
 		FittingScorer scorer = new FastSignalMatchScorer(spectrum, calibration);		
 		for (TransitionSeries ts : fits.getVisibleTransitionSeries()) {
-			if (ts.visible) {
+			if (ts.isVisible()) {
 				score += Math.sqrt(scorer.score(ts));
 			}
 		}

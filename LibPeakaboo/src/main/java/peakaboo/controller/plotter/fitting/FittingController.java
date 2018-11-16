@@ -39,7 +39,7 @@ import peakaboo.curvefit.peak.search.PeakProposal;
 import peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.datasource.model.components.metadata.Metadata;
 import plural.executor.ExecutorSet;
 
@@ -161,12 +161,12 @@ public class FittingController extends EventfulType<Boolean>
 
 	public boolean getTransitionSeriesVisibility(TransitionSeries e)
 	{
-		return e.visible;
+		return e.isVisible();
 	}
 
 	public List<TransitionSeries> getVisibleTransitionSeries()
 	{
-		return getFittedTransitionSeries().stream().filter(ts -> ts.visible).collect(toList());
+		return getFittedTransitionSeries().stream().filter(ts -> ts.isVisible()).collect(toList());
 	}
 
 	public float getTransitionSeriesIntensity(TransitionSeries ts)

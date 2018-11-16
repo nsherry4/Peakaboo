@@ -19,7 +19,7 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /*
  * NOTE: Calibration does not use PeakTable TransitionSeries, 
@@ -152,7 +152,7 @@ public class CalibrationProfile {
 	/**
 	 * returns a sorted list of TransitionSeries in this profile 
 	 */
-	public List<TransitionSeries> getTransitionSeries(TransitionSeriesType tst) {
+	public List<TransitionSeries> getTransitionSeries(TransitionShell tst) {
 		List<TransitionSeries> tss = calibrations
 				.keySet()
 				.stream()
@@ -217,7 +217,7 @@ public class CalibrationProfile {
 		CalibrationPluginManager.init(new File("/home/nathaniel/Desktop/PBCP/"));
 		CalibrationProfile p = CalibrationProfile.load(new File("/home/nathaniel/Desktop/nist610sigray-15.pbcp").toPath());
 		
-		for (TransitionSeriesType tst : TransitionSeriesType.values()) {
+		for (TransitionShell tst : TransitionShell.values()) {
 			System.out.println(tst);
 			for (Element e : Element.values()) {
 				TransitionSeries ts = new TransitionSeries(e, tst);

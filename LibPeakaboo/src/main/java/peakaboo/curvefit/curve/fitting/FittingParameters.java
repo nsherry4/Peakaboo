@@ -9,7 +9,7 @@ import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class FittingParameters {
 
@@ -44,12 +44,12 @@ public class FittingParameters {
 	}
 	
 	
-	public FittingFunction forTransition(Transition transition, TransitionSeriesType type) {
+	public FittingFunction forTransition(Transition transition, TransitionShell type) {
 		FittingContext context = new FittingContext(this, transition, type);
 		return buildFunction(context);
 	}
 
-	public FittingFunction forEscape(Transition transition, Transition escape, Element element, TransitionSeriesType type) {
+	public FittingFunction forEscape(Transition transition, Transition escape, Element element, TransitionShell type) {
 		FittingContext context = new FittingContext(this, transition, escape, element, type);
 		return buildFunction(context);
 	}

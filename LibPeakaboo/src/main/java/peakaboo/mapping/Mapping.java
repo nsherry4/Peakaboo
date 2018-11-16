@@ -16,7 +16,7 @@ import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;

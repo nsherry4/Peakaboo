@@ -9,7 +9,7 @@ import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
@@ -17,12 +17,12 @@ public class CalibrationSmoother implements CalibrationProcessor {
 
 	@Override
 	public void process(CalibrationReference reference, Map<TransitionSeries, Float> calibrations) {
-		smooth(calibrations, TransitionSeriesType.K);
-		smooth(calibrations, TransitionSeriesType.L);
-		smooth(calibrations, TransitionSeriesType.M);
+		smooth(calibrations, TransitionShell.K);
+		smooth(calibrations, TransitionShell.L);
+		smooth(calibrations, TransitionShell.M);
 	}
 
-	private void smooth(Map<TransitionSeries, Float> calibrations, TransitionSeriesType tst) {
+	private void smooth(Map<TransitionSeries, Float> calibrations, TransitionShell tst) {
 		List<TransitionSeries> tss = calibrations
 				.keySet()
 				.stream()

@@ -3,7 +3,7 @@ package peakaboo.calibration;
 import java.util.Map;
 
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationNormalizer implements CalibrationProcessor {
 
@@ -11,12 +11,12 @@ public class CalibrationNormalizer implements CalibrationProcessor {
 	public void process(CalibrationReference reference, Map<TransitionSeries, Float> calibrations) {
 		Float anchorValue = calibrations.get(reference.getAnchor());
 		if (anchorValue == null) return;
-		for (TransitionSeriesType tst : TransitionSeriesType.values()) {
+		for (TransitionShell tst : TransitionShell.values()) {
 			normalize(calibrations, tst, anchorValue);
 		}
 	}
 
-	private void normalize(Map<TransitionSeries, Float> calibrations, TransitionSeriesType tst, float against) {
+	private void normalize(Map<TransitionSeries, Float> calibrations, TransitionShell tst, float against) {
 		
 		for (TransitionSeries ts : calibrations.keySet()) {
 			if (ts.type != tst) { continue; }

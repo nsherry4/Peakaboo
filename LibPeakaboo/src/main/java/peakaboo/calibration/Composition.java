@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class Composition {
 
@@ -61,7 +61,7 @@ public class Composition {
 
 		//find best TransitionSeries per element to measure
 		Map<Element, TransitionSeries> elements = new LinkedHashMap<>();
-		for (TransitionSeriesType type : new TransitionSeriesType[] {TransitionSeriesType.M, TransitionSeriesType.L, TransitionSeriesType.K}) {
+		for (TransitionShell type : new TransitionShell[] {TransitionShell.M, TransitionShell.L, TransitionShell.K}) {
 			for (TransitionSeries ts : tss) {
 				if (ts.type != type) { continue; }
 				elements.put(ts.element, ts);

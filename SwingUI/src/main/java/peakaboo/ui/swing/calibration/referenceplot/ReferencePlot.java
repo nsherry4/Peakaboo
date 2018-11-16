@@ -9,14 +9,14 @@ import cyclops.visualization.backend.awt.GraphicsPanel;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.display.calibration.CalibrationReferencePlot;
 
 public class ReferencePlot extends GraphicsPanel {
 
 	CalibrationReferencePlot plot;
 	
-	public ReferencePlot(CalibrationReference reference, TransitionSeriesType type) {
+	public ReferencePlot(CalibrationReference reference, TransitionShell type) {
 		plot = new CalibrationReferencePlot(reference, type);
 		
 		addMouseMotionListener(new MouseMotionAdapter() {

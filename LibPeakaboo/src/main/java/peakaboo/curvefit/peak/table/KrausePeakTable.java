@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class KrausePeakTable implements PeakTable {
 
@@ -95,7 +95,7 @@ public class KrausePeakTable implements PeakTable {
 			Element e = Element.values()[atomicNumber];
 						
 			// K
-			TransitionSeries ts = new TransitionSeries(e, TransitionSeriesType.K);
+			TransitionSeries ts = new TransitionSeries(e, TransitionShell.K);
 
 			//escape
 			//createTransition(sections, column);
@@ -136,7 +136,7 @@ public class KrausePeakTable implements PeakTable {
 			//table.addSeries(ts.pileup());
 
 
-			ts = new TransitionSeries(e, TransitionSeriesType.L);
+			ts = new TransitionSeries(e, TransitionShell.L);
 			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
 
 			//escape
@@ -180,7 +180,7 @@ public class KrausePeakTable implements PeakTable {
 
 
 			
-			ts = new TransitionSeries(e, TransitionSeriesType.M);
+			ts = new TransitionSeries(e, TransitionShell.M);
 			Transition ma1, mb1, mg;
 
 			//escape

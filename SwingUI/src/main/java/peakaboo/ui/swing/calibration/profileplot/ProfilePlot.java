@@ -11,14 +11,14 @@ import cyclops.visualization.backend.awt.GraphicsPanel;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.display.calibration.CalibrationProfilePlot;
 
 public class ProfilePlot extends GraphicsPanel {
 
 	private CalibrationProfilePlot plot;
 
-	public ProfilePlot(CalibrationProfile profile, File source, TransitionSeriesType type) {
+	public ProfilePlot(CalibrationProfile profile, File source, TransitionShell type) {
 		plot = new CalibrationProfilePlot(profile, type, source);
 		
 		addMouseMotionListener(new MouseMotionAdapter() {

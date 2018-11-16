@@ -6,18 +6,18 @@ import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class LinearCalibrationInterpolator implements CalibrationProcessor {
 
 	@Override
 	public void process(CalibrationReference reference, CalibrationProfile profile) {
-		interpolate(profile, TransitionSeriesType.K);
-		interpolate(profile, TransitionSeriesType.L);
-		interpolate(profile, TransitionSeriesType.M);
+		interpolate(profile, TransitionShell.K);
+		interpolate(profile, TransitionShell.L);
+		interpolate(profile, TransitionShell.M);
 	}
 	
-	private void interpolate(CalibrationProfile profile, TransitionSeriesType tst) {
+	private void interpolate(CalibrationProfile profile, TransitionShell tst) {
 		List<TransitionSeries> knowns = profile.calibrations
 				.keySet()
 				.stream()

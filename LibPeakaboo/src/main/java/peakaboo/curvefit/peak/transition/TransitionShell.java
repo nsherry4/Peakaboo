@@ -6,7 +6,7 @@ package peakaboo.curvefit.peak.transition;
  * @author Nathaniel Sherry, 2009-2010
  */
 
-public enum TransitionSeriesType
+public enum TransitionShell
 {
 
 	K {
@@ -14,7 +14,7 @@ public enum TransitionSeriesType
 		@Override
 		public String toString()
 		{
-			return this.name() + " Series";
+			return this.name() + " Shell";
 		}
 		
 		@Override
@@ -30,7 +30,7 @@ public enum TransitionSeriesType
 		@Override
 		public String toString()
 		{
-			return this.name() + " Series";
+			return this.name() + " Shell";
 		}
 		
 		@Override
@@ -44,7 +44,7 @@ public enum TransitionSeriesType
 		@Override
 		public String toString()
 		{
-			return this.name() + " Series";
+			return this.name() + " Shell";
 		}
 		
 		@Override
@@ -58,7 +58,7 @@ public enum TransitionSeriesType
 		@Override
 		public String toString()
 		{
-			return "Composite Series";
+			return "Composite";
 		}
 		
 		@Override
@@ -73,9 +73,9 @@ public enum TransitionSeriesType
 		throw new UnsupportedOperationException();
 	}
 	
-	public static TransitionSeriesType fromTypeString(String type)
+	public static TransitionShell fromTypeString(String type)
 	{
-		return TransitionSeriesType.valueOf(type);
+		return TransitionShell.valueOf(type);
 	}
 
 	

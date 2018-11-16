@@ -33,7 +33,7 @@ import peakaboo.controller.plotter.PlotController.UpdateType;
 import peakaboo.controller.plotter.calibration.CalibrationController;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import stratus.controls.ButtonLinker;
@@ -156,9 +156,9 @@ public class ProfileManager extends HeaderLayer {
 		//plot views
 		HeaderTabBuilder tabBuilder = new HeaderTabBuilder();
 		
-		ProfilePlot kplot = new ProfilePlot(profile, source, TransitionSeriesType.K);
-		ProfilePlot lplot = new ProfilePlot(profile, source, TransitionSeriesType.L);
-		ProfilePlot mplot = new ProfilePlot(profile, source, TransitionSeriesType.M);
+		ProfilePlot kplot = new ProfilePlot(profile, source, TransitionShell.K);
+		ProfilePlot lplot = new ProfilePlot(profile, source, TransitionShell.L);
+		ProfilePlot mplot = new ProfilePlot(profile, source, TransitionShell.M);
 		profileplots.add(kplot);
 		profileplots.add(lplot);
 		profileplots.add(mplot);

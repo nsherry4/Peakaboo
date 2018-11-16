@@ -10,7 +10,7 @@ import cyclops.Range;
 import cyclops.RangeSet;
 import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class XrayLibPeakTable implements PeakTable {
 
@@ -62,18 +62,18 @@ public class XrayLibPeakTable implements PeakTable {
 		
 		
 		for (Element e : Element.values()) {
-			readElementShell(kLines, e, TransitionSeriesType.K);
+			readElementShell(kLines, e, TransitionShell.K);
 			
 			//Don't read the L1L2,L1L3 lines -- they're at a way lower energy value and can 
 			//mess up fitting on data where low energy ranges are poorly behaved
 			//readElementShell(-30,  -110, e, TransitionSeriesType.L);
-			readElementShell(lLines, e, TransitionSeriesType.L);
-			readElementShell(mLines, e, TransitionSeriesType.M);			
+			readElementShell(lLines, e, TransitionShell.L);
+			readElementShell(mLines, e, TransitionShell.M);			
 		}
 
 	}
 	
-	private void readElementShell(RangeSet lines, Element elem, TransitionSeriesType tstype) {
+	private void readElementShell(RangeSet lines, Element elem, TransitionShell tstype) {
 		TransitionSeries ts = new TransitionSeries(elem, tstype);
 		
 		//find the strongest transition line, so we can skip anything significantly weaker than it

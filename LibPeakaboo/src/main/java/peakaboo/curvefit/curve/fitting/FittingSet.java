@@ -200,7 +200,7 @@ public class FittingSet
 		{
 			if (ts.equals(e))
 			{
-				e.visible = show;
+				e.setVisible(show);
 			}
 		}
 
@@ -221,7 +221,7 @@ public class FittingSet
 
 		for (TransitionSeries e : fitTransitionSeries)
 		{
-			if (e.visible) fittedElements.add(e);
+			if (e.isVisible()) fittedElements.add(e);
 		}
 
 		return fittedElements;

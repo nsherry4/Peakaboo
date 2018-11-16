@@ -29,11 +29,11 @@ import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public abstract class ZCalibrationPlot {
 	
-	private TransitionSeriesType type;
+	private TransitionShell type;
 	
 	private PlotDrawing plotDrawing;
 	private Spectrum data, fadedData;
@@ -43,7 +43,7 @@ public abstract class ZCalibrationPlot {
 	
 	private Element highlighted;
 	
-	public ZCalibrationPlot(TransitionSeriesType type) {
+	public ZCalibrationPlot(TransitionShell type) {
 		this.type = type;
 	}
 	
@@ -120,7 +120,7 @@ public abstract class ZCalibrationPlot {
 		return plotDrawing;
 	}
 	
-	private static Spectrum profileToSpectrum(Map<TransitionSeries, Float> values, TransitionSeriesType tst, int startOrdinal, int stopOrdinal) {	
+	private static Spectrum profileToSpectrum(Map<TransitionSeries, Float> values, TransitionShell tst, int startOrdinal, int stopOrdinal) {	
 		
 		Spectrum spectrum = new ISpectrum(stopOrdinal - startOrdinal + 1);
 		float value = 0;
@@ -189,11 +189,11 @@ public abstract class ZCalibrationPlot {
 	
 	
 
-	public TransitionSeriesType getType() {
+	public TransitionShell getType() {
 		return type;
 	}
 
-	protected abstract List<TransitionSeries> getKeys(TransitionSeriesType type);
+	protected abstract List<TransitionSeries> getKeys(TransitionShell type);
 	protected abstract Map<TransitionSeries, Float> getData();
 	protected abstract Map<TransitionSeries, Float> getFadedData();
 	protected abstract boolean isEmpty();

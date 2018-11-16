@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /*
  * NOTE: Calibration does not use PeakTable TransitionSeries, 
@@ -125,7 +125,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 	/**
 	 * returns a sorted list of TransitionSeries in this reference 
 	 */
-	public List<TransitionSeries> getTransitionSeries(TransitionSeriesType tst) {
+	public List<TransitionSeries> getTransitionSeries(TransitionShell tst) {
 		List<TransitionSeries> tss = new ArrayList<>();
 		tss.addAll(concentrations.keySet());
 		tss.addAll(extraFittings.keySet());

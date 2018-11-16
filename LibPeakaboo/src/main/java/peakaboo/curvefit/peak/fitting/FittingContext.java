@@ -4,17 +4,17 @@ import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class FittingContext {
 
 	private FittingParameters parameters;
 	private float height;
 	private float energy;
-	private TransitionSeriesType type;
+	private TransitionShell type;
 	private Transition transition;
 	
-	public FittingContext(FittingParameters parameters, Transition transition, TransitionSeriesType type) {
+	public FittingContext(FittingParameters parameters, Transition transition, TransitionShell type) {
 		this.height = transition.relativeIntensity;
 		this.energy = transition.energyValue;
 		this.transition = transition;
@@ -23,7 +23,7 @@ public class FittingContext {
 	}
 	
 	//escape peak
-	public FittingContext(FittingParameters parameters, Transition transition, Transition escape, Element element, TransitionSeriesType type) {
+	public FittingContext(FittingParameters parameters, Transition transition, Transition escape, Element element, TransitionShell type) {
 		this.energy = transition.energyValue - escape.energyValue;
 		this.height = transition.relativeIntensity * escape.relativeIntensity * EscapePeak.intensity(element);
 		this.transition = transition;
@@ -52,7 +52,7 @@ public class FittingContext {
 		return parameters.getFWHM(transition);
 	}
 
-	public TransitionSeriesType getTransitionSeriesType() {
+	public TransitionShell getTransitionSeriesType() {
 		return type;
 	}
 	

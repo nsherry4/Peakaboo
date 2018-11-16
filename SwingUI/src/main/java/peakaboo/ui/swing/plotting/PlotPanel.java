@@ -84,7 +84,7 @@ import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.dataset.DatasetReadResult;
 import peakaboo.datasink.model.DataSink;
 import peakaboo.datasource.model.DataSource;
@@ -951,7 +951,7 @@ public class PlotPanel extends TabbedLayerPanel
 			float intensity;
 			for (TransitionSeries ts : tss) {
 
-				if (ts.visible) {
+				if (ts.isVisible()) {
 					intensity = controller.fitting().getTransitionSeriesIntensity(ts);
 					if (profile.contains(ts)) {
 						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + ", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) + "\n");

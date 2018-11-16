@@ -21,7 +21,7 @@ import javax.swing.table.TableModel;
 
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
@@ -43,9 +43,9 @@ public class ReferenceViewPanel extends HeaderLayer {
 		info.setVerticalAlignment(SwingConstants.TOP);
 		info.setBorder(Spacing.bHuge());
 		infopanel.add(info, BorderLayout.CENTER);
-		ReferencePlot kplot = new ReferencePlot(reference, TransitionSeriesType.K);
-		ReferencePlot lplot = new ReferencePlot(reference, TransitionSeriesType.L);
-		ReferencePlot mplot = new ReferencePlot(reference, TransitionSeriesType.M);
+		ReferencePlot kplot = new ReferencePlot(reference, TransitionShell.K);
+		ReferencePlot lplot = new ReferencePlot(reference, TransitionShell.L);
+		ReferencePlot mplot = new ReferencePlot(reference, TransitionShell.M);
 		
 		HeaderTabBuilder tabBuilder = new HeaderTabBuilder();
 		tabBuilder.addTab("Details", infopanel);
@@ -66,7 +66,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 		
 		JTable table = new JTable();
 		List<TransitionSeries> entries = new ArrayList<>();
-		for (TransitionSeriesType type : TransitionSeriesType.values()) {
+		for (TransitionShell type : TransitionShell.values()) {
 			for (TransitionSeries ts : reference.getTransitionSeries(type)) {
 				if (!reference.hasAnnotation(ts)) { continue; }
 				System.out.println(ts);
