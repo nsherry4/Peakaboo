@@ -198,15 +198,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		switch (getMode())
 		{
 
-			case PILEUP:
-
-
-				int count = getPileupCount();
-				String suffix = "";
-				if (count > 2) suffix += " x" + count;
-
-				return componentSeries.get(0).getElement().name() + " " + componentSeries.get(0).getBaseType().name()
-						+ " Pile-Up" + suffix;
 
 			case SUMMATION:
 
@@ -301,17 +292,11 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public TransitionSeries summation(final TransitionSeries other)
 	{
 		
-		TransitionSeriesMode newmode = TransitionSeriesMode.SUMMATION;
-
-		if (this.equals(other)) newmode = TransitionSeriesMode.PILEUP;
-		if (this.getMode() == TransitionSeriesMode.PILEUP && this.getElement().equals(other.getElement())) newmode = TransitionSeriesMode.PILEUP;
-		if (other.getMode() == TransitionSeriesMode.PILEUP && other.getElement().equals(this.getElement())) newmode = TransitionSeriesMode.PILEUP;
-
 		// create the new TransitionSeries object
 		final TransitionSeries newTransitionSeries = new TransitionSeries(
 			getElement(),
 			TransitionShell.COMPOSITE,
-			newmode);
+			TransitionSeriesMode.SUMMATION);
 		
 		if (transitions.size() > 0 && other.transitions.size() > 0) {
 			//For each transition in the outer map, map the list transitionList to a list of pileup values
@@ -356,7 +341,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		{
 
 			case PRIMARY:
-			case PILEUP:
 
 				if (otherTS.getElement() == getElement())
 				{
@@ -436,50 +420,6 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	}
 
 	
-	
-
-	/**
-	 * Returns the number of times the base {@link Element} {@link TransitionSeries} appears duplicated in this {@link TransitionSeries}. If this {@link TransitionSeries} is not a pile-up, the result is 1
-	 * @return the number of times the base {@link TransitionSeries} has been piled-up
-	 */
-	public int getPileupCount()
-	{
-		int count = 0;
-		if (getMode() == TransitionSeriesMode.PILEUP)
-		{
-			for (TransitionSeries ts : componentSeries)
-			{
-				count += ts.getPileupCount();
-			}
-
-		}
-		else if (getMode() == TransitionSeriesMode.PRIMARY)
-		{
-			count = 1;
-		}
-
-		return count;
-	}
-
-
-	/**
-	 * Returns the base {@link TransitionShell} for this {@link TransitionSeries}
-	 * @return the base {@link TransitionShell}
-	 */
-	public TransitionShell getBaseType()
-	{
-
-		if (getMode() == TransitionSeriesMode.PILEUP)
-		{
-			return componentSeries.get(0).getBaseType();
-
-		}
-		else
-		{
-			return getShell();
-		}
-	}
-
 
 	/**
 	 * Returns a list of all primary {@link TransitionSeries} which compose this {@link TransitionSeries}

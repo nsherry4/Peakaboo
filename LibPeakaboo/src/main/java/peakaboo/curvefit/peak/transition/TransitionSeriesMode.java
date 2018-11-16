@@ -9,6 +9,5 @@ package peakaboo.curvefit.peak.transition;
 public enum TransitionSeriesMode
 {
 	PRIMARY,
-	PILEUP,
 	SUMMATION
 }
