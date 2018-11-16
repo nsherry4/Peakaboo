@@ -117,7 +117,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 		tss.addAll(concentrations.keySet());
 		tss.addAll(extraFittings.keySet());
 		tss = tss.stream()
-			.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+			.sorted((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()))
 			.collect(Collectors.toList());
 		return tss;
 	}
@@ -130,8 +130,8 @@ public class CalibrationReference implements BoltConfigPlugin {
 		tss.addAll(concentrations.keySet());
 		tss.addAll(extraFittings.keySet());
 		tss = tss.stream()
-			.filter(ts -> ts.type == tst)
-			.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+			.filter(ts -> ts.getShell() == tst)
+			.sorted((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()))
 			.collect(Collectors.toList());
 		return tss;
 	}
@@ -181,13 +181,13 @@ public class CalibrationReference implements BoltConfigPlugin {
 		serialized.anchor = reference.anchor.toIdentifierString();
 		
 		List<TransitionSeries> tss = new ArrayList<>(reference.concentrations.keySet());
-		tss.sort((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()));
+		tss.sort((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()));
 		for (TransitionSeries ts : tss) {
 			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
 		
 		tss = new ArrayList<>(reference.extraFittings.keySet());
-		tss.sort((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()));
+		tss.sort((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()));
 		for (TransitionSeries ts : tss) {
 			serialized.fitted.put(ts.toIdentifierString(), reference.extraFittings.get(ts));
 		}

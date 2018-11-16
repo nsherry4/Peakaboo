@@ -224,7 +224,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 				{
 					TransitionSeries ts = (TransitionSeries) child;
 					Element e = (Element) parent;
-					List<TransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == ts.element).collect(Collectors.toList());
+					List<TransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
 					return ofElement.indexOf(ts);
 										
 				}
@@ -237,7 +237,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 				if (parent instanceof Element)
 				{
 					Element e = (Element) parent;
-					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == e).collect(Collectors.toList()).size();
+					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).size();
 				}
 				else if (parent instanceof String)
 				{
@@ -258,7 +258,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 				{
 
 					Element e = (Element) parent;
-					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == e).collect(Collectors.toList()).get(index);
+					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).get(index);
 
 				}
 				return null;

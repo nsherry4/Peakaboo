@@ -55,7 +55,7 @@ public class MapResult implements Cloneable
 	@Override
 	public String toString()
 	{
-		return transitionSeries.element.name() + " (" + transitionSeries.type + ")";
+		return transitionSeries.getElement().name() + " (" + transitionSeries.getShell() + ")";
 	}
 
 	public int size() {

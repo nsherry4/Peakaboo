@@ -71,7 +71,7 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	protected String getYAxisTitle() {
 		String ylabel = "Sensitivity";
 		if (!profile.isEmpty()) {
-			ylabel = "Sensitivity versus " + profile.getReference().getAnchor().element.toString();
+			ylabel = "Sensitivity versus " + profile.getReference().getAnchor().getElement().toString();
 		}
 		return ylabel;
 	}
@@ -93,9 +93,9 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	@Override
 	protected String getHighlightText(TransitionSeries ts) {
 		if (profile.getInterpolated().contains(ts)) {
-			return ts.element.toString() + " (Interpolated)";
+			return ts.getElement().toString() + " (Interpolated)";
 		}
-		return ts.element.toString();
+		return ts.getElement().toString();
 	}
 	
 	@Override

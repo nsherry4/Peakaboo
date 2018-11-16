@@ -63,8 +63,8 @@ public class Composition {
 		Map<Element, TransitionSeries> elements = new LinkedHashMap<>();
 		for (TransitionShell type : new TransitionShell[] {TransitionShell.M, TransitionShell.L, TransitionShell.K}) {
 			for (TransitionSeries ts : tss) {
-				if (ts.type != type) { continue; }
-				elements.put(ts.element, ts);
+				if (ts.getShell() != type) { continue; }
+				elements.put(ts.getElement(), ts);
 			}
 		}
 		
@@ -75,7 +75,7 @@ public class Composition {
 			TransitionSeries ts = elements.get(element);
 			float intensity = intensityFunction.apply(ts);
 			
-			intensities.put(ts.element, intensity);
+			intensities.put(ts.getElement(), intensity);
 			sum += intensity;
 		}
 		

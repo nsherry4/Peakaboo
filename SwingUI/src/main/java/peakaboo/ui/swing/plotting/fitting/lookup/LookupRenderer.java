@@ -61,7 +61,7 @@ class LookupRenderer extends DefaultTreeCellRenderer
 		if (value instanceof TransitionSeries)
 		{
 			TransitionSeries ts = (TransitionSeries) value;
-			tswidget.setName(ts.type.toString());
+			tswidget.setName(ts.getShell().toString());
 
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			// element.setPreferredSize(new Dimension(0, element.getPreferredSize().height));

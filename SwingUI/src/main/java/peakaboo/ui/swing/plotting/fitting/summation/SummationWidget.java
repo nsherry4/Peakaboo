@@ -110,7 +110,7 @@ class SummationWidget extends TSSelectorGroup
 		TSSelector sel = super.addTSSelector(active);
 		
 		sel.setTransitionSeries(
-			controller.getFittedTransitionSeries().stream().filter(element ->element.mode == TransitionSeriesMode.PRIMARY).collect(Collectors.toList())		
+			controller.getFittedTransitionSeries().stream().filter(element ->element.getMode() == TransitionSeriesMode.PRIMARY).collect(Collectors.toList())		
 		);
 		
 		

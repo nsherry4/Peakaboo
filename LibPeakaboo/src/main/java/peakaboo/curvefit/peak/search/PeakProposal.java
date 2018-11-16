@@ -185,7 +185,7 @@ public class PeakProposal
 				if (transitionOverlap(t, energy, 0.1f, parameters)) return true;
 			}
 			for (Transition t : ts.escape(parameters.getEscapeType())) {
-				if (transitionOverlap(t, energy, 0.1f * EscapePeak.intensity(ts.element), parameters)) return true;
+				if (transitionOverlap(t, energy, 0.1f * EscapePeak.intensity(ts.getElement()), parameters)) return true;
 			}
 		}
 		return false;

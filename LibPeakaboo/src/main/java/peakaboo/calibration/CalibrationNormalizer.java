@@ -19,7 +19,7 @@ public class CalibrationNormalizer implements CalibrationProcessor {
 	private void normalize(Map<TransitionSeries, Float> calibrations, TransitionShell tst, float against) {
 		
 		for (TransitionSeries ts : calibrations.keySet()) {
-			if (ts.type != tst) { continue; }
+			if (ts.getShell() != tst) { continue; }
 			
 			float value = calibrations.get(ts);
 			calibrations.put(ts, value/against);			

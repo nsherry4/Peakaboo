@@ -72,11 +72,11 @@ class FittingRenderer extends DefaultTableCellRenderer
 			tswidget.setIntensity(SigDigits.roundFloatTo(intensity, 1));
 			tswidget.setFlag(controller.hasAnnotation(ts));
 			String tooltip = "";
-			if (ts.mode != TransitionSeriesMode.SUMMATION){
-				tswidget.setAtomicNumber(ts.element.atomicNumber());
-				tooltip = ts.element.toString();
+			if (ts.getMode() != TransitionSeriesMode.SUMMATION){
+				tswidget.setAtomicNumber(ts.getElement().atomicNumber());
+				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getBaseTransitionSeries().stream().map(t -> t.element).collect(Collectors.toList());
+				List<Element> elements = ts.getBaseTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
 				tswidget.setAtomicNumbers(elements.stream().map(Element::atomicNumber).collect(Collectors.toList()));
 				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
 			}

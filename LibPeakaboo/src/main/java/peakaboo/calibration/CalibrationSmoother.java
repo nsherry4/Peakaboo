@@ -26,13 +26,13 @@ public class CalibrationSmoother implements CalibrationProcessor {
 		List<TransitionSeries> tss = calibrations
 				.keySet()
 				.stream()
-				.filter(ts -> ts.type == tst)
-				.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+				.filter(ts -> ts.getShell() == tst)
+				.sorted((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()))
 				.collect(Collectors.toList());
 		if (tss.size() < 2) { return; }
 		
-		Element lowest = tss.get(0).element;
-		Element highest = tss.get(tss.size()-1).element;
+		Element lowest = tss.get(0).getElement();
+		Element highest = tss.get(tss.size()-1).getElement();
 		
 		//pack - here we use the ordinal values to make sure we don't leave 
 		//0s in any missing/masked transition series which will bring down
@@ -59,7 +59,7 @@ public class CalibrationSmoother implements CalibrationProcessor {
 		
 		//unpack
 		for (TransitionSeries ts : tss) {
-			int index = ts.element.ordinal() - lowest.ordinal();
+			int index = ts.getElement().ordinal() - lowest.ordinal();
 			calibrations.put(ts, results.get(index));
 		}
 				

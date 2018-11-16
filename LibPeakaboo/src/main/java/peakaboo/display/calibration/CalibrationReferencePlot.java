@@ -55,7 +55,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 
 	@Override
 	protected String getHighlightText(TransitionSeries ts) {
-		String title = ts.element.toString();
+		String title = ts.getElement().toString();
 		String annotation = ref.getAnnotation(ts);
 		if (annotation.trim().length() > 0) {
 			title += ": " + annotation;

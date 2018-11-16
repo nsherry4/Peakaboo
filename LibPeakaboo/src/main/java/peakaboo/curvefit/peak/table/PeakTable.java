@@ -44,7 +44,7 @@ public interface PeakTable {
 	default TransitionSeries get(Element e, TransitionShell tst) {
 		List<TransitionSeries> tss = getAll()
 				.stream()
-				.filter(ts -> (ts.element == e) && (ts.type == tst))
+				.filter(ts -> (ts.getElement() == e) && (ts.getShell() == tst))
 				.collect(Collectors.toList());
 		if (tss.size() == 0) return null;
 		if (tss.size() > 1) {
@@ -58,11 +58,11 @@ public interface PeakTable {
 	 * convenience method for {@link PeakTable#get(Element, TransitionShell)}
 	 */
 	default TransitionSeries get(TransitionSeries other) {
-		if (other.type == TransitionShell.COMPOSITE) {
-			List<TransitionSeries> members = other.getBaseTransitionSeries().stream().map(ts -> get(ts.element, ts.type)).filter(ts -> ts != null).collect(Collectors.toList());
+		if (other.getShell() == TransitionShell.COMPOSITE) {
+			List<TransitionSeries> members = other.getBaseTransitionSeries().stream().map(ts -> get(ts.getElement(), ts.getShell())).filter(ts -> ts != null).collect(Collectors.toList());
 			return TransitionSeries.summation(members);
 		} else {
-			return get(other.element, other.type);
+			return get(other.getElement(), other.getShell());
 		}
 	}
 	
@@ -84,7 +84,7 @@ public interface PeakTable {
 	default List<TransitionSeries> getForElement(Element e) {
 		return getAll()
 				.stream()
-				.filter(ts -> (ts.element == e))
+				.filter(ts -> (ts.getElement() == e))
 				.collect(Collectors.toList());
 	}
 	

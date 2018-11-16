@@ -25,7 +25,7 @@ public class SerializedTransitionSeries
 		components.clear();
 		for (TransitionSeries bt : ts.getBaseTransitionSeries())
 		{
-			components.add(bt.element.name() + ":" + bt.type.name());
+			components.add(bt.getElement().name() + ":" + bt.getShell().name());
 		}
 		
 		this.visible = ts.isVisible();

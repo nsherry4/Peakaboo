@@ -25,7 +25,7 @@ public class PileupSourceScorer implements FittingScorer {
 	@Override
 	public float score(TransitionSeries ts) {
 		
-		if (ts.type != TransitionShell.COMPOSITE) { return 1; }
+		if (ts.getShell() != TransitionShell.COMPOSITE) { return 1; }
 	
 		float sourceScore = 0;
 		float tsCount = 0;

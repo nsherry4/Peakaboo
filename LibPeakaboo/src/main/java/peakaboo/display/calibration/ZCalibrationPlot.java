@@ -54,8 +54,8 @@ public abstract class ZCalibrationPlot {
 				
 		List<TransitionSeries> tss = getKeys(type);
 		if (tss.size() >= 1) {
-			lowest = tss.get(0).element.ordinal();
-			highest = tss.get(tss.size() - 1).element.ordinal();
+			lowest = tss.get(0).getElement().ordinal();
+			highest = tss.get(tss.size() - 1).getElement().ordinal();
 		}
 		
 		data = profileToSpectrum(getData(), type, lowest, highest);
@@ -158,8 +158,8 @@ public abstract class ZCalibrationPlot {
 		if (keys.size() == 0) {
 			return null;
 		}
-		int lowest = keys.get(0).element.ordinal();
-		int highest = keys.get(keys.size()-1).element.ordinal();
+		int lowest = keys.get(0).getElement().ordinal();
+		int highest = keys.get(keys.size()-1).getElement().ordinal();
 		if (index < 0 || lowest + index > highest) {
 			return null;
 		} else {

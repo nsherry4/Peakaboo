@@ -80,7 +80,7 @@ public class Curve
 	{
 		this.transitionSeries = ts;
 		calculateConstraintMask();
-		calcUnscaledFit(ts.type != TransitionShell.COMPOSITE);
+		calcUnscaledFit(ts.getShell() != TransitionShell.COMPOSITE);
 		
 	}
 	
@@ -223,11 +223,11 @@ public class Curve
 		for (Transition t : this.transitionSeries)
 		{
 
-			functions.add(parameters.forTransition(t, this.transitionSeries.type));
+			functions.add(parameters.forTransition(t, this.transitionSeries.getShell()));
 
 			if (fitEscape && parameters.getEscapeType().get().hasOffset()) {
 				for (Transition esc : parameters.getEscapeType().get().offset()) {
-					functions.add(parameters.forEscape(t, esc, this.transitionSeries.element, this.transitionSeries.type));
+					functions.add(parameters.forEscape(t, esc, this.transitionSeries.getElement(), this.transitionSeries.getShell()));
 				}
 			}
 

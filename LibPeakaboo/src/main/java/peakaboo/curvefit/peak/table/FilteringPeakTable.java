@@ -52,7 +52,7 @@ public class FilteringPeakTable implements PeakTable {
 		if (all == null) {
 			all = backing.getAll()
 					.stream()
-					.filter(ts -> !filteredElements.contains(ts.element))
+					.filter(ts -> !filteredElements.contains(ts.getElement()))
 					.filter(ts -> !filteredTransitionSeries.contains(ts))
 					.collect(Collectors.toList());
 		}

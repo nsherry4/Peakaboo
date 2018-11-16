@@ -41,8 +41,8 @@ public class PeakTableTest {
 		//Testing convenience methods of PeakTable
 		List<TransitionSeries> series = combined.getForElement(Element.Au);
 		Assert.assertTrue(series.size() == 3);
-		Assert.assertEquals(series.get(0).element, Element.Au);
-		Assert.assertEquals(series.get(0).type, TransitionShell.K);
+		Assert.assertEquals(series.get(0).getElement(), Element.Au);
+		Assert.assertEquals(series.get(0).getShell(), TransitionShell.K);
 		
 		//Testing identifier string lookup
 		TransitionSeries FeK = combined.get(Element.Fe, TransitionShell.K);

@@ -34,7 +34,7 @@ public class CalibrationController extends Eventful {
 	public void loadCalibrationReference(CalibrationReference ref) {
 		plotController.fitting().clearTransitionSeries();
 		List<TransitionSeries> tss = new ArrayList<>(ref.getTransitionSeries());
-		tss.sort((a, b) -> a.element.compareTo(b.element));
+		tss.sort((a, b) -> a.getElement().compareTo(b.getElement()));
 		
 		//CalibrationReferences use blank TransitionSeries so it's not limited by the peaktable data
 		//we have to convert here

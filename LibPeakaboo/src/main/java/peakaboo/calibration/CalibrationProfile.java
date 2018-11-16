@@ -58,7 +58,7 @@ public class CalibrationProfile {
 				
 				//we look up the transitionseries, but ultimately use a blank one.
 				//we have to use all blanks, otherwise equality/contains cheks will fail
-				ts = new TransitionSeries(ts.element, ts.type);
+				ts = new TransitionSeries(ts.getElement(), ts.getShell());
 				if (! reference.hasConcentration(ts)) { continue; }
 				
 				//TODO: Is this the right way to measure sample intensity? Measuring strongestTS height rather than area sum?
@@ -104,12 +104,12 @@ public class CalibrationProfile {
 	}
 
 	public boolean contains(TransitionSeries ts) {
-		ts = new TransitionSeries(ts.element, ts.type);
+		ts = new TransitionSeries(ts.getElement(), ts.getShell());
 		return calibrations.keySet().contains(ts);
 	}
 	
 	public float getCalibration(TransitionSeries ts) {
-		ts = new TransitionSeries(ts.element, ts.type);
+		ts = new TransitionSeries(ts.getElement(), ts.getShell());
 		return calibrations.get(ts);
 	}
 	
@@ -124,7 +124,7 @@ public class CalibrationProfile {
 	}
 	
 	public float calibrate(float value, TransitionSeries ts) {
-		ts = new TransitionSeries(ts.element, ts.type);
+		ts = new TransitionSeries(ts.getElement(), ts.getShell());
 		if (calibrations.keySet().contains(ts)) {
 			float calibration = calibrations.get(ts);
 			return value / calibration;
@@ -156,8 +156,8 @@ public class CalibrationProfile {
 		List<TransitionSeries> tss = calibrations
 				.keySet()
 				.stream()
-				.filter(ts -> ts.type == tst)
-				.sorted((a, b) -> Integer.compare(a.element.ordinal(), b.element.ordinal()))
+				.filter(ts -> ts.getShell() == tst)
+				.sorted((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()))
 				.collect(Collectors.toList());
 		return tss;
 	}

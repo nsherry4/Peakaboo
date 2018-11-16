@@ -62,7 +62,7 @@ public class ConcentrationsPanel extends JPanel {
 				return controller.getSettings().getMapFittings().getMapForTransitionSeries(ts).get(index);
 			});
 			for (TransitionSeries ts : tss) {
-				properties.put(ts.element.toString(), ppm.getPercent(ts.element) );
+				properties.put(ts.getElement().toString(), ppm.getPercent(ts.getElement()) );
 			}
 			view.setProperties(properties);
 		} else {
@@ -74,7 +74,7 @@ public class ConcentrationsPanel extends JPanel {
 		List<TransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
 		Map<String, String> properties = new LinkedHashMap<>();
 		for (TransitionSeries ts : tss) {
-			properties.put(ts.element.name(), "-");
+			properties.put(ts.getElement().name(), "-");
 		}
 		view.setProperties(properties);
 		return;

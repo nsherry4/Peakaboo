@@ -28,12 +28,12 @@ public class CombinedPeakTable implements PeakTable {
 		series.addAll(merged);
 		
 		series.sort((t1, t2) -> {
-			int shellDiff = t1.type.shell() - t2.type.shell();
+			int shellDiff = t1.getShell().shell() - t2.getShell().shell();
 			if (shellDiff != 0) {
 				return shellDiff;
 			}
 			
-			int zDiff = t1.element.atomicNumber() - t2.element.atomicNumber();
+			int zDiff = t1.getElement().atomicNumber() - t2.getElement().atomicNumber();
 			return zDiff;
 			
 		});

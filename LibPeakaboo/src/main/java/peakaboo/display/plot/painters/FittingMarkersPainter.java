@@ -73,7 +73,7 @@ public class FittingMarkersPainter extends PlotPainter
 				channel = parameters.getCalibration().fractionalChannelFromEnergy(t.energyValue);
 				if (channel >= p.dr.dataWidth || channel < 0) continue;
 				
-				FittingFunction fitFn = parameters.forTransition(t, ts.type);
+				FittingFunction fitFn = parameters.forTransition(t, ts.getShell());
 
 				
 				//get a height value from the fitting function, then apply the same transformation as the fitting did
@@ -98,7 +98,7 @@ public class FittingMarkersPainter extends PlotPainter
 						
 						positionX = getXForChannel(p, channel);
 						
-						FittingFunction escFn = parameters.forEscape(t, esc, ts.element, ts.type);
+						FittingFunction escFn = parameters.forEscape(t, esc, ts.getElement(), ts.getShell());
 						markerHeight = escFn.forEnergy(t.energyValue) * label.fit.getTotalScale();
 						//markerHeight *= Curve.escapeIntensity(fit.getTransitionSeries().element);
 						//markerHeight *= esc.relativeIntensity;

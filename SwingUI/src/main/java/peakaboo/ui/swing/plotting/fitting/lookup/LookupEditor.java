@@ -72,7 +72,7 @@ class LookupEditor extends DefaultTreeCellEditor
 		{
 
 			TransitionSeries ts = (TransitionSeries) value;
-			tswidget.setName(ts.type.toString());
+			tswidget.setName(ts.getShell().toString());
 
 			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tswidget.setForeground(cellRenderer.getTextSelectionColor());

@@ -62,10 +62,10 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 			tswidget.setEnabled(enabled.test(ts));
 			
 			String tooltip = "";
-			if (ts.mode != TransitionSeriesMode.SUMMATION){
-				tooltip = ts.element.toString();
+			if (ts.getMode() != TransitionSeriesMode.SUMMATION){
+				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getBaseTransitionSeries().stream().map(t -> t.element).collect(Collectors.toList());
+				List<Element> elements = ts.getBaseTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
 				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
 			}
 			tswidget.setToolTipText(tooltip);

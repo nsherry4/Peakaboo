@@ -31,18 +31,18 @@ import peakaboo.curvefit.peak.table.Element;
  * @author Nathaniel Sherry, 2009-2010
  */
 
-public class TransitionSeries implements Serializable, Iterable<Transition>, Comparable<TransitionSeries>
+public class TransitionSeries implements Serializable, Iterable<Transition>, Comparable<TransitionSeries>, TransitionSeriesInterface
 {
 
 	/**
 	 * The {@link TransitionShell} that this TransitionSeries represents
 	 */
-	public final TransitionShell		type;
+	private final TransitionShell		type;
 	
 	/**
 	 * the {@link TransitionSeriesMode} which describes this TransitionSeries.
 	 */
-	public final TransitionSeriesMode		mode;
+	private final TransitionSeriesMode		mode;
 
 	/**
 	 * If this is a compound TransitionSeries, this list contains the component TransitionSeries
@@ -52,7 +52,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	/**
 	 * The {@link Element} that this TransitionSeries represents
 	 */
-	public final Element					element;
+	private final Element					element;
 
 	private final List<Transition>			transitions;
 
@@ -67,22 +67,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	private boolean							visible;
 
 
-	/**
-	 * Is this TransitionSeries visible?
-	 * 
-	 * @return visibility
-	 */
+	
+	@Override
 	public boolean isVisible()
 	{
 		return visible;
 	}
 
-
-	/**
-	 * Sets the visibility of this TransitionSeries
-	 * 
-	 * @param visible
-	 */
+	@Override
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
@@ -95,15 +87,15 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 * independently.
 	 */
 	public TransitionSeries(TransitionSeries other) {
-		this.type = other.type;
-		this.mode = other.mode;
+		this.type = other.getShell();
+		this.mode = other.getMode();
 		
 		this.componentSeries = new ArrayList<>();
 		for (TransitionSeries ts : other.componentSeries) {
 			this.componentSeries.add(new TransitionSeries(ts));
 		}
 
-		this.element = other.element;
+		this.element = other.getElement();
 		this.transitions = other.transitions;
 		this.intensity = other.getIntensity();
 		this.setVisible(other.isVisible());
@@ -231,7 +223,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	private String getDescription(boolean isShort)
 	{
-		switch (mode)
+		switch (getMode())
 		{
 
 			case PILEUP:
@@ -241,7 +233,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 				String suffix = "";
 				if (count > 2) suffix += " x" + count;
 
-				return componentSeries.get(0).element.name() + " " + componentSeries.get(0).getBaseType().name()
+				return componentSeries.get(0).getElement().name() + " " + componentSeries.get(0).getBaseType().name()
 						+ " Pile-Up" + suffix;
 
 			case SUMMATION:
@@ -252,8 +244,8 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 			default:
 
-				if (isShort) return element.name() + " " + type.name();
-				else return element.toString() + " " + type.name();
+				if (isShort) return getElement().name() + " " + getShell().name();
+				else return getElement().toString() + " " + getShell().name();
 
 		}
 
@@ -286,11 +278,11 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	 * identify the TransitionSeries.
 	 */
 	public String toIdentifierString() {
-		if (type == TransitionShell.COMPOSITE) {
+		if (getShell() == TransitionShell.COMPOSITE) {
 			return componentSeries.stream().map(TransitionSeries::toIdentifierString).reduce((a, b) -> a + "+" + b).get();
 		}
 		
-		return element.name() + ":" + type.name();
+		return getElement().name() + ":" + getShell().name();
 		
 	}
 
@@ -340,12 +332,12 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		TransitionSeriesMode newmode = TransitionSeriesMode.SUMMATION;
 
 		if (this.equals(other)) newmode = TransitionSeriesMode.PILEUP;
-		if (this.mode == TransitionSeriesMode.PILEUP && this.element.equals(other.element)) newmode = TransitionSeriesMode.PILEUP;
-		if (other.mode == TransitionSeriesMode.PILEUP && other.element.equals(this.element)) newmode = TransitionSeriesMode.PILEUP;
+		if (this.getMode() == TransitionSeriesMode.PILEUP && this.getElement().equals(other.getElement())) newmode = TransitionSeriesMode.PILEUP;
+		if (other.getMode() == TransitionSeriesMode.PILEUP && other.getElement().equals(this.getElement())) newmode = TransitionSeriesMode.PILEUP;
 
 		// create the new TransitionSeries object
 		final TransitionSeries newTransitionSeries = new TransitionSeries(
-			element,
+			getElement(),
 			TransitionShell.COMPOSITE,
 			newmode);
 		
@@ -377,7 +369,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		List<Transition> escapePeaks = new ArrayList<>();
 		for (Transition t : this) {
 			for (Transition o : type.get().offset()) {
-				escapePeaks.add(new Transition(t.energyValue - o.energyValue, t.relativeIntensity * o.relativeIntensity * EscapePeak.intensity(this.element), t.name + " Escape"));
+				escapePeaks.add(new Transition(t.energyValue - o.energyValue, t.relativeIntensity * o.relativeIntensity * EscapePeak.intensity(this.getElement()), t.name + " Escape"));
 			}
 		}
 		return escapePeaks;
@@ -387,19 +379,19 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public int compareTo(TransitionSeries otherTS)
 	{
 
-		switch (mode)
+		switch (getMode())
 		{
 
 			case PRIMARY:
 			case PILEUP:
 
-				if (otherTS.element == element)
+				if (otherTS.getElement() == getElement())
 				{
-					return -type.compareTo(otherTS.type);
+					return -getShell().compareTo(otherTS.getShell());
 				}
 				else
 				{
-					return -element.compareTo(otherTS.element);
+					return -getElement().compareTo(otherTS.getElement());
 				}
 
 			case SUMMATION:
@@ -431,9 +423,9 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	@Override
 	public int hashCode()
 	{
-		if (type != TransitionShell.COMPOSITE) 
+		if (getShell() != TransitionShell.COMPOSITE) 
 		{
-			return (1+type.ordinal()) * (1+element.ordinal());
+			return (1+getShell().ordinal()) * (1+getElement().ordinal());
 		}
 		else
 		{
@@ -450,12 +442,12 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 		if (!(oother instanceof TransitionSeries)) return false;
 		TransitionSeries other = (TransitionSeries) oother;
 		
-		if (type != TransitionShell.COMPOSITE && other.element != this.element) return false;
+		if (getShell() != TransitionShell.COMPOSITE && other.getElement() != this.getElement()) return false;
 		
-		if (other.type != this.type) return false;	
-		if (other.mode != this.mode) return false;
+		if (other.getShell() != this.getShell()) return false;	
+		if (other.getMode() != this.getMode()) return false;
 
-		if (type == TransitionShell.COMPOSITE)
+		if (getShell() == TransitionShell.COMPOSITE)
 		{
 			//Don't modify state just for a comparison
 			List<TransitionSeries> mySeries = new ArrayList<>(componentSeries);
@@ -480,7 +472,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public int getPileupCount()
 	{
 		int count = 0;
-		if (mode == TransitionSeriesMode.PILEUP)
+		if (getMode() == TransitionSeriesMode.PILEUP)
 		{
 			for (TransitionSeries ts : componentSeries)
 			{
@@ -488,7 +480,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 			}
 
 		}
-		else if (mode == TransitionSeriesMode.PRIMARY)
+		else if (getMode() == TransitionSeriesMode.PRIMARY)
 		{
 			count = 1;
 		}
@@ -504,14 +496,14 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	public TransitionShell getBaseType()
 	{
 
-		if (mode == TransitionSeriesMode.PILEUP)
+		if (getMode() == TransitionSeriesMode.PILEUP)
 		{
 			return componentSeries.get(0).getBaseType();
 
 		}
 		else
 		{
-			return type;
+			return getShell();
 		}
 	}
 
@@ -524,7 +516,7 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 	{
 		List<TransitionSeries> list = null;
 
-		switch (type)
+		switch (getShell())
 		{
 			case COMPOSITE:
 				return ListOps.concatMap(componentSeries, TransitionSeries::getBaseTransitionSeries);
@@ -563,6 +555,28 @@ public class TransitionSeries implements Serializable, Iterable<Transition>, Com
 
 	public double getIntensity() {
 		return intensity;
+	}
+
+
+	@Override
+	public TransitionShell getShell() {
+		return type;
+	}
+
+
+	public TransitionSeriesMode getMode() {
+		return mode;
+	}
+
+
+	@Override
+	public Element getElement() {
+		return element;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return getTransitionCount() == 0;
 	}
 
 
