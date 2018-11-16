@@ -15,10 +15,10 @@ import javax.swing.JScrollPane;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.layouts.SwingLayoutFactory;
+import swidget.Swidget;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
-import swidget.widgets.TextWrapping;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonLayout;
 import swidget.widgets.layout.ButtonBox;
@@ -124,14 +124,14 @@ public class SwingAutoDialog extends JDialog
 		}
 		
 		
-		info = new ImageButton(StockIcon.BADGE_HELP).withTooltip("Filter Information").withLayout(ImageButtonLayout.IMAGE).withBordered(true);
+		info = new ImageButton(StockIcon.BADGE_HELP).withTooltip("More Information").withLayout(ImageButtonLayout.IMAGE).withBordered(true);
 		info.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{	
 				JOptionPane.showMessageDialog(
 						SwingAutoDialog.this, 
-						TextWrapping.wrapTextForMultiline(helpMessage),
+						Swidget.lineWrapHTML(SwingAutoDialog.this, helpMessage),
 						helpTitle, 
 						JOptionPane.INFORMATION_MESSAGE, 
 						StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON)
