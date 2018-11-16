@@ -161,7 +161,15 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 		return transitions.size() != 0;
 	}
 
-	@Override
+	
+	/**
+	 * Adds the {@link Transition} to the given {@link TransitionType}
+	 * 
+	 * @param type
+	 *            the {@link TransitionType} to fill
+	 * @param t
+	 *            the {@link Transition}
+	 */
 	public void addTransition(Transition t)
 	{
 		if (t == null) return;
@@ -443,7 +451,6 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 	}
 
 
-	@Override
 	public double getIntensity() {
 		return intensity;
 	}

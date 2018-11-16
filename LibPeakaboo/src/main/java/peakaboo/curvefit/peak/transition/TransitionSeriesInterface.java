@@ -59,15 +59,6 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 	 */
 	boolean hasTransitions();
 	
-	/**
-	 * Adds the {@link Transition} to the given {@link TransitionType}
-	 * 
-	 * @param type
-	 *            the {@link TransitionType} to fill
-	 * @param t
-	 *            the {@link Transition}
-	 */
-	void addTransition(Transition t);
 	
 	/**
 	 * Returns the number of filled {@link Transition}s in this TransitionSeries
@@ -96,8 +87,6 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 		return escapePeaks;
 	}
 
-	double getIntensity();
-
 	/**
 	 * Generates an identifier string of the form He:K which can be used to uniquely
 	 * identify the TransitionSeries.
@@ -111,7 +100,43 @@ public interface TransitionSeriesInterface extends Iterable<Transition>, Compara
 	
 	
 	
+	/**
+	 * Inspects the type of TransitionSeries given and returns a copy
+	 */
+	static TransitionSeriesInterface copy(TransitionSeriesInterface other) {
+		if (other instanceof PrimaryTransitionSeries) {
+			return new PrimaryTransitionSeries((PrimaryTransitionSeries)other);
+		}
+		if (other instanceof PileUpTransitionSeries) {
+			return new PileUpTransitionSeries((PileUpTransitionSeries)other);
+		}
+		if (other instanceof TransitionSeries) {
+			return new TransitionSeries((TransitionSeries)other);
+		}
+		throw new IllegalArgumentException("Unknown Type of Transition");
+	}
 	
 	
+	/**
+	 * Reads the identifier string and returns a new blank TransitionSeries, or null
+	 * if the identifier string is invalid.
+	 */
+	public static TransitionSeriesInterface get(String identifier) {
+		if (identifier.contains("+")) {
+			List<TransitionSeriesInterface> tss = Arrays.asList(identifier.split("\\+")).stream().map(TransitionSeriesInterface::get).collect(Collectors.toList());
+			if (tss.contains(null)) {
+				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
+			}
+			return new PileUpTransitionSeries(tss);
+		}
+		String[] parts = identifier.split(":", 2);
+		if (parts.length != 2) {
+			return null;
+		}
+		Element e = Element.valueOf(parts[0]);
+		TransitionShell tst = TransitionShell.fromTypeString(parts[1].trim());
+		
+		return new PrimaryTransitionSeries(e, tst);
+	}
 
 }
