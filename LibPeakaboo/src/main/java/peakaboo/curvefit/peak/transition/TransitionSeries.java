@@ -16,8 +16,6 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import cyclops.util.ListOps;
-import peakaboo.curvefit.peak.escape.EscapePeak;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.table.Element;
 
 
@@ -57,11 +55,6 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 	private final List<Transition>			transitions;
 
 	/**
-	 * The general intensity of this TransitionSeries
-	 */
-	private final double						intensity;
-
-	/**
 	 * Toggle for the visibility of this TransitionSeries
 	 */
 	private boolean							visible;
@@ -97,7 +90,6 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 
 		this.element = other.getElement();
 		this.transitions = other.transitions;
-		this.intensity = other.getIntensity();
 		this.setVisible(other.isVisible());
 	}
 	
@@ -114,7 +106,6 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 		this.element = element;
 		this.type = seriesType;
 		this.mode = mode;
-		intensity = 1.0;
 		setVisible(true);
 
 		transitions = new ArrayList<Transition>();
@@ -448,11 +439,6 @@ public class TransitionSeries implements Serializable, TransitionSeriesInterface
 		TransitionShell tst = TransitionShell.fromTypeString(parts[1].trim());
 		
 		return new TransitionSeries(e, tst);
-	}
-
-
-	public double getIntensity() {
-		return intensity;
 	}
 
 
