@@ -11,7 +11,6 @@ import javax.swing.KeyStroke;
 
 import cyclops.util.Mutable;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.calibration.CalibrationProfile;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasink.plugin.DataSinkPlugin;

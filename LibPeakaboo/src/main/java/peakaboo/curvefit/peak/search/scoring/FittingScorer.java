@@ -3,10 +3,9 @@ package peakaboo.curvefit.peak.search.scoring;
 import java.util.Comparator;
 
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
- * Interface for scoring how well a {@link LegacyTransitionSeries} matches a spectrum.
+ * Interface for scoring how well a {@link ITransitionSeries} matches a spectrum.
  * Larger scores represent better fits.
  * @author NAS
  *

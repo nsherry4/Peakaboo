@@ -21,7 +21,6 @@ import javax.swing.table.TableModel;
 
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.HeaderLayer;
@@ -109,7 +108,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 				switch (columnIndex)
 				{
 					case 0:
-						return LegacyTransitionSeries.class;
+						return ITransitionSeries.class;
 					case 1:
 						return String.class;
 					default:

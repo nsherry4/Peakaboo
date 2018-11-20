@@ -12,16 +12,15 @@ import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 
 
 /**
  * A Curve represents the curve created by applying a {@link FittingFunction} 
- * to a {@link LegacyTransitionSeries}. It can then be applied to signal to determine the scale of fit.
+ * to a {@link ITransitionSeries}. It can then be applied to signal to determine the scale of fit.
  * 
  * @author NAS
  */

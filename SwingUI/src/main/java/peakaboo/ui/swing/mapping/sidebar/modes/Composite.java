@@ -1,17 +1,11 @@
 package peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -19,9 +13,6 @@ import javax.swing.table.TableModel;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
-import peakaboo.display.map.MapScaleMode;
-import peakaboo.mapping.results.MapResult;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 import swidget.widgets.Spacing;

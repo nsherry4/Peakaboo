@@ -6,7 +6,6 @@ import java.util.Map;
 import cyclops.ReadOnlySpectrum;
 import eventful.EventfulType;
 import peakaboo.controller.plotter.calibration.CalibrationController;
-import peakaboo.controller.plotter.calibration.SavedCalibrationSession;
 import peakaboo.controller.plotter.data.DataController;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.controller.plotter.fitting.FittingController;

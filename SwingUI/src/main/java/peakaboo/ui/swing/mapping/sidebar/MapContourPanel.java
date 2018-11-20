@@ -8,7 +8,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.mapper.MappingController;
 import swidget.widgets.Spacing;

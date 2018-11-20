@@ -12,9 +12,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import cyclops.SigDigits;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-import peakaboo.ui.swing.plotting.fitting.lookup.LookupWidget;
 
 
 class FittingRenderer extends DefaultTableCellRenderer
@@ -64,8 +63,8 @@ class FittingRenderer extends DefaultTableCellRenderer
 			table.setRowHeight(tswidget.getPreferredSize().height);
 		}
 		
-		if (value instanceof LegacyTransitionSeries){
-			LegacyTransitionSeries ts = (LegacyTransitionSeries)value;
+		if (value instanceof ITransitionSeries){
+			ITransitionSeries ts = (ITransitionSeries)value;
 			intensity = controller.getTransitionSeriesIntensity(ts);
 			tswidget.setName(ts.toString());
 			
@@ -76,7 +75,7 @@ class FittingRenderer extends DefaultTableCellRenderer
 				tswidget.setAtomicNumber(ts.getElement().atomicNumber());
 				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getBaseTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
+				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
 				tswidget.setAtomicNumbers(elements.stream().map(Element::atomicNumber).collect(Collectors.toList()));
 				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
 			}

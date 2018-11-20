@@ -10,7 +10,6 @@ import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.model.FilterSet;

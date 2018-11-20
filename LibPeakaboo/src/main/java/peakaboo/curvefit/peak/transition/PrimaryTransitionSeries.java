@@ -15,16 +15,14 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	private List<Transition> transitions = new ArrayList<>();
 	private TransitionShell shell;
 	private Element element;
-	private boolean visible;
+	private boolean visible = true;
 	
 	public PrimaryTransitionSeries(Element e, TransitionShell s) {
-		System.out.println("PrimaryTransitionSeries");
 		this.element = e;
 		this.shell = s;
 	}
 	
 	public PrimaryTransitionSeries(PrimaryTransitionSeries other) {
-		System.out.println("PrimaryTransitionSeries");
 		this.transitions = new ArrayList<>(other.transitions);
 		this.shell = other.shell;
 		this.element = other.element;
@@ -35,7 +33,7 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	@Override
 	public boolean equals(Object oother) {
 		//even derived classes of BaseTransitionSeries can't be equal, because they all have different data.
-		if (!(oother.getClass() == PrimaryTransitionSeries.class)) return false;
+		if (!(oother instanceof PrimaryTransitionSeries)) return false;
 		PrimaryTransitionSeries other = (PrimaryTransitionSeries) oother;
 		
 		return shell == other.shell && element == other.element;
@@ -61,25 +59,28 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	
 	
 	/**
-	 * Checks to see if this {@link LegacyTransitionSeries} is empty
-	 * @return true if this {@link LegacyTransitionSeries} is non-empty, false otherwise
+	 * Checks to see if this {@link ITransitionSeries} is empty
+	 * @return true if this {@link ITransitionSeries} is non-empty, false otherwise
 	 */
+	@Override
 	public boolean hasTransitions() {
 		return transitions.size() != 0;
 	}
 
 	/**
-	 * Returns a list of all {@link Transition}s that this {@link LegacyTransitionSeries} is composed of
+	 * Returns a list of all {@link Transition}s that this {@link ITransitionSeries} is composed of
 	 * @return a list of constituent {@link Transition}s
 	 */
+	@Override
 	public List<Transition> getAllTransitions() {
 		return new ArrayList<>(transitions);
 	}
 	
 	/**
-	 * Returns the strongest {@link Transition} for this {@link LegacyTransitionSeries}.
+	 * Returns the strongest {@link Transition} for this {@link ITransitionSeries}.
 	 * @return the most intense {@link Transition}
 	 */
+	@Override
 	public Transition getStrongestTransition() {
 
 		Optional<Transition> strongest = transitions.stream().reduce((Transition t1, Transition t2) -> {
@@ -90,28 +91,14 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 		return strongest.orElse(null);
 
 	}
-	
-
-	/**
-	 * Sets the {@link Transition} for the given {@link TransitionType}
-	 * 
-	 * @param type
-	 *            the {@link TransitionType} to fill
-	 * @param t
-	 *            the {@link Transition}
-	 */
-	public void setTransition(Transition t) {
-		if (t == null) return;
-		transitions.add(t);
-	}
-
-	
+		
 
 	/**
 	 * Returns the number of filled {@link Transition}s in this TransitionSeries
 	 * 
 	 * @return the number of {@link Transition}s in this TransitionSeries
 	 */
+	@Override
 	public int getTransitionCount() {
 		return transitions.size();
 	}
@@ -123,6 +110,7 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	 * 
 	 * @return an iterator of type {@link Transition}
 	 */
+	@Override
 	public Iterator<Transition> iterator() {
 		return transitions.iterator();
 	}
@@ -156,6 +144,7 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 
 
 	public void addTransition(Transition t) {
+		if (t == null) return;
 		transitions.add(t);
 	}
 
@@ -200,7 +189,4 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 		return TransitionSeriesMode.PRIMARY;
 	}
 
-
-
-	
 }

@@ -228,9 +228,9 @@ public class Peakaboo
 			PeakTable original = PeakTable.SYSTEM.getSource();
 			String filename;
 			if (Version.release) {
-				filename = "derived-peakfile-" + Version.longVersionNo + ".yaml";
+				filename = "derived-peakfile-" + Version.longVersionNo + ".dat";
 			} else {
-				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".yaml";
+				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".dat";
 			}
 			File peakdir = DesktopApp.appDir("PeakTable");
 			peakdir.mkdirs();

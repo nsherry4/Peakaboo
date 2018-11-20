@@ -3,12 +3,11 @@ package peakaboo.curvefit.curve.fitting;
 
 import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
  * 
  * This class stores the results of applying a Spectrum to a {@link Curve}, 
- * as well as the {@link LegacyTransitionSeries} that generated the curve.
+ * as well as the {@link ITransitionSeries} that generated the curve.
  * 
  * @author Nathaniel Sherry, 2009
  * 

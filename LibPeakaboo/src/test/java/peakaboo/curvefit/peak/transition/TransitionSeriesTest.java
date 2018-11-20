@@ -33,14 +33,14 @@ public class TransitionSeriesTest {
 		Assert.assertTrue(map.containsKey(ask1));
 		Assert.assertTrue(map.containsKey(ask2));
 		
-		ITransitionSeries id1 = LegacyTransitionSeries.get("Fe:K");
-		ITransitionSeries id2 = LegacyTransitionSeries.get("Zn:K");
+		ITransitionSeries id1 = ITransitionSeries.get("Fe:K");
+		ITransitionSeries id2 = ITransitionSeries.get("Zn:K");
 		Assert.assertFalse(id1.equals(id2));
-		Assert.assertEquals(id1, new LegacyTransitionSeries(Element.Fe, TransitionShell.K));
-		Assert.assertEquals(id2, new LegacyTransitionSeries(Element.Zn, TransitionShell.K));
+		Assert.assertEquals(id1, new PrimaryTransitionSeries(Element.Fe, TransitionShell.K));
+		Assert.assertEquals(id2, new PrimaryTransitionSeries(Element.Zn, TransitionShell.K));
 		
-		ITransitionSeries ids = LegacyTransitionSeries.get("Fe:K+Zn:K");
-		Assert.assertEquals(ids, LegacyTransitionSeries.summation(id1, id2));
+		ITransitionSeries ids = ITransitionSeries.get("Fe:K+Zn:K");
+		Assert.assertEquals(ids, ITransitionSeries.pileup(id1, id2));
 		
 		
 		

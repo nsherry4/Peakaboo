@@ -2,14 +2,9 @@ package peakaboo.ui.swing.calibration.picker;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.function.Consumer;
 
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 import peakaboo.calibration.CalibrationReference;
 import swidget.widgets.Spacing;

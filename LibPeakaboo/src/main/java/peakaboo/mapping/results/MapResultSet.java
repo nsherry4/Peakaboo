@@ -14,7 +14,6 @@ import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 /**
@@ -35,9 +34,9 @@ public class MapResultSet implements Cloneable
 
 	/**
 	 * 
-	 * Create a new MapResultSet with MapResult objects for the given {@link LegacyTransitionSeries}, and of the given map size
+	 * Create a new MapResultSet with MapResult objects for the given {@link ITransitionSeries}, and of the given map size
 	 *  
-	 * @param transitionSeries list of {@link LegacyTransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
+	 * @param transitionSeries list of {@link ITransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
 	 * @param mapSize the size of the map data in each of the {@link MapResult}s
 	 */
 	public MapResultSet(List<ITransitionSeries> transitionSeries, int mapSize)
@@ -111,10 +110,10 @@ public class MapResultSet implements Cloneable
 
 	/**
 	 * 
-	 * Gets the {@link MapResult} related to the given {@link LegacyTransitionSeries}
+	 * Gets the {@link MapResult} related to the given {@link ITransitionSeries}
 	 * 
-	 * @param ts the {@link LegacyTransitionSeries} to look up the {@link MapResult} with
-	 * @return the {@link MapResult} for the given {@link LegacyTransitionSeries}
+	 * @param ts the {@link ITransitionSeries} to look up the {@link MapResult} with
+	 * @return the {@link MapResult} for the given {@link ITransitionSeries}
 	 */
 	public MapResult getMap(ITransitionSeries ts)
 	{
@@ -136,11 +135,11 @@ public class MapResultSet implements Cloneable
 	/**
 	 * 
 	 * Places a value at a given index for the {@link MapResult} data associated
-	 * with the given {@link LegacyTransitionSeries}. This method will apply the
+	 * with the given {@link ITransitionSeries}. This method will apply the
 	 * {@link CalibrationProfile} to the added values.
 	 * 
 	 * @param intensity the intensity value to place in the {@link MapResult} data
-	 * @param ts        the {@link LegacyTransitionSeries} associated with the desired
+	 * @param ts        the {@link ITransitionSeries} associated with the desired
 	 *                  {@link MapResult}
 	 * @param index     the index in the map data at which to place the new value
 	 */

@@ -1,7 +1,6 @@
 package peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import javax.swing.table.TableColumn;
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
-import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

@@ -2,9 +2,8 @@ package peakaboo.curvefit.peak.search.scoring;
 
 import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.Transition;
 
 /**
  * Scores a TransitionSeries based on a rough calculation of

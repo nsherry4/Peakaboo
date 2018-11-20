@@ -10,7 +10,6 @@ import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
  * 
@@ -66,12 +65,12 @@ public class FittingResultSet implements Iterable<FittingResult>
 	
 	/**
 	 * Generates a subset containing the intersection of this FittingResultSet's
-	 * fits and the given list of {@link LegacyTransitionSeries}. Methods like
+	 * fits and the given list of {@link ITransitionSeries}. Methods like
 	 * {@link FittingResultSet#getTotalFit()} and
 	 * {@link FittingResultSet#getResidual()} will return the result for the entire
 	 * set (ie not just the subset).
 	 * 
-	 * @param tss the list of {@link LegacyTransitionSeries} to consider
+	 * @param tss the list of {@link ITransitionSeries} to consider
 	 */
 	public FittingResultSet subsetIntersect(List<ITransitionSeries> tss) {
 		
@@ -87,14 +86,14 @@ public class FittingResultSet implements Iterable<FittingResult>
 
 	/**
 	 * Generates a subset containing the difference of this FittingResultSet's fits
-	 * and the given list of {@link LegacyTransitionSeries}. Methods like
+	 * and the given list of {@link ITransitionSeries}. Methods like
 	 * {@link FittingResultSet#getTotalFit()} and
 	 * {@link FittingResultSet#getResidual()} will return the result for the entire
 	 * set (ie not just the subset).
 	 * 
-	 * @param tss the list of {@link LegacyTransitionSeries} to consider
+	 * @param tss the list of {@link ITransitionSeries} to consider
 	 */
-	public FittingResultSet subsetDifference(List<LegacyTransitionSeries> tss) {
+	public FittingResultSet subsetDifference(List<ITransitionSeries> tss) {
 		
 		FittingResultSet subset = new FittingResultSet(totalFit.size());
 		subset.totalFit = new ISpectrum(this.totalFit);

@@ -8,7 +8,6 @@ import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.display.calibration.CalibrationReferencePlot;
 

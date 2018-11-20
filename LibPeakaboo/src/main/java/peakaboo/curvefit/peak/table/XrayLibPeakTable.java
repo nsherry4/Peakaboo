@@ -8,31 +8,32 @@ import com.github.tschoonj.xraylib.XraylibException;
 
 import cyclops.Range;
 import cyclops.RangeSet;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class XrayLibPeakTable implements PeakTable {
 
-	private List<LegacyTransitionSeries> series;
+	private List<PrimaryTransitionSeries> series;
 	
 	public XrayLibPeakTable() {}
 	
-	private void add(LegacyTransitionSeries ts) {
+	private void add(PrimaryTransitionSeries ts) {
 		if (ts.getTransitionCount() == 0) return;
 		series.add(ts);
 	}
 
 
 	@Override
-	public List<LegacyTransitionSeries> getAll() {
+	public List<PrimaryTransitionSeries> getAll() {
 		if (series == null) {
 			readPeakTableXraylib();
 		}
 		
-		List<LegacyTransitionSeries> copy = new ArrayList<>();
-		for (LegacyTransitionSeries ts : series) {
-			copy.add(new LegacyTransitionSeries(ts));
+		List<PrimaryTransitionSeries> copy = new ArrayList<>();
+		for (PrimaryTransitionSeries ts : series) {
+			copy.add(new PrimaryTransitionSeries(ts));
 		}
 		return copy;
 		
@@ -74,7 +75,7 @@ public class XrayLibPeakTable implements PeakTable {
 	}
 	
 	private void readElementShell(RangeSet lines, Element elem, TransitionShell tstype) {
-		LegacyTransitionSeries ts = new LegacyTransitionSeries(elem, tstype);
+		PrimaryTransitionSeries ts = new PrimaryTransitionSeries(elem, tstype);
 		
 		//find the strongest transition line, so we can skip anything significantly weaker than it
 		float maxRel = 0f;

@@ -7,13 +7,12 @@ import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
 /**
  * 
  * This class stores the data associated with a single map of a scan. Each map is associated with a single
- * {@link LegacyTransitionSeries}, and can be marked as visible or invisible. When generating or displaying data for
+ * {@link ITransitionSeries}, and can be marked as visible or invisible. When generating or displaying data for
  * more than one TransitionSeries, it may be desirable to use a {@link MapResultSet} instead of managing the
  * MapResult objects manually.
  * 

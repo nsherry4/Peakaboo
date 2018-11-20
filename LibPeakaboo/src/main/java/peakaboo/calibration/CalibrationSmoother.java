@@ -9,7 +9,7 @@ import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
@@ -41,7 +41,7 @@ public class CalibrationSmoother implements CalibrationProcessor {
 		Spectrum values = new ISpectrum(highest.ordinal() - lowest.ordinal() + 1);
 		float value = 0;
 		for (int ordinal = lowest.ordinal(); ordinal <= highest.ordinal(); ordinal++) {
-			ITransitionSeries ts = new LegacyTransitionSeries(Element.values()[ordinal], tst);
+			ITransitionSeries ts = new PrimaryTransitionSeries(Element.values()[ordinal], tst);
 						
 			if (ts != null && calibrations.containsKey(ts)) {
 				value = calibrations.get(ts);

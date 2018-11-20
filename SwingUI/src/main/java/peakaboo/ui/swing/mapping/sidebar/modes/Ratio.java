@@ -4,35 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
-import peakaboo.display.map.MapScaleMode;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 
 

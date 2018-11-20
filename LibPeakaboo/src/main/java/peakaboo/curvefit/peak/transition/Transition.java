@@ -1,12 +1,6 @@
 package peakaboo.curvefit.peak.transition;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import peakaboo.curvefit.peak.escape.EscapePeak;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
 
 /**
  * 
@@ -24,7 +18,7 @@ public class Transition implements Serializable, Comparable<Transition>{
 	public final float energyValue;
 	
 	/**
-	 * The relative intensity of this peak compared to the a1 peak of the same {@link LegacyTransitionSeries}
+	 * The relative intensity of this peak compared to the a1 peak of the same {@link ITransitionSeries}
 	 */
 	public final float relativeIntensity;
 	

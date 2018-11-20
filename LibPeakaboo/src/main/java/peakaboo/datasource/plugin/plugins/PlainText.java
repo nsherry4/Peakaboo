@@ -1,7 +1,5 @@
 package peakaboo.datasource.plugin.plugins;
 
-import static java.util.stream.Collectors.toList;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;

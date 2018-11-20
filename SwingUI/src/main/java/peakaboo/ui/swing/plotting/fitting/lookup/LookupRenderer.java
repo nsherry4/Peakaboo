@@ -11,7 +11,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import swidget.widgets.Spacing;
 
 
@@ -59,7 +58,7 @@ class LookupRenderer extends DefaultTreeCellRenderer
 		}
 
 
-		if (value instanceof LegacyTransitionSeries)
+		if (value instanceof ITransitionSeries)
 		{
 			ITransitionSeries ts = (ITransitionSeries) value;
 			tswidget.setName(ts.getShell().toString());

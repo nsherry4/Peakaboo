@@ -6,7 +6,6 @@ import java.awt.Insets;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -33,7 +32,6 @@ import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.HeaderLayer;
-import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.SettingsPanel;
 import swidget.widgets.layout.SettingsPanel.LabelPosition;
 

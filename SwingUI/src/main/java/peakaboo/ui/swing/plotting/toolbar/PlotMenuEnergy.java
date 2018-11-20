@@ -11,17 +11,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import cyclops.util.Mutable;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
-import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconSize;
 import swidget.widgets.Spacing;
-import swidget.widgets.buttons.FileChooserImageButton;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonSize;
-import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layout.SettingsPanel;
 
 public class PlotMenuEnergy extends JPopupMenu {

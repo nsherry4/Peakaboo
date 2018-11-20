@@ -1,7 +1,6 @@
 package peakaboo.display.calibration;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,11 +24,10 @@ import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.Tick
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
-import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.palette.PaletteColour;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public abstract class ZCalibrationPlot {
@@ -126,7 +124,7 @@ public abstract class ZCalibrationPlot {
 		Spectrum spectrum = new ISpectrum(stopOrdinal - startOrdinal + 1);
 		float value = 0;
 		for (int ordinal = startOrdinal; ordinal <= stopOrdinal; ordinal++) {
-			ITransitionSeries ts = new LegacyTransitionSeries(Element.values()[ordinal], tst);
+			ITransitionSeries ts = new PrimaryTransitionSeries(Element.values()[ordinal], tst);
 			if (ts != null && values.containsKey(ts)) {
 				value = values.get(ts);
 			} else {

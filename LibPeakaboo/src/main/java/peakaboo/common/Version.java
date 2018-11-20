@@ -1,7 +1,5 @@
 package peakaboo.common;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

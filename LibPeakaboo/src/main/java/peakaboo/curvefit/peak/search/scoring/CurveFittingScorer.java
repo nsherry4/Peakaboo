@@ -6,7 +6,6 @@ import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class CurveFittingScorer implements FittingScorer {
 

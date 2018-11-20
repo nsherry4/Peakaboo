@@ -2,20 +2,14 @@ package peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
 
 import cyclops.visualization.backend.awt.GraphicsPanel;
@@ -23,13 +17,11 @@ import peakaboo.controller.plotter.PlotController;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.listwidget.ListWidget;
 import swidget.widgets.listwidget.ListWidgetListCellRenderer;
-import swidget.widgets.toggle.ItemToggleButton;
 
 public class ExportPanel extends JPanel {
 	

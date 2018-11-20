@@ -4,7 +4,6 @@ import java.util.List;
 
 import cyclops.Spectrum;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class OverlayChannel {
 	public Spectrum data;

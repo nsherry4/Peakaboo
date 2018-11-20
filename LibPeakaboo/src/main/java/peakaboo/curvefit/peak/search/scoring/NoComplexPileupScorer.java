@@ -1,10 +1,9 @@
 package peakaboo.curvefit.peak.search.scoring;
 
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
- * Penalizes fittings which are too complex, composed of too many base {@link LegacyTransitionSeries}
+ * Penalizes fittings which are too complex, composed of too many base {@link ITransitionSeries}
  * @author NAS
  *
  */

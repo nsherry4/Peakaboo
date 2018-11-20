@@ -11,7 +11,6 @@ import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulListener;
-import peakaboo.calibration.CalibrationProfile;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.discards.Discards;
 import peakaboo.controller.plotter.data.discards.DiscardsList;

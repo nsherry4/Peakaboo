@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
- * This class acts as a container for a set of {@link LegacyTransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 
+ * This class acts as a container for a set of {@link ITransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 
  * @author Nathaniel Sherry, 2009-2010
  *
  */

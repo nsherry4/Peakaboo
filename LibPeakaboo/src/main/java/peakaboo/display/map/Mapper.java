@@ -35,7 +35,6 @@ import cyclops.visualization.palette.palettes.OverlayPalette;
 import cyclops.visualization.palette.palettes.RatioPalette;
 import cyclops.visualization.palette.palettes.SaturationPalette;
 import cyclops.visualization.palette.palettes.ThermalScalePalette;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.display.map.modes.OverlayColour;
 

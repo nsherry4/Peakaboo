@@ -1,17 +1,16 @@
 package peakaboo.display.calibration;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
+import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationReferencePlot extends ZCalibrationPlot {
@@ -69,7 +68,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 		if (getHighlighted() == null) {
 			return Collections.emptyList();
 		}
-		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new LegacyTransitionSeries(getHighlighted(), getType())));
+		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new PrimaryTransitionSeries(getHighlighted(), getType())));
 		return Collections.singletonList(highlightLabel);
 	}
 

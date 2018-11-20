@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittedWidget;
 
@@ -19,10 +19,10 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 {
 
 	private FittedWidget tswidget;
-	private Predicate<LegacyTransitionSeries> enabled;
+	private Predicate<ITransitionSeries> enabled;
 	
 	
-	public MapFittingRenderer(Predicate<LegacyTransitionSeries> enabled){
+	public MapFittingRenderer(Predicate<ITransitionSeries> enabled){
 		tswidget = new FittedWidget();	
 		this.enabled = enabled;
 	}
@@ -56,8 +56,8 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 			table.setRowHeight(tswidget.getPreferredSize().height);
 		}
 		
-		if (value instanceof LegacyTransitionSeries){
-			LegacyTransitionSeries ts = (LegacyTransitionSeries)value;
+		if (value instanceof ITransitionSeries){
+			ITransitionSeries ts = (ITransitionSeries)value;
 			tswidget.setName(ts.toString());
 			tswidget.setEnabled(enabled.test(ts));
 			
@@ -65,7 +65,7 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 			if (ts.getMode() != TransitionSeriesMode.SUMMATION){
 				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getBaseTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
+				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
 				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
 			}
 			tswidget.setToolTipText(tooltip);

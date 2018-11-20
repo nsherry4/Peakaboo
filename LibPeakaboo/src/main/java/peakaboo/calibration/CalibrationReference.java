@@ -1,21 +1,17 @@
 package peakaboo.calibration;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
 import peakaboo.common.YamlSerializer;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /*
@@ -205,12 +201,12 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.rev = serialized.rev;
 		reference.notes = serialized.notes;
 		reference.citations = serialized.citations;
-		reference.anchor = LegacyTransitionSeries.get(serialized.anchor);
+		reference.anchor = ITransitionSeries.get(serialized.anchor);
 		for (String tsidentifier : serialized.concentrations.keySet()) {
-			reference.concentrations.put(LegacyTransitionSeries.get(tsidentifier), serialized.concentrations.get(tsidentifier));
+			reference.concentrations.put(ITransitionSeries.get(tsidentifier), serialized.concentrations.get(tsidentifier));
 		}
 		for (String tsidentifier : serialized.fitted.keySet()) {
-			reference.extraFittings.put(LegacyTransitionSeries.get(tsidentifier), serialized.fitted.get(tsidentifier));
+			reference.extraFittings.put(ITransitionSeries.get(tsidentifier), serialized.fitted.get(tsidentifier));
 		}
 		return reference;
 	}
@@ -226,14 +222,14 @@ public class CalibrationReference implements BoltConfigPlugin {
 		reference.notes = lines.remove(0);
 		String[] citations = lines.remove(0).split("\\|");
 		reference.citations = new ArrayList<>(Arrays.asList(citations));
-		reference.anchor = LegacyTransitionSeries.get(lines.remove(0));
+		reference.anchor = ITransitionSeries.get(lines.remove(0));
 		
 		for (String line : lines) {
 			String[] parts = line.split(",");
 			ITransitionSeries ts = null;
 			Float concentration = null;
 			try {
-				ts = LegacyTransitionSeries.get(parts[0]);
+				ts = ITransitionSeries.get(parts[0]);
 				concentration = Float.parseFloat(parts[1]);
 			} catch (NumberFormatException e) {
 				continue;

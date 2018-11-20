@@ -1,11 +1,11 @@
 package peakaboo.curvefit.peak.table;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public interface PeakTable {
@@ -42,8 +42,8 @@ public interface PeakTable {
 			.filter(Element.F)
 	);
 	
-	default LegacyTransitionSeries get(Element e, TransitionShell tst) {
-		List<LegacyTransitionSeries> tss = getAll()
+	default PrimaryTransitionSeries get(Element e, TransitionShell tst) {
+		List<PrimaryTransitionSeries> tss = getAll()
 				.stream()
 				.filter(ts -> (ts.getElement() == e) && (ts.getShell() == tst))
 				.collect(Collectors.toList());
@@ -61,7 +61,7 @@ public interface PeakTable {
 	default ITransitionSeries get(ITransitionSeries other) {
 		if (other.getShell() == TransitionShell.COMPOSITE) {
 			List<ITransitionSeries> members = other.getPrimaryTransitionSeries().stream().map(ts -> get(ts.getElement(), ts.getShell())).filter(ts -> ts != null).collect(Collectors.toList());
-			return LegacyTransitionSeries.summation(members);
+			return ITransitionSeries.pileup(members);
 		} else {
 			return get(other.getElement(), other.getShell());
 		}
@@ -73,16 +73,16 @@ public interface PeakTable {
 	 * TransitionSeries is not listed in this PeakTable.
 	 */
 	default ITransitionSeries get(String identifier) {
-		ITransitionSeries ts = LegacyTransitionSeries.get(identifier);
+		ITransitionSeries ts = ITransitionSeries.get(identifier);
 		if (ts == null) {
 			return null;
 		}
 		return get(ts);
 	}
 	
-	List<LegacyTransitionSeries> getAll();
+	List<PrimaryTransitionSeries> getAll();
 	
-	default List<LegacyTransitionSeries> getForElement(Element e) {
+	default List<PrimaryTransitionSeries> getForElement(Element e) {
 		return getAll()
 				.stream()
 				.filter(ts -> (ts.getElement() == e))

@@ -2,46 +2,31 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.Mutable;
 import eventful.EventfulCache;
-import eventful.EventfulEnumListener;
-import eventful.EventfulListener;
 import eventful.EventfulType;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.calibration.CalibrationReference;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.search.PeakProposal;
 import peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
-import peakaboo.datasource.model.components.metadata.Metadata;
 import plural.executor.ExecutorSet;
 
 

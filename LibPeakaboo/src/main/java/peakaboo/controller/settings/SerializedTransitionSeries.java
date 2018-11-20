@@ -5,7 +5,7 @@ import java.util.List;
 
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 
 
 public class SerializedTransitionSeries
@@ -48,7 +48,7 @@ public class SerializedTransitionSeries
 			}
 		}
 		
-		ITransitionSeries ts = LegacyTransitionSeries.summation(tss);
+		ITransitionSeries ts = ITransitionSeries.pileup(tss);
 		ts.setVisible(this.visible);
 		
 		return ts;

@@ -1,6 +1,7 @@
 package peakaboo.display.plot.painters;
 
 
+import java.awt.Color;
 import java.util.List;
 
 import cyclops.visualization.drawing.painters.PainterData;

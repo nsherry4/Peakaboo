@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class PeakTableTest {
@@ -40,7 +40,7 @@ public class PeakTableTest {
 		
 		
 		//Testing convenience methods of PeakTable
-		List<ITransitionSeries> series = combined.getForElement(Element.Au);
+		List<? extends ITransitionSeries> series = combined.getForElement(Element.Au);
 		Assert.assertTrue(series.size() == 3);
 		Assert.assertEquals(series.get(0).getElement(), Element.Au);
 		Assert.assertEquals(series.get(0).getShell(), TransitionShell.K);
@@ -49,7 +49,12 @@ public class PeakTableTest {
 		ITransitionSeries FeK = combined.get(Element.Fe, TransitionShell.K);
 		ITransitionSeries ZnK = combined.get(Element.Zn, TransitionShell.K);
 		Assert.assertEquals(combined.get("Fe:K"), FeK);
-		Assert.assertEquals(combined.get("Fe:K+Zn:K"), LegacyTransitionSeries.summation(FeK, ZnK));
+		
+		ITransitionSeries pu1, pu2;
+		pu1 = combined.get("Fe:K+Zn:K");
+		pu2 = ITransitionSeries.pileup(FeK, ZnK);
+		Assert.assertTrue(pu1.equals(pu2));
+		Assert.assertEquals(pu1, pu2);
 		
 	}
 	

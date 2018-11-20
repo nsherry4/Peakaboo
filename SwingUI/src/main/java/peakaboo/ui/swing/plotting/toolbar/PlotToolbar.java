@@ -5,14 +5,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.Box;
-import javax.swing.JButton;
 import javax.swing.JToolBar;
 
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToolbarImageButton;
 
 public class PlotToolbar extends JToolBar {

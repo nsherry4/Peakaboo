@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
@@ -42,7 +42,7 @@ class SummationWidget extends TSSelectorGroup
 		//get a list of all TransitionSeries to be summed
 		List<ITransitionSeries> tss = selectors.stream().map(e -> e.getTransitionSeries()).filter(ts -> ts != null).collect(Collectors.toList());
 		List<ITransitionSeries> sum = new ArrayList<>();
-		sum.add(LegacyTransitionSeries.summation(tss));
+		sum.add(ITransitionSeries.pileup(tss));
 		return sum;
 	}
 	

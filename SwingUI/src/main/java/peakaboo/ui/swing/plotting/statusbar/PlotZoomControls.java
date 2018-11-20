@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPopupMenu;
 
-import eventful.EventfulListener;
 import peakaboo.controller.plotter.PlotController;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

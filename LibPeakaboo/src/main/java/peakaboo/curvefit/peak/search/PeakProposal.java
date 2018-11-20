@@ -1,14 +1,9 @@
 package peakaboo.curvefit.peak.search;
 
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -20,11 +15,8 @@ import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
-import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeak;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
 import peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
@@ -33,9 +25,8 @@ import peakaboo.curvefit.peak.search.scoring.NoComplexPileupScorer;
 import peakaboo.curvefit.peak.search.scoring.PileupSourceScorer;
 import peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.Transition;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 
@@ -204,8 +195,8 @@ public class PeakProposal
 
 	
 	/**
-	 * Generates a list of {@link LegacyTransitionSeries} which are good fits for the given data at the given channel index
-	 * @return an ordered list of {@link LegacyTransitionSeries} which are good fits for the given data at the given channel
+	 * Generates a list of {@link ITransitionSeries} which are good fits for the given data at the given channel index
+	 * @return an ordered list of {@link ITransitionSeries} which are good fits for the given data at the given channel
 	 */
 	public static List<Pair<ITransitionSeries, Float>> fromChannel(
 			final ReadOnlySpectrum data, 

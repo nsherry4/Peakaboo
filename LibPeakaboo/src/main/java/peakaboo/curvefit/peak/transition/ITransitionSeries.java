@@ -1,8 +1,8 @@
 package peakaboo.curvefit.peak.transition;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +10,7 @@ import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.table.Element;
 
-public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITransitionSeries> {
+public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITransitionSeries>, Serializable {
 
 	/**
 	 * Is this TransitionSeries visible?
@@ -42,20 +42,20 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 	/////////////////////////////////////////////////////////////
 	
 	/**
-	 * Returns a list of all {@link Transition}s that this {@link LegacyTransitionSeries} is composed of
+	 * Returns a list of all {@link Transition}s that this {@link ITransitionSeries} is composed of
 	 * @return a list of constituent {@link Transition}s
 	 */
 	List<Transition> getAllTransitions();
 	
 	/**
-	 * Returns the strongest {@link Transition} for this {@link LegacyTransitionSeries}.
+	 * Returns the strongest {@link Transition} for this {@link ITransitionSeries}.
 	 * @return the most intense {@link Transition}
 	 */
 	Transition getStrongestTransition();
 	
 	/**
-	 * Checks to see if this {@link LegacyTransitionSeries} is empty
-	 * @return true if this {@link LegacyTransitionSeries} is non-empty, false otherwise
+	 * Checks to see if this {@link ITransitionSeries} is empty
+	 * @return true if this {@link ITransitionSeries} is non-empty, false otherwise
 	 */
 	boolean hasTransitions();
 	
@@ -102,7 +102,7 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 	
 	
 	default ITransitionSeries summation(final ITransitionSeries other) {
-		return new PileUpTransitionSeries(this, other);
+		return pileup(this, other);
 	}
 
 	/**
@@ -115,12 +115,18 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 		if (other instanceof PileUpTransitionSeries) {
 			return new PileUpTransitionSeries((PileUpTransitionSeries)other);
 		}
-		if (other instanceof LegacyTransitionSeries) {
-			return new LegacyTransitionSeries((LegacyTransitionSeries)other);
-		}
 		throw new IllegalArgumentException("Unknown Type of Transition");
 	}
 	
+	static ITransitionSeries pileup(List<ITransitionSeries> tss) {
+		if (tss.size() == 0) return null;
+		if (tss.size() == 1) return tss.get(0);
+		return new PileUpTransitionSeries(tss);
+	}
+	
+	static ITransitionSeries pileup(ITransitionSeries... tss) {
+		return pileup(Arrays.asList(tss));
+	}
 	
 	/**
 	 * Reads the identifier string and returns a new blank TransitionSeries, or null

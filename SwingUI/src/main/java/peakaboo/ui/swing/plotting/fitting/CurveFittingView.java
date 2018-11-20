@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import cyclops.util.Mutable;

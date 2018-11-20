@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulCache;
-import eventful.EventfulEnumListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.filter.model.Filter;

@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
+import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationProfilePlot extends ZCalibrationPlot {
@@ -104,7 +104,7 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 		if (getHighlighted() == null) {
 			return Collections.emptyList();
 		}
-		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new LegacyTransitionSeries(getHighlighted(), getType())));
+		DataLabel highlightLabel = new DataLabel(PlotPalette.blackOnWhite(), getHighlighted().ordinal() - lowest, getHighlightText(new PrimaryTransitionSeries(getHighlighted(), getType())));
 		return Collections.singletonList(highlightLabel);
 	}
 

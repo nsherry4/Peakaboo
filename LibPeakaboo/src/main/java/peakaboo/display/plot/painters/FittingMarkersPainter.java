@@ -1,19 +1,20 @@
 package peakaboo.display.plot.painters;
 
+import java.awt.Color;
 import java.util.List;
 
 import cyclops.ISpectrum;
 import cyclops.Spectrum;
 import cyclops.visualization.drawing.DrawingRequest;
 import cyclops.visualization.drawing.painters.PainterData;
+import cyclops.visualization.drawing.plot.PlotDrawing;
 import cyclops.visualization.drawing.plot.painters.PlotPainter;
 import peakaboo.curvefit.curve.fitting.FittingParameters;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.transition.Transition;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.Transition;
 
 
 /**

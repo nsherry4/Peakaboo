@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
-import javax.swing.border.TitledBorder;
 
 import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
@@ -19,10 +18,10 @@ import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonLayout;
+import swidget.widgets.layerpanel.ModalLayer;
 
 public class MapDimensionsPanel extends JPanel {
 

@@ -3,17 +3,16 @@ package peakaboo.datasource.plugin;
 import java.io.File;
 import java.util.logging.Level;
 
-import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
-import net.sciencestudio.bolt.plugin.core.BoltFilesystemDirectoryManager;
+import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
+import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
+import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasource.plugin.plugins.PlainText;
 

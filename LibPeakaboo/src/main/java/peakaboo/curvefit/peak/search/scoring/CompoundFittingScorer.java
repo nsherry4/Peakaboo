@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class CompoundFittingScorer implements FittingScorer {
 

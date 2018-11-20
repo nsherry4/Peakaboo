@@ -2,7 +2,6 @@ package peakaboo.ui.swing.calibration.profileplot;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 
 import cyclops.Coord;
@@ -10,7 +9,6 @@ import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.display.calibration.CalibrationProfilePlot;
 

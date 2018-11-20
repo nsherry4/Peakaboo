@@ -6,7 +6,6 @@ import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class FittingLabel extends DataLabel {
 
@@ -21,7 +20,10 @@ public class FittingLabel extends DataLabel {
 		this.annotation = annotation;
 		
 		ITransitionSeries ts = fit.getTransitionSeries();
-		index = ecal.channelFromEnergy(ts.getStrongestTransition().energyValue);
+		System.out.println(ts);
+		System.out.println(ts.getStrongestTransition());
+		float energy = ts.getStrongestTransition().energyValue;
+		index = ecal.channelFromEnergy(energy);
 		super.title = getTitle();
 		
 		

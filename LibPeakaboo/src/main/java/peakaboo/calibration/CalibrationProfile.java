@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,7 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /*
@@ -185,11 +184,11 @@ public class CalibrationProfile {
 		CalibrationProfile profile = new CalibrationProfile();
 		SerializedCalibrationProfile serialized = YamlSerializer.deserialize(yaml);
 		for (String tsidentifier : serialized.calibrations.keySet()) {
-			ITransitionSeries ts = LegacyTransitionSeries.get(tsidentifier);
+			ITransitionSeries ts = ITransitionSeries.get(tsidentifier);
 			profile.calibrations.put(ts, serialized.calibrations.get(tsidentifier));
 		}
 		for (String tsidentifier : serialized.interpolated) {
-			ITransitionSeries ts = LegacyTransitionSeries.get(tsidentifier);
+			ITransitionSeries ts = ITransitionSeries.get(tsidentifier);
 			profile.interpolated.add(ts);
 		}
 		
@@ -215,7 +214,7 @@ public class CalibrationProfile {
 		for (TransitionShell tst : TransitionShell.values()) {
 			System.out.println(tst);
 			for (Element e : Element.values()) {
-				ITransitionSeries ts = new LegacyTransitionSeries(e, tst);
+				ITransitionSeries ts = new PrimaryTransitionSeries(e, tst);
 				if (!p.contains(ts)) { continue; }
 				System.out.println(e.atomicNumber() + ", " + p.getCalibration(ts));
 			}

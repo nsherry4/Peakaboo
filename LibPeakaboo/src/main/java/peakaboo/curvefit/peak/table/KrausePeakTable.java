@@ -10,28 +10,28 @@ import java.util.List;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
+import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class KrausePeakTable implements PeakTable {
 
-	private List<LegacyTransitionSeries> series = new ArrayList<>();
+	private List<PrimaryTransitionSeries> series = new ArrayList<>();
 	
 	public KrausePeakTable() {
 		readPeakTableManual();
 	}
 	
-	private void add(LegacyTransitionSeries ts) {
+	private void add(PrimaryTransitionSeries ts) {
 		series.add(ts);
 	}
 	
 	@Override
-	public List<LegacyTransitionSeries> getAll() {
+	public List<PrimaryTransitionSeries> getAll() {
 		
-		List<LegacyTransitionSeries> copy = new ArrayList<>();
-		for (LegacyTransitionSeries ts : series) {
-			copy.add(new LegacyTransitionSeries(ts));
+		List<PrimaryTransitionSeries> copy = new ArrayList<>();
+		for (PrimaryTransitionSeries ts : series) {
+			copy.add(new PrimaryTransitionSeries(ts));
 		}
 		return copy;
 		
@@ -95,7 +95,7 @@ public class KrausePeakTable implements PeakTable {
 			Element e = Element.values()[atomicNumber];
 						
 			// K
-			LegacyTransitionSeries ts = new LegacyTransitionSeries(e, TransitionShell.K);
+			PrimaryTransitionSeries ts = new PrimaryTransitionSeries(e, TransitionShell.K);
 
 			//escape
 			//createTransition(sections, column);
@@ -136,7 +136,7 @@ public class KrausePeakTable implements PeakTable {
 			//table.addSeries(ts.pileup());
 
 
-			ts = new LegacyTransitionSeries(e, TransitionShell.L);
+			ts = new PrimaryTransitionSeries(e, TransitionShell.L);
 			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
 
 			//escape
@@ -180,7 +180,7 @@ public class KrausePeakTable implements PeakTable {
 
 
 			
-			ts = new LegacyTransitionSeries(e, TransitionShell.M);
+			ts = new PrimaryTransitionSeries(e, TransitionShell.M);
 			Transition ma1, mb1, mg;
 
 			//escape
