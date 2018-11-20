@@ -25,6 +25,7 @@ import peakaboo.calibration.CalibrationProfile;
 import peakaboo.controller.mapper.Interpolation;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.display.map.MapScaleMode;
 import peakaboo.display.map.modes.MapDisplayMode;
@@ -40,9 +41,9 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 	private Function<Coord<Integer>, String> valueAtCoord;
 	
-	private Map<LegacyTransitionSeries, Integer> ratioSide;
-	private Map<LegacyTransitionSeries, OverlayColour> overlayColour;
-	private Map<LegacyTransitionSeries, Boolean> visibility;
+	private Map<ITransitionSeries, Integer> ratioSide;
+	private Map<ITransitionSeries, OverlayColour> overlayColour;
+	private Map<ITransitionSeries, Boolean> visibility;
 	
 	private MapScaleMode mapScaleMode;
 	
@@ -56,11 +57,11 @@ public class MapFittingSettings extends EventfulType<String> {
 		displayMode = MapDisplayMode.COMPOSITE;
 		mapScaleMode = MapScaleMode.ABSOLUTE;
 		
-		ratioSide = new HashMap<LegacyTransitionSeries, Integer>();
-		overlayColour = new HashMap<LegacyTransitionSeries, OverlayColour>();
-		visibility = new HashMap<LegacyTransitionSeries, Boolean>();
+		ratioSide = new HashMap<>();
+		overlayColour = new HashMap<>();
+		visibility = new HashMap<>();
 		
-		for (LegacyTransitionSeries ts : map.mapsController.getMapResultSet().getAllTransitionSeries()) {
+		for (ITransitionSeries ts : map.mapsController.getMapResultSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
 			overlayColour.put(ts, OverlayColour.RED);
 			visibility.put(ts, true);
@@ -161,7 +162,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				0.0f);
 		
 		
-		List<Pair<LegacyTransitionSeries, Spectrum>> dataset = getVisibleTransitionSeries().stream()
+		List<Pair<ITransitionSeries, Spectrum>> dataset = getVisibleTransitionSeries().stream()
 				.map(ts -> new Pair<>(ts, getMapForTransitionSeries(ts)))
 				.collect(toList());
 				
@@ -175,7 +176,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				.map(e -> e.second)
 				.collect(toList());
 
-		List<LegacyTransitionSeries> redTS = dataset.stream()
+		List<ITransitionSeries> redTS = dataset.stream()
 				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.RED))
 				.map(e -> e.first)
 				.collect(toList());
@@ -201,7 +202,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				.map(e -> e.second)
 				.collect(toList());
 		
-		List<LegacyTransitionSeries> greendTS = dataset.stream()
+		List<ITransitionSeries> greendTS = dataset.stream()
 				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.GREEN))
 				.map(e -> e.first)
 				.collect(toList());
@@ -227,7 +228,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				.map(e -> e.second)
 				.collect(toList());
 		
-		List<LegacyTransitionSeries> blueTS = dataset.stream()
+		List<ITransitionSeries> blueTS = dataset.stream()
 				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.BLUE))
 				.map(e -> e.first)
 				.collect(toList());
@@ -254,7 +255,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				.map(e -> e.second)
 				.collect(toList());
 		
-		List<LegacyTransitionSeries> yellowTS = dataset.stream()
+		List<ITransitionSeries> yellowTS = dataset.stream()
 				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.YELLOW))
 				.map(e -> e.first)
 				.collect(toList());
@@ -300,9 +301,9 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 
 		// get transition series on ratio side 1
-		List<LegacyTransitionSeries> side1 = getTransitionSeriesForRatioSide(1);
+		List<ITransitionSeries> side1 = getTransitionSeriesForRatioSide(1);
 		// get transition series on ratio side 2
-		List<LegacyTransitionSeries> side2 = getTransitionSeriesForRatioSide(2);
+		List<ITransitionSeries> side2 = getTransitionSeriesForRatioSide(2);
 		
 		// sum all of the maps for the given transition series for each side
 		Spectrum side1Data = sumGivenTransitionSeriesMaps(side1);
@@ -563,7 +564,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	}	
 
 
-	private String getDatasetTitle(List<LegacyTransitionSeries> list)
+	private String getDatasetTitle(List<ITransitionSeries> list)
 	{
 		
 		List<String> elementNames = list.stream().map(ts -> ts.toString()).collect(toList());
@@ -574,19 +575,19 @@ public class MapFittingSettings extends EventfulType<String> {
 	}
 
 	
-	public synchronized List<LegacyTransitionSeries> getAllTransitionSeries()
+	public synchronized List<ITransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<LegacyTransitionSeries> tsList = this.visibility.keySet().stream().filter(a -> true).collect(toList());
+		List<ITransitionSeries> tsList = this.visibility.keySet().stream().filter(a -> true).collect(toList());
 		Collections.sort(tsList);
 		return tsList;
 	}
 	
 
-	public synchronized List<LegacyTransitionSeries> getVisibleTransitionSeries()
+	public synchronized List<ITransitionSeries> getVisibleTransitionSeries()
 	{
-		List<LegacyTransitionSeries> visible = new ArrayList<>();
-		for (LegacyTransitionSeries ts : getAllTransitionSeries()) {
+		List<ITransitionSeries> visible = new ArrayList<>();
+		for (ITransitionSeries ts : getAllTransitionSeries()) {
 			if (getTransitionSeriesVisibility(ts)) {
 				visible.add(ts);
 			}
@@ -595,15 +596,15 @@ public class MapFittingSettings extends EventfulType<String> {
 	}
 	
 
-	public Spectrum sumGivenTransitionSeriesMaps(List<LegacyTransitionSeries> list)
+	public Spectrum sumGivenTransitionSeriesMaps(List<ITransitionSeries> list)
 	{
 		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list, getCalibrationProfile());
 	}
 	
 
-	public Spectrum getMapForTransitionSeries(LegacyTransitionSeries ts)
+	public Spectrum getMapForTransitionSeries(ITransitionSeries ts)
 	{
-		List<LegacyTransitionSeries> tss = new ArrayList<LegacyTransitionSeries>();
+		List<ITransitionSeries> tss = new ArrayList<>();
 		tss.add(ts);
 		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss, getCalibrationProfile());
 	}
@@ -624,7 +625,7 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	
 
-	public List<LegacyTransitionSeries> getTransitionSeriesForRatioSide(final int side)
+	public List<ITransitionSeries> getTransitionSeriesForRatioSide(final int side)
 	{
 		return getVisibleTransitionSeries().stream().filter(e -> {
 			Integer thisSide = this.ratioSide.get(e);
@@ -637,11 +638,11 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 	
 
-	public OverlayColour getOverlayColour(LegacyTransitionSeries ts)
+	public OverlayColour getOverlayColour(ITransitionSeries ts)
 	{
 		return this.overlayColour.get(ts);
 	}
-	public void setOverlayColour(LegacyTransitionSeries ts, OverlayColour c)
+	public void setOverlayColour(ITransitionSeries ts, OverlayColour c)
 	{
 		this.overlayColour.put(ts, c);
 	}
@@ -650,31 +651,31 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		return this.overlayColour.values();
 	}
-	public Set<LegacyTransitionSeries> getOverlayColourKeys()
+	public Set<ITransitionSeries> getOverlayColourKeys()
 	{
 		return this.overlayColour.keySet();
 	}
 	
 
-	public int getRatioSide(LegacyTransitionSeries ts)
+	public int getRatioSide(ITransitionSeries ts)
 	{
 		return this.ratioSide.get(ts);
 	}
-	public void setRatioSide(LegacyTransitionSeries ts, int side)
+	public void setRatioSide(ITransitionSeries ts, int side)
 	{
 		this.ratioSide.put(ts, side);
 	}
 	
 	/**
 	 * Returns if this TransitionSeries is enabled, but returning false regardless
-	 * of setting if {@link #getTransitionSeriesEnabled(LegacyTransitionSeries)} returns
+	 * of setting if {@link #getTransitionSeriesEnabled(ITransitionSeries)} returns
 	 * false
 	 */
-	public synchronized boolean getTransitionSeriesVisibility(LegacyTransitionSeries ts)
+	public synchronized boolean getTransitionSeriesVisibility(ITransitionSeries ts)
 	{
 		return this.visibility.get(ts) && getTransitionSeriesEnabled(ts);
 	}
-	public synchronized void setTransitionSeriesVisibility(LegacyTransitionSeries ts, boolean visible)
+	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean visible)
 	{
 		this.visibility.put(ts, visible);
 	}
@@ -682,7 +683,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	/**
 	 * Indicates if this TransitionSeries is enabled, or disabled (due to a lack of calibration, for example)
 	 */
-	public boolean getTransitionSeriesEnabled(LegacyTransitionSeries ts) {
+	public boolean getTransitionSeriesEnabled(ITransitionSeries ts) {
 		if (getCalibrationProfile().isEmpty()) {
 			return true;
 		}

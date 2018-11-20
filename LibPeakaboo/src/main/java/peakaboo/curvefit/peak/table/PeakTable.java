@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -57,9 +58,9 @@ public interface PeakTable {
 	 * Gets the equivalent TransitionSeries from this PeakTable. This is a
 	 * convenience method for {@link PeakTable#get(Element, TransitionShell)}
 	 */
-	default LegacyTransitionSeries get(LegacyTransitionSeries other) {
+	default ITransitionSeries get(ITransitionSeries other) {
 		if (other.getShell() == TransitionShell.COMPOSITE) {
-			List<LegacyTransitionSeries> members = other.getBaseTransitionSeries().stream().map(ts -> get(ts.getElement(), ts.getShell())).filter(ts -> ts != null).collect(Collectors.toList());
+			List<ITransitionSeries> members = other.getPrimaryTransitionSeries().stream().map(ts -> get(ts.getElement(), ts.getShell())).filter(ts -> ts != null).collect(Collectors.toList());
 			return LegacyTransitionSeries.summation(members);
 		} else {
 			return get(other.getElement(), other.getShell());
@@ -71,8 +72,8 @@ public interface PeakTable {
 	 * the PeakTable, or null if the identifier string is invalid, or the
 	 * TransitionSeries is not listed in this PeakTable.
 	 */
-	default LegacyTransitionSeries get(String identifier) {
-		LegacyTransitionSeries ts = LegacyTransitionSeries.get(identifier);
+	default ITransitionSeries get(String identifier) {
+		ITransitionSeries ts = LegacyTransitionSeries.get(identifier);
 		if (ts == null) {
 			return null;
 		}

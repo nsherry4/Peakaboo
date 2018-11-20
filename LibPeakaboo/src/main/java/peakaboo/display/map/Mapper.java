@@ -453,7 +453,7 @@ public class Mapper {
 
 		List<Pair<PaletteColour, String>> 	colours = new ArrayList<>();
 		Function<OverlayColour, String> tsFormatter = colour -> data.overlayData.get(colour).elements.stream()
-				.map(LegacyTransitionSeries::toString)
+				.map(ts -> ts.toString())
 				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
 		
 		if (redSpectrum != null) 	colours.add(new Pair<>(OverlayColour.RED.toColour(), tsFormatter.apply(OverlayColour.RED)));

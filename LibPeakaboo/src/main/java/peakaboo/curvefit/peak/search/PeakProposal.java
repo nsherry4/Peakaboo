@@ -34,6 +34,7 @@ import peakaboo.curvefit.peak.search.scoring.PileupSourceScorer;
 import peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.Transition;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -50,7 +51,7 @@ public class PeakProposal
 
 
 	
-	public static ExecutorSet<List<LegacyTransitionSeries>> search(
+	public static ExecutorSet<List<ITransitionSeries>> search(
 			final ReadOnlySpectrum data,
 			PeakSearcher searcher,
 			FittingSet fits,
@@ -63,12 +64,12 @@ public class PeakProposal
 		DummyExecutor secondStage = new DummyExecutor();
 		
 		
-		ExecutorSet<List<LegacyTransitionSeries>> exec = new ExecutorSet<List<LegacyTransitionSeries>>("Automatic Peak Fitting") {
+		ExecutorSet<List<ITransitionSeries>> exec = new ExecutorSet<List<ITransitionSeries>>("Automatic Peak Fitting") {
 
 			float firstGuessScore = 0;
 			
 			@Override
-			protected List<LegacyTransitionSeries> execute() {
+			protected List<ITransitionSeries> execute() {
 				
 				firstStage.advanceState();
 				
@@ -111,7 +112,7 @@ public class PeakProposal
 				 * Find other peaks which also have that guess as part of their list of guesses
 				 * Remove those other peaks from future consideration 
 				 */
-				List<LegacyTransitionSeries> newFits = new ArrayList<>();
+				List<ITransitionSeries> newFits = new ArrayList<>();
 				for (int channel : peaks) {
 					
 					//no fitting below 1keV
@@ -119,7 +120,7 @@ public class PeakProposal
 						continue;
 					}
 					
-					List<Pair<LegacyTransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
+					List<Pair<ITransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
 					
 					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
 					
@@ -137,7 +138,7 @@ public class PeakProposal
 					}
 					
 
-					LegacyTransitionSeries guess = guesses.get(0).first;
+					ITransitionSeries guess = guesses.get(0).first;
 					float guessScore = guesses.get(0).second;
 					if (firstGuessScore == 0) {
 						firstGuessScore = guessScore;
@@ -178,9 +179,9 @@ public class PeakProposal
 
 	//given the energy level of a peak and a list of existing new fits, check to 
 	//see if the given peak can be explained by an existing fit
-	private static boolean peakOverlap(List<LegacyTransitionSeries> newfits, int channel, FittingParameters parameters) {
+	private static boolean peakOverlap(List<ITransitionSeries> newfits, int channel, FittingParameters parameters) {
 		float energy = parameters.getCalibration().energyFromChannel(channel);
-		for (LegacyTransitionSeries ts : newfits) {
+		for (ITransitionSeries ts : newfits) {
 			for (Transition t : ts) {
 				if (transitionOverlap(t, energy, 0.1f, parameters)) return true;
 			}
@@ -206,14 +207,14 @@ public class PeakProposal
 	 * Generates a list of {@link LegacyTransitionSeries} which are good fits for the given data at the given channel index
 	 * @return an ordered list of {@link LegacyTransitionSeries} which are good fits for the given data at the given channel
 	 */
-	public static List<Pair<LegacyTransitionSeries, Float>> fromChannel(
+	public static List<Pair<ITransitionSeries, Float>> fromChannel(
 			final ReadOnlySpectrum data, 
 			FittingSet fits,
 			FittingSet proposed,
 			CurveFitter fitter,
 			FittingSolver solver,
 			final int channel, 
-			LegacyTransitionSeries currentTS,
+			ITransitionSeries currentTS,
 			int guessCount
 		) {
 		
@@ -260,19 +261,19 @@ public class PeakProposal
 		
 
 		//get a list of all transition series to start with
-		List<LegacyTransitionSeries> tss = new ArrayList<>(PeakTable.SYSTEM.getAll());
+		List<ITransitionSeries> tss = new ArrayList<>(PeakTable.SYSTEM.getAll());
 
 		
 		//add in any 2x summations from the list of previously fitted AND proposed peaks.
 		//we exclude any that the caller requests so that if a UI component is *replacing* a TS with
 		//these suggestions, it doesn't get summations for the now-removed TS
-		List<LegacyTransitionSeries> summationCandidates = fits.getFittedTransitionSeries();
+		List<ITransitionSeries> summationCandidates = fits.getFittedTransitionSeries();
 		summationCandidates.addAll(proposed.getFittedTransitionSeries());
 		if (currentTSisUsed) summationCandidates.remove(currentTS);
 		
-		for (LegacyTransitionSeries ts1 : summationCandidates)
+		for (ITransitionSeries ts1 : summationCandidates)
 		{
-			for (LegacyTransitionSeries ts2 : summationCandidates)
+			for (ITransitionSeries ts2 : summationCandidates)
 			{
 				tss.add(ts1.summation(ts2));
 			}
@@ -311,7 +312,7 @@ public class PeakProposal
 		
 		
 		//now sort by score
-		List<Pair<LegacyTransitionSeries, Float>> scoredGuesses = tss.stream()
+		List<Pair<ITransitionSeries, Float>> scoredGuesses = tss.stream()
 			//fast scorer to shrink downthe list
 			.map(ts -> new Pair<>(ts, fastCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p2.second.compareTo(p1.second))

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -57,12 +58,12 @@ public class Composition {
 		return profile;
 	}
 
-	public static Composition calculate(List<LegacyTransitionSeries> tss, CalibrationProfile profile, Function<LegacyTransitionSeries, Float> intensityFunction) {
+	public static Composition calculate(List<ITransitionSeries> tss, CalibrationProfile profile, Function<ITransitionSeries, Float> intensityFunction) {
 
 		//find best TransitionSeries per element to measure
-		Map<Element, LegacyTransitionSeries> elements = new LinkedHashMap<>();
+		Map<Element, ITransitionSeries> elements = new LinkedHashMap<>();
 		for (TransitionShell type : new TransitionShell[] {TransitionShell.M, TransitionShell.L, TransitionShell.K}) {
-			for (LegacyTransitionSeries ts : tss) {
+			for (ITransitionSeries ts : tss) {
 				if (ts.getShell() != type) { continue; }
 				elements.put(ts.getElement(), ts);
 			}
@@ -72,7 +73,7 @@ public class Composition {
 		float sum = 0;
 		Map<Element, Float> intensities = new LinkedHashMap<>();
 		for (Element element : elements.keySet()) {
-			LegacyTransitionSeries ts = elements.get(element);
+			ITransitionSeries ts = elements.get(element);
 			float intensity = intensityFunction.apply(ts);
 			
 			intensities.put(ts.getElement(), intensity);

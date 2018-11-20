@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
@@ -72,7 +73,7 @@ public class FittingResultSet implements Iterable<FittingResult>
 	 * 
 	 * @param tss the list of {@link LegacyTransitionSeries} to consider
 	 */
-	public FittingResultSet subsetIntersect(List<LegacyTransitionSeries> tss) {
+	public FittingResultSet subsetIntersect(List<ITransitionSeries> tss) {
 		
 		FittingResultSet subset = new FittingResultSet(totalFit.size());
 		subset.totalFit = new ISpectrum(this.totalFit);

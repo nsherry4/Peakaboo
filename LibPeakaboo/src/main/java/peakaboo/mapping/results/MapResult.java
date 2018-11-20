@@ -6,6 +6,7 @@ import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import peakaboo.calibration.CalibrationProfile;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 
@@ -24,16 +25,16 @@ public class MapResult implements Cloneable
 {
 
 	private Spectrum data;
-	public LegacyTransitionSeries	transitionSeries;
+	public ITransitionSeries	transitionSeries;
 
 
-	public MapResult(LegacyTransitionSeries ts, int mapSize)
+	public MapResult(ITransitionSeries ts, int mapSize)
 	{
 		this.data = new ISpectrum(mapSize, 0.0f);
 		transitionSeries = ts;
 	}
 	
-	protected MapResult(LegacyTransitionSeries ts, Spectrum data)
+	protected MapResult(ITransitionSeries ts, Spectrum data)
 	{
 		this.transitionSeries = ts;
 		this.data = data;

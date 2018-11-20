@@ -10,6 +10,7 @@ import java.util.function.Function;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import peakaboo.calibration.CalibrationProfile;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -30,17 +31,17 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	}
 	
 	@Override
-	protected List<LegacyTransitionSeries> getKeys(TransitionShell type) {
+	protected List<ITransitionSeries> getKeys(TransitionShell type) {
 		return profile.getTransitionSeries(type);
 	}
 
 	@Override
-	protected Map<LegacyTransitionSeries, Float> getData() {
-		Map<LegacyTransitionSeries, Float> cals = profile.getCalibrations();
-		List<LegacyTransitionSeries> interpolated = profile.getInterpolated();
+	protected Map<ITransitionSeries, Float> getData() {
+		Map<ITransitionSeries, Float> cals = profile.getCalibrations();
+		List<ITransitionSeries> interpolated = profile.getInterpolated();
 		
-		Map<LegacyTransitionSeries, Float> data = new LinkedHashMap<>();
-		for (LegacyTransitionSeries ts : cals.keySet()) {
+		Map<ITransitionSeries, Float> data = new LinkedHashMap<>();
+		for (ITransitionSeries ts : cals.keySet()) {
 			if (!interpolated.contains(ts)) {
 				data.put(ts, cals.get(ts));
 			}
@@ -49,12 +50,12 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	}
 	
 	@Override
-	protected Map<LegacyTransitionSeries, Float> getFadedData() {
-		Map<LegacyTransitionSeries, Float> cals = profile.getCalibrations();
-		List<LegacyTransitionSeries> interpolated = profile.getInterpolated();
+	protected Map<ITransitionSeries, Float> getFadedData() {
+		Map<ITransitionSeries, Float> cals = profile.getCalibrations();
+		List<ITransitionSeries> interpolated = profile.getInterpolated();
 		
-		Map<LegacyTransitionSeries, Float> faded = new LinkedHashMap<>();
-		for (LegacyTransitionSeries ts : cals.keySet()) {
+		Map<ITransitionSeries, Float> faded = new LinkedHashMap<>();
+		for (ITransitionSeries ts : cals.keySet()) {
 			if (interpolated.contains(ts)) {
 				faded.put(ts, cals.get(ts));
 			}
@@ -91,7 +92,7 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	}
 	
 	@Override
-	protected String getHighlightText(LegacyTransitionSeries ts) {
+	protected String getHighlightText(ITransitionSeries ts) {
 		if (profile.getInterpolated().contains(ts)) {
 			return ts.getElement().toString() + " (Interpolated)";
 		}

@@ -30,6 +30,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import peakaboo.controller.plotter.fitting.FittingController;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
@@ -82,10 +83,10 @@ public class FittingPanel extends ClearPanel implements Changeable
 		
 		ImageButton removeButton = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Fittings").withAction(() -> {
 			int rows[] = fitTable.getSelectedRows();
-			List<LegacyTransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
+			List<ITransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 				
 			if (tss.size() == 0) return;
-			for (LegacyTransitionSeries ts : tss)	{
+			for (ITransitionSeries ts : tss)	{
 				controller.removeTransitionSeries(ts);
 			}
 			owner.changed();
@@ -116,7 +117,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 	}
 
-	private LegacyTransitionSeries getSelected() {		
+	private ITransitionSeries getSelected() {		
 		int row = fitTable.getSelectedRow();
 		if (row == -1) {
 			return null;
@@ -124,8 +125,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 		return controller.getFittedTransitionSeries().get(row);
 	}
 	
-	private List<LegacyTransitionSeries> getSelectedList() {
-		LegacyTransitionSeries selected = getSelected();
+	private List<ITransitionSeries> getSelectedList() {
+		ITransitionSeries selected = getSelected();
 		if (selected == null) {
 			return Collections.emptyList();
 		} else {
@@ -156,14 +157,14 @@ public class FittingPanel extends ClearPanel implements Changeable
 		
 		
 		//Update list selection to match controller selection
-		List<LegacyTransitionSeries> modelSelected = controller.getHighlightedTransitionSeries();
-		List<LegacyTransitionSeries> viewSelected = getSelectedList();
+		List<ITransitionSeries> modelSelected = controller.getHighlightedTransitionSeries();
+		List<ITransitionSeries> viewSelected = getSelectedList();
 		if (!modelSelected.equals(viewSelected)) {
 			if (modelSelected.size() == 0) {
 				fitTable.getSelectionModel().clearSelection();
 			} else {
 				//Single selection mode
-				LegacyTransitionSeries ts = modelSelected.get(0);
+				ITransitionSeries ts = modelSelected.get(0);
 				int index = controller.getFittingSelections().getFittedTransitionSeries().indexOf(ts);
 				fitTable.getSelectionModel().setSelectionInterval(index, index);
 			}
@@ -303,7 +304,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 					case 0:
 						return Boolean.class;
 					case 1:
-						return LegacyTransitionSeries.class;
+						return ITransitionSeries.class;
 					default:
 						return Object.class;
 				}
@@ -380,7 +381,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 				if (e.getClickCount() != 2) { return; }
 				
 				//annotation
-				LegacyTransitionSeries selected = controller.getFittedTransitionSeries().get(fitTable.getSelectedRow());
+				ITransitionSeries selected = controller.getFittedTransitionSeries().get(fitTable.getSelectedRow());
 				plotPanel.actionAddAnnotation(selected);
 
 			}

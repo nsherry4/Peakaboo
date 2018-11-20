@@ -9,6 +9,7 @@ import cyclops.ReadOnlySpectrum;
 import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.Filter;
@@ -29,9 +30,9 @@ public class PlotData {
 	public FittingResultSet proposedResults;
 	public FittingResultSet selectionResults;
 	
-	public List<LegacyTransitionSeries> highlightedTransitionSeries = new ArrayList<>();
-	public List<LegacyTransitionSeries> proposedTransitionSeries = new ArrayList<>();
+	public List<ITransitionSeries> highlightedTransitionSeries = new ArrayList<>();
+	public List<ITransitionSeries> proposedTransitionSeries = new ArrayList<>();
 	
-	public Map<LegacyTransitionSeries, String> annotations = new HashMap<>();
+	public Map<ITransitionSeries, String> annotations = new HashMap<>();
 	
 }

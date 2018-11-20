@@ -101,6 +101,10 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 	
 	
 	
+	default ITransitionSeries summation(final ITransitionSeries other) {
+		return new PileUpTransitionSeries(this, other);
+	}
+
 	/**
 	 * Inspects the type of TransitionSeries given and returns a copy
 	 */

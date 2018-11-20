@@ -2,69 +2,36 @@ package peakaboo.ui.swing.mapping;
 
 import static java.util.stream.Collectors.toList;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
+import cyclops.ReadOnlySpectrum;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.calibration.Composition;
-import peakaboo.common.PeakabooLog;
-import cyclops.Pair;
-import cyclops.ReadOnlySpectrum;
-import cyclops.SigDigits;
-
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
-import peakaboo.mapping.Mapping;
-import peakaboo.mapping.correction.Corrections;
-import peakaboo.mapping.correction.CorrectionsManager;
-import peakaboo.mapping.results.MapResult;
-import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFilePanels;
 import peakaboo.ui.swing.calibration.composition.CompositionView;
 import peakaboo.ui.swing.plotting.PlotPanel;
-import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ToolbarImageButton;
-import swidget.widgets.layerpanel.LayerDialog;
-import swidget.widgets.layerpanel.ModalLayer;
-import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.layout.PropertyPanel;
-import swidget.widgets.layout.TitledPanel;
 
 class MapperToolbar extends JToolBar {
 
@@ -120,8 +87,8 @@ class MapperToolbar extends JToolBar {
 				indexes.addAll(pointsSelection.getPoints());
 			}
 			
-			List<LegacyTransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
-			Function<LegacyTransitionSeries, Float> intensityFunction = ts -> {
+			List<ITransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
+			Function<ITransitionSeries, Float> intensityFunction = ts -> {
 				CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
 				ReadOnlySpectrum data = controller.mapsController.getMapResultSet().getMap(ts).getData(profile);
 				float sum = 0;

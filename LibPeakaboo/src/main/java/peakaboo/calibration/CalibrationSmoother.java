@@ -8,6 +8,7 @@ import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.filter.model.Filter;
@@ -16,14 +17,14 @@ import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 public class CalibrationSmoother implements CalibrationProcessor {
 
 	@Override
-	public void process(CalibrationReference reference, Map<LegacyTransitionSeries, Float> calibrations) {
+	public void process(CalibrationReference reference, Map<ITransitionSeries, Float> calibrations) {
 		smooth(calibrations, TransitionShell.K);
 		smooth(calibrations, TransitionShell.L);
 		smooth(calibrations, TransitionShell.M);
 	}
 
-	private void smooth(Map<LegacyTransitionSeries, Float> calibrations, TransitionShell tst) {
-		List<LegacyTransitionSeries> tss = calibrations
+	private void smooth(Map<ITransitionSeries, Float> calibrations, TransitionShell tst) {
+		List<ITransitionSeries> tss = calibrations
 				.keySet()
 				.stream()
 				.filter(ts -> ts.getShell() == tst)
@@ -40,7 +41,7 @@ public class CalibrationSmoother implements CalibrationProcessor {
 		Spectrum values = new ISpectrum(highest.ordinal() - lowest.ordinal() + 1);
 		float value = 0;
 		for (int ordinal = lowest.ordinal(); ordinal <= highest.ordinal(); ordinal++) {
-			LegacyTransitionSeries ts = new LegacyTransitionSeries(Element.values()[ordinal], tst);
+			ITransitionSeries ts = new LegacyTransitionSeries(Element.values()[ordinal], tst);
 						
 			if (ts != null && calibrations.containsKey(ts)) {
 				value = calibrations.get(ts);
@@ -58,7 +59,7 @@ public class CalibrationSmoother implements CalibrationProcessor {
 		
 		
 		//unpack
-		for (LegacyTransitionSeries ts : tss) {
+		for (ITransitionSeries ts : tss) {
 			int index = ts.getElement().ordinal() - lowest.ordinal();
 			calibrations.put(ts, results.get(index));
 		}

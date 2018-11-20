@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -45,8 +46,8 @@ public class PeakTableTest {
 		Assert.assertEquals(series.get(0).getShell(), TransitionShell.K);
 		
 		//Testing identifier string lookup
-		LegacyTransitionSeries FeK = combined.get(Element.Fe, TransitionShell.K);
-		LegacyTransitionSeries ZnK = combined.get(Element.Zn, TransitionShell.K);
+		ITransitionSeries FeK = combined.get(Element.Fe, TransitionShell.K);
+		ITransitionSeries ZnK = combined.get(Element.Zn, TransitionShell.K);
 		Assert.assertEquals(combined.get("Fe:K"), FeK);
 		Assert.assertEquals(combined.get("Fe:K+Zn:K"), LegacyTransitionSeries.summation(FeK, ZnK));
 		

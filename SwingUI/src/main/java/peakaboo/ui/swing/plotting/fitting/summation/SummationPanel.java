@@ -45,9 +45,7 @@ public class SummationPanel extends JPanel
 			protected void approve()
 			{
 				//add all of the transition series that come back from the summation widget
-				summationWidget.getTransitionSeries().forEach((LegacyTransitionSeries ts) -> {
-					controller.addTransitionSeries(ts);
-				});
+				summationWidget.getTransitionSeries().forEach(controller::addTransitionSeries);
 
 
 				controller.clearProposedTransitionSeries();

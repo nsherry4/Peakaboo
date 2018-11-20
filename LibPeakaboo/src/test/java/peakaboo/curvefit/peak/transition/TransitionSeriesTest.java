@@ -18,9 +18,9 @@ public class TransitionSeriesTest {
 		PeakTable table = new KrausePeakTable();
 		
 		LegacyTransitionSeries ask1 = table.get(Element.As, TransitionShell.K);
-		LegacyTransitionSeries ask2 = table.get(Element.As, TransitionShell.K);
-		LegacyTransitionSeries ask3 = table.get(Element.As, TransitionShell.L);
-		LegacyTransitionSeries ask4 = table.get(Element.Fe, TransitionShell.K);
+		ITransitionSeries ask2 = table.get(Element.As, TransitionShell.K);
+		ITransitionSeries ask3 = table.get(Element.As, TransitionShell.L);
+		ITransitionSeries ask4 = table.get(Element.Fe, TransitionShell.K);
 		
 		
 		Assert.assertEquals(ask1, ask2);
@@ -33,13 +33,13 @@ public class TransitionSeriesTest {
 		Assert.assertTrue(map.containsKey(ask1));
 		Assert.assertTrue(map.containsKey(ask2));
 		
-		LegacyTransitionSeries id1 = LegacyTransitionSeries.get("Fe:K");
-		LegacyTransitionSeries id2 = LegacyTransitionSeries.get("Zn:K");
+		ITransitionSeries id1 = LegacyTransitionSeries.get("Fe:K");
+		ITransitionSeries id2 = LegacyTransitionSeries.get("Zn:K");
 		Assert.assertFalse(id1.equals(id2));
 		Assert.assertEquals(id1, new LegacyTransitionSeries(Element.Fe, TransitionShell.K));
 		Assert.assertEquals(id2, new LegacyTransitionSeries(Element.Zn, TransitionShell.K));
 		
-		LegacyTransitionSeries ids = LegacyTransitionSeries.get("Fe:K+Zn:K");
+		ITransitionSeries ids = LegacyTransitionSeries.get("Fe:K+Zn:K");
 		Assert.assertEquals(ids, LegacyTransitionSeries.summation(id1, id2));
 		
 		

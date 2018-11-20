@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 /**
@@ -19,20 +20,20 @@ public class FittingSet
 
 	private List<Curve>						curves;
 	private boolean							curvesValid = false;
-	private List<LegacyTransitionSeries>			fitTransitionSeries;
+	private List<ITransitionSeries>			fitTransitionSeries;
 	
 	private FittingParameters				parameters;
 
 	
 	public FittingSet() {
 		curves = new ArrayList<Curve>();
-		fitTransitionSeries = new ArrayList<LegacyTransitionSeries>();
+		fitTransitionSeries = new ArrayList<>();
 		this.parameters = new FittingParameters(this);
 	}
 
 	public FittingSet(FittingSet copy) {
 		this();
-		for (LegacyTransitionSeries ts : copy.getFittedTransitionSeries()) {
+		for (ITransitionSeries ts : copy.getFittedTransitionSeries()) {
 			addTransitionSeries(ts);
 		}
 		this.parameters = copy.parameters.copy();
@@ -54,7 +55,7 @@ public class FittingSet
 		if (!curvesValid) {
 			synchronized (this) {
 				if (!curvesValid) {
-					for (LegacyTransitionSeries ts : fitTransitionSeries) {
+					for (ITransitionSeries ts : fitTransitionSeries) {
 						generateCurve(ts);
 					}
 					curvesValid = true;
@@ -68,7 +69,7 @@ public class FittingSet
 		return getCurves().stream().filter(c -> c.getTransitionSeries().isVisible()).collect(Collectors.toList());
 	}
 	
-	public synchronized void addTransitionSeries(LegacyTransitionSeries ts)
+	public synchronized void addTransitionSeries(ITransitionSeries ts)
 	{
 
 		if (fitTransitionSeries.contains(ts)) return;
@@ -77,7 +78,7 @@ public class FittingSet
 
 	}
 	
-	public synchronized void insertTransitionSeries(int index, LegacyTransitionSeries ts)
+	public synchronized void insertTransitionSeries(int index, ITransitionSeries ts)
 	{
 
 		if (fitTransitionSeries.contains(ts)) return;
@@ -86,13 +87,13 @@ public class FittingSet
 
 	}
 
-	private synchronized void generateCurve(LegacyTransitionSeries ts)
+	private synchronized void generateCurve(ITransitionSeries ts)
 	{
 		curves.add(new Curve(ts, parameters));
 	}
 
 
-	public synchronized void remove(LegacyTransitionSeries ts)
+	public synchronized void remove(ITransitionSeries ts)
 	{
 		fitTransitionSeries.remove(ts);
 		invalidateCurves();
@@ -113,11 +114,11 @@ public class FittingSet
 	}
 
 	
-	public synchronized boolean moveTransitionSeriesUp(LegacyTransitionSeries e)
+	public synchronized boolean moveTransitionSeriesUp(ITransitionSeries e)
 	{
 		int insertionPoint;
 		boolean movedTS = false;
-		LegacyTransitionSeries ts;
+		ITransitionSeries ts;
 
 		for (int i = 0; i < fitTransitionSeries.size(); i++)
 		{
@@ -139,7 +140,7 @@ public class FittingSet
 		return movedTS;
 		
 	}
-	public synchronized void moveTransitionSeriesUp(List<LegacyTransitionSeries> tss)
+	public synchronized void moveTransitionSeriesUp(List<ITransitionSeries> tss)
 	{
 		for (int i = 0; i < tss.size(); i++)
 		{
@@ -150,11 +151,11 @@ public class FittingSet
 	}
 
 
-	public synchronized boolean moveTransitionSeriesDown(LegacyTransitionSeries e)
+	public synchronized boolean moveTransitionSeriesDown(ITransitionSeries e)
 	{
 		int insertionPoint;
 		boolean movedTS = false;
-		LegacyTransitionSeries ts;
+		ITransitionSeries ts;
 
 		for (int i = 0; i < fitTransitionSeries.size(); i++)
 		{
@@ -177,7 +178,7 @@ public class FittingSet
 		
 	}
 
-	public synchronized void moveTransitionSeriesDown(List<LegacyTransitionSeries> tss)
+	public synchronized void moveTransitionSeriesDown(List<ITransitionSeries> tss)
 	{
 		for (int i = tss.size()-1; i >= 0; i--)
 		{
@@ -187,16 +188,16 @@ public class FittingSet
 		}
 	}
 
-	public synchronized boolean hasTransitionSeries(LegacyTransitionSeries ts)
+	public synchronized boolean hasTransitionSeries(ITransitionSeries ts)
 	{
 		if (fitTransitionSeries.contains(ts)) return true;
 		return false;
 	}
 
 
-	public synchronized void setTransitionSeriesVisibility(LegacyTransitionSeries ts, boolean show)
+	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean show)
 	{
-		for (LegacyTransitionSeries e : fitTransitionSeries)
+		for (ITransitionSeries e : fitTransitionSeries)
 		{
 			if (ts.equals(e))
 			{
@@ -208,18 +209,18 @@ public class FittingSet
 	}
 
 
-	public synchronized List<LegacyTransitionSeries> getFittedTransitionSeries()
+	public synchronized List<ITransitionSeries> getFittedTransitionSeries()
 	{
 		return new ArrayList<>(fitTransitionSeries);
 	}
 
 
-	public synchronized List<LegacyTransitionSeries> getVisibleTransitionSeries()
+	public synchronized List<ITransitionSeries> getVisibleTransitionSeries()
 	{
 
-		List<LegacyTransitionSeries> fittedElements = new ArrayList<LegacyTransitionSeries>();
+		List<ITransitionSeries> fittedElements = new ArrayList<>();
 
-		for (LegacyTransitionSeries e : fitTransitionSeries)
+		for (ITransitionSeries e : fitTransitionSeries)
 		{
 			if (e.isVisible()) fittedElements.add(e);
 		}

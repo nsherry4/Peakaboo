@@ -13,6 +13,7 @@ import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class SavedFittingSession {
@@ -50,7 +51,7 @@ public class SavedFittingSession {
 				.collect(toList());
 		
 		annotations = new HashMap<>();
-		for (LegacyTransitionSeries ts : controller.getAnnotations().keySet()) {
+		for (ITransitionSeries ts : controller.getAnnotations().keySet()) {
 			SerializedTransitionSeries sts = new SerializedTransitionSeries(ts);
 			annotations.put(sts, controller.getAnnotation(ts));
 		}
@@ -89,7 +90,7 @@ public class SavedFittingSession {
 		controller.clearAnnotations();
 		if (annotations != null) {
 			for (SerializedTransitionSeries sts : annotations.keySet()) {
-				LegacyTransitionSeries ts = sts.toTS();
+				ITransitionSeries ts = sts.toTS();
 				controller.setAnnotation(ts, annotations.get(sts));
 			}
 		}

@@ -13,6 +13,7 @@ import java.util.List;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 import peakaboo.curvefit.peak.transition.Transition;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 
 public class SerializedPeakTable implements PeakTable {
@@ -49,7 +50,7 @@ public class SerializedPeakTable implements PeakTable {
 	private static void save(PeakTable toStore, Path target) throws IOException {
 		
 		List<LegacyTransitionSeries> tslist = toStore.getAll();
-		LegacyTransitionSeries[] tss = tslist.toArray(new LegacyTransitionSeries[0]);
+		ITransitionSeries[] tss = tslist.toArray(new LegacyTransitionSeries[0]);
 		byte[] serialized = encoder.encode(tss);
 		Files.write(target, serialized, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 		

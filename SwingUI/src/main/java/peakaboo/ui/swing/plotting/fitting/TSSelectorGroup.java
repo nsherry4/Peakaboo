@@ -13,7 +13,7 @@ import javax.swing.Scrollable;
 
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ImageButton;
@@ -59,8 +59,8 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	
 	protected abstract void refreshGUI();
-	public abstract void setTransitionSeriesOptions(final List<LegacyTransitionSeries> tss);
-	public abstract List<LegacyTransitionSeries> getTransitionSeries();
+	public abstract void setTransitionSeriesOptions(final List<ITransitionSeries> tss);
+	public abstract List<ITransitionSeries> getTransitionSeries();
 	
 	protected void removeTSSelector(TSSelector tssel)
 	{
@@ -127,7 +127,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	protected final void TSSelectorUpdated(final boolean active)
 	{
 		controller.clearProposedTransitionSeries();
-		List<LegacyTransitionSeries> tss = getTransitionSeries();
+		List<ITransitionSeries> tss = getTransitionSeries();
 		if (tss == null) return;
 		
 		//add all of the transition series that come back from the summation widget

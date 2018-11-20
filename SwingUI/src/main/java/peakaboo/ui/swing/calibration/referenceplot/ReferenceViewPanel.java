@@ -20,6 +20,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import peakaboo.calibration.CalibrationReference;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import swidget.widgets.Spacing;
@@ -65,9 +66,9 @@ public class ReferenceViewPanel extends HeaderLayer {
 		alterations.setBorder(Spacing.bHuge());
 		
 		JTable table = new JTable();
-		List<LegacyTransitionSeries> entries = new ArrayList<>();
+		List<ITransitionSeries> entries = new ArrayList<>();
 		for (TransitionShell type : TransitionShell.values()) {
-			for (LegacyTransitionSeries ts : reference.getTransitionSeries(type)) {
+			for (ITransitionSeries ts : reference.getTransitionSeries(type)) {
 				if (!reference.hasAnnotation(ts)) { continue; }
 				System.out.println(ts);
 				entries.add(ts);
@@ -80,7 +81,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 			
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				LegacyTransitionSeries ts = entries.get(rowIndex);
+				ITransitionSeries ts = entries.get(rowIndex);
 				if (columnIndex == 0) {
 					return ts;
 				} else {
@@ -144,7 +145,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 		column.setMinWidth(80);
 		column.setPreferredWidth(80);
 		column.setMaxWidth(80);
-		column.setCellRenderer(new ListWidgetTableCellRenderer<>(new ListWidget<LegacyTransitionSeries>() {
+		column.setCellRenderer(new ListWidgetTableCellRenderer<>(new ListWidget<ITransitionSeries>() {
 
 			private JLabel label;
 			{
@@ -163,7 +164,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 			}
 			
 			@Override
-			protected void onSetValue(LegacyTransitionSeries value) {
+			protected void onSetValue(ITransitionSeries value) {
 				label.setText(value.toString());
 			}
 		}));

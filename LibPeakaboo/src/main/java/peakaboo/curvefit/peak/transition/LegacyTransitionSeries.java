@@ -224,48 +224,14 @@ public class LegacyTransitionSeries implements Serializable, ITransitionSeries
 	}
 
 	/**
-	 * Accepts a list of {@link LegacyTransitionSeries} and generates a composite TransitionSeries representing the occasional simultaneous detection of all of the given {@link LegacyTransitionSeries}
-	 * @param tss list of {@link LegacyTransitionSeries}
-	 * @return a Composite {@link LegacyTransitionSeries}
-	 */
-	public static LegacyTransitionSeries summation(final List<LegacyTransitionSeries> tss)
-	{
-
-		if (tss.size() == 0) return null;
-
-		if (tss.size() == 1) return tss.get(0);
-		
-		//group the TransitionSeries by equality
-		List<List<LegacyTransitionSeries>> tsGroups = ListOps.group(tss);
-
-		//function for summing two TransitionSeries
-		final BinaryOperator<LegacyTransitionSeries> tsSum = (ts1, ts2) -> ts1.summation(ts2);
-
-
-		//turn the groups of primary transitionseries into a list of pile-up transitionseries
-		List<LegacyTransitionSeries> pileups = tsGroups.stream().map(tsList -> tsList.stream().reduce(tsSum).get()).collect(toList());
-	
-		//sum the pileups
-		LegacyTransitionSeries result = pileups.stream().reduce(tsSum).get();
-		return result;
-
-	}
-	
-	/**
-	 * Convenience method for {@link #summation(List)}
-	 */
-	public static LegacyTransitionSeries summation(LegacyTransitionSeries... tss) {
-		return summation(Arrays.asList(tss));
-	}
-
-	/**
 	 * Creates a new {@link LegacyTransitionSeries} representing the effect of two {@link LegacyTransitionSeries} occasionally being detected simultaneously by a detector 
 	 * @param other the other {@link LegacyTransitionSeries} being detected
 	 * @return a Composite {@link LegacyTransitionSeries}
 	 */
-	public LegacyTransitionSeries summation(final LegacyTransitionSeries other)
+	@Override
+	public LegacyTransitionSeries summation(final ITransitionSeries o)
 	{
-		
+		LegacyTransitionSeries other = (LegacyTransitionSeries) o;
 		// create the new TransitionSeries object
 		final LegacyTransitionSeries newTransitionSeries = new LegacyTransitionSeries(
 			getElement(),
@@ -291,6 +257,42 @@ public class LegacyTransitionSeries implements Serializable, ITransitionSeries
 		return newTransitionSeries;
 
 	}
+	
+	/**
+	 * Accepts a list of {@link LegacyTransitionSeries} and generates a composite TransitionSeries representing the occasional simultaneous detection of all of the given {@link LegacyTransitionSeries}
+	 * @param tss list of {@link LegacyTransitionSeries}
+	 * @return a Composite {@link LegacyTransitionSeries}
+	 */
+	public static ITransitionSeries summation(final List<ITransitionSeries> tss)
+	{
+
+		if (tss.size() == 0) return null;
+
+		if (tss.size() == 1) return tss.get(0);
+		
+		//group the TransitionSeries by equality
+		List<List<ITransitionSeries>> tsGroups = ListOps.group(tss);
+
+		//function for summing two TransitionSeries
+		final BinaryOperator<ITransitionSeries> tsSum = (ts1, ts2) -> ts1.summation(ts2);
+
+
+		//turn the groups of primary transitionseries into a list of pile-up transitionseries
+		List<ITransitionSeries> pileups = tsGroups.stream().map(tsList -> tsList.stream().reduce(tsSum).get()).collect(toList());
+	
+		//sum the pileups
+		ITransitionSeries result = pileups.stream().reduce(tsSum).get();
+		return result;
+
+	}
+	
+	/**
+	 * Convenience method for {@link #summation(List)}
+	 */
+	public static ITransitionSeries summation(ITransitionSeries... tss) {
+		return summation(Arrays.asList(tss));
+	}
+
 
 	@Override
 	public int compareTo(ITransitionSeries o)
@@ -359,7 +361,7 @@ public class LegacyTransitionSeries implements Serializable, ITransitionSeries
 		else
 		{
 			int sum = 0;
-			for (LegacyTransitionSeries ts: componentSeries) { sum += ts.hashCode(); }
+			for (ITransitionSeries ts: componentSeries) { sum += ts.hashCode(); }
 			return sum;
 		}
 	}
@@ -422,13 +424,13 @@ public class LegacyTransitionSeries implements Serializable, ITransitionSeries
 	 * Reads the identifier string and returns a new blank TransitionSeries, or null
 	 * if the identifier string is invalid.
 	 */
-	public static LegacyTransitionSeries get(String identifier) {
+	public static ITransitionSeries get(String identifier) {
 		if (identifier.contains("+")) {
-			List<LegacyTransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(LegacyTransitionSeries::get).collect(Collectors.toList());
+			List<ITransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(ITransitionSeries::get).collect(Collectors.toList());
 			if (tss.contains(null)) {
 				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
 			}
-			LegacyTransitionSeries sum = LegacyTransitionSeries.summation(tss);
+			ITransitionSeries sum = LegacyTransitionSeries.summation(tss);
 			return sum;
 		}
 		String[] parts = identifier.split(":", 2);

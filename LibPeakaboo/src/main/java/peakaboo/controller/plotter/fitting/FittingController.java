@@ -38,6 +38,7 @@ import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.search.PeakProposal;
 import peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.datasource.model.components.metadata.Metadata;
@@ -91,7 +92,7 @@ public class FittingController extends EventfulType<Boolean>
 	}
 	
 	
-	public void addTransitionSeries(LegacyTransitionSeries e)
+	public void addTransitionSeries(ITransitionSeries e)
 	{
 		if (e == null) return;
 		fittingModel.selections.addTransitionSeries(e);
@@ -106,7 +107,7 @@ public class FittingController extends EventfulType<Boolean>
 		//to make up the difference
 		if (to > from) { to--; }
 		
-		LegacyTransitionSeries ts = fittingModel.selections.getFittedTransitionSeries().get(from);
+		ITransitionSeries ts = fittingModel.selections.getFittedTransitionSeries().get(from);
 		fittingModel.selections.remove(ts);
 		fittingModel.selections.insertTransitionSeries(to, ts);
 		
@@ -115,9 +116,9 @@ public class FittingController extends EventfulType<Boolean>
 		
 	}
 	
-	public void addAllTransitionSeries(Collection<LegacyTransitionSeries> tss)
+	public void addAllTransitionSeries(Collection<ITransitionSeries> tss)
 	{
-		for (LegacyTransitionSeries ts : tss)
+		for (ITransitionSeries ts : tss)
 		{
 			fittingModel.selections.addTransitionSeries(ts);
 		}
@@ -133,7 +134,7 @@ public class FittingController extends EventfulType<Boolean>
 		fittingDataInvalidated();
 	}
 
-	public void removeTransitionSeries(LegacyTransitionSeries e)
+	public void removeTransitionSeries(ITransitionSeries e)
 	{
 		
 		fittingModel.selections.remove(e);
@@ -141,35 +142,35 @@ public class FittingController extends EventfulType<Boolean>
 		fittingDataInvalidated();
 	}
 
-	public List<LegacyTransitionSeries> getFittedTransitionSeries()
+	public List<ITransitionSeries> getFittedTransitionSeries()
 	{
 		return fittingModel.selections.getFittedTransitionSeries();
 	}
 
-	public List<LegacyTransitionSeries> getUnfittedTransitionSeries()
+	public List<ITransitionSeries> getUnfittedTransitionSeries()
 	{
-		final List<LegacyTransitionSeries> fitted = getFittedTransitionSeries();
+		final List<ITransitionSeries> fitted = getFittedTransitionSeries();
 		return PeakTable.SYSTEM.getAll().stream().filter(ts -> (!fitted.contains(ts))).collect(toList());
 	}
 	
-	public void setTransitionSeriesVisibility(LegacyTransitionSeries e, boolean show)
+	public void setTransitionSeriesVisibility(ITransitionSeries e, boolean show)
 	{
 		fittingModel.selections.setTransitionSeriesVisibility(e, show);
 		setUndoPoint("Fitting Visiblitiy");
 		fittingDataInvalidated();
 	}
 
-	public boolean getTransitionSeriesVisibility(LegacyTransitionSeries e)
+	public boolean getTransitionSeriesVisibility(ITransitionSeries e)
 	{
 		return e.isVisible();
 	}
 
-	public List<LegacyTransitionSeries> getVisibleTransitionSeries()
+	public List<ITransitionSeries> getVisibleTransitionSeries()
 	{
 		return getFittedTransitionSeries().stream().filter(ts -> ts.isVisible()).collect(toList());
 	}
 
-	public float getTransitionSeriesIntensity(LegacyTransitionSeries ts)
+	public float getTransitionSeriesIntensity(ITransitionSeries ts)
 	{
 		FittingResult result = getFittingResultForTransitionSeries(ts);
 		if (result == null) {
@@ -184,7 +185,7 @@ public class FittingController extends EventfulType<Boolean>
 
 
 
-	public void moveTransitionSeriesUp(List<LegacyTransitionSeries> tss)
+	public void moveTransitionSeriesUp(List<ITransitionSeries> tss)
 	{
 		fittingModel.selections.moveTransitionSeriesUp(tss);
 		setUndoPoint("Move Fitting Up");
@@ -192,7 +193,7 @@ public class FittingController extends EventfulType<Boolean>
 	}
 	
 
-	public void moveTransitionSeriesDown(List<LegacyTransitionSeries> tss)
+	public void moveTransitionSeriesDown(List<ITransitionSeries> tss)
 	{
 		fittingModel.selections.moveTransitionSeriesDown(tss);
 		setUndoPoint("Move Fitting Down");
@@ -213,13 +214,13 @@ public class FittingController extends EventfulType<Boolean>
 	}
 
 	
-	public void addProposedTransitionSeries(LegacyTransitionSeries e)
+	public void addProposedTransitionSeries(ITransitionSeries e)
 	{
 		fittingModel.proposals.addTransitionSeries(e);
 		fittingProposalsInvalidated();
 	}
 
-	public void removeProposedTransitionSeries(LegacyTransitionSeries e)
+	public void removeProposedTransitionSeries(ITransitionSeries e)
 	{
 		fittingModel.proposals.remove(e);
 		fittingProposalsInvalidated();
@@ -231,7 +232,7 @@ public class FittingController extends EventfulType<Boolean>
 		fittingProposalsInvalidated();
 	}
 
-	public List<LegacyTransitionSeries> getProposedTransitionSeries()
+	public List<ITransitionSeries> getProposedTransitionSeries()
 	{
 		return fittingModel.proposals.getFittedTransitionSeries();
 	}
@@ -265,7 +266,7 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections.getFittingParameters().getEscapeType();
 	}
 	
-	public List<LegacyTransitionSeries> proposeTransitionSeriesFromChannel(final int channel, LegacyTransitionSeries currentTS)
+	public List<ITransitionSeries> proposeTransitionSeriesFromChannel(final int channel, ITransitionSeries currentTS)
 	{
 		
 		if (! plot.data().hasDataSet() ) return null;
@@ -286,7 +287,7 @@ public class FittingController extends EventfulType<Boolean>
 	 * Given a channel, return the existing FittingResult which makes most sense to
 	 * 'select' for that channel, or null if there are no good fits.
 	 */
-	public LegacyTransitionSeries selectTransitionSeriesAtChannel(int channel) {      
+	public ITransitionSeries selectTransitionSeriesAtChannel(int channel) {      
         float bestValue = 1f;
         FittingResult bestFit = null;
 
@@ -389,7 +390,7 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selectionResults.getValue();
 	}
 
-	public FittingResult getFittingResultForTransitionSeries(LegacyTransitionSeries ts) {
+	public FittingResult getFittingResultForTransitionSeries(ITransitionSeries ts) {
 		if (getFittingSelectionResults() == null) return null;
 
 		for (FittingResult result : getFittingSelectionResults().getFits())
@@ -401,11 +402,11 @@ public class FittingController extends EventfulType<Boolean>
 		return null;
 	}
 	
-	public List<LegacyTransitionSeries> getHighlightedTransitionSeries() {
+	public List<ITransitionSeries> getHighlightedTransitionSeries() {
 		return fittingModel.highlighted;
 	}
 	
-	public void setHighlightedTransitionSeries(List<LegacyTransitionSeries> highlighted) {
+	public void setHighlightedTransitionSeries(List<ITransitionSeries> highlighted) {
 		//If the highlight already matches, don't bother
 		if (fittingModel.highlighted != null && fittingModel.highlighted.equals(highlighted)) {
 			return;
@@ -457,10 +458,10 @@ public class FittingController extends EventfulType<Boolean>
 		fittingDataInvalidated();
 	}
 
-	public ExecutorSet<List<LegacyTransitionSeries>> autodetectPeaks() {
+	public ExecutorSet<List<ITransitionSeries>> autodetectPeaks() {
 		DerivativePeakSearcher searcher = new DerivativePeakSearcher();
 		ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
-		ExecutorSet<List<LegacyTransitionSeries>> exec = PeakProposal.search(
+		ExecutorSet<List<ITransitionSeries>> exec = PeakProposal.search(
 				data, 
 				searcher, 
 				getFittingSelections(), 
@@ -474,7 +475,7 @@ public class FittingController extends EventfulType<Boolean>
 			if (!exec.getCompleted()) return;
 			if (ran.get()) return;
 			ran.set(true);
-			for (LegacyTransitionSeries ts : exec.getResult()) {
+			for (ITransitionSeries ts : exec.getResult()) {
 				getFittingSelections().addTransitionSeries(ts);
 			}
 			fittingDataInvalidated();
@@ -486,7 +487,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 	}
 
-	public boolean hasAnnotation(LegacyTransitionSeries ts) {
+	public boolean hasAnnotation(ITransitionSeries ts) {
 		if (!fittingModel.annotations.containsKey(ts)) {
 			return false;
 		}
@@ -497,11 +498,11 @@ public class FittingController extends EventfulType<Boolean>
 		return true;
 	}
 	
-	public String getAnnotation(LegacyTransitionSeries ts) {
+	public String getAnnotation(ITransitionSeries ts) {
 		return fittingModel.annotations.get(ts);
 	}
 	
-	public void setAnnotation(LegacyTransitionSeries ts, String annotation) {
+	public void setAnnotation(ITransitionSeries ts, String annotation) {
 		if (annotation.trim().length() == 0) {
 			fittingModel.annotations.remove(ts);
 		} else {
@@ -510,7 +511,7 @@ public class FittingController extends EventfulType<Boolean>
 		updateListeners(false);
 	}
 
-	public Map<LegacyTransitionSeries, String> getAnnotations() {
+	public Map<ITransitionSeries, String> getAnnotations() {
 		return new HashMap<>(fittingModel.annotations);
 	}
 

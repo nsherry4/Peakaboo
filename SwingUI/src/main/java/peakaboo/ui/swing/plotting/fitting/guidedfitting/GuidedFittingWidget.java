@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.controller.plotter.fitting.FittingController;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
@@ -45,19 +46,19 @@ class GuidedFittingWidget extends TSSelectorGroup
 	
 
 	@Override
-	public List<LegacyTransitionSeries> getTransitionSeries()
+	public List<ITransitionSeries> getTransitionSeries()
 	{
 		return selectors.stream().map(s -> s.getTransitionSeries()).collect(toList());
 	}
 
-	public LegacyTransitionSeries getActiveTransitionSeries()
+	public ITransitionSeries getActiveTransitionSeries()
 	{
 		return selectors.get(activeIndex).getTransitionSeries();		
 	}
 	
 
 	@Override
-	public void setTransitionSeriesOptions(final List<LegacyTransitionSeries> tss)
+	public void setTransitionSeriesOptions(final List<ITransitionSeries> tss)
 	{
 		selectors.get(activeIndex).setTransitionSeries(tss);
 	}

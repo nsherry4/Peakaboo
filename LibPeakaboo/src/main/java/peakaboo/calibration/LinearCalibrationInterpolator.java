@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -18,7 +19,7 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 	}
 	
 	private void interpolate(CalibrationProfile profile, TransitionShell tst) {
-		List<LegacyTransitionSeries> knowns = profile.calibrations
+		List<ITransitionSeries> knowns = profile.calibrations
 				.keySet()
 				.stream()
 				.filter(ts -> ts.getShell() == tst)
@@ -26,8 +27,8 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 				.collect(Collectors.toList());
 		if (knowns.size() < 2) { return; }
 		
-		LegacyTransitionSeries previous = null;
-		for (LegacyTransitionSeries known : knowns) {
+		ITransitionSeries previous = null;
+		for (ITransitionSeries known : knowns) {
 			if (previous == null) {
 				previous = known;
 				continue;
@@ -36,7 +37,7 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 			//all missing entries between previous and known
 			for (int i = previous.getElement().ordinal()+1; i < known.getElement().ordinal(); i++) {
 				System.out.println(Element.values()[i]);
-				LegacyTransitionSeries inter = new LegacyTransitionSeries(Element.values()[i], tst);		
+				ITransitionSeries inter = new LegacyTransitionSeries(Element.values()[i], tst);		
 				profile.calibrations.put(inter, interpolate(profile.calibrations, inter, previous, known));
 				profile.interpolated.add(inter);
 			}
@@ -47,7 +48,7 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 		
 	}
 	
-	private float interpolate(Map<LegacyTransitionSeries, Float> calibrations, LegacyTransitionSeries current, LegacyTransitionSeries previous, LegacyTransitionSeries next) {
+	private float interpolate(Map<ITransitionSeries, Float> calibrations, ITransitionSeries current, ITransitionSeries previous, ITransitionSeries next) {
 				
 		float pv = calibrations.get(previous);
 		float nv = calibrations.get(next);
@@ -70,7 +71,7 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 	}
 	
 	@Override
-	public void process(CalibrationReference reference, Map<LegacyTransitionSeries, Float> calibrations) {
+	public void process(CalibrationReference reference, Map<ITransitionSeries, Float> calibrations) {
 		//Not Used
 	}
 	

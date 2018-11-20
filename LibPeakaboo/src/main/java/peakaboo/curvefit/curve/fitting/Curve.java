@@ -13,6 +13,7 @@ import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.transition.Transition;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -29,7 +30,7 @@ public class Curve
 {
 
 	//The {@link TransitionSeries} that this fitting is based on
-	private LegacyTransitionSeries		transitionSeries;
+	private ITransitionSeries		transitionSeries;
 		
 	//The details of how we generate our fitting curve
 	private FittingParameters 		parameters;
@@ -63,7 +64,7 @@ public class Curve
 	 * @param ts the TransitionSeries to fit
 	 * @param parameters the fitting parameters to use to model this curve
 	 */
-	public Curve(LegacyTransitionSeries ts, FittingParameters parameters)
+	public Curve(ITransitionSeries ts, FittingParameters parameters)
 	{
 
 		this.parameters = parameters;
@@ -76,7 +77,7 @@ public class Curve
 		
 	}
 	
-	public void setTransitionSeries(LegacyTransitionSeries ts)
+	public void setTransitionSeries(ITransitionSeries ts)
 	{
 		this.transitionSeries = ts;
 		calculateConstraintMask();
@@ -84,7 +85,7 @@ public class Curve
 		
 	}
 	
-	public LegacyTransitionSeries getTransitionSeries() {
+	public ITransitionSeries getTransitionSeries() {
 		return transitionSeries;
 	}
 	

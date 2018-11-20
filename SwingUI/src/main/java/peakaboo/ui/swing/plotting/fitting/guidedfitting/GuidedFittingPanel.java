@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import peakaboo.controller.plotter.fitting.FittingController;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -32,7 +33,7 @@ public class GuidedFittingPanel extends JPanel
 	private SelectionListControls	selControls;
 	private GuidedFittingWidget		guidedWidget;
 
-	private List<LegacyTransitionSeries>	potentials;
+	private List<ITransitionSeries>	potentials;
 
 
 	public GuidedFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas)
@@ -40,7 +41,7 @@ public class GuidedFittingPanel extends JPanel
 		this.controller = controller;
 		this.canvas = canvas;
 
-		potentials = new ArrayList<LegacyTransitionSeries>();
+		potentials = new ArrayList<ITransitionSeries>();
 
 		selControls = new SelectionListControls("Fittings") {
 

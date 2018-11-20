@@ -16,6 +16,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 	private List<Transition> transitions = new ArrayList<>();
 	
 	public PileUpTransitionSeries(List<ITransitionSeries> primaries) {
+		System.out.println("PileUpTransitionSeries");
 		this.primaries = new ArrayList<>();
 		
 		//just in case this list doesn't just contain primaries, we'll force the issue
@@ -38,6 +39,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 	}
 	
 	public PileUpTransitionSeries(PileUpTransitionSeries other) {
+		System.out.println("PileUpTransitionSeries");
 		this.visible = other.visible;
 		this.primaries = other.primaries.stream().map(ITransitionSeries::copy).collect(Collectors.toList());
 		this.transitions = new ArrayList<>(other.transitions);

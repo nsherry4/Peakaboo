@@ -1,10 +1,6 @@
 package peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +11,9 @@ import javax.swing.JScrollPane;
 import cyclops.Coord;
 import peakaboo.calibration.Composition;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
-import peakaboo.mapping.Mapping;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import swidget.widgets.Spacing;
 import swidget.widgets.layout.PropertyPanel;
-import swidget.widgets.layout.TitledPanel;
 
 public class ConcentrationsPanel extends JPanel {
 
@@ -55,13 +48,13 @@ public class ConcentrationsPanel extends JPanel {
 		
 		int index = (mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x) + 1;
 		if (controller.getSettings().getView().isValidPoint(mapCoord)) {
-			List<LegacyTransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
+			List<ITransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
 			Map<String, String> properties = new LinkedHashMap<>();
 			
 			Composition ppm = Composition.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), ts -> {
 				return controller.getSettings().getMapFittings().getMapForTransitionSeries(ts).get(index);
 			});
-			for (LegacyTransitionSeries ts : tss) {
+			for (ITransitionSeries ts : tss) {
 				properties.put(ts.getElement().toString(), ppm.getPercent(ts.getElement()) );
 			}
 			view.setProperties(properties);
@@ -71,9 +64,9 @@ public class ConcentrationsPanel extends JPanel {
 	}
 	
 	private void showEmpty() {
-		List<LegacyTransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
+		List<ITransitionSeries> tss = controller.getSettings().getMapFittings().getAllTransitionSeries();
 		Map<String, String> properties = new LinkedHashMap<>();
-		for (LegacyTransitionSeries ts : tss) {
+		for (ITransitionSeries ts : tss) {
 			properties.put(ts.getElement().name(), "-");
 		}
 		view.setProperties(properties);

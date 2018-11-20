@@ -82,7 +82,7 @@ import peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.dataset.DatasetReadResult;
@@ -934,7 +934,7 @@ public class PlotPanel extends TabbedLayerPanel
 	
 	public void actionSaveFittingInformationToOutputStream(OutputStream os) {
 		
-		List<LegacyTransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
+		List<ITransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
 		
 		try {
 			// get an output stream to write the data to
@@ -949,7 +949,7 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			// write out the data
 			float intensity;
-			for (LegacyTransitionSeries ts : tss) {
+			for (ITransitionSeries ts : tss) {
 
 				if (ts.isVisible()) {
 					intensity = controller.fitting().getTransitionSeriesIntensity(ts);
@@ -1107,7 +1107,7 @@ public class PlotPanel extends TabbedLayerPanel
 		this.pushLayer(advancedPanel);
 	}
 
-	public void actionAddAnnotation(LegacyTransitionSeries selected) {
+	public void actionAddAnnotation(ITransitionSeries selected) {
 		if (!controller.fitting().getFittingSelections().getFittedTransitionSeries().contains(selected)) {
 			return;
 		}
@@ -1139,7 +1139,7 @@ public class PlotPanel extends TabbedLayerPanel
 
 	public void actionShowConcentrations() {
 		CalibrationProfile p = controller.calibration().getCalibrationProfile();
-		List<LegacyTransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
+		List<ITransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
 		Composition ppm = Composition.calculate(tss, p, ts -> {
 			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
 			float intensity = 0;

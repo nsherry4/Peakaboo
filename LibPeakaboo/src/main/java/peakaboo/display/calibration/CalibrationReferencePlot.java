@@ -10,6 +10,7 @@ import java.util.function.Function;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import peakaboo.calibration.CalibrationReference;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -24,12 +25,12 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 	}
 	
 	@Override
-	protected List<LegacyTransitionSeries> getKeys(TransitionShell type) {
+	protected List<ITransitionSeries> getKeys(TransitionShell type) {
 		return ref.getTransitionSeries(type);
 	}
 
 	@Override
-	protected Map<LegacyTransitionSeries, Float> getData() {
+	protected Map<ITransitionSeries, Float> getData() {
 		return ref.getConcentrations();
 	}
 
@@ -54,7 +55,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 	}
 
 	@Override
-	protected String getHighlightText(LegacyTransitionSeries ts) {
+	protected String getHighlightText(ITransitionSeries ts) {
 		String title = ts.getElement().toString();
 		String annotation = ref.getAnnotation(ts);
 		if (annotation.trim().length() > 0) {
@@ -73,7 +74,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 	}
 
 	@Override
-	protected Map<LegacyTransitionSeries, Float> getFadedData() {
+	protected Map<ITransitionSeries, Float> getFadedData() {
 		return new HashMap<>();
 	}
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import cyclops.Pair;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.LegacyTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
@@ -45,7 +46,7 @@ public class Corrections
 		
 	}
 	
-	public Float getCorrection(final LegacyTransitionSeries ts)
+	public Float getCorrection(final ITransitionSeries ts)
 	{	
 		return correctionPairs.stream().filter(p -> p.first.equals(ts)).findFirst().orElse(new Pair<>()).second;
 	}

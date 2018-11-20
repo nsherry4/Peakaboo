@@ -18,11 +18,13 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	private boolean visible;
 	
 	public PrimaryTransitionSeries(Element e, TransitionShell s) {
+		System.out.println("PrimaryTransitionSeries");
 		this.element = e;
 		this.shell = s;
 	}
 	
 	public PrimaryTransitionSeries(PrimaryTransitionSeries other) {
+		System.out.println("PrimaryTransitionSeries");
 		this.transitions = new ArrayList<>(other.transitions);
 		this.shell = other.shell;
 		this.element = other.element;
