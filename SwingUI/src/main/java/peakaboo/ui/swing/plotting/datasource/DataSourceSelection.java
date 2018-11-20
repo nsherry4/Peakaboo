@@ -57,7 +57,6 @@ public class DataSourceSelection extends ListPickerLayer<DataSource>
 
 		@Override
 		protected void onSetValue(DataSource value) {
-			System.out.println("onSetValue");
 			if (titleLabel != null) titleLabel.setText(value.getFileFormat().getFormatName());
 			if (descLabel != null) {
 				String desc = value.getFileFormat().getFormatDescription();

@@ -412,7 +412,6 @@ public class PluginsOverview extends HeaderLayer {
 		box.addRight(b6);
 		
 		
-		System.out.println(frame.getContentPane().getLayout());
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(box, BorderLayout.SOUTH);
 		

@@ -20,8 +20,6 @@ public class FittingLabel extends DataLabel {
 		this.annotation = annotation;
 		
 		ITransitionSeries ts = fit.getTransitionSeries();
-		System.out.println(ts);
-		System.out.println(ts.getStrongestTransition());
 		float energy = ts.getStrongestTransition().energyValue;
 		index = ecal.channelFromEnergy(energy);
 		super.title = getTitle();

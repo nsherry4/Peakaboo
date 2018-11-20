@@ -36,7 +36,6 @@ public class LinearCalibrationInterpolator implements CalibrationProcessor {
 						
 			//all missing entries between previous and known
 			for (int i = previous.getElement().ordinal()+1; i < known.getElement().ordinal(); i++) {
-				System.out.println(Element.values()[i]);
 				ITransitionSeries inter = new PrimaryTransitionSeries(Element.values()[i], tst);		
 				profile.calibrations.put(inter, interpolate(profile.calibrations, inter, previous, known));
 				profile.interpolated.add(inter);

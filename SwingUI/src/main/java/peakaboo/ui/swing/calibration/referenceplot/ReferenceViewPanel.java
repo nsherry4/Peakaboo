@@ -69,7 +69,6 @@ public class ReferenceViewPanel extends HeaderLayer {
 		for (TransitionShell type : TransitionShell.values()) {
 			for (ITransitionSeries ts : reference.getTransitionSeries(type)) {
 				if (!reference.hasAnnotation(ts)) { continue; }
-				System.out.println(ts);
 				entries.add(ts);
 			}
 		}

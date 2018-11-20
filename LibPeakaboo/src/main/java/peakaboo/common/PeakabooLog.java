@@ -42,7 +42,6 @@ public class PeakabooLog {
 		props.setProperty("java.util.logging.ConsoleHandler.level", logLevelString);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(512);
 		try {
-			System.out.println(new String(bos.toByteArray()));
 			props.store(bos, "No Comment");
 			bos.flush();
 			LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(bos.toByteArray()));
