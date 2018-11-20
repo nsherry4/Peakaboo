@@ -426,7 +426,7 @@ public class LegacyTransitionSeries implements Serializable, ITransitionSeries
 	 */
 	public static ITransitionSeries get(String identifier) {
 		if (identifier.contains("+")) {
-			List<ITransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(ITransitionSeries::get).collect(Collectors.toList());
+			List<ITransitionSeries> tss = Arrays.asList(identifier.split("\\+")).stream().map(LegacyTransitionSeries::get).collect(Collectors.toList());
 			if (tss.contains(null)) {
 				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
 			}
