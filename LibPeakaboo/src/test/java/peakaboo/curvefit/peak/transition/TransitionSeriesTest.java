@@ -17,7 +17,7 @@ public class TransitionSeriesTest {
 		
 		PeakTable table = new KrausePeakTable();
 		
-		LegacyTransitionSeries ask1 = table.get(Element.As, TransitionShell.K);
+		ITransitionSeries ask1 = table.get(Element.As, TransitionShell.K);
 		ITransitionSeries ask2 = table.get(Element.As, TransitionShell.K);
 		ITransitionSeries ask3 = table.get(Element.As, TransitionShell.L);
 		ITransitionSeries ask4 = table.get(Element.Fe, TransitionShell.K);
@@ -28,7 +28,7 @@ public class TransitionSeriesTest {
 		Assert.assertFalse(ask2.equals(ask4));
 		Assert.assertFalse(ask3.equals(ask4));
 		
-		Map<LegacyTransitionSeries, Boolean> map = new HashMap<>();
+		Map<ITransitionSeries, Boolean> map = new HashMap<>();
 		map.put(ask1, true);
 		Assert.assertTrue(map.containsKey(ask1));
 		Assert.assertTrue(map.containsKey(ask2));

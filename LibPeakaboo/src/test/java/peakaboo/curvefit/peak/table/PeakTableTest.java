@@ -40,7 +40,7 @@ public class PeakTableTest {
 		
 		
 		//Testing convenience methods of PeakTable
-		List<LegacyTransitionSeries> series = combined.getForElement(Element.Au);
+		List<ITransitionSeries> series = combined.getForElement(Element.Au);
 		Assert.assertTrue(series.size() == 3);
 		Assert.assertEquals(series.get(0).getElement(), Element.Au);
 		Assert.assertEquals(series.get(0).getShell(), TransitionShell.K);

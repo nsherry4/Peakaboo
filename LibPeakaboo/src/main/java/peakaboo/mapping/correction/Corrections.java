@@ -18,12 +18,12 @@ public class Corrections
 {
 
 	private String name;
-	private ArrayList<Pair<LegacyTransitionSeries, Float>> correctionPairs;
+	private ArrayList<Pair<ITransitionSeries, Float>> correctionPairs;
 	
 	public Corrections(URL file) throws IOException
 	{
 	
-		correctionPairs = new ArrayList<Pair<LegacyTransitionSeries, Float>>();
+		correctionPairs = new ArrayList<>();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file.openStream()));
 		name = reader.readLine();
@@ -40,7 +40,7 @@ public class Corrections
 			
 			float factor = Float.parseFloat(parts[2]);
 			
-			correctionPairs.add(new Pair<LegacyTransitionSeries, Float>(PeakTable.SYSTEM.get(e, tst), factor));
+			correctionPairs.add(new Pair<ITransitionSeries, Float>(PeakTable.SYSTEM.get(e, tst), factor));
 		}
 		
 		
