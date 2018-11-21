@@ -35,7 +35,7 @@ import swidget.widgets.buttons.ToolbarImageButton;
 
 class MapperToolbar extends JToolBar {
 
-	private ToolbarImageButton	showConcentrations, examineSubset;
+	private ToolbarImageButton	showComposition, examineSubset;
 	
 	private JCheckBoxMenuItem	monochrome, logview;
 	private JMenuItem			title, spectrum, coords, dstitle;
@@ -69,12 +69,12 @@ class MapperToolbar extends JToolBar {
 		this.addSeparator();
 		
 		
-		showConcentrations = new ToolbarImageButton("Composition")
+		showComposition = new ToolbarImageButton("Composition")
 				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Get fitting compositions for the selection")
 				.withSignificance(true);
 		
-		showConcentrations.addActionListener(e -> {
+		showComposition.addActionListener(e -> {
 			
 			List<Integer> indexes = new ArrayList<>();
 			
@@ -103,7 +103,7 @@ class MapperToolbar extends JToolBar {
 			panel.pushLayer(concentrations);
 							
 		});
-		this.add(showConcentrations, c);
+		this.add(showComposition, c);
 		c.gridx++;
 		
 		
@@ -148,7 +148,7 @@ class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		showConcentrations.setEnabled(false);
+		showComposition.setEnabled(false);
 		examineSubset.setEnabled(false);
 		
 		c.weightx = 1.0;
@@ -171,10 +171,10 @@ class MapperToolbar extends JToolBar {
 			
 			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
 			{
-				showConcentrations.setEnabled(true);
+				showComposition.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
 				examineSubset.setEnabled(true);
 			} else {
-				showConcentrations.setEnabled(false);
+				showComposition.setEnabled(false);
 				examineSubset.setEnabled(false);
 			}
 
