@@ -1118,7 +1118,7 @@ public class PlotPanel extends TabbedLayerPanel
 
 	public void actionShowConcentrations() {
 		CalibrationProfile p = controller.calibration().getCalibrationProfile();
-		List<ITransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
+		List<ITransitionSeries> tss = controller.fitting().getVisibleTransitionSeries();
 		Composition ppm = Composition.calculate(tss, p, ts -> {
 			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
 			float intensity = 0;

@@ -15,12 +15,14 @@ import peakaboo.curvefit.peak.transition.TransitionShell;
 public class Composition {
 
 	private Map<Element, Float> concentrations;
+	private Map<Element, ITransitionSeries> sources;
 	private NumberFormat format = new DecimalFormat("0.0");;
 	private CalibrationProfile profile;
 	
-	public Composition(Map<Element, Float> concentrations, CalibrationProfile profile) {
+	public Composition(Map<Element, Float> concentrations, Map<Element, ITransitionSeries> sources, CalibrationProfile profile) {
 		this.concentrations = concentrations;
 		this.profile = profile;
+		this.sources = sources;
 	}
 	
 	public List<Element> elementsByZ() {
@@ -51,7 +53,17 @@ public class Composition {
 		return concentrations.containsKey(e);
 	}
 	
+	public boolean isCalibrated(Element e) {
+		if (!sources.containsKey(e)) {
+			return false;
+		}
+		ITransitionSeries source = getCompositionSource(e);
+		return profile.contains(source);
+	}
 	
+	public ITransitionSeries getCompositionSource(Element e) {
+		return sources.getOrDefault(e, null);
+	}
 	
 	public CalibrationProfile getProfile() {
 		return profile;
@@ -61,9 +73,23 @@ public class Composition {
 
 		//find best TransitionSeries per element to measure
 		Map<Element, ITransitionSeries> elements = new LinkedHashMap<>();
-		for (TransitionShell type : new TransitionShell[] {TransitionShell.M, TransitionShell.L, TransitionShell.K}) {
+		for (TransitionShell shell : new TransitionShell[] {TransitionShell.M, TransitionShell.L, TransitionShell.K}) {
 			for (ITransitionSeries ts : tss) {
-				if (ts.getShell() != type) { continue; }
+				Element e = ts.getElement();
+				if (ts.getShell() != shell) { continue; }
+				
+				/*
+				 * if there is already an entry, we generally want to replace it with a lower
+				 * shell, but we also don't want to replace a calibrated value with an
+				 * uncalibrated one.
+				 */
+				if (elements.containsKey(e)) {
+					ITransitionSeries prev = elements.get(e);
+					//if the previous entry is calibrated, but the new one isn't, skip it
+					if (profile.contains(prev) && !profile.contains(ts)) {
+						continue;
+					}
+				}
 				elements.put(ts.getElement(), ts);
 			}
 		}
@@ -87,7 +113,7 @@ public class Composition {
 		for (Element element : sorted) {
 			ppm.put(element, intensities.get(element) / sum * 1e6f);
 		}
-		return new Composition(ppm, profile);
+		return new Composition(ppm, elements, profile);
 	}
 	
 }

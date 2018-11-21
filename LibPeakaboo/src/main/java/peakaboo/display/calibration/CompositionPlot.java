@@ -32,33 +32,40 @@ public class CompositionPlot {
 	private Composition comp;
 	
 	private PlotDrawing plotDrawing;
-	private Spectrum data;
+	private Spectrum calibratedData;
+	private Spectrum uncalibratedData;
 	private DrawingRequest dr = new DrawingRequest();
 	private List<PlotPainter> plotPainters;
 	private List<AxisPainter> axisPainters;
 		
 	public CompositionPlot(Composition conc) {
 		this.comp = conc;
-		this.data = getData();
+		calculateData();
 		configure();
 	}
 	
 	protected void configure() {
 	
 		dr.dataHeight = 1;
-		dr.dataWidth = data.size();
+		dr.dataWidth = calibratedData.size();
 		dr.drawToVectorSurface = false;
-		dr.maxYIntensity = data.max();
+		dr.maxYIntensity = Math.max(uncalibratedData.max(), calibratedData.max());
 		dr.unitSize = 1f;
 		dr.viewTransform = ViewTransform.LINEAR;
 		
 		plotPainters = new ArrayList<>();
 		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, dr.maxYIntensity*100f)));
 
-		plotPainters.add(new AreaPainter(data, 
+		plotPainters.add(new AreaPainter(calibratedData, 
 				new PaletteColour(0xff00897B), 
 				new PaletteColour(0xff00796B), 
 				new PaletteColour(0xff004D40)
+			).withTraceType(TraceType.BAR));
+		
+		plotPainters.add(new AreaPainter(uncalibratedData, 
+				new PaletteColour(0xff89000e), 
+				new PaletteColour(0xff79000e), 
+				new PaletteColour(0xff4d000d)
 			).withTraceType(TraceType.BAR));
 		
 
@@ -71,7 +78,7 @@ public class CompositionPlot {
 		Function<Integer, String> sensitivityFormatter = i -> format.format(  ((float)i/10000f)  ) + "%";
 		axisPainters.add(new TickMarkAxisPainter(
 				new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter), 
-				new TickFormatter(-0.5f, data.size()-1-0.5f+0.999f, i -> elements.get(i).name()), 
+				new TickFormatter(-0.5f, calibratedData.size()-1-0.5f+0.999f, i -> elements.get(i).name()), 
 				null, 
 				new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter),
 				false, 
@@ -93,15 +100,22 @@ public class CompositionPlot {
 		return plotDrawing;
 	}
 	
-	private Spectrum getData() {	
+	private void calculateData() {	
 		
 		List<Element> es = comp.elementsByConcentration();
-		Spectrum spectrum = new ISpectrum(es.size());
+		calibratedData = new ISpectrum(es.size());
+		uncalibratedData = new ISpectrum(es.size());
 		for (Element e : es) {
-			spectrum.add(comp.get(e));
+			if (comp.isCalibrated(e)) {
+				calibratedData.add(comp.get(e));
+				uncalibratedData.add(0);
+			} else {
+				calibratedData.add(0);
+				uncalibratedData.add(comp.get(e));
+			}
+			
 		}
 		
-		return spectrum;
 	}
 
 	

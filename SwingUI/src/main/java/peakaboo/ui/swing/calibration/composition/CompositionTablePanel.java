@@ -13,6 +13,7 @@ import javax.swing.table.AbstractTableModel;
 
 import peakaboo.calibration.Composition;
 import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import swidget.widgets.Spacing;
 
 public class CompositionTablePanel extends JPanel {
@@ -31,8 +32,17 @@ public class CompositionTablePanel extends JPanel {
 				Element e = elements.get(rowIndex);
 				if (columnIndex == 0) {
 					return e.toString();
-				} else {
+				} else if (columnIndex == 1) {
 					return comp.getPercent(e);
+				} else {
+					ITransitionSeries ts = comp.getCompositionSource(e);
+					if (ts == null) {
+						return "No Source (!)";
+					} else if (!comp.isCalibrated(e)) {
+						return "Not Calibrated (!)";
+					} else {
+						return "Calibrated from " + ts;
+					}
 				}
 			}
 			
@@ -43,14 +53,16 @@ public class CompositionTablePanel extends JPanel {
 			
 			@Override
 			public int getColumnCount() {
-				return 2;
+				return 3;
 			}
 			
 			public String getColumnName(int columnIndex) {
 				if (columnIndex == 0) {
 					return "Element";
-				} else {
+				} else if (columnIndex == 1) {
 					return "Composition";
+				} else {
+					return "Notes";
 				}
 			}
 			
@@ -59,9 +71,14 @@ public class CompositionTablePanel extends JPanel {
 		JTable table = new JTable(dm);
 		
 		
-		table.getColumnModel().getColumn(0).setMaxWidth(100);
-		table.getColumnModel().getColumn(0).setMinWidth(100);
-		table.getColumnModel().getColumn(0).setPreferredWidth(100);
+		table.getColumnModel().getColumn(0).setMaxWidth(120);
+		table.getColumnModel().getColumn(0).setMinWidth(120);
+		table.getColumnModel().getColumn(0).setPreferredWidth(120);
+		
+		table.getColumnModel().getColumn(1).setMaxWidth(120);
+		table.getColumnModel().getColumn(1).setMinWidth(120);
+		table.getColumnModel().getColumn(1).setPreferredWidth(120);
+		
 		table.setFillsViewportHeight(true);
 		
 		JScrollPane scroller = new JScrollPane(table);
