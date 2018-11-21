@@ -15,6 +15,7 @@ import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.MultiDirectionalSimplex;
+import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizer;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
 
 import cyclops.ISpectrum;
@@ -71,16 +72,20 @@ public class OptimizingFittingSolver implements FittingSolver {
 			public double value(double[] point) {
 				
 				//We really don't like negative scaling factors, they don't make any logical sense.
+				float containsNegatives = 0;
 				for (double v : point) {
 					if (v < 0) {
-						return Math.abs(v) * 1000000;
+						containsNegatives++;
 					}
 				}
 				
 				
 				ReadOnlySpectrum residual = test(point, context);
-				
-				return score(point, intenseChannels, residual);
+				float score = score(point, intenseChannels, residual);
+				if (containsNegatives > 0) {
+					return score * (1f+containsNegatives);
+				}
+				return score;
 				
 			}
 		};
@@ -103,23 +108,34 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		//308 reps on test session
 		//optimizer = new PowellOptimizer(0.001d, 1d);
+		PointValuePair result = new PowellOptimizer(0.01d, 1d).optimize(
+				new ObjectiveFunction(cost), 
+				new InitialGuess(guess),
+				new MaxIter(1000000),
+				new MaxEval(1000000),
+				new NonNegativeConstraint(true), 
+				GoalType.MINIMIZE);
 		
 		//265 reps on test session but occasionally dies?
 		//optimizer = new BOBYQAOptimizer(Math.max(size+2, size*2));
 		
 		//-1 for rel means don't use rel, just use abs difference
-		PointValuePair result = new SimplexOptimizer(-1d, 1d).optimize(
-				new ObjectiveFunction(cost), 
-				new InitialGuess(guess),
-				new MaxIter(100000),
-				new MaxEval(100000),
-				new NonNegativeConstraint(true), 
-				GoalType.MINIMIZE,
-				new MultiDirectionalSimplex(guess)
-				);
+//		PointValuePair result = new SimplexOptimizer(-1d, 1d).optimize(
+//				new ObjectiveFunction(cost), 
+//				new InitialGuess(guess),
+//				new MaxIter(100000),
+//				new MaxEval(100000),
+//				new NonNegativeConstraint(true), 
+//				GoalType.MINIMIZE,
+//				new MultiDirectionalSimplex(guess)
+//				);
 		
 		
 		double[] scalings = result.getPoint();
+		System.out.println("--------------");
+		ReadOnlySpectrum residual = test(scalings, context);
+		System.out.println(score(scalings, intenseChannels, residual));
+		
 		return evaluate(scalings, context);
 		
 		
@@ -150,7 +166,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 			//We penalize this to prevent making up data where none exists.
 			if (channel < 0) {
 				channel = Math.abs(channel);
-				channel *= 5;
+				channel *= 50;
 			}
 			score += channel;
 		}
