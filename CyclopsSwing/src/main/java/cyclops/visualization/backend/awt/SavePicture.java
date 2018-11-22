@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
@@ -218,13 +219,11 @@ public class SavePicture extends JPanel
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0.0;
 		
-		panel.setBorder(Spacing.bHuge());
-		
 		return panel;
 		
 	}
 
-	public JPanel createOptionsPane()
+	public JPanel createFormatPane()
 	{
 
 		List<SurfaceType> items = new ArrayList<>(Arrays.asList(SurfaceType.values()));
@@ -238,12 +237,24 @@ public class SavePicture extends JPanel
 		Color border = UIManager.getColor("stratus-widget-border");
 		if (border == null) { border = Color.LIGHT_GRAY; }
 		table.setBorder(new MatteBorder(1, 1, 1, 1, border));
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.getSelectionModel().setSelectionInterval(0, 0);
 		
 		JPanel outer = new JPanel(new BorderLayout());
-		outer.setBorder(Spacing.bHuge());
 		outer.add(table, BorderLayout.CENTER);
 
 		return outer;
+
+	}
+
+
+	public JPanel createOptionsPane() {
+		
+		JPanel panel = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
+		panel.setBorder(Spacing.bHuge());
+		panel.add(createDimensionsPane(), BorderLayout.NORTH);
+		panel.add(createFormatPane(), BorderLayout.CENTER);
+		return panel;
 
 	}
 
