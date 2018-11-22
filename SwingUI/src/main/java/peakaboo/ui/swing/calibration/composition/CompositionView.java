@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import peakaboo.calibration.Composition;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import stratus.controls.ButtonLinker;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
@@ -80,6 +81,22 @@ public class CompositionView extends HeaderLayer {
 			sb.append(e.name());
 			sb.append(": ");
 			sb.append(conc.getPercent(e));
+			
+			
+			ITransitionSeries ts = conc.getCompositionSource(e);
+			if (ts == null) {
+				sb.append(" (No Source!)");
+			} else if (!conc.isCalibrated(e)) {
+				sb.append(" (Not Calibrated!)");
+			} else {
+				/*
+				 * We don't include this in the text output to avoid clutter and make the text
+				 * easier to use in other documents. Missing calibration still requires a
+				 * notice, though.
+				 */
+			}
+			
+			
 			sb.append("\n");
 		}
 		return sb.toString();
