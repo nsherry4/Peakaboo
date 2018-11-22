@@ -15,7 +15,6 @@ import javax.swing.border.TitledBorder;
 
 import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.ui.swing.mapping.sidebar.ConcentrationsPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapContourPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingPanel;
@@ -29,7 +28,6 @@ class MapperSidebar extends JPanel
 
 	private MappingController		controller;
 	private MapperPanel 			tabPanel;
-	private ConcentrationsPanel concentrations;
 
 
 	MapperSidebar(MapperPanel tabPanel, MappingController controller)
@@ -136,9 +134,7 @@ class MapperSidebar extends JPanel
 
 
 	public void showValueAtCoord(Coord<Integer> mapCoordinateAtPoint) {
-		if (concentrations != null) {
-			concentrations.show(mapCoordinateAtPoint);
-		}
+		//noopo
 	}
 
 
