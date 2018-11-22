@@ -13,13 +13,11 @@ rev: '1.0'
 uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
 
 fitted:
-  Na:K: Omitted, Too Concentrated
-  Si:K: Omitted, Too Concentrated
+#  Na:K: Omitted, Too Concentrated
+#  Si:K: Omitted, Too Concentrated
   P:K: No Value Available
   S:K: No Value Available
   Ar:K: Fitted, Not in Sample
-  Ca:K: Omitted, Too Concentrated
-  Sc:K: Omitted, Overlapped with Sulfur K
   Sn:L: Omitted, Overlapped with Calcium K
   Sb:L: Omitted, Overlapped with Calcium K
   Te:L: Omitted, Overlapped with Sulfur K
@@ -27,6 +25,9 @@ fitted:
   Tl:L: Omitted, No Confidence in Value
 
 concentrations:
+  Ca:K: 11450.0
+  Na:K: 13800.0
+  Si:K: 72200.0
   Mg:K: 460.0
   Al:K: 2100.0
   Cl:K: 470.0
@@ -49,6 +50,8 @@ concentrations:
   Zr:K: 440.0
   Nb:K: 440.0
   Mo:K: 440.0
+  Ag:K: 200.0
+  Cd:K: 250.0
   Ag:L: 200.0
   Cd:L: 250.0
   In:L: 450.0
