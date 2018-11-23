@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.LayoutManager2;
 import java.awt.LinearGradientPaint;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,6 +33,10 @@ public class HeaderBox extends PaintedPanel {
 	private Color base;
 	
 	private Component left, centre, right;
+	private Component close;
+	private JPanel rightWrap, closePanel;
+	private Runnable onClose;
+	boolean showClose;
 	
 	
 	public HeaderBox(Component left, String title, Component right) {
@@ -40,6 +45,7 @@ public class HeaderBox extends PaintedPanel {
 		this.right = right;
 		this.centre = makeHeaderTitle(title);
 		
+		init();
 		make();
 	}
 	
@@ -49,6 +55,7 @@ public class HeaderBox extends PaintedPanel {
 		this.centre = centre;
 		this.right = right;
 		
+		init();
 		make();
 	}
 	
@@ -56,6 +63,14 @@ public class HeaderBox extends PaintedPanel {
 		this(null, "", null);
 	}
 
+	private void init() {
+		rightWrap = new ClearPanel(new BorderLayout(Spacing.medium, Spacing.medium));
+		close = HeaderBox.closeButton().withAction(() -> onClose.run());
+		closePanel = new ClearPanel(new BorderLayout());
+		closePanel.add(close, BorderLayout.CENTER);
+		
+	}
+	
 	private void make() {
 		
 		removeAll();
@@ -65,12 +80,28 @@ public class HeaderBox extends PaintedPanel {
 		setLayout(new BorderLayout());
 		JPanel inner = new ClearPanel();
 		add(inner, BorderLayout.CENTER);
-				
-		HeaderLayout layout = new HeaderLayout(left, centre, right);
+		
+		rightWrap.removeAll();
+		if (right != null) {
+			rightWrap.add(right, BorderLayout.CENTER);
+			Color border = UIManager.getColor("stratus-widget-border");
+			if (border == null) { border = Color.LIGHT_GRAY; }
+			closePanel.setBorder(new CompoundBorder(new MatteBorder(0, 1, 0, 0, border), new EmptyBorder(0, Spacing.medium, 0, 0)));
+			
+		} else {
+			closePanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+		}
+		if (showClose) {
+			rightWrap.add(closePanel, BorderLayout.EAST);
+		}
+		
+		HeaderLayout layout = new HeaderLayout(left, centre, rightWrap);
 		inner.setLayout(layout);
 		if (left != null) inner.add(left);
 		if (centre != null) inner.add(centre);
-		if (right != null) inner.add(right);
+		if (right != null || showClose) { 
+			inner.add(rightWrap);
+		}
 		
 		setBackgroundPaint(new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
 			lighten(base, 0.05f),
@@ -131,6 +162,14 @@ public class HeaderBox extends PaintedPanel {
 		make();
 	}
 
+	public void setShowClose(boolean show) {
+		this.showClose = show;
+		make();
+	}
+	
+	public boolean getShowClose() {
+		return showClose;
+	}
 	
 	
 	
@@ -286,5 +325,9 @@ public class HeaderBox extends PaintedPanel {
 		frame.setVisible(true);
 		
 	}
-	
+
+	public void setOnClose(Runnable onClose) {
+		this.onClose = onClose;
+	}
+
 }

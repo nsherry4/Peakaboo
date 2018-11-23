@@ -97,7 +97,7 @@ public abstract class ListPickerLayer<T> extends HeaderLayer {
 	}
 	
 	public ListPickerLayer(LayerPanel owner, String title, List<T> items, Consumer<T> onAccept) {
-		super(owner);
+		super(owner, false);
 		this.items = items;
 		this.onAccept = t -> {
 			remove();

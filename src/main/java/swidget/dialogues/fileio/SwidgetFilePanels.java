@@ -36,7 +36,7 @@ public class SwidgetFilePanels {
 			ImageButton affirmative = new ImageButton(chooser.getApproveButtonText()).withStateDefault();
 			ImageButton negative = new ImageButton("Cancel");
 			
-			HeaderLayer layer = new HeaderLayer(tabPanel);
+			HeaderLayer layer = new HeaderLayer(tabPanel, false);
 			layer.getHeader().setComponents(negative, title, affirmative);
 			layer.setBody(chooser);
 			

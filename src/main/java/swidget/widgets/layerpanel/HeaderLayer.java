@@ -20,19 +20,19 @@ public class HeaderLayer extends ModalLayer {
 	private HeaderBox header;
 	
 
-	public HeaderLayer(LayerPanel owner) {
-		this(owner, new JPanel());
+	public HeaderLayer(LayerPanel owner, boolean showClose) {
+		this(owner, new JPanel(), showClose);
 	}
 	
-	private HeaderLayer(LayerPanel owner, JPanel content) {
+	private HeaderLayer(LayerPanel owner, JPanel content, boolean showClose) {
 		super(owner, content);	
 		this.content = content;
 		content.setLayout(new BorderLayout());
 				
 		//headerbox
 		this.header = new HeaderBox();
-		ImageButton close = HeaderBox.closeButton().withAction(this::remove);
-		header.setRight(close);
+		this.header.setShowClose(showClose);
+		this.header.setOnClose(this::remove);
 		content.add(header, BorderLayout.NORTH);
 		
 		
