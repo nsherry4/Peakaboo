@@ -79,7 +79,7 @@ public class CalibrationProfile {
 		new SigmoidCalibrationInterpolator().process(reference, this);
 		
 		//smooth calibrations
-		new CalibrationSmoother().process(reference, this);
+		//new CalibrationSmoother().process(reference, this);
 		
 		//normalize against anchor
 		new CalibrationNormalizer().process(reference, this);
