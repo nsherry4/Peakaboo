@@ -97,14 +97,9 @@ public class PluginsOverview extends HeaderLayer {
 		
 		ButtonLinker edits = new ButtonLinker(add, remove, reload);
 		ButtonLinker tools = new ButtonLinker(browse, download);
-
-		ButtonBox left = new ButtonBox(Spacing.tiny, false);
-		left.setOpaque(false);
-		left.addLeft(edits);
-		left.addLeft(new ClearPanel()); //spacing
-		left.addLeft(tools);
 		
-		getHeader().setLeft(left);
+		getHeader().setLeft(edits);
+		getHeader().setRight(tools);
 		getHeader().setCentre("Manage Plugins");
 		
 	}
