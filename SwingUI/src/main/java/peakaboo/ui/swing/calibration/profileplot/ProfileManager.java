@@ -56,7 +56,7 @@ public class ProfileManager extends HeaderLayer {
 	private ImageButton create, open, clear, save;
 	
 	public ProfileManager(PlotPanel parent, PlotController controller) {
-		super(parent);
+		super(parent, true);
 		this.controller = controller;
 		this.parent = parent;
 		
@@ -78,12 +78,11 @@ public class ProfileManager extends HeaderLayer {
 		};
 		controller.addListener(listener);
 		
-		
-		ImageButton close = new ImageButton(StockIcon.WINDOW_CLOSE).withTooltip("Close").withBordered(false).withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		getHeader().setShowClose(true);
+		getHeader().setOnClose(() -> {
 			controller.removeListener(listener);
 			remove();
-		});
-		
+		});	
 
 		
 		
@@ -111,7 +110,7 @@ public class ProfileManager extends HeaderLayer {
 		
 
 		
-		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), buttons, close);
+		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), buttons, null);
 		
 	}
 	

@@ -33,7 +33,7 @@ public class CompositionView extends HeaderLayer {
 	private LayerPanel parent;
 	
 	public CompositionView(Composition conc, LayerPanel parent) {
-		super(parent);
+		super(parent, true);
 		this.conc = conc;
 		this.parent = parent;
 		

@@ -70,7 +70,7 @@ public class PluginsOverview extends HeaderLayer {
 	JButton close, add, remove, reload, browse, download;
 	
 	public PluginsOverview(LayerPanel parent) {
-		super(parent);
+		super(parent, true);
 		this.parent = parent;
 		getContentRoot().setPreferredSize(new Dimension(800, 350));
 		

@@ -33,7 +33,7 @@ public class ReferenceViewPanel extends HeaderLayer {
 
 
 	public ReferenceViewPanel(LayerPanel parent, CalibrationReference reference) {
-		super(parent);
+		super(parent, true);
 		
 		getContentRoot().setPreferredSize(new Dimension(700, 350));
 

@@ -1005,7 +1005,7 @@ public class PlotPanel extends TabbedLayerPanel
 		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties));
 		propPanel.setBorder(Spacing.bHuge());
 
-		HeaderLayer layer = new HeaderLayer(this);
+		HeaderLayer layer = new HeaderLayer(this, true);
 		layer.setBody(propPanel);
 		layer.getHeader().setCentre("Dataset Information");
 		this.pushLayer(layer);

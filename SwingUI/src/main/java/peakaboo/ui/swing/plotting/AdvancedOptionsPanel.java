@@ -38,7 +38,7 @@ import swidget.widgets.layout.SettingsPanel.LabelPosition;
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
-		super(parent);
+		super(parent, true);
 		getHeader().setCentre("Advanced Options");
 		
 		SettingsPanel master = new SettingsPanel();
