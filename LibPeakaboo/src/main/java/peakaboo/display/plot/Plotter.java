@@ -10,6 +10,7 @@ import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
 import cyclops.visualization.Buffer;
 import cyclops.visualization.Surface;
+import cyclops.visualization.SurfaceType;
 import cyclops.visualization.drawing.DrawingRequest;
 import cyclops.visualization.drawing.ViewTransform;
 import cyclops.visualization.drawing.painters.PainterData;
@@ -85,7 +86,12 @@ public class Plotter {
 			doBuffer = false;
 		}
 		
-		if (doBuffer) {
+		 
+		if (context.getSurfaceType() != SurfaceType.RASTER) {
+			//We can't do raster-based buffering if the drawing target is vector/pdf
+			//so just draw directly to the surface
+			drawToBuffer(data, settings, context, size);
+		} else if (doBuffer) {
 			if (buffer == null || plotDrawing == null || bufferSize == null || bufferSize.x < size.x || bufferSize.y < size.y) {
 				buffer = context.getImageBuffer((int)(size.x*1.2f), (int)(size.y*1.2f));
 				bufferSize = size;
