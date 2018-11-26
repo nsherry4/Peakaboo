@@ -14,6 +14,7 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.fop.svg.PDFTranscoder;
 
 import cyclops.log.SciLog;
+import cyclops.visualization.SurfaceType;
 
 
 class PDFSurface extends SVGSurface
@@ -49,6 +50,11 @@ class PDFSurface extends SVGSurface
 			SciLog.get().log(Level.SEVERE, "Failed to write to PDF surface", e);
 		}
 		
+	}
+	
+	@Override
+	public SurfaceType getSurfaceType() {
+		return SurfaceType.PDF;
 	}
 
 }

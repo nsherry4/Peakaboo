@@ -385,4 +385,6 @@ public interface Surface
 	
 	Surface getNewContextForSurface();
 
+	SurfaceType getSurfaceType();
+	
 }

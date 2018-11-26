@@ -3,6 +3,7 @@ package cyclops.visualization.backend.awt;
 import java.awt.Graphics2D;
 
 import cyclops.visualization.Surface;
+import cyclops.visualization.SurfaceType;
 
 
 class ScreenSurface extends AbstractGraphicsSurface
@@ -20,6 +21,11 @@ class ScreenSurface extends AbstractGraphicsSurface
 
 	public boolean isVectorSurface() {
 		return false;
+	}
+
+	@Override
+	public SurfaceType getSurfaceType() {
+		return SurfaceType.RASTER;
 	}
 	
 }

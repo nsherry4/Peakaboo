@@ -8,6 +8,7 @@ import org.apache.batik.svggen.SVGGraphics2D;
 
 import cyclops.visualization.SaveableSurface;
 import cyclops.visualization.Surface;
+import cyclops.visualization.SurfaceType;
 
 class SVGSurface extends AbstractGraphicsSurface implements SaveableSurface 
 {
@@ -33,6 +34,11 @@ class SVGSurface extends AbstractGraphicsSurface implements SaveableSurface
 
 	public boolean isVectorSurface() {
 		return true;
+	}
+
+	@Override
+	public SurfaceType getSurfaceType() {
+		return SurfaceType.VECTOR;
 	}
 
 }

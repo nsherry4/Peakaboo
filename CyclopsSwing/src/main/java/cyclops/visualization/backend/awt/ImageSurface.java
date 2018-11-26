@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import cyclops.visualization.SaveableSurface;
 import cyclops.visualization.Surface;
+import cyclops.visualization.SurfaceType;
 
 
 
@@ -38,6 +39,11 @@ class ImageSurface extends AbstractGraphicsSurface implements SaveableSurface
 
 	public boolean isVectorSurface() {
 		return false;
+	}
+
+	@Override
+	public SurfaceType getSurfaceType() {
+		return SurfaceType.RASTER;
 	}
 
 }
