@@ -67,7 +67,7 @@ public class Transition implements Serializable, Comparable<Transition>{
 	@Override
 	public String toString()
 	{
-		return "Transition " + this.name + ": " + energyValue + "keV @ " + relativeIntensity;
+		return "Transition '" + this.name + "': " + energyValue + "keV @ " + relativeIntensity;
 	}
 	
 }

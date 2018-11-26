@@ -24,13 +24,14 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 		for (ITransitionSeries fromTS : fromTSs) {
 			this.primaries.addAll(fromTS.getPrimaryTransitionSeries());
 		}
-		if (this.primaries.size() == 0) {
-			throw new IllegalArgumentException("No Primary Transitions Found");
+		if (this.primaries.size() < 2) {
+			throw new IllegalArgumentException("PileUpTransitionSeries requires at least 2 PrimaryTransitionSeries");
 		}
-		
+				
 		//for each primary, we generate new transitions by summing every existing transition against every primary transition
 		//eg {t1, t2} x {t3, t4} = {t1+t3, t1+t4, t2+t3, t2+t4}
-		for (ITransitionSeries fromTS : fromTSs) {
+		transitions = new ArrayList<>(fromTSs.get(0).getAllTransitions());
+		for (ITransitionSeries fromTS : fromTSs.subList(1, fromTSs.size())) {
 			List<Transition> summed = new ArrayList<>();
 			for (Transition t1 : transitions) {
 				for (Transition t2 : fromTS.getAllTransitions()) {
@@ -39,7 +40,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 			}
 			this.transitions = summed;
 		}
-		
+				
 	}
 	
 	PileUpTransitionSeries(PileUpTransitionSeries other) {
@@ -120,7 +121,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 
 	@Override
 	public Transition getStrongestTransition() {
-		Optional<Transition> strongest = transitions.stream().reduce((Transition t1, Transition t2) -> {
+		Optional<Transition> strongest = transitions.stream().reduce((t1, t2) -> {
 			if (t1.relativeIntensity > t2.relativeIntensity) return t1;
 			return t2;
 		});

@@ -16,7 +16,7 @@ public class Composition {
 
 	private Map<Element, Float> concentrations;
 	private Map<Element, ITransitionSeries> sources;
-	private NumberFormat format = new DecimalFormat("0.0");;
+	private NumberFormat format = new DecimalFormat("0.00");
 	private CalibrationProfile profile;
 	
 	public Composition(Map<Element, Float> concentrations, Map<Element, ITransitionSeries> sources, CalibrationProfile profile) {
@@ -82,7 +82,7 @@ public class Composition {
 				 * if there is already an entry, we generally want to replace it with a lower
 				 * shell, but we also don't want to replace a calibrated value with an
 				 * uncalibrated one.
-				 */
+				 */				
 				if (elements.containsKey(e)) {
 					ITransitionSeries prev = elements.get(e);
 					//if the previous entry is calibrated, but the new one isn't, skip it
@@ -90,7 +90,7 @@ public class Composition {
 						continue;
 					}
 				}
-				elements.put(ts.getElement(), ts);
+				elements.put(e, ts);
 			}
 		}
 		
