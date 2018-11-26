@@ -98,6 +98,9 @@ public class HeaderBox extends PaintedPanel {
 			
 			@Override
 			public void mouseDragged(MouseEvent e) {
+				if(!SwingUtilities.isLeftMouseButton(e)) {
+					return;
+				}
 				
 				Window parent = SwingUtilities.getWindowAncestor(HeaderBox.this);
 				
