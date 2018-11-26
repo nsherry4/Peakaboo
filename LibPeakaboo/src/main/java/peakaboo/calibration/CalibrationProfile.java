@@ -58,10 +58,10 @@ public class CalibrationProfile {
 				
 				if (! reference.hasConcentration(ts)) { continue; }
 				
-				//TODO: Is this the right way to measure sample intensity? Measuring strongestTS height rather than area sum?
+				//TODO: Is this the right way to measure sample intensity? Measuring sum rather than strongestTS height?
 				ReadOnlySpectrum fitData = fit.getFit();
 				if (channel >= fitData.size()) { continue; }
-				float sampleIntensity = fitData.get(channel);
+				float sampleIntensity = fitData.sum();
 				float referenceValue = reference.getConcentration(ts);
 				float calibration = (sampleIntensity / referenceValue) * 1000f;
 				

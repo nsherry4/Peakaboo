@@ -35,7 +35,6 @@ import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layerpanel.ToastLayer;
-import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.HeaderTabBuilder;
 
 public class ProfileManager extends HeaderLayer {
@@ -43,7 +42,6 @@ public class ProfileManager extends HeaderLayer {
 	private PlotController controller;
 	private PlotPanel parent;
 	
-	private HeaderBox header;
 	protected JPanel body;
 	protected List<ProfilePlot> profileplots = new ArrayList<>();
 
@@ -242,7 +240,7 @@ public class ProfileManager extends HeaderLayer {
 	
 	
 	public void actionLoadCalibrationProfile() {
-		SwidgetFilePanels.openFile(getContentRoot(), "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
+		SwidgetFilePanels.openFile(parent, "Select Calibration Profile", null, new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}
