@@ -1,28 +1,20 @@
 package swidget.dialogues;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
+import java.awt.Window;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
-import swidget.widgets.ClearPanel;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layout.HeaderBox;
+import swidget.widgets.layout.HeaderPanel;
 
 public class HeaderFrame extends JFrame {
 
-	private LayerPanel root;
-	private JComponent content;
-	
-	private HeaderBox header;
-	private Component body;
-	
+	private HeaderPanel root;
 	private Runnable onClose;
 	
 	public HeaderFrame() {
@@ -34,49 +26,33 @@ public class HeaderFrame extends JFrame {
 		
 		this.setUndecorated(true);
 		
-		root = new LayerPanel();
+		root = new HeaderPanel();
 		Color border = UIManager.getColor("stratus-widget-border");
 		if (border == null) { border = Color.LIGHT_GRAY; }
 		root.setBorder(new MatteBorder(1, 1, 1, 1, border));
 		this.setContentPane(root);
 		
-		content = root.getContentLayer();
-		content.setLayout(new BorderLayout());
 		
-		
-		header = new HeaderBox();
-		header.setShowClose(true);
-		header.setOnClose(() -> {
+		root.getHeader().setShowClose(true);
+		root.getHeader().setOnClose(() -> {
 			this.setVisible(false);
 			this.onClose.run();
 		});
-		content.add(header, BorderLayout.NORTH);
-		
-		body = new JPanel();
-		content.add(body, BorderLayout.CENTER);
+
 	}
 
 
 	public HeaderBox getHeader() {
-		return header;
+		return root.getHeader();
 	}
 
 
 	public Component getBody() {
-		return body;
+		return root.getBody();
 	}
 	
 	public void setBody(Component body) {
-		if (this.body != null) {
-			this.content.remove(this.body);
-		}
-		
-		this.body = body;
-		
-		if (this.body != null) {
-			this.content.add(this.body, BorderLayout.CENTER);
-		}
-		
+		root.setBody(body);
 		pack();
 	}
 
@@ -84,7 +60,10 @@ public class HeaderFrame extends JFrame {
 		return root;
 	}
 	
-	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+	}
 	
 	
 }

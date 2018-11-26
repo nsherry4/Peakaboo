@@ -25,7 +25,7 @@ import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layout.HeaderBox;
-import swidget.widgets.layout.HeaderBoxPanel;
+import swidget.widgets.layout.HeaderPanel;
 
 public class SwidgetFilePanels {
 

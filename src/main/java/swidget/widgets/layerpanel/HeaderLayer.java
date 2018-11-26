@@ -1,72 +1,56 @@
 package swidget.widgets.layerpanel;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.layout.HeaderBox;
+import swidget.widgets.layout.HeaderPanel;
 
 public class HeaderLayer extends ModalLayer {
 
-	private JPanel content;
-	
-	private JComponent body;
-	private HeaderBox header;
+	private HeaderPanel root;
 	
 
 	public HeaderLayer(LayerPanel owner, boolean showClose) {
-		this(owner, new JPanel(), showClose);
-	}
-	
-	private HeaderLayer(LayerPanel owner, JPanel content, boolean showClose) {
-		super(owner, content);	
-		this.content = content;
-		content.setLayout(new BorderLayout());
-				
+		super(owner, new HeaderPanel());	
+		root = (HeaderPanel) super.getComponent();
+		
 		//headerbox
-		this.header = new HeaderBox();
-		this.header.setShowClose(showClose);
-		this.header.setOnClose(this::remove);
-		content.add(header, BorderLayout.NORTH);
-		
-		
+		root.getHeader().setShowClose(showClose);
+		root.getHeader().setOnClose(this::remove);
+				
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-		content.getInputMap(JComponent.WHEN_FOCUSED).put(key, key.toString());
-		content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(key, key.toString());
-		content.getActionMap().put(key.toString(), new AbstractAction() {
+		root.getInputMap(JComponent.WHEN_FOCUSED).put(key, key.toString());
+		root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(key, key.toString());
+		root.getActionMap().put(key.toString(), new AbstractAction() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				remove();
 			}
 		});
-		
 	}
+
 	
 	public JComponent getContentRoot() {
-		return content;
+		return root.getContentLayer();
 	}
 
 	public HeaderBox getHeader() {
-		return header;
+		return root.getHeader();
 	}
 
-	public JComponent getBody() {
-		return body;
+	public Component getBody() {
+		return root.getBody();
 	}
 
 	public void setBody(JComponent body) {
-		content.remove(body);
-		this.body = body;
-		if (body != null) {
-			content.add(body, BorderLayout.CENTER);
-		}
+		root.setBody(body);
 	}
 
 	@Override
