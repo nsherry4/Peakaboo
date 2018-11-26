@@ -8,11 +8,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.LayoutManager2;
 import java.awt.LinearGradientPaint;
+import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
@@ -37,6 +45,9 @@ public class HeaderBox extends PaintedPanel {
 	private JPanel rightWrap, closePanel;
 	private Runnable onClose;
 	boolean showClose;
+	
+	//dragging
+	private Point initialClick;
 	
 	
 	public HeaderBox(Component left, String title, Component right) {
@@ -68,6 +79,44 @@ public class HeaderBox extends PaintedPanel {
 		close = HeaderBox.closeButton().withAction(() -> onClose.run());
 		closePanel = new ClearPanel(new BorderLayout());
 		closePanel.add(close, BorderLayout.CENTER);
+		
+		addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				initialClick = null;
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				initialClick = e.getPoint();
+			}
+
+		});
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				
+				Window parent = SwingUtilities.getWindowAncestor(HeaderBox.this);
+				
+				//Thanks https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
+	            // get location of Window
+	            int thisX = parent.getLocation().x;
+	            int thisY = parent.getLocation().y;
+
+	            // Determine how much the mouse moved since the initial click
+	            int xMoved = e.getX() - initialClick.x;
+	            int yMoved = e.getY() - initialClick.y;
+
+	            // Move window to this position
+	            int X = thisX + xMoved;
+	            int Y = thisY + yMoved;
+	            parent.setLocation(X, Y);
+			}
+		});
+		
 		
 	}
 	
