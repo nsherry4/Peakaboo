@@ -13,10 +13,7 @@ public class HeaderPanel extends LayerPanel {
 	private JComponent content;
 	
 	private HeaderBox header;
-	private Component body;
-	
-	private Runnable onClose;
-	
+	private Component body;	
 	
 	public HeaderPanel() {
 		
