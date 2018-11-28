@@ -40,29 +40,26 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		
 		List<Curve> curves = new ArrayList<>(fittings.getVisibleCurves());
 		sortCurves(curves);
-		double[] guess = getInitialGuess(size, curves, fitter, data);
 		
 		
-		Iterable<List<Curve>> permutations = ListOps.permutations(curves);
+		
+		List<Curve> perm = new ArrayList<>(curves);
 		int counter = 0;
 		double[] scalings = new double[size];
-		for (List<Curve> perm : permutations) {
+		while (counter <= 25) {
 			Collections.shuffle(perm, new Random(12345654321l));
-			if (counter > 20) {
-				break;
-			}
 			
 			Set<Integer> intenseChannels = getIntenseChannels(perm);
+			double[] guess = getInitialGuess(size, perm, fitter, data);
 			EvaluationContext context = new EvaluationContext(data, fittings, perm);
 			MultivariateFunction cost = getCostFunction(context, intenseChannels);
-			PointValuePair result = optimizeCostFunction(cost, guess, 0.01d);
+			PointValuePair result = optimizeCostFunction(cost, guess, 0.02d);
 			double[] permScalings = result.getPoint();
 			
+			//DON'T DO THIS, IT CAUSES ALL THE REST OF THE FITS TO BE BIASED TOWARDS THE FIRST ONE
 			//next iteration's guess will be this iterations results
 			//this improves performance like crazy over the first initial guess
-			guess = permScalings;
-			
-			//System.out.println(a2s(permScalings));
+			//guess = permScalings;
 			
 			for (int i = 0; i < scalings.length; i++) {
 				Curve c = perm.get(i);
@@ -76,9 +73,6 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		for (int i = 0; i < scalings.length; i++) {
 			scalings[i] /= counter;
 		}
-		
-		//System.out.println(a2s(scalings));
-		
 
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
 		return evaluate(scalings, context);
