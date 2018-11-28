@@ -47,8 +47,9 @@ public class PaintedPanel extends ClearPanel
 	{
 		
 		if (drawBackground){
+			g = g.create();
 			Graphics2D g2 = (Graphics2D) g;
-	
+			
 			g2.setColor(UIManager.getColor("control"));
 			g2.fillRect(0, 0, getWidth(), getHeight());
 

@@ -1,15 +1,21 @@
 package swidget.dialogues;
 
 
-import javax.swing.*;
-import javax.swing.event.MouseInputListener;
-
-import java.awt.*; 
-import java.awt.event.AWTEventListener; 
+import java.awt.AWTEvent;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener; 
+import java.awt.event.MouseWheelListener;
+
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputListener; 
  
 //Derived from:
 /* 
@@ -28,7 +34,7 @@ import java.awt.event.MouseWheelListener;
 
 class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMotionListener, MouseInputListener, MouseWheelListener { 
 
-	private JFrame frame;
+	private Window window;
 	private boolean dragging = false;
 	
 	private final static int RESIZE_BORDER = 8;
@@ -40,10 +46,10 @@ class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMoti
 	private Dimension resizeDimensions = null;
 	
 	
-    public HeaderFrameGlassPane(JFrame frame) { 
+    public HeaderFrameGlassPane(Window window) { 
     	super(); 
-    	this.frame = frame;
-        setOpaque(false); 
+    	this.window = window;
+    	setOpaque(false); 
     } 
    
 	@Override
@@ -52,8 +58,14 @@ class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMoti
 		if (!(oSource instanceof Component)) { return; }
 		//Component component
 		Component source = (Component) oSource;
-		Window window = SwingUtilities.getWindowAncestor(source);
-		if (!frame.equals(window)) { return; }
+		
+		Window sourceWindow;
+		if (source instanceof Window) {
+			sourceWindow = (Window) source;
+		} else {
+			sourceWindow = SwingUtilities.getWindowAncestor(source);
+		}
+		if (!window.equals(sourceWindow)) { return; }
 		
 //		System.out.println(event);
 //		System.out.println(event.getSource());
@@ -126,12 +138,12 @@ class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMoti
     
     
     private MouseEvent frameEvent(MouseEvent e) {
-		return SwingUtilities.convertMouseEvent((Component)e.getSource(), e, frame);
+		return SwingUtilities.convertMouseEvent((Component)e.getSource(), e, window);
 	}
     
 	
 	private boolean isSouth(int x, int y) {
-		int height = frame.getHeight();
+		int height = window.getHeight();
 		return (y > height-RESIZE_BORDER && y < height+RESIZE_BORDER);
 	}
 	
@@ -144,7 +156,7 @@ class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMoti
 	}
 	
 	private boolean isEast(int x, int y) {
-		int width = frame.getWidth();
+		int width = window.getWidth();
 		return (x > width-RESIZE_BORDER && x < width+RESIZE_BORDER);
 	}
 	
@@ -204,12 +216,12 @@ class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMoti
 			fw -= dx;
 			fx += dx;
 		}
-				
 		
-		frame.setLocation(fx, fy);
-		frame.setSize(fw, fh);
-				
+		window.setLocation(fx, fy);
+		window.setSize(fw, fh);
+	
 	}
+	
 	
 	@Override
 	public void mouseDragged(MouseEvent raw) {
@@ -254,8 +266,8 @@ class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMoti
 			resizeWest = isWest(ex, ey);
 			resizeEast = isEast(ex, ey);
 			resizeCursor = e.getLocationOnScreen();
-			resizePosition = frame.getLocation();
-			resizeDimensions = frame.getSize();
+			resizePosition = window.getLocation();
+			resizeDimensions = window.getSize();
 		} else {
 			dragging = true;
 		}

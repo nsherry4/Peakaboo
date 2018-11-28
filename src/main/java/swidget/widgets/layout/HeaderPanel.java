@@ -1,11 +1,14 @@
 package swidget.widgets.layout;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.LayerPanel;
 
 public class HeaderPanel extends LayerPanel {
@@ -14,18 +17,17 @@ public class HeaderPanel extends LayerPanel {
 	
 	private HeaderBox header;
 	private Component body;	
-	
+		
 	public HeaderPanel() {
 		
 		content = getContentLayer();
-		content.setLayout(new BorderLayout());
+		content.setLayout(new GridBagLayout());
 		
 		
 		header = new HeaderBox();
-		content.add(header, BorderLayout.NORTH);
-		
-		body = new JPanel();
-		content.add(body, BorderLayout.CENTER);
+		content.add(header, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, Spacing.iNone(), 0, 0));
+
+		setBody(new JPanel());	
 	}
 	
 	
@@ -46,7 +48,7 @@ public class HeaderPanel extends LayerPanel {
 		this.body = body;
 		
 		if (this.body != null) {
-			this.content.add(this.body, BorderLayout.CENTER);
+			this.content.add(this.body, new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, Spacing.iNone(), 0, 0));
 		}
 	}
 
