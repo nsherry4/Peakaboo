@@ -75,16 +75,33 @@ public class CalibrationProfile {
 			
 		}
 		
-		//interpolate missing elements
-		new SigmoidCalibrationInterpolator().process(reference, this);
+		CalibrationProcessor smoother = new AggressiveCalibrationSmoother();
+		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
+		CalibrationProcessor normalizer = new CalibrationNormalizer();
 		
-		//smooth calibrations
-		//new CalibrationSmoother().process(reference, this);
+		/*
+		 * interpolate and smooth a copy of this profile, then copy the smooed
+		 * interpolated values back to this one. We do this so that interpolated values
+		 * aren't influenced too much by one outlier neighbour.
+		 */
+		CalibrationProfile smoothed = new CalibrationProfile(this);
+		interpolator.process(smoothed);
+		smoother.process(smoothed);
+		for (ITransitionSeries ts : smoothed.interpolated ) {
+			this.interpolated.add(ts);
+			this.calibrations.put(ts, smoothed.calibrations.get(ts));
+		}
 		
-		//normalize against anchor
-		new CalibrationNormalizer().process(reference, this);
-		
-		
+		//normalize values against anchor element
+		normalizer.process(this);
+				
+	}
+	
+	public CalibrationProfile(CalibrationProfile copy) {
+		this.reference = copy.reference;
+		this.calibrations = new LinkedHashMap<>(copy.calibrations);
+		this.name = copy.name;
+		this.interpolated = new ArrayList<>(copy.interpolated);
 	}
 	
 

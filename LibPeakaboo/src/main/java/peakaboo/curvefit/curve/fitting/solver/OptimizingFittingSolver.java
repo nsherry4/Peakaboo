@@ -45,43 +45,94 @@ public class OptimizingFittingSolver implements FittingSolver {
 
 	@Override
 	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter) {
-		List<Curve> curves = new ArrayList<>(fittings.getVisibleCurves());
-		curves.sort((a, b) -> {
-			TransitionShell as, bs;
-			as = a.getTransitionSeries().getShell();
-			bs = b.getTransitionSeries().getShell();
-			Element ae, be;
-			ae = a.getTransitionSeries().getElement();
-			be = b.getTransitionSeries().getElement();
-			if (as.equals(bs)) {
-				return ae.compareTo(be);
-			} else {
-				return as.compareTo(bs);
-			}
-		});
-		int size = curves.size();
-		
-		
+		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
-			return new FittingResultSet(
-					new ISpectrum(data.size()), 
-					new ISpectrum(data), 
-					Collections.emptyList(), 
-					FittingParameters.copy(fittings.getFittingParameters().copy())
-				);
+			return getEmptyResult(data, fittings);
 		}
 		
+		List<Curve> curves = new ArrayList<>(fittings.getVisibleCurves());
+		sortCurves(curves);
+		Set<Integer> intenseChannels = getIntenseChannels(curves);
+		EvaluationContext context = new EvaluationContext(data, fittings, curves);
+		MultivariateFunction cost = getCostFunction(context, intenseChannels);
+		double[] guess = getInitialGuess(size, curves, fitter, data);
+				
+			
+		PointValuePair result = optimizeCostFunction(cost, guess, 0.01d);
+
+		
+		double[] scalings = result.getPoint();
+		return evaluate(scalings, context);
+		
+		
+	}
+	
+	protected FittingResultSet getEmptyResult(ReadOnlySpectrum data, FittingSet fittings) {
+		return new FittingResultSet(
+				new ISpectrum(data.size()), 
+				new ISpectrum(data), 
+				Collections.emptyList(), 
+				FittingParameters.copy(fittings.getFittingParameters().copy())
+			);
+	}
+	
+	protected PointValuePair optimizeCostFunction(MultivariateFunction cost, double[] guess, double tolerance) {
+		//1358 reps on test session
+		//optimizer = new SimplexOptimizer(-1d, 1d);
+		
+		//308 reps on test session
+		return new PowellOptimizer(tolerance, 1d).optimize(
+				new ObjectiveFunction(cost), 
+				new InitialGuess(guess),
+				new MaxIter(1000000),
+				new MaxEval(1000000),
+				new NonNegativeConstraint(true), 
+				GoalType.MINIMIZE);
+		
+		
+		//265 reps on test session but occasionally dies?
+		//optimizer = new BOBYQAOptimizer(Math.max(size+2, size*2));
+		
+		//-1 for rel means don't use rel, just use abs difference
+//		PointValuePair result = new SimplexOptimizer(-1d, 1d).optimize(
+//				new ObjectiveFunction(cost), 
+//				new InitialGuess(guess),
+//				new MaxIter(100000),
+//				new MaxEval(100000),
+//				new NonNegativeConstraint(true), 
+//				GoalType.MINIMIZE,
+//				new MultiDirectionalSimplex(guess)
+//				);
+		
+		
+	}
+	
+	protected double[] getInitialGuess(int size, List<Curve> curves, CurveFitter fitter, ReadOnlySpectrum data) {
+		double[] guess = new double[size];
+		for (int i = 0; i < size; i++) {
+			Curve curve = curves.get(i);
+			FittingResult guessFittingResult = fitter.fit(data, curve);
+			guess[i] = guessFittingResult.getCurveScale();
+			//guesses shouldn't be zero
+			if (guess[i] == 0) {
+				guess[i] = 0.00001d;
+			}
+		}
+		return guess;
+	}
+	
+	protected Set<Integer> getIntenseChannels(List<Curve> curves) {
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
 		for (Curve curve : curves) {
 			for (int channel : curve.getIntenseRanges()) {
 				intenseChannels.add(channel);
 			}
 		}
-		
-		EvaluationContext context = new EvaluationContext(data, fittings, curves);
-		
-		
-		MultivariateFunction cost = new MultivariateFunction() {
+		return intenseChannels;
+	}
+	
+	protected MultivariateFunction getCostFunction(EvaluationContext context, Set<Integer> intenseChannels) {
+		return new MultivariateFunction() {
 			
 			@Override
 			public double value(double[] point) {
@@ -104,56 +155,22 @@ public class OptimizingFittingSolver implements FittingSolver {
 				
 			}
 		};
-		
-
-		double[] guess = new double[size];
-		for (int i = 0; i < size; i++) {
-			Curve curve = curves.get(i);
-			FittingResult guessFittingResult = fitter.fit(data, curve);
-			guess[i] = guessFittingResult.getCurveScale();
-			//guesses shouldn't be zero
-			if (guess[i] == 0) {
-				guess[i] = 0.00001d;
+	}
+	
+	protected void sortCurves(List<Curve> curves) {
+		curves.sort((a, b) -> {
+			TransitionShell as, bs;
+			as = a.getTransitionSeries().getShell();
+			bs = b.getTransitionSeries().getShell();
+			Element ae, be;
+			ae = a.getTransitionSeries().getElement();
+			be = b.getTransitionSeries().getElement();
+			if (as.equals(bs)) {
+				return ae.compareTo(be);
+			} else {
+				return as.compareTo(bs);
 			}
-		}
-				
-			
-		//1358 reps on test session
-		//optimizer = new SimplexOptimizer(-1d, 1d);
-		
-		//308 reps on test session
-		//optimizer = new PowellOptimizer(0.001d, 1d);
-		PointValuePair result = new PowellOptimizer(0.01d, 1d).optimize(
-				new ObjectiveFunction(cost), 
-				new InitialGuess(guess),
-				new MaxIter(1000000),
-				new MaxEval(1000000),
-				new NonNegativeConstraint(true), 
-				GoalType.MINIMIZE);
-		
-		//265 reps on test session but occasionally dies?
-		//optimizer = new BOBYQAOptimizer(Math.max(size+2, size*2));
-		
-		//-1 for rel means don't use rel, just use abs difference
-//		PointValuePair result = new SimplexOptimizer(-1d, 1d).optimize(
-//				new ObjectiveFunction(cost), 
-//				new InitialGuess(guess),
-//				new MaxIter(100000),
-//				new MaxEval(100000),
-//				new NonNegativeConstraint(true), 
-//				GoalType.MINIMIZE,
-//				new MultiDirectionalSimplex(guess)
-//				);
-		
-		
-		double[] scalings = result.getPoint();
-		System.out.println("--------------");
-		ReadOnlySpectrum residual = test(scalings, context);
-		System.out.println(score(scalings, intenseChannels, residual));
-		
-		return evaluate(scalings, context);
-		
-		
+		});
 	}
 
 	private Spectrum test(double[] point, EvaluationContext context) {
@@ -194,7 +211,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return score;
 	}
 	
-	private FittingResultSet evaluate(double[] point, EvaluationContext context) {
+	protected FittingResultSet evaluate(double[] point, EvaluationContext context) {
 		int index = 0;
 		List<FittingResult> fits = new ArrayList<>();
 		Spectrum total = new ISpectrum(context.data.size());
@@ -207,9 +224,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 		Spectrum residual = SpectrumCalculations.subtractLists(context.data, total);
 		
 		return new FittingResultSet(total, residual, fits, context.fittings.getFittingParameters().copy());
-}
+	}
 	
-	private class EvaluationContext {
+	protected class EvaluationContext {
 		public ReadOnlySpectrum data;
 		public FittingSet fittings;
 		public List<Curve> curves;

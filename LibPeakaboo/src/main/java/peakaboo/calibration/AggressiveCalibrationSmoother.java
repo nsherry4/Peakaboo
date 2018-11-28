@@ -14,7 +14,11 @@ import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.filter.model.Filter;
 import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
-public class CalibrationSmoother implements CalibrationProcessor {
+/*
+ * Smooths a profile very aggressively. This is useful for smoothing 
+ * interpolated values to make sure they're representative.
+ */
+public class AggressiveCalibrationSmoother implements CalibrationProcessor {
 
 	@Override
 	public void process(CalibrationReference reference, Map<ITransitionSeries, Float> calibrations) {
@@ -55,7 +59,10 @@ public class CalibrationSmoother implements CalibrationProcessor {
 		//filter
 		Filter filter = new WeightedAverageNoiseFilter();
 		filter.initialize();
-		ReadOnlySpectrum results = filter.filter(values, false);
+		ReadOnlySpectrum results = values;
+		for (int i = 0; i < 5; i++) {
+			results = filter.filter(results, false);
+		}
 		
 		
 		//unpack

@@ -22,6 +22,7 @@ import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
@@ -135,7 +136,8 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				f -> f.getClass() == controller.fitting().getFittingSolver().getClass(), 
 				f -> controller.fitting().setFittingSolver(f), 
 				new GreedyFittingSolver(),
-				new OptimizingFittingSolver()
+				new OptimizingFittingSolver(),
+				new MultisamplingOptimizingFittingSolver()
 			);
 		build(panel, solversBox, "Multi-Curve Solver", "The strategy used to determine how overlapping element emission curves coexist.", true);
 		
