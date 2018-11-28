@@ -28,6 +28,8 @@ import peakaboo.curvefit.curve.fitting.FittingResult;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.FittingSet;
 import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import peakaboo.curvefit.peak.table.Element;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class OptimizingFittingSolver implements FittingSolver {
 
@@ -43,7 +45,20 @@ public class OptimizingFittingSolver implements FittingSolver {
 
 	@Override
 	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter) {
-		List<Curve> curves = fittings.getVisibleCurves();
+		List<Curve> curves = new ArrayList<>(fittings.getVisibleCurves());
+		curves.sort((a, b) -> {
+			TransitionShell as, bs;
+			as = a.getTransitionSeries().getShell();
+			bs = b.getTransitionSeries().getShell();
+			Element ae, be;
+			ae = a.getTransitionSeries().getElement();
+			be = b.getTransitionSeries().getElement();
+			if (as.equals(bs)) {
+				return ae.compareTo(be);
+			} else {
+				return as.compareTo(bs);
+			}
+		});
 		int size = curves.size();
 		
 		
