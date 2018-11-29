@@ -20,6 +20,11 @@ import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
  */
 public class AggressiveCalibrationSmoother implements CalibrationProcessor {
 
+	private int passes = 1;
+	public AggressiveCalibrationSmoother(int passes) {
+		this.passes = passes;
+	}
+	
 	@Override
 	public void process(CalibrationReference reference, Map<ITransitionSeries, Float> calibrations) {
 		smooth(calibrations, TransitionShell.K);
@@ -60,7 +65,7 @@ public class AggressiveCalibrationSmoother implements CalibrationProcessor {
 		Filter filter = new WeightedAverageNoiseFilter();
 		filter.initialize();
 		ReadOnlySpectrum results = values;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < this.passes; i++) {
 			results = filter.filter(results, false);
 		}
 		

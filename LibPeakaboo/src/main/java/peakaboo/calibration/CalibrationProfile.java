@@ -75,7 +75,8 @@ public class CalibrationProfile {
 			
 		}
 		
-		CalibrationProcessor smoother = new AggressiveCalibrationSmoother();
+		CalibrationProcessor smoother = new BracketedCalibrationSmoother(0.1f);
+		CalibrationProcessor interpolationSmoother = new AggressiveCalibrationSmoother(5);
 		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
 		CalibrationProcessor normalizer = new CalibrationNormalizer();
 		
@@ -86,11 +87,14 @@ public class CalibrationProfile {
 		 */
 		CalibrationProfile smoothed = new CalibrationProfile(this);
 		interpolator.process(smoothed);
-		smoother.process(smoothed);
+		interpolationSmoother.process(smoothed);
 		for (ITransitionSeries ts : smoothed.interpolated ) {
 			this.interpolated.add(ts);
 			this.calibrations.put(ts, smoothed.calibrations.get(ts));
 		}
+		
+		//smooth things just a little bit
+		smoother.process(this);
 		
 		//normalize values against anchor element
 		normalizer.process(this);
