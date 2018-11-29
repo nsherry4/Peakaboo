@@ -33,6 +33,8 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 	
 	@Override
 	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter) {
+		long t1 = System.currentTimeMillis();
+		
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
 			return getEmptyResult(data, fittings);
@@ -42,6 +44,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		sortCurves(curves);
 		
 		
+		Set<Integer> intenseChannels = getIntenseChannels(curves);
 		
 		List<Curve> perm = new ArrayList<>(curves);
 		int counter = 0;
@@ -49,7 +52,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		while (counter <= 25) {
 			Collections.shuffle(perm, new Random(12345654321l));
 			
-			Set<Integer> intenseChannels = getIntenseChannels(perm);
+			
 			double[] guess = getInitialGuess(size, perm, fitter, data);
 			EvaluationContext context = new EvaluationContext(data, fittings, perm);
 			MultivariateFunction cost = getCostFunction(context, intenseChannels);
@@ -75,6 +78,9 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		}
 
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
+		
+		long t2 = System.currentTimeMillis();
+		System.out.println(t2 - t1);
 		return evaluate(scalings, context);
 		
 		
