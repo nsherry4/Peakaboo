@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import eventful.EventfulCache;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 /**
@@ -17,15 +18,14 @@ import peakaboo.curvefit.peak.transition.ITransitionSeries;
 public class FittingSet
 {
 
-	private List<Curve>						curves;
-	private boolean							curvesValid = false;
+	private EventfulCache<List<Curve>>		curves;
 	private List<ITransitionSeries>			fitTransitionSeries;
 	
 	private FittingParameters				parameters;
 
 	
 	public FittingSet() {
-		curves = new ArrayList<Curve>();
+		curves = new EventfulCache<>(this::generateCurves);
 		fitTransitionSeries = new ArrayList<>();
 		this.parameters = new FittingParameters(this);
 	}
@@ -45,23 +45,12 @@ public class FittingSet
 	
 	
 	synchronized void invalidateCurves() {
-		curves.clear();
-		curvesValid = false;
+		curves.invalidate();
 	}
 
 
 	public List<Curve> getCurves() {
-		if (!curvesValid) {
-			synchronized (this) {
-				if (!curvesValid) {
-					for (ITransitionSeries ts : fitTransitionSeries) {
-						generateCurve(ts);
-					}
-					curvesValid = true;
-				}
-			}
-		}
-		return new ArrayList<>(curves);
+		return curves.getValue();
 	}
 	
 	public List<Curve> getVisibleCurves() {
@@ -86,9 +75,13 @@ public class FittingSet
 
 	}
 
-	private synchronized void generateCurve(ITransitionSeries ts)
-	{
-		curves.add(new Curve(ts, parameters));
+	
+	private synchronized List<Curve> generateCurves() {
+		List<Curve> curvelist = new ArrayList<Curve>();
+		for (ITransitionSeries ts : fitTransitionSeries) {
+			curvelist.add(new Curve(ts, parameters));
+		}
+		return curvelist;
 	}
 
 
