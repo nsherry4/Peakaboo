@@ -1,22 +1,15 @@
 package peakaboo.ui.swing;
 
-import java.awt.Dimension;
 import java.io.File;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import com.ezware.common.Strings;
-import com.ezware.dialog.task.TaskDialog;
 
 import eventful.EventfulConfig;
 import peakaboo.calibration.CalibrationPluginManager;
@@ -35,9 +28,8 @@ import peakaboo.ui.swing.plotting.PlotFrame;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
 import swidget.Swidget;
+import swidget.dialogues.ErrorDialog;
 import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layerpanel.LayerPanelConfig;
@@ -54,39 +46,9 @@ public class Peakaboo
 	}
 	
 	
-	private static void showError(Throwable e, String message, String text) {
-		TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
-		errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-		errorDialog.setInstruction(Swidget.lineWrapHTML(new JLabel(), message));
-		
-		String realText = text;
-				
-		if (realText != null) {
-			realText += "<br />";
-		} else if (e != null) {
-			if (e.getMessage() != null) {
-				realText = e.getMessage() + "<br/>";
-			} else {
-				realText = "";
-			}
-			realText += "The problem is of type " + e.getClass().getSimpleName();
-		} else {
-			realText = "";
-		}
-
-		realText = "<html>" + realText + "</html>";
-		errorDialog.setText(realText);
-			
-		JTextArea stacktrace = new JTextArea();
-		stacktrace.setEditable(false);
-		stacktrace.setText((e != null) ? Strings.stackStraceAsString(e) : "No additional information available");
-		
-		JScrollPane scroller = new JScrollPane(stacktrace);
-		scroller.setPreferredSize(new Dimension(500, 200));
-		errorDialog.getDetails().setExpandableComponent(scroller);
-		errorDialog.getDetails().setExpanded(true);
-	
-		errorDialog.show();
+	private static void showError(Throwable t, String message, String text) {
+		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", t);
+		errorDialog.setVisible(true);
 	}
 	
 

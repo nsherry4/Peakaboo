@@ -21,13 +21,6 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.ezware.oxbow/TaskDialog -->
-		<dependency>
-			<groupId>com.ezware.oxbow</groupId>
-			<artifactId>TaskDialog</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
 		<dependency>
 			<groupId>net.sciencestudio</groupId>
 			<artifactId>autodialog-swing</artifactId>
