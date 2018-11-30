@@ -423,7 +423,15 @@ public class SpectrumCalculations
 	 */
 	public static void subtractLists_inplace(Spectrum l1, Spectrum l2)
 	{
-		subtractLists_inplace(l1, l2, Float.NaN);
+		float[] l1a = l1.backingArray();
+		float[] l2a = ((Spectrum)l2).backingArray();
+		
+		int maxInd = Math.min(l1.size(), l2.size());
+		for (int i = 0; i < maxInd; i++)
+		{
+			l1a[i] = l1a[i] - l2a[i];
+		}
+		
 	}
 
 
@@ -437,31 +445,46 @@ public class SpectrumCalculations
 	public static void subtractLists_inplace(Spectrum l1, ReadOnlySpectrum l2, final float minimum)
 	{
 
+		float[] l1a = l1.backingArray();
+		float[] l2a = ((Spectrum)l2).backingArray();
+		
 		int maxInd = Math.min(l1.size(), l2.size());
 		float value;
 		for (int i = 0; i < maxInd; i++)
 		{
-			value = l1.get(i) - l2.get(i);
+			value = l1a[i] - l2a[i];
 			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
-			l1.set(i, value);
+			l1a[i] = value;
 		}
 		
 	}
 
 	
 	public static void subtractLists_target(ReadOnlySpectrum l1, ReadOnlySpectrum l2, Spectrum target) {
-		subtractLists_target(l1, l2, target, Float.NaN);
+		float[] l1a = ((Spectrum)l1).backingArray();
+		float[] l2a = ((Spectrum)l2).backingArray();
+		float[] ta = target.backingArray();
+		
+		int maxInd = Math.min(l1.size(), l2.size());
+		for (int i = 0; i < maxInd; i++)
+		{
+			ta[i] = l1a[i] - l2a[i];
+		}
 	}
 	
 	public static void subtractLists_target(ReadOnlySpectrum l1, ReadOnlySpectrum l2, Spectrum target, final float minimum) {
+		
+		float[] l1a = ((Spectrum)l1).backingArray();
+		float[] l2a = ((Spectrum)l2).backingArray();
+		float[] ta = target.backingArray();
 		
 		int maxInd = Math.min(l1.size(), l2.size());
 		float value;
 		for (int i = 0; i < maxInd; i++)
 		{
-			value = l1.get(i) - l2.get(i);
+			value = l1a[i] - l2a[i];
 			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
-			target.set(i, value);
+			ta[i] = value;
 		}
 		
 	}
