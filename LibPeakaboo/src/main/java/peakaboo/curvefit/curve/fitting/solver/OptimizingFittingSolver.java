@@ -190,10 +190,11 @@ public class OptimizingFittingSolver implements FittingSolver {
 
 	}
 	
-	private float score(double[] point, Set<Integer> intenseChannels, ReadOnlySpectrum residual) {
+	private float score(double[] point, Set<Integer> intenseChannels, Spectrum residual) {
+		float[] ra = residual.backingArray();
 		float score = 0;
 		for (int i : intenseChannels) {
-			float channelValue = residual.get(i);
+			float channelValue = ra[i];
 			
 			//Negative values mean that we've fit more signal than exists
 			//We penalize this to prevent making up data where none exists.

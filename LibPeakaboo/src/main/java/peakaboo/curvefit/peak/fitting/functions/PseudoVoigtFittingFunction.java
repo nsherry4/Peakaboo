@@ -5,7 +5,7 @@ import peakaboo.curvefit.peak.fitting.FittingFunction;
 
 public class PseudoVoigtFittingFunction implements FittingFunction {
 
-	private FittingFunction backer;
+	private MixedFittingFunction backer;
 	private FittingContext context;
 	
 	@Override
@@ -24,7 +24,7 @@ public class PseudoVoigtFittingFunction implements FittingFunction {
 	
 	@Override
 	public float forEnergy(float energy) {
-		return forEnergyAbsolute(energy) * context.getHeight();
+		return backer.forEnergyAbsolute(energy) * context.getHeight();
 	}
 	
 	@Override

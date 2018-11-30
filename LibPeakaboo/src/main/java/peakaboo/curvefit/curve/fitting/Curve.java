@@ -114,8 +114,7 @@ public class Curve implements Comparable<Curve>
 	 * @return a scaled fit
 	 */
 	public Spectrum scaleInto(float scale, Spectrum target) {
-		SpectrumCalculations.multiplyBy_target(normalizedCurve, target, scale);
-		return target;
+		return SpectrumCalculations.multiplyBy_target(normalizedCurve, target, scale);
 	}
 
 
