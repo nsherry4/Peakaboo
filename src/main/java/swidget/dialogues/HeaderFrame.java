@@ -20,11 +20,12 @@ import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.MouseInputListener;
 
+import swidget.widgets.LiveFrame;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layout.HeaderBox;
 import swidget.widgets.layout.HeaderPanel;
 
-public class HeaderFrame extends JFrame {
+public class HeaderFrame extends LiveFrame {
 
 	private HeaderPanel root;
 	private Runnable onClose;
