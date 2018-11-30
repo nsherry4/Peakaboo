@@ -49,7 +49,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		List<Curve> perm = new ArrayList<>(curves);
 		int counter = 0;
 		double[] scalings = new double[size];
-		while (counter <= 25) {
+		while (counter <= 10) {
 			Collections.shuffle(perm, new Random(12345654321l));
 			
 			
