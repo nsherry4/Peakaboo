@@ -23,6 +23,10 @@ fitted:
   Ni:K: Omitted, Considered Inhomogeneous #475.0
   Se:K: Omitted, Considered Inhomogeneous
   Br:K: Omitted, Large Uncertainty
+  Cd:K: Omitted, Considered Inhomogeneous #270.0
+  Cd:L: Omitted, Considered Inhomogeneous #270.0
+#  Re:L: #50.0
+  Pt:L: Omitted, Considered Inhomogeneous
 
 concentrations:
   Na:K: 6700.0
@@ -53,9 +57,7 @@ concentrations:
   Nb:K: 465.0
   Mo:K: 417.0
   Ag:K: 251.0
-  Cd:K: 270.0
   Ag:L: 251.0
-  Cd:L: 270.0
   In:L: 434.0
   Cs:L: 366.0
   Ba:L: 452.0
@@ -76,7 +78,6 @@ concentrations:
   Hf:L: 435.0
   Ta:L: 446.0
   W:L: 444.0
-  Re:L: 50.0
   Au:L: 24.0
   Pb:L: 38.0
   Tl:L: 60.0

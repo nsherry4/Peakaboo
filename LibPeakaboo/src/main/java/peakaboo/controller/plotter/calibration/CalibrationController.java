@@ -12,6 +12,7 @@ import peakaboo.calibration.CalibrationReference;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.curvefit.curve.fitting.FittingResultSet;
 import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
+import peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -42,7 +43,7 @@ public class CalibrationController extends Eventful {
 		tss = tss.stream().map(ts -> PeakTable.SYSTEM.get(ts)).filter(ts -> ts != null).collect(Collectors.toList());
 		plotController.fitting().addAllTransitionSeries(tss);
 		//TODO: Should we be doing this, or should the user be doing it?
-		plotController.fitting().setFittingSolver(new OptimizingFittingSolver());
+		plotController.fitting().setFittingSolver(new MultisamplingOptimizingFittingSolver());
 		plotController.fitting().setCurveFitter(new OptimizingCurveFitter());
 		
 		setCalibrationReference(ref);

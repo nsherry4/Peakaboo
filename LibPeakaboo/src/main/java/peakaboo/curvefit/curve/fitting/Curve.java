@@ -25,7 +25,7 @@ import peakaboo.curvefit.peak.transition.TransitionShell;
  * @author NAS
  */
 
-public class Curve
+public class Curve implements Comparable<Curve>
 {
 
 	//The {@link TransitionSeries} that this fitting is based on
@@ -114,8 +114,7 @@ public class Curve
 	 * @return a scaled fit
 	 */
 	public Spectrum scaleInto(float scale, Spectrum target) {
-		SpectrumCalculations.multiplyBy_target(normalizedCurve, target, scale);
-		return target;
+		return SpectrumCalculations.multiplyBy_target(normalizedCurve, target, scale);
 	}
 
 
@@ -267,6 +266,11 @@ public class Curve
 	public String toString()
 	{
 		return "[" + transitionSeries + "] x " + normalizationScale;
+	}
+
+	@Override
+	public int compareTo(Curve o) {
+		return this.transitionSeries.compareTo(o.transitionSeries);
 	}
 
 	

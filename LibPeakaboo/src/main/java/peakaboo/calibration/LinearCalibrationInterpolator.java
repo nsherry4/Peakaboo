@@ -12,7 +12,7 @@ import peakaboo.curvefit.peak.transition.TransitionShell;
 public class LinearCalibrationInterpolator implements CalibrationProcessor {
 
 	@Override
-	public void process(CalibrationReference reference, CalibrationProfile profile) {
+	public void process(CalibrationProfile profile) {
 		interpolate(profile, TransitionShell.K);
 		interpolate(profile, TransitionShell.L);
 		interpolate(profile, TransitionShell.M);
