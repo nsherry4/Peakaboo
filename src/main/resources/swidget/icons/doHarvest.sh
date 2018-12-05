@@ -52,6 +52,10 @@ mkdir ./48/
 ./harvest.rb elementary/actions edit-clear
 ./harvest.rb elementary/actions edit edit-edit
 
+#selection controls
+./harvest.rb elementary/actions selection-checked selection-all
+./harvest.rb elementary/actions selection-remove selection-none
+
 #directional controls
 ./harvest.rb elementary/actions go-up
 ./harvest.rb elementary/actions go-down

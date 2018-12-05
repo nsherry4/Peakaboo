@@ -81,7 +81,12 @@ public enum StockIcon {
 	ZOOM_BEST_FIT,
 	ZOOM_IN,
 	ZOOM_ORIGINAL,
-	ZOOM_OUT
+	ZOOM_OUT, 
+	
+	
+	
+	SELECTION_ALL,
+	SELECTION_NONE
 
 	
 	

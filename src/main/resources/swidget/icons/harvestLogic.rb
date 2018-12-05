@@ -18,13 +18,13 @@ def harvestIcon(path, folder, name, newname, elementary=true)
 		if (File.exists? "#{path}/48x48/#{folder}/#{name}.png") then
 			`cp "#{path}/48x48/#{folder}/#{name}.png" "./48/#{newname}.png"`
 		else
-			`rsvg "#{path}/scalable/#{folder}/#{name}.svg" "./48/#{newname}.png"`
+			`rsvg-convert "#{path}/scalable/#{folder}/#{name}.svg" >"./48/#{newname}.png"`
 		end
 		
 		if (File.exists? "#{path}/32x32/#{folder}/#{name}.png") then
 			`cp "#{path}/32x32/#{folder}/#{name}.png" "./32/#{newname}.png"`
 		else
-			`rsvg "#{path}/scalable/#{folder}/#{name}.svg" "./32/#{newname}.png"`
+			`rsvg-convert "#{path}/scalable/#{folder}/#{name}.svg" >"./32/#{newname}.png"`
 		end
 		
 		`cp "#{path}/32x32/#{folder}/#{name}.png" "./32/#{newname}.png"`
@@ -41,24 +41,24 @@ end
 def harvestIconAtSize(path, folder, name, newname, size, fallbackSize=nil)
 
 	if File.exist?("#{path}/#{folder}/#{size}/#{name}.svg")
-		cmd = "rsvg '#{path}/#{folder}/#{size}/#{name}.svg' './#{size}/#{newname}.png'"
+		cmd = "rsvg-convert '#{path}/#{folder}/#{size}/#{name}.svg' >'./#{size}/#{newname}.png'"
 		#puts cmd
 		`#{cmd}`
 		#`rsvg "#{path}/#{folder}/#{size}/#{name}.svg" "./#{size}/#{newname}.png"`
 	elsif fallbackSize != nil and File.exist?("#{path}/#{folder}/#{fallbackSize}/#{name}.svg")
-		cmd = "rsvg -w #{size} -h #{size} '#{path}/#{folder}/#{fallbackSize}/#{name}.svg' './#{size}/#{newname}.png'"
+		cmd = "rsvg-convert -w #{size} -h #{size} '#{path}/#{folder}/#{fallbackSize}/#{name}.svg' >'./#{size}/#{newname}.png'"
 		#puts cmd
 		`#{cmd}`
-		#`rsvg -w#{size} -h#{size} "#{path}/#{folder}/#{fallbackSize}/#{name}.svg" "./#{size}/#{newname}.png"`
+		#`rsvg-convert -w#{size} -h#{size} "#{path}/#{folder}/#{fallbackSize}/#{name}.svg" "./#{size}/#{newname}.png"`
 	end
 
 end
 
 def harvestCustom(name, newname)
 
-	`rsvg -w 48 -h 48 "./custom/#{name}.svg" "./48/#{newname}.png"`
-	`rsvg -w 32 -h 32 "./custom/#{name}.svg" "./32/#{newname}.png"`
-	`rsvg -w 24 -h 24 "./custom/#{name}.svg" "./24/#{newname}.png"`
-	`rsvg -w 16 -h 16 "./custom/#{name}.svg" "./16/#{newname}.png"`
+	`rsvg-convert -w 48 -h 48 "./custom/#{name}.svg" >"./48/#{newname}.png"`
+	`rsvg-convert -w 32 -h 32 "./custom/#{name}.svg" >"./32/#{newname}.png"`
+	`rsvg-convert -w 24 -h 24 "./custom/#{name}.svg" >"./24/#{newname}.png"`
+	`rsvg-convert -w 16 -h 16 "./custom/#{name}.svg" >"./16/#{newname}.png"`
 
 end
