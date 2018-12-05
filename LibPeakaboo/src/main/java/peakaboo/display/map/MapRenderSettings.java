@@ -31,7 +31,7 @@ public class MapRenderSettings {
 	
 	
 	public boolean drawCoord = false;
-	public Coord<Number> coordTL, coordTR, coordBL, coordBR;
+	public Coord<Number> coordLoXLoY, coordHiXLoY, coordLoXHiY, coordHiXHiY;
 	public SISize physicalUnits;
 	public boolean physicalCoord = false;
 	

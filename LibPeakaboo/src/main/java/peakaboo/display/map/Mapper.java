@@ -213,10 +213,10 @@ public class Mapper {
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter (
 
 			settings.drawCoord,
-			settings.coordBL,
-			settings.coordBR,
-			settings.coordTL,
-			settings.coordTR,
+			settings.coordLoXHiY,
+			settings.coordHiXHiY,
+			settings.coordLoXLoY,
+			settings.coordHiXLoY,
 			settings.physicalUnits,
 
 			settings.showSpectrum,
@@ -345,10 +345,10 @@ public class Mapper {
 		spectrumCoordPainter = new SpectrumCoordsAxisPainter
 		(
 			settings.drawCoord,
-			settings.coordBL,
-			settings.coordBR,
-			settings.coordTL,
-			settings.coordTR,
+			settings.coordLoXHiY,
+			settings.coordHiXHiY,
+			settings.coordLoXLoY,
+			settings.coordHiXLoY,
 			settings.physicalUnits,
 
 			settings.showSpectrum,
@@ -467,10 +467,10 @@ public class Mapper {
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
 			settings.drawCoord,
-			settings.coordBL,
-			settings.coordBR,
-			settings.coordTL,
-			settings.coordTR,
+			settings.coordLoXHiY,
+			settings.coordHiXHiY,
+			settings.coordLoXLoY,
+			settings.coordHiXLoY,
 			settings.physicalUnits,
 
 			settings.showSpectrum,
