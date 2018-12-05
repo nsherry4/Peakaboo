@@ -93,7 +93,7 @@ public class MappingController extends EventfulType<String>
 		
 		settings.showDatasetTitle = this.display.getView().getShowDatasetTitle();
 		settings.datasetTitle = this.mapsController.getDatasetTitle();
-		
+		settings.showScaleBar = this.display.getView().getShowScaleBar();
 		settings.showMapTitle = this.display.getView().getShowTitle();
 		settings.mapTitle = this.getSettings().getMapFittings().mapLongTitle();
 		

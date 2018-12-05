@@ -224,7 +224,8 @@ public class Mapper {
 			spectrumSteps,
 			paletteList,
 
-			settings.physicalCoord
+			settings.physicalCoord,
+			settings.showScaleBar
 		);
 		axisPainters.add(spectrumCoordPainter);
 
@@ -356,6 +357,7 @@ public class Mapper {
 			paletteList,
 
 			settings.physicalCoord,
+			settings.showScaleBar,
 			1,
 			settings.mode == MapDisplayMode.RATIO,
 			spectrumMarkers
@@ -475,6 +477,7 @@ public class Mapper {
 			settings.spectrumHeight,
 
 			settings.physicalCoord,
+			settings.showScaleBar,
 			colours
 			
 		);

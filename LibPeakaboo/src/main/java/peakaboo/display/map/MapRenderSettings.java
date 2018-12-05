@@ -24,7 +24,9 @@ public class MapRenderSettings {
 	public boolean monochrome = false;
 	public boolean contours = false;
 	public int contourSteps = 15;
-		
+	
+	public boolean showScaleBar = false;
+	
 	public MapDisplayMode mode = MapDisplayMode.COMPOSITE;
 	
 	
@@ -40,6 +42,7 @@ public class MapRenderSettings {
 	public List<Integer> selectedPoints = new ArrayList<>();
 	
 	public CalibrationProfile calibrationProfile = new CalibrationProfile();
+	
 	
 	
 }

@@ -38,7 +38,7 @@ class MapperToolbar extends JToolBar {
 	private ToolbarImageButton	showComposition, examineSubset;
 	
 	private JCheckBoxMenuItem	monochrome, logview;
-	private JMenuItem			title, spectrum, coords, dstitle;
+	private JMenuItem			title, spectrum, coords, dstitle, scalebar;
 	
 	MapperToolbar(MapperPanel panel, MappingController controller) {
 
@@ -196,19 +196,23 @@ class MapperToolbar extends JToolBar {
 		dstitle = new JCheckBoxMenuItem("Show Dataset Title");
 		spectrum = new JCheckBoxMenuItem("Show Spectrum");
 		coords = new JCheckBoxMenuItem("Show Coordinates");
+		scalebar = new JCheckBoxMenuItem("Show Scale Bar");
 		monochrome = new JCheckBoxMenuItem("Monochrome");
 		logview = new JCheckBoxMenuItem("Log Scale");
+		
 
 		MapViewSettings viewSettings = controller.getSettings().getView();
 		title.setSelected(viewSettings.getShowTitle());
 		spectrum.setSelected(viewSettings.getShowSpectrum());
 		coords.setSelected(viewSettings.getShowCoords());
 		dstitle.setSelected(viewSettings.getShowDatasetTitle());
+		scalebar.setSelected(viewSettings.getShowScaleBar());
 
 		spectrum.addActionListener(e -> viewSettings.setShowSpectrum(spectrum.isSelected()));
 		coords.addActionListener(e -> viewSettings.setShowCoords(coords.isSelected()));
 		title.addActionListener(e -> viewSettings.setShowTitle(title.isSelected()));
 		dstitle.addActionListener(e -> viewSettings.setShowDatasetTitle(dstitle.isSelected()));
+		scalebar.addActionListener(e -> viewSettings.setShowScaleBar(scalebar.isSelected()));
 		monochrome.addActionListener(e -> viewSettings.setMonochrome(monochrome.isSelected()));
 		logview.addActionListener(e -> controller.getSettings().getMapFittings().setLogView(logview.isSelected()));
 		
@@ -217,6 +221,7 @@ class MapperToolbar extends JToolBar {
 		menu.add(dstitle);
 		menu.add(spectrum);
 		menu.add(coords);
+		menu.add(scalebar);
 		menu.addSeparator();
 		menu.add(logview);
 		menu.add(monochrome);

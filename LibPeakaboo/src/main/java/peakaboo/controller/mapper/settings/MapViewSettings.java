@@ -25,6 +25,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public boolean	drawCoordinates		= true;
 	public boolean	drawSpectrum		= true;
 	public boolean	drawTitle			= true;
+	private boolean drawScaleBar		= true;
 	
 	public boolean	showDataSetTitle	= false;
 	public int		spectrumSteps		= 15;
@@ -38,6 +39,9 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	
 	public File		savePictureFolder 	= null;
 	public File		dataSourceFolder 	= null;
+
+
+	
 	
 	
 	public MapViewSettings(MappingController mapController, MapViewSettings copy)
@@ -240,6 +244,15 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 
 
+	public void setShowScaleBar(boolean show) {
+		this.drawScaleBar = show;
+		updateListeners(UpdateType.UI_OPTIONS.toString());
+	}
+	
+	public boolean getShowScaleBar() {
+		return this.drawScaleBar;
+	}
+	
 	public void setShowTitle(boolean show)
 	{
 		this.drawTitle = show;
@@ -355,6 +368,9 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 			return new Coord<Number>(mapController.getSettings().getView().getDataWidth(), 1);
 		}
 	}
+
+
+
 	
 
 	
