@@ -28,7 +28,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided)
+			boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super(
 			drawCoords,
@@ -39,7 +39,8 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided);
+			realDimensionsProvided,
+			drawScaleBar);
 
 		this.markings = null;
 		this.negativeValues = false;
@@ -55,7 +56,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
-			boolean realDimensionsProvided, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
+			boolean realDimensionsProvided, boolean drawScaleBar, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
 	{
 		super(
 			drawCoords,
@@ -66,7 +67,8 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided);
+			realDimensionsProvided,
+			drawScaleBar);
 
 		this.markings = new ArrayList<>(markings);
 		this.negativeValues = negativeValues;

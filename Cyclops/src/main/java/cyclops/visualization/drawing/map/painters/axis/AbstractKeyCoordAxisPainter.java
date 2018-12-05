@@ -18,13 +18,13 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	protected SISize				coordinateUnits;
 	protected static Coord<Float>	coordPadding	= new Coord<Float>(3.0f, 3.0f);
 
-	protected boolean				drawCoords, drawKey, realDimensionsProvided;
+	protected boolean				drawCoords, drawKey, realDimensionsProvided, drawScaleBar;
 	protected int					keyHeight;
 
 
 	public AbstractKeyCoordAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
-			boolean drawKey, int keyHeight, boolean realDimensionsProvided)
+			boolean drawKey, int keyHeight, boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super();
 
@@ -34,7 +34,8 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		this.bottomLeftCoord = bottomLeftCoord;
 		this.bottomRightCoord = bottomRightCoord;
 		this.coordinateUnits = coordinateUnits;
-
+		this.drawScaleBar = drawScaleBar;
+		
 		this.drawKey = drawKey;
 		this.keyHeight = keyHeight;
 
@@ -66,7 +67,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		if (drawKey) drawKey(p);
 		drawCoordinates(p, getCoordinateBorderSize(p.context));
-		if (realDimensionsProvided && coordinateUnits != null) drawScaleBar(p);
+		if (realDimensionsProvided && coordinateUnits != null && drawScaleBar) drawScaleBar(p);
 
 	}
 

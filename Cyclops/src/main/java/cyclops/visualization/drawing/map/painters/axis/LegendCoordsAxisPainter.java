@@ -19,7 +19,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	public LegendCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
 			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, List<Pair<PaletteColour, String>> entries)
+			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, boolean drawScaleBar, List<Pair<PaletteColour, String>> entries)
 	{
 		super(
 			drawCoords,
@@ -30,7 +30,8 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
-			realDimensionsProvided);
+			realDimensionsProvided,
+			drawScaleBar);
 
 		this.entries = entries;
 
