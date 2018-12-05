@@ -66,7 +66,7 @@ public class Composite extends JPanel {
 					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
-					mapFittings.invalidateInterpolation();
+
 				}
 			}
 

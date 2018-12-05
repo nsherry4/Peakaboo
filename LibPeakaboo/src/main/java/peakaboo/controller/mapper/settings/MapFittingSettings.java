@@ -677,6 +677,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean visible)
 	{
 		this.visibility.put(ts, visible);
+		invalidateInterpolation();
 	}
 
 	/**
