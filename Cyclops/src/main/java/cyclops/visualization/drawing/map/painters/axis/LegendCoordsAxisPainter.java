@@ -17,16 +17,16 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	private List<Pair<PaletteColour, String>>	entries;
 
-	public LegendCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
-			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
+	public LegendCoordsAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, boolean drawScaleBar, List<Pair<PaletteColour, String>> entries)
 	{
 		super(
 			drawCoords,
-			topLeftCoord,
-			topRightCoord,
-			bottomLeftCoord,
-			bottomRightCoord,
+			coordLoXLoY,
+			coordHiXLoY,
+			coordLoXHiY,
+			coordHiXHiY,
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,

@@ -14,7 +14,7 @@ import cyclops.visualization.drawing.painters.axis.AxisPainter;
 public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 {
 
-	protected Coord<Number>			topLeftCoord, topRightCoord, bottomLeftCoord, bottomRightCoord;
+	protected Coord<Number>			coordLoXLoY, coordHiXLoY, coordLoXHiY, coordHiXHiY;
 	protected SISize				coordinateUnits;
 	protected static Coord<Float>	coordPadding	= new Coord<Float>(3.0f, 3.0f);
 
@@ -22,17 +22,17 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	protected int					keyHeight;
 
 
-	public AbstractKeyCoordAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
-			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
+	public AbstractKeyCoordAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawKey, int keyHeight, boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super();
 
 		this.drawCoords = drawCoords;
-		this.topLeftCoord = topLeftCoord;
-		this.topRightCoord = topRightCoord;
-		this.bottomLeftCoord = bottomLeftCoord;
-		this.bottomRightCoord = bottomRightCoord;
+		this.coordLoXLoY = coordLoXLoY;
+		this.coordHiXLoY = coordHiXLoY;
+		this.coordLoXHiY = coordLoXHiY;
+		this.coordHiXHiY = coordHiXHiY;
 		this.coordinateUnits = coordinateUnits;
 		this.drawScaleBar = drawScaleBar;
 		
@@ -78,7 +78,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	private void drawScaleBar(PainterData p)
 	{
 
-		float width = Math.abs(bottomRightCoord.x.floatValue() - bottomLeftCoord.x.floatValue());
+		float width = Math.abs(coordHiXHiY.x.floatValue() - coordLoXHiY.x.floatValue());
 		if (width == 0d) return;
 		float totalWidth = width;
 		width /= 3.0;
@@ -157,11 +157,11 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		mapXEnd = axesData.xPositionBounds.end - borderX.second;
 		mapYEnd = axesData.yPositionBounds.end - borderY.second;
 
-		drawCoordinatePair(p, topLeftCoord, borders, mapXStart, mapYStart);
-		drawCoordinatePair(p, topRightCoord, borders, mapXEnd, mapYStart);
+		drawCoordinatePair(p, coordLoXLoY, borders, mapXStart, mapYStart);
+		drawCoordinatePair(p, coordHiXLoY, borders, mapXEnd, mapYStart);
 
-		drawCoordinatePair(p, bottomLeftCoord, borders, mapXStart, mapYEnd);
-		drawCoordinatePair(p, bottomRightCoord, borders, mapXEnd, mapYEnd);
+		drawCoordinatePair(p, coordLoXHiY, borders, mapXStart, mapYEnd);
+		drawCoordinatePair(p, coordHiXHiY, borders, mapXEnd, mapYEnd);
 	}
 
 
@@ -224,28 +224,28 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		// X
 
-		cx = context.getTextWidth(topLeftCoord.x.toString() + units + ",");
+		cx = context.getTextWidth(coordLoXLoY.x.toString() + units + ",");
 		if (cx > x) x = cx;
 
-		cx = context.getTextWidth(topRightCoord.x.toString() + units + ",");
+		cx = context.getTextWidth(coordHiXLoY.x.toString() + units + ",");
 		if (cx > x) x = cx;
 
-		cx = context.getTextWidth(bottomLeftCoord.x.toString() + units + ",");
+		cx = context.getTextWidth(coordLoXHiY.x.toString() + units + ",");
 		if (cx > x) x = cx;
 
-		cx = context.getTextWidth(bottomRightCoord.x.toString() + units + ",");
+		cx = context.getTextWidth(coordHiXHiY.x.toString() + units + ",");
 		if (cx > x) x = cx;
 
-		cx = context.getTextWidth(topLeftCoord.y.toString() + units + ",");
+		cx = context.getTextWidth(coordLoXLoY.y.toString() + units + ",");
 		if (cx > x) x = cx;
 
-		cx = context.getTextWidth(topRightCoord.y.toString() + units + ",");
+		cx = context.getTextWidth(coordHiXLoY.y.toString() + units + ",");
 		if (cx > x) x = cx;
 
-		cx = context.getTextWidth(bottomLeftCoord.y.toString() + units + ",");
+		cx = context.getTextWidth(coordLoXHiY.y.toString() + units + ",");
 		if (cx > x) x = cx;
 
-		cx = context.getTextWidth(bottomRightCoord.y.toString() + units + ",");
+		cx = context.getTextWidth(coordHiXHiY.y.toString() + units + ",");
 		if (cx > x) x = cx;
 
 		// Y

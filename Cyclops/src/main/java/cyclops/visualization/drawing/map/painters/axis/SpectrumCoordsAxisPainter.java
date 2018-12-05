@@ -25,17 +25,17 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	private int 						decimalPoints;
 
 	
-	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
-			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
+	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
 			boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super(
 			drawCoords,
-			topLeftCoord,
-			topRightCoord,
-			bottomLeftCoord,
-			bottomRightCoord,
+			coordLoXLoY,
+			coordHiXLoY,
+			coordLoXHiY,
+			coordHiXHiY,
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
@@ -53,17 +53,17 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	}
 
 
-	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> topLeftCoord, Coord<Number> topRightCoord,
-			Coord<Number> bottomLeftCoord, Coord<Number> bottomRightCoord, SISize coordinateUnits,
+	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
 			boolean realDimensionsProvided, boolean drawScaleBar, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
 	{
 		super(
 			drawCoords,
-			topLeftCoord,
-			topRightCoord,
-			bottomLeftCoord,
-			bottomRightCoord,
+			coordLoXLoY,
+			coordHiXLoY,
+			coordLoXHiY,
+			coordHiXHiY,
 			coordinateUnits,
 			drawSpectrum,
 			spectrumHeight,
