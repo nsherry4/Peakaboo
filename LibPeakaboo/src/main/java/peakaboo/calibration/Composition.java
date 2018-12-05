@@ -33,21 +33,38 @@ public class Composition {
 	
 	public List<Element> elementsByConcentration() {
 		List<Element> sorted = new ArrayList<>(concentrations.keySet());
-		sorted.sort((e1, e2) -> -Float.compare(get(e1), get(e2)));
+		sorted.sort((e1, e2) -> -Float.compare(getPercent(e1), getPercent(e2)));
 		return sorted;
 	}
 	
-	public float get(Element e) {
+	public float getPercent(Element e) {
 		if (concentrations.containsKey(e)) {
 			return concentrations.get(e);
 		}
 		return 0f;
 	}
 	
-	public String getPercent(Element e) {
-		float ppm = get(e);
+	public String getPercentFormatted(Element e) {
+		float ppm = getPercent(e);
 		return format.format(ppm/10000) + "%";
 	}
+	
+	public float getRatio(Element e) {
+		if (!concentrations.containsKey(e)) {
+			return 0;
+		}
+		float percent = getPercent(e);
+		float anchor = getPercent(profile.getReference().getAnchor().getElement());
+		float ratio = percent / anchor;
+		return ratio;
+	}
+	
+	public String getRatioFormatted(Element e) {
+		float ratio = getRatio(e);
+		return format.format(ratio) + "x";
+	}
+	
+
 	
 	public boolean contains(Element e) {
 		return concentrations.containsKey(e);

@@ -107,11 +107,11 @@ public class CompositionPlot {
 		uncalibratedData = new ISpectrum(es.size());
 		for (Element e : es) {
 			if (comp.isCalibrated(e)) {
-				calibratedData.add(comp.get(e));
+				calibratedData.add(comp.getPercent(e));
 				uncalibratedData.add(0);
 			} else {
 				calibratedData.add(0);
-				uncalibratedData.add(comp.get(e));
+				uncalibratedData.add(comp.getPercent(e));
 			}
 			
 		}

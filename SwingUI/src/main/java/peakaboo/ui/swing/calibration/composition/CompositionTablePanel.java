@@ -33,7 +33,7 @@ public class CompositionTablePanel extends JPanel {
 				if (columnIndex == 0) {
 					return e.toString();
 				} else if (columnIndex == 1) {
-					return comp.getPercent(e);
+					return comp.getRatioFormatted(e);
 				} else {
 					ITransitionSeries ts = comp.getCompositionSource(e);
 					if (ts == null) {
@@ -60,7 +60,7 @@ public class CompositionTablePanel extends JPanel {
 				if (columnIndex == 0) {
 					return "Element";
 				} else if (columnIndex == 1) {
-					return "Composition";
+					return "Ratio to " + comp.getProfile().getReference().getAnchor().getElement().toString();
 				} else {
 					return "Notes";
 				}

@@ -77,10 +77,15 @@ public class CompositionView extends HeaderLayer {
 	private String textData() {
 		List<Element> es = conc.elementsByConcentration();
 		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Element: Ratio to ");
+		sb.append(conc.getProfile().getReference().getAnchor().getElement().toString());
+		sb.append("\n");
+		
 		for (Element e : es) {
 			sb.append(e.name());
 			sb.append(": ");
-			sb.append(conc.getPercent(e));
+			sb.append(conc.getRatioFormatted(e));
 			
 			
 			ITransitionSeries ts = conc.getCompositionSource(e);
