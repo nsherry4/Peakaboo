@@ -60,6 +60,11 @@ public class DrawingRequest implements Serializable, Cloneable
 	 * The base unit size or scale for a single data point
 	 */
 	public float	unitSize;
+
+	/**
+	 * Indicates if the data should be presented in screen-orientation (0,0 at top left), or in cartesian orientation (0,0 at bottom left)
+	 */
+	public boolean screenOrientation;
 	
 	
 	
@@ -77,7 +82,9 @@ public class DrawingRequest implements Serializable, Cloneable
 		maxYIntensity = -1;
 
 		viewTransform = ViewTransform.LINEAR;
-		unitSize = 10.0f;	
+		unitSize = 10.0f;
+		
+		screenOrientation = true;
 	}
 	
 	

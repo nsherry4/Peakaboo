@@ -370,6 +370,10 @@ public class MapDrawing extends Drawing
 		int indexX = (int) Math.floor(dr.uninterpolatedWidth * percentX);
 		int indexY = (int) Math.floor(dr.uninterpolatedHeight * percentY);
 		
+		if(!dr.screenOrientation) {
+			indexY = (dr.uninterpolatedHeight-1) - indexY;
+		}
+		
 		if (!allowOutOfBounds) if (indexX < 0 || indexX >= dr.uninterpolatedWidth) return null;
 		if (!allowOutOfBounds) if (indexY < 0 || indexY >= dr.uninterpolatedHeight) return null;
 		

@@ -4,7 +4,9 @@ package cyclops.visualization.drawing.map.painters;
 import java.util.ArrayList;
 import java.util.List;
 
+import cyclops.GridPerspective;
 import cyclops.ISpectrum;
+import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
@@ -110,7 +112,30 @@ public abstract class MapPainter extends Painter
 	protected Spectrum transformDataForMap(DrawingRequest dr, ReadOnlySpectrum data)
 	{
 		Spectrum transformedData = new ISpectrum(data);
+		
+		//log transform
 		if (dr.viewTransform == ViewTransform.LOG) transformedData = SpectrumCalculations.logList(transformedData);
+		
+		//vertical orientation flip
+		if (!dr.screenOrientation) {
+			/*
+			 * the screenOrientation setting puts the origin (0,0) in the top left rather
+			 * than in the bottom left. BUT, having the origin in the top left is the
+			 * cyclops-native format. So when flipY is set, we don't have to do anything.
+			 * It's when it's not set that we have to flip it...
+			 */
+			GridPerspective<Float> grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
+			Spectrum flip = new ISpectrum(transformedData.size());
+			for (int i = 0; i < data.size(); i++) {
+				Pair<Integer, Integer> xy = grid.getXYFromIndex(i);
+				int x = xy.first;
+				int y = xy.second;
+				y = (dr.dataHeight-1) - y;
+				flip.set(i, grid.get(transformedData, x, y));
+			}
+			transformedData = flip;
+		}		
+		
 		return transformedData;
 	}
 	

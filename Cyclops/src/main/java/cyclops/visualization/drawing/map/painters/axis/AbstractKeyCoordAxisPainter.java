@@ -20,8 +20,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 	protected boolean				drawCoords, drawKey, realDimensionsProvided, drawScaleBar;
 	protected int					keyHeight;
-
-
+	
 	public AbstractKeyCoordAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawKey, int keyHeight, boolean realDimensionsProvided, boolean drawScaleBar)
@@ -42,7 +41,6 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		this.realDimensionsProvided = realDimensionsProvided;
 		
 	}
-
 
 	@Override
 	public Pair<Float, Float> getAxisSizeX(PainterData p)
@@ -151,17 +149,25 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		borderX = getAxisSizeX(p);
 		borderY = getAxisSizeY(p);
 
-		float mapXStart, mapYStart, mapXEnd, mapYEnd;
-		mapXStart = axesData.xPositionBounds.start;
-		mapYStart = axesData.yPositionBounds.start;
-		mapXEnd = axesData.xPositionBounds.end - borderX.second;
-		mapYEnd = axesData.yPositionBounds.end - borderY.second;
+		float mapLoX, mapLoY, mapHiX, mapHiY;
+		if (p.dr.screenOrientation) {
+			mapLoX = axesData.xPositionBounds.start;
+			mapLoY = axesData.yPositionBounds.start;
+			mapHiX = axesData.xPositionBounds.end - borderX.second;
+			mapHiY = axesData.yPositionBounds.end - borderY.second;
+		} else {
+			mapLoX = axesData.xPositionBounds.start;
+			mapHiY = axesData.yPositionBounds.start; 
+			mapHiX = axesData.xPositionBounds.end - borderX.second;
+			mapLoY = axesData.yPositionBounds.end - borderY.second;
+		}
+		
 
-		drawCoordinatePair(p, coordLoXLoY, borders, mapXStart, mapYStart);
-		drawCoordinatePair(p, coordHiXLoY, borders, mapXEnd, mapYStart);
+		drawCoordinatePair(p, coordLoXLoY, borders, mapLoX, mapLoY);
+		drawCoordinatePair(p, coordHiXLoY, borders, mapHiX, mapLoY);
 
-		drawCoordinatePair(p, coordLoXHiY, borders, mapXStart, mapYEnd);
-		drawCoordinatePair(p, coordHiXHiY, borders, mapXEnd, mapYEnd);
+		drawCoordinatePair(p, coordLoXHiY, borders, mapLoX, mapHiY);
+		drawCoordinatePair(p, coordHiXHiY, borders, mapHiX, mapHiY);
 	}
 
 

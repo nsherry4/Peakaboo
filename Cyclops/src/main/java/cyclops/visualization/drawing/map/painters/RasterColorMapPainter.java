@@ -1,10 +1,19 @@
 package cyclops.visualization.drawing.map.painters;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import cyclops.GridPerspective;
+import cyclops.ISpectrum;
+import cyclops.Pair;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
 import cyclops.visualization.Buffer;
+import cyclops.visualization.drawing.DrawingRequest;
+import cyclops.visualization.drawing.ViewTransform;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.palettes.SingleColourPalette;
@@ -40,14 +49,15 @@ public class RasterColorMapPainter extends MapPainter
 
 		p.context.save();
 
+			List<PaletteColour> data = transformListDataForMap(p.dr, pixels);
 	
 			if (p.dr.drawToVectorSurface) {
-				drawAsScalar(p, pixels, cellSize);
+				drawAsScalar(p, data, cellSize);
 				buffer = null;
 			} else {
 				
 				if (buffer == null) {
-					buffer = drawAsRaster(p, pixels, cellSize, p.dr.dataHeight * p.dr.dataWidth);
+					buffer = drawAsRaster(p, data, cellSize, p.dr.dataHeight * p.dr.dataWidth);
 				}
 				p.context.compose(buffer, 0, 0, cellSize);
 				
@@ -105,6 +115,47 @@ public class RasterColorMapPainter extends MapPainter
 		p.context.restore();
 	}
 
+	
+	protected <T> List<T> transformListDataForMap(DrawingRequest dr, List<T> list)
+	{
+		List<T> flip = new ArrayList<>(list);
+		
+		//vertical orientation flip
+		if (!dr.screenOrientation) {
+			/*
+			 * the screenOrientation setting puts the origin (0,0) in the top left rather
+			 * than in the bottom left. BUT, having the origin in the top left is the
+			 * cyclops-native format. So when flipY is set, we don't have to do anything.
+			 * It's when it's not set that we have to flip it...
+			 */
+			
+			//We have to accommodate interpolated and uninterpolated data here
+			GridPerspective<Float> grid;
+			int height = 0;
+			if (list.size() == dr.dataHeight * dr.dataWidth) {
+				grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
+				height = dr.dataHeight;
+			} else if (list.size() == dr.uninterpolatedWidth * dr.uninterpolatedHeight) {
+				grid = new GridPerspective<>(dr.uninterpolatedWidth, dr.uninterpolatedHeight, 0f);
+				height = dr.uninterpolatedHeight;
+			} else {
+				throw new IllegalArgumentException("List has wrong dimensions");
+			}
+			
+			for (int i = 0; i < flip.size(); i++) {
+				Pair<Integer, Integer> xy = grid.getXYFromIndex(i);
+				int x = xy.first;
+				int y = xy.second;
+				y = (height-1) - y;
+				int index = grid.getIndexFromXY(x, y);
+				flip.set(index, list.get(i));
+			}
+		}		
+		
+		return flip;
+	}
+	
+	
 	
 	public void clearBuffer()
 	{
