@@ -56,7 +56,7 @@ mkdir ./48/
 ./harvest.rb elementary/actions selection-checked selection-all
 ./harvest.rb elementary/actions selection-remove selection-none
 
-./harvest.rb elementary/actions object-flip-vertical
+./harvest.rb custom/actions object-flip-vertical
 ./harvest.rb elementary/actions object-flip-horizontal
 ./harvest.rb elementary/actions object-inverse
 ./harvest.rb elementary/actions object-rotate-left
