@@ -31,6 +31,9 @@ import peakaboo.ui.swing.calibration.composition.CompositionView;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
+import swidget.widgets.buttons.ImageButtonLayout;
+import swidget.widgets.buttons.ImageButtonSize;
+import swidget.widgets.buttons.ToggleImageButton;
 import swidget.widgets.buttons.ToolbarImageButton;
 
 class MapperToolbar extends JToolBar {
@@ -65,8 +68,9 @@ class MapperToolbar extends JToolBar {
 		this.add(saveText, c);
 		c.gridx++;
 		
+		this.add(new JToolBar.Separator( null ), c);
+		c.gridx++;
 		
-		this.addSeparator();
 		
 		
 		showComposition = new ToolbarImageButton("Composition")

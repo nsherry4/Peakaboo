@@ -12,13 +12,14 @@ import javax.swing.JSpinner;
 import peakaboo.controller.mapper.MappingController;
 import swidget.widgets.Spacing;
 
-public class MapContourPanel extends JPanel {
+public class MapAppearancePanel extends JPanel {
 
 	private JSpinner shadesSpinner;
 	private JCheckBox contours;
 	private JSpinner interpolation;
+	private JCheckBox flipY;
 	
-	public MapContourPanel(MappingController controller) {
+	public MapAppearancePanel(MappingController controller) {
 		
 		setName("Appearance");
 		
@@ -32,6 +33,19 @@ public class MapContourPanel extends JPanel {
 		c.weightx = 0.0;
 		c.weighty = 0.0;
 		c.gridy = 0;
+		
+		
+		flipY = new JCheckBox("Flip Vertically");
+		flipY.setSelected(controller.getSettings().getView().getScreenOrientation());
+		flipY.addActionListener(e -> {
+			controller.getSettings().getView().setScreenOrientation(flipY.isSelected());
+		});
+		c.gridx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 1.0;
+		this.add(flipY, c);
+		c.gridy++;
+		
 		
 		interpolation = new JSpinner();
 		interpolation.setValue(controller.getSettings().getView().getInterpolation());
@@ -76,6 +90,7 @@ public class MapContourPanel extends JPanel {
 			shadesSpinner.setEnabled(controller.getSettings().getView().getContours());
 			contours.setSelected(controller.getSettings().getView().getContours());
 			interpolation.setValue(controller.getSettings().getView().getInterpolation());
+			flipY.setSelected(controller.getSettings().getView().getScreenOrientation());
 		});
 		
 	}

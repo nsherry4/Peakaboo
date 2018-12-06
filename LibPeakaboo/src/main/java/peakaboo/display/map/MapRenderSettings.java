@@ -39,6 +39,8 @@ public class MapRenderSettings {
 	public int spectrumHeight = 15;
 	public String spectrumTitle = "";
 	
+	public boolean screenOrientation = false;
+	
 	public List<Integer> selectedPoints = new ArrayList<>();
 	
 	public CalibrationProfile calibrationProfile = new CalibrationProfile();

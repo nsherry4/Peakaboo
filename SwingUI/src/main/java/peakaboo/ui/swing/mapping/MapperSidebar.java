@@ -15,7 +15,7 @@ import javax.swing.border.TitledBorder;
 
 import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.ui.swing.mapping.sidebar.MapContourPanel;
+import peakaboo.ui.swing.mapping.sidebar.MapAppearancePanel;
 import peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapSelectionPanel;
@@ -66,7 +66,7 @@ class MapperSidebar extends JPanel
 		maingbc.gridy++;
 		maingbc.weighty = 0.0;
 		maingbc.fill = GridBagConstraints.HORIZONTAL;
-		tabSettings.add(stylePanel(new MapContourPanel(controller)), maingbc);
+		tabSettings.add(stylePanel(new MapAppearancePanel(controller)), maingbc);
 
 		//Selection settings
 		// map settings

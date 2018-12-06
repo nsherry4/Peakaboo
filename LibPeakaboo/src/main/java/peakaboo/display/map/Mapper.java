@@ -183,7 +183,7 @@ public class Mapper {
 		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
 		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
-
+		dr.screenOrientation = settings.screenOrientation;
 		
 		if (settings.scalemode == MapScaleMode.RELATIVE)
 		{
