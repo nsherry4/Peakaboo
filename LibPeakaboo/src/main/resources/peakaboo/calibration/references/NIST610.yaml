@@ -15,72 +15,66 @@ uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
 fitted:
 #  Na:K: Omitted, Too Concentrated
 #  Si:K: Omitted, Too Concentrated
+  P:K: No Value Available
+  S:K: No Value Available
   Ar:K: Fitted, Not in Sample
-  Sn:L: Omitted, Overlapped with Calcium K #4300
-  Sb:L: Omitted, Overlapped with Calcium K #396
-  Te:L: Omitted, Overlapped with Sulfur K #302
+  Sn:L: Omitted, Overlapped with Calcium K
+  Sb:L: Omitted, Overlapped with Calcium K
+  Te:L: Omitted, Overlapped with Sulfur K
   I:L: No Value Available
-  Ni:K: Omitted, Considered Inhomogeneous #475.0
-  Se:K: Omitted, Considered Inhomogeneous
-  Br:K: Omitted, Large Uncertainty
-  Cd:K: Omitted, Considered Inhomogeneous #270.0
-  Cd:L: Omitted, Considered Inhomogeneous #270.0
-#  Re:L: #50.0
-  Pt:L: Omitted, Considered Inhomogeneous
+  Tl:L: Omitted, No Confidence in Value
 
 concentrations:
-  Na:K: 6700.0
-  Mg:K: 432.0
-  Al:K: 997.0
-  Si:K: 69700.0
-  P:K: 413.0
-  S:K: 575.0
-  Cl:K: 274.0
-  K:K: 464.0
-  Ca:K: 11400.0
-  Sc:K: 455.0
-  Ti:K: 452.0
-  V:K: 450.0
-  Cr:K: 408.0
-  Mn:K: 444.0
-  Fe:K: 458.0
-  Co:K: 410.0
-  Cu:K: 441.0
-  Zn:K: 460.0
-  Ga:K: 433.0
-  Ge:K: 447.0
-  As:K: 325.0
-  Rb:K: 426.0
-  Sr:K: 516.0
-  Y:K: 462.0
-  Zr:K: 448.0
-  Nb:K: 465.0
-  Mo:K: 417.0
-  Ag:K: 251.0
-  Ag:L: 251.0
-  In:L: 434.0
-  Cs:L: 366.0
-  Ba:L: 452.0
+  Ca:K: 11450.0
+  Na:K: 13800.0
+  Si:K: 72200.0
+  Mg:K: 460.0
+  Al:K: 2100.0
+  Cl:K: 470.0
+  K:K: 450.0
+  Ti:K: 450.0
+  V:K: 440.0
+  Cr:K: 400.0
+  Mn:K: 410.0
+  Fe:K: 480.0
+  Co:K: 425.0
+  Ni:K: 475.0
+  Cu:K: 440.0
+  Zn:K: 420.0
+  Ga:K: 440.0
+  Ge:K: 400.0
+  As:K: 300.0
+  Rb:K: 460.0
+  Sr:K: 480.0
+  Y:K: 480.0
+  Zr:K: 440.0
+  Nb:K: 440.0
+  Mo:K: 440.0
+  Ag:K: 200.0
+  Cd:K: 250.0
+  Ag:L: 200.0
+  Cd:L: 250.0
+  In:L: 450.0
+  Cs:L: 390.0
+  Ba:L: 430.0
   La:L: 440.0
-  Ce:L: 453.0
-  Pr:L: 448.0
+  Ce:L: 440.0
+  Pr:L: 440.0
   Nd:L: 430.0
-  Sm:L: 453.0
-  Eu:L: 447.0
-  Gd:L: 449.0
-  Tb:L: 437.0
-  Dy:L: 437.0
-  Ho:L: 449.0
-  Er:L: 455.0
-  Tm:L: 435.0
-  Yb:L: 450.0
-  Lu:L: 439.0
-  Hf:L: 435.0
-  Ta:L: 446.0
-  W:L: 444.0
-  Au:L: 24.0
-  Pb:L: 38.0
-  Tl:L: 60.0
-  Bi:L: 30.0
+  Sm:L: 450.0
+  Eu:L: 450.0
+  Gd:L: 440.0
+  Tb:L: 450.0
+  Dy:L: 430.0
+  Ho:L: 450.0
+  Er:L: 435.0
+  Tm:L: 460.0
+  Yb:L: 445.0
+  Lu:L: 440.0
+  Hf:L: 420.0
+  Ta:L: 320.0
+  Au:L: 226.0
+  Pb:L: 370.0
+  Bi:L: 380.0
   Th:L: 445.0
   U:L: 445.0
