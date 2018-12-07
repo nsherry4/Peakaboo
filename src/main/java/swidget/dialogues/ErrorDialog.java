@@ -15,12 +15,13 @@ public class ErrorDialog extends HeaderDialog {
 
 	private ErrorPanel error;
 	
-	public ErrorDialog(Window parent, String title, Throwable t) {
+	public ErrorDialog(Window parent, String title, String message, Throwable t) {
 		super(parent);
 		
 		getHeader().setCentre(title);
-		error = new ErrorPanel(t);
+		error = new ErrorPanel(message, t);
 		setBody(error);
+		
 		
 		ImageButton copy = new ImageButton(StockIcon.EDIT_COPY)
 				.withButtonSize(ImageButtonSize.LARGE)

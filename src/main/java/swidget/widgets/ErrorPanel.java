@@ -19,7 +19,15 @@ public class ErrorPanel extends JPanel {
 
 	private Throwable t;
 	
+	
 	public ErrorPanel(Throwable t) {
+		this(null, t);
+	}
+	
+	public ErrorPanel(String msg, Throwable t) {
+		if (t == null) {
+			throw new RuntimeException("Error Panel cannot be shown without exception");
+		}
 		this.t = t;
 		setLayout(new BorderLayout(Spacing.huge, Spacing.huge));
 		setBorder(Spacing.bHuge());
@@ -40,11 +48,14 @@ public class ErrorPanel extends JPanel {
 		if (t.getMessage() != null) {
 			realText = "<div style='font-size: 115%; padding-top: 0px; padding-bottom: 5px;'>" + t.getMessage() + "</div>";
 		}
-		realText += "The problem is of type " + t.getClass().getSimpleName();
+		if (msg == null) {
+			msg = "The problem is of type " + t.getClass().getSimpleName();
+		}
+		realText += "<div>" + msg + "</div>";
 		realText = "<html>" + realText + "</html>";
-		JLabel message = new JLabel(realText);
-		message.setBorder(new EmptyBorder(Spacing.medium, 0, Spacing.medium, 0));
-		north.add(message, BorderLayout.CENTER);
+		JLabel lblMessage = new JLabel(realText);
+		lblMessage.setBorder(new EmptyBorder(Spacing.medium, 0, Spacing.medium, 0));
+		north.add(lblMessage, BorderLayout.CENTER);
 		
 		JLabel icon = new JLabel(StockIcon.BADGE_ERROR.toImageIcon(IconSize.ICON));
 		north.add(icon, BorderLayout.WEST);
