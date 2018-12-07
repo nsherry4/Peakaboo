@@ -18,7 +18,8 @@ public class PlotToolbar extends JToolBar {
 	private PlotController controller;
 	private PlotPanel plot;
 	
-	private ToolbarImageButton toolbarSnapshot;
+	private ToolbarImageButton exportMenuButton;
+	private ToolbarImageButton saveButton;
 	private ToolbarImageButton toolbarMap;
 	private ToolbarImageButton toolbarComposition;
 	private ToolbarImageButton toolbarInfo;
@@ -27,6 +28,9 @@ public class PlotToolbar extends JToolBar {
 	private PlotMenuEnergy energyMenu;
 	private PlotMenuView viewMenu;
 	private PlotMenuMain mainMenu;
+	private PlotMenuExport exportMenu;
+	
+	 
 	
 	//===MAIN MENU WIDGETS===
 	
@@ -50,17 +54,28 @@ public class PlotToolbar extends JToolBar {
 		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
-		ToolbarImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set");
+		ToolbarImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set or session");
 		ibutton.addActionListener(e -> plot.actionOpenData());
 		this.add(ibutton, c);
 
 		// controls.add(button);
 
-		toolbarSnapshot = new ToolbarImageButton("Save Image", StockIcon.DEVICE_CAMERA).withTooltip("Save a picture of the current plot");
-		toolbarSnapshot.addActionListener(e -> plot.actionSavePicture());
-		c.gridx += 1;
-		this.add(toolbarSnapshot, c);
 
+
+		c.gridx += 1;
+		saveButton = new ToolbarImageButton("Save", StockIcon.DOCUMENT_SAVE_AS).withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use");
+		saveButton.withAction(plot::actionSaveSession);
+		this.add(saveButton, c);
+		
+		c.gridx += 1;
+		this.add(createExportMenuButton(), c);
+		
+
+		c.gridx += 1;
+		this.add(new JToolBar.Separator( null ), c);
+		
+		
+		
 		toolbarInfo = new ToolbarImageButton("Scan Info", StockIcon.BADGE_INFO).withTooltip("Displays extended information about this data set");
 		toolbarInfo.addActionListener(e -> plot.actionShowInfo());
 		c.gridx += 1;
@@ -113,7 +128,6 @@ public class PlotToolbar extends JToolBar {
 	
 	public void setWidgetState(boolean hasData) {
 		
-		toolbarSnapshot.setEnabled(hasData);
 		toolbarInfo.setEnabled(hasData);
 		toolbarComposition.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
 		
@@ -122,13 +136,23 @@ public class PlotToolbar extends JToolBar {
 		}
 		
 		
+		exportMenuButton.setEnabled(hasData);
+		saveButton.setEnabled(hasData);
+		
 		energyMenu.setWidgetState(hasData);
 		viewMenu.setWidgetState(hasData);
 		mainMenu.setWidgetState(hasData);
+		exportMenu.setWidgetState(hasData);
 		
 		
 	}
 	
+	private ToolbarImageButton createExportMenuButton() {
+		exportMenuButton = new ToolbarImageButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Data");
+		exportMenu = new PlotMenuExport(plot);
+		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
+		return exportMenuButton;
+	}
 
 	private ToolbarImageButton createEnergyMenuButton() {
 		ToolbarImageButton menuButton = new ToolbarImageButton().withIcon("menu-energy").withTooltip("Energy & Peak Calibration");

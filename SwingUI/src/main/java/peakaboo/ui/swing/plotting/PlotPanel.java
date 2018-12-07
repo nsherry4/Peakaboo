@@ -707,7 +707,7 @@ public class PlotPanel extends TabbedLayerPanel
 	{
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		SwidgetFilePanels.saveFile(this, "Save Session Data", savedSessionFileName, peakaboo, file -> {
+		SwidgetFilePanels.saveFile(this, "Save Session", savedSessionFileName, peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}

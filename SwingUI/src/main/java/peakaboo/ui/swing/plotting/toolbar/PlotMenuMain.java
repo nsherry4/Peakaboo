@@ -22,12 +22,7 @@ public class PlotMenuMain extends JPopupMenu {
 
 	private PlotController controller;
 	
-	private JMenuItem					snapshotMenuItem;
-	private JMenuItem					exportFittingsMenuItem;
-	private JMenuItem					exportFilteredDataMenuItem;
-	private JMenuItem					exportArchive;
-	private JMenu 						exportSinks;
-
+	
 	private JMenuItem					undo, redo;
 	
 	public PlotMenuMain(PlotPanel plot, PlotController controller) {
@@ -55,53 +50,7 @@ public class PlotMenuMain extends JPopupMenu {
 		
 
 		
-		JMenu export = new JMenu("Export");
-		
-		exportSinks = new JMenu("Raw Data");
-		
-		for (BoltPluginPrototype<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
-			exportSinks.add(PlotMenuUtils.createMenuItem(plot,
-					plugin.getName(), null, null,
-					e -> plot.actionExportData(plugin.create()),
-					null, null
-			));
-		}
-		
-		export.add(exportSinks);
-		
 
-		
-		snapshotMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
-				e -> plot.actionSavePicture(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
-		);
-		export.add(snapshotMenuItem);
-		
-		
-		exportFilteredDataMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
-				e -> plot.actionSaveFilteredData(),
-				null, null
-		);
-		export.add(exportFilteredDataMenuItem);
-		
-		exportFittingsMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Fittings as Text", null, "Saves the current fitting data to a text file",
-				e -> plot.actionSaveFittingInformation(),
-				null, null
-		);
-		export.add(exportFittingsMenuItem);
-
-		exportArchive = PlotMenuUtils.createMenuItem(plot,
-				"Archive", null, "Saves the plot, session file, z-calibration and fittings",
-				e -> plot.actionExportArchive(),
-				null, null
-		);
-		export.add(exportArchive);
-		
-		
-		this.add(export);
 		
 
 
@@ -186,19 +135,11 @@ public class PlotMenuMain extends JPopupMenu {
 	}
 	
 	public void setWidgetState(boolean hasData) {
-		
-		snapshotMenuItem.setEnabled(hasData);
-		exportFittingsMenuItem.setEnabled(hasData);
-		exportFilteredDataMenuItem.setEnabled(hasData);
-		exportArchive.setEnabled(hasData);
-		exportSinks.setEnabled(hasData);
 
-		
 		undo.setEnabled(controller.history().canUndo());
 		redo.setEnabled(controller.history().canRedo());
 		undo.setText("Undo " + controller.history().getNextUndo());
 		redo.setText("Redo " + controller.history().getNextRedo());
-				
 		
 	}
 	
