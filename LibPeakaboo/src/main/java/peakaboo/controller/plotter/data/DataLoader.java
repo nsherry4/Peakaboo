@@ -59,7 +59,7 @@ public abstract class DataLoader {
 						message += "\nProblem: " + result.problem;
 					}
 					
-					PeakabooLog.get().log(Level.SEVERE, "Error Opening Data", message);
+					PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
 					onFail(paths, message);
 					
 				} else {

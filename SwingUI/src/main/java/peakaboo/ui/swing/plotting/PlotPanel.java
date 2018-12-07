@@ -53,6 +53,7 @@ import cyclops.SISize;
 import cyclops.SigDigits;
 import cyclops.util.Mutable;
 import cyclops.util.StringInput;
+import cyclops.visualization.SurfaceType;
 import cyclops.visualization.backend.awt.SavePicture;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
@@ -83,7 +84,6 @@ import peakaboo.ui.swing.calibration.composition.CompositionView;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
-import peakaboo.ui.swing.plotting.ExportPanel.PlotFormat;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -565,8 +565,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 	
 	public void actionOpenData()
-	{		
-		
+	{	
 		List<SimpleFileExtension> exts = new ArrayList<>();
 		BoltPluginSet<DataSourcePlugin> plugins = DataSourcePluginManager.SYSTEM.getPlugins();
 		for (DataSourcePlugin p : plugins.newInstances()) {
@@ -744,14 +743,14 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionExportArchive() {
 		Mutable<ExportPanel> export = new Mutable<>(null);
 		
-		export.set(new ExportPanel(this, canvas, controller, () -> {
+		export.set(new ExportPanel(this, canvas, () -> {
 			
 			SwidgetFilePanels.saveFile(this, "Save Archive", saveFilesFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
 					return;
 				}
 				
-				PlotFormat format = export.get().getPlotFormat();
+				SurfaceType format = export.get().getPlotFormat();
 				int width = export.get().getImageWidth();
 				int height = export.get().getImageHeight();
 				
@@ -762,7 +761,7 @@ public class PlotPanel extends TabbedLayerPanel
 		}));
 	}
 	
-	private void exportArchiveToZip(File file, PlotFormat format, int width, int height) {
+	private void exportArchiveToZip(File file, SurfaceType format, int width, int height) {
 		try {
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
 			ZipEntry e = new ZipEntry("plot." + format.toString().toLowerCase());
@@ -773,10 +772,10 @@ public class PlotPanel extends TabbedLayerPanel
 			case PDF:
 				canvas.writePDF(zos, new Coord<Integer>(width, height));
 				break;
-			case PNG:
+			case RASTER:
 				canvas.writePNG(zos, new Coord<Integer>(width, height));
 				break;
-			case SVG:
+			case VECTOR:
 				canvas.writeSVG(zos, new Coord<Integer>(width, height));	
 				break;					
 			}

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -124,9 +125,19 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 	
 
-	public Spectrum getCompositeMapData()
+	public Spectrum getCompositeMapData() {
+		return getCompositeMapData(Optional.empty());
+	}
+	
+	public Spectrum getCompositeMapData(Optional<ITransitionSeries> fitting)
 	{
-		Spectrum data = sumVisibleTransitionSeriesMaps();
+		
+		Spectrum data;
+		if (fitting.isPresent()) {
+			data = getMapForTransitionSeries(fitting.get());
+		} else {
+			data = sumVisibleTransitionSeriesMaps();
+		}
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
 				map.getSettings().getView().getDataWidth(),
@@ -603,9 +614,7 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	public Spectrum getMapForTransitionSeries(ITransitionSeries ts)
 	{
-		List<ITransitionSeries> tss = new ArrayList<>();
-		tss.add(ts);
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(tss, getCalibrationProfile());
+		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(Collections.singletonList(ts), getCalibrationProfile());
 	}
 	
 

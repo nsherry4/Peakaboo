@@ -67,6 +67,13 @@ class MapperToolbar extends JToolBar {
 		saveText.addActionListener(e -> panel.actionSaveCSV());
 		this.add(saveText, c);
 		c.gridx++;
+
+		
+		ToolbarImageButton exportArchive = new ToolbarImageButton("Export Maps in Archive", StockIcon.DOCUMENT_EXPORT_ARCHIVE).withTooltip("Export all selected maps as separate images and comma separated value files");
+		exportArchive.addActionListener(e -> panel.actionSaveArchive());
+		this.add(exportArchive, c);
+		c.gridx++;
+		
 		
 		this.add(new JToolBar.Separator( null ), c);
 		c.gridx++;

@@ -12,9 +12,15 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -27,13 +33,22 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import cyclops.Coord;
+import cyclops.util.Mutable;
+import cyclops.visualization.SaveableSurface;
+import cyclops.visualization.SurfaceType;
+import cyclops.visualization.backend.awt.AwtSurfaceFactory;
 import cyclops.visualization.backend.awt.SavePicture;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.controller.mapper.settings.AreaSelection;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import peakaboo.display.map.MapRenderData;
+import peakaboo.display.map.MapRenderSettings;
+import peakaboo.display.map.Mapper;
 import peakaboo.display.map.modes.MapDisplayMode;
+import peakaboo.ui.swing.plotting.ExportPanel;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.ClearPanel;
@@ -248,24 +263,115 @@ public class MapperPanel extends TabbedLayerPanel {
 		
 		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
 		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().getView().savePictureFolder, txt, file -> {
-			if (!file.isPresent()) {
-				return;
-			}
-			try
-			{
-				controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
-				FileOutputStream os = new FileOutputStream(file.get());
-				os.write(controller.getSettings().getMapFittings().mapAsCSV().getBytes());
-				os.close();
-			}
-			catch (IOException e)
-			{
-				PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
-			}
+			if (!file.isPresent()) { return; }
+			controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
+			actionSaveCSV(file.get());
 		});
 
 	}
 	
+	void actionSaveCSV(File file) {
+		try	{
+			FileOutputStream os = new FileOutputStream(file);
+			actionSaveCSV(os);
+			os.close();
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
+		}
+	}
+	
+	void actionSaveCSV(OutputStream os) throws IOException {
+		os.write(controller.getSettings().getMapFittings().mapAsCSV().getBytes());
+	}
+	
+	void actionSaveArchive() {
+		Mutable<ExportPanel> export = new Mutable<>(null);
+		
+		export.set(new ExportPanel(this, canvas, () -> {
+			
+			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().getView().savePictureFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+				if (!file.isPresent()) {
+					return;
+				}
+				
+				SurfaceType format = export.get().getPlotFormat();
+				int width = export.get().getImageWidth();
+				int height = export.get().getImageHeight();
+				
+				try {
+					actionSaveArchive(file.get(), format, width, height);
+				} catch (IOException e) {
+					PeakabooLog.get().log(Level.SEVERE, "Error saving maps as archive", e);
+				}
+				
+				
+			});
+		}));
+	}
+
+	void actionSaveArchive(File file, SurfaceType format, int width, int height) throws IOException {
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
+		ZipEntry e;
+		
+		List<ITransitionSeries> tss = controller.getSettings().getMapFittings().getVisibleTransitionSeries();
+		
+		
+		/*
+		 * Little different here than in most places. Saving an image usually just
+		 * re-uses the GUI component and has it render to a different backend. This
+		 * time, we do it manually so that we can avoid spamming the UI with
+		 * events/redraws. We also only draw composite maps here, since drawing
+		 * per-element overlays/ratios doesn't make a lot of sense.
+		 */
+		Coord<Integer> size = new Coord<>(width, height);
+		SaveableSurface context;		
+		MapRenderSettings settings = controller.getRenderSettings();
+				
+		for (ITransitionSeries ts : tss) {
+		
+			Mapper mapper = new Mapper();
+			MapRenderData data = new MapRenderData();
+			data.compositeData = controller.getSettings().getMapFittings().getCompositeMapData(Optional.of(ts));
+			data.maxIntensity = controller.getSettings().getMapFittings().sumAllTransitionSeriesMaps().max();
+			
+			//image
+			e = new ZipEntry(ts.toString() + "." + format.toString().toLowerCase());
+			zos.putNextEntry(e);
+			switch (format) {
+			case PDF:
+				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.PDF, width, height);
+				mapper.draw(data, settings, context, size);
+				context.write(zos);
+				break;
+			case RASTER:
+				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.RASTER, width, height);
+				mapper.draw(data, settings, context, size);
+				context.write(zos);
+				break;
+			case VECTOR:
+				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.VECTOR, width, height);
+				mapper.draw(data, settings, context, size);
+				context.write(zos);
+				break;					
+			}
+			zos.closeEntry();
+			
+			//csv
+			e = new ZipEntry(ts.toString() + ".csv");
+			zos.putNextEntry(e);
+			actionSaveCSV(zos);
+			zos.closeEntry();
+			
+		}
+		
+		e = new ZipEntry("session.peakaboo");
+		zos.putNextEntry(e);
+		zos.write(controller.getSavedSettings().serialize().getBytes());
+		zos.closeEntry();
+		
+		
+		zos.close();
+	}
 
 
 	private JPanel createCanvasPanel()
@@ -345,6 +451,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	{
 		canvas.setNeedsRedraw();
 	}
+
 
 	
 
