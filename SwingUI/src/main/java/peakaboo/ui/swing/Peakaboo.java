@@ -41,16 +41,10 @@ public class Peakaboo
 	private static Timer gcTimer;
 	
 
-	private static void showError(Throwable e, String message) {
-		showError(e, message, null);
-	}
-	
-	
-	private static void showError(Throwable t, String message, String text) {
-		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", t);
+	private static void showError(Throwable throwable, String message) {
+		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
 		errorDialog.setVisible(true);
 	}
-	
 
 	private static void warnDevRelease() {
 		if (!Version.release){
