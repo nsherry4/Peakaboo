@@ -66,9 +66,137 @@ public class SavePicture extends JPanel
 	private Component				owner;
 	private JDialog					dialog;
 	Consumer<Optional<File>> 		onComplete;
-	private JTable 					table;
+	private FormatPicker			formatPicker;
+	private DimensionPicker			dimensionPicker;
 	
-	private JSpinner spnWidth, spnHeight;	
+	
+	
+	
+	
+	public static class FormatPicker extends JPanel {
+
+		private JTable table;
+		
+		public FormatPicker() {
+		
+			List<SurfaceType> items = new ArrayList<>(Arrays.asList(SurfaceType.values()));
+			table = new JTable(new ListTableModel<>(items));
+			TableColumn c = table.getColumnModel().getColumn(0);
+			c.setCellRenderer(new ListWidgetTableCellRenderer<>( new OptionWidget<SurfaceType>(
+					FormatPicker::getName, 
+					FormatPicker::getDescription, 
+					FormatPicker::getIcon
+				)));
+			Color border = UIManager.getColor("stratus-widget-border");
+			if (border == null) { border = Color.LIGHT_GRAY; }
+			table.setBorder(new MatteBorder(1, 1, 1, 1, border));
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			table.getSelectionModel().setSelectionInterval(0, 0);
+			
+			this.setLayout(new BorderLayout());
+			this.add(table, BorderLayout.CENTER);
+			
+		}
+
+		public SurfaceType getSelectedSurfaceType() {
+			return SurfaceType.values()[table.getSelectedRow()];
+		}
+
+		private static Icon getIcon(SurfaceType format) {
+			switch (format) {
+			case PDF: return StockIcon.MIME_PDF.toImageIcon(IconSize.ICON);
+			case RASTER: return StockIcon.MIME_RASTER.toImageIcon(IconSize.ICON);
+			case VECTOR: return StockIcon.MIME_SVG.toImageIcon(IconSize.ICON);
+			default: return null;
+			}
+		}
+		
+		private static String getName(SurfaceType format) {
+			switch (format) {
+			case PDF: return "PDF File";
+			case RASTER: return "Pixel Image (PNG)";
+			case VECTOR: return "Vector Image (SVG)";
+			default: return null;
+			}
+		}
+		
+		private static String getDescription(SurfaceType format) {
+			switch (format) {
+			case RASTER: return "Pixel based images are a grid of coloured dots. They have a fixed size and level of detail.";
+			case VECTOR: return "Vector images use points, lines, and curves to define an image. They can be scaled to any size.";
+			case PDF: return "PDF files are a more print-oriented vector image format.";
+			default: return null;
+			}
+		}
+		
+	}
+
+	
+	
+	
+	public static class DimensionPicker extends JPanel {
+		
+		private JSpinner spnWidth, spnHeight;	
+		
+		public DimensionPicker(int startWidth, int startHeight) {
+		
+			this.setLayout(new GridBagLayout());
+			GridBagConstraints c = new GridBagConstraints();
+
+			spnWidth = new JSpinner(new SpinnerNumberModel(startWidth, 100, 10000, 1));
+			spnHeight = new JSpinner(new SpinnerNumberModel(startHeight, 100, 10000, 1));
+			
+			c.weightx = 0.0;
+			c.fill = GridBagConstraints.NONE;
+			c.gridx = 0;
+			
+			
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1.0;
+			this.add(Box.createHorizontalGlue(), c);
+			c.gridx++;
+			c.fill = GridBagConstraints.NONE;
+			c.weightx = 0.0;
+			
+			this.add(new JLabel("Width"), c);
+			c.gridx++;
+			this.add(spnWidth, c);
+			c.gridx++;
+			
+			
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1.0;
+			this.add(Box.createHorizontalGlue(), c);
+			c.gridx++;
+			c.fill = GridBagConstraints.NONE;
+			c.weightx = 0.0;
+			
+			
+			this.add(new JLabel("Height"), c);
+			c.gridx++;
+			this.add(spnHeight, c);
+			c.gridx++;
+			
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1.0;
+			this.add(Box.createHorizontalGlue(), c);
+			c.gridx++;
+			c.fill = GridBagConstraints.NONE;
+			c.weightx = 0.0;
+
+		}
+		
+		public int getDimensionWidth() {
+			return ((Number)spnWidth.getValue()).intValue();
+		}
+		
+		public int getDimensionHeight() {
+			return ((Number)spnHeight.getValue()).intValue();
+		}
+		
+	}
+	
+	
 	
 	public SavePicture(Component owner, GraphicsPanel controller, File startingFolder, Consumer<Optional<File>> onComplete)
 	{
@@ -154,10 +282,9 @@ public class SavePicture extends JPanel
 	private ImageButton saveButton() {
 		ImageButton ok = new ImageButton("Save");
 		ok.addActionListener(e -> {
-			SurfaceType type = getSelectedSurfaceType();
 			Cursor oldCursor = getCursor();
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			saveSurfaceType(type);
+			saveSurfaceType(formatPicker.getSelectedSurfaceType());
 			setCursor(oldCursor);
 		});
 		return ok;
@@ -172,122 +299,26 @@ public class SavePicture extends JPanel
 		return cancel;
 	}
 	
-	public JPanel createDimensionsPane() {
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		
-		spnWidth = new JSpinner(new SpinnerNumberModel((int)Math.ceil(controller.getUsedWidth()), 100, 10000, 1));
-		spnHeight = new JSpinner(new SpinnerNumberModel((int)Math.ceil(controller.getUsedHeight()), 100, 10000, 1));
-		
-		c.weightx = 0.0;
-		c.fill = GridBagConstraints.NONE;
-		c.gridx = 0;
-		
-		
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 1.0;
-		panel.add(Box.createHorizontalGlue(), c);
-		c.gridx++;
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0.0;
-		
-		panel.add(new JLabel("Width"), c);
-		c.gridx++;
-		panel.add(spnWidth, c);
-		c.gridx++;
-		
-		
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 1.0;
-		panel.add(Box.createHorizontalGlue(), c);
-		c.gridx++;
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0.0;
-		
-		
-		panel.add(new JLabel("Height"), c);
-		c.gridx++;
-		panel.add(spnHeight, c);
-		c.gridx++;
-		
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 1.0;
-		panel.add(Box.createHorizontalGlue(), c);
-		c.gridx++;
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0.0;
-		
-		return panel;
-		
-	}
 
-	public JPanel createFormatPane()
-	{
-
-		List<SurfaceType> items = new ArrayList<>(Arrays.asList(SurfaceType.values()));
-		table = new JTable(new ListTableModel<>(items));
-		TableColumn c = table.getColumnModel().getColumn(0);
-		c.setCellRenderer(new ListWidgetTableCellRenderer<>( new OptionWidget<SurfaceType>(
-				this::getName, 
-				this::getDescription, 
-				this::getIcon
-			)));
-		Color border = UIManager.getColor("stratus-widget-border");
-		if (border == null) { border = Color.LIGHT_GRAY; }
-		table.setBorder(new MatteBorder(1, 1, 1, 1, border));
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.getSelectionModel().setSelectionInterval(0, 0);
-		
-		JPanel outer = new JPanel(new BorderLayout());
-		outer.add(table, BorderLayout.CENTER);
-
-		return outer;
-
-	}
 
 
 	public JPanel createOptionsPane() {
 		
 		JPanel panel = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
 		panel.setBorder(Spacing.bHuge());
-		panel.add(createDimensionsPane(), BorderLayout.NORTH);
-		panel.add(createFormatPane(), BorderLayout.CENTER);
+		
+		dimensionPicker = new DimensionPicker((int)Math.ceil(controller.getUsedWidth()), (int)Math.ceil(controller.getUsedHeight()));
+		panel.add(dimensionPicker, BorderLayout.NORTH);
+		
+		formatPicker = new FormatPicker();
+		panel.add(formatPicker, BorderLayout.CENTER);
+		
 		return panel;
 
 	}
 
-	private SurfaceType getSelectedSurfaceType() {
-		return SurfaceType.values()[table.getSelectedRow()];
-	}
+
 	
-	private Icon getIcon(SurfaceType format) {
-		switch (format) {
-		case PDF: return StockIcon.MIME_PDF.toImageIcon(IconSize.ICON);
-		case RASTER: return StockIcon.MIME_RASTER.toImageIcon(IconSize.ICON);
-		case VECTOR: return StockIcon.MIME_SVG.toImageIcon(IconSize.ICON);
-		default: return null;
-		}
-	}
-	
-	private String getName(SurfaceType format) {
-		switch (format) {
-		case PDF: return "PDF File";
-		case RASTER: return "Pixel Image (PNG)";
-		case VECTOR: return "Vector Image (SVG)";
-		default: return null;
-		}
-	}
-	
-	private String getDescription(SurfaceType format) {
-		switch (format) {
-		case RASTER: return "Pixel based images are a grid of coloured dots. They have a fixed size and level of detail.";
-		case VECTOR: return "Vector images use points, lines, and curves to define an image. They can be scaled to any size.";
-		case PDF: return "PDF files are a more print-oriented vector image format.";
-		default: return null;
-		}
-	}
 	
 	private void saveSurfaceType(SurfaceType format) {
 		switch (format) {
@@ -321,9 +352,7 @@ public class SavePicture extends JPanel
 				try
 				{
 					OutputStream os = new FileOutputStream(result.get());
-					int width = ((Number)spnWidth.getValue()).intValue();
-					int height = ((Number)spnHeight.getValue()).intValue();
-					controller.writePNG(os, new Coord<Integer>(width, height));
+					controller.writePNG(os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
 					os.close();
 	
 					startingFolder = result.get().getParentFile();
@@ -360,9 +389,7 @@ public class SavePicture extends JPanel
 				try
 				{
 					OutputStream os = new FileOutputStream(result.get());				
-					int width = ((Number)spnWidth.getValue()).intValue();
-					int height = ((Number)spnHeight.getValue()).intValue();
-					controller.writeSVG(os, new Coord<Integer>(width, height));
+					controller.writeSVG(os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
 					os.close();
 
 					startingFolder = result.get().getParentFile();
@@ -396,9 +423,7 @@ public class SavePicture extends JPanel
 			}
 			try {
 				OutputStream os = new FileOutputStream(result.get());				
-				int width = ((Number)spnWidth.getValue()).intValue();
-				int height = ((Number)spnHeight.getValue()).intValue();
-				controller.writePDF(os, new Coord<Integer>(width, height));
+				controller.writePDF(os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
 				os.close();
 
 				startingFolder = result.get().getParentFile();
