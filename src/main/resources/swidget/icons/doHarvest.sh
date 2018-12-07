@@ -81,6 +81,7 @@ mkdir ./48/
 ./harvest.rb elementary/actions document-new
 ./harvest.rb elementary/actions document-import
 ./harvest.rb elementary/actions document-export
+./harvest.rb custom/actions document-export-archive
 
 #window/tab operations
 ./harvest.rb elementary/actions window-close window-close
