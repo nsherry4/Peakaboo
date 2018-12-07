@@ -65,8 +65,9 @@ public class ThermalScalePalette extends AbstractPalette
 		} else {
 			percentage = intensity / maximum;
 		}
-		
 		int index = (int)(spectrum.size() * percentage);
+		
+		//bounds check
 		if (index >= spectrum.size()) index = spectrum.size() - 1;
 		if (index < 0) index = 0;
 		

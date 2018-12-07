@@ -32,7 +32,11 @@ public class OverlayPalette extends AbstractPalette
 	{
 		double percentage = intensity / maximum;
 		int index = (int)(spectrum.size() * percentage);
-		if (index == spectrum.size()) index--;
+
+		//bounds check
+		if (index >= spectrum.size()) index = spectrum.size() - 1;
+		if (index < 0) index = 0;
+		
 		return spectrum.get(index);
 	}
 
