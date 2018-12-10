@@ -24,12 +24,12 @@ import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import cyclops.visualization.palette.PaletteColour;
-import peakaboo.calibration.Composition;
+import peakaboo.calibration.Concentrations;
 import peakaboo.curvefit.peak.table.Element;
 
-public class CompositionPlot {
+public class ConcentrationPlot {
 
-	private Composition comp;
+	private Concentrations comp;
 	
 	private PlotDrawing plotDrawing;
 	private Spectrum calibratedData;
@@ -38,7 +38,7 @@ public class CompositionPlot {
 	private List<PlotPainter> plotPainters;
 	private List<AxisPainter> axisPainters;
 		
-	public CompositionPlot(Composition conc) {
+	public ConcentrationPlot(Concentrations conc) {
 		this.comp = conc;
 		calculateData();
 		configure();
@@ -73,7 +73,7 @@ public class CompositionPlot {
 
 		axisPainters = new ArrayList<>();
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Composition", null, null, "Elements - Calibrated With " + comp.getProfile().getName()));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Concentrations vs. " + comp.getProfile().getReference().getAnchor().getElement(), null, null, "Elements - Calibrated With " + comp.getProfile().getName()));
 		NumberFormat format = new DecimalFormat("0.0");
 		Function<Integer, String> sensitivityFormatter = i -> format.format(  ((float)i/10000f)  ) + "%";
 		axisPainters.add(new TickMarkAxisPainter(

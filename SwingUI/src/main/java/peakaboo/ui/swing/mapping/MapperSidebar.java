@@ -89,27 +89,7 @@ class MapperSidebar extends JPanel
 		tabFittings.setBorder(Spacing.bNone());
 		tabFittings.add(new MapFittingPanel(controller.getSettings()), BorderLayout.CENTER);
 		tabs.add("Peak Fittings", tabFittings);
-		
-//		
-//		if (!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty()) {
-//			JPanel outer = new JPanel(new GridBagLayout());
-//			outer.setBorder(Spacing.bNone());
-//			GridBagConstraints c = new GridBagConstraints();
-//			c.anchor = GridBagConstraints.NORTHWEST;
-//			c.fill = GridBagConstraints.BOTH;
-//			c.gridheight = 1;
-//			c.gridwidth = 1;
-//			c.gridx = 0;
-//			c.gridy = 0;
-//			c.weightx = 1f;
-//			c.weighty = 1f;
-//			
-//			concentrations = new ConcentrationsPanel(controller);
-//			outer.add(concentrations, c);
-//			tabs.add("Composition", outer);
-//		}
-//		
-		
+
 		
 		setLayout(new BorderLayout());
 		add(tabs, BorderLayout.CENTER);

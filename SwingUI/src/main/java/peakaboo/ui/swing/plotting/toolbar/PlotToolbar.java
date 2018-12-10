@@ -21,7 +21,7 @@ public class PlotToolbar extends JToolBar {
 	private ToolbarImageButton exportMenuButton;
 	private ToolbarImageButton saveButton;
 	private ToolbarImageButton toolbarMap;
-	private ToolbarImageButton toolbarComposition;
+	private ToolbarImageButton toolbarConcentrations;
 	private ToolbarImageButton toolbarInfo;
 
 	
@@ -83,15 +83,15 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarInfo, c);
 	
 		
-		toolbarComposition = new ToolbarImageButton("Composition")
+		toolbarConcentrations = new ToolbarImageButton("Concentration")
 				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-				.withTooltip("Display composition estimates for the fitted elements. Requires a Z-Calibration Profile.")
+				.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
 				.withSignificance(false);
-		toolbarComposition.addActionListener(e -> plot.actionShowConcentrations());
+		toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
 		
 		c.gridx += 1;
-		toolbarComposition.setEnabled(false);
-		this.add(toolbarComposition, c);
+		toolbarConcentrations.setEnabled(false);
+		this.add(toolbarConcentrations, c);
 		
 		
 		toolbarMap = new ToolbarImageButton("Map Fittings")
@@ -129,7 +129,7 @@ public class PlotToolbar extends JToolBar {
 	public void setWidgetState(boolean hasData) {
 		
 		toolbarInfo.setEnabled(hasData);
-		toolbarComposition.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
+		toolbarConcentrations.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
 		
 		if (hasData) {
 			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.composition;
+package peakaboo.ui.swing.calibration.concentration;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,15 +11,15 @@ import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.AbstractTableModel;
 
-import peakaboo.calibration.Composition;
+import peakaboo.calibration.Concentrations;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import swidget.widgets.Spacing;
 
-public class CompositionTablePanel extends JPanel {
+public class ConcentrationTablePanel extends JPanel {
 	
 	
-	public CompositionTablePanel(Composition comp) {
+	public ConcentrationTablePanel(Concentrations comp) {
 		
 		setLayout(new BorderLayout());
 		setBorder(Spacing.bHuge());
@@ -35,7 +35,7 @@ public class CompositionTablePanel extends JPanel {
 				} else if (columnIndex == 1) {
 					return comp.getRatioFormatted(e);
 				} else {
-					ITransitionSeries ts = comp.getCompositionSource(e);
+					ITransitionSeries ts = comp.getConcentrationSource(e);
 					if (ts == null) {
 						return "No Source (!)";
 					} else if (!comp.isCalibrated(e)) {

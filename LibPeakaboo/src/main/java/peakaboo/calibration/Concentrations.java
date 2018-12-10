@@ -12,14 +12,14 @@ import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionShell;
 
-public class Composition {
+public class Concentrations {
 
 	private Map<Element, Float> concentrations;
 	private Map<Element, ITransitionSeries> sources;
 	private NumberFormat format = new DecimalFormat("0.00");
 	private CalibrationProfile profile;
 	
-	public Composition(Map<Element, Float> concentrations, Map<Element, ITransitionSeries> sources, CalibrationProfile profile) {
+	public Concentrations(Map<Element, Float> concentrations, Map<Element, ITransitionSeries> sources, CalibrationProfile profile) {
 		this.concentrations = concentrations;
 		this.profile = profile;
 		this.sources = sources;
@@ -74,11 +74,11 @@ public class Composition {
 		if (!sources.containsKey(e)) {
 			return false;
 		}
-		ITransitionSeries source = getCompositionSource(e);
+		ITransitionSeries source = getConcentrationSource(e);
 		return profile.contains(source);
 	}
 	
-	public ITransitionSeries getCompositionSource(Element e) {
+	public ITransitionSeries getConcentrationSource(Element e) {
 		return sources.getOrDefault(e, null);
 	}
 	
@@ -86,7 +86,7 @@ public class Composition {
 		return profile;
 	}
 
-	public static Composition calculate(List<ITransitionSeries> tss, CalibrationProfile profile, Function<ITransitionSeries, Float> intensityFunction) {
+	public static Concentrations calculate(List<ITransitionSeries> tss, CalibrationProfile profile, Function<ITransitionSeries, Float> intensityFunction) {
 
 		//find best TransitionSeries per element to measure
 		Map<Element, ITransitionSeries> elements = new LinkedHashMap<>();
@@ -130,7 +130,7 @@ public class Composition {
 		for (Element element : sorted) {
 			ppm.put(element, intensities.get(element) / sum * 1e6f);
 		}
-		return new Composition(ppm, elements, profile);
+		return new Concentrations(ppm, elements, profile);
 	}
 	
 }

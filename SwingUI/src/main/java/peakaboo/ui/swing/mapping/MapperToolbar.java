@@ -19,7 +19,7 @@ import javax.swing.JToolBar;
 
 import cyclops.ReadOnlySpectrum;
 import peakaboo.calibration.CalibrationProfile;
-import peakaboo.calibration.Composition;
+import peakaboo.calibration.Concentrations;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
@@ -27,18 +27,15 @@ import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
-import peakaboo.ui.swing.calibration.composition.CompositionView;
+import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.buttons.ImageButtonLayout;
-import swidget.widgets.buttons.ImageButtonSize;
-import swidget.widgets.buttons.ToggleImageButton;
 import swidget.widgets.buttons.ToolbarImageButton;
 
 class MapperToolbar extends JToolBar {
 
-	private ToolbarImageButton	showComposition, examineSubset;
+	private ToolbarImageButton	showConcentrations, examineSubset;
 	
 	private JCheckBoxMenuItem	monochrome, logview;
 	private JMenuItem			title, spectrum, coords, dstitle, scalebar;
@@ -80,12 +77,12 @@ class MapperToolbar extends JToolBar {
 		
 		
 		
-		showComposition = new ToolbarImageButton("Composition")
+		showConcentrations = new ToolbarImageButton("Concentration")
 				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-				.withTooltip("Get fitting compositions for the selection")
+				.withTooltip("Get fitting concentration for the selection")
 				.withSignificance(true);
 		
-		showComposition.addActionListener(e -> {
+		showConcentrations.addActionListener(e -> {
 			
 			List<Integer> indexes = new ArrayList<>();
 			
@@ -108,13 +105,13 @@ class MapperToolbar extends JToolBar {
 				}
 				return sum /= indexes.size();
 			};
-			Composition ppm = Composition.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
+			Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
 			
-			CompositionView concentrations = new CompositionView(ppm, panel);
+			ConcentrationView concentrations = new ConcentrationView(ppm, panel);
 			panel.pushLayer(concentrations);
 							
 		});
-		this.add(showComposition, c);
+		this.add(showConcentrations, c);
 		c.gridx++;
 		
 		
@@ -159,7 +156,7 @@ class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		showComposition.setEnabled(false);
+		showConcentrations.setEnabled(false);
 		examineSubset.setEnabled(false);
 		
 		c.weightx = 1.0;
@@ -182,10 +179,10 @@ class MapperToolbar extends JToolBar {
 			
 			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
 			{
-				showComposition.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
+				showConcentrations.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
 				examineSubset.setEnabled(true);
 			} else {
-				showComposition.setEnabled(false);
+				showConcentrations.setEnabled(false);
 				examineSubset.setEnabled(false);
 			}
 

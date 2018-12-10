@@ -59,7 +59,7 @@ import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import peakaboo.calibration.CalibrationProfile;
-import peakaboo.calibration.Composition;
+import peakaboo.calibration.Concentrations;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
@@ -80,7 +80,7 @@ import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
-import peakaboo.ui.swing.calibration.composition.CompositionView;
+import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
@@ -1118,7 +1118,7 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionShowConcentrations() {
 		CalibrationProfile p = controller.calibration().getCalibrationProfile();
 		List<ITransitionSeries> tss = controller.fitting().getVisibleTransitionSeries();
-		Composition ppm = Composition.calculate(tss, p, ts -> {
+		Concentrations ppm = Concentrations.calculate(tss, p, ts -> {
 			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
 			float intensity = 0;
 			if (result == null) { return 0f; }
@@ -1130,7 +1130,7 @@ public class PlotPanel extends TabbedLayerPanel
 		});
 		
 		
-		CompositionView concentrations = new CompositionView(ppm, this);
+		ConcentrationView concentrations = new ConcentrationView(ppm, this);
 		this.pushLayer(concentrations);
 
 	}

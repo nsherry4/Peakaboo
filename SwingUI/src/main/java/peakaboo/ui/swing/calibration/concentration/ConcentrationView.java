@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.composition;
+package peakaboo.ui.swing.calibration.concentration;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 import javax.swing.JPanel;
 
-import peakaboo.calibration.Composition;
+import peakaboo.calibration.Concentrations;
 import peakaboo.common.PeakabooLog;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -27,12 +27,12 @@ import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ToastLayer;
 import swidget.widgets.layout.HeaderTabBuilder;
 
-public class CompositionView extends HeaderLayer {
+public class ConcentrationView extends HeaderLayer {
 
-	private Composition conc;
+	private Concentrations conc;
 	private LayerPanel parent;
 	
-	public CompositionView(Composition conc, LayerPanel parent) {
+	public ConcentrationView(Concentrations conc, LayerPanel parent) {
 		super(parent, true);
 		this.conc = conc;
 		this.parent = parent;
@@ -42,12 +42,12 @@ public class CompositionView extends HeaderLayer {
 		
 		ImageButton save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS)
 				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Save composition as text")
+				.withTooltip("Save concentrations as text")
 				.withAction(this::saveData);
 		
 		ImageButton copy = new ImageButton(StockIcon.EDIT_COPY)
 				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Copy composition to clipboard")
+				.withTooltip("Copy concentrations to clipboard")
 				.withAction(this::copyData);
 		
 		ButtonLinker linker = new ButtonLinker(save, copy);
@@ -64,12 +64,12 @@ public class CompositionView extends HeaderLayer {
 	}
 
 	private JPanel buildChart() {
-		JPanel chart = new CompositionPlotPanel(conc);
+		JPanel chart = new ConcentrationPlotPanel(conc);
 		return chart;
 	}
 	
 	private JPanel buildTable( ) {
-		JPanel table = new CompositionTablePanel(conc);
+		JPanel table = new ConcentrationTablePanel(conc);
 		return table;
 	}
 
@@ -88,7 +88,7 @@ public class CompositionView extends HeaderLayer {
 			sb.append(conc.getRatioFormatted(e));
 			
 			
-			ITransitionSeries ts = conc.getCompositionSource(e);
+			ITransitionSeries ts = conc.getConcentrationSource(e);
 			if (ts == null) {
 				sb.append(" (No Source!)");
 			} else if (!conc.isCalibrated(e)) {
@@ -120,7 +120,7 @@ public class CompositionView extends HeaderLayer {
 	private void saveData() {
 		
 		//TODO: starting folder
-		SwidgetFilePanels.saveFile(parent, "Save Composition Data", null, new SimpleFileExtension("Text File", "txt"), result -> {
+		SwidgetFilePanels.saveFile(parent, "Save Concentration Data", null, new SimpleFileExtension("Text File", "txt"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}
@@ -131,7 +131,7 @@ public class CompositionView extends HeaderLayer {
 				writer.write(textData());
 				writer.close();
 			} catch (IOException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to save composition data", e);
+				PeakabooLog.get().log(Level.SEVERE, "Failed to save concentration data", e);
 			}
 			
 		});
