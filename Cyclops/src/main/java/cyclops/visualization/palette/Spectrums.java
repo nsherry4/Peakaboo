@@ -26,19 +26,14 @@ public class Spectrums
 	 */
 	
 	final static int[] ratioThermal = {
-			0xff204a87, 0,
-			0xff102543, 77,
-			0xff000000, 50,
-			0xff520000, 51,
-			0xffa30000, 77
+			0xff1485CC, 0,
+			0xff000000, 127,
+			0xffff0000, 128
 	};
 	
 	final static int[] ratioMonochrome = { 
 			0xff000000, 0,
-			0xff333333, 89,
-			0xff808080, 39,
-			0xffcccccc, 38,
-			0xffffffff, 89
+			0xffffffff, 255
 	};
 	
 	
