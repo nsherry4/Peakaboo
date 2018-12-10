@@ -286,10 +286,11 @@ public class Mapper {
 		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
 		//LOG view not supported
 		dr.viewTransform = ViewTransform.LINEAR;
+		dr.screenOrientation = settings.screenOrientation;
 		
 		
-		//this is a valid ratio if there is at least 1 visible TS for each side
-		boolean validRatio = (ratiodata.first.sum() > 0) && (ratiodata.second.sum() > 0);
+		//this is a valid ratio if there is at least 1 visible TS
+		boolean validRatio = ratiodata.first.sum() != 0;
 		
 		
 		//how many steps/markings will we display on the spectrum
@@ -433,7 +434,7 @@ public class Mapper {
 		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
 		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
-		
+		dr.screenOrientation = settings.screenOrientation;
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
 		

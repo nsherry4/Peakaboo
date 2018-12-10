@@ -83,13 +83,11 @@ public class Ratio extends JPanel {
 					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
-					mapFittings.invalidateInterpolation();
 				} 
 				else if (columnIndex == 2)
 				{
 					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 					mapFittings.setRatioSide(ts, (Integer)value);
-					mapFittings.invalidateInterpolation();
 				}
 			}
 

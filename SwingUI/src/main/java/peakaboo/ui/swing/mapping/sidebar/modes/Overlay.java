@@ -68,13 +68,11 @@ public class Overlay extends JPanel {
 					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
-					mapFittings.invalidateInterpolation();
 				} 
 				else if (columnIndex == 2)
 				{
 					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 					mapFittings.setOverlayColour(ts, (OverlayColour)value);
-					mapFittings.invalidateInterpolation();
 				}
 			}
 

@@ -102,15 +102,11 @@ public class MapFittingSettings extends EventfulType<String> {
 	public void setMapDisplayMode(MapDisplayMode mode)
 	{		
 		this.displayMode = mode;
-		invalidateInterpolation();
+		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 	
 
-	public void invalidateInterpolation()
-	{
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
 
-	}
 	
 
 	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
@@ -653,6 +649,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	public void setOverlayColour(ITransitionSeries ts, OverlayColour c)
 	{
 		this.overlayColour.put(ts, c);
+		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 	
 	public Collection<OverlayColour> getOverlayColourValues()
@@ -672,6 +669,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	public void setRatioSide(ITransitionSeries ts, int side)
 	{
 		this.ratioSide.put(ts, side);
+		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 	
 	/**
@@ -686,7 +684,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean visible)
 	{
 		this.visibility.put(ts, visible);
-		invalidateInterpolation();
+		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 
 	/**
