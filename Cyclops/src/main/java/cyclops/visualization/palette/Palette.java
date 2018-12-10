@@ -98,12 +98,12 @@ public enum Palette
 		}
 		
 		private final static int[] thermal = { 
-				0xff12294d, 0,
-				0xff2959a6, 77,
-				0xff59b008, 51,
-				0xffe0ba00, 59,
-				0xffcf5c00, 31,
-				0xffa30000, 37
+				0xff10154D, 0,
+				0xff0D47A1, 60,
+				0xff388E3C, 40,
+				0xffFBC02D, 55,
+				0xffEF6C00, 40,
+				0xffB71C1C, 60
 		};
 		
 

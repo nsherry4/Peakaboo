@@ -13,7 +13,7 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.fop.svg.PDFTranscoder;
 
-import cyclops.log.SciLog;
+import cyclops.log.CyclopsLog;
 import cyclops.visualization.SurfaceType;
 
 
@@ -47,7 +47,7 @@ class PDFSurface extends SVGSurface
 		try {
 			t.transcode(input, output);
 		} catch (TranscoderException e) {
-			SciLog.get().log(Level.SEVERE, "Failed to write to PDF surface", e);
+			CyclopsLog.get().log(Level.SEVERE, "Failed to write to PDF surface", e);
 		}
 		
 	}

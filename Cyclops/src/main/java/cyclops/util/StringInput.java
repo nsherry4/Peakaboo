@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import cyclops.log.SciLog;
+import cyclops.log.CyclopsLog;
 
 
 public class StringInput implements Iterator<String>, Closeable{
@@ -399,7 +399,7 @@ class LinesReader implements CustomReader
 					try {
 						close();
 					} catch (IOException e) {
-						SciLog.get().log(Level.WARNING, "Failed to close the file", e);
+						CyclopsLog.get().log(Level.WARNING, "Failed to close the file", e);
 					}
 					return false;
 				}
@@ -412,7 +412,7 @@ class LinesReader implements CustomReader
 						try {
 							close();
 						} catch (IOException e) {
-							SciLog.get().log(Level.WARNING, "Failed to close the file", e);
+							CyclopsLog.get().log(Level.WARNING, "Failed to close the file", e);
 						}
 						return false;
 					}
@@ -422,7 +422,7 @@ class LinesReader implements CustomReader
 					try {
 						close();
 					} catch (IOException e2) {
-						SciLog.get().log(Level.WARNING, "Failed to close the file", e2);
+						CyclopsLog.get().log(Level.WARNING, "Failed to close the file", e2);
 					}
 					return false;
 				}
@@ -511,7 +511,7 @@ class WordsReader implements CustomReader
 						try {
 							close();
 						} catch (IOException e) {
-							SciLog.get().log(Level.WARNING, "Failed to close the file", e);
+							CyclopsLog.get().log(Level.WARNING, "Failed to close the file", e);
 						}
 						return false;
 					}

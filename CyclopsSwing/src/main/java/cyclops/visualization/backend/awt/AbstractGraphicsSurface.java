@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 import java.util.Stack;
 import java.util.logging.Level;
 
-import cyclops.log.SciLog;
+import cyclops.log.CyclopsLog;
 import cyclops.visualization.Buffer;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.composite.BlendComposite;
@@ -274,7 +274,7 @@ abstract class AbstractGraphicsSurface implements Surface
 			TextLayout layout = new TextLayout(text, graphics.getFont(), graphics.getFontRenderContext());
 			return (float) (layout.getBounds().getWidth() + layout.getBounds().getX());
 		} catch (Throwable e) {
-			SciLog.get().log(Level.SEVERE, "Failed to determine text width", e);
+			CyclopsLog.get().log(Level.SEVERE, "Failed to determine text width", e);
 		}
 
 		return 0.0f;

@@ -2,7 +2,7 @@ package cyclops.log;
 
 import java.util.logging.Logger;
 
-public class SciLog {
+public class CyclopsLog {
 
 	public static Logger get() {
 		StackTraceElement[] stElements = Thread.currentThread().getStackTrace();

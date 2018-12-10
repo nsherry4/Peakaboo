@@ -4,7 +4,7 @@ package cyclops.visualization.drawing;
 import java.io.Serializable;
 import java.util.logging.Level;
 
-import cyclops.log.SciLog;
+import cyclops.log.CyclopsLog;
 
 
 /**
@@ -94,7 +94,7 @@ public class DrawingRequest implements Serializable, Cloneable
 		try {
 			return (DrawingRequest) super.clone();
 		} catch (CloneNotSupportedException e) {
-			SciLog.get().log(Level.SEVERE, "Failed to clone Drawing Request", e);
+			CyclopsLog.get().log(Level.SEVERE, "Failed to clone Drawing Request", e);
 			return null;
 		}
 	}

@@ -11,7 +11,7 @@ import cyclops.ISpectrum;
 import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import cyclops.log.SciLog;
+import cyclops.log.CyclopsLog;
 import cyclops.visualization.Surface;
 import cyclops.visualization.drawing.Drawing;
 import cyclops.visualization.drawing.DrawingRequest;
@@ -186,7 +186,7 @@ public class PlotDrawing extends Drawing
 					try {
 						painter.draw(new PainterData(context, dr, plotSize, dataHeights));
 					} catch (Exception e) {
-						SciLog.get().log(Level.SEVERE, "Failed to draw painter " + painter.getSourceName(), e);
+						CyclopsLog.get().log(Level.SEVERE, "Failed to draw painter " + painter.getSourceName(), e);
 					}
 				}
 	
@@ -215,7 +215,7 @@ public class PlotDrawing extends Drawing
 					try{
 						axisPainter.draw(new PainterData(context, dr, plotSize, dataHeights));
 					} catch (Exception e) {
-						SciLog.get().log(Level.WARNING, "Axis Painter " + axisPainter.getSourceName() + " Failed", e);
+						CyclopsLog.get().log(Level.WARNING, "Axis Painter " + axisPainter.getSourceName() + " Failed", e);
 					}
 					
 					

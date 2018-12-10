@@ -39,7 +39,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.TableColumn;
 
 import cyclops.Coord;
-import cyclops.log.SciLog;
+import cyclops.log.CyclopsLog;
 import cyclops.visualization.Surface;
 import cyclops.visualization.SurfaceType;
 import swidget.Swidget;
@@ -366,7 +366,7 @@ public class SavePicture extends JPanel
 				}
 				catch (IOException e)
 				{
-					SciLog.get().log(Level.SEVERE, "Failed to save PNG", e);
+					CyclopsLog.get().log(Level.SEVERE, "Failed to save PNG", e);
 				}
 			});
 
@@ -401,7 +401,7 @@ public class SavePicture extends JPanel
 				}
 				catch (IOException e)
 				{
-					SciLog.get().log(Level.SEVERE, "Failed to save SVG", e);
+					CyclopsLog.get().log(Level.SEVERE, "Failed to save SVG", e);
 				}
 
 			});
@@ -436,7 +436,7 @@ public class SavePicture extends JPanel
 			}
 			catch (IOException e)
 			{
-				SciLog.get().log(Level.SEVERE, "Failed to save PDF", e);
+				CyclopsLog.get().log(Level.SEVERE, "Failed to save PDF", e);
 			}
 		});
 

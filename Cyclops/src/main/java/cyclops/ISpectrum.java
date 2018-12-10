@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import cyclops.log.SciLog;
+import cyclops.log.CyclopsLog;
 
 public class ISpectrum implements Spectrum
 {
@@ -336,7 +336,7 @@ public class ISpectrum implements Spectrum
 			}
 			catch (IOException e)
 			{
-				SciLog.get().log(Level.SEVERE, "Failed to encode spectrum", e);
+				CyclopsLog.get().log(Level.SEVERE, "Failed to encode spectrum", e);
 				return new byte[0];
 			}
 
@@ -359,12 +359,12 @@ public class ISpectrum implements Spectrum
 			}
 			catch (IOException e)
 			{
-				SciLog.get().log(Level.SEVERE, "Failed to decode spectrum", e);
+				CyclopsLog.get().log(Level.SEVERE, "Failed to decode spectrum", e);
 				return null;
 			}
 			catch (ClassNotFoundException e)
 			{
-				SciLog.get().log(Level.SEVERE, "Failed to decode spectrum", e);
+				CyclopsLog.get().log(Level.SEVERE, "Failed to decode spectrum", e);
 				return null;
 			}
 
