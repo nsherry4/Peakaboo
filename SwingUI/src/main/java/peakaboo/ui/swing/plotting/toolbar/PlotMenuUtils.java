@@ -64,7 +64,7 @@ public class PlotMenuUtils {
 		
 	}
 	
-	static JMenuItem createMenuItem(PlotPanel plot, String title, ImageIcon icon, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
+	public static JMenuItem createMenuItem(JComponent plot, String title, ImageIcon icon, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
 	{
 		JMenuItem menuItem;
 		if (icon != null) {
@@ -79,7 +79,7 @@ public class PlotMenuUtils {
 		
 	}
 	
-	static void configureMenuItem(PlotPanel plot, JMenuItem menuItem, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
+	static void configureMenuItem(JComponent plot, JMenuItem menuItem, String description, Consumer<ActionEvent> listener, KeyStroke key, Integer mnemonic)
 	{
 		
 		

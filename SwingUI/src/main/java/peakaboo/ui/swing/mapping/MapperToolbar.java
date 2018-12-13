@@ -30,6 +30,8 @@ import peakaboo.datasource.model.internal.SubsetDataSource;
 import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.plotting.PlotPanel;
+import peakaboo.ui.swing.plotting.toolbar.PlotMenuExport;
+import peakaboo.ui.swing.plotting.toolbar.PlotMenuView;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;
@@ -53,25 +55,11 @@ class MapperToolbar extends JToolBar {
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
-		c.insets = new Insets(4, 4, 4, 4);
+		c.insets = new Insets(2, 2, 2, 2);
 		
-		ToolbarImageButton savePicture = new ToolbarImageButton("Save Image", StockIcon.DEVICE_CAMERA).withTooltip("Save the current map as an image");
-		savePicture.addActionListener(e -> panel.actionSavePicture());
-		this.add(savePicture, c);
+		ToolbarImageButton export = createExportMenuButton(panel);
+		this.add(export, c);
 		c.gridx++;
-		
-		
-		ToolbarImageButton saveText = new ToolbarImageButton("Export as Text", StockIcon.DOCUMENT_EXPORT).withTooltip("Export the current map as a comma separated value file");
-		saveText.addActionListener(e -> panel.actionSaveCSV());
-		this.add(saveText, c);
-		c.gridx++;
-
-		
-		ToolbarImageButton exportArchive = new ToolbarImageButton("Export Maps in Archive", StockIcon.DOCUMENT_EXPORT_ARCHIVE).withTooltip("Export all selected maps as images and comma separated value files in a zip archive");
-		exportArchive.addActionListener(e -> panel.actionSaveArchive());
-		this.add(exportArchive, c);
-		c.gridx++;
-		
 		
 		this.add(new JToolBar.Separator( null ), c);
 		c.gridx++;
@@ -239,6 +227,14 @@ class MapperToolbar extends JToolBar {
 		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
 		
 		return opts;
+	}
+	
+	
+	private ToolbarImageButton createExportMenuButton(MapperPanel panel) {
+		ToolbarImageButton exportMenuButton = new ToolbarImageButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Maps");
+		JPopupMenu exportMenu = new MapMenuExport(panel);
+		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
+		return exportMenuButton;
 	}
 	
 }

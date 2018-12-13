@@ -62,7 +62,7 @@ public class PlotMenuExport extends JPopupMenu {
 		this.add(exportFittingsMenuItem);
 
 		exportArchive = PlotMenuUtils.createMenuItem(plot,
-				"Archive", null, "Saves the plot, session file, z-calibration and fittings",
+				"All-In-One Zip Archive", null, "Saves the plot, session file, z-calibration and fittings",
 				e -> plot.actionExportArchive(),
 				null, null
 		);

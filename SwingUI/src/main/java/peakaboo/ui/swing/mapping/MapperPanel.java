@@ -335,7 +335,19 @@ public class MapperPanel extends TabbedLayerPanel {
 			data.maxIntensity = controller.getSettings().getMapFittings().sumAllTransitionSeriesMaps().max();
 			
 			//image
-			e = new ZipEntry(ts.toString() + "." + format.toString().toLowerCase());
+			String ext = "";
+			switch (format) {
+			case PDF: 
+				ext = "pdf";
+				break;
+			case RASTER:
+				ext = "png";
+				break;
+			case VECTOR:
+				ext = "svg";
+				break;			
+			}
+			e = new ZipEntry(ts.toString() + "." + ext);
 			zos.putNextEntry(e);
 			switch (format) {
 			case PDF:
