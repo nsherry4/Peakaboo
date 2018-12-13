@@ -39,7 +39,7 @@ public class PlotMenuMain extends JPopupMenu {
 		this.add(PlotMenuUtils.createMenuItem(plot,
 				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
 				e -> plot.actionSaveSession(),
-				null, null
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK), null
 		));
 		
 		this.add(PlotMenuUtils.createMenuItem(plot,
