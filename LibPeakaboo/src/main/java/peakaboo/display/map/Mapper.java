@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 import com.google.common.base.Function;
 
 import cyclops.Coord;
+import cyclops.ISpectrum;
 import cyclops.Pair;
 import cyclops.Ratios;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
+import cyclops.visualization.Buffer;
 import cyclops.visualization.Surface;
 import cyclops.visualization.Surface.CompositeModes;
 import cyclops.visualization.drawing.DrawingRequest;
@@ -20,11 +22,13 @@ import cyclops.visualization.drawing.map.MapDrawing;
 import cyclops.visualization.drawing.map.painters.FloodMapPainter;
 import cyclops.visualization.drawing.map.painters.MapPainter;
 import cyclops.visualization.drawing.map.painters.MapTechniqueFactory;
+import cyclops.visualization.drawing.map.painters.RasterColorMapPainter;
 import cyclops.visualization.drawing.map.painters.RasterSpectrumMapPainter;
 import cyclops.visualization.drawing.map.painters.SelectionMaskPainter;
 import cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import cyclops.visualization.drawing.map.painters.axis.LegendCoordsAxisPainter;
 import cyclops.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
+import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.drawing.painters.axis.AxisPainter;
 import cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
 import cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
@@ -41,7 +45,8 @@ import peakaboo.display.map.modes.OverlayColour;
 public class Mapper {
 
 	private DrawingRequest dr;
-	private SpectrumMapPainter contourMapPainter, ratioMapPainter, overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue, overlayMapPainterYellow;
+	private SpectrumMapPainter contourMapPainter, ratioMapPainter;
+	private RasterSpectrumMapPainter overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue, overlayMapPainterYellow;
 	
 	private MapDrawing map;
 	
@@ -503,23 +508,22 @@ public class Mapper {
 
 		dr.drawToVectorSurface = vector;
 
-		map.setContext(backend);
+		
 		map.setAxisPainters(axisPainters);
 		map.setDrawingRequest(dr);
 
 	
 
 		// create a list of map painters, one for each of the maps we want to show
-		List<MapPainter> painters = new ArrayList<MapPainter>();
 		
-		if (redSpectrum != null){
+		
+		if (redSpectrum != null) {
 			if (overlayMapPainterRed == null) {
 				overlayMapPainterRed = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour()), redSpectrum);
 				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterRed.setData(redSpectrum);
 			overlayMapPainterRed.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour()));
-			painters.add(overlayMapPainterRed);
 		}
 			
 		if (greenSpectrum != null) {
@@ -529,7 +533,6 @@ public class Mapper {
 			}
 			overlayMapPainterGreen.setData(greenSpectrum);
 			overlayMapPainterGreen.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour()));
-			painters.add(overlayMapPainterGreen);
 		}
 		
 		if (blueSpectrum != null) {
@@ -539,7 +542,6 @@ public class Mapper {
 			}
 			overlayMapPainterBlue.setData(blueSpectrum);
 			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour()));
-			painters.add(overlayMapPainterBlue);
 		}
 		
 		if (yellowSpectrum != null) {
@@ -549,26 +551,77 @@ public class Mapper {
 			}
 			overlayMapPainterYellow.setData(yellowSpectrum);
 			overlayMapPainterYellow.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour()));
-			painters.add(overlayMapPainterYellow);
 		}
-		
-		//need to paint the background black first
-		painters.add(
-				0, 
-				new FloodMapPainter(new PaletteColour(0xff000000))
-		);
+
 		
 		
 		
 		//Selection Painter
 		MapPainter selection = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
-		painters.add(selection);
+		
 
 		
 		
-		// set the new data
-		map.setPainters(painters);
-		map.draw();
+		if (vector) {
+						
+			//create new buffer to add the rgby channels in
+			Buffer buffer = backend.getImageBuffer(settings.dataWidth, settings.dataHeight);
+			PainterData p = new PainterData(buffer, dr, new Coord<Float>((float)dr.dataWidth, (float)dr.dataHeight), null);
+			
+			/*
+			 * Hacky! Go through each colour painter and have it calculate the colour it
+			 * would use to draw each pixel, adding them as it goes, until it can create a
+			 * list of colours to feed to a RasterColourMapPainter.
+			 */
+			List<PaletteColour> addedColours = new ArrayList<>();
+			for (int i = 0; i < dr.dataWidth * dr.dataHeight; i++) {
+				PaletteColour addedColour = new PaletteColour();
+				
+				if (overlayMapPainterRed != null) {
+					addedColour = addedColour.add(overlayMapPainterRed.getColourFromRules(redSpectrum.get(i), overlayMapPainterRed.calcMaxIntensity(p), dr.viewTransform));
+				}
+				if (overlayMapPainterGreen != null) {
+					addedColour = addedColour.add(overlayMapPainterGreen.getColourFromRules(greenSpectrum.get(i), overlayMapPainterGreen.calcMaxIntensity(p), dr.viewTransform));
+				}
+				if (overlayMapPainterBlue != null) {
+					addedColour = addedColour.add(overlayMapPainterBlue.getColourFromRules(blueSpectrum.get(i), overlayMapPainterBlue.calcMaxIntensity(p), dr.viewTransform));
+				}
+				if (overlayMapPainterYellow != null) {
+					addedColour = addedColour.add(overlayMapPainterYellow.getColourFromRules(yellowSpectrum.get(i), overlayMapPainterYellow.calcMaxIntensity(p), dr.viewTransform));
+				}
+				addedColours.add(addedColour);
+			}
+			
+			
+			//get the pixels from the buffer as PaletteColour objects and pass them to a RasterColourMapPainter
+			RasterColorMapPainter addedColoursMapPainter = new RasterColorMapPainter();
+			addedColoursMapPainter.setPixels(addedColours);
+			
+			//set up the list of painters
+			List<MapPainter> painters = new ArrayList<MapPainter>();
+			painters.add(new FloodMapPainter(new PaletteColour(0xff000000))); //background
+			painters.add(addedColoursMapPainter);
+			painters.add(selection);
+			map.setPainters(painters);
+			
+			//draw to the real backend
+			map.setContext(backend);
+			map.draw();
+			
+		} else {
+			
+			List<MapPainter> painters = new ArrayList<MapPainter>();
+			painters.add(new FloodMapPainter(new PaletteColour(0xff000000))); //background
+			if (overlayMapPainterRed != null)    painters.add(overlayMapPainterRed);
+			if (overlayMapPainterGreen != null)  painters.add(overlayMapPainterGreen);
+			if (overlayMapPainterBlue != null)   painters.add(overlayMapPainterBlue);
+			if (overlayMapPainterYellow != null) painters.add(overlayMapPainterYellow);
+			painters.add(selection);
+			map.setPainters(painters);
+			
+			map.setContext(backend);
+			map.draw();
+		}
 		
 	}
 
