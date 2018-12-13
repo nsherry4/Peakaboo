@@ -3,6 +3,8 @@ package cyclops.visualization.backend.awt;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import cyclops.visualization.Buffer;
 import cyclops.visualization.palette.PaletteColour;
@@ -34,7 +36,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 	}
 
 
-	public Object getImageSource()
+	public BufferedImage getImageSource()
 	{
 		commitChanges();
 		return image;
@@ -66,16 +68,84 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		dirty = true;
 		offset *= 4;
 
-		int alpha = c.getAlpha();
-		int red = c.getRed();
-		int green = c.getGreen();
-		int blue = c.getBlue();
+		datasource[offset + 3] = c.getAlpha();
+		datasource[offset + 0] = c.getRed();
+		datasource[offset + 1] = c.getGreen();
+		datasource[offset + 2] = c.getBlue();
 
-		datasource[offset + 3] = alpha;
-		datasource[offset + 0] = red;
-		datasource[offset + 1] = green;
-		datasource[offset + 2] = blue;
+	}
+	
+	
 
+	@Override
+	public PaletteColour getPixelValue(int x, int y) {
+		int index = (y * image.getWidth() + x);
+		return getPixelValue(index);
+	}
+
+	@Override
+	public PaletteColour getPixelValue(int index) {
+		
+		if (datasource == null) {
+			init();
+		}
+		
+		int offset = index * 4;
+		
+		return new PaletteColour(
+				datasource[offset+3], 
+				datasource[offset+0], 
+				datasource[offset+1], 
+				datasource[offset+2]
+			);
+	}
+
+	@Override
+	public List<PaletteColour> getPixelValues() {
+		List<PaletteColour> pixels = new ArrayList<>();
+		for (int i = 0; i < getSize(); i++) {
+			pixels.add(getPixelValue(i));
+		}
+		return pixels;
+	}
+
+	@Override
+	public int getWidth() {
+		return image.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return image.getHeight();
+	}
+
+	@Override
+	public List<Integer> getPixelsARGB() {
+		List<Integer> pixels = new ArrayList<>();
+		for (int i = 0; i < getSize(); i++) {
+			pixels.add(getPixelARGB(i));
+		}
+		return pixels;
+	}
+
+	@Override
+	public int getPixelARGB(int index) {
+		int offset = index * 4;
+		
+		int argb = 0;
+		argb += datasource[offset+3] << 24;
+		argb += datasource[offset+0] << 16;
+		argb += datasource[offset+1] << 8;
+		argb += datasource[offset+2];
+		
+		return argb;
+		
+	}
+
+	@Override
+	public int getPixelARGB(int x, int y) {
+		int index = (y * image.getWidth() + x);
+		return getPixelARGB(index);
 	}
 
 }

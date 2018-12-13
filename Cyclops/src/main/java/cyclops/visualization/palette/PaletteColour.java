@@ -48,6 +48,15 @@ public class PaletteColour {
 		
 	}
 	
+	public PaletteColour add(PaletteColour other) {
+		int a, r, g, b;
+		a = Math.min(255, this.getAlpha() + other.getAlpha());
+		r = Math.min(255, this.getRed() + other.getRed());
+		g = Math.min(255, this.getGreen() + other.getGreen());
+		b = Math.min(255, this.getBlue() + other.getBlue());
+		return new PaletteColour(a, r, g, b);
+	}
+	
 	public String toString() {
 		return Integer.toHexString(arbg);
 	}

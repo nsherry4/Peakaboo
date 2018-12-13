@@ -1,5 +1,7 @@
 package cyclops.visualization;
 
+import java.util.List;
+
 import cyclops.visualization.palette.PaletteColour;
 
 
@@ -18,10 +20,21 @@ public interface Buffer extends Surface
 
 	Object getImageSource();
 
-
+	int getWidth();
+	int getHeight();
+	default int getSize() {
+		return getWidth() * getHeight();
+	}
+	
 	void setPixelValue(int x, int y, PaletteColour c);
-
-
 	void setPixelValue(int offset, PaletteColour c);
-
+	
+	PaletteColour getPixelValue(int x, int y);
+	PaletteColour getPixelValue(int index);
+	List<PaletteColour> getPixelValues();
+	
+	int getPixelARGB(int index);
+	int getPixelARGB(int x, int y);
+	List<Integer> getPixelsARGB(); 
+	
 }

@@ -42,17 +42,8 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 		p.context.save();
 	
 			Spectrum modData = transformDataForMap(p.dr, data);
+			float maxIntensity = calcMaxIntensity(p);
 			
-			float maxIntensity;
-			if (p.dr.maxYIntensity <= 0) {
-				maxIntensity = data.max();
-			} else {
-				maxIntensity = p.dr.maxYIntensity;
-			}
-	
-			//GridPerspective<Float> grid = new GridPerspective<Float>(p.dr.dataWidth, p.dr.dataHeight, 0.0f);
-			//modData = SpectrumCalculations.gridYReverse(modData, grid);
-	
 			if (p.dr.drawToVectorSurface) {
 				drawAsScalar(p, modData, cellSize, maxIntensity);
 			} else {
@@ -64,6 +55,14 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 
 		p.context.restore();
 
+	}
+	
+	public float calcMaxIntensity(PainterData p) {
+		if (p.dr.maxYIntensity <= 0) {
+			return data.max();
+		} else {
+			return p.dr.maxYIntensity;
+		}
 	}
 
 
