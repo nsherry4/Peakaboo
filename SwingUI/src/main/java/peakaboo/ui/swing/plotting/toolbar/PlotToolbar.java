@@ -8,6 +8,7 @@ import javax.swing.Box;
 import javax.swing.JToolBar;
 
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -82,17 +83,17 @@ public class PlotToolbar extends JToolBar {
 		toolbarInfo.setEnabled(false);
 		this.add(toolbarInfo, c);
 	
-		
-		toolbarConcentrations = new ToolbarImageButton("Concentration")
-				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-				.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
-				.withSignificance(false);
-		toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
-		
-		c.gridx += 1;
-		toolbarConcentrations.setEnabled(false);
-		this.add(toolbarConcentrations, c);
-		
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			toolbarConcentrations = new ToolbarImageButton("Concentration")
+					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
+					.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
+					.withSignificance(false);
+			toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
+			
+			c.gridx += 1;
+			toolbarConcentrations.setEnabled(false);
+			this.add(toolbarConcentrations, c);
+		}
 		
 		toolbarMap = new ToolbarImageButton("Map Fittings")
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
@@ -129,7 +130,7 @@ public class PlotToolbar extends JToolBar {
 	public void setWidgetState(boolean hasData) {
 		
 		toolbarInfo.setEnabled(hasData);
-		toolbarConcentrations.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
+		if (Peakaboo.SHOW_QUANTITATIVE) toolbarConcentrations.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
 		
 		if (hasData) {
 			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());

@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.widgets.Spacing;
@@ -33,7 +34,9 @@ public class PlotMenuEnergy extends JPopupMenu {
 		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
 
 		outer.addSetting(energyCalibration(plot));
-		outer.addSetting(zcalibration(plot));
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			outer.addSetting(zcalibration(plot));
+		}
 		outer.addSetting(advanced(plot));
 		outer.setOpaque(false);
 		this.add(outer);

@@ -27,6 +27,7 @@ import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
+import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
@@ -76,43 +77,44 @@ class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		
-		showConcentrations = new ToolbarImageButton("Concentration")
-				.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-				.withTooltip("Get fitting concentration for the selection")
-				.withSignificance(true);
-		
-		showConcentrations.addActionListener(e -> {
+		if (Peakaboo.SHOW_QUANTITATIVE)  {
+			showConcentrations = new ToolbarImageButton("Concentration")
+					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
+					.withTooltip("Get fitting concentration for the selection")
+					.withSignificance(true);
 			
-			List<Integer> indexes = new ArrayList<>();
-			
-			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
-			PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
-			
-			if (areaSelection.hasSelection()) {
-				indexes.addAll(areaSelection.getPoints());
-			} else if (pointsSelection.hasSelection()) {
-				indexes.addAll(pointsSelection.getPoints());
-			}
-			
-			List<ITransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
-			Function<ITransitionSeries, Float> intensityFunction = ts -> {
-				CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
-				ReadOnlySpectrum data = controller.mapsController.getMapResultSet().getMap(ts).getData(profile);
-				float sum = 0;
-				for (int index : indexes) {
-					sum += data.get(index);
+			showConcentrations.addActionListener(e -> {
+				
+				List<Integer> indexes = new ArrayList<>();
+				
+				AreaSelection areaSelection = controller.getSettings().getAreaSelection();
+				PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
+				
+				if (areaSelection.hasSelection()) {
+					indexes.addAll(areaSelection.getPoints());
+				} else if (pointsSelection.hasSelection()) {
+					indexes.addAll(pointsSelection.getPoints());
 				}
-				return sum /= indexes.size();
-			};
-			Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
-			
-			ConcentrationView concentrations = new ConcentrationView(ppm, panel);
-			panel.pushLayer(concentrations);
-							
-		});
-		this.add(showConcentrations, c);
-		c.gridx++;
+				
+				List<ITransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
+				Function<ITransitionSeries, Float> intensityFunction = ts -> {
+					CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
+					ReadOnlySpectrum data = controller.mapsController.getMapResultSet().getMap(ts).getData(profile);
+					float sum = 0;
+					for (int index : indexes) {
+						sum += data.get(index);
+					}
+					return sum /= indexes.size();
+				};
+				Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
+				
+				ConcentrationView concentrations = new ConcentrationView(ppm, panel);
+				panel.pushLayer(concentrations);
+								
+			});
+			this.add(showConcentrations, c);
+			c.gridx++;
+		}
 		
 		
 		examineSubset = new ToolbarImageButton("Plot Selection", "view-subset");
@@ -156,7 +158,7 @@ class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		showConcentrations.setEnabled(false);
+		if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
 		examineSubset.setEnabled(false);
 		
 		c.weightx = 1.0;
@@ -179,10 +181,10 @@ class MapperToolbar extends JToolBar {
 			
 			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
 			{
-				showConcentrations.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
+				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
 				examineSubset.setEnabled(true);
 			} else {
-				showConcentrations.setEnabled(false);
+				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
 				examineSubset.setEnabled(false);
 			}
 

@@ -40,6 +40,7 @@ public class Peakaboo
 {
 	private static Timer gcTimer;
 	
+	public static final boolean SHOW_QUANTITATIVE = false;
 
 	private static void showError(Throwable throwable, String message) {
 		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
