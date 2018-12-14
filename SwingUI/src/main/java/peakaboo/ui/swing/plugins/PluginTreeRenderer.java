@@ -1,6 +1,7 @@
 package peakaboo.ui.swing.plugins;
 
 import java.awt.Component;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -8,6 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
+import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import peakaboo.calibration.CalibrationReference;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
@@ -37,11 +39,11 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
     	
     	DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
     	Object object = node.getUserObject();
-    	if (object instanceof String) {
-    		String string = object.toString();
-    		setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
-    		setText(string);
-    	} else {
+    	if (object instanceof BoltPluginManager) {
+    		BoltPluginManager<?> manager = (BoltPluginManager<?>) object;
+        	setText(manager.getInterfaceName());
+        	setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
+    	} else if (object instanceof BoltPluginPrototype) {
         	BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>)object;
         	setText(plugin.getName());
         	setIcon(getIcon(plugin));	

@@ -61,4 +61,16 @@ public class CalibrationPluginManager extends BoltPluginManager<CalibrationRefer
 		return new BoltFilesystemDirectoryManager<>(this, getDirectory());
 	}
 
+
+	@Override
+	public String getInterfaceDescription() {
+		return "Z-Calibration References describe standard reference materials. When combined with a data set for that standard reference, they can be used to estimate and correct per-element experimental sensitifity.";
+	}
+
+
+	@Override
+	public String getInterfaceName() {
+		return "Z-Calibration Reference";
+	}
+
 }

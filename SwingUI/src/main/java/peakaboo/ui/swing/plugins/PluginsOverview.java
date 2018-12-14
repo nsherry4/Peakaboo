@@ -42,6 +42,7 @@ import peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
+import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.FileDrop;
 import stratus.StratusLookAndFeel;
@@ -51,7 +52,6 @@ import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonSize;
@@ -78,6 +78,7 @@ public class PluginsOverview extends HeaderLayer {
 		JPanel body = new JPanel(new BorderLayout());
 		body.add(pluginTree(), BorderLayout.WEST);
 		details = new JPanel(new BorderLayout());
+		details.add(new PluginMessageView("No Selection", 0), BorderLayout.CENTER);
 		body.add(details, BorderLayout.CENTER);
 		new FileDrop(body, files -> {
 			for (File file : files) {
@@ -91,6 +92,7 @@ public class PluginsOverview extends HeaderLayer {
 		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
 		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
 		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		remove.setEnabled(false);
 		
 		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
 		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
@@ -216,8 +218,10 @@ public class PluginsOverview extends HeaderLayer {
 			return FilterPluginManager.SYSTEM;
 		}
 		
-		if (pluginBaseClass == CalibrationReference.class) {
-			return CalibrationPluginManager.SYSTEM;
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			if (pluginBaseClass == CalibrationReference.class) {
+				return CalibrationPluginManager.SYSTEM;
+			}
 		}
 		
 		return null;
@@ -236,7 +240,7 @@ public class PluginsOverview extends HeaderLayer {
 			handled |= addFileToManager(file, DataSourcePluginManager.SYSTEM);
 			handled |= addFileToManager(file, DataSinkPluginManager.SYSTEM);
 			handled |= addFileToManager(file, FilterPluginManager.SYSTEM);
-			handled |= addFileToManager(file, CalibrationPluginManager.SYSTEM);
+			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.SYSTEM);
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
@@ -285,7 +289,7 @@ public class PluginsOverview extends HeaderLayer {
 		DataSourcePluginManager.SYSTEM.reload();
 		DataSinkPluginManager.SYSTEM.reload();
 		FilterPluginManager.SYSTEM.reload();
-		CalibrationPluginManager.SYSTEM.reload();
+		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.SYSTEM.reload();
 		tree.setModel(buildTreeModel());
 	}
 	
@@ -308,32 +312,34 @@ public class PluginsOverview extends HeaderLayer {
 		
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
 		
-		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode("Data Sources");
+		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(DataSourcePluginManager.SYSTEM);
 		plugins.add(sourcesNode);
 		for (BoltPluginPrototype<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sourcesNode.add(node);
 		}
 		
-		DefaultMutableTreeNode sinksNode = new DefaultMutableTreeNode("Data Sinks");
+		DefaultMutableTreeNode sinksNode = new DefaultMutableTreeNode(DataSinkPluginManager.SYSTEM);
 		plugins.add(sinksNode);
 		for (BoltPluginPrototype<? extends DataSinkPlugin> source :  DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sinksNode.add(node);
 		}
 		
-		DefaultMutableTreeNode filtersNode = new DefaultMutableTreeNode("Filters");
+		DefaultMutableTreeNode filtersNode = new DefaultMutableTreeNode(FilterPluginManager.SYSTEM);
 		plugins.add(filtersNode);
 		for (BoltPluginPrototype<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			filtersNode.add(node);
 		}
 		
-		DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode("Calibration References");
-		plugins.add(calibrationsNode);
-		for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins().getAll()) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
-			calibrationsNode.add(node);
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.SYSTEM);
+			plugins.add(calibrationsNode);
+			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins().getAll()) {
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
+				calibrationsNode.add(node);
+			}
 		}
 		
 		
@@ -356,8 +362,14 @@ public class PluginsOverview extends HeaderLayer {
 		tree.addTreeSelectionListener(tse -> {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			details.removeAll();
-			if (node == null || !node.isLeaf()) { 
-				details.add(new JPanel(), BorderLayout.CENTER);
+			if (node == null) { 
+				details.add(new PluginMessageView("No Selection", 0), BorderLayout.CENTER);
+				remove.setEnabled(false);
+			} else if (!node.isLeaf()) {
+				
+				BoltPluginManager<? extends BoltPlugin> manager = (BoltPluginManager<? extends BoltPlugin>) node.getUserObject();
+				String interfaceDesc = manager.getInterfaceDescription();
+				details.add(new PluginMessageView(interfaceDesc, 300), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else {
 				details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);

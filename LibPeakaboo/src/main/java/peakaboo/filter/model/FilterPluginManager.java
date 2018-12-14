@@ -124,5 +124,14 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		return null;
 	}
 	
+	@Override
+	public String getInterfaceDescription() {
+		return "Filters are ways to process or transform spectral data. This can be used to do things like remove background or smooth noise.";
+	}
+	
+	@Override
+	public String getInterfaceName() {
+		return "Filter";
+	}
 	
 }

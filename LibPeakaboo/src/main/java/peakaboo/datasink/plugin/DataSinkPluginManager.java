@@ -69,6 +69,15 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 		return null;
 	}
 	
+	@Override
+	public String getInterfaceDescription() {
+		return "Data Sinks are ways to save data loaded by Peakaboo back to a file (or files). This can be useful for file format conversion.";
+	}
+	
+	@Override
+	public String getInterfaceName() {
+		return "Data Sink";
+	}
 
 		
 }

@@ -90,7 +90,15 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 		return null;
 	}
 	
-
+	@Override
+	public String getInterfaceDescription() {
+		return "Data Sources are ways to load data into Peakaboo from a file (or files). This can be used to add support for new file formats.";
+	}
+	
+	@Override
+	public String getInterfaceName() {
+		return "Data Source";
+	}
 
 		
 }
