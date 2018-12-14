@@ -114,6 +114,7 @@ import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
 import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.ToastLayer;
+import swidget.widgets.layerpanel.widgets.AboutLayer;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.layout.PropertyPanel;
 import swidget.widgets.layout.TitledPanel;
@@ -556,7 +557,10 @@ public class PlotPanel extends TabbedLayerPanel
 		contents.releaseDescription = Version.releaseDescription;
 		contents.date = Version.buildDate;
 		
-		new AboutDialogue(getTabbedInterface().getWindow(), contents);
+		AboutLayer about = new AboutLayer(this, contents);
+		this.pushLayer(about);
+		
+		//new AboutDialogue(getTabbedInterface().getWindow(), contents);
 	}
 	
 	public void actionHelp()
