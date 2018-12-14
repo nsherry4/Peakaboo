@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 
 public class PathDataFile implements DataFile {
 	
@@ -32,6 +33,15 @@ public class PathDataFile implements DataFile {
 	@Override
 	public void close() throws Exception {
 		//NOOP
+	}
+
+	@Override
+	public Optional<Long> size() {
+		try {
+			return Optional.of(Files.size(path));
+		} catch (IOException e) {
+			return Optional.empty();
+		}
 	}
 
 }

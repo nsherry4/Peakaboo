@@ -3,6 +3,7 @@ package peakaboo.datasource.model.datafile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import peakaboo.datasource.model.DataSource;
 
@@ -31,8 +32,9 @@ public interface DataFile extends AutoCloseable {
 	public InputStream getInputStream() throws IOException;
 
 	/**
-	 * Ensures that the data is available as a file on disk, and returns a
-	 * {@link Path} to that file. <br/>
+	 * Ensures that the data is available as a file on disk (or some filesystem
+	 * accessible by the java.nio system), and returns a {@link Path} to that
+	 * file. <br/>
 	 * <br/>
 	 * Note that for some input sources, the data may not originate from a file on
 	 * disk, and this step may incur extra overhead compared to
@@ -46,4 +48,9 @@ public interface DataFile extends AutoCloseable {
 	 */
 	public Path getAndEnsurePath() throws IOException;
 
+	/**
+	 * Returns the size of the file or stream if available
+	 */
+	public Optional<Long> size();
+	
 }
