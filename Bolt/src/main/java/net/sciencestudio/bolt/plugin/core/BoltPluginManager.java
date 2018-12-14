@@ -186,7 +186,15 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 	protected abstract BoltDirectoryManager<P> filesystemDirectoryManager();
 
 
-
+	/**
+	 * Provides a name for the kind of plugins managed by this manager
+	 * @return
+	 */
+	public abstract String getInterfaceName();
+	/**
+	 * Provides a description for the kind of plugins managed by this manager
+	 */
+	public abstract String getInterfaceDescription();
 	
 
 
