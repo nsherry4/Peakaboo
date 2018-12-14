@@ -116,11 +116,6 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	@Override
 	public abstract void initialize();
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getPainter()
-	 */
-	@Override
-	public abstract Object getPainter();
 	
 
 	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache);

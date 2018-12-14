@@ -102,12 +102,6 @@ public class SubFilter extends AbstractFilter
 	}
 
 	@Override
-	public Object getPainter()
-	{
-		return filter.getValue().getPainter();		
-	}
-
-	@Override
 	public boolean pluginEnabled()
 	{
 		return true;

@@ -7,13 +7,6 @@ public abstract class AbstractSimpleFilter extends AbstractFilter
 {
 
 	@Override
-	public Object getPainter()
-	{
-		return null;
-	}
-
-
-	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache)
 	{
 		return filterApplyTo(data);

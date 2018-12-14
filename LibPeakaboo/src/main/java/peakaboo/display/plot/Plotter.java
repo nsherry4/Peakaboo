@@ -249,24 +249,8 @@ public class Plotter {
 		}
 		
 		
-		// get any painters that the filters might want to add to the mix
-		// note that this style is now deprecated, and should be removed
-		// TODO: Remove in Peakaboo 6 
+		//Filter previews
 		PlotPainter filterPainter;
-		for (Filter f : data.filters)
-		{
-			Object painterObject = f.getPainter();
-			if (painterObject instanceof PlotPainter) {
-				filterPainter = (PlotPainter) painterObject;
-				
-				if (filterPainter != null && f.isEnabled()) {
-					filterPainter.setSourceName(f.getFilterName());
-					plotPainters.add(filterPainter);
-				}
-			}
-		}
-
-		//New way of drawing filter previews
 		for (Filter f : data.filters) {
 			if (!f.isPreviewOnly()) { continue; }
 			

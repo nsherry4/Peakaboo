@@ -46,14 +46,6 @@ public interface Filter {
 	 * This method is called once before the filter is used.  
 	 */
 	void initialize();
-
-	/**
-	 * Returns an object describing how to paint a preview of this filter. This used
-	 * to be a SciDraw PlotPainter, but was changed to Object so that awt/swing was
-	 * not used.
-	 */
-	@Deprecated
-	Object getPainter();
 	
 	
 	/**

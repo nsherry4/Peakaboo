@@ -112,11 +112,6 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	public boolean isPreviewOnly() {
 		return preview.getValue();
 	}
-	
-	@Override
-	public final Object getPainter()
-	{
-		return null;
-	}
+
 	
 }
