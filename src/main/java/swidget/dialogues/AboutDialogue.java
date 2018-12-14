@@ -75,10 +75,78 @@ public class AboutDialogue extends JDialog
 		JPanel panel = new JPanel(new BorderLayout());
 		c.add(panel, BorderLayout.CENTER);
 		
+		
+		
+		
+		
+		ButtonBox bbox = new ButtonBox();
+		
+		ImageButton btnCredit = new ImageButton()
+				.withIcon(StockIcon.MISC_ABOUT, IconSize.BUTTON)
+				.withText("Credits")
+				.withTooltip("View Credits")
+				.withAction(() -> {
+					TitledPanel creditsTitledPanel = new TitledPanel(creditsPanel(contents), true);
+					new PropertyDialogue("Credits", AboutDialogue.this, creditsTitledPanel);
+					
+				});
+		bbox.addLeft(btnCredit);
+		
+		
+		ImageButton btnLicence = new ImageButton()
+				.withIcon(StockIcon.MIME_TEXT, IconSize.BUTTON)
+				.withText("Licence")
+				.withTooltip("View Licence")
+				.withAction(() -> {
+					new LayerDialog(contents.name + " Licence", textForJOptionPane(contents.licence), MessageType.INFO).showInWindow(AboutDialogue.this);
+				});
+
+		bbox.addLeft(btnLicence);	
+
+
+		ImageButton btnClose = new ImageButton().withIcon(StockIcon.WINDOW_CLOSE, IconSize.BUTTON).withText("Close").withTooltip("Close this window");
+		btnClose.addActionListener(new ActionListener() {
+		
+			public void actionPerformed(ActionEvent arg0)
+			{
+				setVisible(false);
+			}
+		});
+		bbox.addRight(btnClose);
+		
+		
+		
+		
+		panel.add(aboutPanel(contents), BorderLayout.CENTER);
+		panel.add(bbox, BorderLayout.SOUTH);
+		
+		
+		pack();
+
+		
+		setLocationRelativeTo(owner);
+		setVisible(true);
+		
+	}
+	
+	public static PropertyPanel creditsPanel(Contents contents) {
+		Map<String, String> credits = new LinkedHashMap<>();
+		for (String credit : contents.credits.split("\n")) {
+			if (credit.trim().length() == 0) {
+				continue;
+			}
+			String[] creditParts = credit.split(": ");
+			credits.put(creditParts[0], creditParts[1]);
+		}
+		return new PropertyPanel(credits);
+	}
+	
+	public static JPanel aboutPanel(Contents contents) {
+
 		JPanel infopanel = new JPanel(new GridBagLayout());
-		//infopanel.setBorder(new EmptyBorder(0, 50, Spacing.large, 50));		
-		infopanel.setBorder(Spacing.bLarge());
 		infopanel.setBackground(Color.WHITE);
+		//infopanel.setBorder(new EmptyBorder(0, 50, Spacing.large, 50));		
+		infopanel.setBorder(Spacing.bHuge());
 		
 		GridBagConstraints gc = new GridBagConstraints();
 		
@@ -89,6 +157,7 @@ public class AboutDialogue extends JDialog
 		gc.weightx = 0.0;
 		gc.weighty = 1.0;
 		gc.gridheight = 3;
+		gc.insets = Spacing.iHuge();
 		
 		JLabel iconLabel = new JLabel(contents.logo);
 		//iconLabel.setOpaque(true);
@@ -108,7 +177,7 @@ public class AboutDialogue extends JDialog
 		title.setFont(title.getFont().deriveFont(Font.PLAIN));
 		title.setText(
 			"<html><div style='text-align: left; width: 250px;'>" +
-				"<big><big>" + contents.name + " " + contents.version + "</big></big>" +
+				"<span style='font-size: 250%;'>" + contents.name + " " + contents.version + "</span>" +
 				(("".equals(contents.releaseDescription)) ? "" : "<br><font color=\"#c00000\">" + contents.releaseDescription + "</font>") +  
 			"</div></html>");
 		
@@ -166,63 +235,7 @@ public class AboutDialogue extends JDialog
 			infopanel.add(weblabel, gc);
 		}
 		
-		ButtonBox bbox = new ButtonBox();
-		
-		ImageButton btnCredit = new ImageButton()
-				.withIcon(StockIcon.MISC_ABOUT, IconSize.BUTTON)
-				.withText("Credits")
-				.withTooltip("View Credits")
-				.withAction(() -> {
-					
-					Map<String, String> credits = new LinkedHashMap<>();
-					for (String credit : contents.credits.split("\n")) {
-						if (credit.trim().length() == 0) {
-							continue;
-						}
-						String[] creditParts = credit.split(": ");
-						credits.put(creditParts[0], creditParts[1]);
-					}
-					TitledPanel creditsPanel = new TitledPanel(new PropertyPanel(credits), true);
-					new PropertyDialogue("Credits", AboutDialogue.this, creditsPanel);
-					
-				});
-		bbox.addLeft(btnCredit);
-		
-		
-		ImageButton btnLicence = new ImageButton()
-				.withIcon(StockIcon.MIME_TEXT, IconSize.BUTTON)
-				.withText("Licence")
-				.withTooltip("View Licence")
-				.withAction(() -> {
-					new LayerDialog(contents.name + " Licence", textForJOptionPane(contents.licence), MessageType.INFO).showInWindow(AboutDialogue.this);
-				});
-
-		bbox.addLeft(btnLicence);	
-
-
-		ImageButton btnClose = new ImageButton().withIcon(StockIcon.WINDOW_CLOSE, IconSize.BUTTON).withText("Close").withTooltip("Close this window");
-		btnClose.addActionListener(new ActionListener() {
-		
-			public void actionPerformed(ActionEvent arg0)
-			{
-				setVisible(false);
-			}
-		});
-		bbox.addRight(btnClose);
-		
-		
-		
-		
-		panel.add(infopanel, BorderLayout.CENTER);
-		panel.add(bbox, BorderLayout.SOUTH);
-		
-		
-		pack();
-
-		
-		setLocationRelativeTo(owner);
-		setVisible(true);
-		
+		return infopanel;
 	}
 	
 	
