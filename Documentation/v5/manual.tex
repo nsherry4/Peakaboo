@@ -340,7 +340,7 @@ To add an annotation, double-click on the fitting in the \command{Peak Fitting} 
 
 \tocchapter{Filters}
 
-Filters can be accessed by clicking on the \command{Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into folders based on type. Each folder can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
+Filters are ways to process or transform spectral data. Filters can be accessed by clicking on the \command{Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into folders based on type. Each folder can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
 
 After you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed.
 
@@ -420,6 +420,16 @@ There are two ways to select sections of a map, cropping and point-selection. Cr
 \screenshot{select-subset}{Selecting a cropped subset of a data set}
 
 Point selection is accomplished by double clicking on a point of interest, which will select all points in a contiguous region with similar intensity. Triple clicking will select all points in a map with similar intensity regardless of location. More complex selections can be made by holding the \command{Control} key while double-clicking. For example, \command{Control} + \command{Double Clicking} on a previously unselected point will create a union with a previously selected set of points.
+
+The \command{Map Settings} tab has two settings which will control how point selections are made. 
+
+\begin{description}
+
+\item [Threshold] Threshold adjusts the sensitivity of the selection. For a threshold $t$, double-clicking a point with intensity $i$ will select all contiguous points with an intensity between $\frac{i}{t}$ and $i\times t$. For example, with a threshold setting of 2, double-clicking a point with a value 2 will select all touching points with a value between 50 and 200.
+
+\item [Padding] Padding controls how many extra `rings' of pixels get selected along with matching pixels. For example, when a point selection is made with a padding value of 1, all pixels which are adjacent to the selection area are added to the selection. For a larger padding value $p$, this process is repeated $p$ times.
+
+\end{description}
 
 \screenshot{select-points}{Selecting a series of contiguous high-intensity points from the data set}
 
