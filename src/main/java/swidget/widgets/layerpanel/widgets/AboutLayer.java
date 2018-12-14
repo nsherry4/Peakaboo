@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 
 import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.AboutDialogue.Contents;
+import swidget.widgets.CenteringPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
@@ -53,16 +54,8 @@ public class AboutLayer extends HeaderLayer {
 			credits.put(creditParts[0], creditParts[1]);
 		}
 		JPanel panel = new PropertyPanel(credits, false, 0);
-		JPanel outer = new JPanel(new GridBagLayout());
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0f;
-		c.weighty = 0f;
-		
-		outer.add(panel, c);
-		return outer;
+		return new CenteringPanel(panel);
 	}
 	
 	private static Component licencePanel(AboutDialogue.Contents contents) {

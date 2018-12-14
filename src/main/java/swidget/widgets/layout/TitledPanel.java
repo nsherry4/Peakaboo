@@ -17,7 +17,8 @@ import swidget.widgets.Spacing;
 public class TitledPanel extends JPanel
 {
 
-	private JLabel icon;
+	private ImageIcon icon = StockIcon.BADGE_INFO.toImageIcon(IconSize.ICON);
+	private JLabel iconLabel;
 	private GridBagConstraints c;
 	
 	private boolean showBadge = false;
@@ -67,9 +68,12 @@ public class TitledPanel extends JPanel
 		c.weightx = 0;
 		
 		if (showBadge) {
-			icon = new JLabel(StockIcon.BADGE_INFO.toImageIcon(IconSize.ICON));
-			icon.setBorder(new EmptyBorder(0, 0, 0, Spacing.huge));
-			add(icon, c);
+			if (iconLabel == null) {
+				iconLabel = new JLabel();
+				iconLabel.setBorder(new EmptyBorder(0, 0, 0, Spacing.huge));
+			}
+			iconLabel.setIcon(icon);
+			add(iconLabel, c);
 		}
 		
 		c.anchor = GridBagConstraints.LINE_START;
@@ -96,7 +100,7 @@ public class TitledPanel extends JPanel
 	
 
 	public void setBadge(ImageIcon imageIcon) {
-		icon.setIcon(imageIcon);
+		icon = imageIcon;
 		make();
 	}
 }

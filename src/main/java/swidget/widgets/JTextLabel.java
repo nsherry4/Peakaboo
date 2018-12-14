@@ -20,4 +20,9 @@ public class JTextLabel extends JTextArea {
 		setBorder(template.getBorder());
 	}
 	
+	public JTextLabel(String text) {
+		this();
+		setText(text);
+	}
+	
 }
