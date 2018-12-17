@@ -208,10 +208,15 @@ public class Peakaboo
 			uiPerformanceTune();
 
 			//Init plugins
-			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
-			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
-			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
-			CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
+			//TODO: This try-catch should be more granular, maybe in the managers themselves?
+			try {
+				FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+				DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
+				DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
+				CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
+			} catch (Exception e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to load plugins", e);
+			}
 			
 			try {
 				peakLoader.join();
