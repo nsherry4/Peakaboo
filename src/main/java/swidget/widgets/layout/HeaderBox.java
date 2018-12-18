@@ -101,14 +101,23 @@ public class HeaderBox extends PaintedPanel {
 				if(!SwingUtilities.isLeftMouseButton(e)) {
 					return;
 				}
-				
+								
 				Window parent = SwingUtilities.getWindowAncestor(HeaderBox.this);
+				
+				//dont' move parent window if it's maximized
+				if (parent instanceof JFrame) {
+					JFrame parentJFrame = (JFrame) parent;
+					if ((parentJFrame.getExtendedState() & JFrame.MAXIMIZED_HORIZ) == JFrame.MAXIMIZED_HORIZ ||
+						(parentJFrame.getExtendedState() & JFrame.MAXIMIZED_VERT) == JFrame.MAXIMIZED_VERT) {
+						return;
+					}
+				}
 				
 				//Thanks https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
 	            // get location of Window
-	            int thisX = parent.getLocation().x;
-	            int thisY = parent.getLocation().y;
-
+	            int thisX = parent.getX();
+	            int thisY = parent.getY();
+	            
 	            // Determine how much the mouse moved since the initial click
 	            int xMoved = e.getX() - initialClick.x;
 	            int yMoved = e.getY() - initialClick.y;
