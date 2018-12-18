@@ -214,7 +214,7 @@ public class Peakaboo
 				DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 				DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
 				CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load plugins", e);
 			}
 			
