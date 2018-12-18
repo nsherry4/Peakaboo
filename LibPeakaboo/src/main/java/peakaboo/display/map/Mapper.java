@@ -577,16 +577,16 @@ public class Mapper {
 			for (int i = 0; i < dr.dataWidth * dr.dataHeight; i++) {
 				PaletteColour addedColour = new PaletteColour();
 				
-				if (overlayMapPainterRed != null) {
+				if (redSpectrum != null && overlayMapPainterRed != null) {
 					addedColour = addedColour.add(overlayMapPainterRed.getColourFromRules(redSpectrum.get(i), overlayMapPainterRed.calcMaxIntensity(p), dr.viewTransform));
 				}
-				if (overlayMapPainterGreen != null) {
+				if (greenSpectrum != null && overlayMapPainterGreen != null) {
 					addedColour = addedColour.add(overlayMapPainterGreen.getColourFromRules(greenSpectrum.get(i), overlayMapPainterGreen.calcMaxIntensity(p), dr.viewTransform));
 				}
-				if (overlayMapPainterBlue != null) {
+				if (blueSpectrum != null && overlayMapPainterBlue != null) {
 					addedColour = addedColour.add(overlayMapPainterBlue.getColourFromRules(blueSpectrum.get(i), overlayMapPainterBlue.calcMaxIntensity(p), dr.viewTransform));
 				}
-				if (overlayMapPainterYellow != null) {
+				if (yellowSpectrum != null && overlayMapPainterYellow != null) {
 					addedColour = addedColour.add(overlayMapPainterYellow.getColourFromRules(yellowSpectrum.get(i), overlayMapPainterYellow.calcMaxIntensity(p), dr.viewTransform));
 				}
 				addedColours.add(addedColour);
@@ -612,10 +612,10 @@ public class Mapper {
 			
 			List<MapPainter> painters = new ArrayList<MapPainter>();
 			painters.add(new FloodMapPainter(new PaletteColour(0xff000000))); //background
-			if (overlayMapPainterRed != null)    painters.add(overlayMapPainterRed);
-			if (overlayMapPainterGreen != null)  painters.add(overlayMapPainterGreen);
-			if (overlayMapPainterBlue != null)   painters.add(overlayMapPainterBlue);
-			if (overlayMapPainterYellow != null) painters.add(overlayMapPainterYellow);
+			if (redSpectrum != null && overlayMapPainterRed != null)       painters.add(overlayMapPainterRed);
+			if (greenSpectrum != null && overlayMapPainterGreen != null)   painters.add(overlayMapPainterGreen);
+			if (blueSpectrum != null && overlayMapPainterBlue != null)     painters.add(overlayMapPainterBlue);
+			if (yellowSpectrum != null && overlayMapPainterYellow != null) painters.add(overlayMapPainterYellow);
 			painters.add(selection);
 			map.setPainters(painters);
 			
