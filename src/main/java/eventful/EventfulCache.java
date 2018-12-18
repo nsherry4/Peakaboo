@@ -32,17 +32,26 @@ public class EventfulCache<T> extends Eventful {
 		deps.setUIThreadRunnerOverride(runnable -> runnable.run());
 	}
 	
-	public synchronized void invalidate() {
-		value = null;
-		hasValue = false;
+	public void invalidate() {
+		// We don't want to hold the lock for updating the deps to prevent deadlock
+		// where getValue locks from the bottom up and invalidate locks from the top
+		// down.
+		synchronized (this) {
+			value = null;
+			hasValue = false;
+		}
 		deps.updateListeners();
 		updateListeners();
 	}
 	
-	public synchronized T getValue() {
+	public T getValue() {
 		if (!hasValue) {
-			value = supplier.get();
-			hasValue = true;
+			synchronized (this) {
+				if (!hasValue) {
+					value = supplier.get();
+					hasValue = true;
+				}
+			}
 		}
 		return value;
 	}
