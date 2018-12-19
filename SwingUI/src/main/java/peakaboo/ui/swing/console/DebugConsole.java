@@ -34,19 +34,19 @@ public class DebugConsole extends TabbedLayerPanel {
 		this.thread = new Thread(interpreter);
 		this.thread.start();
 		
-		for (Package p : this.getClass().getClassLoader().getDefinedPackages()) {
-			try {
-
-				if (p.getName().startsWith("peakaboo.")) {
-					String importCmd = "import " + p.getName() + ".*;";
-					System.out.println(importCmd);
-					this.interpreter.eval(importCmd);
-				}
-			} catch (EvalError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		for (Package p : this.getClass().getClassLoader().getDefinedPackages()) {
+//			try {
+//
+//				if (p.getName().startsWith("peakaboo.")) {
+//					String importCmd = "import " + p.getName() + ".*;";
+//					System.out.println(importCmd);
+//					this.interpreter.eval(importCmd);
+//				}
+//			} catch (EvalError e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 
 		
 		
