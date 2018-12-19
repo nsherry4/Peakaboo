@@ -12,6 +12,7 @@ import javax.swing.KeyStroke;
 import cyclops.util.Mutable;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import peakaboo.common.PeakabooLog;
+import peakaboo.common.Version;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
@@ -114,6 +115,15 @@ public class PlotMenuMain extends JPopupMenu {
 				null, null
 			);
 		debug.add(bugreport);
+		
+		if (!Version.release) {
+			JMenuItem console = PlotMenuUtils.createMenuItem(plot,
+					"Debug Console", null, null,
+					e -> plot.actionDebugConsole(),
+					null, null
+				);
+			debug.add(console);
+		}
 		
 		
 		this.add(debug);

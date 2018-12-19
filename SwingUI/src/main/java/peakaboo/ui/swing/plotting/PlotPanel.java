@@ -46,6 +46,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
+import bsh.Interpreter;
 import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.Pair;
@@ -82,6 +83,7 @@ import peakaboo.filter.model.FilterSet;
 import peakaboo.mapping.results.MapResultSet;
 import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
+import peakaboo.ui.swing.console.DebugConsole;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.mapping.MapperFrame;
 import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
@@ -140,12 +142,15 @@ public class PlotPanel extends TabbedLayerPanel
 	private PlotStatusBar				statusBar;
 	private JScrollPane					scrolledCanvas;
 
+	
+	TabbedInterface<TabbedLayerPanel> 	tabs;
 
 	private static boolean newVersionNotified = false;
 	
 	public PlotPanel(TabbedInterface<TabbedLayerPanel> container) {
 		super(container);
-			
+		this.tabs = container;
+		
 		savedSessionFileName = null;
 		exportedDataFileName = null;
 		
@@ -587,6 +592,12 @@ public class PlotPanel extends TabbedLayerPanel
 		
 	}
 	
+	public void actionDebugConsole() {
+		DebugConsole console = new DebugConsole(tabs);
+		
+		tabs.addTab(console);
+		tabs.setTabTitle(console, "Debug Console");
+	}
 
 
 	
