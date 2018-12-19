@@ -474,15 +474,40 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 	
 			//TEXTFIELD
+			
 			reg(ret, "TextField[Disabled].borderPainter", new TextFieldBorderPainter(theme, ButtonState.DISABLED));
 			reg(ret, "TextField[Enabled].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
 			reg(ret, "TextField[Focused].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));
 	
 			reg(ret, "TextField[Disabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.DISABLED));
 			reg(ret, "TextField[Enabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextField[Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
 			reg(ret, "TextField[Focused].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));
 	
+			reg(ret, "TextField.background", theme.getRecessedControl());
 			reg(ret, "TextField.foreground", theme.getRecessedText());
+			
+			
+			//TEXTAREA
+			reg(ret, "TextArea.background", theme.getRecessedControl());
+			reg(ret, "TextArea.foreground", theme.getRecessedText());
+			
+			reg(ret, "TextArea[Enabled].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextArea[Enabled+NotInScrollPane].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextArea[Selected].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
+			
+			reg(ret, "TextArea[Enabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextArea[Enabled+NotInScrollPane].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextArea[Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
+			
+			//TEXTPANE
+			reg(ret, "TextPane.background", theme.getRecessedControl());
+			reg(ret, "TextPane.foreground", theme.getRecessedText());
+			
+			reg(ret, "TextPane[Enabled].backgroundPainter", new FillPainter(theme.getRecessedControl()));
+			reg(ret, "TextPane[Selected].backgroundPainter", new FillPainter(theme.getRecessedControl()));
+			
+			
 			
 			
 			//PASSWORD FIELD
