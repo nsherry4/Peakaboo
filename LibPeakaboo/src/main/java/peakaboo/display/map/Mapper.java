@@ -553,6 +553,7 @@ public class Mapper {
 		
 		if (yellowSpectrum != null) {
 			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour());
+			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterYellow == null) {
 				overlayMapPainterYellow = new RasterSpectrumMapPainter(palette, yellowSpectrum);
 				overlayMapPainterYellow.setCompositeMode(CompositeModes.ADD);
