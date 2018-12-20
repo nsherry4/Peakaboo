@@ -38,7 +38,7 @@ public interface BoltPluginLoader<T extends BoltPlugin> {
 		for (int i = 0; i < files.length; i++) {
 			try	{
 				registerURL(files[i].toURI().toURL());
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				Bolt.logger().log(Level.WARNING, "Unable to load plugin at " + files[i], e);
 			}
 		}

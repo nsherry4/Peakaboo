@@ -81,7 +81,7 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 			return null;
 
 		}
-		catch (ServiceConfigurationError e)
+		catch (Throwable e)
 		{
 			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
 			throw new ClassInstantiationException("Unable to load plugin", e);
@@ -164,7 +164,7 @@ public class IBoltJavaPluginLoader<T extends BoltJavaPlugin> implements BoltClas
 			for (T t : loader) {
 				registerPlugin((Class<? extends T>) t.getClass(), url);
 			}
-		} catch (ServiceConfigurationError | NoClassDefFoundError | ClassInstantiationException e) {
+		} catch (Throwable e) {
 			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
 		} 
 	}

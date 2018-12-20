@@ -65,7 +65,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 				classpathLoader.scanDirectory(directory);
 			}
 							
-		} catch (ClassInheritanceException e) {
+		} catch (Throwable e) {
 			Bolt.logger().log(Level.SEVERE, "Failed to load plugins", e);
 		}
 	}
