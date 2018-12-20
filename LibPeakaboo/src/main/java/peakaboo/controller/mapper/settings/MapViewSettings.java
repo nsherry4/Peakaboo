@@ -44,6 +44,9 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	private boolean screenOrientation = false;
 
 
+	private float overlayLowCutoff		= 0f;
+
+
 	
 	
 	
@@ -308,14 +311,25 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public boolean getScreenOrientation() {
 		return this.screenOrientation;
 	}
-	
-	
-	
+
 	public void setScreenOrientation(boolean screenOrientation) {
 		this.screenOrientation = screenOrientation;
 		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
 
+
+	public float getOverlayLowCutoff() {
+		return this.overlayLowCutoff;
+	}
+
+	public void setOverlayLowCutoff(float cutoff) {
+		if (cutoff == this.overlayLowCutoff) {
+			return;
+		}
+		this.overlayLowCutoff = cutoff;
+		updateListeners(UpdateType.UI_OPTIONS.toString());
+	}
+	
 
 	public int getInterpolatedHeight()
 	{
@@ -382,6 +396,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 			return new Coord<Number>(mapController.getSettings().getView().getDataWidth(), 1);
 		}
 	}
+
 
 
 

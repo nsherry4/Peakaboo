@@ -24,6 +24,7 @@ public class MapRenderSettings {
 	public boolean monochrome = false;
 	public boolean contours = false;
 	public int contourSteps = 15;
+	public float overlayLowCutoff = 0f;
 	
 	public boolean showScaleBar = false;
 	
@@ -44,6 +45,8 @@ public class MapRenderSettings {
 	public List<Integer> selectedPoints = new ArrayList<>();
 	
 	public CalibrationProfile calibrationProfile = new CalibrationProfile();
+
+	
 	
 	
 	

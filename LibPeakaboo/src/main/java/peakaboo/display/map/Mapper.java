@@ -35,12 +35,12 @@ import cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.Spectrums;
 import cyclops.visualization.palette.palettes.AbstractPalette;
-import cyclops.visualization.palette.palettes.OverlayPalette;
-import cyclops.visualization.palette.palettes.RatioPalette;
 import cyclops.visualization.palette.palettes.SaturationPalette;
 import cyclops.visualization.palette.palettes.ThermalScalePalette;
 import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.display.map.modes.OverlayColour;
+import peakaboo.display.map.modes.OverlayPalette;
+import peakaboo.display.map.modes.RatioPalette;
 
 public class Mapper {
 
@@ -518,39 +518,47 @@ public class Mapper {
 		
 		
 		if (redSpectrum != null) {
+			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour());
+			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterRed == null) {
-				overlayMapPainterRed = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour()), redSpectrum);
+				overlayMapPainterRed = new RasterSpectrumMapPainter(palette, redSpectrum);
 				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterRed.setData(redSpectrum);
-			overlayMapPainterRed.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour()));
+			overlayMapPainterRed.setPalette(palette);
+			
 		}
 			
 		if (greenSpectrum != null) {
+			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour());
+			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterGreen == null) {
-				overlayMapPainterGreen = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour()), greenSpectrum);
+				overlayMapPainterGreen = new RasterSpectrumMapPainter(palette, greenSpectrum);
 				overlayMapPainterGreen.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterGreen.setData(greenSpectrum);
-			overlayMapPainterGreen.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour()));
+			overlayMapPainterGreen.setPalette(palette);
 		}
 		
 		if (blueSpectrum != null) {
+			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour());
+			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterBlue == null) {
-				overlayMapPainterBlue = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour()), blueSpectrum);
+				overlayMapPainterBlue = new RasterSpectrumMapPainter(palette, blueSpectrum);
 				overlayMapPainterBlue.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterBlue.setData(blueSpectrum);
-			overlayMapPainterBlue.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour()));
+			overlayMapPainterBlue.setPalette(palette);
 		}
 		
 		if (yellowSpectrum != null) {
+			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour());
 			if (overlayMapPainterYellow == null) {
-				overlayMapPainterYellow = new RasterSpectrumMapPainter(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour()), yellowSpectrum);
+				overlayMapPainterYellow = new RasterSpectrumMapPainter(palette, yellowSpectrum);
 				overlayMapPainterYellow.setCompositeMode(CompositeModes.ADD);
 			}
 			overlayMapPainterYellow.setData(yellowSpectrum);
-			overlayMapPainterYellow.setPalette(new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour()));
+			overlayMapPainterYellow.setPalette(palette);
 		}
 
 		

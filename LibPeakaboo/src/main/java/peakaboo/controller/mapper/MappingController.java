@@ -102,7 +102,8 @@ public class MappingController extends EventfulType<String>
 		settings.monochrome = this.display.getView().getMonochrome();
 		settings.contours = this.display.getView().getContours();
 		settings.contourSteps = this.display.getView().getSpectrumSteps();
-			
+		settings.overlayLowCutoff = this.display.getView().getOverlayLowCutoff();
+		
 		settings.mode = this.getSettings().getMapFittings().getMapDisplayMode();
 		
 		settings.screenOrientation = this.getSettings().getView().getScreenOrientation();

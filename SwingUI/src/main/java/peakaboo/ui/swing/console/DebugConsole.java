@@ -2,16 +2,18 @@ package peakaboo.ui.swing.console;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JTextPane;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.ColorUIResource;
 
-import bsh.EvalError;
+import bsh.BshClassManager;
+import bsh.ClassPathException;
 import bsh.Interpreter;
+import bsh.classpath.ClassManagerImpl;
+import bsh.util.ClassBrowser;
 import bsh.util.JConsole;
 import stratus.StratusLookAndFeel;
 import swidget.Swidget;
@@ -33,7 +35,9 @@ public class DebugConsole extends TabbedLayerPanel {
 		this.interpreter = new Interpreter(this.console);
 		this.thread = new Thread(interpreter);
 		this.thread.start();
+
 		
+//requires java v9 api
 //		for (Package p : this.getClass().getClassLoader().getDefinedPackages()) {
 //			try {
 //
@@ -48,13 +52,21 @@ public class DebugConsole extends TabbedLayerPanel {
 //			}
 //		}
 
-		
-		
-
 
 		this.console.setBorder(new EmptyBorder(0, 0, 0, 0));
 		this.setBackground(Color.WHITE);
 		this.add(this.console, BorderLayout.CENTER);
+
+//Doesn't work w/ java 9+ jre due to module system maybe?
+//		ClassBrowser browser = new ClassBrowser(BshClassManager.createClassManager(this.interpreter));
+//		try {
+//			browser.init();
+//		} catch (ClassPathException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		browser.setPreferredSize(new Dimension(200, 200));
+//		this.add(browser, BorderLayout.EAST);
 	}
 
 	@Override
