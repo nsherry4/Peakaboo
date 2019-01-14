@@ -78,7 +78,7 @@
 %placing a screenshot as a figure
 \newcommand{\screenshot}[2]{%
 \begin{figure}[h!]
-\centering\includegraphics[width=0.85\textwidth]{figures/#1.png}
+\centering\includegraphics[width=0.999\textwidth]{figures/#1.png}
 \caption{#2}
 \end{figure}
 }
@@ -91,8 +91,8 @@
 \newcommand{\tocsubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
 
 \title{Peakaboo 5}
-\date{July 27th, 2018}
-\author{Nathaniel Sherry, Marina Suominen Fuller}
+\date{January 14th, 2019}
+\author{Nathaniel Sherry, N. Stewart McIntyre, Marina Suominen Fuller}
         
 
 \begin{document}
@@ -102,7 +102,7 @@
 \rhead[]{}
 %\rhead[\includegraphics[height=1em]{title/peakaboo.pdf}]{\includegraphics[height=1em]{title/peakaboo.pdf}}
 \fancyhead[C]{
-	\includegraphics[height=1em]{title/peakaboo.pdf}
+	\includegraphics[height=1em]{title/peakaboo.pdf}\hspace{0.3em}
 	\includegraphics[height=1em]{title/usersguide.pdf}
 }
 
@@ -121,6 +121,7 @@
 	\includegraphics[height=1.5em]{title/usersguide.pdf}\\
 	\vspace*{\fill}
 	\vspace*{\fill}
+	Version 5.2
 \end{titlepage}
 
 \cleardoublepage
@@ -137,7 +138,11 @@
 
 \tocchapter{Introduction}
 
-Peakaboo allows users to identify the spectral origins of an XRF spectrum using a routine that fits all components of the K, L, or M spectrum including escape peaks and pileup peaks, and then plots their spatial intensity distributions as maps. It was originally developed as part of the Science Studio project.
+Peakaboo is a platform that facilitates the interpretation of spectra from X ray Fluorescence (EXF) experiments that use conventional or synchrotron-based radiation sources. It uses efficient software tools to provide a close fitting of most spectral components using the most recent libraries available. A prime objective of the platform is to provide detailed maps of elemental spatial distribution(s) and attendant tools to extract compositional information from each region of a map. The simplified software layout makes it possible for new users to be productive within a matter of minutes.
+
+Peakaboo provides only qualitative information about elemental composition. Potential users interested in more advanced versions of the software should contact the developers.
+
+Peakaboo was originally developed within the Science Studio project that was funded by CANARIE.
 
 \tocsection{Accepted File Formats}
 
@@ -159,13 +164,15 @@ If you have any questions or concerns not addressed in this guide, please feel f
 \tocsection{Opening Data}
 
 Select \button{document-open}{Open} or 
-\command{\button{main-menu}{Menu} \menu \button{document-open}{Open}} to locate your XRF data. If all scan point data is contained in a single file, simply select that file and open it. If there are many individual scan point files, (eg one scan per file), then locate them in their directory and use \shortcut{Control}{Click} to select more than one of them, or \shortcut{Control}{A} to select all of them. If no XRF data appears, it is likely that the appropriate plug-in is not loaded (see Plug-in Section).
+\command{\button{main-menu}{Menu} \menu \button{document-open}{Open}} to locate your XRF data. If all scan point data is contained in a single file, simply select that file and open it. If there are many individual scan point files, (e.g. one scan per file), then locate them in their directory and use \shortcut{Control}{Click} to select more than one of them, or \shortcut{Control}{A} to select all of them. If no XRF data appears, it is likely that the appropriate plug-in is not loaded (see Plug-in Section).
+
+Because Peakaboo has a tabbed interface, additional data sets may be opened and processed without having to close other data sets.
 
 \screenshot{open-files}{Peakaboo's file selection dialog}
 
 \tocsection{File Format Conflicts}
 
-While rare, it is possible that more than one of the plug-ins that Peakaboo uses to read XRF data will believe that it can open a particular data set. This is usually the result of many different file formats having some of the same properties, such as similar file extensions (eg \file{.txt}, \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo cannot automatically determine which XRF reader plug-in to use, it will ask you to indicate which format your data is in. Select the entry which matches your data.
+While rare, it is possible that more than one of the plug-ins that Peakaboo uses to read XRF data will believe that it can open a particular data set. This is usually the result of many different file formats having some of the same properties, such as similar file extensions (e.g. \file{.txt}, \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo cannot automatically determine which XRF reader plug-in to use, it will ask you to indicate which format your data is in. Select the entry which matches your data.
 
 \tocsection{Viewing the Data}
 
@@ -219,11 +226,40 @@ which components of your data to emphasize.
 
 \tocsection{Saving and Loading Data}
 
+From the toolbar, you can \button{document-save-as}{Save} your session information so that next time you want to look at this XRF dataset, you can load this information (session) and not have to start from the beginning. The saved session does not store the data itself, so the data must still be available when loading a session.
+
 Your spectrum, as it appears in the window, can also be saved by selecting 
-\button{device-camera}{Export Plot as Image} from the toolbar or \shortcut{Control}{P}. Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can also save the fitting results as a text file by selecting \command{\button{main-menu}{Menu} \menu\ Export \menu\ Fittings as Text}.
+\button{document-export}{Export Data} \menu\ \button{device-camera}{Plot as Image} from the toolbar or \shortcut{Control}{P}. Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can also save the fitting results as a text file by selecting \button{document-export}{Export Data} \menu\ \command{Fittings as Text}.
 
-You can save your session information so that next time you want to look at an XRF dataset, you can load this information (session) and not have to start from the beginning. You must still load the dataset separately, as the saved session does not store the data itself. These options are found under \command{\button{main-menu}{Menu} \menu\ \button{document-save}{Save Session}} and \command{\button{main-menu}{Menu} \menu\ Load Session}.
 
+
+\tocchapter{Filters}
+
+Filters are ways to process or transform spectral data. Filters can be accessed by clicking on the \command{Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into folders based on type. Each folder can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
+
+After you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed.
+
+To view a full listing of built-in filters and their descriptions, see the appendix.
+
+\screenshot{brukner-filter}{The Brukner background filter's settings window with raw data outline in plot}
+
+The use of filters will obviously alter the spectrum. If you wish to see the original spectrum in addition to the filtered data, select \command{\button{view-menu}{View} \menu\ Raw Data Outline}.
+
+
+\tocsection{Noise Removal}
+
+Noise reduction is frequently essential since the spectra are often taken at very brief intervals particularly in fly-scanning. The software provides a number of mathematical filters that are used in noise reduction or in background attenuation or removal. Noise filters include moving average, fast Fourier transform (FFT) low pass, Savitsky-Golay, and others.
+
+Where applicable, noise removal filter parameters can be adjusted to suit the data in question. Best noise reduction with minimum change in peak shape is often achieved using a Savitsky-Golay filter.
+
+
+\tocsection{Background Removal}
+
+When using background filters, it is usually best to leave 10\%-15\% of the background in place (default is 10\%) in order to prevent the background filter from removing all signal under the edges of the peak. When too much signal around the edges of a peak is removed, it can prevent peaks from being fitted to the proper intensity, or being fitted at all.
+
+While the removal of background certainly makes the actual spectral peaks more apparent, we have found that when fitting peaks to a spectrum, it is often not necessary to carry out a background subtract. The peaks fitted using a Voigt function (pseudo or convolved) actually contain a significant component of the scattering function that approximates the background. This is particularly true in the energy range 1-9 KeV. Therefore we recommend that spectral fitting be first carried out without any background subtraction
+
+For a more detailed example of using a filter, see the appendix.
 
 
 
@@ -248,7 +284,7 @@ In fitting each peak in the spectrum, the appropriate lineshape must consist of 
 
 \screenshot{fitting-markings}{Spectral Fitting of multi element NIST 610 Glass showing individual lines}
 
-The width of XRF peaks detected by solid state devices such as a Silicon Diode Detector (SDD) is a convolution of an invariant intrinsic width and width that is due to electronic noise in the detector. The noise level has improved with improved technologies and therefore it can be changed using the Advanced Options menu. A reduction in the noise will result in a corresponding change in the width of the fitting lineshape. The width of the XRF characteristic peak also decreases linearly with EDX peak energy. This is accounted for in the simulated fitting algorithm.   
+The width of XRF peaks detected by solid state devices such as a Silicon Diode Detector (SDD) is a convolution of an invariant intrinsic width and width that is due to electronic noise in the detector. The noise level has improved with improved technologies and therefore it can be changed using the Advanced Options menu. A reduction in the noise will result in a corresponding change in the width of the fitting lineshape. The width of the XRF characteristic peak also decreases linearly with peak energy. This is accounted for in the simulated fitting algorithm.   
 
 The positions and relative intensities for each K, L or M XRF elemental transition were taken from tabulated sources to build an accurate and up-to-date data base. Fittings from the database take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the \href{https://github.com/tschoonj/xraylib}{Xraylib} \cite{xraylib} project. For high $Z$ elements where the K series fittings are not available in Xraylib, values provided by Krause \cite{krause} have been used. The intensity ratios have been optimized for 20keV irradiation.
 
@@ -328,6 +364,8 @@ Changing the order of fittings can reveal and correct these problems. Select the
 
 \item [Optimizing] The Optimizing fitting solver is a Least Squares algorithm modified to strongly penalize over-fitting against signal which doesn't exist. This algorithm is slower than Greedy, but results in more nuanced fitting solutions in complex, crowded spectra with many overlapping peaks. An example of this approach is seen in Figure 5, where it is possible to fit minor L peaks in the presence of more intense K peaks.
 
+\item [MultiSampling] The MultiSampling fitting solver is a variation of the Optimizing solver which predictably permutes the order of element fittings to produce slightly different results. This helps to produce more reliable results, but is also considerably slower for large numbers of fittings.
+
 \end{description}
 
 \tocsection{Annotations}
@@ -337,33 +375,14 @@ Each fitting you add can be annotated to track important context or caveats for 
 To add an annotation, double-click on the fitting in the \command{Peak Fitting} sidebar. A prompt will appear which will let you add an annotation to the selected fitting. It can be cleared by double-clicking the entry again and setting the
 
 
-
-\tocchapter{Filters}
-
-Filters are ways to process or transform spectral data. Filters can be accessed by clicking on the \command{Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into folders based on type. Each folder can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
-
-After you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed.
-
-To view a full listing of built-in filters and their descriptions, see the appendix.
-
-\screenshot{brukner-filter}{The Brukner background filter's settings window with raw data outline in plot}
-
-The use of filters will obviously alter the spectrum. If you wish to see the original spectrum in addition to the filtered data, select \command{\button{view-menu}{View} \menu\ Raw Data Outline}.
-
-
-\tocsection{Noise Removal}
-
-Noise reduction is frequently essential since the spectra are often taken at very brief intervals particularly in fly-scanning. The software provides a number of mathematical filters that are used in noise reduction or in background attenuation or removal. Noise filters include moving average, fast Fourier transform (FFT) low pass, Savitsky-Golay, and others.
-
-Where applicable, noise removal filter parameters can be adjusted to suit the data in question. Best noise reduction with minimum change in peak shape is often achieved using a Savitsky-Golay filter.
-
-
-\tocsection{Background Removal}
-
-When using background filters, it is usually best to leave 10\%-15\% of the background in place (default is 10\%) in order to prevent the background filter from removing all signal under the edges of the peak. When too much signal around the edges of a peak is removed, it can prevent peaks from being fitted to the proper intensity, or being fitted at all.
-
-For a more detailed example of using a filter, see the appendix.
-
+\tocsection{Suggestions for Successful Fitting}
+\begin{itemize}
+\item Consider NOT using any background subtraction. Its use may distort some peak shapes and thereby compromise an exacting fitting procedure.
+\item After energy calibration, use Automatic Fitting to find and assign many of the more obvious peaks. Thereafter, use a combination of Guided Fitting and Element Lookup to identify as many peaks as possible. 
+\item The fitted spectrum summation line should match, as closely as possible, the experimental line.
+\item Watch carefully for summation peaks. If you find one, there are likely others. Summation peaks are prevalent when the SDD detector is experiencing a higher flux of incoming photons. Use of the Summation Fitting process is an efficient way to cover all possible contributions. 
+\item Consider trying minor adjustments to the peak width setting (FWHM noise level) to improve the fitting match. Increased photon flux will change the noise level. 
+\end{itemize}
 
 
 
@@ -399,6 +418,8 @@ These groups are overlaid, with the presence of each colour indicating the inten
 
 The \command{Scale Colours} options control the way that the fitting group's colours are scaled. With the \command{As a Group} option, the highest intensity from \emphasis{all} groups of fittings is used to scale the intensities for \emphasis{every} group. With the \command{Separately} option, the highest intensity from \emphasis{within each} group of fittings is used to scale the intensities for that group. The \command{Separately} option produces maps which may be qualitatively interesting, but are quantitatively 
 incorrect.
+
+Sometimes the weaker intensities for different elements can overlap to the extent that each elemental distribution is difficult to distinguish. In such cases, the intensity distributions can be truncated to remove the weaker intensities and therefore clarify the overlay map. This truncation is effected by moving the \command{Low Signal Cutoff} slider bar at the bottom of the sidebar
 
 \tocsection{Ratios}
 
@@ -441,19 +462,22 @@ Peakaboo also allows you to view spectra from selected regions within your map. 
 \screenshot{plot-subset}{Plotting window showing data for a subset of the original data set}
 
 
-\tocsection{Examining Subsections}
+%\tocsection{Examining Subsections}
 
-The distribution of elements will likely vary across your sample and hence your maps. For samples that have a composition that consists primarily of low $Z$ elements, it is possible to make a rough estimate of the composition. This estimate is based on the relative intensities of many elements (from $Z=20\ldots 44$) measured in a glass matrix. The relative intensities of these elements have been entered into Peakaboo as conversion coefficients. Using these coefficients the concentration of elements within a low $Z$ matrix can be estimated.
+%The distribution of elements will likely vary across your sample and hence your maps. For samples that have a composition that consists primarily of low $Z$ elements, it is possible to make a rough estimate of the composition. This estimate is based on the relative intensities of many elements (from $Z=20\ldots 44$) measured in a glass matrix. The relative intensities of these elements have been entered into Peakaboo as conversion coefficients. Using these coefficients the concentration of elements within a low $Z$ matrix can be estimated.
 
 
-Left click and drag the mouse in order to draw a rectangle surrounding the region you wish to select. To view the relative intensity information, click on \button{badge-info}{Get Intensities} in the mapping window toolbar.
+%Left click and drag the mouse in order to draw a rectangle surrounding the region you wish to select. To view the relative intensity information, click on \button{badge-info}{Get Intensities} in the mapping window toolbar.
 
-\screenshot{intensity-estimate}{Rough estimate of elemental intensity in the selected region}
+%\screenshot{intensity-estimate}{Rough estimate of elemental intensity in the selected region}
 
 
 \tocchapter{Plugins}
 
-Plugins can add new filters or new file format support to Peakaboo. You can manage Peakaboo's plugins by selecting \command{\button{main-menu}{Menu} \menu\ Plugins}.
+Plugins are software components which are used by Peakaboo to extend Peakaboo's functionality. Plugins can add new filters or new file format support to Peakaboo. There are \href{https://github.com/nsherry4/PeakabooPlugins/releases/latest}{a number of plugins available along with Peakaboo}, and anyone with some experience in Java programming can also make their own.
+
+
+You can manage Peakaboo's plugins by selecting \command{\button{main-menu}{Menu} \menu\ Plugins}.
 
 \screenshot{plugins}{Peakaboo's plugin management screen}
 
@@ -500,8 +524,7 @@ The specific interfaces used for different types of plugins are:
 \item Filter: \class{peakaboo.filter.plugin.JavaFilterPlugin}
 \end{itemize}
 
-Example plugins for both filters and data sources are available online at 
-\href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file containing Peakaboo for building against.
+Example plugins for both filters and data sources are \href{https://github.com/nsherry4/PeakabooPlugins/}{available online}, along with a jar file containing Peakaboo for building against.
 
 \tocsection{Filters}
 
