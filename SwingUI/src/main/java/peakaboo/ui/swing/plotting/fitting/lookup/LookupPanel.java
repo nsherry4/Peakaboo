@@ -23,7 +23,7 @@ import javax.swing.tree.TreePath;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.ClearPanel;
@@ -161,9 +161,9 @@ public class LookupPanel extends ClearPanel implements Changeable
 
 			public void valueForPathChanged(TreePath path, Object newValue)
 			{
-				if (path.getLastPathComponent() instanceof TransitionSeries)
+				if (path.getLastPathComponent() instanceof ITransitionSeries)
 				{
-					TransitionSeries ts = (TransitionSeries) path.getLastPathComponent();
+					ITransitionSeries ts = (ITransitionSeries) path.getLastPathComponent();
 					boolean included = (Boolean) newValue;
 
 					if (included)
@@ -195,7 +195,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 			public boolean isLeaf(Object node)
 			{
 
-				if (node instanceof TransitionSeries)
+				if (node instanceof ITransitionSeries)
 				{
 					return true;
 				}
@@ -222,9 +222,9 @@ public class LookupPanel extends ClearPanel implements Changeable
 				}
 				else if (parent instanceof Element)
 				{
-					TransitionSeries ts = (TransitionSeries) child;
+					ITransitionSeries ts = (ITransitionSeries) child;
 					Element e = (Element) parent;
-					List<TransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == ts.element).collect(Collectors.toList());
+					List<ITransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
 					return ofElement.indexOf(ts);
 										
 				}
@@ -237,7 +237,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 				if (parent instanceof Element)
 				{
 					Element e = (Element) parent;
-					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == e).collect(Collectors.toList()).size();
+					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).size();
 				}
 				else if (parent instanceof String)
 				{
@@ -258,7 +258,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 				{
 
 					Element e = (Element) parent;
-					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.element == e).collect(Collectors.toList()).get(index);
+					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).get(index);
 
 				}
 				return null;

@@ -6,28 +6,23 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import javax.swing.Scrollable;
 
+import cyclops.Coord;
+import cyclops.visualization.Surface;
+import cyclops.visualization.backend.awt.GraphicsPanel;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.display.plot.PlotData;
 import peakaboo.display.plot.PlotSettings;
 import peakaboo.display.plot.Plotter;
-import scidraw.drawing.ViewTransform;
-import scidraw.drawing.backends.Surface;
-import scidraw.drawing.plot.PlotDrawing;
-import scidraw.swing.GraphicsPanel;
-import scitypes.Bounds;
-import scitypes.Coord;
-import scitypes.Pair;
-import scitypes.ReadOnlySpectrum;
 
 
 
@@ -40,10 +35,10 @@ import scitypes.ReadOnlySpectrum;
 public class PlotCanvas extends GraphicsPanel implements Scrollable
 {
 
-	private PlotDrawing				plotDrawing;
 	private PlotController			controller;
 	private Consumer<Integer>		grabChannelFromClickCallback;
-
+	private PlotPanel plotPanel;
+	private Plotter plotter;
 
 	PlotCanvas(final PlotController controller, final PlotPanel parent)
 	{
@@ -52,6 +47,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		this.setFocusable(true);
 
 		this.controller = controller;
+		this.plotter = new Plotter();
+		this.plotPanel = parent;
 		this.setMinimumSize(new Dimension(100, 100));
 
 		//setCanvasSize();
@@ -75,7 +72,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		
 		
 		new FileDrop(this, files -> {
-			parent.loadFiles(Arrays.asList(files).stream().map(File::toPath).collect(Collectors.toList()), null);
+			parent.load(Arrays.asList(files));
 		});
 
 		
@@ -100,8 +97,15 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			public void mouseClicked(MouseEvent e)
 			{
 				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
-					grabChannelFromClickCallback.accept(channelFromCoordinate(e.getX()));
+					grabChannelFromClickCallback.accept(plotter.getChannel(e.getX()));
+				} else if (controller.data().hasDataSet()) {
+					if (e.getClickCount() == 1) {
+						onSingleClick(e);
+					} else if (e.getClickCount() == 2)					 {
+						onDoubleClick(e);
+					}
 				}
+				
 				//Make the plot canvas focusable
 				if (!PlotCanvas.this.hasFocus()) {
 					PlotCanvas.this.requestFocus();
@@ -110,7 +114,25 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		});
 
 	}
+	
+	private void onSingleClick(MouseEvent e) {
 
+		ITransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
+        controller.fitting().clearProposedTransitionSeries();
+        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
+        if (bestFit != null) {
+            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit));
+        }
+	}
+
+	private void onDoubleClick(MouseEvent e) {
+		ITransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
+		if (bestFit == null) {
+			return;
+		}
+		plotPanel.actionAddAnnotation(bestFit);
+	}
+		
 
 	public void grabChannelFromClick(Consumer<Integer> callback)
 	{
@@ -195,28 +217,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	}
 
 
-	int channelFromCoordinate(int x)
-	{
-
-		if (plotDrawing == null) return -1;
-
-		Coord<Bounds<Float>> axesSize;
-		int channel;
-
-		// Plot p = new Plot(this.toyContext, model.dr);
-		axesSize = plotDrawing.getPlotOffsetFromBottomLeft();
-
-		float plotWidth = axesSize.x.end - axesSize.x.start; // width - axesSize.x;
-		// x -= axesSize.x;
-		x -= axesSize.x.start;
-
-		if (x < 0 || !controller.data().hasDataSet()) return -1;
-
-		channel = (int) ((x / plotWidth) * controller.data().getDataSet().getAnalysis().channelsPerScan());
-		return channel;
-
+	int channelFromCoordinate(int x) {
+		return plotter.getChannel(x);
 	}
-	
+
 
 
 	
@@ -237,25 +241,19 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	// GraphicsPanel extension
 	//**************************************************************
 	@Override
-	protected void drawGraphics(Surface context, boolean vector, Dimension size)
+	protected void drawGraphics(Surface context, Coord<Integer> size)
 	{
 				
 		try {
 			
-	
-			// calculates filters and fittings if needed
-			Pair<ReadOnlySpectrum, ReadOnlySpectrum> dataForPlot = controller.getDataForPlot();
-			if (dataForPlot == null) {
+			PlotData data = controller.getPlotData();
+			if (data.filtered == null) {
+				//No Data
 				return;
 			}
+			PlotSettings settings = controller.view().getPlotSettings();
 			
-
-			PlotData data = controller.getPlotData();
-			PlotSettings settings = controller.view().setPlotSettings();
-
-			
-			Plotter plotObject = new Plotter();
-			plotDrawing = plotObject.draw(data, settings, context, size);
+			plotter.draw(data, settings, context, size);
 	
 			
 		} catch (Exception e) {
@@ -343,7 +341,9 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 	
 	
-
+	public void setNeedsRedraw() {
+		plotter.setNeedsRedraw();
+	}
 
 
 }

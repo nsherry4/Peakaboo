@@ -2,23 +2,24 @@ package peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import cyclops.SigDigits;
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-import peakaboo.ui.swing.plotting.fitting.TSWidget;
-import scitypes.SigDigits;
 
 
 class FittingRenderer extends DefaultTableCellRenderer
 {
 
-	private TSWidget tswidget;
+	private FittedWidget tswidget;
 	private FittingController controller;
 
 	
@@ -29,7 +30,7 @@ class FittingRenderer extends DefaultTableCellRenderer
 		
 		this.controller = controller;
 		
-		tswidget = new TSWidget(true);		
+		tswidget = new FittedWidget();		
 	}
 
 	@Override
@@ -56,38 +57,34 @@ class FittingRenderer extends DefaultTableCellRenderer
 			
 		}
 		
-		Element e;
 		float intensity;
 		
 		if (table.getRowHeight() < tswidget.getPreferredSize().height) {
 			table.setRowHeight(tswidget.getPreferredSize().height);
 		}
 		
-		if (value instanceof TransitionSeries){
-			TransitionSeries ts = (TransitionSeries)value;
-			e = ts.element; 
+		if (value instanceof ITransitionSeries){
+			ITransitionSeries ts = (ITransitionSeries)value;
 			intensity = controller.getTransitionSeriesIntensity(ts);
-			tswidget.setName(ts.getDescription());
+			tswidget.setName(ts.toString());
 			
-			String desc;
-			if (ts.mode == TransitionSeriesMode.SUMMATION)
-			{
-				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1);
-			} else {
-				desc = "Intensity: " + SigDigits.roundFloatTo(intensity, 1) + ", Atomic #" + (e.atomicNumber());
-			}
-			tswidget.setDescription(desc);
+			tswidget.setIntensity(SigDigits.roundFloatTo(intensity, 1));
 			tswidget.setFlag(controller.hasAnnotation(ts));
-			
-			tswidget.setSelected(controller.getTransitionSeriesVisibility(ts));
-			tswidget.setMinimumSize(new Dimension(0, 100));
-			
-			String tooltip = e.toString();
+			String tooltip = "";
+			if (ts.getMode() != TransitionSeriesMode.SUMMATION){
+				tswidget.setAtomicNumber(ts.getElement().atomicNumber());
+				tooltip = ts.getElement().toString();
+			} else {
+				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
+				tswidget.setAtomicNumbers(elements.stream().map(Element::atomicNumber).collect(Collectors.toList()));
+				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
+			}
 			if (controller.hasAnnotation(ts)) {
 				tooltip += " - " + controller.getAnnotation(ts);
 			}
 			tswidget.setToolTipText(tooltip);
 			
+			tswidget.setMinimumSize(new Dimension(0, 100));
 			return tswidget;
 		} 
 		

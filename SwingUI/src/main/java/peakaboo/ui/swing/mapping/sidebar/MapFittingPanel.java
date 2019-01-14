@@ -12,14 +12,19 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.display.map.MapDisplayMode;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
+import stratus.controls.ButtonLinker;
+import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
+import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonSize;
 
 
 public class MapFittingPanel extends ClearPanel
@@ -52,24 +57,46 @@ public class MapFittingPanel extends ClearPanel
 		
 		
 		//create combobox
-		final JComboBox<MapDisplayMode> modeSelect = new JComboBox<>(MapDisplayMode.values());
-		modeSelect.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-		modeSelect.addActionListener(new ActionListener() {
+		final JComboBox<MapDisplayMode> modeSelectBox = new JComboBox<>(MapDisplayMode.values());
+		modeSelectBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+		modeSelectBox.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				MapDisplayMode mode = (MapDisplayMode)modeSelect.getSelectedItem();
+				MapDisplayMode mode = (MapDisplayMode)modeSelectBox.getSelectedItem();
 				controller.getMapFittings().setMapDisplayMode(mode);
 				card.show(cardPanel, mode.toString());
 			}
 		});
+		JPanel modeSelectPanel = new ClearPanel(new BorderLayout());
+		modeSelectPanel.add(modeSelectBox, BorderLayout.CENTER);
+		modeSelectPanel.setBorder(Spacing.bSmall());
 		
+		
+		ImageButton selectAll = new ImageButton(StockIcon.SELECTION_ALL)
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withTooltip("Select All")
+				.withAction(() -> {
+					for (ITransitionSeries ts : controller.getMapFittings().getAllTransitionSeries()) {
+						controller.getMapFittings().setTransitionSeriesVisibility(ts, true);
+					}
+				});
+		ImageButton selectNone = new ImageButton(StockIcon.SELECTION_NONE)
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withTooltip("Select None")
+				.withAction(() -> {
+					for (ITransitionSeries ts : controller.getMapFittings().getAllTransitionSeries()) {
+						controller.getMapFittings().setTransitionSeriesVisibility(ts, false);
+					}
+				});
+		ButtonLinker linker = new ButtonLinker(selectNone, selectAll);
+		modeSelectPanel.add(linker, BorderLayout.EAST);
 		
 		//add the two components to this panel
 		setLayout(new BorderLayout());
 		add(cardPanel, BorderLayout.CENTER);
-		add(modeSelect, BorderLayout.NORTH);
-		setBorder(new TitledBorder("Fittings"));
+		add(modeSelectPanel, BorderLayout.NORTH);
+		
 		
 		
 	}

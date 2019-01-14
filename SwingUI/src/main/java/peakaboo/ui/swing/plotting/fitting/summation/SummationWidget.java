@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
@@ -36,19 +37,19 @@ class SummationWidget extends TSSelectorGroup
 	
 	
 	@Override
-	public List<TransitionSeries> getTransitionSeries()
+	public List<ITransitionSeries> getTransitionSeries()
 	{
 		//get a list of all TransitionSeries to be summed
-		List<TransitionSeries> tss = selectors.stream().map(e -> e.getTransitionSeries()).filter(ts -> ts != null).collect(Collectors.toList());
-		List<TransitionSeries> sum = new ArrayList<>();
-		sum.add(TransitionSeries.summation(tss));
+		List<ITransitionSeries> tss = selectors.stream().map(e -> e.getTransitionSeries()).filter(ts -> ts != null).collect(Collectors.toList());
+		List<ITransitionSeries> sum = new ArrayList<>();
+		sum.add(ITransitionSeries.pileup(tss));
 		return sum;
 	}
 	
 
 
 	@Override
-	public void setTransitionSeriesOptions(final List<TransitionSeries> tss)
+	public void setTransitionSeriesOptions(final List<ITransitionSeries> tss)
 	{
 		selectors.stream().forEach((TSSelector selector) -> {
 			selector.setTransitionSeries(tss);
@@ -110,7 +111,7 @@ class SummationWidget extends TSSelectorGroup
 		TSSelector sel = super.addTSSelector(active);
 		
 		sel.setTransitionSeries(
-			controller.getFittedTransitionSeries().stream().filter(element ->element.mode == TransitionSeriesMode.PRIMARY).collect(Collectors.toList())		
+			controller.getFittedTransitionSeries().stream().filter(element ->element.getMode() == TransitionSeriesMode.PRIMARY).collect(Collectors.toList())		
 		);
 		
 		

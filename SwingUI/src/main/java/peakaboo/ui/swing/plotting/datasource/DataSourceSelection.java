@@ -1,106 +1,36 @@
 package peakaboo.ui.swing.plotting.datasource;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 
 import peakaboo.datasource.model.DataSource;
-import swidget.widgets.HeaderBox;
-import swidget.widgets.ImageButton;
-import swidget.widgets.Spacing;
-import swidget.widgets.gradientpanel.TitlePaintedPanel;
+import swidget.models.ListTableModel;
 import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.ModalLayer;
-import swidget.widgets.toggle.ItemToggleButton;
-import swidget.widgets.toggle.ToggleGroup;
+import swidget.widgets.layerpanel.widgets.ListPickerLayer;
+import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
+import swidget.widgets.listwidget.impl.OptionWidget;
 
 
-public class DataSourceSelection extends JPanel
+public class DataSourceSelection extends ListPickerLayer<DataSource>
 {
-	
-	private Map<ItemToggleButton, DataSource> toggleMap;
-	private DataSource selected;
-	
-	public DataSourceSelection() {
-		super(new BorderLayout());
-	}
-	
-	public void pickDSP(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {	
-		
-		toggleMap = new HashMap<ItemToggleButton, DataSource>();
-		
-		JPanel body = new JPanel(new BorderLayout());
-		
-		TitlePaintedPanel title = new TitlePaintedPanel("Peakaboo can't decide what format this data is in.", true);
-		title.setBackgroundPaint(Color.decode("#FFE082"));
-		body.add(title, BorderLayout.NORTH);
-		
-		JPanel optionPanel = new JPanel();
-		optionPanel.setBorder(Spacing.bHuge());
-		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
-		
-		final List<ItemToggleButton> toggleButtons = new ArrayList<ItemToggleButton>();
-		ItemToggleButton toggle;
-		final ToggleGroup group = new ToggleGroup();
-		for (DataSource dsp : dsps)
-		{
-			toggle = new ItemToggleButton("", dsp.getFileFormat().getFormatName(), dsp.getFileFormat().getFormatDescription());
-			toggleMap.put(toggle, dsp);
-			group.registerButton(toggle);	
-			toggleButtons.add(toggle);
-			
-			optionPanel.add(toggle);
-			optionPanel.add(Box.createVerticalStrut(Spacing.medium));
-		}
-		toggleButtons.get(0).setSelected(true);
-		
-		body.add(optionPanel, BorderLayout.CENTER);
-		
-		
-		
-		
-		
-		
-		JButton ok = new ImageButton("Select").withAction(() -> {
-			parent.popLayer();
-			selected = toggleMap.get(toggleButtons.get(group.getToggledIndex()));
-			onSelect.accept(selected);
-		}).withStateDefault();
-		
-		JButton cancel = new ImageButton("Cancel").withAction(() -> {
-			parent.popLayer();
-		});
-		
-		HeaderBox box = new HeaderBox(cancel, "Please Select Data Format", ok);
-		
-		
-		
-		add(box, BorderLayout.NORTH);
-		add(body, BorderLayout.CENTER);
-		
-		parent.pushLayer(new ModalLayer(parent, this));
-		
 
-		
-		
+	public DataSourceSelection(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {
+		super(parent, "Please Select Data Format", dsps, onSelect);		
 	}
-	
-	
-//	public static void main(String[] args) throws UnsupportedLookAndFeelException
-//	{
-//		Swidget.initialize(() -> {}, "Test");
-//		UIManager.setLookAndFeel(new StratusLookAndFeel());
-//
-//		
-//	}
+
+	@Override
+	protected JTable getTable(List<DataSource> items) {
+		JTable table = new JTable(new ListTableModel<>(items));
+		TableColumn c = table.getColumnModel().getColumn(0);
+		c.setCellRenderer(new ListWidgetTableCellRenderer<>( new OptionWidget<DataSource>(
+				ds -> ds.getFileFormat().getFormatName(), 
+				ds -> ds.getFileFormat().getFormatDescription(), 
+				ds -> null
+			)));
+		return table;
+	}
 	
 }

@@ -8,25 +8,50 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import eventful.swing.EventfulPanel;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import eventful.Eventful;
+import eventful.EventfulListener;
+import eventful.IEventful;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 
-public class TSSelector extends EventfulPanel
+public class TSSelector extends JPanel implements IEventful
 {
+	//EVENTFUL
+	private Eventful listenee;
 	
-	private JComboBox<TransitionSeries> tsCombo;
+	public void addListener(EventfulListener l) {
+		listenee.addListener(l);
+	}
+
+	public void removeAllListeners() {
+		listenee.removeAllListeners();
+	}
+
+	public void removeListener(EventfulListener l) {
+		listenee.removeListener(l);
+	}
+
+	public void updateListeners() {
+		listenee.updateListeners();
+	}
+	
+	
+	
+	
+	
+	private JComboBox<ITransitionSeries> tsCombo;
 	private JLabel tsLabel;
 	
 	private ActionListener tsComboListener;
 	
 	public TSSelector()
 	{
-
+		listenee = new Eventful();
 		setLayout(new BorderLayout());
 
-		tsCombo = new JComboBox<TransitionSeries>();
+		tsCombo = new JComboBox<>();
 		
 		tsLabel = new JLabel();
 		tsLabel.setPreferredSize(tsCombo.getPreferredSize());
@@ -50,7 +75,7 @@ public class TSSelector extends EventfulPanel
 	}
 
 
-	public void setTransitionSeries(List<TransitionSeries> tss)
+	public void setTransitionSeries(List<ITransitionSeries> tss)
 	{
 		
 		tsCombo.removeActionListener(tsComboListener);
@@ -58,7 +83,7 @@ public class TSSelector extends EventfulPanel
 				
 		if (tss == null) return;
 		
-		for (TransitionSeries ts : tss) { tsCombo.addItem(ts); }
+		for (ITransitionSeries ts : tss) { tsCombo.addItem(ts); }
 		if (tss.size() > 0) tsCombo.setSelectedIndex(0);
 		
 		updateLabelText();
@@ -68,9 +93,9 @@ public class TSSelector extends EventfulPanel
 		
 	}
 	
-	public TransitionSeries getTransitionSeries()
+	public ITransitionSeries getTransitionSeries()
 	{
-		return (TransitionSeries) tsCombo.getSelectedItem();
+		return (ITransitionSeries) tsCombo.getSelectedItem();
 	}
 	
 	

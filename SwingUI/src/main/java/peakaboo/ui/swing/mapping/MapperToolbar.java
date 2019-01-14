@@ -2,53 +2,46 @@ package peakaboo.ui.swing.mapping;
 
 import static java.util.stream.Collectors.toList;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
+import cyclops.ReadOnlySpectrum;
+import peakaboo.calibration.CalibrationProfile;
+import peakaboo.calibration.Concentrations;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.mapper.settings.PointsSelection;
 import peakaboo.controller.settings.SavedSession;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.datasource.model.internal.SubsetDataSource;
-import peakaboo.mapping.correction.Corrections;
-import peakaboo.mapping.correction.CorrectionsManager;
-import peakaboo.mapping.results.MapResult;
-import scitypes.Pair;
-import scitypes.SigDigits;
+import peakaboo.ui.swing.Peakaboo;
+import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
+import peakaboo.ui.swing.plotting.PlotPanel;
+import peakaboo.ui.swing.plotting.toolbar.PlotMenuExport;
+import peakaboo.ui.swing.plotting.toolbar.PlotMenuView;
+import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
-import swidget.widgets.ImageButton;
-import swidget.widgets.Spacing;
-import swidget.widgets.ToolbarImageButton;
-import swidget.widgets.layerpanel.ModalLayer;
-import swidget.widgets.properties.PropertyViewPanel;
+import swidget.widgets.buttons.ToolbarImageButton;
 
 class MapperToolbar extends JToolBar {
 
-	private ToolbarImageButton	readIntensities, examineSubset;
+	private ToolbarImageButton	showConcentrations, examineSubset;
 	
-	private JCheckBoxMenuItem	monochrome;
-	private JMenuItem			title, spectrum, coords, dstitle;
+	private JCheckBoxMenuItem	monochrome, logview;
+	private JMenuItem			title, spectrum, coords, dstitle, scalebar;
 	
 	MapperToolbar(MapperPanel panel, MappingController controller) {
 
@@ -62,98 +55,54 @@ class MapperToolbar extends JToolBar {
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
-		c.insets = new Insets(4, 4, 4, 4);
+		c.insets = new Insets(2, 2, 2, 2);
 		
-		ToolbarImageButton savePicture = new ToolbarImageButton("Save Image", StockIcon.DEVICE_CAMERA).withTooltip("Save the current map as an image");
-		savePicture.addActionListener(e -> panel.actionSavePicture());
-		this.add(savePicture, c);
+		ToolbarImageButton export = createExportMenuButton(panel);
+		this.add(export, c);
+		c.gridx++;
+		
+		this.add(new JToolBar.Separator( null ), c);
 		c.gridx++;
 		
 		
-		ToolbarImageButton saveText = new ToolbarImageButton("Export as Text", StockIcon.DOCUMENT_EXPORT).withTooltip("Export the current map as a comma separated value file");
-		saveText.addActionListener(e -> panel.actionSaveCSV());
-		this.add(saveText, c);
-		c.gridx++;
-		
-		
-		this.addSeparator();
-		
-		
-		readIntensities = new ToolbarImageButton("Get Intensities", StockIcon.BADGE_INFO).withTooltip("Get fitting intensities for the selection").withSignificance(true);
-		readIntensities.addActionListener(e -> {
-			Map<String, String> fittings = new HashMap<String, String>();
+		if (Peakaboo.SHOW_QUANTITATIVE)  {
+			showConcentrations = new ToolbarImageButton("Concentration")
+					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
+					.withTooltip("Get fitting concentration for the selection")
+					.withSignificance(true);
 			
-			final Corrections corr = CorrectionsManager.getCorrections("WL");
-			
-			List<Integer> indexes = new ArrayList<>();
-			
-			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
-			PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
-			
-			if (areaSelection.hasSelection()) {
-				indexes.addAll(areaSelection.getPoints());
-			} else if (pointsSelection.hasSelection()) {
-				indexes.addAll(pointsSelection.getPoints());
-			}
+			showConcentrations.addActionListener(e -> {
 				
-			
-			//generate a list of pairings of TransitionSeries and their intensity values
-			List<Pair<TransitionSeries, Float>> averages = controller.mapsController.getMapResultSet().stream().map((MapResult r) -> {
-				float sum = 0;
-				for (int index : indexes) {
-					sum += r.data.get(index);
+				List<Integer> indexes = new ArrayList<>();
+				
+				AreaSelection areaSelection = controller.getSettings().getAreaSelection();
+				PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
+				
+				if (areaSelection.hasSelection()) {
+					indexes.addAll(areaSelection.getPoints());
+				} else if (pointsSelection.hasSelection()) {
+					indexes.addAll(pointsSelection.getPoints());
 				}
-				return new Pair<TransitionSeries, Float>(r.transitionSeries, sum / indexes.size());
-			}).collect(toList());
-			
-			
-			//get the total of all of the corrected values
-			float total = averages.stream().map((Pair<TransitionSeries, Float> p) -> {
-				Float corrFactor = corr.getCorrection(p.first);
-				return (corrFactor == null) ? 0f : p.second * corrFactor;
-			}).reduce(0f, (a, b) -> a + b);
-			
-			for (Pair<TransitionSeries, Float> p : averages)
-			{
-				float average = p.second;
-				Float corrFactor = corr.getCorrection(p.first);
-				String corrected = "(-)";
-				if (corrFactor != null) corrected = "(~" + SigDigits.toIntSigDigit((average*corrFactor/total*100), 1) + "%)";
 				
-				fittings.put(p.first.getDescription(), SigDigits.roundFloatTo(average, 2) + " " + corrected);
-			}
-			
-			PropertyViewPanel correctionsPanel = new PropertyViewPanel(fittings);
-			
-			
-			JPanel corrections = new JPanel(new BorderLayout());
-			JPanel contentPanel = new JPanel(new BorderLayout());
-			corrections.add(contentPanel, BorderLayout.CENTER);
-			
-			contentPanel.add(new JLabel("Concentrations accurate to a factor of 5", JLabel.CENTER), BorderLayout.SOUTH);
-			contentPanel.add(correctionsPanel, BorderLayout.CENTER);
-			contentPanel.setBorder(Spacing.bHuge());
-			
-			ButtonBox bbox = new ButtonBox();
-			ImageButton close = new ImageButton("Close").withIcon(StockIcon.WINDOW_CLOSE).withTooltip("Close this window").withBordered(true);
-			close.addActionListener(new ActionListener() {
+				List<ITransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
+				Function<ITransitionSeries, Float> intensityFunction = ts -> {
+					CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
+					ReadOnlySpectrum data = controller.mapsController.getMapResultSet().getMap(ts).getData(profile);
+					float sum = 0;
+					for (int index : indexes) {
+						sum += data.get(index);
+					}
+					return sum /= indexes.size();
+				};
+				Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
 				
-				public void actionPerformed(ActionEvent e)
-				{
-					panel.popLayer();
-				}
+				ConcentrationView concentrations = new ConcentrationView(ppm, panel);
+				panel.pushLayer(concentrations);
+								
 			});
-			bbox.addRight(close);
-			corrections.add(bbox, BorderLayout.SOUTH);
-			
-			
-			panel.pushLayer(new ModalLayer(panel, corrections));
-			
-				
-				
-		});
-		this.add(readIntensities, c);
-		c.gridx++;
+			this.add(showConcentrations, c);
+			c.gridx++;
+		}
 		
 		
 		examineSubset = new ToolbarImageButton("Plot Selection", "view-subset");
@@ -181,7 +130,9 @@ class MapperToolbar extends JToolBar {
 					.collect(Collectors.toList()
 				);
 		
-			panel.parentPlotter.newTab(sds, settings.serialize());
+			PlotPanel subplot = new PlotPanel(panel.parentPlotter);
+			subplot.loadExistingDataSource(sds, settings.serialize());
+			panel.parentPlotter.addActiveTab(subplot);
 			//Focus and un-minimize
 			JFrame plotWindow = panel.parentPlotter.getWindow();
 			plotWindow.toFront();
@@ -195,7 +146,7 @@ class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		readIntensities.setEnabled(false);
+		if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
 		examineSubset.setEnabled(false);
 		
 		c.weightx = 1.0;
@@ -203,22 +154,25 @@ class MapperToolbar extends JToolBar {
 		c.weightx = 0.0;
 		c.gridx++;
 		
-		this.add(createOptionsButton(controller), c);
+		this.add(createOptionsButton(panel, controller), c);
 		c.gridx++;
 		
 		
 		
+		
+		
 		controller.addListener(s -> {
+			logview.setSelected(controller.getSettings().getMapFittings().isLogView());
 			monochrome.setSelected(controller.getSettings().getView().getMonochrome());
 			spectrum.setSelected(controller.getSettings().getView().getShowSpectrum());
 			coords.setSelected(controller.getSettings().getView().getShowCoords());
 			
 			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
 			{
-				readIntensities.setEnabled(true);
+				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
 				examineSubset.setEnabled(true);
 			} else {
-				readIntensities.setEnabled(false);
+				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
 				examineSubset.setEnabled(false);
 			}
 
@@ -229,7 +183,7 @@ class MapperToolbar extends JToolBar {
 	}
 	
 
-	private ToolbarImageButton createOptionsButton(MappingController controller) {
+	private ToolbarImageButton createOptionsButton(MapperPanel panel, MappingController controller) {
 		
 		ToolbarImageButton opts = new ToolbarImageButton();
 		opts.withIcon("menu-view").withTooltip("Map Settings Menu");
@@ -240,30 +194,47 @@ class MapperToolbar extends JToolBar {
 		dstitle = new JCheckBoxMenuItem("Show Dataset Title");
 		spectrum = new JCheckBoxMenuItem("Show Spectrum");
 		coords = new JCheckBoxMenuItem("Show Coordinates");
+		scalebar = new JCheckBoxMenuItem("Show Scale Bar");
 		monochrome = new JCheckBoxMenuItem("Monochrome");
+		logview = new JCheckBoxMenuItem("Log Scale");
+		
 
 		MapViewSettings viewSettings = controller.getSettings().getView();
 		title.setSelected(viewSettings.getShowTitle());
 		spectrum.setSelected(viewSettings.getShowSpectrum());
 		coords.setSelected(viewSettings.getShowCoords());
 		dstitle.setSelected(viewSettings.getShowDatasetTitle());
+		scalebar.setSelected(viewSettings.getShowScaleBar());
 
 		spectrum.addActionListener(e -> viewSettings.setShowSpectrum(spectrum.isSelected()));
 		coords.addActionListener(e -> viewSettings.setShowCoords(coords.isSelected()));
 		title.addActionListener(e -> viewSettings.setShowTitle(title.isSelected()));
 		dstitle.addActionListener(e -> viewSettings.setShowDatasetTitle(dstitle.isSelected()));
+		scalebar.addActionListener(e -> viewSettings.setShowScaleBar(scalebar.isSelected()));
 		monochrome.addActionListener(e -> viewSettings.setMonochrome(monochrome.isSelected()));
+		logview.addActionListener(e -> controller.getSettings().getMapFittings().setLogView(logview.isSelected()));
+		
 		
 		menu.add(title);
 		menu.add(dstitle);
 		menu.add(spectrum);
 		menu.add(coords);
+		menu.add(scalebar);
 		menu.addSeparator();
+		menu.add(logview);
 		menu.add(monochrome);
-		
+
 		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
 		
 		return opts;
+	}
+	
+	
+	private ToolbarImageButton createExportMenuButton(MapperPanel panel) {
+		ToolbarImageButton exportMenuButton = new ToolbarImageButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Maps");
+		JPopupMenu exportMenu = new MapMenuExport(panel);
+		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
+		return exportMenuButton;
 	}
 	
 }

@@ -5,16 +5,15 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 
-import javax.swing.JFrame;
-
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
 import swidget.icons.IconFactory;
+import swidget.widgets.LiveFrame;
 import swidget.widgets.tabbedinterface.TabbedInterface;
+import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
 /**
@@ -24,18 +23,18 @@ import swidget.widgets.tabbedinterface.TabbedInterface;
  * @author Nathaniel Sherry, 2009
  */
 
-public class MapperFrame extends JFrame
+public class MapperFrame extends LiveFrame
 {
 
-	private TabbedInterface<MapperPanel> tabs;
-	private PlotController	plotController;	
+	private TabbedInterface<TabbedLayerPanel> tabs;
+	private PlotController plotController;
 
-	private TabbedPlotterManager 	parentPlotter;
-	private MapViewSettings 		previousMapSettings;
-	private MapSetController 		mapData;
+	private TabbedInterface<TabbedLayerPanel> parentPlotter;
+	private MapViewSettings previousMapSettings;
+	private MapSetController mapData;
 	
 	
-	public MapperFrame(TabbedPlotterManager plotter, MapSetController mapData, MapViewSettings previousMapSettings, PlotController plotcontroller)
+	public MapperFrame(TabbedInterface<TabbedLayerPanel> plotter, MapSetController mapData, MapViewSettings previousMapSettings, PlotController plotcontroller)
 	{
 		super();
 			
@@ -54,7 +53,7 @@ public class MapperFrame extends JFrame
 	
 	
 	
-	public TabbedPlotterManager getParentPlotter() {
+	public TabbedInterface<TabbedLayerPanel> getParentPlotter() {
 		return parentPlotter;
 	}
 
@@ -69,7 +68,7 @@ public class MapperFrame extends JFrame
 		Container pane = this.getContentPane();
 		pane.setLayout(new BorderLayout());
 		
-		tabs = new TabbedInterface<MapperPanel>(MapperPanel::getTitle) {
+		tabs = new TabbedInterface<TabbedLayerPanel>(this, TabbedLayerPanel::getTabTitle) {
 
 			@Override
 			protected MapperPanel createComponent() {
@@ -77,7 +76,7 @@ public class MapperFrame extends JFrame
 			}
 
 			@Override
-			protected void destroyComponent(MapperPanel component) {}
+			protected void destroyComponent(TabbedLayerPanel component) {}
 
 			@Override
 			protected void titleChanged(String title) {
@@ -99,7 +98,10 @@ public class MapperFrame extends JFrame
 	{
 		MapViewSettings lastMapSettings = previousMapSettings;
 		if (tabs.getActiveTab() != null) {
-			lastMapSettings = tabs.getActiveTab().controller.getSettings().getView();
+			TabbedLayerPanel lastTab = tabs.getActiveTab();
+			if (lastTab instanceof MapperPanel) {
+				lastMapSettings = ((MapperPanel)lastTab).controller.getSettings().getView();
+			}
 		}
 		
 		MappingController newController = new MappingController(mapData, lastMapSettings, plotController);

@@ -9,26 +9,21 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
+import cyclops.util.Mutable;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import peakaboo.common.PeakabooLog;
+import peakaboo.common.Version;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.datasink.plugin.DataSinkPlugin;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.ui.swing.plotting.PlotPanel;
-import scitypes.util.Mutable;
 import swidget.icons.StockIcon;
 
 public class PlotMenuMain extends JPopupMenu {
 
 	private PlotController controller;
 	
-	//FILE
-	private JMenuItem					snapshotMenuItem;
-	private JMenuItem					exportFittingsMenuItem;
-	private JMenuItem					exportFilteredDataMenuItem;
-	private JMenu 						exportSinks;
-
-	//EDIT
+	
 	private JMenuItem					undo, redo;
 	
 	public PlotMenuMain(PlotPanel plot, PlotController controller) {
@@ -45,7 +40,7 @@ public class PlotMenuMain extends JPopupMenu {
 		this.add(PlotMenuUtils.createMenuItem(plot,
 				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
 				e -> plot.actionSaveSession(),
-				null, null
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK), null
 		));
 		
 		this.add(PlotMenuUtils.createMenuItem(plot,
@@ -56,48 +51,9 @@ public class PlotMenuMain extends JPopupMenu {
 		
 
 		
-		JMenu export = new JMenu("Export");
-		
-		exportSinks = new JMenu("Raw Data");
-		
-		for (BoltPluginController<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
-			exportSinks.add(PlotMenuUtils.createMenuItem(plot,
-					plugin.getName(), null, null,
-					e -> plot.actionExportData(plugin.create()),
-					null, null
-			));
-		}
-		
-		export.add(exportSinks);
-		
 
 		
-		snapshotMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
-				e -> plot.actionSavePicture(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
-		);
-		export.add(snapshotMenuItem);
-		
-		
-		exportFilteredDataMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
-				e -> plot.actionSaveFilteredData(),
-				null, null
-		);
-		export.add(exportFilteredDataMenuItem);
-		
-		exportFittingsMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Fittings as Text", null, "Saves the current fitting data to a text file",
-				e -> plot.actionSaveFittingInformation(),
-				null, null
-		);
-		export.add(exportFittingsMenuItem);
 
-
-		this.add(export);
-		
-				
 
 		this.addSeparator();
 
@@ -160,6 +116,15 @@ public class PlotMenuMain extends JPopupMenu {
 			);
 		debug.add(bugreport);
 		
+		if (!Version.release) {
+			JMenuItem console = PlotMenuUtils.createMenuItem(plot,
+					"Debug Console", null, null,
+					e -> plot.actionDebugConsole(),
+					null, null
+				);
+			debug.add(console);
+		}
+		
 		
 		this.add(debug);
 		
@@ -180,17 +145,11 @@ public class PlotMenuMain extends JPopupMenu {
 	}
 	
 	public void setWidgetState(boolean hasData) {
-		
-		snapshotMenuItem.setEnabled(hasData);
-		exportFittingsMenuItem.setEnabled(hasData);
-		exportFilteredDataMenuItem.setEnabled(hasData);
-		exportSinks.setEnabled(hasData);
-				
+
 		undo.setEnabled(controller.history().canUndo());
 		redo.setEnabled(controller.history().canRedo());
 		undo.setText("Undo " + controller.history().getNextUndo());
 		redo.setText("Redo " + controller.history().getNextRedo());
-				
 		
 	}
 	

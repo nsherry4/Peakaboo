@@ -9,15 +9,16 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.ButtonSize;
-import swidget.widgets.SettingsPanel;
 import swidget.widgets.Spacing;
-import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonSize;
+import swidget.widgets.layout.SettingsPanel;
 
 public class PlotMenuEnergy extends JPopupMenu {
 
@@ -30,12 +31,67 @@ public class PlotMenuEnergy extends JPopupMenu {
 		this.controller = controller;
 		
 		
+		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
+
+		outer.addSetting(energyCalibration(plot));
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			outer.addSetting(zcalibration(plot));
+		}
+		outer.addSetting(advanced(plot));
+		outer.setOpaque(false);
+		this.add(outer);
+		
+		
+	}
+	
+	private SettingsPanel zcalibration(PlotPanel plot) {
+		
+		SettingsPanel zcal = new SettingsPanel();
+		zcal.setOpaque(false);
+		zcal.setBorder(Spacing.bMedium());
+
+		JButton button = new ImageButton("Z-Calibration")
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withAction(() -> {
+					this.setVisible(false);
+					plot.actionShowCalibrationProfileManager();		
+				});
+		button.setHorizontalAlignment(SwingConstants.CENTER);
+		button.setFont(button.getFont().deriveFont(Font.BOLD));
+		
+		zcal.addSetting(button);
+		
+		return zcal;
+		
+	}
+	
+	private SettingsPanel advanced(PlotPanel plot) {
+		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
+		advanced.setOpaque(false);
+		advanced.setBorder(Spacing.bMedium());
+		JButton button = new ImageButton("Advanced Options")
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withAction(() -> {
+					this.setVisible(false);
+					plot.actionShowAdvancedOptions();		
+				});
+
+		button.setHorizontalAlignment(SwingConstants.CENTER);
+		button.setFont(button.getFont().deriveFont(Font.BOLD));
+		advanced.addSetting(button);
+
+		return advanced;
+	}
+	
+	private SettingsPanel energyCalibration(PlotPanel plot) {
+
 		SettingsPanel energy = new SettingsPanel(Spacing.iTiny());
 		energy.setOpaque(false);
 		energy.setBorder(Spacing.bMedium());
 		JLabel energyTitle = new JLabel("Energy Calibration (keV)");
 		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
+		energyTitle.setBorder(new EmptyBorder(0, 0, Spacing.small, 0));
 		energy.addSetting(energyTitle);
 		
 		
@@ -80,42 +136,28 @@ public class PlotMenuEnergy extends JPopupMenu {
 		});
 		energy.addSetting(energyGuess);
 		
-		
-		
-		
-		
-		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
-		advanced.setOpaque(false);
-		advanced.setBorder(Spacing.bMedium());
-		JButton advancedButton = new ImageButton("Advanced Options")
-				.withButtonSize(ButtonSize.COMPACT)
-				.withAction(() -> {
-					this.setVisible(false);
-					plot.actionShowAdvancedOptions();		
-				});
-
-		advancedButton.setHorizontalAlignment(SwingConstants.CENTER);
-		advancedButton.setFont(advancedButton.getFont().deriveFont(Font.BOLD));
-		advanced.addSetting(advancedButton);
-
-
-		
-		
-		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
-
-		outer.addSetting(energy);
-		outer.addSetting(advanced);
-		outer.setOpaque(false);
-		this.add(outer);
-		
-		
+		return energy;
 	}
 
 	public void setWidgetState(boolean hasData) {
-		minEnergy.setEnabled(hasData);
+		
+		
 		maxEnergy.setEnabled(hasData);
-		minEnergy.setValue((double) controller.fitting().getMinEnergy());
-		maxEnergy.setValue((double) controller.fitting().getMaxEnergy());
+		float modelMax = controller.fitting().getMaxEnergy();
+		float viewMax = ((Number) maxEnergy.getValue()).floatValue();
+		if (modelMax != viewMax) {
+			maxEnergy.setValue((double) modelMax);
+		}
+		
+
+		minEnergy.setEnabled(hasData);
+		float modelMin = controller.fitting().getMinEnergy();
+		float viewMin = ((Number) minEnergy.getValue()).floatValue();
+		if (modelMin != viewMin) {
+			minEnergy.setValue((double) modelMin);
+		}
+
+		
 		energyGuess.setEnabled(hasData);
 	}
 	

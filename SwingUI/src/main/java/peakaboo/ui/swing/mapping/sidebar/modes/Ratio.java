@@ -4,44 +4,35 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.mapper.settings.MapFittingSettings;
 import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.display.map.MapScaleMode;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
+import peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
+import peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 import swidget.widgets.Spacing;
 
 
 public class Ratio extends JPanel {
 
 	private MapFittingSettings mapFittings;
-	
-	private JRadioButton 		relativeScale;
-	private JRadioButton 		absoluteScale;
+	private MapSettingsController controller;
+
 	
 	public Ratio(MapSettingsController _controller) {
 
+		this.controller = _controller;
 		this.mapFittings = _controller.getMapFittings();
 
 		setLayout(new GridBagLayout());
@@ -57,73 +48,13 @@ public class Ratio extends JPanel {
 		maingbc.weighty = 1.0;
 		maingbc.fill = GridBagConstraints.BOTH;
 		add(createElementsList(), maingbc);
-		
-		
-		_controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String s)
-			{
-				
-				absoluteScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-				relativeScale.setSelected(mapFittings.getMapScaleMode() == MapScaleMode.RELATIVE);			
-
-			}
-		});
-		
 
 	}
 
 	
-	private JPanel createScaleOptions()
-	{
-		
-		JPanel modeFrame = new JPanel();
-		
-		TitledBorder titleBorder = new TitledBorder("Scale Ratio Sides:");
-		titleBorder.setBorder(Spacing.bNone());
-		
-		modeFrame.setBorder(titleBorder);
-		modeFrame.setLayout(new BorderLayout());
-		
-		JPanel visibleElementsPanel = new ClearPanel();
-		visibleElementsPanel.setLayout(new BorderLayout());
-		
-		relativeScale = new JRadioButton("Separately (Qualitative)");
-		JLabel warning = new JLabel( StockIcon.BADGE_WARNING.toImageIcon(IconSize.BUTTON) );
-		visibleElementsPanel.add(relativeScale, BorderLayout.WEST);
-		visibleElementsPanel.add(warning, BorderLayout.EAST);
-		
-		relativeScale.setToolTipText("Warning: This option gives qualitative results only. Scaling each ratio side separately may lead to better looking graphs, but they will not be accurate.");
-		warning.setToolTipText("Warning: This option gives qualitative results only. Scaling each ratio side separately may lead to better looking graphs, but they will not be accurate.");
-		
-		absoluteScale = new JRadioButton("As a Group");
-		
-		
-		
-		ButtonGroup scaleGroup = new ButtonGroup();
-		scaleGroup.add(relativeScale);
-		scaleGroup.add(absoluteScale);
-		absoluteScale.setSelected(true);
-		
-		relativeScale.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				mapFittings.setMapScaleMode(MapScaleMode.RELATIVE);
-			}
-		});
-		absoluteScale.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				mapFittings.setMapScaleMode(MapScaleMode.ABSOLUTE);
-			}
-		});
-		
-		
-		modeFrame.add(visibleElementsPanel, BorderLayout.NORTH);
-		modeFrame.add(absoluteScale, BorderLayout.SOUTH);
-		
-		return modeFrame;
-		
+	private JPanel createScaleOptions() {
+		ScaleModeWidget scaleMode = new ScaleModeWidget(controller, "Colour", "All", true);
+		return scaleMode;
 	}
 	
 	
@@ -131,7 +62,7 @@ public class Ratio extends JPanel {
 	private JPanel createElementsList() {
 
 		JPanel elementsPanel = new JPanel();
-		elementsPanel.setLayout(new BorderLayout());
+		elementsPanel.setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
 
 		// elements list
 		elementsPanel.add(createTransitionSeriesList(), BorderLayout.CENTER);
@@ -149,16 +80,14 @@ public class Ratio extends JPanel {
 				if (columnIndex == 0) {
 					
 					Boolean bvalue = (Boolean) value;
-					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
-					mapFittings.invalidateInterpolation();
 				} 
 				else if (columnIndex == 2)
 				{
-					TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 					mapFittings.setRatioSide(ts, (Integer)value);
-					mapFittings.invalidateInterpolation();
 				}
 			}
 
@@ -168,10 +97,11 @@ public class Ratio extends JPanel {
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 				
 				switch (columnIndex) {
 
-					case 0: return true;
+					case 0: return mapFittings.getTransitionSeriesEnabled(ts);
 					case 1: return false;
 					case 2: return true;
 				}
@@ -182,12 +112,12 @@ public class Ratio extends JPanel {
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
 
-				TransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+				ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
 
 					case 0: return mapFittings.getTransitionSeriesVisibility(ts);
-					case 1: return ts.toElementString();
+					case 1: return ts;
 					case 2: return mapFittings.getRatioSide(ts);
 				}
 
@@ -219,7 +149,7 @@ public class Ratio extends JPanel {
 				switch (columnIndex)
 				{
 					case 0:	return Boolean.class;
-					case 1: return String.class;
+					case 1: return ITransitionSeries.class;
 					case 2: return Integer.class;
 				}
 				return Object.class;
@@ -232,7 +162,15 @@ public class Ratio extends JPanel {
 		};
 
 		JTable table = new JTable(m);
-
+		table.setTableHeader(null);
+		table.setShowVerticalLines(false);
+		table.setShowHorizontalLines(false);
+		table.setFillsViewportHeight(true);
+		
+		MapFittingRenderer fitRenderer = new MapFittingRenderer(mapFittings::getTransitionSeriesEnabled);
+		table.getColumnModel().getColumn(1).setCellRenderer(fitRenderer);
+		table.setRowHeight(fitRenderer.getPreferredSize().height);
+		
 		
 		TableColumn column = null;
 		column = table.getColumnModel().getColumn(0);
@@ -263,7 +201,8 @@ public class Ratio extends JPanel {
 		
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));
-
+		scroll.setBorder(Spacing.bNone());
+		
 		return scroll;
 
 	}

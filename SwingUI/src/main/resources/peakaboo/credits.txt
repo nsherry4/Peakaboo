@@ -1,3 +1,4 @@
-Programming: Nathaniel Sherry
+Development: Nathaniel Sherry
 Peak Tables: The Xraylib Team
 Special Thanks To: Marina Fuller
+: Stewart McIntyre

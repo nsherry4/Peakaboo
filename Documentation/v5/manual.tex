@@ -78,7 +78,7 @@
 %placing a screenshot as a figure
 \newcommand{\screenshot}[2]{%
 \begin{figure}[h!]
-\centering\includegraphics[width=0.85\textwidth]{figures/#1.png}
+\centering\includegraphics[width=0.999\textwidth]{figures/#1.png}
 \caption{#2}
 \end{figure}
 }
@@ -91,8 +91,8 @@
 \newcommand{\tocsubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
 
 \title{Peakaboo 5}
-\date{July 27th, 2018}
-\author{Nathaniel Sherry, Marina Suominen Fuller}
+\date{January 14th, 2019}
+\author{Nathaniel Sherry, N. Stewart McIntyre, Marina Suominen Fuller}
         
 
 \begin{document}
@@ -102,7 +102,7 @@
 \rhead[]{}
 %\rhead[\includegraphics[height=1em]{title/peakaboo.pdf}]{\includegraphics[height=1em]{title/peakaboo.pdf}}
 \fancyhead[C]{
-	\includegraphics[height=1em]{title/peakaboo.pdf}
+	\includegraphics[height=1em]{title/peakaboo.pdf}\hspace{0.3em}
 	\includegraphics[height=1em]{title/usersguide.pdf}
 }
 
@@ -121,6 +121,7 @@
 	\includegraphics[height=1.5em]{title/usersguide.pdf}\\
 	\vspace*{\fill}
 	\vspace*{\fill}
+	Version 5.2
 \end{titlepage}
 
 \cleardoublepage
@@ -137,7 +138,11 @@
 
 \tocchapter{Introduction}
 
-Peakaboo allows users to identify the spectral origins of an XRF spectrum using a routine that fits all components of the K, L, or M spectrum including escape peaks and pileup peaks, and then plots their spatial intensity distributions as maps. It was originally developed as part of the Science Studio project.
+Peakaboo is a platform that facilitates the interpretation of spectra from X ray Fluorescence (EXF) experiments that use conventional or synchrotron-based radiation sources. It uses efficient software tools to provide a close fitting of most spectral components using the most recent libraries available. A prime objective of the platform is to provide detailed maps of elemental spatial distribution(s) and attendant tools to extract compositional information from each region of a map. The simplified software layout makes it possible for new users to be productive within a matter of minutes.
+
+Peakaboo provides only qualitative information about elemental composition. Potential users interested in more advanced versions of the software should contact the developers.
+
+Peakaboo was originally developed within the Science Studio project that was funded by CANARIE.
 
 \tocsection{Accepted File Formats}
 
@@ -159,19 +164,21 @@ If you have any questions or concerns not addressed in this guide, please feel f
 \tocsection{Opening Data}
 
 Select \button{document-open}{Open} or 
-\command{\button{main-menu}{Menu} \menu \button{document-open}{Open}} to locate your XRF data. If all scan point data is contained in a single file, simply select that file and open it. If there are many individual scan point files, (eg one scan per file), then locate them in their directory and use \shortcut{Control}{Click} to select more than one of them, or \shortcut{Control}{A} to select all of them.
+\command{\button{main-menu}{Menu} \menu \button{document-open}{Open}} to locate your XRF data. If all scan point data is contained in a single file, simply select that file and open it. If there are many individual scan point files, (e.g. one scan per file), then locate them in their directory and use \shortcut{Control}{Click} to select more than one of them, or \shortcut{Control}{A} to select all of them. If no XRF data appears, it is likely that the appropriate plug-in is not loaded (see Plug-in Section).
+
+Because Peakaboo has a tabbed interface, additional data sets may be opened and processed without having to close other data sets.
 
 \screenshot{open-files}{Peakaboo's file selection dialog}
 
 \tocsection{File Format Conflicts}
 
-While rare, it is possible that more than one of the plug-ins that Peakaboo uses to read XRF data will believe that it can open a particular data set. This is usually the result of many different file formats having some of the same properties, such as similar file extensions (eg \file{.txt}, \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo cannot automatically determine which XRF reader plug-in to use, it will ask you to indicate which format your data is in. Select the entry which matches your data.
+While rare, it is possible that more than one of the plug-ins that Peakaboo uses to read XRF data will believe that it can open a particular data set. This is usually the result of many different file formats having some of the same properties, such as similar file extensions (e.g. \file{.txt}, \file{.dat}, \file{.xml}, \ldots ). In the event that Peakaboo cannot automatically determine which XRF reader plug-in to use, it will ask you to indicate which format your data is in. Select the entry which matches your data.
 
 \tocsection{Viewing the Data}
 
 The \icon{zoom-in} \icon{zoom-out} zoom slider bar on the bottom right of the window allows you to expand the x-axis (energy scale). You can use the scroll bar below the scan (or click and drag on the spectrum itself) to pan back and forth to view different energy regions. 
 
-The \button{misc-locked}{Lock Zoom} button locks the vertical zoom to the size of the viewing area. You can disable this if you wish to zoom in vertically as well as horizontally.
+The y-axis zoom is enabled by toggling the \button{misc-locked}{Lock Zoom} button on the right of the zoom panel. When zoomed in closely enough, the plot will also zoom in vertically. You can magnify any region of the spectrum using the vertical and horizontal scroll-bars together, or by clicking and dragging the plot.
 
 \screenshot{zoom-scroll}{Zoom controls and horizontal scrollbar}
 
@@ -191,9 +198,11 @@ The \button{energy-menu}{Calibration} menu in the upper right allows you to conf
 
 These values can be tweaked or adjusted by selecting several major elements known or suspected to be present in the sample and adjusting the energy range until the associated peaks fit properly (See the section on Peak Fitting for more information on adding fittings).
 
+In the calibration menu, the number in the Maximum Energy field is the maximum energy that is collected on the XRF detector. Unless the minimum energy on the detector is non-zero, no other additions to the calibration menu are necessary.
+
 Peakaboo can also try to auto-detect the energy calibration with the \button{auto}{Guess Calibration} tool. You should always review any results from this tool to make sure that they are correct.
 
-You should double-check any energy calibration by adding another element to your fittings. Although \element{Ar} may not be present in your sample, it typically appears in XRF spectra. Select \element{Ar} from the peak list and look for the \element{Ar} K-$\alpha$ peak. It should appear at 2.95 keV with the accompanying K-$\beta$ peak. If you start adding more element lines and the fits appear off, check your calibration again.
+A minimum of two elements must be present in the Element Table (see Fitting). An additional check on the veracity of the calibration involves the \element{Ar} K line at 2.95 keV. Argon gas is a component of the air surrounding the sample and its XRF signature is found in every spectrum.   
 
 \screenshot{max-energy}{The calibration menu}
 
@@ -202,125 +211,33 @@ You should double-check any energy calibration by adding another element to your
 
 \tocsection{Customizing the View}
 
-The \command{\button{view-menu}{View}} menu contains many settings to help you visualize the spectrum: \command{Logarithmic Scale}, \command{Axes}, and other settins control how a spectrum is presented. \command{Individual Scan}, \command{Mean per Channel}, and \command{Max per Channel} allow you to view a single scan, the per-channel average scan, or the per-channel maximum values.  These composite modes can be useful for viewing a cleaner spectrum, or for finding elements which only appear in a small area of your dataset.
+The \command{\button{view-menu}{View}} menu contains settings to help you visualize the spectrum. Some of the more important options are:
 
-You can also add curve fitting markings to your spectrum: \command{\button{view-menu}{View} \menu\ Curve Fit \menu\ Element Names} to label each curve with the name of the element it represents, \command{\button{view-menu}{View} \menu\ Curve Fit \menu\ Markings} showing transition markings (K-, L-lines), and \command{\button{view-menu}{View} \menu\ Curve Fit \menu\ Heights} for fitting heights (max counts).
+\begin{description}
 
-\screenshot{view-example}{Peakaboo with mean averaged data, axes, fitting labels, and fitting markings}
+\item [Logarithmic Scale] Selecting Logarithmic or Linear Scale allows you to select 
+which components of your data to emphasize.
+
+\item [Curve Fit Markings] This will display all transition lines for a fitted element, scaled by their relative intensity. It can be useful for understanding the structure of a fitting's lineshape.
+
+\item [Max or Mean per Channel] These options allow you to view a composite spectrum when viewing multi-point data (i.e. line or area raster scans). These modes can be useful for viewing a cleaner spectrum or for finding elements which only appear in a small area of your dataset.
+
+\end{description}
+
+\tocsection{Saving and Loading Data}
+
+From the toolbar, you can \button{document-save-as}{Save} your session information so that next time you want to look at this XRF dataset, you can load this information (session) and not have to start from the beginning. The saved session does not store the data itself, so the data must still be available when loading a session.
 
 Your spectrum, as it appears in the window, can also be saved by selecting 
-\button{device-camera}{Export Plot as Image} from the toolbar or \shortcut{Control}{P}. Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can also save the fitting results as a text file by selecting \command{\button{main-menu}{Menu} \menu\ Export \menu\ Fittings as Text}.
-
-
-\tocsection{Saving and Loading Sessions}
-
-You can save your session information so that next time you want to look at an XRF dataset, you can load this information (session) and not have to start from the beginning. You must still load the dataset separately, as the saved session does not store the data itself. These options are found under \command{\button{main-menu}{Menu} \menu\ \button{document-save}{Save Session}} and \command{\button{main-menu}{Menu} \menu\ Load Session}.
-
-
-
-
-\tocchapter{Peak Fitting}
-
-
-\tocsection{Escape Peaks}
-
-Before doing any peak fitting, you should consider the type of detector you used to collect the XRF spectra. Features may be present in your spectra that are due to incoming X-rays interacting with the detector material. For example, for a \element{Si} detector, there is a probability that some of the incoming X-rays will interact with the \element{Si} and kick out \element{Si} K-shell electrons, thereby reducing the incoming X-ray's measured energy by 1.74 keV. This escape peak may be present for major elements in a sample.
-
-To adjust the type of escape peaks used in fitting the peaks in your spectra, select \command{\button{energy-menu}{Calibration} \menu\ Advanced Options} and choose either \command{Silicon} or \command{Germanium}, depending on the type of detector you used. If you do not need to fit escape peaks, choose \command{None}. By default, \command{Silicon} is selected.
-
-\tocsection{Selecting Fittings}
-
-There are four different tools which can be used to fit your data. To access these options, click on the drop-down arrow next to the \button{edit-add}{Add Fittings} button at the top of the \command{Peak Fitting} tab.
-
-
-\tocsubsection{Guided Fitting}
-
-Guided fitting will attempt to identify peaks one by one with user supervision. Click on the peak you wish to fit and the program will fit the peak with a possible option. Other possible options will also be displayed in a drop down list in the side bar. To add another fitting, click on the \button{edit-add}{Add} button below the current entry and click on another peak. To edit a previous fitting, click \button{edit-edit}{Edit}. Once you are happy with the fittings click \button{choose-ok}{OK} to add the fittings to your list.
-
-\screenshot{guided-fitting}{The guided fitting controls}
-
-
-\tocsubsection{Automatic Fitting}
-
-Automatic fitting will attempt to identify all intense peaks at once, without user supervision. Simply selecting this option from the menu will automatically populate the fittings list with suggestions. Take extra care to review these fittings manually, as they are by no means guaranteed to be correct.
-
-
-\tocsubsection{Element Lookup}
-
-Best results are usually obtained by adding elements with the lowest atomic numbers first and working your way up. It is recommended that you fit the K lines first. L lines for elements for tungsten and higher should be fit separately from the K lines for lower atomic number elements, as the K lines will interfere with the L line fittings. As you select elements, their fittings will appear in red on the spectrum. Once you are happy with the fittings, click \button{choose-ok}{OK}, and the list of newly-fitted elements will be added to your fitted element list, and will appear in black on the spectrum.
-
-\screenshot{lookup-fitting}{The elemental lookup fitting controls}
-
-\tocsubsection{Summation Peaks}
-
-If you are having trouble finding element lines to fit some peaks in your spectrum, you may have what are called `pile-up peaks' (referred to as `summation' peaks in Peakaboo). This is a detector phenomenon. If your sample has a lot of one element present, then some of the emitted x-rays due to the presence of this element will impinge on the detector virtually simultaneously and the pulse created and measured would be the sum of the two x-ray energies. Please note that for element lines to appear in the drop down lists, they must have already been included in the spectral fit.
-
-\screenshot{fitting-summation}{The summation fitting controls}
-
-\tocsection{Working with Fittings}
-
-Each fitting has a checkbox under the \command{Fit} column in the \command{Peak Fitting} panel. This checkbox controls whether this fitting is enabled or not. Toggling the checkbox will allow you to temporarily remove a specific fitting from the fitting process. Rechecking the box will restore the fitting as it was.
-
-When using background filters, it is usually best to leave 10\%-15\% of the background in place (default is 10\%) in order to prevent the background filter from removing all signal under the edges of the peak. When too much signal around the edges of a peak is removed, it can prevent peaks from being fitted to the proper intensity, or being fitted at all.
-
-\tocsubsection{Fitting Algorithms}
-
-When trying to determine how to fit an element's theoretical peak curve to real data, Peakaboo has several algorithms to make this determination. The algorithm can be selected from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Single-Curve Fitting}. The available options are:
-
-\begin{description}
-
-\item [Max-Under-Curve] This is the default algorithm in Peakaboo. It is extremely fast, and quite conservative in fitting against real data. Within a fitting's full-width half-max (FWHM) area, it will never over-fit against real data. The drawback is that it does not handle noisy data particularly well, since any single-channel dip in a curve can keep it from fitting it completely.
-
-\item [Least Squares] This is a standard optimizing algorithm minimizing the sum of the squares of the difference between the fitting's curve and the data. This algorithm is excellent for working with extremely noisy data, but has a tendency to over-fit against curves which are not as strong as it thinks they ought to be.
-
-\item [Optimizing] This is a Least Squares algorithm modified to strongly penalize over-fitting against signal which doesn't exist. It acts as a trade-off between the other two; reasonably good fitting of noisy data and reasonably averse to over-fitting non-existent signal.
-
-\end{description}
-
-\tocsubsection{Multi-Element Fitting Solvers}
-
-When fittings from two or more elements overlap, they content for being fit against the same data. Peakaboo must solve this signal contention by determining how much of the signal originates from each elemental fitting. The algorithm can be selected from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Multi-Curve Solver}. Peakaboo has two algorithms for determining the intensity of each contending fitting:
-
-\begin{description}
-
-\item [Greedy] The Greedy fitting solver is the default fitting solver algorithm in Peakaboo. is extremely fast, and allows the user to control the order of fittings by rearranging the fittings in the side bar. 
-
-It works by scaling each fitting curve, one at a time, using the selected fitting algorithm (described in the previous section). Each curve is fitted against a spectrum with all previously fitted curves subtracted from it. Thus, each curve greedily fits as much signal as it can from the residual spectrum of previous elemental fittings.
-
-While there are usually multiple peaks per fitting which all constrain the height of a fitting, in the case of peak overlap, a fitting will occasionally be calculated to be larger than it ought to be. In this case, other fittings may be under-represented because there is no more signal left for those fittings to be fit to.
-
-Changing the order of fittings can reveal and correct these problems. Select a fitting (\shortcut{Control}{Click} to select several) that you wish to change the ordering of, and click \button{go-up}{Move Up} or \button{go-down}{Move Down} to adjust the ordering of their fitting.
-
-
-\item [Optimizing] The Optimizing fitting solver is a Least Squares algorithm modified to strongly penalize over-fitting against signal which doesn't exist. This algorithm is slower than Greedy, but results in more nuanced fitting solutions in complex, crowded spectra with many overlapping peaks.
-
-\end{description}
-
-\tocsection{Annotations}
-
-Each fitting you add can be annotated to track important context or caveats for your work. Annotations will be displayed with the fitting's \command{Element Name} in the plot, and in tool tips in the \command{Peak Fitting} sidebar.
-
-To add an annotation, double-click on the fitting in the \command{Peak Fitting} sidebar. A prompt will appear which will let you add an annotation to the selected fitting. It can be cleared by double-clicking the entry again and setting the
-
-
-
-\tocsection{Details of Peak Fitting}
-
-A fitting is a model composed of several ``transitions'' from one of the K, L, or M groups of electronic transitions within the particular atom. The positions and relative intensities for each transition series were taken from several tabulated sources to build a model as accurate and as thorough as possible. Fittings take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the \href{https://github.com/tschoonj/xraylib}{Xraylib} \cite{xraylib} project. For high $Z$ elements where the K series fittings are available in Xraylib, values provided by Krause 
-\cite{krause} have been used. The intensity rations have been optimized for $\sim$20keV irradiation.
-
-For fitting of the spectral peaks, a Pseudo-Voigt fitting function is used by default, with a width which expands slightly as the energy level increases \cite[p.~282]{xray-handbook}. Other peak modelling functions are available from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Peak Model}
-
+\button{document-export}{Export Data} \menu\ \button{device-camera}{Plot as Image} from the toolbar or \shortcut{Control}{P}. Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can also save the fitting results as a text file by selecting \button{document-export}{Export Data} \menu\ \command{Fittings as Text}.
 
 
 
 \tocchapter{Filters}
 
-\tocsection{Using Filters}
+Filters are ways to process or transform spectral data. Filters can be accessed by clicking on the \command{Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into folders based on type. Each folder can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
 
-Filters can be accessed by clicking on the \command{Data Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into types. Each type heading can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
-
-Once you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed. Once you are satisfied with the filter settings, you may close the window.
+After you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed.
 
 To view a full listing of built-in filters and their descriptions, see the appendix.
 
@@ -331,37 +248,151 @@ The use of filters will obviously alter the spectrum. If you wish to see the ori
 
 \tocsection{Noise Removal}
 
-Noise reduction is essential since the spectra are taken at very brief intervals while the sample is scanned in the X-Ray beam. The software provides a number of mathematical filters that are used in noise reduction or in background attenuation or removal. Noise filters include moving average, fast Fourier transform (FFT) low pass, Savitsky-Golay, and others.
+Noise reduction is frequently essential since the spectra are often taken at very brief intervals particularly in fly-scanning. The software provides a number of mathematical filters that are used in noise reduction or in background attenuation or removal. Noise filters include moving average, fast Fourier transform (FFT) low pass, Savitsky-Golay, and others.
 
 Where applicable, noise removal filter parameters can be adjusted to suit the data in question. Best noise reduction with minimum change in peak shape is often achieved using a Savitsky-Golay filter.
 
 
 \tocsection{Background Removal}
 
-Background removal or reduction is particularly important for spectra acquired using white radiation. Peakaboo has a number of background removal filters of varying sophistication and performance. Varying levels of background can be removed, but care should be taken not to remove genuine signal along with the background, as this may degrade the peak fitting result.
+When using background filters, it is usually best to leave 10\%-15\% of the background in place (default is 10\%) in order to prevent the background filter from removing all signal under the edges of the peak. When too much signal around the edges of a peak is removed, it can prevent peaks from being fitted to the proper intensity, or being fitted at all.
+
+While the removal of background certainly makes the actual spectral peaks more apparent, we have found that when fitting peaks to a spectrum, it is often not necessary to carry out a background subtract. The peaks fitted using a Voigt function (pseudo or convolved) actually contain a significant component of the scattering function that approximates the background. This is particularly true in the energy range 1-9 KeV. Therefore we recommend that spectral fitting be first carried out without any background subtraction
+
+For a more detailed example of using a filter, see the appendix.
 
 
 
-\tocsection{Filtering Example with Normalizer Filter}
+\tocchapter{Peak Fitting}
 
-When detector deadtime is very high, the detector cannot keep up with the incoming x-rays. For example, low energy x-rays such as those coming from \element{Ar} may not get counted and mapping the distribution of \element{Ar} will reveal areas of next to no intensity. 
 
-The \command{Normalizer Filer} scales each spectrum so that the intensity at a given channel is always the same. This filter can be used in this case to correct the spectra. By normalizing against a channel from within the \element{Ar} peak, we can mitigate the distortion caused by detector saturation.
+\tocsection{Escape Peaks}
 
-Go to the \command{Filters} tab and add the \command{Normalizer Filter} found under the \command{Advanced} filter types. Click on the \button{misc-preferences}{Settings} button to bring up the settings window for the filter. Place the cursor on the \element{Ar} peak in the spectrum and read the channel number and value (counts) from the information found below the spectrum window, and enter them into the appropriate settings fields. Make sure you are viewing the \command{Mean Average} spectrum to get the average value (counts) for the \element{Ar}. Close the edit window.
+Before doing any peak fitting, you should consider the type of detector you used to collect the XRF spectra. Features may be present in your spectra that are due to incoming X-rays interacting with the detector material. For example, for a Silicon Diode Detector (SDD), there is a probability that some of the incoming X-rays will interact with the Silicon and emit \element{Si} K-shell electrons, thereby reducing the incoming X-ray's measured energy by 1.74 keV. This escape peak will be present for major elements in a sample.
 
-\clearpage
-\screenshot{normalize-uncorrected-ar}{Uncorrected \element{Ar} with weak signal where \element{Ti} is strongest} \screenshot{normalize-uncorrected-ti}{Uncorrected \element{Ti}} \screenshot{normalize-corrected-ar}{Corrected \element{Ar}} \screenshot{normalize-corrected-ti}{Corrected \element{Ti} with greater maximum intensity}
+To adjust the type of escape peaks used in fitting the peaks in your spectra, select \command{\button{energy-menu}{Calibration} \menu\ Advanced Options} and choose either \command{Silicon} or \command{Germanium}, depending on the type of detector you used. If you do not need to fit escape peaks, choose \command{None}. By default, \command{Silicon} is selected.
+
+
+
+\tocsection{Shape and Width of Fitting Curves}
+
+The shape of the curve (lineshape) used to simulate the characteristic XRF peak is a Pseudo-Voigt function. A proper Voigt function is a convolution of guassian and lorenzian peak shapes. The Pseudo-Voigt function is a linear combination of the two, and provides a excellent balance of accuracy and speed. The Voigt and Pseudo-Voigt functions are particularly effective in dealing with tailing due to scattering and detector effects. 
+
+In the energy calibration menu, under Advanced Options, you can choose the type of function used for peak fittings. The pseudo Voigt function is the default option. The Convolving Voigt function is also provided, but is much slower. The original Lorentzian and Gaussian functions are also provided.
+
+In fitting each peak in the spectrum, the appropriate lineshape must consist of an overlay of several functions since there are multiple transitions, closely spaced in energy, that are associated with each K, L and M-shell XRF transition. You can choose to display these individual transitions or not with \command{View \menu\ Curve Fit \menu\ Markings}. Each individual transition is indicated by a solid line within the lineshape envelope that is a composite of these transitions and their probability (see Figure 5). 
+
+\screenshot{fitting-markings}{Spectral Fitting of multi element NIST 610 Glass showing individual lines}
+
+The width of XRF peaks detected by solid state devices such as a Silicon Diode Detector (SDD) is a convolution of an invariant intrinsic width and width that is due to electronic noise in the detector. The noise level has improved with improved technologies and therefore it can be changed using the Advanced Options menu. A reduction in the noise will result in a corresponding change in the width of the fitting lineshape. The width of the XRF characteristic peak also decreases linearly with peak energy. This is accounted for in the simulated fitting algorithm.   
+
+The positions and relative intensities for each K, L or M XRF elemental transition were taken from tabulated sources to build an accurate and up-to-date data base. Fittings from the database take account of details such as separations and relative intensities of transitions. Most fittings are derived from data from the \href{https://github.com/tschoonj/xraylib}{Xraylib} \cite{xraylib} project. For high $Z$ elements where the K series fittings are not available in Xraylib, values provided by Krause \cite{krause} have been used. The intensity ratios have been optimized for 20keV irradiation.
+
+
+\tocsection{Selecting Fittings}
+
+There are four different tools which can be used to fit your data. To access these options, click the \button{edit-add}{Add Fittings} button at the top of the \command{Peak Fitting} tab.
+
+
+\tocsubsection{Element Lookup}
+
+This option provides a listing of chemical elements that will help you fit a K,L or M lineshape for a particular element to a peak (or peaks) in the spectrum. A particular element can be found by scrolling through the menu or typing the element name or atomic symbol. Then, select the desired transition. A set of red-coloured provisional lineshapes will appear within the actual spectrum and an atomic symbol will appear on the most intense component. Your assignment may or may not coincide with the positions of spectral peaks that you are trying to identify. If the assignment appears incorrect, click on the \button{choose-cancel}{Cancel} button, or deselect the element and try again. If the choice appears to be correct, click \button{choose-ok}{OK}.
+
+\screenshot{lookup-fitting}{The elemental lookup fitting controls}
+
+Best results are usually obtained by adding elements with the lowest atomic numbers first and working your way up. It is recommended that you fit the K lines first. L lines should be fit after the K lines since spectral overlaps may be confusing. In addition to the labels for elemental K, L, M elemental lines and summation lines on the spectrum display, it is possible to make brief annotations adjacent to each label by double clicking on the appropriate element in the list.
+ 
+
+\tocsubsection{Guided Fitting}
+
+Guided fitting will attempt to identify peaks the user selects. Click on the peak you wish to fit and the program will fit the peak with its recommendation. Other recommendations will also be displayed in a drop down list in the side bar. To add another fitting, click on the \button{edit-add}{Add} button below the current entry and click on another peak. To edit a previous fitting, click \button{edit-edit}{Edit}. After you are happy with the fittings, click \button{choose-ok}{OK} to add the fittings to your list.
+
+\screenshot{guided-fitting}{The guided fitting controls}
+
+
+\tocsubsection{Automatic Fitting}
+
+Automatic fitting will attempt to identify all intense peaks at once, without user supervision. Simply selecting this option from the menu will automatically populate the fittings list. Automatic fitting can provide a rapid assessment of the major components of a spectrum, but its results should still be checked for correctness.
+
+
+\tocsubsection{Summation Peaks}
+
+Additional spectral peaks can result from virtually simultaneous arrival of signals from intense XRF peaks. These peaks are the sum of the energies of the more intense peaks. The lineshapes already selected in the Element Table can be summed in different combinations to create new lineshapes on the experimental spectrum.
+
+\screenshot{fitting-summation}{The summation fitting controls}
+
+\tocsection{Working with Fittings}
+
+Each fitting has a checkbox controlling whether this fitting is enabled or not. Toggling the checkbox will allow you to temporarily remove a specific fitting from the fitting process. Rechecking the box will restore the fitting as it was.
+
+Selecting a fitting in the list will cause the fitting to be highlighted in blue. This feature is also useful to identify all components of a lineshape in a complex overlay of spectral peaks.
+
+\tocsection{Fitting Algorithms}
+
+When trying to determine how to fit an element's theoretical lineshape to real data, Peakaboo has several algorithms to make this determination. The algorithms can be selected from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Single-Curve Fitting}. The available options are:
+
+\begin{description}
+
+\item [Max-Under-Curve] This is the default algorithm in Peakaboo. It is extremely fast, and is quite conservative in fitting against real data. Within the dimensions of the peak, it will never over-fit against real data. The drawback is that it does not handle noisy data particularly well.
+
+\item [Least Squares] This is a standard optimizing algorithm minimizing the sum of the squares of the difference between the fitting's lineshape and the data. This algorithm is excellent for working with extremely noisy data, but has a tendency to over-fit against data which is not as strong as it thinks it ought to be.
+
+\item [Optimizing] This is a Least Squares algorithm modified to strongly penalize over-fitting against signal which doesn't exist. It acts as a trade-off between the other two; reasonably good fitting of noisy data and reasonably averse to over-fitting non-existent signal.
+
+\screenshot{maxunder-vs-optimizing}{Comparison of mapping data treated with Max-Under-Curve (left) and Optimizing (right)}
+
+\end{description}
+
+\tocsection{Multi-Element Fitting Solvers}
+
+When fittings from two or more elements overlap, they content for being fit against the same data. Peakaboo must solve this signal contention by determining how much of the signal originates from each elemental fitting. The algorithm can be selected from \command{\button{energy-menu}{Calibration} \menu\ Advanced Options \menu\ Multi-Curve Solver}. Peakaboo has two algorithms for determining the intensity of each contending fitting:
+
+A critical part of the fitting process involves the decisions to be made when spectral peaks overlap to some degree. Decisions must be made about mathematical approximations that will provide reliable and consistent assignments of areas associated with the neighbouring peaks. Peakaboo has two approaches to assessment of such data: 
+
+
+
+
+
+\begin{description}
+
+\item [Greedy] The Greedy fitting solver is the default fitting solver algorithm in Peakaboo. is extremely fast, and allows the user to control the order of fittings by rearranging the fittings in the side bar. 
+
+This sequential approach fits peakshapes in the order in which they are listed in the Peak Fitting list, scaling each fitting curve, one at a time, using the selected fitting algorithm . Each curve is fitted against a spectrum with all previously fitted curves subtracted from it. While there are constraints due to relative height of peaks, there are some possibilities for inconsistencies since overfitting is possible. 
+
+Changing the order of fittings can reveal and correct these problems. Select the fitting that you wish to reorder, and click-and-drag the element in the list to reorder it.
+
+
+\item [Optimizing] The Optimizing fitting solver is a Least Squares algorithm modified to strongly penalize over-fitting against signal which doesn't exist. This algorithm is slower than Greedy, but results in more nuanced fitting solutions in complex, crowded spectra with many overlapping peaks. An example of this approach is seen in Figure 5, where it is possible to fit minor L peaks in the presence of more intense K peaks.
+
+\item [MultiSampling] The MultiSampling fitting solver is a variation of the Optimizing solver which predictably permutes the order of element fittings to produce slightly different results. This helps to produce more reliable results, but is also considerably slower for large numbers of fittings.
+
+\end{description}
+
+\tocsection{Annotations}
+
+Each fitting you add can be annotated to track important context or caveats for your work. Annotations will be displayed with the fitting's \command{Element Name} in the plot, and in tool tips in the \command{Peak Fitting} sidebar.
+
+To add an annotation, double-click on the fitting in the \command{Peak Fitting} sidebar. A prompt will appear which will let you add an annotation to the selected fitting. It can be cleared by double-clicking the entry again and setting the
+
+
+\tocsection{Suggestions for Successful Fitting}
+\begin{itemize}
+\item Consider NOT using any background subtraction. Its use may distort some peak shapes and thereby compromise an exacting fitting procedure.
+\item After energy calibration, use Automatic Fitting to find and assign many of the more obvious peaks. Thereafter, use a combination of Guided Fitting and Element Lookup to identify as many peaks as possible. 
+\item The fitted spectrum summation line should match, as closely as possible, the experimental line.
+\item Watch carefully for summation peaks. If you find one, there are likely others. Summation peaks are prevalent when the SDD detector is experiencing a higher flux of incoming photons. Use of the Summation Fitting process is an efficient way to cover all possible contributions. 
+\item Consider trying minor adjustments to the peak width setting (FWHM noise level) to improve the fitting match. Increased photon flux will change the noise level. 
+\end{itemize}
 
 
 
 \tocchapter{Mapping}
 
-To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. Only those fittings which are enabled in your \command{Peak Fitting} list will be mapped. It is recommended that you enable all fittings for mapping as each fitting results in an individual map which can be disabled later.
+To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. Only those fittings which are enabled in your \command{Peak Fitting} list will be mapped. It is recommended that you enable all fittings for mapping as each fitting results in an individual map which can be disabled later. For extremely large maps, you may see some performance gain from disabling some fittings, especially if you are using data filtering or Optimizing/Least-Squares Curve Fitting or Fitting Solver algorithms.
 
 \screenshot{map-window}{Peakaboo's mapping window}
 
-Once the mapping is complete, a window will appear with a coloured map, scale, and list of mapped element lines. For datasets which contain dimension information, map widths and heights are automatically set to appropriate values. Otherwise, the user must adjust the width and height. 
+After the mapping is complete, a window will appear with a coloured map, a scale, and a list of the mapped element lines. For datasets which contain dimension information, map widths and heights are automatically set to appropriate values. Otherwise, Peakaboo can attempt to find dimensions that produce contiguous images. If this does not work (it usually does), you will have to adjust the dimensions yourself. 
 
 All fittings will be represented in the initial map. To get the individual element maps, uncheck all other fittings in the \command{Peak Fittings} tab in the sidebar, leaving the element fitting you wish to view. If your maps have a pixelated appearance, you may want to try interpolating the data and using contouring. Note that interpolation is not adding new data to the map, and should not be used to excess.
 
@@ -388,6 +419,8 @@ These groups are overlaid, with the presence of each colour indicating the inten
 The \command{Scale Colours} options control the way that the fitting group's colours are scaled. With the \command{As a Group} option, the highest intensity from \emphasis{all} groups of fittings is used to scale the intensities for \emphasis{every} group. With the \command{Separately} option, the highest intensity from \emphasis{within each} group of fittings is used to scale the intensities for that group. The \command{Separately} option produces maps which may be qualitatively interesting, but are quantitatively 
 incorrect.
 
+Sometimes the weaker intensities for different elements can overlap to the extent that each elemental distribution is difficult to distinguish. In such cases, the intensity distributions can be truncated to remove the weaker intensities and therefore clarify the overlay map. This truncation is effected by moving the \command{Low Signal Cutoff} slider bar at the bottom of the sidebar
+
 \tocsection{Ratios}
 
 Mapping of element ratios is also available within Peakaboo. Select \command{Ratio} from the \command{Peak Fittings} dropdown list. Select the fittings (or fitting sets) you wish to view in ratio and select the desired colours from the dropdown lists next to each fitting.
@@ -407,18 +440,20 @@ There are two ways to select sections of a map, cropping and point-selection. Cr
 
 \screenshot{select-subset}{Selecting a cropped subset of a data set}
 
-Point selection is accomplished by double clicking on a point of interest, which will select all points in a contiguous region with similar intensity. Triple clicking will select all points in a map with similar intensity regardless of location. More complex selections can be made by holding the \command{Control} key while double-clicking.
+Point selection is accomplished by double clicking on a point of interest, which will select all points in a contiguous region with similar intensity. Triple clicking will select all points in a map with similar intensity regardless of location. More complex selections can be made by holding the \command{Control} key while double-clicking. For example, \command{Control} + \command{Double Clicking} on a previously unselected point will create a union with a previously selected set of points.
+
+The \command{Map Settings} tab has two settings which will control how point selections are made. 
+
+\begin{description}
+
+\item [Threshold] Threshold adjusts the sensitivity of the selection. For a threshold $t$, double-clicking a point with intensity $i$ will select all contiguous points with an intensity between $\frac{i}{t}$ and $i\times t$. For example, with a threshold setting of 2, double-clicking a point with a value 2 will select all touching points with a value between 50 and 200.
+
+\item [Padding] Padding controls how many extra `rings' of pixels get selected along with matching pixels. For example, when a point selection is made with a padding value of 1, all pixels which are adjacent to the selection area are added to the selection. For a larger padding value $p$, this process is repeated $p$ times.
+
+\end{description}
 
 \screenshot{select-points}{Selecting a series of contiguous high-intensity points from the data set}
 
-\tocsection{Examining Subsections}
-
-The distribution of elements will likely vary across your sample and hence your maps. For samples that have a composition that consists primarily of low atomic number (low $Z$) elements, it is possible to make a rough estimate of the composition. This estimate is based on the relative intensities of many elements (from $Z=20\ldots 44$) measured in a glass matrix. The relative intensities of these elements have been entered into Peakaboo as conversion coefficients. Using these coefficients the concentration of elements within a low $Z$ matrix can be estimated.
-
-
-Left click and drag the mouse in order to draw a rectangle surrounding the region you wish to select. To view the relative intensity information, click on \button{badge-info}{Get Intensities} in the mapping window toolbar.
-
-\screenshot{intensity-estimate}{Rough estimate of elemental intensity in the selected region}
 
 \tocsection{Plotting Subsections}
 
@@ -427,9 +462,22 @@ Peakaboo also allows you to view spectra from selected regions within your map. 
 \screenshot{plot-subset}{Plotting window showing data for a subset of the original data set}
 
 
+%\tocsection{Examining Subsections}
+
+%The distribution of elements will likely vary across your sample and hence your maps. For samples that have a composition that consists primarily of low $Z$ elements, it is possible to make a rough estimate of the composition. This estimate is based on the relative intensities of many elements (from $Z=20\ldots 44$) measured in a glass matrix. The relative intensities of these elements have been entered into Peakaboo as conversion coefficients. Using these coefficients the concentration of elements within a low $Z$ matrix can be estimated.
+
+
+%Left click and drag the mouse in order to draw a rectangle surrounding the region you wish to select. To view the relative intensity information, click on \button{badge-info}{Get Intensities} in the mapping window toolbar.
+
+%\screenshot{intensity-estimate}{Rough estimate of elemental intensity in the selected region}
+
+
 \tocchapter{Plugins}
 
-Plugins can add new filters or new file format support to Peakaboo. You can manage Peakaboo's plugins by selecting \command{\button{main-menu}{Menu} \menu\ Plugins}.
+Plugins are software components which are used by Peakaboo to extend Peakaboo's functionality. Plugins can add new filters or new file format support to Peakaboo. There are \href{https://github.com/nsherry4/PeakabooPlugins/releases/latest}{a number of plugins available along with Peakaboo}, and anyone with some experience in Java programming can also make their own.
+
+
+You can manage Peakaboo's plugins by selecting \command{\button{main-menu}{Menu} \menu\ Plugins}.
 
 \screenshot{plugins}{Peakaboo's plugin management screen}
 
@@ -476,8 +524,7 @@ The specific interfaces used for different types of plugins are:
 \item Filter: \class{peakaboo.filter.plugin.JavaFilterPlugin}
 \end{itemize}
 
-Example plugins for both filters and data sources are available online at 
-\href{http://sciencestudioproject.com/}{sciencestudioproject.com}, along with a jar file containing Peakaboo for building against.
+Example plugins for both filters and data sources are \href{https://github.com/nsherry4/PeakabooPlugins/}{available online}, along with a jar file containing Peakaboo for building against.
 
 \tocsection{Filters}
 
@@ -581,7 +628,7 @@ This filter attempts to fit a series of parabolic (or higher order single-term) 
 
 \tocsubsection{Square Snip}
 
-This is a very fast background removal method based on the Peak Stripping algorithm. It iteratively replaces signal with the average of the points $(-window, +window)$ channels apart if that average is less than the existing signal. By taking a double square root of the signal and then reversing it afterwards, the number if iterations required is greatly reduced. Because noise-reduction filters are separate and composable, this version of the algorithm does not do any smoothing of it's own.
+This is a very fast background removal method based on the Peak Stripping algorithm. It iteratively replaces signal with the average of the points $(-window, +window)$ channels apart if that average is less than the existing signal. By taking a double square root of the signal and then reversing it afterwards, the number if iterations required is greatly reduced. Because noise-reduction filters are separate and composable, this version of the algorithm does not do any smoothing itself.
 
 
 
@@ -635,7 +682,18 @@ This filter smooths signal per-channel by shrinking a moving-average window unti
 \end{itemize}
 
 
+\chapter{Filtering Example}
 
+This example uses the Normalizer Filter.
+
+When detector deadtime is very high, the detector cannot keep up with the incoming x-rays. For example, low energy x-rays such as those coming from \element{Ar} may not get counted and mapping the distribution of \element{Ar} will reveal areas of next to no intensity. 
+
+The \command{Normalizer Filer} scales each spectrum so that the intensity at a given channel is always the same. This filter can be used in this case to correct the spectra. By normalizing against a channel from within the \element{Ar} peak, we can mitigate the distortion caused by detector saturation.
+
+Go to the \command{Filters} tab and add the \command{Normalizer Filter} found under the \command{Advanced} filter types. Click on the \button{misc-preferences}{Settings} button to bring up the settings window for the filter. Place the cursor on the \element{Ar} peak in the spectrum and read the channel number and value (counts) from the information found below the spectrum window, and enter them into the appropriate settings fields. Make sure you are viewing the \command{Mean Average} spectrum to get the average value (counts) for the \element{Ar}. Close the edit window.
+
+\clearpage
+\screenshot{normalize-uncorrected-ar}{Uncorrected \element{Ar} with weak signal where \element{Ti} is strongest} \screenshot{normalize-uncorrected-ti}{Uncorrected \element{Ti}} \screenshot{normalize-corrected-ar}{Corrected \element{Ar}} \screenshot{normalize-corrected-ti}{Corrected \element{Ti} with greater maximum intensity}
 
 
 

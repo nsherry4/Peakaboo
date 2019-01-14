@@ -4,14 +4,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPopupMenu;
 
-import eventful.EventfulListener;
 import peakaboo.controller.plotter.PlotController;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
-import swidget.widgets.toggle.ImageToggleButton;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
+import swidget.widgets.buttons.ToggleImageButton;
 
 public class PlotZoomControls extends ImageButton {
 	
@@ -23,7 +23,7 @@ public class PlotZoomControls extends ImageButton {
 	public PlotZoomControls(PlotController controller) {
 		super(StockIcon.FIND);
 		super.withTooltip("Zoom")
-			.withLayout(Layout.IMAGE)
+			.withLayout(ImageButtonLayout.IMAGE)
 			.withBordered(false);
 		
 		this.controller = controller;
@@ -31,20 +31,15 @@ public class PlotZoomControls extends ImageButton {
 		zoomPanel = new ClearPanel();
 		zoomPanel.setBorder(Spacing.bMedium());
 		
-		zoomSlider = new ZoomSlider(10, 1000, 10);
+		zoomSlider = new ZoomSlider(10, 1000, 10, value -> {
+			controller.view().setZoom(value / 100f);
+		});
 		zoomSlider.setOpaque(false);
 		zoomSlider.setValue(100);
-		zoomSlider.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				controller.view().setZoom(zoomSlider.getValue() / 100f);
-			}
-		});
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
 
 		
-		final ImageToggleButton lockHorizontal = new ImageToggleButton(StockIcon.MISC_LOCKED, "", "Lock Vertical Zoom to Window Size");
+		final ToggleImageButton lockHorizontal = new ToggleImageButton("", StockIcon.MISC_LOCKED).withTooltip("Lock Vertical Zoom to Window Size");
 		lockHorizontal.setSelected(true);
 		lockHorizontal.addActionListener(e -> {
 			controller.view().setLockPlotHeight(lockHorizontal.isSelected());

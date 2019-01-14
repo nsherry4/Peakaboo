@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 
@@ -45,19 +45,19 @@ class GuidedFittingWidget extends TSSelectorGroup
 	
 
 	@Override
-	public List<TransitionSeries> getTransitionSeries()
+	public List<ITransitionSeries> getTransitionSeries()
 	{
 		return selectors.stream().map(s -> s.getTransitionSeries()).collect(toList());
 	}
 
-	public TransitionSeries getActiveTransitionSeries()
+	public ITransitionSeries getActiveTransitionSeries()
 	{
 		return selectors.get(activeIndex).getTransitionSeries();		
 	}
 	
 
 	@Override
-	public void setTransitionSeriesOptions(final List<TransitionSeries> tss)
+	public void setTransitionSeriesOptions(final List<ITransitionSeries> tss)
 	{
 		selectors.get(activeIndex).setTransitionSeries(tss);
 	}
@@ -149,7 +149,7 @@ class GuidedFittingWidget extends TSSelectorGroup
 
 		final ImageButton edit = new ImageButton(StockIcon.EDIT_EDIT, IconSize.BUTTON)
 				.withTooltip("Edit this fitting")
-				.withLayout(Layout.IMAGE)
+				.withLayout(ImageButtonLayout.IMAGE)
 				.withBordered(false);
 
 		edit.addActionListener(new ActionListener() {

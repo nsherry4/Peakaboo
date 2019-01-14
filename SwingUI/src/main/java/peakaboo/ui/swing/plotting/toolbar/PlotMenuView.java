@@ -5,142 +5,24 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
-import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
-import peakaboo.display.plot.ChannelCompositeMode;
+import peakaboo.controller.plotter.view.ChannelCompositeMode;
 import peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {
 
-	public PlotMenuView(PlotPanel plot, PlotController controller) {
+	private JCheckBoxMenuItem logPlot, consistentScale, monochrome, raw, fittings;
+	private JCheckBoxMenuItem markings, intensities;
+	private JRadioButtonMenuItem individual, average, maximum;
 	
-
-		final JMenuItem logPlot, axes, monochrome, title, raw, fittings;
-
-		
-		logPlot = PlotMenuUtils.createMenuCheckItem(plot,
-				"Logarithmic Scale", null, "Toggles the plot between a linear and logarithmic scale",
-				b -> {
-					controller.view().setViewLog(b);
-				},
-				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), KeyEvent.VK_L
-		);
-		logPlot.setSelected(controller.view().getViewLog());
-		
-		axes = PlotMenuUtils.createMenuCheckItem(plot,
-				"Axes", null, "Toggles display of axes and grid lines",
-				b -> {
-					controller.view().setShowAxes(b);
-				},
-				null, null
-		);
-		axes.setSelected(controller.view().getShowAxes());
-
-		title = PlotMenuUtils.createMenuCheckItem(plot,
-				"Title", null, "Toggles display of the current data set's title",
-				b -> {
-					controller.view().setShowTitle(b);
-				},
-				null, null
-		);
-
-		monochrome = PlotMenuUtils.createMenuCheckItem(plot,
-				"Monochrome", null, "Toggles the monochrome colour palette",
-				b -> {
-					controller.view().setMonochrome(b);
-				},
-				null, KeyEvent.VK_M
-		);
-		
-		
-
-		raw = PlotMenuUtils.createMenuCheckItem(plot,
-				"Raw Data Outline", null, "Toggles an outline of the original raw data",
-				b -> {
-					controller.view().setShowRawData(b);
-				},
-				null, KeyEvent.VK_O
-		);
-		
-		fittings = PlotMenuUtils.createMenuCheckItem(plot,
-				"Individual Fittings", null, "Switches between showing all fittings as a single curve and showing all fittings individually",
-				b -> {
-					controller.view().setShowIndividualSelections(b);
-				},
-				null, KeyEvent.VK_O
-		);	
-		
-		this.add(logPlot);
-		this.add(axes);
-		this.add(title);
-		this.add(monochrome);
-		
-		this.add(raw);
-		this.add(fittings);
-
-
-		// Element Drawing submenu
-		JMenu elementDrawing = new JMenu("Curve Fit");
-		final JCheckBoxMenuItem etitles, emarkings, eintensities;
-
-		
-		etitles = PlotMenuUtils.createMenuCheckItem(plot,
-				"Element Names", null, "Label fittings with the names of their elements",
-				b -> {
-					controller.view().setShowElementTitles(b);
-				},
-				null, null
-		);
-		elementDrawing.add(etitles);
-
-		
-		emarkings = PlotMenuUtils.createMenuCheckItem(plot,
-				"Markings", null, "Label fittings with lines denoting their energies",
-				b -> {
-					controller.view().setShowElementMarkers(b);
-				},
-				null, null
-		);
-		elementDrawing.add(emarkings);
-
-		
-		eintensities = PlotMenuUtils.createMenuCheckItem(plot,
-				"Heights", null, "Label fittings with their heights",
-				b -> {
-					controller.view().setShowElementIntensities(b);
-				},
-				null, null
-		);
-		elementDrawing.add(eintensities);
-
-		
-		this.add(elementDrawing);
-
-
-		this.addSeparator();
-		
-		JCheckBoxMenuItem consistentScale = PlotMenuUtils.createMenuCheckItem(plot,
-				"Use Consistent Scale", null, "All spectra in a dataset will be displayed with a consisntent scale",
-				b -> {
-					controller.view().setConsistentScale(b);
-				},
-				null, null
-		);
-		consistentScale.setSelected(controller.view().getConsistentScale());
-		this.add(consistentScale);
-		
-		
-		this.addSeparator();
-		
-
-
-		final JRadioButtonMenuItem individual, average, maximum;
+	private PlotController controller;
+	
+	public PlotMenuView(PlotPanel plot, PlotController controller) {
+		this.controller = controller;
 
 		ButtonGroup viewGroup = new ButtonGroup();
 
@@ -179,48 +61,130 @@ public class PlotMenuView extends JPopupMenu {
 		viewGroup.add(maximum);
 		this.add(maximum);
 		
+		
+		
+		
+		
+		
+		
+		
+		this.addSeparator();
+		
+		
+		
+
+
+
 
 		
-		controller.addListener(new EventfulTypeListener<String>() {
+		logPlot = PlotMenuUtils.createMenuCheckItem(plot,
+				"Logarithmic Scale", 
+				null, 
+				"Toggles the plot between a linear and logarithmic scale",
+				controller.view()::setViewLog,
+				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), 
+				KeyEvent.VK_L
+		);
 
-			public void change(String s)
-			{
+		consistentScale = PlotMenuUtils.createMenuCheckItem(plot,
+				"Consistent Scale", 
+				null, 
+				"All spectra in a dataset will be displayed with a consisntent scale",
+				controller.view()::setConsistentScale,
+				null, 
+				null
+		);
+				
+		fittings = PlotMenuUtils.createMenuCheckItem(plot,
+				"Individual Fittings", 
+				null, 
+				"Switches between showing all fittings as a single curve and showing all fittings individually",
+				controller.view()::setShowIndividualSelections,
+				null, 
+				KeyEvent.VK_O
+		);
 
-				logPlot.setSelected(controller.view().getViewLog());
-				axes.setSelected(controller.view().getShowAxes());
-				title.setSelected(controller.view().getShowTitle());
-				monochrome.setSelected(controller.view().getMonochrome());
+		markings = PlotMenuUtils.createMenuCheckItem(plot,
+				"Transition Lines", 
+				null, 
+				"Label fittings with lines denoting their transition energies",
+				controller.view()::setShowElementMarkers,
+				null, null
+		);
 
-				etitles.setSelected(controller.view().getShowElementTitles());
-				emarkings.setSelected(controller.view().getShowElementMarkers());
-				eintensities.setSelected(controller.view().getShowElementIntensities());
+		intensities = PlotMenuUtils.createMenuCheckItem(plot,
+				"Fitting Intensities", 
+				null, 
+				"Label fittings with their intensities",
+				controller.view()::setShowElementIntensities,
+				null, 
+				null
+		);
+	
+		raw = PlotMenuUtils.createMenuCheckItem(plot,
+				"Raw Data Outline", 
+				null, 
+				"Toggles an outline of the original raw data",
+				controller.view()::setShowRawData,
+				null, 
+				KeyEvent.VK_O
+		);		
 
-				switch (controller.view().getChannelCompositeMode())
-				{
+		monochrome = PlotMenuUtils.createMenuCheckItem(plot,
+				"Monochrome", 
+				null, 
+				"Toggles the monochrome colour palette",
+				controller.view()::setMonochrome,
+				null, 
+				KeyEvent.VK_M
+		);
+		
 
-					case NONE:
-						individual.setSelected(true);
-						break;
-					case AVERAGE:
-						average.setSelected(true);
-						break;
-					case MAXIMUM:
-						maximum.setSelected(true);
-						break;
 
-				}
+		this.add(logPlot);
+		this.add(consistentScale);
+		this.add(fittings);
+		this.add(markings);
+		this.add(intensities);
+		this.add(raw);
+		this.add(monochrome);
 
-				raw.setSelected(controller.view().getShowRawData());
-				fittings.setSelected(controller.view().getShowIndividualSelections());
-
-			}
+		
+		updateWidgetValues();
+		controller.addListener(s -> {
+			updateWidgetValues();
 		});
 		
 	}
 
-	public void setWidgetState(boolean hasData) {
-		// TODO Auto-generated method stub
+	private void updateWidgetValues() {
 		
+		logPlot.setSelected(controller.view().getViewLog());
+		monochrome.setSelected(controller.view().getMonochrome());
+		markings.setSelected(controller.view().getShowElementMarkers());
+		intensities.setSelected(controller.view().getShowElementIntensities());
+		raw.setSelected(controller.view().getShowRawData());
+		fittings.setSelected(controller.view().getShowIndividualSelections());
+		consistentScale.setSelected(controller.view().getConsistentScale());
+
+		switch (controller.view().getChannelCompositeMode())
+		{
+
+			case NONE:
+				individual.setSelected(true);
+				break;
+			case AVERAGE:
+				average.setSelected(true);
+				break;
+			case MAXIMUM:
+				maximum.setSelected(true);
+				break;
+		}
+		
+	}
+	
+	public void setWidgetState(boolean hasData) {
+		//View controls don't get disabled when there's no dataset present
 	}
 	
 }

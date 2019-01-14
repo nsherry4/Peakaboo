@@ -6,7 +6,6 @@ import java.awt.Insets;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -23,6 +22,7 @@ import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
 import peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeak;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
@@ -31,30 +31,21 @@ import peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
-import swidget.widgets.HeaderBox;
-import swidget.widgets.ImageButton;
-import swidget.widgets.SettingsPanel;
-import swidget.widgets.SettingsPanel.LabelPosition;
 import swidget.widgets.Spacing;
+import swidget.widgets.layerpanel.HeaderLayer;
+import swidget.widgets.layout.SettingsPanel;
+import swidget.widgets.layout.SettingsPanel.LabelPosition;
 
-public class AdvancedOptionsPanel extends JPanel {
+public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
-
+		super(parent, true);
+		getHeader().setCentre("Advanced Options");
+		
 		SettingsPanel master = new SettingsPanel();
 		master.addSetting(peakFitting(controller));
 		master.setBorder(Spacing.bLarge());
-		
-		this.setLayout(new BorderLayout());
-		this.add(master, BorderLayout.CENTER);
-		
-		
-		
-		
-		JButton close = new ImageButton("Close").withAction(() -> parent.popLayer());
-		HeaderBox box = new HeaderBox(null, "Advanced Options", close);
-		
-		this.add(box, BorderLayout.NORTH);
+		setBody(master);
 		
 	}
 
@@ -145,7 +136,8 @@ public class AdvancedOptionsPanel extends JPanel {
 				f -> f.getClass() == controller.fitting().getFittingSolver().getClass(), 
 				f -> controller.fitting().setFittingSolver(f), 
 				new GreedyFittingSolver(),
-				new OptimizingFittingSolver()
+				new OptimizingFittingSolver(),
+				new MultisamplingOptimizingFittingSolver()
 			);
 		build(panel, solversBox, "Multi-Curve Solver", "The strategy used to determine how overlapping element emission curves coexist.", true);
 		

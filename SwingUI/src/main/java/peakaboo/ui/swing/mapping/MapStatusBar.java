@@ -1,19 +1,22 @@
 package peakaboo.ui.swing.mapping;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.UIManager;
+import javax.swing.border.MatteBorder;
 
+import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
-import scitypes.Coord;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 class MapStatusBar extends JPanel {
 
@@ -40,22 +43,28 @@ class MapStatusBar extends JPanel {
 		
 		
 		//zoom controls
-		ZoomSlider zoom = new ZoomSlider(10, 100, 1);
+		ZoomSlider zoom = new ZoomSlider(10, 100, 1, value -> {
+			controller.getSettings().getView().setZoom(value / 10f);
+		});
 		zoom.setOpaque(false);
 		zoom.setBorder(Spacing.bMedium());
 		
 		JPopupMenu zoomMenu = new JPopupMenu();
 		zoomMenu.setBorder(Spacing.bNone());
 		zoomMenu.add(zoom);
-		ImageButton zoomButton = new ImageButton(StockIcon.FIND).withTooltip("Zoom").withLayout(Layout.IMAGE).withBordered(false);
+		ImageButton zoomButton = new ImageButton(StockIcon.FIND).withTooltip("Zoom").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
 		zoomButton.addActionListener(e -> {
 			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
 		});
 		
 		add(zoomButton, BorderLayout.EAST);
-		zoom.addListener(() -> {
-			controller.getSettings().getView().setZoom(zoom.getValue()/10f);
-		});
+
+		
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		this.setBorder(new MatteBorder(1, 0, 0, 0, dividerColour));
 		
 		
 		
@@ -75,8 +84,7 @@ class MapStatusBar extends JPanel {
 			return;
 		}
 
-		int index = mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x;
-		index++;
+		int index = (mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x) + 1;
 		
 		if (controller.getSettings().getView().isValidPoint(mapCoord))
 		{

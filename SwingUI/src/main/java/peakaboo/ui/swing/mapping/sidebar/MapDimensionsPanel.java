@@ -2,26 +2,26 @@ package peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
-import javax.swing.border.TitledBorder;
 
+import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.MapperPanel;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.Event;
 import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
-import scitypes.Coord;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
-import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
+import swidget.widgets.layerpanel.ModalLayer;
 
 public class MapDimensionsPanel extends JPanel {
 
@@ -30,12 +30,12 @@ public class MapDimensionsPanel extends JPanel {
 	
 	public MapDimensionsPanel(MapperPanel tabPanel, MappingController controller) {
 				
-		this.setBorder(new TitledBorder("Dimensions"));
+		setName("Dimensions");
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = Spacing.iTiny();
+		c.insets = new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.tiny);
 		c.ipadx = 0;
 		c.ipady = 0;
 
@@ -78,7 +78,7 @@ public class MapDimensionsPanel extends JPanel {
 			ImageButton magic = new ImageButton("Guess Dimensions")
 					.withIcon("auto", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Try to detect the map's dimensions.")
-					.withLayout(Layout.IMAGE_ON_SIDE)
+					.withLayout(ImageButtonLayout.IMAGE_ON_SIDE)
 					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;
@@ -89,14 +89,15 @@ public class MapDimensionsPanel extends JPanel {
 				StreamExecutor<Coord<Integer>> guessTask = controller.mapsController.guessDataDimensions();
 				StreamExecutorView view = new StreamExecutorView(guessTask);
 				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
+				ModalLayer layer = new ModalLayer(tabPanel, panel);
 				guessTask.addListener(event -> {
 					SwingUtilities.invokeLater(() -> {
 						if (event == Event.ABORTED) {
-							tabPanel.popLayer();
+							tabPanel.removeLayer(layer);
 						}
 						if (event == Event.COMPLETED) {
 						
-							tabPanel.popLayer();
+							tabPanel.removeLayer(layer);
 							
 							Coord<Integer> guess = guessTask.getResult().orElse(null);
 							if (guess != null) {
@@ -108,7 +109,7 @@ public class MapDimensionsPanel extends JPanel {
 						}
 					});
 				});
-				tabPanel.pushLayer(new ModalLayer(tabPanel, panel));
+				tabPanel.pushLayer(layer);
 				guessTask.start();				
 
 			});
@@ -116,7 +117,7 @@ public class MapDimensionsPanel extends JPanel {
 		} else {
 			ImageButton reset = new ImageButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
 					.withTooltip("Reset the dimensions to those given in the data set.")
-					.withLayout(Layout.IMAGE)
+					.withLayout(ImageButtonLayout.IMAGE)
 					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;

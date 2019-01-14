@@ -1,93 +1,52 @@
 package peakaboo.ui.swing;
 
-import java.awt.Dimension;
+import java.io.File;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.ezware.common.Strings;
-import com.ezware.dialog.task.TaskDialog;
-
+import eventful.EventfulConfig;
+import peakaboo.calibration.CalibrationPluginManager;
 import peakaboo.common.Env;
-import peakaboo.common.MemoryProfile;
+import peakaboo.common.PeakabooConfiguration;
+import peakaboo.common.PeakabooConfiguration.MemorySize;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.common.MemoryProfile.Size;
-import peakaboo.curvefit.peak.table.CombinedPeakTable;
-import peakaboo.curvefit.peak.table.KrausePeakTable;
 import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.table.XrayLibPeakTable;
+import peakaboo.curvefit.peak.table.SerializedPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
-import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterFrame;
+import peakaboo.ui.swing.environment.DesktopApp;
+import peakaboo.ui.swing.plotting.PlotFrame;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
 import swidget.Swidget;
+import swidget.dialogues.ErrorDialog;
 import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
+import swidget.widgets.layerpanel.LayerPanelConfig;
 
 
 
 public class Peakaboo
 {
 	private static Timer gcTimer;
+	public static PlotFrame plotWindow;
 	
+	public static final boolean SHOW_QUANTITATIVE = false;
 
-	private static void showError(Throwable e, String message) {
-		showError(e, message, null);
+	private static void showError(Throwable throwable, String message) {
+		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
+		errorDialog.setVisible(true);
 	}
-	
-	private static void showError(Throwable e, String message, String text)
-	{
-		
-		SwingUtilities.invokeLater(() -> {
-			TaskDialog errorDialog = new TaskDialog("Peakaboo Error");
-			errorDialog.setIcon(StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON));
-			errorDialog.setInstruction(message);
-			
-			String realText = text;
-			
-			if (realText != null) {
-				realText += "\n";
-			} else if (e != null) {
-				if (e.getMessage() != null) {
-					realText = e.getMessage() + "\n";
-				}
-				realText += "The problem is of type " + e.getClass().getSimpleName();
-			}
-			
-			errorDialog.setText(realText);
-				
-			JTextArea stacktrace = new JTextArea();
-			stacktrace.setEditable(false);
-			stacktrace.setText((e != null) ? Strings.stackStraceAsString(e) : "No additional information available");
-			
-			JScrollPane scroller = new JScrollPane(stacktrace);
-			scroller.setPreferredSize(new Dimension(500, 200));
-			errorDialog.getDetails().setExpandableComponent(scroller);
-			errorDialog.getDetails().setExpanded(true);
-		
-			errorDialog.show();
-		});
-			
-	}
-	
 
 	private static void warnDevRelease() {
 		if (!Version.release){
@@ -102,7 +61,7 @@ public class Peakaboo
 	private static void warnLowMemory() {
 		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
-		if (MemoryProfile.size == Size.SMALL){
+		if (PeakabooConfiguration.memorySize == MemorySize.TINY){
 			String message = "This system's Java VM is only allocated " + Env.maxHeap()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
@@ -120,20 +79,19 @@ public class Peakaboo
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
-			new TabbedPlotterFrame();
-		} catch (Exception e) {
-			
-			PeakabooLog.get().log(Level.SEVERE, "Critical Error in Peakaboo", e);
-			
-			//if the user chooses to close rather than restart, break out of the loop
-			showError(e, "Peakaboo has encountered a problem and must exit");
+			plotWindow = new PlotFrame();
+		} catch (Throwable e) {
+			PeakabooLog.get().log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
 			System.exit(1);
-			
 		}
 		
 	}
 	
 	private static void errorHook() {
+		
+
+		
+		//Set error handler that shows a popup
 		PeakabooLog.getRoot().addHandler(new Handler() {
 			
 			@Override
@@ -197,6 +155,12 @@ public class Peakaboo
 		}
 	}
 	
+	private static void uiPerformanceTune() {
+		if (PeakabooConfiguration.memorySize == MemorySize.TINY || PeakabooConfiguration.memorySize == MemorySize.SMALL) {
+			LayerPanelConfig.blur = false;
+		}
+	}
+	
 	public static void run() {
 		
 		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
@@ -205,7 +169,8 @@ public class Peakaboo
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		
+		peakaboo.common.PeakabooConfiguration.diskstore = true;
+		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
@@ -217,20 +182,43 @@ public class Peakaboo
 		//do this in a separate thread so that it proceeds in parallel 
 		//with all the other tasks, since this is usually the longest 
 		//running init job
-		Thread peakLoader = new Thread(() -> PeakTable.SYSTEM.getAll());
+		Thread peakLoader = new Thread(() -> {
+			PeakTable original = PeakTable.SYSTEM.getSource();
+			String filename;
+			if (Version.release) {
+				filename = "derived-peakfile-" + Version.longVersionNo + ".dat";
+			} else {
+				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".dat";
+			}
+			File peakdir = DesktopApp.appDir("PeakTable");
+			peakdir.mkdirs();
+			File peakfile = new File(DesktopApp.appDir("PeakTable") + "/" + filename);
+			
+			PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
+		});
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
 		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
 			setLaF(laf);
-			PeakabooLog.init();
+			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();
 			startGCTimer();
 			warnLowMemory();
 			warnDevRelease();
-			DataSourcePluginManager.SYSTEM.load();
-			FilterPluginManager.SYSTEM.load();
-			DataSinkPluginManager.SYSTEM.load();
+			uiPerformanceTune();
+
+			//Init plugins
+			//TODO: This try-catch should be more granular, maybe in the managers themselves?
+			try {
+				FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+				DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
+				DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
+				CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
+			} catch (Throwable e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to load plugins", e);
+			}
+			
 			try {
 				peakLoader.join();
 			} catch (InterruptedException e) {

@@ -13,11 +13,11 @@ import javax.swing.Scrollable;
 
 import eventful.EventfulListener;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 public abstract class TSSelectorGroup extends JPanel implements Scrollable
@@ -40,7 +40,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		addButton = new ImageButton()
 				.withIcon(StockIcon.EDIT_ADD, IconSize.BUTTON)
 				.withTooltip("Add")
-				.withLayout(Layout.IMAGE)
+				.withLayout(ImageButtonLayout.IMAGE)
 				.withBordered(false);
 		addButton.addActionListener(new ActionListener() {
 
@@ -59,8 +59,8 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	
 	protected abstract void refreshGUI();
-	public abstract void setTransitionSeriesOptions(final List<TransitionSeries> tss);
-	public abstract List<TransitionSeries> getTransitionSeries();
+	public abstract void setTransitionSeriesOptions(final List<ITransitionSeries> tss);
+	public abstract List<ITransitionSeries> getTransitionSeries();
 	
 	protected void removeTSSelector(TSSelector tssel)
 	{
@@ -97,7 +97,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		ImageButton remove = new ImageButton()
 				.withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON)
 				.withTooltip("Remove")
-				.withLayout(Layout.IMAGE)
+				.withLayout(ImageButtonLayout.IMAGE)
 				.withBordered(false);
 
 		remove.addActionListener(new ActionListener() {
@@ -127,7 +127,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	protected final void TSSelectorUpdated(final boolean active)
 	{
 		controller.clearProposedTransitionSeries();
-		List<TransitionSeries> tss = getTransitionSeries();
+		List<ITransitionSeries> tss = getTransitionSeries();
 		if (tss == null) return;
 		
 		//add all of the transition series that come back from the summation widget

@@ -8,25 +8,30 @@ import javax.swing.Box;
 import javax.swing.JToolBar;
 
 import peakaboo.controller.plotter.PlotController;
+import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ToolbarImageButton;
+import swidget.widgets.buttons.ToolbarImageButton;
 
 public class PlotToolbar extends JToolBar {
 
 	private PlotController controller;
 	private PlotPanel plot;
 	
-	private ImageButton toolbarSnapshot;
-	private ImageButton toolbarMap;
-	private ImageButton toolbarInfo;
+	private ToolbarImageButton exportMenuButton;
+	private ToolbarImageButton saveButton;
+	private ToolbarImageButton toolbarMap;
+	private ToolbarImageButton toolbarConcentrations;
+	private ToolbarImageButton toolbarInfo;
 
 	
 	private PlotMenuEnergy energyMenu;
 	private PlotMenuView viewMenu;
 	private PlotMenuMain mainMenu;
+	private PlotMenuExport exportMenu;
+	
+	 
 	
 	//===MAIN MENU WIDGETS===
 	
@@ -50,34 +55,61 @@ public class PlotToolbar extends JToolBar {
 		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
-		ImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set");
+		ToolbarImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set or session");
 		ibutton.addActionListener(e -> plot.actionOpenData());
 		this.add(ibutton, c);
 
 		// controls.add(button);
 
-		toolbarSnapshot = new ToolbarImageButton("Save Image", StockIcon.DEVICE_CAMERA).withTooltip("Save a picture of the current plot");
-		toolbarSnapshot.addActionListener(e -> plot.actionSavePicture());
-		c.gridx += 1;
-		this.add(toolbarSnapshot, c);
 
+
+		c.gridx += 1;
+		saveButton = new ToolbarImageButton("Save", StockIcon.DOCUMENT_SAVE_AS).withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use");
+		saveButton.withAction(plot::actionSaveSession);
+		this.add(saveButton, c);
+		
+		c.gridx += 1;
+		this.add(createExportMenuButton(), c);
+		
+
+		c.gridx += 1;
+		this.add(new JToolBar.Separator( null ), c);
+		
+		
+		
 		toolbarInfo = new ToolbarImageButton("Scan Info", StockIcon.BADGE_INFO).withTooltip("Displays extended information about this data set");
 		toolbarInfo.addActionListener(e -> plot.actionShowInfo());
 		c.gridx += 1;
 		toolbarInfo.setEnabled(false);
 		this.add(toolbarInfo, c);
 	
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			toolbarConcentrations = new ToolbarImageButton("Concentration")
+					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
+					.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
+					.withSignificance(false);
+			toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
+			
+			c.gridx += 1;
+			toolbarConcentrations.setEnabled(false);
+			this.add(toolbarConcentrations, c);
+		}
 		
-		toolbarMap = new ImageButton("Map Fittings")
+		toolbarMap = new ToolbarImageButton("Map Fittings")
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
-				.withLayout(ToolbarImageButton.significantLayout);
+				.withSignificance(true);
 		toolbarMap.addActionListener(e -> plot.actionMap());
 		
 		c.gridx += 1;
 		toolbarMap.setEnabled(false);
 		this.add(toolbarMap, c);
 
+		
+
+
+		
+		
 		c.gridx += 1;
 		c.weightx = 1.0;
 		this.add(Box.createHorizontalGlue(), c);
@@ -97,21 +129,31 @@ public class PlotToolbar extends JToolBar {
 	
 	public void setWidgetState(boolean hasData) {
 		
-		toolbarSnapshot.setEnabled(hasData);
 		toolbarInfo.setEnabled(hasData);
+		if (Peakaboo.SHOW_QUANTITATIVE) toolbarConcentrations.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
 		
 		if (hasData) {
 			toolbarMap.setEnabled(controller.fitting().canMap() && controller.data().getDataSet().getDataSource().isContiguous());
 		}
 		
 		
+		exportMenuButton.setEnabled(hasData);
+		saveButton.setEnabled(hasData);
+		
 		energyMenu.setWidgetState(hasData);
 		viewMenu.setWidgetState(hasData);
 		mainMenu.setWidgetState(hasData);
+		exportMenu.setWidgetState(hasData);
 		
 		
 	}
 	
+	private ToolbarImageButton createExportMenuButton() {
+		exportMenuButton = new ToolbarImageButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Data");
+		exportMenu = new PlotMenuExport(plot);
+		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
+		return exportMenuButton;
+	}
 
 	private ToolbarImageButton createEnergyMenuButton() {
 		ToolbarImageButton menuButton = new ToolbarImageButton().withIcon("menu-energy").withTooltip("Energy & Peak Calibration");

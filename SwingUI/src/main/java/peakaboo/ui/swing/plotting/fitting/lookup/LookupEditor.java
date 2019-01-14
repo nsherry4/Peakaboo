@@ -14,9 +14,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import peakaboo.controller.plotter.fitting.FittingController;
 import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesType;
-import peakaboo.ui.swing.plotting.fitting.TSWidget;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionShell;
 import swidget.widgets.Spacing;
 
 
@@ -24,7 +23,7 @@ import swidget.widgets.Spacing;
 class LookupEditor extends DefaultTreeCellEditor
 {
 
-	private TSWidget	tswidget;
+	private LookupWidget	tswidget;
 	private JLabel						tstLabel;
 	private FittingController			controller;
 	private DefaultTreeCellRenderer		cellRenderer;
@@ -39,7 +38,7 @@ class LookupEditor extends DefaultTreeCellEditor
 		this.cellRenderer = renderer;
 		this.controller = controller;
 
-		tswidget = new TSWidget(false);
+		tswidget = new LookupWidget();
 		tswidget.setOpaque(true);
 		
 
@@ -69,11 +68,11 @@ class LookupEditor extends DefaultTreeCellEditor
 
 		Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
 
-		if (value instanceof TransitionSeries)
+		if (value instanceof ITransitionSeries)
 		{
 
-			TransitionSeries ts = (TransitionSeries) value;
-			tswidget.setName(ts.type.toString());
+			ITransitionSeries ts = (ITransitionSeries) value;
+			tswidget.setName(ts.getShell().toString());
 
 			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tswidget.setForeground(cellRenderer.getTextSelectionColor());
@@ -118,7 +117,7 @@ class LookupEditor extends DefaultTreeCellEditor
 		Object selected = tree.getLastSelectedPathComponent();
 
 		if (selected == null) return false;
-		if (selected instanceof TransitionSeriesType) return false;
+		if (selected instanceof TransitionShell) return false;
 		if (selected instanceof String) return false;
 		return true;
 	}

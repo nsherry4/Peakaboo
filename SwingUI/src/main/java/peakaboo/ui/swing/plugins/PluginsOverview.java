@@ -1,72 +1,67 @@
 package peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
-import net.sciencestudio.bolt.plugin.core.BoltPluginController;
-import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import peakaboo.datasink.plugin.DataSinkPluginManager;
-import peakaboo.datasink.plugin.JavaDataSinkPlugin;
-import peakaboo.common.Apps;
-import peakaboo.common.Configuration;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
+import peakaboo.calibration.CalibrationPluginManager;
+import peakaboo.calibration.CalibrationReference;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.datasink.plugin.DataSinkPlugin;
+import peakaboo.datasink.plugin.DataSinkPluginManager;
+import peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.datasource.plugin.JavaDataSourcePlugin;
-import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
+import peakaboo.ui.swing.Peakaboo;
+import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.FileDrop;
 import stratus.StratusLookAndFeel;
-import stratus.theme.DarkTheme;
+import stratus.controls.ButtonLinker;
 import stratus.theme.LightTheme;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ButtonBox;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.HeaderBox;
-import swidget.widgets.HeaderBoxPanel;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.ButtonSize;
-import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonSize;
+import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
-import swidget.widgets.Spacing;
+import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layout.ButtonBox;
 
-public class PluginsOverview extends JPanel {
+public class PluginsOverview extends HeaderLayer {
 
 	JPanel details;
 	JTree tree;
@@ -75,44 +70,39 @@ public class PluginsOverview extends JPanel {
 	JButton close, add, remove, reload, browse, download;
 	
 	public PluginsOverview(LayerPanel parent) {
-		super(new BorderLayout());
-		
+		super(parent, true);
 		this.parent = parent;
+		getContentRoot().setPreferredSize(new Dimension(800, 350));
 		
+		//body
 		JPanel body = new JPanel(new BorderLayout());
-		setPreferredSize(new Dimension(800, 350));
 		body.add(pluginTree(), BorderLayout.WEST);
 		details = new JPanel(new BorderLayout());
+		details.add(new PluginMessageView("No Selection", 0), BorderLayout.CENTER);
 		body.add(details, BorderLayout.CENTER);
-				
-		close = new ImageButton("Close").withAction(() -> parent.popLayer());
-		
-		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Import Plugins").withAction(this::add);
-		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Remove Plugins").withAction(this::removeSelected);
-		
-		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Reload Plugins").withAction(this::reload);
-		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ButtonSize.LARGE).withBordered(false).withTooltip("Get More Plugins").withAction(this::download);
-		
-		ButtonBox left = new ButtonBox(Spacing.tiny, false);
-		left.setOpaque(false);
-		left.addLeft(add);
-		left.addLeft(remove);
-		left.addLeft(reload);
-		left.addLeft(new ClearPanel()); //spacing
-		left.addLeft(browse);
-		left.addLeft(download);
-		
-		HeaderBoxPanel main = new HeaderBoxPanel(new HeaderBox(left, "Manage Plugins", close), body);
-		
-		this.add(main, BorderLayout.CENTER);
-		
 		new FileDrop(body, files -> {
 			for (File file : files) {
-				addJar(file);
+				addPluginFile(file);
 			}
 		});
-
+		setBody(body);
+		
+		
+		//header controls
+		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
+		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		remove.setEnabled(false);
+		
+		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
+		
+		ButtonLinker edits = new ButtonLinker(add, remove, reload);
+		ButtonLinker tools = new ButtonLinker(browse, download);
+		
+		getHeader().setLeft(edits);
+		getHeader().setRight(tools);
+		getHeader().setCentre("Manage Plugins");
 		
 	}
 	
@@ -122,37 +112,37 @@ public class PluginsOverview extends JPanel {
 				return;
 			}
 			
-			addJar(result.get());
-			
+			addPluginFile(result.get());
+
 		});
 	}
 	
-	private boolean isRemovable(BoltPluginController<? extends BoltPlugin> plugin) {
+	private boolean isRemovable(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		return plugin.getSource() != null;
 	}
 	
-	private BoltPluginController<? extends BoltPlugin> selectedPlugin() {
+	private BoltPluginPrototype<? extends BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
 		if (node == null) {
 			return null;
 		}
-		if (!(node.getUserObject() instanceof BoltPluginController<?>)) {
+		if (!(node.getUserObject() instanceof BoltPluginPrototype<?>)) {
 			return null;
 		}
 		
-		BoltPluginController<? extends BoltPlugin> plugin = (BoltPluginController<? extends BoltPlugin>) node.getUserObject();
+		BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>) node.getUserObject();
 		return plugin;
 	}
 	
 	private void removeSelected() {	
-		BoltPluginController<? extends BoltPlugin> plugin = selectedPlugin();
+		BoltPluginPrototype<? extends BoltPlugin> plugin = selectedPlugin();
 		if (plugin != null) {
 			remove(plugin);	
 		}
 	}
 	
-	private void remove(BoltPluginController<? extends BoltPlugin> plugin) {
+	private void remove(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		/*
 		 * This is a little tricky. There's no rule that says that each plugin is in 
 		 * it's own jar file. We need to confirm with the user that they want to 
@@ -168,11 +158,11 @@ public class PluginsOverview extends JPanel {
 			return;
 		}
 		
-		File jar;
+		File file;
 		BoltPluginSet<? extends BoltPlugin> set;
 		try {
-			jar = new File(plugin.getSource().toURI());
-			set = manager.pluginsInJar(jar);
+			file = new File(plugin.getSource().toURI());
+			set = manager.pluginsInFile(file);
 		} catch (URISyntaxException e) {
 			PeakabooLog.get().log(Level.WARNING, "Cannot lookup jar for plugin", e);
 			return;
@@ -188,7 +178,7 @@ public class PluginsOverview extends JPanel {
 				MessageType.QUESTION)
 			.addRight(
 				new ImageButton("Delete").withAction(() -> {
-					manager.removeJar(jar);
+					manager.removeFile(file);
 					this.reload();
 				}).withStateCritical()
 				)
@@ -203,8 +193,8 @@ public class PluginsOverview extends JPanel {
 		buff.append("<ul>");
 		for (Object o : stuff) {
 			String name = o.toString();
-			if (o instanceof BoltPluginController<?>) {
-				BoltPluginController<?> plugin = (BoltPluginController<?>) o;
+			if (o instanceof BoltPluginPrototype<?>) {
+				BoltPluginPrototype<?> plugin = (BoltPluginPrototype<?>) o;
 				name = plugin.getName() + " (v" + plugin.getVersion() + ")";
 			}
 			buff.append("<li>" + name + "</li>");
@@ -213,7 +203,7 @@ public class PluginsOverview extends JPanel {
 		return buff.toString();
 	}
 	
-	private BoltPluginManager<? extends BoltPlugin> managerForPlugin(BoltPluginController<? extends BoltPlugin> plugin) {
+	private BoltPluginManager<? extends BoltPlugin> managerForPlugin(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == JavaDataSourcePlugin.class) {
@@ -228,18 +218,29 @@ public class PluginsOverview extends JPanel {
 			return FilterPluginManager.SYSTEM;
 		}
 		
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			if (pluginBaseClass == CalibrationReference.class) {
+				return CalibrationPluginManager.SYSTEM;
+			}
+		}
+		
 		return null;
 		
 	}
 	
-	private void addJar(File jar) {
+
+	/**
+	 * Add a jar file containing plugins
+	 */
+	private void addPluginFile(File file) {
 		
-		boolean added = false;
+		boolean handled = false;
 		
 		try {
-			added |= addJarToManager(jar, DataSourcePluginManager.SYSTEM);
-			added |= addJarToManager(jar, DataSinkPluginManager.SYSTEM);
-			added |= addJarToManager(jar, FilterPluginManager.SYSTEM);		
+			handled |= addFileToManager(file, DataSourcePluginManager.SYSTEM);
+			handled |= addFileToManager(file, DataSinkPluginManager.SYSTEM);
+			handled |= addFileToManager(file, FilterPluginManager.SYSTEM);
+			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.SYSTEM);
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
@@ -247,10 +248,10 @@ public class PluginsOverview extends JPanel {
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
 					MessageType.ERROR).showIn(parent);
-			added = true;
+			handled = true;
 		}
 		
-		if (!added) {
+		if (!handled) {
 			new LayerDialog(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
@@ -258,24 +259,19 @@ public class PluginsOverview extends JPanel {
 		}
 		
 		reload();
-		
-		
 
 	}
 	
-	private boolean addJarToManager(File jar, BoltPluginManager<? extends BoltPlugin> manager) throws BoltImportException {
+	/**
+	 * Try adding a jar to a specific plugin manager. Return true if the given manager accepted the jar
+	 */
+	private boolean addFileToManager(File file, BoltPluginManager<? extends BoltPlugin> manager) throws BoltImportException {
 		
-		if (!manager.jarContainsPlugins(jar)) {
+		if (!manager.fileContainsPlugins(file)) {
 			return false;
 		}
-		
-		Optional<File> upgradeTarget = manager.jarUpgradeTarget(jar);
-		//looks like this jar is an upgrade for an existing jar
-		if (upgradeTarget.isPresent()) {
-			manager.removeJar(upgradeTarget.get());
-		}
-		
-		BoltPluginSet<? extends BoltPlugin> plugins = manager.importJar(jar);
+
+		BoltPluginSet<? extends BoltPlugin> plugins = manager.importOrUpgradeFile(file);
 		
 		this.reload();
 		new LayerDialog(
@@ -293,11 +289,12 @@ public class PluginsOverview extends JPanel {
 		DataSourcePluginManager.SYSTEM.reload();
 		DataSinkPluginManager.SYSTEM.reload();
 		FilterPluginManager.SYSTEM.reload();
+		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.SYSTEM.reload();
 		tree.setModel(buildTreeModel());
 	}
 	
 	private void browse() {
-		File appDataDir = Configuration.appDir("Plugins");
+		File appDataDir = DesktopApp.appDir("Plugins");
 		appDataDir.mkdirs();
 		Desktop desktop = Desktop.getDesktop();
 		try {
@@ -308,32 +305,41 @@ public class PluginsOverview extends JPanel {
 	}
 	
 	private void download() {
-		Apps.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
+		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
 	}
 	
 	private TreeModel buildTreeModel() {
 		
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
 		
-		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode("Data Sources");
+		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(DataSourcePluginManager.SYSTEM);
 		plugins.add(sourcesNode);
-		for (BoltPluginController<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sourcesNode.add(node);
 		}
 		
-		DefaultMutableTreeNode sinksNode = new DefaultMutableTreeNode("Data Sinks");
+		DefaultMutableTreeNode sinksNode = new DefaultMutableTreeNode(DataSinkPluginManager.SYSTEM);
 		plugins.add(sinksNode);
-		for (BoltPluginController<? extends DataSinkPlugin> source :  DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends DataSinkPlugin> source :  DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sinksNode.add(node);
 		}
 		
-		DefaultMutableTreeNode filtersNode = new DefaultMutableTreeNode("Filters");
+		DefaultMutableTreeNode filtersNode = new DefaultMutableTreeNode(FilterPluginManager.SYSTEM);
 		plugins.add(filtersNode);
-		for (BoltPluginController<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			filtersNode.add(node);
+		}
+		
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.SYSTEM);
+			plugins.add(calibrationsNode);
+			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins().getAll()) {
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
+				calibrationsNode.add(node);
+			}
 		}
 		
 		
@@ -345,7 +351,7 @@ public class PluginsOverview extends JPanel {
 			
 		tree = new JTree(buildTreeModel());
 
-		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+		DefaultTreeCellRenderer renderer = new PluginTreeRenderer();
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
 		renderer.setBorder(Spacing.bSmall());
 		tree.setCellRenderer(renderer);
@@ -356,11 +362,17 @@ public class PluginsOverview extends JPanel {
 		tree.addTreeSelectionListener(tse -> {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			details.removeAll();
-			if (node == null || !node.isLeaf()) { 
-				details.add(new JPanel(), BorderLayout.CENTER);
+			if (node == null) { 
+				details.add(new PluginMessageView("No Selection", 0), BorderLayout.CENTER);
+				remove.setEnabled(false);
+			} else if (!node.isLeaf()) {
+				
+				BoltPluginManager<? extends BoltPlugin> manager = (BoltPluginManager<? extends BoltPlugin>) node.getUserObject();
+				String interfaceDesc = manager.getInterfaceDescription();
+				details.add(new PluginMessageView(interfaceDesc, 300), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else {
-				details.add(new PluginView((BoltPluginController<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
+				details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
 				remove.setEnabled(isRemovable(selectedPlugin()));
 			}
 			details.revalidate();
@@ -369,7 +381,12 @@ public class PluginsOverview extends JPanel {
 		
 		JScrollPane scroller = new JScrollPane(tree);
 		scroller.setPreferredSize(new Dimension(200, 300));
-		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		scroller.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
 		return scroller;
 		
 	}
@@ -381,14 +398,14 @@ public class PluginsOverview extends JPanel {
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(640, 480));
 		
-		ImageButton b1 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
-		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		ImageButton b1 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
+		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
 
-		ImageButton b3 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
-		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		ImageButton b3 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
+		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
 		
-		ImageButton b5 = new ImageButton("OK").withButtonSize(ButtonSize.LARGE);
-		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ButtonSize.LARGE);
+		ImageButton b5 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
+		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
 		
 		ButtonBox box = new ButtonBox();
 		
@@ -402,7 +419,6 @@ public class PluginsOverview extends JPanel {
 		box.addRight(b6);
 		
 		
-		System.out.println(frame.getContentPane().getLayout());
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(box, BorderLayout.SOUTH);
 		

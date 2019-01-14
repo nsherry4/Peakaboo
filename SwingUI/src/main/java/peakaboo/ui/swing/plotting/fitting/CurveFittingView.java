@@ -7,13 +7,13 @@ import java.awt.Dimension;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import cyclops.util.Mutable;
 import eventful.EventfulTypeListener;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.TransitionSeries;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
@@ -22,7 +22,6 @@ import peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
 import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
-import scitypes.util.Mutable;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
@@ -144,26 +143,28 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	public void autoAdd() {
 		
 		if (plotController.data().hasDataSet() && plotController.fitting().getMaxEnergy() > 0f) {
-			ExecutorSet<List<TransitionSeries>> exec = controller.autodetectPeaks();
+			ExecutorSet<List<ITransitionSeries>> exec = controller.autodetectPeaks();
 			ExecutorSetView execPanel = new ExecutorSetView(exec); 
+			
+			ModalLayer layer = new ModalLayer(plotPanel, execPanel);
 			
 			Mutable<Boolean> ran = new Mutable<>(false);
 			exec.addListener(() -> {
 				if (exec.getCompleted() && !ran.get()) {
 					ran.set(true);
-					plotPanel.popLayer();
+					plotPanel.removeLayer(layer);
 					changed();
 					exec.discard();
 				} else if (exec.isAborted() && !ran.get()) {
 					ran.set(true);
-					plotPanel.popLayer();
+					plotPanel.removeLayer(layer);
 					exec.discard();
 				}
 			});		
 			
 			
 			
-			plotPanel.pushLayer(new ModalLayer(plotPanel, execPanel));
+			plotPanel.pushLayer(layer);
 			exec.startWorking();
 			
 		} else {

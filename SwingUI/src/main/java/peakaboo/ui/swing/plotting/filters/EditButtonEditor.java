@@ -2,13 +2,8 @@ package peakaboo.ui.swing.plotting.filters;
 
 
 
-import static java.util.stream.Collectors.toList;
-
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +18,9 @@ import peakaboo.controller.plotter.filtering.FilteringController;
 import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
-import swidget.widgets.ImageButton;
-import swidget.widgets.ImageButton.Layout;
 import swidget.widgets.Spacing;
+import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.buttons.ImageButtonLayout;
 
 
 
@@ -35,7 +30,7 @@ class EditButtonEditor extends DefaultCellEditor
 	private ImageButton				button;
 	private JPanel 					container;
 	
-	private Container				owner;
+	private Window					owner;
 
 	private Filter					filter;
 	private FilteringController		controller;
@@ -46,7 +41,7 @@ class EditButtonEditor extends DefaultCellEditor
 	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
 
-	public EditButtonEditor(FilteringController controller, Container owner)
+	public EditButtonEditor(FilteringController controller, Window owner)
 	{
 		super(new JCheckBox());
 
@@ -54,7 +49,7 @@ class EditButtonEditor extends DefaultCellEditor
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(Layout.IMAGE).withBordered(false);
+		button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
 		button.addActionListener(e -> fireEditingStopped());
 		button.setOpaque(false);
 		
@@ -100,12 +95,7 @@ class EditButtonEditor extends DefaultCellEditor
 
 			if (!settingsDialogs.containsKey(filter)) {
 				
-				if (owner instanceof Window) {
-					dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, (Window)owner);	
-				} else {
-					dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, null);
-				}
-				
+				dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, owner);	
 				dialog.setHelpMessage(filter.getFilterDescription());
 				dialog.setHelpTitle(filter.getFilterName());
 				settingsDialogs.put(filter, dialog);

@@ -3,10 +3,9 @@ package peakaboo.ui.swing.mapping.sidebar;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.TitledBorder;
 
 import peakaboo.controller.mapper.MappingController;
-import swidget.widgets.SettingsPanel;
+import swidget.widgets.layout.SettingsPanel;
 
 public class MapSelectionPanel extends SettingsPanel {
 
@@ -16,7 +15,8 @@ public class MapSelectionPanel extends SettingsPanel {
 	
 	
 	public MapSelectionPanel(MappingController controller) {
-		this.setBorder(new TitledBorder("Selection"));
+		
+		setName("Selection");
 		
 		String thresholdTip = "<html>Controls the selection threshold.<br/>Points selected will be between (v/threshold, v*threshold),<br/>where v is the value of the clicked point.</html>";
 		SpinnerNumberModel thresholdModel = new SpinnerNumberModel(controller.getSettings().getPointsSelection().getThreshold(), 1.0d, 100.0d, 0.1d);

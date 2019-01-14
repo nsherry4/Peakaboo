@@ -4,6 +4,7 @@ package peakaboo.ui.swing.mapping;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
@@ -11,60 +12,85 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
+import cyclops.Coord;
+import cyclops.util.Mutable;
+import cyclops.visualization.SaveableSurface;
+import cyclops.visualization.SurfaceType;
+import cyclops.visualization.backend.awt.AwtSurfaceFactory;
+import cyclops.visualization.backend.awt.SavePicture;
 import eventful.EventfulTypeListener;
 import peakaboo.common.PeakabooLog;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.controller.mapper.settings.AreaSelection;
-import peakaboo.display.map.MapDisplayMode;
-import peakaboo.ui.swing.plotting.tabbed.TabbedPlotterManager;
-import scidraw.swing.SavePicture;
-import scitypes.Coord;
+import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import peakaboo.display.map.MapRenderData;
+import peakaboo.display.map.MapRenderSettings;
+import peakaboo.display.map.Mapper;
+import peakaboo.display.map.modes.MapDisplayMode;
+import peakaboo.ui.swing.plotting.ExportPanel;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
+import swidget.widgets.ClearPanel;
 import swidget.widgets.DraggingScrollPaneListener;
 import swidget.widgets.DraggingScrollPaneListener.Buttons;
-import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.Spacing;
 import swidget.widgets.tabbedinterface.TabbedInterface;
+import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
 
-public class MapperPanel extends LayerPanel
-{
+public class MapperPanel extends TabbedLayerPanel {
 
 	private MapCanvas				canvas;
 	
 	protected MappingController		controller;
-	protected TabbedPlotterManager 	parentPlotter;
+	TabbedInterface<TabbedLayerPanel> parentPlotter;
 	
 	private JLabel					warnOnTooSmallDataset;
 	private MapStatusBar			statusBar;
 	
 	private MapperToolbar			toolbar;
 
-	MapperPanel(MappingController controller, TabbedPlotterManager parentPlotter, TabbedInterface<MapperPanel> owner)
-	{
-
+	public MapperPanel(MappingController controller, TabbedInterface<TabbedLayerPanel> parentPlotter, TabbedInterface<TabbedLayerPanel> owner) {
+		super(owner);
+		
 		this.controller = controller;
 		this.parentPlotter = parentPlotter;
 
 		this.controller.addListener(s -> {
-			if (! s.equals(MappingController.UpdateType.AREA_SELECTION.toString())) setNeedsRedraw();
-			if (! s.equals(MappingController.UpdateType.POINT_SELECTION.toString())) setNeedsRedraw();
-				
-			owner.setTabTitle(this, getTitle());
+			boolean needsRedraw = true;
+			if (s.equals(UpdateType.AREA_SELECTION.toString())) {
+				needsRedraw = false;
+			}
+			if (s.equals(UpdateType.POINT_SELECTION.toString())) {
+				needsRedraw = false;
+			}
+			if (needsRedraw) {
+				setNeedsRedraw();
+			}
+
+			owner.setTabTitle(this, getTabTitle());
 			
 			canvas.updateCanvasSize();
 			repaint();
@@ -76,14 +102,14 @@ public class MapperPanel extends LayerPanel
 			}
 		});
 
-		owner.setTabTitle(this, getTitle());
+		owner.setTabTitle(this, getTabTitle());
 		
 
 		init();
 
 	}
 	
-	public String getTitle() {
+	public String getTabTitle() {
 		return controller.getSettings().getMapFittings().mapLongTitle();
 	}
 
@@ -91,14 +117,31 @@ public class MapperPanel extends LayerPanel
 	private void init()
 	{
 
-		JPanel contentLayer = this.getContentLayer();
+		JComponent contentLayer = this.getContentLayer();
 		contentLayer.setLayout(new BorderLayout());
 		
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new MapperSidebar(this, controller), createCanvasPanel());
-		split.setResizeWeight(0);
-		split.setOneTouchExpandable(true);
-		split.setBorder(Spacing.bNone());
-		contentLayer.add(split, BorderLayout.CENTER);	
+		MapperSidebar sidebar = new MapperSidebar(this, controller);
+		JPanel mapCanvas = createCanvasPanel();
+		
+		
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		sidebar.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
+		ClearPanel split = new ClearPanel(new BorderLayout());
+		sidebar.setPreferredSize(new Dimension(225, sidebar.getPreferredSize().height));
+		split.add(sidebar, BorderLayout.WEST);
+		split.add(mapCanvas, BorderLayout.CENTER);
+		
+		contentLayer.add(split, BorderLayout.CENTER);
+		
+		
+//		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, mapCanvas);
+//		split.setResizeWeight(0);
+//		split.setOneTouchExpandable(true);
+//		split.setBorder(Spacing.bNone());
+//		contentLayer.add(split, BorderLayout.CENTER);
 		
 		toolbar = new MapperToolbar(this, controller);
 		contentLayer.add(toolbar, BorderLayout.NORTH);
@@ -121,6 +164,7 @@ public class MapperPanel extends LayerPanel
 			public void mouseMoved(MouseEvent e)
 			{
 				statusBar.showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
+				sidebar.showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
 			}
 
 			public void mouseClicked(MouseEvent e){
@@ -219,24 +263,127 @@ public class MapperPanel extends LayerPanel
 		
 		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
 		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().getView().savePictureFolder, txt, file -> {
-			if (!file.isPresent()) {
-				return;
-			}
-			try
-			{
-				controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
-				FileOutputStream os = new FileOutputStream(file.get());
-				os.write(controller.getSettings().getMapFittings().mapAsCSV().getBytes());
-				os.close();
-			}
-			catch (IOException e)
-			{
-				PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
-			}
+			if (!file.isPresent()) { return; }
+			controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
+			actionSaveCSV(file.get());
 		});
 
 	}
 	
+	void actionSaveCSV(File file) {
+		try	{
+			FileOutputStream os = new FileOutputStream(file);
+			actionSaveCSV(os);
+			os.close();
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
+		}
+	}
+	
+	void actionSaveCSV(OutputStream os) throws IOException {
+		os.write(controller.getSettings().getMapFittings().mapAsCSV().getBytes());
+	}
+	
+	void actionSaveArchive() {
+		Mutable<ExportPanel> export = new Mutable<>(null);
+		
+		export.set(new ExportPanel(this, canvas, () -> {
+			
+			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().getView().savePictureFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+				if (!file.isPresent()) {
+					return;
+				}
+				
+				SurfaceType format = export.get().getPlotFormat();
+				int width = export.get().getImageWidth();
+				int height = export.get().getImageHeight();
+				
+				try {
+					actionSaveArchive(file.get(), format, width, height);
+				} catch (IOException e) {
+					PeakabooLog.get().log(Level.SEVERE, "Error saving maps as archive", e);
+				}
+				
+				
+			});
+		}));
+	}
+
+	void actionSaveArchive(File file, SurfaceType format, int width, int height) throws IOException {
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
+		ZipEntry e;
+		
+		List<ITransitionSeries> tss = controller.getSettings().getMapFittings().getVisibleTransitionSeries();
+		
+		
+		/*
+		 * Little different here than in most places. Saving an image usually just
+		 * re-uses the GUI component and has it render to a different backend. This
+		 * time, we do it manually so that we can avoid spamming the UI with
+		 * events/redraws. We also only draw composite maps here, since drawing
+		 * per-element overlays/ratios doesn't make a lot of sense.
+		 */
+		Coord<Integer> size = new Coord<>(width, height);
+		SaveableSurface context;		
+		MapRenderSettings settings = controller.getRenderSettings();
+				
+		for (ITransitionSeries ts : tss) {
+		
+			Mapper mapper = new Mapper();
+			MapRenderData data = new MapRenderData();
+			data.compositeData = controller.getSettings().getMapFittings().getCompositeMapData(Optional.of(ts));
+			data.maxIntensity = controller.getSettings().getMapFittings().sumAllTransitionSeriesMaps().max();
+			
+			//image
+			String ext = "";
+			switch (format) {
+			case PDF: 
+				ext = "pdf";
+				break;
+			case RASTER:
+				ext = "png";
+				break;
+			case VECTOR:
+				ext = "svg";
+				break;			
+			}
+			e = new ZipEntry(ts.toString() + "." + ext);
+			zos.putNextEntry(e);
+			switch (format) {
+			case PDF:
+				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.PDF, width, height);
+				mapper.draw(data, settings, context, size);
+				context.write(zos);
+				break;
+			case RASTER:
+				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.RASTER, width, height);
+				mapper.draw(data, settings, context, size);
+				context.write(zos);
+				break;
+			case VECTOR:
+				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.VECTOR, width, height);
+				mapper.draw(data, settings, context, size);
+				context.write(zos);
+				break;					
+			}
+			zos.closeEntry();
+			
+			//csv
+			e = new ZipEntry(ts.toString() + ".csv");
+			zos.putNextEntry(e);
+			actionSaveCSV(zos);
+			zos.closeEntry();
+			
+		}
+		
+		e = new ZipEntry("session.peakaboo");
+		zos.putNextEntry(e);
+		zos.write(controller.getSavedSettings().serialize().getBytes());
+		zos.closeEntry();
+		
+		
+		zos.close();
+	}
 
 
 	private JPanel createCanvasPanel()
@@ -316,6 +463,7 @@ public class MapperPanel extends LayerPanel
 	{
 		canvas.setNeedsRedraw();
 	}
+
 
 	
 

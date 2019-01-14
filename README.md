@@ -3,7 +3,7 @@ XRF Visualization Software
 
 Peakaboo allows users to identify the spectral origins of the XRF spectrum using a technique that fits all components of the K, L, or M spectrum including escape peaks and pileup peaks, and then plots their spatial intensity distributions as maps.
 
-![Peakaboo](https://raw.githubusercontent.com/nsherry4/Peakaboo/master/Documentation/screenshot.png)
+![Peakaboo](https://raw.githubusercontent.com/nsherry4/Peakaboo/master/Documentation/github/screenshot.png)
 
 [Downloads for Windows, Mac, Linux](https://github.com/nsherry4/Peakaboo/releases)
 
@@ -34,12 +34,16 @@ Peakaboo allows users who are comfortable with Java programming to extend Peakab
 
 To get started creating your own filters or file format support, all you need is the Peakaboo JAR to build against. For more information on creating plugins, see the user manual.
 
+# Library and Plugins
+
+Peakaboo can also be used as a library. This is also the easiest target to build custom plugins against. [Read more about Peakaboo as a library without the GUI](Documentation/github/LibPeakaboo.md).
+
 
 # Building
 
 Peakaboo builds and manages its dependencies with maven, however it does also depend on several other libraries on GitHub which are not in maven. These are:
 
- - **[nsherry4/Libraries](https://github.com/nsherry4/Libraries)** Collection of small libraries not yet broken out into separate repositories
+  - **[nsherry4/Cyclops](https://github.com/nsherry4/Cyclops)** Scientific Data Type & Visualisation Library 
   - **[nsherry4/Eventful](https://github.com/nsherry4/Eventful)**  Simple, UI Friendly Event Library
   - **[nsherry4/Swidget](https://github.com/nsherry4/Swidget)**  Mixed Collection of Swing UI components 
   - **[nsherry4/Plural](https://github.com/nsherry4/Plural)**   Library to help parallelize tasks, show progress, and allow user cancel 

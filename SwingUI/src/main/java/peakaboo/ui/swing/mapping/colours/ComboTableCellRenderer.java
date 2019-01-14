@@ -15,8 +15,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import peakaboo.common.Version;
-import peakaboo.display.map.OverlayColour;
-import peakaboo.display.map.RatioColour;
+import peakaboo.display.map.modes.OverlayColour;
+import peakaboo.display.map.modes.RatioColour;
 import swidget.widgets.Spacing;
 
 
@@ -35,16 +35,16 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		if ((value != null) && (value instanceof OverlayColour))
 		{
 			//Overlay Mode
-			Color c = ((OverlayColour) value).toColor();
-			renderer.setIcon(new SquareIcon( c ));
+			Color c = new Color(((OverlayColour) value).toARGB());
+			renderer.setIcon(new ColourRenderer( c ));
 			renderer.setText("");
 			renderer.setBackground( c );
 		} 
 		else if (value != null && value instanceof Integer) 
 		{
 			//Ratio Mode
-			Color c = RatioColour.values()[((Integer)value) - 1].toColor();
-			renderer.setIcon(new SquareIcon( c ));
+			Color c = new Color(RatioColour.values()[((Integer)value) - 1].toARGB(), true);
+			renderer.setIcon(new ColourRenderer( c ));
 			renderer.setText("");
 			renderer.setBackground( c );
 		}
@@ -57,7 +57,8 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 		}
 	}
 
-
+	//For combobox editor
+	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 			boolean cellHasFocus)
 	{
@@ -73,6 +74,8 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 	}
 
 
+	//For table renderer
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 			int row, int column)
 	{
@@ -83,7 +86,7 @@ public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCell
 			hasFocus,
 			row,
 			column);
-		
+				
 		configureRenderer(tableRenderer, value);
 		return tableRenderer;
 	}
