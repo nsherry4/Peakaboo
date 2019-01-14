@@ -91,7 +91,7 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 
 	@Override
 	public String toString() {
-		return name();
+		return name() + " (Beta)";
 	}
 	
 	
