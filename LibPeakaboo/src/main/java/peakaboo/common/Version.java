@@ -37,7 +37,7 @@ public class Version {
 	
 	
 	public final static int versionNoMajor = 5;
-	public final static int versionNoMinor = 1;
+	public final static int versionNoMinor = 2;
 	public final static int versionNoPoint = 0;
 	
 	
