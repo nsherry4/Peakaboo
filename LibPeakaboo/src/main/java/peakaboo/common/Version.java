@@ -28,7 +28,7 @@ public class Version {
 	}
 	
 	
-	public final static boolean release = true;
+	public final static boolean release = false;
 	
 	public final static String devReleaseDescription = "Development Version - " + buildDate;
 	public final static String releaseDescription = release ? "" : devReleaseDescription;
@@ -38,7 +38,7 @@ public class Version {
 	
 	public final static int versionNoMajor = 5;
 	public final static int versionNoMinor = 2;
-	public final static int versionNoPoint = 0;
+	public final static int versionNoPoint = 1;
 	
 	
 	public final static String longVersionNo =  
