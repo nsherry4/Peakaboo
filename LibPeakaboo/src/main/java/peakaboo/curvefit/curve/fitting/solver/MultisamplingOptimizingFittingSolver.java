@@ -33,7 +33,6 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 	
 	@Override
 	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter) {
-		long t1 = System.currentTimeMillis();
 		
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
@@ -79,8 +78,6 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
 		
-		long t2 = System.currentTimeMillis();
-		System.out.println(t2 - t1);
 		return evaluate(scalings, context);
 		
 		
