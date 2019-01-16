@@ -32,7 +32,7 @@ abstract class BoltJavaFunction {
 	}
 	public String getIncludeText()
 	{
-		return "import fava.signatures.*;\nimport java.util.function.*;\n" + includeText;
+		return "import java.util.function.*;\n" + includeText;
 	}
 	
 	public void setFunctionText(String function)
