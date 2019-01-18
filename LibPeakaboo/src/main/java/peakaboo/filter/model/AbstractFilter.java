@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
@@ -30,9 +29,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	
 	private List<Value<?>>		parameters;
 	public boolean				enabled;
-	
-	protected ReadOnlySpectrum	previewCache;
-	
+		
 	
 	//==============================================
 	// PLUGIN METHODS
@@ -101,12 +98,6 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	protected void addParameter(Parameter<?>... params)
 	{
 		for (Parameter<?> param : params) { addParameter(param); }
-	}
-	
-	@Deprecated
-	protected final void setPreviewCache(ReadOnlySpectrum data)
-	{
-		this.previewCache = new ISpectrum(data);
 	}
 
 
