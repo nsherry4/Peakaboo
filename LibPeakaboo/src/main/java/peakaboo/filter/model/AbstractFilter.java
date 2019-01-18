@@ -52,38 +52,12 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 		this.enabled = true;
 	}
 
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getFilterName()
-	 */
-	@Override
-	public abstract String getFilterName();
-	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getFilterDescription()
-	 */
-	@Override
-	public abstract String getFilterDescription();
-	
-
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getFilterType()
-	 */
-	@Override
-	public abstract FilterType getFilterType();
-
-
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getParameters()
-	 */
 	@Override
 	public final List<Value<?>> getParameters()
 	{
 		return this.parameters;
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#setParameters(java.util.Map)
-	 */
 	@Override
 	public final void setParameters(List<Value<?>> params)
 	{
@@ -99,28 +73,13 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	{
 		for (Parameter<?> param : params) { addParameter(param); }
 	}
-
-
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#initialize()
-	 */
-	@Override
-	public abstract void initialize();
 	
 	
 
 	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data);
+		
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#canFilterSubset()
-	 */
-	@Override
-	public abstract boolean canFilterSubset();
-	
-	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#filter(scitypes.Spectrum, boolean)
-	 */
+
 	@Override
 	public ReadOnlySpectrum filter(ReadOnlySpectrum data)
 	{
