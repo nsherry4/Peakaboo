@@ -13,7 +13,7 @@ import cyclops.Spectrum;
 import eventful.EventfulType;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.mapping.results.AreaMapSet;
+import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 
 
@@ -35,7 +35,7 @@ public class MapSetController extends EventfulType<String>
 	 * @param calibrationProfile 
 	 */
 	public void setMapData(
-			AreaMapSet data,
+			MapResultSet data,
 			String datasetName,
 			List<Integer> badPoints,
 			Coord<Integer> dataDimensions,
@@ -47,7 +47,7 @@ public class MapSetController extends EventfulType<String>
 	{
 	
 		
-		mapModel.areaMaps = data;
+		mapModel.mapResults = data;
 		mapModel.datasetTitle = datasetName;
 		mapModel.badPoints = badPoints;
 		
@@ -93,7 +93,7 @@ public class MapSetController extends EventfulType<String>
 	
 	public StreamExecutor<Coord<Integer>> guessDataDimensions() {
 		//We don't need the real calibration profile just to guess the dimensions
-		Spectrum all = mapModel.areaMaps.sumAllTransitionSeriesMaps(new CalibrationProfile());
+		Spectrum all = mapModel.mapResults.sumAllTransitionSeriesMaps(new CalibrationProfile());
 
 		
 		//find the highest average edge delta
@@ -225,9 +225,9 @@ public class MapSetController extends EventfulType<String>
 	}
 	
 
-	public AreaMapSet getAreaMapSet()
+	public MapResultSet getMapResultSet()
 	{
-		return mapModel.areaMaps;
+		return mapModel.mapResults;
 	}
 
 	public CalibrationProfile getCalibrationProfile() {

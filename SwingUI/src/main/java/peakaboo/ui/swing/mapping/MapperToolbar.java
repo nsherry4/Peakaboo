@@ -84,10 +84,10 @@ class MapperToolbar extends JToolBar {
 					indexes.addAll(pointsSelection.getPoints());
 				}
 				
-				List<ITransitionSeries> tss = controller.mapsController.getAreaMapSet().stream().map(r -> r.transitionSeries).collect(toList());
+				List<ITransitionSeries> tss = controller.mapsController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
 				Function<ITransitionSeries, Float> intensityFunction = ts -> {
 					CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
-					ReadOnlySpectrum data = controller.mapsController.getAreaMapSet().getMap(ts).getData(profile);
+					ReadOnlySpectrum data = controller.mapsController.getMapResultSet().getMap(ts).getData(profile);
 					float sum = 0;
 					for (int index : indexes) {
 						sum += data.get(index);

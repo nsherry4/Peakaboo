@@ -15,7 +15,7 @@ import peakaboo.controller.plotter.view.ViewController;
 import peakaboo.controller.settings.SavedSession;
 import peakaboo.display.plot.PlotData;
 import peakaboo.filter.model.Filter;
-import peakaboo.mapping.results.AreaMapSet;
+import peakaboo.mapping.results.MapResultSet;
 import plural.streams.StreamExecutor;
 
 
@@ -201,7 +201,7 @@ public class PlotController extends EventfulType<String>
 	 * @param type The type of {@link FittingTransform} to use in the calculation
 	 * @return
 	 */
-	public StreamExecutor<AreaMapSet> getMapTask() {
+	public StreamExecutor<MapResultSet> getMapTask() {
 		return dataController.getMapTask(
 				filteringController.getActiveFilters(), 
 				fittingController.getFittingSelections(), 

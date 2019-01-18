@@ -8,7 +8,7 @@ import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.SISize;
 import peakaboo.calibration.CalibrationProfile;
-import peakaboo.mapping.results.AreaMapSet;
+import peakaboo.mapping.results.MapResultSet;
 
 
 
@@ -24,7 +24,7 @@ public class MapSetMapData
 	public Coord<Integer>			originalDimensions	= new Coord<Integer>(1, 1);
 	public boolean					originalDimensionsProvided = false;
 	
-	public AreaMapSet				areaMaps			= null;
+	public MapResultSet				mapResults			= null;
 	public String					datasetTitle		= "";
 	
 	public List<Integer>			badPoints			= new ArrayList<Integer>();
@@ -33,7 +33,7 @@ public class MapSetMapData
 
 	public int mapSize()
 	{
-		return areaMaps.size();
+		return mapResults.size();
 	}
 	
 }

@@ -13,27 +13,27 @@ import peakaboo.curvefit.peak.transition.ITransitionSeries;
  * 
  * This class stores the data associated with a single map of a scan. Each map is associated with a single
  * {@link ITransitionSeries}, and can be marked as visible or invisible. When generating or displaying data for
- * more than one TransitionSeries, it may be desirable to use a {@link AreaMapSet} instead of managing the
- * AreaMap objects manually.
+ * more than one TransitionSeries, it may be desirable to use a {@link MapResultSet} instead of managing the
+ * MapResult objects manually.
  * 
  * @author Nathaniel Sherry, 2009
  * 
  */
 
-public class AreaMap implements Cloneable
+public class MapResult implements Cloneable
 {
 
 	private Spectrum data;
 	public ITransitionSeries	transitionSeries;
 
 
-	public AreaMap(ITransitionSeries ts, int mapSize)
+	public MapResult(ITransitionSeries ts, int mapSize)
 	{
 		this.data = new ISpectrum(mapSize, 0.0f);
 		transitionSeries = ts;
 	}
 	
-	protected AreaMap(ITransitionSeries ts, Spectrum data)
+	protected MapResult(ITransitionSeries ts, Spectrum data)
 	{
 		this.transitionSeries = ts;
 		this.data = data;
@@ -46,9 +46,9 @@ public class AreaMap implements Cloneable
 	
 
 	@Override
-	public AreaMap clone()
+	public MapResult clone()
 	{
-		return new AreaMap(transitionSeries, data);
+		return new MapResult(transitionSeries, data);
 	}
 	
 
