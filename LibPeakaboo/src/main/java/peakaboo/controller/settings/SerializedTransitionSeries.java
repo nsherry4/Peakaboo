@@ -2,6 +2,7 @@ package peakaboo.controller.settings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import peakaboo.curvefit.peak.table.PeakTable;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -33,8 +34,8 @@ public class SerializedTransitionSeries
 		
 	}
 	
-	
-	public ITransitionSeries toTS()
+
+	public Optional<ITransitionSeries> toTS()
 	{
 		
 		List<ITransitionSeries> tss = new ArrayList<>();
@@ -47,11 +48,11 @@ public class SerializedTransitionSeries
 				tss.add(created);
 			}
 		}
-		
 		ITransitionSeries ts = ITransitionSeries.pileup(tss);
+		if (ts == null) { return Optional.empty(); }
 		ts.setVisible(this.visible);
 		
-		return ts;
+		return Optional.ofNullable(ts);
 		
 	}
 	

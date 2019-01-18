@@ -2,9 +2,11 @@ package peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import peakaboo.common.PeakabooLog;
@@ -14,6 +16,7 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.escape.EscapePeakType;
 import peakaboo.curvefit.peak.fitting.FittingFunction;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 
 public class SavedFittingSession {
 
@@ -83,14 +86,17 @@ public class SavedFittingSession {
 		//we now convert them back to TransitionSeries
 		controller.fittingModel.selections.clear();
 		for (SerializedTransitionSeries sts : this.fittings) {
-			controller.fittingModel.selections.addTransitionSeries(sts.toTS());
+			Optional<ITransitionSeries> newTs = sts.toTS();
+			if (! newTs.isPresent()) { continue; }
+			controller.fittingModel.selections.addTransitionSeries(newTs.get());
 		}
 		
 		controller.clearAnnotations();
 		if (annotations != null) {
 			for (SerializedTransitionSeries sts : annotations.keySet()) {
-				ITransitionSeries ts = sts.toTS();
-				controller.setAnnotation(ts, annotations.get(sts));
+				Optional<ITransitionSeries> newTs = sts.toTS();
+				if (! newTs.isPresent()) { continue; }
+				controller.setAnnotation(newTs.get(), annotations.get(sts));
 			}
 		}
 		
@@ -99,8 +105,8 @@ public class SavedFittingSession {
 		Class<? extends FittingSolver> fittingSolverClass;
 		try {
 			fittingSolverClass = (Class<? extends FittingSolver>) Class.forName(solver);
-			controller.fittingModel.fittingSolver = fittingSolverClass.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			controller.fittingModel.fittingSolver = fittingSolverClass.getDeclaredConstructor().newInstance();
+		} catch (ReflectiveOperationException | RuntimeException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + solver, e);
 		}
 		
@@ -108,8 +114,8 @@ public class SavedFittingSession {
 		Class<? extends CurveFitter> curveFitterClass;
 		try {
 			curveFitterClass = (Class<? extends CurveFitter>) Class.forName(fitter);
-			controller.fittingModel.curveFitter = curveFitterClass.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			controller.fittingModel.curveFitter = curveFitterClass.getDeclaredConstructor().newInstance();
+		} catch (ReflectiveOperationException | RuntimeException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + fitter, e);
 		}
 		
