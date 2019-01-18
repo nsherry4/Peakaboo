@@ -61,7 +61,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		overlayColour = new HashMap<>();
 		visibility = new HashMap<>();
 		
-		for (ITransitionSeries ts : map.mapsController.getMapResultSet().getAllTransitionSeries()) {
+		for (ITransitionSeries ts : map.mapsController.getAreaMapSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
 			overlayColour.put(ts, OverlayColour.RED);
 			visibility.put(ts, true);
@@ -604,25 +604,25 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	public Spectrum sumGivenTransitionSeriesMaps(List<ITransitionSeries> list)
 	{
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list, getCalibrationProfile());
+		return map.mapsController.getAreaMapSet().sumGivenTransitionSeriesMaps(list, getCalibrationProfile());
 	}
 	
 
 	public Spectrum getMapForTransitionSeries(ITransitionSeries ts)
 	{
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(Collections.singletonList(ts), getCalibrationProfile());
+		return map.mapsController.getAreaMapSet().sumGivenTransitionSeriesMaps(Collections.singletonList(ts), getCalibrationProfile());
 	}
 	
 
 	public Spectrum sumVisibleTransitionSeriesMaps()
 	{	
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries(), getCalibrationProfile());
+		return map.mapsController.getAreaMapSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries(), getCalibrationProfile());
 	}
 	
 
 	public synchronized Spectrum sumAllTransitionSeriesMaps()
 	{		
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visibility.keySet(), getCalibrationProfile());
+		return map.mapsController.getAreaMapSet().sumGivenTransitionSeriesMaps(this.visibility.keySet(), getCalibrationProfile());
 	}
 
 

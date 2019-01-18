@@ -18,60 +18,60 @@ import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 /**
  * 
- * This class stores a set of {@link MapResult}s, and provides convenience methods for setting pixel values,
+ * This class stores a set of {@link AreaMap}s, and provides convenience methods for setting pixel values,
  * visibility and generating map composites.
  * 
  * @author Nathaniel Sherry, 2009
  * 
  */
 
-public class MapResultSet implements Cloneable
+public class AreaMapSet implements Cloneable
 {
 
-	private List<MapResult>	maps;
+	private List<AreaMap>	maps;
 	private int				mapSize;
 
 
 	/**
 	 * 
-	 * Create a new MapResultSet with MapResult objects for the given {@link ITransitionSeries}, and of the given map size
+	 * Create a new AreaMapSet with AreaMap objects for the given {@link ITransitionSeries}, and of the given map size
 	 *  
-	 * @param transitionSeries list of {@link ITransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
-	 * @param mapSize the size of the map data in each of the {@link MapResult}s
+	 * @param transitionSeries list of {@link ITransitionSeries} to store {@link AreaMap}s for in this {@link AreaMapSet}
+	 * @param mapSize the size of the map data in each of the {@link AreaMap}s
 	 */
-	public MapResultSet(List<ITransitionSeries> transitionSeries, int mapSize)
+	public AreaMapSet(List<ITransitionSeries> transitionSeries, int mapSize)
 	{
-		maps = new ArrayList<MapResult>();
+		maps = new ArrayList<AreaMap>();
 		for (ITransitionSeries ts : transitionSeries) {
-			maps.add(new MapResult(ts, mapSize));
+			maps.add(new AreaMap(ts, mapSize));
 		}
 		this.mapSize = mapSize;
 
 	}
 	
-	public MapResultSet(List<MapResult> maps, int mapSize, boolean flagToMakeSignatureDifferent)
+	public AreaMapSet(List<AreaMap> maps, int mapSize, boolean flagToMakeSignatureDifferent)
 	{
 		this.maps = maps;
 		this.mapSize = mapSize;
 	}
 	
 	@Override
-	public MapResultSet clone() throws CloneNotSupportedException
+	public AreaMapSet clone() throws CloneNotSupportedException
 	{
 			
-		List<MapResult> mapresults = new ArrayList<MapResult>();
+		List<AreaMap> areamaps = new ArrayList<AreaMap>();
 		
-		for (MapResult map : maps)
+		for (AreaMap map : maps)
 		{
-			mapresults.add(map.clone());
+			areamaps.add(map.clone());
 		}
 				
-		return new MapResultSet(mapresults, mapSize, true);
+		return new AreaMapSet(areamaps, mapSize, true);
 		
 	}
 	
 	
-	public Stream<MapResult> stream() {
+	public Stream<AreaMap> stream() {
 		return maps.stream();
 	}
 	
@@ -97,12 +97,12 @@ public class MapResultSet implements Cloneable
 
 	/**
 	 * 
-	 * Get a {@link MapResult} at a specific index. Useful for UI lists.
+	 * Get a {@link AreaMap} at a specific index. Useful for UI lists.
 	 * 
 	 * @param index index of the map to retrieve
-	 * @return the {@link MapResult} at the given index
+	 * @return the {@link AreaMap} at the given index
 	 */
-	public MapResult getMap(int index)
+	public AreaMap getMap(int index)
 	{
 		return maps.get(index);
 	}
@@ -110,14 +110,14 @@ public class MapResultSet implements Cloneable
 
 	/**
 	 * 
-	 * Gets the {@link MapResult} related to the given {@link ITransitionSeries}
+	 * Gets the {@link AreaMap} related to the given {@link ITransitionSeries}
 	 * 
-	 * @param ts the {@link ITransitionSeries} to look up the {@link MapResult} with
-	 * @return the {@link MapResult} for the given {@link ITransitionSeries}
+	 * @param ts the {@link ITransitionSeries} to look up the {@link AreaMap} with
+	 * @return the {@link AreaMap} for the given {@link ITransitionSeries}
 	 */
-	public MapResult getMap(ITransitionSeries ts)
+	public AreaMap getMap(ITransitionSeries ts)
 	{
-		for (MapResult m : maps) {
+		for (AreaMap m : maps) {
 			if (m.transitionSeries == ts) return m;
 		}
 		return null;
@@ -125,29 +125,29 @@ public class MapResultSet implements Cloneable
 	
 
 	/**
-	 * Generates a list of all of the TransitionSeries included in this MapResultSet
+	 * Generates a list of all of the TransitionSeries included in this AreaMapSet
 	 */
 	public List<ITransitionSeries> getAllTransitionSeries()
 	{
-		return maps.stream().map(mr -> mr.transitionSeries).collect(toList());
+		return maps.stream().map(am -> am.transitionSeries).collect(toList());
 	}
 	
 	/**
 	 * 
-	 * Places a value at a given index for the {@link MapResult} data associated
+	 * Places a value at a given index for the {@link AreaMap} data associated
 	 * with the given {@link ITransitionSeries}. This method will apply the
 	 * {@link CalibrationProfile} to the added values.
 	 * 
-	 * @param intensity the intensity value to place in the {@link MapResult} data
+	 * @param intensity the intensity value to place in the {@link AreaMap} data
 	 * @param ts        the {@link ITransitionSeries} associated with the desired
-	 *                  {@link MapResult}
+	 *                  {@link AreaMap}
 	 * @param index     the index in the map data at which to place the new value
 	 */
 	public void putIntensityInMapAtPoint(float intensity, ITransitionSeries ts, int index)
 	{	
 		
 		
-		MapResult m = getMap(ts);
+		AreaMap m = getMap(ts);
 		if (m == null) return;
 
 		m.setData(index, intensity);
@@ -156,7 +156,7 @@ public class MapResultSet implements Cloneable
 
 	/**
 	 * 
-	 * Composites the data in all {@link MapResult} into a single map. 
+	 * Composites the data in all {@link AreaMap} into a single map. 
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
@@ -168,7 +168,7 @@ public class MapResultSet implements Cloneable
 	
 	/**
 	 * 
-	 * Composites the data in all {@link MapResult} into a single map. 
+	 * Composites the data in all {@link AreaMap} into a single map. 
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
@@ -177,7 +177,7 @@ public class MapResultSet implements Cloneable
 		
 		Spectrum sums = new ISpectrum(maps.get(0).size(), 0.0f);
 
-		for (MapResult map : maps) {
+		for (AreaMap map : maps) {
 			if (list.contains(map.transitionSeries)) SpectrumCalculations.addLists_inplace(sums, map.getData(profile));
 		}
 
@@ -185,7 +185,7 @@ public class MapResultSet implements Cloneable
 
 	}
 
-	public Iterator<MapResult> iterator()
+	public Iterator<AreaMap> iterator()
 	{
 		return maps.iterator();
 	}

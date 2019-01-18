@@ -80,7 +80,7 @@ import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.mapping.results.AreaMapSet;
 import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import peakaboo.ui.swing.console.DebugConsole;
@@ -652,7 +652,7 @@ public class PlotPanel extends TabbedLayerPanel
 		if (!controller.data().hasDataSet()) return;
 
 
-		StreamExecutor<MapResultSet> mapTask = controller.getMapTask();
+		StreamExecutor<AreaMapSet> mapTask = controller.getMapTask();
 		if (mapTask == null) return;
 
 		StreamExecutorView taskView = new StreamExecutorView(mapTask);
@@ -675,7 +675,7 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			
 			MapperFrame mapperWindow;
-			MapResultSet results = mapTask.getResult().get();
+			AreaMapSet results = mapTask.getResult().get();
 			MapSetController mapData = new MapSetController();
 			
 
