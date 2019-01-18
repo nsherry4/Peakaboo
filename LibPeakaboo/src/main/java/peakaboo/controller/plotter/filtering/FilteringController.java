@@ -27,7 +27,7 @@ public class FilteringController extends Eventful
 			if (plot.currentScan() == null) {
 				return null;
 			}
-			return filteringModel.filters.applyFilters(plot.currentScan(), true);
+			return filteringModel.filters.applyFilters(plot.currentScan());
 		});
 		
 		filteringModel.filterDeltas = new EventfulCache<>(() -> { 

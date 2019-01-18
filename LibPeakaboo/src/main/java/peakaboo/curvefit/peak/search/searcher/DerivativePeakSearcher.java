@@ -25,7 +25,7 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		ReadOnlySpectrum smoothed = new ISpectrum(rawdata);
 		
 		for (int i = 0; i < 3; i++) {
-			smoothed = filter.filter(smoothed, false);
+			smoothed = filter.filter(smoothed);
 		}
 		ReadOnlySpectrum data = smoothed;
 				

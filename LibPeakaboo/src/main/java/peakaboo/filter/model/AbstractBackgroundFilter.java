@@ -103,7 +103,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	@Override
-	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache)
+	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		ReadOnlySpectrum background = getBackground(data);
 		return SpectrumCalculations.subtractLists(data, background);

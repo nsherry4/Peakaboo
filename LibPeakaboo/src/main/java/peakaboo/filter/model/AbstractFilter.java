@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
@@ -30,9 +29,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	
 	private List<Value<?>>		parameters;
 	public boolean				enabled;
-	
-	protected ReadOnlySpectrum	previewCache;
-	
+		
 	
 	//==============================================
 	// PLUGIN METHODS
@@ -55,38 +52,12 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 		this.enabled = true;
 	}
 
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getFilterName()
-	 */
-	@Override
-	public abstract String getFilterName();
-	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getFilterDescription()
-	 */
-	@Override
-	public abstract String getFilterDescription();
-	
-
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getFilterType()
-	 */
-	@Override
-	public abstract FilterType getFilterType();
-
-
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#getParameters()
-	 */
 	@Override
 	public final List<Value<?>> getParameters()
 	{
 		return this.parameters;
 	}
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#setParameters(java.util.Map)
-	 */
 	@Override
 	public final void setParameters(List<Value<?>> params)
 	{
@@ -103,39 +74,18 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 		for (Parameter<?> param : params) { addParameter(param); }
 	}
 	
-	@Deprecated
-	protected final void setPreviewCache(ReadOnlySpectrum data)
-	{
-		this.previewCache = new ISpectrum(data);
-	}
-
-
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#initialize()
-	 */
-	@Override
-	public abstract void initialize();
-	
 	
 
-	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache);
+	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data);
+		
 	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#canFilterSubset()
-	 */
+
 	@Override
-	public abstract boolean canFilterSubset();
-	
-	
-	/* (non-Javadoc)
-	 * @see peakaboo.filter.model.Filter#filter(scitypes.Spectrum, boolean)
-	 */
-	@Override
-	public ReadOnlySpectrum filter(ReadOnlySpectrum data, boolean cache)
+	public ReadOnlySpectrum filter(ReadOnlySpectrum data)
 	{
 		
 		try{
-			ReadOnlySpectrum newdata = filterApplyTo(data, cache);
+			ReadOnlySpectrum newdata = filterApplyTo(data);
 			if (newdata != null) return newdata;
 			return data;
 		}

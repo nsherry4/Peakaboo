@@ -75,7 +75,7 @@ public interface Filter {
 	 * @param cache whether or not this data should be cached for the purposes of drawing on the spectrum
 	 * @return the result of applying the filter to data
 	 */
-	ReadOnlySpectrum filter(ReadOnlySpectrum data, boolean cache);
+	ReadOnlySpectrum filter(ReadOnlySpectrum data);
 	
 	
 

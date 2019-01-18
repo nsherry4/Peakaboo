@@ -853,7 +853,7 @@ public class PlotPanel extends TabbedLayerPanel
 					Mutable<Boolean> errored = new Mutable<>(false);
 					OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(saveFile.get()));
 					stream.forEach(spectrum -> {
-						spectrum = filters.applyFiltersUnsynchronized(spectrum, false);
+						spectrum = filters.applyFiltersUnsynchronized(spectrum);
 						try {
 							osw.write(spectrum.toString() + "\n");
 						} catch (Exception e) { 
