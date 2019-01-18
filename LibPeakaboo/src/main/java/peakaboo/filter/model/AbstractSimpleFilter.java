@@ -6,12 +6,6 @@ import cyclops.Spectrum;
 public abstract class AbstractSimpleFilter extends AbstractFilter
 {
 
-	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache)
-	{
-		return filterApplyTo(data);
-	}
-
 	/**
 	 * Filter the given {@link Spectrum} and return the modified result
 	 * @param data the Spectrum to filter

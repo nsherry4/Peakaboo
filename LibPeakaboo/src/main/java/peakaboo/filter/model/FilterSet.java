@@ -119,27 +119,19 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data) {
-		return applyFilters(data, false);
-	}
-	
-	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data, boolean filtersShouldCache)
+	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data)
 	{
 
-		return applyFiltersUnsynchronized(data, filtersShouldCache);
+		return applyFiltersUnsynchronized(data);
 	}
 
-
-	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data) {
-		return applyFiltersUnsynchronized(data, false);
-	}
 	
-	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, boolean filtersShouldCache)
+	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data)
 	{
 
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled() && !f.isPreviewOnly()) {
-				data = f.filter(data, filtersShouldCache);
+				data = f.filter(data);
 			}
 		}
 		
@@ -193,7 +185,7 @@ public class FilterSet implements Iterable<Filter>
 		
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled()) {
-				current = f.filter(last, false);
+				current = f.filter(last);
 				current = correctNonFinite(current);
 				delta = SpectrumCalculations.subtractLists(last, current, 0f);
 				deltas.put(f, delta);

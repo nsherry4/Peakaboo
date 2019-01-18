@@ -109,7 +109,7 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	
 	
 
-	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache);
+	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data);
 	
 	/* (non-Javadoc)
 	 * @see peakaboo.filter.model.Filter#canFilterSubset()
@@ -122,11 +122,11 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	 * @see peakaboo.filter.model.Filter#filter(scitypes.Spectrum, boolean)
 	 */
 	@Override
-	public ReadOnlySpectrum filter(ReadOnlySpectrum data, boolean cache)
+	public ReadOnlySpectrum filter(ReadOnlySpectrum data)
 	{
 		
 		try{
-			ReadOnlySpectrum newdata = filterApplyTo(data, cache);
+			ReadOnlySpectrum newdata = filterApplyTo(data);
 			if (newdata != null) return newdata;
 			return data;
 		}

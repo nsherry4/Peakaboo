@@ -61,7 +61,7 @@ public class SubFilter extends AbstractFilter
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, boolean cache)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
 	{
 		
 		int start = begin.getValue();
@@ -73,7 +73,7 @@ public class SubFilter extends AbstractFilter
 		Spectrum result = new ISpectrum(data);
 		ReadOnlySpectrum subspectrum = data.subSpectrum(start, stop);
 		
-		subspectrum = filter.getValue().filter(subspectrum, cache);
+		subspectrum = filter.getValue().filter(subspectrum);
 		
 		for (int i = start; i <= stop; i++)
 		{

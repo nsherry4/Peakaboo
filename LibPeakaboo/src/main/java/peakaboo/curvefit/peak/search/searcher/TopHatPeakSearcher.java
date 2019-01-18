@@ -82,7 +82,7 @@ public class TopHatPeakSearcher implements PeakSearcher {
 		ReadOnlySpectrum smoothed = new ISpectrum(data);
 		
 		for (int i = 0; i < 3; i++) {
-			smoothed = filter.filter(smoothed, false);
+			smoothed = filter.filter(smoothed);
 		}
 		
 		

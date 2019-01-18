@@ -66,7 +66,7 @@ public class AggressiveCalibrationSmoother implements CalibrationProcessor {
 		filter.initialize();
 		ReadOnlySpectrum results = values;
 		for (int i = 0; i < this.passes; i++) {
-			results = filter.filter(results, false);
+			results = filter.filter(results);
 		}
 		
 		
