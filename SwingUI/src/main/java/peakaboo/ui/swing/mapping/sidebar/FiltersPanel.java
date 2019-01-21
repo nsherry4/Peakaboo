@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Window;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,15 +14,21 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
+import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
+import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import peakaboo.controller.mapper.MappingController.UpdateType;
 import peakaboo.controller.mapper.filtering.MapFilteringController;
 import peakaboo.mapping.filter.model.MapFilter;
-import peakaboo.mapping.filter.plugin.plugins.AverageMapFilter;
+import peakaboo.mapping.filter.model.MapFilterPluginManager;
+import peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.models.ListTableModel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
+import swidget.widgets.gradientpanel.TitlePaintedPanel;
+import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.listcontrols.ListControls;
 import swidget.widgets.listwidget.ListWidget;
 import swidget.widgets.listwidget.ListWidgetCellEditor;
@@ -111,7 +119,7 @@ public class FiltersPanel extends JPanel {
 					//TODO: does this have to be here, it should be lower (ie not in the ui)
 					controller.updateListeners(UpdateType.FILTER.toString());
 					return;
-				case 1: return; //TODO: Show dialog?
+				case 1: return;
 				case 2: return;
 				default: return;
 				}
@@ -134,8 +142,8 @@ public class FiltersPanel extends JPanel {
 		filterTable.getColumnModel().getColumn(0).setPreferredWidth(32);
 		filterTable.getColumnModel().getColumn(0).setMaxWidth(32);
 		
-		filterTable.getColumnModel().getColumn(1).setCellRenderer(new ListWidgetTableCellRenderer<MapFilter>(new MapFilterSettingsButton()));
-		filterTable.getColumnModel().getColumn(1).setCellEditor(new ListWidgetCellEditor<MapFilter>(new MapFilterSettingsButton()));
+		filterTable.getColumnModel().getColumn(1).setCellRenderer(new ListWidgetTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller)));
+		filterTable.getColumnModel().getColumn(1).setCellEditor(new ListWidgetCellEditor<MapFilter>(new MapFilterSettingsButton(controller)));
 		filterTable.getColumnModel().getColumn(1).setMinWidth(32);
 		filterTable.getColumnModel().getColumn(1).setPreferredWidth(32);
 		filterTable.getColumnModel().getColumn(1).setMaxWidth(32);
@@ -147,9 +155,9 @@ public class FiltersPanel extends JPanel {
 		ImageButton add = new ImageButton(StockIcon.EDIT_ADD)
 			.withTooltip("Add Filter")
 			.withAction(() -> {
-				//layout.show(this, PANEL_ADD);
+				layout.show(this, PANEL_ADD);
 				//TODO: Remove Me
-				controller.add(new AverageMapFilter());
+				//controller.add(new AverageMapFilter());
 		});
 		ImageButton remove = new ImageButton(StockIcon.EDIT_REMOVE)
 			.withTooltip("Remove Filter")
@@ -173,8 +181,35 @@ public class FiltersPanel extends JPanel {
 	}
 
 	private JPanel buildAddPanel() {
+		
+		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.SYSTEM.getPlugins().getAll();
+		TableModel model = new ListTableModel<>(plugins);
+		JTable table = new JTable(model);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.getColumnModel().getColumn(0).setCellRenderer(new ListWidgetTableCellRenderer<>(new MapFilterPluginWidget()));
+		
+		
+		ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK).withText("OK").withBordered(false).withAction(() -> {
+			int index = table.getSelectedRow();
+			MapFilterPlugin plugin = plugins.get(index).create();
+			plugin.initialize();
+			controller.add(plugin);
+			layout.show(this, PANEL_FILTERS);
+		});
+		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL).withText("Cancel").withBordered(false).withAction(() -> {
+			layout.show(this, PANEL_FILTERS);
+		});
+		ButtonBox buttons = new ButtonBox(Spacing.tiny, false);
+		buttons.addCentre(ok);
+		buttons.addCentre(cancel);
+		JPanel header = new TitlePaintedPanel("Add Map Filter", false, buttons);
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(table, BorderLayout.CENTER);
+		panel.add(header, BorderLayout.NORTH);
+		
 		// TODO Auto-generated method stub
-		return new JPanel();
+		return panel;
 	}
 	
 }
@@ -209,7 +244,7 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	private ImageButton button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL);
 	private MapFilter filter;
 	
-	public MapFilterSettingsButton() {
+	public MapFilterSettingsButton(MapFilteringController controller) {
 		
 		setLayout(new BorderLayout());
 		add(button, BorderLayout.CENTER);
@@ -217,8 +252,12 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 		button.withBordered(false);
 		button.setOpaque(false);
 		
+		//TODO: Track all settings dialogs in a map so we don't create duplicates
 		button.withAction(() -> {
-			System.out.println("Show Settings for Filter " + filter);
+			MapFilterDialog dialog = new MapFilterDialog(controller, filter, AutoDialogButtons.CLOSE, null); //TODO: window should not be null
+			dialog.setHelpMessage(filter.getFilterDescription());
+			dialog.setHelpTitle(filter.getFilterName());
+			dialog.initialize();
 		});
 	}
 	
@@ -227,4 +266,42 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 		this.filter = filter;
 	}
 	
+}
+
+class MapFilterPluginWidget extends ListWidget<BoltPluginPrototype<? extends MapFilterPlugin>> {
+
+	private JLabel label = new JLabel();
+	
+	public MapFilterPluginWidget() {
+		label.setIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
+		label.setBorder(Spacing.bMedium());
+		setLayout(new BorderLayout());
+		add(label, BorderLayout.CENTER);
+	}
+	
+	@Override
+	public void setForeground(Color c) {
+		super.setForeground(c);
+		if (label == null) { return; }
+		label.setForeground(c);
+	}
+	
+	@Override
+	protected void onSetValue(BoltPluginPrototype<? extends MapFilterPlugin> value) {
+		label.setText(value.getName());
+	}
+	
+	
+}
+
+class MapFilterDialog extends SwingAutoDialog {
+	
+	MapFilterDialog(MapFilteringController controller, MapFilter filter, AutoDialogButtons buttons, Window window) {
+		super(window, filter.getParameterGroup(), buttons);
+		
+		getGroup().getValueHook().addListener(o -> {
+			controller.filteredDataInvalidated();
+		});
+		
+	}
 }

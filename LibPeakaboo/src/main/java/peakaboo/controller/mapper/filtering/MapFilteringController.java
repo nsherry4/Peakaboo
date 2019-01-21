@@ -55,6 +55,11 @@ public class MapFilteringController extends EventfulType<String> {
 		return filters.size();
 	}
 
+	public void filteredDataInvalidated() {
+		//TODO: We will eventually cache data in here
+		updateListeners(UpdateType.FILTER.toString());
+	}
+
 	
 	
 	

@@ -23,6 +23,7 @@ import peakaboo.curvefit.peak.table.SerializedPeakTable;
 import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterPluginManager;
+import peakaboo.mapping.filter.model.MapFilterPluginManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.PlotFrame;
 import stratus.StratusLookAndFeel;
@@ -212,6 +213,7 @@ public class Peakaboo
 			//TODO: This try-catch should be more granular, maybe in the managers themselves?
 			try {
 				FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+				MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
 				DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 				DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
 				CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
