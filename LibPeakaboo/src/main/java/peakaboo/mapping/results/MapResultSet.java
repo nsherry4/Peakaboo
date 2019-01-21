@@ -160,6 +160,7 @@ public class MapResultSet implements Cloneable
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
+	@Deprecated(forRemoval=true, since="5.3")
 	public Spectrum sumAllTransitionSeriesMaps(CalibrationProfile profile)
 	{
 		return sumGivenTransitionSeriesMaps(getAllTransitionSeries(), profile);
@@ -172,6 +173,7 @@ public class MapResultSet implements Cloneable
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
+	@Deprecated(forRemoval=true, since="5.3")
 	public Spectrum sumGivenTransitionSeriesMaps(Collection<ITransitionSeries> list, CalibrationProfile profile)
 	{
 		

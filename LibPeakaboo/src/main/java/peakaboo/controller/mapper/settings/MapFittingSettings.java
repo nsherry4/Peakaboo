@@ -18,6 +18,7 @@ import cyclops.GridPerspective;
 import cyclops.ISpectrum;
 import cyclops.Pair;
 import cyclops.Ratios;
+import cyclops.ReadOnlySpectrum;
 import cyclops.SigDigits;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
@@ -31,6 +32,11 @@ import peakaboo.display.map.modes.MapDisplayMode;
 import peakaboo.display.map.modes.OverlayChannel;
 import peakaboo.display.map.modes.OverlayColour;
 import peakaboo.mapping.filter.Interpolation;
+import peakaboo.mapping.filter.model.AreaMap;
+import peakaboo.mapping.filter.model.MapFilter;
+import peakaboo.mapping.filter.plugin.plugins.AverageMapFilter;
+import peakaboo.mapping.results.MapResult;
+import peakaboo.mapping.results.MapResultSet;
 
 
 
@@ -604,25 +610,50 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	public Spectrum sumGivenTransitionSeriesMaps(List<ITransitionSeries> list)
 	{
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(list, getCalibrationProfile());
+		Coord<Integer> size = map.getSettings().getView().viewDimensions;
+		
+		//get calibrated map data and generate AreaMaps
+		List<AreaMap> calibrateds = new ArrayList<>();
+		MapResultSet rawmaps = map.mapsController.getMapResultSet();
+		CalibrationProfile profile = getCalibrationProfile();
+		for (ITransitionSeries ts : list) {
+			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
+			calibrateds.add(new AreaMap(calibrated, size));
+		}
+		
+		//filter the maps
+		List<AreaMap> filtereds = new ArrayList<>();
+		for (AreaMap map : calibrateds) {
+			//TODO: Actually filter things
+			filtereds.add(map);
+		}
+		
+		//merge the maps into a single composite map
+		Coord<Integer> newSize = filtereds.get(0).getSize();
+		Spectrum composite = new ISpectrum(newSize.x * newSize.y);
+		for (AreaMap map : filtereds) {
+			SpectrumCalculations.addLists_inplace(composite, map.getData());
+		}
+		return composite;
+		
 	}
 	
 
 	public Spectrum getMapForTransitionSeries(ITransitionSeries ts)
 	{
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(Collections.singletonList(ts), getCalibrationProfile());
+		return sumGivenTransitionSeriesMaps(Collections.singletonList(ts));
 	}
 	
 
 	public Spectrum sumVisibleTransitionSeriesMaps()
 	{	
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(getVisibleTransitionSeries(), getCalibrationProfile());
+		return sumGivenTransitionSeriesMaps(getVisibleTransitionSeries());
 	}
 	
 
 	public synchronized Spectrum sumAllTransitionSeriesMaps()
 	{		
-		return map.mapsController.getMapResultSet().sumGivenTransitionSeriesMaps(this.visibility.keySet(), getCalibrationProfile());
+		return sumGivenTransitionSeriesMaps(new ArrayList<>(this.visibility.keySet()));
 	}
 
 
