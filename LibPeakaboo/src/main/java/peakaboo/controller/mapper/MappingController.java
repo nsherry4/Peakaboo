@@ -7,6 +7,7 @@ import java.util.List;
 import cyclops.Coord;
 import eventful.EventfulType;
 import peakaboo.controller.mapper.data.MapSetController;
+import peakaboo.controller.mapper.filtering.MapFilteringController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
@@ -33,6 +34,7 @@ public class MappingController extends EventfulType<String>
 	
 	public 	MapSetController		mapsController;
 	private MapSettingsController	display;
+	private MapFilteringController filteringController;
 
 	private PlotController			plotcontroller;
 	
@@ -46,6 +48,7 @@ public class MappingController extends EventfulType<String>
 	public MappingController(MapSetController data, MapViewSettings copyViewSettings, PlotController plotcontroller)
 	{
 		this.mapsController = data;
+		this.filteringController = new MapFilteringController();
 		initialize(plotcontroller, copyViewSettings);
 		
 	}
@@ -66,6 +69,10 @@ public class MappingController extends EventfulType<String>
 
 	public MapSettingsController getSettings() {
 		return display;
+	}
+	
+	public MapFilteringController getFiltering() {
+		return filteringController;
 	}
 
 	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)

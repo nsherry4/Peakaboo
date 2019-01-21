@@ -623,16 +623,16 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		//filter the maps
 		List<AreaMap> filtereds = new ArrayList<>();
-		for (AreaMap map : calibrateds) {
-			//TODO: Actually filter things
-			filtereds.add(map);
+		for (AreaMap areamap : calibrateds) {
+			areamap = map.getFiltering().getFilterSet().apply(areamap);
+			filtereds.add(areamap);
 		}
 		
 		//merge the maps into a single composite map
 		Coord<Integer> newSize = filtereds.get(0).getSize();
 		Spectrum composite = new ISpectrum(newSize.x * newSize.y);
-		for (AreaMap map : filtereds) {
-			SpectrumCalculations.addLists_inplace(composite, map.getData());
+		for (AreaMap areamap : filtereds) {
+			SpectrumCalculations.addLists_inplace(composite, areamap.getData());
 		}
 		return composite;
 		
