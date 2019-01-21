@@ -15,6 +15,7 @@ import javax.swing.border.TitledBorder;
 
 import cyclops.Coord;
 import peakaboo.controller.mapper.MappingController;
+import peakaboo.ui.swing.mapping.sidebar.FiltersPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapAppearancePanel;
 import peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapFittingPanel;
@@ -43,8 +44,28 @@ class MapperSidebar extends JPanel
 	{
 
 		JTabbedPane tabs = new JTabbedPane();
+
+		tabs.addTab("Settings", settingsTab());
+		tabs.add("Fittings", fittingsTab());
+		tabs.add("Filters", filtersTab());
+		
+		setLayout(new BorderLayout());
+		add(tabs, BorderLayout.CENTER);
+
+	}
+
+	private JPanel filtersTab() {
+		return new FiltersPanel(controller.getFiltering());
+	}
 	
+	private JPanel fittingsTab() {
+		JPanel tabFittings = new JPanel(new BorderLayout());
+		tabFittings.setBorder(Spacing.bNone());
+		tabFittings.add(new MapFittingPanel(controller.getSettings()), BorderLayout.CENTER);
+		return tabFittings;
+	}
 	
+	private JPanel settingsTab() {
 		
 		JPanel tabSettings = new JPanel(new GridBagLayout());
 		
@@ -79,23 +100,10 @@ class MapperSidebar extends JPanel
 		maingbc.weighty = 1f;
 		tabSettings.add(Box.createVerticalGlue(), maingbc);
 		
-		tabs.addTab("Map Settings", tabSettings);
-
+		return tabSettings;
 		
-		
-		
-		
-		JPanel tabFittings = new JPanel(new BorderLayout());
-		tabFittings.setBorder(Spacing.bNone());
-		tabFittings.add(new MapFittingPanel(controller.getSettings()), BorderLayout.CENTER);
-		tabs.add("Peak Fittings", tabFittings);
-
-		
-		setLayout(new BorderLayout());
-		add(tabs, BorderLayout.CENTER);
-
 	}
-
+	
 	private JPanel stylePanel(JPanel panel) {
 		JPanel inner = new JPanel(new BorderLayout());
 		JPanel outer = new JPanel(new BorderLayout());

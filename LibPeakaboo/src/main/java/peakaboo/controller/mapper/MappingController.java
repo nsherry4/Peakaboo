@@ -28,7 +28,7 @@ public class MappingController extends EventfulType<String>
 
 	public enum UpdateType
 	{
-		DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION;
+		DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION, FILTER;
 	}
 	
 	
@@ -56,10 +56,11 @@ public class MappingController extends EventfulType<String>
 	
 	private void initialize(PlotController plotcontroller, MapViewSettings copyViewSettings)
 	{
-		display = new MapSettingsController(this, copyViewSettings);
-
+		this.display = new MapSettingsController(this, copyViewSettings);
+		
 		mapsController.addListener(this::updateListeners);
 		display.addListener(this::updateListeners);		
+		filteringController.addListener(this::updateListeners);
 
 		this.plotcontroller = plotcontroller;
 	}

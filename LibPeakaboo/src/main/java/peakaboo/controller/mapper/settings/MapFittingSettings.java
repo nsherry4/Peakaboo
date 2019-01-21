@@ -624,7 +624,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		//filter the maps
 		List<AreaMap> filtereds = new ArrayList<>();
 		for (AreaMap areamap : calibrateds) {
-			areamap = map.getFiltering().getFilterSet().apply(areamap);
+			areamap = map.getFiltering().apply(areamap);
 			filtereds.add(areamap);
 		}
 		
