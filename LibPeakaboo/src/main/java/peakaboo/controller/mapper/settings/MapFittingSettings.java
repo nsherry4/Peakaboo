@@ -629,6 +629,10 @@ public class MapFittingSettings extends EventfulType<String> {
 		}
 		
 		//merge the maps into a single composite map
+		if (filtereds.isEmpty()) {
+			//TODO: This may give a technically wrong result until interpolation is made into a filter
+			return new ISpectrum(size.x * size.y);
+		}
 		Coord<Integer> newSize = filtereds.get(0).getSize();
 		Spectrum composite = new ISpectrum(newSize.x * newSize.y);
 		for (AreaMap areamap : filtereds) {
