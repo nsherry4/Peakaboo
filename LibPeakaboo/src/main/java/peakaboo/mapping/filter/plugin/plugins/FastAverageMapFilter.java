@@ -19,7 +19,7 @@ public class FastAverageMapFilter extends AbstractMapFilter {
 
 	@Override
 	public String getFilterDescription() {
-		return "The Averaging filter is a simple filter which calculates a 9-point (3x3) average for each point.";
+		return "The Fast Average filter is a simple filter which calculates a 9-point (3x3) average for each point.";
 	}
 
 	@Override
