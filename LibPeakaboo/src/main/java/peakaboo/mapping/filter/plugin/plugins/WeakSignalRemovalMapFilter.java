@@ -18,8 +18,7 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 
 	@Override
 	public String getFilterDescription() {
-		// TODO Auto-generated method stub
-		return "";
+		return "The Low Signal Removal filter removes the weakest n% signal from each map.";
 	}
 
 	@Override

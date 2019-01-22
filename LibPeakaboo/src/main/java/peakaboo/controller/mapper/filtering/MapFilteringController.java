@@ -40,7 +40,6 @@ public class MapFilteringController extends EventfulType<String> {
 		Coord<Integer> size = controller.getSettings().getView().viewDimensions;
 
 		//get calibrated map data and generate AreaMaps
-		//TODO: Move this to a CalibrationController which can cache the calibrated data?
 		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
 		
 		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
