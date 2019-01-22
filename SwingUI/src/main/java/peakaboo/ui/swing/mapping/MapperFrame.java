@@ -7,7 +7,7 @@ import java.awt.Dimension;
 
 import peakaboo.common.Version;
 import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.data.MapSetController;
+import peakaboo.controller.mapper.rawdata.RawDataController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
 import peakaboo.controller.plotter.PlotController;
 import swidget.icons.IconFactory;
@@ -31,10 +31,10 @@ public class MapperFrame extends LiveFrame
 
 	private TabbedInterface<TabbedLayerPanel> parentPlotter;
 	private MapViewSettings previousMapSettings;
-	private MapSetController mapData;
+	private RawDataController mapData;
 	
 	
-	public MapperFrame(TabbedInterface<TabbedLayerPanel> plotter, MapSetController mapData, MapViewSettings previousMapSettings, PlotController plotcontroller)
+	public MapperFrame(TabbedInterface<TabbedLayerPanel> plotter, RawDataController mapData, MapViewSettings previousMapSettings, PlotController plotcontroller)
 	{
 		super();
 			

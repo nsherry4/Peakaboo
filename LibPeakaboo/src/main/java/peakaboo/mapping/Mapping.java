@@ -12,7 +12,7 @@ import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.dataset.DataSet;
 import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.mapping.rawmap.RawMapSet;
 import plural.streams.StreamExecutor;
 
 /**
@@ -30,9 +30,9 @@ public class Mapping
 	 * @param filters the {@link FilterSet} containing all filters needing to be applied to this data
 	 * @param fittings the {@link FittingSet} containing all fittings needing to be turned into maps
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
-	 * @return a {@link StreamExecutor} which will return a {@link MapResultSet}
+	 * @return a {@link StreamExecutor} which will return a {@link RawMapSet}
 	 */
-	public static StreamExecutor<MapResultSet> mapTask(
+	public static StreamExecutor<RawMapSet> mapTask(
 			DataSet dataset, 
 			FilterSet filters, 
 			FittingSet fittings, 
@@ -41,10 +41,10 @@ public class Mapping
 		) {
 		
 		List<ITransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		MapResultSet maps = new MapResultSet(transitionSeries, dataset.getScanData().scanCount());
+		RawMapSet maps = new RawMapSet(transitionSeries, dataset.getScanData().scanCount());
 		
 		//Math.max(1, dataset.getScanData().scanCount())
-		StreamExecutor<MapResultSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", 1);
+		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", 1);
 		streamer.setTask(new Range(0, dataset.getScanData().scanCount()-1), stream -> {
 			stream.forEach(index -> {
 				

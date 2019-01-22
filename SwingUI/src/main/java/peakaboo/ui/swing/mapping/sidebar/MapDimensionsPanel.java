@@ -74,7 +74,7 @@ public class MapDimensionsPanel extends JPanel {
 		this.add(height, c);
 		
 		
-		if (!controller.mapsController.hasOriginalDataDimensions()) {
+		if (!controller.rawDataController.hasOriginalDataDimensions()) {
 			ImageButton magic = new ImageButton("Guess Dimensions")
 					.withIcon("auto", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Try to detect the map's dimensions.")
@@ -86,7 +86,7 @@ public class MapDimensionsPanel extends JPanel {
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
 			magic.addActionListener(e -> {
-				StreamExecutor<Coord<Integer>> guessTask = controller.mapsController.guessDataDimensions();
+				StreamExecutor<Coord<Integer>> guessTask = controller.rawDataController.guessDataDimensions();
 				StreamExecutorView view = new StreamExecutorView(guessTask);
 				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
 				ModalLayer layer = new ModalLayer(tabPanel, panel);
@@ -125,8 +125,8 @@ public class MapDimensionsPanel extends JPanel {
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
 			reset.addActionListener(e -> {
-				height.setValue(controller.mapsController.getOriginalDataHeight());
-				width.setValue(controller.mapsController.getOriginalDataWidth());
+				height.setValue(controller.rawDataController.getOriginalDataHeight());
+				width.setValue(controller.rawDataController.getOriginalDataWidth());
 			});
 			this.add(reset, c);
 		}

@@ -35,8 +35,8 @@ import peakaboo.mapping.filter.Interpolation;
 import peakaboo.mapping.filter.model.AreaMap;
 import peakaboo.mapping.filter.model.MapFilter;
 import peakaboo.mapping.filter.plugin.plugins.AverageMapFilter;
-import peakaboo.mapping.results.MapResult;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.mapping.rawmap.RawMap;
+import peakaboo.mapping.rawmap.RawMapSet;
 
 
 
@@ -67,7 +67,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		overlayColour = new HashMap<>();
 		visibility = new HashMap<>();
 		
-		for (ITransitionSeries ts : map.mapsController.getMapResultSet().getAllTransitionSeries()) {
+		for (ITransitionSeries ts : map.rawDataController.getMapResultSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
 			overlayColour.put(ts, OverlayColour.RED);
 			visibility.put(ts, true);
@@ -147,7 +147,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				0.0f);
 		
 		// fix bad points on the map
-		Interpolation.interpolateBadPoints(grid, data, map.mapsController.getBadPoints());
+		Interpolation.interpolateBadPoints(grid, data, map.rawDataController.getBadPoints());
 		
 		// interpolation of data
 		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(data, grid, map.getSettings().getView().getInterpolation());
@@ -363,7 +363,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				0.0f);
 		
 		// fix bad points on the map
-		Interpolation.interpolateBadPoints(grid, ratioData, map.mapsController.getBadPoints());
+		Interpolation.interpolateBadPoints(grid, ratioData, map.rawDataController.getBadPoints());
 		
 	
 		Spectrum mapdata;
@@ -723,7 +723,7 @@ public class MapFittingSettings extends EventfulType<String> {
 
 
 	public CalibrationProfile getCalibrationProfile() {
-		return map.mapsController.getCalibrationProfile();
+		return map.rawDataController.getCalibrationProfile();
 	}
 
 	

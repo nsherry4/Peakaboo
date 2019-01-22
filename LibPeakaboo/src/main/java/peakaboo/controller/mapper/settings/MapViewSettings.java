@@ -83,10 +83,10 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	
 	public void setMappingController(MappingController controller) {
 		this.mapController = controller;
-		if (mapController.mapsController.getOriginalDataDimensions() != null) {
-			viewDimensions = new Coord<>(mapController.mapsController.getOriginalDataWidth(), mapController.mapsController.getOriginalDataHeight());
+		if (mapController.rawDataController.getOriginalDataDimensions() != null) {
+			viewDimensions = new Coord<>(mapController.rawDataController.getOriginalDataWidth(), mapController.rawDataController.getOriginalDataHeight());
 		} else {
-			viewDimensions = new Coord<Integer>(mapController.mapsController.getMapResultSet().getMap(0).size(), 1);
+			viewDimensions = new Coord<Integer>(mapController.rawDataController.getMapResultSet().getMap(0).size(), 1);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public void setDataHeight(int height)
 	{
 
-		if (getDataWidth() * height > mapController.mapsController.getMapSize()) height = mapController.mapsController.getMapSize() / getDataWidth();
+		if (getDataWidth() * height > mapController.rawDataController.getMapSize()) height = mapController.rawDataController.getMapSize() / getDataWidth();
 		if (height < 1) height = 1;
 
 		viewDimensions.y = height;
@@ -156,7 +156,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public void setDataWidth(int width)
 	{
 
-		if (getDataHeight() * width > mapController.mapsController.getMapSize()) width = mapController.mapsController.getMapSize() / getDataHeight();
+		if (getDataHeight() * width > mapController.rawDataController.getMapSize()) width = mapController.rawDataController.getMapSize() / getDataHeight();
 		if (width < 1) width = 1;
 
 		viewDimensions.x = width;
@@ -362,7 +362,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	
 
 	public Coord<Number> getLoXLoYCoord() {
-		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>(realDims.x.start, realDims.y.end);
 		} else {
@@ -371,7 +371,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 	public Coord<Number> getHiXLoYCoord()
 	{
-		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.end, 		realDims.y.end);
 		} else {
@@ -380,7 +380,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 	public Coord<Number> getLoXHiYCoord()
 	{
-		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.start,	realDims.y.start);
 		} else {
@@ -389,7 +389,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 	public Coord<Number> getHiXHiYCoord()
 	{
-		Coord<Bounds<Number>> realDims = mapController.mapsController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.end,		realDims.y.start);
 		} else {

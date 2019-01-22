@@ -6,8 +6,8 @@ import java.util.List;
 
 import cyclops.Coord;
 import eventful.EventfulType;
-import peakaboo.controller.mapper.data.MapSetController;
 import peakaboo.controller.mapper.filtering.MapFilteringController;
+import peakaboo.controller.mapper.rawdata.RawDataController;
 import peakaboo.controller.mapper.settings.AreaSelection;
 import peakaboo.controller.mapper.settings.MapSettingsController;
 import peakaboo.controller.mapper.settings.MapViewSettings;
@@ -32,7 +32,7 @@ public class MappingController extends EventfulType<String>
 	}
 	
 	
-	public 	MapSetController		mapsController;
+	public 	RawDataController		rawDataController;
 	private MapSettingsController	display;
 	private MapFilteringController filteringController;
 
@@ -45,9 +45,9 @@ public class MappingController extends EventfulType<String>
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(MapSetController data, MapViewSettings copyViewSettings, PlotController plotcontroller)
+	public MappingController(RawDataController rawDataController, MapViewSettings copyViewSettings, PlotController plotcontroller)
 	{
-		this.mapsController = data;
+		this.rawDataController = rawDataController;
 		this.filteringController = new MapFilteringController(this);
 		initialize(plotcontroller, copyViewSettings);
 		
@@ -58,7 +58,7 @@ public class MappingController extends EventfulType<String>
 	{
 		this.display = new MapSettingsController(this, copyViewSettings);
 		
-		mapsController.addListener(this::updateListeners);
+		rawDataController.addListener(this::updateListeners);
 		display.addListener(this::updateListeners);		
 		filteringController.addListener(this::updateListeners);
 
@@ -100,7 +100,7 @@ public class MappingController extends EventfulType<String>
 		settings.interpolatedHeight = this.display.getView().getInterpolatedHeight();
 		
 		settings.showDatasetTitle = this.display.getView().getShowDatasetTitle();
-		settings.datasetTitle = this.mapsController.getDatasetTitle();
+		settings.datasetTitle = this.rawDataController.getDatasetTitle();
 		settings.showScaleBar = this.display.getView().getShowScaleBar();
 		settings.showMapTitle = this.display.getView().getShowTitle();
 		settings.mapTitle = this.getSettings().getMapFittings().mapLongTitle();
@@ -121,8 +121,8 @@ public class MappingController extends EventfulType<String>
 		settings.coordHiXLoY = this.getSettings().getView().getHiXLoYCoord();
 		settings.coordLoXHiY = this.getSettings().getView().getLoXHiYCoord();
 		settings.coordHiXHiY = this.getSettings().getView().getHiXHiYCoord();
-		settings.physicalUnits = this.mapsController.getRealDimensionUnits();
-		settings.physicalCoord = this.mapsController.getRealDimensions() != null;
+		settings.physicalUnits = this.rawDataController.getRealDimensionUnits();
+		settings.physicalCoord = this.rawDataController.getRealDimensions() != null;
 		
 		settings.showSpectrum = this.display.getView().getShowSpectrum();
 		settings.spectrumHeight = SPECTRUM_HEIGHT;

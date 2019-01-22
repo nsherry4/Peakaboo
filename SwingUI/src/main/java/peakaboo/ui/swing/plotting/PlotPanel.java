@@ -64,7 +64,7 @@ import peakaboo.calibration.Concentrations;
 import peakaboo.common.Env;
 import peakaboo.common.PeakabooLog;
 import peakaboo.common.Version;
-import peakaboo.controller.mapper.data.MapSetController;
+import peakaboo.controller.mapper.rawdata.RawDataController;
 import peakaboo.controller.plotter.PlotController;
 import peakaboo.controller.plotter.data.DataLoader;
 import peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
@@ -80,7 +80,7 @@ import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import peakaboo.datasource.plugin.DataSourcePlugin;
 import peakaboo.datasource.plugin.DataSourcePluginManager;
 import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.mapping.rawmap.RawMapSet;
 import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import peakaboo.ui.swing.console.DebugConsole;
@@ -652,7 +652,7 @@ public class PlotPanel extends TabbedLayerPanel
 		if (!controller.data().hasDataSet()) return;
 
 
-		StreamExecutor<MapResultSet> mapTask = controller.getMapTask();
+		StreamExecutor<RawMapSet> mapTask = controller.getMapTask();
 		if (mapTask == null) return;
 
 		StreamExecutorView taskView = new StreamExecutorView(mapTask);
@@ -675,8 +675,8 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			
 			MapperFrame mapperWindow;
-			MapResultSet results = mapTask.getResult().get();
-			MapSetController mapData = new MapSetController();
+			RawMapSet results = mapTask.getResult().get();
+			RawDataController mapData = new RawDataController();
 			
 
 			Coord<Integer> dataDimensions = null;

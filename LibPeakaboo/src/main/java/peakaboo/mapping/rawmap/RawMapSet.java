@@ -1,4 +1,4 @@
-package peakaboo.mapping.results;
+package peakaboo.mapping.rawmap;
 
 
 import static java.util.stream.Collectors.toList;
@@ -18,17 +18,17 @@ import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 /**
  * 
- * This class stores a set of {@link MapResult}s, and provides convenience methods for setting pixel values,
+ * This class stores a set of {@link RawMap}s, and provides convenience methods for setting pixel values,
  * visibility and generating map composites.
  * 
  * @author Nathaniel Sherry, 2009
  * 
  */
 
-public class MapResultSet implements Cloneable, Iterable<MapResult>
+public class RawMapSet implements Cloneable, Iterable<RawMap>
 {
 
-	private List<MapResult>	maps;
+	private List<RawMap>	maps;
 	private int				mapSize;
 
 
@@ -36,42 +36,42 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	 * 
 	 * Create a new MapResultSet with MapResult objects for the given {@link ITransitionSeries}, and of the given map size
 	 *  
-	 * @param transitionSeries list of {@link ITransitionSeries} to store {@link MapResult}s for in this {@link MapResultSet}
-	 * @param mapSize the size of the map data in each of the {@link MapResult}s
+	 * @param transitionSeries list of {@link ITransitionSeries} to store {@link RawMap}s for in this {@link RawMapSet}
+	 * @param mapSize the size of the map data in each of the {@link RawMap}s
 	 */
-	public MapResultSet(List<ITransitionSeries> transitionSeries, int mapSize)
+	public RawMapSet(List<ITransitionSeries> transitionSeries, int mapSize)
 	{
-		maps = new ArrayList<MapResult>();
+		maps = new ArrayList<RawMap>();
 		for (ITransitionSeries ts : transitionSeries) {
-			maps.add(new MapResult(ts, mapSize));
+			maps.add(new RawMap(ts, mapSize));
 		}
 		this.mapSize = mapSize;
 
 	}
 	
-	public MapResultSet(List<MapResult> maps, int mapSize, boolean flagToMakeSignatureDifferent)
+	public RawMapSet(List<RawMap> maps, int mapSize, boolean flagToMakeSignatureDifferent)
 	{
 		this.maps = maps;
 		this.mapSize = mapSize;
 	}
 	
 	@Override
-	public MapResultSet clone() throws CloneNotSupportedException
+	public RawMapSet clone() throws CloneNotSupportedException
 	{
 			
-		List<MapResult> mapresults = new ArrayList<MapResult>();
+		List<RawMap> mapresults = new ArrayList<RawMap>();
 		
-		for (MapResult map : maps)
+		for (RawMap map : maps)
 		{
 			mapresults.add(map.clone());
 		}
 				
-		return new MapResultSet(mapresults, mapSize, true);
+		return new RawMapSet(mapresults, mapSize, true);
 		
 	}
 	
 	
-	public Stream<MapResult> stream() {
+	public Stream<RawMap> stream() {
 		return maps.stream();
 	}
 	
@@ -97,12 +97,12 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 
 	/**
 	 * 
-	 * Get a {@link MapResult} at a specific index. Useful for UI lists.
+	 * Get a {@link RawMap} at a specific index. Useful for UI lists.
 	 * 
 	 * @param index index of the map to retrieve
-	 * @return the {@link MapResult} at the given index
+	 * @return the {@link RawMap} at the given index
 	 */
-	public MapResult getMap(int index)
+	public RawMap getMap(int index)
 	{
 		return maps.get(index);
 	}
@@ -110,14 +110,14 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 
 	/**
 	 * 
-	 * Gets the {@link MapResult} related to the given {@link ITransitionSeries}
+	 * Gets the {@link RawMap} related to the given {@link ITransitionSeries}
 	 * 
-	 * @param ts the {@link ITransitionSeries} to look up the {@link MapResult} with
-	 * @return the {@link MapResult} for the given {@link ITransitionSeries}
+	 * @param ts the {@link ITransitionSeries} to look up the {@link RawMap} with
+	 * @return the {@link RawMap} for the given {@link ITransitionSeries}
 	 */
-	public MapResult getMap(ITransitionSeries ts)
+	public RawMap getMap(ITransitionSeries ts)
 	{
-		for (MapResult m : maps) {
+		for (RawMap m : maps) {
 			if (m.transitionSeries == ts) return m;
 		}
 		return null;
@@ -134,20 +134,20 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	
 	/**
 	 * 
-	 * Places a value at a given index for the {@link MapResult} data associated
+	 * Places a value at a given index for the {@link RawMap} data associated
 	 * with the given {@link ITransitionSeries}. This method will apply the
 	 * {@link CalibrationProfile} to the added values.
 	 * 
-	 * @param intensity the intensity value to place in the {@link MapResult} data
+	 * @param intensity the intensity value to place in the {@link RawMap} data
 	 * @param ts        the {@link ITransitionSeries} associated with the desired
-	 *                  {@link MapResult}
+	 *                  {@link RawMap}
 	 * @param index     the index in the map data at which to place the new value
 	 */
 	public void putIntensityInMapAtPoint(float intensity, ITransitionSeries ts, int index)
 	{	
 		
 		
-		MapResult m = getMap(ts);
+		RawMap m = getMap(ts);
 		if (m == null) return;
 
 		m.setData(index, intensity);
@@ -156,7 +156,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 
 	/**
 	 * 
-	 * Composites the data in all {@link MapResult} into a single map. 
+	 * Composites the data in all {@link RawMap} into a single map. 
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
@@ -169,7 +169,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 	
 	/**
 	 * 
-	 * Composites the data in all {@link MapResult} into a single map. 
+	 * Composites the data in all {@link RawMap} into a single map. 
 	 * 
 	 * @return a list of double values representing the composited map
 	 */
@@ -179,7 +179,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 		
 		Spectrum sums = new ISpectrum(maps.get(0).size(), 0.0f);
 
-		for (MapResult map : maps) {
+		for (RawMap map : maps) {
 			if (list.contains(map.transitionSeries)) SpectrumCalculations.addLists_inplace(sums, map.getData(profile));
 		}
 
@@ -187,7 +187,7 @@ public class MapResultSet implements Cloneable, Iterable<MapResult>
 
 	}
 
-	public Iterator<MapResult> iterator()
+	public Iterator<RawMap> iterator()
 	{
 		return maps.iterator();
 	}

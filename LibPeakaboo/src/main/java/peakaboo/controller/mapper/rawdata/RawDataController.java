@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.data;
+package peakaboo.controller.mapper.rawdata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,19 +13,19 @@ import cyclops.Spectrum;
 import eventful.EventfulType;
 import peakaboo.calibration.CalibrationProfile;
 import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.mapping.rawmap.RawMapSet;
 import plural.streams.StreamExecutor;
 
 
-public class MapSetController extends EventfulType<String>
+public class RawDataController extends EventfulType<String>
 {
 
-	MapSetMapData mapModel;
+	RawDataModel mapModel;
 	
 	
-	public MapSetController()
+	public RawDataController()
 	{
-		mapModel = new MapSetMapData();
+		mapModel = new RawDataModel();
 	}
 	
 
@@ -35,7 +35,7 @@ public class MapSetController extends EventfulType<String>
 	 * @param calibrationProfile 
 	 */
 	public void setMapData(
-			MapResultSet data,
+			RawMapSet data,
 			String datasetName,
 			List<Integer> badPoints,
 			Coord<Integer> dataDimensions,
@@ -225,7 +225,7 @@ public class MapSetController extends EventfulType<String>
 	}
 	
 
-	public MapResultSet getMapResultSet()
+	public RawMapSet getMapResultSet()
 	{
 		return mapModel.mapResults;
 	}

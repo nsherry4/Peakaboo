@@ -1,4 +1,4 @@
-package peakaboo.mapping.results;
+package peakaboo.mapping.rawmap;
 
 
 
@@ -13,27 +13,27 @@ import peakaboo.curvefit.peak.transition.ITransitionSeries;
  * 
  * This class stores the data associated with a single map of a scan. Each map is associated with a single
  * {@link ITransitionSeries}, and can be marked as visible or invisible. When generating or displaying data for
- * more than one TransitionSeries, it may be desirable to use a {@link MapResultSet} instead of managing the
+ * more than one TransitionSeries, it may be desirable to use a {@link RawMapSet} instead of managing the
  * MapResult objects manually.
  * 
  * @author Nathaniel Sherry, 2009
  * 
  */
 
-public class MapResult implements Cloneable
+public class RawMap implements Cloneable
 {
 
 	private Spectrum data;
 	public ITransitionSeries	transitionSeries;
 
 
-	public MapResult(ITransitionSeries ts, int mapSize)
+	public RawMap(ITransitionSeries ts, int mapSize)
 	{
 		this.data = new ISpectrum(mapSize, 0.0f);
 		transitionSeries = ts;
 	}
 	
-	protected MapResult(ITransitionSeries ts, Spectrum data)
+	protected RawMap(ITransitionSeries ts, Spectrum data)
 	{
 		this.transitionSeries = ts;
 		this.data = data;
@@ -46,9 +46,9 @@ public class MapResult implements Cloneable
 	
 
 	@Override
-	public MapResult clone()
+	public RawMap clone()
 	{
-		return new MapResult(transitionSeries, data);
+		return new RawMap(transitionSeries, data);
 	}
 	
 

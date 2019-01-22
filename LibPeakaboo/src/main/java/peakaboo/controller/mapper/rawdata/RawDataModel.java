@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.data;
+package peakaboo.controller.mapper.rawdata;
 
 
 import java.util.ArrayList;
@@ -8,11 +8,11 @@ import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.SISize;
 import peakaboo.calibration.CalibrationProfile;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.mapping.rawmap.RawMapSet;
 
 
 
-public class MapSetMapData
+public class RawDataModel
 {
 
 	
@@ -24,7 +24,7 @@ public class MapSetMapData
 	public Coord<Integer>			originalDimensions	= new Coord<Integer>(1, 1);
 	public boolean					originalDimensionsProvided = false;
 	
-	public MapResultSet				mapResults			= null;
+	public RawMapSet				mapResults			= null;
 	public String					datasetTitle		= "";
 	
 	public List<Integer>			badPoints			= new ArrayList<Integer>();

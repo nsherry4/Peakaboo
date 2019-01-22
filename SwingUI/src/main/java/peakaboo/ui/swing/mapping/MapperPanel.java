@@ -225,7 +225,7 @@ public class MapperPanel extends TabbedLayerPanel {
 			public void change(String ss)
 			{
 
-				if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.mapsController.getMapSize())
+				if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.rawDataController.getMapSize())
 				{
 					warnOnTooSmallDataset.setVisible(false);
 				}
@@ -406,14 +406,14 @@ public class MapperPanel extends TabbedLayerPanel {
 		canvasContainer.add(canvasScroller, c);
 
 		warnOnTooSmallDataset = new JLabel("Warning: Map dimensions are smaller than data set ("
-				+ controller.mapsController.getMapSize() + ")");
+				+ controller.rawDataController.getMapSize() + ")");
 		warnOnTooSmallDataset.setBorder(Spacing.bSmall());
 		warnOnTooSmallDataset.setBackground(new Color(0.64f, 0.0f, 0.0f));
 		warnOnTooSmallDataset.setForeground(new Color(1.0f, 1.0f, 1.0f));
 		warnOnTooSmallDataset.setOpaque(true);
 		warnOnTooSmallDataset.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.mapsController.getMapSize())
+		if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.rawDataController.getMapSize())
 		{
 			warnOnTooSmallDataset.setVisible(false);
 		}

@@ -16,8 +16,8 @@ import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.mapping.filter.model.AreaMap;
 import peakaboo.mapping.filter.model.MapFilter;
 import peakaboo.mapping.filter.model.MapFilterSet;
-import peakaboo.mapping.results.MapResult;
-import peakaboo.mapping.results.MapResultSet;
+import peakaboo.mapping.rawmap.RawMap;
+import peakaboo.mapping.rawmap.RawMapSet;
 
 public class MapFilteringController extends EventfulType<String> {
 
@@ -41,10 +41,10 @@ public class MapFilteringController extends EventfulType<String> {
 
 		//get calibrated map data and generate AreaMaps
 		//TODO: Move this to a CalibrationController which can cache the calibrated data?
-		CalibrationProfile profile = controller.mapsController.getCalibrationProfile();
+		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
 		
-		MapResultSet rawmaps = controller.mapsController.getMapResultSet();
-		for (MapResult rawmap : rawmaps) {
+		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
+		for (RawMap rawmap : rawmaps) {
 			ITransitionSeries ts = rawmap.transitionSeries;
 			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
 			AreaMap areamap = new AreaMap(calibrated, size);
