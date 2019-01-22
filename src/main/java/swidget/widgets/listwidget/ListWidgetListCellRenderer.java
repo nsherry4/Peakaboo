@@ -5,12 +5,13 @@ import java.awt.Component;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-public class ListWidgetListCellRenderer<T> implements ListCellRenderer<T>{
+public class ListWidgetListCellRenderer<T> implements ListCellRenderer<T>, ListWidgetParent {
 
 	private ListWidget<T> widget;
 	
 	public ListWidgetListCellRenderer(ListWidget<T> widget) {
 		this.widget = widget;
+		widget.setParent(this);
 	}
 	
 	@Override
@@ -31,6 +32,11 @@ public class ListWidgetListCellRenderer<T> implements ListCellRenderer<T>{
 			
 		return widget;
 		
+	}
+
+	@Override
+	public void editingStopped() {
+		//NOOP
 	}
 
 

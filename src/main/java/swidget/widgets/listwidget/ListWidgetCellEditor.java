@@ -6,13 +6,14 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
-public class ListWidgetCellEditor<T> extends DefaultCellEditor {
+public class ListWidgetCellEditor<T> extends DefaultCellEditor implements ListWidgetParent {
 
 	private ListWidget<T> widget;
 	
 	public ListWidgetCellEditor(ListWidget<T> widget) {
 		super(new JCheckBox());
 		this.widget = widget;
+		widget.setParent(this);
 	}
 	
 	@Override
@@ -30,6 +31,11 @@ public class ListWidgetCellEditor<T> extends DefaultCellEditor {
 	@Override
 	public Object getCellEditorValue() {
 		return null;
+	}
+
+	@Override
+	public void editingStopped() {
+		super.fireEditingStopped();
 	}
 
 }
