@@ -9,18 +9,18 @@ import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.RealSpinnerStyle;
 import peakaboo.mapping.filter.model.AreaMap;
 
-public class SignalOutlierCapMapFilter extends AbstractMapFilter {
+public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 
 	Parameter<Float> percent;
 	
 	@Override
 	public String getFilterName() {
-		return "Outlier Cap";
+		return "Outlier Correction";
 	}
 
 	@Override
 	public String getFilterDescription() {
-		return "The Outlier Cap filter is useful for correcting a few erroneously intense pixels in a map. These intense pixels will be capped at the same value as the maximum remaining pixels. Manually managing bad scans or erroneous fits in the plot before mapping is still preferable, but can be quite time consuming.";
+		return "The Outlier Correction filter is useful for correcting a few erroneously intense pixels in a map. These intense pixels will be capped at the same value as the maximum remaining pixels. Manually managing bad scans or erroneous fits in the plot before mapping is still preferable, but can be quite time consuming.";
 	}
 
 	@Override

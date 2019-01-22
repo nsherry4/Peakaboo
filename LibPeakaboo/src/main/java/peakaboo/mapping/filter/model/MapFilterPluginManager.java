@@ -17,7 +17,8 @@ import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import peakaboo.mapping.filter.plugin.plugins.EnlargeMapFilter;
 import peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
-import peakaboo.mapping.filter.plugin.plugins.SignalOutlierCapMapFilter;
+import peakaboo.mapping.filter.plugin.plugins.SignalLimitMapFilter;
+import peakaboo.mapping.filter.plugin.plugins.SignalOutlierCorrectionMapFilter;
 import peakaboo.mapping.filter.plugin.plugins.WeakSignalRemovalMapFilter;
 import peakaboo.mapping.filter.plugin.plugins.WeightedAverageMapFilter;
 
@@ -46,7 +47,8 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 			loader.registerPlugin(EnlargeMapFilter.class);
 			loader.registerPlugin(WeightedAverageMapFilter.class);
 			loader.registerPlugin(WeakSignalRemovalMapFilter.class);
-			loader.registerPlugin(SignalOutlierCapMapFilter.class);
+			loader.registerPlugin(SignalOutlierCorrectionMapFilter.class);
+			loader.registerPlugin(SignalLimitMapFilter.class);
 			
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load MapFilter plugins", e);
