@@ -11,6 +11,7 @@ import peakaboo.mapping.filter.model.AreaMap;
 public class WeightedAverageMapFilter extends AbstractMapFilter{
 
 	Parameter<Integer> radius;
+	Parameter<Integer> reps;
 	
 	@Override
 	public String getFilterName() {
@@ -27,11 +28,18 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 	public void initialize() {
 		radius = new Parameter<Integer>("Radius", new IntegerSpinnerStyle(), 1, this::validate);
 		addParameter(radius);
+		reps = new Parameter<Integer>("Repetitions", new IntegerSpinnerStyle(), 1, this::validate);
+		addParameter(reps);
 	}
 
 	private boolean validate(Parameter<?> param) {
+		
 		if (radius.getValue() <= 0) { return false; }
 		if (radius.getValue() > 5) { return false; }
+		
+		if (reps.getValue() <= 0) { return false; }
+		if (reps.getValue() > 10) { return false; }
+		
 		return true;
 	}
 	
@@ -43,40 +51,46 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 
 		int r = radius.getValue();
 		
-		for (int y = 0; y < map.getSize().y; y++) {
-			for (int x = 0; x < map.getSize().x; x++) {
-				
-				float sum = 0f;
-				float weights = 0f;
-				
-				for (int dy = -r; dy <= +r; dy++) {
-					for (int dx = -r; dx <= +r; dx++) {
-						//don't include oob points
-						if (!grid.boundsCheck(x+dx, y+dy)) {
-							continue;
+		for (int rep = 0; rep < reps.getValue(); rep++) {
+		
+			for (int y = 0; y < map.getSize().y; y++) {
+				for (int x = 0; x < map.getSize().x; x++) {
+					
+					float sum = 0f;
+					float weights = 0f;
+					
+					for (int dy = -r; dy <= +r; dy++) {
+						for (int dx = -r; dx <= +r; dx++) {
+							//don't include oob points
+							if (!grid.boundsCheck(x+dx, y+dy)) {
+								continue;
+							}
+							
+							//calculate weight for this point
+							double dist = Math.sqrt(dx*dx+dy*dy);
+							float weight = (float) (r+1f - dist);
+							
+							//this will form a circular sampling area
+							if (weight < 0) { continue; }
+							
+							//normalize and square the weight to give extra weight to the central points
+							float maxweight = r+1f;
+							weight = (weight/maxweight);
+							weight *= weight;
+							
+							//add to the sum
+							sum += grid.get(data, x+dx, y+dy) * weight;
+							weights += weight;
 						}
-						
-						//calculate weight for this point
-						double dist = Math.sqrt(dx*dx+dy*dy);
-						float weight = (float) (r+1f - dist);
-						
-						//this will form a circular sampling area
-						if (weight < 0) { continue; }
-						
-						//normalize and square the weight to give extra weight to the central points
-						float maxweight = r+1f;
-						weight = (weight/maxweight);
-						weight *= weight;
-						
-						//add to the sum
-						sum += grid.get(data, x+dx, y+dy) * weight;
-						weights += weight;
 					}
+					
+					grid.set(filtered, x, y, sum/weights);
+					
 				}
-				
-				grid.set(filtered, x, y, sum/weights);
-				
 			}
+			
+			data = filtered;
+			
 		}
 
 		
