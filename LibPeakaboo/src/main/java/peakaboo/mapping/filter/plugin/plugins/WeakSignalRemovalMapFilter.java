@@ -64,5 +64,10 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 	public String pluginUUID() {
 		return "1dd38076-44f4-4717-8ae7-49e4e0e0d48f";
 	}
+	
+	@Override
+	public String getFilterAction() {
+		return "Clipped";
+	}
 
 }

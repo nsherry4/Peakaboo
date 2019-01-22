@@ -85,4 +85,9 @@ public class FastAverageMapFilter extends AbstractMapFilter {
 		return "983260dc-e133-4dc0-a736-f646bb8998ed";
 	}
 
+	@Override
+	public String getFilterAction() {
+		return "Smoothed";
+	}
+
 }

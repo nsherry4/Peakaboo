@@ -111,4 +111,9 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 		return "fc2c3147-07a7-4823-b508-1a20d0579ccf";
 	}
 
+	@Override
+	public String getFilterAction() {
+		return "Smoothed";
+	}
+	
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
+import cyclops.util.ListOps;
 import eventful.EventfulCache;
 import eventful.EventfulType;
 import peakaboo.calibration.CalibrationProfile;
@@ -117,8 +118,11 @@ public class MapFilteringController extends EventfulType<String> {
 	}
 	
 	
+	public String getActionDescription() {
+		List<String> actions = filters.getAll().stream().map(f -> f.getFilterAction()).collect(Collectors.toList());
+		return ListOps.unique(actions).stream().reduce((a, b) -> a + ", " + b).orElse(null);
+	}
+	
 
-	
-	
 	
 }

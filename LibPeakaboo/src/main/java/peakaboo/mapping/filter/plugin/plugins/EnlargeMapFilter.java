@@ -72,4 +72,9 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 		//TODO: Limit by map size?
 	}
 
+	@Override
+	public String getFilterAction() {
+		return "Enlarged";
+	}
+
 }

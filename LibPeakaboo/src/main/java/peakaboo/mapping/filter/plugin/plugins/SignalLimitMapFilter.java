@@ -60,5 +60,10 @@ public class SignalLimitMapFilter extends AbstractMapFilter {
 	public String pluginUUID() {
 		return "18e25949-9c6c-4487-b466-7fda8359459e";
 	}
+	
+	@Override
+	public String getFilterAction() {
+		return "Clipped";
+	}
 
 }

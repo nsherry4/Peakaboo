@@ -143,6 +143,7 @@ public class MappingController extends EventfulType<String>
 		}
 		
 		
+		
 		switch (settings.mode) {
 		case COMPOSITE:
 			settings.spectrumTitle = this.getSettings().getMapFittings().isLogView() ? "Log Scale Intensity (counts)" : "Intensity (counts)";
@@ -154,8 +155,13 @@ public class MappingController extends EventfulType<String>
 					(this.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : "");
 			break;
 		case RATIO:
-			settings.spectrumTitle = "Intensity (ratio)" + (this.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Ratio sides scaled independently" : "");
+			settings.spectrumTitle = "Intensity (ratio)" + (this.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - sides scaled independently" : "");
 			break;
+		}
+		
+		String filterActions = filteringController.getActionDescription();
+		if (filterActions != null) {
+			settings.spectrumTitle += " - " + filterActions;
 		}
 		
 		return settings;

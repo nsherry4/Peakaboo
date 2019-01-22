@@ -71,5 +71,10 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 	public String pluginUUID() {
 		return "ecb7ac3e-254e-4383-bb14-c75926d0eb76";
 	}
+	
+	@Override
+	public String getFilterAction() {
+		return "Clipped";
+	}
 
 }

@@ -194,15 +194,18 @@ public class FiltersPanel extends JPanel {
 		
 		ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK).withText("OK").withBordered(false).withAction(() -> {
 			int index = table.getSelectedRow();
-			MapFilterPlugin plugin = plugins.get(index).create();
-			plugin.initialize();
-			controller.add(plugin);
+			if (index >= 0) { 
+				MapFilterPlugin plugin = plugins.get(index).create();
+				plugin.initialize();
+				controller.add(plugin);
+			}
 			layout.show(this, PANEL_FILTERS);
+			
 		});
 		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL).withText("Cancel").withBordered(false).withAction(() -> {
 			layout.show(this, PANEL_FILTERS);
 		});
-		ButtonBox buttons = new ButtonBox(Spacing.tiny, false);
+		ButtonBox buttons = new ButtonBox(Spacing.small, false);
 		buttons.addCentre(ok);
 		buttons.addCentre(cancel);
 		JPanel header = new TitlePaintedPanel("Add Map Filter", false, buttons);

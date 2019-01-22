@@ -23,6 +23,12 @@ public interface MapFilter {
 	String getFilterDescription();
 
 	/**
+	 * Returns a short title-cased string (ideally 1 word) describing the kind of
+	 * thing that this filter does in the past tense (e.g. Enlarged, Smoothed)
+	 */
+	String getFilterAction();
+	
+	/**
 	 * Returns the parameters
 	 */
 	List<Value<?>> getParameters();
