@@ -7,10 +7,17 @@ import javax.swing.table.AbstractTableModel;
 public class ListTableModel<T> extends AbstractTableModel {
 	
 	private List<T> items;
+	private int columns;
 	
 	public ListTableModel(List<T> items) {
-		this.items = items;
+		this(items, 1);
 	}
+
+	public ListTableModel(List<T> items, int columns) {
+		this.items = items;
+		this.columns = columns;
+	}
+	
 
 	@Override
 	public int getRowCount() {
@@ -19,7 +26,7 @@ public class ListTableModel<T> extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 1;
+		return columns;
 	}
 
 	@Override

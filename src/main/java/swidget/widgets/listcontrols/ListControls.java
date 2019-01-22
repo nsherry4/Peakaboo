@@ -48,6 +48,18 @@ public class ListControls extends ClearPanel {
 		b.withBordered(false);
 	}
 	
+	public void setElementCount(int elements) {
+		ElementCount ec = ElementCount.NONE;
+		if (elements == 0) {
+			ec = ElementCount.NONE;
+		} else if (elements == 1) {
+			ec = ElementCount.ONE;
+		} else if (elements >= 2) {
+			ec = ElementCount.MANY;
+		}
+		setElementCount(ec);
+	}
+	
 	public void setElementCount(ElementCount ec)
 	{
 
