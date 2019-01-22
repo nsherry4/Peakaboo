@@ -48,7 +48,7 @@ public class MappingController extends EventfulType<String>
 	public MappingController(MapSetController data, MapViewSettings copyViewSettings, PlotController plotcontroller)
 	{
 		this.mapsController = data;
-		this.filteringController = new MapFilteringController();
+		this.filteringController = new MapFilteringController(this);
 		initialize(plotcontroller, copyViewSettings);
 		
 	}

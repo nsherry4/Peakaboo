@@ -25,7 +25,7 @@ import peakaboo.curvefit.peak.transition.ITransitionSeries;
  * 
  */
 
-public class MapResultSet implements Cloneable
+public class MapResultSet implements Cloneable, Iterable<MapResult>
 {
 
 	private List<MapResult>	maps;

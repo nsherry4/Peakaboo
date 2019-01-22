@@ -612,21 +612,9 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		Coord<Integer> size = map.getSettings().getView().viewDimensions;
 		
-		//get calibrated map data and generate AreaMaps
-		List<AreaMap> calibrateds = new ArrayList<>();
-		MapResultSet rawmaps = map.mapsController.getMapResultSet();
-		CalibrationProfile profile = getCalibrationProfile();
-		for (ITransitionSeries ts : list) {
-			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
-			calibrateds.add(new AreaMap(calibrated, size));
-		}
 		
 		//filter the maps
-		List<AreaMap> filtereds = new ArrayList<>();
-		for (AreaMap areamap : calibrateds) {
-			areamap = map.getFiltering().apply(areamap);
-			filtereds.add(areamap);
-		}
+		List<AreaMap> filtereds = map.getFiltering().getAreaMaps(list);
 		
 		//merge the maps into a single composite map
 		if (filtereds.isEmpty()) {

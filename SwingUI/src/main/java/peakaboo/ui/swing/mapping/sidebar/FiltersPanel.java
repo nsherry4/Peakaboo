@@ -115,9 +115,7 @@ public class FiltersPanel extends JPanel {
 			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 				switch (columnIndex) {
 				case 0: 
-					controller.get(rowIndex).setEnabled((boolean) aValue); 
-					//TODO: does this have to be here, it should be lower (ie not in the ui)
-					controller.updateListeners(UpdateType.FILTER.toString());
+					controller.setMapFilterEnabled(rowIndex, (boolean)aValue);
 					return;
 				case 1: return;
 				case 2: return;
