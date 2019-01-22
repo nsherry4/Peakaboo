@@ -42,6 +42,9 @@ import peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import peakaboo.filter.model.FilterPluginManager;
 import peakaboo.filter.plugins.FilterPlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
+import peakaboo.mapping.filter.model.MapFilterPluginManager;
+import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.FileDrop;
@@ -218,6 +221,10 @@ public class PluginsOverview extends HeaderLayer {
 			return FilterPluginManager.SYSTEM;
 		}
 		
+		if (pluginBaseClass == JavaMapFilterPlugin.class) {
+			return MapFilterPluginManager.SYSTEM;
+		}
+		
 		if (Peakaboo.SHOW_QUANTITATIVE) {
 			if (pluginBaseClass == CalibrationReference.class) {
 				return CalibrationPluginManager.SYSTEM;
@@ -240,6 +247,7 @@ public class PluginsOverview extends HeaderLayer {
 			handled |= addFileToManager(file, DataSourcePluginManager.SYSTEM);
 			handled |= addFileToManager(file, DataSinkPluginManager.SYSTEM);
 			handled |= addFileToManager(file, FilterPluginManager.SYSTEM);
+			handled |= addFileToManager(file, MapFilterPluginManager.SYSTEM);
 			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.SYSTEM);
 		} catch (BoltImportException e) {
 		
@@ -289,6 +297,7 @@ public class PluginsOverview extends HeaderLayer {
 		DataSourcePluginManager.SYSTEM.reload();
 		DataSinkPluginManager.SYSTEM.reload();
 		FilterPluginManager.SYSTEM.reload();
+		MapFilterPluginManager.SYSTEM.reload();
 		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.SYSTEM.reload();
 		tree.setModel(buildTreeModel());
 	}
@@ -332,6 +341,14 @@ public class PluginsOverview extends HeaderLayer {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			filtersNode.add(node);
 		}
+		
+		DefaultMutableTreeNode mapFiltersNode = new DefaultMutableTreeNode(MapFilterPluginManager.SYSTEM);
+		plugins.add(mapFiltersNode);
+		for (BoltPluginPrototype<? extends MapFilterPlugin> source :  MapFilterPluginManager.SYSTEM.getPlugins().getAll()) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
+			mapFiltersNode.add(node);
+		}
+		
 		
 		if (Peakaboo.SHOW_QUANTITATIVE) {
 			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.SYSTEM);

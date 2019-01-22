@@ -15,6 +15,7 @@ import peakaboo.calibration.CalibrationReference;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
+import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -66,6 +67,10 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
 		}
 		
 		if (pluginBaseClass == JavaFilterPlugin.class) {
+			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON);
+		}
+
+		if (pluginBaseClass == JavaMapFilterPlugin.class) {
 			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON);
 		}
 		

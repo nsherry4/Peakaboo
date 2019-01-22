@@ -19,6 +19,7 @@ import peakaboo.calibration.CalibrationReference;
 import peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import peakaboo.filter.plugins.JavaFilterPlugin;
+import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
@@ -93,6 +94,10 @@ public class PluginView extends JPanel {
 			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.ICON);
 		}
 		
+		if (pluginBaseClass == JavaMapFilterPlugin.class) {
+			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.ICON);
+		}
+				
 		if (pluginBaseClass == CalibrationReference.class) {
 			return IconFactory.getImageIcon("calibration", IconSize.ICON);
 		}
