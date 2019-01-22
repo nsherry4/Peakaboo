@@ -154,38 +154,6 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 
 	}
 
-	/**
-	 * 
-	 * Composites the data in all {@link RawMap} into a single map. 
-	 * 
-	 * @return a list of double values representing the composited map
-	 */
-	@Deprecated //removal in 5.3
-	public Spectrum sumAllTransitionSeriesMaps(CalibrationProfile profile)
-	{
-		return sumGivenTransitionSeriesMaps(getAllTransitionSeries(), profile);
-	}
-
-	
-	/**
-	 * 
-	 * Composites the data in all {@link RawMap} into a single map. 
-	 * 
-	 * @return a list of double values representing the composited map
-	 */
-	@Deprecated //removal in 5.3
-	public Spectrum sumGivenTransitionSeriesMaps(Collection<ITransitionSeries> list, CalibrationProfile profile)
-	{
-		
-		Spectrum sums = new ISpectrum(maps.get(0).size(), 0.0f);
-
-		for (RawMap map : maps) {
-			if (list.contains(map.transitionSeries)) SpectrumCalculations.addLists_inplace(sums, map.getData(profile));
-		}
-
-		return sums;
-
-	}
 
 	public Iterator<RawMap> iterator()
 	{

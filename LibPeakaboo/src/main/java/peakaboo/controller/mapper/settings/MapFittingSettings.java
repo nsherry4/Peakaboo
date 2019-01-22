@@ -621,12 +621,8 @@ public class MapFittingSettings extends EventfulType<String> {
 			//TODO: This may give a technically wrong result until interpolation is made into a filter
 			return new ISpectrum(size.x * size.y);
 		}
-		Coord<Integer> newSize = filtereds.get(0).getSize();
-		Spectrum composite = new ISpectrum(newSize.x * newSize.y);
-		for (AreaMap areamap : filtereds) {
-			SpectrumCalculations.addLists_inplace(composite, areamap.getData());
-		}
-		return composite;
+		
+		return AreaMap.sumSpectrum(filtereds);
 		
 	}
 	
