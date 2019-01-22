@@ -76,7 +76,7 @@ public class GridPerspective<T> implements Cloneable
 		return value;
 	}
 
-	public Float get(Spectrum spec, int x, int y)
+	public Float get(ReadOnlySpectrum spec, int x, int y)
 	{
 		int index = y * width + x;
 
