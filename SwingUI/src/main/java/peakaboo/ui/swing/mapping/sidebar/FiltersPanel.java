@@ -5,12 +5,15 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Window;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
@@ -36,6 +39,7 @@ import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
 public class FiltersPanel extends JPanel {
 
+	private Window window;
 	private CardLayout layout;
 	
 	private String PANEL_FILTERS = "PANEL_FILTERS";
@@ -46,8 +50,9 @@ public class FiltersPanel extends JPanel {
 	private JTable filterTable;
 	private ListControls filterControls;
 	
-	public FiltersPanel(MapFilteringController controller) {
+	public FiltersPanel(MapFilteringController controller, Window window) {
 		this.controller = controller;
+		this.window = window;
 		
 		layout = new CardLayout();
 		setLayout(layout);
@@ -140,8 +145,8 @@ public class FiltersPanel extends JPanel {
 		filterTable.getColumnModel().getColumn(0).setPreferredWidth(32);
 		filterTable.getColumnModel().getColumn(0).setMaxWidth(32);
 		
-		filterTable.getColumnModel().getColumn(1).setCellRenderer(new ListWidgetTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller)));
-		filterTable.getColumnModel().getColumn(1).setCellEditor(new ListWidgetCellEditor<MapFilter>(new MapFilterSettingsButton(controller)));
+		filterTable.getColumnModel().getColumn(1).setCellRenderer(new ListWidgetTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller, window)));
+		filterTable.getColumnModel().getColumn(1).setCellEditor(new ListWidgetCellEditor<MapFilter>(new MapFilterSettingsButton(controller, window)));
 		filterTable.getColumnModel().getColumn(1).setMinWidth(32);
 		filterTable.getColumnModel().getColumn(1).setPreferredWidth(32);
 		filterTable.getColumnModel().getColumn(1).setMaxWidth(32);
@@ -242,26 +247,37 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	private ImageButton button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL);
 	private MapFilter filter;
 	
-	public MapFilterSettingsButton(MapFilteringController controller) {
+	private static Map<MapFilter, MapFilterDialog> dialogs = new HashMap<>();
+	
+	public MapFilterSettingsButton(MapFilteringController controller, Window window) {
 		
 		setLayout(new BorderLayout());
 		add(button, BorderLayout.CENTER);
 		
 		button.withBordered(false);
 		button.setOpaque(false);
-		
-		//TODO: Track all settings dialogs in a map so we don't create duplicates
+		button.withBorder(new EmptyBorder(0, 0, 0, 0));
+				
 		button.withAction(() -> {
-			MapFilterDialog dialog = new MapFilterDialog(controller, filter, AutoDialogButtons.CLOSE, null); //TODO: window should not be null
-			dialog.setHelpMessage(filter.getFilterDescription());
-			dialog.setHelpTitle(filter.getFilterName());
-			dialog.initialize();
+			MapFilterDialog dialog;
+			if (dialogs.keySet().contains(filter)) {
+				dialog = dialogs.get(filter);
+				dialog.setVisible(true);
+			} else {
+				dialog = new MapFilterDialog(controller, filter, AutoDialogButtons.CLOSE, window);
+				dialog.setHelpMessage(filter.getFilterDescription());
+				dialog.setHelpTitle(filter.getFilterName());
+				dialog.initialize();
+				dialogs.put(filter, dialog);
+			}
+			getListWidgetParent().editingStopped();
 		});
 	}
 	
 	@Override
 	protected void onSetValue(MapFilter filter) {
 		this.filter = filter;
+		button.setVisible(filter.getParameters().size() > 0);
 	}
 	
 }

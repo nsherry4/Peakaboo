@@ -55,7 +55,7 @@ class MapperSidebar extends JPanel
 	}
 
 	private JPanel filtersTab() {
-		return new FiltersPanel(controller.getFiltering());
+		return new FiltersPanel(controller.getFiltering(), tabPanel.getTabbedInterface().getWindow());
 	}
 	
 	private JPanel fittingsTab() {
