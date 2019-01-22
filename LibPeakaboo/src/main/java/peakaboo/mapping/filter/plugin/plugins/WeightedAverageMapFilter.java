@@ -20,8 +20,7 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 
 	@Override
 	public String getFilterDescription() {
-		// TODO Auto-generated method stub
-		return "";
+		return "The Weighted Average filter performs a weighted average within a given radius, favouring closer points more than points farther away";
 	}
 
 	@Override
@@ -109,8 +108,7 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 
 	@Override
 	public String pluginUUID() {
-		// TODO Auto-generated method stub
-		return "ccccccccccccccccccccccccccccc";
+		return "fc2c3147-07a7-4823-b508-1a20d0579ccf";
 	}
 
 }

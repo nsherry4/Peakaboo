@@ -82,8 +82,7 @@ public class FastAverageMapFilter extends AbstractMapFilter {
 
 	@Override
 	public String pluginUUID() {
-		// TODO Auto-generated method stub
-		return "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+		return "983260dc-e133-4dc0-a736-f646bb8998ed";
 	}
 
 }
