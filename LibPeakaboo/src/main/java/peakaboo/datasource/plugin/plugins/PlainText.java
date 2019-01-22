@@ -1,11 +1,19 @@
 package peakaboo.datasource.plugin.plugins;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import com.univocity.parsers.common.IterableResult;
+import com.univocity.parsers.common.ParsingContext;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 import cyclops.ISpectrum;
 import cyclops.Spectrum;
@@ -86,28 +94,26 @@ public class PlainText extends AbstractDataSource
 		LoaderQueue queue = scandata.createLoaderQueue(10);
 		
 		
-		Iterator<String> lines = Files.lines(file).iterator();
+		
+		CsvParserSettings settings = new CsvParserSettings();
+		settings.setDelimiterDetectionEnabled(true, ' ', '\t', ',');
+		settings.setNullValue("0");
+		settings.setEmptyValue("0");
+		settings.setLineSeparatorDetectionEnabled(true);
+		settings.setMaxColumns(16384);
+		settings.setMaxCharsPerColumn(20);
+		CsvParser parser = new CsvParser(settings);
+		
+		for (String[] row : parser.iterate(Files.newInputStream(file, StandardOpenOption.READ))) {
 
-		while (lines.hasNext())
-		{
-			String line = lines.next();
 			if (lineEstimate == -1) {
-				lineEstimate = fileSize / line.length();
+				lineEstimate = fileSize / (String.join(" ", row).length());
 				getInteraction().notifyScanCount(lineEstimate);
 			}
 			
-			if (line == null || getInteraction().checkReadAborted()) break;
+			if (getInteraction().checkReadAborted()) break;
 			
-			if (line.trim().equals("") || line.trim().startsWith("#")) continue;
-						
-			//split on all non-digit characters
-			String[] entries = line.trim().split("[, \\t]+");
-			Spectrum scan = parseLine(entries);
-//			Spectrum scan = new ISpectrum(Arrays.asList(line.trim().split("[, \\t]+")).stream().map(s -> {
-//				try { return Float.parseFloat(s); } 
-//				catch (Exception e) { return 0f; }
-//			}).collect(toList()));
-			
+			Spectrum scan = parseLine(row);
 			
 			if (size > 0 && scan.size() != scanSize) 
 			{
@@ -118,8 +124,6 @@ public class PlainText extends AbstractDataSource
 				scanSize = scan.size();
 			}
 			
-			
-			//scandata.add(scan);
 			queue.submit(scan);
 			size++;
 			
@@ -127,10 +131,12 @@ public class PlainText extends AbstractDataSource
 			
 		}
 		
+		
 		queue.finish();
 		
 
 	}
+
 
 	private Spectrum parseLine(String[] entries) {
 		Spectrum scan = new ISpectrum(entries.length);
@@ -191,7 +197,5 @@ public class PlainText extends AbstractDataSource
 		return Optional.empty();
 	}
 
-
-	
 
 }
