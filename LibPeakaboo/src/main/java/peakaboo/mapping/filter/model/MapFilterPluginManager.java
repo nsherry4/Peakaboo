@@ -9,17 +9,15 @@ import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.java.BoltJavaPlugin;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
 import peakaboo.common.PeakabooLog;
-import peakaboo.filter.plugins.JavaFilterPlugin;
 import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import peakaboo.mapping.filter.plugin.MapFilterPlugin;
-import peakaboo.mapping.filter.plugin.plugins.AverageMapFilter;
 import peakaboo.mapping.filter.plugin.plugins.EnlargeMapFilter;
-import peakaboo.mapping.filter.plugin.plugins.SpreadMapFilter;
+import peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
+import peakaboo.mapping.filter.plugin.plugins.WeightedAverageMapFilter;
 
 public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 
@@ -42,9 +40,9 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		try {
 			BoltClassloaderPluginLoader<JavaMapFilterPlugin> loader = classpathLoader(getPlugins());
 			
-			loader.registerPlugin(AverageMapFilter.class);
+			loader.registerPlugin(FastAverageMapFilter.class);
 			loader.registerPlugin(EnlargeMapFilter.class);
-			loader.registerPlugin(SpreadMapFilter.class);
+			loader.registerPlugin(WeightedAverageMapFilter.class);
 			
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load MapFilter plugins", e);

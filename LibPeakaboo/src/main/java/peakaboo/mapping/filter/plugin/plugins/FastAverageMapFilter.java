@@ -8,13 +8,13 @@ import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerSpinnerStyle;
 import peakaboo.mapping.filter.model.AreaMap;
 
-public class AverageMapFilter extends AbstractMapFilter {
+public class FastAverageMapFilter extends AbstractMapFilter {
 
 	Parameter<Integer> reps;
 	
 	@Override
 	public String getFilterName() {
-		return "Averaging";
+		return "Fast Average";
 	}
 
 	@Override

@@ -34,7 +34,7 @@ import peakaboo.display.map.modes.OverlayColour;
 import peakaboo.mapping.filter.Interpolation;
 import peakaboo.mapping.filter.model.AreaMap;
 import peakaboo.mapping.filter.model.MapFilter;
-import peakaboo.mapping.filter.plugin.plugins.AverageMapFilter;
+import peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
 import peakaboo.mapping.rawmap.RawMap;
 import peakaboo.mapping.rawmap.RawMapSet;
 

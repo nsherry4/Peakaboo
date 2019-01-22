@@ -8,19 +8,18 @@ import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerSpinnerStyle;
 import peakaboo.mapping.filter.model.AreaMap;
 
-public class SpreadMapFilter extends AbstractMapFilter {
+public class WeightedAverageMapFilter extends AbstractMapFilter{
 
 	Parameter<Integer> radius;
 	
 	@Override
 	public String getFilterName() {
-		return "Signal Spread";
-		
+		return "Weighted Average";
 	}
 
 	@Override
 	public String getFilterDescription() {
-		//TODO
+		// TODO Auto-generated method stub
 		return "";
 	}
 
@@ -46,31 +45,42 @@ public class SpreadMapFilter extends AbstractMapFilter {
 		
 		for (int y = 0; y < map.getSize().y; y++) {
 			for (int x = 0; x < map.getSize().x; x++) {
-
-				float value = grid.get(data, x, y);
+				
+				float sum = 0f;
+				float weights = 0f;
 				
 				for (int dy = -r; dy <= +r; dy++) {
 					for (int dx = -r; dx <= +r; dx++) {
-						//skip points out in the corners, this is a circle
+						//don't include oob points
+						if (!grid.boundsCheck(x+dx, y+dy)) {
+							continue;
+						}
+						
+						//calculate weight for this point
 						double dist = Math.sqrt(dx*dx+dy*dy);
-						if (dist > r+1) { continue; }
-						float fraction = 1f;
-						if (dist > r ) { fraction = (float) (1f - (dist - (float)r)); }
+						float weight = (float) (r+1f - dist);
 						
-						float current = grid.get(filtered, x+dx, y+dy);
-						float added = value * fraction;
+						//this will form a circular sampling area
+						if (weight < 0) { continue; }
 						
-						grid.set(filtered, x+dx, y+dy, current + added);
+						//normalize and square the weight to give extra weight to the central points
+						float maxweight = r+1f;
+						weight = (weight/maxweight);
+						weight *= weight;
 						
+						//add to the sum
+						sum += grid.get(data, x+dx, y+dy) * weight;
+						weights += weight;
 					}
 				}
+				
+				grid.set(filtered, x, y, sum/weights);
 				
 			}
 		}
 
 		
 		return new AreaMap(filtered, map.getSize());
-		
 	}
 
 	@Override
@@ -86,7 +96,7 @@ public class SpreadMapFilter extends AbstractMapFilter {
 	@Override
 	public String pluginUUID() {
 		// TODO Auto-generated method stub
-		return "bbbbbbbbbbbbbbbbbbbbbbbbbb";
+		return "ccccccccccccccccccccccccccccc";
 	}
 
 }
