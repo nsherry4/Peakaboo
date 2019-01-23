@@ -19,7 +19,7 @@ public class Version {
 	static {
 		prop = new Properties();
 		try {
-			InputStream versionInfoFile = Version.class.getResourceAsStream("/peakaboo/common/version.info");
+			InputStream versionInfoFile = Version.class.getResourceAsStream("/org/peakaboo/common/version.info");
 			prop.load(versionInfoFile);
 			buildDate = prop.getProperty("builddate");
 		} catch (IOException e) {

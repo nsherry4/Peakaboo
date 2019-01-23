@@ -22,7 +22,7 @@ public class CorrectionsManager
 		correctionSets = new HashMap<String, Corrections>();
 		try
 		{
-			correctionSets.put("WL", new Corrections(PeakTable.class.getResource("/peakaboo/mapping/correction/wl.csv"))); 
+			correctionSets.put("WL", new Corrections(PeakTable.class.getResource("/org/peakaboo/mapping/correction/wl.csv"))); 
 		}
 		catch (IOException e)
 		{

@@ -42,7 +42,7 @@ public class KrausePeakTable implements PeakTable {
 		
 		int elementDataWidth = 2;
 
-		InputStream ins = PeakTable.class.getResourceAsStream("/peakaboo/curvefit/peaktable/PeakTable.tsv");
+		InputStream ins = PeakTable.class.getResourceAsStream("/org/peakaboo/curvefit/peaktable/PeakTable.tsv");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
 		
 

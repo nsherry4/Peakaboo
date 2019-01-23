@@ -1,4 +1,4 @@
-package peakaboo.datasource;
+package org.peakaboo.datasource;
 
 import org.junit.Test;
 import org.peakaboo.datasource.model.components.physicalsize.SimplePhysicalSize;
