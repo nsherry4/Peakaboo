@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.concentration;
+package org.peakaboo.ui.swing.calibration.concentration;
 
 import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.display.calibration.ConcentrationPlot;

@@ -1,4 +1,4 @@
-package net.sciencestudio.peakaboo.SwingUI;
+package org.peakaboo.ui.swing;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

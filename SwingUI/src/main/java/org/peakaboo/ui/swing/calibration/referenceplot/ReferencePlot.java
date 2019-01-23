@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.referenceplot;
+package org.peakaboo.ui.swing.calibration.referenceplot;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;

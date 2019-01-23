@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.concentration;
+package org.peakaboo.ui.swing.calibration.concentration;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;

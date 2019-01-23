@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.profileplot;
+package org.peakaboo.ui.swing.calibration.profileplot;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -20,10 +20,10 @@ import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.ui.swing.calibration.picker.ReferencePicker;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 import eventful.EventfulTypeListener;
-import peakaboo.ui.swing.calibration.picker.ReferencePicker;
-import peakaboo.ui.swing.plotting.PlotPanel;
 import stratus.controls.ButtonLinker;
 import swidget.Swidget;
 import swidget.dialogues.fileio.SimpleFileExtension;

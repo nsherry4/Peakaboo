@@ -1,4 +1,4 @@
-package peakaboo.ui.swing;
+package org.peakaboo.ui.swing;
 
 import java.io.File;
 import java.util.logging.Handler;
@@ -23,10 +23,10 @@ import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.ui.swing.environment.DesktopApp;
+import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 import eventful.EventfulConfig;
-import peakaboo.ui.swing.environment.DesktopApp;
-import peakaboo.ui.swing.plotting.PlotFrame;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
 import swidget.Swidget;
@@ -175,7 +175,7 @@ public class Peakaboo
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
-		IconFactory.customPath = "/peakaboo/ui/swing/icons/";
+		IconFactory.customPath = "/org/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
 		setAppTitle("Peakaboo 5");
 		

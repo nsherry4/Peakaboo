@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping.sidebar.modes;
+package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
 

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plugins;
+package org.peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,15 +40,15 @@ import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
+import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.environment.DesktopApp;
+import org.peakaboo.ui.swing.plotting.FileDrop;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
-import peakaboo.ui.swing.Peakaboo;
-import peakaboo.ui.swing.environment.DesktopApp;
-import peakaboo.ui.swing.plotting.FileDrop;
 import stratus.StratusLookAndFeel;
 import stratus.controls.ButtonLinker;
 import stratus.theme.LightTheme;

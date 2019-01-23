@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package org.peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
 import java.awt.Window;
@@ -17,9 +17,9 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 
 import eventful.EventfulListener;
-import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;

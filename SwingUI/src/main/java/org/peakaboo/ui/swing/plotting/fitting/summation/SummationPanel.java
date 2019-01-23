@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting.summation;
+package org.peakaboo.ui.swing.plotting.fitting.summation;
 
 
 import java.awt.BorderLayout;
@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
-import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.listcontrols.SelectionListControls;

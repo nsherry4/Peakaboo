@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,13 +26,13 @@ import org.peakaboo.controller.mapper.settings.PointsSelection;
 import org.peakaboo.controller.settings.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plotting.toolbar.PlotMenuExport;
+import org.peakaboo.ui.swing.plotting.toolbar.PlotMenuView;
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.ui.swing.Peakaboo;
-import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
-import peakaboo.ui.swing.plotting.PlotPanel;
-import peakaboo.ui.swing.plotting.toolbar.PlotMenuExport;
-import peakaboo.ui.swing.plotting.toolbar.PlotMenuView;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.toolbar;
+package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,9 +12,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
-import peakaboo.ui.swing.Peakaboo;
-import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;

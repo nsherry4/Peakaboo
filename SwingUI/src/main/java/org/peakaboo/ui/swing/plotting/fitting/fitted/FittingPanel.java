@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting.fitted;
+package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 
 
@@ -28,11 +28,11 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plotting.fitting.Changeable;
+import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
+import org.peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 
-import peakaboo.ui.swing.plotting.PlotPanel;
-import peakaboo.ui.swing.plotting.fitting.Changeable;
-import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
-import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.toolbar;
+package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -11,8 +11,7 @@ import javax.swing.KeyStroke;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
-
-import peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {
 

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping.sidebar;
+package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

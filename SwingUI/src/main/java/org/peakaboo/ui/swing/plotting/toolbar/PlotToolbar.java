@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.toolbar;
+package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,9 +8,9 @@ import javax.swing.Box;
 import javax.swing.JToolBar;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
-import peakaboo.ui.swing.Peakaboo;
-import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;

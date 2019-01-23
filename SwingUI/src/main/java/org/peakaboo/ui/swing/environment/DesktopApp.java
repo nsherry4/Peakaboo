@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.environment;
+package org.peakaboo.ui.swing.environment;
 
 import java.awt.Desktop;
 import java.io.File;

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -7,7 +7,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
-import peakaboo.ui.swing.plotting.toolbar.PlotMenuUtils;
+import org.peakaboo.ui.swing.plotting.toolbar.PlotMenuUtils;
+
 import swidget.icons.StockIcon;
 
 public class MapMenuExport extends JPopupMenu {

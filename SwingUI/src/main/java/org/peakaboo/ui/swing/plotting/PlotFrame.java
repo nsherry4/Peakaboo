@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting;
+package org.peakaboo.ui.swing.plotting;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;

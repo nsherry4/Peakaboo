@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting;
+package org.peakaboo.ui.swing.plotting;
 
 
 import java.awt.Color;
@@ -32,8 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 import org.peakaboo.common.PeakabooLog;
-
-import peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
+import org.peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
 
 /**
  * This class makes it easy to drag and drop files from the operating

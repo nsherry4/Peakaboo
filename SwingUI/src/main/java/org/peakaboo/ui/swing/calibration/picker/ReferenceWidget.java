@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.picker;
+package org.peakaboo.ui.swing.calibration.picker;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

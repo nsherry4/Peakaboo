@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting;
+package org.peakaboo.ui.swing.plotting.fitting;
 
 
 
@@ -12,15 +12,15 @@ import javax.swing.JPanel;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.ui.swing.plotting.PlotCanvas;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
+import org.peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
+import org.peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
+import org.peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 
 import cyclops.util.Mutable;
 import eventful.EventfulTypeListener;
-import peakaboo.ui.swing.plotting.PlotCanvas;
-import peakaboo.ui.swing.plotting.PlotPanel;
-import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
-import peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
-import peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
-import peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
 import swidget.widgets.ClearPanel;

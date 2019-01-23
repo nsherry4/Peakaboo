@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

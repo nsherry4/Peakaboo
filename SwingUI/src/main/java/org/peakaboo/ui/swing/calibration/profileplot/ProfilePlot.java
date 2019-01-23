@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.profileplot;
+package org.peakaboo.ui.swing.calibration.profileplot;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;

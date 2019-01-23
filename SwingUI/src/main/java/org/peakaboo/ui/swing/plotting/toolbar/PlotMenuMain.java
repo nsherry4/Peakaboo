@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.toolbar;
+package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -14,10 +14,10 @@ import org.peakaboo.common.Version;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.datasink.plugin.DataSinkPlugin;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 import cyclops.util.Mutable;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.StockIcon;
 
 public class PlotMenuMain extends JPopupMenu {

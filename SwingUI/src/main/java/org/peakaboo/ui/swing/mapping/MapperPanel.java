@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping;
 
 
 
@@ -41,6 +41,7 @@ import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.Mapper;
 import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.ui.swing.plotting.ExportPanel;
 
 import cyclops.Coord;
 import cyclops.util.Mutable;
@@ -49,7 +50,6 @@ import cyclops.visualization.SurfaceType;
 import cyclops.visualization.backend.awt.AwtSurfaceFactory;
 import cyclops.visualization.backend.awt.SavePicture;
 import eventful.EventfulTypeListener;
-import peakaboo.ui.swing.plotting.ExportPanel;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.ClearPanel;

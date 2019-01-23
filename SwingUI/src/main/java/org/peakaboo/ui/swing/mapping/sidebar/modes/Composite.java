@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping.sidebar.modes;
+package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,9 +13,9 @@ import javax.swing.table.TableModel;
 import org.peakaboo.controller.mapper.settings.MapFittingSettings;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
+import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
-import peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
-import peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 import swidget.widgets.Spacing;
 
 public class Composite extends JPanel {

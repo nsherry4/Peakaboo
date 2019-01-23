@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping.sidebar;
+package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -16,10 +16,10 @@ import javax.swing.SwingConstants;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
+import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
+import org.peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
 
-import peakaboo.ui.swing.mapping.sidebar.modes.Composite;
-import peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
-import peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
 import stratus.controls.ButtonLinker;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

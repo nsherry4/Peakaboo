@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.calibration.picker;
+package org.peakaboo.ui.swing.calibration.picker;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,8 +14,8 @@ import javax.swing.table.TableModel;
 
 import org.peakaboo.calibration.CalibrationPluginManager;
 import org.peakaboo.calibration.CalibrationReference;
+import org.peakaboo.ui.swing.calibration.referenceplot.ReferenceViewPanel;
 
-import peakaboo.ui.swing.calibration.referenceplot.ReferenceViewPanel;
 import swidget.models.ListTableModel;
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.LayerPanel;

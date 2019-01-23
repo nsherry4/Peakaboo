@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.datasource;
+package org.peakaboo.ui.swing.plotting.datasource;
 
 import java.util.List;
 import java.util.function.Consumer;

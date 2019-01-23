@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.toolbar;
+package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
@@ -12,7 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
-import peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuUtils {
 

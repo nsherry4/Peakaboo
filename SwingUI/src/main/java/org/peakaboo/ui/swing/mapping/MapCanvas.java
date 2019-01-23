@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;

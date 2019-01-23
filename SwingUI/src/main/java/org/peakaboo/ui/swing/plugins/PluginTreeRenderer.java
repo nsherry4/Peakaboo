@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plugins;
+package org.peakaboo.ui.swing.plugins;
 
 import java.awt.Component;
 import java.util.List;

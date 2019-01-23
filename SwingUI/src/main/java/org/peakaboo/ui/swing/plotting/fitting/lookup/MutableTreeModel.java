@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting.lookup;
+package org.peakaboo.ui.swing.plotting.fitting.lookup;
 
 import javax.swing.tree.TreeModel;
 

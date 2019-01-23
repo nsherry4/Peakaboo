@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.statusbar;
+package org.peakaboo.ui.swing.plotting.statusbar;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.fitting.guidedfitting;
+package org.peakaboo.ui.swing.plotting.fitting.guidedfitting;
 
 
 
@@ -12,9 +12,9 @@ import java.util.List;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.ui.swing.plotting.fitting.TSSelector;
+import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 
-import peakaboo.ui.swing.plotting.fitting.TSSelector;
-import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

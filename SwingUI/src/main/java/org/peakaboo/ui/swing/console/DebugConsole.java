@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.console;
+package org.peakaboo.ui.swing.console;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

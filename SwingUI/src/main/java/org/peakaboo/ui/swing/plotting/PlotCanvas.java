@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting;
+package org.peakaboo.ui.swing.plotting;
 
 
 

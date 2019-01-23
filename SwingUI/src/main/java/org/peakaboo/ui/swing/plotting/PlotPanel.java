@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting;
+package org.peakaboo.ui.swing.plotting;
 
 
 
@@ -68,6 +68,17 @@ import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.mapping.rawmap.RawMapSet;
+import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
+import org.peakaboo.ui.swing.calibration.profileplot.ProfileManager;
+import org.peakaboo.ui.swing.console.DebugConsole;
+import org.peakaboo.ui.swing.environment.DesktopApp;
+import org.peakaboo.ui.swing.mapping.MapperFrame;
+import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
+import org.peakaboo.ui.swing.plotting.filters.FiltersetViewer;
+import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
+import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
+import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
+import org.peakaboo.ui.swing.plugins.PluginsOverview;
 
 import bsh.Interpreter;
 import cyclops.Bounds;
@@ -82,17 +93,6 @@ import cyclops.visualization.backend.awt.SavePicture;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
-import peakaboo.ui.swing.calibration.profileplot.ProfileManager;
-import peakaboo.ui.swing.console.DebugConsole;
-import peakaboo.ui.swing.environment.DesktopApp;
-import peakaboo.ui.swing.mapping.MapperFrame;
-import peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
-import peakaboo.ui.swing.plotting.filters.FiltersetViewer;
-import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
-import peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
-import peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
-import peakaboo.ui.swing.plugins.PluginsOverview;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
@@ -555,8 +555,8 @@ public class PlotPanel extends TabbedLayerPanel
 		contents.linkAction = () -> DesktopApp.browser("https://github.com/nsherry4/Peakaboo");
 		contents.linktext = "Website";
 		contents.copyright = "2009-2018 by The University of Western Ontario and The Canadian Light Source Inc.";
-		contents.licence = StringInput.contents(getClass().getResourceAsStream("/peakaboo/licence.txt"));
-		contents.credits = StringInput.contents(getClass().getResourceAsStream("/peakaboo/credits.txt"));
+		contents.licence = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/licence.txt"));
+		contents.credits = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/credits.txt"));
 		contents.logo = logo;
 		contents.version = Version.versionNoMajor + "." + Version.versionNoMinor;
 		contents.longVersion = Version.longVersionNo;

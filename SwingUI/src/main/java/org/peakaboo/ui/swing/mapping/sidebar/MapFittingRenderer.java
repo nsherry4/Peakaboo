@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping.sidebar;
+package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,8 +13,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-
-import peakaboo.ui.swing.plotting.fitting.fitted.FittedWidget;
+import org.peakaboo.ui.swing.plotting.fitting.fitted.FittedWidget;
 
 public class MapFittingRenderer extends DefaultTableCellRenderer
 {

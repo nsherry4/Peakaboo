@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.mapping.sidebar;
+package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,9 +10,9 @@ import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 import cyclops.Coord;
-import peakaboo.ui.swing.mapping.MapperPanel;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.Event;
 import plural.streams.swing.StreamExecutorPanel;

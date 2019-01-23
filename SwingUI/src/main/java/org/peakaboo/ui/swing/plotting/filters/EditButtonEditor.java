@@ -1,4 +1,4 @@
-package peakaboo.ui.swing.plotting.filters;
+package org.peakaboo.ui.swing.plotting.filters;
 
 
 
