@@ -43,6 +43,7 @@ public class SimpleLoaderQueue implements LoaderQueue {
 				}
 			}
 		});
+		thread.setName("SimpleLoaderQueue");
 		thread.start();
 
 	}

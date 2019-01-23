@@ -104,6 +104,7 @@ public class PlainText extends AbstractDataSource
 		settings.setMaxCharsPerColumn(20);
 		CsvParser parser = new CsvParser(settings);
 		
+		int readcount = 0;
 		for (String[] row : parser.iterate(Files.newInputStream(file, StandardOpenOption.READ))) {
 
 			if (lineEstimate == -1) {
@@ -126,8 +127,12 @@ public class PlainText extends AbstractDataSource
 			
 			queue.submit(scan);
 			size++;
+			readcount++;
 			
-			getInteraction().notifyScanRead(1);
+			if (readcount == 50) {
+				getInteraction().notifyScanRead(readcount);
+				readcount = 0;
+			}
 			
 		}
 		
@@ -197,5 +202,8 @@ public class PlainText extends AbstractDataSource
 		return Optional.empty();
 	}
 
+	
+	
+	
 
 }

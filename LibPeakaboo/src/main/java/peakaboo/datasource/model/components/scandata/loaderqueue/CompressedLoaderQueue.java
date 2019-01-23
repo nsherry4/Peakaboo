@@ -54,6 +54,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 				}
 			}
 		});
+		thread.setName("CompressedLoaderQueue");
 		thread.start();
 
 	}
