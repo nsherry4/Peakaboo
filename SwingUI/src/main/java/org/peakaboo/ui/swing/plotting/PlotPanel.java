@@ -60,6 +60,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.datasink.model.DataSink;
+import org.peakaboo.datasink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
@@ -637,16 +638,29 @@ public class PlotPanel extends TabbedLayerPanel
 			if (!file.isPresent()) {
 				return;
 			}
-			try {
-				sink.write(source, file.get().toPath());
-			} catch (IOException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
-			}
+			actionExportData(source, sink, file.get());
 			
 		});
 
 	}
 
+	public void actionExportData(DataSource source, DataSink sink, File file) {
+
+		ExecutorSet<Void> writer = DataSink.write(source, sink, file.toPath());
+
+		ExecutorSetView execPanel = new ExecutorSetView(writer); 
+		ModalLayer execlayer = new ModalLayer(PlotPanel.this, execPanel);
+		writer.addListener(() -> {
+			if (writer.getCompleted() || writer.isAborted()) {
+				PlotPanel.this.removeLayer(execlayer);
+			}
+		});
+		PlotPanel.this.pushLayer(execlayer);
+
+		writer.startWorking();
+
+	}
+	
 	public void actionMap()
 	{
 

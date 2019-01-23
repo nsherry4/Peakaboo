@@ -7,26 +7,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 
-import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import org.peakaboo.datasink.plugin.AbstractDataSink;
 import org.peakaboo.datasource.model.DataSource;
 
 import cyclops.ReadOnlySpectrum;
 
-public class CSV implements JavaDataSinkPlugin {
+public class CSV extends AbstractDataSink {
 
 	@Override
 	public boolean pluginEnabled() {
 		return true;
-	}
-
-	@Override
-	public String pluginName() {
-		return getFormatName();
-	}
-
-	@Override
-	public String pluginDescription() {
-		return getFormatDescription();
 	}
 
 	@Override
@@ -42,10 +32,20 @@ public class CSV implements JavaDataSinkPlugin {
 	@Override
 	public void write(DataSource source, Path destination) throws IOException {
 		Writer writer = new OutputStreamWriter(Files.newOutputStream(destination));
+		
+		int counter = 0;
 		for (ReadOnlySpectrum s : source.getScanData()) {
 			String spectrum = s.stream().map(f -> Float.toString(f)).collect(Collectors.joining(", "));
 			writer.write(spectrum);
 			writer.write("\n");
+			counter++;
+			if (counter == 100) {
+				getInteraction().notifyScanWritten(counter);
+				counter = 0;
+				if (getInteraction().isAbortedRequested()) {
+					return;
+				}
+			}
 		}
 		writer.close();		
 	}
