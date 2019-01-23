@@ -1,4 +1,4 @@
-package peakaboo.filter.model;
+package org.peakaboo.filter.model;
 
 
 import java.util.ArrayList;
@@ -8,11 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
+
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import peakaboo.common.PeakabooLog;
 
 /**
  * 

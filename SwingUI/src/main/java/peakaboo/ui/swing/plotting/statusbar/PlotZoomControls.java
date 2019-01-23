@@ -4,7 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPopupMenu;
 
-import peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.PlotController;
+
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;

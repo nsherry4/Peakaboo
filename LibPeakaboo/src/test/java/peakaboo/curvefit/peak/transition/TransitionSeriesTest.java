@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.KrausePeakTable;
-import peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.table.KrausePeakTable;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class TransitionSeriesTest {
 

@@ -10,8 +10,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import peakaboo.ui.swing.plotting.fitting.TSSelector;
 import peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 import swidget.icons.IconSize;

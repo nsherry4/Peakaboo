@@ -1,12 +1,13 @@
-package peakaboo.mapping.rawmap;
+package org.peakaboo.mapping.rawmap;
 
 
+
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 
 /**

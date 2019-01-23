@@ -1,4 +1,7 @@
-package peakaboo.mapping.filter.plugin.plugins;
+package org.peakaboo.mapping.filter.plugin.plugins;
+
+import org.peakaboo.mapping.filter.Interpolation;
+import org.peakaboo.mapping.filter.model.AreaMap;
 
 import cyclops.Coord;
 import cyclops.GridPerspective;
@@ -7,8 +10,6 @@ import cyclops.Pair;
 import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerSpinnerStyle;
-import peakaboo.mapping.filter.Interpolation;
-import peakaboo.mapping.filter.model.AreaMap;
 
 public class EnlargeMapFilter extends AbstractMapFilter {
 

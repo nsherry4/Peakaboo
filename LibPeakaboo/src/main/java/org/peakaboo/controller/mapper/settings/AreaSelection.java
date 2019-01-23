@@ -1,15 +1,16 @@
-package peakaboo.controller.mapper.settings;
+package org.peakaboo.controller.mapper.settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
+
 import cyclops.Coord;
 import cyclops.GridPerspective;
 import cyclops.Range;
 import eventful.EventfulType;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.MappingController.UpdateType;
 
 /**
  * Represents a box-style selection over an area

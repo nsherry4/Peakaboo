@@ -1,9 +1,14 @@
-package peakaboo.curvefit.curve.fitting;
+package org.peakaboo.curvefit.curve.fitting;
 
 
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 import cyclops.ISpectrum;
 import cyclops.Range;
@@ -11,10 +16,6 @@ import cyclops.RangeSet;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 
 
 

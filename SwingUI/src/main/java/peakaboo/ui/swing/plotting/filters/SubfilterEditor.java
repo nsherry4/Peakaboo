@@ -10,11 +10,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
+import org.peakaboo.filter.model.Filter;
+
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.autodialog.view.swing.editors.AbstractSwingEditor;
-import peakaboo.filter.model.Filter;
 import swidget.widgets.Spacing;
 
 

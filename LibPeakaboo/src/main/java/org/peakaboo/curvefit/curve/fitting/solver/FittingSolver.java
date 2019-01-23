@@ -1,11 +1,12 @@
-package peakaboo.curvefit.curve.fitting.solver;
+package org.peakaboo.curvefit.curve.fitting.solver;
+
+import org.peakaboo.curvefit.curve.fitting.Curve;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 
 /**
  * Defines a method by which a {@link FittingSet} of {@link Curve}s are fit to a given {@link Spectrum}

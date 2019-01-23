@@ -1,9 +1,13 @@
-package peakaboo.controller.mapper.settings;
+package org.peakaboo.controller.mapper.settings;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -11,9 +15,6 @@ import cyclops.ISpectrum;
 import cyclops.Pair;
 import cyclops.Spectrum;
 import eventful.EventfulType;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.MappingController.UpdateType;
 import plural.streams.StreamExecutor;
 
 /**

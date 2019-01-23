@@ -1,12 +1,12 @@
-package peakaboo.curvefit.peak.table;
+package org.peakaboo.curvefit.peak.table;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
-import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public interface PeakTable {
 

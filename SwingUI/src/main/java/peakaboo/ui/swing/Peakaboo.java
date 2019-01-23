@@ -11,19 +11,20 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.peakaboo.calibration.CalibrationPluginManager;
+import org.peakaboo.common.Env;
+import org.peakaboo.common.PeakabooConfiguration;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.common.Version;
+import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
+import org.peakaboo.datasink.plugin.DataSinkPluginManager;
+import org.peakaboo.datasource.plugin.DataSourcePluginManager;
+import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+
 import eventful.EventfulConfig;
-import peakaboo.calibration.CalibrationPluginManager;
-import peakaboo.common.Env;
-import peakaboo.common.PeakabooConfiguration;
-import peakaboo.common.PeakabooConfiguration.MemorySize;
-import peakaboo.common.PeakabooLog;
-import peakaboo.common.Version;
-import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.table.SerializedPeakTable;
-import peakaboo.datasink.plugin.DataSinkPluginManager;
-import peakaboo.datasource.plugin.DataSourcePluginManager;
-import peakaboo.filter.model.FilterPluginManager;
-import peakaboo.mapping.filter.model.MapFilterPluginManager;
 import peakaboo.ui.swing.environment.DesktopApp;
 import peakaboo.ui.swing.plotting.PlotFrame;
 import stratus.StratusLookAndFeel;
@@ -170,7 +171,7 @@ public class Peakaboo
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		peakaboo.common.PeakabooConfiguration.diskstore = true;
+		org.peakaboo.common.PeakabooConfiguration.diskstore = true;
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);

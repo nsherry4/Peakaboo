@@ -11,7 +11,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.PlotController;
+
 import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;

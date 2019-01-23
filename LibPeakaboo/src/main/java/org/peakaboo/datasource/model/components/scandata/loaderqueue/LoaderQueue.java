@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.scandata.loaderqueue;
+package org.peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import cyclops.ISpectrum;
 import cyclops.Spectrum;

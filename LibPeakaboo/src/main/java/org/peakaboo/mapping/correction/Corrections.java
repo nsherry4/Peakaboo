@@ -1,4 +1,4 @@
-package peakaboo.mapping.correction;
+package org.peakaboo.mapping.correction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,11 +6,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
+
 import cyclops.Pair;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 
 
 public class Corrections

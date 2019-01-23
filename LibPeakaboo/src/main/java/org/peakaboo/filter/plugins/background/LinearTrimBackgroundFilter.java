@@ -1,6 +1,8 @@
-package peakaboo.filter.plugins.background;
+package org.peakaboo.filter.plugins.background;
 
 
+
+import org.peakaboo.filter.model.AbstractBackgroundFilter;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
@@ -8,7 +10,6 @@ import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import peakaboo.filter.model.AbstractBackgroundFilter;
 
 /**
  * 

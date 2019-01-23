@@ -1,11 +1,12 @@
-package peakaboo.display.map;
+package org.peakaboo.display.map;
 
 import java.util.Map;
 
+import org.peakaboo.display.map.modes.OverlayChannel;
+import org.peakaboo.display.map.modes.OverlayColour;
+
 import cyclops.Pair;
 import cyclops.Spectrum;
-import peakaboo.display.map.modes.OverlayChannel;
-import peakaboo.display.map.modes.OverlayColour;
 
 public class MapRenderData {
 

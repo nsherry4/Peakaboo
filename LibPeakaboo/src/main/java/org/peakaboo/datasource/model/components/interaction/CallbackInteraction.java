@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.interaction;
+package org.peakaboo.datasource.model.components.interaction;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

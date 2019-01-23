@@ -1,18 +1,19 @@
-package peakaboo.curvefit.curve.fitting.solver;
+package org.peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.peakaboo.curvefit.curve.fitting.Curve;
+import org.peakaboo.curvefit.curve.fitting.FittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 
 public class GreedyFittingSolver implements FittingSolver {
 

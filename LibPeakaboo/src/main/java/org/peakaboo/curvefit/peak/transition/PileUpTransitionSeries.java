@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.transition;
+package org.peakaboo.curvefit.peak.transition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.peakaboo.curvefit.peak.table.Element;
+
 import cyclops.util.ListOps;
-import peakaboo.curvefit.peak.table.Element;
 
 public class PileUpTransitionSeries implements ITransitionSeries {
 

@@ -1,8 +1,8 @@
-package peakaboo.curvefit.peak.fitting.functions;
+package org.peakaboo.curvefit.peak.fitting.functions;
 
-import peakaboo.curvefit.peak.fitting.FittingContext;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.fitting.FittingContext;
+import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.transition.Transition;
 
 public class ConvolvingVoigtFittingFunction implements FittingFunction {
 

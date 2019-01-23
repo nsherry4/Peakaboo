@@ -1,11 +1,12 @@
-package peakaboo.curvefit.peak.search.scoring;
+package org.peakaboo.curvefit.peak.search.scoring;
+
+import org.peakaboo.curvefit.curve.fitting.Curve;
+import org.peakaboo.curvefit.curve.fitting.FittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 public class CurveFittingScorer implements FittingScorer {
 

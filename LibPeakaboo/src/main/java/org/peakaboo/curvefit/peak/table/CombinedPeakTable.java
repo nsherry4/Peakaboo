@@ -1,11 +1,11 @@
-package peakaboo.curvefit.peak.table;
+package org.peakaboo.curvefit.peak.table;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 
 public class CombinedPeakTable implements PeakTable {
 

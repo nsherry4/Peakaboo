@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.search;
+package org.peakaboo.curvefit.peak.search;
 
 
 import java.util.ArrayList;
@@ -7,26 +7,27 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.curvefit.curve.fitting.FittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.peak.escape.EscapePeak;
+import org.peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
+import org.peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
+import org.peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
+import org.peakaboo.curvefit.peak.search.scoring.FastFittingScorer;
+import org.peakaboo.curvefit.peak.search.scoring.NoComplexPileupScorer;
+import org.peakaboo.curvefit.peak.search.scoring.PileupSourceScorer;
+import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.Transition;
+
 import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
-import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.peak.escape.EscapePeak;
-import peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
-import peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
-import peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
-import peakaboo.curvefit.peak.search.scoring.FastFittingScorer;
-import peakaboo.curvefit.peak.search.scoring.NoComplexPileupScorer;
-import peakaboo.curvefit.peak.search.scoring.PileupSourceScorer;
-import peakaboo.curvefit.peak.search.searcher.PeakSearcher;
-import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.Transition;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 

@@ -4,13 +4,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.display.calibration.CalibrationProfilePlot;
+
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionShell;
-import peakaboo.display.calibration.CalibrationProfilePlot;
 
 public class ProfilePlot extends GraphicsPanel {
 

@@ -1,7 +1,8 @@
-package peakaboo.datasource.plugin;
+package org.peakaboo.datasource.plugin;
+
+import org.peakaboo.datasource.model.DataSource;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
-import peakaboo.datasource.model.DataSource;
 
 public interface DataSourcePlugin extends DataSource, BoltPlugin {
 

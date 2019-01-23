@@ -4,15 +4,16 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.settings.MapViewSettings;
+import org.peakaboo.display.map.MapRenderData;
+import org.peakaboo.display.map.MapRenderSettings;
+import org.peakaboo.display.map.Mapper;
+
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
-import peakaboo.common.PeakabooLog;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.settings.MapViewSettings;
-import peakaboo.display.map.MapRenderData;
-import peakaboo.display.map.MapRenderSettings;
-import peakaboo.display.map.Mapper;
 
 
 class MapCanvas extends GraphicsPanel

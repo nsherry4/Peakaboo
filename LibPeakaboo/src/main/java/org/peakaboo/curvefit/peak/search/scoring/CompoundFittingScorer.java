@@ -1,9 +1,9 @@
-package peakaboo.curvefit.peak.search.scoring;
+package org.peakaboo.curvefit.peak.search.scoring;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 public class CompoundFittingScorer implements FittingScorer {
 

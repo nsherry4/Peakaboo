@@ -1,10 +1,10 @@
-package peakaboo.controller.plotter.data.discards;
+package org.peakaboo.controller.plotter.data.discards;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.PlotController;
 
 public class DiscardsList implements Discards {
 

@@ -1,11 +1,12 @@
-package peakaboo.display.plot.painters;
+package org.peakaboo.display.plot.painters;
+
+import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 import cyclops.SigDigits;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 public class FittingLabel extends DataLabel {
 

@@ -13,8 +13,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import org.peakaboo.controller.mapper.MappingController;
+
 import cyclops.Coord;
-import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.sidebar.FiltersPanel;
 import peakaboo.ui.swing.mapping.sidebar.MapAppearancePanel;
 import peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;

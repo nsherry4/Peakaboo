@@ -1,12 +1,12 @@
-package peakaboo.controller.settings;
+package org.peakaboo.controller.settings;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 
 
 public class SerializedTransitionSeries

@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.fitting;
+package org.peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
@@ -9,24 +9,25 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.search.PeakProposal;
+import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.Mutable;
 import eventful.EventfulCache;
 import eventful.EventfulType;
-import peakaboo.common.PeakabooLog;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.search.PeakProposal;
-import peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
-import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import plural.executor.ExecutorSet;
 
 

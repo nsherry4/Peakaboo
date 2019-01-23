@@ -11,9 +11,10 @@ import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.AbstractTableModel;
 
-import peakaboo.calibration.Concentrations;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.calibration.Concentrations;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import swidget.widgets.Spacing;
 
 public class ConcentrationTablePanel extends JPanel {

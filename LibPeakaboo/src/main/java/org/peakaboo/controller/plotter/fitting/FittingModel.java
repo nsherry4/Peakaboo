@@ -1,19 +1,20 @@
-package peakaboo.controller.plotter.fitting;
+package org.peakaboo.controller.plotter.fitting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import eventful.EventfulCache;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 
 

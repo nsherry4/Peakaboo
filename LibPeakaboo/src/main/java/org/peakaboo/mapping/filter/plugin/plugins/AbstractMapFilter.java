@@ -1,11 +1,12 @@
-package peakaboo.mapping.filter.plugin.plugins;
+package org.peakaboo.mapping.filter.plugin.plugins;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.Value;
-import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 
 public abstract class AbstractMapFilter implements JavaMapFilterPlugin {
 

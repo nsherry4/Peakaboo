@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.data.discards;
+package org.peakaboo.controller.plotter.data.discards;
 
 import java.util.List;
 

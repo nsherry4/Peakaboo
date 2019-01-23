@@ -1,4 +1,4 @@
-package peakaboo.controller.mapper.settings;
+package org.peakaboo.controller.mapper.settings;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -13,6 +13,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.display.map.MapScaleMode;
+import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.OverlayChannel;
+import org.peakaboo.display.map.modes.OverlayColour;
+import org.peakaboo.mapping.filter.Interpolation;
+import org.peakaboo.mapping.filter.model.AreaMap;
+import org.peakaboo.mapping.filter.model.MapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
+import org.peakaboo.mapping.rawmap.RawMap;
+import org.peakaboo.mapping.rawmap.RawMapSet;
+
 import cyclops.Coord;
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
@@ -23,20 +38,6 @@ import cyclops.SigDigits;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import eventful.EventfulType;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.display.map.MapScaleMode;
-import peakaboo.display.map.modes.MapDisplayMode;
-import peakaboo.display.map.modes.OverlayChannel;
-import peakaboo.display.map.modes.OverlayColour;
-import peakaboo.mapping.filter.Interpolation;
-import peakaboo.mapping.filter.model.AreaMap;
-import peakaboo.mapping.filter.model.MapFilter;
-import peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
-import peakaboo.mapping.rawmap.RawMap;
-import peakaboo.mapping.rawmap.RawMapSet;
 
 
 

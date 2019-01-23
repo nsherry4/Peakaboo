@@ -1,8 +1,11 @@
-package peakaboo.filter.plugins.noise;
+package org.peakaboo.filter.plugins.noise;
 
 
 
 import java.util.Arrays;
+
+import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.FilterType;
 
 import JSci.maths.Complex;
 import JSci.maths.FourierMath;
@@ -14,8 +17,6 @@ import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
 import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
-import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.FilterType;
 
 /**
  * 

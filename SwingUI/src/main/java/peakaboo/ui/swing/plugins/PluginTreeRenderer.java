@@ -8,14 +8,15 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import org.peakaboo.calibration.CalibrationReference;
+import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
+import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.calibration.CalibrationReference;
-import peakaboo.datasink.plugin.JavaDataSinkPlugin;
-import peakaboo.datasource.plugin.JavaDataSourcePlugin;
-import peakaboo.filter.plugins.JavaFilterPlugin;
-import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;

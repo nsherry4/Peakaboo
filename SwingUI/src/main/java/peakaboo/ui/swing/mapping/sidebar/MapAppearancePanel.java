@@ -9,7 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-import peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.MappingController;
+
 import swidget.widgets.Spacing;
 
 public class MapAppearancePanel extends JPanel {

@@ -1,7 +1,10 @@
-package peakaboo.filter.plugins.noise;
+package org.peakaboo.filter.plugins.noise;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.FilterType;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
@@ -11,8 +14,6 @@ import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 import net.sciencestudio.autodialog.model.style.editors.SeparatorStyle;
-import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.FilterType;
 
 //From Handbook of X-Ray Spectrometry
 public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {

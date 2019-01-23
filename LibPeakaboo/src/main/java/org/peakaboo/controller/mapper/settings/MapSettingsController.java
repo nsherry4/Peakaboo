@@ -1,9 +1,10 @@
-package peakaboo.controller.mapper.settings;
+package org.peakaboo.controller.mapper.settings;
 
 
+
+import org.peakaboo.controller.mapper.MappingController;
 
 import eventful.EventfulType;
-import peakaboo.controller.mapper.MappingController;
 
 
 

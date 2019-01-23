@@ -19,9 +19,10 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import peakaboo.calibration.CalibrationReference;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.calibration.CalibrationReference;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
+
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;

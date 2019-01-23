@@ -1,4 +1,4 @@
-package peakaboo.dataset;
+package org.peakaboo.dataset;
 
 
 import java.nio.file.Path;
@@ -10,21 +10,22 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
+import org.peakaboo.dataset.analysis.Analysis;
+import org.peakaboo.dataset.analysis.DataSourceAnalysis;
+import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.components.datasize.DataSize;
+import org.peakaboo.datasource.model.components.datasize.DummyDataSize;
+import org.peakaboo.datasource.model.components.interaction.CallbackInteraction;
+import org.peakaboo.datasource.model.components.metadata.Metadata;
+import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.components.scandata.DummyScanData;
+import org.peakaboo.datasource.model.components.scandata.ScanData;
+
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
-import peakaboo.common.PeakabooLog;
-import peakaboo.dataset.DatasetReadResult.ReadStatus;
-import peakaboo.dataset.analysis.Analysis;
-import peakaboo.dataset.analysis.DataSourceAnalysis;
-import peakaboo.datasource.model.DataSource;
-import peakaboo.datasource.model.components.datasize.DataSize;
-import peakaboo.datasource.model.components.datasize.DummyDataSize;
-import peakaboo.datasource.model.components.interaction.CallbackInteraction;
-import peakaboo.datasource.model.components.metadata.Metadata;
-import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.model.components.scandata.DummyScanData;
-import peakaboo.datasource.model.components.scandata.ScanData;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 

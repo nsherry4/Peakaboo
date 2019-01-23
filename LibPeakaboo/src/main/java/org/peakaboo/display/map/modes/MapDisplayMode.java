@@ -1,4 +1,4 @@
-package peakaboo.display.map.modes;
+package org.peakaboo.display.map.modes;
 
 public enum MapDisplayMode {
 	COMPOSITE

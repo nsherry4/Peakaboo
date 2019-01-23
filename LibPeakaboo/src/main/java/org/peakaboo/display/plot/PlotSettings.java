@@ -1,4 +1,4 @@
-package peakaboo.display.plot;
+package org.peakaboo.display.plot;
 
 public class PlotSettings {
 	

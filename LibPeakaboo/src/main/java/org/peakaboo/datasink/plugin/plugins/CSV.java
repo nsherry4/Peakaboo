@@ -1,4 +1,4 @@
-package peakaboo.datasink.plugin.plugins;
+package org.peakaboo.datasink.plugin.plugins;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -7,9 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 
+import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import org.peakaboo.datasource.model.DataSource;
+
 import cyclops.ReadOnlySpectrum;
-import peakaboo.datasink.plugin.JavaDataSinkPlugin;
-import peakaboo.datasource.model.DataSource;
 
 public class CSV implements JavaDataSinkPlugin {
 

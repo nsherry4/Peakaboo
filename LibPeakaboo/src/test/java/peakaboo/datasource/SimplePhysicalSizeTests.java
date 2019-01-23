@@ -1,11 +1,11 @@
 package peakaboo.datasource;
 
 import org.junit.Test;
+import org.peakaboo.datasource.model.components.physicalsize.SimplePhysicalSize;
 
 import cyclops.Coord;
 import cyclops.SISize;
 import junit.framework.Assert;
-import peakaboo.datasource.model.components.physicalsize.SimplePhysicalSize;
 
 public class SimplePhysicalSizeTests {
 

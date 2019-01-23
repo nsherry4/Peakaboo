@@ -13,9 +13,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.display.map.modes.MapDisplayMode;
+
 import peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import peakaboo.ui.swing.mapping.sidebar.modes.Ratio;

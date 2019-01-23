@@ -6,7 +6,8 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 
-import peakaboo.calibration.CalibrationReference;
+import org.peakaboo.calibration.CalibrationReference;
+
 import swidget.widgets.Spacing;
 import swidget.widgets.listwidget.ListWidget;
 

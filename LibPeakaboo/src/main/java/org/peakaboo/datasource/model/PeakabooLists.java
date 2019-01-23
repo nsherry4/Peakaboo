@@ -1,11 +1,12 @@
-package peakaboo.datasource.model;
+package org.peakaboo.datasource.model;
+
+import org.peakaboo.common.PeakabooConfiguration;
 
 import cyclops.ISpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.list.ScratchList;
 import net.sciencestudio.scratch.list.ScratchLists;
-import peakaboo.common.PeakabooConfiguration;
 
 /**
  * SpectrumList is an implementation of the List interface which writes 

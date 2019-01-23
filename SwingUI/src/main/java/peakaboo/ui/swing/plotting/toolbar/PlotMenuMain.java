@@ -9,13 +9,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.common.Version;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.datasink.plugin.DataSinkPlugin;
+import org.peakaboo.datasink.plugin.DataSinkPluginManager;
+
 import cyclops.util.Mutable;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.common.PeakabooLog;
-import peakaboo.common.Version;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.datasink.plugin.DataSinkPlugin;
-import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.StockIcon;
 

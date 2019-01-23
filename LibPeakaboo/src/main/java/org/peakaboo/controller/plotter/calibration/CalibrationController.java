@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.calibration;
+package org.peakaboo.controller.plotter.calibration;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,17 +6,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.CalibrationReference;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
+import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datasource.model.components.metadata.Metadata;
+
 import eventful.Eventful;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.calibration.CalibrationReference;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
-import peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
-import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.datasource.model.components.metadata.Metadata;
 
 public class CalibrationController extends Eventful {
 

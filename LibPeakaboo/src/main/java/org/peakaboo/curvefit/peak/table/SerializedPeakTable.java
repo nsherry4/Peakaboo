@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.table;
+package org.peakaboo.curvefit.peak.table;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.Transition;
+
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
-import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import peakaboo.curvefit.peak.transition.Transition;
 
 public class SerializedPeakTable implements PeakTable {
 

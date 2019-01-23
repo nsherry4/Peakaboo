@@ -1,10 +1,10 @@
-package peakaboo.curvefit.peak.fitting;
+package org.peakaboo.curvefit.peak.fitting;
 
-import peakaboo.curvefit.curve.fitting.FittingParameters;
-import peakaboo.curvefit.peak.escape.EscapePeak;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.curvefit.curve.fitting.FittingParameters;
+import org.peakaboo.curvefit.peak.escape.EscapePeak;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class FittingContext {
 

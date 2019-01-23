@@ -10,9 +10,10 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
+
 import peakaboo.ui.swing.plotting.fitting.fitted.FittedWidget;
 
 public class MapFittingRenderer extends DefaultTableCellRenderer

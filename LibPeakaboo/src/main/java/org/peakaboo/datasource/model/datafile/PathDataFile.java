@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.datafile;
+package org.peakaboo.datasource.model.datafile;
 
 import java.io.IOException;
 import java.io.InputStream;

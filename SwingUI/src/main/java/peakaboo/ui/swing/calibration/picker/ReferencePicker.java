@@ -12,8 +12,9 @@ import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import peakaboo.calibration.CalibrationPluginManager;
-import peakaboo.calibration.CalibrationReference;
+import org.peakaboo.calibration.CalibrationPluginManager;
+import org.peakaboo.calibration.CalibrationReference;
+
 import peakaboo.ui.swing.calibration.referenceplot.ReferenceViewPanel;
 import swidget.models.ListTableModel;
 import swidget.widgets.Spacing;

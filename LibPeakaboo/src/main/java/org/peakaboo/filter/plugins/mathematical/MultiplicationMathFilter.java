@@ -1,13 +1,14 @@
-package peakaboo.filter.plugins.mathematical;
+package org.peakaboo.filter.plugins.mathematical;
 
 
+
+import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.FilterType;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
-import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.FilterType;
 
 
 public class MultiplicationMathFilter extends AbstractSimpleFilter

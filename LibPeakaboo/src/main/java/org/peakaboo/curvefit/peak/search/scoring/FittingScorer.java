@@ -1,8 +1,8 @@
-package peakaboo.curvefit.peak.search.scoring;
+package org.peakaboo.curvefit.peak.search.scoring;
 
 import java.util.Comparator;
 
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 /**
  * Interface for scoring how well a {@link ITransitionSeries} matches a spectrum.

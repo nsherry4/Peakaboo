@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.escape;
+package org.peakaboo.curvefit.peak.escape;
 
 /**
  * Describes the kind of escape peaks that would be expected from different kinds of detectors.

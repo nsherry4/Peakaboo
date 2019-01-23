@@ -1,11 +1,11 @@
-package peakaboo.datasource.model.datafile;
+package org.peakaboo.datasource.model.datafile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.DataSource;
 
 /**
  * A DataFile is a representation of data that does not necessarily exist on

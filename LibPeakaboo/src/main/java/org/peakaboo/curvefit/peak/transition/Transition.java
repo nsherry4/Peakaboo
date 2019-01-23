@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.transition;
+package org.peakaboo.curvefit.peak.transition;
 
 import java.io.Serializable;
 

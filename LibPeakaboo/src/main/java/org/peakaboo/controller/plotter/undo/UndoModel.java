@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.undo;
+package org.peakaboo.controller.plotter.undo;
 
 import java.util.Stack;
 

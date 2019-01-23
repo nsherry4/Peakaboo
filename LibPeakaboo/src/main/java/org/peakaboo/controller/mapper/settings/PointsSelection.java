@@ -1,9 +1,13 @@
-package peakaboo.controller.mapper.settings;
+package org.peakaboo.controller.mapper.settings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.display.map.modes.MapDisplayMode;
 
 import cyclops.Coord;
 import cyclops.GridPerspective;
@@ -11,9 +15,6 @@ import cyclops.Pair;
 import cyclops.Range;
 import cyclops.Spectrum;
 import eventful.EventfulType;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.display.map.modes.MapDisplayMode;
 
 /**
  * Represents a selection of points, which may not be contiguous 

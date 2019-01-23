@@ -1,4 +1,4 @@
-package peakaboo.calibration;
+package org.peakaboo.calibration;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class Concentrations {
 

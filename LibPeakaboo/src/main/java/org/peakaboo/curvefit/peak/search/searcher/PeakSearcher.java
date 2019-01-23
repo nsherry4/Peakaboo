@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.search.searcher;
+package org.peakaboo.curvefit.peak.search.searcher;
 
 import java.util.List;
 

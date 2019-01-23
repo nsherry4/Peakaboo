@@ -1,7 +1,8 @@
-package peakaboo.filter.plugins;
+package org.peakaboo.filter.plugins;
+
+import org.peakaboo.filter.model.Filter;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
-import peakaboo.filter.model.Filter;
 
 public interface FilterPlugin extends Filter, BoltPlugin {
 

@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.fitting.solver;
+package org.peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,13 +10,13 @@ import java.util.Set;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.PointValuePair;
+import org.peakaboo.curvefit.curve.fitting.Curve;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.ListOps;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 

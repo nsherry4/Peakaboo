@@ -20,10 +20,11 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.table.PeakTable;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import peakaboo.ui.swing.plotting.fitting.Changeable;
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.ClearPanel;

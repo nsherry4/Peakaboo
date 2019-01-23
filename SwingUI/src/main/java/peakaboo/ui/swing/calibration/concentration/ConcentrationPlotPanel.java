@@ -1,10 +1,11 @@
 package peakaboo.ui.swing.calibration.concentration;
 
+import org.peakaboo.calibration.Concentrations;
+import org.peakaboo.display.calibration.ConcentrationPlot;
+
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
-import peakaboo.calibration.Concentrations;
-import peakaboo.display.calibration.ConcentrationPlot;
 
 public class ConcentrationPlotPanel extends GraphicsPanel {
 

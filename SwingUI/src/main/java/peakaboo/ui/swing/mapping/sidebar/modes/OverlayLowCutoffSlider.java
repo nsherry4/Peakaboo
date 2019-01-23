@@ -8,8 +8,9 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.controller.mapper.settings.MapSettingsController;
+
 import swidget.widgets.Spacing;
 
 public class OverlayLowCutoffSlider extends JPanel {

@@ -6,7 +6,8 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
-import peakaboo.common.Version;
+import org.peakaboo.common.Version;
+
 import swidget.icons.IconFactory;
 import swidget.widgets.LiveFrame;
 import swidget.widgets.tabbedinterface.TabbedInterface;

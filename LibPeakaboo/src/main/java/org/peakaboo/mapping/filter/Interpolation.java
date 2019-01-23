@@ -1,4 +1,4 @@
-package peakaboo.mapping.filter;
+package org.peakaboo.mapping.filter;
 
 import java.util.ArrayList;
 import java.util.List;

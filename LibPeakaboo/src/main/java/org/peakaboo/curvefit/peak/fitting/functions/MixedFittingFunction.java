@@ -1,7 +1,7 @@
-package peakaboo.curvefit.peak.fitting.functions;
+package org.peakaboo.curvefit.peak.fitting.functions;
 
-import peakaboo.curvefit.peak.fitting.FittingContext;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.FittingContext;
+import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 
 public class MixedFittingFunction implements FittingFunction {
 

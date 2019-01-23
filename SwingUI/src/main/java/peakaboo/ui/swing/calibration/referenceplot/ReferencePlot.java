@@ -3,13 +3,14 @@ package peakaboo.ui.swing.calibration.referenceplot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
+import org.peakaboo.calibration.CalibrationReference;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.display.calibration.CalibrationReferencePlot;
+
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
-import peakaboo.calibration.CalibrationReference;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.TransitionShell;
-import peakaboo.display.calibration.CalibrationReferencePlot;
 
 public class ReferencePlot extends GraphicsPanel {
 

@@ -1,4 +1,6 @@
-package peakaboo.mapping.filter.plugin.plugins;
+package org.peakaboo.mapping.filter.plugin.plugins;
+
+import org.peakaboo.mapping.filter.model.AreaMap;
 
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
@@ -6,7 +8,6 @@ import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerSpinnerStyle;
-import peakaboo.mapping.filter.model.AreaMap;
 
 public class FastAverageMapFilter extends AbstractMapFilter {
 

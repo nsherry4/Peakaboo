@@ -1,4 +1,4 @@
-package peakaboo.common;
+package org.peakaboo.common;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;

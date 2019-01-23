@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.metadata;
+package org.peakaboo.datasource.model.components.metadata;
 
 public class SimpleMetadata implements Metadata {
 

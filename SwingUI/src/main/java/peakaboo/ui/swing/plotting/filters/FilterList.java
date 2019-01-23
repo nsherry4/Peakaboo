@@ -15,9 +15,10 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
+import org.peakaboo.controller.plotter.filtering.FilteringController;
+import org.peakaboo.filter.model.Filter;
+
 import eventful.EventfulListener;
-import peakaboo.controller.plotter.filtering.FilteringController;
-import peakaboo.filter.model.Filter;
 import peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

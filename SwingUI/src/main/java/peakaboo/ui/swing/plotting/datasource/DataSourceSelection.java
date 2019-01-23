@@ -6,7 +6,8 @@ import java.util.function.Consumer;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
-import peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.DataSource;
+
 import swidget.models.ListTableModel;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.widgets.ListPickerLayer;

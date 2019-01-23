@@ -1,10 +1,11 @@
-package peakaboo.curvefit.peak.search.scoring;
+package org.peakaboo.curvefit.peak.search.scoring;
+
+import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /**
  * Prefers pileup peaks which are a small percent of the 

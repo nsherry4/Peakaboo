@@ -16,11 +16,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
+
 import eventful.EventfulTypeListener;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.common.PeakabooLog;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 import peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import stratus.controls.ButtonLinker;

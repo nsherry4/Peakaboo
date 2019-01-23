@@ -1,8 +1,19 @@
-package peakaboo.display.plot;
+package org.peakaboo.display.plot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.peakaboo.common.PeakabooConfiguration;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.display.plot.painters.FittingLabel;
+import org.peakaboo.display.plot.painters.FittingMarkersPainter;
+import org.peakaboo.display.plot.painters.FittingPainter;
+import org.peakaboo.display.plot.painters.FittingSumPainter;
+import org.peakaboo.filter.model.Filter;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -28,16 +39,6 @@ import cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import cyclops.visualization.palette.PaletteColour;
-import peakaboo.common.PeakabooConfiguration;
-import peakaboo.common.PeakabooConfiguration.MemorySize;
-import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.display.plot.painters.FittingLabel;
-import peakaboo.display.plot.painters.FittingMarkersPainter;
-import peakaboo.display.plot.painters.FittingPainter;
-import peakaboo.display.plot.painters.FittingSumPainter;
-import peakaboo.filter.model.Filter;
 
 public class Plotter {
 

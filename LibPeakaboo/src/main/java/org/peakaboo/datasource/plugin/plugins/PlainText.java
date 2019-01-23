@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugin.plugins;
+package org.peakaboo.datasource.plugin.plugins;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,6 +10,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.datasource.model.components.datasize.DataSize;
+import org.peakaboo.datasource.model.components.fileformat.FileFormat;
+import org.peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
+import org.peakaboo.datasource.model.components.metadata.Metadata;
+import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
+import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
+import org.peakaboo.datasource.plugin.AbstractDataSource;
+
 import com.univocity.parsers.common.IterableResult;
 import com.univocity.parsers.common.ParsingContext;
 import com.univocity.parsers.csv.CsvParser;
@@ -18,15 +28,6 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import cyclops.ISpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Group;
-import peakaboo.datasource.model.components.datasize.DataSize;
-import peakaboo.datasource.model.components.fileformat.FileFormat;
-import peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
-import peakaboo.datasource.model.components.metadata.Metadata;
-import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.model.components.scandata.ScanData;
-import peakaboo.datasource.model.components.scandata.SimpleScanData;
-import peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
-import peakaboo.datasource.plugin.AbstractDataSource;
 
 
 public class PlainText extends AbstractDataSource

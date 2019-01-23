@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.fitting;
+package org.peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import peakaboo.common.PeakabooLog;
-import peakaboo.controller.settings.SerializedTransitionSeries;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionSeriesMode;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.settings.SerializedTransitionSeries;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 
 public class SavedFittingSession {
 

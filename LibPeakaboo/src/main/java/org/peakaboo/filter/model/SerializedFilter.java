@@ -1,9 +1,10 @@
-package peakaboo.filter.model;
+package org.peakaboo.filter.model;
 
 import java.util.List;
 
+import org.peakaboo.filter.plugins.FilterPlugin;
+
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.filter.plugins.FilterPlugin;
 
 /**
  * SerializedFilter holds a reference to a filter, and provides getters/setters for

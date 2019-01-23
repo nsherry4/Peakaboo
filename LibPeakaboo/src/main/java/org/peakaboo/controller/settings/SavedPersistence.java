@@ -1,9 +1,9 @@
-package peakaboo.controller.settings;
+package org.peakaboo.controller.settings;
 
 
-import peakaboo.common.YamlSerializer;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.view.PersistentViewModel;
+import org.peakaboo.common.YamlSerializer;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.PersistentViewModel;
 
 /**
  * Stores persistent settings which are loaded when a PlotController is created.

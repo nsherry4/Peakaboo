@@ -9,8 +9,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.view.ChannelCompositeMode;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
+
 import peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {

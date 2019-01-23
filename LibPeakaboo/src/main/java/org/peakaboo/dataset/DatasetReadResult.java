@@ -1,4 +1,4 @@
-package peakaboo.dataset;
+package org.peakaboo.dataset;
 
 public class DatasetReadResult
 {

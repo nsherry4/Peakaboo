@@ -1,20 +1,21 @@
-package peakaboo.datasource.model.internal;
+package org.peakaboo.datasource.model.internal;
 
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.components.datasize.DataSize;
+import org.peakaboo.datasource.model.components.fileformat.FileFormat;
+import org.peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
+import org.peakaboo.datasource.model.components.interaction.Interaction;
+import org.peakaboo.datasource.model.components.metadata.Metadata;
+import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
+
 import net.sciencestudio.autodialog.model.Group;
-import peakaboo.datasource.model.DataSource;
-import peakaboo.datasource.model.components.datasize.DataSize;
-import peakaboo.datasource.model.components.fileformat.FileFormat;
-import peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
-import peakaboo.datasource.model.components.interaction.Interaction;
-import peakaboo.datasource.model.components.metadata.Metadata;
-import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.model.components.scandata.ScanData;
-import peakaboo.datasource.model.components.scandata.SimpleScanData;
 
 /**
  * @author maxweld

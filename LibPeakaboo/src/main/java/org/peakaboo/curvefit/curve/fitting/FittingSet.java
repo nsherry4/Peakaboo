@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.fitting;
+package org.peakaboo.curvefit.curve.fitting;
 
 
 
@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import eventful.EventfulCache;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 /**
  * This class acts as a container for a set of {@link ITransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 

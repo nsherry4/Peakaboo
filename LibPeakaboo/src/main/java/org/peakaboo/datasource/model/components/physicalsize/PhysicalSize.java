@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.physicalsize;
+package org.peakaboo.datasource.model.components.physicalsize;
 
 import cyclops.Bounds;
 import cyclops.Coord;

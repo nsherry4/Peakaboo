@@ -1,9 +1,9 @@
-package peakaboo.calibration;
+package org.peakaboo.calibration;
 
 import java.util.Map;
 
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationNormalizer implements CalibrationProcessor {
 

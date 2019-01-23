@@ -1,24 +1,25 @@
-package peakaboo.controller.mapper;
+package org.peakaboo.controller.mapper;
 
 
 
 import java.util.List;
 
+import org.peakaboo.controller.mapper.filtering.MapFilteringController;
+import org.peakaboo.controller.mapper.rawdata.RawDataController;
+import org.peakaboo.controller.mapper.settings.AreaSelection;
+import org.peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.controller.mapper.settings.MapViewSettings;
+import org.peakaboo.controller.mapper.settings.PointsSelection;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.settings.SavedSession;
+import org.peakaboo.datasource.model.internal.CroppedDataSource;
+import org.peakaboo.datasource.model.internal.SelectionDataSource;
+import org.peakaboo.display.map.MapRenderData;
+import org.peakaboo.display.map.MapRenderSettings;
+import org.peakaboo.display.map.MapScaleMode;
+
 import cyclops.Coord;
 import eventful.EventfulType;
-import peakaboo.controller.mapper.filtering.MapFilteringController;
-import peakaboo.controller.mapper.rawdata.RawDataController;
-import peakaboo.controller.mapper.settings.AreaSelection;
-import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.controller.mapper.settings.MapViewSettings;
-import peakaboo.controller.mapper.settings.PointsSelection;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.settings.SavedSession;
-import peakaboo.datasource.model.internal.CroppedDataSource;
-import peakaboo.datasource.model.internal.SelectionDataSource;
-import peakaboo.display.map.MapRenderData;
-import peakaboo.display.map.MapRenderSettings;
-import peakaboo.display.map.MapScaleMode;
 
 
 public class MappingController extends EventfulType<String>

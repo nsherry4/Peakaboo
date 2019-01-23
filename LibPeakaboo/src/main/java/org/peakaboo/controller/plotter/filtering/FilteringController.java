@@ -1,15 +1,16 @@
-package peakaboo.controller.plotter.filtering;
+package org.peakaboo.controller.plotter.filtering;
 
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterSet;
+
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulCache;
-import peakaboo.common.PeakabooLog;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterSet;
 
 
 public class FilteringController extends Eventful

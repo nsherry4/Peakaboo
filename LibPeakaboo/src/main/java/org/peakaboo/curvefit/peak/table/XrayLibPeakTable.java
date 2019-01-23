@@ -1,17 +1,18 @@
-package peakaboo.curvefit.peak.table;
+package org.peakaboo.curvefit.peak.table;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 import com.github.tschoonj.xraylib.Xraylib;
 import com.github.tschoonj.xraylib.XraylibException;
 
 import cyclops.Range;
 import cyclops.RangeSet;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class XrayLibPeakTable implements PeakTable {
 

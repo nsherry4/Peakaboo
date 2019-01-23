@@ -1,12 +1,13 @@
-package peakaboo.display.map;
+package org.peakaboo.display.map;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.display.map.modes.MapDisplayMode;
+
 import cyclops.Coord;
 import cyclops.SISize;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.display.map.modes.MapDisplayMode;
 
 public class MapRenderSettings {
 

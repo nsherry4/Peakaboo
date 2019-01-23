@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.table;
+package org.peakaboo.curvefit.peak.table;
 
 
 

@@ -9,8 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
-import peakaboo.controller.mapper.settings.MapSettingsController;
-import peakaboo.display.map.MapScaleMode;
+import org.peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.display.map.MapScaleMode;
+
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ToggleImageButton;
 import swidget.widgets.layout.ButtonBox;

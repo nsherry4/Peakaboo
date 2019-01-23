@@ -1,8 +1,8 @@
-package peakaboo.calibration;
+package org.peakaboo.calibration;
 
 import java.util.Map;
 
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 public class BracketedCalibrationSmoother implements CalibrationProcessor {
 

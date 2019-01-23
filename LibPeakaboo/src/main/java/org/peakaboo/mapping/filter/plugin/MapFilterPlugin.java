@@ -1,7 +1,8 @@
-package peakaboo.mapping.filter.plugin;
+package org.peakaboo.mapping.filter.plugin;
+
+import org.peakaboo.mapping.filter.model.MapFilter;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
-import peakaboo.mapping.filter.model.MapFilter;
 
 public interface MapFilterPlugin extends MapFilter, BoltPlugin {
 

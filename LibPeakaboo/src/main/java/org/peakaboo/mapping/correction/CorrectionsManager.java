@@ -1,4 +1,4 @@
-package peakaboo.mapping.correction;
+package org.peakaboo.mapping.correction;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.curvefit.peak.table.PeakTable;
 
 
 public class CorrectionsManager

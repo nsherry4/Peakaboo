@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.data;
+package org.peakaboo.controller.plotter.data;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

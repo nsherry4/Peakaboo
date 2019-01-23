@@ -1,14 +1,15 @@
-package peakaboo.datasource.model.components.scandata.loaderqueue;
+package org.peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooConfiguration;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
+
 import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.single.Compressed;
-import peakaboo.common.PeakabooConfiguration;
-import peakaboo.common.PeakabooLog;
-import peakaboo.datasource.model.components.scandata.SimpleScanData;
 
 /**
  * CompressedLoaderQueue moves the compression into the submit call, 

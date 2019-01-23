@@ -9,11 +9,12 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import cyclops.util.Mutable;
 import eventful.EventfulTypeListener;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import peakaboo.ui.swing.plotting.PlotCanvas;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;

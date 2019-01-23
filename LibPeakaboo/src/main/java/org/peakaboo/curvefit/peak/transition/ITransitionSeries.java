@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.transition;
+package org.peakaboo.curvefit.peak.transition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import peakaboo.curvefit.peak.escape.EscapePeak;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.escape.EscapePeak;
+import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.table.Element;
 
 public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITransitionSeries>, Serializable {
 

@@ -1,4 +1,4 @@
-package peakaboo.display.calibration;
+package org.peakaboo.display.calibration;
 
 import java.io.File;
 import java.util.Collections;
@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
+
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class CalibrationProfilePlot extends ZCalibrationPlot {
 

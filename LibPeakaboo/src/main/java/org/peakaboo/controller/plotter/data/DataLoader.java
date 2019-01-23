@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.data;
+package org.peakaboo.controller.plotter.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,19 +9,20 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.common.Version;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.settings.SavedSession;
+import org.peakaboo.dataset.DatasetReadResult;
+import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
+import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.plugin.DataSourceLookup;
+import org.peakaboo.datasource.plugin.DataSourcePlugin;
+import org.peakaboo.datasource.plugin.DataSourcePluginManager;
+
 import cyclops.util.StringInput;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
-import peakaboo.common.PeakabooLog;
-import peakaboo.common.Version;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.settings.SavedSession;
-import peakaboo.dataset.DatasetReadResult;
-import peakaboo.dataset.DatasetReadResult.ReadStatus;
-import peakaboo.datasource.model.DataSource;
-import peakaboo.datasource.plugin.DataSourceLookup;
-import peakaboo.datasource.plugin.DataSourcePlugin;
-import peakaboo.datasource.plugin.DataSourcePluginManager;
 import plural.executor.ExecutorSet;
 
 

@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.fitting.fitter;
+package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,13 +12,13 @@ import org.apache.commons.math3.optim.univariate.SearchInterval;
 import org.apache.commons.math3.optim.univariate.UnivariateObjectiveFunction;
 import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
 import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
+import org.peakaboo.curvefit.curve.fitting.Curve;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import peakaboo.curvefit.curve.fitting.Curve;
-import peakaboo.curvefit.curve.fitting.FittingResult;
 
 public class OptimizingCurveFitter implements CurveFitter {
 

@@ -12,10 +12,11 @@ import java.util.logging.Level;
 
 import javax.swing.JPanel;
 
-import peakaboo.calibration.Concentrations;
-import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.calibration.Concentrations;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import stratus.controls.ButtonLinker;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;

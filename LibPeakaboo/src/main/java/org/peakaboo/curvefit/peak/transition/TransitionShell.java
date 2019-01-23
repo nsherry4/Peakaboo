@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.transition;
+package org.peakaboo.curvefit.peak.transition;
 
 /**
  * This lists the various series of {@link Transition}s, such as all of the K transitions

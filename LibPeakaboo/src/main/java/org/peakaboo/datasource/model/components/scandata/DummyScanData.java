@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.scandata;
+package org.peakaboo.datasource.model.components.scandata;
 
 
 import cyclops.ReadOnlySpectrum;

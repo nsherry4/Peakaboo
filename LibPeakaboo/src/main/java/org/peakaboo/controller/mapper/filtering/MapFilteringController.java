@@ -1,24 +1,25 @@
-package peakaboo.controller.mapper.filtering;
+package org.peakaboo.controller.mapper.filtering;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.mapping.filter.model.AreaMap;
+import org.peakaboo.mapping.filter.model.MapFilter;
+import org.peakaboo.mapping.filter.model.MapFilterSet;
+import org.peakaboo.mapping.rawmap.RawMap;
+import org.peakaboo.mapping.rawmap.RawMapSet;
+
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.ListOps;
 import eventful.EventfulCache;
 import eventful.EventfulType;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.mapping.filter.model.AreaMap;
-import peakaboo.mapping.filter.model.MapFilter;
-import peakaboo.mapping.filter.model.MapFilterSet;
-import peakaboo.mapping.rawmap.RawMap;
-import peakaboo.mapping.rawmap.RawMapSet;
 
 public class MapFilteringController extends EventfulType<String> {
 

@@ -1,4 +1,4 @@
-package peakaboo.common;
+package org.peakaboo.common;
 
 import cyclops.ISpectrum;
 import cyclops.Spectrum;

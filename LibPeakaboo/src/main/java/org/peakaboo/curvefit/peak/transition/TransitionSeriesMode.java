@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.transition;
+package org.peakaboo.curvefit.peak.transition;
 
 /**
  * A TransitionSeriesMode represents the various kinds of {@link ITransitionSeries}, and if a {@link ITransitionSeries} is composite or primary

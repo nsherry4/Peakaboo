@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.fitting;
+package org.peakaboo.curvefit.peak.fitting;
 
 /**
  * 

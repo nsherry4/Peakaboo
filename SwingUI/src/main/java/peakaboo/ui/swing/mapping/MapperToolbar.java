@@ -17,16 +17,17 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.Concentrations;
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.settings.AreaSelection;
+import org.peakaboo.controller.mapper.settings.MapViewSettings;
+import org.peakaboo.controller.mapper.settings.PointsSelection;
+import org.peakaboo.controller.settings.SavedSession;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datasource.model.internal.SubsetDataSource;
+
 import cyclops.ReadOnlySpectrum;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.calibration.Concentrations;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.settings.AreaSelection;
-import peakaboo.controller.mapper.settings.MapViewSettings;
-import peakaboo.controller.mapper.settings.PointsSelection;
-import peakaboo.controller.settings.SavedSession;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.datasource.model.internal.SubsetDataSource;
 import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import peakaboo.ui.swing.plotting.PlotPanel;

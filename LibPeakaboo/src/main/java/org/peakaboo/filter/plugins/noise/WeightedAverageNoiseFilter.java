@@ -1,12 +1,13 @@
-package peakaboo.filter.plugins.noise;
+package org.peakaboo.filter.plugins.noise;
+
+import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.FilterType;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.FilterType;
 
 public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 

@@ -1,8 +1,13 @@
-package peakaboo.filter.plugins.advanced;
+package org.peakaboo.filter.plugins.advanced;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.peakaboo.filter.model.AbstractFilter;
+import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.model.SerializedFilter;
 import org.yaml.snakeyaml.Yaml;
 
 import cyclops.ISpectrum;
@@ -15,11 +20,6 @@ import net.sciencestudio.autodialog.model.classinfo.SimpleClassInfo;
 import net.sciencestudio.autodialog.model.style.CoreStyle;
 import net.sciencestudio.autodialog.model.style.SimpleStyle;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import peakaboo.filter.model.AbstractFilter;
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterPluginManager;
-import peakaboo.filter.model.FilterType;
-import peakaboo.filter.model.SerializedFilter;
 
 public class SubFilter extends AbstractFilter
 {

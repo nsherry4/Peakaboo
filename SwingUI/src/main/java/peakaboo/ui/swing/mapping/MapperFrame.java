@@ -5,11 +5,12 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 
-import peakaboo.common.Version;
-import peakaboo.controller.mapper.MappingController;
-import peakaboo.controller.mapper.rawdata.RawDataController;
-import peakaboo.controller.mapper.settings.MapViewSettings;
-import peakaboo.controller.plotter.PlotController;
+import org.peakaboo.common.Version;
+import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.rawdata.RawDataController;
+import org.peakaboo.controller.mapper.settings.MapViewSettings;
+import org.peakaboo.controller.plotter.PlotController;
+
 import swidget.icons.IconFactory;
 import swidget.widgets.LiveFrame;
 import swidget.widgets.tabbedinterface.TabbedInterface;

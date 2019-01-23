@@ -12,12 +12,13 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.peakaboo.controller.plotter.filtering.FilteringController;
+import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.plugins.FilterPlugin;
+
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.controller.plotter.filtering.FilteringController;
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterPluginManager;
-import peakaboo.filter.model.FilterType;
-import peakaboo.filter.plugins.FilterPlugin;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

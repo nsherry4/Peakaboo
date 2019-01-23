@@ -10,7 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.Filter;
+
 import swidget.Swidget;
 import swidget.widgets.Spacing;
 

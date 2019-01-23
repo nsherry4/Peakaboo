@@ -1,4 +1,4 @@
-package peakaboo.filter.model;
+package org.peakaboo.filter.model;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;

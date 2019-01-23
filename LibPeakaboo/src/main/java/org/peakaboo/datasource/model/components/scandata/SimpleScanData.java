@@ -1,16 +1,17 @@
-package peakaboo.datasource.model.components.scandata;
+package org.peakaboo.datasource.model.components.scandata;
+
+import org.peakaboo.common.PeakabooConfiguration;
+import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.datasource.model.PeakabooLists;
+import org.peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
+import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
+import org.peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import net.sciencestudio.scratch.list.ScratchList;
 import net.sciencestudio.scratch.single.Compressed;
-import peakaboo.common.PeakabooConfiguration;
-import peakaboo.common.PeakabooConfiguration.MemorySize;
-import peakaboo.datasource.model.PeakabooLists;
-import peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
-import peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
-import peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
 
 public class SimpleScanData implements ScanData {
 

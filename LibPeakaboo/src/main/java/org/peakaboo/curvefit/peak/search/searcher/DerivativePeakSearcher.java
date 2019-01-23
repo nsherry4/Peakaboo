@@ -1,15 +1,16 @@
-package peakaboo.curvefit.peak.search.searcher;
+package org.peakaboo.curvefit.peak.search.searcher;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
 import net.sciencestudio.autodialog.model.Value;
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
 public class DerivativePeakSearcher implements PeakSearcher {
 

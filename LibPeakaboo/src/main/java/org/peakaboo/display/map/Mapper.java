@@ -1,9 +1,14 @@
-package peakaboo.display.map;
+package org.peakaboo.display.map;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.OverlayColour;
+import org.peakaboo.display.map.modes.OverlayPalette;
+import org.peakaboo.display.map.modes.RatioPalette;
 
 import com.google.common.base.Function;
 
@@ -37,10 +42,6 @@ import cyclops.visualization.palette.Spectrums;
 import cyclops.visualization.palette.palettes.AbstractPalette;
 import cyclops.visualization.palette.palettes.SaturationPalette;
 import cyclops.visualization.palette.palettes.ThermalScalePalette;
-import peakaboo.display.map.modes.MapDisplayMode;
-import peakaboo.display.map.modes.OverlayColour;
-import peakaboo.display.map.modes.OverlayPalette;
-import peakaboo.display.map.modes.RatioPalette;
 
 public class Mapper {
 

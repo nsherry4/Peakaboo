@@ -7,7 +7,8 @@ import java.awt.Insets;
 import javax.swing.Box;
 import javax.swing.JToolBar;
 
-import peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.PlotController;
+
 import peakaboo.ui.swing.Peakaboo;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.IconSize;

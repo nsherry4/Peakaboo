@@ -6,8 +6,9 @@ import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterType;
+
 import swidget.Swidget;
 import swidget.widgets.Spacing;
 

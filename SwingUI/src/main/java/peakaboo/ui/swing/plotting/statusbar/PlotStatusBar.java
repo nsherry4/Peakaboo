@@ -9,7 +9,8 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
-import peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.PlotController;
+
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;
 

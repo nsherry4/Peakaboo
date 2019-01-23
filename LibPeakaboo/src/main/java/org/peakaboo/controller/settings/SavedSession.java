@@ -1,13 +1,13 @@
-package peakaboo.controller.settings;
+package org.peakaboo.controller.settings;
 
-import peakaboo.common.Version;
-import peakaboo.common.YamlSerializer;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.calibration.SavedCalibrationSession;
-import peakaboo.controller.plotter.data.SavedDataSession;
-import peakaboo.controller.plotter.filtering.SavedFilteringSession;
-import peakaboo.controller.plotter.fitting.SavedFittingSession;
-import peakaboo.controller.plotter.view.SessionViewModel;
+import org.peakaboo.common.Version;
+import org.peakaboo.common.YamlSerializer;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.calibration.SavedCalibrationSession;
+import org.peakaboo.controller.plotter.data.SavedDataSession;
+import org.peakaboo.controller.plotter.filtering.SavedFilteringSession;
+import org.peakaboo.controller.plotter.fitting.SavedFittingSession;
+import org.peakaboo.controller.plotter.view.SessionViewModel;
 
 /**
  * Stores session settings which are saved/loaded when the user chooses to

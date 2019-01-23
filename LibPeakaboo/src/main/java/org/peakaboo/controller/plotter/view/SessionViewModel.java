@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.view;
+package org.peakaboo.controller.plotter.view;
 
 
 public class SessionViewModel {

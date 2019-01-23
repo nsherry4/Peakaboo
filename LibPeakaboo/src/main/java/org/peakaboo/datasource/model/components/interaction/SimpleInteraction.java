@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.interaction;
+package org.peakaboo.datasource.model.components.interaction;
 
 public class SimpleInteraction implements Interaction {
 

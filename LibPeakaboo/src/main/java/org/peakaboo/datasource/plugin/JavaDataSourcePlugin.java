@@ -1,4 +1,4 @@
-package peakaboo.datasource.plugin;
+package org.peakaboo.datasource.plugin;
 
 import net.sciencestudio.bolt.plugin.java.BoltJavaPlugin;
 

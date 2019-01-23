@@ -1,4 +1,4 @@
-package peakaboo.curvefit.curve.fitting;
+package org.peakaboo.curvefit.curve.fitting;
 
 
 import java.util.ArrayList;
@@ -6,10 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 /**
  * 

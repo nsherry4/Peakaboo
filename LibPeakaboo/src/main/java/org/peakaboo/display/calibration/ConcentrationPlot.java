@@ -1,10 +1,13 @@
-package peakaboo.display.calibration;
+package org.peakaboo.display.calibration;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+
+import org.peakaboo.calibration.Concentrations;
+import org.peakaboo.curvefit.peak.table.Element;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -24,8 +27,6 @@ import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import cyclops.visualization.palette.PaletteColour;
-import peakaboo.calibration.Concentrations;
-import peakaboo.curvefit.peak.table.Element;
 
 public class ConcentrationPlot {
 

@@ -1,9 +1,9 @@
-package peakaboo.datasink.model;
+package org.peakaboo.datasink.model;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-import peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.DataSource;
 
 public interface DataSink
 {

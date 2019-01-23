@@ -12,10 +12,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
+import org.peakaboo.controller.plotter.filtering.FilteringController;
+import org.peakaboo.filter.model.Filter;
+
 import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
-import peakaboo.controller.plotter.filtering.FilteringController;
-import peakaboo.filter.model.Filter;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;

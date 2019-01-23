@@ -1,4 +1,4 @@
-package peakaboo.curvefit.peak.transition;
+package org.peakaboo.curvefit.peak.transition;
 
 
 import java.util.ArrayList;
@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import peakaboo.curvefit.peak.escape.EscapePeak;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.escape.EscapePeak;
+import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.table.Element;
 
 public class PrimaryTransitionSeries implements ITransitionSeries {
 

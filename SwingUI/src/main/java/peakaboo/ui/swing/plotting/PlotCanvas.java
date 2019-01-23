@@ -13,16 +13,17 @@ import java.util.logging.Level;
 
 import javax.swing.Scrollable;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.display.plot.PlotData;
+import org.peakaboo.display.plot.PlotSettings;
+import org.peakaboo.display.plot.Plotter;
+
 import cyclops.Coord;
 import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
 import eventful.EventfulTypeListener;
-import peakaboo.common.PeakabooLog;
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.display.plot.PlotData;
-import peakaboo.display.plot.PlotSettings;
-import peakaboo.display.plot.Plotter;
 
 
 

@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.fileformat;
+package org.peakaboo.datasource.model.components.fileformat;
 
 
 /**

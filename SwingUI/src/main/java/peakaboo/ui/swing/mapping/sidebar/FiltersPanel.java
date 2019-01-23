@@ -17,14 +17,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.controller.mapper.filtering.MapFilteringController;
+import org.peakaboo.mapping.filter.model.MapFilter;
+import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
+
 import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
 import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.controller.mapper.MappingController.UpdateType;
-import peakaboo.controller.mapper.filtering.MapFilteringController;
-import peakaboo.mapping.filter.model.MapFilter;
-import peakaboo.mapping.filter.model.MapFilterPluginManager;
-import peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.models.ListTableModel;

@@ -1,4 +1,4 @@
-package peakaboo.filter.plugins;
+package org.peakaboo.filter.plugins;
 
 import net.sciencestudio.bolt.plugin.java.BoltJavaPlugin;
 

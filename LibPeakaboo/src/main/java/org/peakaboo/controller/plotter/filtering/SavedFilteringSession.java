@@ -1,11 +1,11 @@
-package peakaboo.controller.plotter.filtering;
+package org.peakaboo.controller.plotter.filtering;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import peakaboo.filter.model.Filter;
-import peakaboo.filter.model.FilterSet;
-import peakaboo.filter.model.SerializedFilter;
+import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.filter.model.SerializedFilter;
 
 public class SavedFilteringSession {
 	

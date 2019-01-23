@@ -1,4 +1,4 @@
-package peakaboo.datasource.model.components.datasize;
+package org.peakaboo.datasource.model.components.datasize;
 
 import cyclops.Coord;
 

@@ -11,9 +11,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
+import org.peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import eventful.EventfulListener;
-import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ImageButton;

@@ -31,7 +31,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 
-import peakaboo.common.PeakabooLog;
+import org.peakaboo.common.PeakabooLog;
+
 import peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
 
 /**

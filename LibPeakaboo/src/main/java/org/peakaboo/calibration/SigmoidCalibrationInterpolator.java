@@ -1,4 +1,4 @@
-package peakaboo.calibration;
+package org.peakaboo.calibration;
 
 public class SigmoidCalibrationInterpolator extends LinearCalibrationInterpolator {
 

@@ -1,4 +1,4 @@
-package peakaboo.controller.plotter.fitting;
+package org.peakaboo.controller.plotter.fitting;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.peak.search.scoring.FastSignalMatchScorer;
+import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import cyclops.Pair;
 import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.peak.search.scoring.FastSignalMatchScorer;
-import peakaboo.curvefit.peak.search.scoring.FittingScorer;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;
 

@@ -1,7 +1,29 @@
-package peakaboo.filter.model;
+package org.peakaboo.filter.model;
 
 import java.io.File;
 import java.util.logging.Level;
+
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.filter.plugins.FilterPlugin;
+import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.filter.plugins.advanced.IdentityFilter;
+import org.peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
+import org.peakaboo.filter.plugins.advanced.SubFilter;
+import org.peakaboo.filter.plugins.background.BruknerBackgroundFilter;
+import org.peakaboo.filter.plugins.background.LinearTrimBackgroundFilter;
+import org.peakaboo.filter.plugins.background.PolynomialBackgroundFilter;
+import org.peakaboo.filter.plugins.background.SquareSnipBackgroundFilter;
+import org.peakaboo.filter.plugins.mathematical.AdditionMathFilter;
+import org.peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
+import org.peakaboo.filter.plugins.mathematical.IntegralMathFilter;
+import org.peakaboo.filter.plugins.mathematical.MultiplicationMathFilter;
+import org.peakaboo.filter.plugins.mathematical.SubtractionMathFilter;
+import org.peakaboo.filter.plugins.noise.FourierNoiseFilter;
+import org.peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
+import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
+import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
+import org.peakaboo.filter.plugins.noise.WaveletNoiseFilter;
+import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
@@ -13,27 +35,6 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
-import peakaboo.common.PeakabooLog;
-import peakaboo.filter.plugins.FilterPlugin;
-import peakaboo.filter.plugins.JavaFilterPlugin;
-import peakaboo.filter.plugins.advanced.IdentityFilter;
-import peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
-import peakaboo.filter.plugins.advanced.SubFilter;
-import peakaboo.filter.plugins.background.BruknerBackgroundFilter;
-import peakaboo.filter.plugins.background.LinearTrimBackgroundFilter;
-import peakaboo.filter.plugins.background.PolynomialBackgroundFilter;
-import peakaboo.filter.plugins.background.SquareSnipBackgroundFilter;
-import peakaboo.filter.plugins.mathematical.AdditionMathFilter;
-import peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
-import peakaboo.filter.plugins.mathematical.IntegralMathFilter;
-import peakaboo.filter.plugins.mathematical.MultiplicationMathFilter;
-import peakaboo.filter.plugins.mathematical.SubtractionMathFilter;
-import peakaboo.filter.plugins.noise.FourierNoiseFilter;
-import peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
-import peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
-import peakaboo.filter.plugins.noise.SpringNoiseFilter;
-import peakaboo.filter.plugins.noise.WaveletNoiseFilter;
-import peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
 
 public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {

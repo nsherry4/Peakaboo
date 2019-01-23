@@ -1,4 +1,4 @@
-package peakaboo.common;
+package org.peakaboo.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;

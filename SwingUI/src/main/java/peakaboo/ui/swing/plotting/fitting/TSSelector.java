@@ -10,10 +10,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import eventful.Eventful;
 import eventful.EventfulListener;
 import eventful.IEventful;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 
 public class TSSelector extends JPanel implements IEventful

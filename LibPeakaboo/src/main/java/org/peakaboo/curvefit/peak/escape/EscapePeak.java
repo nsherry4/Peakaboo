@@ -1,10 +1,10 @@
-package peakaboo.curvefit.peak.escape;
+package org.peakaboo.curvefit.peak.escape;
 
 import java.util.List;
 
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.Transition;
 
 public interface EscapePeak {
 	

@@ -9,8 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 
+import org.peakaboo.controller.mapper.MappingController;
+
 import cyclops.Coord;
-import peakaboo.controller.mapper.MappingController;
 import peakaboo.ui.swing.mapping.MapperPanel;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.Event;

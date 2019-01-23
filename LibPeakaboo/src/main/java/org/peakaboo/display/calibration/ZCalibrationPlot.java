@@ -1,9 +1,14 @@
-package peakaboo.display.calibration;
+package org.peakaboo.display.calibration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -25,10 +30,6 @@ import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
 import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 import cyclops.visualization.palette.PaletteColour;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 
 public abstract class ZCalibrationPlot {
 	

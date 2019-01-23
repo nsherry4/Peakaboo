@@ -1,21 +1,22 @@
-package peakaboo.controller.plotter;
+package org.peakaboo.controller.plotter;
 
 import java.io.File;
 import java.util.Map;
 
+import org.peakaboo.controller.plotter.calibration.CalibrationController;
+import org.peakaboo.controller.plotter.data.DataController;
+import org.peakaboo.controller.plotter.filtering.FilteringController;
+import org.peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.controller.plotter.undo.UndoController;
+import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
+import org.peakaboo.controller.plotter.view.ViewController;
+import org.peakaboo.controller.settings.SavedSession;
+import org.peakaboo.display.plot.PlotData;
+import org.peakaboo.filter.model.Filter;
+import org.peakaboo.mapping.rawmap.RawMapSet;
+
 import cyclops.ReadOnlySpectrum;
 import eventful.EventfulType;
-import peakaboo.controller.plotter.calibration.CalibrationController;
-import peakaboo.controller.plotter.data.DataController;
-import peakaboo.controller.plotter.filtering.FilteringController;
-import peakaboo.controller.plotter.fitting.FittingController;
-import peakaboo.controller.plotter.undo.UndoController;
-import peakaboo.controller.plotter.view.ChannelCompositeMode;
-import peakaboo.controller.plotter.view.ViewController;
-import peakaboo.controller.settings.SavedSession;
-import peakaboo.display.plot.PlotData;
-import peakaboo.filter.model.Filter;
-import peakaboo.mapping.rawmap.RawMapSet;
 import plural.streams.StreamExecutor;
 
 

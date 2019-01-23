@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import peakaboo.common.Env;
-import peakaboo.common.Version;
+import org.peakaboo.common.Env;
+import org.peakaboo.common.Version;
 
 
 

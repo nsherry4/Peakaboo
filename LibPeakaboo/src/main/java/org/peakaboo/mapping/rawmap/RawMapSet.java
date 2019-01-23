@@ -1,4 +1,4 @@
-package peakaboo.mapping.rawmap;
+package org.peakaboo.mapping.rawmap;
 
 
 import static java.util.stream.Collectors.toList;
@@ -9,11 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+
 import cyclops.ISpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 
 /**

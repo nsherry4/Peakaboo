@@ -1,18 +1,19 @@
-package peakaboo.mapping;
+package org.peakaboo.mapping;
 
 import java.util.List;
 
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.mapping.rawmap.RawMapSet;
+
 import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.curve.fitting.FittingSet;
-import peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.dataset.DataSet;
-import peakaboo.filter.model.FilterSet;
-import peakaboo.mapping.rawmap.RawMapSet;
 import plural.streams.StreamExecutor;
 
 /**

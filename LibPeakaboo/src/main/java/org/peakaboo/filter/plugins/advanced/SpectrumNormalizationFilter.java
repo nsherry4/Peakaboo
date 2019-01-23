@@ -1,4 +1,7 @@
-package peakaboo.filter.plugins.advanced;
+package org.peakaboo.filter.plugins.advanced;
+
+import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.FilterType;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
@@ -8,8 +11,6 @@ import net.sciencestudio.autodialog.model.SelectionParameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 import net.sciencestudio.autodialog.model.style.editors.ListStyle;
 import net.sciencestudio.autodialog.model.style.editors.RealStyle;
-import peakaboo.filter.model.AbstractSimpleFilter;
-import peakaboo.filter.model.FilterType;
 
 
 public class SpectrumNormalizationFilter extends AbstractSimpleFilter

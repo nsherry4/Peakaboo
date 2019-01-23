@@ -12,8 +12,9 @@ import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import peakaboo.controller.plotter.PlotController;
-import peakaboo.controller.plotter.view.ChannelCompositeMode;
+import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
+
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.Spacing;

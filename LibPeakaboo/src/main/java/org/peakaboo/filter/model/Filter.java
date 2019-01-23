@@ -1,4 +1,4 @@
-package peakaboo.filter.model;
+package org.peakaboo.filter.model;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package peakaboo.controller.plotter.calibration;
+package org.peakaboo.controller.plotter.calibration;
 
 import java.io.File;
 
-import peakaboo.calibration.CalibrationProfile;
-import peakaboo.calibration.CalibrationReference;
+import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.CalibrationReference;
 
 public class CalibrationModel {
 

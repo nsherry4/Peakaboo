@@ -7,7 +7,8 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.controller.plotter.fitting.FittingController;
+
 import peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import swidget.widgets.Spacing;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;

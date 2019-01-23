@@ -1,7 +1,17 @@
-package peakaboo.mapping.filter.model;
+package org.peakaboo.mapping.filter.model;
 
 import java.io.File;
 import java.util.logging.Level;
+
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.plugins.EnlargeMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.SignalLimitMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.SignalOutlierCorrectionMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.WeakSignalRemovalMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.WeightedAverageMapFilter;
 
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
@@ -12,15 +22,6 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
 import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
 import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
-import peakaboo.common.PeakabooLog;
-import peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
-import peakaboo.mapping.filter.plugin.MapFilterPlugin;
-import peakaboo.mapping.filter.plugin.plugins.EnlargeMapFilter;
-import peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
-import peakaboo.mapping.filter.plugin.plugins.SignalLimitMapFilter;
-import peakaboo.mapping.filter.plugin.plugins.SignalOutlierCorrectionMapFilter;
-import peakaboo.mapping.filter.plugin.plugins.WeakSignalRemovalMapFilter;
-import peakaboo.mapping.filter.plugin.plugins.WeightedAverageMapFilter;
 
 public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 

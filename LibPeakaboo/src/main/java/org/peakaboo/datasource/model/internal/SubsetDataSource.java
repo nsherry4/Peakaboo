@@ -1,6 +1,6 @@
-package peakaboo.datasource.model.internal;
+package org.peakaboo.datasource.model.internal;
 
-import peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.DataSource;
 
 
 /**

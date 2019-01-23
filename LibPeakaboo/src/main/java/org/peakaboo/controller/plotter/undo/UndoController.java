@@ -1,8 +1,9 @@
-package peakaboo.controller.plotter.undo;
+package org.peakaboo.controller.plotter.undo;
 
+
+import org.peakaboo.controller.plotter.PlotController;
 
 import eventful.Eventful;
-import peakaboo.controller.plotter.PlotController;
 
 
 

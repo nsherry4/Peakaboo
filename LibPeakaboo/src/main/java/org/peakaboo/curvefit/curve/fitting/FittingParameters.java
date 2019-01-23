@@ -1,15 +1,15 @@
-package peakaboo.curvefit.curve.fitting;
+package org.peakaboo.curvefit.curve.fitting;
 
 import java.util.logging.Level;
 
-import peakaboo.common.PeakabooLog;
-import peakaboo.curvefit.peak.escape.EscapePeakType;
-import peakaboo.curvefit.peak.fitting.FittingContext;
-import peakaboo.curvefit.peak.fitting.FittingFunction;
-import peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.Transition;
-import peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.fitting.FittingContext;
+import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class FittingParameters {
 

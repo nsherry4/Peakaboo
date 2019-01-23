@@ -1,13 +1,13 @@
-package peakaboo.datasource.plugin;
+package org.peakaboo.datasource.plugin;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import peakaboo.common.PeakabooLog;
-import peakaboo.datasource.model.DataSource;
-import peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
 
 public class DataSourceLookup
 {

@@ -1,4 +1,4 @@
-package peakaboo.calibration;
+package org.peakaboo.calibration;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,16 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.peakaboo.common.YamlSerializer;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
+
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import peakaboo.common.YamlSerializer;
-import peakaboo.curvefit.curve.fitting.FittingResult;
-import peakaboo.curvefit.curve.fitting.FittingResultSet;
-import peakaboo.curvefit.peak.table.Element;
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import peakaboo.curvefit.peak.transition.TransitionShell;
 
 /*
  * NOTE: Calibration does not use PeakTable TransitionSeries, 

@@ -1,4 +1,4 @@
-package peakaboo.dataset.analysis;
+package org.peakaboo.dataset.analysis;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;

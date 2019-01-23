@@ -1,11 +1,12 @@
-package peakaboo.datasource.model.components.scandata.loaderqueue;
+package org.peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
+
 import cyclops.Spectrum;
-import peakaboo.common.PeakabooLog;
-import peakaboo.datasource.model.components.scandata.SimpleScanData;
 
 
 public class SimpleLoaderQueue implements LoaderQueue {

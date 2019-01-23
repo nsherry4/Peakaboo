@@ -8,9 +8,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
+import org.peakaboo.datasink.plugin.DataSinkPlugin;
+import org.peakaboo.datasink.plugin.DataSinkPluginManager;
+
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import peakaboo.datasink.plugin.DataSinkPlugin;
-import peakaboo.datasink.plugin.DataSinkPluginManager;
 import peakaboo.ui.swing.plotting.PlotPanel;
 import swidget.icons.StockIcon;
 

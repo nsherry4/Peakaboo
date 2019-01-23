@@ -1,14 +1,14 @@
-package peakaboo.dataset;
+package org.peakaboo.dataset;
 
 import java.io.File;
 import java.util.Optional;
 
-import peakaboo.dataset.analysis.Analysis;
-import peakaboo.datasource.model.DataSource;
-import peakaboo.datasource.model.components.datasize.DataSize;
-import peakaboo.datasource.model.components.metadata.Metadata;
-import peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.dataset.analysis.Analysis;
+import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.components.datasize.DataSize;
+import org.peakaboo.datasource.model.components.metadata.Metadata;
+import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.components.scandata.ScanData;
 
 
 /**

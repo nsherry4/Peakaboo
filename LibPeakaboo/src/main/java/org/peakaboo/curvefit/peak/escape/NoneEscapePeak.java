@@ -1,10 +1,10 @@
-package peakaboo.curvefit.peak.escape;
+package org.peakaboo.curvefit.peak.escape;
 
 import java.util.Collections;
 import java.util.List;
 
-import peakaboo.curvefit.peak.transition.ITransitionSeries;
-import peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.Transition;
 
 public class NoneEscapePeak implements EscapePeak {
 
