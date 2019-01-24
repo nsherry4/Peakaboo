@@ -6,14 +6,9 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import cyclops.GridPerspective;
-import cyclops.ISpectrum;
 import cyclops.Pair;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
 import cyclops.visualization.Buffer;
 import cyclops.visualization.drawing.DrawingRequest;
-import cyclops.visualization.drawing.ViewTransform;
 import cyclops.visualization.drawing.painters.PainterData;
 import cyclops.visualization.palette.PaletteColour;
 import cyclops.visualization.palette.palettes.SingleColourPalette;
@@ -28,8 +23,9 @@ import cyclops.visualization.palette.palettes.SingleColourPalette;
 public class RasterColorMapPainter extends MapPainter
 {
 	
-	private List<PaletteColour> 	pixels;
-	protected Buffer 				buffer;
+	private List<PaletteColour> pixels;
+	protected Buffer buffer;
+	protected boolean stale = true;
 
 
 	public RasterColorMapPainter()
@@ -38,13 +34,13 @@ public class RasterColorMapPainter extends MapPainter
 	}
 
 
-	public void setPixels(List<PaletteColour> pixels)
-	{
+	public synchronized void setPixels(List<PaletteColour> pixels) {
 		this.pixels = pixels;
+		this.stale = true;
 	}
 	
 	@Override
-	public void drawMap(PainterData p, float cellSize, float rawCellSize)
+	public synchronized void drawMap(PainterData p, float cellSize, float rawCellSize)
 	{
 
 		p.context.save();
@@ -56,8 +52,11 @@ public class RasterColorMapPainter extends MapPainter
 				buffer = null;
 			} else {
 				
-				if (buffer == null) {
-					buffer = drawAsRaster(p, data, cellSize, p.dr.dataHeight * p.dr.dataWidth);
+				if (buffer == null || buffer.getWidth() != p.dr.dataWidth || buffer.getHeight() != p.dr.dataHeight) {
+					buffer = createRasterBuffer(p);
+				}
+				if (stale) {
+					drawToRasterBuffer(p, data, cellSize, p.dr.dataHeight * p.dr.dataWidth);
 				}
 				p.context.compose(buffer, 0, 0, cellSize);
 				
@@ -68,24 +67,24 @@ public class RasterColorMapPainter extends MapPainter
 	}
 
 
-	private Buffer drawAsRaster(PainterData p, final List<PaletteColour> data, float cellSize, final int maximumIndex)
+	private Buffer createRasterBuffer(PainterData p) {
+		return p.context.getImageBuffer(p.dr.dataWidth, p.dr.dataHeight);
+	}
+	
+	private void drawToRasterBuffer(PainterData p, final List<PaletteColour> data, float cellSize, final int maximumIndex)
 	{
-
-		final Buffer b = p.context.getImageBuffer(p.dr.dataWidth, p.dr.dataHeight);
-
 		final PaletteColour transparent = new PaletteColour(0x00000000);
 		
 		IntStream.range(0, data.size()).parallel().forEach(ordinal -> {		
 			if (maximumIndex > ordinal) {
 				PaletteColour c = data.get(ordinal);
 				if (c == null) c = transparent;
-				b.setPixelValue(ordinal, c);
+				buffer.setPixelValue(ordinal, c);
 			}
 		});
-
-		p.context.compose(b, 0, 0, cellSize);
 		
-		return b;
+		this.stale = false;
+		
 	}
 
 
@@ -155,11 +154,14 @@ public class RasterColorMapPainter extends MapPainter
 		return flip;
 	}
 	
-	
-	
+	/*
+	 * We don't actually delete the buffer (we only do that when the size changes),
+	 * but we mark it as needing a redraw. Redraws here change every pixel, so we
+	 * don't need to worry about clearing the buffer either.
+	 */
 	public void clearBuffer()
 	{
-		buffer = null;
+		stale = true;
 	}
 
 
