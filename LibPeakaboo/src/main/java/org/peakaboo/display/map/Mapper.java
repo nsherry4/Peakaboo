@@ -49,6 +49,8 @@ public class Mapper {
 	private SpectrumMapPainter contourMapPainter, ratioMapPainter;
 	private RasterSpectrumMapPainter overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue, overlayMapPainterYellow;
 	
+	private SelectionMaskPainter selectionPainter;
+	
 	private MapDrawing map;
 	
 	
@@ -257,8 +259,12 @@ public class Mapper {
 		
 		
 		//Selection Painter
-		MapPainter selection = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
-		mapPainters.add(selection);
+		if (selectionPainter == null) {
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		} else {
+			selectionPainter.configure(settings.dataWidth, settings.dataHeight, settings.selectedPoints);
+		}
+		mapPainters.add(selectionPainter);
 			
 		
 		map.setPainters(mapPainters);
@@ -409,8 +415,12 @@ public class Mapper {
 		
 		
 		//Selection Painter
-		MapPainter selection = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
-		mapPainters.add(selection);
+		if (selectionPainter == null) {
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		} else {
+			selectionPainter.configure(settings.dataWidth, settings.dataHeight, settings.selectedPoints);
+		}
+		mapPainters.add(selectionPainter);
 		
 		
 		map.setPainters(mapPainters);
@@ -567,7 +577,11 @@ public class Mapper {
 		
 		
 		//Selection Painter
-		MapPainter selection = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		if (selectionPainter == null) {
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+		} else {
+			selectionPainter.configure(settings.dataWidth, settings.dataHeight, settings.selectedPoints);
+		}
 		
 
 		
@@ -611,7 +625,7 @@ public class Mapper {
 			List<MapPainter> painters = new ArrayList<MapPainter>();
 			painters.add(new FloodMapPainter(new PaletteColour(0xff000000))); //background
 			painters.add(addedColoursMapPainter);
-			painters.add(selection);
+			painters.add(selectionPainter);
 			map.setPainters(painters);
 			
 			//draw to the real backend
@@ -626,7 +640,7 @@ public class Mapper {
 			if (greenSpectrum != null && overlayMapPainterGreen != null)   painters.add(overlayMapPainterGreen);
 			if (blueSpectrum != null && overlayMapPainterBlue != null)     painters.add(overlayMapPainterBlue);
 			if (yellowSpectrum != null && overlayMapPainterYellow != null) painters.add(overlayMapPainterYellow);
-			painters.add(selection);
+			painters.add(selectionPainter);
 			map.setPainters(painters);
 			
 			map.setContext(backend);
