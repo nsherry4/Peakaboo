@@ -4,6 +4,7 @@ package cyclops.visualization.backend.awt;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cyclops.visualization.Buffer;
@@ -48,6 +49,14 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 			image.getRaster().setPixels(0, 0, image.getWidth(), image.getHeight(), datasource);
 		}
 		dirty = false;
+	}
+	
+	public void clear() {
+		if (datasource == null) {
+			init();
+		}
+		Arrays.fill(datasource, 0);
+		commitChanges();
 	}
 
 	public void setPixelValue(int x, int y, PaletteColour c)
