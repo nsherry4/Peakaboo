@@ -468,6 +468,11 @@ public class PlotPanel extends TabbedLayerPanel
 				
 				buttonYes.grabFocus();
 			}
+
+			@Override
+			public void onSessionFailure() {
+				new LayerDialog("Loading Session Failed", "The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", MessageType.ERROR).showIn(PlotPanel.this);
+			}
 			
 		};
 		

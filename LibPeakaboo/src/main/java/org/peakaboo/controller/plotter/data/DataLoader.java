@@ -128,7 +128,14 @@ public abstract class DataLoader {
 		
 		File file = paths.get(0).toFile();
 		try {
-			SavedSession session = controller.readSavedSettings(StringInput.contents(file));
+			Optional<SavedSession> optSession = controller.readSavedSettings(StringInput.contents(file));
+			
+			if (!optSession.isPresent()) {
+				onSessionFailure();
+				return;
+			}
+			
+			SavedSession session = optSession.get();
 			
 			
 			//chech if the session is from a newer version of Peakaboo, and warn if it is
@@ -187,6 +194,7 @@ public abstract class DataLoader {
 	public abstract void onSelection(List<DataSource> datasources, Consumer<DataSource> selected);
 	
 	public abstract void onSessionNewer();
+	public abstract void onSessionFailure();
 	public abstract void onSessionHasData(File sessionFile, Consumer<Boolean> load);
 	
 }

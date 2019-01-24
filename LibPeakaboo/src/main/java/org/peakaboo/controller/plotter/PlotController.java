@@ -2,6 +2,7 @@ package org.peakaboo.controller.plotter;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Optional;
 
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.controller.plotter.data.DataController;
@@ -81,8 +82,12 @@ public class PlotController extends EventfulType<String>
 	}
 	
 	
-	public SavedSession readSavedSettings(String yaml) {
-		return SavedSession.deserialize(yaml);
+	public Optional<SavedSession> readSavedSettings(String yaml) {
+		try {
+			return Optional.of(SavedSession.deserialize(yaml));
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 
 	
