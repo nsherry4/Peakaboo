@@ -60,17 +60,25 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 					float weights = 0f;
 					
 					for (int dy = -r; dy <= +r; dy++) {
+						int sy = y+dy;
 						for (int dx = -r; dx <= +r; dx++) {
+							int sx = x+dx;
+														
 							//don't include oob points
-							if (!grid.boundsCheck(x+dx, y+dy)) {
+							if (!grid.boundsCheck(sx, sy)) {
 								continue;
 							}
 							
-							//calculate weight for this point
+							// do a fast distance check to avoid unneeded sqrt calls
+							// this rough distance should never be less than the pythagorean distance,
+							// although when x or y = 0, it will be equal.
+							int roughdist = Math.abs(dx) + Math.abs(dy);
+							if (roughdist > r+1f) { continue; }
+							
+							
+							//calculate weight for this point and do a proper distance check
 							double dist = Math.sqrt(dx*dx+dy*dy);
 							float weight = (float) (r+1f - dist);
-							
-							//this will form a circular sampling area
 							if (weight < 0) { continue; }
 							
 							//normalize and square the weight to give extra weight to the central points
@@ -79,7 +87,7 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 							weight *= weight;
 							
 							//add to the sum
-							sum += grid.get(data, x+dx, y+dy) * weight;
+							sum += grid.get(data, sx, sy) * weight;
 							weights += weight;
 						}
 					}
