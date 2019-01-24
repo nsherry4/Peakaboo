@@ -16,7 +16,6 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.settings.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
-import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.plugin.DataSourceLookup;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;

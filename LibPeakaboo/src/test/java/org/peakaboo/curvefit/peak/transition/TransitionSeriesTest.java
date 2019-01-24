@@ -8,9 +8,6 @@ import org.junit.Test;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.table.KrausePeakTable;
 import org.peakaboo.curvefit.peak.table.PeakTable;
-import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class TransitionSeriesTest {
 

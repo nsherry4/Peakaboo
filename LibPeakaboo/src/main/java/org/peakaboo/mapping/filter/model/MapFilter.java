@@ -2,8 +2,6 @@ package org.peakaboo.mapping.filter.model;
 
 import java.util.List;
 
-import cyclops.Coord;
-import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.model.Value;
 

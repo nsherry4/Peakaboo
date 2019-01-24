@@ -2,7 +2,6 @@ package org.peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.escape.EscapePeakType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 
 public class SavedFittingSession {
 

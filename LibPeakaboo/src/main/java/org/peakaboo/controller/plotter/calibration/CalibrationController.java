@@ -12,7 +12,6 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
-import org.peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.components.metadata.Metadata;

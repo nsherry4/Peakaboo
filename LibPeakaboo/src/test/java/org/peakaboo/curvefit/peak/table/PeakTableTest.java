@@ -4,13 +4,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.peakaboo.curvefit.peak.table.CombinedPeakTable;
-import org.peakaboo.curvefit.peak.table.Element;
-import org.peakaboo.curvefit.peak.table.KrausePeakTable;
-import org.peakaboo.curvefit.peak.table.PeakTable;
-import org.peakaboo.curvefit.peak.table.XrayLibPeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class PeakTableTest {

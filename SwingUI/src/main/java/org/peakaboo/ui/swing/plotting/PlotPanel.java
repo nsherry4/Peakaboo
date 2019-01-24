@@ -60,7 +60,6 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.datasink.model.DataSink;
-import org.peakaboo.datasink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
@@ -81,7 +80,6 @@ import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
 import org.peakaboo.ui.swing.plugins.PluginsOverview;
 
-import bsh.Interpreter;
 import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.Pair;

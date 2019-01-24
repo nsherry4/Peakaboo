@@ -1,9 +1,7 @@
 package org.peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -16,7 +14,6 @@ import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 
 import cyclops.ReadOnlySpectrum;
-import cyclops.util.ListOps;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 

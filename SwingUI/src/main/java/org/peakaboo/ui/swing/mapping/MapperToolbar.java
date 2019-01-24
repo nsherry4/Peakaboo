@@ -29,8 +29,6 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
-import org.peakaboo.ui.swing.plotting.toolbar.PlotMenuExport;
-import org.peakaboo.ui.swing.plotting.toolbar.PlotMenuView;
 
 import cyclops.ReadOnlySpectrum;
 import swidget.icons.IconSize;

@@ -23,17 +23,12 @@ import org.peakaboo.display.map.modes.OverlayChannel;
 import org.peakaboo.display.map.modes.OverlayColour;
 import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
-import org.peakaboo.mapping.filter.model.MapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
-import org.peakaboo.mapping.rawmap.RawMap;
-import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.Coord;
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
 import cyclops.Pair;
 import cyclops.Ratios;
-import cyclops.ReadOnlySpectrum;
 import cyclops.SigDigits;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;

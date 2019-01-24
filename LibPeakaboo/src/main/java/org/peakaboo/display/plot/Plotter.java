@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooConfiguration;
-import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.display.plot.painters.FittingLabel;

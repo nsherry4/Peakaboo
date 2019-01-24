@@ -4,17 +4,12 @@ package org.peakaboo.mapping.rawmap;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
 
 
 /**

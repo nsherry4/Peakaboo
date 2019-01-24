@@ -3,7 +3,6 @@ package org.peakaboo.curvefit.peak.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;

@@ -2,7 +2,6 @@ package org.peakaboo.controller.mapper.rawdata;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
@@ -10,12 +9,8 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.Bounds;
 import cyclops.Coord;
-import cyclops.ISpectrum;
-import cyclops.Pair;
 import cyclops.SISize;
-import cyclops.Spectrum;
 import eventful.EventfulType;
-import plural.streams.StreamExecutor;
 
 
 public class RawDataController extends EventfulType<String>

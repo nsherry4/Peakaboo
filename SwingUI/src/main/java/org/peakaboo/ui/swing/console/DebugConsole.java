@@ -2,18 +2,13 @@ package org.peakaboo.ui.swing.console;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import bsh.BshClassManager;
-import bsh.ClassPathException;
 import bsh.Interpreter;
-import bsh.classpath.ClassManagerImpl;
-import bsh.util.ClassBrowser;
 import bsh.util.JConsole;
 import stratus.StratusLookAndFeel;
 import swidget.Swidget;

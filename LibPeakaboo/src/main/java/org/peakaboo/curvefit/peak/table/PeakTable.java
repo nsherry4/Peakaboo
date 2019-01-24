@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 

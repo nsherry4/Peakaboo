@@ -1,12 +1,9 @@
 package org.peakaboo.datasource.plugin.plugins;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +17,6 @@ import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.datasource.plugin.AbstractDataSource;
 
-import com.univocity.parsers.common.IterableResult;
-import com.univocity.parsers.common.ParsingContext;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 

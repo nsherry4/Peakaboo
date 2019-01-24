@@ -13,7 +13,6 @@ import org.peakaboo.display.map.modes.RatioPalette;
 import com.google.common.base.Function;
 
 import cyclops.Coord;
-import cyclops.ISpectrum;
 import cyclops.Pair;
 import cyclops.Ratios;
 import cyclops.Spectrum;

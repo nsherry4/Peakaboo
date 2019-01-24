@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.curvefit.peak.transition.PileUpTransitionSeries;
 
 
 public class SerializedTransitionSeries

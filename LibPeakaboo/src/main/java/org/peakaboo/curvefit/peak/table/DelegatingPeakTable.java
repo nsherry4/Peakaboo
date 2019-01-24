@@ -2,7 +2,6 @@ package org.peakaboo.curvefit.peak.table;
 
 import java.util.List;
 
-import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 
 public class DelegatingPeakTable implements PeakTable {

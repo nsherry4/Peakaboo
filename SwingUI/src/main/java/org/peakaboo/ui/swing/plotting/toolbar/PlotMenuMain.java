@@ -12,12 +12,9 @@ import javax.swing.KeyStroke;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.datasink.plugin.DataSinkPlugin;
-import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 import cyclops.util.Mutable;
-import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import swidget.icons.StockIcon;
 
 public class PlotMenuMain extends JPopupMenu {

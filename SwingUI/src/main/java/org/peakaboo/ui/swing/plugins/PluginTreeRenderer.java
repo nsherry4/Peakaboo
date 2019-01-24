@@ -1,7 +1,6 @@
 package org.peakaboo.ui.swing.plugins;
 
 import java.awt.Component;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
