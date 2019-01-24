@@ -5,6 +5,7 @@ import java.util.List;
 
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
+import cyclops.IntPair;
 import cyclops.Pair;
 import cyclops.Spectrum;
 
@@ -84,7 +85,7 @@ public class Interpolation {
 	public static void interpolateBadPoints(GridPerspective<Float> grid, Spectrum list, List<Integer> badPoints)
 	{
 		
-		Pair<Integer, Integer> coords;
+		IntPair coords;
 		int x, y;
 		float newval;
 		List<Integer> newBadPoints = new ArrayList<Integer>();
