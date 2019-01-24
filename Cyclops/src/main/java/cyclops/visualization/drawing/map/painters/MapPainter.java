@@ -6,6 +6,7 @@ import java.util.List;
 
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
+import cyclops.IntPair;
 import cyclops.Pair;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
@@ -127,7 +128,7 @@ public abstract class MapPainter extends Painter
 			GridPerspective<Float> grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
 			Spectrum flip = new ISpectrum(transformedData.size());
 			for (int i = 0; i < data.size(); i++) {
-				Pair<Integer, Integer> xy = grid.getXYFromIndex(i);
+				IntPair xy = grid.getXYFromIndex(i);
 				int x = xy.first;
 				int y = xy.second;
 				y = (dr.dataHeight-1) - y;

@@ -118,11 +118,12 @@ public class GridPerspective<T> implements Cloneable
 		list.set(index, value);
 	}
 
-	public Pair<Integer, Integer> getXYFromIndex(int index)
+	
+	public IntPair getXYFromIndex(int index)
 	{
 		int x = index % width;
 		int y = ((index - x) / width);
-		return new Pair<Integer, Integer>(x, y);
+		return new IntPair(x, y);
 		
 	}
 	
@@ -152,7 +153,7 @@ public class GridPerspective<T> implements Cloneable
 	
 	public int north(int index) {
 		
-		Pair<Integer, Integer> coord = getXYFromIndex(index);
+		IntPair coord = getXYFromIndex(index);
 		int x = coord.first - 1;
 		int y = coord.second;
 		
@@ -163,7 +164,7 @@ public class GridPerspective<T> implements Cloneable
 	
 	public int south(int index) {
 		
-		Pair<Integer, Integer> coord = getXYFromIndex(index);
+		IntPair coord = getXYFromIndex(index);
 		int x = coord.first + 1;
 		int y = coord.second;
 		
@@ -174,7 +175,7 @@ public class GridPerspective<T> implements Cloneable
 	
 	public int east(int index) {
 		
-		Pair<Integer, Integer> coord = getXYFromIndex(index);
+		IntPair coord = getXYFromIndex(index);
 		int x = coord.first;
 		int y = coord.second+1;
 		
@@ -185,7 +186,7 @@ public class GridPerspective<T> implements Cloneable
 	
 	public int west(int index) {
 		
-		Pair<Integer, Integer> coord = getXYFromIndex(index);
+		IntPair coord = getXYFromIndex(index);
 		int x = coord.first;
 		int y = coord.second-1;
 		

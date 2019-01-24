@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import cyclops.GridPerspective;
+import cyclops.IntPair;
 import cyclops.Pair;
 import cyclops.visualization.Buffer;
 import cyclops.visualization.drawing.DrawingRequest;
@@ -26,6 +27,7 @@ public class RasterColorMapPainter extends MapPainter
 	private List<PaletteColour> pixels;
 	protected Buffer buffer;
 	protected boolean stale = true;
+	private boolean enabled = true;
 
 
 	public RasterColorMapPainter()
@@ -39,10 +41,16 @@ public class RasterColorMapPainter extends MapPainter
 		this.stale = true;
 	}
 	
+	public synchronized void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
 	@Override
 	public synchronized void drawMap(PainterData p, float cellSize, float rawCellSize)
 	{
 
+		if (!enabled) { return; }
+		
 		p.context.save();
 
 			List<PaletteColour> data = transformListDataForMap(p.dr, pixels);
@@ -142,7 +150,7 @@ public class RasterColorMapPainter extends MapPainter
 			}
 			
 			for (int i = 0; i < flip.size(); i++) {
-				Pair<Integer, Integer> xy = grid.getXYFromIndex(i);
+				IntPair xy = grid.getXYFromIndex(i);
 				int x = xy.first;
 				int y = xy.second;
 				y = (height-1) - y;

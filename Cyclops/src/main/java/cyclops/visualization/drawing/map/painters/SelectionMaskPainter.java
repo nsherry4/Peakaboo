@@ -25,14 +25,22 @@ public class SelectionMaskPainter extends RasterColorMapPainter {
 		this.sizeX = dataWidth;
 		this.sizeY = dataHeight;
 	
+		// don't bother updating the pixel list, we won't be drawing anything when no
+		// points are in the selection.
+		if (points.size() == 0) {
+			setEnabled(false);
+			return;
+		}
+		
 		PaletteColour transparent = new PaletteColour(0, 0, 0, 0);
 		
-		List<PaletteColour> colors = new ArrayList<>();
-		for (int i = 0; i < (sizeX*sizeY); i++) {
+		int size = sizeX*sizeY;
+		List<PaletteColour> colors = new ArrayList<>(size);
+		for (int i = 0; i < size; i++) {
 			colors.add(transparent);
 		}
 		for (Integer i : points) {
-			if (i >= sizeX*sizeY || i < 0) {
+			if (i >= size || i < 0) {
 				CyclopsLog.get().log(Level.WARNING, "Selected point " + i + " is out of bounds, ignoring");
 			} else {
 				colors.set(i, selectionColour);
@@ -40,6 +48,7 @@ public class SelectionMaskPainter extends RasterColorMapPainter {
 		}
 
 		setPixels(colors);
+		setEnabled(true);
 		
 	}
 	
