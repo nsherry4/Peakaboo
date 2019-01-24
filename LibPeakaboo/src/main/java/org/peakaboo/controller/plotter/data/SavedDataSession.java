@@ -10,11 +10,12 @@ public class SavedDataSession {
 
 	public List<Integer> discards = new ArrayList<>();
 	public List<String> files = new ArrayList<>();
-
+	public String dataSourcePluginUUID = null;
 	
 	public SavedDataSession storeFrom(DataController controller) {
 		this.discards = controller.getDiscards().list();
 		this.files = controller.getDataPaths().stream().map(p -> p.toString()).collect(Collectors.toList());
+		this.dataSourcePluginUUID = controller.getDataSourcePluginUUID();
 		return this;
 	}
 	
@@ -23,6 +24,7 @@ public class SavedDataSession {
 		for (int i : discards) {
 			controller.getDiscards().discard(i);
 		}
+		controller.setDataSourcePluginUUID(this.dataSourcePluginUUID);
 		controller.setDataPaths(this.filesAsDataPaths());
 		return this;
 	}

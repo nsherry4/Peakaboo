@@ -6,21 +6,20 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
 
 public class DataSourceLookup
 {
 
-	public static List<DataSource> findDataSourcesForFiles(List<Path> paths, List<DataSourcePlugin> dsps)
+	public static List<DataSourcePlugin> findDataSourcesForFiles(List<Path> paths, List<DataSourcePlugin> dsps)
 	{	
 		
-		List<DataSource> maybe_by_filename = new ArrayList<DataSource>();
-		List<DataSource> maybe_by_contents = new ArrayList<DataSource>();
-		List<DataSource> yes_by_contents = new ArrayList<DataSource>();
+		List<DataSourcePlugin> maybe_by_filename = new ArrayList<>();
+		List<DataSourcePlugin> maybe_by_contents = new ArrayList<>();
+		List<DataSourcePlugin> yes_by_contents = new ArrayList<>();
 		
 
-		for (DataSource datasource : dsps)
+		for (DataSourcePlugin datasource : dsps)
 		{
 			try {
 				FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<>(paths));

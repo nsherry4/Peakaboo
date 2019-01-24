@@ -431,7 +431,7 @@ public class PlotPanel extends TabbedLayerPanel
 
 
 			@Override
-			public void onSelection(List<DataSource> datasources, Consumer<DataSource> selected) {
+			public void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected) {
 				DataSourceSelection selection = new DataSourceSelection(PlotPanel.this, datasources, selected);
 				PlotPanel.this.pushLayer(selection);
 			}

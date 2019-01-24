@@ -7,6 +7,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
 import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.plugin.DataSourcePlugin;
 
 import swidget.models.ListTableModel;
 import swidget.widgets.layerpanel.LayerPanel;
@@ -15,15 +16,15 @@ import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 import swidget.widgets.listwidget.impl.OptionWidget;
 
 
-public class DataSourceSelection extends ListPickerLayer<DataSource>
+public class DataSourceSelection extends ListPickerLayer<DataSourcePlugin>
 {
 
-	public DataSourceSelection(LayerPanel parent, List<DataSource> dsps, Consumer<DataSource> onSelect) {
+	public DataSourceSelection(LayerPanel parent, List<DataSourcePlugin> dsps, Consumer<DataSourcePlugin> onSelect) {
 		super(parent, "Please Select Data Format", dsps, onSelect);		
 	}
 
 	@Override
-	protected JTable getTable(List<DataSource> items) {
+	protected JTable getTable(List<DataSourcePlugin> items) {
 		JTable table = new JTable(new ListTableModel<>(items));
 		TableColumn c = table.getColumnModel().getColumn(0);
 		c.setCellRenderer(new ListWidgetTableCellRenderer<>( new OptionWidget<DataSource>(

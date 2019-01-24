@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -32,6 +33,7 @@ public abstract class DataLoader {
 
 	private PlotController controller;
 	private List<Path> paths;
+	private String dataSourceUUID = null;
 
 	//if we're loading a session, we need to do some extra work after loading the dataset
 	private Runnable sessionCallback = () -> {}; 
@@ -41,7 +43,7 @@ public abstract class DataLoader {
 		this.paths = paths;
 	}
 	
-	private void loadWithDataSource(DataSource dsp)
+	private void loadWithDataSource(DataSourcePlugin dsp)
 	{
 		if (paths != null)
 		{
@@ -89,8 +91,19 @@ public abstract class DataLoader {
 			return;
 		}
 		
-		List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
-		List<DataSource> formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
+		/*
+		 * look up the data source to use to open this data with we should prefer a
+		 * plugin specified by uuid (eg from a reloaded session). If there is no plugin
+		 * specified, we look up all formats
+		 */
+		List<DataSourcePlugin> formats = new ArrayList<>();
+		if (dataSourceUUID != null) {
+			formats.add(DataSourcePluginManager.SYSTEM.getPlugins().getByUUID(dataSourceUUID).create());
+		}
+		if (formats.size() == 0) {
+			List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
+			formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
+		}
 		
 		if (formats.size() > 1)
 		{
@@ -109,7 +122,7 @@ public abstract class DataLoader {
 		
 	}
 	
-	private void prompt(DataSource dsp) {
+	private void prompt(DataSourcePlugin dsp) {
 		Optional<Group> parameters = dsp.getParameters(paths);
 		if (parameters.isPresent()) {
 			onParameters(parameters.get(), (accepted) -> {
@@ -159,6 +172,7 @@ public abstract class DataLoader {
 						//this needs to be done this way b/c loading a new dataset wipes out
 						//things like calibration info
 						this.paths = sessionPaths;
+						this.dataSourceUUID = session.data.dataSourcePluginUUID;
 						sessionCallback = () -> {
 							controller.loadSessionSettings(session, true);	
 							warnVersion.run();
@@ -191,7 +205,7 @@ public abstract class DataLoader {
 	public abstract void onSuccess(List<Path> paths);
 	public abstract void onFail(List<Path> paths, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
-	public abstract void onSelection(List<DataSource> datasources, Consumer<DataSource> selected);
+	public abstract void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected);
 	
 	public abstract void onSessionNewer();
 	public abstract void onSessionFailure();

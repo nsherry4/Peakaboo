@@ -20,6 +20,7 @@ import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
+import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
@@ -44,6 +45,7 @@ public class DataController extends Eventful
 	private PlotController		plot;
 	private Discards			discards;
 	private List<Path>			dataPaths;
+	private String				dataSourcePluginUUID;
 	
 	
 	public DataController(PlotController plotController)
@@ -52,6 +54,7 @@ public class DataController extends Eventful
 		dataModel = new EmptyDataSet();
 		discards = new DiscardsList(plot);
 		dataPaths = new ArrayList<>();
+		dataSourcePluginUUID = null;
 	}
 
 	
@@ -65,7 +68,7 @@ public class DataController extends Eventful
 	// =============================================
 	
 
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, DataSource dsp, Consumer<DatasetReadResult> onResult)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, DataSourcePlugin dsp, Consumer<DatasetReadResult> onResult)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
@@ -91,6 +94,7 @@ public class DataController extends Eventful
 					
 					if (dataset.getAnalysis().channelsPerScan() > 0) {
 						setDataSetProvider(dataset);
+						setDataSourcePluginUUID(dsp.pluginUUID());
 					}
 					onResult.accept(result);
 					return;
@@ -161,6 +165,15 @@ public class DataController extends Eventful
 		
 
 	}
+	
+	public String getDataSourcePluginUUID() {
+		return this.dataSourcePluginUUID;
+	}
+	
+	public void setDataSourcePluginUUID(String uuid) {
+		this.dataSourcePluginUUID = uuid;
+	}
+	
 	
 	public void setDataSource(DataSource ds, DummyExecutor progress, Supplier<Boolean> isAborted)
 	{
