@@ -32,12 +32,14 @@ public class AreaMap {
 	}
 	
 	public static AreaMap sum(List<AreaMap> maps) {
+		if (maps.size() == 0) { return null; }
 		Coord<Integer> size = maps.get(0).getSize();
 		return new AreaMap(sumSpectrum(maps), size);
 	}
 	
 	
 	public static Spectrum sumSpectrum(List<AreaMap> maps) {
+		if (maps.size() == 0) { return null; }
 		Coord<Integer> size = maps.get(0).getSize();
 		Spectrum target = new ISpectrum(size.x * size.y);
 		for (AreaMap map : maps) {

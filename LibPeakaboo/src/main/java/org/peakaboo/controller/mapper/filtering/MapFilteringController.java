@@ -1,5 +1,6 @@
 package org.peakaboo.controller.mapper.filtering;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +28,14 @@ public class MapFilteringController extends EventfulType<String> {
 	
 	private MapFilterSet filters = new MapFilterSet();
 	private EventfulCache<Map<ITransitionSeries, AreaMap>> cachedMaps;
-
+	private EventfulCache<AreaMap> summedMap;
+	
 	
 	public MapFilteringController(MappingController controller) {
 		this.controller = controller;
 		cachedMaps = new EventfulCache<>(this::filterMaps);
+		summedMap = new EventfulCache<>(this::sumMaps);
+		summedMap.addUpstreamDependency(cachedMaps);
 	}
 	
 	
@@ -57,12 +61,23 @@ public class MapFilteringController extends EventfulType<String> {
 		
 	}
 	
+	private AreaMap sumMaps() {
+		return AreaMap.sum(new ArrayList<>(cachedMaps.getValue().values()));
+	}
+	
 	public AreaMap getAreaMap(ITransitionSeries ts) {
 		return cachedMaps.getValue().get(ts);
 	}
 	
 	public List<AreaMap> getAreaMaps(List<ITransitionSeries> tss) {
 		return tss.stream().map(this::getAreaMap).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Returns the sum of all maps, or null, if there are no maps.
+	 */
+	public AreaMap getSummedMap() {
+		return summedMap.getValue();
 	}
 	
 	private AreaMap apply(AreaMap map) {

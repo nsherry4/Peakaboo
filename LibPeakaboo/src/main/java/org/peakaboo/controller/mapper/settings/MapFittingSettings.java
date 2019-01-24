@@ -635,9 +635,18 @@ public class MapFittingSettings extends EventfulType<String> {
 	}
 	
 
-	public synchronized Spectrum sumAllTransitionSeriesMaps()
-	{		
-		return sumGivenTransitionSeriesMaps(new ArrayList<>(this.visibility.keySet()));
+	public synchronized Spectrum sumAllTransitionSeriesMaps() {		
+		
+		AreaMap sum = map.getFiltering().getSummedMap();
+
+		//When there are no maps, the sum will be null
+		if (sum == null) {
+			Coord<Integer> size = map.getSettings().getView().viewDimensions;
+			return new ISpectrum(size.x * size.y);
+		}
+		
+		return new ISpectrum(sum.getData());
+		
 	}
 
 
