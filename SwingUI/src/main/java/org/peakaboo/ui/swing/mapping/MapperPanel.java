@@ -226,7 +226,7 @@ public class MapperPanel extends TabbedLayerPanel {
 			public void change(String ss)
 			{
 
-				if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.rawDataController.getMapSize())
+				if (controller.getSettings().getView().getUserDataHeight() * controller.getSettings().getView().getUserDataWidth() == controller.rawDataController.getMapSize())
 				{
 					warnOnTooSmallDataset.setVisible(false);
 				}
@@ -414,7 +414,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		warnOnTooSmallDataset.setOpaque(true);
 		warnOnTooSmallDataset.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		if (controller.getSettings().getView().getDataHeight() * controller.getSettings().getView().getDataWidth() == controller.rawDataController.getMapSize())
+		if (controller.getSettings().getView().getUserDataHeight() * controller.getSettings().getView().getUserDataWidth() == controller.rawDataController.getMapSize())
 		{
 			warnOnTooSmallDataset.setVisible(false);
 		}

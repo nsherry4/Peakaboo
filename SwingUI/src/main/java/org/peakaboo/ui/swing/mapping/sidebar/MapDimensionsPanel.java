@@ -44,9 +44,9 @@ public class MapDimensionsPanel extends JPanel {
 		c.weighty = 0.0;
 		c.gridy = 0;
 		width = new JSpinner();
-		width.setValue(controller.getSettings().getView().getDataWidth());
+		width.setValue(controller.getSettings().getView().getUserDataWidth());
 		width.addChangeListener(e -> {
-			controller.getSettings().getView().setDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getSettings().getView().setUserDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
@@ -60,9 +60,9 @@ public class MapDimensionsPanel extends JPanel {
 
 		c.gridy += 1;
 		height = new JSpinner();
-		height.setValue(controller.getSettings().getView().getDataHeight());
+		height.setValue(controller.getSettings().getView().getUserDataHeight());
 		height.addChangeListener(e -> {
-			controller.getSettings().getView().setDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getSettings().getView().setUserDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
@@ -136,8 +136,8 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		controller.addListener(e -> {
-			width.setValue(controller.getSettings().getView().getDataWidth());
-			height.setValue(controller.getSettings().getView().getDataHeight());
+			width.setValue(controller.getSettings().getView().getUserDataWidth());
+			height.setValue(controller.getSettings().getView().getUserDataHeight());
 		});
 		
 	}

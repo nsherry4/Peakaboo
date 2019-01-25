@@ -106,7 +106,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		int side, newside;
 		while (true) {
 			
-			side = (int)Math.sqrt( getDataHeight() * getDataWidth() );
+			side = (int)Math.sqrt( getUserDataHeight() * getUserDataWidth() );
 			
 			newside = (int)(side * Math.pow(2, passes));
 		
@@ -141,10 +141,10 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	
 
 	// data height and width
-	public void setDataHeight(int height)
+	public void setUserDataHeight(int height)
 	{
 
-		if (getDataWidth() * height > mapController.rawDataController.getMapSize()) height = mapController.rawDataController.getMapSize() / getDataWidth();
+		if (getUserDataWidth() * height > mapController.rawDataController.getMapSize()) height = mapController.rawDataController.getMapSize() / getUserDataWidth();
 		if (height < 1) height = 1;
 
 		viewDimensions.y = height;
@@ -155,16 +155,19 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 
 
-	public int getDataHeight()
+	/**
+	 * Gets the height of the map as specified by the user
+	 */
+	public int getUserDataHeight()
 	{
 		return viewDimensions.y;
 	}
 
 
-	public void setDataWidth(int width)
+	public void setUserDataWidth(int width)
 	{
 
-		if (getDataHeight() * width > mapController.rawDataController.getMapSize()) width = mapController.rawDataController.getMapSize() / getDataHeight();
+		if (getUserDataHeight() * width > mapController.rawDataController.getMapSize()) width = mapController.rawDataController.getMapSize() / getUserDataHeight();
 		if (width < 1) width = 1;
 
 		viewDimensions.x = width;
@@ -174,7 +177,12 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 
-	public int getDataWidth()
+	
+	/**
+	 * Sets the height of the map as specified by the user
+	 * @return
+	 */
+	public int getUserDataWidth()
 	{
 		return viewDimensions.x;
 	}
@@ -449,7 +457,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public int getInterpolatedHeight()
 	{
 		
-		int height = getDataHeight();
+		int height = getUserDataHeight();
 		
 		for (int i = 0; i < getInterpolation(); i++)
 		{
@@ -463,7 +471,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 
 	public int getInterpolatedWidth()
 	{
-		int width = getDataWidth();
+		int width = getUserDataWidth();
 		
 		for (int i = 0; i < getInterpolation(); i++)
 		{
@@ -481,7 +489,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		if (realDims != null) {
 			return new Coord<Number>(realDims.x.start, realDims.y.end);
 		} else {
-			return new Coord<Number>(1, mapController.getSettings().getView().getDataHeight());
+			return new Coord<Number>(1, mapController.getSettings().getView().getUserDataHeight());
 		}
 	}
 	public Coord<Number> getHiXLoYCoord()
@@ -490,7 +498,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.end, 		realDims.y.end);
 		} else {
-			return new Coord<Number>(mapController.getSettings().getView().getDataWidth(), mapController.getSettings().getView().getDataHeight());
+			return new Coord<Number>(mapController.getSettings().getView().getUserDataWidth(), mapController.getSettings().getView().getUserDataHeight());
 		}
 	}
 	public Coord<Number> getLoXHiYCoord()
@@ -508,7 +516,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.end,		realDims.y.start);
 		} else {
-			return new Coord<Number>(mapController.getSettings().getView().getDataWidth(), 1);
+			return new Coord<Number>(mapController.getSettings().getView().getUserDataWidth(), 1);
 		}
 	}
 

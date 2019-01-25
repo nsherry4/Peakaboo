@@ -43,8 +43,8 @@ public class AreaSelection extends EventfulType<String> {
 		{
 			if (dragStart.x < 0) dragStart.x = 0;
 			if (dragStart.y < 0) dragStart.y = 0;
-			if (dragStart.x >= map.getSettings().getView().getDataWidth()) dragStart.x = map.getSettings().getView().getDataWidth()-1;
-			if (dragStart.y >= map.getSettings().getView().getDataHeight()) dragStart.y = map.getSettings().getView().getDataHeight()-1;
+			if (dragStart.x >= map.getSettings().getView().getUserDataWidth()) dragStart.x = map.getSettings().getView().getUserDataWidth()-1;
+			if (dragStart.y >= map.getSettings().getView().getUserDataHeight()) dragStart.y = map.getSettings().getView().getUserDataHeight()-1;
 		}
 		
 		this.start = dragStart;
@@ -71,8 +71,8 @@ public class AreaSelection extends EventfulType<String> {
 		{
 			if (dragEnd.x < 0) dragEnd.x = 0;
 			if (dragEnd.y < 0) dragEnd.y = 0;
-			if (dragEnd.x >= map.getSettings().getView().getDataWidth()) dragEnd.x = map.getSettings().getView().getDataWidth()-1;
-			if (dragEnd.y >= map.getSettings().getView().getDataHeight()) dragEnd.y = map.getSettings().getView().getDataHeight()-1;
+			if (dragEnd.x >= map.getSettings().getView().getUserDataWidth()) dragEnd.x = map.getSettings().getView().getUserDataWidth()-1;
+			if (dragEnd.y >= map.getSettings().getView().getUserDataHeight()) dragEnd.y = map.getSettings().getView().getUserDataHeight()-1;
 		}
 		
 		this.end = dragEnd;
@@ -99,8 +99,8 @@ public class AreaSelection extends EventfulType<String> {
 		final int yend = getEnd().y;
 
 		final GridPerspective<Float> grid = new GridPerspective<Float>(
-				map.getSettings().getView().getDataWidth(), 
-				map.getSettings().getView().getDataHeight(), 
+				map.getSettings().getView().getUserDataWidth(), 
+				map.getSettings().getView().getUserDataHeight(), 
 				0f);
 		
 		for (int x : new Range(xstart, xend)) {

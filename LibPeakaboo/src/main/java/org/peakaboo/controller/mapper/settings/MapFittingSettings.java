@@ -115,7 +115,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		if (valueAtCoord == null) return "";
 		MapViewSettings view = map.getSettings().getView();
-		if (mapCoord.x < 0 || mapCoord.y < 0 || mapCoord.x >= view.getDataWidth() || mapCoord.y >= view.getDataHeight()) {
+		if (mapCoord.x < 0 || mapCoord.y < 0 || mapCoord.x >= view.getUserDataWidth() || mapCoord.y >= view.getUserDataHeight()) {
 			return "";
 		}
 		return valueAtCoord.apply(mapCoord);
@@ -138,8 +138,8 @@ public class MapFittingSettings extends EventfulType<String> {
 		}
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.getSettings().getView().getDataWidth(),
-				map.getSettings().getView().getDataHeight(),
+				map.getSettings().getView().getUserDataWidth(),
+				map.getSettings().getView().getUserDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
@@ -165,8 +165,8 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.getSettings().getView().getDataWidth(),
-				map.getSettings().getView().getDataHeight(),
+				map.getSettings().getView().getUserDataWidth(),
+				map.getSettings().getView().getUserDataHeight(),
 				0.0f);
 		
 		
@@ -354,8 +354,8 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.getSettings().getView().getDataWidth(),
-				map.getSettings().getView().getDataHeight(),
+				map.getSettings().getView().getUserDataWidth(),
+				map.getSettings().getView().getUserDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
@@ -410,7 +410,7 @@ public class MapFittingSettings extends EventfulType<String> {
 			
 			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.getSettings().getView().getDataWidth() * coord.y + coord.x;
+			int index = map.getSettings().getView().getUserDataWidth() * coord.y + coord.x;
 			List<String> results = new ArrayList<String>();
 			for (OverlayColour c : OverlayColour.values())
 			{
@@ -432,7 +432,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		valueAtCoord = coord -> {
 			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.getSettings().getView().getDataWidth() * coord.y + coord.x;
+			int index = map.getSettings().getView().getUserDataWidth() * coord.y + coord.x;
 			if (ratioData.second.get(index) != 0) return "Invalid";
 			return Ratios.fromFloat(  ratioData.first.get(index)  );
 		};
@@ -448,7 +448,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	private void putValueFunctionForComposite(final Spectrum data)
 	{
 		valueAtCoord = coord -> {
-			int index = map.getSettings().getView().getDataWidth() * coord.y + coord.x;
+			int index = map.getSettings().getView().getUserDataWidth() * coord.y + coord.x;
 			if (index >= data.size()) return "";
 			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
 		};
@@ -504,11 +504,11 @@ public class MapFittingSettings extends EventfulType<String> {
 		}
 		
 
-		for (int y = 0; y < map.getSettings().getView().getDataHeight(); y++) {
+		for (int y = 0; y < map.getSettings().getView().getUserDataHeight(); y++) {
 			
 			if (y != 0) sb.append("\n");
 			
-			for (int x = 0; x < map.getSettings().getView().getDataWidth(); x++) {
+			for (int x = 0; x < map.getSettings().getView().getUserDataWidth(); x++) {
 				
 				if (x != 0) sb.append(", ");
 				sb.append(valueAtCoord.apply(new Coord<Integer>(x, y)));

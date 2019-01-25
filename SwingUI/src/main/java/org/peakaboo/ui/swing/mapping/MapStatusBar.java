@@ -85,7 +85,7 @@ class MapStatusBar extends JPanel {
 			return;
 		}
 
-		int index = (mapCoord.y * controller.getSettings().getView().getDataWidth() + mapCoord.x) + 1;
+		int index = (mapCoord.y * controller.getSettings().getView().getUserDataWidth() + mapCoord.x) + 1;
 		
 		if (controller.getSettings().getView().isValidPoint(mapCoord))
 		{

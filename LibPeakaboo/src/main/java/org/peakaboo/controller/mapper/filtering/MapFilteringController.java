@@ -64,6 +64,33 @@ public class MapFilteringController extends EventfulType<String> {
 		
 	}
 	
+	public int getFilteredDataWidth() {
+		AreaMap summed = getSummedMap();
+		if (summed == null) {
+			return controller.getSettings().getView().getUserDataWidth();
+		}
+		return summed.getSize().x;
+	}
+		
+	public int getFilteredDataHeight() {
+		AreaMap summed = getSummedMap();
+		if (summed == null) {
+			return controller.getSettings().getView().getUserDataHeight();
+		}
+		return summed.getSize().y;
+	}
+	
+	/**
+	 * Returns true if and only if the size of the filtered maps does not match the
+	 * user specified size.
+	 */
+	public boolean filtersChangeMapSize() {
+		return 
+				getFilteredDataHeight() != controller.getSettings().getView().getUserDataHeight() 
+				||
+				getFilteredDataWidth() != controller.getSettings().getView().getUserDataWidth();
+	}
+	
 	
 	private AreaMap sumMaps() {
 		return AreaMap.sum(new ArrayList<>(cachedMaps.getValue().values()));

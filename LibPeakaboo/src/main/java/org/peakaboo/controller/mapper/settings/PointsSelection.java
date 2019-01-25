@@ -96,8 +96,8 @@ public class PointsSelection extends EventfulType<String>{
 			}
 		}
 		
-		int w = map.getSettings().getView().getDataWidth();
-		int h = map.getSettings().getView().getDataHeight();
+		int w = map.getSettings().getView().getUserDataWidth();
+		int h = map.getSettings().getView().getUserDataHeight();
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
 		int clickedAtIndex = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
@@ -192,8 +192,8 @@ public class PointsSelection extends EventfulType<String>{
 		Set<Integer> pointSet = new HashSet<>();
 		pointSet.addAll(points);
 	
-		int w = map.getSettings().getView().getDataWidth();
-		int h = map.getSettings().getView().getDataHeight();
+		int w = map.getSettings().getView().getUserDataWidth();
+		int h = map.getSettings().getView().getUserDataHeight();
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
 		
 		//visit all existing points

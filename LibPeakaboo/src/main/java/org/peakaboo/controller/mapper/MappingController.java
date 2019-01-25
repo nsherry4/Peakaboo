@@ -79,7 +79,7 @@ public class MappingController extends EventfulType<String>
 
 	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return plotcontroller.data().getDataSourceForSubset(getSettings().getView().getDataWidth(), getSettings().getView().getDataHeight(), cstart, cend);
+		return plotcontroller.data().getDataSourceForSubset(getSettings().getView().getUserDataWidth(), getSettings().getView().getUserDataHeight(), cstart, cend);
 	}
 
 	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
@@ -95,8 +95,8 @@ public class MappingController extends EventfulType<String>
 	
 	public MapRenderSettings getRenderSettings() {
 		MapRenderSettings settings = new MapRenderSettings();
-		settings.dataWidth = this.display.getView().getDataWidth(); 
-		settings.dataHeight = this.display.getView().getDataHeight();
+		settings.dataWidth = this.display.getView().getUserDataWidth(); 
+		settings.dataHeight = this.display.getView().getUserDataHeight();
 		settings.interpolatedWidth = this.display.getView().getInterpolatedWidth();
 		settings.interpolatedHeight = this.display.getView().getInterpolatedHeight();
 		
