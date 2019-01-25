@@ -74,6 +74,10 @@ public class MapFilterSet implements Iterable<MapFilter> {
 	}
 	
 	public synchronized AreaMap apply(AreaMap map) {
+		return applyUnsynchronized(map);
+	}
+	
+	public AreaMap applyUnsynchronized(AreaMap map) {
 		
 		for (MapFilter filter : filters) {
 			if (filter.isEnabled()) {

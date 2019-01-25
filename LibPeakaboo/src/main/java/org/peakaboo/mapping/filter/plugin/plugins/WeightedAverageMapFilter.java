@@ -38,7 +38,7 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 		if (radius.getValue() > 5) { return false; }
 		
 		if (reps.getValue() <= 0) { return false; }
-		if (reps.getValue() > 10) { return false; }
+		if (reps.getValue() > 5) { return false; }
 		
 		return true;
 	}

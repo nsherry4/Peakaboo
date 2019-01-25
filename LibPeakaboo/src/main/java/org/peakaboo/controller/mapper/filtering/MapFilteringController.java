@@ -1,9 +1,11 @@
 package org.peakaboo.controller.mapper.filtering;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.peakaboo.calibration.CalibrationProfile;
@@ -40,9 +42,9 @@ public class MapFilteringController extends EventfulType<String> {
 	}
 	
 	
-	private Map<ITransitionSeries, AreaMap> filterMaps() {
+	private synchronized Map<ITransitionSeries, AreaMap> filterMaps() {
 		
-		Map<ITransitionSeries, AreaMap> areamaps = new HashMap<>();
+		Map<ITransitionSeries, AreaMap> areamaps = new ConcurrentHashMap<>();
 		
 		Coord<Integer> size = controller.getSettings().getView().viewDimensions;
 
@@ -50,17 +52,18 @@ public class MapFilteringController extends EventfulType<String> {
 		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
 		
 		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
-		for (RawMap rawmap : rawmaps) {
+		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
 			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
 			AreaMap areamap = new AreaMap(calibrated, size);
-			areamap = apply(areamap);
+			areamap = filters.applyUnsynchronized(areamap);
 			areamaps.put(ts, areamap);
-		}
+		});
 
 		return areamaps;
 		
 	}
+	
 	
 	private AreaMap sumMaps() {
 		return AreaMap.sum(new ArrayList<>(cachedMaps.getValue().values()));
