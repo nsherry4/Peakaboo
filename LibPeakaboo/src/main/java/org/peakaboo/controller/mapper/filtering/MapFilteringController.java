@@ -10,6 +10,7 @@ import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.filter.model.Filter;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
@@ -96,6 +97,18 @@ public class MapFilteringController extends EventfulType<String> {
 		return result;
 	}
 
+	public void moveMapFilter(int from, int to) {
+		//we'll be removing the item from the list, so if the 
+		//destination is greater than the source, decrement it 
+		//to make up the difference
+		if (to > from) { to--; }
+		
+		MapFilter filter = filters.get(from);
+		filters.remove(from);
+		filters.add(to, filter);
+		filteredDataInvalidated();
+	}
+	
 	public void clear() {
 		filters.clear();
 		filteredDataInvalidated();

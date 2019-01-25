@@ -9,10 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.DropMode;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -34,6 +36,7 @@ import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.gradientpanel.TitlePaintedPanel;
 import swidget.widgets.layout.ButtonBox;
 import swidget.widgets.listcontrols.ListControls;
+import swidget.widgets.listcontrols.ReorderTransferHandler;
 import swidget.widgets.listwidget.ListWidget;
 import swidget.widgets.listwidget.ListWidgetCellEditor;
 import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
@@ -154,6 +157,21 @@ public class FiltersPanel extends JPanel {
 		
 		filterTable.getColumnModel().getColumn(2).setCellRenderer(new ListWidgetTableCellRenderer<MapFilter>(new MapFilterWidget()));
 		filterTable.getColumnModel().getColumn(2).setCellEditor(new ListWidgetCellEditor<MapFilter>(new MapFilterWidget()));
+		
+		
+		
+		filterTable.setDragEnabled(true);
+		filterTable.setDropMode(DropMode.INSERT_ROWS);
+		filterTable.setTransferHandler(new ReorderTransferHandler(filterTable) {
+			
+			@Override
+			public void move(int from, int to) {
+				controller.moveMapFilter(from, to);
+			}
+		});
+		
+		ToolTipManager.sharedInstance().registerComponent(filterTable);
+		
 		
 		
 		ImageButton add = new ImageButton(StockIcon.EDIT_ADD)
