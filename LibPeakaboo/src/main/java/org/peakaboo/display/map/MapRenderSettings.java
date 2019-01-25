@@ -11,7 +11,7 @@ import cyclops.SISize;
 
 public class MapRenderSettings {
 
-	public int dataWidth, dataHeight;
+	public int userDataWidth, userDataHeight;
 	public int interpolatedWidth, interpolatedHeight;
 	
 	public boolean showDatasetTitle = false;

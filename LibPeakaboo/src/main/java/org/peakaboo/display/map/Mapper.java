@@ -95,8 +95,8 @@ public class Mapper {
 		
 		size = new Coord<Integer>((int)Math.round(width), (int)Math.round(height));
 		
-		dr.dataHeight = settings.dataHeight;
-		dr.dataWidth = settings.dataWidth;
+		dr.dataHeight = settings.userDataHeight;
+		dr.dataWidth = settings.userDataWidth;
 		dr.imageWidth = (float)size.x;
 		dr.imageHeight = (float)size.y;
 		
@@ -185,10 +185,10 @@ public class Mapper {
 		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
 				
-		dr.uninterpolatedWidth = settings.dataWidth;
-		dr.uninterpolatedHeight = settings.dataHeight;
-		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
+		dr.uninterpolatedWidth = settings.userDataWidth;
+		dr.uninterpolatedHeight = settings.userDataHeight;
+		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.userDataWidth : settings.interpolatedWidth;
+		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.userDataHeight : settings.interpolatedHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.screenOrientation = settings.screenOrientation;
 		
@@ -259,9 +259,9 @@ public class Mapper {
 		
 		//Selection Painter
 		if (selectionPainter == null) {
-			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
 		} else {
-			selectionPainter.configure(settings.dataWidth, settings.dataHeight, settings.selectedPoints);
+			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
 		}
 		mapPainters.add(selectionPainter);
 			
@@ -291,10 +291,10 @@ public class Mapper {
 		
 		Pair<Spectrum, Spectrum> ratiodata = data.ratioData;
 		
-		dr.uninterpolatedWidth = settings.dataWidth;
-		dr.uninterpolatedHeight = settings.dataHeight;
-		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
+		dr.uninterpolatedWidth = settings.userDataWidth;
+		dr.uninterpolatedHeight = settings.userDataHeight;
+		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.userDataWidth : settings.interpolatedWidth;
+		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.userDataHeight : settings.interpolatedHeight;
 		//LOG view not supported
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = settings.screenOrientation;
@@ -415,9 +415,9 @@ public class Mapper {
 		
 		//Selection Painter
 		if (selectionPainter == null) {
-			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
 		} else {
-			selectionPainter.configure(settings.dataWidth, settings.dataHeight, settings.selectedPoints);
+			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
 		}
 		mapPainters.add(selectionPainter);
 		
@@ -444,10 +444,10 @@ public class Mapper {
 
 		
 		
-		dr.uninterpolatedWidth = settings.dataWidth;
-		dr.uninterpolatedHeight = settings.dataHeight;
-		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.dataWidth : settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.dataHeight : settings.interpolatedHeight;
+		dr.uninterpolatedWidth = settings.userDataWidth;
+		dr.uninterpolatedHeight = settings.userDataHeight;
+		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.userDataWidth : settings.interpolatedWidth;
+		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.userDataHeight : settings.interpolatedHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.screenOrientation = settings.screenOrientation;
 		
@@ -577,9 +577,9 @@ public class Mapper {
 		
 		//Selection Painter
 		if (selectionPainter == null) {
-			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.dataWidth, settings.dataHeight);
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
 		} else {
-			selectionPainter.configure(settings.dataWidth, settings.dataHeight, settings.selectedPoints);
+			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
 		}
 		
 
@@ -588,7 +588,7 @@ public class Mapper {
 		if (vector) {
 						
 			//create new buffer to add the rgby channels in
-			Buffer buffer = backend.getImageBuffer(settings.dataWidth, settings.dataHeight);
+			Buffer buffer = backend.getImageBuffer(settings.userDataWidth, settings.userDataHeight);
 			PainterData p = new PainterData(buffer, dr, new Coord<Float>((float)dr.dataWidth, (float)dr.dataHeight), null);
 			
 			/*
