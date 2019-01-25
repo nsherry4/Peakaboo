@@ -17,7 +17,6 @@ public class MapAppearancePanel extends JPanel {
 
 	private JSpinner shadesSpinner;
 	private JCheckBox contours;
-	private JSpinner interpolation;
 	private JCheckBox flipY;
 	
 	public MapAppearancePanel(MappingController controller) {
@@ -47,20 +46,7 @@ public class MapAppearancePanel extends JPanel {
 		this.add(flipY, c);
 		c.gridy++;
 		
-		
-		interpolation = new JSpinner();
-		interpolation.setValue(controller.getSettings().getView().getInterpolation());
-		interpolation.addChangeListener(e -> {
-			controller.getSettings().getView().setInterpolation((Integer) ((JSpinner) e.getSource()).getValue());
-		});
-		c.gridx = 0;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 1.0;
-		this.add(new JLabel("Interpolation Passes:"), c);
-		c.gridx = 1;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.0;
-		this.add(interpolation, c);
+
 
 		c.gridy += 1;
 		contours = new JCheckBox("Contours");
@@ -90,7 +76,6 @@ public class MapAppearancePanel extends JPanel {
 			shadesSpinner.setValue(controller.getSettings().getView().getSpectrumSteps());
 			shadesSpinner.setEnabled(controller.getSettings().getView().getContours());
 			contours.setSelected(controller.getSettings().getView().getContours());
-			interpolation.setValue(controller.getSettings().getView().getInterpolation());
 			flipY.setSelected(controller.getSettings().getView().getScreenOrientation());
 		});
 		

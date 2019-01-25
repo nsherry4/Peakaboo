@@ -38,7 +38,6 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public boolean	showDataSetTitle	= false;
 	public int		spectrumSteps		= 15;
 	public boolean	contour				= false;
-	public int		interpolation		= 0;
 	public boolean	monochrome			= false;
 
 	public float	zoom				= 1f;
@@ -70,7 +69,6 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 			this.showDataSetTitle = copy.showDataSetTitle;
 			this.spectrumSteps = copy.spectrumSteps;
 			this.contour = copy.contour;
-			this.interpolation = copy.interpolation;
 			this.monochrome = copy.monochrome;
 			
 			this.viewDimensions = new Coord<>(copy.viewDimensions);
@@ -100,45 +98,6 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 
 
 	
-	// interpolation
-	public void setInterpolation(int passes)
-	{
-		int side, newside;
-		while (true) {
-			
-			side = (int)Math.sqrt( getUserDataHeight() * getUserDataWidth() );
-			
-			newside = (int)(side * Math.pow(2, passes));
-		
-			if (newside > 750) {
-				passes--;
-			} else {
-				break;
-			}
-		
-		}
-
-		//Hard cap to prevent wildly making up data that doesn't exist
-		passes = Math.min(passes, 3);
-		
-		if (passes < 0) passes = 0;
-		interpolation = passes;
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
-		
-		
-		//Interpolation is incompatible with points selection
-		if (passes > 0 && mapController.getSettings().getPointsSelection().hasSelection()) {
-			mapController.getSettings().getPointsSelection().clearSelection();
-		}
-		
-	}
-	
-	public int getInterpolation()
-	{
-		return interpolation;
-	}
-	
-	
 
 	// data height and width
 	public void setUserDataHeight(int height)
@@ -148,9 +107,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		if (height < 1) height = 1;
 
 		viewDimensions.y = height;
-		
-		setInterpolation(interpolation);
-		
+				
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 
@@ -171,8 +128,6 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		if (width < 1) width = 1;
 
 		viewDimensions.x = width;
-		
-		setInterpolation(interpolation);
 		
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
@@ -452,37 +407,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		this.overlayLowCutoff = cutoff;
 		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
-	
-
-	public int getInterpolatedHeight()
-	{
 		
-		int height = getUserDataHeight();
-		
-		for (int i = 0; i < getInterpolation(); i++)
-		{
-			height = height * 2 - 1;
-		}
-		
-		return height;
-		
-	}
-
-
-	public int getInterpolatedWidth()
-	{
-		int width = getUserDataWidth();
-		
-		for (int i = 0; i < getInterpolation(); i++)
-		{
-			width = width * 2 - 1;
-		}
-		
-		return width;
-		
-	}
-	
-	
 
 	public Coord<Number> getLoXLoYCoord() {
 		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();

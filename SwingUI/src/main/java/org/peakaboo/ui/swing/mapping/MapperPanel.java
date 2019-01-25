@@ -173,7 +173,7 @@ public class MapperPanel extends TabbedLayerPanel {
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2) {
 					MapDisplayMode displayMode = controller.getSettings().getMapFittings().getMapDisplayMode();
 					//Double-click selects points with similar intensity
-					if ((displayMode == MapDisplayMode.COMPOSITE || displayMode == MapDisplayMode.RATIO) && controller.getSettings().getView().getInterpolation() == 0) {
+					if ((displayMode == MapDisplayMode.COMPOSITE || displayMode == MapDisplayMode.RATIO) && !controller.getFiltering().filteringChangedMapSize()) {
 						
 						controller.getSettings().getAreaSelection().clearSelection();
 						

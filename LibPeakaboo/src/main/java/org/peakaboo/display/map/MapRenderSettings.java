@@ -12,7 +12,7 @@ import cyclops.SISize;
 public class MapRenderSettings {
 
 	public int userDataWidth, userDataHeight;
-	public int interpolatedWidth, interpolatedHeight;
+	public int filteredDataWidth, filteredDataHeight;
 	
 	public boolean showDatasetTitle = false;
 	public String datasetTitle = "";

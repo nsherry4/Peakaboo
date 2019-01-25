@@ -27,11 +27,7 @@ public class AreaSelection extends EventfulType<String> {
 	public AreaSelection(MappingController map) {
 		this.map = map;
 	}
-	
-	private boolean isInterpolated( ) {
-		return map.getSettings().getView().interpolation > 0;
-	}
-	
+		
 	public Coord<Integer> getStart()
 	{
 		return start;
@@ -115,7 +111,7 @@ public class AreaSelection extends EventfulType<String> {
 	
 	public boolean hasSelection()
 	{
-		return hasSelection && !isInterpolated();
+		return hasSelection && !map.getFiltering().filteringChangedMapSize();
 			
 	}
 

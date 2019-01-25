@@ -52,7 +52,7 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 
 	@Override
 	public boolean pluginEnabled() {
-		return false;
+		return true;
 	}
 
 	@Override

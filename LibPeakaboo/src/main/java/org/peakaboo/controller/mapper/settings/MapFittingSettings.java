@@ -16,6 +16,7 @@ import java.util.function.Function;
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapDisplayMode;
@@ -111,11 +112,14 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	
 
+	/*
+	 * POST FILTERING
+	 */
 	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
 	{
 		if (valueAtCoord == null) return "";
-		MapViewSettings view = map.getSettings().getView();
-		if (mapCoord.x < 0 || mapCoord.y < 0 || mapCoord.x >= view.getUserDataWidth() || mapCoord.y >= view.getUserDataHeight()) {
+		MapFilteringController filters = map.getFiltering();
+		if (!filters.isValidPoint(mapCoord)) {
 			return "";
 		}
 		return valueAtCoord.apply(mapCoord);
@@ -145,16 +149,9 @@ public class MapFittingSettings extends EventfulType<String> {
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, data, map.rawDataController.getBadPoints());
 		
-		// interpolation of data
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(data, grid, map.getSettings().getView().getInterpolation());
-
-		
-		//map.mapsController.interpolatedSize.x = interpolationResult.first.width;
-		//mapModel.interpolatedSize.y = interpolationResult.first.height;
-		
 		//data = mapdata;
 		putValueFunctionForComposite(data);
-		return interpolationResult.second;
+		return data;
 		
 		
 	}
@@ -176,7 +173,7 @@ public class MapFittingSettings extends EventfulType<String> {
 				
 
 		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null, yellowSpectrum = null;
-		Map<OverlayColour, Spectrum> uninterpolatedColours = new HashMap<OverlayColour, Spectrum>();
+		Map<OverlayColour, Spectrum> valueFunctionMaps = new HashMap<OverlayColour, Spectrum>();
 		
 		//get the TSs for this colour, and get their combined spectrum
 		List<Spectrum> redSpectrums = dataset.stream()
@@ -191,14 +188,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		if (redSpectrums != null && redSpectrums.size() > 0) {
 			redSpectrum = redSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			
-			uninterpolatedColours.put(OverlayColour.RED, redSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(redSpectrum, grid, map.getSettings().getView().getInterpolation());
-			redSpectrum = interpolationResult.second;
-			//mapModel.interpolatedSize.x = interpolationResult.first.width;
-			//mapModel.interpolatedSize.y = interpolationResult.first.height;
-			
-			
+			valueFunctionMaps.put(OverlayColour.RED, redSpectrum);
 		} else {
 			redSpectrum = null;
 		}
@@ -217,13 +207,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		if (greenSpectrums != null && greenSpectrums.size() > 0){
 			greenSpectrum = greenSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			
-			uninterpolatedColours.put(OverlayColour.GREEN, greenSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(greenSpectrum, grid, map.getSettings().getView().getInterpolation());
-			greenSpectrum = interpolationResult.second;
-			//mapModel.interpolatedSize.x = interpolationResult.first.width;
-			//mapModel.interpolatedSize.y = interpolationResult.first.height;
-			
+			valueFunctionMaps.put(OverlayColour.GREEN, greenSpectrum);
 		} else {
 			greenSpectrum = null;
 		}
@@ -243,13 +227,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		if (blueSpectrums != null && blueSpectrums.size() > 0) {
 			blueSpectrum = blueSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			
-			uninterpolatedColours.put(OverlayColour.BLUE, blueSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(blueSpectrum, grid, map.getSettings().getView().getInterpolation());
-			blueSpectrum = interpolationResult.second;
-			//mapModel.interpolatedSize.x = interpolationResult.first.width;
-			//mapModel.interpolatedSize.y = interpolationResult.first.height;
-					
+			valueFunctionMaps.put(OverlayColour.BLUE, blueSpectrum);	
 		} else {
 			blueSpectrum = null;
 		}
@@ -270,13 +248,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		if (yellowSpectrums != null && yellowSpectrums.size() > 0) {
 			yellowSpectrum = yellowSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			
-			uninterpolatedColours.put(OverlayColour.YELLOW, yellowSpectrum);
-			Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(yellowSpectrum, grid, map.getSettings().getView().getInterpolation());
-			yellowSpectrum = interpolationResult.second;
-			//mapModel.interpolatedSize.x = interpolationResult.first.width;
-			//mapModel.interpolatedSize.y = interpolationResult.first.height;
-					
+			valueFunctionMaps.put(OverlayColour.YELLOW, yellowSpectrum);
 		} else {
 			yellowSpectrum = null;
 		}
@@ -298,7 +270,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		colours.put(OverlayColour.BLUE, new OverlayChannel(blueSpectrum, blueTS));
 		colours.put(OverlayColour.YELLOW, new OverlayChannel(yellowSpectrum, yellowTS));
 		
-		putValueFunctionForOverlay(uninterpolatedColours);
+		putValueFunctionForOverlay(valueFunctionMaps);
 		return colours;
 		
 	}
@@ -361,14 +333,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, ratioData, map.rawDataController.getBadPoints());
 		
-	
-		Spectrum mapdata;
-		
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult = interpolate(ratioData, grid, map.getSettings().getView().getInterpolation());
-		mapdata = interpolationResult.second;
-		//mapModel.interpolatedSize.x = interpolationResult.first.width;
-		//mapModel.interpolatedSize.y = interpolationResult.first.height;
-		
+
 		Spectrum invalidPoints = new ISpectrum(ratioData.size(), 0f);
 		for (int i = 0; i < ratioData.size(); i++)
 		{
@@ -379,20 +344,11 @@ public class MapFittingSettings extends EventfulType<String> {
 			}
 		}
 		
-		Spectrum invalidPointsInterpolated = new ISpectrum(mapdata.size(), 0f);
-		for (int i = 0; i < mapdata.size(); i++)
-		{
-			if (  Float.isNaN(mapdata.get(i))  )
-			{
-				invalidPointsInterpolated.set(i, 1f);
-				mapdata.set(i, 0f);
-			}
-		}
 				
 		putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
 		
 		
-		return new Pair<Spectrum, Spectrum>(mapdata, invalidPointsInterpolated);
+		return new Pair<Spectrum, Spectrum>(ratioData, invalidPoints);
 
 		
 	}
@@ -410,7 +366,7 @@ public class MapFittingSettings extends EventfulType<String> {
 			
 			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.getSettings().getView().getUserDataWidth() * coord.y + coord.x;
+			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
 			List<String> results = new ArrayList<String>();
 			for (OverlayColour c : OverlayColour.values())
 			{
@@ -432,7 +388,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		valueAtCoord = coord -> {
 			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
-			int index = map.getSettings().getView().getUserDataWidth() * coord.y + coord.x;
+			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
 			if (ratioData.second.get(index) != 0) return "Invalid";
 			return Ratios.fromFloat(  ratioData.first.get(index)  );
 		};
@@ -448,7 +404,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	private void putValueFunctionForComposite(final Spectrum data)
 	{
 		valueAtCoord = coord -> {
-			int index = map.getSettings().getView().getUserDataWidth() * coord.y + coord.x;
+			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
 			if (index >= data.size()) return "";
 			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
 		};

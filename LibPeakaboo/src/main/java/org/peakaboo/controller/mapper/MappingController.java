@@ -97,8 +97,8 @@ public class MappingController extends EventfulType<String>
 		MapRenderSettings settings = new MapRenderSettings();
 		settings.userDataWidth = this.display.getView().getUserDataWidth(); 
 		settings.userDataHeight = this.display.getView().getUserDataHeight();
-		settings.interpolatedWidth = this.display.getView().getInterpolatedWidth();
-		settings.interpolatedHeight = this.display.getView().getInterpolatedHeight();
+		settings.filteredDataWidth = this.getFiltering().getFilteredDataWidth();
+		settings.filteredDataHeight = this.getFiltering().getFilteredDataHeight();
 		
 		settings.showDatasetTitle = this.display.getView().getShowDatasetTitle();
 		settings.datasetTitle = this.rawDataController.getDatasetTitle();

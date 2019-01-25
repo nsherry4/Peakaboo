@@ -80,6 +80,19 @@ public class MapFilteringController extends EventfulType<String> {
 		return summed.getSize().y;
 	}
 	
+	public boolean isValidPoint(Coord<Integer> mapCoord)
+	{
+		return (mapCoord.x >= 0 && mapCoord.x < getFilteredDataWidth() && mapCoord.y >= 0 && mapCoord.y < getFilteredDataHeight());
+	}
+	
+	
+	public boolean filteringChangedMapSize() {
+		return 
+				controller.getSettings().getView().getUserDataWidth() != getFilteredDataWidth()
+				||
+				controller.getSettings().getView().getUserDataHeight() != getFilteredDataHeight();
+	}
+	
 	/**
 	 * Returns true if and only if the size of the filtered maps does not match the
 	 * user specified size.
@@ -180,6 +193,14 @@ public class MapFilteringController extends EventfulType<String> {
 	public String getActionDescription() {
 		List<String> actions = filters.getAll().stream().map(f -> f.getFilterAction()).collect(Collectors.toList());
 		return ListOps.unique(actions).stream().reduce((a, b) -> a + ", " + b).orElse(null);
+	}
+
+
+	/**
+	 * Returns true if the map data is being changed by the filters
+	 */
+	public boolean isFiltering() {
+		return filters.getAll().stream().map(f -> f.isEnabled()).reduce(false, (a, b) -> a || b);
 	}
 	
 

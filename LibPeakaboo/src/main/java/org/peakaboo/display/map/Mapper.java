@@ -185,10 +185,10 @@ public class Mapper {
 		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
 				
-		dr.uninterpolatedWidth = settings.userDataWidth;
-		dr.uninterpolatedHeight = settings.userDataHeight;
-		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.userDataWidth : settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.userDataHeight : settings.interpolatedHeight;
+		dr.uninterpolatedWidth = settings.filteredDataWidth;
+		dr.uninterpolatedHeight = settings.filteredDataHeight;
+		dr.dataWidth = settings.filteredDataWidth;
+		dr.dataHeight = settings.filteredDataHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.screenOrientation = settings.screenOrientation;
 		
@@ -291,10 +291,10 @@ public class Mapper {
 		
 		Pair<Spectrum, Spectrum> ratiodata = data.ratioData;
 		
-		dr.uninterpolatedWidth = settings.userDataWidth;
-		dr.uninterpolatedHeight = settings.userDataHeight;
-		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.userDataWidth : settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.userDataHeight : settings.interpolatedHeight;
+		dr.uninterpolatedWidth = settings.filteredDataWidth;
+		dr.uninterpolatedHeight = settings.filteredDataHeight;
+		dr.dataWidth = settings.filteredDataWidth;
+		dr.dataHeight = settings.filteredDataHeight;
 		//LOG view not supported
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = settings.screenOrientation;
@@ -444,10 +444,10 @@ public class Mapper {
 
 		
 		
-		dr.uninterpolatedWidth = settings.userDataWidth;
-		dr.uninterpolatedHeight = settings.userDataHeight;
-		dr.dataWidth = settings.interpolatedWidth == 0 ? settings.userDataWidth : settings.interpolatedWidth;
-		dr.dataHeight = settings.interpolatedHeight == 0 ? settings.userDataHeight : settings.interpolatedHeight;
+		dr.uninterpolatedWidth = settings.filteredDataWidth;
+		dr.uninterpolatedHeight = settings.filteredDataHeight;
+		dr.dataWidth = settings.filteredDataWidth;
+		dr.dataHeight = settings.filteredDataHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
 		dr.screenOrientation = settings.screenOrientation;
 		
