@@ -50,7 +50,7 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 			if (value < cutoff) { continue; }
 			newmap.set(i, value);
 		}
-		return new AreaMap(newmap, map.getSize());
+		return new AreaMap(newmap, map.getSize(), map.getRealDimensions());
 	}
 
 	@Override

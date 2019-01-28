@@ -49,7 +49,7 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 			count++;
 		}
 		
-		return new AreaMap(mapdata, new Coord<>(interpGrid.width, interpGrid.height));
+		return new AreaMap(mapdata, new Coord<>(interpGrid.width, interpGrid.height), map.getRealDimensions());
 	}
 
 	@Override

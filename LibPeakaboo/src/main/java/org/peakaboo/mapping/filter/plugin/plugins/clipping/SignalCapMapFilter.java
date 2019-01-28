@@ -46,7 +46,7 @@ public class SignalCapMapFilter extends AbstractMapFilter {
 			newdata.set(i, Math.min(cap, olddata.get(i)));
 		}
 		
-		return new AreaMap(newdata, map.getSize());
+		return new AreaMap(newdata, map.getSize(), map.getRealDimensions());
 	}
 
 	@Override

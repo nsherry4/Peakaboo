@@ -70,7 +70,7 @@ public class FastAverageMapFilter extends AbstractMapFilter {
 			
 		}
 		
-		return new AreaMap(filtered, map.getSize());
+		return new AreaMap(filtered, map.getSize(), map.getRealDimensions());
 	}
 
 	@Override

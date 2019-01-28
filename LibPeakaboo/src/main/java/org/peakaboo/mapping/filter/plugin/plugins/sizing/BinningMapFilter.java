@@ -80,7 +80,7 @@ public class BinningMapFilter extends AbstractMapFilter {
 			}
 		}
 		
-		return new AreaMap(binnedData, new Coord<>(binnedGrid.width, binnedGrid.height));
+		return new AreaMap(binnedData, new Coord<>(binnedGrid.width, binnedGrid.height), map.getRealDimensions());
 	}
 	
 	@Override

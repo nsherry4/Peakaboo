@@ -4,6 +4,7 @@ import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
 
+import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
@@ -38,7 +39,7 @@ public class Rotate180MapFilter extends AbstractMapFilter {
 		GridPerspective<Float> sourceGrid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
 		
 		Spectrum target = new ISpectrum(source.size());
-		GridPerspective<Float> targetGrid = new GridPerspective<Float>(map.getSize().x, map.getSize().x, 0f);
+		GridPerspective<Float> targetGrid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
 		
 		int maxy = map.getSize().y-1;
 		int maxx = map.getSize().x-1;
@@ -50,8 +51,14 @@ public class Rotate180MapFilter extends AbstractMapFilter {
 			}
 		}
 		
+		Coord<Bounds<Number>> origDim = map.getRealDimensions();
+		Coord<Bounds<Number>> newDim = null;
+		if (origDim != null) {
+			newDim = new Coord<>(new Bounds<>(origDim.x.end, origDim.x.start), new Bounds<>(origDim.y.end, origDim.y.start));
+		}
+		
 		Coord<Integer> oldsize = map.getSize();
-		return new AreaMap(target, new Coord<>(oldsize.y, oldsize.x));
+		return new AreaMap(target, new Coord<>(oldsize.x, oldsize.y), newDim);
 	}
 
 	@Override

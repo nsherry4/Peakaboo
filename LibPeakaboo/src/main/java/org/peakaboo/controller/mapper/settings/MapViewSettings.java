@@ -410,25 +410,25 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		
 
 	public Coord<Number> getLoXLoYCoord() {
-		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>(realDims.x.start, realDims.y.end);
 		} else {
-			return new Coord<Number>(1, mapController.getSettings().getView().getUserDataHeight());
+			return new Coord<Number>(1, mapController.getFiltering().getFilteredDataHeight());
 		}
 	}
 	public Coord<Number> getHiXLoYCoord()
 	{
-		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.end, 		realDims.y.end);
 		} else {
-			return new Coord<Number>(mapController.getSettings().getView().getUserDataWidth(), mapController.getSettings().getView().getUserDataHeight());
+			return new Coord<Number>(mapController.getFiltering().getFilteredDataWidth(), mapController.getFiltering().getFilteredDataHeight());
 		}
 	}
 	public Coord<Number> getLoXHiYCoord()
 	{
-		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.start,	realDims.y.start);
 		} else {
@@ -437,11 +437,11 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 	public Coord<Number> getHiXHiYCoord()
 	{
-		Coord<Bounds<Number>> realDims = mapController.rawDataController.getRealDimensions();
+		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();
 		if (realDims != null) {
 			return new Coord<Number>( realDims.x.end,		realDims.y.start);
 		} else {
-			return new Coord<Number>(mapController.getSettings().getView().getUserDataWidth(), 1);
+			return new Coord<Number>(mapController.getFiltering().getFilteredDataWidth(), 1);
 		}
 	}
 

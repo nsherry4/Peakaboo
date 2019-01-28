@@ -20,6 +20,7 @@ import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
+import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.ListOps;
@@ -56,7 +57,7 @@ public class MapFilteringController extends EventfulType<String> {
 		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
 			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
-			AreaMap areamap = new AreaMap(calibrated, size);
+			AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
 			areamap = filters.applyUnsynchronized(areamap);
 			areamaps.put(ts, areamap);
 		});
@@ -202,6 +203,13 @@ public class MapFilteringController extends EventfulType<String> {
 	 */
 	public boolean isFiltering() {
 		return filters.getAll().stream().map(f -> f.isEnabled()).reduce(false, (a, b) -> a || b);
+	}
+	
+	public Coord<Bounds<Number>> getRealDimensions() {
+		if (summedMap.getValue() == null) {
+			return null;
+		}
+		return summedMap.getValue().getRealDimensions();
 	}
 	
 

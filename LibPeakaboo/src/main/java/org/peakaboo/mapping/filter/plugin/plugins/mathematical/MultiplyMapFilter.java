@@ -41,7 +41,7 @@ public class MultiplyMapFilter extends AbstractMapFilter {
 	
 	@Override
 	public AreaMap filter(AreaMap map) {
-		return new AreaMap(SpectrumCalculations.multiplyBy(map.getData(), multiplier.getValue()), map.getSize());
+		return new AreaMap(SpectrumCalculations.multiplyBy(map.getData(), multiplier.getValue()), map.getSize(), map.getRealDimensions());
 	}
 
 	@Override

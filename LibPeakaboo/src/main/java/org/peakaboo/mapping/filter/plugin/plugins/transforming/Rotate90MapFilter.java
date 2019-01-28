@@ -4,6 +4,7 @@ import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
 
+import cyclops.Bounds;
 import cyclops.Coord;
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
@@ -51,7 +52,14 @@ public class Rotate90MapFilter extends AbstractMapFilter {
 		}
 		
 		Coord<Integer> oldsize = map.getSize();
-		return new AreaMap(target, new Coord<>(oldsize.y, oldsize.x));
+		
+		Coord<Bounds<Number>> origDim = map.getRealDimensions();
+		Coord<Bounds<Number>> newDim = null;
+		if (origDim != null) {
+			newDim = new Coord<>(new Bounds<>(origDim.y.start, origDim.y.end), new Bounds<>(origDim.x.end, origDim.x.start));
+		}
+		
+		return new AreaMap(target, new Coord<>(oldsize.y, oldsize.x), newDim);
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class NormalizationMapFilter extends AbstractMapFilter {
 	
 	@Override
 	public AreaMap filter(AreaMap map) {
-		return new AreaMap(SpectrumCalculations.addToList(map.getData(), level.getValue()), map.getSize());
+		return new AreaMap(SpectrumCalculations.addToList(map.getData(), level.getValue()), map.getSize(), map.getRealDimensions());
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
 
+import cyclops.Bounds;
+import cyclops.Coord;
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
@@ -45,7 +47,13 @@ public class HFlipMapFilter extends AbstractMapFilter {
 			}
 		}
 		
-		return new AreaMap(target, map.getSize());
+		Coord<Bounds<Number>> origDim = map.getRealDimensions();
+		Coord<Bounds<Number>> newDim = null;
+		if (origDim != null) {
+			newDim = new Coord<>(new Bounds<>(origDim.x.end, origDim.x.start), origDim.y);
+		}
+		
+		return new AreaMap(target, map.getSize(), newDim);
 		
 	}
 
