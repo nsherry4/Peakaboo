@@ -57,4 +57,9 @@ public class AdditionMapFilter extends AbstractMapFilter {
 		return "0044766b-d091-42a2-9833-480672a81ee0";
 	}
 
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
+
 }

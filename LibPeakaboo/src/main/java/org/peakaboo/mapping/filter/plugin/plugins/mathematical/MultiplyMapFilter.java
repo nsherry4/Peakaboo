@@ -59,4 +59,9 @@ public class MultiplyMapFilter extends AbstractMapFilter {
 		return "503ca760-e39e-45a9-9218-2103f99dfc3d";
 	}
 
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
+
 }

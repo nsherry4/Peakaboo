@@ -15,7 +15,7 @@ public class AreaMap {
 	private ReadOnlySpectrum data;
 	private Coord<Integer> size;
 	
-	Coord<Bounds<Number>> realDimensions;
+	private Coord<Bounds<Number>> realDimensions;
 	
 	
 	public AreaMap(ReadOnlySpectrum data, Coord<Integer> size, Coord<Bounds<Number>> realDims) {

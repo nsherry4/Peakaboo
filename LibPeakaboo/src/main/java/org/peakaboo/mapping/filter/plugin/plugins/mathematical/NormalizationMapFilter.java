@@ -58,4 +58,9 @@ public class NormalizationMapFilter extends AbstractMapFilter {
 		return "6fefa14d-bc4b-4b3f-8235-16735a70190d";
 	}
 
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
+
 }

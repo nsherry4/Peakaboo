@@ -98,4 +98,10 @@ public class BinningMapFilter extends AbstractMapFilter {
 		return "0231d1b9-83e7-48b4-9a94-cc2e2a9083b7";
 	}
 
+
+	@Override
+	public boolean isReplottable() {
+		return false;
+	}
+	
 }

@@ -36,7 +36,11 @@ public class PointsSelection extends EventfulType<String>{
 	}
 	
 	public boolean hasSelection() {
-		return indexes.size() > 0 && !map.getFiltering().filteringChangedMapSize();
+		
+		// TODO: this check can be moved further down the line later. There's no reason
+		// why we can't make any selections just because that selection is not
+		// replottable
+		return indexes.size() > 0 && map.getFiltering().isReplottable();
 	}
 	
 	public void clearSelection() {

@@ -1,8 +1,6 @@
 package org.peakaboo.controller.mapper.filtering;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,12 +10,9 @@ import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.filter.model.Filter;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
-import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
-import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.Bounds;
@@ -32,15 +27,12 @@ public class MapFilteringController extends EventfulType<String> {
 	private MappingController controller;
 	
 	private MapFilterSet filters = new MapFilterSet();
-	private EventfulCache<Map<ITransitionSeries, AreaMap>> cachedMaps;
-	private EventfulCache<AreaMap> summedMap;
+	private EventfulCache<CachedMaps> cachedMaps;
 	
 	
 	public MapFilteringController(MappingController controller) {
 		this.controller = controller;
-		cachedMaps = new EventfulCache<>(this::filterMaps);
-		summedMap = new EventfulCache<>(this::sumMaps);
-		summedMap.addUpstreamDependency(cachedMaps);
+		cachedMaps = new EventfulCache<>(() -> new CachedMaps(controller, filters));
 		
 		controller.addListener(t -> {
 			if (UpdateType.DATA.toString().equals(t) || UpdateType.DATA_SIZE.toString().equals(t)) {
@@ -50,28 +42,6 @@ public class MapFilteringController extends EventfulType<String> {
 		
 	}
 	
-	
-	private synchronized Map<ITransitionSeries, AreaMap> filterMaps() {
-		
-		Map<ITransitionSeries, AreaMap> areamaps = new ConcurrentHashMap<>();
-		
-		Coord<Integer> size = controller.getSettings().getView().viewDimensions;
-
-		//get calibrated map data and generate AreaMaps
-		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
-		
-		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
-		rawmaps.stream().parallel().forEach(rawmap -> {
-			ITransitionSeries ts = rawmap.transitionSeries;
-			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
-			AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
-			areamap = filters.applyUnsynchronized(areamap);
-			areamaps.put(ts, areamap);
-		});
-
-		return areamaps;
-		
-	}
 	
 	public int getFilteredDataWidth() {
 		AreaMap summed = getSummedMap();
@@ -95,7 +65,11 @@ public class MapFilteringController extends EventfulType<String> {
 	}
 	
 	
-	public boolean filteringChangedMapSize() {
+	/**
+	 * Returns true if and only if the size of the filtered maps does not match the
+	 * user specified size.
+	 */
+	private boolean filteringChangedMapSize() {
 		return 
 				controller.getSettings().getView().getUserDataWidth() != getFilteredDataWidth()
 				||
@@ -103,23 +77,16 @@ public class MapFilteringController extends EventfulType<String> {
 	}
 	
 	/**
-	 * Returns true if and only if the size of the filtered maps does not match the
-	 * user specified size.
+	 * Indicates that the map's pixels still line up with the input spectra
+	 * @return true if the map pixels still line up with the input spectra, false otherwise
 	 */
-	public boolean filtersChangeMapSize() {
-		return 
-				getFilteredDataHeight() != controller.getSettings().getView().getUserDataHeight() 
-				||
-				getFilteredDataWidth() != controller.getSettings().getView().getUserDataWidth();
+	public boolean isReplottable() {
+		return (!filteringChangedMapSize()) && (this.cachedMaps.getValue().replottable);
 	}
 	
-	
-	private AreaMap sumMaps() {
-		return AreaMap.sum(new ArrayList<>(cachedMaps.getValue().values()));
-	}
 	
 	public AreaMap getAreaMap(ITransitionSeries ts) {
-		return cachedMaps.getValue().get(ts);
+		return cachedMaps.getValue().maps.get(ts);
 	}
 	
 	public List<AreaMap> getAreaMaps(List<ITransitionSeries> tss) {
@@ -130,12 +97,9 @@ public class MapFilteringController extends EventfulType<String> {
 	 * Returns the sum of all maps, or null, if there are no maps.
 	 */
 	public AreaMap getSummedMap() {
-		return summedMap.getValue();
+		return cachedMaps.getValue().sum;
 	}
 	
-	private AreaMap apply(AreaMap map) {
-		return filters.apply(map);
-	}
 
 	public boolean add(MapFilter e) {
 		boolean result = filters.add(e);
@@ -213,12 +177,47 @@ public class MapFilteringController extends EventfulType<String> {
 	}
 	
 	public Coord<Bounds<Number>> getRealDimensions() {
-		if (summedMap.getValue() == null) {
+		if (cachedMaps.getValue().sum == null) {
 			return null;
 		}
-		return summedMap.getValue().getRealDimensions();
+		return cachedMaps.getValue().sum.getRealDimensions();
 	}
 	
 
+	
+}
+
+class CachedMaps {
+	
+	public Map<ITransitionSeries, AreaMap> maps;
+	public AreaMap sum;
+	public boolean replottable;
+	
+	public CachedMaps(MappingController controller, MapFilterSet filters) {
+
+		maps = new ConcurrentHashMap<>();
+		
+		Coord<Integer> size = controller.getSettings().getView().viewDimensions;
+
+		//get calibrated map data and generate AreaMaps
+		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
+		
+		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
+		rawmaps.stream().parallel().forEach(rawmap -> {
+			ITransitionSeries ts = rawmap.transitionSeries;
+			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
+			AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
+			areamap = filters.applyUnsynchronized(areamap);
+			maps.put(ts, areamap);
+		});
+
+		this.replottable = filters.isReplottable();
+		
+		sum = AreaMap.sum(new ArrayList<>(maps.values()));
+		
+	}
+	
+	
+	
 	
 }

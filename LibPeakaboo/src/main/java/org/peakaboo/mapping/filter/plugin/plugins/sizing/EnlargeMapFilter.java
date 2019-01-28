@@ -78,5 +78,11 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 	public MapFilterDescriptor getFilterDescriptor() {
 		return MapFilterDescriptor.SIZING;
 	}
+	
+
+	@Override
+	public boolean isReplottable() {
+		return false;
+	}
 
 }

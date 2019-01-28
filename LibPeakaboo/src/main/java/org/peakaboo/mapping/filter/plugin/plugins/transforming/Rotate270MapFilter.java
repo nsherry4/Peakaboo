@@ -76,4 +76,9 @@ public class Rotate270MapFilter extends AbstractMapFilter {
 		return "05c41d99-bfa7-45ce-82b5-97e4a6ffd8f7";
 	}
 
+	@Override
+	public boolean isReplottable() {
+		return false;
+	}
+
 }

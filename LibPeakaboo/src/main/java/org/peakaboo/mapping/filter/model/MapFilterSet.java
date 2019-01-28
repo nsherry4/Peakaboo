@@ -64,6 +64,17 @@ public class MapFilterSet implements Iterable<MapFilter> {
 		add(index, filter);
 	}
 	
+	public synchronized boolean isReplottable() {
+		boolean replottable = true;
+		for (MapFilter f : filters) {
+			if (!f.isEnabled()) {
+				continue;
+			}
+			replottable &= f.isReplottable();
+		}
+		return replottable;
+	}
+	
 	@Override
 	public Iterator<MapFilter> iterator() {
 		return filters.iterator();
@@ -72,7 +83,7 @@ public class MapFilterSet implements Iterable<MapFilter> {
 	public synchronized List<MapFilter> getAll() {
 		return new ArrayList<>(filters);
 	}
-	
+		
 	public synchronized AreaMap apply(AreaMap map) {
 		return applyUnsynchronized(map);
 	}

@@ -71,5 +71,11 @@ public class HFlipMapFilter extends AbstractMapFilter {
 	public String pluginUUID() {
 		return "725c5443-9794-4d99-90a8-302e9c04b694";
 	}
+	
+
+	@Override
+	public boolean isReplottable() {
+		return false;
+	}
 
 }

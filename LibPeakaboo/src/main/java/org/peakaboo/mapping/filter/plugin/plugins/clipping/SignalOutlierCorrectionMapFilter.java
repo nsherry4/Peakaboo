@@ -79,5 +79,10 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 	public MapFilterDescriptor getFilterDescriptor() {
 		return MapFilterDescriptor.CLIPPING;
 	}
+	
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
 
 }

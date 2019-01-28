@@ -75,5 +75,11 @@ public class Rotate180MapFilter extends AbstractMapFilter {
 	public String pluginUUID() {
 		return "ba124149-18c5-4661-b14c-547c9bee0cdc";
 	}
+	
+
+	@Override
+	public boolean isReplottable() {
+		return false;
+	}
 
 }

@@ -69,4 +69,9 @@ public class SignalCapMapFilter extends AbstractMapFilter {
 		return MapFilterDescriptor.CLIPPING;
 	}
 
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
+
 }

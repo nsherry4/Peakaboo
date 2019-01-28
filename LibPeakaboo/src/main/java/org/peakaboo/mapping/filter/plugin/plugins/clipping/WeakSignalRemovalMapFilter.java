@@ -73,4 +73,9 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 		return MapFilterDescriptor.CLIPPING;
 	}
 
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
+
 }

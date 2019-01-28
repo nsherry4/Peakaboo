@@ -126,5 +126,10 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 	public MapFilterDescriptor getFilterDescriptor() {
 		return MapFilterDescriptor.SMOOTHING;
 	}
+
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
 	
 }

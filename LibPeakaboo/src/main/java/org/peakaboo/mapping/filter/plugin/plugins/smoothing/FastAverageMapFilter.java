@@ -93,4 +93,9 @@ public class FastAverageMapFilter extends AbstractMapFilter {
 		return MapFilterDescriptor.SMOOTHING;
 	}
 
+
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
 }

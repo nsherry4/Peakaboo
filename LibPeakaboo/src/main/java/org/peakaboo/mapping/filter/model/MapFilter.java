@@ -49,7 +49,12 @@ public interface MapFilter {
 	void initialize();
 
 	
-	AreaMap filter(AreaMap map);	
+	AreaMap filter(AreaMap map);
+	
+	/**
+	 * Returns true if and only if this MapFilter does not change the relationship between map pixels and the originating set of spectra;
+	 */
+	boolean isReplottable();	
 	
 	
 }

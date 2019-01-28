@@ -40,7 +40,7 @@ public class MapSelectionPanel extends SettingsPanel {
 		addSetting(padding, paddingLabel, LabelPosition.BESIDE, false, false);
 		
 		controller.addListener(s -> {
-			boolean enabled = !controller.getFiltering().filteringChangedMapSize();
+			boolean enabled = controller.getFiltering().isReplottable();
 			this.setEnabled(enabled);
 			threshold.setEnabled(enabled);
 			padding.setEnabled(enabled);

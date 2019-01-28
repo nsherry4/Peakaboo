@@ -72,4 +72,9 @@ public class VFlipMapFilter extends AbstractMapFilter {
 		return "41c16908-5880-45ff-b157-d4d0f7c41b1c";
 	}
 
+	@Override
+	public boolean isReplottable() {
+		return false;
+	}
+
 }
