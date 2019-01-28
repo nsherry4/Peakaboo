@@ -2,23 +2,24 @@ package org.peakaboo.mapping.filter.plugin;
 
 public class MapFilterDescriptor {
 
-	public static MapFilterDescriptor SCALING = new MapFilterDescriptor("Scaling", "Scaled");
+	public static MapFilterDescriptor SIZED = new MapFilterDescriptor("Sizing", "Sized");
 	public static MapFilterDescriptor SMOOTHING = new MapFilterDescriptor("Smoothing", "Smoothed");
 	public static MapFilterDescriptor CLIPPING = new MapFilterDescriptor("Clipping", "Clipped");
+	public static MapFilterDescriptor MATH = new MapFilterDescriptor("Mathematical", "Filtered");
 	
-	private String present, past;
+	private String group, action;
 	
-	public MapFilterDescriptor(String present, String past) {
-		this.present = present;
-		this.past = past;
+	public MapFilterDescriptor(String group, String action) {
+		this.group = group;
+		this.action = action;
 	}
 
-	public String getPresent() {
-		return present;
+	public String getGroup() {
+		return group;
 	}
 
-	public String getPast() {
-		return past;
+	public String getAction() {
+		return action;
 	}
 	
 	

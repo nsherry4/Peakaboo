@@ -1,7 +1,8 @@
-package org.peakaboo.mapping.filter.plugin.plugins;
+package org.peakaboo.mapping.filter.plugin.plugins.sizing;
 
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
+import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
 
 import cyclops.Coord;
 import cyclops.GridPerspective;
@@ -27,7 +28,7 @@ public class BinningMapFilter extends AbstractMapFilter {
 
 	@Override
 	public MapFilterDescriptor getFilterDescriptor() {
-		return MapFilterDescriptor.SCALING;
+		return MapFilterDescriptor.SIZED;
 	}
 
 	@Override

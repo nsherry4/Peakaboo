@@ -1,7 +1,8 @@
-package org.peakaboo.mapping.filter.plugin.plugins;
+package org.peakaboo.mapping.filter.plugin.plugins.clipping;
 
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
+import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;

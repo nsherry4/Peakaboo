@@ -213,7 +213,7 @@ public class FiltersPanel extends JPanel {
 		//model and tree
 		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.SYSTEM.getPlugins().getAll();
 		GroupedListTreeModel<BoltPluginPrototype<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
-				item -> item.getReferenceInstance().getFilterDescriptor().getPresent());
+				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);
 		tree.setRootVisible(false);
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();

@@ -6,13 +6,16 @@ import java.util.logging.Level;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
-import org.peakaboo.mapping.filter.plugin.plugins.BinningMapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.EnlargeMapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.FastAverageMapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.SignalCapMapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.SignalOutlierCorrectionMapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.WeakSignalRemovalMapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.WeightedAverageMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalCapMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrectionMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.clipping.WeakSignalRemovalMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.mathematical.AdditionMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.mathematical.MultiplyMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.mathematical.NormalizationMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.sizing.BinningMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.sizing.EnlargeMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.smoothing.FastAverageMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.smoothing.WeightedAverageMapFilter;
 
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
 import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
@@ -52,6 +55,9 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 			loader.registerPlugin(SignalOutlierCorrectionMapFilter.class);
 			loader.registerPlugin(SignalCapMapFilter.class);
 			loader.registerPlugin(BinningMapFilter.class);
+			loader.registerPlugin(MultiplyMapFilter.class);
+			loader.registerPlugin(AdditionMapFilter.class);
+			loader.registerPlugin(NormalizationMapFilter.class);
 			
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load MapFilter plugins", e);

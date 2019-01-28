@@ -1,7 +1,8 @@
-package org.peakaboo.mapping.filter.plugin.plugins;
+package org.peakaboo.mapping.filter.plugin.plugins.clipping;
 
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
+import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
@@ -20,7 +21,7 @@ public class SignalCapMapFilter extends AbstractMapFilter {
 
 	@Override
 	public String getFilterDescription() {
-		return "This filter caps the value for any pixel in a map to a specified value. Because filters area applied to each fitting's map individually, this filter can have unexpected results when more than one fitting is selected.";
+		return "This filter caps the value for any pixel in a map to a specified value. Note that filters are applied to fitting maps individually.";
 	}
 
 	@Override
