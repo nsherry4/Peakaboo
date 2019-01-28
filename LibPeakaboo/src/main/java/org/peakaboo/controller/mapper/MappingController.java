@@ -29,7 +29,7 @@ public class MappingController extends EventfulType<String>
 
 	public enum UpdateType
 	{
-		DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION, FILTER;
+		DATA_SIZE, DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION, FILTER;
 	}
 	
 	

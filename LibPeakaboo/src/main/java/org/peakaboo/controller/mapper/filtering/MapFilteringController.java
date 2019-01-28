@@ -41,6 +41,13 @@ public class MapFilteringController extends EventfulType<String> {
 		cachedMaps = new EventfulCache<>(this::filterMaps);
 		summedMap = new EventfulCache<>(this::sumMaps);
 		summedMap.addUpstreamDependency(cachedMaps);
+		
+		controller.addListener(t -> {
+			if (UpdateType.DATA.toString().equals(t) || UpdateType.DATA_SIZE.toString().equals(t)) {
+				filteredDataInvalidated();
+			}
+		});
+		
 	}
 	
 	

@@ -48,7 +48,7 @@ public class AreaSelection extends EventfulType<String> {
 		updateListeners(UpdateType.AREA_SELECTION.toString());
 		
 		map.addListener(type -> {
-			if (type == UpdateType.DATA_OPTIONS.toString()) {
+			if (UpdateType.DATA_SIZE.toString().equals(type)) {
 				trimSelectionToBounds();
 			}
 		});

@@ -108,7 +108,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 
 		viewDimensions.y = height;
 				
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		updateListeners(UpdateType.DATA_SIZE.toString());
 	}
 
 
@@ -129,7 +129,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 
 		viewDimensions.x = width;
 		
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		updateListeners(UpdateType.DATA_SIZE.toString());
 	}
 
 	
