@@ -66,6 +66,9 @@ public class Mapper {
 			settings = new MapRenderSettings();
 		}
 
+		//need to set this up front so that calTotalSize has the right dimensions to work with
+		dr.dataHeight = settings.filteredDataHeight;
+		dr.dataWidth = settings.filteredDataWidth;
 		
 		double width = 0;
 		double height = 0;
@@ -94,9 +97,6 @@ public class Mapper {
 		}
 		
 		size = new Coord<Integer>((int)Math.round(width), (int)Math.round(height));
-		
-		dr.dataHeight = settings.userDataHeight;
-		dr.dataWidth = settings.userDataWidth;
 		dr.imageWidth = (float)size.x;
 		dr.imageHeight = (float)size.y;
 		
@@ -106,7 +106,7 @@ public class Mapper {
 	
 	
 	public MapDrawing draw(MapRenderData data, MapRenderSettings settings, Surface context, Coord<Integer> size) {
-	
+			
 		if (settings == null) {
 			settings = new MapRenderSettings();
 		}
@@ -588,7 +588,7 @@ public class Mapper {
 		if (vector) {
 						
 			//create new buffer to add the rgby channels in
-			Buffer buffer = backend.getImageBuffer(settings.userDataWidth, settings.userDataHeight);
+			Buffer buffer = backend.getImageBuffer(settings.filteredDataWidth, settings.filteredDataHeight);
 			PainterData p = new PainterData(buffer, dr, new Coord<Float>((float)dr.dataWidth, (float)dr.dataHeight), null);
 			
 			/*

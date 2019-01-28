@@ -28,7 +28,7 @@ public class BinningMapFilter extends AbstractMapFilter {
 
 	@Override
 	public MapFilterDescriptor getFilterDescriptor() {
-		return MapFilterDescriptor.SIZED;
+		return MapFilterDescriptor.SIZING;
 	}
 
 	@Override
