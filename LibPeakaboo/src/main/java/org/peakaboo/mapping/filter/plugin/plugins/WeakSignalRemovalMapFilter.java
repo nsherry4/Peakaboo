@@ -1,6 +1,7 @@
 package org.peakaboo.mapping.filter.plugin.plugins;
 
 import org.peakaboo.mapping.filter.model.AreaMap;
+import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
@@ -67,8 +68,8 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public String getFilterAction() {
-		return "Clipped";
+	public MapFilterDescriptor getFilterDescriptor() {
+		return MapFilterDescriptor.CLIPPING;
 	}
 
 }

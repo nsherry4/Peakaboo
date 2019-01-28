@@ -2,6 +2,7 @@ package org.peakaboo.mapping.filter.plugin.plugins;
 
 import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
+import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 
 import cyclops.Coord;
 import cyclops.GridPerspective;
@@ -57,7 +58,7 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 
 	@Override
 	public String pluginVersion() {
-		return "0.1";
+		return "1.0";
 	}
 
 	@Override
@@ -70,12 +71,11 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 			return false;
 		}
 		return true;
-		//TODO: Limit by map size?
 	}
 
 	@Override
-	public String getFilterAction() {
-		return "Enlarged";
+	public MapFilterDescriptor getFilterDescriptor() {
+		return MapFilterDescriptor.SCALING;
 	}
 
 }

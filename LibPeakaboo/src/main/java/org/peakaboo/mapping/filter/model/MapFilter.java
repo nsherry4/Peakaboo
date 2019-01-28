@@ -2,6 +2,8 @@ package org.peakaboo.mapping.filter.model;
 
 import java.util.List;
 
+import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
+
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.model.Value;
 
@@ -24,7 +26,7 @@ public interface MapFilter {
 	 * Returns a short title-cased string (ideally 1 word) describing the kind of
 	 * thing that this filter does in the past tense (e.g. Enlarged, Smoothed)
 	 */
-	String getFilterAction();
+	MapFilterDescriptor getFilterDescriptor();
 	
 	/**
 	 * Returns the parameters

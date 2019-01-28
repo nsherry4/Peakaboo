@@ -1,6 +1,7 @@
 package org.peakaboo.mapping.filter.plugin.plugins;
 
 import org.peakaboo.mapping.filter.model.AreaMap;
+import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
@@ -8,18 +9,18 @@ import cyclops.Spectrum;
 import net.sciencestudio.autodialog.model.Parameter;
 import net.sciencestudio.autodialog.model.style.editors.IntegerSpinnerStyle;
 
-public class SignalLimitMapFilter extends AbstractMapFilter {
+public class SignalCapMapFilter extends AbstractMapFilter {
 
 	Parameter<Integer> limit;
 	
 	@Override
 	public String getFilterName() {
-		return "Signal Limit";
+		return "Signal Cap";
 	}
 
 	@Override
 	public String getFilterDescription() {
-		return "This filter limits the value for any pixel in a map to a specified value.";
+		return "This filter caps the value for any pixel in a map to a specified value. Because filters area applied to each fitting's map individually, this filter can have unexpected results when more than one fitting is selected.";
 	}
 
 	@Override
@@ -63,8 +64,8 @@ public class SignalLimitMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public String getFilterAction() {
-		return "Clipped";
+	public MapFilterDescriptor getFilterDescriptor() {
+		return MapFilterDescriptor.CLIPPING;
 	}
 
 }

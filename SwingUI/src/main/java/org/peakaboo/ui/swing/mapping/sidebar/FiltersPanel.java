@@ -13,11 +13,16 @@ import javax.swing.DropMode;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
@@ -30,6 +35,7 @@ import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
+import swidget.models.GroupedListTreeModel;
 import swidget.models.ListTableModel;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
@@ -204,36 +210,45 @@ public class FiltersPanel extends JPanel {
 
 	private JPanel buildAddPanel() {
 		
+		//model and tree
 		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.SYSTEM.getPlugins().getAll();
-		TableModel model = new ListTableModel<>(plugins);
-		JTable table = new JTable(model);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.getColumnModel().getColumn(0).setCellRenderer(new ListWidgetTableCellRenderer<>(new MapFilterPluginWidget()));
+		GroupedListTreeModel<BoltPluginPrototype<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
+				item -> item.getReferenceInstance().getFilterDescriptor().getPresent());
+		JTree tree = new JTree(treeModel);
+		tree.setRootVisible(false);
+		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
+		tree.setCellRenderer(renderer);
 		
-		
+		//buttons
 		ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK).withText("OK").withBordered(false).withAction(() -> {
-			int index = table.getSelectedRow();
-			if (index >= 0) { 
-				MapFilterPlugin plugin = plugins.get(index).create();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+			BoltPluginPrototype<? extends MapFilterPlugin> proto = null;
+			try {
+				proto = (BoltPluginPrototype<? extends MapFilterPlugin>) node.getUserObject();	
+			} catch (ClassCastException e) {}
+			
+			if (proto != null) { 
+				MapFilterPlugin plugin = proto.create();
 				plugin.initialize();
 				controller.add(plugin);
 			}
 			layout.show(this, PANEL_FILTERS);
-			
 		});
 		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL).withText("Cancel").withBordered(false).withAction(() -> {
 			layout.show(this, PANEL_FILTERS);
 		});
+		
+		//setting
 		ButtonBox buttons = new ButtonBox(Spacing.small, false);
 		buttons.addCentre(ok);
 		buttons.addCentre(cancel);
 		JPanel header = new TitlePaintedPanel("Add Map Filter", false, buttons);
 		
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(table, BorderLayout.CENTER);
+		panel.add(tree, BorderLayout.CENTER);
 		panel.add(header, BorderLayout.NORTH);
 		
-		// TODO Auto-generated method stub
 		return panel;
 	}
 	

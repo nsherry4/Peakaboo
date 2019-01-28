@@ -1,6 +1,7 @@
 package org.peakaboo.mapping.filter.plugin.plugins;
 
 import org.peakaboo.mapping.filter.model.AreaMap;
+import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 
 import cyclops.GridPerspective;
 import cyclops.ISpectrum;
@@ -87,8 +88,8 @@ public class FastAverageMapFilter extends AbstractMapFilter {
 	}
 
 	@Override
-	public String getFilterAction() {
-		return "Smoothed";
+	public MapFilterDescriptor getFilterDescriptor() {
+		return MapFilterDescriptor.SMOOTHING;
 	}
 
 }
