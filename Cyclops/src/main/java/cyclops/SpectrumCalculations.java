@@ -323,6 +323,14 @@ public class SpectrumCalculations
 	}
 
 	
+	public static Spectrum addToList(ReadOnlySpectrum data, float value) {
+		Spectrum copy = new ISpectrum(data.size());
+		for (int i = 0; i < data.size(); i++) {
+			copy.set(i, data.get(i) + value);
+		}
+		return copy;
+	}
+	
 	public static void addToList_inplace(Spectrum data, float value) {
 		for (int i = 0; i < data.size(); i++) {
 			data.set(i, data.get(i) + value);
