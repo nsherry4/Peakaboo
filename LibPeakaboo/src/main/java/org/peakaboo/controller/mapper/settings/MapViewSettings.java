@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -153,8 +155,8 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 
 	public StreamExecutor<Coord<Integer>> guessDataDimensions() {
 		//We don't need the real calibration profile just to guess the dimensions
-		Spectrum all = mapController.getSettings().getMapFittings().sumAllTransitionSeriesMaps();
-
+		//we also don't want filtered maps, since the size of the data may change with map resizing
+		Spectrum all = mapController.rawDataController.getMapResultSet().getSummedRawMap(new CalibrationProfile());
 		
 		//find the highest average edge delta
 		int min = (int) Math.max(Math.sqrt(all.size()) / 15, 2); //don't consider dimensions that are too small

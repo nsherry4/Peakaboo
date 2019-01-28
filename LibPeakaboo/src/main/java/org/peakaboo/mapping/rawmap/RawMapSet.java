@@ -11,6 +11,10 @@ import java.util.stream.Stream;
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
+import cyclops.ISpectrum;
+import cyclops.Spectrum;
+import cyclops.SpectrumCalculations;
+
 
 /**
  * 
@@ -154,6 +158,15 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 	public Iterator<RawMap> iterator()
 	{
 		return maps.iterator();
+	}
+	
+	
+	public Spectrum getSummedRawMap(CalibrationProfile profile) {
+		Spectrum s = new ISpectrum(maps.get(0).size());
+		for (RawMap map : maps) {
+			SpectrumCalculations.addLists_inplace(s, map.getData(profile));
+		}
+		return s;
 	}
 	
 	
