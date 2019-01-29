@@ -38,12 +38,14 @@ public class GreedyFittingSolver implements FittingSolver {
 		List<FittingResult> resultFits = new ArrayList<>();
 		FittingParameters resultParameters = FittingParameters.copy(fittings.getFittingParameters());
 		
+		Spectrum remainder = new ISpectrum(data);
+		
 		// calculate the curves
 		for (Curve curve : fittings.getCurves()) {
 			if (!curve.getTransitionSeries().isVisible()) { continue; }
-						
-			FittingResult result = fitter.fit(data, curve);
-			data = SpectrumCalculations.subtractLists(data, result.getFit(), 0.0f);
+			
+			FittingResult result = fitter.fit(remainder, curve);
+			SpectrumCalculations.subtractLists_inplace(remainder, result.getFit(), 0.0f);
 			
 			//should this be done through a method addFit?
 			resultFits.add(result);
