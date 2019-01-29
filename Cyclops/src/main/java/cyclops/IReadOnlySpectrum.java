@@ -47,6 +47,19 @@ public class IReadOnlySpectrum implements ReadOnlySpectrum {
 		return backer.toString();
 	}
 	
+	public float sum() {
+		return backer.sum();
+	}
+
+	@Override
+	public float max() {
+		return backer.max();
+	}
+
+	@Override
+	public float min() {
+		return backer.min();
+	}
 	
 	
 }

@@ -433,4 +433,31 @@ public class ISpectrum implements Spectrum
 		Arrays.fill(data, 0f);
 	}
 
+	public float sum()  {
+		float sum = 0;
+		for (int i = 0; i < size; i++) {
+			sum += data[i];
+		}
+		return sum;
+	}
+	
+	public float max() {
+		float max = this.get(0);
+		for (int i = 0; i < size; i++) {
+			float val = data[i];
+			max = Math.max(max, val);
+		}
+		return max;		
+	}
+	
+	public float min() {
+		float min = data[0];
+		for (int i = 0; i < size; i++) {
+			float val = data[i];
+			min = Math.min(min, val);
+		}
+		return min;		
+	}
+
+	
 }

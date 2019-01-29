@@ -59,30 +59,8 @@ public interface ReadOnlySpectrum extends Serializable, Iterable<Float> {
 	
 	
 	
-	default float sum() {
-		float sum = 0;
-		for (Float f : this) {
-			sum += f;
-		}
-		return sum;
-	}
-	
-	default float max() {
-		float max = this.get(0);
-		for (int i = 0; i < this.size(); i++) {
-			float val = this.get(i);
-			max = Math.max(max, val);
-		}
-		return max;		
-	}
-	
-	default float min() {
-		float min = this.get(0);
-		for (int i = 0; i < this.size(); i++) {
-			float val = this.get(i);
-			min = Math.min(min, val);
-		}
-		return min;		
-	}
+	float sum();
+	float max();
+	float min();
 
 }
