@@ -1,7 +1,9 @@
 package org.peakaboo.mapping;
 
 import java.util.List;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
@@ -45,8 +47,11 @@ public class Mapping
 		RawMapSet maps = new RawMapSet(transitionSeries, dataset.getScanData().scanCount());
 		
 		//Math.max(1, dataset.getScanData().scanCount())
-		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", 1);
+		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
 		streamer.setTask(new Range(0, dataset.getScanData().scanCount()-1), stream -> {
+			
+			long t1 = System.currentTimeMillis();
+			
 			stream.forEach(index -> {
 				
 				ReadOnlySpectrum data = dataset.getScanData().get(index);
@@ -61,6 +66,10 @@ public class Mapping
 				}
 				
 			});
+			
+			long t2 = System.currentTimeMillis();
+			PeakabooLog.get().log(Level.INFO, "Generated Maps in " + ((t2-t1)/1000)  + " seconds");
+			
 			System.gc();
 			return maps;
 		}); 
