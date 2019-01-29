@@ -190,7 +190,7 @@ public class Mapper {
 		dr.dataWidth = settings.filteredDataWidth;
 		dr.dataHeight = settings.filteredDataHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
-		dr.screenOrientation = settings.screenOrientation;
+		dr.screenOrientation = false;
 		
 		if (settings.scalemode == MapScaleMode.RELATIVE)
 		{
@@ -297,7 +297,7 @@ public class Mapper {
 		dr.dataHeight = settings.filteredDataHeight;
 		//LOG view not supported
 		dr.viewTransform = ViewTransform.LINEAR;
-		dr.screenOrientation = settings.screenOrientation;
+		dr.screenOrientation = false;
 		
 		
 		//this is a valid ratio if there is at least 1 visible TS
@@ -449,7 +449,7 @@ public class Mapper {
 		dr.dataWidth = settings.filteredDataWidth;
 		dr.dataHeight = settings.filteredDataHeight;
 		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
-		dr.screenOrientation = settings.screenOrientation;
+		dr.screenOrientation = false;
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
 		

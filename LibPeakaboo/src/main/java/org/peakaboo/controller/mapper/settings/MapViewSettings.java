@@ -49,10 +49,6 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public File		savePictureFolder 	= null;
 	public File		dataSourceFolder 	= null;
 
-	//place (0, 0) in the top left corner rather than bottom left corner
-	private boolean screenOrientation = false;
-
-
 	private float overlayLowCutoff		= 0f;
 
 
@@ -154,6 +150,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	
 
 	public StreamExecutor<Coord<Integer>> guessDataDimensions() {
+		
 		//We don't need the real calibration profile just to guess the dimensions
 		//we also don't want filtered maps, since the size of the data may change with map resizing
 		Spectrum all = mapController.rawDataController.getMapResultSet().getSummedRawMap(new CalibrationProfile());
@@ -212,9 +209,10 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		float value = 0;
 		int count = 0;
 		int dind;
+		int mapsize = map.size();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (y*width+x >= map.size()) break;
+				if (y*width+x >= mapsize) break;
 				value = map.get(y*width+x);
 				count = 0;
 				delta = 0;
@@ -232,13 +230,13 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 				}
 
 				dind = y*width+(x+1);
-				if (x < width-1 && dind < map.size()) {
+				if (x < width-1 && dind < mapsize) {
 					delta += Math.abs(value - map.get(dind));
 					count++;
 				}
 				
 				dind = (y+1)*width+x;
-				if (y < height-1 && dind < map.size()) {
+				if (y < height-1 && dind < mapsize) {
 					delta += Math.abs(value - map.get(dind));
 					count++;
 				}
@@ -387,17 +385,6 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		this.drawCoordinates = draw;
 	}
 	
-	
-	public boolean getScreenOrientation() {
-		return this.screenOrientation;
-	}
-
-	public void setScreenOrientation(boolean screenOrientation) {
-		this.screenOrientation = screenOrientation;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-
-
 	public float getOverlayLowCutoff() {
 		return this.overlayLowCutoff;
 	}

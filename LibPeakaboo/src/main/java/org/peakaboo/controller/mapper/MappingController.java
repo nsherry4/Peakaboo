@@ -114,9 +114,7 @@ public class MappingController extends EventfulType<String>
 		settings.overlayLowCutoff = this.display.getView().getOverlayLowCutoff();
 		
 		settings.mode = this.getSettings().getMapFittings().getMapDisplayMode();
-		
-		settings.screenOrientation = this.getSettings().getView().getScreenOrientation();
-		
+				
 		settings.drawCoord = this.display.getView().getDrawCoords();
 		settings.coordLoXLoY = this.getSettings().getView().getLoXLoYCoord();
 		settings.coordHiXLoY = this.getSettings().getView().getHiXLoYCoord();

@@ -17,7 +17,6 @@ public class MapAppearancePanel extends JPanel {
 
 	private JSpinner shadesSpinner;
 	private JCheckBox contours;
-	private JCheckBox flipY;
 	
 	public MapAppearancePanel(MappingController controller) {
 		
@@ -31,24 +30,10 @@ public class MapAppearancePanel extends JPanel {
 		c.ipady = 0;
 
 		c.weightx = 0.0;
-		c.weighty = 0.0;
+		c.weighty = 1.0;
 		c.gridy = 0;
-		
-		
-		flipY = new JCheckBox("Flip Vertically");
-		flipY.setSelected(controller.getSettings().getView().getScreenOrientation());
-		flipY.addActionListener(e -> {
-			controller.getSettings().getView().setScreenOrientation(flipY.isSelected());
-		});
-		c.gridx = 0;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 1.0;
-		this.add(flipY, c);
-		c.gridy++;
-		
 
 
-		c.gridy += 1;
 		contours = new JCheckBox("Contours");
 		contours.setSelected(controller.getSettings().getView().getContours());
 		contours.addActionListener(e -> {
@@ -64,11 +49,12 @@ public class MapAppearancePanel extends JPanel {
 		
 		c.gridx = 0;
 		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.0;
+		c.weightx = 1.0;
 		this.add(contours, c);
 		c.gridx = 1;
 		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 1.0;
+		c.weightx = 0.0;
+		
 		this.add(shadesSpinner, c);
 
 		
@@ -76,7 +62,6 @@ public class MapAppearancePanel extends JPanel {
 			shadesSpinner.setValue(controller.getSettings().getView().getSpectrumSteps());
 			shadesSpinner.setEnabled(controller.getSettings().getView().getContours());
 			contours.setSelected(controller.getSettings().getView().getContours());
-			flipY.setSelected(controller.getSettings().getView().getScreenOrientation());
 		});
 		
 	}
