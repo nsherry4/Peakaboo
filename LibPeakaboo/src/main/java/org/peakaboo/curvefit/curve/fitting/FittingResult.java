@@ -17,7 +17,7 @@ import cyclops.ReadOnlySpectrum;
 public class FittingResult
 {
 
-	private ReadOnlySpectrum		fit;
+	private ReadOnlySpectrum		fit = null;
 	private Curve	curve;
 
 	private float					curveScale;
@@ -25,8 +25,7 @@ public class FittingResult
 	
 	private ITransitionSeries		transitionSeries;
 
-	public FittingResult(ReadOnlySpectrum fit, Curve curve, float curveScale)	{
-		this.fit = fit;
+	public FittingResult(Curve curve, float curveScale)	{
 		this.curve = curve;
 		this.curveScale = curveScale;
 		this.normalizationScale = curve.getNormalizationScale();
@@ -35,10 +34,24 @@ public class FittingResult
 
 
 	public ReadOnlySpectrum getFit() {
+		if (fit == null) {
+			fit = curve.scale(curveScale);
+		}
 		return fit;
 	}
 
+	public float getFitSum() {
+		return curve.scaleSum(curveScale);
+	}
 
+	public float getFitMax() {
+		return curve.scaleMax(curveScale);
+	}
+	
+	public int getFitChannels() {
+		return curve.get().size();
+	}
+	
 	public Curve getCurve() {
 		return curve;
 	}

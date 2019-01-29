@@ -39,17 +39,19 @@ public class GreedyFittingSolver implements FittingSolver {
 		FittingParameters resultParameters = FittingParameters.copy(fittings.getFittingParameters());
 		
 		Spectrum remainder = new ISpectrum(data);
+		Spectrum scaled = new ISpectrum(data.size());
 		
 		// calculate the curves
 		for (Curve curve : fittings.getCurves()) {
 			if (!curve.getTransitionSeries().isVisible()) { continue; }
 			
 			FittingResult result = fitter.fit(remainder, curve);
-			SpectrumCalculations.subtractLists_inplace(remainder, result.getFit(), 0.0f);
+			curve.scaleInto(result.getCurveScale(), scaled);
+			SpectrumCalculations.subtractLists_inplace(remainder, scaled, 0.0f);
 			
 			//should this be done through a method addFit?
 			resultFits.add(result);
-			SpectrumCalculations.addLists_inplace(resultTotalFit, result.getFit());
+			SpectrumCalculations.addLists_inplace(resultTotalFit, scaled);
 		}
 
 		

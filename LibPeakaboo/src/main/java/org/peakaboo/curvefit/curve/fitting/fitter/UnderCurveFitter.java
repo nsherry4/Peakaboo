@@ -24,8 +24,7 @@ public class UnderCurveFitter implements CurveFitter {
 	 */
 	public FittingResult fit(ReadOnlySpectrum data, Curve curve) {
 		float scale = this.getRatioForCurveUnderData(data, curve);
-		ReadOnlySpectrum scaledData = curve.scale(scale);
-		FittingResult result = new FittingResult(scaledData, curve, scale);
+		FittingResult result = new FittingResult(curve, scale);
 		return result;
 	}
 	
@@ -46,7 +45,7 @@ public class UnderCurveFitter implements CurveFitter {
 		float cutoff;
 		
 		//look at every point in the ranges covered by transitions, find the max intensity
-		for (Integer i : curve.getIntenseRanges())
+		for (Integer i : curve.getIntenseChannels())
 		{
 			if (i < 0 || i >= data.size()) continue;
 			currentIntensity = data.get(i);
@@ -75,7 +74,7 @@ public class UnderCurveFitter implements CurveFitter {
 
 		
 		//look at every point in the ranges covered by transitions 
-		for (Integer i : curve.getIntenseRanges())
+		for (Integer i : curve.getIntenseChannels())
 		{
 			if (i < 0 || i >= data.size()) continue;
 			

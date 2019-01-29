@@ -60,9 +60,8 @@ public class CalibrationProfile {
 				if (! reference.hasConcentration(ts)) { continue; }
 				
 				//TODO: Is this the right way to measure sample intensity? Measuring sum rather than strongestTS height?
-				ReadOnlySpectrum fitData = fit.getFit();
-				if (channel >= fitData.size()) { continue; }
-				float sampleIntensity = fitData.sum();
+				if (channel >= fit.getFitChannels()) { continue; }
+				float sampleIntensity = fit.getFitSum();
 				float referenceValue = reference.getConcentration(ts);
 				float calibration = (sampleIntensity / referenceValue) * 1000f;
 				
@@ -138,7 +137,7 @@ public class CalibrationProfile {
 	
 	public float calibratedSum(FittingResult fittingResult) {
 		ITransitionSeries ts = fittingResult.getTransitionSeries();
-		float rawfit = fittingResult.getFit().sum();
+		float rawfit = fittingResult.getFitSum();
 		return calibrate(rawfit, ts);
 	}
 	
@@ -152,7 +151,7 @@ public class CalibrationProfile {
 	}
 	
 	public float calibrate(FittingResult result) {
-		return calibrate(result.getFit().sum(), result.getTransitionSeries());
+		return calibrate(result.getFitSum(), result.getTransitionSeries());
 	}
 	
 	public ReadOnlySpectrum calibrateMap(ReadOnlySpectrum data, ITransitionSeries ts) {

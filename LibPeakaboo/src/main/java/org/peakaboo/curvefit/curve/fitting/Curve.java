@@ -3,7 +3,11 @@ package org.peakaboo.curvefit.curve.fitting;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -43,7 +47,9 @@ public class Curve implements Comparable<Curve>
 	//then divided by
 	private float					normalizationScale;
 	//This is the curve created by applying a FittingFunction to the TransitionSeries 
-	Spectrum						normalizedCurve;	
+	Spectrum						normalizedCurve;
+	private float normalizedSum;
+	private float normalizedMax;
 
 	
 	
@@ -53,6 +59,7 @@ public class Curve implements Comparable<Curve>
 	
 	//Areas (in channels) where the curve is strong enough that we need to consider it.
 	private RangeSet				intenseRanges;
+	private Set<Integer>			intenseChannels;
 	
 	//how large a footprint this curve has, used in scoring fittings
 	private int						baseSize;
@@ -72,6 +79,7 @@ public class Curve implements Comparable<Curve>
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		intenseRanges = new RangeSet();
+		intenseChannels = new LinkedHashSet<>();
 		
 		if (ts != null) setTransitionSeries(ts);
 		
@@ -103,6 +111,22 @@ public class Curve implements Comparable<Curve>
 	public Spectrum scale(float scale)
 	{
 		return SpectrumCalculations.multiplyBy(normalizedCurve, scale);
+	}
+	
+	/**
+	 * Returns the sum of the scaled curve. This is generally faster than calling
+	 * scale() and calculating the sum
+	 */
+	public float scaleSum(float scale) {
+		return normalizedSum * scale;
+	}
+	
+	/**
+	 * Returns the max of the scaled curve. This is generally faster than calling
+	 * scale() and calculating the sum
+	 */
+	public float scaleMax(float scale) {
+		return normalizedMax * scale;
 	}
 	
 	/**
@@ -159,6 +183,14 @@ public class Curve implements Comparable<Curve>
 		return intenseRanges;
 	}
 	
+	/**
+	 * Returns a Set of Integers containing the channels for which this Curve is intense or
+	 * significant.
+	 */
+	public Set<Integer> getIntenseChannels() {
+		return Collections.unmodifiableSet(intenseChannels);
+	}
+	
 	
 
 	/**
@@ -199,6 +231,11 @@ public class Curve implements Comparable<Curve>
 			
 			intenseRanges.addRange(new Range(start, stop));
 			
+		}
+		
+		intenseChannels.clear();
+		for (int channel : intenseRanges) {
+			intenseChannels.add(channel);
 		}
 		
 		
@@ -259,6 +296,8 @@ public class Curve implements Comparable<Curve>
 		{
 			normalizedCurve = SpectrumCalculations.divideBy(fit, normalizationScale);
 		}
+		normalizedSum = normalizedCurve.sum();
+		normalizedMax = normalizedCurve.max();
 
 
 	}

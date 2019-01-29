@@ -62,7 +62,7 @@ public class Mapping
 				FittingResultSet frs = solver.solve(data, fittings, fitter);
 				
 				for (FittingResult result : frs.getFits()) {
-					maps.putIntensityInMapAtPoint(result.getFit().sum(), result.getTransitionSeries(), index);
+					maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), index);
 				}
 				
 			});

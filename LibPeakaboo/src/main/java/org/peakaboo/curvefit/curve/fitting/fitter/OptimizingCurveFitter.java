@@ -27,8 +27,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 	@Override
 	public FittingResult fit(ReadOnlySpectrum data, Curve curve) {
 		float scale = this.findScale(data, curve);
-		ReadOnlySpectrum scaledData = curve.scale(scale);
-		FittingResult result = new FittingResult(scaledData, curve, scale);
+		FittingResult result = new FittingResult(curve, scale);
 		return result;
 	}
 	
@@ -36,11 +35,10 @@ public class OptimizingCurveFitter implements CurveFitter {
 	
 	private float findScale(ReadOnlySpectrum data, Curve curve) {
 
-		Set<Integer> intenseChannels = getIntenseChannels(curve);
-		UnivariateFunction score = scoringFunction(data, curve, intenseChannels);
+		UnivariateFunction score = scoringFunction(data, curve);
 		
 		double guess = 0;
-		for (int channel : intenseChannels) {
+		for (int channel : curve.getIntenseChannels()) {
 			guess = Math.max(guess, data.get(channel));
 		}
 		
@@ -60,16 +58,8 @@ public class OptimizingCurveFitter implements CurveFitter {
 		
 		
 	}
-
-	protected Set<Integer> getIntenseChannels(Curve curve) {
-		Set<Integer> intenseChannels = new LinkedHashSet<>();
-		for (int channel : curve.getIntenseRanges()) {
-			intenseChannels.add(channel);
-		}
-		return intenseChannels;
-	}
 	
-	protected UnivariateFunction scoringFunction(ReadOnlySpectrum data, Curve curve, Set<Integer> intenseChannels) {
+	protected UnivariateFunction scoringFunction(ReadOnlySpectrum data, Curve curve) {
 		return new UnivariateFunction() {
 			
 			Spectrum scaled = new ISpectrum(data.size());
@@ -81,7 +71,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 				SpectrumCalculations.subtractLists_target(data, scaled, residual);
 				
 				float score = 0;
-				for (int i : intenseChannels) {
+				for (int i : curve.getIntenseChannels()) {
 					float value = residual.get(i);
 					if (value < 0) {
 						value *= overfitPenalty;

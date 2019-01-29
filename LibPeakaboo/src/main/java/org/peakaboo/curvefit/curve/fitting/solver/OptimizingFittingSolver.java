@@ -126,9 +126,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	protected Set<Integer> getIntenseChannels(List<Curve> curves) {
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
 		for (Curve curve : curves) {
-			for (int channel : curve.getIntenseRanges()) {
-				intenseChannels.add(channel);
-			}
+			intenseChannels.addAll(curve.getIntenseChannels());
 		}
 		return intenseChannels;
 	}
@@ -213,10 +211,11 @@ public class OptimizingFittingSolver implements FittingSolver {
 		int index = 0;
 		List<FittingResult> fits = new ArrayList<>();
 		Spectrum total = new ISpectrum(context.data.size());
+		Spectrum scaled = new ISpectrum(context.data.size());
 		for (Curve curve : context.curves) {
 			float scale = (float) point[index++];
-			Spectrum scaled = curve.scale(scale);
-			fits.add(new FittingResult(scaled, curve, scale));
+			curve.scaleInto(scale, scaled);
+			fits.add(new FittingResult(curve, scale));
 			SpectrumCalculations.addLists_inplace(total, scaled);
 		}
 		Spectrum residual = SpectrumCalculations.subtractLists(context.data, total);

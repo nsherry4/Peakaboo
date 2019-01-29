@@ -163,7 +163,7 @@ public class FittingController extends EventfulType<Boolean>
 			return 0f;
 		}
 
-		float max = result.getFit().max();
+		float max = result.getFitMax();
 		if (Float.isNaN(max)) max = 0f;
 		return max;
 		

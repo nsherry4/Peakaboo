@@ -1155,7 +1155,7 @@ public class PlotPanel extends TabbedLayerPanel
 			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
 			float intensity = 0;
 			if (result == null) { return 0f; }
-			intensity = p.calibrate(result.getFit().sum(), ts);
+			intensity = p.calibrate(result.getFitSum(), ts);
 			if (Float.isNaN(intensity)) {
 				return 0f;
 			}
