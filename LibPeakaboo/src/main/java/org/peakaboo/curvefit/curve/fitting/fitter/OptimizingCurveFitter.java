@@ -36,36 +36,8 @@ public class OptimizingCurveFitter implements CurveFitter {
 	
 	private float findScale(ReadOnlySpectrum data, Curve curve) {
 
-		Set<Integer> intenseChannels = new LinkedHashSet<>();
-		for (int channel : curve.getIntenseRanges()) {
-			intenseChannels.add(channel);
-		}
-		
-		
-		UnivariateFunction score = new UnivariateFunction() {
-			
-			Spectrum scaled = new ISpectrum(data.size());
-			Spectrum residual = new ISpectrum(data.size());
-			
-			@Override
-			public double value(double scale) {
-				curve.scaleInto((float) scale, scaled);
-				residual.copy(data);
-				SpectrumCalculations.subtractLists_inplace(residual, scaled);
-				
-				float score = 0;
-				for (int i : intenseChannels) {
-					float value = residual.get(i);
-					if (value < 0) {
-						value *= overfitPenalty;
-					}
-					value *= value;
-					score += value;
-				}
-				return score;
-			}
-		};
-		
+		Set<Integer> intenseChannels = getIntenseChannels(curve);
+		UnivariateFunction score = scoringFunction(data, curve, intenseChannels);
 		
 		double guess = 0;
 		for (int channel : intenseChannels) {
@@ -89,6 +61,39 @@ public class OptimizingCurveFitter implements CurveFitter {
 		
 	}
 
+	protected Set<Integer> getIntenseChannels(Curve curve) {
+		Set<Integer> intenseChannels = new LinkedHashSet<>();
+		for (int channel : curve.getIntenseRanges()) {
+			intenseChannels.add(channel);
+		}
+		return intenseChannels;
+	}
+	
+	protected UnivariateFunction scoringFunction(ReadOnlySpectrum data, Curve curve, Set<Integer> intenseChannels) {
+		return new UnivariateFunction() {
+			
+			Spectrum scaled = new ISpectrum(data.size());
+			Spectrum residual = new ISpectrum(data.size());
+			
+			@Override
+			public double value(double scale) {
+				curve.scaleInto((float) scale, scaled);
+				SpectrumCalculations.subtractLists_target(data, scaled, residual);
+				
+				float score = 0;
+				for (int i : intenseChannels) {
+					float value = residual.get(i);
+					if (value < 0) {
+						value *= overfitPenalty;
+					}
+					value *= value;
+					score += value;
+				}
+				return score;
+			}
+		};
+	}
+	
 	@Override
 	public String name() {
 		return "Optimizing";
