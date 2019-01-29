@@ -76,7 +76,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>peakaboo.ui.swing.Peakaboo</mainClass>
+							<mainClass>org.peakaboo.ui.swing.Peakaboo</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
