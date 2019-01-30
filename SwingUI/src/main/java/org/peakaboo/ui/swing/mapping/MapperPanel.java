@@ -335,6 +335,10 @@ public class MapperPanel extends TabbedLayerPanel {
 			data.compositeData = controller.getSettings().getMapFittings().getCompositeMapData(Optional.of(ts));
 			data.maxIntensity = controller.getSettings().getMapFittings().sumAllTransitionSeriesMaps().max();
 			
+			controller.getSettings().getMapFittings().setAllTransitionSeriesVisibility(false);
+			controller.getSettings().getMapFittings().setTransitionSeriesVisibility(ts, true);
+			settings = controller.getRenderSettings();
+			
 			//image
 			String ext = "";
 			switch (format) {

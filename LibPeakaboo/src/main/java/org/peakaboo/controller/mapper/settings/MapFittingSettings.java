@@ -683,5 +683,13 @@ public class MapFittingSettings extends EventfulType<String> {
 		return map.rawDataController.getCalibrationProfile();
 	}
 
+
+
+	public void setAllTransitionSeriesVisibility(boolean visible) {
+		for (ITransitionSeries ts : getAllTransitionSeries()) {
+			setTransitionSeriesVisibility(ts, visible);
+		}
+	}
+
 	
 }
