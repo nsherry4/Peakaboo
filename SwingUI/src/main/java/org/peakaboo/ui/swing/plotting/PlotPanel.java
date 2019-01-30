@@ -797,10 +797,25 @@ public class PlotPanel extends TabbedLayerPanel
 	private void exportArchiveToZip(File file, SurfaceType format, int width, int height) {
 		try {
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
-			ZipEntry e = new ZipEntry("plot." + format.toString().toLowerCase());
-			zos.putNextEntry(e);
+			
 			
 			//Save Plot
+			String ext = "";
+			switch (format) {
+			case PDF: 
+				ext = "pdf";
+				break;
+			case RASTER:
+				ext = "png";
+				break;
+			case VECTOR:
+				ext = "svg";
+				break;			
+			}
+			
+			ZipEntry e = new ZipEntry("plot." + ext);
+			zos.putNextEntry(e);
+
 			switch (format) {
 			case PDF:
 				canvas.writePDF(zos, new Coord<Integer>(width, height));
@@ -815,6 +830,7 @@ public class PlotPanel extends TabbedLayerPanel
 			zos.closeEntry();
 			
 			
+			//save fittings as text
 			e = new ZipEntry("fittings.txt");
 			zos.putNextEntry(e);
 			actionSaveFittingInformationToOutputStream(zos);
