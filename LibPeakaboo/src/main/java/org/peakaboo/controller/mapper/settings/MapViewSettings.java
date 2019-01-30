@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.mapping.rawmap.RawMapSet;
@@ -165,6 +167,8 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 		StreamExecutor<Coord<Integer>> executor = new StreamExecutor<>("Evaluating Sizes");
 		executor.setTask(widths, stream -> {
 			
+			long t1 = System.currentTimeMillis();
+			
 			Optional<Pair<Coord<Integer>, Float>> best = stream.map(x -> {
 				
 				float delta;
@@ -181,6 +185,9 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 				
 			}).min((a, b) -> a.second.compareTo(b.second));
 			
+			
+			long t2 = System.currentTimeMillis();
+			PeakabooLog.get().log(Level.INFO, "Guessed Data Dimensions in " + ((t2-t1)/1000) + " seconds");
 			
 			if (best.isPresent()) {
 				return best.get().first;
@@ -204,45 +211,56 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 	
 	private Spectrum map2dDelta(Spectrum map, int width, int height) {
+		float[] maparray = map.backingArray();
 		Spectrum deltas = new ISpectrum(map.size());
+		float[] deltasarray = deltas.backingArray();
 		float delta = 0;
 		float value = 0;
-		int count = 0;
-		int dind;
+		float count = 0;
 		int mapsize = map.size();
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				if (y*width+x >= mapsize) break;
-				value = map.get(y*width+x);
+		
+		// calculate offsets for indexes of neighbouring pixels. these can be used to
+		// get the neighbours for that pixel faster than doing the math at every point
+		int noff = -width;
+		int eoff = 1;
+		int soff = width;
+		int woff = -1;
+		
+		for (int y = 0; y < height; y++) {
+			int rowind = y*width;
+			
+			for (int x = 0; x < width; x++) {
+				int ind = rowind+x;
+				if (ind >= mapsize) break;
+				value = maparray[ind];
 				count = 0;
 				delta = 0;
 				
-				dind = y*width+(x-1);
+				//west
 				if (x > 0) {
-					delta += Math.abs(value - map.get(dind));
+					delta += Math.abs(value - maparray[ind+woff]);
 					count++;
 				}
 				
-				dind = (y-1)*width+x;
+				//north
 				if (y > 0) {
-					delta += Math.abs(value - map.get(dind));
+					delta += Math.abs(value - maparray[ind+noff]);
 					count++;
 				}
 
-				dind = y*width+(x+1);
-				if (x < width-1 && dind < mapsize) {
-					delta += Math.abs(value - map.get(dind));
+				//east
+				if (x < width-1 && ind+eoff < mapsize) {
+					delta += Math.abs(value - maparray[ind+eoff]);
 					count++;
 				}
 				
-				dind = (y+1)*width+x;
-				if (y < height-1 && dind < mapsize) {
-					delta += Math.abs(value - map.get(dind));
+				//south
+				if (y < height-1 && ind+soff < mapsize) {
+					delta += Math.abs(value - maparray[ind+soff]);
 					count++;
 				}
 				
-				delta /= (float)count;
-				deltas.set(y*width+x, delta);
+				deltasarray[ind] = delta/count;
 
 			}
 		}
