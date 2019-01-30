@@ -28,37 +28,40 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 			return 0;
 		} else {
 		}
-		//Create a lorentz transition+fittingfunction
+		//Create a kernel transition+fittingfunction centered around the current energy
 		Transition fake = new Transition(energy, 1f, "Fake Transition for Voigt Fitting Function");
 		FittingContext copy = new FittingContext(context.getFittingParameters(), fake, context.getTransitionSeriesType());
 		FittingFunction kernel = gaussian();
 		kernel.initialize(copy);
 		
+		return convolveForEnergy(energy, kernel);
+
+	}
+	
+	/**
+	 * Solves a function convolution at the given energy 
+	 */
+	private float convolveForEnergy(float energy, FittingFunction kernel) {
 		float max = kernel.forEnergyAbsolute(energy);
 		float deltaEnergy = 0f;
 		float sum = 0f;
 		float kernelValue, signalValue;
-		int normalizer = 0;
+		float normalizer = 0;
 		while (true) {
 			//kernel is centered at `energy`, so we can take advantage of 
 			//symmetry to only call it once for +/-
 			kernelValue = kernel.forEnergyAbsolute(energy + deltaEnergy);
-			if (kernelValue < 0.001 * max) break;
+			signalValue = signal.forEnergyAbsolute(energy + deltaEnergy) + signal.forEnergyAbsolute(energy - deltaEnergy);
 			
-			signalValue = signal.forEnergyAbsolute(energy + deltaEnergy);
-			sum += kernelValue * signalValue;
-			normalizer += kernelValue;
+			if (kernelValue < 0.001f * max && kernelValue < 0.1f && signalValue < 0.2f) break;
 			
-			signalValue = signal.forEnergyAbsolute(energy - deltaEnergy);
-			sum += kernelValue * signalValue;
-			normalizer += kernelValue;
+			sum += kernelValue * signalValue; //same as kernel * signal1 + kernel * signal2
+			normalizer += kernelValue + kernelValue;
 			
-			deltaEnergy += 0.0005;
-			
-			
+			deltaEnergy += 0.002;
 		}
 		
-		sum /= (float)normalizer;
+		sum /= normalizer;
 		
 		return sum;
 	}
