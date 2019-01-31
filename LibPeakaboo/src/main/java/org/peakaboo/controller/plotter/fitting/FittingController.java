@@ -20,7 +20,9 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.escape.EscapePeakType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
+import org.peakaboo.curvefit.peak.search.searcher.DoubleDerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
+import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
@@ -445,7 +447,7 @@ public class FittingController extends EventfulType<Boolean>
 	}
 
 	public ExecutorSet<List<ITransitionSeries>> autodetectPeaks() {
-		DerivativePeakSearcher searcher = new DerivativePeakSearcher();
+		PeakSearcher searcher = new DoubleDerivativePeakSearcher();
 		ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
 		ExecutorSet<List<ITransitionSeries>> exec = PeakProposal.search(
 				data, 
