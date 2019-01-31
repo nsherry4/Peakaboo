@@ -1093,8 +1093,10 @@ public class PlotPanel extends TabbedLayerPanel
 			if (event == Event.COMPLETED) {
 				EnergyCalibration energy = energyTask.last().getResult().orElse(null);
 				if (energy != null) {
-					controller.fitting().setMinEnergy(energy.getMinEnergy());
+					//make sure min energy is lower than new max energy
+					controller.fitting().setMinEnergy(0);
 					controller.fitting().setMaxEnergy(energy.getMaxEnergy());
+					controller.fitting().setMinEnergy(energy.getMinEnergy());
 				}
 			}
 		});

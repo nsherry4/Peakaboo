@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FastSignalMatchScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -17,16 +18,22 @@ import cyclops.Pair;
 import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
+import plural.Plural;
+import plural.executor.AbstractExecutor;
+import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutorSet;
 
 public class AutoEnergyCalibration {
 
 
+	/**
+	 * Generates a list of all possible energy calibration candidates
+	 */
 	private static List<EnergyCalibration> allEnergies(int dataWidth) {
 		List<EnergyCalibration> energies = new ArrayList<>();
-		for (float max = 0.25f; max <= 100f; max += 0.05f) {
-			for (float min = -0.25f; min < 0.25f; min += 0.05) {
+		for (float max = 1f; max <= 100f; max += 0.05f) {
+			for (float min = -0.5f; min < 0.5f; min += 0.05) {
 				if (min >= max-1f) continue;
 				energies.add(new EnergyCalibration(min, max, dataWidth));
 			}
@@ -84,7 +91,7 @@ public class AutoEnergyCalibration {
 			float bestScore = scores.get(0).second;
 			
 			for (Pair<Integer, Float> score : scores) {
-				if (score.second < bestScore * 0.5f) break;
+				if (score.second < bestScore * 0.9f) break;
 				filteredScores.add(energies.get(score.first));
 			}
 						
@@ -154,7 +161,7 @@ public class AutoEnergyCalibration {
 	private static float scoreFitFast(FittingSet fits, ReadOnlySpectrum spectrum, EnergyCalibration calibration) {
 		float score = 0;
 
-		FittingScorer scorer = new FastSignalMatchScorer(spectrum, calibration);		
+		FittingScorer scorer = new FastPeakSearchingScorer(spectrum, calibration);		
 		for (ITransitionSeries ts : fits.getVisibleTransitionSeries()) {
 			if (ts.isVisible()) {
 				score += Math.sqrt(scorer.score(ts));
