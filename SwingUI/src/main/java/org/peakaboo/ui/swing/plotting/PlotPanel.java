@@ -118,6 +118,7 @@ import swidget.widgets.layerpanel.ModalLayer;
 import swidget.widgets.layerpanel.ToastLayer;
 import swidget.widgets.layerpanel.widgets.AboutLayer;
 import swidget.widgets.layout.ButtonBox;
+import swidget.widgets.layout.HeaderPanel;
 import swidget.widgets.layout.PropertyPanel;
 import swidget.widgets.layout.TitledPanel;
 import swidget.widgets.tabbedinterface.TabbedInterface;
@@ -392,35 +393,32 @@ public class PlotPanel extends TabbedLayerPanel
 
 			@Override
 			public void onParameters(Group parameters, Consumer<Boolean> finished) {
-				JPanel paramPanel = new JPanel(new BorderLayout());
+				HeaderPanel paramPanel = new HeaderPanel();
 				ModalLayer layer = new ModalLayer(PlotPanel.this, paramPanel);
 				
-				TitlePaintedPanel title = new TitlePaintedPanel("Additional Information Required", false);
-				title.setBorder(Spacing.bMedium());
 				
+				paramPanel.getHeader().setCentre("Options");
+				paramPanel.getHeader().setShowClose(false);
 				
-				SwingAutoPanel sap = new SwingAutoPanel(parameters);
-				sap.setBorder(Spacing.bMedium());
-				
-				ButtonBox bbox = new ButtonBox();
-				ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
+				ImageButton ok = new ImageButton("OK").withStateDefault();
 				ok.addActionListener(e -> {
 					PlotPanel.this.removeLayer(layer);
 					finished.accept(true);
 				});
-				
-				ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
+				ImageButton cancel = new ImageButton("Cancel");
 				cancel.addActionListener(e -> {
 					PlotPanel.this.removeLayer(layer);
 					finished.accept(false);
 				});
 				
-				bbox.addRight(0, cancel);
-				bbox.addRight(0, ok);
+				paramPanel.getHeader().setLeft(cancel);
+				paramPanel.getHeader().setRight(ok);
 				
-				paramPanel.add(title, BorderLayout.NORTH);
-				paramPanel.add(sap, BorderLayout.CENTER);
-				paramPanel.add(bbox, BorderLayout.SOUTH);
+				
+				SwingAutoPanel sap = new SwingAutoPanel(parameters);
+				sap.setBorder(Spacing.bMedium());
+				paramPanel.setBody(sap);
+				
 				
 				PlotPanel.this.pushLayer(layer);
 			}
