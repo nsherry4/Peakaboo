@@ -7,6 +7,7 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
+import org.peakaboo.filter.plugins.advanced.PeakDetectorFilter;
 import org.peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.SubFilter;
 import org.peakaboo.filter.plugins.background.BruknerBackgroundFilter;
@@ -83,6 +84,9 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 			newPluginLoader.registerPlugin(SpringNoiseFilter.class);
 			newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
 			newPluginLoader.registerPlugin(LowStatisticsNoiseFilter.class);
+			
+			
+			newPluginLoader.registerPlugin(PeakDetectorFilter.class);
 
 			
 		} catch (ClassInheritanceException | ClassInstantiationException e) {
