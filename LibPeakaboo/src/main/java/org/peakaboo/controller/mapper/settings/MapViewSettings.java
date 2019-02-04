@@ -34,15 +34,9 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public boolean	monochrome			= false;
 
 	public float	zoom				= 1f;
-	
-	
-	
+
 	public File		savePictureFolder 	= null;
 	public File		dataSourceFolder 	= null;
-
-	private float overlayLowCutoff		= 0f;
-
-
 	
 	
 	
@@ -207,19 +201,6 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	{
 		this.drawCoordinates = draw;
 	}
-	
-	public float getOverlayLowCutoff() {
-		return this.overlayLowCutoff;
-	}
-
-	public void setOverlayLowCutoff(float cutoff) {
-		if (cutoff == this.overlayLowCutoff) {
-			return;
-		}
-		this.overlayLowCutoff = cutoff;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-		
 
 	public Coord<Number> getLoXLoYCoord() {
 		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();

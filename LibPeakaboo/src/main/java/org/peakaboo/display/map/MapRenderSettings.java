@@ -25,7 +25,6 @@ public class MapRenderSettings {
 	public boolean monochrome = false;
 	public boolean contours = false;
 	public int contourSteps = 15;
-	public float overlayLowCutoff = 0f;
 	
 	public boolean showScaleBar = false;
 	

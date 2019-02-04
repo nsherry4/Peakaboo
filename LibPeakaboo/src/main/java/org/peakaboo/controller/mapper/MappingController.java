@@ -122,7 +122,6 @@ public class MappingController extends EventfulType<String>
 		settings.monochrome = this.display.getView().getMonochrome();
 		settings.contours = this.display.getView().getContours();
 		settings.contourSteps = this.display.getView().getSpectrumSteps();
-		settings.overlayLowCutoff = this.display.getView().getOverlayLowCutoff();
 		
 		settings.mode = this.getSettings().getMapFittings().getMapDisplayMode();
 				
@@ -147,8 +146,7 @@ public class MappingController extends EventfulType<String>
 			settings.spectrumTitle = this.getSettings().getMapFittings().isLogView() ? "Log Scale Intensity (counts)" : "Intensity (counts)";
 			break;
 		case OVERLAY:
-			settings.spectrumTitle = 
-					(this.getSettings().getView().getOverlayLowCutoff() == 0f ? "Colour" : "High Intensities") +
+			settings.spectrumTitle = "Colour" +
 					(this.getSettings().getMapFittings().isLogView() ? " (Log Scale)" : "") + 
 					(this.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : "");
 			break;

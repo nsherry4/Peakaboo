@@ -47,9 +47,7 @@ public class Overlay extends JPanel {
 		
 		scaleMode = new ScaleModeWidget(controller, "Colour", "All", true);
 		options.add(scaleMode, BorderLayout.CENTER);
-		
-		options.add(new OverlayLowCutoffSlider(controller), BorderLayout.SOUTH);
-		
+				
 		return options;
 	}
 	

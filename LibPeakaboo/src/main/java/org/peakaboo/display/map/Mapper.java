@@ -529,7 +529,6 @@ public class Mapper {
 		
 		if (redSpectrum != null) {
 			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour());
-			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterRed == null) {
 				overlayMapPainterRed = new RasterSpectrumMapPainter(palette, redSpectrum);
 				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
@@ -541,7 +540,6 @@ public class Mapper {
 			
 		if (greenSpectrum != null) {
 			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour());
-			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterGreen == null) {
 				overlayMapPainterGreen = new RasterSpectrumMapPainter(palette, greenSpectrum);
 				overlayMapPainterGreen.setCompositeMode(CompositeModes.ADD);
@@ -552,7 +550,6 @@ public class Mapper {
 		
 		if (blueSpectrum != null) {
 			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour());
-			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterBlue == null) {
 				overlayMapPainterBlue = new RasterSpectrumMapPainter(palette, blueSpectrum);
 				overlayMapPainterBlue.setCompositeMode(CompositeModes.ADD);
@@ -563,7 +560,6 @@ public class Mapper {
 		
 		if (yellowSpectrum != null) {
 			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour());
-			palette.setLowCutoff(settings.overlayLowCutoff);
 			if (overlayMapPainterYellow == null) {
 				overlayMapPainterYellow = new RasterSpectrumMapPainter(palette, yellowSpectrum);
 				overlayMapPainterYellow.setCompositeMode(CompositeModes.ADD);
