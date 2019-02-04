@@ -175,10 +175,10 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 				int y;
 				if (all.size() % x == 0) {
 					y = all.size() / x;
-					delta = getDimensionScore(all, x, y);
+					delta = map2dDeltaSum(all, x, y);
 				} else {
 					y = (int)Math.ceil(all.size() / (float)x);
-					delta = getDimensionScore(all, x, y); //include the last incomplete row
+					delta = map2dDeltaSum(all, x, y); //include the last incomplete row
 				}
 				
 				return new Pair<>(new Coord<>(x, y), delta);
@@ -202,22 +202,17 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	}
 	
 	
-	//helper for guessDataDimensions, calculates the deltas along the wrapping 
-	//left-hand edge of a map between the end of one row and the start of the 
-	//next. Higher values should indicate the dimensions are correct and the 
-	//two sets of points are not next to each other.
-	private float getDimensionScore(Spectrum map, int width, int height) {
-		return map2dDelta(map2dDelta(map, width, height), width, height).sum();
-	}
 	
-	private Spectrum map2dDelta(Spectrum map, int width, int height) {
+
+	
+	//Calculates the delta of the map
+	private float map2dDeltaSum(Spectrum map, int width, int height) {
 		float[] maparray = map.backingArray();
-		Spectrum deltas = new ISpectrum(map.size());
-		float[] deltasarray = deltas.backingArray();
 		float delta = 0;
 		float value = 0;
 		float count = 0;
 		int mapsize = map.size();
+		float deltaSum = 0;
 		
 		// calculate offsets for indexes of neighbouring pixels. these can be used to
 		// get the neighbours for that pixel faster than doing the math at every point
@@ -260,12 +255,12 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 					count++;
 				}
 				
-				deltasarray[ind] = delta/count;
+				deltaSum += delta/count;
 
 			}
 		}
 		
-		return deltas;
+		return deltaSum;
 		
 	}
 	
