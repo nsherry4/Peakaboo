@@ -51,6 +51,7 @@ import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.common.Env;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
+import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.DataLoader;
@@ -147,6 +148,8 @@ public class PlotPanel extends TabbedLayerPanel
 	TabbedInterface<TabbedLayerPanel> 	tabs;
 
 	private static boolean newVersionNotified = false;
+	
+	private Mutable<SavedMapSession> 	mapSession = new Mutable<>();
 	
 	public PlotPanel(TabbedInterface<TabbedLayerPanel> container) {
 		super(container);
@@ -720,7 +723,7 @@ public class PlotPanel extends TabbedLayerPanel
 				);
 			
 			
-			mapperWindow = new MapperFrame(getTabbedInterface(), mapData, null, null, controller);
+			mapperWindow = new MapperFrame(getTabbedInterface(), mapData, mapSession, controller);
 
 			mapperWindow.setVisible(true);
 

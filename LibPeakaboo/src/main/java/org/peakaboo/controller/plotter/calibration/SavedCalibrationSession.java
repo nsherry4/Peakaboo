@@ -34,7 +34,7 @@ public class SavedCalibrationSession {
 		return this;
 	}
 
-	public SavedCalibrationSession loadInto(CalibrationController controller) {
+	public void loadInto(CalibrationController controller) {
 		
 		if (profileYaml != null) {
 			controller.setCalibrationProfile(CalibrationProfile.load(profileYaml), new File(profileFilename));
@@ -53,7 +53,6 @@ public class SavedCalibrationSession {
 		} else {
 			controller.setCalibrationReference(CalibrationReference.empty());
 		}
-		return this;
 	}
 	
 }

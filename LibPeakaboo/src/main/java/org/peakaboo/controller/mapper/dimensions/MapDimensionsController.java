@@ -32,13 +32,6 @@ public class MapDimensionsController extends EventfulType<String>{
 		
 	}
 
-	public MapDimensionsController(MappingController mappingController, MapDimensionsController copyUserDimensions) {
-		this(mappingController);
-		if (copyUserDimensions != null) {
-			this.viewDimensions = new Coord<>(copyUserDimensions.viewDimensions);
-		}
-	}
-
 	public Coord<Integer> getDimensions() {
 		return new Coord<>(viewDimensions);
 	}

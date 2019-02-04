@@ -1,13 +1,17 @@
-package org.peakaboo.controller.settings;
+package org.peakaboo.curvefit.peak.transition;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.curvefit.peak.table.PeakTable;
-import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
 
+/**
+ * Simple structure for serializing a {@link TransitionSeriesMode} and reconsituting it.
+ * @author NAS
+ *
+ */
 public class SerializedTransitionSeries
 {
 

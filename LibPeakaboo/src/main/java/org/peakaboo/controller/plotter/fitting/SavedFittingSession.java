@@ -9,12 +9,12 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.controller.settings.SerializedTransitionSeries;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.escape.EscapePeakType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.SerializedTransitionSeries;
 
 public class SavedFittingSession {
 
@@ -78,7 +78,7 @@ public class SavedFittingSession {
 		return this;
 	}
 	
-	public SavedFittingSession loadInto(FittingController controller) {
+	public void loadInto(FittingController controller) {
 				
 		//we can't serialize TransitionSeries directly, so we store a list of Ni:K strings instead
 		//we now convert them back to TransitionSeries
@@ -140,7 +140,6 @@ public class SavedFittingSession {
 		//Restore peak model base width
 		controller.setFWHMBase(fwhmBase);
 		
-		return this;
 	}
 	
 }

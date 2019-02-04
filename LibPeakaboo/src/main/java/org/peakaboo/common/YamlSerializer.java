@@ -23,7 +23,7 @@ public class YamlSerializer {
 		//TODO: remove in Peakaboo 6
 		yaml = yaml.replace("!!peakaboo.", "!!org.peakaboo.");
 		yaml = yaml.replace(": peakaboo.", ": org.peakaboo.");
-				
+		yaml = yaml.replace("!!org.peakaboo.controller.settings.SavedSession", "!!org.peakaboo.controller.plotter.SavedSession");
 		
 		//be forgiving of fields which are unfamiliar, this may 
 		//be a peakaboo session file from the future

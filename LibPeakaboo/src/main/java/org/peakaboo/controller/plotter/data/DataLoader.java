@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.settings.SavedSession;
+import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.datasource.plugin.DataSourceLookup;

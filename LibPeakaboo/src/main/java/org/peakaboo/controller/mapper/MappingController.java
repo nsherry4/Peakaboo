@@ -11,7 +11,7 @@ import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.mapper.selection.MapSelectionController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.settings.SavedSession;
+import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.display.map.MapRenderData;
@@ -61,7 +61,7 @@ public class MappingController extends EventfulType<String>
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(RawDataController rawDataController, MapSettingsController copyViewSettings, MapDimensionsController copyUserDimensions, PlotController plotcontroller)
+	public MappingController(RawDataController rawDataController, PlotController plotcontroller)
 	{
 		this.plotcontroller = plotcontroller;
 		
@@ -74,14 +74,13 @@ public class MappingController extends EventfulType<String>
 		this.selectionController = new MapSelectionController(this);
 		this.selectionController.addListener(this::updateListeners);
 		
-		this.settingsController = new MapSettingsController(this, copyViewSettings);		
+		this.settingsController = new MapSettingsController(this);		
 		this.settingsController.addListener(this::updateListeners);		
 		
 		this.fittingController = new MapFittingController(this);
 		this.fittingController.addListener(this::updateListeners);
 		
-		
-		this.dimensionsController = new MapDimensionsController(this, copyUserDimensions);	
+		this.dimensionsController = new MapDimensionsController(this);	
 		this.dimensionsController.addListener(this::updateListeners);
 		
 	}
@@ -143,7 +142,7 @@ public class MappingController extends EventfulType<String>
 		
 		settings.mode = this.getFitting().getMapDisplayMode();
 				
-		settings.drawCoord = this.settingsController.getDrawCoords();
+		settings.drawCoord = this.settingsController.getShowCoords();
 		settings.coordLoXLoY = this.getSettings().getLoXLoYCoord();
 		settings.coordHiXLoY = this.getSettings().getHiXLoYCoord();
 		settings.coordLoXHiY = this.getSettings().getLoXHiYCoord();

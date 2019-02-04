@@ -13,7 +13,6 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
-import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.Bounds;

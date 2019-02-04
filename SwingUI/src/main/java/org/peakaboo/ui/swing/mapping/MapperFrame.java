@@ -4,14 +4,18 @@ package org.peakaboo.ui.swing.mapping;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
+import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
-import org.peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.controller.mapper.settings.SavedMapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
 
+import cyclops.util.Mutable;
 import swidget.icons.IconFactory;
 import swidget.widgets.LiveFrame;
 import swidget.widgets.tabbedinterface.TabbedInterface;
@@ -30,18 +34,15 @@ public class MapperFrame extends LiveFrame
 
 	private TabbedInterface<TabbedLayerPanel> tabs;
 	private PlotController plotController;
-
+	private Mutable<SavedMapSession> previousMapSession;
 	private TabbedInterface<TabbedLayerPanel> parentPlotter;
-	private MapSettingsController previousMapSettings;
-	private MapDimensionsController previousUserDimensions;
 	private RawDataController mapData;
 	
 	
 	public MapperFrame(
 			TabbedInterface<TabbedLayerPanel> plotter, 
 			RawDataController mapData, 
-			MapSettingsController previousMapSettings,
-			MapDimensionsController previousUserDimensions,
+			Mutable<SavedMapSession> lastMapSession,
 			PlotController plotcontroller
 		)
 	{
@@ -49,12 +50,21 @@ public class MapperFrame extends LiveFrame
 			
 		this.plotController = plotcontroller;
 		this.parentPlotter = plotter;
-		this.previousMapSettings = previousMapSettings;
-		this.previousUserDimensions = previousUserDimensions;
+		this.previousMapSession = lastMapSession;
 		this.mapData = mapData;
 		
 		init();
 
+		this.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				MapperPanel mapPanel = (MapperPanel) tabs.getActiveTab();
+				previousMapSession.set(new SavedMapSession().storeFrom(mapPanel.controller));
+			}
+
+		});
+		
 		setLocationRelativeTo(plotter.getWindow());
 				
 	}
@@ -106,17 +116,19 @@ public class MapperFrame extends LiveFrame
 
 	private MapperPanel createMapperPanel()
 	{
-		MapSettingsController lastMapSettings = previousMapSettings;
-		MapDimensionsController lastDimensions = previousUserDimensions;
+		SavedMapSession mapSession = previousMapSession.get();
 		if (tabs.getActiveTab() != null) {
 			TabbedLayerPanel lastTab = tabs.getActiveTab();
 			if (lastTab instanceof MapperPanel) {
-				lastMapSettings = ((MapperPanel)lastTab).controller.getSettings();
-				lastDimensions = ((MapperPanel)lastTab).controller.getUserDimensions();
+				mapSession = new SavedMapSession().storeFrom(((MapperPanel)lastTab).controller);
 			}
 		}
 		
-		MappingController newController = new MappingController(mapData, lastMapSettings, lastDimensions, plotController);
+		MappingController newController = new MappingController(mapData, plotController);
+		if (mapSession != null) {
+			mapSession.loadInto(newController);
+		}
+		
 		final MapperPanel viewer = new MapperPanel(newController, parentPlotter, tabs);
 		return viewer;					
 	}

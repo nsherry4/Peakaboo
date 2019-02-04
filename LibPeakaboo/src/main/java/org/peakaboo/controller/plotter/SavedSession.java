@@ -1,8 +1,7 @@
-package org.peakaboo.controller.settings;
+package org.peakaboo.controller.plotter;
 
 import org.peakaboo.common.Version;
 import org.peakaboo.common.YamlSerializer;
-import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.SavedCalibrationSession;
 import org.peakaboo.controller.plotter.data.SavedDataSession;
 import org.peakaboo.controller.plotter.filtering.SavedFilteringSession;

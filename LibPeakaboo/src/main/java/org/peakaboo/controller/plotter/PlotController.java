@@ -11,7 +11,6 @@ import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.controller.plotter.undo.UndoController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
-import org.peakaboo.controller.settings.SavedSession;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.mapping.rawmap.RawMapSet;

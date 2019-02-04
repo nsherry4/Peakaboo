@@ -19,14 +19,13 @@ public class SavedDataSession {
 		return this;
 	}
 	
-	public SavedDataSession loadInto(DataController controller) {
+	public void loadInto(DataController controller) {
 		controller.getDiscards().clear();
 		for (int i : discards) {
 			controller.getDiscards().discard(i);
 		}
 		controller.setDataSourcePluginUUID(this.dataSourcePluginUUID);
 		controller.setDataPaths(this.filesAsDataPaths());
-		return this;
 	}
 	
 	public List<Path> filesAsDataPaths() {

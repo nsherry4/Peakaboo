@@ -23,7 +23,7 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.selection.AreaSelection;
 import org.peakaboo.controller.mapper.selection.PointsSelection;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
-import org.peakaboo.controller.settings.SavedSession;
+import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.ui.swing.Peakaboo;

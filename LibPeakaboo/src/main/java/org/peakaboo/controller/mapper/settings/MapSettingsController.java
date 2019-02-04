@@ -23,45 +23,22 @@ public class MapSettingsController extends EventfulType<String>
 	
 	
 	//SETTINGS
-	public boolean	drawCoordinates		= true;
-	public boolean	drawSpectrum		= true;
-	public boolean	drawTitle			= true;
+	private boolean	drawCoordinates		= true;
+	private boolean	drawSpectrum		= true;
+	private boolean	drawTitle			= true;
 	private boolean drawScaleBar		= true;
-	public boolean	drawDataSetTitle	= false;
+	private boolean	drawDataSetTitle	= false;
 	
-	public int		spectrumSteps		= 15;
-	public boolean	contour				= false;
-	public boolean	monochrome			= false;
+	private int		spectrumSteps		= 15;
+	private boolean	contour				= false;
+	private boolean	monochrome			= false;
 
-	public float	zoom				= 1f;
+	private float	zoom				= 1f;
 
 	public File		savePictureFolder 	= null;
 	public File		dataSourceFolder 	= null;
 	
-	
-	
-	public MapSettingsController(MappingController mapController, MapSettingsController copy)
-	{
-		this(mapController);
 		
-		//Any settings which should persist between map windows should be copied here
-		if (copy != null) {
-			this.drawCoordinates = copy.drawCoordinates;
-			this.drawSpectrum = copy.drawSpectrum;
-			this.drawTitle = copy.drawTitle;
-			this.drawDataSetTitle = copy.drawDataSetTitle;
-			this.spectrumSteps = copy.spectrumSteps;
-			this.contour = copy.contour;
-			this.monochrome = copy.monochrome;
-
-			this.savePictureFolder = copy.savePictureFolder;
-			this.dataSourceFolder = copy.dataSourceFolder;
-			
-			this.zoom = copy.zoom;
-		}
-	}
-	
-	
 	public MapSettingsController(MappingController mapController)
 	{
 		setMappingController(mapController);
@@ -192,15 +169,6 @@ public class MapSettingsController extends EventfulType<String>
 		return this.drawCoordinates;
 	}
 	
-	
-	public boolean getDrawCoords()
-	{
-		return this.drawCoordinates;
-	}
-	public void setDrawCoords(boolean draw)
-	{
-		this.drawCoordinates = draw;
-	}
 
 	public Coord<Number> getLoXLoYCoord() {
 		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();

@@ -20,13 +20,12 @@ public class SavedFilteringSession {
 		return this;
 	}
 	
-	public SavedFilteringSession loadInto(FilteringController controller) {
+	public void loadInto(FilteringController controller) {
 		FilterSet filterset = controller.getFilteringModel().filters;
 		filterset.clear();
 		for (SerializedFilter f : this.filters) {
 			filterset.add(f.getFilter());
 		}
-		return this;
 	}
 	
 	
