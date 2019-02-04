@@ -10,12 +10,12 @@ import cyclops.Coord;
 import eventful.EventfulType;
 
 /**
- * Settings for a map view which are not directly dependent on the contents 
- * of the map (eg no TransisionSeries lists, etc)
+ * Settings for a map view which relate to presentation settings unrelated to
+ * the maps themselves.
+ * 
  * @author NAS
- *
  */
-public class MapViewSettings extends EventfulType<String> //TODO remove extends
+public class MapViewSettings extends EventfulType<String>
 {
 
 	//SOURCE DATA
@@ -27,8 +27,8 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 	public boolean	drawSpectrum		= true;
 	public boolean	drawTitle			= true;
 	private boolean drawScaleBar		= true;
+	public boolean	drawDataSetTitle	= false;
 	
-	public boolean	showDataSetTitle	= false;
 	public int		spectrumSteps		= 15;
 	public boolean	contour				= false;
 	public boolean	monochrome			= false;
@@ -49,7 +49,7 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 			this.drawCoordinates = copy.drawCoordinates;
 			this.drawSpectrum = copy.drawSpectrum;
 			this.drawTitle = copy.drawTitle;
-			this.showDataSetTitle = copy.showDataSetTitle;
+			this.drawDataSetTitle = copy.drawDataSetTitle;
 			this.spectrumSteps = copy.spectrumSteps;
 			this.contour = copy.contour;
 			this.monochrome = copy.monochrome;
@@ -169,14 +169,14 @@ public class MapViewSettings extends EventfulType<String> //TODO remove extends
 
 	public void setShowDatasetTitle(boolean show)
 	{
-		this.showDataSetTitle = show;
+		this.drawDataSetTitle = show;
 		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
 
 
 	public boolean getShowDatasetTitle()
 	{
-		return this.showDataSetTitle;
+		return this.drawDataSetTitle;
 	}
 
 
