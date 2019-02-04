@@ -20,19 +20,19 @@ public class MapSelectionPanel extends SettingsPanel {
 		setName("Selection");
 		
 		String thresholdTip = "<html>Controls the selection threshold.<br/>Points selected will be between (v/threshold, v*threshold),<br/>where v is the value of the clicked point.</html>";
-		SpinnerNumberModel thresholdModel = new SpinnerNumberModel(controller.getSettings().getPointsSelection().getThreshold(), 1.0d, 100.0d, 0.1d);
+		SpinnerNumberModel thresholdModel = new SpinnerNumberModel(controller.getSelection().getNeighbourThreshold(), 1.0d, 100.0d, 0.1d);
 		threshold = new JSpinner(thresholdModel);
 		JLabel thresholdLabel = new JLabel("Threshold");
 		threshold.addChangeListener(l -> {
 			Double val = (Double) thresholdModel.getValue();
-			controller.getSettings().getPointsSelection().setThreshold(val.floatValue());
+			controller.getSelection().setNeighbourThreshold(val.floatValue());
 		});
 		threshold.setToolTipText(thresholdTip);
 		thresholdLabel.setToolTipText(thresholdTip);
 		
-		padding = new JSpinner(new SpinnerNumberModel(controller.getSettings().getPointsSelection().getPadding(), 0, 10, 1));
+		padding = new JSpinner(new SpinnerNumberModel(controller.getSelection().getNeighbourPadding(), 0, 10, 1));
 		padding.addChangeListener(l -> {
-			controller.getSettings().getPointsSelection().setPadding((Integer) padding.getValue());
+			controller.getSelection().setNeighbourPadding((Integer) padding.getValue());
 		});
 		
 		JLabel paddingLabel = new JLabel("Padding");

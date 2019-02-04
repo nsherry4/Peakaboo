@@ -35,7 +35,7 @@ import javax.swing.border.MatteBorder;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
-import org.peakaboo.controller.mapper.settings.AreaSelection;
+import org.peakaboo.controller.mapper.selection.AreaSelection;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
@@ -154,11 +154,8 @@ public class MapperPanel extends TabbedLayerPanel {
 			public void mouseDragged(MouseEvent e)
 			{
 				if (SwingUtilities.isLeftMouseButton(e)) {
-					controller.getSettings().getPointsSelection().clearSelection();
-					
-					AreaSelection selection = controller.getSettings().getAreaSelection();
-					selection.setEnd( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-					selection.setHasBoundingRegion( true );
+					Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
+					controller.getSelection().makeRectSelectionEnd(point);
 				}
 			}
 
@@ -175,21 +172,19 @@ public class MapperPanel extends TabbedLayerPanel {
 					//Double-click selects points with similar intensity
 					if ((displayMode == MapDisplayMode.COMPOSITE || displayMode == MapDisplayMode.RATIO) && controller.getFiltering().isReplottable()) {
 						
-						controller.getSettings().getAreaSelection().clearSelection();
-						
 						Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
 						if (e.isControlDown()) {
 							if (e.getClickCount() == 2) {
-								controller.getSettings().getPointsSelection().makeSelection(clickedAt, true, true);
+								controller.getSelection().makeNeighbourSelection(clickedAt, true, true);
 							} else if (e.getClickCount() == 3) {
 								//Triple clicks only get run after a double click gets run. If CTRL is down, that means we need to
 								//undo the action caused by the previous (improper) double-click, so we re-run the contiguous
 								//selection modification to perform the reverse modification.
-								controller.getSettings().getPointsSelection().makeSelection(clickedAt, true, true);
-								controller.getSettings().getPointsSelection().makeSelection(clickedAt, false, true);
+								controller.getSelection().makeNeighbourSelection(clickedAt, true, true);
+								controller.getSelection().makeNeighbourSelection(clickedAt, false, true);
 							}
 						} else {
-							controller.getSettings().getPointsSelection().makeSelection(clickedAt, e.getClickCount() == 2, false);
+							controller.getSelection().makeNeighbourSelection(clickedAt, e.getClickCount() == 2, false);
 						}
 
 						
@@ -204,12 +199,8 @@ public class MapperPanel extends TabbedLayerPanel {
 			public void mousePressed(MouseEvent e)
 			{			
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && !e.isControlDown()) {
-					controller.getSettings().getPointsSelection().clearSelection();
-					
-					AreaSelection selection = controller.getSettings().getAreaSelection();
-					selection.setStart( canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true) );
-					selection.setEnd( null );
-					selection.setHasBoundingRegion( false );
+					Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
+					controller.getSelection().makeRectSelectionStart(point);
 				}
 			}
 

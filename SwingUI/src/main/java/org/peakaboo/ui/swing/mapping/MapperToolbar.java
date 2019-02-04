@@ -20,9 +20,9 @@ import javax.swing.JToolBar;
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.settings.AreaSelection;
+import org.peakaboo.controller.mapper.selection.AreaSelection;
+import org.peakaboo.controller.mapper.selection.PointsSelection;
 import org.peakaboo.controller.mapper.settings.MapViewSettings;
-import org.peakaboo.controller.mapper.settings.PointsSelection;
 import org.peakaboo.controller.settings.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
@@ -72,17 +72,8 @@ class MapperToolbar extends JToolBar {
 			
 			showConcentrations.addActionListener(e -> {
 				
-				List<Integer> indexes = new ArrayList<>();
-				
-				AreaSelection areaSelection = controller.getSettings().getAreaSelection();
-				PointsSelection pointsSelection = controller.getSettings().getPointsSelection();
-				
-				if (areaSelection.hasSelection()) {
-					indexes.addAll(areaSelection.getPoints());
-				} else if (pointsSelection.hasSelection()) {
-					indexes.addAll(pointsSelection.getPoints());
-				}
-				
+				List<Integer> indexes = controller.getSelection().getPoints();
+
 				List<ITransitionSeries> tss = controller.rawDataController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
 				Function<ITransitionSeries, Float> intensityFunction = ts -> {
 					CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
@@ -108,17 +99,8 @@ class MapperToolbar extends JToolBar {
 		examineSubset.withSignificance(true).withTooltip("Plot the selection as a new data set");
 		
 		examineSubset.addActionListener(e -> {
-			
-			AreaSelection areaSelection = controller.getSettings().getAreaSelection();
-			PointsSelection pointSelection = controller.getSettings().getPointsSelection();
-			
-			SubsetDataSource sds;
-			if (areaSelection.hasSelection()) {
-				sds = controller.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd());
-			} else {
-				sds = controller.getDataSourceForSubset(pointSelection.getPoints());
-			}
-			
+
+			SubsetDataSource sds = controller.getSelection().getSubsetDataSource();
 			SavedSession settings = controller.getSavedSettings();
 			
 			//update the bad scan indexes to match the new data source's indexing scheme
@@ -166,7 +148,7 @@ class MapperToolbar extends JToolBar {
 			spectrum.setSelected(controller.getSettings().getView().getShowSpectrum());
 			coords.setSelected(controller.getSettings().getView().getShowCoords());
 			
-			if (controller.getSettings().getAreaSelection().hasSelection() || controller.getSettings().getPointsSelection().hasSelection())
+			if (controller.getSelection().hasSelection())
 			{
 				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
 				examineSubset.setEnabled(true);

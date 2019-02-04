@@ -6,10 +6,11 @@ import java.util.List;
 
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
-import org.peakaboo.controller.mapper.settings.AreaSelection;
+import org.peakaboo.controller.mapper.selection.AreaSelection;
+import org.peakaboo.controller.mapper.selection.MapSelectionController;
+import org.peakaboo.controller.mapper.selection.PointsSelection;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.mapper.settings.MapViewSettings;
-import org.peakaboo.controller.mapper.settings.PointsSelection;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.settings.SavedSession;
 import org.peakaboo.datasource.model.internal.CroppedDataSource;
@@ -36,7 +37,8 @@ public class MappingController extends EventfulType<String>
 	public 	RawDataController		rawDataController;
 	private MapSettingsController	display;
 	private MapFilteringController filteringController;
-
+	private MapSelectionController	selectionController;
+	
 	private PlotController			plotcontroller;
 	
 	
@@ -50,6 +52,7 @@ public class MappingController extends EventfulType<String>
 	{
 		this.rawDataController = rawDataController;
 		this.filteringController = new MapFilteringController(this);
+		this.selectionController = new MapSelectionController(this);
 		initialize(plotcontroller, copyViewSettings);
 		
 	}
@@ -62,6 +65,7 @@ public class MappingController extends EventfulType<String>
 		rawDataController.addListener(this::updateListeners);
 		display.addListener(this::updateListeners);		
 		filteringController.addListener(this::updateListeners);
+		selectionController.addListener(this::updateListeners);
 
 		this.plotcontroller = plotcontroller;
 	}
@@ -77,6 +81,10 @@ public class MappingController extends EventfulType<String>
 		return filteringController;
 	}
 
+	public MapSelectionController getSelection() {
+		return selectionController;
+	}
+	
 	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
 		return plotcontroller.data().getDataSourceForSubset(getSettings().getView().getUserDataWidth(), getSettings().getView().getUserDataHeight(), cstart, cend);
@@ -127,20 +135,8 @@ public class MappingController extends EventfulType<String>
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
 		
 		settings.calibrationProfile = this.getSettings().getMapFittings().getCalibrationProfile();
-
-		
-		
-		//There should only ever be one selection active at a time
-		AreaSelection areaSelection = this.getSettings().getAreaSelection();
-		if (areaSelection.hasSelection()) {
-			settings.selectedPoints = areaSelection.getPoints();
-		}
-		
-		PointsSelection pointsSelection = this.getSettings().getPointsSelection();
-		if (pointsSelection.hasSelection()) {
-			settings.selectedPoints = pointsSelection.getPoints();
-		}
-		
+		settings.selectedPoints = this.getSelection().getPoints();
+			
 		
 		
 		switch (settings.mode) {

@@ -1,4 +1,4 @@
-package org.peakaboo.controller.mapper.settings;
+package org.peakaboo.controller.mapper.selection;
 
 import java.util.ArrayList;
 import java.util.HashSet;
