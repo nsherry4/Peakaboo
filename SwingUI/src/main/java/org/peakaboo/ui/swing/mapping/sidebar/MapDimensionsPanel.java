@@ -44,9 +44,9 @@ public class MapDimensionsPanel extends JPanel {
 		c.weighty = 0.0;
 		c.gridy = 0;
 		width = new JSpinner();
-		width.setValue(controller.getSettings().getView().getUserDataWidth());
+		width.setValue(controller.getUserDimensions().getUserDataWidth());
 		width.addChangeListener(e -> {
-			controller.getSettings().getView().setUserDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getUserDimensions().setUserDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
@@ -60,9 +60,9 @@ public class MapDimensionsPanel extends JPanel {
 
 		c.gridy += 1;
 		height = new JSpinner();
-		height.setValue(controller.getSettings().getView().getUserDataHeight());
+		height.setValue(controller.getUserDimensions().getUserDataHeight());
 		height.addChangeListener(e -> {
-			controller.getSettings().getView().setUserDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getUserDimensions().setUserDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
 		c.gridx = 0;
@@ -87,7 +87,7 @@ public class MapDimensionsPanel extends JPanel {
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
 			magic.addActionListener(e -> {
-				StreamExecutor<Coord<Integer>> guessTask = controller.getSettings().getView().guessDataDimensions();
+				StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
 				StreamExecutorView view = new StreamExecutorView(guessTask);
 				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
 				ModalLayer layer = new ModalLayer(tabPanel, panel);
@@ -136,8 +136,8 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		controller.addListener(e -> {
-			width.setValue(controller.getSettings().getView().getUserDataWidth());
-			height.setValue(controller.getSettings().getView().getUserDataHeight());
+			width.setValue(controller.getUserDimensions().getUserDataWidth());
+			height.setValue(controller.getUserDimensions().getUserDataHeight());
 		});
 		
 	}

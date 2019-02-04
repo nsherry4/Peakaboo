@@ -142,8 +142,8 @@ public class MapFittingSettings extends EventfulType<String> {
 		}
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.getSettings().getView().getUserDataWidth(),
-				map.getSettings().getView().getUserDataHeight(),
+				map.getUserDimensions().getUserDataWidth(),
+				map.getUserDimensions().getUserDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
@@ -162,8 +162,8 @@ public class MapFittingSettings extends EventfulType<String> {
 	{
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.getSettings().getView().getUserDataWidth(),
-				map.getSettings().getView().getUserDataHeight(),
+				map.getUserDimensions().getUserDataWidth(),
+				map.getUserDimensions().getUserDataHeight(),
 				0.0f);
 		
 		
@@ -326,8 +326,8 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		
 		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.getSettings().getView().getUserDataWidth(),
-				map.getSettings().getView().getUserDataHeight(),
+				map.getUserDimensions().getUserDataWidth(),
+				map.getUserDimensions().getUserDataHeight(),
 				0.0f);
 		
 		// fix bad points on the map
@@ -460,11 +460,11 @@ public class MapFittingSettings extends EventfulType<String> {
 		}
 		
 
-		for (int y = 0; y < map.getSettings().getView().getUserDataHeight(); y++) {
+		for (int y = 0; y < map.getUserDimensions().getUserDataHeight(); y++) {
 			
 			if (y != 0) sb.append("\n");
 			
-			for (int x = 0; x < map.getSettings().getView().getUserDataWidth(); x++) {
+			for (int x = 0; x < map.getUserDimensions().getUserDataWidth(); x++) {
 				
 				if (x != 0) sb.append(", ");
 				sb.append(valueAtCoord.apply(new Coord<Integer>(x, y)));
@@ -562,7 +562,8 @@ public class MapFittingSettings extends EventfulType<String> {
 
 	public Spectrum sumGivenTransitionSeriesMaps(List<ITransitionSeries> list)
 	{
-		Coord<Integer> size = map.getSettings().getView().viewDimensions;
+		int y = map.getFiltering().getFilteredDataHeight();
+		int x = map.getFiltering().getFilteredDataWidth();
 		
 		
 		//filter the maps
@@ -571,7 +572,7 @@ public class MapFittingSettings extends EventfulType<String> {
 		//merge the maps into a single composite map
 		if (filtereds.isEmpty()) {
 			//TODO: This may give a technically wrong result until interpolation is made into a filter
-			return new ISpectrum(size.x * size.y);
+			return new ISpectrum(x * y);
 		}
 		
 		return AreaMap.sumSpectrum(filtereds);
@@ -597,8 +598,9 @@ public class MapFittingSettings extends EventfulType<String> {
 
 		//When there are no maps, the sum will be null
 		if (sum == null) {
-			Coord<Integer> size = map.getSettings().getView().viewDimensions;
-			return new ISpectrum(size.x * size.y);
+			int y = map.getFiltering().getFilteredDataHeight();
+			int x = map.getFiltering().getFilteredDataWidth();
+			return new ISpectrum(x * y);
 		}
 		
 		return new ISpectrum(sum.getData());

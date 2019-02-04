@@ -720,7 +720,7 @@ public class PlotPanel extends TabbedLayerPanel
 				);
 			
 			
-			mapperWindow = new MapperFrame(getTabbedInterface(), mapData, null, controller);
+			mapperWindow = new MapperFrame(getTabbedInterface(), mapData, null, null, controller);
 
 			mapperWindow.setVisible(true);
 

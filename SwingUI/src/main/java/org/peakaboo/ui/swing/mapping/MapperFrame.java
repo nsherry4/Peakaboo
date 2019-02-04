@@ -7,6 +7,7 @@ import java.awt.Dimension;
 
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.mapper.settings.MapViewSettings;
 import org.peakaboo.controller.plotter.PlotController;
@@ -32,16 +33,24 @@ public class MapperFrame extends LiveFrame
 
 	private TabbedInterface<TabbedLayerPanel> parentPlotter;
 	private MapViewSettings previousMapSettings;
+	private MapDimensionsController previousUserDimensions;
 	private RawDataController mapData;
 	
 	
-	public MapperFrame(TabbedInterface<TabbedLayerPanel> plotter, RawDataController mapData, MapViewSettings previousMapSettings, PlotController plotcontroller)
+	public MapperFrame(
+			TabbedInterface<TabbedLayerPanel> plotter, 
+			RawDataController mapData, 
+			MapViewSettings previousMapSettings,
+			MapDimensionsController previousUserDimensions,
+			PlotController plotcontroller
+		)
 	{
 		super();
 			
 		this.plotController = plotcontroller;
 		this.parentPlotter = plotter;
 		this.previousMapSettings = previousMapSettings;
+		this.previousUserDimensions = previousUserDimensions;
 		this.mapData = mapData;
 		
 		init();
@@ -98,14 +107,16 @@ public class MapperFrame extends LiveFrame
 	private MapperPanel createMapperPanel()
 	{
 		MapViewSettings lastMapSettings = previousMapSettings;
+		MapDimensionsController lastDimensions = previousUserDimensions;
 		if (tabs.getActiveTab() != null) {
 			TabbedLayerPanel lastTab = tabs.getActiveTab();
 			if (lastTab instanceof MapperPanel) {
 				lastMapSettings = ((MapperPanel)lastTab).controller.getSettings().getView();
+				lastDimensions = ((MapperPanel)lastTab).controller.getUserDimensions();
 			}
 		}
 		
-		MappingController newController = new MappingController(mapData, lastMapSettings, plotController);
+		MappingController newController = new MappingController(mapData, lastMapSettings, lastDimensions, plotController);
 		final MapperPanel viewer = new MapperPanel(newController, parentPlotter, tabs);
 		return viewer;					
 	}

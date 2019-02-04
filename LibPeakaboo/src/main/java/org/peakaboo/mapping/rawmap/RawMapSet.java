@@ -124,6 +124,10 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 	}
 	
 
+	public List<RawMap> getMaps() {
+		return new ArrayList<>(maps);
+	}
+	
 	/**
 	 * Generates a list of all of the TransitionSeries included in this MapResultSet
 	 */

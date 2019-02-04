@@ -13,10 +13,12 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
+import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.Bounds;
 import cyclops.Coord;
+import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.util.ListOps;
 import eventful.EventfulCache;
@@ -44,19 +46,11 @@ public class MapFilteringController extends EventfulType<String> {
 	
 	
 	public int getFilteredDataWidth() {
-		AreaMap summed = getSummedMap();
-		if (summed == null) {
-			return controller.getSettings().getView().getUserDataWidth();
-		}
-		return summed.getSize().x;
+		return getSummedMap().getSize().x;
 	}
 		
 	public int getFilteredDataHeight() {
-		AreaMap summed = getSummedMap();
-		if (summed == null) {
-			return controller.getSettings().getView().getUserDataHeight();
-		}
-		return summed.getSize().y;
+		return getSummedMap().getSize().y;
 	}
 	
 	public boolean isValidPoint(Coord<Integer> mapCoord)
@@ -71,9 +65,9 @@ public class MapFilteringController extends EventfulType<String> {
 	 */
 	private boolean filteringChangedMapSize() {
 		return 
-				controller.getSettings().getView().getUserDataWidth() != getFilteredDataWidth()
+				controller.getUserDimensions().getUserDataWidth() != getFilteredDataWidth()
 				||
-				controller.getSettings().getView().getUserDataHeight() != getFilteredDataHeight();
+				controller.getUserDimensions().getUserDataHeight() != getFilteredDataHeight();
 	}
 	
 	/**
@@ -197,7 +191,7 @@ class CachedMaps {
 
 		maps = new ConcurrentHashMap<>();
 		
-		Coord<Integer> size = controller.getSettings().getView().viewDimensions;
+		Coord<Integer> size = controller.getUserDimensions().getDimensions();
 
 		//get calibrated map data and generate AreaMaps
 		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
@@ -213,7 +207,12 @@ class CachedMaps {
 
 		this.replottable = filters.isReplottable();
 		
-		sum = AreaMap.sum(new ArrayList<>(maps.values()));
+		if (maps.size() > 0) {
+			sum = AreaMap.sum(new ArrayList<>(maps.values()));
+		} else {
+			sum = new AreaMap(new ISpectrum(size.x * size.y), size, null);
+			sum = filters.applyUnsynchronized(sum);
+		}
 		
 	}
 	

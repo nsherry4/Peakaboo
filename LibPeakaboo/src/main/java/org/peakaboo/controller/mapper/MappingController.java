@@ -4,6 +4,7 @@ package org.peakaboo.controller.mapper;
 
 import java.util.List;
 
+import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.mapper.selection.AreaSelection;
@@ -36,8 +37,9 @@ public class MappingController extends EventfulType<String>
 	
 	public 	RawDataController		rawDataController;
 	private MapSettingsController	display;
-	private MapFilteringController filteringController;
+	private MapFilteringController 	filteringController;
 	private MapSelectionController	selectionController;
+	private MapDimensionsController dimensionsController;
 	
 	private PlotController			plotcontroller;
 	
@@ -48,29 +50,26 @@ public class MappingController extends EventfulType<String>
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(RawDataController rawDataController, MapViewSettings copyViewSettings, PlotController plotcontroller)
+	public MappingController(RawDataController rawDataController, MapViewSettings copyViewSettings, MapDimensionsController copyUserDimensions, PlotController plotcontroller)
 	{
-		this.rawDataController = rawDataController;
-		this.filteringController = new MapFilteringController(this);
-		this.selectionController = new MapSelectionController(this);
-		initialize(plotcontroller, copyViewSettings);
-		
-	}
-	
-	
-	private void initialize(PlotController plotcontroller, MapViewSettings copyViewSettings)
-	{
-		this.display = new MapSettingsController(this, copyViewSettings);
-		
-		rawDataController.addListener(this::updateListeners);
-		display.addListener(this::updateListeners);		
-		filteringController.addListener(this::updateListeners);
-		selectionController.addListener(this::updateListeners);
-
 		this.plotcontroller = plotcontroller;
+		
+		this.rawDataController = rawDataController;
+		rawDataController.addListener(this::updateListeners);
+		
+		this.filteringController = new MapFilteringController(this);
+		filteringController.addListener(this::updateListeners);
+		
+		this.selectionController = new MapSelectionController(this);
+		selectionController.addListener(this::updateListeners);
+		
+		this.display = new MapSettingsController(this, copyViewSettings);		
+		display.addListener(this::updateListeners);		
+		
+		this.dimensionsController = new MapDimensionsController(this, copyUserDimensions);	
+		dimensionsController.addListener(this::updateListeners);
+		
 	}
-	
-
 	
 
 	public MapSettingsController getSettings() {
@@ -85,9 +84,13 @@ public class MappingController extends EventfulType<String>
 		return selectionController;
 	}
 	
+	public MapDimensionsController getUserDimensions() {
+		return dimensionsController;
+	}
+	
 	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
 	{
-		return plotcontroller.data().getDataSourceForSubset(getSettings().getView().getUserDataWidth(), getSettings().getView().getUserDataHeight(), cstart, cend);
+		return plotcontroller.data().getDataSourceForSubset(getUserDimensions().getUserDataWidth(), getUserDimensions().getUserDataHeight(), cstart, cend);
 	}
 
 	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
@@ -103,8 +106,8 @@ public class MappingController extends EventfulType<String>
 	
 	public MapRenderSettings getRenderSettings() {
 		MapRenderSettings settings = new MapRenderSettings();
-		settings.userDataWidth = this.display.getView().getUserDataWidth(); 
-		settings.userDataHeight = this.display.getView().getUserDataHeight();
+		settings.userDataWidth = this.getUserDimensions().getUserDataWidth(); 
+		settings.userDataHeight = this.getUserDimensions().getUserDataHeight();
 		settings.filteredDataWidth = this.getFiltering().getFilteredDataWidth();
 		settings.filteredDataHeight = this.getFiltering().getFilteredDataHeight();
 		

@@ -13,6 +13,11 @@ import cyclops.SISize;
 import eventful.EventfulType;
 
 
+/**
+ * The RawDataController represents the data originally fed into the map
+ * component from the plot after mapping has occurred and a {@link RawMapSet}
+ * has been generated.
+ */
 public class RawDataController extends EventfulType<String>
 {
 
