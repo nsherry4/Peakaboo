@@ -45,7 +45,7 @@ class MapStatusBar extends JPanel {
 		
 		//zoom controls
 		ZoomSlider zoom = new ZoomSlider(10, 100, 1, value -> {
-			controller.getSettings().getView().setZoom(value / 10f);
+			controller.getSettings().setZoom(value / 10f);
 		});
 		zoom.setOpaque(false);
 		zoom.setBorder(Spacing.bMedium());
@@ -89,7 +89,7 @@ class MapStatusBar extends JPanel {
 		
 		if (controller.getFiltering().isValidPoint(mapCoord))
 		{
-			String value = controller.getSettings().getMapFittings().getIntensityMeasurementAtPoint(mapCoord);
+			String value = controller.getFitting().getIntensityMeasurementAtPoint(mapCoord);
 			if (!controller.getFiltering().isFiltering()) value += " (filtered)";
 			
 			setStatus("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "

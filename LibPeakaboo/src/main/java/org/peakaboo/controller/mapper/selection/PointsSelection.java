@@ -79,14 +79,14 @@ public class PointsSelection extends EventfulType<String>{
 
 	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
 				
-		MapDisplayMode displayMode = map.getSettings().getMapFittings().getMapDisplayMode();
+		MapDisplayMode displayMode = map.getFitting().getMapDisplayMode();
 		Spectrum data = null;
 		List<Integer> invalid = new ArrayList<>();
 		
 		if (displayMode == MapDisplayMode.COMPOSITE) {
-			data = map.getSettings().getMapFittings().getCompositeMapData();
+			data = map.getFitting().getCompositeMapData();
 		} else if (displayMode == MapDisplayMode.RATIO) {
-			Pair<Spectrum, Spectrum> ratiodata = map.getSettings().getMapFittings().getRatioMapData();
+			Pair<Spectrum, Spectrum> ratiodata = map.getFitting().getRatioMapData();
 			data = ratiodata.first;
 			Spectrum invalidMap = ratiodata.second;
 			for (int i = 0; i < invalidMap.size(); i++) {

@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.settings.MapViewSettings;
+import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.Mapper;
@@ -19,16 +19,16 @@ import cyclops.visualization.backend.awt.GraphicsPanel;
 class MapCanvas extends GraphicsPanel
 {
 
-	private MappingController 		controller;
-	private MapViewSettings			viewSettings;
+	private MappingController 		mapController;
+	private MapSettingsController			settingsController;
 	
 	private Mapper mapper;
 	
 	
 	MapCanvas(MappingController controller)
 	{
-		this.controller = controller;
-		this.viewSettings = controller.getSettings().getView();
+		this.mapController = controller;
+		this.settingsController = controller.getSettings();
 		
 		mapper = new Mapper();
 				
@@ -94,7 +94,7 @@ class MapCanvas extends GraphicsPanel
 			parentWidth = this.getParent().getWidth();
 		}
 
-		int newWidth = (int) (parentWidth * viewSettings.getZoom());
+		int newWidth = (int) (parentWidth * settingsController.getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
 		
@@ -106,7 +106,7 @@ class MapCanvas extends GraphicsPanel
 			parentHeight = this.getParent().getHeight();
 		}
 
-		int newHeight = (int) (parentHeight * viewSettings.getZoom());
+		int newHeight = (int) (parentHeight * settingsController.getZoom());
 		if (newHeight < parentHeight) newHeight = (int) parentHeight;
 		
 		
@@ -139,8 +139,8 @@ class MapCanvas extends GraphicsPanel
 	
 	private void drawMap(Surface context, Coord<Integer> size) {
 				
-		MapRenderSettings settings = controller.getRenderSettings();
-		MapRenderData data = controller.getMapRenderData();
+		MapRenderSettings settings = mapController.getRenderSettings();
+		MapRenderData data = mapController.getMapRenderData();
 		mapper.draw(data, settings, context, size);
 		
 	}

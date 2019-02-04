@@ -13,8 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.peakaboo.controller.mapper.settings.MapSettingsController;
-import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.modes.MapDisplayMode;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
@@ -39,7 +38,7 @@ public class MapFittingPanel extends ClearPanel
 	
 	
 	
-	public MapFittingPanel(final MapSettingsController controller)
+	public MapFittingPanel(final MapFittingController controller)
 	{
 		//create the card panel
 		cardPanel = new ClearPanel();
@@ -65,7 +64,7 @@ public class MapFittingPanel extends ClearPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				MapDisplayMode mode = (MapDisplayMode)modeSelectBox.getSelectedItem();
-				controller.getMapFittings().setMapDisplayMode(mode);
+				controller.setMapDisplayMode(mode);
 				card.show(cardPanel, mode.toString());
 			}
 		});
@@ -77,11 +76,11 @@ public class MapFittingPanel extends ClearPanel
 		ImageButton selectAll = new ImageButton(StockIcon.SELECTION_ALL)
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withTooltip("Select All")
-				.withAction(() -> controller.getMapFittings().setAllTransitionSeriesVisibility(true));
+				.withAction(() -> controller.setAllTransitionSeriesVisibility(true));
 		ImageButton selectNone = new ImageButton(StockIcon.SELECTION_NONE)
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withTooltip("Select None")
-				.withAction(() -> controller.getMapFittings().setAllTransitionSeriesVisibility(false));
+				.withAction(() -> controller.setAllTransitionSeriesVisibility(false));
 		ButtonLinker linker = new ButtonLinker(selectNone, selectAll);
 		modeSelectPanel.add(linker, BorderLayout.EAST);
 		

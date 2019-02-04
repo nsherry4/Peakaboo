@@ -35,16 +35,16 @@ public class MapAppearancePanel extends JPanel {
 
 
 		contours = new JCheckBox("Contours");
-		contours.setSelected(controller.getSettings().getView().getContours());
+		contours.setSelected(controller.getSettings().getContours());
 		contours.addActionListener(e -> {
-			controller.getSettings().getView().setContours(((JCheckBox) e.getSource()).isSelected());
+			controller.getSettings().setContours(((JCheckBox) e.getSource()).isSelected());
 		});
 
 		shadesSpinner = new JSpinner();
-		shadesSpinner.setValue(controller.getSettings().getView().getSpectrumSteps());
-		shadesSpinner.setEnabled(controller.getSettings().getView().getContours());
+		shadesSpinner.setValue(controller.getSettings().getSpectrumSteps());
+		shadesSpinner.setEnabled(controller.getSettings().getContours());
 		shadesSpinner.addChangeListener(e -> {
-			controller.getSettings().getView().setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
+			controller.getSettings().setSpectrumSteps((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 		
 		c.gridx = 0;
@@ -59,9 +59,9 @@ public class MapAppearancePanel extends JPanel {
 
 		
 		controller.addListener(e -> {
-			shadesSpinner.setValue(controller.getSettings().getView().getSpectrumSteps());
-			shadesSpinner.setEnabled(controller.getSettings().getView().getContours());
-			contours.setSelected(controller.getSettings().getView().getContours());
+			shadesSpinner.setValue(controller.getSettings().getSpectrumSteps());
+			shadesSpinner.setEnabled(controller.getSettings().getContours());
+			contours.setSelected(controller.getSettings().getContours());
 		});
 		
 	}

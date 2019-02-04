@@ -15,8 +15,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import org.peakaboo.controller.mapper.settings.MapFittingSettings;
-import org.peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
@@ -27,14 +26,12 @@ import swidget.widgets.Spacing;
 
 public class Ratio extends JPanel {
 
-	private MapFittingSettings mapFittings;
-	private MapSettingsController controller;
+	private MapFittingController viewController;
 
 	
-	public Ratio(MapSettingsController _controller) {
+	public Ratio(MapFittingController viewController) {
 
-		this.controller = _controller;
-		this.mapFittings = _controller.getMapFittings();
+		this.viewController = viewController;
 
 		setLayout(new GridBagLayout());
 
@@ -54,7 +51,7 @@ public class Ratio extends JPanel {
 
 	
 	private JPanel createScaleOptions() {
-		ScaleModeWidget scaleMode = new ScaleModeWidget(controller, "Colour", "All", true);
+		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Colour", "All", true);
 		return scaleMode;
 	}
 	
@@ -81,14 +78,14 @@ public class Ratio extends JPanel {
 				if (columnIndex == 0) {
 					
 					Boolean bvalue = (Boolean) value;
-					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					mapFittings.setTransitionSeriesVisibility(ts, bvalue);
+					viewController.setTransitionSeriesVisibility(ts, bvalue);
 				} 
 				else if (columnIndex == 2)
 				{
-					ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
-					mapFittings.setRatioSide(ts, (Integer)value);
+					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
+					viewController.setRatioSide(ts, (Integer)value);
 				}
 			}
 
@@ -98,11 +95,11 @@ public class Ratio extends JPanel {
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 				
 				switch (columnIndex) {
 
-					case 0: return mapFittings.getTransitionSeriesEnabled(ts);
+					case 0: return viewController.getTransitionSeriesEnabled(ts);
 					case 1: return false;
 					case 2: return true;
 				}
@@ -113,13 +110,13 @@ public class Ratio extends JPanel {
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
 
-				ITransitionSeries ts = mapFittings.getAllTransitionSeries().get(rowIndex);
+				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
 
-					case 0: return mapFittings.getTransitionSeriesVisibility(ts);
+					case 0: return viewController.getTransitionSeriesVisibility(ts);
 					case 1: return ts;
-					case 2: return mapFittings.getRatioSide(ts);
+					case 2: return viewController.getRatioSide(ts);
 				}
 
 				return null;
@@ -127,7 +124,7 @@ public class Ratio extends JPanel {
 			}
 
 			public int getRowCount() {
-				return mapFittings.getAllTransitionSeries().size();
+				return viewController.getAllTransitionSeries().size();
 			}
 
 			public String getColumnName(int columnIndex) {
@@ -168,7 +165,7 @@ public class Ratio extends JPanel {
 		table.setShowHorizontalLines(false);
 		table.setFillsViewportHeight(true);
 		
-		MapFittingRenderer fitRenderer = new MapFittingRenderer(mapFittings::getTransitionSeriesEnabled);
+		MapFittingRenderer fitRenderer = new MapFittingRenderer(viewController::getTransitionSeriesEnabled);
 		table.getColumnModel().getColumn(1).setCellRenderer(fitRenderer);
 		table.setRowHeight(fitRenderer.getPreferredSize().height);
 		

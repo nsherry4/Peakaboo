@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
-import org.peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.MapScaleMode;
 
 import swidget.widgets.Spacing;
@@ -20,7 +20,7 @@ public class ScaleModeWidget extends JPanel {
 
 	private ToggleImageButton relativeButton, absoluteButton;
 	
-	public ScaleModeWidget(MapSettingsController controller, String relative, String absolute, boolean warnRelative) {
+	public ScaleModeWidget(MapFittingController viewController, String relative, String absolute, boolean warnRelative) {
 		
 		TitledBorder titleBorder = new TitledBorder("Scale By");
 		titleBorder.setBorder(Spacing.bSmall());
@@ -30,9 +30,9 @@ public class ScaleModeWidget extends JPanel {
 		
 		
 		
-		controller.addListener(s -> {
-			relativeButton.setSelected(controller.getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE);
-			absoluteButton.setSelected(controller.getMapFittings().getMapScaleMode() == MapScaleMode.ABSOLUTE);
+		viewController.addListener(s -> {
+			relativeButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.RELATIVE);
+			absoluteButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.ABSOLUTE);
 		});
 		
 		relativeButton = new ToggleImageButton(relative);
@@ -43,11 +43,11 @@ public class ScaleModeWidget extends JPanel {
 		scaleGroup.add(absoluteButton);
 		
 		
-		relativeButton.addActionListener(e -> controller.getMapFittings().setMapScaleMode(MapScaleMode.RELATIVE));
-		absoluteButton.addActionListener(e -> controller.getMapFittings().setMapScaleMode(MapScaleMode.ABSOLUTE));
+		relativeButton.addActionListener(e -> viewController.setMapScaleMode(MapScaleMode.RELATIVE));
+		absoluteButton.addActionListener(e -> viewController.setMapScaleMode(MapScaleMode.ABSOLUTE));
 		
-		relativeButton.setSelected(controller.getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE);
-		absoluteButton.setSelected(controller.getMapFittings().getMapScaleMode() == MapScaleMode.ABSOLUTE);
+		relativeButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.RELATIVE);
+		absoluteButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.ABSOLUTE);
 		
 		styleButton(relativeButton);
 		styleButton(absoluteButton);

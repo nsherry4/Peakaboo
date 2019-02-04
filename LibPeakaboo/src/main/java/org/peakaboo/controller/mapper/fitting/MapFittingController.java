@@ -1,4 +1,4 @@
-package org.peakaboo.controller.mapper.settings;
+package org.peakaboo.controller.mapper.fitting;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -38,7 +38,7 @@ import eventful.EventfulType;
 
 
 
-public class MapFittingSettings extends EventfulType<String> {
+public class MapFittingController extends EventfulType<String> {
 	
 	private MappingController map;
 	
@@ -46,14 +46,13 @@ public class MapFittingSettings extends EventfulType<String> {
 	
 	private Map<ITransitionSeries, Integer> ratioSide;
 	private Map<ITransitionSeries, OverlayColour> overlayColour;
-	private Map<ITransitionSeries, Boolean> visibility;
+	private Map<ITransitionSeries, Boolean> compositeVisibility;
 	
 	private MapScaleMode mapScaleMode;
-	
 	private MapDisplayMode displayMode;
 	
 	
-	public MapFittingSettings(MappingController map){
+	public MapFittingController(MappingController map){
 		this.map = map;
 		
 		displayMode = MapDisplayMode.COMPOSITE;
@@ -61,12 +60,12 @@ public class MapFittingSettings extends EventfulType<String> {
 		
 		ratioSide = new HashMap<>();
 		overlayColour = new HashMap<>();
-		visibility = new HashMap<>();
+		compositeVisibility = new HashMap<>();
 		
 		for (ITransitionSeries ts : map.rawDataController.getMapResultSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
 			overlayColour.put(ts, OverlayColour.RED);
-			visibility.put(ts, true);
+			compositeVisibility.put(ts, true);
 		}
 		
 	}
@@ -533,7 +532,7 @@ public class MapFittingSettings extends EventfulType<String> {
 	public synchronized List<ITransitionSeries> getAllTransitionSeries()
 	{
 		
-		List<ITransitionSeries> tsList = this.visibility.keySet().stream().filter(a -> true).collect(toList());
+		List<ITransitionSeries> tsList = this.compositeVisibility.keySet().stream().filter(a -> true).collect(toList());
 		Collections.sort(tsList);
 		return tsList;
 	}
@@ -652,11 +651,11 @@ public class MapFittingSettings extends EventfulType<String> {
 	 */
 	public synchronized boolean getTransitionSeriesVisibility(ITransitionSeries ts)
 	{
-		return this.visibility.get(ts) && getTransitionSeriesEnabled(ts);
+		return this.compositeVisibility.get(ts) && getTransitionSeriesEnabled(ts);
 	}
 	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean visible)
 	{
-		this.visibility.put(ts, visible);
+		this.compositeVisibility.put(ts, visible);
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 

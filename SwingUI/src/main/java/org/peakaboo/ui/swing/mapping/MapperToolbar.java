@@ -22,7 +22,7 @@ import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.selection.AreaSelection;
 import org.peakaboo.controller.mapper.selection.PointsSelection;
-import org.peakaboo.controller.mapper.settings.MapViewSettings;
+import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.settings.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
@@ -76,7 +76,7 @@ class MapperToolbar extends JToolBar {
 
 				List<ITransitionSeries> tss = controller.rawDataController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
 				Function<ITransitionSeries, Float> intensityFunction = ts -> {
-					CalibrationProfile profile = controller.getSettings().getMapFittings().getCalibrationProfile();
+					CalibrationProfile profile = controller.getFitting().getCalibrationProfile();
 					ReadOnlySpectrum data = controller.rawDataController.getMapResultSet().getMap(ts).getData(profile);
 					float sum = 0;
 					for (int index : indexes) {
@@ -84,7 +84,7 @@ class MapperToolbar extends JToolBar {
 					}
 					return sum /= indexes.size();
 				};
-				Concentrations ppm = Concentrations.calculate(tss, controller.getSettings().getMapFittings().getCalibrationProfile(), intensityFunction);
+				Concentrations ppm = Concentrations.calculate(tss, controller.getFitting().getCalibrationProfile(), intensityFunction);
 				
 				ConcentrationView concentrations = new ConcentrationView(ppm, panel);
 				panel.pushLayer(concentrations);
@@ -143,13 +143,13 @@ class MapperToolbar extends JToolBar {
 		
 		
 		controller.addListener(s -> {
-			monochrome.setSelected(controller.getSettings().getView().getMonochrome());
-			spectrum.setSelected(controller.getSettings().getView().getShowSpectrum());
-			coords.setSelected(controller.getSettings().getView().getShowCoords());
+			monochrome.setSelected(controller.getSettings().getMonochrome());
+			spectrum.setSelected(controller.getSettings().getShowSpectrum());
+			coords.setSelected(controller.getSettings().getShowCoords());
 			
 			if (controller.getSelection().hasSelection())
 			{
-				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getSettings().getMapFittings().getCalibrationProfile().isEmpty());
+				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getFitting().getCalibrationProfile().isEmpty());
 				examineSubset.setEnabled(true);
 			} else {
 				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
@@ -178,7 +178,7 @@ class MapperToolbar extends JToolBar {
 		monochrome = new JCheckBoxMenuItem("Monochrome");
 		
 
-		MapViewSettings viewSettings = controller.getSettings().getView();
+		MapSettingsController viewSettings = controller.getSettings();
 		title.setSelected(viewSettings.getShowTitle());
 		spectrum.setSelected(viewSettings.getShowSpectrum());
 		coords.setSelected(viewSettings.getShowCoords());

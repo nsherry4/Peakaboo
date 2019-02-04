@@ -6,12 +6,10 @@ import java.util.List;
 
 import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
+import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
-import org.peakaboo.controller.mapper.selection.AreaSelection;
 import org.peakaboo.controller.mapper.selection.MapSelectionController;
-import org.peakaboo.controller.mapper.selection.PointsSelection;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
-import org.peakaboo.controller.mapper.settings.MapViewSettings;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.settings.SavedSession;
 import org.peakaboo.datasource.model.internal.CroppedDataSource;
@@ -36,10 +34,11 @@ public class MappingController extends EventfulType<String>
 	
 	
 	public 	RawDataController		rawDataController;
-	private MapSettingsController	display;
+	private MapSettingsController	settingsController;
 	private MapFilteringController 	filteringController;
 	private MapSelectionController	selectionController;
 	private MapDimensionsController dimensionsController;
+	private MapFittingController 	fittingController;
 	
 	private PlotController			plotcontroller;
 	
@@ -50,30 +49,34 @@ public class MappingController extends EventfulType<String>
 	 * @param copy
 	 * @param plotcontroller
 	 */
-	public MappingController(RawDataController rawDataController, MapViewSettings copyViewSettings, MapDimensionsController copyUserDimensions, PlotController plotcontroller)
+	public MappingController(RawDataController rawDataController, MapSettingsController copyViewSettings, MapDimensionsController copyUserDimensions, PlotController plotcontroller)
 	{
 		this.plotcontroller = plotcontroller;
 		
 		this.rawDataController = rawDataController;
-		rawDataController.addListener(this::updateListeners);
+		this.rawDataController.addListener(this::updateListeners);
 		
 		this.filteringController = new MapFilteringController(this);
-		filteringController.addListener(this::updateListeners);
+		this.filteringController.addListener(this::updateListeners);
 		
 		this.selectionController = new MapSelectionController(this);
-		selectionController.addListener(this::updateListeners);
+		this.selectionController.addListener(this::updateListeners);
 		
-		this.display = new MapSettingsController(this, copyViewSettings);		
-		display.addListener(this::updateListeners);		
+		this.settingsController = new MapSettingsController(this, copyViewSettings);		
+		this.settingsController.addListener(this::updateListeners);		
+		
+		this.fittingController = new MapFittingController(this);
+		this.fittingController.addListener(this::updateListeners);
+		
 		
 		this.dimensionsController = new MapDimensionsController(this, copyUserDimensions);	
-		dimensionsController.addListener(this::updateListeners);
+		this.dimensionsController.addListener(this::updateListeners);
 		
 	}
 	
 
 	public MapSettingsController getSettings() {
-		return display;
+		return settingsController;
 	}
 	
 	public MapFilteringController getFiltering() {
@@ -86,6 +89,10 @@ public class MappingController extends EventfulType<String>
 	
 	public MapDimensionsController getUserDimensions() {
 		return dimensionsController;
+	}
+
+	public MapFittingController getFitting() {
+		return fittingController;
 	}
 	
 	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
@@ -111,31 +118,31 @@ public class MappingController extends EventfulType<String>
 		settings.filteredDataWidth = this.getFiltering().getFilteredDataWidth();
 		settings.filteredDataHeight = this.getFiltering().getFilteredDataHeight();
 		
-		settings.showDatasetTitle = this.display.getView().getShowDatasetTitle();
+		settings.showDatasetTitle = this.settingsController.getShowDatasetTitle();
 		settings.datasetTitle = this.rawDataController.getDatasetTitle();
-		settings.showScaleBar = this.display.getView().getShowScaleBar();
-		settings.showMapTitle = this.display.getView().getShowTitle();
-		settings.mapTitle = this.getSettings().getMapFittings().mapLongTitle();
+		settings.showScaleBar = this.settingsController.getShowScaleBar();
+		settings.showMapTitle = this.settingsController.getShowTitle();
+		settings.mapTitle = this.getFitting().mapLongTitle();
 		
-		settings.scalemode = this.getSettings().getMapFittings().getMapScaleMode();
-		settings.monochrome = this.display.getView().getMonochrome();
-		settings.contours = this.display.getView().getContours();
-		settings.contourSteps = this.display.getView().getSpectrumSteps();
+		settings.scalemode = this.getFitting().getMapScaleMode();
+		settings.monochrome = this.settingsController.getMonochrome();
+		settings.contours = this.settingsController.getContours();
+		settings.contourSteps = this.settingsController.getSpectrumSteps();
 		
-		settings.mode = this.getSettings().getMapFittings().getMapDisplayMode();
+		settings.mode = this.getFitting().getMapDisplayMode();
 				
-		settings.drawCoord = this.display.getView().getDrawCoords();
-		settings.coordLoXLoY = this.getSettings().getView().getLoXLoYCoord();
-		settings.coordHiXLoY = this.getSettings().getView().getHiXLoYCoord();
-		settings.coordLoXHiY = this.getSettings().getView().getLoXHiYCoord();
-		settings.coordHiXHiY = this.getSettings().getView().getHiXHiYCoord();
+		settings.drawCoord = this.settingsController.getDrawCoords();
+		settings.coordLoXLoY = this.getSettings().getLoXLoYCoord();
+		settings.coordHiXLoY = this.getSettings().getHiXLoYCoord();
+		settings.coordLoXHiY = this.getSettings().getLoXHiYCoord();
+		settings.coordHiXHiY = this.getSettings().getHiXHiYCoord();
 		settings.physicalUnits = this.rawDataController.getRealDimensionUnits();
 		settings.physicalCoord = this.rawDataController.getRealDimensions() != null;
 		
-		settings.showSpectrum = this.display.getView().getShowSpectrum();
+		settings.showSpectrum = this.settingsController.getShowSpectrum();
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
 		
-		settings.calibrationProfile = this.getSettings().getMapFittings().getCalibrationProfile();
+		settings.calibrationProfile = this.getFitting().getCalibrationProfile();
 		settings.selectedPoints = this.getSelection().getPoints();
 			
 		
@@ -146,10 +153,10 @@ public class MappingController extends EventfulType<String>
 			break;
 		case OVERLAY:
 			settings.spectrumTitle = "Colour" +
-					(this.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : "");
+					(this.getFitting().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : "");
 			break;
 		case RATIO:
-			settings.spectrumTitle = "Intensity (ratio)" + (this.getSettings().getMapFittings().getMapScaleMode() == MapScaleMode.RELATIVE ? " - sides scaled independently" : "");
+			settings.spectrumTitle = "Intensity (ratio)" + (this.getFitting().getMapScaleMode() == MapScaleMode.RELATIVE ? " - sides scaled independently" : "");
 			break;
 		}
 		
@@ -166,18 +173,18 @@ public class MappingController extends EventfulType<String>
 		
 		MapRenderData data = new MapRenderData();
 		
-		switch (getSettings().getMapFittings().getMapDisplayMode()) {
+		switch (getFitting().getMapDisplayMode()) {
 		case COMPOSITE:
-			data.compositeData = this.getSettings().getMapFittings().getCompositeMapData();
+			data.compositeData = this.getFitting().getCompositeMapData();
 			break;
 		case OVERLAY:
-			data.overlayData = this.getSettings().getMapFittings().getOverlayMapData();
+			data.overlayData = this.getFitting().getOverlayMapData();
 			break;
 		case RATIO:
-			data.ratioData = this.getSettings().getMapFittings().getRatioMapData();
+			data.ratioData = this.getFitting().getRatioMapData();
 			break;
 		}
-		data.maxIntensity = this.getSettings().getMapFittings().sumAllTransitionSeriesMaps().max();
+		data.maxIntensity = this.getFitting().sumAllTransitionSeriesMaps().max();
 		
 		return data;
 		

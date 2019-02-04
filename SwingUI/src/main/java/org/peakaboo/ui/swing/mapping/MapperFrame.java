@@ -9,7 +9,7 @@ import org.peakaboo.common.Version;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
-import org.peakaboo.controller.mapper.settings.MapViewSettings;
+import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
 
 import swidget.icons.IconFactory;
@@ -32,7 +32,7 @@ public class MapperFrame extends LiveFrame
 	private PlotController plotController;
 
 	private TabbedInterface<TabbedLayerPanel> parentPlotter;
-	private MapViewSettings previousMapSettings;
+	private MapSettingsController previousMapSettings;
 	private MapDimensionsController previousUserDimensions;
 	private RawDataController mapData;
 	
@@ -40,7 +40,7 @@ public class MapperFrame extends LiveFrame
 	public MapperFrame(
 			TabbedInterface<TabbedLayerPanel> plotter, 
 			RawDataController mapData, 
-			MapViewSettings previousMapSettings,
+			MapSettingsController previousMapSettings,
 			MapDimensionsController previousUserDimensions,
 			PlotController plotcontroller
 		)
@@ -106,12 +106,12 @@ public class MapperFrame extends LiveFrame
 
 	private MapperPanel createMapperPanel()
 	{
-		MapViewSettings lastMapSettings = previousMapSettings;
+		MapSettingsController lastMapSettings = previousMapSettings;
 		MapDimensionsController lastDimensions = previousUserDimensions;
 		if (tabs.getActiveTab() != null) {
 			TabbedLayerPanel lastTab = tabs.getActiveTab();
 			if (lastTab instanceof MapperPanel) {
-				lastMapSettings = ((MapperPanel)lastTab).controller.getSettings().getView();
+				lastMapSettings = ((MapperPanel)lastTab).controller.getSettings();
 				lastDimensions = ((MapperPanel)lastTab).controller.getUserDimensions();
 			}
 		}

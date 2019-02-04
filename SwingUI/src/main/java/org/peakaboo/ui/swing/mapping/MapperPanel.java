@@ -111,7 +111,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	}
 	
 	public String getTabTitle() {
-		return controller.getSettings().getMapFittings().mapLongTitle();
+		return controller.getFitting().mapLongTitle();
 	}
 
 
@@ -168,7 +168,7 @@ public class MapperPanel extends TabbedLayerPanel {
 			public void mouseClicked(MouseEvent e){
 				
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2) {
-					MapDisplayMode displayMode = controller.getSettings().getMapFittings().getMapDisplayMode();
+					MapDisplayMode displayMode = controller.getFitting().getMapDisplayMode();
 					//Double-click selects points with similar intensity
 					if ((displayMode == MapDisplayMode.COMPOSITE || displayMode == MapDisplayMode.RATIO) && controller.getFiltering().isReplottable()) {
 						
@@ -238,10 +238,10 @@ public class MapperPanel extends TabbedLayerPanel {
 	
 	void actionSavePicture()
 	{
-		if (controller.getSettings().getView().savePictureFolder == null) controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
-		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().getView().savePictureFolder, file -> {
+		if (controller.getSettings().savePictureFolder == null) controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
+		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().savePictureFolder, file -> {
 			if (file.isPresent()) {
-				controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
+				controller.getSettings().savePictureFolder = file.get().getParentFile();
 			}
 		});
 		sp.show();
@@ -249,14 +249,14 @@ public class MapperPanel extends TabbedLayerPanel {
 	
 	void actionSaveCSV()
 	{
-		if (controller.getSettings().getView().savePictureFolder == null) {
-			controller.getSettings().getView().savePictureFolder = controller.getSettings().getView().dataSourceFolder;
+		if (controller.getSettings().savePictureFolder == null) {
+			controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
 		}
 		
 		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
-		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().getView().savePictureFolder, txt, file -> {
+		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().savePictureFolder, txt, file -> {
 			if (!file.isPresent()) { return; }
-			controller.getSettings().getView().savePictureFolder = file.get().getParentFile();
+			controller.getSettings().savePictureFolder = file.get().getParentFile();
 			actionSaveCSV(file.get());
 		});
 
@@ -273,7 +273,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	}
 	
 	void actionSaveCSV(OutputStream os) throws IOException {
-		os.write(controller.getSettings().getMapFittings().mapAsCSV().getBytes());
+		os.write(controller.getFitting().mapAsCSV().getBytes());
 	}
 	
 	void actionSaveArchive() {
@@ -281,7 +281,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		
 		export.set(new ExportPanel(this, canvas, () -> {
 			
-			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().getView().savePictureFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().savePictureFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
 					return;
 				}
@@ -305,7 +305,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
 		ZipEntry e;
 		
-		List<ITransitionSeries> tss = controller.getSettings().getMapFittings().getVisibleTransitionSeries();
+		List<ITransitionSeries> tss = controller.getFitting().getVisibleTransitionSeries();
 		
 		
 		/*
@@ -323,11 +323,11 @@ public class MapperPanel extends TabbedLayerPanel {
 		
 			Mapper mapper = new Mapper();
 			MapRenderData data = new MapRenderData();
-			data.compositeData = controller.getSettings().getMapFittings().getCompositeMapData(Optional.of(ts));
-			data.maxIntensity = controller.getSettings().getMapFittings().sumAllTransitionSeriesMaps().max();
+			data.compositeData = controller.getFitting().getCompositeMapData(Optional.of(ts));
+			data.maxIntensity = controller.getFitting().sumAllTransitionSeriesMaps().max();
 			
-			controller.getSettings().getMapFittings().setAllTransitionSeriesVisibility(false);
-			controller.getSettings().getMapFittings().setTransitionSeriesVisibility(ts, true);
+			controller.getFitting().setAllTransitionSeriesVisibility(false);
+			controller.getFitting().setTransitionSeriesVisibility(ts, true);
 			settings = controller.getRenderSettings();
 			
 			//image
