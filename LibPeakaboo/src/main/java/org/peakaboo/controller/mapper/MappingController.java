@@ -22,6 +22,8 @@ import cyclops.Coord;
 import eventful.EventfulType;
 
 
+
+
 public class MappingController extends EventfulType<String>
 {
 	
@@ -32,13 +34,23 @@ public class MappingController extends EventfulType<String>
 		DATA_SIZE, DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION, FILTER;
 	}
 	
-	
+
+	/*
+	 * Generally, the flow from start to finish with these controllers is:
+	 *  * RawDataController starts with the data from mapping
+	 *  * MapDimensionsController lets the user specify the dimensions of the map
+	 *  * MapFilteringController applies filters (which may change the size)
+	 *  * MapFittingController determines how the maps are merged together (eg overlay)
+	 *  * MapSettingsController determines how those merged maps are displayed
+	 *  * MapSelectionController handles selection masks over the merged data
+	 */
 	public 	RawDataController		rawDataController;
-	private MapSettingsController	settingsController;
-	private MapFilteringController 	filteringController;
-	private MapSelectionController	selectionController;
 	private MapDimensionsController dimensionsController;
+	private MapFilteringController 	filteringController;
 	private MapFittingController 	fittingController;
+	private MapSettingsController	settingsController;
+	private MapSelectionController	selectionController;
+	
 	
 	private PlotController			plotcontroller;
 	
