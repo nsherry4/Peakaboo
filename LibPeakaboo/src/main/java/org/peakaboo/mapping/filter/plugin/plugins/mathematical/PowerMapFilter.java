@@ -16,7 +16,7 @@ public class PowerMapFilter extends AbstractMapFilter {
 	
 	@Override
 	public String getFilterName() {
-		return "Power";
+		return "Exponent";
 	}
 
 	@Override

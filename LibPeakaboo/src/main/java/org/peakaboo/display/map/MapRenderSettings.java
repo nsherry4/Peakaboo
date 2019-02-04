@@ -20,7 +20,6 @@ public class MapRenderSettings {
 	public boolean showMapTitle = false;
 	public String mapTitle = "";
 	
-	public boolean logTransform = false;
 	public MapScaleMode scalemode = MapScaleMode.ABSOLUTE;
 	public boolean monochrome = false;
 	public boolean contours = false;

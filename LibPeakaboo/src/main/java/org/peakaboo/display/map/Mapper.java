@@ -189,7 +189,7 @@ public class Mapper {
 		dr.uninterpolatedHeight = settings.filteredDataHeight;
 		dr.dataWidth = settings.filteredDataWidth;
 		dr.dataHeight = settings.filteredDataHeight;
-		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
+		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
 		
 		if (settings.scalemode == MapScaleMode.RELATIVE)
@@ -448,7 +448,7 @@ public class Mapper {
 		dr.uninterpolatedHeight = settings.filteredDataHeight;
 		dr.dataWidth = settings.filteredDataWidth;
 		dr.dataHeight = settings.filteredDataHeight;
-		dr.viewTransform = settings.logTransform ? ViewTransform.LOG : ViewTransform.LINEAR;
+		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
 		
 		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;

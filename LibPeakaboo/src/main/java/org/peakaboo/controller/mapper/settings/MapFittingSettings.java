@@ -51,7 +51,6 @@ public class MapFittingSettings extends EventfulType<String> {
 	private MapScaleMode mapScaleMode;
 	
 	private MapDisplayMode displayMode;
-	private boolean logView;
 	
 	
 	public MapFittingSettings(MappingController map){
@@ -86,14 +85,6 @@ public class MapFittingSettings extends EventfulType<String> {
 		updateListeners(UpdateType.UI_OPTIONS.toString());
 	}
 
-	public boolean isLogView() {
-		return this.logView;
-	}
-	public void setLogView(boolean logView) {
-		this.logView = logView;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
-	}
-	
 
 	public MapDisplayMode getMapDisplayMode()
 	{
