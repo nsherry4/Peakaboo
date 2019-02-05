@@ -26,6 +26,7 @@ import org.peakaboo.datasource.model.components.scandata.ScanData;
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
+import plural.executor.AbstractExecutor;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 
@@ -64,7 +65,7 @@ public class StandardDataSet implements DataSet
 		this(ds, null, null);
 	}
 	
-	public StandardDataSet(DataSource ds, DummyExecutor progress, Supplier<Boolean> isAborted)
+	public StandardDataSet(DataSource ds, AbstractExecutor progress, Supplier<Boolean> isAborted)
 	{
 		super();
 		
@@ -202,7 +203,7 @@ public class StandardDataSet implements DataSet
 
 	
 	
-	private void readDataSource(DataSource ds, DummyExecutor applying, Supplier<Boolean> isAborted)
+	private void readDataSource(DataSource ds, AbstractExecutor applying, Supplier<Boolean> isAborted)
 	{
 		
 		if (ds == null || ds.getScanData().scanCount() == 0) return;

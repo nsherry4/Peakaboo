@@ -93,6 +93,7 @@ import cyclops.visualization.backend.awt.SavePicture;
 import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import plural.Plural;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
@@ -535,7 +536,9 @@ public class PlotPanel extends TabbedLayerPanel
 		
 	}
 
-
+	public void setNeedsRedraw() {
+		canvas.setNeedsRedraw();
+	}
 
 
 
@@ -608,26 +611,21 @@ public class PlotPanel extends TabbedLayerPanel
 
 	
 	
-	public void loadExistingDataSource(DataSource ds, String settings) {
+	public void actionLoadExistingDataSource(DataSource ds, String settings) {
 		
-		DummyExecutor progress = new DummyExecutor(ds.getScanData().scanCount());
-		progress.advanceState();
-		ExecutorSet<Boolean> exec = new ExecutorSet<Boolean>("Loading Data Set") {
-
-			@Override
-			protected Boolean execute() {
-				getController().data().setDataSource(ds, progress, this::isAborted);
-				getController().loadSettings(settings, false);
-				popLayer();
-				return true;
-			}}; 
-			
+		Mutable<ModalLayer> layer = new Mutable<>();
 		
-		exec.addExecutor(progress, "Calculating Values");
-			
-		ExecutorSetView view = new ExecutorSetView(exec);
-		pushLayer(new ModalLayer(this, view));
-		exec.startWorking();
+		ExecutorSet<Boolean> loader = Plural.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
+			getController().data().setDataSource(ds, exec, execset::isAborted);
+			getController().loadSettings(settings, false);
+			removeLayer(layer.get());
+			return true;
+		});
+		
+		ExecutorSetView view = new ExecutorSetView(loader);
+		layer.set(new ModalLayer(this, view));
+		pushLayer(layer.get());
+		loader.startWorking();
 		
 	}
 
@@ -788,14 +786,14 @@ public class PlotPanel extends TabbedLayerPanel
 				int width = export.get().getImageWidth();
 				int height = export.get().getImageHeight();
 				
-				exportArchiveToZip(file.get(), format, width, height);
+				actionExportArchiveToZip(file.get(), format, width, height);
 				
 				
 			});
 		}));
 	}
 	
-	private void exportArchiveToZip(File file, SurfaceType format, int width, int height) {
+	private void actionExportArchiveToZip(File file, SurfaceType format, int width, int height) {
 		try {
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
 			
@@ -1141,27 +1139,31 @@ public class PlotPanel extends TabbedLayerPanel
 		if (!controller.fitting().getFittingSelections().getFittedTransitionSeries().contains(selected)) {
 			return;
 		}
+		
+		Mutable<LayerDialog> dialogbox = new Mutable<>();
+		
 		JTextField textfield = new JTextField(20);
 		textfield.addActionListener(ae -> {
 			controller.fitting().setAnnotation(selected, textfield.getText());
-			this.popLayer();
+			dialogbox.get().hide();
 		});
 		textfield.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-					PlotPanel.this.popLayer();
+					dialogbox.get().hide();
 				}
 			}
 		});
 		textfield.setText(controller.fitting().getAnnotation(selected));
 		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, MessageType.QUESTION);
+		dialogbox.set(dialog);
 		dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
-			this.popLayer();
+			dialog.hide();
 		}));
 		dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
 			controller.fitting().setAnnotation(selected, textfield.getText());
-			this.popLayer();
+			dialog.hide();
 		}));
 		dialog.showIn(this);
 		textfield.grabFocus();
@@ -1191,11 +1193,5 @@ public class PlotPanel extends TabbedLayerPanel
 		this.pushLayer(new ProfileManager(this, controller));
 	}
 	
-	
-
-
-	public void setNeedsRedraw() {
-		canvas.setNeedsRedraw();
-	}
 
 }

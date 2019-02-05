@@ -112,7 +112,7 @@ class MapperToolbar extends JToolBar {
 				);
 		
 			PlotPanel subplot = new PlotPanel(panel.parentPlotter);
-			subplot.loadExistingDataSource(sds, settings.serialize());
+			subplot.actionLoadExistingDataSource(sds, settings.serialize());
 			panel.parentPlotter.addActiveTab(subplot);
 			//Focus and un-minimize
 			JFrame plotWindow = panel.parentPlotter.getWindow();

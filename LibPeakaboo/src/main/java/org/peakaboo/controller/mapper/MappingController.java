@@ -2,7 +2,13 @@ package org.peakaboo.controller.mapper;
 
 
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
@@ -12,13 +18,17 @@ import org.peakaboo.controller.mapper.selection.MapSelectionController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSession;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.MapScaleMode;
+import org.peakaboo.display.map.Mapper;
 
 import cyclops.Coord;
+import cyclops.visualization.SaveableSurface;
+import cyclops.visualization.SurfaceType;
 import eventful.EventfulType;
 
 
@@ -199,6 +209,79 @@ public class MappingController extends EventfulType<String>
 		
 		return data;
 		
+	}
+
+
+	public void writeArchive(OutputStream fos, SurfaceType format, int width, int height, Supplier<SaveableSurface> surfaceFactory) throws IOException {
+
+		ZipOutputStream zos = new ZipOutputStream(fos);
+		ZipEntry e;
+		
+		List<ITransitionSeries> tss = getFitting().getVisibleTransitionSeries();
+		
+		
+		/*
+		 * Little different here than in most places. Saving an image usually just
+		 * re-uses the GUI component and has it render to a different backend. This
+		 * time, we do it manually so that we can avoid spamming the UI with
+		 * events/redraws. We also only draw composite maps here, since drawing
+		 * per-element overlays/ratios doesn't make a lot of sense.
+		 */
+		Coord<Integer> size = new Coord<>(width, height);
+		SaveableSurface context;		
+		MapRenderSettings settings = getRenderSettings();
+				
+		for (ITransitionSeries ts : tss) {
+		
+			Mapper mapper = new Mapper();
+			MapRenderData data = new MapRenderData();
+			data.compositeData = getFitting().getCompositeMapData(Optional.of(ts));
+			data.maxIntensity = getFitting().sumAllTransitionSeriesMaps().max();
+			
+			getFitting().setAllTransitionSeriesVisibility(false);
+			getFitting().setTransitionSeriesVisibility(ts, true);
+			settings = getRenderSettings();
+			
+			//image
+			String ext = "";
+			switch (format) {
+			case PDF: 
+				ext = "pdf";
+				break;
+			case RASTER:
+				ext = "png";
+				break;
+			case VECTOR:
+				ext = "svg";
+				break;			
+			}
+			e = new ZipEntry(ts.toString() + "." + ext);
+			zos.putNextEntry(e);
+			context = surfaceFactory.get();
+			mapper.draw(data, settings, context, size);
+			context.write(zos);
+			zos.closeEntry();
+			
+			//csv
+			e = new ZipEntry(ts.toString() + ".csv");
+			zos.putNextEntry(e);
+			writeCSV(zos);
+			zos.closeEntry();
+			
+		}
+		
+		e = new ZipEntry("session.peakaboo");
+		zos.putNextEntry(e);
+		zos.write(getSavedSettings().serialize().getBytes());
+		zos.closeEntry();
+		
+		
+		zos.close();
+		
+	}
+	
+	public void writeCSV(OutputStream os) throws IOException {
+		os.write(getFitting().mapAsCSV().getBytes());
 	}
 	
 

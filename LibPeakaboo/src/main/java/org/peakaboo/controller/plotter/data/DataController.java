@@ -29,6 +29,7 @@ import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulListener;
+import plural.executor.AbstractExecutor;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
@@ -175,7 +176,7 @@ public class DataController extends Eventful
 	}
 	
 	
-	public void setDataSource(DataSource ds, DummyExecutor progress, Supplier<Boolean> isAborted)
+	public void setDataSource(DataSource ds, AbstractExecutor progress, Supplier<Boolean> isAborted)
 	{
 		StandardDataSet dataset = new StandardDataSet(ds, progress, isAborted);
 		if (!isAborted.get()) {

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -35,7 +36,6 @@ import javax.swing.border.MatteBorder;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
-import org.peakaboo.controller.mapper.selection.AreaSelection;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
@@ -234,153 +234,6 @@ public class MapperPanel extends TabbedLayerPanel {
 
 	}
 	
-	
-	
-	void actionSavePicture()
-	{
-		if (controller.getSettings().savePictureFolder == null) controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
-		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().savePictureFolder, file -> {
-			if (file.isPresent()) {
-				controller.getSettings().savePictureFolder = file.get().getParentFile();
-			}
-		});
-		sp.show();
-	}
-	
-	void actionSaveCSV()
-	{
-		if (controller.getSettings().savePictureFolder == null) {
-			controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
-		}
-		
-		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
-		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().savePictureFolder, txt, file -> {
-			if (!file.isPresent()) { return; }
-			controller.getSettings().savePictureFolder = file.get().getParentFile();
-			actionSaveCSV(file.get());
-		});
-
-	}
-	
-	void actionSaveCSV(File file) {
-		try	{
-			FileOutputStream os = new FileOutputStream(file);
-			actionSaveCSV(os);
-			os.close();
-		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
-		}
-	}
-	
-	void actionSaveCSV(OutputStream os) throws IOException {
-		os.write(controller.getFitting().mapAsCSV().getBytes());
-	}
-	
-	void actionSaveArchive() {
-		Mutable<ExportPanel> export = new Mutable<>(null);
-		
-		export.set(new ExportPanel(this, canvas, () -> {
-			
-			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().savePictureFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
-				if (!file.isPresent()) {
-					return;
-				}
-				
-				SurfaceType format = export.get().getPlotFormat();
-				int width = export.get().getImageWidth();
-				int height = export.get().getImageHeight();
-				
-				try {
-					actionSaveArchive(file.get(), format, width, height);
-				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, "Error saving maps as archive", e);
-				}
-				
-				
-			});
-		}));
-	}
-
-	void actionSaveArchive(File file, SurfaceType format, int width, int height) throws IOException {
-		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
-		ZipEntry e;
-		
-		List<ITransitionSeries> tss = controller.getFitting().getVisibleTransitionSeries();
-		
-		
-		/*
-		 * Little different here than in most places. Saving an image usually just
-		 * re-uses the GUI component and has it render to a different backend. This
-		 * time, we do it manually so that we can avoid spamming the UI with
-		 * events/redraws. We also only draw composite maps here, since drawing
-		 * per-element overlays/ratios doesn't make a lot of sense.
-		 */
-		Coord<Integer> size = new Coord<>(width, height);
-		SaveableSurface context;		
-		MapRenderSettings settings = controller.getRenderSettings();
-				
-		for (ITransitionSeries ts : tss) {
-		
-			Mapper mapper = new Mapper();
-			MapRenderData data = new MapRenderData();
-			data.compositeData = controller.getFitting().getCompositeMapData(Optional.of(ts));
-			data.maxIntensity = controller.getFitting().sumAllTransitionSeriesMaps().max();
-			
-			controller.getFitting().setAllTransitionSeriesVisibility(false);
-			controller.getFitting().setTransitionSeriesVisibility(ts, true);
-			settings = controller.getRenderSettings();
-			
-			//image
-			String ext = "";
-			switch (format) {
-			case PDF: 
-				ext = "pdf";
-				break;
-			case RASTER:
-				ext = "png";
-				break;
-			case VECTOR:
-				ext = "svg";
-				break;			
-			}
-			e = new ZipEntry(ts.toString() + "." + ext);
-			zos.putNextEntry(e);
-			switch (format) {
-			case PDF:
-				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.PDF, width, height);
-				mapper.draw(data, settings, context, size);
-				context.write(zos);
-				break;
-			case RASTER:
-				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.RASTER, width, height);
-				mapper.draw(data, settings, context, size);
-				context.write(zos);
-				break;
-			case VECTOR:
-				context = AwtSurfaceFactory.createSaveableSurface(SurfaceType.VECTOR, width, height);
-				mapper.draw(data, settings, context, size);
-				context.write(zos);
-				break;					
-			}
-			zos.closeEntry();
-			
-			//csv
-			e = new ZipEntry(ts.toString() + ".csv");
-			zos.putNextEntry(e);
-			actionSaveCSV(zos);
-			zos.closeEntry();
-			
-		}
-		
-		e = new ZipEntry("session.peakaboo");
-		zos.putNextEntry(e);
-		zos.write(controller.getSavedSettings().serialize().getBytes());
-		zos.closeEntry();
-		
-		
-		zos.close();
-	}
-
 
 	private JPanel createCanvasPanel()
 	{
@@ -460,8 +313,93 @@ public class MapperPanel extends TabbedLayerPanel {
 		canvas.setNeedsRedraw();
 	}
 
+	
+	
+	
+	
+	
+	/////////////////////////////////////////////
+	// UI ACTIONS
+	/////////////////////////////////////////////
+	
+	
+	
+	void actionSavePicture()
+	{
+		if (controller.getSettings().savePictureFolder == null) controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
+		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().savePictureFolder, file -> {
+			if (file.isPresent()) {
+				controller.getSettings().savePictureFolder = file.get().getParentFile();
+			}
+		});
+		sp.show();
+	}
+	
+	void actionSaveCSV()
+	{
+		if (controller.getSettings().savePictureFolder == null) {
+			controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
+		}
+		
+		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
+		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().savePictureFolder, txt, file -> {
+			if (!file.isPresent()) { return; }
+			controller.getSettings().savePictureFolder = file.get().getParentFile();
+			actionSaveCSV(file.get());
+		});
 
+	}
+	
+	void actionSaveCSV(File file) {
+		try	{
+			FileOutputStream os = new FileOutputStream(file);
+			controller.writeCSV(os);
+			os.close();
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
+		}
+	}
 	
 
+	
+	void actionSaveArchive() {
+		Mutable<ExportPanel> export = new Mutable<>(null);
+		
+		export.set(new ExportPanel(this, canvas, () -> {
+			
+			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().savePictureFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+				if (!file.isPresent()) {
+					return;
+				}
+				
+				SurfaceType format = export.get().getPlotFormat();
+				int width = export.get().getImageWidth();
+				int height = export.get().getImageHeight();
+				
+				try {
+					actionSaveArchive(file.get(), format, width, height);
+				} catch (IOException e) {
+					PeakabooLog.get().log(Level.SEVERE, "Error saving maps as archive", e);
+				}
+				
+				
+			});
+		}));
+	}
+
+	void actionSaveArchive(File file, SurfaceType format, int width, int height) throws IOException {
+		FileOutputStream fos = new FileOutputStream(file);
+		
+		Supplier<SaveableSurface> surfaceFactory = () -> {
+			switch (format) {
+			case PDF: return AwtSurfaceFactory.createSaveableSurface(SurfaceType.PDF, width, height);
+			case RASTER: return AwtSurfaceFactory.createSaveableSurface(SurfaceType.RASTER, width, height);
+			case VECTOR:return AwtSurfaceFactory.createSaveableSurface(SurfaceType.VECTOR, width, height);
+			}
+			return null;
+		};
+		
+		controller.writeArchive(fos, format, width, height, surfaceFactory);
+	}
 
 }
