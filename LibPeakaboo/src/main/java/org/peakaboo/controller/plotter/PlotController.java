@@ -2,12 +2,16 @@ package org.peakaboo.controller.plotter;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.controller.plotter.data.DataController;
@@ -16,6 +20,7 @@ import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.controller.plotter.undo.UndoController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.filter.model.Filter;
@@ -23,6 +28,7 @@ import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.ReadOnlySpectrum;
+import cyclops.SigDigits;
 import eventful.EventfulType;
 import plural.Plural;
 import plural.executor.ExecutorSet;
@@ -259,6 +265,44 @@ public class PlotController extends EventfulType<String>
 			return null;
 		});
 		
+	}
+	
+	
+
+	public void writeFittingInformation(OutputStream os) {
+		
+		List<ITransitionSeries> tss = fitting().getFittedTransitionSeries();
+		
+		try {
+			// get an output stream to write the data to
+			OutputStreamWriter osw = new OutputStreamWriter(os);
+			CalibrationProfile profile = calibration().getCalibrationProfile();
+			
+			if (!calibration().hasCalibrationProfile()) {
+				osw.write("Fitting, Intensity\n");
+			} else {
+				osw.write("Fitting, Intensity (Raw), Intensity (Calibrated with " + profile.getName() + ")\n");
+			}
+			
+			// write out the data
+			float intensity;
+			for (ITransitionSeries ts : tss) {
+
+				if (ts.isVisible()) {
+					intensity = fitting().getTransitionSeriesIntensity(ts);
+					if (profile.contains(ts)) {
+						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + ", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) + "\n");
+					} else {
+						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+					}
+				}
+			}
+			osw.flush();
+		}
+		catch (IOException e)
+		{
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
+		}
 	}
 	
 	

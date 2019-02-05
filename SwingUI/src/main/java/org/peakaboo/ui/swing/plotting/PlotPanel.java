@@ -832,7 +832,7 @@ public class PlotPanel extends TabbedLayerPanel
 			//save fittings as text
 			e = new ZipEntry("fittings.txt");
 			zos.putNextEntry(e);
-			actionSaveFittingInformationToOutputStream(zos);
+			controller.writeFittingInformation(zos);
 			zos.closeEntry();
 			
 			if (controller.calibration().hasCalibrationProfile()) {
@@ -915,7 +915,7 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			try {
 				FileOutputStream os = new FileOutputStream(file.get());
-				actionSaveFittingInformationToOutputStream(os);
+				controller.writeFittingInformation(os);
 				os.close();
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
@@ -924,47 +924,7 @@ public class PlotPanel extends TabbedLayerPanel
 		});
 
 	}
-	
-	
-	public void actionSaveFittingInformationToOutputStream(OutputStream os) {
 		
-		List<ITransitionSeries> tss = controller.fitting().getFittedTransitionSeries();
-		
-		try {
-			// get an output stream to write the data to
-			OutputStreamWriter osw = new OutputStreamWriter(os);
-			CalibrationProfile profile = controller.calibration().getCalibrationProfile();
-			
-			if (!controller.calibration().hasCalibrationProfile()) {
-				osw.write("Fitting, Intensity\n");
-			} else {
-				osw.write("Fitting, Intensity (Raw), Intensity (Calibrated with " + profile.getName() + ")\n");
-			}
-			
-			// write out the data
-			float intensity;
-			for (ITransitionSeries ts : tss) {
-
-				if (ts.isVisible()) {
-					intensity = controller.fitting().getTransitionSeriesIntensity(ts);
-					if (profile.contains(ts)) {
-						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + ", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) + "\n");
-					} else {
-						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
-					}
-				}
-			}
-			osw.flush();
-		}
-		catch (IOException e)
-		{
-			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
-		}
-	}
-	
-
-
-	
 	public void actionLoadSession() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
@@ -988,10 +948,7 @@ public class PlotPanel extends TabbedLayerPanel
 		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().getAnalysis().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().getAnalysis().maximumIntensity());
-		
-		
-		
-		
+
 		//Extended attributes
 		if (controller.data().getDataSet().getMetadata().isPresent()) {
 			Metadata metadata = controller.data().getDataSet().getMetadata().get();
@@ -1012,11 +969,6 @@ public class PlotPanel extends TabbedLayerPanel
 			
 		}
 		
-		
-
-		
-		
-		
 		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties));
 		propPanel.setBorder(Spacing.bHuge());
 
@@ -1025,7 +977,6 @@ public class PlotPanel extends TabbedLayerPanel
 		layer.getHeader().setCentre("Dataset Information");
 		this.pushLayer(layer);
 		
-
 	}
 	
 	public void actionGuessMaxEnergy() {
