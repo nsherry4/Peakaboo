@@ -195,7 +195,7 @@ public class LayerDialog {
 		}
 	}
 	
-	private void hide() {
+	public void hide() {
 		hider.run();
 	}
 		
