@@ -70,7 +70,7 @@ public class SavePicture extends JPanel
 	private DimensionPicker			dimensionPicker;
 	
 	
-	
+	private ModalLayer				layer = null;
 	
 	
 	public static class FormatPicker extends JPanel {
@@ -223,7 +223,8 @@ public class SavePicture extends JPanel
 	public void show() {
 		if (owner instanceof LayerPanel) {
 			makeGUI(true);
-			((LayerPanel) owner).pushLayer(new ModalLayer((LayerPanel) owner, this));
+			layer = new ModalLayer((LayerPanel) owner, this);
+			((LayerPanel) owner).pushLayer(layer);
 			this.requestFocus();
 		} else {
 			makeGUI(false);
@@ -233,7 +234,7 @@ public class SavePicture extends JPanel
 	
 	public void hide() {
 		if (owner instanceof LayerPanel) {
-			((LayerPanel) owner).popLayer();
+			((LayerPanel) owner).removeLayer(layer);
 		} else {
 			if (dialog != null) {
 				dialog.setVisible(false);
