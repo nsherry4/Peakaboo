@@ -450,15 +450,12 @@ public class MapFittingController extends EventfulType<String> {
 		}
 		
 
-		for (int y = 0; y < map.getUserDimensions().getUserDataHeight(); y++) {
-			
+		for (int y = 0; y < map.getFiltering().getFilteredDataHeight(); y++) {
 			if (y != 0) sb.append("\n");
 			
-			for (int x = 0; x < map.getUserDimensions().getUserDataWidth(); x++) {
-				
+			for (int x = 0; x < map.getFiltering().getFilteredDataWidth(); x++) {
 				if (x != 0) sb.append(", ");
 				sb.append(valueAtCoord.apply(new Coord<Integer>(x, y)));
-				
 			}
 		}
 			

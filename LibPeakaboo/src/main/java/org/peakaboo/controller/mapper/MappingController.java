@@ -139,20 +139,20 @@ public class MappingController extends EventfulType<String>
 		settings.filteredDataWidth = this.getFiltering().getFilteredDataWidth();
 		settings.filteredDataHeight = this.getFiltering().getFilteredDataHeight();
 		
-		settings.showDatasetTitle = this.settingsController.getShowDatasetTitle();
+		settings.showDatasetTitle = this.getSettings().getShowDatasetTitle();
 		settings.datasetTitle = this.rawDataController.getDatasetTitle();
-		settings.showScaleBar = this.settingsController.getShowScaleBar();
-		settings.showMapTitle = this.settingsController.getShowTitle();
+		settings.showScaleBar = this.getSettings().getShowScaleBar();
+		settings.showMapTitle = this.getSettings().getShowTitle();
 		settings.mapTitle = this.getFitting().mapLongTitle();
 		
 		settings.scalemode = this.getFitting().getMapScaleMode();
-		settings.monochrome = this.settingsController.getMonochrome();
-		settings.contours = this.settingsController.getContours();
-		settings.contourSteps = this.settingsController.getSpectrumSteps();
+		settings.monochrome = this.getSettings().getMonochrome();
+		settings.contours = this.getSettings().getContours();
+		settings.contourSteps = this.getSettings().getSpectrumSteps();
 		
 		settings.mode = this.getFitting().getMapDisplayMode();
 				
-		settings.drawCoord = this.settingsController.getShowCoords();
+		settings.drawCoord = this.getSettings().getShowCoords();
 		settings.coordLoXLoY = this.getSettings().getLoXLoYCoord();
 		settings.coordHiXLoY = this.getSettings().getHiXLoYCoord();
 		settings.coordLoXHiY = this.getSettings().getLoXHiYCoord();
@@ -160,7 +160,7 @@ public class MappingController extends EventfulType<String>
 		settings.physicalUnits = this.rawDataController.getRealDimensionUnits();
 		settings.physicalCoord = this.rawDataController.getRealDimensions() != null;
 		
-		settings.showSpectrum = this.settingsController.getShowSpectrum();
+		settings.showSpectrum = this.getSettings().getShowSpectrum();
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
 		
 		settings.calibrationProfile = this.getFitting().getCalibrationProfile();
@@ -242,7 +242,7 @@ public class MappingController extends EventfulType<String>
 			getFitting().setTransitionSeriesVisibility(ts, true);
 			settings = getRenderSettings();
 			
-			//image
+			//image extension
 			String ext = "";
 			switch (format) {
 			case PDF: 
