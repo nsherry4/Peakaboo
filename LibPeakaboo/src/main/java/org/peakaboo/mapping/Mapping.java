@@ -1,21 +1,31 @@
 package org.peakaboo.mapping;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.peak.table.Element;
+import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
+import cyclops.ISpectrum;
 import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
+import plural.Plural;
+import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
 
 /**
@@ -79,5 +89,45 @@ public class Mapping
 	}
 	
 
+	public static ExecutorSet<RawMapSet> quickMapTask(DataController data, int channel) {
+	
+		DataSet ds = data.getDataSet();
+		
+		
+		return Plural.build("Quick Map", "Generating Map", (execset, exec) -> {
+			exec.setWorkUnits(ds.getScanData().scanCount());
+						
+			Spectrum map = new ISpectrum(ds.getScanData().scanCount());
+			int index = 0;
+			int count = 0;
+			for (ReadOnlySpectrum s : ds.getScanData()) {
+				map.set(index++, s.get(channel));
+				
+				//abort check
+				if (execset.isAbortRequested()) {
+					execset.aborted();
+					break;
+				}
+				
+				//show progress
+				count++;
+				if (count >= 100) {
+					exec.workUnitCompleted(count);
+					count = 0;
+				}
+			}
+			
+			RawMap rawmap = new RawMap(PeakTable.SYSTEM.get(Element.Fe, TransitionShell.K), map);
+			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), ds.getScanData().scanCount(), true);
+			return rawmaps;
+			
+		});
+		
+
+		
+		
+		
+	}
+	
 	
 }

@@ -10,7 +10,6 @@ import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 import cyclops.Coord;
 import plural.streams.StreamExecutor;
@@ -22,6 +21,7 @@ import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonLayout;
+import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;
 
 public class MapDimensionsPanel extends JPanel {
@@ -29,7 +29,11 @@ public class MapDimensionsPanel extends JPanel {
 	private JSpinner width;
 	private JSpinner height;
 	
-	public MapDimensionsPanel(MapperPanel tabPanel, MappingController controller) {
+	public MapDimensionsPanel(LayerPanel tabPanel, MappingController controller) {
+		this(tabPanel, controller, false);
+	}
+	
+	public MapDimensionsPanel(LayerPanel tabPanel, MappingController controller, boolean compact) {
 				
 		setName("Dimensions");
 		
@@ -76,7 +80,7 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		if (!controller.rawDataController.hasOriginalDataDimensions()) {
-			ImageButton magic = new ImageButton("Guess Dimensions")
+			ImageButton magic = new ImageButton(compact ? "Guess" : "Guess Dimensions")
 					.withIcon("auto", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Try to detect the map's dimensions.")
 					.withLayout(ImageButtonLayout.IMAGE_ON_SIDE)

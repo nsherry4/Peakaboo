@@ -34,14 +34,12 @@ import cyclops.ReadOnlySpectrum;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;
+import swidget.widgets.layerpanel.LayerPanel;
 
 class MapperToolbar extends JToolBar {
 
 	private ToolbarImageButton	showConcentrations, examineSubset;
-	
-	private JCheckBoxMenuItem	monochrome;
-	private JMenuItem			title, spectrum, coords, dstitle, scalebar;
-	
+
 	MapperToolbar(MapperPanel panel, MappingController controller) {
 
 
@@ -143,9 +141,6 @@ class MapperToolbar extends JToolBar {
 		
 		
 		controller.addListener(s -> {
-			monochrome.setSelected(controller.getSettings().getMonochrome());
-			spectrum.setSelected(controller.getSettings().getShowSpectrum());
-			coords.setSelected(controller.getSettings().getShowCoords());
 			
 			if (controller.getSelection().hasSelection())
 			{
@@ -163,44 +158,11 @@ class MapperToolbar extends JToolBar {
 	}
 	
 
-	private ToolbarImageButton createOptionsButton(MapperPanel panel, MappingController controller) {
+	public static ToolbarImageButton createOptionsButton(LayerPanel panel, MappingController controller) {
 		
 		ToolbarImageButton opts = new ToolbarImageButton();
 		opts.withIcon("menu-view").withTooltip("Map Settings Menu");
-		
-		JPopupMenu menu = new JPopupMenu();
-		
-		title = new JCheckBoxMenuItem("Show Elements List");
-		dstitle = new JCheckBoxMenuItem("Show Dataset Title");
-		spectrum = new JCheckBoxMenuItem("Show Spectrum");
-		coords = new JCheckBoxMenuItem("Show Coordinates");
-		scalebar = new JCheckBoxMenuItem("Show Scale Bar");
-		monochrome = new JCheckBoxMenuItem("Monochrome");
-		
-
-		MapSettingsController viewSettings = controller.getSettings();
-		title.setSelected(viewSettings.getShowTitle());
-		spectrum.setSelected(viewSettings.getShowSpectrum());
-		coords.setSelected(viewSettings.getShowCoords());
-		dstitle.setSelected(viewSettings.getShowDatasetTitle());
-		scalebar.setSelected(viewSettings.getShowScaleBar());
-
-		spectrum.addActionListener(e -> viewSettings.setShowSpectrum(spectrum.isSelected()));
-		coords.addActionListener(e -> viewSettings.setShowCoords(coords.isSelected()));
-		title.addActionListener(e -> viewSettings.setShowTitle(title.isSelected()));
-		dstitle.addActionListener(e -> viewSettings.setShowDatasetTitle(dstitle.isSelected()));
-		scalebar.addActionListener(e -> viewSettings.setShowScaleBar(scalebar.isSelected()));
-		monochrome.addActionListener(e -> viewSettings.setMonochrome(monochrome.isSelected()));
-		
-		
-		menu.add(title);
-		menu.add(dstitle);
-		menu.add(spectrum);
-		menu.add(coords);
-		menu.add(scalebar);
-		menu.addSeparator();
-		menu.add(monochrome);
-
+		JPopupMenu menu = new MapMenuView(controller);
 		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
 		
 		return opts;

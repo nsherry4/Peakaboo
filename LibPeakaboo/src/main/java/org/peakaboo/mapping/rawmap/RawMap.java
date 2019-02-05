@@ -34,7 +34,7 @@ public class RawMap implements Cloneable
 		transitionSeries = ts;
 	}
 	
-	protected RawMap(ITransitionSeries ts, Spectrum data)
+	public RawMap(ITransitionSeries ts, Spectrum data)
 	{
 		this.transitionSeries = ts;
 		this.data = data;

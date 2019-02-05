@@ -3,17 +3,33 @@ package org.peakaboo.ui.swing.plotting.toolbar;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JToolBar;
 
+import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.mapping.Mapping;
+import org.peakaboo.mapping.rawmap.RawMap;
+import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
+import cyclops.GridPerspective;
+import cyclops.ISpectrum;
+import cyclops.ReadOnlySpectrum;
+import cyclops.Spectrum;
+import cyclops.visualization.palette.PaletteColour;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;
+import swidget.widgets.layerpanel.ModalLayer;
 
 public class PlotToolbar extends JToolBar {
 
@@ -88,8 +104,8 @@ public class PlotToolbar extends JToolBar {
 			toolbarConcentrations = new ToolbarImageButton("Concentration")
 					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
-					.withSignificance(false);
-			toolbarConcentrations.addActionListener(e -> plot.actionShowConcentrations());
+					.withSignificance(false)
+					.withAction(plot::actionShowConcentrations);
 			
 			c.gridx += 1;
 			toolbarConcentrations.setEnabled(false);
@@ -99,13 +115,22 @@ public class PlotToolbar extends JToolBar {
 		toolbarMap = new ToolbarImageButton("Map Fittings")
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
-				.withSignificance(true);
-		toolbarMap.addActionListener(e -> plot.actionMap());
+				.withSignificance(true).withAction(plot::actionMap);
 		
 		c.gridx += 1;
 		toolbarMap.setEnabled(false);
 		this.add(toolbarMap, c);
 
+
+		ToolbarImageButton quickMap = new ToolbarImageButton("QuickMap")
+				.withAction(() -> {
+					RawMapSet rawmapset = Mapping.quickMapTask(controller.data(), 48).startWorkingBlocking();
+					QuickMapPanel layer = new QuickMapPanel(plot, 48, rawmapset, controller);
+					plot.pushLayer(layer);
+				});
+		
+		c.gridx += 1;
+		this.add(quickMap, c);
 		
 
 

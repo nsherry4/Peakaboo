@@ -80,21 +80,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		this.parentPlotter = parentPlotter;
 
 		this.controller.addListener(s -> {
-			boolean needsRedraw = true;
-			if (s.equals(UpdateType.AREA_SELECTION.toString())) {
-				needsRedraw = false;
-			}
-			if (s.equals(UpdateType.POINT_SELECTION.toString())) {
-				needsRedraw = false;
-			}
-			if (needsRedraw) {
-				setNeedsRedraw();
-			}
-
 			owner.setTabTitle(this, getTabTitle());
-			
-			canvas.updateCanvasSize();
-			repaint();
 		});
 		
 		this.addComponentListener(new ComponentAdapter() {
@@ -237,7 +223,7 @@ public class MapperPanel extends TabbedLayerPanel {
 
 	private JPanel createCanvasPanel()
 	{
-		canvas = new MapCanvas(controller);
+		canvas = new MapCanvas(controller, true);
 		JScrollPane canvasScroller = new JScrollPane(canvas);
 		canvasScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		canvasScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -305,12 +291,6 @@ public class MapperPanel extends TabbedLayerPanel {
 			}
 		});
 
-	}
-
-
-	private void setNeedsRedraw()
-	{
-		canvas.setNeedsRedraw();
 	}
 
 	

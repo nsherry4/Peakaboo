@@ -6,6 +6,7 @@ import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
@@ -25,12 +26,31 @@ class MapCanvas extends GraphicsPanel
 	private Mapper mapper;
 	
 	
-	MapCanvas(MappingController controller)
+	MapCanvas(MappingController controller, boolean resizable)
 	{
 		this.mapController = controller;
 		this.settingsController = controller.getSettings();
 		
 		mapper = new Mapper();
+		
+		controller.addListener(s -> {
+			boolean needsRedraw = true;
+			if (s.equals(UpdateType.AREA_SELECTION.toString())) {
+				needsRedraw = false;
+			}
+			if (s.equals(UpdateType.POINT_SELECTION.toString())) {
+				needsRedraw = false;
+			}
+			if (needsRedraw) {
+				setNeedsRedraw();
+			}
+
+			if (resizable) {
+				updateCanvasSize();
+			}
+			repaint();
+		});
+		
 				
 	}
 	
