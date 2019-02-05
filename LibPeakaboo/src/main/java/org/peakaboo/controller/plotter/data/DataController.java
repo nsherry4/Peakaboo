@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -29,6 +30,7 @@ import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulListener;
+import net.sciencestudio.autodialog.model.Group;
 import plural.executor.AbstractExecutor;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
@@ -47,7 +49,7 @@ public class DataController extends Eventful
 	private Discards			discards;
 	private List<Path>			dataPaths;
 	private String				dataSourcePluginUUID;
-	
+	private List<Object>		dataSourceParameters;
 	
 	public DataController(PlotController plotController)
 	{
@@ -56,6 +58,7 @@ public class DataController extends Eventful
 		discards = new DiscardsList(plot);
 		dataPaths = new ArrayList<>();
 		dataSourcePluginUUID = null;
+		dataSourceParameters = new ArrayList<>();
 	}
 
 	
@@ -247,7 +250,13 @@ public class DataController extends Eventful
 		this.dataPaths = dataPaths;
 	}
 
-	
-	
+
+	public List<Object> getDataSourceParameters() {
+		return dataSourceParameters;
+	}
+
+	public void setDataSourceParameters(List<Object> dataSourceParameters) {
+		this.dataSourceParameters = dataSourceParameters;
+	}
 	
 }

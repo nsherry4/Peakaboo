@@ -11,11 +11,13 @@ public class SavedDataSession {
 	public List<Integer> discards = new ArrayList<>();
 	public List<String> files = new ArrayList<>();
 	public String dataSourcePluginUUID = null;
+	public List<Object> dataSourceParameters = null;
 	
 	public SavedDataSession storeFrom(DataController controller) {
 		this.discards = controller.getDiscards().list();
 		this.files = controller.getDataPaths().stream().map(p -> p.toString()).collect(Collectors.toList());
 		this.dataSourcePluginUUID = controller.getDataSourcePluginUUID();
+		this.dataSourceParameters = controller.getDataSourceParameters();
 		return this;
 	}
 	
@@ -26,6 +28,15 @@ public class SavedDataSession {
 		}
 		controller.setDataSourcePluginUUID(this.dataSourcePluginUUID);
 		controller.setDataPaths(this.filesAsDataPaths());
+
+		/*
+		 * We don't load the datasource paramters here, since they're used while opening
+		 * the actual data source, and may be altered by the user. We don't want to go
+		 * clobbering the user's updated parameters. We store the value, and it is read
+		 * by the DataLoader directly when opeing associated data. If no data is opened,
+		 * this value is of no use to us.
+		 */
+		//controller.setDataSourceParameters(dataSourceParameters);
 	}
 	
 	public List<Path> filesAsDataPaths() {

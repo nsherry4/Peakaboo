@@ -33,7 +33,8 @@ public abstract class DataLoader {
 	private PlotController controller;
 	private List<Path> paths;
 	private String dataSourceUUID = null;
-
+	private List<Object> sessionParameters = null;
+	
 	//if we're loading a session, we need to do some extra work after loading the dataset
 	private Runnable sessionCallback = () -> {}; 
 	
@@ -66,6 +67,7 @@ public abstract class DataLoader {
 					
 				} else {
 					sessionCallback.run();
+					controller.data().setDataSourceParameters(sessionParameters);
 					onSuccess(paths);
 				}						
 							
@@ -123,9 +125,26 @@ public abstract class DataLoader {
 	
 	private void prompt(DataSourcePlugin dsp) {
 		Optional<Group> parameters = dsp.getParameters(paths);
+		
 		if (parameters.isPresent()) {
-			onParameters(parameters.get(), (accepted) -> {
+			Group dsGroup = parameters.get();
+			
+			/*
+			 * if we've alredy loaded a set of parameters from a session we're opening then
+			 * we transfer those values into the values for the data source's Parameters
+			 */
+			if (sessionParameters != null) {
+				try {
+					dsGroup.deserialize(sessionParameters);
+				} catch (RuntimeException e) {
+					PeakabooLog.get().log(Level.WARNING, "Failed to load saved Data Source parameters", e);
+				}
+			}
+			
+			onParameters(dsGroup, (accepted) -> {
 				if (accepted) {
+					//user accepted, save a copy of the new parameters
+					sessionParameters = dsGroup.serialize();
 					loadWithDataSource(dsp);
 				}
 			});
@@ -172,6 +191,7 @@ public abstract class DataLoader {
 						//things like calibration info
 						this.paths = sessionPaths;
 						this.dataSourceUUID = session.data.dataSourcePluginUUID;
+						this.sessionParameters = session.data.dataSourceParameters;
 						sessionCallback = () -> {
 							controller.loadSessionSettings(session, true);	
 							warnVersion.run();
