@@ -867,7 +867,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		
 		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
-		final FilterSet filters = controller.filtering().getActiveFilters();
+		
 
 		SimpleFileExtension text = new SimpleFileExtension("Text File", "txt");
 		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", saveFilesFolder, text, saveFile -> {
@@ -877,54 +877,22 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			saveFilesFolder = saveFile.get().getParentFile();
 			
-			StreamExecutor<Throwable> streamexec = new StreamExecutor<>("Exporting Data");
-			streamexec.setParallel(false);
-			streamexec.setTask(controller.data().getDataSet().getScanData(), stream -> {
-				
-				try {
-										
-					Mutable<Boolean> errored = new Mutable<>(false);
-					OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(saveFile.get()));
-					stream.forEach(spectrum -> {
-						spectrum = filters.applyFiltersUnsynchronized(spectrum);
-						try {
-							osw.write(spectrum.toString() + "\n");
-						} catch (Exception e) { 
-							if (!errored.get()) {
-								PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
-								streamexec.abort();
-								errored.set(true);
-							}
-						}
-					});
-
-					osw.close();
-										
-					return null;
-				} catch (Exception e) { 
-					PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
-				}
-				
-				return null;
-			});
+			ExecutorSet<Object> execset = controller.writeFitleredDataToText(saveFile.get());
 			
-			StreamExecutorView view = new StreamExecutorView(streamexec);
-			StreamExecutorPanel panel = new StreamExecutorPanel("Exporting Data", view);
-			ModalLayer layer = new ModalLayer(this, panel);
+			ExecutorSetView view = new ExecutorSetView(execset);
+			ModalLayer layer = new ModalLayer(this, view);
 			
-			streamexec.addListener(event -> {
-				//if not just a progress event, hide the modal panel
-				if (event != Event.PROGRESS) {
-					removeLayer(layer);
-				}
-				//remove the output file if the task was aborted
-				if (event == Event.ABORTED) {
+			execset.addListener(() -> {
+				if (execset.isAborted()) {
 					saveFile.get().delete();
+				}
+				if (execset.getCompleted() || execset.isAborted()) {
+					removeLayer(layer);
 				}
 			});
 			
 			pushLayer(layer);
-			streamexec.start();
+			execset.startWorking();
 			
 			
 		});

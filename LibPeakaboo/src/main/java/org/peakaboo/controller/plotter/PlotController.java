@@ -1,9 +1,14 @@
 package org.peakaboo.controller.plotter;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.controller.plotter.filtering.FilteringController;
@@ -11,12 +16,16 @@ import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.controller.plotter.undo.UndoController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
+import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
 import cyclops.ReadOnlySpectrum;
 import eventful.EventfulType;
+import plural.Plural;
+import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
 
 
@@ -214,6 +223,44 @@ public class PlotController extends EventfulType<String>
 				fittingController.getFittingSolver()
 			);
 	}
+	
+	
+	public ExecutorSet<Object> writeFitleredDataToText(File saveFile) {
+		
+		return Plural.build("Exporting Data", "Writing", (execset, exec) -> {
+			FilterSet filters = filtering().getActiveFilters();
+			ScanData data = data().getDataSet().getScanData();
+			
+			exec.setWorkUnits(data.scanCount());
+
+			try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
+				int count = 0;
+				for (ReadOnlySpectrum spectrum : data) {
+					spectrum = filters.applyFiltersUnsynchronized(spectrum);
+					writer.write(spectrum.toString() + "\n");
+
+					//abort test
+					if (execset.isAbortRequested()) {
+						break;
+					}
+					
+					//progress counter
+					count++;
+					if (count >= 100) {
+						exec.workUnitCompleted(count);
+						count = 0;
+					}
+				}
+			} catch (Exception e) { 
+				PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
+				execset.aborted();
+			}
+			
+			return null;
+		});
+		
+	}
+	
 	
 	
 	public DataController data()
