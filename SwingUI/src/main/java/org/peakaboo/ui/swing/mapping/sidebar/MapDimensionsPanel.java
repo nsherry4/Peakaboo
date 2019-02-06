@@ -28,6 +28,7 @@ public class MapDimensionsPanel extends JPanel {
 
 	private JSpinner width;
 	private JSpinner height;
+	private ImageButton magic;
 	
 	public MapDimensionsPanel(LayerPanel tabPanel, MappingController controller) {
 		this(tabPanel, controller, false);
@@ -80,7 +81,7 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		if (!controller.rawDataController.hasOriginalDataDimensions()) {
-			ImageButton magic = new ImageButton(compact ? "Guess" : "Guess Dimensions")
+			magic = new ImageButton(compact ? "Guess" : "Guess Dimensions")
 					.withIcon("auto", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Try to detect the map's dimensions.")
 					.withLayout(ImageButtonLayout.IMAGE_ON_SIDE)
@@ -145,5 +146,11 @@ public class MapDimensionsPanel extends JPanel {
 		});
 		
 	}
+
+	public ImageButton getGuessDimensionsButton() {
+		return magic;
+	}
+	
+	
 	
 }

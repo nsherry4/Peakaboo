@@ -68,12 +68,14 @@ import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import org.peakaboo.ui.swing.calibration.profileplot.ProfileManager;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
+import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import org.peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -235,6 +237,13 @@ public class PlotPanel extends TabbedLayerPanel
 
 		});
 
+		canvas.setRightClickCallback((channel, coords) -> {
+			//if the click is in the bounds of the data/plot
+			if (channel > -1 && channel < controller.data().getDataSet().getScanData().scanCount()) {
+				CanvasPopupMenu menu = new CanvasPopupMenu(canvas, this, controller, channel);
+				menu.show(canvas, coords.x, coords.y);
+			}
+		});
 
 
 		
@@ -1110,6 +1119,30 @@ public class PlotPanel extends TabbedLayerPanel
 
 	public void actionShowCalibrationProfileManager() {
 		this.pushLayer(new ProfileManager(this, controller));
+	}
+
+	public void actionQuickMap(int channel) {
+		ExecutorSet<RawMapSet> execset = Mapping.quickMapTask(controller.data(), channel);
+		ExecutorSetView view = new ExecutorSetView(execset);
+		ModalLayer progress = new ModalLayer(this, view);
+		Mutable<Boolean> done = new Mutable<>(false);
+		execset.addListener(() -> {
+			if (execset.getCompleted() || execset.isAborted()) {
+				removeLayer(progress);
+			}
+			if (execset.getCompleted() && execset.getResult() != null) {
+				if (!done.get()) {
+					done.set(true);
+					QuickMapPanel maplayer = new QuickMapPanel(this, channel, execset.getResult(), controller);
+					this.pushLayer(maplayer);
+				}
+			}
+		});
+		
+		pushLayer(progress);
+		execset.startWorking();
+		
+
 	}
 	
 

@@ -8,10 +8,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import javax.swing.Scrollable;
+import javax.swing.SwingUtilities;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
@@ -36,8 +38,8 @@ import eventful.EventfulTypeListener;
 public class PlotCanvas extends GraphicsPanel implements Scrollable
 {
 
-	private PlotController			controller;
-	private Consumer<Integer>		grabChannelFromClickCallback;
+	private PlotController controller;
+	private BiConsumer<Integer, Coord<Integer>>	onSingleClickCallback, onDoubleClickCallback, onRightClickCallback;
 	private PlotPanel plotPanel;
 	private Plotter plotter;
 
@@ -95,17 +97,44 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			{}
 			
 		
-			public void mouseClicked(MouseEvent e)
-			{
-				if (controller.data().hasDataSet() && grabChannelFromClickCallback != null){
-					grabChannelFromClickCallback.accept(plotter.getChannel(e.getX()));
-				} else if (controller.data().hasDataSet()) {
-					if (e.getClickCount() == 1) {
-						onSingleClick(e);
-					} else if (e.getClickCount() == 2)					 {
-						onDoubleClick(e);
+			public void mouseClicked(MouseEvent e) {
+				
+				/*
+				 * Mouse clicking on the plot can be a few things
+				 * * Selecting a fitting 'for' a channel (single left click)
+				 * * Annotating a fitting 'for' a channel (double left click)
+				 * * Getting a popup menu 'for' a channel (right click)
+				 */
+
+				boolean oneclick = e.getClickCount() == 1;
+				boolean twoclick = e.getClickCount() == 2;
+				boolean rightclick = SwingUtilities.isRightMouseButton(e);
+				boolean leftclick = SwingUtilities.isLeftMouseButton(e);
+						
+				if (controller.data().hasDataSet()) {
+					
+					Coord<Integer> mouseCoords = new Coord<>(e.getX(), e.getY());
+					if (oneclick && leftclick) {
+						if (onSingleClickCallback != null) {
+							onSingleClickCallback.accept(plotter.getChannel(e.getX()), mouseCoords);
+						} else {
+							onSingleClick(e);
+						}
+					} else if (twoclick && leftclick) {
+						if (onDoubleClickCallback != null) {
+							onDoubleClickCallback.accept(plotter.getChannel(e.getX()), mouseCoords);
+						} else {
+							onDoubleClick(e);
+						}
+					} else if (oneclick && rightclick) {
+						if (controller.data().hasDataSet() && onRightClickCallback != null) {
+							onRightClickCallback.accept(plotter.getChannel(e.getX()), mouseCoords);
+						}
 					}
+						
+					
 				}
+				
 				
 				//Make the plot canvas focusable
 				if (!PlotCanvas.this.hasFocus()) {
@@ -135,15 +164,27 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	}
 		
 
-	public void grabChannelFromClick(Consumer<Integer> callback)
-	{
-		grabChannelFromClickCallback = callback;
+	/////////////////////////////////////////////
+	// Low Level click handlers
+	/////////////////////////////////////////////
+	
+	public void setSingleClickCallback(BiConsumer<Integer, Coord<Integer>> callback) {
+		onSingleClickCallback = callback;
+	}
+
+	public void setDoubleClickCallback(BiConsumer<Integer, Coord<Integer>> onDoubleClickCallback) {
+		this.onDoubleClickCallback = onDoubleClickCallback;
+	}
+
+	public void setRightClickCallback(BiConsumer<Integer, Coord<Integer>> onRightClickCallback) {
+		this.onRightClickCallback = onRightClickCallback;
 	}
 
 
-
-
-
+	
+	
+	
+	
 	private Dimension calculateCanvasSize() {
 		//Width
 		double parentWidth = 1.0;

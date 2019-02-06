@@ -49,14 +49,9 @@ public class QuickMapPanel extends HeaderLayer {
 		
 		JPanel body = new JPanel(new BorderLayout());
 		canvas = new MapCanvas(controller, false);
-		canvas.setPreferredSize(new Dimension(500, 300));
+		canvas.setPreferredSize(new Dimension(600, 300));
 		body.add(canvas, BorderLayout.CENTER);
-		
-//		JPanel sidebar = new JPanel(new BorderLayout());
-//		MapDimensionsPanel dimensions = new MapDimensionsPanel(owner, controller, true);
-//		sidebar.add(dimensions, BorderLayout.NORTH);
-//		body.add(sidebar, BorderLayout.WEST);
-		
+				
 		setBody(body);
 		
 		
@@ -73,6 +68,9 @@ public class QuickMapPanel extends HeaderLayer {
 		JPopupMenu menu = new JPopupMenu();
 		
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);
+		dimensions.getGuessDimensionsButton().addActionListener(e -> {
+			menu.setVisible(false);
+		});
 		dimensions.setOpaque(false);
 		menu.add(dimensions);
 		

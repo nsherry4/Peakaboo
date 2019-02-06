@@ -82,12 +82,16 @@ public class GuidedFittingPanel extends JPanel
 	}
 
 
+	/**
+	 * Flips the canvas between guided fitting (selection) mode (true) and normal
+	 * mode
+	 */
 	public void setSelectionMode(boolean mode)
 	{
 		if (mode)
 		{
 			guidedWidget.setTransitionSeriesOptions(null);
-			canvas.grabChannelFromClick((Integer channel) -> {
+			canvas.setSingleClickCallback((channel, coords) -> {
 				canvas.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				
 				potentials = controller.proposeTransitionSeriesFromChannel(
@@ -106,7 +110,7 @@ public class GuidedFittingPanel extends JPanel
 		}
 		else
 		{
-			canvas.grabChannelFromClick(null);
+			canvas.setSingleClickCallback(null);
 			guidedWidget.setTransitionSeriesOptions(null);
 			canvas.setCursor(canvasCursor);
 

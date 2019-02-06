@@ -122,20 +122,6 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarMap, c);
 
 
-		ToolbarImageButton quickMap = new ToolbarImageButton("QuickMap")
-				.withAction(() -> {
-					RawMapSet rawmapset = Mapping.quickMapTask(controller.data(), 48).startWorkingBlocking();
-					QuickMapPanel layer = new QuickMapPanel(plot, 48, rawmapset, controller);
-					plot.pushLayer(layer);
-				});
-		
-		c.gridx += 1;
-		this.add(quickMap, c);
-		
-
-
-		
-		
 		c.gridx += 1;
 		c.weightx = 1.0;
 		this.add(Box.createHorizontalGlue(), c);
