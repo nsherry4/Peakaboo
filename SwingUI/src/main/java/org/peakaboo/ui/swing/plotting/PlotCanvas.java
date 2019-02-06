@@ -123,8 +123,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 					} else if (twoclick && leftclick) {
 						if (onDoubleClickCallback != null) {
 							onDoubleClickCallback.accept(plotter.getChannel(e.getX()), mouseCoords);
-						} else {
-							onDoubleClick(e);
 						}
 					} else if (oneclick && rightclick) {
 						if (controller.data().hasDataSet() && onRightClickCallback != null) {
@@ -155,14 +153,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
         }
 	}
 
-	private void onDoubleClick(MouseEvent e) {
-		ITransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
-		if (bestFit == null) {
-			return;
-		}
-		plotPanel.actionAddAnnotation(bestFit);
-	}
-		
+
 
 	/////////////////////////////////////////////
 	// Low Level click handlers
