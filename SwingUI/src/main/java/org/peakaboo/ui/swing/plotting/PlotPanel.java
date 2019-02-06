@@ -1133,7 +1133,7 @@ public class PlotPanel extends TabbedLayerPanel
 			if (execset.getCompleted() && execset.getResult() != null) {
 				if (!done.get()) {
 					done.set(true);
-					QuickMapPanel maplayer = new QuickMapPanel(this, channel, execset.getResult(), controller);
+					QuickMapPanel maplayer = new QuickMapPanel(this, channel, execset.getResult(), mapSession, controller);
 					this.pushLayer(maplayer);
 				}
 			}

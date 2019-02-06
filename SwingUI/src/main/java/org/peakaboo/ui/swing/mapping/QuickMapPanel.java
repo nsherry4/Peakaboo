@@ -9,11 +9,13 @@ import javax.swing.JPopupMenu;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 
+import cyclops.util.Mutable;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.HeaderLayer;
@@ -24,19 +26,32 @@ public class QuickMapPanel extends HeaderLayer {
 	private MappingController controller;
 	private MapCanvas canvas;
 	
-	public QuickMapPanel(LayerPanel owner, int channel, RawMapSet maps, PlotController plotcontroller) {
+	public QuickMapPanel(LayerPanel owner, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
 		super(owner, true);
 		
 		RawDataController rawDataController = new RawDataController();
 		rawDataController.setMapData(maps, "", Collections.emptyList(), null, null, null, new CalibrationProfile());
 		this.controller = new MappingController(rawDataController, plotcontroller);
 		
-//		controller.getUserDimensions().guessDataDimensions().run().ifPresent(coord -> {
-//			controller.getUserDimensions().setUserDataWidth(coord.x);
-//			controller.getUserDimensions().setUserDataHeight(coord.y);
-//			System.out.println(coord);
-//		});
+		// load saved dimensions, and when the window closes, save them
+		// we don't save anything else because this is not the usual mapping window.
+		// we don't want to load all the filters normally used in full mapping, for
+		// example.
+		SavedMapSession session = previousMapSession.get();
+		if (session != null) {
+			session.dimensions.loadInto(this.controller.getUserDimensions());
+		}
+		setOnClose(() -> {
+			if (session != null) {
+				session.dimensions.storeFrom(this.controller.getUserDimensions());
+			} else {
+				//if there is no session yet, we save the whole thing
+				SavedMapSession newsession = new SavedMapSession().storeFrom(this.controller);
+				previousMapSession.set(newsession);
+			}
+		});
 		
+
 		controller.getSettings().setShowCoords(true);
 		controller.getSettings().setShowDatasetTitle(false);
 		controller.getSettings().setShowScaleBar(false);
