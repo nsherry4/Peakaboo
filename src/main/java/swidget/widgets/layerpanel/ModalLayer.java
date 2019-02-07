@@ -148,7 +148,6 @@ public class ModalLayer implements Layer {
 		
 		modalPanel.removeAll();
 		
-		System.out.println(sizeWithParent);
 		if (sizeWithParent) {
 			modalPanel.setLayout(new BorderLayout());
 			modalPanel.add(wrap, BorderLayout.CENTER);
