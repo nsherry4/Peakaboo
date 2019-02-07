@@ -24,9 +24,13 @@ import cyclops.ISpectrum;
 import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
+import cyclops.util.Mutable;
 import plural.Plural;
 import plural.executor.ExecutorSet;
+import plural.executor.eachindex.EachIndexExecutor;
+import plural.executor.eachindex.implementations.PluralEachIndexExecutor;
 import plural.streams.StreamExecutor;
+import plural.streams.StreamExecutorSet;
 
 /**
  * This class contains logic for generating maps for a {@link AbstractDataSet}, so that functionality does not have to be duplicated across various implementations
@@ -90,42 +94,41 @@ public class Mapping
 	
 
 	public static ExecutorSet<RawMapSet> quickMapTask(DataController data, int channel) {
-	
+				
+		//worker task
 		DataSet ds = data.getDataSet();
+		int scancount = ds.getScanData().scanCount();
+		Spectrum map = new ISpectrum(scancount);
+		EachIndexExecutor maptask = new PluralEachIndexExecutor(scancount, index -> {
+			map.set(index, ds.getScanData().get(index).get(channel));
+		});
+		maptask.setName("Examining Spectra");
 		
 		
-		return Plural.build("Generating Quick Map", "Examining Spectra", (execset, exec) -> {
-			exec.setWorkUnits(ds.getScanData().scanCount());
-						
-			Spectrum map = new ISpectrum(ds.getScanData().scanCount());
-			int index = 0;
-			int count = 0;
-			for (ReadOnlySpectrum s : ds.getScanData()) {
-				map.set(index++, s.get(channel));
-				
-				//abort check
-				if (execset.isAbortRequested()) {
-					execset.aborted();
-					break;
-				}
-				
-				//show progress
-				count++;
-				if (count >= 100) {
-					exec.workUnitCompleted(count);
-					count = 0;
-				}
-			}
+		//timer
+		Mutable<Long> t1 = new Mutable<>();
+		Mutable<Long> t2 = new Mutable<>();
+		Runnable timer_pre = () -> {
+			//pre-task
+			t1.set(System.currentTimeMillis());
+		};
+		Runnable timer_post = () -> {
+			t2.set(System.currentTimeMillis());
+			long seconds = (t2.get() - t1.get()) / 1000;
+			PeakabooLog.get().log(Level.INFO, "Generated a QuickMap in " + seconds + " seconds");
+		};
+		
+		
+		//executor
+		return Plural.build("Generating Quick Map", maptask, timer_pre, (v) -> {
+			timer_post.run();
 			
+			//build the RawMapSet now that the map Spectrum has been populated
 			RawMap rawmap = new RawMap(PeakTable.SYSTEM.get(Element.Fe, TransitionShell.K), map);
 			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), ds.getScanData().scanCount(), true);
 			return rawmaps;
-			
 		});
-		
 
-		
-		
 		
 	}
 	
