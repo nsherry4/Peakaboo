@@ -112,7 +112,7 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 
 	@Override
 	public String getInterfaceDescription() {
-		return "Map Filters are ways to process or transform map data. This can be used to do things like smooth noise.";
+		return "Map Filters are ways to process or transform map data. This can be used to do things like smooth noise, shrink or enlarge maps, or correct for errors and outliers.";
 	}
 
 }

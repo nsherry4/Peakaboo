@@ -27,7 +27,7 @@ public class QuickMapPanel extends HeaderLayer {
 	private MapCanvas canvas;
 	
 	public QuickMapPanel(LayerPanel owner, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
-		super(owner, true);
+		super(owner, true, true);
 		
 		RawDataController rawDataController = new RawDataController();
 		rawDataController.setMapData(maps, "", Collections.emptyList(), null, null, null, new CalibrationProfile());
