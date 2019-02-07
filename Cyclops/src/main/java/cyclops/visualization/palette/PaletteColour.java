@@ -36,6 +36,10 @@ public class PaletteColour {
 		return arbg;
 	}
 	
+	public int toRGBA() {
+		return (getRed()<<24) | (getGreen()<<16) | (getBlue()<<8) | (getAlpha()<<0);
+	}
+	
 	public PaletteColour blend(PaletteColour other, double percentOther) {
 		int a, r, g, b;
 		//rgb vlaues here are just a mix -- 30% along means 70% start colour, 30% end colour
