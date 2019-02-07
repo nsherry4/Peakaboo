@@ -9,6 +9,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -33,11 +35,20 @@ public class ModalLayer implements Layer {
 	protected LayerPanel owner;
 	
 	private ComponentAdapter listener;
+	private boolean sizeWithParent = false;
+	
 	
 	public ModalLayer(LayerPanel owner, JComponent component) {
+		this(owner, component, false);
+	}
+	
+	public ModalLayer(LayerPanel owner, JComponent component, boolean sizeWithParent) {
 		this.owner = owner;
 		this.component = component;
+		this.sizeWithParent = sizeWithParent;
+		
 		this.layer = makeModalLayer();
+		
 	}
 	
 
@@ -136,28 +147,36 @@ public class ModalLayer implements Layer {
 		wrap.setBorder(border);
 		
 		modalPanel.removeAll();
-		modalPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.NONE;
-		c.gridheight = 3;
-		c.gridwidth = 3;
-		c.weightx = 0f;
-		c.weighty = 0f;
-		c.gridx = 1;
-		c.gridy = 1;
 		
-		modalPanel.add(wrap, c);
-		updateModalContentDimensions(modalScroller);
-		listener = new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				updateModalContentDimensions(modalScroller);
-			}
-		};
-		owner.addComponentListener(listener);
-		SwingUtilities.invokeLater(() -> {
+		System.out.println(sizeWithParent);
+		if (sizeWithParent) {
+			modalPanel.setLayout(new BorderLayout());
+			modalPanel.add(wrap, BorderLayout.CENTER);
+		} else {
+			modalPanel.setLayout(new GridBagLayout());
+			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.NONE;
+			c.gridheight = 3;
+			c.gridwidth = 3;
+			c.weightx = 0f;
+			c.weighty = 0f;
+			c.gridx = 1;
+			c.gridy = 1;
+			
+			modalPanel.add(wrap, c);
+			
 			updateModalContentDimensions(modalScroller);
-		});
-
+			listener = new ComponentAdapter() {
+				public void componentResized(ComponentEvent e) {
+					updateModalContentDimensions(modalScroller);
+				}
+			};
+			owner.addComponentListener(listener);
+			
+			SwingUtilities.invokeLater(() -> {
+				updateModalContentDimensions(modalScroller);
+			});
+		}
 		
 	}
 	

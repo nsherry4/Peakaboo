@@ -17,7 +17,11 @@ public class HeaderLayer extends ModalLayer {
 	private Runnable onClose;
 
 	public HeaderLayer(LayerPanel owner, boolean showClose) {
-		super(owner, new HeaderPanel());	
+		this(owner, showClose, false);
+	}
+	
+	public HeaderLayer(LayerPanel owner, boolean showClose, boolean sizeWithOwner) {
+		super(owner, new HeaderPanel(), sizeWithOwner);	
 		root = (HeaderPanel) super.getComponent();
 		
 		//headerbox
