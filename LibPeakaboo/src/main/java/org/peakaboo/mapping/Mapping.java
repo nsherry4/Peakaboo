@@ -13,7 +13,9 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.FilterSet;
@@ -124,7 +126,7 @@ public class Mapping
 			timer_post.run();
 			
 			//build the RawMapSet now that the map Spectrum has been populated
-			RawMap rawmap = new RawMap(PeakTable.SYSTEM.get(Element.Fe, TransitionShell.K), map);
+			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), map);
 			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), ds.getScanData().scanCount(), true);
 			return rawmaps;
 		});
