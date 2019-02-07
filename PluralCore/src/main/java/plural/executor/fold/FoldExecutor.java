@@ -23,7 +23,7 @@ import plural.executor.map.implementations.SimpleMapExecutor;
  * 
  */
 
-public abstract class FoldExecutor<T1> extends AbstractExecutor
+public abstract class FoldExecutor<T1> extends AbstractExecutor<T1>
 {
 
 	protected BiFunction<T1, T1, T1>	fold;

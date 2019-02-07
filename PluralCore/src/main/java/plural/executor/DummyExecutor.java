@@ -1,6 +1,6 @@
 package plural.executor;
 
-public class DummyExecutor extends AbstractExecutor{
+public class DummyExecutor extends AbstractExecutor<Void> {
 
 	public DummyExecutor() {
 		super();
@@ -43,6 +43,11 @@ public class DummyExecutor extends AbstractExecutor{
 	public synchronized void workUnitCompleted()
 	{
 		super.workUnitCompleted();
+	}
+
+	@Override
+	public Void executeBlocking() {
+		return null;
 	}
 
 }

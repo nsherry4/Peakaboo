@@ -25,7 +25,7 @@ import plural.executor.map.implementations.SimpleMapExecutor;
  * 
  */
 
-public abstract class FilterExecutor<T1> extends AbstractExecutor
+public abstract class FilterExecutor<T1> extends AbstractExecutor<List<T1>>
 {
 
 	protected Predicate<T1>		filter;

@@ -49,7 +49,7 @@ public class SimpleEachIndexExecutor extends EachIndexExecutor
 	 * Executes the {@link Task}, blocking until complete. This method will return without executing the Task if the Task is null.
 	 */
 	@Override
-	public void executeBlocking()
+	public Void executeBlocking()
 	{
 		super.advanceState();
 
@@ -60,6 +60,7 @@ public class SimpleEachIndexExecutor extends EachIndexExecutor
 		}
 
 		super.advanceState();
+		return null;
 	}
 
 

@@ -4,7 +4,7 @@ import eventful.Eventful;
 import plural.executor.map.MapExecutor;
 
 
-public abstract class AbstractExecutor extends Eventful implements PluralExecutor{
+public abstract class AbstractExecutor<T> extends Eventful implements PluralExecutor{
 
 	private String			name;
 
@@ -233,5 +233,11 @@ public abstract class AbstractExecutor extends Eventful implements PluralExecuto
 	 */
 	@Override
 	public abstract int getDataSize();
+	
+	
+	/**
+	 * Executes the Executor, waiting until the processing is complete.
+	 */
+	public abstract T executeBlocking();
 	
 }

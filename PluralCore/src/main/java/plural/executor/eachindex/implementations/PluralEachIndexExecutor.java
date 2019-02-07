@@ -55,9 +55,9 @@ public class PluralEachIndexExecutor extends EachIndexExecutor
 	 * Executes the {@link Task}, blocking until complete. This method will return without executing the Task if the Task is null.
 	 */
 	@Override
-	public void executeBlocking()
+	public Void executeBlocking()
 	{
-		if (super.eachIndex == null) return;
+		if (super.eachIndex == null) return null;
 		
 		super.advanceState();
 
@@ -68,7 +68,7 @@ public class PluralEachIndexExecutor extends EachIndexExecutor
 		}
 
 		super.advanceState();
-
+		return null;
 	}
 
 

@@ -23,7 +23,7 @@ import plural.executor.map.implementations.SimpleMapExecutor;
  * 
  */
 
-public abstract class MapExecutor<T1, T2> extends AbstractExecutor
+public abstract class MapExecutor<T1, T2> extends AbstractExecutor<List<T2>>
 {
 
 	protected Function<T1, T2>		map;

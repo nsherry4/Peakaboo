@@ -7,7 +7,7 @@ import plural.executor.AbstractExecutor;
 import plural.executor.ExecutorState;
 import plural.executor.map.MapExecutor;
 
-public abstract class EachIndexExecutor extends AbstractExecutor {
+public abstract class EachIndexExecutor extends AbstractExecutor<Void> {
 
 	protected Consumer<Integer>		eachIndex;
 	
@@ -50,6 +50,6 @@ public abstract class EachIndexExecutor extends AbstractExecutor {
 	/**
 	 * Executes the EachIndexExecutor, waiting until the processing is complete.
 	 */
-	public abstract void executeBlocking();
+	public abstract Void executeBlocking();
 	
 }
