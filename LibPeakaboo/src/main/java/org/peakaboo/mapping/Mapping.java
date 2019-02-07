@@ -94,7 +94,7 @@ public class Mapping
 		DataSet ds = data.getDataSet();
 		
 		
-		return Plural.build("Quick Map", "Generating Map", (execset, exec) -> {
+		return Plural.build("Generating Quick Map", "Examining Spectra", (execset, exec) -> {
 			exec.setWorkUnits(ds.getScanData().scanCount());
 						
 			Spectrum map = new ISpectrum(ds.getScanData().scanCount());

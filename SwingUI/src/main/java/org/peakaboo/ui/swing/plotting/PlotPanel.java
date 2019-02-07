@@ -429,7 +429,7 @@ public class PlotPanel extends TabbedLayerPanel
 				
 				
 				SwingAutoPanel sap = new SwingAutoPanel(parameters);
-				sap.setBorder(Spacing.bMedium());
+				sap.setBorder(Spacing.bHuge());
 				paramPanel.setBody(sap);
 				
 				
