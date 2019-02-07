@@ -101,6 +101,10 @@ public class HeaderBox extends PaintedPanel {
 				if(!SwingUtilities.isLeftMouseButton(e)) {
 					return;
 				}
+				
+				if (initialClick == null) {
+					return;
+				}
 								
 				Window parent = SwingUtilities.getWindowAncestor(HeaderBox.this);
 				

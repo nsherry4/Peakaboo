@@ -14,7 +14,7 @@ import swidget.widgets.layout.HeaderPanel;
 public class HeaderLayer extends ModalLayer {
 
 	private HeaderPanel root;
-	
+	private Runnable onClose;
 
 	public HeaderLayer(LayerPanel owner, boolean showClose) {
 		super(owner, new HeaderPanel());	
@@ -34,6 +34,7 @@ public class HeaderLayer extends ModalLayer {
 				remove();
 			}
 		});
+		
 	}
 
 	
@@ -56,7 +57,16 @@ public class HeaderLayer extends ModalLayer {
 	@Override
 	public void remove() {
 		owner.removeLayer(this);
+		if (onClose != null) {
+			onClose.run();
+		}
 	}
+
+
+	public void setOnClose(Runnable onClose) {
+		this.onClose = onClose;
+	}
+	
 	
 	
 }
