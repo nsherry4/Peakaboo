@@ -17,9 +17,11 @@ import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 
 import cyclops.util.Mutable;
 import swidget.icons.StockIcon;
+import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
+import swidget.widgets.layout.ButtonBox;
 
 public class QuickMapPanel extends HeaderLayer {
 
@@ -70,26 +72,35 @@ public class QuickMapPanel extends HeaderLayer {
 		setBody(body);
 		
 		
+		ToolbarImageButton viewButton = MapperToolbar.createOptionsButton(owner, controller);
+		ToolbarImageButton sizingButton = createSizingButton(owner, controller);
+		ButtonBox bbox = new ButtonBox(0, false);
+		bbox.setOpaque(false);
+		bbox.addRight(sizingButton);
+		bbox.addRight(viewButton);
+		
+		
 		getHeader().setCentre("QuickMap of Channel " + channel);
-		getHeader().setRight(MapperToolbar.createOptionsButton(owner, controller));
-		getHeader().setLeft(createDimensionsButton(owner, controller));
+		getHeader().setRight(bbox);
+//		getHeader().setLeft(sizingButton);
 				
 	}
 	
-	public static ToolbarImageButton createDimensionsButton(LayerPanel panel, MappingController controller) {
+	public static ToolbarImageButton createSizingButton(LayerPanel panel, MappingController controller) {
 		
 		ToolbarImageButton opts = new ToolbarImageButton();
-		opts.withIcon(StockIcon.MISC_PROPERTIES).withTooltip("Map Dimensions Menu");
+		opts.withIcon(StockIcon.MENU_SETTINGS).withTooltip("Map Dimensions Menu");
 		JPopupMenu menu = new JPopupMenu();
 		
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);
+		dimensions.setBorder(Spacing.bMedium());
 		dimensions.getGuessDimensionsButton().addActionListener(e -> {
 			menu.setVisible(false);
 		});
 		dimensions.setOpaque(false);
 		menu.add(dimensions);
 		
-		opts.addActionListener(e -> menu.show(opts, 0, opts.getHeight()));
+		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
 		
 		return opts;
 	}
