@@ -13,6 +13,7 @@ import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.mapping.rawmap.RawMapSet;
+import org.peakaboo.ui.swing.mapping.controls.PlotSelectionButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 
 import cyclops.util.Mutable;
@@ -22,14 +23,16 @@ import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.HeaderLayer;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layout.ButtonBox;
+import swidget.widgets.tabbedinterface.TabbedInterface;
+import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 public class QuickMapPanel extends HeaderLayer {
 
 	private MappingController controller;
 	private MapCanvas canvas;
 	
-	public QuickMapPanel(LayerPanel owner, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
-		super(owner, true, true);
+	public QuickMapPanel(LayerPanel plotTab, TabbedInterface<TabbedLayerPanel> plotTabs, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
+		super(plotTab, true, true);
 		
 		RawDataController rawDataController = new RawDataController();
 		rawDataController.setMapData(maps, "", Collections.emptyList(), null, null, null, new CalibrationProfile());
@@ -72,16 +75,20 @@ public class QuickMapPanel extends HeaderLayer {
 		setBody(body);
 		
 		
-		ToolbarImageButton viewButton = MapperToolbar.createOptionsButton(owner, controller);
-		ToolbarImageButton sizingButton = createSizingButton(owner, controller);
+		ToolbarImageButton viewButton = MapperToolbar.createOptionsButton(plotTab, controller);
+		ToolbarImageButton sizingButton = createSizingButton(plotTab, controller);
 		ButtonBox bbox = new ButtonBox(0, false);
 		bbox.setOpaque(false);
 		bbox.addRight(sizingButton);
 		bbox.addRight(viewButton);
 		
 		
+		ToolbarImageButton plotSelection = new PlotSelectionButton(controller, plotTabs);
+		
+		
 		getHeader().setCentre("QuickMap of Channel " + channel);
 		getHeader().setRight(bbox);
+		getHeader().setLeft(plotSelection);
 		
 		MapSelectionListener selectionListener = new MapSelectionListener(canvas, controller);
 		canvas.addMouseMotionListener(selectionListener);

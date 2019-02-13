@@ -28,6 +28,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
+import org.peakaboo.ui.swing.mapping.controls.PlotSelectionButton;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 import cyclops.ReadOnlySpectrum;
@@ -93,34 +94,7 @@ class MapperToolbar extends JToolBar {
 		}
 		
 		
-		examineSubset = new ToolbarImageButton("Plot Selection", "view-subset");
-		examineSubset.withSignificance(true).withTooltip("Plot the selection as a new data set");
-		
-		examineSubset.addActionListener(e -> {
-
-			SubsetDataSource sds = controller.getSelection().getSubsetDataSource();
-			SavedSession settings = controller.getSavedSettings();
-			
-			//update the bad scan indexes to match the new data source's indexing scheme
-			//TODO: Is there a better way to do this?
-			settings.data.discards = settings.data.discards.stream()
-					.map(index -> sds.getUpdatedIndex(index))
-					.filter(index -> index > 0)
-					.collect(Collectors.toList()
-				);
-		
-			PlotPanel subplot = new PlotPanel(panel.parentPlotter);
-			subplot.actionLoadExistingDataSource(sds, settings.serialize());
-			panel.parentPlotter.addActiveTab(subplot);
-			//Focus and un-minimize
-			JFrame plotWindow = panel.parentPlotter.getWindow();
-			plotWindow.toFront();
-			int windowState = plotWindow.getExtendedState();
-			if ((windowState & JFrame.ICONIFIED) == JFrame.ICONIFIED) {
-				plotWindow.setExtendedState(windowState ^ JFrame.ICONIFIED);
-			}
-						
-		});
+		examineSubset = new PlotSelectionButton(controller, panel.getParentPlotter());
 		this.add(examineSubset, c);
 		c.gridx++;
 		

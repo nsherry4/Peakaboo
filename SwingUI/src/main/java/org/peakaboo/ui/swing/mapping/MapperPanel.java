@@ -67,7 +67,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	private MapCanvas				canvas;
 	
 	protected MappingController		controller;
-	TabbedInterface<TabbedLayerPanel> parentPlotter;
+	protected TabbedInterface<TabbedLayerPanel> parentPlotter;
 	
 	private JLabel					warnOnTooSmallDataset;
 	private MapStatusBar			statusBar;
@@ -221,7 +221,10 @@ public class MapperPanel extends TabbedLayerPanel {
 
 		return canvasContainer;
 	}
-
+	
+	public TabbedInterface<TabbedLayerPanel> getParentPlotter() {
+		return parentPlotter;
+	}
 
 	private void fullRedraw()
 	{
