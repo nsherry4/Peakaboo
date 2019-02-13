@@ -15,7 +15,7 @@ public abstract class TabbedLayerPanel extends LayerPanel {
 	}
 	
 	public abstract String getTabTitle();
-	
+	public abstract void titleDoubleClicked();
 	
 	
 	

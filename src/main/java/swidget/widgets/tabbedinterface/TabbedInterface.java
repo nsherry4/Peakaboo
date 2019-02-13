@@ -1,6 +1,7 @@
 package swidget.widgets.tabbedinterface;
 
 import java.awt.Component;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.swing.Icon;
@@ -19,7 +20,7 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 	
 	private Function<T, String> titleFunction;
 	private boolean working = false;
-	private int tabWidth = 150;
+	protected int tabWidth = 150;
 	
 	private T lastSelectedTab = null;
 	
@@ -90,10 +91,16 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 	{
 		int count = this.getTabCount() - 1;
 		
-		TabbedInterfaceTitle titleComponent = new TabbedInterfaceTitle(this, tabWidth);
+		TabbedInterfaceTitle titleComponent = makeTitleComponent(component);
 		this.insertTab("", null, component, "", count);
 		this.setTabComponentAt(count, titleComponent);
 		setTabTitle(component, titleFunction.apply(component));
+	}
+	
+	public TabbedInterfaceTitle makeTitleComponent(T component) {
+		TabbedInterfaceTitle title = new TabbedInterfaceTitle(this, tabWidth);
+		title.setOnDoubleClick(() -> titleDoubleClicked(component));
+		return title;
 	}
 	
 	public void addActiveTab(T component) {
@@ -174,9 +181,10 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 	public JFrame getWindow() {
 		return window;
 	}
-
+	
 	protected abstract T createComponent();
 	protected abstract void destroyComponent(T component);
 	protected abstract void titleChanged(String title);	
+	protected abstract void titleDoubleClicked(T component);
 	
 }

@@ -40,11 +40,15 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
@@ -56,6 +60,7 @@ public class TabbedInterfaceTitle extends JPanel {
     
 	private final TabbedInterface<?> owner;
 	private JLabel label;
+	private Runnable onDoubleClick = () -> {};
 	
 	public TabbedInterfaceTitle(String title, int width) {
 		this(null, width, false);
@@ -90,6 +95,21 @@ public class TabbedInterfaceTitle extends JPanel {
         
         setMinimumSize(new Dimension(width, (int)getMinimumSize().getHeight()));
         setPreferredSize(new Dimension(width, (int)getPreferredSize().getHeight()));
+        
+        MouseListener doubleClickListener = new MouseAdapter() {
+					
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//Double-click triggers the action, nothing else does
+				if (!  (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2)) {
+					return;
+				}
+				onDoubleClick.run();
+			}
+		};
+		this.addMouseListener(doubleClickListener);
+		label.addMouseListener(doubleClickListener);
+        
         
     }
     
@@ -172,6 +192,11 @@ public class TabbedInterfaceTitle extends JPanel {
         }
         
     }
- 
+
+	public void setOnDoubleClick(Runnable onDoubleClick) {
+		this.onDoubleClick = onDoubleClick;
+	}
+
+    
 
 }
