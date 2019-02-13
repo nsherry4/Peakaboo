@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -19,6 +18,7 @@ import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
@@ -30,9 +30,7 @@ import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulListener;
-import net.sciencestudio.autodialog.model.Group;
 import plural.executor.AbstractExecutor;
-import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 import plural.streams.StreamExecutor;
 
@@ -48,6 +46,7 @@ public class DataController extends Eventful
 	private PlotController		plot;
 	private Discards			discards;
 	private List<Path>			dataPaths;
+	protected String			title;
 	private String				dataSourcePluginUUID;
 	private List<Object>		dataSourceParameters;
 	
@@ -257,6 +256,25 @@ public class DataController extends Eventful
 
 	public void setDataSourceParameters(List<Object> dataSourceParameters) {
 		this.dataSourceParameters = dataSourceParameters;
+	}
+	
+
+	/**
+	 * Returns the human readable title for this dataset. If the dataset has been
+	 * set by the user, that value is returned, otherwise the call will be delegated
+	 * to {@link ScanData#datasetName()}
+	 */
+	public String getTitle() {
+		if (title == null) {
+			return getDataSet().getScanData().datasetName();
+		} else {
+			return title;
+		}
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+		updateListeners();
 	}
 	
 }

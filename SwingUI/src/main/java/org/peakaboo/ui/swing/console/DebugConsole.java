@@ -84,4 +84,9 @@ public class DebugConsole extends TabbedLayerPanel {
 		frame.pack();
 		frame.setVisible(true);
 	}
+
+	@Override
+	public void titleDoubleClicked() {
+		// NOOP
+	}
 }

@@ -38,7 +38,14 @@ public class PlotFrame extends LiveFrame
 
 			@Override
 			protected void titleChanged(String title) {}
+
+			@Override
+			protected void titleDoubleClicked(TabbedLayerPanel component) {
+				component.titleDoubleClicked();
+			}
 		};
+		
+
 		
 		addWindowListener(new WindowListener() {
 			

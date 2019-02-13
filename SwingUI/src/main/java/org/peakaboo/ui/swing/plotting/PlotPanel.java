@@ -344,7 +344,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		if (controller.data().hasDataSet())
 		{
-			titleString.append(controller.data().getDataSet().getScanData().datasetName());
+			titleString.append(controller.data().getTitle());
 		} else {
 			titleString.append("No Data");
 		}
@@ -721,7 +721,7 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			mapData.setMapData(
 					results,
-					controller.data().getDataSet().getScanData().datasetName(),
+					controller.data().getTitle(),
 					controller.data().getDiscards().list(),
 					dataDimensions,
 					physicalDimensions,
@@ -954,6 +954,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		properties = new LinkedHashMap<String, String>();
 		properties.put("Data Format", "" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
+		properties.put("Dataset Title", "" + controller.data().getTitle());
 		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().getAnalysis().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().getAnalysis().maximumIntensity());
@@ -1143,6 +1144,42 @@ public class PlotPanel extends TabbedLayerPanel
 		execset.startWorking();
 		
 
+	}
+
+	@Override
+	public void titleDoubleClicked() {
+		if (!controller.data().hasDataSet()) {
+			return;
+		}
+		
+		Mutable<LayerDialog> dialogbox = new Mutable<>();
+		
+		JTextField textfield = new JTextField(20);
+		textfield.addActionListener(ae -> {
+			controller.data().setTitle(textfield.getText());
+			dialogbox.get().hide();
+		});
+		textfield.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+					dialogbox.get().hide();
+				}
+			}
+		});
+		textfield.setText(controller.data().getTitle());
+		LayerDialog dialog = new LayerDialog("Change Dataset Title", textfield, MessageType.QUESTION);
+		dialogbox.set(dialog);
+		dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
+			dialog.hide();
+		}));
+		dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
+			controller.data().setTitle(textfield.getText());
+			dialog.hide();
+		}));
+		dialog.showIn(this);
+		textfield.grabFocus();
+		
 	}
 	
 

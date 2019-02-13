@@ -12,12 +12,14 @@ public class SavedDataSession {
 	public List<String> files = new ArrayList<>();
 	public String dataSourcePluginUUID = null;
 	public List<Object> dataSourceParameters = null;
+	public String title = null;
 	
 	public SavedDataSession storeFrom(DataController controller) {
 		this.discards = controller.getDiscards().list();
 		this.files = controller.getDataPaths().stream().map(p -> p.toString()).collect(Collectors.toList());
 		this.dataSourcePluginUUID = controller.getDataSourcePluginUUID();
 		this.dataSourceParameters = controller.getDataSourceParameters();
+		this.title = controller.title;
 		return this;
 	}
 	
@@ -28,6 +30,7 @@ public class SavedDataSession {
 		}
 		controller.setDataSourcePluginUUID(this.dataSourcePluginUUID);
 		controller.setDataPaths(this.filesAsDataPaths());
+		controller.setTitle(this.title);
 
 		/*
 		 * We don't load the datasource paramters here, since they're used while opening

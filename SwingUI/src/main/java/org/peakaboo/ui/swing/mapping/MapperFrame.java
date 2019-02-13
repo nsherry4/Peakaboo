@@ -100,6 +100,11 @@ public class MapperFrame extends LiveFrame
 			protected void titleChanged(String title) {
 				//setTitle(title);
 			}
+
+			@Override
+			protected void titleDoubleClicked(TabbedLayerPanel component) {
+				// NOOP
+			}
 		};
 		setTitle("Peakaboo");
 		setIconImage(IconFactory.getImage(Version.icon));

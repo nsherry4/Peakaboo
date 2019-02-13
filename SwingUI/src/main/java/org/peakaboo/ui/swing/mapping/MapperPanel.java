@@ -321,4 +321,10 @@ public class MapperPanel extends TabbedLayerPanel {
 		controller.writeArchive(fos, format, width, height, surfaceFactory);
 	}
 
+	@Override
+	public void titleDoubleClicked() {
+		// NOOP
+		
+	}
+
 }
