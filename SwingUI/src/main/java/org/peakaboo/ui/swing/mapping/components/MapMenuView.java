@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping.components;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;

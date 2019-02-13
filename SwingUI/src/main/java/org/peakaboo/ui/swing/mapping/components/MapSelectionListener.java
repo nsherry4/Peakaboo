@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping.components;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.ui.swing.mapping.MapCanvas;
 
 import cyclops.Coord;
 

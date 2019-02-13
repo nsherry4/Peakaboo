@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping.sidebar;
 
 
 
@@ -14,25 +14,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.ui.swing.mapping.sidebar.FiltersPanel;
-import org.peakaboo.ui.swing.mapping.sidebar.MapAppearancePanel;
-import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
-import org.peakaboo.ui.swing.mapping.sidebar.MapFittingPanel;
-import org.peakaboo.ui.swing.mapping.sidebar.MapSelectionPanel;
+import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 import cyclops.Coord;
 import swidget.widgets.Spacing;
 
 
 
-class MapperSidebar extends JPanel
+public class MapperSidebar extends JPanel
 {
 
 	private MappingController		controller;
 	private MapperPanel 			tabPanel;
 
 
-	MapperSidebar(MapperPanel tabPanel, MappingController controller)
+	public MapperSidebar(MapperPanel tabPanel, MappingController controller)
 	{
 		this.controller = controller;
 		this.tabPanel = tabPanel;

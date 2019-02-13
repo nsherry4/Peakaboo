@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping.components;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +28,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
-import org.peakaboo.ui.swing.mapping.controls.PlotSelectionButton;
+import org.peakaboo.ui.swing.mapping.MapperPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 import cyclops.ReadOnlySpectrum;
@@ -37,11 +37,11 @@ import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;
 import swidget.widgets.layerpanel.LayerPanel;
 
-class MapperToolbar extends JToolBar {
+public class MapperToolbar extends JToolBar {
 
 	private ToolbarImageButton	showConcentrations, examineSubset;
 
-	MapperToolbar(MapperPanel panel, MappingController controller) {
+	public MapperToolbar(MapperPanel panel, MappingController controller) {
 
 
 		this.setFloatable(false);

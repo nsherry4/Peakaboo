@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.mapping;
+package org.peakaboo.ui.swing.mapping.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,6 +11,7 @@ import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 import cyclops.Coord;
 import swidget.icons.StockIcon;
@@ -19,12 +20,12 @@ import swidget.widgets.ZoomSlider;
 import swidget.widgets.buttons.ImageButton;
 import swidget.widgets.buttons.ImageButtonLayout;
 
-class MapStatusBar extends JPanel {
+public class MapStatusBar extends JPanel {
 
 	private JLabel status;
 	private MappingController controller;
 	
-	MapStatusBar(MapperPanel tabPanel, MappingController controller) {
+	public MapStatusBar(MapperPanel tabPanel, MappingController controller) {
 		
 		this.controller = controller;
 		

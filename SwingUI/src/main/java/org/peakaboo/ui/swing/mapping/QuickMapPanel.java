@@ -13,7 +13,9 @@ import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.mapping.rawmap.RawMapSet;
-import org.peakaboo.ui.swing.mapping.controls.PlotSelectionButton;
+import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
+import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
+import org.peakaboo.ui.swing.mapping.components.PlotSelectionButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 
 import cyclops.util.Mutable;
@@ -30,6 +32,7 @@ public class QuickMapPanel extends HeaderLayer {
 
 	private MappingController controller;
 	private MapCanvas canvas;
+	private ToolbarImageButton plotSelection;
 	
 	public QuickMapPanel(LayerPanel plotTab, TabbedInterface<TabbedLayerPanel> plotTabs, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
 		super(plotTab, true, true);
@@ -83,7 +86,7 @@ public class QuickMapPanel extends HeaderLayer {
 		bbox.addRight(viewButton);
 		
 		
-		ToolbarImageButton plotSelection = new PlotSelectionButton(controller, plotTabs);
+		plotSelection = new PlotSelectionButton(controller, plotTabs);
 		
 		
 		getHeader().setCentre("QuickMap of Channel " + channel);

@@ -6,13 +6,11 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
-import org.peakaboo.controller.mapper.settings.SavedMapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
 
 import cyclops.util.Mutable;

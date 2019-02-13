@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.mapping.controls;
+package org.peakaboo.ui.swing.mapping.components;
 
 import java.util.stream.Collectors;
 
@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
@@ -24,6 +25,10 @@ public class PlotSelectionButton extends ToolbarImageButton {
 		this.controller = controller;
 		this.plotter = plotter;
 		this.withSignificance(true).withTooltip("Plot the selection as a new data set");
+
+		this.setEnabled(controller.getSelection().hasSelection());
+		controller.addListener(s -> this.setEnabled(controller.getSelection().hasSelection()));
+		
 		this.withAction(this::action);
 	}
 	

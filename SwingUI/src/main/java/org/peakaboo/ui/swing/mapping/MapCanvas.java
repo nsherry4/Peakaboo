@@ -17,16 +17,15 @@ import cyclops.visualization.Surface;
 import cyclops.visualization.backend.awt.GraphicsPanel;
 
 
-class MapCanvas extends GraphicsPanel
+public class MapCanvas extends GraphicsPanel
 {
 
-	private MappingController 		mapController;
-	private MapSettingsController			settingsController;
-	
+	private MappingController mapController;
+	private MapSettingsController settingsController;
 	private Mapper mapper;
 	
 	
-	MapCanvas(MappingController controller, boolean resizable)
+	public MapCanvas(MappingController controller, boolean resizable)
 	{
 		this.mapController = controller;
 		this.settingsController = controller.getSettings();

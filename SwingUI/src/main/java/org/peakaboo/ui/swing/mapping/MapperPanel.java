@@ -10,41 +10,31 @@ import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
-import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.display.map.MapRenderData;
-import org.peakaboo.display.map.MapRenderSettings;
-import org.peakaboo.display.map.Mapper;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
+import org.peakaboo.ui.swing.mapping.components.MapStatusBar;
+import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
+import org.peakaboo.ui.swing.mapping.sidebar.MapperSidebar;
 import org.peakaboo.ui.swing.plotting.ExportPanel;
 
-import cyclops.Coord;
 import cyclops.util.Mutable;
 import cyclops.visualization.SaveableSurface;
 import cyclops.visualization.SurfaceType;
@@ -253,7 +243,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	
 	
 	
-	void actionSavePicture()
+	public void actionSavePicture()
 	{
 		if (controller.getSettings().savePictureFolder == null) controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
 		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().savePictureFolder, file -> {
@@ -264,7 +254,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		sp.show();
 	}
 	
-	void actionSaveCSV()
+	public void actionSaveCSV()
 	{
 		if (controller.getSettings().savePictureFolder == null) {
 			controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
@@ -291,7 +281,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	
 
 	
-	void actionSaveArchive() {
+	public void actionSaveArchive() {
 		Mutable<ExportPanel> export = new Mutable<>(null);
 		
 		export.set(new ExportPanel(this, canvas, () -> {
