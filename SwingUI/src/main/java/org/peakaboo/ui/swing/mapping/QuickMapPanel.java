@@ -82,8 +82,11 @@ public class QuickMapPanel extends HeaderLayer {
 		
 		getHeader().setCentre("QuickMap of Channel " + channel);
 		getHeader().setRight(bbox);
-//		getHeader().setLeft(sizingButton);
-				
+		
+		MapSelectionListener selectionListener = new MapSelectionListener(canvas, controller);
+		canvas.addMouseMotionListener(selectionListener);
+		canvas.addMouseListener(selectionListener);
+		
 	}
 	
 	public static ToolbarImageButton createSizingButton(LayerPanel panel, MappingController controller) {

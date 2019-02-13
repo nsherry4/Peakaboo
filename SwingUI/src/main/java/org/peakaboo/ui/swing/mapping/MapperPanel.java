@@ -11,6 +11,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -120,82 +121,27 @@ public class MapperPanel extends TabbedLayerPanel {
 		sidebar.setPreferredSize(new Dimension(225, sidebar.getPreferredSize().height));
 		split.add(sidebar, BorderLayout.WEST);
 		split.add(mapCanvas, BorderLayout.CENTER);
-		
 		contentLayer.add(split, BorderLayout.CENTER);
-		
-		
-//		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, mapCanvas);
-//		split.setResizeWeight(0);
-//		split.setOneTouchExpandable(true);
-//		split.setBorder(Spacing.bNone());
-//		contentLayer.add(split, BorderLayout.CENTER);
 		
 		toolbar = new MapperToolbar(this, controller);
 		contentLayer.add(toolbar, BorderLayout.NORTH);
 		
 		
-		class CompleteMouseListener implements MouseMotionListener, MouseListener
-		{
-			
-			public void mouseDragged(MouseEvent e)
-			{
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-					controller.getSelection().makeRectSelectionEnd(point);
-				}
-			}
-
-			public void mouseMoved(MouseEvent e)
-			{
+		MapSelectionListener selectionListener = new MapSelectionListener(canvas, controller);
+		
+		MouseMotionListener movementListener = new MouseMotionAdapter() {
+		
+			@Override
+			public void mouseMoved(MouseEvent e) {
 				statusBar.showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
 				sidebar.showValueAtCoord(canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), false));
 			}
 
-			public void mouseClicked(MouseEvent e){
-				
-				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2) {
-					MapDisplayMode displayMode = controller.getFitting().getMapDisplayMode();
-					//Double-click selects points with similar intensity
-					if ((displayMode == MapDisplayMode.COMPOSITE || displayMode == MapDisplayMode.RATIO) && controller.getFiltering().isReplottable()) {
-						
-						Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-						if (e.isControlDown()) {
-							if (e.getClickCount() == 2) {
-								controller.getSelection().makeNeighbourSelection(clickedAt, true, true);
-							} else if (e.getClickCount() == 3) {
-								//Triple clicks only get run after a double click gets run. If CTRL is down, that means we need to
-								//undo the action caused by the previous (improper) double-click, so we re-run the contiguous
-								//selection modification to perform the reverse modification.
-								controller.getSelection().makeNeighbourSelection(clickedAt, true, true);
-								controller.getSelection().makeNeighbourSelection(clickedAt, false, true);
-							}
-						} else {
-							controller.getSelection().makeNeighbourSelection(clickedAt, e.getClickCount() == 2, false);
-						}
-
-						
-					}
-				}
-			}
-
-			public void mouseEntered(MouseEvent e){}
-
-			public void mouseExited(MouseEvent e){}
-
-			public void mousePressed(MouseEvent e)
-			{			
-				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && !e.isControlDown()) {
-					Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-					controller.getSelection().makeRectSelectionStart(point);
-				}
-			}
-
-			public void mouseReleased(MouseEvent e){}
-			
-		}
+		};
 		
-		canvas.addMouseMotionListener(new CompleteMouseListener());
-		canvas.addMouseListener(new CompleteMouseListener());
+		canvas.addMouseMotionListener(movementListener);
+		canvas.addMouseMotionListener(selectionListener);
+		canvas.addMouseListener(selectionListener);
 		
 
 		controller.addListener(new EventfulTypeListener<String>() {
