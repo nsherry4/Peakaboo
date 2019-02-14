@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    sodipodi:docname="map-24-newtab.svg"
-   inkscape:export-filename="/home/nathaniel/Projects/SS/Git/Peakaboo/SwingUI/src/main/resources/org/peakaboo/ui/swing/icons/24/map.png"
-   inkscape:export-xdpi="48"
-   inkscape:export-ydpi="48"
+   inkscape:export-filename="/home/nathaniel/Projects/SS/Git/Peakaboo/SwingUI/src/main/resources/org/peakaboo/ui/swing/icons/16/map-new.png"
+   inkscape:export-xdpi="32"
+   inkscape:export-ydpi="32"
    enable-background="new">
   <defs
      id="defs3985">
@@ -415,9 +415,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284273"
-     inkscape:cx="-155.61202"
-     inkscape:cy="6.6197324"
+     inkscape:zoom="4.0000002"
+     inkscape:cx="-59.005657"
+     inkscape:cy="-1.0903906"
      inkscape:current-layer="layer5"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -603,15 +603,8 @@
      id="layer5"
      inkscape:label="Plus"
      style="display:inline">
-    <rect
-       style="opacity:1;fill:#6d6f6f;fill-opacity:1;fill-rule:nonzero;stroke:#6d6f6f;stroke-width:2;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
-       id="rect1236"
-       width="42.625"
-       height="37.375"
-       x="-87.124992"
-       y="-2.2499979" />
     <g
-       transform="matrix(2.0000016,0,0,2.0000016,0.03560363,-0.01461041)"
+       transform="matrix(2.9118797,0,0,2.9118797,-21.83322,-21.906329)"
        id="g4474-4">
       <path
          inkscape:connector-curvature="0"

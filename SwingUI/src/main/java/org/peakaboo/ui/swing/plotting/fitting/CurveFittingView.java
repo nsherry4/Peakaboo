@@ -23,6 +23,7 @@ import cyclops.util.Mutable;
 import eventful.EventfulTypeListener;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
+import plural.swing.ExecutorSetViewLayer;
 import swidget.widgets.ClearPanel;
 import swidget.widgets.layerpanel.LayerDialog;
 import swidget.widgets.layerpanel.LayerDialog.MessageType;
@@ -145,25 +146,23 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		
 		if (plotController.data().hasDataSet() && plotController.fitting().getMaxEnergy() > 0f) {
 			ExecutorSet<List<ITransitionSeries>> exec = controller.autodetectPeaks();
-			ExecutorSetView execPanel = new ExecutorSetView(exec); 
-			
-			ModalLayer layer = new ModalLayer(plotPanel, execPanel);
+			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(plotPanel, exec);
 			
 			Mutable<Boolean> ran = new Mutable<>(false);
 			exec.addListener(() -> {
-				if (exec.getCompleted() && !ran.get()) {
+				if (ran.get()) {
+					return;
+				}
+				
+				if (exec.getCompleted()) {
 					ran.set(true);
-					plotPanel.removeLayer(layer);
 					changed();
 					exec.discard();
-				} else if (exec.isAborted() && !ran.get()) {
+				} else if (exec.isAborted()) {
 					ran.set(true);
-					plotPanel.removeLayer(layer);
 					exec.discard();
 				}
 			});		
-			
-			
 			
 			plotPanel.pushLayer(layer);
 			exec.startWorking();

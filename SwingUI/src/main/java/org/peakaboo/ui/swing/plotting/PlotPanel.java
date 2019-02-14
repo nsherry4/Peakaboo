@@ -104,6 +104,7 @@ import plural.streams.StreamExecutorSet;
 import plural.streams.swing.StreamExecutorPanel;
 import plural.streams.swing.StreamExecutorView;
 import plural.swing.ExecutorSetView;
+import plural.swing.ExecutorSetViewLayer;
 import swidget.dialogues.AboutDialogue;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
@@ -373,15 +374,12 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 	
 	void load(List<File> files) {
-		Mutable<ModalLayer> loadingLayer = new Mutable<>(null);
 		
 		DataLoader loader = new DataLoader(controller, files.stream().map(File::toPath).collect(Collectors.toList())) {
 
 			@Override
 			public void onLoading(ExecutorSet<DatasetReadResult> job) {
-				ExecutorSetView execPanel = new ExecutorSetView(job); 
-				loadingLayer.set(new ModalLayer(PlotPanel.this, execPanel));
-				PlotPanel.this.pushLayer(loadingLayer.get());
+				PlotPanel.this.pushLayer(new ExecutorSetViewLayer(PlotPanel.this, job));
 			}
 			
 			@Override
@@ -392,7 +390,6 @@ public class PlotPanel extends TabbedLayerPanel
 				//TODO: Should this be cleared even when we load a session?
 				savedSessionFileName = null;
 				canvas.updateCanvasSize();
-				removeLayer(loadingLayer.get());
 			}
 
 			@Override
@@ -658,16 +655,8 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionExportData(DataSource source, DataSink sink, File file) {
 
 		ExecutorSet<Void> writer = DataSink.write(source, sink, file.toPath());
-
-		ExecutorSetView execPanel = new ExecutorSetView(writer); 
-		ModalLayer execlayer = new ModalLayer(PlotPanel.this, execPanel);
-		writer.addListener(() -> {
-			if (writer.getCompleted() || writer.isAborted()) {
-				PlotPanel.this.removeLayer(execlayer);
-			}
-		});
-		PlotPanel.this.pushLayer(execlayer);
-
+		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
+		pushLayer(layer);
 		writer.startWorking();
 
 	}
@@ -888,15 +877,11 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			ExecutorSet<Object> execset = controller.writeFitleredDataToText(saveFile.get());
 			
-			ExecutorSetView view = new ExecutorSetView(execset);
-			ModalLayer layer = new ModalLayer(this, view);
+			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
 			
 			execset.addListener(() -> {
 				if (execset.isAborted()) {
 					saveFile.get().delete();
-				}
-				if (execset.getCompleted() || execset.isAborted()) {
-					removeLayer(layer);
 				}
 			});
 			
@@ -1124,13 +1109,10 @@ public class PlotPanel extends TabbedLayerPanel
 
 	public void actionQuickMap(int channel) {
 		ExecutorSet<RawMapSet> execset = Mapping.quickMapTask(controller.data(), channel);
-		ExecutorSetView view = new ExecutorSetView(execset);
-		ModalLayer progress = new ModalLayer(this, view);
+		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
+
 		Mutable<Boolean> done = new Mutable<>(false);
 		execset.addListener(() -> {
-			if (execset.getCompleted() || execset.isAborted()) {
-				removeLayer(progress);
-			}
 			if (execset.getCompleted() && execset.getResult() != null) {
 				if (!done.get()) {
 					done.set(true);
@@ -1140,7 +1122,7 @@ public class PlotPanel extends TabbedLayerPanel
 			}
 		});
 		
-		pushLayer(progress);
+		pushLayer(layer);
 		execset.startWorking();
 		
 
