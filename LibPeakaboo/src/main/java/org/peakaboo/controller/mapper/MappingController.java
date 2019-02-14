@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
@@ -27,9 +30,14 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.Mapper;
 
 import cyclops.Coord;
+import cyclops.util.Mutable;
 import cyclops.visualization.SaveableSurface;
 import cyclops.visualization.SurfaceType;
 import eventful.EventfulType;
+import plural.Plural;
+import plural.executor.ExecutorSet;
+import plural.executor.eachindex.EachIndexExecutor;
+import plural.executor.eachindex.implementations.SimpleEachIndexExecutor;
 
 
 
@@ -127,7 +135,7 @@ public class MappingController extends EventfulType<String>
 	}
 	
 	
-	public SavedSession getSavedSettings() {
+	public SavedSession getPlotSavedSettings() {
 		return plotcontroller.getSavedSettings();
 	}
 	
@@ -212,14 +220,17 @@ public class MappingController extends EventfulType<String>
 	}
 
 
-	public void writeArchive(OutputStream fos, SurfaceType format, int width, int height, Supplier<SaveableSurface> surfaceFactory) throws IOException {
-
-		ZipOutputStream zos = new ZipOutputStream(fos);
-		ZipEntry e;
+	public ExecutorSet<Void> writeArchive(OutputStream fos, SurfaceType format, int width, int height, Supplier<SaveableSurface> surfaceFactory) throws IOException {
+		//we make a copy of the controller to prevent spamming the UI with changes as we generate map after map
+		MappingController exportController = new MappingController(this.rawDataController, this.plotcontroller);
+		new SavedMapSession().storeFrom(this).loadInto(exportController);
+		return writeArchive(exportController, fos, format, width, height, surfaceFactory);
+	}
+	
+	private static ExecutorSet<Void> writeArchive(MappingController controller, OutputStream fos, SurfaceType format, int width, int height, Supplier<SaveableSurface> surfaceFactory) throws IOException {
+		final ZipOutputStream zos = new ZipOutputStream(fos);
 		
-		List<ITransitionSeries> tss = getFitting().getVisibleTransitionSeries();
-		
-		
+		List<ITransitionSeries> tss = controller.getFitting().getAllTransitionSeries();
 		/*
 		 * Little different here than in most places. Saving an image usually just
 		 * re-uses the GUI component and has it render to a different backend. This
@@ -228,19 +239,19 @@ public class MappingController extends EventfulType<String>
 		 * per-element overlays/ratios doesn't make a lot of sense.
 		 */
 		Coord<Integer> size = new Coord<>(width, height);
-		SaveableSurface context;		
-		MapRenderSettings settings = getRenderSettings();
-				
-		for (ITransitionSeries ts : tss) {
+		Mutable<Exception> exceptionBox = new Mutable<>();
 		
+		EachIndexExecutor executor = new SimpleEachIndexExecutor(tss.size(), index -> {
+			ITransitionSeries ts = tss.get(index);
+			
 			Mapper mapper = new Mapper();
 			MapRenderData data = new MapRenderData();
-			data.compositeData = getFitting().getCompositeMapData(Optional.of(ts));
-			data.maxIntensity = getFitting().sumAllTransitionSeriesMaps().max();
+			data.compositeData = controller.getFitting().getCompositeMapData(Optional.of(ts));
+			data.maxIntensity = controller.getFitting().sumAllTransitionSeriesMaps().max();
 			
-			getFitting().setAllTransitionSeriesVisibility(false);
-			getFitting().setTransitionSeriesVisibility(ts, true);
-			settings = getRenderSettings();
+			controller.getFitting().setAllTransitionSeriesVisibility(false);
+			controller.getFitting().setTransitionSeriesVisibility(ts, true);
+			MapRenderSettings settings = controller.getRenderSettings();
 			
 			//image extension
 			String ext = "";
@@ -255,28 +266,51 @@ public class MappingController extends EventfulType<String>
 				ext = "svg";
 				break;			
 			}
-			e = new ZipEntry(ts.toString() + "." + ext);
-			zos.putNextEntry(e);
-			context = surfaceFactory.get();
-			mapper.draw(data, settings, context, size);
-			context.write(zos);
-			zos.closeEntry();
+			try {
+				ZipEntry entry = new ZipEntry(ts.toString() + "." + ext);
+				zos.putNextEntry(entry);
+				SaveableSurface context = surfaceFactory.get();
+				mapper.draw(data, settings, context, size);
+				context.write(zos);
+				zos.closeEntry();
+				
+				//csv
+				entry = new ZipEntry(ts.toString() + ".csv");
+				zos.putNextEntry(entry);
+				controller.writeCSV(zos);
+				zos.closeEntry();
+			} catch (IOException exception) {
+				exceptionBox.set(exception);
+			}
+		});
+		executor.setName("Generating Maps");
+		
+		Function<Void, Void> after = nothing -> {
 			
-			//csv
-			e = new ZipEntry(ts.toString() + ".csv");
-			zos.putNextEntry(e);
-			writeCSV(zos);
-			zos.closeEntry();
+			try {
+				ZipEntry sessionEntry = new ZipEntry("session.peakaboo");
+				zos.putNextEntry(sessionEntry);
+				zos.write(controller.getPlotSavedSettings().serialize().getBytes());
+				zos.closeEntry();
+			} catch (IOException e) {
+				exceptionBox.set(e);
+			} finally {
+				try {
+					zos.close();
+				} catch (IOException e) {
+					exceptionBox.set(e);
+				}
+			}
 			
-		}
+			if (exceptionBox.get() != null) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to generate archive", exceptionBox.get());
+			}
+			
+			return null;
+		};
 		
-		e = new ZipEntry("session.peakaboo");
-		zos.putNextEntry(e);
-		zos.write(getSavedSettings().serialize().getBytes());
-		zos.closeEntry();
-		
-		
-		zos.close();
+		return Plural.build("Writing Archive", executor, () -> {}, after);
+
 		
 	}
 	

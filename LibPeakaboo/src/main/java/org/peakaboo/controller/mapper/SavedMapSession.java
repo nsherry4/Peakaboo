@@ -3,6 +3,7 @@ package org.peakaboo.controller.mapper;
 import org.peakaboo.common.YamlSerializer;
 import org.peakaboo.controller.mapper.dimensions.SavedMapDimensionsSession;
 import org.peakaboo.controller.mapper.filtering.SavedMapFilteringSession;
+import org.peakaboo.controller.mapper.fitting.SavedMapFittingSession;
 import org.peakaboo.controller.mapper.settings.SavedMapSettingsController;
 
 public class SavedMapSession {
@@ -10,6 +11,7 @@ public class SavedMapSession {
 	public SavedMapDimensionsSession dimensions;
 	public SavedMapSettingsController settings;
 	public SavedMapFilteringSession filters;
+	public SavedMapFittingSession fittings;
 	
 	
 	/**
@@ -31,6 +33,7 @@ public class SavedMapSession {
 		dimensions.loadInto(map.getUserDimensions());
 		settings.loadInto(map.getSettings());
 		filters.loadInto(map.getFiltering());
+		fittings.loadInto(map.getFitting());
 		
 	}
 	
@@ -39,6 +42,7 @@ public class SavedMapSession {
 		dimensions = new SavedMapDimensionsSession().storeFrom(map.getUserDimensions());
 		settings = new SavedMapSettingsController().storeFrom(map.getSettings());
 		filters = new SavedMapFilteringSession().storeFrom(map.getFiltering());
+		fittings = new SavedMapFittingSession().storeFrom(map.getFitting());
 		
 		return this;
 	}

@@ -48,8 +48,11 @@ public class MapFittingController extends EventfulType<String> {
 	private Map<ITransitionSeries, OverlayColour> overlayColour;
 	private Map<ITransitionSeries, Boolean> compositeVisibility;
 	
-	private MapScaleMode mapScaleMode;
 	private MapDisplayMode displayMode;
+	//TODO: should this be in MapSettingsController?
+	private MapScaleMode mapScaleMode;
+	
+	
 	
 	
 	public MapFittingController(MappingController map){

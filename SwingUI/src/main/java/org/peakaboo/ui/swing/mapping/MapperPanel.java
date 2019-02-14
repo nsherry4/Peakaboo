@@ -41,6 +41,9 @@ import cyclops.visualization.SurfaceType;
 import cyclops.visualization.backend.awt.AwtSurfaceFactory;
 import cyclops.visualization.backend.awt.SavePicture;
 import eventful.EventfulTypeListener;
+import plural.executor.ExecutorSet;
+import plural.swing.ExecutorSetView;
+import plural.swing.ExecutorSetViewLayer;
 import swidget.dialogues.fileio.SimpleFileExtension;
 import swidget.dialogues.fileio.SwidgetFilePanels;
 import swidget.widgets.ClearPanel;
@@ -318,7 +321,13 @@ public class MapperPanel extends TabbedLayerPanel {
 			return null;
 		};
 		
-		controller.writeArchive(fos, format, width, height, surfaceFactory);
+		ExecutorSet<Void> executorset = controller.writeArchive(fos, format, width, height, surfaceFactory);
+		
+		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, executorset);
+		this.pushLayer(layer);
+		
+		executorset.startWorking();
+		
 	}
 
 	@Override
