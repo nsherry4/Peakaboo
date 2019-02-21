@@ -3,6 +3,7 @@ package org.peakaboo.mapping.filter.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapFilterSet implements Iterable<MapFilter> {
 
@@ -83,6 +84,10 @@ public class MapFilterSet implements Iterable<MapFilter> {
 	public synchronized List<MapFilter> getAll() {
 		return new ArrayList<>(filters);
 	}
+	
+	public List<MapFilter> getAllEnabled() {
+		return filters.stream().filter(f -> f.isEnabled()).collect(Collectors.toList());
+	}
 		
 	public synchronized AreaMap apply(AreaMap map) {
 		return applyUnsynchronized(map);
@@ -98,5 +103,7 @@ public class MapFilterSet implements Iterable<MapFilter> {
 		
 		return map;
 	}
+
+
 
 }

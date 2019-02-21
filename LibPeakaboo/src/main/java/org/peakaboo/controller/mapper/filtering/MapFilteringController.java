@@ -140,6 +140,10 @@ public class MapFilteringController extends EventfulType<String> {
 	public List<MapFilter> getAll() {
 		return filters.getAll();
 	}
+	
+	public List<MapFilter> getAllEnabled() {
+		return filters.getAllEnabled();
+	}
 
 	public int size() {
 		return filters.size();
@@ -157,7 +161,7 @@ public class MapFilteringController extends EventfulType<String> {
 	
 	
 	public String getActionDescription() {
-		List<String> actions = filters.getAll().stream().map(f -> f.getFilterDescriptor().getAction()).collect(Collectors.toList());
+		List<String> actions = filters.getAllEnabled().stream().map(f -> f.getFilterDescriptor().getAction()).collect(Collectors.toList());
 		return ListOps.unique(actions).stream().reduce((a, b) -> a + ", " + b).orElse(null);
 	}
 
