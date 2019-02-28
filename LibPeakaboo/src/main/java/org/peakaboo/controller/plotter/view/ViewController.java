@@ -97,11 +97,11 @@ public class ViewController extends Eventful
 
 		if (direction > 0)
 		{
-			number = plot.data().getDataSet().getAnalysis().firstNonNullScanIndex(number);
+			number = plot.data().getDataSet().getScanData().firstNonNullScanIndex(number);
 		}
 		else
 		{
-			number = plot.data().getDataSet().getAnalysis().lastNonNullScanIndex(number);
+			number = plot.data().getDataSet().getScanData().lastNonNullScanIndex(number);
 		}
 
 		if (number == -1)

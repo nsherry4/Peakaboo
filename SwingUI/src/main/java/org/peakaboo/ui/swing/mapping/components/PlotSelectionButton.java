@@ -45,7 +45,7 @@ public class PlotSelectionButton extends ToolbarImageButton {
 			);
 	
 		PlotPanel subplot = new PlotPanel(plotter);
-		subplot.actionLoadExistingDataSource(sds, settings.serialize());
+		subplot.actionLoadSubsetDataSource(sds, settings.serialize());
 		plotter.addActiveTab(subplot);
 		//Focus and un-minimize
 		JFrame plotWindow = plotter.getWindow();

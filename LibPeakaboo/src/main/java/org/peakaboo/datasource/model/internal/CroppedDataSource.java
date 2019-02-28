@@ -11,6 +11,8 @@ import org.peakaboo.datasource.model.components.interaction.Interaction;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
+import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -30,6 +32,8 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 	private int							sizeX, sizeY;
 	private Range						rangeX, rangeY;
 	
+	private DataSourceAnalysis analysis;
+	
 	public CroppedDataSource(DataSource ds, int sizeX, int sizeY, Coord<Integer> cstart, Coord<Integer> cend)
 	{
 		
@@ -40,7 +44,11 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 		
 		this.rangeX = new Range(cstart.x, cend.x);
 		this.rangeY = new Range(cstart.y, cend.y);
-				
+		
+		//we don't reanalyze in the constructor for performance reasons
+		this.analysis = new DataSourceAnalysis();
+		this.analysis.init(ds.getScanData().getAnalysis().channelsPerScan());
+
 	}
 	
 
@@ -239,7 +247,24 @@ public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSi
 	}
 
 
+	@Override
+	public Analysis getAnalysis() {
+		return this.analysis;
+	}
 
+
+	@Override
+	public void reanalyze() {
+		for (int i = 0; i < scanCount(); i++) {
+			this.reanalyze(i);
+		}
+	}
+
+	@Override
+	public void reanalyze(int i) {
+		this.analysis.process(get(i));
+	}
+	
 
 	
 	

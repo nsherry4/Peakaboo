@@ -3,6 +3,8 @@ package org.peakaboo.datasource.model.components.scandata;
 
 import java.util.Iterator;
 
+import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
+
 import cyclops.ReadOnlySpectrum;
 
 
@@ -70,7 +72,63 @@ public interface ScanData extends Iterable<ReadOnlySpectrum>
 	String datasetName();
 	
 	
+	Analysis getAnalysis();
+	
 
+	/**
+	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
+	 * @param start the index from which to start searching
+	 * @return the index of the first non-null scan
+	 */
+	default int firstNonNullScanIndex(int start) {
+		for (int i = start; i < scanCount(); i++) {
+			if (get(i) != null) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+
+	/**
+	 * Finds the first non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 10-50
+	 * @return the index of the first non-null scan, or -1 if no such scans exist
+	 */
+	default int firstNonNullScanIndex() {
+		return firstNonNullScanIndex(0);
+	}
+	
+
+	/**
+	 * Finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
+	 * @param upto the maximum index to consider
+	 * @return the index of the last non-null scan
+	 */
+	default int lastNonNullScanIndex(int upto) {
+		upto = Math.min(upto, scanCount()-1);
+		
+		for (int i = upto; i >= 0; i--) {
+			if (get(i) != null) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+
+	/**
+	 * Finds the last non-null scan. This is useful in situations where a partial data set is read, containing, for example, scans 1-45 where 50 scans are expected
+	 * @return the index of the last non-null scan, or -1 if no such scans exist
+	 */
+	default int lastNonNullScanIndex() {
+		return lastNonNullScanIndex(scanCount()-1);
+	}
+
+	
+
+	
+	
+	
 	
 
 }

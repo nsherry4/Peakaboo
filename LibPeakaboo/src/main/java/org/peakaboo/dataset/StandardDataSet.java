@@ -12,8 +12,6 @@ import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
-import org.peakaboo.dataset.analysis.Analysis;
-import org.peakaboo.dataset.analysis.DataSourceAnalysis;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.datasize.DataSize;
 import org.peakaboo.datasource.model.components.datasize.DummyDataSize;
@@ -22,6 +20,9 @@ import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.DummyScanData;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
+import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.datasource.model.internal.SubsetDataSource;
 
 import cyclops.Coord;
 import cyclops.ReadOnlySpectrum;
@@ -52,7 +53,6 @@ public class StandardDataSet implements DataSet
 	//information about scans, so we store the physical coordinates
 	//here
 	protected List<Coord<Number>>	realCoords;
-	protected Analysis				analysis;
 	
 
 	public StandardDataSet()
@@ -154,10 +154,7 @@ public class StandardDataSet implements DataSet
 					gotScanCount.accept(scanCount);
 					reading.advanceState();
 					
-					applying.setWorkUnits(dataSource.getScanData().scanCount());
 					applying.advanceState();
-					
-					
 					//now that we have the datasource, read it
 					readDataSource(dataSource, applying, isAborted);
 					
@@ -208,41 +205,47 @@ public class StandardDataSet implements DataSet
 		
 		if (ds == null || ds.getScanData().scanCount() == 0) return;
 
-		
-		//if this data source has dimensions, make space to store them all in a list
-		if (ds.getPhysicalSize().isPresent())
-		{
-			realCoords = new ArrayList<Coord<Number>>();
-		}
-
-		
+		boolean hasRealSize = ds.getPhysicalSize().isPresent();
+		boolean isSubset = ds instanceof SubsetDataSource;
+			
 		//go over each scan, calculating the average, max10th and max value
-		ReadOnlySpectrum current;
 		int updateInterval = Math.min(Math.max(ds.getScanData().scanCount()/100, 20), 1000);
 		int gcInterval = 5000;
+		applying.setWorkUnits(ds.getScanData().scanCount());
 		
-		analysis = new DataSourceAnalysis(this, ds);
-		for (int i = 0; i < ds.getScanData().scanCount(); i++)
-		{
-			current = ds.getScanData().get(i);
-			analysis.process(i, current);
-
-			//read the real coordinates for this scan
-			if (ds.getPhysicalSize().isPresent()) {
-				realCoords.add(ds.getPhysicalSize().get().getPhysicalCoordinatesAtIndex(i));
-			}
-
-			if (i % updateInterval == 0) {
-				if (applying != null) applying.workUnitCompleted(updateInterval);
-				if (isAborted != null && isAborted.get()) return;
-			}
-			if (i % gcInterval == 0) {
-				System.gc();
-			}
-			
+		if (hasRealSize) {
+			realCoords = new ArrayList<Coord<Number>>();
 		}
 		
-		System.gc();
+		if (hasRealSize || isSubset) {
+			for (int i = 0; i < ds.getScanData().scanCount(); i++) {
+				
+				if (isSubset) {
+					//subset data sources need to re-perform their analysis on the subset
+					if (ds instanceof SubsetDataSource) {
+						SubsetDataSource sds = (SubsetDataSource) ds;
+						sds.reanalyze(i);
+					}
+				}
+				
+				if (hasRealSize) {
+					//read the real coordinates for this scan
+					realCoords.add(ds.getPhysicalSize().get().getPhysicalCoordinatesAtIndex(i));
+				}
+	
+				if (i % updateInterval == 0) {
+					if (applying != null) applying.workUnitCompleted(updateInterval);
+					if (isAborted != null && isAborted.get()) return;
+				}
+				if (i % gcInterval == 0) {
+					System.gc();
+				}
+				
+			}
+			System.gc();
+		}
+			
+		
 		this.dataSource = ds;
 		
 
@@ -316,7 +319,7 @@ public class StandardDataSet implements DataSet
 
 	@Override
 	public Analysis getAnalysis() {
-		return analysis;
+		return dataSource.getScanData().getAnalysis();
 	}
 
 

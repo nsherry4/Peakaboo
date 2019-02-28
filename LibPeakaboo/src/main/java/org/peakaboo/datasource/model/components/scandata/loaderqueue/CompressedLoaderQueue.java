@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
+import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
+import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 
 import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
@@ -27,12 +29,14 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
 	private ScratchEncoder<Spectrum> encoder;
+	private Analysis analysis;
 	
-	public CompressedLoaderQueue(SimpleScanData data) {
-		this(data, 1000);
+	public CompressedLoaderQueue(SimpleScanData data, Analysis analysis) {
+		this(data, analysis, 1000);
 	}
-	public CompressedLoaderQueue(SimpleScanData data, int depth) {
+	public CompressedLoaderQueue(SimpleScanData data, Analysis analysis, int depth) {
 		this.encoder = PeakabooConfiguration.spectrumEncoder;
+		this.analysis = new DataSourceAnalysis();
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {
@@ -69,6 +73,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	public void submit(int index, Spectrum s) throws InterruptedException {
 		SpectrumIndex struct = new SpectrumIndex();
 		struct.index = index;
+		this.analysis.process(s);
 		struct.spectrum = Compressed.create(s, this.encoder);
 		queue.put(struct);
 	}
@@ -78,6 +83,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 		queue.put(new SpectrumIndex());
 		thread.join();
 	}
+
 	
 }
 

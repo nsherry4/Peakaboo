@@ -33,6 +33,7 @@ public class PlainText extends AbstractDataSource
 
 	private SimpleScanData scandata;
 	
+	
 	public PlainText()
 	{
 	}

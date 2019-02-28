@@ -11,6 +11,8 @@ import org.peakaboo.datasource.model.components.interaction.Interaction;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
+import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 
 import cyclops.ReadOnlySpectrum;
 import net.sciencestudio.autodialog.model.Group;
@@ -24,10 +26,15 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 
 	private DataSource source;
 	private List<Integer> selectedIndexes;
+	private DataSourceAnalysis analysis;
 	
 	public SelectionDataSource(DataSource source, List<Integer> selectedIndexes) {
 		this.source = source;
 		this.selectedIndexes = selectedIndexes;
+		
+		//we don't reanalyze in the constructor for performance reasons
+		this.analysis = new DataSourceAnalysis();
+		this.analysis.init(source.getScanData().getAnalysis().channelsPerScan());
 	}
 	
 	public boolean isContiguous() {
@@ -121,5 +128,24 @@ public class SelectionDataSource implements SubsetDataSource, ScanData {
 	public Optional<Group> getParameters(List<Path> paths) {
 		return Optional.empty();
 	}
+
+	@Override
+	public Analysis getAnalysis() {
+		return this.analysis;
+	}
+
+	@Override
+	public void reanalyze() {
+		for (int i = 0; i < scanCount(); i++) {
+			this.reanalyze(i);
+		}
+	}
+
+	@Override
+	public void reanalyze(int i) {
+		this.analysis.process(get(i));
+	}
+	
+	
 	
 }

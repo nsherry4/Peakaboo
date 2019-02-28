@@ -152,7 +152,7 @@ public class DataController extends Eventful
 		DataSet old = dataModel;
 		dataModel = dsp;
 		
-		plot.view().setScanNumber( dsp.getAnalysis().firstNonNullScanIndex() );
+		plot.view().setScanNumber( dsp.getScanData().firstNonNullScanIndex() );
 		plot.fitting().setMinEnergy(dsp.getDataSource().getScanData().minEnergy());
 		plot.fitting().setMaxEnergy(dsp.getDataSource().getScanData().maxEnergy());
 		
@@ -211,7 +211,7 @@ public class DataController extends Eventful
 		
 		return new Iterator<ReadOnlySpectrum>() {
 
-			int nextIndex = dataModel.getAnalysis().firstNonNullScanIndex();
+			int nextIndex = dataModel.getScanData().firstNonNullScanIndex();
 			ReadOnlySpectrum next = dataModel.getScanData().get(nextIndex);
 			
 			
@@ -223,7 +223,7 @@ public class DataController extends Eventful
 			public ReadOnlySpectrum next()
 			{
 				ReadOnlySpectrum current = next;
-				nextIndex = dataModel.getAnalysis().firstNonNullScanIndex(nextIndex+1);
+				nextIndex = dataModel.getScanData().firstNonNullScanIndex(nextIndex+1);
 				if (nextIndex == -1) {
 					next = null;
 				} else {

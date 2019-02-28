@@ -65,6 +65,7 @@ import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterSet;
@@ -617,12 +618,12 @@ public class PlotPanel extends TabbedLayerPanel
 
 	
 	
-	public void actionLoadExistingDataSource(DataSource ds, String settings) {
+	public void actionLoadSubsetDataSource(SubsetDataSource sds, String settings) {
 		
 		Mutable<ModalLayer> layer = new Mutable<>();
 		
 		ExecutorSet<Boolean> loader = Plural.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
-			getController().data().setDataSource(ds, exec, execset::isAborted);
+			getController().data().setDataSource(sds, exec, execset::isAborted);
 			getController().loadSettings(settings, false);
 			removeLayer(layer.get());
 			return true;

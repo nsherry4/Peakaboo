@@ -3,6 +3,8 @@ package org.peakaboo.datasource.model.components.scandata;
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.common.PeakabooConfiguration.MemorySize;
 import org.peakaboo.datasource.model.PeakabooLists;
+import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
+import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
@@ -20,10 +22,12 @@ public class SimpleScanData implements ScanData {
 	private float maxEnergy;
 	private float minEnergy = 0;
 	private String name;
+	private Analysis analysis;
 	
 	public SimpleScanData(String name) {
 		this.name = name;
 		this.spectra = PeakabooLists.create();
+		this.analysis = new DataSourceAnalysis();
 	}
 		
 
@@ -110,10 +114,16 @@ public class SimpleScanData implements ScanData {
 				(PeakabooConfiguration.memorySize == MemorySize.MEDIUM && capacity > 1000) || //8 - 16 MB
 				(PeakabooConfiguration.memorySize == MemorySize.LARGE && capacity > 20000) //160 - 320 MB
 			) {
-			return new CompressedLoaderQueue(this, capacity);
+			return new CompressedLoaderQueue(this, analysis, capacity);
 		} else {
-			return new SimpleLoaderQueue(this, capacity);			
+			return new SimpleLoaderQueue(this, analysis, capacity);			
 		}
+	}
+
+
+	@Override
+	public Analysis getAnalysis() {
+		return this.analysis;
 	}
 
 

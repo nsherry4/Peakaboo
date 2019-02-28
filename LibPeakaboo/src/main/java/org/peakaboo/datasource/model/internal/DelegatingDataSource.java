@@ -11,6 +11,7 @@ import org.peakaboo.datasource.model.components.interaction.Interaction;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 
 import net.sciencestudio.autodialog.model.Group;
 
