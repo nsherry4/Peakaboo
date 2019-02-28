@@ -34,6 +34,7 @@ package swidget.widgets.tabbedinterface;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -43,11 +44,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicButtonUI;
 
@@ -95,21 +98,62 @@ public class TabbedInterfaceTitle extends JPanel {
         
         setMinimumSize(new Dimension(width, (int)getMinimumSize().getHeight()));
         setPreferredSize(new Dimension(width, (int)getPreferredSize().getHeight()));
-        
-        MouseListener doubleClickListener = new MouseAdapter() {
-					
+        MouseListener doubleClickListener = new MouseListener() {
+			
+			// We have to make sure that we don't eat events that ought to go to the
+			// tab/frame itself, so we redispatch all events when we're done with them
+			private void redispatch(MouseEvent e) {
+				Component source = e.getComponent();
+				Component target = source.getParent();
+				while (true) {
+					if (target == null) {
+						break;
+					}
+					if (target instanceof JTabbedPane) {
+						break;
+					}
+					target = target.getParent();
+				}
+				if (target != null) {
+					MouseEvent targetEvent = SwingUtilities.convertMouseEvent(source, e, target);
+					target.dispatchEvent(targetEvent);
+				}
+			}
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//Double-click triggers the action, nothing else does
 				if (!  (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2)) {
+					redispatch(e);
 					return;
 				}
 				onDoubleClick.run();
+				redispatch(e);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				redispatch(e);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				redispatch(e);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				redispatch(e);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				redispatch(e);
 			}
 		};
 		this.addMouseListener(doubleClickListener);
 		label.addMouseListener(doubleClickListener);
-        
+
         
     }
     
