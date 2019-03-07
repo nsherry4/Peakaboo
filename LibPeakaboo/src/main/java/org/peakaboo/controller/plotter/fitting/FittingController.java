@@ -336,6 +336,12 @@ public class FittingController extends EventfulType<Boolean>
 		setFittingParameters(dataWidth, min, getMaxEnergy());
 		updateListeners(false);
 	}
+	
+	public void setMinMaxEnergy(float min, float max) {
+		int dataWidth = plot.data().getDataSet().getAnalysis().channelsPerScan();
+		setFittingParameters(dataWidth, min, max);
+		updateListeners(false);
+	}
 
 	
 	public float getMinEnergy()

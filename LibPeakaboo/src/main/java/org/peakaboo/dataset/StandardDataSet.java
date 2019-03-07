@@ -148,7 +148,7 @@ public class StandardDataSet implements DataSet
 						return new DatasetReadResult(ReadStatus.CANCELLED);
 					}
 					
-					
+
 					scanCount = dataSource.getScanData().scanCount();
 					if (scanCount == 0) return new DatasetReadResult(ReadStatus.FAILED, "Did not find any data in file(s)");
 					gotScanCount.accept(scanCount);

@@ -107,7 +107,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 				min = controller.fitting().getMaxEnergy() - 0.01f;
 				minEnergy.setValue(min);
 			} 
-			controller.fitting().setMinEnergy(min);	
+			controller.fitting().setMinEnergy(min);
 		});
 		energy.addSetting(minEnergy, "Minimum");
 		
