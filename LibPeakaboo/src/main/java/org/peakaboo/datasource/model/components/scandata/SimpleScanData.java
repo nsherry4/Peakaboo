@@ -109,8 +109,8 @@ public class SimpleScanData implements ScanData {
 		 * DataSource thread, since it now handles the compression.
 		 */
 		if (
-				(PeakabooConfiguration.memorySize == MemorySize.TINY && capacity > 100) || //0.8 - 1.6 MB
-				(PeakabooConfiguration.memorySize == MemorySize.SMALL && capacity > 200) || //1.6 - 3.2 MB
+				(PeakabooConfiguration.memorySize == MemorySize.TINY && capacity > 200) || //1.6 - 3.2 MB
+				(PeakabooConfiguration.memorySize == MemorySize.SMALL && capacity > 400) || //3.2 - 6.4 MB
 				(PeakabooConfiguration.memorySize == MemorySize.MEDIUM && capacity > 1000) || //8 - 16 MB
 				(PeakabooConfiguration.memorySize == MemorySize.LARGE && capacity > 20000) //160 - 320 MB
 			) {

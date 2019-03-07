@@ -23,11 +23,11 @@ public class PeakabooConfiguration {
 		
 		long maxHeap = Env.maxHeap();
 		
-		if (maxHeap < 128) {
+		if (maxHeap < 256) {
 			return MemorySize.TINY;
-		} else if (maxHeap < 256) {
+		} else if (maxHeap <= 512) {
 			return MemorySize.SMALL;
-		} else if (maxHeap < 1024) {
+		} else if (maxHeap <= 1024) {
 			return MemorySize.MEDIUM;
 		} else {
 			return MemorySize.LARGE;
