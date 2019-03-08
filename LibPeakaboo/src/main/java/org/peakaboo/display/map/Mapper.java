@@ -2,7 +2,10 @@ package org.peakaboo.display.map;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.peakaboo.display.map.modes.MapDisplayMode;
@@ -46,7 +49,7 @@ public class Mapper {
 
 	private DrawingRequest dr;
 	private SpectrumMapPainter contourMapPainter, ratioMapPainter;
-	private RasterSpectrumMapPainter overlayMapPainterRed, overlayMapPainterGreen, overlayMapPainterBlue, overlayMapPainterYellow;
+	private Map<OverlayColour, RasterSpectrumMapPainter> overlayMapPainters;
 	
 	private SelectionMaskPainter selectionPainter;
 	
@@ -450,34 +453,50 @@ public class Mapper {
 		dr.dataHeight = settings.filteredDataHeight;
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
+		dr.drawToVectorSurface = vector;
 		
-		Float redMax = 0f, greenMax = 0f, blueMax = 0f, yellowMax=0f;
-		
-		Spectrum redSpectrum = data.overlayData.get(OverlayColour.RED).data;
-		Spectrum greenSpectrum = data.overlayData.get(OverlayColour.GREEN).data;
-		Spectrum blueSpectrum = data.overlayData.get(OverlayColour.BLUE).data;
-		Spectrum yellowSpectrum = data.overlayData.get(OverlayColour.YELLOW).data;
-		
-		
-		if (redSpectrum != null ) redMax = redSpectrum.max();
-		if (greenSpectrum != null ) greenMax = greenSpectrum.max();
-		if (blueSpectrum != null ) blueMax = blueSpectrum.max();
-		if (yellowSpectrum != null ) yellowMax = yellowSpectrum.max();
-		
-		
-		dr.maxYIntensity = Math.max(Math.max(redMax, yellowMax), Math.max(greenMax, blueMax));
-
-
-		List<Pair<PaletteColour, String>> 	colours = new ArrayList<>();
-		Function<OverlayColour, String> tsFormatter = colour -> data.overlayData.get(colour).elements.stream()
+		List<Pair<PaletteColour, String>> colours = new ArrayList<>();
+		Function<OverlayColour, String> tsFormatter = colour -> data.overlayData.get(colour).elements
+				.stream()
 				.map(ts -> ts.toString())
 				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
 		
-		if (redSpectrum != null) 	colours.add(new Pair<>(OverlayColour.RED.toColour(), tsFormatter.apply(OverlayColour.RED)));
-		if (yellowSpectrum != null) colours.add(new Pair<>(OverlayColour.YELLOW.toColour(), tsFormatter.apply(OverlayColour.YELLOW)));
-		if (greenSpectrum != null) 	colours.add(new Pair<>(OverlayColour.GREEN.toColour(), tsFormatter.apply(OverlayColour.GREEN)));
-		if (blueSpectrum != null) 	colours.add(new Pair<>(OverlayColour.BLUE.toColour(), tsFormatter.apply(OverlayColour.BLUE)));
+		if (overlayMapPainters == null) {
+			overlayMapPainters = new LinkedHashMap<>();
+		}
 		
+		float maxmax = 0f;
+		Map<OverlayColour, Spectrum> overlaySpectra = new LinkedHashMap<>();
+		for (OverlayColour colour : OverlayColour.values()) {
+			Spectrum colourSpectrum = data.overlayData.get(colour).data;
+			float colourMax = 0f;
+			if (colourSpectrum != null) {
+				overlaySpectra.put(colour, colourSpectrum);
+				
+				//calculate the max for this colour
+				colourMax = colourSpectrum.max();
+				//add the colour to a list of colourcode/label pairs
+				colours.add(new Pair<>(colour.toColour(), tsFormatter.apply(colour)));
+				
+				OverlayPalette palette = new OverlayPalette(spectrumSteps, colour.toColour());
+				
+				// create a list of map painters, one for each of the maps we want to show
+				RasterSpectrumMapPainter overlayColourMapPainter;
+				if (! overlayMapPainters.containsKey(colour)) {
+					overlayColourMapPainter = new RasterSpectrumMapPainter(palette, colourSpectrum);
+					overlayColourMapPainter.setCompositeMode(CompositeModes.ADD);
+					overlayMapPainters.put(colour, overlayColourMapPainter);
+				} else {
+					overlayColourMapPainter = overlayMapPainters.get(colour);
+				}
+				overlayColourMapPainter.setData(colourSpectrum);
+				overlayColourMapPainter.setPalette(palette);
+				
+			}
+			maxmax = Math.max(maxmax, colourMax);
+		}
+		dr.maxYIntensity = maxmax;
+
 		
 		
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
@@ -510,66 +529,14 @@ public class Mapper {
 			String mapTitle = settings.mapTitle;
 			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
 		}
-
+		
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
-		
 		axisPainters.add(spectrumCoordPainter);
-
-		dr.drawToVectorSurface = vector;
-
-		
 		map.setAxisPainters(axisPainters);
 		map.setDrawingRequest(dr);
 
-	
 
-		// create a list of map painters, one for each of the maps we want to show
-		
-		
-		if (redSpectrum != null) {
-			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.RED.toColour());
-			if (overlayMapPainterRed == null) {
-				overlayMapPainterRed = new RasterSpectrumMapPainter(palette, redSpectrum);
-				overlayMapPainterRed.setCompositeMode(CompositeModes.ADD);
-			}
-			overlayMapPainterRed.setData(redSpectrum);
-			overlayMapPainterRed.setPalette(palette);
-			
-		}
-			
-		if (greenSpectrum != null) {
-			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.GREEN.toColour());
-			if (overlayMapPainterGreen == null) {
-				overlayMapPainterGreen = new RasterSpectrumMapPainter(palette, greenSpectrum);
-				overlayMapPainterGreen.setCompositeMode(CompositeModes.ADD);
-			}
-			overlayMapPainterGreen.setData(greenSpectrum);
-			overlayMapPainterGreen.setPalette(palette);
-		}
-		
-		if (blueSpectrum != null) {
-			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.BLUE.toColour());
-			if (overlayMapPainterBlue == null) {
-				overlayMapPainterBlue = new RasterSpectrumMapPainter(palette, blueSpectrum);
-				overlayMapPainterBlue.setCompositeMode(CompositeModes.ADD);
-			}
-			overlayMapPainterBlue.setData(blueSpectrum);
-			overlayMapPainterBlue.setPalette(palette);
-		}
-		
-		if (yellowSpectrum != null) {
-			OverlayPalette palette = new OverlayPalette(spectrumSteps, OverlayColour.YELLOW.toColour());
-			if (overlayMapPainterYellow == null) {
-				overlayMapPainterYellow = new RasterSpectrumMapPainter(palette, yellowSpectrum);
-				overlayMapPainterYellow.setCompositeMode(CompositeModes.ADD);
-			}
-			overlayMapPainterYellow.setData(yellowSpectrum);
-			overlayMapPainterYellow.setPalette(palette);
-		}
-
-		
-		
 		
 		//Selection Painter
 		if (selectionPainter == null) {
@@ -596,17 +563,12 @@ public class Mapper {
 			for (int i = 0; i < dr.dataWidth * dr.dataHeight; i++) {
 				PaletteColour addedColour = new PaletteColour();
 				
-				if (redSpectrum != null && overlayMapPainterRed != null) {
-					addedColour = addedColour.add(overlayMapPainterRed.getColourFromRules(redSpectrum.get(i), overlayMapPainterRed.calcMaxIntensity(p), dr.viewTransform));
-				}
-				if (greenSpectrum != null && overlayMapPainterGreen != null) {
-					addedColour = addedColour.add(overlayMapPainterGreen.getColourFromRules(greenSpectrum.get(i), overlayMapPainterGreen.calcMaxIntensity(p), dr.viewTransform));
-				}
-				if (blueSpectrum != null && overlayMapPainterBlue != null) {
-					addedColour = addedColour.add(overlayMapPainterBlue.getColourFromRules(blueSpectrum.get(i), overlayMapPainterBlue.calcMaxIntensity(p), dr.viewTransform));
-				}
-				if (yellowSpectrum != null && overlayMapPainterYellow != null) {
-					addedColour = addedColour.add(overlayMapPainterYellow.getColourFromRules(yellowSpectrum.get(i), overlayMapPainterYellow.calcMaxIntensity(p), dr.viewTransform));
+				for (OverlayColour colour : OverlayColour.values()) {
+					if (overlaySpectra.containsKey(colour) && overlayMapPainters.containsKey(colour) ) {
+						Spectrum colourSpectrum = overlaySpectra.get(colour);
+						RasterSpectrumMapPainter colourPainter = overlayMapPainters.get(colour);
+						addedColour = addedColour.add(colourPainter.getColourFromRules(colourSpectrum.get(i), colourPainter.calcMaxIntensity(p), dr.viewTransform));
+					}
 				}
 				addedColours.add(addedColour);
 			}
@@ -631,10 +593,12 @@ public class Mapper {
 			
 			List<MapPainter> painters = new ArrayList<MapPainter>();
 			painters.add(new FloodMapPainter(new PaletteColour(0xff000000))); //background
-			if (redSpectrum != null && overlayMapPainterRed != null)       painters.add(overlayMapPainterRed);
-			if (greenSpectrum != null && overlayMapPainterGreen != null)   painters.add(overlayMapPainterGreen);
-			if (blueSpectrum != null && overlayMapPainterBlue != null)     painters.add(overlayMapPainterBlue);
-			if (yellowSpectrum != null && overlayMapPainterYellow != null) painters.add(overlayMapPainterYellow);
+			for (OverlayColour colour : OverlayColour.values()) {
+				if (overlaySpectra.containsKey(colour) && overlayMapPainters.containsKey(colour) ) {
+					RasterSpectrumMapPainter colourPainter = overlayMapPainters.get(colour);
+					painters.add(colourPainter);
+				}
+			}
 			painters.add(selectionPainter);
 			map.setPainters(painters);
 			
@@ -653,10 +617,12 @@ public class Mapper {
 		
 		if (contourMapPainter != null)			contourMapPainter.clearBuffer();
 		if (ratioMapPainter != null) 			ratioMapPainter.clearBuffer();
-		if (overlayMapPainterBlue != null) 		overlayMapPainterBlue.clearBuffer();
-		if (overlayMapPainterGreen != null)		overlayMapPainterGreen.clearBuffer();
-		if (overlayMapPainterRed != null) 		overlayMapPainterRed.clearBuffer();
-		if (overlayMapPainterYellow != null) 	overlayMapPainterYellow.clearBuffer();
+		
+		if (overlayMapPainters != null) {
+			for (RasterSpectrumMapPainter painter : overlayMapPainters.values()) {
+				painter.clearBuffer();
+			}
+		}
 	}
 
 	

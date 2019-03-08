@@ -27,6 +27,24 @@ public enum OverlayColour {
 		public int toARGB(){return 0xffFFFC19;}
 		@Override
 		public String toString(){return "Yellow";}
+	},
+	ORANGE {
+		@Override
+		public int toARGB(){return 0xffFF8000;}
+		@Override
+		public String toString(){return "Orange";}
+	},
+	PURPLE {
+		@Override
+		public int toARGB(){return 0xff9000FF;}
+		@Override
+		public String toString(){return "Purple";}
+	},
+	PINK {
+		@Override
+		public int toARGB(){return 0xffFF0090;}
+		@Override
+		public String toString(){return "Pink";}
 	};
 	
 	

@@ -165,106 +165,39 @@ public class MapFittingController extends EventfulType<String> {
 				.collect(toList());
 				
 
-		Spectrum redSpectrum = null, greenSpectrum = null, blueSpectrum = null, yellowSpectrum = null;
 		Map<OverlayColour, Spectrum> valueFunctionMaps = new HashMap<OverlayColour, Spectrum>();
+		Map<OverlayColour, OverlayChannel> colourChannels = new HashMap<>();
 		
-		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> redSpectrums = dataset.stream()
-				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.RED))
-				.map(e -> e.second)
-				.collect(toList());
+		for (OverlayColour colour : OverlayColour.values()) {
+			Spectrum colourSpectrum;
+			//get the TSs for this colour, and get their combined spectrum
+			List<Spectrum> colourSpectrums = dataset.stream()
+					.filter(e -> (this.overlayColour.get(e.first) == colour))
+					.map(e -> e.second)
+					.collect(toList());
 
-		List<ITransitionSeries> redTS = dataset.stream()
-				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.RED))
-				.map(e -> e.first)
-				.collect(toList());
-		
-		if (redSpectrums != null && redSpectrums.size() > 0) {
-			redSpectrum = redSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			valueFunctionMaps.put(OverlayColour.RED, redSpectrum);
-		} else {
-			redSpectrum = null;
-		}
+			List<ITransitionSeries> colourTS = dataset.stream()
+					.filter(e -> (this.overlayColour.get(e.first) == colour))
+					.map(e -> e.first)
+					.collect(toList());
 			
-		
-		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> greenSpectrums = dataset.stream()
-				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.GREEN))
-				.map(e -> e.second)
-				.collect(toList());
-		
-		List<ITransitionSeries> greendTS = dataset.stream()
-				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.GREEN))
-				.map(e -> e.first)
-				.collect(toList());
-		
-		if (greenSpectrums != null && greenSpectrums.size() > 0){
-			greenSpectrum = greenSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			valueFunctionMaps.put(OverlayColour.GREEN, greenSpectrum);
-		} else {
-			greenSpectrum = null;
+			if (colourSpectrums != null && colourSpectrums.size() > 0) {
+				colourSpectrum = colourSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
+				valueFunctionMaps.put(colour, colourSpectrum);
+			} else {
+				colourSpectrum = null;
+			}
+			
+			if (this.mapScaleMode == MapScaleMode.RELATIVE && colourSpectrum != null) {
+				SpectrumCalculations.normalize_inplace(colourSpectrum);
+			}
+			
+			colourChannels.put(colour, new OverlayChannel(colourSpectrum, colourTS));
+			
 		}
 
-
-			
-		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> blueSpectrums = dataset.stream()
-				.filter(e -> this.overlayColour.get(e.first) == OverlayColour.BLUE)
-				.map(e -> e.second)
-				.collect(toList());
-		
-		List<ITransitionSeries> blueTS = dataset.stream()
-				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.BLUE))
-				.map(e -> e.first)
-				.collect(toList());
-		
-		if (blueSpectrums != null && blueSpectrums.size() > 0) {
-			blueSpectrum = blueSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			valueFunctionMaps.put(OverlayColour.BLUE, blueSpectrum);	
-		} else {
-			blueSpectrum = null;
-		}
-		
-		
-		
-		
-		//get the TSs for this colour, and get their combined spectrum
-		List<Spectrum> yellowSpectrums = dataset.stream()
-				.filter(e -> this.overlayColour.get(e.first) == OverlayColour.YELLOW)
-				.map(e -> e.second)
-				.collect(toList());
-		
-		List<ITransitionSeries> yellowTS = dataset.stream()
-				.filter(e -> (this.overlayColour.get(e.first) == OverlayColour.YELLOW))
-				.map(e -> e.first)
-				.collect(toList());
-		
-		if (yellowSpectrums != null && yellowSpectrums.size() > 0) {
-			yellowSpectrum = yellowSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
-			valueFunctionMaps.put(OverlayColour.YELLOW, yellowSpectrum);
-		} else {
-			yellowSpectrum = null;
-		}
-			
-		
-		
-		if (this.mapScaleMode == MapScaleMode.RELATIVE)
-		{
-			if (redSpectrum != null ) SpectrumCalculations.normalize_inplace(redSpectrum);
-			if (greenSpectrum != null ) SpectrumCalculations.normalize_inplace(greenSpectrum);
-			if (blueSpectrum != null ) SpectrumCalculations.normalize_inplace(blueSpectrum);
-			if (yellowSpectrum != null ) SpectrumCalculations.normalize_inplace(yellowSpectrum);
-		}
-		
-		Map<OverlayColour, OverlayChannel> colours = new HashMap<>();
-		
-		colours.put(OverlayColour.RED, new OverlayChannel(redSpectrum, redTS));
-		colours.put(OverlayColour.GREEN, new OverlayChannel(greenSpectrum, greendTS));
-		colours.put(OverlayColour.BLUE, new OverlayChannel(blueSpectrum, blueTS));
-		colours.put(OverlayColour.YELLOW, new OverlayChannel(yellowSpectrum, yellowTS));
-		
 		putValueFunctionForOverlay(valueFunctionMaps);
-		return colours;
+		return colourChannels;
 		
 	}
 	
