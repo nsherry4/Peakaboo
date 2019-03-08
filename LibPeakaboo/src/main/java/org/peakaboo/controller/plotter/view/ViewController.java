@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import org.peakaboo.common.ConfigurationLoadException;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.PlotController.PlotSpectra;
@@ -236,7 +237,7 @@ public class ViewController extends Eventful
 			SavedPersistence saved = SavedPersistence.deserialize(yaml);
 			saved.loadInto(plot);
 					
-		} catch (IOException e) {
+		} catch (IOException | ConfigurationLoadException e) {
 			PeakabooLog.get().log(Level.WARNING, "Could not load persistent settings", e);
 		}
 		

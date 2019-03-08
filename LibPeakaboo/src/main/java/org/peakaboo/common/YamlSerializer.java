@@ -2,6 +2,7 @@ package org.peakaboo.common;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -31,8 +32,12 @@ public class YamlSerializer {
 		representer.getPropertyUtils().setSkipMissingProperties(true);
 		Yaml y = new Yaml(representer);
 		
-		T data = (T)y.load(yaml);
-		return data;
+		try {
+			return (T)y.load(yaml);
+		} catch (YAMLException e) {
+			throw new ConfigurationLoadException(e);
+		}
+		
 	}
 	
 	

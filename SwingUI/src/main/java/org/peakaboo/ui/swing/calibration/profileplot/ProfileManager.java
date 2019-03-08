@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.common.ConfigurationLoadException;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
@@ -256,7 +257,7 @@ public class ProfileManager extends HeaderLayer {
 			controller.calibration().clearCalibrationReference();
 			controller.calibration().setCalibrationProfile(profile, file);
 			
-		} catch (IOException e1) {
+		} catch (IOException | ConfigurationLoadException e1) {
 			PeakabooLog.get().log(Level.SEVERE, "Could not load calibration profile", e1);
 		}
 	}
