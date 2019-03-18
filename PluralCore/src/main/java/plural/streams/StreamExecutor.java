@@ -73,7 +73,7 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 		if (parallel) {
 			return stream.parallel().filter(this);
 		} else {
-			return stream.filter(this);
+			return stream.sequential().filter(this);
 		}
 	}
 	
