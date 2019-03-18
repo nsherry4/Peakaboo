@@ -148,58 +148,22 @@ public class MapDimensionsController extends EventfulType<String>{
 	private float map2dDeltaSum(Spectrum map, int width, int height) {
 		float[] maparray = map.backingArray();
 		float delta = 0;
-		float value = 0;
 		float count = 0;
 		int mapsize = map.size();
-		float deltaSum = 0;
-		
-		// calculate offsets for indexes of neighbouring pixels. these can be used to
-		// get the neighbours for that pixel faster than doing the math at every point
-		int noff = -width;
-		int eoff = 1;
-		int soff = width;
-		int woff = -1;
-		
-		for (int y = 0; y < height; y++) {
+
+		for (int y = 1; y < height; y++) {
 			int rowind = y*width;
 			
 			for (int x = 0; x < width; x++) {
 				int ind = rowind+x;
 				if (ind >= mapsize) break;
-				value = maparray[ind];
-				count = 0;
-				delta = 0;
 				
-				//west
-				if (x > 0) {
-					delta += Math.abs(value - maparray[ind+woff]);
-					count++;
-				}
-				
-				//north
-				if (y > 0) {
-					delta += Math.abs(value - maparray[ind+noff]);
-					count++;
-				}
-
-				//east
-				if (x < width-1 && ind+eoff < mapsize) {
-					delta += Math.abs(value - maparray[ind+eoff]);
-					count++;
-				}
-				
-				//south
-				if (y < height-1 && ind+soff < mapsize) {
-					delta += Math.abs(value - maparray[ind+soff]);
-					count++;
-				}
-				
-				deltaSum += delta/count;
-
+				delta += Math.abs(maparray[ind] - maparray[ind-width]);
+				count++;
 			}
 		}
 		
-		return deltaSum;
+		return delta/count;
 		
 	}
 	
