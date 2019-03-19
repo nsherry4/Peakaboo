@@ -16,6 +16,7 @@ import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
@@ -48,6 +49,10 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
         	BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>)object;
         	setText(plugin.getName());
         	setIcon(getIcon(plugin));	
+    	} else if (object instanceof BoltIssue) {
+    		BoltIssue issue = (BoltIssue) object;
+    		setText(issue.shortSource());
+    		setIcon(StockIcon.BADGE_ERROR.toImageIcon(IconSize.BUTTON));
     	}
     	
 

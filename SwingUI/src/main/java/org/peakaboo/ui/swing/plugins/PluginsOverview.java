@@ -49,6 +49,7 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
+import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
 import stratus.StratusLookAndFeel;
 import stratus.controls.ButtonLinker;
 import stratus.theme.LightTheme;
@@ -77,7 +78,7 @@ public class PluginsOverview extends HeaderLayer {
 		super(parent, true);
 		this.parent = parent;
 		getContentRoot().setPreferredSize(new Dimension(800, 350));
-		
+				
 		//body
 		JPanel body = new JPanel(new BorderLayout());
 		body.add(pluginTree(), BorderLayout.WEST);
@@ -294,7 +295,7 @@ public class PluginsOverview extends HeaderLayer {
 	}
 	
 	
-	private void reload() {
+	public void reload() {
 		DataSourcePluginManager.SYSTEM.reload();
 		DataSinkPluginManager.SYSTEM.reload();
 		FilterPluginManager.SYSTEM.reload();
@@ -318,37 +319,35 @@ public class PluginsOverview extends HeaderLayer {
 		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
 	}
 	
+	private DefaultMutableTreeNode createPluginManagerRootNode(BoltPluginManager<?> manager) {
+		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(manager);
+		for (BoltPluginPrototype<?> source :  manager.getPlugins().getAll()) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
+			sourcesNode.add(node);
+		}
+		for (BoltIssue issue : manager.getPlugins().getIssues()) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(issue);
+			sourcesNode.add(node);
+		}
+		return sourcesNode;
+	}
+	
 	private TreeModel buildTreeModel() {
 		
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
 		
-		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(DataSourcePluginManager.SYSTEM);
+		DefaultMutableTreeNode sourcesNode = createPluginManagerRootNode(DataSourcePluginManager.SYSTEM);
 		plugins.add(sourcesNode);
-		for (BoltPluginPrototype<? extends DataSourcePlugin> source :  DataSourcePluginManager.SYSTEM.getPlugins().getAll()) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
-			sourcesNode.add(node);
-		}
 		
-		DefaultMutableTreeNode sinksNode = new DefaultMutableTreeNode(DataSinkPluginManager.SYSTEM);
+		DefaultMutableTreeNode sinksNode = createPluginManagerRootNode(DataSinkPluginManager.SYSTEM);
 		plugins.add(sinksNode);
-		for (BoltPluginPrototype<? extends DataSinkPlugin> source :  DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
-			sinksNode.add(node);
-		}
 		
-		DefaultMutableTreeNode filtersNode = new DefaultMutableTreeNode(FilterPluginManager.SYSTEM);
+		DefaultMutableTreeNode filtersNode = createPluginManagerRootNode(FilterPluginManager.SYSTEM);
 		plugins.add(filtersNode);
-		for (BoltPluginPrototype<? extends FilterPlugin> source :  FilterPluginManager.SYSTEM.getPlugins().getAll()) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
-			filtersNode.add(node);
-		}
 		
-		DefaultMutableTreeNode mapFiltersNode = new DefaultMutableTreeNode(MapFilterPluginManager.SYSTEM);
+		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterPluginManager.SYSTEM);
 		plugins.add(mapFiltersNode);
-		for (BoltPluginPrototype<? extends MapFilterPlugin> source :  MapFilterPluginManager.SYSTEM.getPlugins().getAll()) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
-			mapFiltersNode.add(node);
-		}
+
 		
 		
 		if (Peakaboo.SHOW_QUANTITATIVE) {
@@ -390,8 +389,14 @@ public class PluginsOverview extends HeaderLayer {
 				details.add(new PluginMessageView(interfaceDesc, 300), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else {
-				details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) node.getUserObject()), BorderLayout.CENTER);
-				remove.setEnabled(isRemovable(selectedPlugin()));
+				Object o = node.getUserObject();
+				if (o instanceof BoltPluginPrototype<?>) {
+					details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) o), BorderLayout.CENTER);
+					remove.setEnabled(isRemovable(selectedPlugin()));
+				} else if (o instanceof BoltIssue) {
+					details.add(new IssueView((BoltIssue) o, this));
+					remove.setEnabled(false);
+				}
 			}
 			details.revalidate();
 		});
