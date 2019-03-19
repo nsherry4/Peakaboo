@@ -5,9 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
+import net.sciencestudio.bolt.plugin.core.issue.BoltOldPluginIssue;
+
 public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 
 	private ArrayList<BoltPluginPrototype<? extends T>> plugins = new ArrayList<>();
+	private ArrayList<BoltIssue> issues = new ArrayList<>();
 	
 	@Override
 	public List<BoltPluginPrototype<? extends T>> getAll() {
@@ -34,6 +38,7 @@ public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 			
 			if (plugin.isUpgradeFor(existingPlugin)) {
 				plugins.remove(existingPlugin);
+				addIssue(new BoltOldPluginIssue(existingPlugin));
 				plugins.add(plugin);
 			}
 			
@@ -52,5 +57,15 @@ public class IBoltPluginSet<T extends BoltPlugin> implements BoltPluginSet<T> {
 		}
 		return null;
 	}
+
+	@Override
+	public List<BoltIssue> getIssues() {
+		return Collections.unmodifiableList(issues);
+	}
+	
+	public void addIssue(BoltIssue issue) {
+		issues.add(issue);
+	}
+	
 
 }

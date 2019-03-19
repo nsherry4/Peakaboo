@@ -3,6 +3,8 @@ package net.sciencestudio.bolt.plugin.core;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
+
 /**
  * Tracks a set of plugins and provides operations such as looking plugins 
  * up and getting new instances of all plugins.
@@ -33,6 +35,9 @@ public interface BoltPluginSet<T extends BoltPlugin> {
 	default int size() {
 		return getAll().size();
 	}
+	
+	List<BoltIssue> getIssues();
+	void addIssue(BoltIssue issue);
 	
 	/**
 	 * Checks this set against the given one to determine if this 

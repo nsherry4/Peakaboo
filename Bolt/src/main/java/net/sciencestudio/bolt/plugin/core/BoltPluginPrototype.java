@@ -3,7 +3,7 @@ package net.sciencestudio.bolt.plugin.core;
 import java.net.URL;
 
 /**
- * A BoltPluginController wraps a single plugin and allows it to be managed and introspected.
+ * A BoltPluginPrototype wraps a single plugin and allows it to be managed and introspected.
  * @author NAS
  *
  * @param <T>
