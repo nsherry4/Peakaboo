@@ -9,7 +9,7 @@ public interface BoltIssue {
 	String description();
 	String shortSource();
 	String longSource();
-	
+		
 	default boolean hasFix() {
 		return false;
 	}

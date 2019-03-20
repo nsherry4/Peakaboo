@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 /**
  * This plugin is out of date
@@ -36,5 +37,6 @@ public class BoltOldPluginIssue implements BoltIssue {
 	public String longSource() {
 		return proto.getContainer().getSourcePath();
 	}
+
 	
 }
