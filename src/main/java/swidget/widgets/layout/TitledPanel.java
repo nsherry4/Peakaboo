@@ -24,6 +24,7 @@ public class TitledPanel extends JPanel
 	private boolean showBadge = false;
 	private String caption = null;
 	private JComponent component;
+	private JComponent controls = null;
 	
 	public TitledPanel(JComponent component)
 	{
@@ -51,6 +52,10 @@ public class TitledPanel extends JPanel
 		
 	}
 	
+	public void addControls(JComponent controls) {
+		this.controls = controls;
+		make();
+	}
 
 	private void make() {
 		
@@ -82,15 +87,25 @@ public class TitledPanel extends JPanel
 		c.gridy = 0;
 		c.gridx = (showBadge ? 1 : 0);
 		
-		if (caption != null) 
-		{
-			c.gridwidth = 2;
+		if (caption != null) {
 			add(new JLabel("<html><big><b>" + caption + "</b></big></html>"), c);
-			c.gridwidth = 1;
-			c.gridy++;
-			
+			c.gridx++;
 		}
 		
+		if (controls != null) {
+			c.weightx = 0;
+			c.weighty = 0;
+			c.fill = GridBagConstraints.NONE;
+			add(controls, c);
+			c.gridx++;
+		}
+		
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 2;
+		c.gridx = (showBadge ? 1 : 0);
+		c.gridy = 1;
 		add(component, c);
 
 		this.repaint();
