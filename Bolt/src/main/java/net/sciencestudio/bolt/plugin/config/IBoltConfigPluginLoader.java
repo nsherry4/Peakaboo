@@ -1,16 +1,12 @@
 package net.sciencestudio.bolt.plugin.config;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.function.Function;
-import java.util.logging.Level;
 
-
-import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 public class IBoltConfigPluginLoader<T extends BoltConfigPlugin> implements BoltFilesytstemPluginLoader<T>{
 
@@ -36,8 +32,8 @@ public class IBoltConfigPluginLoader<T extends BoltConfigPlugin> implements Bolt
 		
 	@Override
 	public void registerURL(URL url) {
-		IBoltConfigPluginPrototype<T> plugin = new IBoltConfigPluginPrototype<T>(builder, pluginClass, url);
-		plugins.addPlugin(plugin);
+		BoltContainer<T> container = new BoltConfigContainer<>(url, pluginClass, builder);
+		plugins.loadFrom(container.getPlugins());
 	}
 	
 	

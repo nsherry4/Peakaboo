@@ -7,14 +7,15 @@ import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.issue.BoltBrokenContainerIssue;
+import net.sciencestudio.bolt.plugin.java.container.BoltJarContainer;
 
 public class BoltBrokenJarIssue extends BoltBrokenContainerIssue {
 
-	private URL url;
+	private BoltJarContainer<?> container;
 	private String message;
 	
-	public BoltBrokenJarIssue(URL url, String message) {
-		this.url = url;
+	public BoltBrokenJarIssue(BoltJarContainer<?> container, String message) {
+		this.container = container;
 		this.message = message;
 	}
 
@@ -30,18 +31,12 @@ public class BoltBrokenJarIssue extends BoltBrokenContainerIssue {
 
 	@Override
 	public boolean hasFix() {
-		return true;
+		return container.isDeletable();
 	}
 	
 	@Override
 	public boolean fix() {
-		try {
-			File f = new File(this.url.toURI());
-			return f.delete();
-		} catch (URISyntaxException e) {
-			Bolt.logger().log(Level.WARNING, "Could not delete broken jar " + shortSource());
-			return false;
-		}
+		return container.delete();
 	}
 	
 	@Override
@@ -56,17 +51,12 @@ public class BoltBrokenJarIssue extends BoltBrokenContainerIssue {
 
 	@Override
 	public String shortSource() {
-		try {
-			return new File(this.url.toURI()).getName();
-		} catch (Throwable e) {
-			String[] parts = this.url.getFile().split("{/,\\}");
-			return parts[parts.length-1];
-		}
+		return container.getSourceName();
 	}
 
 	@Override
 	public String longSource() {
-		return this.url.getFile();
+		return container.getSourcePath();
 	}
 	
 }

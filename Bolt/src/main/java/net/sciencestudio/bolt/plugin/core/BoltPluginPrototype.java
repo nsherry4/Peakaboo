@@ -2,6 +2,8 @@ package net.sciencestudio.bolt.plugin.core;
 
 import java.net.URL;
 
+import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
+
 /**
  * A BoltPluginPrototype wraps a single plugin and allows it to be managed and introspected.
  * @author NAS
@@ -48,7 +50,7 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 	 */
 	String getUUID();
 
-	URL getSource();
+	BoltContainer<T> getContainer();
 
 	/**
 	 * Returns true if (and only if) the UUID of the other plugin matches 

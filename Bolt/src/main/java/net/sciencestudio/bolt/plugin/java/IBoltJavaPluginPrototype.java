@@ -1,22 +1,22 @@
 package net.sciencestudio.bolt.plugin.java;
 
-import java.net.URL;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 public class IBoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPluginPrototype<T> {
 
 	private Class<T> pluginClass;
 	private Class<? extends T> implClass;
-	private URL source;
+	private BoltContainer<T> container;
 	private T instance;
 	
-	public IBoltJavaPluginPrototype(Class<T> pluginClass, Class<? extends T> implClass, URL source) {
+	public IBoltJavaPluginPrototype(Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container) {
 		this.pluginClass = pluginClass;
 		this.implClass = implClass;
-		this.source = source;
+		this.container = container;
 		instance = create();
 	}
 	
@@ -90,11 +90,7 @@ public class IBoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltP
 		return instance.pluginVersion();
 	}
 	
-	@Override
-	public URL getSource() {
-		return source;
-	}
-	
+
 	public String toString() {
 		return getName();
 	}
@@ -103,6 +99,11 @@ public class IBoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltP
 	public String getUUID() {
 		if (instance == null) return null;
 		return instance.pluginUUID();
+	}
+
+	@Override
+	public BoltContainer<T> getContainer() {
+		return container;
 	}
 	
 	

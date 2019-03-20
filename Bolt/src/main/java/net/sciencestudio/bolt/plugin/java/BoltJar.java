@@ -27,4 +27,23 @@ public class BoltJar {
 		}
 	}
 	
+	public static boolean checkImplementsInterface(Class<?> c, Class<?> targetInterface)
+	{
+		if (c == null) return false;
+		
+		while (c != Object.class) {
+		
+			Class<?> ifaces[] = c.getInterfaces();
+			for (Class<?> iface : ifaces)
+			{
+				if (iface.equals(targetInterface)) return true;
+			}
+						
+			c = c.getSuperclass();
+			
+		}
+		return false;
+		
+	}
+	
 }

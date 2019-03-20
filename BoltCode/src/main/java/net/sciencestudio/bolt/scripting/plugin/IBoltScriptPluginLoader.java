@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 public class IBoltScriptPluginLoader<T extends BoltScriptPlugin> implements BoltFilesytstemPluginLoader<T> {
 
@@ -37,8 +38,8 @@ public class IBoltScriptPluginLoader<T extends BoltScriptPlugin> implements Bolt
 
 	@Override
 	public void registerURL(URL url) {
-		IBoltScriptPluginPrototype<T> plugin = new IBoltScriptPluginPrototype<>(url, runner);
-		plugins.addPlugin(plugin);
+		BoltContainer<T> container = new BoltScriptContainer<>(url, runner);
+		plugins.loadFrom(container.getPlugins());
 	}
 	
 }

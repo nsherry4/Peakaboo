@@ -11,12 +11,12 @@ import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 
 public class IBoltScriptPluginPrototype<T extends BoltScriptPlugin> implements BoltPluginPrototype<T> {
 
-	private URL scriptFile;
+	private BoltScriptContainer<T> container;
 	private Class<T> runnerClass;
 	private T instance;
 	
-	public IBoltScriptPluginPrototype(URL url, Class<T> runner) {
-		this.scriptFile = url;
+	public IBoltScriptPluginPrototype(BoltScriptContainer<T> container, Class<T> runner) {
+		this.container = container;
 		this.runnerClass = runner;
 		instance = create();
 	}
@@ -38,7 +38,7 @@ public class IBoltScriptPluginPrototype<T extends BoltScriptPlugin> implements B
 		try
 		{
 			T inst = runnerClass.newInstance();
-			inst.setScriptFile(scriptFile);
+			inst.setScriptFile(container.getURL());
 			return inst;
 		}
 		catch (InstantiationException e)
@@ -88,8 +88,8 @@ public class IBoltScriptPluginPrototype<T extends BoltScriptPlugin> implements B
 	}
 
 	@Override
-	public URL getSource() {
-		return scriptFile;
+	public BoltScriptContainer<T> getContainer() {
+		return container;
 	}
 
 	@Override

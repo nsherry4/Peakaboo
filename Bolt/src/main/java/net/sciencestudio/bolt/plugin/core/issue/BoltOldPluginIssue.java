@@ -29,17 +29,12 @@ public class BoltOldPluginIssue implements BoltIssue {
 
 	@Override
 	public String shortSource() {
-		try {
-			return new File(proto.getSource().toURI()).getName();
-		} catch (Throwable e) {
-			String[] parts = proto.getSource().getFile().split("{/,\\}");
-			return parts[parts.length-1];
-		}
+		return proto.getContainer().getSourceName();
 	}
 
 	@Override
 	public String longSource() {
-		return proto.getSource().getFile();
+		return proto.getContainer().getSourcePath();
 	}
 	
 }

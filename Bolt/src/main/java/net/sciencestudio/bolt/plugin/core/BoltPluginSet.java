@@ -30,7 +30,14 @@ public interface BoltPluginSet<T extends BoltPlugin> {
 	
 	
 	void addPlugin(BoltPluginPrototype<? extends T> plugin);
-
+	default void loadFrom(BoltPluginSet<? extends T> pluginset) {
+		for (BoltPluginPrototype<? extends T> t : pluginset.getAll()) {
+			addPlugin(t);
+		}
+		for (BoltIssue i : pluginset.getIssues()) {
+			addIssue(i);
+		}
+	}
 	
 	default int size() {
 		return getAll().size();

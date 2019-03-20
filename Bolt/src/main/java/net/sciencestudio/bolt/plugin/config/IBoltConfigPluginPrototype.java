@@ -9,18 +9,19 @@ import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 public class IBoltConfigPluginPrototype<T extends BoltConfigPlugin> implements BoltPluginPrototype<T> {
 
 	private Function<String, T> builder;
 	private Class<T> pluginClass;
 	private T reference;
-	private URL source;
+	private BoltConfigContainer<T> container;
 	
-	public IBoltConfigPluginPrototype(Function<String, T> builder, Class<T> pluginClass, URL source) {
+	public IBoltConfigPluginPrototype(Function<String, T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
-		this.source = source;
+		this.container = container;
 		this.reference = create();
 	}
 	
@@ -39,7 +40,7 @@ public class IBoltConfigPluginPrototype<T extends BoltConfigPlugin> implements B
 		
 		InputStream stream;
 		try {
-			stream = source.openStream();
+			stream = container.openStream();
 			T plugin;
 			Scanner s = new Scanner(stream).useDelimiter("\\A");
 			if (s.hasNext()) {
@@ -52,7 +53,7 @@ public class IBoltConfigPluginPrototype<T extends BoltConfigPlugin> implements B
 			stream.close();
 			return plugin;
 		} catch (IOException e) {
-			Bolt.logger().log(Level.WARNING, "Could not create plugin instance: " + source, e);
+			Bolt.logger().log(Level.WARNING, "Could not create plugin instance: " + container.getSourceName(), e);
 			return null;
 		}
 
@@ -102,8 +103,8 @@ public class IBoltConfigPluginPrototype<T extends BoltConfigPlugin> implements B
 	}
 
 	@Override
-	public URL getSource() {
-		return source;
+	public BoltContainer<T> getContainer() {
+		return container;
 	}
 	
 	@Override
