@@ -79,7 +79,7 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 			
 			
 			
-		} catch (ClassInheritanceException | ClassInstantiationException e) {
+		} catch (ClassInheritanceException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load MapFilter plugins", e);
 		}
 		

@@ -46,17 +46,11 @@ public class PluginView extends JPanel {
 		
 		c.ipadx = Spacing.large;
 		c.ipady = Spacing.large;
-		
-		
-		String source = "Built-In";
-		if (plugin.getSource() != null) {
-			source = plugin.getSource().toString();
-		}
-		
+
 		Map<String, String> properties = new HashMap<>();
 		properties.put("Version", plugin.getVersion());
 		properties.put("Enabled", "" + plugin.isEnabled());
-		properties.put("Source", source);
+		properties.put("Source", plugin.getContainer().getSourcePath());
 		properties.put("UUID", plugin.getUUID());
 		TitledPanel propertyPanel = new TitledPanel(new PropertyPanel(properties), plugin.getName(), true);
 		propertyPanel.setBadge(getIcon(plugin));

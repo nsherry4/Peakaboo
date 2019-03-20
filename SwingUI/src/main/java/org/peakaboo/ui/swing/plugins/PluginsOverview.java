@@ -123,7 +123,7 @@ public class PluginsOverview extends HeaderLayer {
 	}
 	
 	private boolean isRemovable(BoltPluginPrototype<? extends BoltPlugin> plugin) {
-		return plugin.getSource() != null;
+		return plugin.getContainer().isDeletable();
 	}
 	
 	private BoltPluginPrototype<? extends BoltPlugin> selectedPlugin() {
@@ -163,27 +163,21 @@ public class PluginsOverview extends HeaderLayer {
 			return;
 		}
 		
-		File file;
 		BoltPluginSet<? extends BoltPlugin> set;
-		try {
-			file = new File(plugin.getSource().toURI());
-			set = manager.pluginsInFile(file);
-		} catch (URISyntaxException e) {
-			PeakabooLog.get().log(Level.WARNING, "Cannot lookup jar for plugin", e);
-			return;
-		}
+		set = plugin.getContainer().getPlugins();
+
 		
 		if (set.getAll().size() == 0) {
 			return;
 		}
 		
 		new LayerDialog(
-				"Delete Plugin Archive?", 
-				"Are you sure you want to delete the archive containing the plugins:\n\n" + listToUL(set.getAll()), 
+				"Delete Plugin Container?", 
+				"Are you sure you want to delete the container with the plugins:\n\n" + listToUL(set.getAll()), 
 				MessageType.QUESTION)
 			.addRight(
 				new ImageButton("Delete").withAction(() -> {
-					manager.removeFile(file);
+					plugin.getContainer().delete();
 					this.reload();
 				}).withStateCritical()
 				)

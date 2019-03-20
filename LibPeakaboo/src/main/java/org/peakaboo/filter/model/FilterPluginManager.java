@@ -89,7 +89,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 			newPluginLoader.registerPlugin(PeakDetectorFilter.class);
 
 			
-		} catch (ClassInheritanceException | ClassInstantiationException e) {
+		} catch (ClassInheritanceException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load Filter plugins", e);
 		}
 		
@@ -98,13 +98,8 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	
 	public synchronized void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
 		try {
-			BoltClassloaderPluginLoader<JavaFilterPlugin> javaLoader = classpathLoader(getPlugins());
-			BoltPluginPrototype<JavaFilterPlugin> plugin = javaLoader.registerPlugin(clazz);
-			if (plugin != null) {
-				PeakabooLog.get().info("Registered Filter Plugin " + plugin.getName() + " from " + plugin.getSource());
-			}
-			
-		} catch (ClassInheritanceException | ClassInstantiationException e) {
+			classpathLoader(getPlugins()).registerPlugin(clazz);
+		} catch (ClassInheritanceException e) {
 			PeakabooLog.get().log(Level.WARNING, "Error registering filter plugin " + clazz.getName(), e);
 		}
 	}

@@ -42,7 +42,7 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 			javaLoader.registerPlugin(CSV.class);
 
 			
-		} catch (ClassInheritanceException | ClassInstantiationException e) {
+		} catch (ClassInheritanceException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load Data Sink plugins", e);
 		}  
 		

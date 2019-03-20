@@ -35,8 +35,6 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	
 	protected synchronized void loadCustomPlugins() {
 
-		
-		;
 		try {
 						
 			BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader = classpathLoader(getPlugins());
@@ -46,11 +44,11 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 
 			//Log info for plugins
 			for (BoltPluginPrototype<? extends DataSourcePlugin> plugin : getPlugins().getAll()) {
-				PeakabooLog.get().info("Found DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
+				PeakabooLog.get().info("Found DataSource Plugin " + plugin.getName() + " from " + plugin.getContainer().getSourcePath());
 			}
 			
 			
-		} catch (ClassInheritanceException | ClassInstantiationException e) {
+		} catch (ClassInheritanceException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load Data Source plugins", e);
 		}  
 		
@@ -60,13 +58,8 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	
 	public synchronized void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
 		try {
-			BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader = classpathLoader(getPlugins());
-			BoltPluginPrototype<JavaDataSourcePlugin> plugin = javaLoader.registerPlugin(clazz);
-			if (plugin != null) {
-				PeakabooLog.get().info("Registered DataSource Plugin " + plugin.getName() + " from " + plugin.getSource());
-			}
-			
-		} catch (ClassInheritanceException | ClassInstantiationException e) {
+			classpathLoader(getPlugins()).registerPlugin(clazz);
+		} catch (ClassInheritanceException e) {
 			PeakabooLog.get().log(Level.WARNING, "Error registering data source plugin " + clazz.getName(), e);
 		}
 	}
