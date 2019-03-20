@@ -1,10 +1,12 @@
-package net.sciencestudio.bolt.scripting.plugin;
+package net.sciencestudio.bolt.scripting.plugin.container;
 
 import java.net.URL;
 
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.container.BoltURLContainer;
+import net.sciencestudio.bolt.scripting.plugin.BoltScriptPlugin;
+import net.sciencestudio.bolt.scripting.plugin.IBoltScriptPluginPrototype;
 
 public class BoltScriptContainer<T extends BoltScriptPlugin> extends BoltURLContainer<T> {
 

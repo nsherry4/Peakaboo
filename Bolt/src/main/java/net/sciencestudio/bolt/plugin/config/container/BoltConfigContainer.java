@@ -1,10 +1,12 @@
-package net.sciencestudio.bolt.plugin.config;
+package net.sciencestudio.bolt.plugin.config.container;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.function.Function;
 
+import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
+import net.sciencestudio.bolt.plugin.config.IBoltConfigPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.container.BoltURLContainer;

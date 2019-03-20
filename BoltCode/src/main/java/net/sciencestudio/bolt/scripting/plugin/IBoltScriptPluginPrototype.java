@@ -1,12 +1,10 @@
 package net.sciencestudio.bolt.scripting.plugin;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
+import net.sciencestudio.bolt.scripting.plugin.container.BoltScriptContainer;
 
 
 public class IBoltScriptPluginPrototype<T extends BoltScriptPlugin> implements BoltPluginPrototype<T> {

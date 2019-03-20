@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
+import net.sciencestudio.bolt.plugin.config.container.BoltConfigContainer;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
