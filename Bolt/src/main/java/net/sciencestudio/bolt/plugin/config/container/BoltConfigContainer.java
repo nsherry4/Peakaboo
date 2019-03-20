@@ -6,9 +6,9 @@ import java.net.URL;
 import java.util.function.Function;
 
 import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
-import net.sciencestudio.bolt.plugin.config.IBoltConfigPluginPrototype;
+import net.sciencestudio.bolt.plugin.config.BoltConfigPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.container.BoltURLContainer;
 
 public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLContainer<T>{
@@ -19,8 +19,8 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 		super(url);
 		this.url = url;
 		
-		plugins = new IBoltPluginSet<>();
-		IBoltConfigPluginPrototype<T> plugin = new IBoltConfigPluginPrototype<T>(builder, pluginClass, this);
+		plugins = new BoltPluginSet<>();
+		BoltConfigPluginPrototype<T> plugin = new BoltConfigPluginPrototype<T>(builder, pluginClass, this);
 		plugins.addPlugin(plugin);
 	}
 

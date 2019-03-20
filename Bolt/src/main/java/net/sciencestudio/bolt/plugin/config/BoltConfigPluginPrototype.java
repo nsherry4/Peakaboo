@@ -12,14 +12,14 @@ import net.sciencestudio.bolt.plugin.config.container.BoltConfigContainer;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
-public class IBoltConfigPluginPrototype<T extends BoltConfigPlugin> implements BoltPluginPrototype<T> {
+public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements BoltPluginPrototype<T> {
 
 	private Function<String, T> builder;
 	private Class<T> pluginClass;
 	private T reference;
 	private BoltConfigContainer<T> container;
 	
-	public IBoltConfigPluginPrototype(Function<String, T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
+	public BoltConfigPluginPrototype(Function<String, T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
 		this.container = container;

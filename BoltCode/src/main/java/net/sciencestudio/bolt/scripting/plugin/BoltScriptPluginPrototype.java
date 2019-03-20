@@ -1,62 +1,57 @@
-package net.sciencestudio.bolt.plugin.java;
+package net.sciencestudio.bolt.scripting.plugin;
 
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
+import net.sciencestudio.bolt.scripting.plugin.container.BoltScriptContainer;
 
-public class IBoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPluginPrototype<T> {
 
-	private Class<T> pluginClass;
-	private Class<? extends T> implClass;
-	private BoltContainer<T> container;
+public class BoltScriptPluginPrototype<T extends BoltScriptPlugin> implements BoltPluginPrototype<T> {
+
+	private BoltScriptContainer<T> container;
+	private Class<T> runnerClass;
 	private T instance;
 	
-	public IBoltJavaPluginPrototype(Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container) {
-		this.pluginClass = pluginClass;
-		this.implClass = implClass;
+	public BoltScriptPluginPrototype(BoltScriptContainer<T> container, Class<T> runner) {
 		this.container = container;
+		this.runnerClass = runner;
 		instance = create();
 	}
-	
-	public Class<? extends T> getImplementationClass() {
-		return implClass;
-	}
-	
-	public Class<T> getPluginClass() {
-		return pluginClass;
-	}
-	
-	/**
-	 * Returns an instance of this plugin which is to be used for reference only. 
-	 * Do not use this instance of the plugin directly.
-	 */
+
 	@Override
-	public T getReferenceInstance() {
-		return instance;
+	public Class<? extends T> getImplementationClass() {
+		return runnerClass;
 	}
-	
-	
+
+	@Override
+	public Class<T> getPluginClass() {
+		return runnerClass;
+	}
+
 	@Override
 	public T create()
 	{
+
 		try
 		{
-			return implClass.newInstance();
+			T inst = runnerClass.newInstance();
+			inst.setScriptFile(container.getURL());
+			return inst;
 		}
 		catch (InstantiationException e)
 		{
-			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
+			Bolt.logger().log(Level.SEVERE, "Failed to create new plugin instance of " + runnerClass, e);
 			return null;
 		}
 		catch (IllegalAccessException e)
 		{
-			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
+			Bolt.logger().log(Level.SEVERE, "Failed to create new plugin instance of " + runnerClass, e);
 			return null;
 		}
 	}
 	
+
 	@Override
 	public boolean isEnabled() {
 		return (instance != null && instance.pluginEnabled());
@@ -89,22 +84,27 @@ public class IBoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltP
 		if (instance == null) return null;
 		return instance.pluginVersion();
 	}
-	
 
+	@Override
+	public BoltScriptContainer<T> getContainer() {
+		return container;
+	}
+
+	@Override
+	public T getReferenceInstance() {
+		return instance;
+	}
+	
 	public String toString() {
 		return getName();
 	}
 
+	/**
+	 * Script files get a pass on generating a UUID, since we want to keep things simple
+	 */
 	@Override
 	public String getUUID() {
-		if (instance == null) return null;
-		return instance.pluginUUID();
+		return getName();
 	}
-
-	@Override
-	public BoltContainer<T> getContainer() {
-		return container;
-	}
-	
 	
 }

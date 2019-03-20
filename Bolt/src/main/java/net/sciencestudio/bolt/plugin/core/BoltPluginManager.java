@@ -22,7 +22,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 
 	private boolean loaded = false;
 	private List<BoltContainer<P>> containers = new ArrayList<>();
-	private BoltPluginSet<P> plugins = new IBoltPluginSet<>();
+	private BoltPluginSet<P> plugins = new BoltPluginSet<>();
 	private List<BoltLoader<P>> loaders = new ArrayList<>();
 	
 	private Class<P> pluginClass;
@@ -41,7 +41,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 	}
 	
 	public synchronized final void clear() {
-		plugins = new IBoltPluginSet<>();
+		plugins = new BoltPluginSet<>();
 		loaded = false;
 	}
 	
@@ -55,7 +55,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 				containers.addAll(loaderContainers);
 			}
 			
-			plugins = new IBoltPluginSet<>();
+			plugins = new BoltPluginSet<>();
 			for (BoltContainer<P> container : containers) {
 				plugins.loadFrom(container.getPlugins());
 			}

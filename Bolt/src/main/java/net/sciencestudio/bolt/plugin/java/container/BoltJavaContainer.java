@@ -6,11 +6,11 @@ import java.util.logging.Level;
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.IBoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 import net.sciencestudio.bolt.plugin.java.BoltJar;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPlugin;
-import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginPrototype;
+import net.sciencestudio.bolt.plugin.java.BoltJavaPluginPrototype;
 import net.sciencestudio.bolt.plugin.java.issue.BoltBrokenJavaPluginIssue;
 
 public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements BoltContainer<T> {
@@ -20,7 +20,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 	
 	public BoltJavaContainer(Class<T> targetClass) {
 		this.targetClass = targetClass;
-		this.plugins = new IBoltPluginSet<>();
+		this.plugins = new BoltPluginSet<>();
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 				return; 
 			} 
 			
-			BoltPluginPrototype<T> plugin = new IBoltJavaPluginPrototype<>(targetClass, loadedClass, this);
+			BoltPluginPrototype<T> plugin = new BoltJavaPluginPrototype<>(targetClass, loadedClass, this);
 			
 			if (plugin.isEnabled()) {
 				plugins.addPlugin(plugin);
