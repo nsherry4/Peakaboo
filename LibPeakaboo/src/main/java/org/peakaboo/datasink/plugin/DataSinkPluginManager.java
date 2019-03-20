@@ -1,26 +1,16 @@
 package org.peakaboo.datasink.plugin;
 
 import java.io.File;
-import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasink.plugin.plugins.CSV;
 
-import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
-import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
-import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
-import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
+import net.sciencestudio.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
-import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
+import net.sciencestudio.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 
-public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
-{
+public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 
 	public static DataSinkPluginManager SYSTEM;
-	
 	public static void init(File dataSinkDir) {
 		if (SYSTEM == null) {
 			SYSTEM = new DataSinkPluginManager(dataSinkDir);
@@ -28,47 +18,31 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin>
 		}
 	}
 	
+
+	
+	private BoltJavaBuiltinLoader<JavaDataSinkPlugin> builtins;
+	
 	public DataSinkPluginManager(File dataSinkDir) {
-		super(dataSinkDir);
+		super(DataSinkPlugin.class);
+		
+		addLoader(new BoltJarDirectoryLoader<>(JavaDataSinkPlugin.class, dataSinkDir));
+		addLoader(new BoltJarDirectoryLoader<>(JavaDataSinkPlugin.class));
+		
+		builtins = new BoltJavaBuiltinLoader<>(JavaDataSinkPlugin.class);
+		registerCustomPlugins();
+		addLoader(builtins);
+		//TODO: Add script loader
 	}
 	
-	@Override
-	protected void loadCustomPlugins() {
-		try {
-			
-			BoltClassloaderPluginLoader<JavaDataSinkPlugin> javaLoader = classpathLoader(getPlugins());
-			
-			//register built-in plugins
-			javaLoader.registerPlugin(CSV.class);
-
-			
-		} catch (ClassInheritanceException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load Data Sink plugins", e);
-		}  
-		
-
+	private void registerCustomPlugins() {
+		builtins.load(CSV.class);
 	}
 
-	@Override
-	protected BoltClassloaderPluginLoader<JavaDataSinkPlugin> classpathLoader(BoltPluginSet<DataSinkPlugin> pluginset) throws ClassInheritanceException {
-		return new IBoltJavaPluginLoader<JavaDataSinkPlugin>(pluginset, JavaDataSinkPlugin.class);
+	public synchronized void registerPlugin(Class<? extends JavaDataSinkPlugin> clazz) {
+		builtins.load(clazz);
+		reload();
 	}
 
-	@Override
-	protected BoltFilesytstemPluginLoader<? extends DataSinkPlugin> filesystemLoader(BoltPluginSet<DataSinkPlugin> pluginset) {
-		return null;
-	}
-
-
-	@Override
-	protected BoltDirectoryManager<DataSinkPlugin> classloaderDirectoryManager() {
-		return new BoltClassloaderDirectoryManager<>(this, getDirectory());
-	}
-
-	@Override
-	protected BoltDirectoryManager<DataSinkPlugin> filesystemDirectoryManager() {
-		return null;
-	}
 	
 	@Override
 	public String getInterfaceDescription() {

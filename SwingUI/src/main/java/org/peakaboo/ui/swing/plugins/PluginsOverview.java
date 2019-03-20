@@ -48,6 +48,7 @@ import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
+import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
 import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
 import stratus.StratusLookAndFeel;
@@ -122,10 +123,7 @@ public class PluginsOverview extends HeaderLayer {
 		});
 	}
 	
-	private boolean isRemovable(BoltPluginPrototype<? extends BoltPlugin> plugin) {
-		return plugin.getContainer().isDeletable();
-	}
-	
+
 	private BoltPluginPrototype<? extends BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
@@ -154,17 +152,13 @@ public class PluginsOverview extends HeaderLayer {
 		 * remove the jar file and all plugins that it contains.
 		 */
 		
-		BoltPluginManager<? extends BoltPlugin> manager = managerForPlugin(plugin);
-		if (manager == null) {
+		BoltContainer<? extends BoltPlugin> container = plugin.getContainer();
+		if (!container.isDeletable()) {
 			return;
 		}
-		
-		if (!isRemovable(plugin)) {
-			return;
-		}
-		
+
 		BoltPluginSet<? extends BoltPlugin> set;
-		set = plugin.getContainer().getPlugins();
+		set = container.getPlugins();
 
 		
 		if (set.getAll().size() == 0) {
@@ -202,34 +196,6 @@ public class PluginsOverview extends HeaderLayer {
 		return buff.toString();
 	}
 	
-	private BoltPluginManager<? extends BoltPlugin> managerForPlugin(BoltPluginPrototype<? extends BoltPlugin> plugin) {
-		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
-		
-		if (pluginBaseClass == JavaDataSourcePlugin.class) {
-			return DataSourcePluginManager.SYSTEM;
-		}
-		
-		if (pluginBaseClass == JavaDataSinkPlugin.class) {
-			return DataSinkPluginManager.SYSTEM;
-		}
-		
-		if (pluginBaseClass == JavaFilterPlugin.class) {
-			return FilterPluginManager.SYSTEM;
-		}
-		
-		if (pluginBaseClass == JavaMapFilterPlugin.class) {
-			return MapFilterPluginManager.SYSTEM;
-		}
-		
-		if (Peakaboo.SHOW_QUANTITATIVE) {
-			if (pluginBaseClass == CalibrationReference.class) {
-				return CalibrationPluginManager.SYSTEM;
-			}
-		}
-		
-		return null;
-		
-	}
 	
 
 	/**
@@ -271,16 +237,16 @@ public class PluginsOverview extends HeaderLayer {
 	 */
 	private boolean addFileToManager(File file, BoltPluginManager<? extends BoltPlugin> manager) throws BoltImportException {
 		
-		if (!manager.fileContainsPlugins(file)) {
+		if (!manager.isImportable(file)) {
 			return false;
 		}
-
-		BoltPluginSet<? extends BoltPlugin> plugins = manager.importOrUpgradeFile(file);
+		
+		BoltContainer<? extends BoltPlugin> container = manager.importOrUpgradeFile(file);
 		
 		this.reload();
 		new LayerDialog(
 				"Imported New Plugins", 
-				"Peakboo successfully imported the following plugin(s):\n" + listToUL(plugins.getAll()), 
+				"Peakboo successfully imported the following plugin(s):\n" + listToUL(container.getPlugins().getAll()), 
 				MessageType.INFO).showIn(parent);
 
 		return true;
@@ -386,7 +352,7 @@ public class PluginsOverview extends HeaderLayer {
 				Object o = node.getUserObject();
 				if (o instanceof BoltPluginPrototype<?>) {
 					details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) o), BorderLayout.CENTER);
-					remove.setEnabled(isRemovable(selectedPlugin()));
+					remove.setEnabled(selectedPlugin().getContainer().isDeletable());
 				} else if (o instanceof BoltIssue) {
 					details.add(new IssueView((BoltIssue) o, this));
 					remove.setEnabled(false);

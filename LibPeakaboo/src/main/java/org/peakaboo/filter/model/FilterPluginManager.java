@@ -1,9 +1,7 @@
 package org.peakaboo.filter.model;
 
 import java.io.File;
-import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
@@ -26,104 +24,69 @@ import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 
-import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
-import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
-import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
-import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
+import net.sciencestudio.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
-import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
-
+import net.sciencestudio.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 
 public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
-
 	public static FilterPluginManager SYSTEM;
-	
 	public static void init(File filterDir) {
 		if (SYSTEM == null) {
 			SYSTEM = new FilterPluginManager(filterDir);
 			SYSTEM.load();
 		}
 	}
+
+	
+	
+	private BoltJavaBuiltinLoader<JavaFilterPlugin> builtins;
 	
 	public FilterPluginManager(File filterDir) {
-		super(filterDir);
+		super(FilterPlugin.class);
+		
+		addLoader(new BoltJarDirectoryLoader<>(JavaFilterPlugin.class, filterDir));
+		addLoader(new BoltJarDirectoryLoader<>(JavaFilterPlugin.class));
+		
+		builtins = new BoltJavaBuiltinLoader<>(JavaFilterPlugin.class);
+		registerCustomPlugins();
+		addLoader(builtins);
+		//TODO: Add script loader
 	}
 	
-	@Override
-	protected void loadCustomPlugins() {
-		
-		
-		try {
-			BoltClassloaderPluginLoader<JavaFilterPlugin> newPluginLoader = classpathLoader(getPlugins());
-			
+	private void registerCustomPlugins() {
 
-			//register built-in plugins
-			newPluginLoader.registerPlugin(IdentityFilter.class);
-			newPluginLoader.registerPlugin(SubFilter.class);
-			newPluginLoader.registerPlugin(SpectrumNormalizationFilter.class);
-			
-			newPluginLoader.registerPlugin(BruknerBackgroundFilter.class);
-			newPluginLoader.registerPlugin(LinearTrimBackgroundFilter.class);
-			newPluginLoader.registerPlugin(PolynomialBackgroundFilter.class);
-			newPluginLoader.registerPlugin(SquareSnipBackgroundFilter.class);
-			
-			newPluginLoader.registerPlugin(AdditionMathFilter.class);
-			newPluginLoader.registerPlugin(DerivativeMathFilter.class);
-			newPluginLoader.registerPlugin(IntegralMathFilter.class);
-			newPluginLoader.registerPlugin(MultiplicationMathFilter.class);
-			newPluginLoader.registerPlugin(SubtractionMathFilter.class);
-			
-			newPluginLoader.registerPlugin(FourierNoiseFilter.class);
-			newPluginLoader.registerPlugin(WeightedAverageNoiseFilter.class);
-			newPluginLoader.registerPlugin(SavitskyGolayNoiseFilter.class);
-			newPluginLoader.registerPlugin(SpringNoiseFilter.class);
-			newPluginLoader.registerPlugin(WaveletNoiseFilter.class);
-			newPluginLoader.registerPlugin(LowStatisticsNoiseFilter.class);
-			
-			
-			newPluginLoader.registerPlugin(PeakDetectorFilter.class);
-
-			
-		} catch (ClassInheritanceException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load Filter plugins", e);
-		}
+		builtins.load(IdentityFilter.class);
+		builtins.load(SubFilter.class);
+		builtins.load(SpectrumNormalizationFilter.class);
 		
+		builtins.load(BruknerBackgroundFilter.class);
+		builtins.load(LinearTrimBackgroundFilter.class);
+		builtins.load(PolynomialBackgroundFilter.class);
+		builtins.load(SquareSnipBackgroundFilter.class);
 		
+		builtins.load(AdditionMathFilter.class);
+		builtins.load(DerivativeMathFilter.class);
+		builtins.load(IntegralMathFilter.class);
+		builtins.load(MultiplicationMathFilter.class);
+		builtins.load(SubtractionMathFilter.class);
+		
+		builtins.load(FourierNoiseFilter.class);
+		builtins.load(WeightedAverageNoiseFilter.class);
+		builtins.load(SavitskyGolayNoiseFilter.class);
+		builtins.load(SpringNoiseFilter.class);
+		builtins.load(WaveletNoiseFilter.class);
+		builtins.load(LowStatisticsNoiseFilter.class);
+		
+		builtins.load(PeakDetectorFilter.class);
+	
 	}
 	
 	public synchronized void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
-		try {
-			classpathLoader(getPlugins()).registerPlugin(clazz);
-		} catch (ClassInheritanceException e) {
-			PeakabooLog.get().log(Level.WARNING, "Error registering filter plugin " + clazz.getName(), e);
-		}
+		builtins.load(clazz);
+		reload();
 	}
 
-	@Override
-	protected BoltClassloaderPluginLoader<JavaFilterPlugin> classpathLoader(BoltPluginSet<FilterPlugin> pluginset) throws ClassInheritanceException {
-		return new IBoltJavaPluginLoader<JavaFilterPlugin>(pluginset, JavaFilterPlugin.class);
-	}
-
-	@Override
-	protected BoltFilesytstemPluginLoader<? extends FilterPlugin> filesystemLoader(BoltPluginSet<FilterPlugin> pluginset) {
-		return null;
-	}
-	
-	@Override
-	protected BoltDirectoryManager<FilterPlugin> classloaderDirectoryManager() {
-		return new BoltClassloaderDirectoryManager<>(this, getDirectory());
-	}
-
-	@Override
-	protected BoltDirectoryManager<FilterPlugin> filesystemDirectoryManager() {
-		return null;
-	}
-	
 	@Override
 	public String getInterfaceDescription() {
 		return "Filters are ways to process or transform spectral data. This can be used to do things like remove background or smooth noise.";

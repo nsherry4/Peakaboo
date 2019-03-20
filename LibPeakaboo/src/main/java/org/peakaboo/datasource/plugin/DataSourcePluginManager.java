@@ -1,27 +1,16 @@
 package org.peakaboo.datasource.plugin;
 
 import java.io.File;
-import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasource.plugin.plugins.PlainText;
 
-import net.sciencestudio.bolt.plugin.core.BoltClassloaderDirectoryManager;
-import net.sciencestudio.bolt.plugin.core.BoltClassloaderPluginLoader;
-import net.sciencestudio.bolt.plugin.core.BoltDirectoryManager;
-import net.sciencestudio.bolt.plugin.core.BoltFilesytstemPluginLoader;
+import net.sciencestudio.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.java.ClassInheritanceException;
-import net.sciencestudio.bolt.plugin.java.ClassInstantiationException;
-import net.sciencestudio.bolt.plugin.java.IBoltJavaPluginLoader;
+import net.sciencestudio.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 
-public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
-{
+public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin> {
 
 	public static DataSourcePluginManager SYSTEM;
-	
 	public synchronized static void init(File dataSourceDir) {
 		if (SYSTEM == null) {
 			SYSTEM = new DataSourcePluginManager(dataSourceDir);
@@ -29,60 +18,32 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 		}
 	}
 	
+	
+	
+	private BoltJavaBuiltinLoader<JavaDataSourcePlugin> builtins;
+	
 	public DataSourcePluginManager(File dataSourceDir) {
-		super(dataSourceDir);
-	}
-	
-	protected synchronized void loadCustomPlugins() {
-
-		try {
-						
-			BoltClassloaderPluginLoader<JavaDataSourcePlugin> javaLoader = classpathLoader(getPlugins());
-					
-			//register built-in plugins
-			javaLoader.registerPlugin(PlainText.class);
-
-			//Log info for plugins
-			for (BoltPluginPrototype<? extends DataSourcePlugin> plugin : getPlugins().getAll()) {
-				PeakabooLog.get().info("Found DataSource Plugin " + plugin.getName() + " from " + plugin.getContainer().getSourcePath());
-			}
-			
-			
-		} catch (ClassInheritanceException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load Data Source plugins", e);
-		}  
+		super(DataSourcePlugin.class);
 		
-
-
+		addLoader(new BoltJarDirectoryLoader<>(JavaDataSourcePlugin.class, dataSourceDir));
+		addLoader(new BoltJarDirectoryLoader<>(JavaDataSourcePlugin.class));
+		
+		builtins = new BoltJavaBuiltinLoader<>(JavaDataSourcePlugin.class);
+		registerCustomPlugins();
+		addLoader(builtins);
+		//TODO: Add script loader
 	}
 	
-	public synchronized void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
-		try {
-			classpathLoader(getPlugins()).registerPlugin(clazz);
-		} catch (ClassInheritanceException e) {
-			PeakabooLog.get().log(Level.WARNING, "Error registering data source plugin " + clazz.getName(), e);
-		}
-	}
-
-	@Override
-	protected BoltClassloaderPluginLoader<JavaDataSourcePlugin> classpathLoader(BoltPluginSet<DataSourcePlugin> pluginset) throws ClassInheritanceException {
-		return new IBoltJavaPluginLoader<JavaDataSourcePlugin>(pluginset, JavaDataSourcePlugin.class);
-	}
-
-	@Override
-	protected BoltFilesytstemPluginLoader<? extends DataSourcePlugin> filesystemLoader(BoltPluginSet<DataSourcePlugin> pluginset) {
-		return null;
+	private void registerCustomPlugins() {
+		builtins.load(PlainText.class);
 	}
 	
-	@Override
-	protected BoltDirectoryManager<DataSourcePlugin> classloaderDirectoryManager() {
-		return new BoltClassloaderDirectoryManager<>(this, getDirectory());
+	public void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
+		builtins.load(clazz);
+		reload();
 	}
 
-	@Override
-	protected BoltDirectoryManager<DataSourcePlugin> filesystemDirectoryManager() {
-		return null;
-	}
+
 	
 	@Override
 	public String getInterfaceDescription() {
