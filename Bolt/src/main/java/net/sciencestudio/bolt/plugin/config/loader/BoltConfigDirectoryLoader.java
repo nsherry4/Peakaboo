@@ -30,7 +30,7 @@ public class BoltConfigDirectoryLoader<T extends BoltConfigPlugin> extends BoltD
 		return files.stream()
 			.map(f -> build(f))
 			.filter(c -> c != null)
-			.filter(c -> managedNotEmpty(c))
+			.filter(c -> unmanagedNotEmpty(c))
 			.collect(Collectors.toList());
 
 	}

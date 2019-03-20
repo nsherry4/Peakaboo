@@ -16,6 +16,7 @@ import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 import net.sciencestudio.bolt.plugin.core.exceptions.BoltImportException;
+import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
 import net.sciencestudio.bolt.plugin.java.BoltJar;
 
 public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltManagedLoader<T> {
@@ -64,8 +65,13 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 		return new ArrayList<>();
 	}	
 	
-	protected boolean managedNotEmpty(BoltContainer<T> container) {
-		if (!managed) {
+	/**
+	 * On unmanaged directories, tests to make sure that containers are not empty.
+	 * Does not test on managed directories, because that should generate a
+	 * {@link BoltIssue}
+	 */
+	protected boolean unmanagedNotEmpty(BoltContainer<T> container) {
+		if (managed) {
 			//don't test jars if this is not a local path (eg dir a jar was run from)
 			return true;
 		}
@@ -84,7 +90,18 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 			if (!managed) { return false; }
 			BoltContainer<T> container = build(file);
 			if (container == null) { return false; }
-			return !container.getPlugins().getAll().isEmpty();
+			if (container.getPlugins().getAll().isEmpty()) { return false; }
+			if (importedFile(file).exists()) {
+				// if the destination file already exists, we want to test if the new file would
+				// consitute an upgrade for the existing file. If it does, then we can go ahead
+				// and replace the existing file with the new one. If it doesn't, we can't
+				// import it. TODO: implement a renaming scheme for these kinds of name
+				// collisions
+				if (isUpgrade(file)) {
+					return true;
+				}
+			}
+			return true;
 		} catch (Throwable e) {
 			return false;
 		}
@@ -92,10 +109,27 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 
 	@Override
 	public void doImport(File file) throws BoltImportException {
+		BoltContainer<T> importing = build(file);
+		
+		//if a file of the same name already exists, but is not an upgrade, error out
 		if (importedFile(file).exists()) {
-			String msg = "Importing " + file.getAbsolutePath() + " failed, file already exists";
-			Bolt.logger().log(Level.INFO, msg);
-			throw new BoltImportException(msg);
+			if (isUpgrade(file)) {
+				//if this is an upgrade of an older file, we delete the older file
+				build(importedFile(file)).delete();
+			} else {
+				String msg = "Importing " + file.getAbsolutePath() + " failed, file already exists";
+				Bolt.logger().log(Level.INFO, msg);
+				throw new BoltImportException(msg);		
+			}
+		}
+		
+		
+		for (BoltContainer<T> existing : getContainers()) {
+			if (importing.getPlugins().isUpgradeFor(existing.getPlugins())) {
+				// TODO: Do we delete when the plugins in another (differently named) container
+				// are all superceeded by newer versions?
+				existing.delete();
+			}
 		}
 		
 		try {
@@ -108,7 +142,22 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 		
 	}
 	
-
+	
+	
+	private boolean isUpgrade(File file) {
+		if (!importedFile(file).exists()) {
+			return false;
+		}
+		BoltContainer<T> importing = build(file);
+		BoltContainer<T> existing = build(importedFile(file));
+		
+		if (existing.getPlugins().getAll().isEmpty()) {
+			return true;
+		}
+		
+		return importing.getPlugins().isUpgradeFor(existing.getPlugins());
+	}
+	
 	
 	/**
 	 * Determines the name of a File, were it to be imported to the given directory.

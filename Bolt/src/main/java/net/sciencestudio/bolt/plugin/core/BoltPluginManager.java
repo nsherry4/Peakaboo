@@ -71,25 +71,23 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 
 	
 	public boolean isImportable(File file) {
-		return !importCandidates(file).isEmpty();
+		BoltManagedLoader<P> loader = importer(file);
+		if (loader == null) { return false; }
+		return true;
 	}
-	
-	
-	
+
 	//TODO
 	public BoltContainer<? extends BoltPlugin> importOrUpgradeFile(File file) throws BoltImportException {
 	
-		
-		List<BoltManagedLoader<P>> candidates = importCandidates(file);
-		
 		// TODO: check if it's an upgrade for any of the containers in any of the other
 		// loaders? Do we care?
 		
+		BoltManagedLoader<P> loader = importer(file);
+		
 		//all else being equal, we choose to import to the first loader in the list
-		if (candidates.isEmpty()) {
+		if (loader == null) {
 			throw new BoltImportException("No import destinations found");
 		}
-		BoltManagedLoader<P> loader = candidates.get(0);
 		BoltContainer<P> container = loader.build(file);
 		loader.doImport(file);
 		reload();
@@ -121,6 +119,12 @@ public abstract class BoltPluginManager<P extends BoltPlugin> {
 					return !container.getPlugins().getAll().isEmpty();
 				})
 				.collect(Collectors.toList());
+	}
+	
+	private BoltManagedLoader<P> importer(File file) {
+		List<BoltManagedLoader<P>> candidates = importCandidates(file);
+		if (candidates.isEmpty()) { return null; }
+		return candidates.get(0);
 	}
 	
 	

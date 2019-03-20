@@ -64,10 +64,10 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 		}
 		int cmp = AlphaNumericComparitor.compareVersions(getVersion(), other.getVersion());
 		if (cmp >= 0) {
-			//this plugin is an older (or same) version of the given one, so it's an upgrade
+			//this plugin is a newer (or same) version of the given one, so it's an upgrade
 			return true;
 		} else {
-			//this is the newer version
+			//other is the newer version
 			return false;
 		}
 	}

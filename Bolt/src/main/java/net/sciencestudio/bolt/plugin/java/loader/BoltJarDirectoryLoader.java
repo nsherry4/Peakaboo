@@ -34,7 +34,7 @@ public class BoltJarDirectoryLoader<T extends BoltJavaPlugin> extends BoltDirect
 		return getJars().stream()
 				.map(f -> build(f))
 				.filter(c -> c != null)
-				.filter(c -> managedNotEmpty(c))
+				.filter(c -> unmanagedNotEmpty(c))
 				.collect(Collectors.toList());
 	}
 	
@@ -46,18 +46,4 @@ public class BoltJarDirectoryLoader<T extends BoltJavaPlugin> extends BoltDirect
 		return new BoltJarContainer<>(targetClass, url);
 	}
 	
-
-
-	@Override
-	public boolean canImport(File file) {
-		try {
-			if (!isManaged()) { return false; }
-			BoltContainer<T> container = build(file);
-			if (container == null) { return false; }
-			return !container.getPlugins().getAll().isEmpty();
-		} catch (Throwable e) {
-			return false;
-		}
-	}
-
 }
