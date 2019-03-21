@@ -6,9 +6,8 @@ import java.awt.Component;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 
+import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
-
-import stratus.controls.ButtonLinker;
 
 public class HeaderTabBuilder {
 

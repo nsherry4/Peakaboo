@@ -15,6 +15,7 @@ import javax.swing.SwingConstants;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -23,8 +24,6 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
-
-import stratus.controls.ButtonLinker;
 
 
 public class MapFittingPanel extends ClearPanel

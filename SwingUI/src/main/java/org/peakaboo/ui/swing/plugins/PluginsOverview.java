@@ -44,6 +44,9 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
+import org.peakaboo.framework.stratus.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.controls.ButtonLinker;
+import org.peakaboo.framework.stratus.theme.LightTheme;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconSize;
@@ -62,10 +65,6 @@ import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.plotting.FileDrop;
-
-import stratus.StratusLookAndFeel;
-import stratus.controls.ButtonLinker;
-import stratus.theme.LightTheme;
 
 public class PluginsOverview extends HeaderLayer {
 

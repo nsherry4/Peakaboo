@@ -22,6 +22,8 @@ import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.framework.stratus.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.theme.LightTheme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
 import org.peakaboo.framework.swidget.icons.IconFactory;
@@ -33,8 +35,6 @@ import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 import eventful.EventfulConfig;
-import stratus.StratusLookAndFeel;
-import stratus.theme.LightTheme;
 
 
 
