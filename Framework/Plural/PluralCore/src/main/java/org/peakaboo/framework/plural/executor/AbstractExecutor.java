@@ -3,7 +3,7 @@ package org.peakaboo.framework.plural.executor;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.map.MapExecutor;
 
-import eventful.Eventful;
+import org.peakaboo.framework.eventful.Eventful;
 
 
 public abstract class AbstractExecutor<T> extends Eventful implements PluralExecutor{

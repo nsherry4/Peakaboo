@@ -8,7 +8,7 @@ import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
 import org.peakaboo.framework.autodialog.model.classinfo.ClassInfoDefaults;
 import org.peakaboo.framework.autodialog.model.style.Style;
 
-import eventful.EventfulType;
+import org.peakaboo.framework.eventful.EventfulType;
 
 /**
  * 

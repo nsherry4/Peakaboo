@@ -27,12 +27,11 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SigDigits;
+import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.mapping.rawmap.RawMapSet;
-
-import eventful.EventfulType;
 
 
 

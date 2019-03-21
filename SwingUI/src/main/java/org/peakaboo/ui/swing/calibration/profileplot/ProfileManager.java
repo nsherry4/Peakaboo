@@ -21,6 +21,7 @@ import org.peakaboo.common.ConfigurationLoadException;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
@@ -36,8 +37,6 @@ import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType
 import org.peakaboo.framework.swidget.widgets.layout.HeaderTabBuilder;
 import org.peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
-
-import eventful.EventfulTypeListener;
 
 public class ProfileManager extends HeaderLayer {
 

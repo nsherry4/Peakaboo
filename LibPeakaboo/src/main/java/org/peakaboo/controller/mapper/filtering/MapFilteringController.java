@@ -15,13 +15,12 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.util.ListOps;
+import org.peakaboo.framework.eventful.EventfulCache;
+import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
 import org.peakaboo.mapping.rawmap.RawMapSet;
-
-import eventful.EventfulCache;
-import eventful.EventfulType;
 
 public class MapFilteringController extends EventfulType<String> {
 

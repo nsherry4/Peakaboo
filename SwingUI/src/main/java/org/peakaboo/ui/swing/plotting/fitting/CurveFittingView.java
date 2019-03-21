@@ -13,6 +13,7 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.swing.ExecutorSetView;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
@@ -26,8 +27,6 @@ import org.peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import org.peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
 import org.peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
 import org.peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
-
-import eventful.EventfulTypeListener;
 
 
 

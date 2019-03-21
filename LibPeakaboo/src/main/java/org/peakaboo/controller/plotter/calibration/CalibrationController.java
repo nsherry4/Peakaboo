@@ -15,8 +15,7 @@ import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFitting
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
-
-import eventful.Eventful;
+import org.peakaboo.framework.eventful.Eventful;
 
 public class CalibrationController extends Eventful {
 

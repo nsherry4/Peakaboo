@@ -11,10 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import eventful.Eventful;
-import eventful.EventfulListener;
-import eventful.IEventful;
+import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulListener;
+import org.peakaboo.framework.eventful.IEventful;
 
 
 public class TSSelector extends JPanel implements IEventful

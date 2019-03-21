@@ -30,10 +30,9 @@ import org.peakaboo.framework.cyclops.Ratios;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
+import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
-
-import eventful.EventfulType;
 
 
 

@@ -1,4 +1,4 @@
-package eventful;
+package org.peakaboo.framework.eventful;
 
 
 import java.util.LinkedList;
@@ -73,7 +73,7 @@ public class Eventful implements IEventful
 	
 	
 	/**
-	 * @see eventful.IEventful#updateListeners()
+	 * @see org.peakaboo.framework.eventful.IEventful#updateListeners()
 	 */
 	public void updateListeners()
 	{

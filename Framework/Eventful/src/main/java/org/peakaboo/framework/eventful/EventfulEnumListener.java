@@ -1,4 +1,4 @@
-package eventful;
+package org.peakaboo.framework.eventful;
 
 import java.util.EventListener;
 
@@ -10,7 +10,7 @@ import java.util.EventListener;
  *
  */
 
-public interface EventfulTypeListener<T> extends EventListener {
+public interface EventfulEnumListener<T extends Enum<T>> extends EventListener {
 
 	void change(T message);
 	

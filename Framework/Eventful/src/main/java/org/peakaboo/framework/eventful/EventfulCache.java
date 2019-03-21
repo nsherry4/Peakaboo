@@ -1,4 +1,4 @@
-package eventful;
+package org.peakaboo.framework.eventful;
 
 import java.util.Optional;
 import java.util.function.Supplier;

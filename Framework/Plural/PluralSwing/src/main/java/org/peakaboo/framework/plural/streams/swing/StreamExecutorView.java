@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import eventful.EventfulConfig;
+import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
 import org.peakaboo.framework.swidget.Swidget;

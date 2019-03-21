@@ -3,7 +3,7 @@ package org.peakaboo.framework.autodialog.view.javafx;
 import java.io.IOException;
 import java.util.Arrays;
 
-import eventful.EventfulConfig;
+import org.peakaboo.framework.eventful.EventfulConfig;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;

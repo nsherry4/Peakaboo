@@ -13,8 +13,7 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.peak.escape.EscapePeakType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import eventful.EventfulCache;
+import org.peakaboo.framework.eventful.EventfulCache;
 
 
 

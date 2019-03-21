@@ -24,8 +24,7 @@ import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
-
-import eventful.EventfulTypeListener;
+import org.peakaboo.framework.eventful.EventfulTypeListener;
 
 
 

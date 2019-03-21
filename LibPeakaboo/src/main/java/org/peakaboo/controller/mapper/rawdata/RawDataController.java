@@ -8,9 +8,8 @@ import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
+import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.mapping.rawmap.RawMapSet;
-
-import eventful.EventfulType;
 
 
 /**

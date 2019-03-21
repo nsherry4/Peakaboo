@@ -17,6 +17,7 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -24,8 +25,6 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.ui.swing.plotting.fitting.MutableTableModel;
-
-import eventful.EventfulListener;
 
 
 class FilterList extends ClearPanel {

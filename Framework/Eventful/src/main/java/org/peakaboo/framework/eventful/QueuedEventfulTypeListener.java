@@ -1,23 +1,23 @@
-package eventful;
+package org.peakaboo.framework.eventful;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * QueuedEventfulEnumListener stores events for up to a user-specified time interval, and
+ * QueuedEventfulTypeListener stores events for up to a user-specified time interval, and
  * delivers the events in a list.
  * @author Nathaniel Sherry, 2011
  *
  * @param <T>
  */
 
-public abstract class QueuedEventfulEnumListener<T extends Enum<T>> implements EventfulEnumListener<T>{
+public abstract class QueuedEventfulTypeListener<T> implements EventfulTypeListener<T>{
 
 	private LinkedBlockingQueue<T> eventQueue;
 	private Thread deliveryThread;
 	
-	public QueuedEventfulEnumListener(final int msDelay) {
+	public QueuedEventfulTypeListener(final int msDelay) {
 		
 		eventQueue = new LinkedBlockingQueue<T>();
 		

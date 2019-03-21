@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import eventful.EventfulEnum;
+import org.peakaboo.framework.eventful.EventfulEnum;
 
 public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implements Predicate<Object>{
 

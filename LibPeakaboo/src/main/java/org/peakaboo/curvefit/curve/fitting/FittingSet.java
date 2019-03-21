@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import eventful.EventfulCache;
+import org.peakaboo.framework.eventful.EventfulCache;
 
 /**
  * This class acts as a container for a set of {@link ITransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 

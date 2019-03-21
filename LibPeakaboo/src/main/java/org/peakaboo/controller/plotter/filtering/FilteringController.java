@@ -8,9 +8,8 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
-
-import eventful.Eventful;
-import eventful.EventfulCache;
+import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulCache;
 
 
 public class FilteringController extends Eventful

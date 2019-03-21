@@ -6,8 +6,7 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
-
-import eventful.EventfulType;
+import org.peakaboo.framework.eventful.EventfulType;
 
 /**
  * Settings for a map view which relate to presentation settings unrelated to

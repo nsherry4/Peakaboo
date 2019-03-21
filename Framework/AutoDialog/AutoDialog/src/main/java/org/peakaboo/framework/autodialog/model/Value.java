@@ -2,7 +2,7 @@ package org.peakaboo.framework.autodialog.model;
 
 import org.peakaboo.framework.autodialog.model.style.Style;
 
-import eventful.EventfulType;
+import org.peakaboo.framework.eventful.EventfulType;
 
 public interface Value<T> {
 

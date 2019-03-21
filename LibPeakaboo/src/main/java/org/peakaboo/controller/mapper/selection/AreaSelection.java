@@ -9,8 +9,7 @@ import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
-
-import eventful.EventfulType;
+import org.peakaboo.framework.eventful.EventfulType;
 
 /**
  * Represents a box-style selection over an area

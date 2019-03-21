@@ -13,8 +13,7 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.Spectrum;
-
-import eventful.EventfulType;
+import org.peakaboo.framework.eventful.EventfulType;
 
 /**
  * Represents a selection of points, which may not be contiguous 

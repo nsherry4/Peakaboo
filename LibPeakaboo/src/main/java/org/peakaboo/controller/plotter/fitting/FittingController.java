@@ -27,10 +27,9 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.eventful.EventfulCache;
+import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
-
-import eventful.EventfulCache;
-import eventful.EventfulType;
 
 
 public class FittingController extends EventfulType<Boolean>

@@ -13,8 +13,7 @@ import org.peakaboo.controller.settings.SavedPersistence;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.framework.cyclops.Pair;
-
-import eventful.Eventful;
+import org.peakaboo.framework.eventful.Eventful;
 
 
 public class ViewController extends Eventful

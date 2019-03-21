@@ -2,8 +2,7 @@ package org.peakaboo.controller.plotter.undo;
 
 
 import org.peakaboo.controller.plotter.PlotController;
-
-import eventful.Eventful;
+import org.peakaboo.framework.eventful.Eventful;
 
 
 

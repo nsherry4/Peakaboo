@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import org.peakaboo.framework.autodialog.model.style.Style;
 import org.peakaboo.framework.autodialog.model.style.layouts.ColumnLayoutStyle;
 
-import eventful.EventfulType;
+import org.peakaboo.framework.eventful.EventfulType;
 
 public class Group implements Value<List<Value<?>>> {
 

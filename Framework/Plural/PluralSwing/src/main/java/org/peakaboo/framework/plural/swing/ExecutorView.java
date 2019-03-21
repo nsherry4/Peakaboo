@@ -7,7 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import eventful.EventfulListener;
+import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;

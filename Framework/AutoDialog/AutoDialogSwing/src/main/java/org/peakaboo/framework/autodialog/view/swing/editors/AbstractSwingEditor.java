@@ -1,6 +1,6 @@
 package org.peakaboo.framework.autodialog.view.swing.editors;
 
-import eventful.EventfulType;
+import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
 

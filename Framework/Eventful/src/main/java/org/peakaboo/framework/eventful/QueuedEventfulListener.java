@@ -1,4 +1,4 @@
-package eventful;
+package org.peakaboo.framework.eventful;
 
 /**
  * QueuedEventListener counts the number of event notifications, and delivers that

@@ -25,14 +25,13 @@ import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
-
-import eventful.Eventful;
-import eventful.EventfulListener;
 
 
 /**
