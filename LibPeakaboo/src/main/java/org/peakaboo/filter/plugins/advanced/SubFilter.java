@@ -31,7 +31,7 @@ public class SubFilter extends AbstractFilter
 	@Override
 	public void initialize()
 	{
-		List<Filter> filters = FilterPluginManager.SYSTEM.getPlugins().newInstances().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
+		List<Filter> filters = FilterPluginManager.SYSTEM.newInstances().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
 		filters.add(0, new IdentityFilter());
 		
 		for (Filter f : filters)

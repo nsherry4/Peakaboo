@@ -55,7 +55,7 @@ public class SerializedFilter {
 	public Filter getFilter() {
 		if (filter != null) { return filter; }
 			
-		for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
 				filter = plugin.create();
 				filter.initialize();

@@ -28,7 +28,7 @@ public class PlotMenuExport extends JPopupMenu {
 				
 		exportSinks = new JMenu("Raw Data");
 		
-		for (BoltPluginPrototype<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins().getAll()) {
+		for (BoltPluginPrototype<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins()) {
 			exportSinks.add(PlotMenuUtils.createMenuItem(plot,
 					plugin.getName(), null, null,
 					e -> plot.actionExportData(plugin.create()),

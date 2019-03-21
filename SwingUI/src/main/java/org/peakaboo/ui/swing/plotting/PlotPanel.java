@@ -592,8 +592,7 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionOpenData()
 	{	
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		BoltPluginSet<DataSourcePlugin> plugins = DataSourcePluginManager.SYSTEM.getPlugins();
-		for (DataSourcePlugin p : plugins.newInstances()) {
+		for (DataSourcePlugin p : DataSourcePluginManager.SYSTEM.newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);

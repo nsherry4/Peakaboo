@@ -211,7 +211,7 @@ public class FiltersPanel extends JPanel {
 	private JPanel buildAddPanel() {
 		
 		//model and tree
-		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.SYSTEM.getPlugins().getAll();
+		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.SYSTEM.getPlugins();
 		GroupedListTreeModel<BoltPluginPrototype<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
 				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);

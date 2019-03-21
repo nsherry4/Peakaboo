@@ -99,7 +99,7 @@ class FilterSelectionList extends ClearPanel
 					@SuppressWarnings("unchecked")
 					BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
 					
-					return FilterPluginManager.SYSTEM.getPlugins().getAll().indexOf(plugin);
+					return FilterPluginManager.SYSTEM.getPlugins().indexOf(plugin);
 					
 
 				} else if (parent instanceof String) {
@@ -120,7 +120,7 @@ class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
 						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 					}
 					return typeCount;
@@ -142,7 +142,7 @@ class FilterSelectionList extends ClearPanel
 					FilterType ft = (FilterType) parent;
 					int typeCount = 0;
 
-					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins().getAll()) {
+					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
 						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 						if (typeCount == index) return plugin;
 					}

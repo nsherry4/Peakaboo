@@ -215,8 +215,7 @@ public class CalibrationProfile {
 			profile.interpolated.add(ts);
 		}
 		
-		BoltPluginSet<CalibrationReference> plugins = CalibrationPluginManager.SYSTEM.getPlugins();
-		profile.reference = plugins.getByUUID(serialized.referenceUUID).create();
+		profile.reference = CalibrationPluginManager.SYSTEM.getByUUID(serialized.referenceUUID).create();
 		if (profile.reference == null) {
 			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
 		}

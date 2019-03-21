@@ -156,18 +156,14 @@ public class PluginsOverview extends HeaderLayer {
 		if (!container.isDeletable()) {
 			return;
 		}
-
-		BoltPluginSet<? extends BoltPlugin> set;
-		set = container.getPlugins();
-
 		
-		if (set.getAll().size() == 0) {
+		if (container.isEmpty()) {
 			return;
 		}
 		
 		new LayerDialog(
 				"Delete Plugin Container?", 
-				"Are you sure you want to delete the container with the plugins:\n\n" + listToUL(set.getAll()), 
+				"Are you sure you want to delete the container with the plugins:\n\n" + listToUL(container.getPlugins()), 
 				MessageType.QUESTION)
 			.addRight(
 				new ImageButton("Delete").withAction(() -> {
@@ -246,7 +242,7 @@ public class PluginsOverview extends HeaderLayer {
 		this.reload();
 		new LayerDialog(
 				"Imported New Plugins", 
-				"Peakboo successfully imported the following plugin(s):\n" + listToUL(container.getPlugins().getAll()), 
+				"Peakboo successfully imported the following plugin(s):\n" + listToUL(container.getPlugins()), 
 				MessageType.INFO).showIn(parent);
 
 		return true;
@@ -281,11 +277,11 @@ public class PluginsOverview extends HeaderLayer {
 	
 	private DefaultMutableTreeNode createPluginManagerRootNode(BoltPluginManager<?> manager) {
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(manager);
-		for (BoltPluginPrototype<?> source :  manager.getPlugins().getAll()) {
+		for (BoltPluginPrototype<?> source :  manager.getPlugins()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sourcesNode.add(node);
 		}
-		for (BoltIssue issue : manager.getPlugins().getIssues()) {
+		for (BoltIssue<? extends BoltPlugin> issue : manager.getIssues()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(issue);
 			sourcesNode.add(node);
 		}
@@ -313,7 +309,7 @@ public class PluginsOverview extends HeaderLayer {
 		if (Peakaboo.SHOW_QUANTITATIVE) {
 			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.SYSTEM);
 			plugins.add(calibrationsNode);
-			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins().getAll()) {
+			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins()) {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 				calibrationsNode.add(node);
 			}
@@ -354,7 +350,7 @@ public class PluginsOverview extends HeaderLayer {
 					details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) o), BorderLayout.CENTER);
 					remove.setEnabled(selectedPlugin().getContainer().isDeletable());
 				} else if (o instanceof BoltIssue) {
-					details.add(new IssueView((BoltIssue) o, this));
+					details.add(new IssueView((BoltIssue<? extends BoltPlugin>) o, this));
 					remove.setEnabled(false);
 				}
 			}

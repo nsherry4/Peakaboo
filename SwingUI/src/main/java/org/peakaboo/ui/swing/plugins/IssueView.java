@@ -1,6 +1,5 @@
 package org.peakaboo.ui.swing.plugins;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import swidget.widgets.layout.TitledPanel;
 
 public class IssueView extends JPanel {
 
-	public IssueView(BoltIssue issue, PluginsOverview parent) {
+	public IssueView(BoltIssue<?> issue, PluginsOverview parent) {
 		super(new GridBagLayout());
 		this.setBorder(Spacing.bHuge());
 		
@@ -31,7 +30,7 @@ public class IssueView extends JPanel {
 		Map<String, String> properties = new HashMap<>();
 		properties.put("Source", issue.longSource());	
 		TitledPanel titlePanel = new TitledPanel(new PropertyPanel(properties), issue.title(), true);
-		titlePanel.setBadge(StockIcon.DOCUMENT_IMPORT.toImageIcon(IconSize.ICON));
+		titlePanel.setBadge(StockIcon.BADGE_ERROR.toImageIcon(IconSize.ICON));
 		
 		JTextLabel desc = new JTextLabel(issue.description());
 		JScrollPane scroller = new JScrollPane(desc);

@@ -99,10 +99,10 @@ public abstract class DataLoader {
 		 */
 		List<DataSourcePlugin> formats = new ArrayList<>();
 		if (dataSourceUUID != null) {
-			formats.add(DataSourcePluginManager.SYSTEM.getPlugins().getByUUID(dataSourceUUID).create());
+			formats.add(DataSourcePluginManager.SYSTEM.getByUUID(dataSourceUUID).create());
 		}
 		if (formats.size() == 0) {
-			List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.getPlugins().newInstances();
+			List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.newInstances();
 			formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
 		}
 		
