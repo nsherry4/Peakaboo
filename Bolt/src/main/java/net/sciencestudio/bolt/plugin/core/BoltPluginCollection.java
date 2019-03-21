@@ -11,12 +11,12 @@ import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
  * Interface for exposing a set of {@link BoltPlugin}s and {@link BoltIssue}s
  * in a read-only way.
  */
-public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<T> {
+public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<BoltPluginPrototype<? extends T>> {
 
 	List<BoltPluginPrototype<? extends T>> getPlugins();
 	
-	default Iterator<T> iterator() {
-		return (Iterator<T>) getPlugins().iterator();
+	default Iterator<BoltPluginPrototype<? extends T>> iterator() {
+		return getPlugins().iterator();
 	}
 	
 	List<BoltIssue<? extends T>> getIssues();
