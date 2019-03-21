@@ -1,15 +1,16 @@
 package net.sciencestudio.bolt.plugin.core.issue;
 
+import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 /**
  * This container is broken in some way
  */
-public abstract class BoltBrokenContainerIssue implements BoltIssue {
+public abstract class BoltBrokenContainerIssue<T extends BoltPlugin> implements BoltContainerIssue<T> {
 	
-	private BoltContainer<?> container;
+	private BoltContainer<T> container;
 
-	public BoltBrokenContainerIssue(BoltContainer<?> container) {
+	public BoltBrokenContainerIssue(BoltContainer<T> container) {
 		this.container = container;
 	}
 	
@@ -44,4 +45,8 @@ public abstract class BoltBrokenContainerIssue implements BoltIssue {
 		return container.getSourcePath();
 	}
 	
+	@Override
+	public BoltContainer<T> getContainer() {
+		return container;
+	}
 }

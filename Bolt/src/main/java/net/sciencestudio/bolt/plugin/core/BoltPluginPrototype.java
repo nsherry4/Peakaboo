@@ -72,4 +72,19 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 		}
 	}
 	
+	default boolean isNewerThan(BoltPluginPrototype<?> other) {
+		if (getUUID() != other.getUUID()) {
+			return false;
+		}
+		int cmp = AlphaNumericComparitor.compareVersions(getVersion(), other.getVersion());
+		if (cmp > 0) {
+			//this plugin is a newer version of the given one, so it's an upgrade
+			return true;
+		} else {
+			//this is an older (or same) version
+			return false;
+		}
+	}
+	
+	
 }

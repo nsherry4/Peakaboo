@@ -76,7 +76,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 			return true;
 		}
 		try {
-			return container.getPlugins().getAll().size() > 0;
+			return container.size() > 0;
 		} catch (Throwable e) {
 			return false;
 		}
@@ -90,7 +90,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 			if (!managed) { return false; }
 			BoltContainer<T> container = build(file);
 			if (container == null) { return false; }
-			if (container.getPlugins().getAll().isEmpty()) { return false; }
+			if (container.isEmpty()) { return false; }
 			if (importedFile(file).exists()) {
 				// if the destination file already exists, we want to test if the new file would
 				// consitute an upgrade for the existing file. If it does, then we can go ahead
@@ -125,7 +125,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 		
 		
 		for (BoltContainer<T> existing : getContainers()) {
-			if (importing.getPlugins().isUpgradeFor(existing.getPlugins())) {
+			if (importing.isUpgradeFor(existing)) {
 				// TODO: Do we delete when the plugins in another (differently named) container
 				// are all superceeded by newer versions?
 				existing.delete();
@@ -151,11 +151,11 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 		BoltContainer<T> importing = build(file);
 		BoltContainer<T> existing = build(importedFile(file));
 		
-		if (existing.getPlugins().getAll().isEmpty()) {
+		if (existing.isEmpty()) {
 			return true;
 		}
 		
-		return importing.getPlugins().isUpgradeFor(existing.getPlugins());
+		return importing.isUpgradeFor(existing);
 	}
 	
 	

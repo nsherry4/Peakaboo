@@ -1,15 +1,20 @@
 package net.sciencestudio.bolt.plugin.core.issue;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sciencestudio.bolt.plugin.core.BoltPlugin;
+
 /**
  * Represends a problem with a plugin or plugin container
  **/
-public interface BoltIssue {
+public interface BoltIssue<T extends BoltPlugin> {
 
 	String title();
 	String description();
 	String shortSource();
 	String longSource();
-		
+
 	default boolean hasFix() {
 		return false;
 	}

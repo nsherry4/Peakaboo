@@ -1,19 +1,16 @@
 package net.sciencestudio.bolt.plugin.core.issue;
 
-import java.io.File;
-
 import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
-import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 /**
  * This plugin is out of date
  */
-public class BoltOldPluginIssue implements BoltIssue {
+public class BoltOldPluginIssue<T extends BoltPlugin> implements BoltPluginIssue<T> {
 
-	protected BoltPluginPrototype<? extends BoltPlugin> proto;
+	protected BoltPluginPrototype<? extends T> proto;
 	
-	public BoltOldPluginIssue(BoltPluginPrototype<? extends BoltPlugin> proto) {
+	public BoltOldPluginIssue(BoltPluginPrototype<? extends T> proto) {
 		this.proto = proto;
 	}
 	

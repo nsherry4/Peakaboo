@@ -3,22 +3,23 @@ package net.sciencestudio.bolt.plugin.core.issue;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 /**
  * This plugin is broken in some way
  */
-public abstract class BoltBrokenPluginIssue implements BoltIssue {
+public abstract class BoltBrokenPluginIssue<T extends BoltPlugin> implements BoltPluginIssue<T> {
 	
-	private BoltContainer<?> container;
+	private BoltContainer<T> container;
 	private String message;
 	
-	public BoltBrokenPluginIssue(BoltContainer<?> container, String message) {
+	public BoltBrokenPluginIssue(BoltContainer<T> container, String message) {
 		this.container = container;
 		this.message = message;
 	}
 	
-	public BoltBrokenPluginIssue(BoltContainer<?> container, Throwable e) {
+	public BoltBrokenPluginIssue(BoltContainer<T> container, Throwable e) {
 		this.container = container;
 		
 		StringWriter s = new StringWriter();

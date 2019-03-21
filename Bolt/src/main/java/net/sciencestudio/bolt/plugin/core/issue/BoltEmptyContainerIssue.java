@@ -1,15 +1,16 @@
 package net.sciencestudio.bolt.plugin.core.issue;
 
+import net.sciencestudio.bolt.plugin.core.BoltPlugin;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
 
 /**
  * This container contains no plugins
  */
-public abstract class BoltEmptyContainerIssue implements BoltIssue {
+public abstract class BoltEmptyContainerIssue<T extends BoltPlugin> implements BoltContainerIssue<T> {
 
-	private BoltContainer<?> container;
+	private BoltContainer<T> container;
 	
-	public BoltEmptyContainerIssue(BoltContainer<?> container) {
+	public BoltEmptyContainerIssue(BoltContainer<T> container) {
 		this.container = container;
 	}
 	
@@ -42,6 +43,11 @@ public abstract class BoltEmptyContainerIssue implements BoltIssue {
 	@Override
 	public String longSource() {
 		return container.getSourcePath();
+	}
+	
+	@Override
+	public BoltContainer<T> getContainer() {
+		return container;
 	}
 	
 }

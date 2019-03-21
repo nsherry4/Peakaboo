@@ -1,13 +1,14 @@
 package net.sciencestudio.bolt.plugin.java.container;
 
 import java.lang.reflect.Modifier;
+import java.util.List;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
-import net.sciencestudio.bolt.plugin.core.BoltPluginSet;
 import net.sciencestudio.bolt.plugin.core.container.BoltContainer;
+import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
 import net.sciencestudio.bolt.plugin.java.BoltJar;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPlugin;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPluginPrototype;
@@ -24,17 +25,21 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 	}
 
 	@Override
-	public BoltPluginSet<T> getPlugins() {
-		return plugins;
+	public List<BoltPluginPrototype<? extends T>> getPlugins() {
+		return plugins.getPlugins();
 	}
 
+	@Override
+	public List<BoltIssue<? extends T>> getIssues() {
+		return plugins.getIssues();
+	}
 
 	protected void add(Class<? extends T> loadedClass) {
 
 		try 
 		{
 			if (!checkPluginCriteria(loadedClass)) {
-				plugins.addIssue(new BoltBrokenJavaPluginIssue(loadedClass, this, "It does not appear to be a valid plugin"));
+				plugins.addIssue(new BoltBrokenJavaPluginIssue<>(loadedClass, this, "It does not appear to be a valid plugin"));
 				return; 
 			} 
 			
@@ -47,7 +52,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 		}
 		catch (Throwable e)
 		{
-			plugins.addIssue(new BoltBrokenJavaPluginIssue(loadedClass, this, e));
+			plugins.addIssue(new BoltBrokenJavaPluginIssue<>(loadedClass, this, e));
 			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
 		}
 	}

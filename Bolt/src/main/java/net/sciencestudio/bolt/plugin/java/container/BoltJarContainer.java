@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import net.sciencestudio.bolt.Bolt;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPlugin;
 import net.sciencestudio.bolt.plugin.java.issue.BoltBrokenJarIssue;
-import net.sciencestudio.bolt.plugin.java.issue.BoltBrokenJavaPluginIssue;
 import net.sciencestudio.bolt.plugin.java.issue.BoltEmptyJarIssue;
 
 public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContainer<T> {
@@ -33,7 +32,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 		try {
 
 			if (!isValidJar()) {
-				plugins.addIssue(new BoltBrokenJarIssue(this, "It does not appear to be a valid jar file"));
+				plugins.addIssue(new BoltBrokenJarIssue<>(this, "It does not appear to be a valid jar file"));
 				return;
 			}
 
@@ -55,18 +54,18 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 					T t = iter.next();
 					add((Class<? extends T>) t.getClass());
 				} catch (Throwable e) {
-					plugins.addIssue(new BoltBrokenJavaPluginIssue(null, this, e));
+					plugins.addIssue(new BoltBrokenJarIssue<>(this, "Failed to load plugins"));
 					Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
 					empty = false;
 				}
 			}
 
 			if (empty) {
-				plugins.addIssue(new BoltEmptyJarIssue(this));
+				plugins.addIssue(new BoltEmptyJarIssue<>(this));
 			}
 
 		} catch (Throwable e) {
-			plugins.addIssue(new BoltBrokenJarIssue(this, e.getMessage()));
+			plugins.addIssue(new BoltBrokenJarIssue<>(this, e.getMessage()));
 			Bolt.logger().log(Level.WARNING, "Unable to load plugins from jar", e);
 		}
 
