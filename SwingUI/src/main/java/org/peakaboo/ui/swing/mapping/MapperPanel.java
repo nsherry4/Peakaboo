@@ -34,6 +34,9 @@ import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.AwtSurfaceFactory;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
+import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.swing.ExecutorSetView;
+import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
@@ -49,9 +52,6 @@ import org.peakaboo.ui.swing.mapping.sidebar.MapperSidebar;
 import org.peakaboo.ui.swing.plotting.ExportPanel;
 
 import eventful.EventfulTypeListener;
-import plural.executor.ExecutorSet;
-import plural.swing.ExecutorSetView;
-import plural.swing.ExecutorSetViewLayer;
 
 
 

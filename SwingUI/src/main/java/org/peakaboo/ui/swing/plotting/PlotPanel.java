@@ -81,6 +81,16 @@ import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.util.StringInput;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
+import org.peakaboo.framework.plural.Plural;
+import org.peakaboo.framework.plural.executor.DummyExecutor;
+import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
+import org.peakaboo.framework.plural.streams.StreamExecutorSet;
+import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
+import org.peakaboo.framework.plural.streams.swing.StreamExecutorPanel;
+import org.peakaboo.framework.plural.streams.swing.StreamExecutorView;
+import org.peakaboo.framework.plural.swing.ExecutorSetView;
+import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.dialogues.AboutDialogue;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
@@ -118,17 +128,6 @@ import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
 import org.peakaboo.ui.swing.plugins.PluginsOverview;
-
-import plural.Plural;
-import plural.executor.DummyExecutor;
-import plural.executor.ExecutorSet;
-import plural.streams.StreamExecutor;
-import plural.streams.StreamExecutor.Event;
-import plural.streams.StreamExecutorSet;
-import plural.streams.swing.StreamExecutorPanel;
-import plural.streams.swing.StreamExecutorView;
-import plural.swing.ExecutorSetView;
-import plural.swing.ExecutorSetViewLayer;
 
 
 

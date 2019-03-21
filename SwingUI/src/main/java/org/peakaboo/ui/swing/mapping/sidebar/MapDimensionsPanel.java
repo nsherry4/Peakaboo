@@ -11,6 +11,10 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
+import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
+import org.peakaboo.framework.plural.streams.swing.StreamExecutorPanel;
+import org.peakaboo.framework.plural.streams.swing.StreamExecutorView;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -18,11 +22,6 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
-
-import plural.streams.StreamExecutor;
-import plural.streams.StreamExecutor.Event;
-import plural.streams.swing.StreamExecutorPanel;
-import plural.streams.swing.StreamExecutorView;
 
 public class MapDimensionsPanel extends JPanel {
 

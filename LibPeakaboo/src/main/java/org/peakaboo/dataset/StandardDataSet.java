@@ -26,10 +26,9 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
-
-import plural.executor.AbstractExecutor;
-import plural.executor.DummyExecutor;
-import plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.AbstractExecutor;
+import org.peakaboo.framework.plural.executor.DummyExecutor;
+import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 
 

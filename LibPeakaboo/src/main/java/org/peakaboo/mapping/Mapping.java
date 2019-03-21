@@ -24,15 +24,14 @@ import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.plural.Plural;
+import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.eachindex.EachIndexExecutor;
+import org.peakaboo.framework.plural.executor.eachindex.implementations.PluralEachIndexExecutor;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
+import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
-
-import plural.Plural;
-import plural.executor.ExecutorSet;
-import plural.executor.eachindex.EachIndexExecutor;
-import plural.executor.eachindex.implementations.PluralEachIndexExecutor;
-import plural.streams.StreamExecutor;
-import plural.streams.StreamExecutorSet;
 
 /**
  * This class contains logic for generating maps for a {@link AbstractDataSet}, so that functionality does not have to be duplicated across various implementations

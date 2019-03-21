@@ -32,12 +32,12 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
+import org.peakaboo.framework.plural.Plural;
+import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.eachindex.EachIndexExecutor;
+import org.peakaboo.framework.plural.executor.eachindex.implementations.SimpleEachIndexExecutor;
 
 import eventful.EventfulType;
-import plural.Plural;
-import plural.executor.ExecutorSet;
-import plural.executor.eachindex.EachIndexExecutor;
-import plural.executor.eachindex.implementations.SimpleEachIndexExecutor;
 
 
 

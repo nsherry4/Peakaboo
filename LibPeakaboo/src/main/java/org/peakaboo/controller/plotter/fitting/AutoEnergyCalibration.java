@@ -17,12 +17,11 @@ import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
-
-import plural.Plural;
-import plural.executor.AbstractExecutor;
-import plural.executor.ExecutorSet;
-import plural.streams.StreamExecutor;
-import plural.streams.StreamExecutorSet;
+import org.peakaboo.framework.plural.Plural;
+import org.peakaboo.framework.plural.executor.AbstractExecutor;
+import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
+import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 
 public class AutoEnergyCalibration {
 

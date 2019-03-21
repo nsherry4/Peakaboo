@@ -22,8 +22,7 @@ import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.util.StringInput;
-
-import plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 
 

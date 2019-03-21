@@ -12,9 +12,9 @@ import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
 
 import eventful.EventfulType;
-import plural.streams.StreamExecutor;
 
 public class MapDimensionsController extends EventfulType<String>{
 
