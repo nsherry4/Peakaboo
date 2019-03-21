@@ -13,11 +13,11 @@ import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FastSignalMatchScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
-import cyclops.Pair;
-import cyclops.Range;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 import plural.Plural;
 import plural.executor.AbstractExecutor;
 import plural.executor.ExecutorSet;

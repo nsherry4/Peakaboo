@@ -1,6 +1,6 @@
 package org.peakaboo.display.map.modes;
 
-import cyclops.visualization.palette.PaletteColour;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public enum OverlayColour {
 	

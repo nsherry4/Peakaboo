@@ -6,12 +6,11 @@ import java.util.List;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.cyclops.RangeSet;
 
 import com.github.tschoonj.xraylib.Xraylib;
 import com.github.tschoonj.xraylib.XraylibException;
-
-import cyclops.Range;
-import cyclops.RangeSet;
 
 public class XrayLibPeakTable implements PeakTable {
 

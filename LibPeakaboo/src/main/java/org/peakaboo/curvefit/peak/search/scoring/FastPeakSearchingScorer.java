@@ -7,8 +7,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 /**
  * Detects peaks in the given data, and then scores each TransitionSeries based

@@ -2,9 +2,9 @@ package org.peakaboo.calibration;
 
 import java.io.File;
 
-import net.sciencestudio.bolt.plugin.config.loader.BoltConfigBuiltinLoader;
-import net.sciencestudio.bolt.plugin.config.loader.BoltConfigDirectoryLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.config.loader.BoltConfigBuiltinLoader;
+import org.peakaboo.framework.bolt.plugin.config.loader.BoltConfigDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 
 public class CalibrationPluginManager extends BoltPluginManager<CalibrationReference> {
 

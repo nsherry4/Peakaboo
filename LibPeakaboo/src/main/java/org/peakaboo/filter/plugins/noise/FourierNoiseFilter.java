@@ -11,12 +11,12 @@ import org.peakaboo.framework.autodialog.model.SelectionParameter;
 import org.peakaboo.framework.autodialog.model.classinfo.EnumClassInfo;
 import org.peakaboo.framework.autodialog.model.style.editors.DropDownStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 import JSci.maths.Complex;
 import JSci.maths.FourierMath;
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 
 /**
  * 

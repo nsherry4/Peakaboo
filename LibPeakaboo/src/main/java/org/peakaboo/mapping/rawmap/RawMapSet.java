@@ -10,10 +10,9 @@ import java.util.stream.Stream;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
 /**

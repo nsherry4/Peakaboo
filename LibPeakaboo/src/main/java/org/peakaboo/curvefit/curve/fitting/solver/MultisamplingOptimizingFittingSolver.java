@@ -12,8 +12,7 @@ import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 

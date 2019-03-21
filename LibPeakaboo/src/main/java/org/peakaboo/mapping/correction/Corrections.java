@@ -10,8 +10,7 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-
-import cyclops.Pair;
+import org.peakaboo.framework.cyclops.Pair;
 
 
 public class Corrections

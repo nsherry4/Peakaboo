@@ -3,11 +3,11 @@ package org.peakaboo.mapping.filter;
 import java.util.ArrayList;
 import java.util.List;
 
-import cyclops.GridPerspective;
-import cyclops.ISpectrum;
-import cyclops.IntPair;
-import cyclops.Pair;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.IntPair;
+import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 /**
  * 

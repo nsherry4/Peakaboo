@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.display.map.modes.MapDisplayMode;
-
-import cyclops.Coord;
-import cyclops.SISize;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.SISize;
 
 public class MapRenderSettings {
 

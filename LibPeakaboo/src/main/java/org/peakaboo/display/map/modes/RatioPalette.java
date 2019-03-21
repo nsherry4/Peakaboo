@@ -4,9 +4,9 @@ package org.peakaboo.display.map.modes;
 
 import java.util.List;
 
-import cyclops.visualization.palette.PaletteColour;
-import cyclops.visualization.palette.Spectrums;
-import cyclops.visualization.palette.palettes.AbstractPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
+import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
+import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 
 

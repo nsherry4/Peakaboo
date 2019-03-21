@@ -9,13 +9,12 @@ import org.peakaboo.curvefit.peak.escape.EscapePeakType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
-import cyclops.visualization.drawing.DrawingRequest;
-import cyclops.visualization.drawing.painters.PainterData;
-import cyclops.visualization.drawing.plot.PlotDrawing;
-import cyclops.visualization.drawing.plot.painters.PlotPainter;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
 
 
 /**

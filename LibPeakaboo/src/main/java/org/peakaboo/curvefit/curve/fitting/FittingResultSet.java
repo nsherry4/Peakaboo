@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 /**
  * 

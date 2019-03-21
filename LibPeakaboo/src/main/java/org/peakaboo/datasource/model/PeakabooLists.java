@@ -1,9 +1,9 @@
 package org.peakaboo.datasource.model;
 
 import org.peakaboo.common.PeakabooConfiguration;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.list.ScratchList;
 import net.sciencestudio.scratch.list.ScratchLists;

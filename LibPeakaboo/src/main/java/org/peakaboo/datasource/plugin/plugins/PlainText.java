@@ -17,12 +17,11 @@ import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.datasource.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
-
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
 
 
 public class PlainText extends AbstractDataSource

@@ -8,9 +8,8 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.ui.swing.mapping.MapCanvas;
-
-import cyclops.Coord;
 
 public class MapSelectionListener implements MouseMotionListener, MouseListener {
 

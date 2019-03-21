@@ -25,9 +25,9 @@ import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
-import cyclops.Pair;
-import cyclops.ReadOnlySpectrum;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;
 

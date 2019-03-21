@@ -3,10 +3,9 @@ package org.peakaboo.filter.plugins.mathematical;
 
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
-
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
 public class DerivativeMathFilter extends AbstractSimpleFilter

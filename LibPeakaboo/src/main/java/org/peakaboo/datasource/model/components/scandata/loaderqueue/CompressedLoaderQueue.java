@@ -8,8 +8,8 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.framework.cyclops.Spectrum;
 
-import cyclops.Spectrum;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.single.Compressed;
 

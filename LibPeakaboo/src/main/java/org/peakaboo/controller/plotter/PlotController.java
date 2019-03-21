@@ -25,10 +25,10 @@ import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
-import cyclops.ReadOnlySpectrum;
-import cyclops.SigDigits;
 import eventful.EventfulType;
 import plural.Plural;
 import plural.executor.ExecutorSet;

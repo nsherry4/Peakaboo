@@ -3,10 +3,9 @@ package org.peakaboo.datasource.plugin;
 import java.io.File;
 
 import org.peakaboo.datasource.plugin.plugins.PlainText;
-
-import net.sciencestudio.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.java.loader.BoltJarDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin> {
 

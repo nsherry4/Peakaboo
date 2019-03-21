@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
-import cyclops.Bounds;
-import cyclops.Coord;
-import cyclops.SISize;
 import eventful.EventfulType;
 
 

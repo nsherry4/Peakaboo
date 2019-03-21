@@ -23,10 +23,10 @@ import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
-import cyclops.Coord;
-import cyclops.ReadOnlySpectrum;
-import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import plural.executor.AbstractExecutor;
 import plural.executor.DummyExecutor;
 import plural.executor.ExecutorSet;

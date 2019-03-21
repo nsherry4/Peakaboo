@@ -1,15 +1,14 @@
 package org.peakaboo.mapping.filter.plugin.plugins.transforming;
 
+import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
-
-import cyclops.Bounds;
-import cyclops.Coord;
-import cyclops.GridPerspective;
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 
 public class Rotate270MapFilter extends AbstractMapFilter {
 

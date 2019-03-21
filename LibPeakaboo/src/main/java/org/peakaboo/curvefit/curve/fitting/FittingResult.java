@@ -2,8 +2,7 @@ package org.peakaboo.curvefit.curve.fitting;
 
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 /**
  * 

@@ -13,8 +13,7 @@ import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-
-import cyclops.SigDigits;
+import org.peakaboo.framework.cyclops.SigDigits;
 
 
 class FittingRenderer extends DefaultTableCellRenderer

@@ -17,8 +17,8 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.FilterPlugin;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 
-import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.ClearPanel;

@@ -2,8 +2,7 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 public class UnderCurveFitter implements CurveFitter {
 

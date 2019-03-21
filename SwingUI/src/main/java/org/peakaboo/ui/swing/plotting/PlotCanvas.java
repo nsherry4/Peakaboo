@@ -21,10 +21,10 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 
-import cyclops.Coord;
-import cyclops.visualization.Surface;
-import cyclops.visualization.backend.awt.GraphicsPanel;
 import eventful.EventfulTypeListener;
 
 

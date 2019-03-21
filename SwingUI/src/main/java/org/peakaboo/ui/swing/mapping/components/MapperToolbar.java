@@ -26,12 +26,12 @@ import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
-import cyclops.ReadOnlySpectrum;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.buttons.ToolbarImageButton;

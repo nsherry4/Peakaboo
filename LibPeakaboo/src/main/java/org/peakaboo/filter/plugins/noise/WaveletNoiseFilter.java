@@ -6,11 +6,11 @@ import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 import JSci.maths.wavelet.daubechies2.FastDaubechies2;
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 
 
 

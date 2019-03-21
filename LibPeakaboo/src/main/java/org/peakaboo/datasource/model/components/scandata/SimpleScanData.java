@@ -8,10 +8,10 @@ import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnal
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 import net.sciencestudio.scratch.list.ScratchList;
 import net.sciencestudio.scratch.single.Compressed;
 

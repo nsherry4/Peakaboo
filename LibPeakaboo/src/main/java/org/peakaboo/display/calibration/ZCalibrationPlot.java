@@ -9,27 +9,26 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-
-import cyclops.Bounds;
-import cyclops.Coord;
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
-import cyclops.visualization.Surface;
-import cyclops.visualization.drawing.DrawingRequest;
-import cyclops.visualization.drawing.ViewTransform;
-import cyclops.visualization.drawing.painters.axis.AxisPainter;
-import cyclops.visualization.drawing.painters.axis.LineAxisPainter;
-import cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
-import cyclops.visualization.drawing.plot.PlotDrawing;
-import cyclops.visualization.drawing.plot.painters.PlotPainter;
-import cyclops.visualization.drawing.plot.painters.PlotPainter.TraceType;
-import cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
-import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
-import cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
-import cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
-import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
-import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
-import cyclops.visualization.palette.PaletteColour;
+import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
+import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.LineAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter.TraceType;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public abstract class ZCalibrationPlot {
 	

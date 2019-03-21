@@ -3,10 +3,9 @@ package org.peakaboo.datasink.plugin;
 import java.io.File;
 
 import org.peakaboo.datasink.plugin.plugins.CSV;
-
-import net.sciencestudio.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.java.loader.BoltJarDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 

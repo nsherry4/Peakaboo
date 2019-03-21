@@ -10,10 +10,9 @@ import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.SeparatorStyle;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 //From Handbook of X-Ray Spectrometry
 public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {

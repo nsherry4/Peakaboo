@@ -23,11 +23,10 @@ import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 public class OptimizingFittingSolver implements FittingSolver {
 

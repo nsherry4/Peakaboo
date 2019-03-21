@@ -2,15 +2,14 @@ package org.peakaboo.mapping.filter.plugin.plugins.sizing;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
-
-import cyclops.Coord;
-import cyclops.GridPerspective;
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 
 public class BinningMapFilter extends AbstractMapFilter {
 

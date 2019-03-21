@@ -4,8 +4,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 /**
  * Prefers pileup peaks which are a small percent of the 

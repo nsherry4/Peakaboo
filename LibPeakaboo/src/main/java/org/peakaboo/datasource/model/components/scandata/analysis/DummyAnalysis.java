@@ -1,7 +1,7 @@
 package org.peakaboo.datasource.model.components.scandata.analysis;
 
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 public class DummyAnalysis implements Analysis {
 

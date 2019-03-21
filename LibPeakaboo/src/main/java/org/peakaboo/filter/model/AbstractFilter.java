@@ -9,9 +9,8 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
-
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 /**
  * 

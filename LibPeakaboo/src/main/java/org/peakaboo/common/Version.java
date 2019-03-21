@@ -9,7 +9,7 @@ import java.net.URLConnection;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
+import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 
 public class Version {
 

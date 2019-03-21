@@ -10,8 +10,8 @@ import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.framework.cyclops.Coord;
 
-import cyclops.Coord;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.Event;
 import plural.streams.swing.StreamExecutorPanel;

@@ -4,8 +4,7 @@ package org.peakaboo.datasource.model.components.scandata;
 import java.util.Iterator;
 
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 
 

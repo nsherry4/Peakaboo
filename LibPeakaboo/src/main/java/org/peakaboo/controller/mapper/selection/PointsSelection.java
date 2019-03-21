@@ -8,12 +8,12 @@ import java.util.Set;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.cyclops.Spectrum;
 
-import cyclops.Coord;
-import cyclops.GridPerspective;
-import cyclops.Pair;
-import cyclops.Range;
-import cyclops.Spectrum;
 import eventful.EventfulType;
 
 /**

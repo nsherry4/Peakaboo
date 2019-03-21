@@ -3,8 +3,8 @@ package cyclops;
 import java.util.ArrayList;
 
 import org.junit.Test;
+import org.peakaboo.framework.cyclops.SparsedList;
 
-import cyclops.SparsedList;
 import junit.framework.Assert;
 
 public class SparsedListTests {

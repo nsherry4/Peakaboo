@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.Range;
 
-import cyclops.Coord;
-import cyclops.GridPerspective;
-import cyclops.Range;
 import eventful.EventfulType;
 
 /**

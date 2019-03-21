@@ -14,8 +14,7 @@ import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.framework.autodialog.model.Group;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 /**
  * Represents a random selection of data points from another DataSource

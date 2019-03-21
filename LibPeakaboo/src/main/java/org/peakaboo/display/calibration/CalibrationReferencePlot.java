@@ -10,9 +10,8 @@ import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-
-import cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
-import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
 
 public class CalibrationReferencePlot extends ZCalibrationPlot {
 

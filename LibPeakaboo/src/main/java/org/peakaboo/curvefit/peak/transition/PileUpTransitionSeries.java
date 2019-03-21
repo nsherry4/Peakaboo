@@ -8,8 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.table.Element;
-
-import cyclops.util.ListOps;
+import org.peakaboo.framework.cyclops.util.ListOps;
 
 public class PileUpTransitionSeries implements ITransitionSeries {
 

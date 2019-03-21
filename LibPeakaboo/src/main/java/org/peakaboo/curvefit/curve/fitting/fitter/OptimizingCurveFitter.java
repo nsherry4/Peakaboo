@@ -14,11 +14,10 @@ import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
 import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 public class OptimizingCurveFitter implements CurveFitter {
 

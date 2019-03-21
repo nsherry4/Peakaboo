@@ -5,11 +5,12 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
-import cyclops.visualization.SurfaceType;
-import cyclops.visualization.backend.awt.GraphicsPanel;
-import cyclops.visualization.backend.awt.SavePicture;
-import cyclops.visualization.backend.awt.SavePicture.DimensionPicker;
-import cyclops.visualization.backend.awt.SavePicture.FormatPicker;
+import org.peakaboo.framework.cyclops.visualization.SurfaceType;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture.DimensionPicker;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture.FormatPicker;
+
 import swidget.widgets.Spacing;
 import swidget.widgets.layerpanel.LayerPanel;
 import swidget.widgets.layerpanel.ModalLayer;

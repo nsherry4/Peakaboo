@@ -14,9 +14,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
-import cyclops.Coord;
 import swidget.widgets.Spacing;
 
 

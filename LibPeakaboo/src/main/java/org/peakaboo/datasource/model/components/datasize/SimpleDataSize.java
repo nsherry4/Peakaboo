@@ -1,7 +1,7 @@
 package org.peakaboo.datasource.model.components.datasize;
 
 
-import cyclops.Coord;
+import org.peakaboo.framework.cyclops.Coord;
 
 public class SimpleDataSize implements DataSize {
 

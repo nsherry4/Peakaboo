@@ -9,11 +9,10 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 /**
  * 

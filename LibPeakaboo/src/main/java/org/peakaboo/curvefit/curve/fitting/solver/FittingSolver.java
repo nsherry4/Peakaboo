@@ -4,9 +4,8 @@ import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 /**
  * Defines a method by which a {@link FittingSet} of {@link Curve}s are fit to a given {@link Spectrum}

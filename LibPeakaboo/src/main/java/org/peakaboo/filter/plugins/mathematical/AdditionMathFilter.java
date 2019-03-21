@@ -4,9 +4,8 @@ import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
-
-import cyclops.ReadOnlySpectrum;
-import cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
 

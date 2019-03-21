@@ -28,11 +28,11 @@ import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.Mapper;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
+import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 
-import cyclops.Coord;
-import cyclops.util.Mutable;
-import cyclops.visualization.SaveableSurface;
-import cyclops.visualization.SurfaceType;
 import eventful.EventfulType;
 import plural.Plural;
 import plural.executor.ExecutorSet;

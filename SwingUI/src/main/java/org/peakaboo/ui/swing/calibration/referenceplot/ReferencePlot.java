@@ -7,10 +7,9 @@ import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.display.calibration.CalibrationReferencePlot;
-
-import cyclops.Coord;
-import cyclops.visualization.Surface;
-import cyclops.visualization.backend.awt.GraphicsPanel;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 
 public class ReferencePlot extends GraphicsPanel {
 

@@ -2,9 +2,8 @@ package org.peakaboo.mapping.filter.model;
 
 import java.util.List;
 
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
-
-import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 
 /**
  * SerializedFilter holds a reference to a filter, and provides getters/setters for

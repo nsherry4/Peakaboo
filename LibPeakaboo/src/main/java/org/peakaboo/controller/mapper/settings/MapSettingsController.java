@@ -4,9 +4,9 @@ import java.io.File;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.cyclops.Coord;
 
-import cyclops.Bounds;
-import cyclops.Coord;
 import eventful.EventfulType;
 
 /**

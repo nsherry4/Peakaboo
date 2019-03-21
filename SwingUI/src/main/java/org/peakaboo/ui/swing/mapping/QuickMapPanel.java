@@ -12,13 +12,13 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
 import org.peakaboo.ui.swing.mapping.components.PlotSelectionButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 
-import cyclops.util.Mutable;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.buttons.ToolbarImageButton;

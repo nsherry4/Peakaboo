@@ -14,14 +14,13 @@ import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.framework.autodialog.model.Group;
-
-import cyclops.Bounds;
-import cyclops.Coord;
-import cyclops.GridPerspective;
-import cyclops.Range;
-import cyclops.ReadOnlySpectrum;
-import cyclops.SISize;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.SISize;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 
 public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSize, ScanData

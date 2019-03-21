@@ -12,8 +12,8 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.cyclops.util.Mutable;
 
-import cyclops.util.Mutable;
 import swidget.icons.IconFactory;
 import swidget.widgets.LiveFrame;
 import swidget.widgets.tabbedinterface.TabbedInterface;

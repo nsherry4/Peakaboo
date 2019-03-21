@@ -4,12 +4,11 @@ package org.peakaboo.display.plot.painters;
 import java.awt.Color;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-
-import cyclops.Spectrum;
-import cyclops.visualization.drawing.painters.PainterData;
-import cyclops.visualization.drawing.plot.PlotDrawing;
-import cyclops.visualization.drawing.plot.painters.PlotPainter;
-import cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 
 /**
  * 

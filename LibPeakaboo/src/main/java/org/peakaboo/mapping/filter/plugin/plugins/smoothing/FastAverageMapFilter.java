@@ -2,14 +2,13 @@ package org.peakaboo.mapping.filter.plugin.plugins.smoothing;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
-
-import cyclops.GridPerspective;
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 
 public class FastAverageMapFilter extends AbstractMapFilter {
 

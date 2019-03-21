@@ -23,11 +23,11 @@ import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
-import cyclops.Coord;
-import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulListener;
 import plural.executor.AbstractExecutor;

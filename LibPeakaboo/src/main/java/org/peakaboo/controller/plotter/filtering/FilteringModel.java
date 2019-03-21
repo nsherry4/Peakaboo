@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
-import cyclops.ReadOnlySpectrum;
 import eventful.EventfulCache;
 
 public class FilteringModel {

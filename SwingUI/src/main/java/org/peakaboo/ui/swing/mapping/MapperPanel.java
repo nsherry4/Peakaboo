@@ -29,17 +29,17 @@ import javax.swing.border.MatteBorder;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
+import org.peakaboo.framework.cyclops.visualization.SurfaceType;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.AwtSurfaceFactory;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapStatusBar;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
 import org.peakaboo.ui.swing.mapping.sidebar.MapperSidebar;
 import org.peakaboo.ui.swing.plotting.ExportPanel;
 
-import cyclops.util.Mutable;
-import cyclops.visualization.SaveableSurface;
-import cyclops.visualization.SurfaceType;
-import cyclops.visualization.backend.awt.AwtSurfaceFactory;
-import cyclops.visualization.backend.awt.SavePicture;
 import eventful.EventfulTypeListener;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;

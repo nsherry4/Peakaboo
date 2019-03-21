@@ -9,10 +9,10 @@ import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.Spectrum;
 
-import cyclops.Coord;
-import cyclops.Pair;
-import cyclops.Spectrum;
 import eventful.EventfulType;
 import plural.streams.StreamExecutor;
 

@@ -15,11 +15,10 @@ import org.peakaboo.framework.autodialog.model.classinfo.SimpleClassInfo;
 import org.peakaboo.framework.autodialog.model.style.CoreStyle;
 import org.peakaboo.framework.autodialog.model.style.SimpleStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 import org.yaml.snakeyaml.Yaml;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
 
 public class SubFilter extends AbstractFilter
 {

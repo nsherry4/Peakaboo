@@ -2,6 +2,9 @@ package org.peakaboo.mapping.filter.model;
 
 import java.io.File;
 
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalCapMapFilter;
@@ -21,10 +24,6 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate180MapFilte
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate270MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate90MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
-
-import net.sciencestudio.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 
 public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 

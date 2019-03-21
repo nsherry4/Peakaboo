@@ -16,10 +16,10 @@ import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 
-import net.sciencestudio.bolt.plugin.core.BoltPlugin;
-import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import swidget.Swidget;
 import swidget.icons.IconFactory;
 import swidget.icons.IconSize;

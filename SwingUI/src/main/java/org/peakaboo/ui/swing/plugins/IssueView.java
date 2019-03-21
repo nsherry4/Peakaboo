@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.apache.batik.ext.swing.GridBagConstants;
+import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 
-import net.sciencestudio.bolt.plugin.core.issue.BoltIssue;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.JTextLabel;

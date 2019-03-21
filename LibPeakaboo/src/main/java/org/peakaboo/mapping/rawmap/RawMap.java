@@ -4,10 +4,9 @@ package org.peakaboo.mapping.rawmap;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 
 /**

@@ -6,8 +6,7 @@ import java.util.logging.Level;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
-
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 
 public class SimpleLoaderQueue implements LoaderQueue {

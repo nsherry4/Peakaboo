@@ -12,9 +12,9 @@ import javax.swing.KeyStroke;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
-import cyclops.util.Mutable;
 import swidget.icons.StockIcon;
 
 public class PlotMenuMain extends JPopupMenu {

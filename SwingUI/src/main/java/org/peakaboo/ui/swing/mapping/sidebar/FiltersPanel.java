@@ -28,11 +28,11 @@ import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
-import net.sciencestudio.bolt.plugin.core.BoltPluginPrototype;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.models.GroupedListTreeModel;

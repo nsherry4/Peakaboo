@@ -7,10 +7,9 @@ import org.peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 /**
  * 

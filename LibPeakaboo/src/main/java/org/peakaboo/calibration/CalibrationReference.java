@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.common.YamlSerializer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-
-import net.sciencestudio.bolt.plugin.config.BoltConfigPlugin;
+import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 
 /*
  * NOTE: Calibration does not use PeakTable TransitionSeries, 

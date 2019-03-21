@@ -22,17 +22,17 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapDisplayMode;
 import org.peakaboo.display.map.modes.OverlayChannel;
 import org.peakaboo.display.map.modes.OverlayColour;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.Ratios;
+import org.peakaboo.framework.cyclops.SigDigits;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
 
-import cyclops.Coord;
-import cyclops.GridPerspective;
-import cyclops.ISpectrum;
-import cyclops.Pair;
-import cyclops.Ratios;
-import cyclops.SigDigits;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
 import eventful.EventfulType;
 
 

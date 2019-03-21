@@ -7,8 +7,8 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
-import cyclops.ReadOnlySpectrum;
 import eventful.Eventful;
 import eventful.EventfulCache;
 

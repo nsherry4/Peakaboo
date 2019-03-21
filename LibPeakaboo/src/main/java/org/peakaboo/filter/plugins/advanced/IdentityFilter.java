@@ -2,8 +2,7 @@ package org.peakaboo.filter.plugins.advanced;
 
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
-
-import cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
 public class IdentityFilter extends AbstractSimpleFilter
 {

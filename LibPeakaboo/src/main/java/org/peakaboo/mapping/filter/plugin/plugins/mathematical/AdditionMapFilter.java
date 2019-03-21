@@ -2,11 +2,10 @@ package org.peakaboo.mapping.filter.plugin.plugins.mathematical;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
-
-import cyclops.SpectrumCalculations;
 
 public class AdditionMapFilter extends AbstractMapFilter {
 

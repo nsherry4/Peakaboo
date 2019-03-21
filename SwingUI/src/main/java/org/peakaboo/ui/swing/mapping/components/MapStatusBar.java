@@ -11,9 +11,9 @@ import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
-import cyclops.Coord;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;
 import swidget.widgets.ZoomSlider;

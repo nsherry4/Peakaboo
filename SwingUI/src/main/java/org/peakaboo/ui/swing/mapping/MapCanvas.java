@@ -11,10 +11,9 @@ import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.Mapper;
-
-import cyclops.Coord;
-import cyclops.visualization.Surface;
-import cyclops.visualization.backend.awt.GraphicsPanel;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 
 
 public class MapCanvas extends GraphicsPanel

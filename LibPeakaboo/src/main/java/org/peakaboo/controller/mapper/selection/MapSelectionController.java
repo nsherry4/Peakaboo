@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.framework.cyclops.Coord;
 
-import cyclops.Coord;
 import eventful.EventfulType;
 
 public class MapSelectionController extends EventfulType<String>  {

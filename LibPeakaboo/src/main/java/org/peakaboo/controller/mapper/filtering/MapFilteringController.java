@@ -10,16 +10,16 @@ import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.util.ListOps;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
-import cyclops.Bounds;
-import cyclops.Coord;
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.util.ListOps;
 import eventful.EventfulCache;
 import eventful.EventfulType;
 

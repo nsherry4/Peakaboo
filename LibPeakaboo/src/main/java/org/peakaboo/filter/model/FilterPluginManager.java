@@ -23,10 +23,9 @@ import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
-
-import net.sciencestudio.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
-import net.sciencestudio.bolt.plugin.core.BoltPluginManager;
-import net.sciencestudio.bolt.plugin.java.loader.BoltJarDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
+import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 

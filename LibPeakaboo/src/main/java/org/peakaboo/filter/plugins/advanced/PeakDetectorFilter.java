@@ -10,11 +10,10 @@ import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
-
-import cyclops.ISpectrum;
-import cyclops.ReadOnlySpectrum;
-import cyclops.Spectrum;
-import cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 public class PeakDetectorFilter extends AbstractFilter {
 

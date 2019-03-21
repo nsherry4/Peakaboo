@@ -1,7 +1,7 @@
 package org.peakaboo.datasource.model.components.scandata.loaderqueue;
 
-import cyclops.ISpectrum;
-import cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 public interface LoaderQueue {
 

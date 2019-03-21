@@ -6,11 +6,11 @@ import java.util.List;
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.common.PeakabooConfiguration.MemorySize;
 import org.peakaboo.datasource.model.PeakabooLists;
+import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.SISize;
+import org.peakaboo.framework.cyclops.SparsedList;
 
-import cyclops.Bounds;
-import cyclops.Coord;
-import cyclops.SISize;
-import cyclops.SparsedList;
 import net.sciencestudio.scratch.ScratchEncoder;
 import net.sciencestudio.scratch.encoders.serializers.Serializers;
 
