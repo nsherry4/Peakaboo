@@ -13,6 +13,7 @@ import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.framework.autodialog.model.Group;
 
 import cyclops.Bounds;
 import cyclops.Coord;
@@ -21,7 +22,6 @@ import cyclops.Range;
 import cyclops.ReadOnlySpectrum;
 import cyclops.SISize;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Group;
 
 
 public class CroppedDataSource implements SubsetDataSource, DataSize, PhysicalSize, ScanData

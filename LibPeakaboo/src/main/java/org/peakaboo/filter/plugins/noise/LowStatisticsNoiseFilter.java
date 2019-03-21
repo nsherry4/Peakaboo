@@ -2,13 +2,13 @@ package org.peakaboo.filter.plugins.noise;
 
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 
 public class LowStatisticsNoiseFilter extends AbstractSimpleFilter {
 

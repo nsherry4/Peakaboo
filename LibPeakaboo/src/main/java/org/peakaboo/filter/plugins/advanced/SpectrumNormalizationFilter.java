@@ -2,15 +2,15 @@ package org.peakaboo.filter.plugins.advanced;
 
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.SelectionParameter;
+import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.ListStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.SpectrumCalculations;
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.SelectionParameter;
-import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import net.sciencestudio.autodialog.model.style.editors.ListStyle;
-import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 
 
 public class SpectrumNormalizationFilter extends AbstractSimpleFilter

@@ -1,5 +1,7 @@
 package org.peakaboo.mapping.filter.plugin.plugins.clipping;
 
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
@@ -7,8 +9,6 @@ import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.style.editors.IntegerSpinnerStyle;
 
 public class SignalCapMapFilter extends AbstractMapFilter {
 

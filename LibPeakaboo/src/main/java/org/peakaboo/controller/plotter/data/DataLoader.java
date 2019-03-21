@@ -19,9 +19,9 @@ import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.datasource.plugin.DataSourceLookup;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
+import org.peakaboo.framework.autodialog.model.Group;
 
 import cyclops.util.StringInput;
-import net.sciencestudio.autodialog.model.Group;
 import net.sciencestudio.bolt.plugin.core.AlphaNumericComparitor;
 import plural.executor.ExecutorSet;
 

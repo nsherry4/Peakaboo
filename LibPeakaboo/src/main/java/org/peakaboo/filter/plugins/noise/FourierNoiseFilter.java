@@ -6,17 +6,17 @@ import java.util.Arrays;
 
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.SelectionParameter;
+import org.peakaboo.framework.autodialog.model.classinfo.EnumClassInfo;
+import org.peakaboo.framework.autodialog.model.style.editors.DropDownStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 
 import JSci.maths.Complex;
 import JSci.maths.FourierMath;
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.SelectionParameter;
-import net.sciencestudio.autodialog.model.classinfo.EnumClassInfo;
-import net.sciencestudio.autodialog.model.style.editors.DropDownStyle;
-import net.sciencestudio.autodialog.model.style.editors.RealStyle;
 
 /**
  * 

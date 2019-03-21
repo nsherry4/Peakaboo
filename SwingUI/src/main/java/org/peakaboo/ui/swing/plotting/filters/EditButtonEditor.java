@@ -14,9 +14,9 @@ import javax.swing.JTable;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
+import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
 
-import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
-import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
 import swidget.icons.IconSize;
 import swidget.icons.StockIcon;
 import swidget.widgets.Spacing;

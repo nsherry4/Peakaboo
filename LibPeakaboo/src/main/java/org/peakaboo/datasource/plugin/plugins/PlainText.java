@@ -16,13 +16,13 @@ import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.datasource.plugin.AbstractDataSource;
+import org.peakaboo.framework.autodialog.model.Group;
 
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
 import cyclops.ISpectrum;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Group;
 
 
 public class PlainText extends AbstractDataSource

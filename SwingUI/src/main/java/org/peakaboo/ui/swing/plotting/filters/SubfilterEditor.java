@@ -11,11 +11,11 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.SelectionParameter;
+import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
+import org.peakaboo.framework.autodialog.view.swing.editors.AbstractSwingEditor;
 
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.SelectionParameter;
-import net.sciencestudio.autodialog.view.swing.SwingAutoPanel;
-import net.sciencestudio.autodialog.view.swing.editors.AbstractSwingEditor;
 import swidget.widgets.Spacing;
 
 

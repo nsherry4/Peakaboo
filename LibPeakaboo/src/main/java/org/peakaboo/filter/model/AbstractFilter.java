@@ -7,11 +7,11 @@ import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.Value;
 
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.Value;
 
 /**
  * 

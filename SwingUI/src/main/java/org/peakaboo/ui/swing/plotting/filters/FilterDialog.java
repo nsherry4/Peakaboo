@@ -4,10 +4,9 @@ import java.awt.Window;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
-
-import net.sciencestudio.autodialog.view.editors.AutoDialogButtons;
-import net.sciencestudio.autodialog.view.swing.SwingAutoDialog;
-import net.sciencestudio.autodialog.view.swing.editors.SwingEditorFactory;
+import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
+import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
+import org.peakaboo.framework.autodialog.view.swing.editors.SwingEditorFactory;
 
 class FilterDialog extends SwingAutoDialog{
 	

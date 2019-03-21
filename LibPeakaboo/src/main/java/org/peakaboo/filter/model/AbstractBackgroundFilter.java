@@ -1,13 +1,14 @@
 package org.peakaboo.filter.model;
 
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.SeparatorStyle;
+
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.style.editors.BooleanStyle;
-import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
-import net.sciencestudio.autodialog.model.style.editors.SeparatorStyle;
 
 
 public abstract class AbstractBackgroundFilter extends AbstractFilter

@@ -2,10 +2,11 @@ package org.peakaboo.filter.model;
 
 import java.util.List;
 
+import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.autodialog.model.Value;
+
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Group;
-import net.sciencestudio.autodialog.model.Value;
 
 public interface Filter {
 

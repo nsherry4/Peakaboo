@@ -8,18 +8,18 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.model.SerializedFilter;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.SelectionParameter;
+import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
+import org.peakaboo.framework.autodialog.model.classinfo.SimpleClassInfo;
+import org.peakaboo.framework.autodialog.model.style.CoreStyle;
+import org.peakaboo.framework.autodialog.model.style.SimpleStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.yaml.snakeyaml.Yaml;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
-import net.sciencestudio.autodialog.model.Parameter;
-import net.sciencestudio.autodialog.model.SelectionParameter;
-import net.sciencestudio.autodialog.model.classinfo.ClassInfo;
-import net.sciencestudio.autodialog.model.classinfo.SimpleClassInfo;
-import net.sciencestudio.autodialog.model.style.CoreStyle;
-import net.sciencestudio.autodialog.model.style.SimpleStyle;
-import net.sciencestudio.autodialog.model.style.editors.IntegerStyle;
 
 public class SubFilter extends AbstractFilter
 {

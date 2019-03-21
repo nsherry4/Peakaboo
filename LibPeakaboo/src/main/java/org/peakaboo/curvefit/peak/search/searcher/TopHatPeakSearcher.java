@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
+import org.peakaboo.framework.autodialog.model.Value;
 
 import cyclops.ISpectrum;
 import cyclops.ReadOnlySpectrum;
 import cyclops.Spectrum;
 import cyclops.SpectrumCalculations;
-import net.sciencestudio.autodialog.model.Value;
 
 public class TopHatPeakSearcher implements PeakSearcher {
 

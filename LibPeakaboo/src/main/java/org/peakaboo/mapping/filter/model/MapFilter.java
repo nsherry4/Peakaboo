@@ -2,10 +2,9 @@ package org.peakaboo.mapping.filter.model;
 
 import java.util.List;
 
+import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
-
-import net.sciencestudio.autodialog.model.Group;
-import net.sciencestudio.autodialog.model.Value;
 
 public interface MapFilter {
 
