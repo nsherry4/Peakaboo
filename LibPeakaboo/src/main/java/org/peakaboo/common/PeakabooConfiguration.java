@@ -2,11 +2,10 @@ package org.peakaboo.common;
 
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
-
-import net.sciencestudio.scratch.ScratchEncoder;
-import net.sciencestudio.scratch.encoders.CompoundEncoder;
-import net.sciencestudio.scratch.encoders.compressors.Compressors;
-import net.sciencestudio.scratch.encoders.serializers.Serializers;
+import org.peakaboo.framework.scratch.ScratchEncoder;
+import org.peakaboo.framework.scratch.encoders.CompoundEncoder;
+import org.peakaboo.framework.scratch.encoders.compressors.Compressors;
+import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class PeakabooConfiguration {
 

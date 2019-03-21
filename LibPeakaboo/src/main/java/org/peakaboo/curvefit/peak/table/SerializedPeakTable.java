@@ -11,9 +11,8 @@ import java.util.List;
 
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-
-import net.sciencestudio.scratch.ScratchEncoder;
-import net.sciencestudio.scratch.encoders.serializers.Serializers;
+import org.peakaboo.framework.scratch.ScratchEncoder;
+import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class SerializedPeakTable implements PeakTable {
 

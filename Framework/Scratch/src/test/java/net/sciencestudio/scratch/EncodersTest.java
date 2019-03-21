@@ -2,10 +2,10 @@ package net.sciencestudio.scratch;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import net.sciencestudio.scratch.encoders.compressors.Compressors;
-import net.sciencestudio.scratch.encoders.serializers.Serializers;
-import net.sciencestudio.scratch.single.Compressed;
+import org.peakaboo.framework.scratch.ScratchEncoder;
+import org.peakaboo.framework.scratch.encoders.compressors.Compressors;
+import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
+import org.peakaboo.framework.scratch.single.Compressed;
 
 public class EncodersTest {
 

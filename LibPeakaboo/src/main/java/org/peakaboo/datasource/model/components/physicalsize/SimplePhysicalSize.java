@@ -10,9 +10,8 @@ import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.framework.cyclops.SparsedList;
-
-import net.sciencestudio.scratch.ScratchEncoder;
-import net.sciencestudio.scratch.encoders.serializers.Serializers;
+import org.peakaboo.framework.scratch.ScratchEncoder;
+import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class SimplePhysicalSize implements PhysicalSize {
 

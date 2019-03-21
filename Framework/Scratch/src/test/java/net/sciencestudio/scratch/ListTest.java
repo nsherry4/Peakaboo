@@ -5,11 +5,10 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import net.sciencestudio.scratch.encoders.CompoundEncoder;
-import net.sciencestudio.scratch.encoders.compressors.Compressors;
-import net.sciencestudio.scratch.encoders.serializers.Serializers;
-import net.sciencestudio.scratch.list.ScratchLists;
+import org.peakaboo.framework.scratch.encoders.CompoundEncoder;
+import org.peakaboo.framework.scratch.encoders.compressors.Compressors;
+import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
+import org.peakaboo.framework.scratch.list.ScratchLists;
 
 
 public class ListTest{

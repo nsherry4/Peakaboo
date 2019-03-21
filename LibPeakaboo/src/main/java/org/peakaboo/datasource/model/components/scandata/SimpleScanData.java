@@ -11,9 +11,8 @@ import org.peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoade
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
-
-import net.sciencestudio.scratch.list.ScratchList;
-import net.sciencestudio.scratch.single.Compressed;
+import org.peakaboo.framework.scratch.list.ScratchList;
+import org.peakaboo.framework.scratch.single.Compressed;
 
 public class SimpleScanData implements ScanData {
 
