@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.sciencestudio.peakaboo</groupId>
+	<groupId>org.peakaboo</groupId>
 	<artifactId>SwingUI</artifactId>
 	<version>5-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -33,11 +33,6 @@
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.peakaboo</groupId>
-			<artifactId>libpeakaboo</artifactId>
-			<version>5-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>net.sciencestudio.plural</groupId>
 			<artifactId>plural-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
@@ -51,6 +46,11 @@
 			<groupId>org.apache-extras.beanshell</groupId>
 			<artifactId>bsh</artifactId>
 			<version>2.0b6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.peakaboo</groupId>
+			<artifactId>libpeakaboo</artifactId>
+			<version>5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
