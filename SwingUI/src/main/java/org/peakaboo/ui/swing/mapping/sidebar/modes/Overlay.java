@@ -16,11 +16,10 @@ import javax.swing.table.TableModel;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.OverlayColour;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
-
-import swidget.widgets.Spacing;
 
 
 public class Overlay extends JPanel {

@@ -28,18 +28,17 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls.ElementCount;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 import org.peakaboo.ui.swing.plotting.fitting.Changeable;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import org.peakaboo.ui.swing.plotting.fitting.MutableTableModel;
-
-import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.listcontrols.ListControls;
-import swidget.widgets.listcontrols.ListControls.ElementCount;
-import swidget.widgets.listcontrols.ReorderTransferHandler;
 
 
 

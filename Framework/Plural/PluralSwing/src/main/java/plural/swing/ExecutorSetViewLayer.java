@@ -1,8 +1,8 @@
 package plural.swing;
 
 import plural.executor.ExecutorSet;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.ModalLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 
 public class ExecutorSetViewLayer extends ModalLayer {
 

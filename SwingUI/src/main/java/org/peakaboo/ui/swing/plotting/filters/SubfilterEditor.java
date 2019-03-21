@@ -15,8 +15,7 @@ import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.autodialog.view.swing.editors.AbstractSwingEditor;
-
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 

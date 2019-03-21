@@ -16,13 +16,13 @@ import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
-import swidget.Swidget;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonLayout;
-import swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 
 
 public class SwingAutoDialog extends JDialog

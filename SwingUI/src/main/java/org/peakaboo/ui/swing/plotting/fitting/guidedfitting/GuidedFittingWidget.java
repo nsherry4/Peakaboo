@@ -12,14 +12,13 @@ import java.util.List;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelector;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
-
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonLayout;
 
 
 

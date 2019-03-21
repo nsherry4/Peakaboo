@@ -21,23 +21,23 @@ import org.peakaboo.common.ConfigurationLoadException;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
+import org.peakaboo.framework.swidget.widgets.layout.HeaderTabBuilder;
 import org.peakaboo.ui.swing.calibration.picker.ReferencePicker;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 import eventful.EventfulTypeListener;
 import stratus.controls.ButtonLinker;
-import swidget.Swidget;
-import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFilePanels;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonSize;
-import swidget.widgets.layerpanel.HeaderLayer;
-import swidget.widgets.layerpanel.LayerDialog;
-import swidget.widgets.layerpanel.LayerDialog.MessageType;
-import swidget.widgets.layerpanel.ToastLayer;
-import swidget.widgets.layout.HeaderTabBuilder;
 
 public class ProfileManager extends HeaderLayer {
 

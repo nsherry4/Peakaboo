@@ -34,6 +34,14 @@ import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.AwtSurfaceFactory;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener.Buttons;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapStatusBar;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
@@ -44,14 +52,6 @@ import eventful.EventfulTypeListener;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
 import plural.swing.ExecutorSetViewLayer;
-import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFilePanels;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.DraggingScrollPaneListener;
-import swidget.widgets.DraggingScrollPaneListener.Buttons;
-import swidget.widgets.Spacing;
-import swidget.widgets.tabbedinterface.TabbedInterface;
-import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
 

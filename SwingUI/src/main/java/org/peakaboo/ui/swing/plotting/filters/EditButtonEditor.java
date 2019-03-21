@@ -16,12 +16,11 @@ import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
-
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
 
 
 

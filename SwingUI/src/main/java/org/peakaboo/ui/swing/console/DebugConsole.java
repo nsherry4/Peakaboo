@@ -8,13 +8,14 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.dialogues.HeaderFrame;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+
 import bsh.Interpreter;
 import bsh.util.JConsole;
 import stratus.StratusLookAndFeel;
-import swidget.Swidget;
-import swidget.dialogues.HeaderFrame;
-import swidget.widgets.tabbedinterface.TabbedInterface;
-import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 public class DebugConsole extends TabbedLayerPanel {
 

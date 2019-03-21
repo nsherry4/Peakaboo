@@ -7,13 +7,12 @@ import javax.swing.JFrame;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
-
-import swidget.widgets.buttons.ToolbarImageButton;
-import swidget.widgets.tabbedinterface.TabbedInterface;
-import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 public class PlotSelectionButton extends ToolbarImageButton {
 

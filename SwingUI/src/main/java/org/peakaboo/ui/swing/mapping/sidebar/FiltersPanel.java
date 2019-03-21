@@ -29,23 +29,22 @@ import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.models.GroupedListTreeModel;
+import org.peakaboo.framework.swidget.models.ListTableModel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
+import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
-
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.models.GroupedListTreeModel;
-import swidget.models.ListTableModel;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.gradientpanel.TitlePaintedPanel;
-import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.listcontrols.ListControls;
-import swidget.widgets.listcontrols.ReorderTransferHandler;
-import swidget.widgets.listwidget.ListWidget;
-import swidget.widgets.listwidget.ListWidgetCellEditor;
-import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
 public class FiltersPanel extends JPanel {
 

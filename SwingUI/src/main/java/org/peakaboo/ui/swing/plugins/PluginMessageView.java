@@ -6,9 +6,9 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import swidget.Swidget;
-import swidget.widgets.CenteringPanel;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.widgets.CenteringPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class PluginMessageView extends JPanel {
 

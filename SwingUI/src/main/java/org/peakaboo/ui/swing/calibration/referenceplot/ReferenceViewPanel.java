@@ -22,13 +22,12 @@ import javax.swing.table.TableModel;
 import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-
-import swidget.widgets.Spacing;
-import swidget.widgets.layerpanel.HeaderLayer;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layout.HeaderTabBuilder;
-import swidget.widgets.listwidget.ListWidget;
-import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layout.HeaderTabBuilder;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
 public class ReferenceViewPanel extends HeaderLayer {
 

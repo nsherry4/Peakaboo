@@ -13,12 +13,12 @@ import javax.swing.Scrollable;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
 
 import eventful.EventfulListener;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonLayout;
 
 
 public abstract class TSSelectorGroup extends JPanel implements Scrollable

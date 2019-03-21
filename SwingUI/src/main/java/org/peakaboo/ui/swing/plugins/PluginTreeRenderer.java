@@ -15,12 +15,11 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
-
-import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
 
 public class PluginTreeRenderer extends DefaultTreeCellRenderer {
 	

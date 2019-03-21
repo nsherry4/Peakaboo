@@ -13,9 +13,9 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class FilterBox extends JTextField {
 

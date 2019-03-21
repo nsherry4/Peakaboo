@@ -17,15 +17,15 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.ui.swing.plotting.fitting.MutableTableModel;
 
 import eventful.EventfulListener;
-import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.listcontrols.ListControls;
-import swidget.widgets.listcontrols.ReorderTransferHandler;
 
 
 class FilterList extends ClearPanel {

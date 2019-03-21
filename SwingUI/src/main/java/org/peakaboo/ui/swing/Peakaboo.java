@@ -22,6 +22,12 @@ import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanelConfig;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
@@ -29,12 +35,6 @@ import org.peakaboo.ui.swing.plotting.PlotFrame;
 import eventful.EventfulConfig;
 import stratus.StratusLookAndFeel;
 import stratus.theme.LightTheme;
-import swidget.Swidget;
-import swidget.dialogues.ErrorDialog;
-import swidget.icons.IconFactory;
-import swidget.widgets.layerpanel.LayerDialog;
-import swidget.widgets.layerpanel.LayerDialog.MessageType;
-import swidget.widgets.layerpanel.LayerPanelConfig;
 
 
 

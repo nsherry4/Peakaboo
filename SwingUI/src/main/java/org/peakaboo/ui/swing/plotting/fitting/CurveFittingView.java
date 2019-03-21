@@ -13,6 +13,10 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.ui.swing.plotting.PlotCanvas;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 import org.peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
@@ -24,10 +28,6 @@ import eventful.EventfulTypeListener;
 import plural.executor.ExecutorSet;
 import plural.swing.ExecutorSetView;
 import plural.swing.ExecutorSetViewLayer;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.layerpanel.LayerDialog;
-import swidget.widgets.layerpanel.LayerDialog.MessageType;
-import swidget.widgets.layerpanel.ModalLayer;
 
 
 

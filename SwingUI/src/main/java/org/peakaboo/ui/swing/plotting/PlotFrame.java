@@ -7,11 +7,10 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 import org.peakaboo.common.Version;
-
-import swidget.icons.IconFactory;
-import swidget.widgets.LiveFrame;
-import swidget.widgets.tabbedinterface.TabbedInterface;
-import swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.widgets.LiveFrame;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
 public class PlotFrame extends LiveFrame

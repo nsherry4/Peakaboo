@@ -24,7 +24,7 @@ import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.TabbedLayoutStyle;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
-import swidget.Swidget;
+import org.peakaboo.framework.swidget.Swidget;
 
 public class Test {
 

@@ -42,21 +42,20 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
-
-import swidget.Swidget;
-import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFilePanels;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.models.ListTableModel;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.ModalLayer;
-import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.layout.HeaderBox;
-import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
-import swidget.widgets.listwidget.impl.OptionWidget;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.models.ListTableModel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
+import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
+import org.peakaboo.framework.swidget.widgets.listwidget.impl.OptionWidget;
 
 
 public class SavePicture extends JPanel

@@ -17,7 +17,7 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class SimpleSwingLayout extends AbstractSwingLayout {
 

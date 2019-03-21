@@ -12,9 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
-import swidget.icons.StockIcon;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
 
 public class FilenameEditor extends AbstractSwingEditor<String> {
 

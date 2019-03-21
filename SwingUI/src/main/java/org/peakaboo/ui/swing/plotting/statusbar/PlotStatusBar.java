@@ -10,9 +10,8 @@ import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
-
-import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class PlotStatusBar extends ClearPanel {
 

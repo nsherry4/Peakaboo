@@ -19,17 +19,16 @@ import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
-
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.buttons.ToolbarImageButton;
-import swidget.widgets.layerpanel.ModalLayer;
 
 public class PlotToolbar extends JToolBar {
 

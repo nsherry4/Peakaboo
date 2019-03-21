@@ -12,14 +12,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
-
-import swidget.icons.IconSize;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonSize;
-import swidget.widgets.layout.SettingsPanel;
 
 public class PlotMenuEnergy extends JPopupMenu {
 

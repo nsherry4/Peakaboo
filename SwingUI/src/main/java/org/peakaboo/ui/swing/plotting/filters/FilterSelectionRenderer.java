@@ -8,9 +8,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterType;
-
-import swidget.Swidget;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 class FilterSelectionRenderer extends DefaultTreeCellRenderer
 {

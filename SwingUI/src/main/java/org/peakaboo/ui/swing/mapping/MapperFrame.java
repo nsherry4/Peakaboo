@@ -13,11 +13,10 @@ import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
-
-import swidget.icons.IconFactory;
-import swidget.widgets.LiveFrame;
-import swidget.widgets.tabbedinterface.TabbedInterface;
-import swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.widgets.LiveFrame;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 
 /**

@@ -12,13 +12,12 @@ import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.ZoomSlider;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
-
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.ZoomSlider;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonLayout;
 
 public class MapStatusBar extends JPanel {
 

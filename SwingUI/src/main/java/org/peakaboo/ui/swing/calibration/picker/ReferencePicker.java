@@ -14,15 +14,14 @@ import javax.swing.table.TableModel;
 
 import org.peakaboo.calibration.CalibrationPluginManager;
 import org.peakaboo.calibration.CalibrationReference;
+import org.peakaboo.framework.swidget.models.ListTableModel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.widgets.ListPickerLayer;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 import org.peakaboo.ui.swing.calibration.referenceplot.ReferenceViewPanel;
-
-import swidget.models.ListTableModel;
-import swidget.widgets.Spacing;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.widgets.ListPickerLayer;
-import swidget.widgets.listwidget.ListWidget;
-import swidget.widgets.listwidget.ListWidgetCellEditor;
-import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
 public class ReferencePicker extends ListPickerLayer<CalibrationReference> {
 

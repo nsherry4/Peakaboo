@@ -10,11 +10,10 @@ import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture.DimensionPicker;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture.FormatPicker;
-
-import swidget.widgets.Spacing;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.ModalLayer;
-import swidget.widgets.layout.HeaderBox;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
+import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 public class ExportPanel extends JPanel {
 	

@@ -13,10 +13,9 @@ import javax.swing.table.TableModel;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
-
-import swidget.widgets.Spacing;
 
 public class Composite extends JPanel {
 	

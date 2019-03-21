@@ -31,11 +31,10 @@ import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFuncti
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
-
-import swidget.widgets.Spacing;
-import swidget.widgets.layerpanel.HeaderLayer;
-import swidget.widgets.layout.SettingsPanel;
-import swidget.widgets.layout.SettingsPanel.LabelPosition;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
+import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
+import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel.LabelPosition;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	

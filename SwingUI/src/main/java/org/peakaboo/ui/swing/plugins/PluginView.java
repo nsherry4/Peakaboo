@@ -18,15 +18,14 @@ import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
+import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
-
-import swidget.Swidget;
-import swidget.icons.IconFactory;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.layout.PropertyPanel;
-import swidget.widgets.layout.TitledPanel;
 
 public class PluginView extends JPanel {
 	

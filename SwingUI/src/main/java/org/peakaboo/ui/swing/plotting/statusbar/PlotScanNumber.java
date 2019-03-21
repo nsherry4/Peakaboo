@@ -14,11 +14,10 @@ import javax.swing.event.ChangeListener;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
-
-import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
-import swidget.widgets.toggle.ItemToggleButton;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.toggle.ItemToggleButton;
 
 public class PlotScanNumber extends ClearPanel {
 

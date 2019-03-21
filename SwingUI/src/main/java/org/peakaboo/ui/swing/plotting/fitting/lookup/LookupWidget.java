@@ -7,8 +7,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 public class LookupWidget extends ClearPanel

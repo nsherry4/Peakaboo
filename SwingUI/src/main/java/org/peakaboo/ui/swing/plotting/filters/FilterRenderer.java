@@ -11,9 +11,8 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 import org.peakaboo.filter.model.Filter;
-
-import swidget.Swidget;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 class FilterRenderer extends JPanel implements TableCellRenderer
 {

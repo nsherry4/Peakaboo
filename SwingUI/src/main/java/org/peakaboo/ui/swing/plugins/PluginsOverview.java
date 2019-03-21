@@ -44,6 +44,18 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
+import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
@@ -54,18 +66,6 @@ import org.peakaboo.ui.swing.plotting.FileDrop;
 import stratus.StratusLookAndFeel;
 import stratus.controls.ButtonLinker;
 import stratus.theme.LightTheme;
-import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFilePanels;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonSize;
-import swidget.widgets.layerpanel.HeaderLayer;
-import swidget.widgets.layerpanel.LayerDialog;
-import swidget.widgets.layerpanel.LayerDialog.MessageType;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layout.ButtonBox;
 
 public class PluginsOverview extends HeaderLayer {
 

@@ -14,10 +14,10 @@ import javax.swing.SwingUtilities;
 import eventful.EventfulConfig;
 import plural.streams.StreamExecutor;
 import plural.streams.StreamExecutor.Event;
-import swidget.Swidget;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class StreamExecutorView extends JPanel {
 

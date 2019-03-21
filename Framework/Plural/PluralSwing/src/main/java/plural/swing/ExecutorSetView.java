@@ -18,11 +18,11 @@ import javax.swing.border.EmptyBorder;
 import plural.executor.ExecutorSet;
 import plural.executor.ExecutorState;
 import plural.executor.PluralExecutor;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.layout.HeaderBox;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 public class ExecutorSetView extends JPanel
 {

@@ -16,17 +16,17 @@ import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
+import org.peakaboo.framework.swidget.widgets.layout.HeaderTabBuilder;
 
 import stratus.controls.ButtonLinker;
-import swidget.dialogues.fileio.SimpleFileExtension;
-import swidget.dialogues.fileio.SwidgetFilePanels;
-import swidget.icons.StockIcon;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonSize;
-import swidget.widgets.layerpanel.HeaderLayer;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.ToastLayer;
-import swidget.widgets.layout.HeaderTabBuilder;
 
 public class ConcentrationView extends HeaderLayer {
 

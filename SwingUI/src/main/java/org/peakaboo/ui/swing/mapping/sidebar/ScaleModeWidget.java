@@ -11,10 +11,9 @@ import javax.swing.border.TitledBorder;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.MapScaleMode;
-
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ToggleImageButton;
-import swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 
 public class ScaleModeWidget extends JPanel {
 

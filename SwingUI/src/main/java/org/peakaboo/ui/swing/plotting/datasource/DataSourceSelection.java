@@ -8,12 +8,11 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
-
-import swidget.models.ListTableModel;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layerpanel.widgets.ListPickerLayer;
-import swidget.widgets.listwidget.ListWidgetTableCellRenderer;
-import swidget.widgets.listwidget.impl.OptionWidget;
+import org.peakaboo.framework.swidget.models.ListTableModel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.widgets.ListPickerLayer;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
+import org.peakaboo.framework.swidget.widgets.listwidget.impl.OptionWidget;
 
 
 public class DataSourceSelection extends ListPickerLayer<DataSourcePlugin>

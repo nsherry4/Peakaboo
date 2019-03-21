@@ -10,14 +10,13 @@ import javax.swing.JScrollPane;
 
 import org.apache.batik.ext.swing.GridBagConstants;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
-
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.JTextLabel;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.layout.PropertyPanel;
-import swidget.widgets.layout.TitledPanel;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.JTextLabel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
+import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 
 public class IssueView extends JPanel {
 

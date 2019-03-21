@@ -13,20 +13,19 @@ import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
+import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
 import org.peakaboo.ui.swing.mapping.components.PlotSelectionButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
-
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
-import swidget.widgets.buttons.ToolbarImageButton;
-import swidget.widgets.layerpanel.HeaderLayer;
-import swidget.widgets.layerpanel.LayerPanel;
-import swidget.widgets.layout.ButtonBox;
-import swidget.widgets.tabbedinterface.TabbedInterface;
-import swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
 public class QuickMapPanel extends HeaderLayer {
 

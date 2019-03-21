@@ -11,8 +11,8 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 public class FittedWidget extends ClearPanel

@@ -5,14 +5,13 @@ import java.awt.BorderLayout;
 import javax.swing.JPopupMenu;
 
 import org.peakaboo.controller.plotter.PlotController;
-
-import swidget.icons.StockIcon;
-import swidget.widgets.ClearPanel;
-import swidget.widgets.Spacing;
-import swidget.widgets.ZoomSlider;
-import swidget.widgets.buttons.ImageButton;
-import swidget.widgets.buttons.ImageButtonLayout;
-import swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.ZoomSlider;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
 
 public class PlotZoomControls extends ImageButton {
 	

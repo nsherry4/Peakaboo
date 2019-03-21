@@ -9,9 +9,9 @@ import javax.swing.JPanel;
 
 import eventful.EventfulListener;
 import plural.executor.PluralExecutor;
-import swidget.icons.IconSize;
-import swidget.icons.StockIcon;
-import swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.icons.IconSize;
+import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 public class ExecutorView extends JPanel{

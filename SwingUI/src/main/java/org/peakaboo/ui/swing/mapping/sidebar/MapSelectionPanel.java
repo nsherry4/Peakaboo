@@ -5,8 +5,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import org.peakaboo.controller.mapper.MappingController;
-
-import swidget.widgets.layout.SettingsPanel;
+import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 
 public class MapSelectionPanel extends SettingsPanel {
 

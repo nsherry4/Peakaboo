@@ -13,9 +13,8 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
-
-import swidget.icons.StockIcon;
 
 public class PlotMenuMain extends JPopupMenu {
 

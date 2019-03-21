@@ -11,9 +11,8 @@ import javax.swing.KeyStroke;
 import org.peakaboo.datasink.plugin.DataSinkPlugin;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
-
-import swidget.icons.StockIcon;
 
 public class PlotMenuExport extends JPopupMenu {
 

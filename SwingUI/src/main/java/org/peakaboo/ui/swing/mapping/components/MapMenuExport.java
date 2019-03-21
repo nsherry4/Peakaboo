@@ -7,10 +7,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotMenuUtils;
-
-import swidget.icons.StockIcon;
 
 public class MapMenuExport extends JPopupMenu {
 
