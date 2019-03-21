@@ -11,6 +11,7 @@ import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 
 import net.sciencestudio.bolt.Bolt;
+import net.sciencestudio.bolt.plugin.java.BoltJar;
 import net.sciencestudio.bolt.plugin.java.BoltJavaPlugin;
 import net.sciencestudio.bolt.plugin.java.issue.BoltBrokenJarIssue;
 import net.sciencestudio.bolt.plugin.java.issue.BoltEmptyJarIssue;
@@ -40,6 +41,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 			ServiceLoader<T> loader = ServiceLoader.load(targetClass, urlLoader);
 			loader.reload();
 
+
 			// odd structure is used here because hasNext() will throw an exception if the
 			// next plugin cannot be loaded. We want to make sure these kinds of errors are
 			// treated as issues with the plugin rather than issues with tha jar.
@@ -50,9 +52,20 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 					if (!iter.hasNext()) {
 						break;
 					}
-					empty = false;
 					T t = iter.next();
+					
+					/*
+					 * Any built-in plugins will show up in this URLClassLoader, so we do a check
+					 * and only accept plugins loaded by this classloader, and not some parent
+					 * loader.
+					 */
+					if (t.getClass().getClassLoader() != urlLoader) {
+						continue;
+					}
+					
+					empty = false;
 					add((Class<? extends T>) t.getClass());
+					
 				} catch (Throwable e) {
 					plugins.addIssue(new BoltBrokenJarIssue<>(this, "Failed to load plugins"));
 					Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
@@ -68,7 +81,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 			plugins.addIssue(new BoltBrokenJarIssue<>(this, e.getMessage()));
 			Bolt.logger().log(Level.WARNING, "Unable to load plugins from jar", e);
 		}
-
+		
 	}
 
 	private boolean isValidJar() {
@@ -127,3 +140,5 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 	}
 
 }
+
+

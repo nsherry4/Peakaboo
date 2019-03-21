@@ -90,7 +90,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 
 		//check if a container contains only outdated plugins
 		for (BoltContainer<P> container : containers) {
-			boolean outdated = true;
+			boolean outdated = false;
 			
 			//we're not responsible for detecting empty containers
 			if (container.isEmpty()) { continue; }
@@ -98,9 +98,8 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 			for (BoltPluginPrototype<? extends P> plugin : container.getPlugins()) {
 				//look up the newest version of this plugin by UUID
 				BoltPluginPrototype<? extends P> newest = getByUUID(plugin.getUUID());
-				if (!newest.isNewerThan(plugin)) {
-					outdated = false;
-					break;
+				if (newest.isNewerThan(plugin)) {
+					outdated = true;
 				}
 			}
 			if (outdated) {

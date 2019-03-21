@@ -33,7 +33,9 @@ public class BoltPluginSet<T extends BoltPlugin> implements BoltPluginCollection
 			
 			if (plugin.isUpgradeFor(existingPlugin)) {
 				plugins.remove(existingPlugin);
-				addIssue(new BoltOldPluginIssue<>(existingPlugin));
+				if (plugin.isNewerThan(existingPlugin)) {
+					addIssue(new BoltOldPluginIssue<>(existingPlugin));
+				}
 				plugins.add(plugin);
 			}
 			
