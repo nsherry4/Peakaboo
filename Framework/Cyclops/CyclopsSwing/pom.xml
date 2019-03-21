@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.sciencestudio</groupId>
+	<groupId>org.peakaboo.framework</groupId>
 	<artifactId>cyclops-swing</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -22,7 +22,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>cyclops</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -37,7 +37,7 @@
 			<version>2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>swidget</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>

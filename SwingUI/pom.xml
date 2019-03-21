@@ -23,22 +23,22 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>autodialog-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>stratus</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.plural</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>plural-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>cyclops-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
