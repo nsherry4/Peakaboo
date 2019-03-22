@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
@@ -50,19 +50,19 @@ public class MapFittingPanel extends ClearPanel
 		ratioPanel = new Ratio(controller);
 		
 		//add each of the panels
-		cardPanel.add(compPanel, MapDisplayMode.COMPOSITE.toString());
-		cardPanel.add(overPanel, MapDisplayMode.OVERLAY.toString());
-		cardPanel.add(ratioPanel, MapDisplayMode.RATIO.toString());
+		cardPanel.add(compPanel, MapModes.COMPOSITE.toString());
+		cardPanel.add(overPanel, MapModes.OVERLAY.toString());
+		cardPanel.add(ratioPanel, MapModes.RATIO.toString());
 		
 		
 		//create combobox
-		final JComboBox<MapDisplayMode> modeSelectBox = new JComboBox<>(MapDisplayMode.values());
+		final JComboBox<MapModes> modeSelectBox = new JComboBox<>(MapModes.values());
 		modeSelectBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 		modeSelectBox.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				MapDisplayMode mode = (MapDisplayMode)modeSelectBox.getSelectedItem();
+				MapModes mode = (MapModes)modeSelectBox.getSelectedItem();
 				controller.setMapDisplayMode(mode);
 				card.show(cardPanel, mode.toString());
 			}

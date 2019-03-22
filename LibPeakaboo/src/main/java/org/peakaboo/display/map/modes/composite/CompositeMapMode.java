@@ -6,7 +6,7 @@ import java.util.List;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.MapScaleMode;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
@@ -140,8 +140,8 @@ public class CompositeMapMode extends MapMode{
 
 
 	@Override
-	public MapDisplayMode getMode() {
-		return MapDisplayMode.COMPOSITE;
+	public MapModes getMode() {
+		return MapModes.COMPOSITE;
 	}
 
 

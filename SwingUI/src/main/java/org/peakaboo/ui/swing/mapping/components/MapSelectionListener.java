@@ -7,7 +7,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.ui.swing.mapping.MapCanvas;
 
@@ -29,8 +29,8 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 			return;
 		}
 		
-		MapDisplayMode displayMode = controller.getFitting().getMapDisplayMode();
-		if (!  ((displayMode == MapDisplayMode.COMPOSITE || displayMode == MapDisplayMode.RATIO) && controller.getFiltering().isReplottable())) {
+		MapModes displayMode = controller.getFitting().getMapDisplayMode();
+		if (!  ((displayMode == MapModes.COMPOSITE || displayMode == MapModes.RATIO) && controller.getFiltering().isReplottable())) {
 			return;
 		}
 		

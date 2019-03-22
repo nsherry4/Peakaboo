@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Pair;
@@ -78,13 +78,13 @@ public class PointsSelection extends EventfulType<String>{
 
 	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
 				
-		MapDisplayMode displayMode = map.getFitting().getMapDisplayMode();
+		MapModes displayMode = map.getFitting().getMapDisplayMode();
 		Spectrum data = null;
 		List<Integer> invalid = new ArrayList<>();
 		
-		if (displayMode == MapDisplayMode.COMPOSITE) {
+		if (displayMode == MapModes.COMPOSITE) {
 			data = map.getFitting().getCompositeMapData();
-		} else if (displayMode == MapDisplayMode.RATIO) {
+		} else if (displayMode == MapModes.RATIO) {
 			Pair<Spectrum, Spectrum> ratiodata = map.getFitting().getRatioMapData();
 			data = ratiodata.first;
 			Spectrum invalidMap = ratiodata.second;
@@ -103,7 +103,7 @@ public class PointsSelection extends EventfulType<String>{
 		
 		//If we're selecting on a ratio map, and the selected point is 1:10 instead of 10:1,
 		//it will be represented as a negative number. We flip it here for convenience
-		if (displayMode == MapDisplayMode.RATIO && value < 0f) {
+		if (displayMode == MapModes.RATIO && value < 0f) {
 			for (int i = 0; i < data.size(); i++) {
 				data.set(i, -data.get(i));
 			}

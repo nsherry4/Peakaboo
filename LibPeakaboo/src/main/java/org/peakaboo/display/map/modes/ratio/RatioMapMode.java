@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
@@ -128,7 +128,7 @@ public class RatioMapMode extends MapMode {
 			settings.physicalCoord,
 			settings.showScaleBar,
 			1,
-			settings.mode == MapDisplayMode.RATIO,
+			settings.mode == MapModes.RATIO,
 			spectrumMarkers
 		);
 		axisPainters.add(spectrumCoordPainter);
@@ -187,8 +187,8 @@ public class RatioMapMode extends MapMode {
 	}
 
 	@Override
-	public MapDisplayMode getMode() {
-		return MapDisplayMode.RATIO;
+	public MapModes getMode() {
+		return MapModes.RATIO;
 	}
 
 	@Override

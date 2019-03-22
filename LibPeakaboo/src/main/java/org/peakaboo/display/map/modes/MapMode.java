@@ -62,11 +62,7 @@ public abstract class MapMode {
 		return size;
 		
 	}
-	
-	public Coord<Integer> getCoordinate(float x, float y, boolean allowOutOfBounds) {
-		return map.getMapCoordinateAtPoint(x, y, allowOutOfBounds);
-	}
-	
+		
 	public MapDrawing getMap() {
 		return map;
 	}
@@ -81,11 +77,8 @@ public abstract class MapMode {
 	
 	public abstract void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps);
 	
-	//TODO: Make this a String? How to make it expandable?
-	public abstract MapDisplayMode getMode();
-	
-	
-	
+	public abstract MapModes getMode();
+
 	public abstract void invalidate();
 	
 }

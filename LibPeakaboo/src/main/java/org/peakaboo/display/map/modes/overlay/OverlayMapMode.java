@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
@@ -210,8 +210,8 @@ public class OverlayMapMode extends MapMode {
 	}
 
 	@Override
-	public MapDisplayMode getMode() {
-		return MapDisplayMode.OVERLAY;
+	public MapModes getMode() {
+		return MapModes.OVERLAY;
 	}
 	
 	@Override

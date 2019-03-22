@@ -3,8 +3,6 @@ package org.peakaboo.display.map;
 
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
-import org.peakaboo.display.map.modes.overlay.OverlayMapMode;
-import org.peakaboo.display.map.modes.ratio.RatioMapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
@@ -27,22 +25,9 @@ public class Mapper {
 		final int spectrumSteps = (settings.contours) ? settings.contourSteps : Spectrums.DEFAULT_STEPS;
 		
 		if (mapmode.getMode() != settings.mode) {
-			switch(settings.mode) {
-			case COMPOSITE:
-				mapmode = new CompositeMapMode();
-				break;
-			case OVERLAY:
-				mapmode = new OverlayMapMode();
-				break;
-			case RATIO:
-				mapmode = new RatioMapMode();
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown Map Mode");		
-			}
+			mapmode = settings.mode.getMapper();
 		}
 		
-		//TODO: remove context.isvecotrsurface as argument
 		mapmode.draw(size, data, settings, context, spectrumSteps);
 
 	}
@@ -52,7 +37,7 @@ public class Mapper {
 	}
 	
 	public Coord<Integer> getCoordinate(float x, float y, boolean allowOutOfBounds) {
-		return mapmode.getCoordinate(x, y, allowOutOfBounds);
+		return getMap().getMapCoordinateAtPoint(x, y, allowOutOfBounds);
 	}
 	
 	public void setNeedsRedraw() {

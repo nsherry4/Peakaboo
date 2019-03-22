@@ -19,7 +19,7 @@ import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
-import org.peakaboo.display.map.modes.MapDisplayMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.overlay.OverlayChannel;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.framework.cyclops.Coord;
@@ -47,7 +47,7 @@ public class MapFittingController extends EventfulType<String> {
 	private Map<ITransitionSeries, OverlayColour> overlayColour;
 	private Map<ITransitionSeries, Boolean> compositeVisibility;
 	
-	private MapDisplayMode displayMode;
+	private MapModes displayMode;
 	//TODO: should this be in MapSettingsController?
 	private MapScaleMode mapScaleMode;
 	
@@ -57,7 +57,7 @@ public class MapFittingController extends EventfulType<String> {
 	public MapFittingController(MappingController map){
 		this.map = map;
 		
-		displayMode = MapDisplayMode.COMPOSITE;
+		displayMode = MapModes.COMPOSITE;
 		mapScaleMode = MapScaleMode.ABSOLUTE;
 		
 		ratioSide = new HashMap<>();
@@ -87,14 +87,14 @@ public class MapFittingController extends EventfulType<String> {
 	}
 
 
-	public MapDisplayMode getMapDisplayMode()
+	public MapModes getMapDisplayMode()
 	{
 		return this.displayMode;
 	}
 
 
 
-	public void setMapDisplayMode(MapDisplayMode mode)
+	public void setMapDisplayMode(MapModes mode)
 	{		
 		this.displayMode = mode;
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
