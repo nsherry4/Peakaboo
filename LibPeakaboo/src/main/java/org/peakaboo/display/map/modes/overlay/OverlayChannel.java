@@ -1,4 +1,4 @@
-package org.peakaboo.display.map.modes;
+package org.peakaboo.display.map.modes.overlay;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package org.peakaboo.display.map;
 
 import java.util.Map;
 
-import org.peakaboo.display.map.modes.OverlayChannel;
-import org.peakaboo.display.map.modes.OverlayColour;
+import org.peakaboo.display.map.modes.overlay.OverlayChannel;
+import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Spectrum;
 

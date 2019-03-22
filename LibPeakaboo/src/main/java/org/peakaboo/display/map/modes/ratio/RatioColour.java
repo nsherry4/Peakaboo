@@ -1,4 +1,6 @@
-package org.peakaboo.display.map.modes;
+package org.peakaboo.display.map.modes.ratio;
+
+import org.peakaboo.display.map.modes.overlay.OverlayColour;
 
 public enum RatioColour
 {

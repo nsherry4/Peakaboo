@@ -1,4 +1,4 @@
-package org.peakaboo.display.map.modes;
+package org.peakaboo.display.map.modes.overlay;
 
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 

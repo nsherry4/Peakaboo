@@ -15,8 +15,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import org.peakaboo.common.Version;
-import org.peakaboo.display.map.modes.OverlayColour;
-import org.peakaboo.display.map.modes.RatioColour;
+import org.peakaboo.display.map.modes.overlay.OverlayColour;
+import org.peakaboo.display.map.modes.ratio.RatioColour;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
