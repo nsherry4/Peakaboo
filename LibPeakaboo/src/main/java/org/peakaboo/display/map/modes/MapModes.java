@@ -3,6 +3,7 @@ package org.peakaboo.display.map.modes;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.display.map.modes.overlay.OverlayMapMode;
 import org.peakaboo.display.map.modes.ratio.RatioMapMode;
+import org.peakaboo.display.map.modes.scatter.ScatterMapMode;
 
 public enum MapModes {
 	COMPOSITE
@@ -30,7 +31,17 @@ public enum MapModes {
 		
 		@Override 
 		public MapMode getMapper() { return new RatioMapMode(); }
-	};
+	},
+	SCATTER
+	{
+		@Override
+		public String toString() { return "Scatter"; }
+		
+		@Override 
+		public MapMode getMapper() { return new ScatterMapMode(); }
+	}
+	
+	;
 	
 	public MapMode getMapper() {
 		return null;

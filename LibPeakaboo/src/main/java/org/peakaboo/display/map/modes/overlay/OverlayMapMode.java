@@ -45,9 +45,9 @@ public class OverlayMapMode extends MapMode {
 		backend.setSource(new PaletteColour(0xffffffff));
 		backend.fill();
 		
-		AxisPainter spectrumCoordPainter 	= 		null;
-		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
-				
+		AxisPainter spectrumCoordPainter = null;
+		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+
 		dr.uninterpolatedWidth = settings.filteredDataWidth;
 		dr.uninterpolatedHeight = settings.filteredDataHeight;
 		dr.dataWidth = settings.filteredDataWidth;

@@ -22,6 +22,7 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.overlay.OverlayChannel;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
+import org.peakaboo.display.map.modes.scatter.ScatterMapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
@@ -46,6 +47,8 @@ public class MapFittingController extends EventfulType<String> {
 	private Map<ITransitionSeries, Integer> ratioSide;
 	private Map<ITransitionSeries, OverlayColour> overlayColour;
 	private Map<ITransitionSeries, Boolean> compositeVisibility;
+	private Map<ITransitionSeries, Integer> scatterSide;
+	
 	
 	private MapModes displayMode;
 	//TODO: should this be in MapSettingsController?
@@ -63,11 +66,13 @@ public class MapFittingController extends EventfulType<String> {
 		ratioSide = new HashMap<>();
 		overlayColour = new HashMap<>();
 		compositeVisibility = new HashMap<>();
+		scatterSide = new HashMap<>();
 		
 		for (ITransitionSeries ts : map.rawDataController.getMapResultSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
 			overlayColour.put(ts, OverlayColour.RED);
 			compositeVisibility.put(ts, true);
+			scatterSide.put(ts, 1);
 		}
 		
 	}
@@ -278,6 +283,51 @@ public class MapFittingController extends EventfulType<String> {
 		
 	}
 	
+	public Spectrum getScatterMapData() {
+		
+		
+		// get transition series on ratio side 1
+		List<ITransitionSeries> s1 = getTransitionSeriesForScatterSide(1);
+		// get transition series on ratio side 2
+		List<ITransitionSeries> s2 = getTransitionSeriesForScatterSide(2);
+		
+		// sum all of the maps for the given transition series for each side
+		Spectrum s1Data = sumGivenTransitionSeriesMaps(s1);
+		Spectrum s2Data = sumGivenTransitionSeriesMaps(s2);
+		
+		float s1max = s1Data.max();
+		float s2max = s2Data.max();
+		
+		//if it's absolute, we use the larger max to scale both histograms
+		if (this.mapScaleMode != MapScaleMode.RELATIVE) {
+			s1max = Math.max(s1max, s2max);
+			s2max = Math.max(s1max, s2max);
+		}
+		
+
+		
+		GridPerspective<Float> grid = new GridPerspective<Float>(ScatterMapMode.SCATTERSIZE, ScatterMapMode.SCATTERSIZE, 0f);
+		Spectrum scatter = new ISpectrum(ScatterMapMode.SCATTERSIZE*ScatterMapMode.SCATTERSIZE);
+		for (int i = 0; i < s1Data.size(); i++) {
+			float s1pct = s1Data.get(i) / s1max;
+			float s2pct = s2Data.get(i) / s2max;
+			
+			int s1bin = (int) (s1pct*ScatterMapMode.SCATTERSIZE);
+			int s2bin = (int) (s2pct*ScatterMapMode.SCATTERSIZE);
+			if (s1bin == ScatterMapMode.SCATTERSIZE) { s1bin = ScatterMapMode.SCATTERSIZE-1; }
+			if (s2bin == ScatterMapMode.SCATTERSIZE) { s2bin = ScatterMapMode.SCATTERSIZE-1; }
+			
+			grid.set(scatter, s1bin, s2bin, grid.get(scatter, s1bin, s2bin)+1);
+			
+		}
+		
+		//TODO: add putvaluefunction call
+		//TODO: WHY IS THIS WRITTEN LIKE THIS?
+		//putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
+		
+		return scatter;
+	}
+	
 	
 
 	/**
@@ -382,6 +432,9 @@ public class MapFittingController extends EventfulType<String> {
 				getRatioMapData();
 				break;
 				
+			case SCATTER:
+				getScatterMapData();
+				break;
 		}
 		
 
@@ -427,7 +480,6 @@ public class MapFittingController extends EventfulType<String> {
 		{
 			case RATIO:
 				String side1Title = getDatasetTitle(getTransitionSeriesForRatioSide(1));
-
 				String side2Title = getDatasetTitle(getTransitionSeriesForRatioSide(2));
 
 				return "Map of " + side1Title + " : " + side2Title;
@@ -442,6 +494,11 @@ public class MapFittingController extends EventfulType<String> {
 					return "Map of " + getDatasetTitle(getVisibleTransitionSeries());
 				}
 		
+			case SCATTER:
+				String axis1Title = getDatasetTitle(getTransitionSeriesForScatterSide(1));
+				String axis2Title = getDatasetTitle(getTransitionSeriesForScatterSide(2));
+				return "Scatter Plot of " + axis1Title + " : " + axis2Title;
+				
 			default:
 				return "Map of " + getDatasetTitle(getVisibleTransitionSeries());
 				
@@ -541,7 +598,13 @@ public class MapFittingController extends EventfulType<String> {
 		}).collect(toList());
 	}
 
-	
+	public List<ITransitionSeries> getTransitionSeriesForScatterSide(final int side)
+	{
+		return getVisibleTransitionSeries().stream().filter(e -> {
+			Integer thisSide = this.scatterSide.get(e);
+			return thisSide == side;
+		}).collect(toList());
+	}
 	
 	
 	
@@ -573,6 +636,17 @@ public class MapFittingController extends EventfulType<String> {
 	public void setRatioSide(ITransitionSeries ts, int side)
 	{
 		this.ratioSide.put(ts, side);
+		updateListeners(UpdateType.DATA_OPTIONS.toString());
+	}
+	
+	
+	public int getScatterSide(ITransitionSeries ts)
+	{
+		return this.scatterSide.get(ts);
+	}
+	public void setScatterSide(ITransitionSeries ts, int side)
+	{
+		this.scatterSide.put(ts, side);
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 	

@@ -35,17 +35,15 @@ public class RatioMapMode extends MapMode {
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
 		
-		//TODO: move this call to Mapper
 		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(new PaletteColour(0xffffffff));
 		backend.fill();
 		
-		
-		AxisPainter spectrumCoordPainter 	= 		null;
-		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
-		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
-		
+		AxisPainter spectrumCoordPainter = null;
+		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
+		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+
 		Pair<Spectrum, Spectrum> ratiodata = data.ratioData;
 		
 		dr.uninterpolatedWidth = settings.filteredDataWidth;

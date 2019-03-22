@@ -186,6 +186,9 @@ public class MappingController extends EventfulType<String>
 		case RATIO:
 			settings.spectrumTitle = "Intensity (ratio)" + (this.getFitting().getMapScaleMode() == MapScaleMode.RELATIVE ? " - sides scaled independently" : "");
 			break;
+		case SCATTER:
+			settings.spectrumTitle = "Scatter";
+			break;
 		}
 		
 		String filterActions = filteringController.getActionDescription();
@@ -211,6 +214,8 @@ public class MappingController extends EventfulType<String>
 		case RATIO:
 			data.ratioData = this.getFitting().getRatioMapData();
 			break;
+		case SCATTER:
+			data.scatterData = this.getFitting().getScatterMapData();
 		}
 		data.maxIntensity = this.getFitting().sumAllTransitionSeriesMaps().max();
 		

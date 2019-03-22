@@ -12,6 +12,7 @@ public class MapRenderData {
 	public Spectrum compositeData;
 	public Map<OverlayColour, OverlayChannel> overlayData;
 	public Pair<Spectrum, Spectrum> ratioData;
+	public Spectrum scatterData;
 	
 	public float maxIntensity = 0f;
 	
