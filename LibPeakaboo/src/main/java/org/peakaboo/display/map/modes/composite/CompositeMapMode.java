@@ -41,7 +41,6 @@ public class CompositeMapMode extends MapMode{
 		AbstractPalette palette 			=		new ThermalScalePalette(spectrumSteps, settings.monochrome);
 		AxisPainter spectrumCoordPainter 	= 		null;
 		List<AbstractPalette> paletteList	=		new ArrayList<AbstractPalette>();
-		List<AxisPainter> axisPainters 		= 		new ArrayList<AxisPainter>();
 		
 				
 		dr.uninterpolatedWidth = settings.filteredDataWidth;
@@ -64,15 +63,8 @@ public class CompositeMapMode extends MapMode{
 		palette = new ThermalScalePalette(spectrumSteps, settings.monochrome);
 
 		
-
-		if (settings.showDatasetTitle) {
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
-		}
-
-		if (settings.showMapTitle) {
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, settings.mapTitle));
-		}
-		
+		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
 		
@@ -94,15 +86,12 @@ public class CompositeMapMode extends MapMode{
 			settings.showScaleBar
 		);
 		axisPainters.add(spectrumCoordPainter);
-
+		map.setAxisPainters(axisPainters);
+		
+		
 		
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
-
-		map.setContext(backend);
-		map.setAxisPainters(axisPainters);
-		
-
 
 		paletteList.add(palette);
 		

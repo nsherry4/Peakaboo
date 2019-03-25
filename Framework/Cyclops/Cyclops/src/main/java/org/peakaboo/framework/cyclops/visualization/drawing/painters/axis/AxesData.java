@@ -9,7 +9,6 @@ public class AxesData
 {
 	
 	public Bounds<Float> xPositionBounds, yPositionBounds;
-	public boolean yLeftLog, yRightLog;
 	
 	public AxesData()
 	{
@@ -27,10 +26,7 @@ public class AxesData
 
 		xPositionBounds = new Bounds<Float>(yLeftPosition, yRightPosition);
 		yPositionBounds = new Bounds<Float>(xTopPosition, xBottomPosition);
-		
-		yLeftLog = false;
-		yRightLog = false;
-		
+
 	}
 
 	public AxesData(
@@ -42,9 +38,6 @@ public class AxesData
 		
 		this.xPositionBounds = xPositionBounds;
 		this.yPositionBounds = yPositionBounds;
-		
-		yLeftLog = false;
-		yRightLog = false;
 
 	}
 	

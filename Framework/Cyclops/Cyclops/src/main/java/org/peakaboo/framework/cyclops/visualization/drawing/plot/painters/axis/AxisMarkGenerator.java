@@ -3,9 +3,12 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 
 
 public class AxisMarkGenerator
@@ -49,22 +52,37 @@ public class AxisMarkGenerator
 		return SigDigits.toIntSigDigit(valueRange / maxTickCount, significantDigits);
 		
 	}
+
 	
-	public static int getMaxTicksY(Surface context, float axisSize)
-	{		
-		float textHeight = context.getFontHeight();
-		int maxTicks = (int)Math.floor(axisSize / (textHeight*3.0));
-		
-		return maxTicks;
-	}
-	
-	public static void drawTick(Surface context, float startx, float starty, float endx, float endy)
+	public static void drawLine(Surface context, float startx, float starty, float endx, float endy)
 	{
 		context.setAntialias(false);
 		context.moveTo(startx,  starty);
 		context.lineTo(endx, endy);
 		context.stroke();
 		context.setAntialias(true);
+	}
+	
+	public static float calcMaxTicks(PainterData p, TickFormatter tick, float freeSpace) {
+		//how many ticks we can fit and the range of values we're drawing over
+		float maxTicks = 0;
+		if (tick.textRotate) {
+			float textHeight = p.context.getFontHeight();
+			maxTicks = (float) Math.floor(freeSpace / (textHeight*3.0));
+			return maxTicks;
+		} else {
+			// text isn't rotated out so calculate the maximum width of a text entry here
+			int maxValue = (int) (tick.end.floatValue());
+			String text = tick.formatter.apply(maxValue);
+			float maxWidth = p.context.getTextWidth(text);
+			maxTicks = freeSpace / (maxWidth * 3.0f);
+		}
+		return maxTicks;
+	}
+	
+	public static float calcMaxTicks(PainterData p, TickFormatter tick, Bounds<Float> axisBounds, Pair<Float, Float> otherAxisSize) {
+		float freeSpace = axisBounds.end - axisBounds.start - otherAxisSize.first - otherAxisSize.second;
+		return calcMaxTicks(p, tick, freeSpace);
 	}
 	
 }

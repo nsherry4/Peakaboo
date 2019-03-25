@@ -45,28 +45,17 @@ public abstract class AxisPainter extends Painter
 
 
 	/**
-	 * Returns the size of the axis in the y (vertical) direction. It <i>does
-	 * not</i> get the size of the y-axes
+	 * Returns the vertical size of the axes. It <i>does not</i> get the size of the
+	 * y-axes. Usually, this is measuring the height of the top and bottom x-axes
 	 */
 	public abstract Pair<Float, Float> getAxisSizeY(PainterData p);
 
 	/**
-	 * Returns the size of the axis in the x (horizontal) direction. It <i>does
-	 * not</i> get the size of the x-axes
+	 * Returns the horizontal size of the axis. It <i>does not</i> get the size of
+	 * the x-axes. Usually, this is measuring the width of the left and right y-axes
 	 */
 	public abstract Pair<Float, Float> getAxisSizeX(PainterData p);
 
-
-	protected static float getTickSize(float baseSize, DrawingRequest dr)
-	{
-		return baseSize * 5;
-	}
-
-
-	protected static float getTickFontHeight(Surface context, DrawingRequest dr)
-	{
-		return context.getFontHeight();
-	}
 
 
 	protected static float getTitleFontHeight(Surface context, DrawingRequest dr)

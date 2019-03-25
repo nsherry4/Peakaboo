@@ -8,11 +8,17 @@ import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapTechniqueFactory;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
@@ -22,6 +28,12 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScal
 
 public class ScatterMapMode extends MapMode {
 
+	public static class ScatterMapData {
+		public Spectrum data;
+		public String xAxisTitle, yAxisTitle;
+		public float xMaxCounts, yMaxCounts;
+	}
+	
 	private SpectrumMapPainter scatterMapPainter;
 	
 	public static int SCATTERSIZE = 100;
@@ -29,6 +41,10 @@ public class ScatterMapMode extends MapMode {
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
+		
+		//overrides for this display style
+		settings.drawCoord = false;
+		
 		
 		//TODO: move this call to Mapper
 		size = this.setDimensions(settings, size);
@@ -42,19 +58,32 @@ public class ScatterMapMode extends MapMode {
 		dr.dataHeight = SCATTERSIZE;
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
-		dr.maxYIntensity = data.scatterData.max();
+		dr.maxYIntensity = data.scatterData.data.max();
 		map.setDrawingRequest(dr);
 
 		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
 		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.TERRA.getPaletteData(), 1f, 1f), false));
-		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.THOUGHTFUL.getPaletteData(), 1f, 1f), false));
-		paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.SUGAR.getPaletteData(), 1f, 1f), false));
+		paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.THOUGHTFUL.getPaletteData(), 1f, 1f), false));
+		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.SUGAR.getPaletteData(), 1f, 1f), false));
+		
+		
+		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+		super.setupTitleAxisPainters(settings, axisPainters);
+		axisPainters.add(super.getSpectrumPainter(settings, spectrumSteps, paletteList));
+		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, data.scatterData.yAxisTitle, "", "", data.scatterData.xAxisTitle));
+		TickFormatter xTick = new TickFormatter(0, data.scatterData.xMaxCounts).withTick(0.5f);
+		TickFormatter yTick = new TickFormatter(0, data.scatterData.yMaxCounts).withTick(0.5f).withRotate(false);
+		axisPainters.add(new TickMarkAxisPainter(null, xTick, null, yTick));
+		
+		map.setAxisPainters(axisPainters);
+		
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (scatterMapPainter == null) {
-			scatterMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.scatterData, spectrumSteps); 
+			scatterMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.scatterData.data, spectrumSteps); 
 		} else {
-			scatterMapPainter.setData(data.scatterData);
+			scatterMapPainter.setData(data.scatterData.data);
 			scatterMapPainter.setPalettes(paletteList);
 		}
 		mapPainters.add(scatterMapPainter);

@@ -6,6 +6,8 @@ import java.util.function.Function;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
+import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
@@ -17,6 +19,18 @@ public class TickMarkAxisPainter extends AxisPainter
 	public static class TickFormatter {
 		public Float start, end;
 		Function<Integer, String> formatter;
+		public boolean log = false;
+		
+		/**
+		 * Rotates text 90 degrees so that it is running perpendicular to the axis instead of parallel
+		 */
+		public boolean textRotate = false;
+		
+		/**
+		 * Percentage value where 1 = 100%. Used to scale the size of tickmarks, with 1 being 100%
+		 */
+		public float tickScale = 1f;
+		
 		
 		public TickFormatter(float start, float end) {
 			this(start, end, String::valueOf);
@@ -27,17 +41,30 @@ public class TickMarkAxisPainter extends AxisPainter
 			this.end = endstop;
 			this.formatter = formatter;
 		}
+		
+		public TickFormatter withLog(boolean log) {
+			this.log = log;
+			return this;
+		}
+		
+		public TickFormatter withTick(float percent) {
+			this.tickScale = percent;
+			return this;
+		}
+		
+		public TickFormatter withRotate(boolean rotate) {
+			this.textRotate = rotate;
+			return this;
+		}
 	}
 	
 	public TickFormatter yRightValueBounds, xBottomValueBounds, xTopValueBounds, yLeftValueBounds;
 	
 	public TickMarkAxisPainter(TickFormatter rightValueBounds, TickFormatter bottomValueBounds,
-			TickFormatter topValueBounds, TickFormatter leftValueBounds, boolean yLeftLog, boolean yRightLog)
+			TickFormatter topValueBounds, TickFormatter leftValueBounds)
 	{
 
 		super();
-		super.axesData.yLeftLog = yLeftLog;
-		super.axesData.yRightLog = yRightLog;
 		
 		this.yRightValueBounds = rightValueBounds;
 		this.yLeftValueBounds = leftValueBounds;
@@ -55,18 +82,18 @@ public class TickMarkAxisPainter extends AxisPainter
 	@Override
 	public void drawElement(PainterData p)
 	{
-		drawTopXAxis(p);
-		drawBottomXAxis(p);
-		drawLeftYAxis(p);
-		drawRightYAxis(p);
+		drawTopXAxis(p, xTopValueBounds);
+		drawBottomXAxis(p, xBottomValueBounds);
+		drawLeftYAxis(p, yLeftValueBounds);
+		drawRightYAxis(p, yRightValueBounds);
 		
 	}
-
-	public void drawBottomXAxis(PainterData p)
+	
+	public void drawBottomXAxis(PainterData p, TickFormatter tick)
 	{
 	
-		if (this.xBottomValueBounds == null) return;
-		if (this.xBottomValueBounds.end - this.xBottomValueBounds.start <= 0) return;
+		if (tick == null) return;
+		if (tick.end - tick.start <= 0) return;
 	
 		p.context.save();
 				
@@ -76,47 +103,57 @@ public class TickMarkAxisPainter extends AxisPainter
 			Pair<Float, Float> otherAxisSize = getAxisSizeX(p);
 			
 			// dimensions for various parts of the axis
-			float tickSize = getTickSize(getBaseUnitSize(p.dr), p.dr);
+			float tickLength = getTickLength(p.dr, tick);
 			float textHeight = getTickFontHeight(p.context, p.dr);
-		
+			float textAscent = p.context.getFontAscent();
+			
 			float axisYStart = axesData.yPositionBounds.end - getAxisSizeY(p).second;
 			float axisXStart = axesData.xPositionBounds.start + otherAxisSize.first;
 			float axisWidth = axesData.xPositionBounds.end - axesData.xPositionBounds.start - otherAxisSize.first - otherAxisSize.second;
+			float textBaseline = axisYStart + tickLength + textHeight;
 		
-			float textBaseline = axisYStart + tickSize + textHeight;
-		
-			// calculate the maximum width of a text entry here
-		
-			//width of single entry
-			int maxValue = (int) (this.xBottomValueBounds.end.floatValue());
-			String text = this.xBottomValueBounds.formatter.apply(maxValue);
-			float maxWidth = p.context.getTextWidth(text);
-		
+				
+			
 			//how many ticks we can fit and the range of values we're drawing over
-			float maxTicks = axisWidth / (maxWidth * 3.0f);
-			float valueRange = this.xBottomValueBounds.end - this.xBottomValueBounds.start;
+			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.xPositionBounds, otherAxisSize);
+			
 		
+			
+			
+			float valueRange = tick.end - tick.start;
 					
 			String tickText;
 			float tickWidth;
 			int increment = AxisMarkGenerator.getIncrement(valueRange, maxTicks, 1);
-			int startingValue = getStartingAxisValue(this.xBottomValueBounds.start, increment);
+			int startingValue = getStartingAxisValue(tick.start, increment);
 			int currentValue = startingValue;
 			float percentAlongAxis, position;
 	
-			while (currentValue <= this.xBottomValueBounds.end)
+			while (currentValue <= tick.end)
 			{
 				
-				percentAlongAxis = (currentValue - this.xBottomValueBounds.start)  / valueRange;
+				percentAlongAxis = (currentValue - tick.start)  / valueRange;
 				//Don't draw tick marks outside of the proper axis range
 				if (percentAlongAxis >= 0 && percentAlongAxis <= 1) {
 					position = axisXStart + (axisWidth * percentAlongAxis);
 	
-					AxisMarkGenerator.drawTick(p.context, position, axisYStart, position, axisYStart + tickSize);
+					AxisMarkGenerator.drawLine(p.context, position, axisYStart, position, axisYStart + tickLength);
 			
-					tickText = this.xBottomValueBounds.formatter.apply(currentValue);
+					tickText = tick.formatter.apply(currentValue);
 					tickWidth = p.context.getTextWidth(tickText);
-					p.context.writeText(tickText, position - (tickWidth / 2.0f), textBaseline);
+					if (tick.textRotate) {
+						float tx = position;
+						float ty = textBaseline - textAscent;
+						float px = -tickWidth - tickLength * 0.5f;
+						float py = textAscent/2f;
+						p.context.save();
+						p.context.translate(tx, ty);
+						p.context.rotate(-1.57f);					
+						p.context.writeText(tickText, px, py);
+						p.context.restore();
+					} else {
+						p.context.writeText(tickText, position - (tickWidth / 2.0f), textBaseline);
+					}
 				}
 				
 				currentValue += increment;
@@ -130,10 +167,10 @@ public class TickMarkAxisPainter extends AxisPainter
 	}
 
 	
-	public void drawTopXAxis(PainterData p)
+	public void drawTopXAxis(PainterData p, TickFormatter tick)
 	{
 
-		if (this.xTopValueBounds == null) return;
+		if (tick == null) return;
 		
 		p.context.save();
 			
@@ -147,25 +184,17 @@ public class TickMarkAxisPainter extends AxisPainter
 			Pair<Float, Float> otherAxisSize = getAxisSizeX(p);
 			
 			// dimensions for various parts of the axis
-			float tickSize = getTickSize(getBaseUnitSize(p.dr), p.dr);
+			float tickLength = getTickLength(p.dr, tick);
 			float textHeight = getTickFontHeight(p.context, p.dr);
-	
 			float axisWidth = axesData.xPositionBounds.end - axesData.xPositionBounds.start - otherAxisSize.first - otherAxisSize.second;		
-		
-			float textBaseline = axesData.yPositionBounds.start + textHeight;
-	
-			// calculate the maximum width of a text entry here
-	
+			float axisYEnd = axesData.yPositionBounds.start + getAxisSizeY(p).first;
+			float textAscent = p.context.getFontAscent();
+
 			//width of single entry
-			int maxValue = (int) (this.xTopValueBounds.end.floatValue());
-			String text = this.xTopValueBounds.formatter.apply(maxValue);
-			float maxWidth = p.context.getTextWidth(text);
-	
-			//how many ticks we can fit
-			float maxTicks = axisWidth / (maxWidth * 3.0f);
+			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.xPositionBounds, otherAxisSize);
 			
 			//the range of values we have to show 
-			float valueRange = this.xTopValueBounds.end - this.xTopValueBounds.start;
+			float valueRange = tick.end - tick.start;
 			
 			// we know how many we can fit on to the axis, what is the increment
 			// size so we can be near, but not above that number of ticks
@@ -175,24 +204,38 @@ public class TickMarkAxisPainter extends AxisPainter
 	
 	
 			int increment = AxisMarkGenerator.getIncrement(valueRange, maxTicks, 1);
-			int startingValue = getStartingAxisValue(this.xTopValueBounds.start, increment);
+			int startingValue = getStartingAxisValue(tick.start, increment);
 			int currentValue = startingValue;
 			
 			if (showTickMarks) {
 	
 				float percentAlongAxis, position;
-				while (currentValue <= this.xTopValueBounds.end)
+				while (currentValue <= tick.end)
 				{
 					
-					percentAlongAxis = (currentValue - this.xTopValueBounds.start)  / valueRange;
+					percentAlongAxis = (currentValue - tick.start)  / valueRange;
 					if (percentAlongAxis >= 0 && percentAlongAxis <= 1) {
 						position = axesData.xPositionBounds.start + otherAxisSize.first + axisWidth * percentAlongAxis;
 						
-						AxisMarkGenerator.drawTick(p.context, position, textBaseline + tickSize * 0.5f, position, textBaseline + tickSize * 1.5f);
-		
-						tickText = this.xTopValueBounds.formatter.apply(currentValue);
+						AxisMarkGenerator.drawLine(p.context, position, axisYEnd, position, axisYEnd - tickLength);
+						float textBaseline = axisYEnd - tickLength*1.5f;
+						
+						tickText = tick.formatter.apply(currentValue);
 						tickWidth = p.context.getTextWidth(tickText);
-						p.context.writeText(tickText, position - (tickWidth / 2.0f), textBaseline);
+						
+						if (tick.textRotate) {
+							float tx = position;
+							float ty = textBaseline;
+							float px = 0;//-tickWidth - tickLength * 0.5f;
+							float py = textAscent/2f;
+							p.context.save();
+							p.context.translate(tx, ty);
+							p.context.rotate(-1.57f);					
+							p.context.writeText(tickText, px, py);
+							p.context.restore();
+						} else {
+							p.context.writeText(tickText, position - (tickWidth / 2.0f), textBaseline);
+						}
 					}
 					
 					
@@ -205,10 +248,10 @@ public class TickMarkAxisPainter extends AxisPainter
 	}
 	
 
-	public void drawLeftYAxis(PainterData p)
+	public void drawLeftYAxis(PainterData p, TickFormatter tick)
 	{
 		
-		if (this.yLeftValueBounds == null) return;
+		if (tick == null) return;
 	
 		p.context.save();
 			
@@ -220,12 +263,11 @@ public class TickMarkAxisPainter extends AxisPainter
 			float axisHeight = axesData.yPositionBounds.end - axesData.yPositionBounds.start - otherAxisSize.first - otherAxisSize.second;
 			float axisStart = axesData.xPositionBounds.start;
 			float axisWidth = getAxisSizeX(p).first;
-	
-			float tickWidth = getTickSize(getBaseUnitSize(p.dr), p.dr);
-			int maxTicks = AxisMarkGenerator.getMaxTicksY(p.context, axisHeight); //axisHeight / (textHeight*2.0);
+			float tickLength = getTickLength(p.dr, tick);
+			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
-			float valueRangeStart = this.yLeftValueBounds.start;
-			float valueRangeEnd = PlotDrawing.getDataScale(this.yLeftValueBounds.end, false);
+			float valueRangeStart = tick.start;
+			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
 			float valueRange = valueRangeEnd - valueRangeStart;
 			
 			
@@ -243,7 +285,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				
 				position = axesData.yPositionBounds.start + otherAxisSize.first + axisHeight * percentAlongAxis;
 				
-				if (axesData.yRightLog) {
+				if (tick.log) {
 					tickValue = (float)Math.exp(  (1.0 - percentAlongAxis) * (Math.log(valueRange) + 1.0)  ) - 1.0f;
 					roundedTickValue = SigDigits.toIntSigDigit(tickValue, 2);
 				} else {
@@ -251,10 +293,28 @@ public class TickMarkAxisPainter extends AxisPainter
 				}
 				
 				if (position - p.context.getFontAscent() / 2.0 > 0) {
-					AxisMarkGenerator.drawTick(p.context, axisStart + axisWidth - tickWidth, position, axisStart + axisWidth, position);
-					currentValueString = this.yLeftValueBounds.formatter.apply(roundedTickValue);
+					AxisMarkGenerator.drawLine(p.context, axisStart + axisWidth - tickLength, position, axisStart + axisWidth, position);
+					currentValueString = tick.formatter.apply(roundedTickValue);
 					textWidth = p.context.getTextWidth(currentValueString);
-					p.context.writeText(currentValueString, axisStart + axisWidth - tickWidth*1.5f - textWidth, position + p.context.getFontAscent() / 2.0f);		
+					
+
+					
+					if (!tick.textRotate) {
+						float tx = axisStart + axisWidth - tickLength*1.5f;
+						float ty = position;
+						float px = -textWidth/2f;
+						float py = 0;
+						p.context.save();
+						p.context.translate(tx, ty);
+						p.context.rotate(-1.57f);					
+						p.context.writeText(currentValueString, px, py);
+						p.context.restore();
+					} else {
+						float xTextPos = axisStart + axisWidth - tickLength*1.5f - textWidth;
+						float yTextPos = position + p.context.getFontAscent() / 2.0f;
+						p.context.writeText(currentValueString, xTextPos, yTextPos);
+					}
+							
 				}
 				
 			}
@@ -264,10 +324,10 @@ public class TickMarkAxisPainter extends AxisPainter
 	}
 
 
-	public void drawRightYAxis(PainterData p)
+	public void drawRightYAxis(PainterData p, TickFormatter tick)
 	{
 		
-		if (this.yRightValueBounds == null) return;
+		if (tick == null) return;
 		
 		
 		p.context.save();
@@ -282,11 +342,11 @@ public class TickMarkAxisPainter extends AxisPainter
 			float axisStart = axesData.xPositionBounds.end - axisWidth;
 	
 			
-			float tickWidth = getTickSize(getBaseUnitSize(p.dr), p.dr);
-			int maxTicks = AxisMarkGenerator.getMaxTicksY(p.context, axisHeight); //axisHeight / (textHeight*2.0);
+			float tickLength = getTickLength(p.dr, tick);
+			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
-			float valueRangeStart = this.yRightValueBounds.start;
-			float valueRangeEnd = PlotDrawing.getDataScale(this.yRightValueBounds.end, false);
+			float valueRangeStart = tick.start;
+			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
 			float valueRange = valueRangeEnd - valueRangeStart;
 			
 			List<Pair<Float, Integer>> tickLocations = AxisMarkGenerator.getAxisMarkList(maxTicks, axisHeight, 1, valueRangeStart, valueRangeEnd);
@@ -303,7 +363,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				
 				position = axesData.yPositionBounds.start + otherAxisSize.first + axisHeight * percentAlongAxis;
 				
-				if (axesData.yRightLog) {
+				if (tick.log) {
 					tickValue = (float)Math.exp(  (1.0 - percentAlongAxis) * (Math.log(valueRange) + 1.0)  ) - 1.0f;
 					roundedTickValue = SigDigits.toIntSigDigit(tickValue, 2);
 				} else {
@@ -311,9 +371,23 @@ public class TickMarkAxisPainter extends AxisPainter
 				}
 				
 				if (position - p.context.getFontAscent() / 2.0 > 0) {
-					AxisMarkGenerator.drawTick(p.context, axisStart, position, axisStart + tickWidth, position);
-					currentValueString = this.yRightValueBounds.formatter.apply(roundedTickValue);
-					p.context.writeText(currentValueString, axisStart + tickWidth*1.5f, position + p.context.getFontAscent() / 2.0f);			
+					AxisMarkGenerator.drawLine(p.context, axisStart, position, axisStart + tickLength, position);
+					currentValueString = tick.formatter.apply(roundedTickValue);
+					float textWidth = p.context.getTextWidth(currentValueString);
+					
+					if (!tick.textRotate) {
+						float tx = axisStart + axisWidth - tickLength*2.5f;
+						float ty = position;
+						float px = -textWidth/2f;
+						float py = 0;
+						p.context.save();
+						p.context.translate(tx, ty);
+						p.context.rotate(1.57f);					
+						p.context.writeText(currentValueString, px, py);
+						p.context.restore();
+					} else {
+						p.context.writeText(currentValueString, axisStart + tickLength*1.5f, position + p.context.getFontAscent() / 2.0f);
+					}
 				}
 				
 			}
@@ -323,64 +397,40 @@ public class TickMarkAxisPainter extends AxisPainter
 	}
 
 	
-	
 	@Override
-	public Pair<Float, Float> getAxisSizeX(PainterData p)
-	{
-	
-		p.context.save();
-			
-			float baseSize = getBaseUnitSize(p.dr);
-			float tickSize = getTickSize(baseSize, p.dr);
-			float textWidth;
-			
-			float leftTextWidth = 0.0f;
-			if (this.yLeftValueBounds != null){
-				textWidth = p.context.getTextWidth(this.yLeftValueBounds.formatter.apply(  SigDigits.toIntSigDigit(this.yLeftValueBounds.start, 2)  ));
-				if (textWidth > leftTextWidth) leftTextWidth = textWidth;
-				
-				textWidth = p.context.getTextWidth(this.yLeftValueBounds.formatter.apply(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.yLeftValueBounds.end, false), 2)  ));
-				if (textWidth > leftTextWidth) leftTextWidth = textWidth;
-				
-				leftTextWidth += tickSize * 2.5f;
-				
-			}
-			
-			float rightTextWidth = 0.0f;
-			if (this.yRightValueBounds != null){
-				textWidth = p.context.getTextWidth(this.yRightValueBounds.formatter.apply(  SigDigits.toIntSigDigit(this.yRightValueBounds.start, 2)  ));
-				if (textWidth > rightTextWidth) rightTextWidth = textWidth;
-				
-				textWidth = p.context.getTextWidth(this.yRightValueBounds.formatter.apply(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.yRightValueBounds.end, false), 2)  ));
-				if (textWidth > rightTextWidth) rightTextWidth = textWidth;
-				
-				rightTextWidth += tickSize * 2.5;
-				
-			}
-			
-		p.context.restore();
-		
-		return new Pair<Float, Float>(  leftTextWidth, rightTextWidth  );
+	public Pair<Float, Float> getAxisSizeX(PainterData p) {		
+		return new Pair<Float, Float>(  getSingleAxisSize(p, yLeftValueBounds, true), getSingleAxisSize(p, yRightValueBounds, true)  );
 	}
 
-
 	@Override
-	public Pair<Float, Float> getAxisSizeY(PainterData p)
-	{
+	public Pair<Float, Float> getAxisSizeY(PainterData p) {
+		return new Pair<Float, Float>(  getSingleAxisSize(p, xTopValueBounds, false), getSingleAxisSize(p, xBottomValueBounds, false)  );
+	}
+	
+	private float getSingleAxisSize(PainterData p, TickFormatter tick, boolean vertical) {
 		
-		float baseSize = getBaseUnitSize(p.dr);
-		float tickSize = getTickSize(baseSize, p.dr);
+		p.context.save();
+		
 		float textHeight = getTickFontHeight(p.context, p.dr);
+		float textWidth = 0f;
+		if (tick != null){
+			if (!tick.textRotate) {
+				textWidth = getTickLength(p.dr, tick) + textHeight;
+			} else {
+				float startTextWidth = p.context.getTextWidth(tick.formatter.apply(  SigDigits.toIntSigDigit(tick.start, 2)  ));			
+				float endTextWidth = p.context.getTextWidth(tick.formatter.apply(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(tick.end, false), 2)  ));
+				textWidth = Math.max(startTextWidth, endTextWidth);
+				
+				textWidth += getTickLength(p.dr, tick) * 2.5;
+			}
+			
+		} else {
+			textWidth = 0;
+		}
 		
+		p.context.restore();
 		
-		float heightTop = tickSize*1.5f + textHeight;
-		float heightBottom = tickSize + textHeight;
-		
-		if (this.xTopValueBounds == null) heightTop = 0.0f;
-		if (this.xBottomValueBounds == null) heightBottom = 0.0f;
-		
-		
-		return new Pair<Float, Float>(  heightTop, heightBottom  );
+		return textWidth;
 	}
 	
 	
@@ -389,6 +439,23 @@ public class TickMarkAxisPainter extends AxisPainter
 	{
 		return (int)(valueStart + (Math.abs(valueStart) % increment));
 	}
+	
+	private float getTickLength(DrawingRequest dr, TickFormatter tick)
+	{
+		float baseSize = getBaseUnitSize(dr);
+		float scale = 5;
+		if (tick != null) {
+			scale *= tick.tickScale;
+		}
+		return baseSize * scale;
+	}
+
+
+	private static float getTickFontHeight(Surface context, DrawingRequest dr)
+	{
+		return context.getFontHeight();
+	}
+
 
 
 	

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
@@ -23,6 +24,7 @@ import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.overlay.OverlayChannel;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.display.map.modes.scatter.ScatterMapMode;
+import org.peakaboo.display.map.modes.scatter.ScatterMapMode.ScatterMapData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
@@ -283,49 +285,76 @@ public class MapFittingController extends EventfulType<String> {
 		
 	}
 	
-	public Spectrum getScatterMapData() {
+	public ScatterMapData getScatterMapData() {
 		
 		
 		// get transition series on ratio side 1
-		List<ITransitionSeries> s1 = getTransitionSeriesForScatterSide(1);
+		List<ITransitionSeries> xTS = getTransitionSeriesForScatterSide(1);
 		// get transition series on ratio side 2
-		List<ITransitionSeries> s2 = getTransitionSeriesForScatterSide(2);
+		List<ITransitionSeries> yTS = getTransitionSeriesForScatterSide(2);
 		
 		// sum all of the maps for the given transition series for each side
-		Spectrum s1Data = sumGivenTransitionSeriesMaps(s1);
-		Spectrum s2Data = sumGivenTransitionSeriesMaps(s2);
+		Spectrum xData = sumGivenTransitionSeriesMaps(xTS);
+		Spectrum yData = sumGivenTransitionSeriesMaps(yTS);
 		
-		float s1max = s1Data.max();
-		float s2max = s2Data.max();
+		//Generate histograms
+		List<Float> xSorted = xData.stream().collect(Collectors.toList());
+		List<Float> ySorted = yData.stream().collect(Collectors.toList());
+		xSorted.sort(Float::compare);
+		ySorted.sort(Float::compare);
+		int index999 = (int)(xSorted.size() * 0.999f);
+		
+
+		//float s1max = s1Data.max();
+		//float s2max = s2Data.max();
+		//mnax value is 95th percentile in histogram
+		float xMax = xSorted.get(index999);
+		float yMax = ySorted.get(index999);
 		
 		//if it's absolute, we use the larger max to scale both histograms
 		if (this.mapScaleMode != MapScaleMode.RELATIVE) {
-			s1max = Math.max(s1max, s2max);
-			s2max = Math.max(s1max, s2max);
+			xMax = Math.max(xMax, yMax);
+			yMax = Math.max(xMax, yMax);
 		}
 		
-
 		
 		GridPerspective<Float> grid = new GridPerspective<Float>(ScatterMapMode.SCATTERSIZE, ScatterMapMode.SCATTERSIZE, 0f);
 		Spectrum scatter = new ISpectrum(ScatterMapMode.SCATTERSIZE*ScatterMapMode.SCATTERSIZE);
-		for (int i = 0; i < s1Data.size(); i++) {
-			float s1pct = s1Data.get(i) / s1max;
-			float s2pct = s2Data.get(i) / s2max;
+		for (int i = 0; i < xData.size(); i++) {
+
+			float xpct = xData.get(i) / xMax;
+			float ypct = yData.get(i) / yMax;
 			
-			int s1bin = (int) (s1pct*ScatterMapMode.SCATTERSIZE);
-			int s2bin = (int) (s2pct*ScatterMapMode.SCATTERSIZE);
-			if (s1bin == ScatterMapMode.SCATTERSIZE) { s1bin = ScatterMapMode.SCATTERSIZE-1; }
-			if (s2bin == ScatterMapMode.SCATTERSIZE) { s2bin = ScatterMapMode.SCATTERSIZE-1; }
+			if (xpct <= 0.01f && ypct <= 0.01f) {
+				/*
+				 * Don't measure areas where neither element exists, this just creates a large
+				 * spike at 0,0 which can drown out everything else
+				 */
+				continue;
+			}
 			
-			grid.set(scatter, s1bin, s2bin, grid.get(scatter, s1bin, s2bin)+1);
+			int xbin = (int)(xpct*ScatterMapMode.SCATTERSIZE);
+			int ybin = (int)(ypct*ScatterMapMode.SCATTERSIZE);
+			if (xbin >= ScatterMapMode.SCATTERSIZE) { xbin = ScatterMapMode.SCATTERSIZE-1; }
+			if (ybin >= ScatterMapMode.SCATTERSIZE) { ybin = ScatterMapMode.SCATTERSIZE-1; }
+			
+			grid.set(scatter, xbin, ybin, grid.get(scatter, xbin, ybin)+1);
 			
 		}
-		
+
 		//TODO: add putvaluefunction call
 		//TODO: WHY IS THIS WRITTEN LIKE THIS?
 		//putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
 		
-		return scatter;
+		ScatterMapData data = new ScatterMapData();
+		data.data = scatter;
+		data.xAxisTitle = getDatasetTitle(xTS);
+		data.yAxisTitle = getDatasetTitle(yTS);
+		data.xMaxCounts = xMax;
+		data.yMaxCounts = yMax;
+		
+		
+		return data;
 	}
 	
 	

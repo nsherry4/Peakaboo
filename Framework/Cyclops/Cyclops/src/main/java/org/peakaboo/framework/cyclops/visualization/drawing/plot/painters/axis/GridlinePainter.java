@@ -2,32 +2,34 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
+/**
+ * Draws grid lines based on a TickFormatter. Currently only supports horitontal lines.
+ */
 public class GridlinePainter extends PlotPainter
 {
 
-	Bounds<Float> valueBounds;
+	TickFormatter tick;
 	
-	public GridlinePainter(Bounds<Float> valueBounds)
+	public GridlinePainter(TickFormatter tick)
 	{
-		this.valueBounds = valueBounds;
+		this.tick = tick;
 	}
 	
 	@Override
 	public void drawElement(PainterData p)
 	{
 		
-		float valueRangeStart = valueBounds.start;
-		float valueRangeEnd = PlotDrawing.getDataScale(valueBounds.end, false);
-		
-		int maxTicks = AxisMarkGenerator.getMaxTicksY(p.context, p.plotSize.y);
+		float valueRangeStart = tick.start;
+		float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
+		float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, p.plotSize.y);
 	
 		List<Pair<Float, Integer>> tickData = AxisMarkGenerator.getAxisMarkList(maxTicks, p.plotSize.y, 1, valueRangeStart, valueRangeEnd);
 		
@@ -40,7 +42,7 @@ public class GridlinePainter extends PlotPainter
 		{
 			tickPercent = tick.first;
 			yPos = tickPercent * p.plotSize.y;
-			AxisMarkGenerator.drawTick(p.context, 0, yPos, p.plotSize.x, yPos);
+			AxisMarkGenerator.drawLine(p.context, 0, yPos, p.plotSize.x, yPos);
 			
 		}
 		

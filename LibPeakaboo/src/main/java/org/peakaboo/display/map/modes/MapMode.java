@@ -1,13 +1,18 @@
 package org.peakaboo.display.map.modes;
 
+import java.util.List;
+
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
+import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 public abstract class MapMode {
 
@@ -73,6 +78,70 @@ public abstract class MapMode {
 			title += " calibrated with " + settings.calibrationProfile.getName();	
 		}
 		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, title);
+	}
+	
+	protected SpectrumCoordsAxisPainter getSpectrumPainter(MapRenderSettings settings, int spectrumSteps, List<AbstractPalette> paletteList) {
+		return new SpectrumCoordsAxisPainter (
+
+				settings.drawCoord,
+				settings.coordLoXHiY,
+				settings.coordHiXHiY,
+				settings.coordLoXLoY,
+				settings.coordHiXLoY,
+				settings.physicalUnits,
+
+				settings.showSpectrum,
+				settings.spectrumHeight,
+				spectrumSteps,
+				paletteList,
+
+				settings.physicalCoord,
+				settings.showScaleBar
+			);
+	}
+	
+	protected SpectrumCoordsAxisPainter getSpectrumPainter(
+			MapRenderSettings settings, 
+			int spectrumSteps, 
+			List<AbstractPalette> paletteList, 
+			boolean hasNegatives, 
+			List<Pair<Float, String>> spectrumMarkers
+		) {
+		
+		return new SpectrumCoordsAxisPainter (
+			settings.drawCoord,
+			settings.coordLoXHiY,
+			settings.coordHiXHiY,
+			settings.coordLoXLoY,
+			settings.coordHiXLoY,
+			settings.physicalUnits,
+
+			settings.showSpectrum,
+			settings.spectrumHeight,
+			spectrumSteps,
+			paletteList,
+
+			settings.physicalCoord,
+			settings.showScaleBar,
+			1,
+			hasNegatives,
+			spectrumMarkers
+		);
+	}
+	
+	protected void setupTitleAxisPainters(MapRenderSettings settings, List<AxisPainter> axisPainters) {
+		//if we're showing a dataset title, add a title axis painter to put a title on the top
+		if (settings.showDatasetTitle)
+		{
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
+		}
+
+		//if we're map title, add a title axis painter to put a title on the bottom
+		if (settings.showMapTitle)
+		{
+			String mapTitle = settings.mapTitle;
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
+		}
 	}
 	
 	public abstract void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps);

@@ -232,10 +232,15 @@ public class Plotter {
 		
 		List<PlotPainter> plotPainters = new ArrayList<PlotPainter>();
 		
-		// if axes are shown, also draw horizontal grid lines
-		plotPainters.add(new GridlinePainter(new Bounds<Float>(
-			0.0f,
-			maxIntensity)));
+		boolean log = dr.viewTransform == ViewTransform.LOG;
+		TickFormatter tickRight = new TickFormatter(0.0f, maxIntensity).withLog(log).withRotate(true);
+		TickFormatter tickBottom = new TickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()).withRotate(false);
+		TickFormatter tickTop = null;
+		TickFormatter tickLeft = new TickFormatter(0.0f, maxIntensity).withLog(log).withRotate(true);
+		
+		
+		//draw horizontal grid lines. We do this right up front so they're behind everything else
+		plotPainters.add(new GridlinePainter(tickLeft));
 
 
 		// draw the filtered data
@@ -364,14 +369,11 @@ public class Plotter {
 		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 
 
+
+		
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, "Relative Intensity", null, null, "Energy (keV)"));
-		axisPainters.add(new TickMarkAxisPainter(
-			new TickFormatter(0.0f, maxIntensity),
-			new TickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()),
-			null,
-			new TickFormatter(0.0f, maxIntensity),
-			dr.viewTransform == ViewTransform.LOG,
-			dr.viewTransform == ViewTransform.LOG));
+		
+		axisPainters.add(new TickMarkAxisPainter(tickRight, tickBottom, tickTop, tickLeft));
 		axisPainters.add(new LineAxisPainter(true, true, false, true));
 
 

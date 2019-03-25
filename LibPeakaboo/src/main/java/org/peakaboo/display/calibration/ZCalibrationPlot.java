@@ -67,8 +67,20 @@ public abstract class ZCalibrationPlot {
 		dr.unitSize = 1f;
 		dr.viewTransform = ViewTransform.LINEAR;
 		
+		//tick formatters for ticks/gridlines
+		Function<Integer, String> sensitivityFormatter = getYAxisFormatter();
+		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter).withRotate(true);
+		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter).withRotate(true);
+		TickFormatter tickTop = null;
+		TickFormatter tickBottom = new TickFormatter((float)lowest-0.5f, (float)highest-0.5f+0.999f, i -> {  
+			Element element = Element.values()[i];
+			return element.name();
+		});
+		
+		
+		
 		plotPainters = new ArrayList<>();
-		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, dr.maxYIntensity*100f)));
+		plotPainters.add(new GridlinePainter(tickLeft));
 
 		plotPainters.add(new AreaPainter(fadedData, 
 				new PaletteColour(0xff6AA39D), 
@@ -81,27 +93,13 @@ public abstract class ZCalibrationPlot {
 				new PaletteColour(0xff00796B), 
 				new PaletteColour(0xff004D40)
 			).withTraceType(TraceType.BAR));
-		
 
-		
-		
 		plotPainters.add(new DataLabelPainter(getLabels(lowest, highest), 0.5f));
-	
+		
 		
 		axisPainters = new ArrayList<>();
-		
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, getYAxisTitle(), null, getTitle(), "Element"));
-		Function<Integer, String> sensitivityFormatter = getYAxisFormatter();
-		axisPainters.add(new TickMarkAxisPainter(
-				new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter), 
-				new TickFormatter((float)lowest-0.5f, (float)highest-0.5f+0.999f, i -> {  
-					Element element = Element.values()[i];
-					return element.name();
-				}), 
-				null, 
-				new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter),
-				false, 
-				false));
+		axisPainters.add(new TickMarkAxisPainter(tickRight, tickBottom, tickTop, tickLeft));
 		axisPainters.add(new LineAxisPainter(true, true, true, true));
 	}
 	

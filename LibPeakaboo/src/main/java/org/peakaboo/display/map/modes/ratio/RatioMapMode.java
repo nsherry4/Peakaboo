@@ -42,7 +42,7 @@ public class RatioMapMode extends MapMode {
 		
 		AxisPainter spectrumCoordPainter = null;
 		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
-		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+		
 
 		Pair<Spectrum, Spectrum> ratiodata = data.ratioData;
 		
@@ -91,52 +91,18 @@ public class RatioMapMode extends MapMode {
 		
 		
 
+		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 		
-		//if we're showing a dataset title, add a title axis painter to put a title on the top
-		if (settings.showDatasetTitle)
-		{
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
-		}
-
-		//if we're map title, add a title axis painter to put a title on the bottom
-		if (settings.showMapTitle)
-		{
-			String mapTitle = settings.mapTitle;
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
-		}
-		
+		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
-
-		//create a new coordinate/axis painter using the values in the model
-		spectrumCoordPainter = new SpectrumCoordsAxisPainter
-		(
-			settings.drawCoord,
-			settings.coordLoXHiY,
-			settings.coordHiXHiY,
-			settings.coordLoXLoY,
-			settings.coordHiXLoY,
-			settings.physicalUnits,
-
-			settings.showSpectrum,
-			settings.spectrumHeight,
-			spectrumSteps,
-			paletteList,
-
-			settings.physicalCoord,
-			settings.showScaleBar,
-			1,
-			settings.mode == MapModes.RATIO,
-			spectrumMarkers
-		);
-		axisPainters.add(spectrumCoordPainter);
-
+		axisPainters.add(super.getSpectrumPainter(settings, spectrumSteps, paletteList, true, spectrumMarkers));
+		map.setAxisPainters(axisPainters);
+		
+		
 		
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
-
-		map.setContext(backend);
-		map.setAxisPainters(axisPainters);
 		map.setDrawingRequest(dr);
 
 

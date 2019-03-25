@@ -46,7 +46,6 @@ public class OverlayMapMode extends MapMode {
 		backend.fill();
 		
 		AxisPainter spectrumCoordPainter = null;
-		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 
 		dr.uninterpolatedWidth = settings.filteredDataWidth;
 		dr.uninterpolatedHeight = settings.filteredDataHeight;
@@ -119,18 +118,8 @@ public class OverlayMapMode extends MapMode {
 		);
 
 			
-
-		if (settings.showDatasetTitle)
-		{
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
-		}
-
-		if (settings.showMapTitle)
-		{
-			String mapTitle = settings.mapTitle;
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
-		}
-		
+		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
 		axisPainters.add(spectrumCoordPainter);

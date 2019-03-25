@@ -53,8 +53,18 @@ public class ConcentrationPlot {
 		dr.unitSize = 1f;
 		dr.viewTransform = ViewTransform.LINEAR;
 		
+		List<Element> elements = comp.elementsByConcentration();
+		NumberFormat format = new DecimalFormat("0.0");
+		Function<Integer, String> sensitivityFormatter = i -> format.format(  ((float)i/10000f)  ) + "%";
+		TickFormatter tickTop = null;
+		TickFormatter tickBottom = new TickFormatter(-0.5f, calibratedData.size()-1-0.5f+0.999f, i -> elements.get(i).name());
+		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter).withRotate(true);
+		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter).withRotate(true);
+		
+		
+		
 		plotPainters = new ArrayList<>();
-		plotPainters.add(new GridlinePainter(new Bounds<Float>(0f, dr.maxYIntensity*100f)));
+		plotPainters.add(new GridlinePainter(tickLeft));
 
 		plotPainters.add(new AreaPainter(calibratedData, 
 				new PaletteColour(0xff00897B), 
@@ -69,20 +79,11 @@ public class ConcentrationPlot {
 			).withTraceType(TraceType.BAR));
 		
 
-		List<Element> elements = comp.elementsByConcentration();
+		
 
 		axisPainters = new ArrayList<>();
-		
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, "Concentrations vs. " + comp.getProfile().getReference().getAnchor().getElement(), null, null, "Elements - Calibrated With " + comp.getProfile().getName()));
-		NumberFormat format = new DecimalFormat("0.0");
-		Function<Integer, String> sensitivityFormatter = i -> format.format(  ((float)i/10000f)  ) + "%";
-		axisPainters.add(new TickMarkAxisPainter(
-				new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter), 
-				new TickFormatter(-0.5f, calibratedData.size()-1-0.5f+0.999f, i -> elements.get(i).name()), 
-				null, 
-				new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter),
-				false, 
-				false));
+		axisPainters.add(new TickMarkAxisPainter(tickRight, tickBottom, tickTop, tickLeft));
 		axisPainters.add(new LineAxisPainter(true, true, false, true));
 	}
 
