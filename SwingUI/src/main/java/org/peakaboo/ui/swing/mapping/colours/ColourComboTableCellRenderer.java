@@ -21,7 +21,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 
-public class ComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCellRenderer
+public class ColourComboTableCellRenderer<T> implements ListCellRenderer<T>, TableCellRenderer
 {
 
 	private DefaultListCellRenderer	listRenderer = new DefaultListCellRenderer();

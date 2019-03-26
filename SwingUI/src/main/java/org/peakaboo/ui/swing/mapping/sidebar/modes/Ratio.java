@@ -18,7 +18,7 @@ import javax.swing.table.TableModel;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
+import org.peakaboo.ui.swing.mapping.colours.ColourComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
@@ -178,7 +178,7 @@ public class Ratio extends JPanel {
 		
 		
 		Integer choices[] = {1,2};
-		ComboTableCellRenderer<Integer> renderer = new ComboTableCellRenderer<>();
+		ColourComboTableCellRenderer<Integer> renderer = new ColourComboTableCellRenderer<>();
 		JComboBox<Integer> comboBox = new JComboBox<>(choices);
 		comboBox.setRenderer(renderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);

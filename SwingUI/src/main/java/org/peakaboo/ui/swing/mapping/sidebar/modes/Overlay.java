@@ -17,7 +17,7 @@ import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.ui.swing.mapping.colours.ComboTableCellRenderer;
+import org.peakaboo.ui.swing.mapping.colours.ColourComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
@@ -168,7 +168,7 @@ public class Overlay extends JPanel {
 		
 
 				
-		ComboTableCellRenderer<OverlayColour> colourRenderer = new ComboTableCellRenderer<>();
+		ColourComboTableCellRenderer<OverlayColour> colourRenderer = new ColourComboTableCellRenderer<>();
 		JComboBox<OverlayColour> comboBox = new JComboBox<>(OverlayColour.values());
 		comboBox.setRenderer(colourRenderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);

@@ -82,6 +82,13 @@ public enum Palette
 			{
 				return blackbody;
 			}
+		},
+		GEORGIA {
+			@Override
+			public int[] getPaletteData()
+			{
+				return georgia;
+			}
 		}
 		;
 		public abstract int[] getPaletteData();
@@ -189,6 +196,14 @@ public enum Palette
 				0xffffe7bf, 64,
 				0xffdfe6ff, 64,
 				0xffa6baff, 63
+		};
+		
+		private final static int[] georgia = {
+				0xffFFFFFF, 0,
+				0xffE6B350, 64,
+				0xffF27C55, 64,
+				0xffD94C58, 64,
+				0xff993D6B, 63
 		};
 		
 //		public static void main(String[] args) {

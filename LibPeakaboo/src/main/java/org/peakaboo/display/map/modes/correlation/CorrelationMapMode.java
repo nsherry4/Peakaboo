@@ -1,4 +1,4 @@
-package org.peakaboo.display.map.modes.scatter;
+package org.peakaboo.display.map.modes.correlation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPain
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapTechniqueFactory;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.LineAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
@@ -24,19 +25,18 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScalePalette;
 
-public class ScatterMapMode extends MapMode {
+public class CorrelationMapMode extends MapMode {
 
-	public static class ScatterMapData {
+	public static class CorrelationMapData {
 		public Spectrum data;
 		public String xAxisTitle, yAxisTitle;
 		public float xMaxCounts, yMaxCounts;
 	}
 	
-	private SpectrumMapPainter scatterMapPainter;
+	private SpectrumMapPainter correlationMapPainter;
 	
-	public static int SCATTERSIZE = 100;
+	public static int CORRELATION_MAP_SIZE = 100;
 	
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
@@ -52,41 +52,48 @@ public class ScatterMapMode extends MapMode {
 		backend.setSource(new PaletteColour(0xffffffff));
 		backend.fill();
 		
-		dr.uninterpolatedWidth = SCATTERSIZE;
-		dr.uninterpolatedHeight = SCATTERSIZE;
-		dr.dataWidth = SCATTERSIZE;
-		dr.dataHeight = SCATTERSIZE;
+		dr.uninterpolatedWidth = CORRELATION_MAP_SIZE;
+		dr.uninterpolatedHeight = CORRELATION_MAP_SIZE;
+		dr.dataWidth = CORRELATION_MAP_SIZE;
+		dr.dataHeight = CORRELATION_MAP_SIZE;
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
-		dr.maxYIntensity = data.scatterData.data.max();
+		dr.maxYIntensity = data.correlationData.data.max();
 		map.setDrawingRequest(dr);
 
 		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
 		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.TERRA.getPaletteData(), 1f, 1f), false));
-		paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.THOUGHTFUL.getPaletteData(), 1f, 1f), false));
+		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.THOUGHTFUL.getPaletteData(), 1f, 1f), false));
 		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.SUGAR.getPaletteData(), 1f, 1f), false));
-		
+		paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.GEORGIA.getPaletteData(), 1f, 1f), false));
 		
 		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
 		super.setupTitleAxisPainters(settings, axisPainters);
-		axisPainters.add(super.getSpectrumPainter(settings, spectrumSteps, paletteList));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, data.scatterData.yAxisTitle, "", "", data.scatterData.xAxisTitle));
-		TickFormatter xTick = new TickFormatter(0, data.scatterData.xMaxCounts).withTick(0.5f);
-		TickFormatter yTick = new TickFormatter(0, data.scatterData.yMaxCounts).withTick(0.5f).withRotate(false);
+
+		axisPainters.add(getDescriptionPainter(settings));
+		axisPainters.add(super.getSpectrumPainter(settings, spectrumSteps, paletteList));
+		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 0));
+		
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, data.correlationData.yAxisTitle, "", "", data.correlationData.xAxisTitle));
+		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 2));
+		
+		TickFormatter xTick = new TickFormatter(0, data.correlationData.xMaxCounts).withTick(0.5f);
+		TickFormatter yTick = new TickFormatter(0, data.correlationData.yMaxCounts).withTick(0.5f).withRotate(false);
 		axisPainters.add(new TickMarkAxisPainter(null, xTick, null, yTick));
+		axisPainters.add(new LineAxisPainter(true, false, false, true));
 		
 		map.setAxisPainters(axisPainters);
 		
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
-		if (scatterMapPainter == null) {
-			scatterMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.scatterData.data, spectrumSteps); 
+		if (correlationMapPainter == null) {
+			correlationMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.correlationData.data, spectrumSteps); 
 		} else {
-			scatterMapPainter.setData(data.scatterData.data);
-			scatterMapPainter.setPalettes(paletteList);
+			correlationMapPainter.setData(data.correlationData.data);
+			correlationMapPainter.setPalettes(paletteList);
 		}
-		mapPainters.add(scatterMapPainter);
+		mapPainters.add(correlationMapPainter);
 		map.setPainters(mapPainters);
 		
 		map.draw();
@@ -100,8 +107,8 @@ public class ScatterMapMode extends MapMode {
 		}
 
 		//need to set this up front so that calTotalSize has the right dimensions to work with
-		dr.dataHeight = SCATTERSIZE;
-		dr.dataWidth = SCATTERSIZE;
+		dr.dataHeight = CORRELATION_MAP_SIZE;
+		dr.dataWidth = CORRELATION_MAP_SIZE;
 		
 		double width = 0;
 		double height = 0;
@@ -139,13 +146,13 @@ public class ScatterMapMode extends MapMode {
 	
 	@Override
 	public MapModes getMode() {
-		return MapModes.SCATTER;
+		return MapModes.CORRELATION;
 	}
 
 	@Override
 	public void invalidate() {
 		map.needsMapRepaint();
-		if (scatterMapPainter != null) { scatterMapPainter.clearBuffer(); }
+		if (correlationMapPainter != null) { correlationMapPainter.clearBuffer(); }
 	}
 
 }

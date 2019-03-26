@@ -21,10 +21,10 @@ import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModes;
+import org.peakaboo.display.map.modes.correlation.CorrelationMapMode;
+import org.peakaboo.display.map.modes.correlation.CorrelationMapMode.CorrelationMapData;
 import org.peakaboo.display.map.modes.overlay.OverlayChannel;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
-import org.peakaboo.display.map.modes.scatter.ScatterMapMode;
-import org.peakaboo.display.map.modes.scatter.ScatterMapMode.ScatterMapData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
@@ -49,7 +49,7 @@ public class MapFittingController extends EventfulType<String> {
 	private Map<ITransitionSeries, Integer> ratioSide;
 	private Map<ITransitionSeries, OverlayColour> overlayColour;
 	private Map<ITransitionSeries, Boolean> compositeVisibility;
-	private Map<ITransitionSeries, Integer> scatterSide;
+	private Map<ITransitionSeries, Integer> correlationSide;
 	
 	
 	private MapModes displayMode;
@@ -68,13 +68,13 @@ public class MapFittingController extends EventfulType<String> {
 		ratioSide = new HashMap<>();
 		overlayColour = new HashMap<>();
 		compositeVisibility = new HashMap<>();
-		scatterSide = new HashMap<>();
+		correlationSide = new HashMap<>();
 		
 		for (ITransitionSeries ts : map.rawDataController.getMapResultSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
 			overlayColour.put(ts, OverlayColour.RED);
 			compositeVisibility.put(ts, true);
-			scatterSide.put(ts, 1);
+			correlationSide.put(ts, 1);
 		}
 		
 	}
@@ -285,13 +285,13 @@ public class MapFittingController extends EventfulType<String> {
 		
 	}
 	
-	public ScatterMapData getScatterMapData() {
+	public CorrelationMapData getCorrelationMapData() {
 		
 		
 		// get transition series on ratio side 1
-		List<ITransitionSeries> xTS = getTransitionSeriesForScatterSide(1);
+		List<ITransitionSeries> xTS = getTransitionSeriesForCorrelationSide(1);
 		// get transition series on ratio side 2
-		List<ITransitionSeries> yTS = getTransitionSeriesForScatterSide(2);
+		List<ITransitionSeries> yTS = getTransitionSeriesForCorrelationSide(2);
 		
 		// sum all of the maps for the given transition series for each side
 		Spectrum xData = sumGivenTransitionSeriesMaps(xTS);
@@ -318,8 +318,8 @@ public class MapFittingController extends EventfulType<String> {
 		}
 		
 		
-		GridPerspective<Float> grid = new GridPerspective<Float>(ScatterMapMode.SCATTERSIZE, ScatterMapMode.SCATTERSIZE, 0f);
-		Spectrum scatter = new ISpectrum(ScatterMapMode.SCATTERSIZE*ScatterMapMode.SCATTERSIZE);
+		GridPerspective<Float> grid = new GridPerspective<Float>(CorrelationMapMode.CORRELATION_MAP_SIZE, CorrelationMapMode.CORRELATION_MAP_SIZE, 0f);
+		Spectrum correlation = new ISpectrum(CorrelationMapMode.CORRELATION_MAP_SIZE*CorrelationMapMode.CORRELATION_MAP_SIZE);
 		for (int i = 0; i < xData.size(); i++) {
 
 			float xpct = xData.get(i) / xMax;
@@ -333,12 +333,12 @@ public class MapFittingController extends EventfulType<String> {
 				continue;
 			}
 			
-			int xbin = (int)(xpct*ScatterMapMode.SCATTERSIZE);
-			int ybin = (int)(ypct*ScatterMapMode.SCATTERSIZE);
-			if (xbin >= ScatterMapMode.SCATTERSIZE) { xbin = ScatterMapMode.SCATTERSIZE-1; }
-			if (ybin >= ScatterMapMode.SCATTERSIZE) { ybin = ScatterMapMode.SCATTERSIZE-1; }
+			int xbin = (int)(xpct*CorrelationMapMode.CORRELATION_MAP_SIZE);
+			int ybin = (int)(ypct*CorrelationMapMode.CORRELATION_MAP_SIZE);
+			if (xbin >= CorrelationMapMode.CORRELATION_MAP_SIZE) { xbin = CorrelationMapMode.CORRELATION_MAP_SIZE-1; }
+			if (ybin >= CorrelationMapMode.CORRELATION_MAP_SIZE) { ybin = CorrelationMapMode.CORRELATION_MAP_SIZE-1; }
 			
-			grid.set(scatter, xbin, ybin, grid.get(scatter, xbin, ybin)+1);
+			grid.set(correlation, xbin, ybin, grid.get(correlation, xbin, ybin)+1);
 			
 		}
 
@@ -346,10 +346,10 @@ public class MapFittingController extends EventfulType<String> {
 		//TODO: WHY IS THIS WRITTEN LIKE THIS?
 		//putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
 		
-		ScatterMapData data = new ScatterMapData();
-		data.data = scatter;
-		data.xAxisTitle = getDatasetTitle(xTS);
-		data.yAxisTitle = getDatasetTitle(yTS);
+		CorrelationMapData data = new CorrelationMapData();
+		data.data = correlation;
+		data.xAxisTitle = getDatasetTitle(xTS) + " (Intensity)";
+		data.yAxisTitle = getDatasetTitle(yTS) + " (Intensity)";
 		data.xMaxCounts = xMax;
 		data.yMaxCounts = yMax;
 		
@@ -461,8 +461,8 @@ public class MapFittingController extends EventfulType<String> {
 				getRatioMapData();
 				break;
 				
-			case SCATTER:
-				getScatterMapData();
+			case CORRELATION:
+				getCorrelationMapData();
 				break;
 		}
 		
@@ -523,10 +523,10 @@ public class MapFittingController extends EventfulType<String> {
 					return "Map of " + getDatasetTitle(getVisibleTransitionSeries());
 				}
 		
-			case SCATTER:
-				String axis1Title = getDatasetTitle(getTransitionSeriesForScatterSide(1));
-				String axis2Title = getDatasetTitle(getTransitionSeriesForScatterSide(2));
-				return "Scatter Plot of " + axis1Title + " : " + axis2Title;
+			case CORRELATION:
+				String axis1Title = getDatasetTitle(getTransitionSeriesForCorrelationSide(1));
+				String axis2Title = getDatasetTitle(getTransitionSeriesForCorrelationSide(2));
+				return "Correlation of " + axis1Title + " & " + axis2Title;
 				
 			default:
 				return "Map of " + getDatasetTitle(getVisibleTransitionSeries());
@@ -627,10 +627,10 @@ public class MapFittingController extends EventfulType<String> {
 		}).collect(toList());
 	}
 
-	public List<ITransitionSeries> getTransitionSeriesForScatterSide(final int side)
+	public List<ITransitionSeries> getTransitionSeriesForCorrelationSide(final int side)
 	{
 		return getVisibleTransitionSeries().stream().filter(e -> {
-			Integer thisSide = this.scatterSide.get(e);
+			Integer thisSide = this.correlationSide.get(e);
 			return thisSide == side;
 		}).collect(toList());
 	}
@@ -669,13 +669,13 @@ public class MapFittingController extends EventfulType<String> {
 	}
 	
 	
-	public int getScatterSide(ITransitionSeries ts)
+	public int getCorrelationSide(ITransitionSeries ts)
 	{
-		return this.scatterSide.get(ts);
+		return this.correlationSide.get(ts);
 	}
-	public void setScatterSide(ITransitionSeries ts, int side)
+	public void setCorrelationSide(ITransitionSeries ts, int side)
 	{
-		this.scatterSide.put(ts, side);
+		this.correlationSide.put(ts, side);
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 	

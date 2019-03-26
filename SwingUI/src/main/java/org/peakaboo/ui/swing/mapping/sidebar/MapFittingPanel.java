@@ -24,7 +24,7 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
-import org.peakaboo.ui.swing.mapping.sidebar.modes.Scatter;
+import org.peakaboo.ui.swing.mapping.sidebar.modes.Correlation;
 
 
 public class MapFittingPanel extends ClearPanel
@@ -34,7 +34,7 @@ public class MapFittingPanel extends ClearPanel
 
 	private JPanel		cardPanel;
 	
-	private JPanel		compPanel, overPanel, ratioPanel, scatterPanel;
+	private JPanel		compPanel, overPanel, ratioPanel, correlationPanel;
 	
 	
 	
@@ -49,13 +49,13 @@ public class MapFittingPanel extends ClearPanel
 		compPanel = new Composite(controller);
 		overPanel = new Overlay(controller);
 		ratioPanel = new Ratio(controller);
-		scatterPanel = new Scatter(controller);
+		correlationPanel = new Correlation(controller);
 		
 		//add each of the panels
 		cardPanel.add(compPanel, MapModes.COMPOSITE.toString());
 		cardPanel.add(overPanel, MapModes.OVERLAY.toString());
 		cardPanel.add(ratioPanel, MapModes.RATIO.toString());
-		cardPanel.add(scatterPanel, MapModes.SCATTER.toString());
+		cardPanel.add(correlationPanel, MapModes.CORRELATION.toString());
 		
 		
 		//create combobox
