@@ -11,27 +11,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
-import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
+import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.display.map.modes.MapModes;
-import org.peakaboo.display.map.modes.composite.CompositeMapMode;
+import org.peakaboo.display.map.modes.composite.CompositeModeData;
 import org.peakaboo.display.map.modes.correlation.CorrelationMapMode;
-import org.peakaboo.display.map.modes.correlation.CorrelationMapMode.CorrelationMapData;
+import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
 import org.peakaboo.display.map.modes.overlay.OverlayChannel;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
+import org.peakaboo.display.map.modes.overlay.OverlayModeData;
+import org.peakaboo.display.map.modes.ratio.RatioModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Ratios;
-import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -45,7 +45,7 @@ public class MapFittingController extends EventfulType<String> {
 	
 	private MappingController map;
 	
-	private Function<Coord<Integer>, String> valueAtCoord;
+	private MapModeData mapModeData;
 	
 	private Map<ITransitionSeries, Integer> ratioSide;
 	private Map<ITransitionSeries, OverlayColour> overlayColour;
@@ -100,6 +100,9 @@ public class MapFittingController extends EventfulType<String> {
 		return this.displayMode;
 	}
 
+	public MapModeData getMapModeData() {
+		return this.mapModeData;
+	}
 
 
 	public void setMapDisplayMode(MapModes mode)
@@ -115,19 +118,20 @@ public class MapFittingController extends EventfulType<String> {
 	/*
 	 * POST FILTERING
 	 */
-	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
-	{
-		if (valueAtCoord == null) return "";
-		return valueAtCoord.apply(mapCoord);
+	public String getInfoAtPoint(Coord<Integer> coord) {
+		if (mapModeData == null) {
+			return "";
+		}
+		return mapModeData.getInfoAtCoord(coord);
 	}
 	
 	
 
-	public Spectrum getCompositeMapData() {
+	public CompositeModeData getCompositeMapData() {
 		return getCompositeMapData(Optional.empty());
 	}
 	
-	public Spectrum getCompositeMapData(Optional<ITransitionSeries> fitting)
+	public CompositeModeData getCompositeMapData(Optional<ITransitionSeries> fitting)
 	{
 		
 		Spectrum data;
@@ -145,22 +149,21 @@ public class MapFittingController extends EventfulType<String> {
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, data, map.rawDataController.getBadPoints());
 		
-		//data = mapdata;
-		putValueFunctionForComposite(data);
-		return data;
+
+		int w = map.getFiltering().getFilteredDataWidth();
+		int h = map.getFiltering().getFilteredDataHeight();
+		Coord<Integer> size = new Coord<Integer>(w, h);
+		CompositeModeData modedata = new CompositeModeData(data, size);
+		setMapModeData(modedata);
 		
+		return modedata;
 		
 	}
 	
 	
 
-	public Map<OverlayColour, OverlayChannel> getOverlayMapData()
+	public OverlayModeData getOverlayMapData()
 	{
-		
-		GridPerspective<Float>	grid	= new GridPerspective<Float>(
-				map.getUserDimensions().getUserDataWidth(),
-				map.getUserDimensions().getUserDataHeight(),
-				0.0f);
 		
 		
 		List<Pair<ITransitionSeries, Spectrum>> dataset = getVisibleTransitionSeries().stream()
@@ -199,14 +202,20 @@ public class MapFittingController extends EventfulType<String> {
 			
 		}
 
-		putValueFunctionForOverlay(valueFunctionMaps);
-		return colourChannels;
+		int w = map.getFiltering().getFilteredDataWidth();
+		int h = map.getFiltering().getFilteredDataHeight();
+		Coord<Integer> size = new Coord<Integer>(w, h);
+		boolean relative = this.mapScaleMode == MapScaleMode.RELATIVE;
+		OverlayModeData modedata = new OverlayModeData(colourChannels, size, relative);
+		setMapModeData(modedata);
+		
+		return modedata;
 		
 	}
 	
 	
 
-	public Pair<Spectrum, Spectrum> getRatioMapData()
+	public RatioModeData getRatioMapData()
 	{
 
 		// get transition series on ratio side 1
@@ -273,16 +282,21 @@ public class MapFittingController extends EventfulType<String> {
 			}
 		}
 		
-				
-		putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
 		
+		int w = map.getFiltering().getFilteredDataWidth();
+		int h = map.getFiltering().getFilteredDataHeight();
+		Coord<Integer> size = new Coord<Integer>(w, h);
+		Pair<Spectrum, Spectrum> data = new Pair<Spectrum, Spectrum>(ratioData, invalidPoints);
+		boolean relative = this.mapScaleMode == MapScaleMode.RELATIVE;
+		RatioModeData modedata = new RatioModeData(data, size, relative);
+		setMapModeData(modedata);
 		
-		return new Pair<Spectrum, Spectrum>(ratioData, invalidPoints);
+		return modedata;
 
 		
 	}
 	
-	public CorrelationMapData getCorrelationMapData() {
+	public CorrelationModeData getCorrelationMapData() {
 		
 		
 		// get transition series on ratio side 1
@@ -341,139 +355,56 @@ public class MapFittingController extends EventfulType<String> {
 
 
 		
-		CorrelationMapData data = new CorrelationMapData();
+		CorrelationModeData data = new CorrelationModeData();
 		data.data = correlation;
 		data.xAxisTitle = getDatasetTitle(xTS) + " (Intensity)";
 		data.yAxisTitle = getDatasetTitle(yTS) + " (Intensity)";
 		data.xMaxCounts = xMax;
 		data.yMaxCounts = yMax;
-		
-		//TODO: add putvaluefunction call
-		//TODO: WHY IS THIS WRITTEN LIKE THIS?
-		//putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
-		putValueFunctionForCorrelation(data);
+		setMapModeData(data);
 		
 		return data;
 	}
 	
 	
+	private void setMapModeData(MapModeData data) {
+		this.mapModeData = data;
+	}
 
-	/**
-	 * sets the private object-scoped FunctionMap<Coord<Integer>, String> variable "valueAtCoord"
-	 * to a function which reports values from the data passed in overlayData
-	 * @param overlayData the overlay data to report on
-	 */
-	private void putValueFunctionForOverlay(final Map<OverlayColour, Spectrum> overlayData)
-	{
-		valueAtCoord = coord -> {
-			if (!map.getFiltering().isValidPoint(coord)) {
-				return null;
-			}
-			
-			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
-			
-			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
-			List<String> results = new ArrayList<String>();
-			for (OverlayColour c : OverlayColour.values())
-			{
-				if (overlayData.get(c) != null) results.add(  c.toString() + ": " + SigDigits.roundFloatTo(overlayData.get(c).get(index), 2)  );
-			}
-			return results.stream().collect(joining(", "));
-		};
-	}
-	
-	
-
-	/**
-	 * sets the private object-scoped FunctionMap<Coord<Integer>, String> varialbe "valueAtCoord"
-	 * to a function which reports values from the data passed in ratioData
-	 * @param ratioData the ratio data to report on
-	 */
-	private void putValueFunctionForRatio(final Pair<Spectrum, Spectrum> ratioData)
-	{
-		valueAtCoord = coord -> {
-			if (!map.getFiltering().isValidPoint(coord)) {
-				return null;
-			}
-			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
-			
-			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
-			if (ratioData.second.get(index) != 0) return "Invalid";
-			return Ratios.fromFloat(  ratioData.first.get(index)  );
-		};
-	}
-	
-	
-	
-	/**
-	 * sets the private object-scoped FunctionMap<Coord<Integer>, String> varialbe "valueAtCoord"
-	 * to a function which reports values from the data passed in 'data'
-	 * @param data the data to report on
-	 */
-	private void putValueFunctionForComposite(final Spectrum data)
-	{
-		valueAtCoord = coord -> {
-			if (!map.getFiltering().isValidPoint(coord)) {
-				return null;
-			}
-			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
-			if (index >= data.size()) return "";
-			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
-		};
-	}
-	
-
-	private void putValueFunctionForCorrelation(final CorrelationMapData data) {
-		valueAtCoord = coord -> {
-			System.out.println(coord);
-			if (coord.x < 0 || coord.x >= CorrelationMapMode.CORRELATION_MAP_SIZE) {
-				return null;
-			}
-			if (coord.y < 0 || coord.y >= CorrelationMapMode.CORRELATION_MAP_SIZE) {
-				return null;
-			}
-			int index = CorrelationMapMode.CORRELATION_MAP_SIZE * coord.y + coord.x;
-			float frequency = data.data.get(index);
-			return "" + SigDigits.roundFloatTo(  frequency, 2  );
-		};
-	}
-	
 
 	
 	public String mapAsCSV()
 	{
 		StringBuilder sb = new StringBuilder();
 
-		//the getXXXXXXXXMapData methods have the side-effect of (re)placing
-		//the valueAdCoord :: Coord<Integer> -> String  variable/function to reflect the values it calculates
-		//we run these methods to ensure that the data and the function are correct
+		MapModeData data = null;
 		switch (this.displayMode)
 		{
 			case COMPOSITE:
-				getCompositeMapData();
+				data = getCompositeMapData();
 				break;
 				
 			case OVERLAY:
-				getOverlayMapData();
+				data = getOverlayMapData();
 				break;
 				
 			case RATIO:
-				getRatioMapData();
+				data = getRatioMapData();
 				break;
 				
 			case CORRELATION:
-				//TODO: This assumes all views have the map's dimensions
-				getCorrelationMapData();
+				data = getCorrelationMapData();
 				break;
 		}
 		
 
-		for (int y = 0; y < map.getFiltering().getFilteredDataHeight(); y++) {
+		Coord<Integer> size = data.getSize();
+		for (int y = 0; y < size.y; y++) {
 			if (y != 0) sb.append("\n");
 			
-			for (int x = 0; x < map.getFiltering().getFilteredDataWidth(); x++) {
+			for (int x = 0; x < size.x; x++) {
 				if (x != 0) sb.append(", ");
-				sb.append(valueAtCoord.apply(new Coord<Integer>(x, y)));
+				sb.append(data.getValueAtCoord(new Coord<Integer>(x, y)));
 			}
 		}
 			

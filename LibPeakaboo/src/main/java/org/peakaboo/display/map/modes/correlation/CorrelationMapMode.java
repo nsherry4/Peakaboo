@@ -8,7 +8,6 @@ import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPainter;
@@ -28,12 +27,6 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListP
 
 public class CorrelationMapMode extends MapMode {
 
-	public static class CorrelationMapData {
-		public Spectrum data;
-		public String xAxisTitle, yAxisTitle;
-		public float xMaxCounts, yMaxCounts;
-	}
-	
 	private SpectrumMapPainter correlationMapPainter;
 	
 	public static int CORRELATION_MAP_SIZE = 100;
@@ -41,6 +34,8 @@ public class CorrelationMapMode extends MapMode {
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
+		
+		CorrelationModeData correlationData = (CorrelationModeData) data.mapModeData;
 		
 		//overrides for this display style
 		settings.drawCoord = false;
@@ -58,7 +53,7 @@ public class CorrelationMapMode extends MapMode {
 		dr.dataHeight = CORRELATION_MAP_SIZE;
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
-		dr.maxYIntensity = data.correlationData.data.max();
+		dr.maxYIntensity = correlationData.getData().max();
 		map.setDrawingRequest(dr);
 
 		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
@@ -75,11 +70,11 @@ public class CorrelationMapMode extends MapMode {
 		axisPainters.add(super.getSpectrumPainter(settings, spectrumSteps, paletteList));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 0));
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, data.correlationData.yAxisTitle, "", "", data.correlationData.xAxisTitle));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, correlationData.yAxisTitle, "", "", correlationData.xAxisTitle));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 2));
 		
-		TickFormatter xTick = new TickFormatter(0, data.correlationData.xMaxCounts).withTick(0.5f);
-		TickFormatter yTick = new TickFormatter(0, data.correlationData.yMaxCounts).withTick(0.5f).withRotate(false);
+		TickFormatter xTick = new TickFormatter(0, correlationData.xMaxCounts).withTick(0.5f);
+		TickFormatter yTick = new TickFormatter(0, correlationData.yMaxCounts).withTick(0.5f).withRotate(false);
 		axisPainters.add(new TickMarkAxisPainter(null, xTick, null, yTick));
 		axisPainters.add(new LineAxisPainter(true, false, false, true));
 		
@@ -88,9 +83,9 @@ public class CorrelationMapMode extends MapMode {
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (correlationMapPainter == null) {
-			correlationMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.correlationData.data, spectrumSteps); 
+			correlationMapPainter = MapTechniqueFactory.getTechnique(paletteList, correlationData.data, spectrumSteps); 
 		} else {
-			correlationMapPainter.setData(data.correlationData.data);
+			correlationMapPainter.setData(correlationData.data);
 			correlationMapPainter.setPalettes(paletteList);
 		}
 		mapPainters.add(correlationMapPainter);

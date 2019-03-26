@@ -40,11 +40,10 @@ public class RatioMapMode extends MapMode {
 		backend.setSource(new PaletteColour(0xffffffff));
 		backend.fill();
 		
-		AxisPainter spectrumCoordPainter = null;
 		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
 		
 
-		Pair<Spectrum, Spectrum> ratiodata = data.ratioData;
+		Pair<Spectrum, Spectrum> ratiodata = ((RatioModeData)data.mapModeData).getData();
 		
 		dr.uninterpolatedWidth = settings.filteredDataWidth;
 		dr.uninterpolatedHeight = settings.filteredDataHeight;

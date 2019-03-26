@@ -73,7 +73,9 @@ public class MapFilteringController extends EventfulType<String> {
 	 * @return true if the map pixels still line up with the input spectra, false otherwise
 	 */
 	public boolean isReplottable() {
-		return (!filteringChangedMapSize()) && (this.cachedMaps.getValue().replottable);
+		if (filteringChangedMapSize()) return false;
+		if (! this.cachedMaps.getValue().replottable) return false;
+		return true;
 	}
 	
 	

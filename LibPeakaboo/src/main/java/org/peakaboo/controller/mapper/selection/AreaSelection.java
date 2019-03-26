@@ -113,7 +113,7 @@ public class AreaSelection extends EventfulType<String> {
 		// TODO: this check can be moved further down the line later. There's no reason
 		// why we can't make any selections just because that selection is not
 		// replottable
-		return hasSelection && map.getFiltering().isReplottable();
+		return hasSelection && map.getFiltering().isReplottable() && map.getFitting().getMapModeData().isReplottable();
 			
 	}
 

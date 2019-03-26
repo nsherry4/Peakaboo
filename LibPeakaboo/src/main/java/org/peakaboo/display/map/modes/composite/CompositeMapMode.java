@@ -33,6 +33,8 @@ public class CompositeMapMode extends MapMode{
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
 		
+		CompositeModeData compositedata = (CompositeModeData) data.mapModeData;
+		
 		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(new PaletteColour(0xffffffff));
@@ -52,7 +54,7 @@ public class CompositeMapMode extends MapMode{
 		
 		if (settings.scalemode == MapScaleMode.RELATIVE)
 		{
-			dr.maxYIntensity = data.compositeData.max();
+			dr.maxYIntensity = compositedata.getData().max();
 		}
 		else
 		{
@@ -97,9 +99,9 @@ public class CompositeMapMode extends MapMode{
 		
 		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
 		if (contourMapPainter == null) {
-			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, data.compositeData, spectrumSteps); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, compositedata.getData(), spectrumSteps); 
 		} else {
-			contourMapPainter.setData(data.compositeData);
+			contourMapPainter.setData(compositedata.getData());
 			contourMapPainter.setPalettes(paletteList);
 		}
 		mapPainters.add(contourMapPainter);
@@ -120,6 +122,7 @@ public class CompositeMapMode extends MapMode{
 		dr.drawToVectorSurface = oldVector;
 
 	}
+
 
 	@Override
 	public void invalidate() {

@@ -40,6 +40,8 @@ public class OverlayMapMode extends MapMode {
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
 		
+		OverlayModeData overlayData = (OverlayModeData) data.mapModeData;
+		
 		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(new PaletteColour(0xffffffff));
@@ -56,7 +58,7 @@ public class OverlayMapMode extends MapMode {
 		dr.drawToVectorSurface = backend.isVectorSurface();
 		
 		List<Pair<PaletteColour, String>> colours = new ArrayList<>();
-		Function<OverlayColour, String> tsFormatter = colour -> data.overlayData.get(colour).elements
+		Function<OverlayColour, String> tsFormatter = colour -> overlayData.getData().get(colour).elements
 				.stream()
 				.map(ts -> ts.toString())
 				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
@@ -68,7 +70,7 @@ public class OverlayMapMode extends MapMode {
 		float maxmax = 0f;
 		Map<OverlayColour, Spectrum> overlaySpectra = new LinkedHashMap<>();
 		for (OverlayColour colour : OverlayColour.values()) {
-			Spectrum colourSpectrum = data.overlayData.get(colour).data;
+			Spectrum colourSpectrum = overlayData.getData().get(colour).data;
 			float colourMax = 0f;
 			if (colourSpectrum != null) {
 				overlaySpectra.put(colour, colourSpectrum);

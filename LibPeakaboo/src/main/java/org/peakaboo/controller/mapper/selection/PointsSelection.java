@@ -8,6 +8,8 @@ import java.util.Set;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.display.map.modes.MapModes;
+import org.peakaboo.display.map.modes.composite.CompositeModeData;
+import org.peakaboo.display.map.modes.ratio.RatioModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Pair;
@@ -39,7 +41,7 @@ public class PointsSelection extends EventfulType<String>{
 		// TODO: this check can be moved further down the line later. There's no reason
 		// why we can't make any selections just because that selection is not
 		// replottable
-		return indexes.size() > 0 && map.getFiltering().isReplottable();
+		return indexes.size() > 0 && map.getFiltering().isReplottable() && map.getFitting().getMapModeData().isReplottable();
 	}
 	
 	public void clearSelection() {
@@ -77,17 +79,20 @@ public class PointsSelection extends EventfulType<String>{
 	}
 
 	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
-				
+		
 		MapModes displayMode = map.getFitting().getMapDisplayMode();
 		Spectrum data = null;
 		List<Integer> invalid = new ArrayList<>();
 		
+
+		
 		if (displayMode == MapModes.COMPOSITE) {
-			data = map.getFitting().getCompositeMapData();
+			CompositeModeData compositeData = map.getFitting().getCompositeMapData();
+			data = compositeData.getData();
 		} else if (displayMode == MapModes.RATIO) {
-			Pair<Spectrum, Spectrum> ratiodata = map.getFitting().getRatioMapData();
-			data = ratiodata.first;
-			Spectrum invalidMap = ratiodata.second;
+			RatioModeData ratiodata = map.getFitting().getRatioMapData();
+			data = ratiodata.getData().first;
+			Spectrum invalidMap = ratiodata.getData().second;
 			for (int i = 0; i < invalidMap.size(); i++) {
 				if (invalidMap.get(i) > 0f) {
 					invalid.add(i);
