@@ -10,8 +10,6 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
-import org.peakaboo.ui.swing.Peakaboo;
-import org.peakaboo.ui.swing.mapping.MapperPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotSelectionButton extends ToolbarImageButton {
@@ -26,12 +24,18 @@ public class PlotSelectionButton extends ToolbarImageButton {
 		this.withSignificance(true).withTooltip("Plot the selection as a new data set");
 
 		this.setEnabled(controller.getSelection().hasSelection());
-		controller.addListener(s -> this.setEnabled(controller.getSelection().hasSelection()));
+		controller.addListener(s -> {
+			this.setEnabled(controller.getSelection().hasSelection());
+		});
 		
 		this.withAction(this::action);
 	}
 	
 	private void action() {
+		if (!controller.getSelection().hasSelection()) {
+			return;
+		}
+		
 		SubsetDataSource sds = controller.getSelection().getSubsetDataSource();
 		SavedSession settings = controller.getPlotSavedSettings();
 		

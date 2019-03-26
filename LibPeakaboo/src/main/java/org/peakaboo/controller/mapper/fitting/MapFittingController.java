@@ -34,6 +34,7 @@ import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Ratios;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
+import org.peakaboo.framework.eventful.EventfulCache;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
@@ -45,7 +46,7 @@ public class MapFittingController extends EventfulType<String> {
 	
 	private MappingController map;
 	
-	private MapModeData mapModeData;
+	private EventfulCache<MapModeData> mapModeData;
 	
 	private Map<ITransitionSeries, Integer> ratioSide;
 	private Map<ITransitionSeries, OverlayColour> overlayColour;
@@ -70,6 +71,26 @@ public class MapFittingController extends EventfulType<String> {
 		overlayColour = new HashMap<>();
 		compositeVisibility = new HashMap<>();
 		correlationSide = new HashMap<>();
+		
+		mapModeData = new EventfulCache<>(this::calcMapModeData);
+		map.addListener(t -> {
+			if (t == null || t.length() == 0) {
+				return;
+			}
+			UpdateType type = UpdateType.valueOf(UpdateType.class, t);
+			switch (type) {
+				case AREA_SELECTION:
+				case POINT_SELECTION:
+					break;
+				
+				case DATA:
+				case DATA_OPTIONS:
+				case DATA_SIZE:
+				case FILTER:
+				case UI_OPTIONS:
+					mapModeData.invalidate();			
+			}
+		});
 		
 		for (ITransitionSeries ts : map.rawDataController.getMapResultSet().getAllTransitionSeries()) {
 			ratioSide.put(ts, 1);
@@ -101,17 +122,33 @@ public class MapFittingController extends EventfulType<String> {
 	}
 
 	public MapModeData getMapModeData() {
-		return this.mapModeData;
+		return this.mapModeData.getValue();
 	}
 
 
 	public void setMapDisplayMode(MapModes mode)
 	{		
 		this.displayMode = mode;
+		this.mapModeData.invalidate();
 		updateListeners(UpdateType.DATA_OPTIONS.toString());
 	}
 	
 
+	private MapModeData calcMapModeData() {
+		
+		switch (getMapDisplayMode()) {
+		case COMPOSITE:
+			return this.getCompositeMapData();
+		case OVERLAY:
+			return this.getOverlayMapData();
+		case RATIO:
+			return this.getRatioMapData();
+		case CORRELATION:
+			return this.getCorrelationMapData();
+		}
+		return null;
+		
+	}
 
 	
 
@@ -122,12 +159,12 @@ public class MapFittingController extends EventfulType<String> {
 		if (mapModeData == null) {
 			return "";
 		}
-		return mapModeData.getInfoAtCoord(coord);
+		return mapModeData.getValue().getInfoAtCoord(coord);
 	}
 	
 	
 
-	public CompositeModeData getCompositeMapData() {
+	private CompositeModeData getCompositeMapData() {
 		return getCompositeMapData(Optional.empty());
 	}
 	
@@ -154,7 +191,6 @@ public class MapFittingController extends EventfulType<String> {
 		int h = map.getFiltering().getFilteredDataHeight();
 		Coord<Integer> size = new Coord<Integer>(w, h);
 		CompositeModeData modedata = new CompositeModeData(data, size);
-		setMapModeData(modedata);
 		
 		return modedata;
 		
@@ -162,7 +198,7 @@ public class MapFittingController extends EventfulType<String> {
 	
 	
 
-	public OverlayModeData getOverlayMapData()
+	private OverlayModeData getOverlayMapData()
 	{
 		
 		
@@ -207,7 +243,6 @@ public class MapFittingController extends EventfulType<String> {
 		Coord<Integer> size = new Coord<Integer>(w, h);
 		boolean relative = this.mapScaleMode == MapScaleMode.RELATIVE;
 		OverlayModeData modedata = new OverlayModeData(colourChannels, size, relative);
-		setMapModeData(modedata);
 		
 		return modedata;
 		
@@ -215,7 +250,7 @@ public class MapFittingController extends EventfulType<String> {
 	
 	
 
-	public RatioModeData getRatioMapData()
+	private RatioModeData getRatioMapData()
 	{
 
 		// get transition series on ratio side 1
@@ -289,14 +324,13 @@ public class MapFittingController extends EventfulType<String> {
 		Pair<Spectrum, Spectrum> data = new Pair<Spectrum, Spectrum>(ratioData, invalidPoints);
 		boolean relative = this.mapScaleMode == MapScaleMode.RELATIVE;
 		RatioModeData modedata = new RatioModeData(data, size, relative);
-		setMapModeData(modedata);
 		
 		return modedata;
 
 		
 	}
 	
-	public CorrelationModeData getCorrelationMapData() {
+	private CorrelationModeData getCorrelationMapData() {
 		
 		
 		// get transition series on ratio side 1
@@ -361,17 +395,10 @@ public class MapFittingController extends EventfulType<String> {
 		data.yAxisTitle = getDatasetTitle(yTS) + " (Intensity)";
 		data.xMaxCounts = xMax;
 		data.yMaxCounts = yMax;
-		setMapModeData(data);
 		
 		return data;
 	}
 	
-	
-	private void setMapModeData(MapModeData data) {
-		this.mapModeData = data;
-	}
-
-
 	
 	public String mapAsCSV()
 	{

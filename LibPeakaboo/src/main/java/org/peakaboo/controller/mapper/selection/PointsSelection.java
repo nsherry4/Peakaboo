@@ -87,10 +87,10 @@ public class PointsSelection extends EventfulType<String>{
 
 		
 		if (displayMode == MapModes.COMPOSITE) {
-			CompositeModeData compositeData = map.getFitting().getCompositeMapData();
+			CompositeModeData compositeData = (CompositeModeData) map.getFitting().getMapModeData();
 			data = compositeData.getData();
 		} else if (displayMode == MapModes.RATIO) {
-			RatioModeData ratiodata = map.getFitting().getRatioMapData();
+			RatioModeData ratiodata = (RatioModeData) map.getFitting().getMapModeData();
 			data = ratiodata.getData().first;
 			Spectrum invalidMap = ratiodata.getData().second;
 			for (int i = 0; i < invalidMap.size(); i++) {

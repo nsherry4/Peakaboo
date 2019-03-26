@@ -204,19 +204,7 @@ public class MappingController extends EventfulType<String>
 		
 		MapRenderData data = new MapRenderData();
 		
-		switch (getFitting().getMapDisplayMode()) {
-		case COMPOSITE:
-			data.mapModeData = this.getFitting().getCompositeMapData();
-			break;
-		case OVERLAY:
-			data.mapModeData = this.getFitting().getOverlayMapData();
-			break;
-		case RATIO:
-			data.mapModeData = this.getFitting().getRatioMapData();
-			break;
-		case CORRELATION:
-			data.mapModeData = this.getFitting().getCorrelationMapData();
-		}
+		data.mapModeData = this.getFitting().getMapModeData();
 		data.maxIntensity = this.getFitting().sumAllTransitionSeriesMaps().max();
 		
 		return data;
