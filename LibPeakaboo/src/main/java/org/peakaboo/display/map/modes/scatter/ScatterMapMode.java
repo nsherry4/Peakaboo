@@ -17,8 +17,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.Spectru
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;

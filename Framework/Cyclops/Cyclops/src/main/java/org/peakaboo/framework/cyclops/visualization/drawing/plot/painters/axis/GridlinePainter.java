@@ -6,7 +6,6 @@ import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 

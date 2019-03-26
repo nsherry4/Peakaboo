@@ -22,8 +22,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter.TraceType;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 

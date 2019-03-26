@@ -8,7 +8,6 @@ import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter.TickFormatter;
 
 
 public class AxisMarkGenerator
