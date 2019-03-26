@@ -28,7 +28,7 @@ public class GridlinePainter extends PlotPainter
 		
 		float valueRangeStart = tick.start;
 		float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
-		float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, p.plotSize.y);
+		float maxTicks = tick.calcMaxTicks(p, p.plotSize.y);
 	
 		List<Pair<Float, Integer>> tickData = AxisMarkGenerator.getAxisMarkList(maxTicks, p.plotSize.y, 1, valueRangeStart, valueRangeEnd);
 		

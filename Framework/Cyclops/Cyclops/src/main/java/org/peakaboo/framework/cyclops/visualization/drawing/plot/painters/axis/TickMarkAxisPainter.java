@@ -72,7 +72,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				
 			
 			//how many ticks we can fit and the range of values we're drawing over
-			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.xPositionBounds, otherAxisSize);
+			float maxTicks = calcMaxTicksInternal(p, tick, axesData.xPositionBounds, otherAxisSize);
 			
 		
 			
@@ -148,7 +148,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			float textAscent = p.context.getFontAscent();
 
 			//width of single entry
-			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.xPositionBounds, otherAxisSize);
+			float maxTicks = calcMaxTicksInternal(p, tick, axesData.xPositionBounds, otherAxisSize);
 			
 			//the range of values we have to show 
 			float valueRange = tick.end - tick.start;
@@ -221,7 +221,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			float axisStart = axesData.xPositionBounds.start;
 			float axisWidth = getAxisSizeX(p).first;
 			float tickLength = getTickLength(p.dr, tick);
-			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.yPositionBounds, otherAxisSize);
+			float maxTicks = calcMaxTicksInternal(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
 			float valueRangeStart = tick.start;
 			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
@@ -300,7 +300,7 @@ public class TickMarkAxisPainter extends AxisPainter
 	
 			
 			float tickLength = getTickLength(p.dr, tick);
-			float maxTicks = AxisMarkGenerator.calcMaxTicks(p, tick, axesData.yPositionBounds, otherAxisSize);
+			float maxTicks = calcMaxTicksInternal(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
 			float valueRangeStart = tick.start;
 			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
@@ -390,6 +390,16 @@ public class TickMarkAxisPainter extends AxisPainter
 		return textWidth;
 	}
 	
+	/**
+	 * Because we're calculating the number of ticks for an axis painter, we need to
+	 * calculate the amount of space <i>inside</i> the axis painter, rather than the
+	 * free space that it itself has. This method calculates that value and then
+	 * calls {@link TickFormatter#calcMaxTicks(PainterData, float)} with it.
+	 */
+	public static float calcMaxTicksInternal(PainterData p, TickFormatter tick, Bounds<Float> axisBounds, Pair<Float, Float> otherAxisSize) {
+		float freeSpace = axisBounds.end - axisBounds.start - otherAxisSize.first - otherAxisSize.second;
+		return tick.calcMaxTicks(p, freeSpace);
+	}
 	
 	
 	private int getStartingAxisValue(float valueStart, int increment)
