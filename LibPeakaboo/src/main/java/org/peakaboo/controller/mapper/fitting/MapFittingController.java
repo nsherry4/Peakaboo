@@ -21,6 +21,7 @@ import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModes;
+import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.display.map.modes.correlation.CorrelationMapMode;
 import org.peakaboo.display.map.modes.correlation.CorrelationMapMode.CorrelationMapData;
 import org.peakaboo.display.map.modes.overlay.OverlayChannel;
@@ -117,10 +118,6 @@ public class MapFittingController extends EventfulType<String> {
 	public String getIntensityMeasurementAtPoint(final Coord<Integer> mapCoord)
 	{
 		if (valueAtCoord == null) return "";
-		MapFilteringController filters = map.getFiltering();
-		if (!filters.isValidPoint(mapCoord)) {
-			return "";
-		}
 		return valueAtCoord.apply(mapCoord);
 	}
 	
@@ -342,9 +339,7 @@ public class MapFittingController extends EventfulType<String> {
 			
 		}
 
-		//TODO: add putvaluefunction call
-		//TODO: WHY IS THIS WRITTEN LIKE THIS?
-		//putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
+
 		
 		CorrelationMapData data = new CorrelationMapData();
 		data.data = correlation;
@@ -353,6 +348,10 @@ public class MapFittingController extends EventfulType<String> {
 		data.xMaxCounts = xMax;
 		data.yMaxCounts = yMax;
 		
+		//TODO: add putvaluefunction call
+		//TODO: WHY IS THIS WRITTEN LIKE THIS?
+		//putValueFunctionForRatio(new Pair<Spectrum, Spectrum>(ratioData, invalidPoints));
+		putValueFunctionForCorrelation(data);
 		
 		return data;
 	}
@@ -367,6 +366,9 @@ public class MapFittingController extends EventfulType<String> {
 	private void putValueFunctionForOverlay(final Map<OverlayColour, Spectrum> overlayData)
 	{
 		valueAtCoord = coord -> {
+			if (!map.getFiltering().isValidPoint(coord)) {
+				return null;
+			}
 			
 			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
@@ -390,6 +392,9 @@ public class MapFittingController extends EventfulType<String> {
 	private void putValueFunctionForRatio(final Pair<Spectrum, Spectrum> ratioData)
 	{
 		valueAtCoord = coord -> {
+			if (!map.getFiltering().isValidPoint(coord)) {
+				return null;
+			}
 			if (this.mapScaleMode == MapScaleMode.RELATIVE) return "--";
 			
 			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
@@ -408,6 +413,9 @@ public class MapFittingController extends EventfulType<String> {
 	private void putValueFunctionForComposite(final Spectrum data)
 	{
 		valueAtCoord = coord -> {
+			if (!map.getFiltering().isValidPoint(coord)) {
+				return null;
+			}
 			int index = map.getFiltering().getFilteredDataWidth() * coord.y + coord.x;
 			if (index >= data.size()) return "";
 			return "" + SigDigits.roundFloatTo(  data.get(index), 2  );
@@ -415,31 +423,23 @@ public class MapFittingController extends EventfulType<String> {
 	}
 	
 
-	
-	private Pair<GridPerspective<Float>, Spectrum> interpolate(Spectrum data, GridPerspective<Float> grid, int passes)
-	{
-		
-		GridPerspective<Float> interpGrid = grid;
-		
-		Spectrum mapdata = new ISpectrum(data);
-		
-		Pair<GridPerspective<Float>, Spectrum> interpolationResult;
-		int count = 0;
-		while (count < passes)
-		{
-			interpolationResult = Interpolation.interpolateGridLinear(interpGrid, mapdata);
-			interpGrid = interpolationResult.first;
-			mapdata = interpolationResult.second;
-			count++;
-		}
-		
-		return new Pair<GridPerspective<Float>, Spectrum>(interpGrid, mapdata);
-		
+	private void putValueFunctionForCorrelation(final CorrelationMapData data) {
+		valueAtCoord = coord -> {
+			System.out.println(coord);
+			if (coord.x < 0 || coord.x >= CorrelationMapMode.CORRELATION_MAP_SIZE) {
+				return null;
+			}
+			if (coord.y < 0 || coord.y >= CorrelationMapMode.CORRELATION_MAP_SIZE) {
+				return null;
+			}
+			int index = CorrelationMapMode.CORRELATION_MAP_SIZE * coord.y + coord.x;
+			float frequency = data.data.get(index);
+			return "" + SigDigits.roundFloatTo(  frequency, 2  );
+		};
 	}
 	
+
 	
-
-
 	public String mapAsCSV()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -462,6 +462,7 @@ public class MapFittingController extends EventfulType<String> {
 				break;
 				
 			case CORRELATION:
+				//TODO: This assumes all views have the map's dimensions
 				getCorrelationMapData();
 				break;
 		}

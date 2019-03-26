@@ -87,18 +87,17 @@ public class MapStatusBar extends JPanel {
 
 		int index = (mapCoord.y * controller.getFiltering().getFilteredDataWidth() + mapCoord.x) + 1;
 		
-		if (controller.getFiltering().isValidPoint(mapCoord))
-		{
-			String value = controller.getFitting().getIntensityMeasurementAtPoint(mapCoord);
+
+		String value = controller.getFitting().getIntensityMeasurementAtPoint(mapCoord);
+		if (value == null) {
+			setStatus(noValue);
+		} else {
 			if (!controller.getFiltering().isFiltering()) value += " (filtered)";
-			
+		
 			setStatus("Index: " + index + ", X: " + (mapCoord.x + 1) + ", Y: " + (mapCoord.y + 1) + ", Value: "
 					+ value);
 		}
-		else
-		{
-			setStatus(noValue);
-		}
+
 
 	}
 	
