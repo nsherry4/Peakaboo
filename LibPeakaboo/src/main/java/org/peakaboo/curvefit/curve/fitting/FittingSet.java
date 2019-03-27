@@ -200,6 +200,13 @@ public class FittingSet
 		invalidateCurves();
 	}
 
+	public void setAllTransitionSeriesVisibility(boolean show) {
+		for (ITransitionSeries e : fitTransitionSeries) {
+			e.setVisible(show);
+		}
+		invalidateCurves();
+	}
+	
 
 	public synchronized List<ITransitionSeries> getFittedTransitionSeries()
 	{
@@ -224,6 +231,8 @@ public class FittingSet
 	public FittingParameters getFittingParameters() {
 		return parameters;
 	}
+
+
 	
 
 }

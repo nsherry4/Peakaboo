@@ -2,6 +2,13 @@ package org.peakaboo.framework.swidget.widgets.listcontrols;
 
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.swing.JButton;
 
@@ -15,8 +22,9 @@ import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 public class ListControls extends ClearPanel {
 
 	private JButton add, remove, clear;
+	private ButtonBox box;
+	private Map<Component, Function<ElementCount, Boolean>> customButtons = new LinkedHashMap<>();
 	
-
 	public enum ElementCount
 	{
 		NONE, ONE, MANY
@@ -34,7 +42,7 @@ public class ListControls extends ClearPanel {
 		
 		setElementCount(ElementCount.NONE);
 		
-		ButtonBox box = new ButtonBox(Spacing.small, false);
+		box = new ButtonBox(Spacing.small, false);
 		box.addLeft(add);
 		box.addLeft(remove);
 		box.addRight(clear);
@@ -84,10 +92,33 @@ public class ListControls extends ClearPanel {
 			remove.setEnabled(true);
 			clear.setEnabled(true);
 			break;
+		}
 		
+		for (Component button : customButtons.keySet()) {
+			boolean enabled = customButtons.get(button).apply(ec);
+			button.setEnabled(enabled);
 		}
 
 	}
-
+	
+	public void addLeft(Component button) {
+		this.addLeft(button, e -> true);
+	}
+	public void addLeft(Component button, Function<ElementCount, Boolean> ec) {
+		customButtons.put(button, ec);
+		if (button instanceof ImageButton) configureButton((ImageButton) button);
+		box.addLeft(button);
+	}
+	
+	
+	public void addRight(Component button) {
+		this.addLeft(button, e -> true);
+	}
+	public void addRight(Component button, Function<ElementCount, Boolean> ec) {
+		customButtons.put(button, ec);
+		if (button instanceof ImageButton) configureButton((ImageButton) button);
+		box.addRight(button);
+	}
+	
 	
 }

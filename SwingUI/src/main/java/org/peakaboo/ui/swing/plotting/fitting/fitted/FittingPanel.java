@@ -28,10 +28,12 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls.ElementCount;
@@ -93,6 +95,19 @@ public class FittingPanel extends ClearPanel implements Changeable
 		
 		controls = new ListControls(addButton, removeButton, clearButton);
 		
+		ImageButton selectAll = new ImageButton(StockIcon.SELECTION_ALL)
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withTooltip("Select All")
+				.withBordered(false)
+				.withAction(() -> controller.setAllTransitionSeriesVisibility(true));
+		ImageButton selectNone = new ImageButton(StockIcon.SELECTION_NONE)
+				.withButtonSize(ImageButtonSize.COMPACT)
+				.withTooltip("Select None")
+				.withBordered(false)
+				.withAction(() -> controller.setAllTransitionSeriesVisibility(false));
+		
+		controls.addRight(selectNone, ec -> ec != ElementCount.NONE);
+		controls.addRight(selectAll, ec -> ec != ElementCount.NONE);
 		
 		/*
 		 * We need to add an extra listener here: Normally we don't update controls when

@@ -146,6 +146,12 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Fitting Visiblitiy");
 		fittingDataInvalidated();
 	}
+	
+	public void setAllTransitionSeriesVisibility(boolean show) {
+		fittingModel.selections.setAllTransitionSeriesVisibility(show);
+		setUndoPoint("Fitting Visiblitiy");
+		fittingDataInvalidated();
+	}
 
 	public boolean getTransitionSeriesVisibility(ITransitionSeries e)
 	{
