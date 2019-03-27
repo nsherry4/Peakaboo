@@ -3,12 +3,13 @@ package org.peakaboo.controller.mapper.selection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.eventful.EventfulType;
 
-public class MapSelectionController extends EventfulType<String>  {
+public class MapSelectionController extends EventfulType<MapUpdateType>  {
 
 	private MappingController mappingController;
 	private AreaSelection areaSelection;

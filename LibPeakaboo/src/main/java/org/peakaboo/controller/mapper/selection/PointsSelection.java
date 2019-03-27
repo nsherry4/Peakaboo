@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.composite.CompositeModeData;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
@@ -23,7 +23,7 @@ import org.peakaboo.framework.eventful.EventfulType;
  *
  */
 
-public class PointsSelection extends EventfulType<String>{
+public class PointsSelection extends EventfulType<MapUpdateType>{
 
 	private List<Integer> indexes = new ArrayList<>();
 	private MappingController map;
@@ -54,7 +54,7 @@ public class PointsSelection extends EventfulType<String>{
 
 	public void setPoints(List<Integer> indexes) {
 		this.indexes = indexes;
-		updateListeners(UpdateType.POINT_SELECTION.toString());
+		updateListeners(MapUpdateType.POINT_SELECTION);
 	}
 	
 
@@ -64,7 +64,7 @@ public class PointsSelection extends EventfulType<String>{
 
 	public void setThreshold(float threshold) {
 		this.threshold = threshold;
-		updateListeners(UpdateType.POINT_SELECTION.toString());
+		updateListeners(MapUpdateType.POINT_SELECTION);
 	}
 	
 	
@@ -75,7 +75,7 @@ public class PointsSelection extends EventfulType<String>{
 
 	public void setPadding(int padding) {
 		this.padding = padding;
-		updateListeners(UpdateType.POINT_SELECTION.toString());
+		updateListeners(MapUpdateType.POINT_SELECTION);
 	}
 
 	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {

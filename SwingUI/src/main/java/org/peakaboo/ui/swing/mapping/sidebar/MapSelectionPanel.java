@@ -38,7 +38,7 @@ public class MapSelectionPanel extends SettingsPanel {
 		addSetting(threshold, thresholdLabel, LabelPosition.BESIDE, false, false);
 		addSetting(padding, paddingLabel, LabelPosition.BESIDE, false, false);
 		
-		controller.addListener(s -> {
+		controller.addListener(t -> {
 			boolean enabled = controller.getFiltering().isReplottable();
 			this.setEnabled(enabled);
 			threshold.setEnabled(enabled);

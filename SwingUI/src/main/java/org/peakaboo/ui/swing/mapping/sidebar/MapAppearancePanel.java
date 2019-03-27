@@ -57,7 +57,7 @@ public class MapAppearancePanel extends JPanel {
 		this.add(shadesSpinner, c);
 
 		
-		controller.addListener(e -> {
+		controller.addListener(t -> {
 			shadesSpinner.setValue(controller.getSettings().getSpectrumSteps());
 			shadesSpinner.setEnabled(controller.getSettings().getContours());
 			contours.setSelected(controller.getSettings().getContours());

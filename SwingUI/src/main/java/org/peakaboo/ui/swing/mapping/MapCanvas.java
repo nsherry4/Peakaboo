@@ -5,8 +5,8 @@ import java.awt.Rectangle;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
@@ -31,12 +31,12 @@ public class MapCanvas extends GraphicsPanel
 		
 		mapper = new Mapper();
 		
-		controller.addListener(s -> {
+		controller.addListener(t -> {
 			boolean needsRedraw = true;
-			if (s.equals(UpdateType.AREA_SELECTION.toString())) {
+			if (t == MapUpdateType.AREA_SELECTION) {
 				needsRedraw = false;
 			}
-			if (s.equals(UpdateType.POINT_SELECTION.toString())) {
+			if (t == MapUpdateType.POINT_SELECTION) {
 				needsRedraw = false;
 			}
 			if (needsRedraw) {

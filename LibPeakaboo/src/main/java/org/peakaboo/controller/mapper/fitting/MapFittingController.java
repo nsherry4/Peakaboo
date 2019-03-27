@@ -14,8 +14,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModeData;
@@ -42,7 +42,7 @@ import org.peakaboo.mapping.filter.model.AreaMap;
 
 
 
-public class MapFittingController extends EventfulType<String> {
+public class MapFittingController extends EventfulType<MapUpdateType> {
 	
 	private MappingController map;
 	
@@ -74,11 +74,10 @@ public class MapFittingController extends EventfulType<String> {
 		
 		mapModeData = new EventfulCache<>(this::calcMapModeData);
 		map.addListener(t -> {
-			if (t == null || t.length() == 0) {
+			if (t == null) {
 				return;
 			}
-			UpdateType type = UpdateType.valueOf(UpdateType.class, t);
-			switch (type) {
+			switch (t) {
 				case AREA_SELECTION:
 				case POINT_SELECTION:
 					break;
@@ -112,7 +111,7 @@ public class MapFittingController extends EventfulType<String> {
 	public void setMapScaleMode(MapScaleMode mode)
 	{
 		this.mapScaleMode = mode;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -130,7 +129,7 @@ public class MapFittingController extends EventfulType<String> {
 	{		
 		this.displayMode = mode;
 		this.mapModeData.invalidate();
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		updateListeners(MapUpdateType.DATA_OPTIONS);
 	}
 	
 
@@ -604,7 +603,7 @@ public class MapFittingController extends EventfulType<String> {
 	public void setOverlayColour(ITransitionSeries ts, OverlayColour c)
 	{
 		this.overlayColour.put(ts, c);
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		updateListeners(MapUpdateType.DATA_OPTIONS);
 	}
 	
 	public Collection<OverlayColour> getOverlayColourValues()
@@ -624,7 +623,7 @@ public class MapFittingController extends EventfulType<String> {
 	public void setRatioSide(ITransitionSeries ts, int side)
 	{
 		this.ratioSide.put(ts, side);
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		updateListeners(MapUpdateType.DATA_OPTIONS);
 	}
 	
 	
@@ -635,7 +634,7 @@ public class MapFittingController extends EventfulType<String> {
 	public void setCorrelationSide(ITransitionSeries ts, int side)
 	{
 		this.correlationSide.put(ts, side);
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		updateListeners(MapUpdateType.DATA_OPTIONS);
 	}
 	
 	/**
@@ -650,7 +649,7 @@ public class MapFittingController extends EventfulType<String> {
 	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean visible)
 	{
 		this.compositeVisibility.put(ts, visible);
-		updateListeners(UpdateType.DATA_OPTIONS.toString());
+		updateListeners(MapUpdateType.DATA_OPTIONS);
 	}
 
 	/**

@@ -46,7 +46,7 @@ public class MapMenuView extends JPopupMenu {
 		this.addSeparator();
 		this.add(monochrome);
 		
-		controller.addListener(s -> {
+		controller.addListener(t -> {
 			monochrome.setSelected(controller.getSettings().getMonochrome());
 			spectrum.setSelected(controller.getSettings().getShowSpectrum());
 			coords.setSelected(controller.getSettings().getShowCoords());

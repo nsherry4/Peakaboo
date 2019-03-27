@@ -28,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
@@ -72,7 +73,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		this.controller = controller;
 		this.parentPlotter = parentPlotter;
 
-		this.controller.addListener(s -> {
+		this.controller.addListener(t -> {
 			owner.setTabTitle(this, getTabTitle());
 		});
 		
@@ -136,25 +137,19 @@ public class MapperPanel extends TabbedLayerPanel {
 		canvas.addMouseListener(selectionListener);
 		
 
-		controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String ss)
-			{
-
-				if (controller.getUserDimensions().getUserDataHeight() * controller.getUserDimensions().getUserDataWidth() == controller.rawDataController.getMapSize())
-				{
-					warnOnTooSmallDataset.setVisible(false);
-				}
-				else
-				{
-					warnOnTooSmallDataset.setVisible(true);
-				}
-
-				fullRedraw();
+		controller.addListener(t -> {
+			if (controller.getUserDimensions().getUserDataHeight() * controller.getUserDimensions().getUserDataWidth() == controller.rawDataController.getMapSize()) {
+				warnOnTooSmallDataset.setVisible(false);
+			} else {
+				warnOnTooSmallDataset.setVisible(true);
 			}
+
+			fullRedraw();
 		});
 
-		controller.updateListeners("");
+
+		//TODO: Why is this here?
+		controller.updateListeners(MapUpdateType.UI_OPTIONS);
 
 	}
 	

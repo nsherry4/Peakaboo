@@ -7,15 +7,15 @@ import java.util.logging.Level;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 
-public class MapDimensionsController extends EventfulType<String>{
+public class MapDimensionsController extends EventfulType<MapUpdateType>{
 
 	private MappingController mappingController;
 	private Coord<Integer> viewDimensions = new Coord<Integer>(1, 1);
@@ -46,7 +46,7 @@ public class MapDimensionsController extends EventfulType<String>{
 
 		viewDimensions.y = height;
 				
-		updateListeners(UpdateType.DATA_SIZE.toString());
+		updateListeners(MapUpdateType.DATA_SIZE);
 	}
 
 
@@ -67,7 +67,7 @@ public class MapDimensionsController extends EventfulType<String>{
 
 		viewDimensions.x = width;
 		
-		updateListeners(UpdateType.DATA_SIZE.toString());
+		updateListeners(MapUpdateType.DATA_SIZE);
 	}
 
 	

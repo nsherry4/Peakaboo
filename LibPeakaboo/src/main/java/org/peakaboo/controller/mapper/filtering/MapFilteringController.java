@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
@@ -22,7 +22,7 @@ import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
-public class MapFilteringController extends EventfulType<String> {
+public class MapFilteringController extends EventfulType<MapUpdateType> {
 
 	private MappingController controller;
 	
@@ -35,7 +35,7 @@ public class MapFilteringController extends EventfulType<String> {
 		cachedMaps = new EventfulCache<>(() -> new CachedMaps(controller, filters));
 		
 		controller.addListener(t -> {
-			if (UpdateType.DATA.toString().equals(t) || UpdateType.DATA_SIZE.toString().equals(t)) {
+			if (t == MapUpdateType.DATA || t == MapUpdateType.DATA_SIZE) {
 				filteredDataInvalidated();
 			}
 		});
@@ -157,7 +157,7 @@ public class MapFilteringController extends EventfulType<String> {
 	
 	public void filteredDataInvalidated() {
 		cachedMaps.invalidate();
-		updateListeners(UpdateType.FILTER.toString());
+		updateListeners(MapUpdateType.FILTER);
 	}
 	
 	

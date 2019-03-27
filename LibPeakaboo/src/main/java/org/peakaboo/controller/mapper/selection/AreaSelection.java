@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
@@ -16,7 +16,7 @@ import org.peakaboo.framework.eventful.EventfulType;
  * @author NAS
  *
  */
-public class AreaSelection extends EventfulType<String> {
+public class AreaSelection extends EventfulType<MapUpdateType> {
 
 	private Coord<Integer> start, end;
 	private boolean hasSelection = false;
@@ -44,10 +44,10 @@ public class AreaSelection extends EventfulType<String> {
 		
 		this.start = dragStart;
 		
-		updateListeners(UpdateType.AREA_SELECTION.toString());
+		updateListeners(MapUpdateType.AREA_SELECTION);
 		
 		map.addListener(type -> {
-			if (UpdateType.DATA_SIZE.toString().equals(type)) {
+			if (type == MapUpdateType.DATA_SIZE) {
 				trimSelectionToBounds();
 			}
 		});
@@ -72,7 +72,7 @@ public class AreaSelection extends EventfulType<String> {
 		
 		this.end = dragEnd;
 		
-		updateListeners(UpdateType.AREA_SELECTION.toString());
+		updateListeners(MapUpdateType.AREA_SELECTION);
 	}
 
 	
@@ -123,7 +123,7 @@ public class AreaSelection extends EventfulType<String> {
 	public void setHasBoundingRegion(boolean hasBoundingRegion)
 	{
 		this.hasSelection = hasBoundingRegion;
-		updateListeners(UpdateType.AREA_SELECTION.toString());
+		updateListeners(MapUpdateType.AREA_SELECTION);
 	}
 
 

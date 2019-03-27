@@ -41,16 +41,10 @@ import org.peakaboo.framework.plural.executor.eachindex.implementations.SimpleEa
 
 
 
-public class MappingController extends EventfulType<String>
+public class MappingController extends EventfulType<MapUpdateType>
 {
 	
 	private static final int SPECTRUM_HEIGHT = 15;
-
-	public enum UpdateType
-	{
-		DATA_SIZE, DATA_OPTIONS, DATA, UI_OPTIONS, AREA_SELECTION, POINT_SELECTION, FILTER;
-	}
-	
 
 	/*
 	 * Generally, the flow from start to finish with these controllers is:

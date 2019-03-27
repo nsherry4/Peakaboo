@@ -29,7 +29,7 @@ public class ScaleModeWidget extends JPanel {
 		
 		
 		
-		viewController.addListener(s -> {
+		viewController.addListener(t -> {
 			relativeButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.RELATIVE);
 			absoluteButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.ABSOLUTE);
 		});

@@ -139,7 +139,7 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		
-		controller.addListener(e -> {
+		controller.addListener(t -> {
 			width.setValue(controller.getUserDimensions().getUserDataWidth());
 			height.setValue(controller.getUserDimensions().getUserDataHeight());
 		});

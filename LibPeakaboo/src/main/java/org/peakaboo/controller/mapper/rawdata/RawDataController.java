@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.calibration.CalibrationProfile;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
@@ -17,7 +17,7 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
  * component from the plot after mapping has occurred and a {@link RawMapSet}
  * has been generated.
  */
-public class RawDataController extends EventfulType<String>
+public class RawDataController extends EventfulType<MapUpdateType>
 {
 
 	RawDataModel mapModel;
@@ -57,7 +57,7 @@ public class RawDataController extends EventfulType<String>
 		mapModel.realDimensionsUnits = realDimensionsUnits;
 		mapModel.calibrationProfile = calibrationProfile;
 
-		updateListeners(UpdateType.DATA.toString());
+		updateListeners(MapUpdateType.DATA);
 
 	}
 	

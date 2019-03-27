@@ -24,7 +24,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
@@ -72,11 +72,9 @@ public class FiltersPanel extends JPanel {
 		
 		
 		controller.addListener(type -> {
-			if (!UpdateType.FILTER.toString().equals(type)) {
+			if (type != MapUpdateType.FILTER) {
 				return;
 			}
-
-			
 			filterControls.setElementCount(controller.size());
 		});
 		

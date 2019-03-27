@@ -2,8 +2,8 @@ package org.peakaboo.controller.mapper.settings;
 
 import java.io.File;
 
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.MappingController.UpdateType;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -14,7 +14,7 @@ import org.peakaboo.framework.eventful.EventfulType;
  * 
  * @author NAS
  */
-public class MapSettingsController extends EventfulType<String>
+public class MapSettingsController extends EventfulType<MapUpdateType>
 {
 
 	//SOURCE DATA
@@ -54,7 +54,7 @@ public class MapSettingsController extends EventfulType<String>
 	{
 		this.contour = contours;
 				
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -72,7 +72,7 @@ public class MapSettingsController extends EventfulType<String>
 
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 	
 
@@ -84,7 +84,7 @@ public class MapSettingsController extends EventfulType<String>
 		{
 			this.spectrumSteps = steps;
 		}
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -97,7 +97,7 @@ public class MapSettingsController extends EventfulType<String>
 	public void setMonochrome(boolean mono)
 	{
 		this.monochrome = mono;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -111,7 +111,7 @@ public class MapSettingsController extends EventfulType<String>
 	public void setShowSpectrum(boolean show)
 	{
 		this.drawSpectrum = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -123,7 +123,7 @@ public class MapSettingsController extends EventfulType<String>
 
 	public void setShowScaleBar(boolean show) {
 		this.drawScaleBar = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 	
 	public boolean getShowScaleBar() {
@@ -133,7 +133,7 @@ public class MapSettingsController extends EventfulType<String>
 	public void setShowTitle(boolean show)
 	{
 		this.drawTitle = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -146,7 +146,7 @@ public class MapSettingsController extends EventfulType<String>
 	public void setShowDatasetTitle(boolean show)
 	{
 		this.drawDataSetTitle = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -159,7 +159,7 @@ public class MapSettingsController extends EventfulType<String>
 	public void setShowCoords(boolean show)
 	{
 		this.drawCoordinates = show;
-		updateListeners(UpdateType.UI_OPTIONS.toString());
+		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
@@ -181,7 +181,7 @@ public class MapSettingsController extends EventfulType<String>
 	{
 		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();
 		if (realDims != null) {
-			return new Coord<Number>( realDims.x.end, 		realDims.y.end);
+			return new Coord<Number>( realDims.x.end, realDims.y.end);
 		} else {
 			return new Coord<Number>(mapController.getFiltering().getFilteredDataWidth(), mapController.getFiltering().getFilteredDataHeight());
 		}
@@ -199,7 +199,7 @@ public class MapSettingsController extends EventfulType<String>
 	{
 		Coord<Bounds<Number>> realDims = mapController.getFiltering().getRealDimensions();
 		if (realDims != null) {
-			return new Coord<Number>( realDims.x.end,		realDims.y.start);
+			return new Coord<Number>( realDims.x.end, realDims.y.start);
 		} else {
 			return new Coord<Number>(mapController.getFiltering().getFilteredDataWidth(), 1);
 		}

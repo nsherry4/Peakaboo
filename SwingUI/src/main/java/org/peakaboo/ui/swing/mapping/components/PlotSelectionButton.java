@@ -24,7 +24,7 @@ public class PlotSelectionButton extends ToolbarImageButton {
 		this.withSignificance(true).withTooltip("Plot the selection as a new data set");
 
 		this.setEnabled(controller.getSelection().hasSelection());
-		controller.addListener(s -> {
+		controller.addListener(t -> {
 			this.setEnabled(controller.getSelection().hasSelection());
 		});
 		

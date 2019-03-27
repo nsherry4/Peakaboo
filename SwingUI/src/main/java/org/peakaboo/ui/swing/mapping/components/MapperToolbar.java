@@ -113,7 +113,7 @@ public class MapperToolbar extends JToolBar {
 		
 		
 		
-		controller.addListener(s -> {
+		controller.addListener(t -> {
 			
 			if (controller.getSelection().hasSelection())
 			{
