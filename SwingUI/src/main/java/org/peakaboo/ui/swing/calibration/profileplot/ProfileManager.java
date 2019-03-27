@@ -20,6 +20,7 @@ import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.common.ConfigurationLoadException;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.PlotUpdateType;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
@@ -60,7 +61,7 @@ public class ProfileManager extends HeaderLayer {
 		this.parent = parent;
 		
 		
-		EventfulTypeListener<String> listener = t -> {
+		EventfulTypeListener<PlotUpdateType> listener = t -> {
 			CalibrationProfile profile = controller.calibration().getCalibrationProfile();
 			File file = controller.calibration().getCalibrationProfileFile();
 			if (profile == null) {
