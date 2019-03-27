@@ -42,7 +42,7 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PlotController extends EventfulType<String> 
+public class PlotController extends EventfulType<PlotUpdateType> 
 {
 		
 	private UndoController					undoController;
@@ -54,12 +54,6 @@ public class PlotController extends EventfulType<String>
 
 	private File configDir;
 
-	public static enum UpdateType
-	{
-		DATA, FITTING, FILTER, UNDO, UI, CALIBRATION
-	}
-	
-	
 	public PlotController(File configDir)
 	{
 		super();
@@ -79,12 +73,12 @@ public class PlotController extends EventfulType<String>
 		viewController.loadPersistentSettings();
 		
 		
-		undoController.addListener(() -> updateListeners(UpdateType.UNDO.toString()));
-		dataController.addListener(() -> updateListeners(UpdateType.DATA.toString()));
-		filteringController.addListener(() -> updateListeners(UpdateType.FILTER.toString()));		
-		fittingController.addListener(b -> updateListeners(UpdateType.FITTING.toString()));
-		viewController.addListener(() -> updateListeners(UpdateType.UI.toString()));
-		calibrationController.addListener(() -> updateListeners(UpdateType.CALIBRATION.toString()));
+		undoController.addListener(() -> updateListeners(PlotUpdateType.UNDO));
+		dataController.addListener(() -> updateListeners(PlotUpdateType.DATA));
+		filteringController.addListener(() -> updateListeners(PlotUpdateType.FILTER));
+		fittingController.addListener(b -> updateListeners(PlotUpdateType.FITTING));
+		viewController.addListener(() -> updateListeners(PlotUpdateType.UI));
+		calibrationController.addListener(() -> updateListeners(PlotUpdateType.CALIBRATION));
 		
 		undoController.setUndoPoint("");
 	}

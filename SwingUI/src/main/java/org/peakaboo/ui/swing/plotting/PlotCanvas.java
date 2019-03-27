@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.PlotUpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
@@ -55,20 +56,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 		//setCanvasSize();
 
-		controller.addListener(new EventfulTypeListener<String>() {
-
-			public void change(String s)
-			{
-				if (
-						s.equals(PlotController.UpdateType.UI.toString())
-						||
-						s.equals(PlotController.UpdateType.DATA.toString())
-						||
-						s.equals(PlotController.UpdateType.UNDO.toString())
-					)
-				{
-					updateCanvasSize();
-				}
+		controller.addListener(type -> {
+			switch (type) {
+			case UI:
+			case DATA:	
+			case UNDO:
+				updateCanvasSize();
+			default: break;
 			}
 		});
 		
