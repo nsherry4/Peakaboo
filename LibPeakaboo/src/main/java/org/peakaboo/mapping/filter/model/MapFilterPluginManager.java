@@ -17,6 +17,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.mathematical.NormalizationMapF
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.PowerMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.sizing.BinningMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.sizing.EnlargeMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.smoothing.DenoiseMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.FastAverageMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.WeightedAverageMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.HFlipMapFilter;
@@ -57,6 +58,7 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		
 		builtins.load(FastAverageMapFilter.class);
 		builtins.load(WeightedAverageMapFilter.class);
+		builtins.load(DenoiseMapFilter.class);
 		
 		builtins.load(WeakSignalRemovalMapFilter.class);
 		builtins.load(SignalOutlierCorrectionMapFilter.class);
