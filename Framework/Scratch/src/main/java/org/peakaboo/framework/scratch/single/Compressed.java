@@ -29,6 +29,11 @@ public class Compressed<T> implements ByteStorage<T> {
 	}
 	
 	@Override
+	public void put(T value) {
+		data = encoder.encode(value);
+	}
+	
+	@Override
 	public byte[] getBytes() {
 		return data;
 	}

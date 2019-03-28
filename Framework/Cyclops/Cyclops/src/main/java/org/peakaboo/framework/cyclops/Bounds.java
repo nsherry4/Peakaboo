@@ -1,5 +1,7 @@
 package org.peakaboo.framework.cyclops;
 
+import java.io.Serializable;
+
 /**
  * 
  *  This class provides a method of storing a bounds using any datatype which extends Number
@@ -9,7 +11,7 @@ package org.peakaboo.framework.cyclops;
  * @param <T> The type of data to be held in both slots of this range pair
  */
 
-public class Bounds<T extends Number> {
+public class Bounds<T extends Number> implements Serializable {
 
 	public T start, end;
 	
