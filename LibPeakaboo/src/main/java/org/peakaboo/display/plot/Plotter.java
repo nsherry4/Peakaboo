@@ -1,5 +1,6 @@
 package org.peakaboo.display.plot;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,7 +46,7 @@ public class Plotter {
 	
 	private int spectrumSize = 2048;
 	
-	private Buffer buffer;
+	private SoftReference<Buffer> bufferRef;
 	private Coord<Integer> bufferSize;
 	private PlotDrawing plotDrawing;
 	
@@ -85,6 +86,11 @@ public class Plotter {
 		if (bufferSpace > 250 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
 			doBuffer = false;
 		}
+		Runtime rt = Runtime.getRuntime();
+		int freemem = (int) (rt.freeMemory() / 1024f / 1024f);
+		if (bufferSpace * 1.2f > freemem) {
+			doBuffer = false;
+		}
 		
 		 
 		if (context.getSurfaceType() != SurfaceType.RASTER) {
@@ -92,8 +98,10 @@ public class Plotter {
 			//so just draw directly to the surface
 			drawToBuffer(data, settings, context, size);
 		} else if (doBuffer) {
+			Buffer buffer = bufferRef.get();
 			if (buffer == null || plotDrawing == null || bufferSize == null || bufferSize.x < size.x || bufferSize.y < size.y) {
 				buffer = context.getImageBuffer((int)(size.x*1.2f), (int)(size.y*1.2f));
+				bufferRef = new SoftReference<>(buffer);
 				bufferSize = size;
 				drawToBuffer(data, settings, buffer, size);
 			} else if (!bufferSize.equals(size)) {
@@ -105,7 +113,7 @@ public class Plotter {
 			context.clip();
 			context.compose(buffer, 0, 0, 1f);
 		} else {
-			buffer = null;
+			bufferRef = new SoftReference<>(null);
 			bufferSize = null;
 			drawToBuffer(data, settings, context, size);
 		}
@@ -416,7 +424,7 @@ public class Plotter {
 	
 	
 	public void setNeedsRedraw() {
-		buffer = null;
+		bufferRef = new SoftReference<>(null);
 		plotDrawing = null;
 	}
 	
