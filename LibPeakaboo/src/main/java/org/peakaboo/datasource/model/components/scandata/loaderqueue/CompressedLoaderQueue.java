@@ -35,7 +35,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	}
 	public CompressedLoaderQueue(SimpleScanData data, Analysis analysis, int depth) {
 		this.encoder = PeakabooConfiguration.spectrumEncoder;
-		this.analysis = new DataSourceAnalysis();
+		this.analysis = analysis;
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {
