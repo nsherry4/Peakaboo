@@ -1,5 +1,6 @@
 package org.peakaboo.display.map.modes.ratio;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationP
 public class RatioMapMode extends MapMode {
 
 	private SpectrumMapPainter ratioMapPainter;
-	private SelectionMaskPainter selectionPainter;
+	private SoftReference<SelectionMaskPainter> selectionPainterRef = new SoftReference<>(null);
 	
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
@@ -134,8 +135,10 @@ public class RatioMapMode extends MapMode {
 		
 		
 		//Selection Painter
+		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
 		if (selectionPainter == null) {
 			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
+			selectionPainterRef = new SoftReference<>(selectionPainter);
 		} else {
 			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
 		}

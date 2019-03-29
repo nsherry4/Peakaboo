@@ -1,5 +1,6 @@
 package org.peakaboo.display.map.modes.overlay;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ import com.google.common.base.Function;
 public class OverlayMapMode extends MapMode {
 
 	private Map<OverlayColour, RasterSpectrumMapPainter> overlayMapPainters;
-	private SelectionMaskPainter selectionPainter;
+	private SoftReference<SelectionMaskPainter> selectionPainterRef = new SoftReference<>(null);
 	
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
@@ -131,8 +132,10 @@ public class OverlayMapMode extends MapMode {
 
 		
 		//Selection Painter
+		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
 		if (selectionPainter == null) {
 			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
+			selectionPainterRef = new SoftReference<>(selectionPainter);
 		} else {
 			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
 		}

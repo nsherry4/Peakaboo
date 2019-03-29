@@ -1,5 +1,6 @@
 package org.peakaboo.display.map.modes.composite;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class CompositeMapMode extends MapMode{
 
 
 	private SpectrumMapPainter contourMapPainter;
-	private SelectionMaskPainter selectionPainter;
+	private SoftReference<SelectionMaskPainter> selectionPainterRef = new SoftReference<>(null);
 	
 
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
@@ -108,8 +109,10 @@ public class CompositeMapMode extends MapMode{
 		
 		
 		//Selection Painter
+		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
 		if (selectionPainter == null) {
 			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
+			selectionPainterRef = new SoftReference<>(selectionPainter);
 		} else {
 			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
 		}
