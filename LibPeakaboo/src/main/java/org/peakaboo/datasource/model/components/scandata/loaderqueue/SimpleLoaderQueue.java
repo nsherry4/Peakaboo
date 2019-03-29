@@ -32,7 +32,6 @@ public class SimpleLoaderQueue implements LoaderQueue {
 				try {
 					SpectrumIndex struct = queue.take();
 					if (struct.spectrum != null) {
-						this.analysis.process(struct.spectrum);
 						if (struct.index == -1) {
 							data.add(struct.spectrum);
 						} else {

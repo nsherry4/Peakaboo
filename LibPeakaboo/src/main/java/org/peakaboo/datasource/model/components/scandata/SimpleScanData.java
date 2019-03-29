@@ -36,6 +36,7 @@ public class SimpleScanData implements ScanData {
 	}
 	
 	public void add(Spectrum spectrum) {
+		analysis.process(spectrum);
 		spectra.add(spectrum);
 	}
 	
@@ -47,11 +48,16 @@ public class SimpleScanData implements ScanData {
 		add(new ISpectrum(spectrum));
 	}
 	
+	/**
+	 * Adds a previously compressed spectrum. Note that this will not trigger the {@link Analysis}, and will need to be done manually
+	 * @param compressed
+	 */
 	public void add(Compressed<Spectrum> compressed) {
 		spectra.addCompressed(compressed);
 	}
 	
 	public void set(int index, Spectrum spectrum) {
+		analysis.process(spectrum);
 		spectra.set(index, spectrum);
 	}
 	
@@ -64,7 +70,10 @@ public class SimpleScanData implements ScanData {
 		set(index, new ISpectrum(spectrum));
 	}
 	
-	
+	/**
+	 * Adds a previously compressed spectrum. Note that this will not trigger the {@link Analysis}, and will need to be done manually
+	 * @param compressed
+	 */
 	public void set(int index, Compressed<Spectrum> compressed) {
 		spectra.setCompressed(index, compressed);
 	}

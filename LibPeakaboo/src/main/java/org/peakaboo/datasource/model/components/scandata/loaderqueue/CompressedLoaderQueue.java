@@ -72,7 +72,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	public void submit(int index, Spectrum s) throws InterruptedException {
 		SpectrumIndex struct = new SpectrumIndex();
 		struct.index = index;
-		this.analysis.process(s);
+		this.analysis.process(s); //has to be done manually before compression
 		struct.spectrum = Compressed.create(s, this.encoder);
 		queue.put(struct);
 	}

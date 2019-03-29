@@ -3,6 +3,7 @@ package org.peakaboo.datasource.plugin;
 import java.io.File;
 
 import org.peakaboo.datasource.plugin.plugins.PlainText;
+import org.peakaboo.datasource.plugin.plugins.SingleColumn;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
@@ -35,6 +36,7 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	
 	private void registerCustomPlugins() {
 		builtins.load(PlainText.class);
+		builtins.load(SingleColumn.class);
 	}
 	
 	public void registerPlugin(Class<? extends JavaDataSourcePlugin> clazz) {
