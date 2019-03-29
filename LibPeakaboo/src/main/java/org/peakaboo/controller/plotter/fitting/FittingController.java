@@ -27,8 +27,8 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.util.Mutable;
-import org.peakaboo.framework.eventful.EventfulCache;
 import org.peakaboo.framework.eventful.EventfulType;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 
@@ -45,7 +45,7 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel = new FittingModel();
 		
 		
-		fittingModel.selectionResults = new EventfulCache<>(() -> {
+		fittingModel.selectionResults = new EventfulNullableCache<>(() -> {
 			ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
 			if (data == null) {
 				return null;
@@ -53,7 +53,7 @@ public class FittingController extends EventfulType<Boolean>
 			return getFittingSolver().solve(data, fittingModel.selections, getCurveFitter());
 		});
 		
-		fittingModel.proposalResults = new EventfulCache<>(() -> {
+		fittingModel.proposalResults = new EventfulNullableCache<>(() -> {
 			if (plot.currentScan() == null) {
 				return null;
 			}

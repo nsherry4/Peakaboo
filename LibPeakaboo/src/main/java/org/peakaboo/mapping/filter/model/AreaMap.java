@@ -24,6 +24,12 @@ public class AreaMap {
 		this.realDimensions = realDims;
 	}
 
+	public AreaMap(AreaMap other) {
+		this.data = new ISpectrum(other.data);
+		this.size = other.size;
+		this.realDimensions = other.realDimensions;
+	}
+	
 	public ReadOnlySpectrum getData() {
 		return data;
 	}
@@ -36,23 +42,30 @@ public class AreaMap {
 		return realDimensions;
 	}
 	
-	
+	public void add(AreaMap other) {
+		if (!other.size.equals(size)) {
+			throw new IllegalArgumentException("Size mismatch");
+		}
+		this.data = SpectrumCalculations.addLists(this.data, other.data);
+	}
 	
 
+	
+	
 	public static AreaMap sum(AreaMap... maps) {
 		return sum(Arrays.asList(maps));
 	}
 	
-	public static AreaMap sum(List<AreaMap> maps) {
-		if (maps.size() == 0) { return null; }
-		Coord<Integer> size = maps.get(0).getSize();
-		Coord<Bounds<Number>> realDimensions = maps.get(0).getRealDimensions();
+	public static AreaMap sum(Iterable<AreaMap> maps) {
+		if (!maps.iterator().hasNext()) { return null; }
+		Coord<Integer> size = maps.iterator().next().getSize();
+		Coord<Bounds<Number>> realDimensions = maps.iterator().next().getRealDimensions();
 		return new AreaMap(sumSpectrum(maps), size, realDimensions);
 	}	
 	
-	public static Spectrum sumSpectrum(List<AreaMap> maps) {
-		if (maps.size() == 0) { return null; }
-		Coord<Integer> size = maps.get(0).getSize();
+	public static Spectrum sumSpectrum(Iterable<AreaMap> maps) {
+		if (!maps.iterator().hasNext()) { return null; }
+		Coord<Integer> size = maps.iterator().next().getSize();
 		Spectrum target = new ISpectrum(size.x * size.y);
 		for (AreaMap map : maps) {
 			SpectrumCalculations.addLists_inplace(target, map.getData());

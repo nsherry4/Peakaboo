@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.eventful.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 /**
  * This class acts as a container for a set of {@link ITransitionSeries} and maintains a set of {@link Curve}s based on various provided parameters. 
@@ -25,7 +26,7 @@ public class FittingSet
 
 	
 	public FittingSet() {
-		curves = new EventfulCache<>(this::generateCurves);
+		curves = new EventfulNullableCache<>(this::generateCurves);
 		fitTransitionSeries = new ArrayList<>();
 		this.parameters = new FittingParameters(this);
 	}

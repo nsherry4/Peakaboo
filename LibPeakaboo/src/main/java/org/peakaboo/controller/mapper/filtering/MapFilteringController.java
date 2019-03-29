@@ -14,9 +14,14 @@ import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.util.ListOps;
-import org.peakaboo.framework.eventful.EventfulCache;
 import org.peakaboo.framework.eventful.EventfulType;
+import org.peakaboo.framework.eventful.cache.CacheIterable;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
+import org.peakaboo.framework.eventful.cache.EventfulSoftCache;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
@@ -32,7 +37,7 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	
 	public MapFilteringController(MappingController controller) {
 		this.controller = controller;
-		cachedMaps = new EventfulCache<>(() -> new CachedMaps(controller, filters));
+		cachedMaps = new EventfulNullableCache<>(() -> new CachedMaps(controller, filters));
 		
 		controller.addListener(t -> {
 			if (t == MapUpdateType.DATA || t == MapUpdateType.DATA_SIZE) {
@@ -74,24 +79,24 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	 */
 	public boolean isReplottable() {
 		if (filteringChangedMapSize()) return false;
-		if (! this.cachedMaps.getValue().replottable) return false;
+		if (! this.cachedMaps.getValue().isReplottable()) return false;
 		return true;
 	}
 	
 	
-	public AreaMap getAreaMap(ITransitionSeries ts) {
-		return cachedMaps.getValue().maps.get(ts);
+	private EventfulSoftCache<AreaMap> getAreaMap(ITransitionSeries ts) {
+		return cachedMaps.getValue().getCachedMap(ts);
 	}
 	
-	public List<AreaMap> getAreaMaps(List<ITransitionSeries> tss) {
-		return tss.stream().map(this::getAreaMap).collect(Collectors.toList());
+	public Iterable<AreaMap> getAreaMaps(List<ITransitionSeries> tss) {
+		return new CacheIterable<>(tss.stream().map(this::getAreaMap).collect(Collectors.toList()));
 	}
 	
 	/**
 	 * Returns the sum of all maps, or null, if there are no maps.
 	 */
 	public AreaMap getSummedMap() {
-		return cachedMaps.getValue().sum;
+		return cachedMaps.getValue().getSum();
 	}
 	
 
@@ -175,10 +180,10 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	}
 	
 	public Coord<Bounds<Number>> getRealDimensions() {
-		if (cachedMaps.getValue().sum == null) {
+		if (cachedMaps.getValue().getSum() == null) {
 			return null;
 		}
-		return cachedMaps.getValue().sum.getRealDimensions();
+		return cachedMaps.getValue().getSum().getRealDimensions();
 	}
 	
 
@@ -187,9 +192,9 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 
 class CachedMaps {
 	
-	public Map<ITransitionSeries, AreaMap> maps;
-	public AreaMap sum;
-	public boolean replottable;
+	private Map<ITransitionSeries, EventfulSoftCache<AreaMap>> maps;
+	private AreaMap sum;
+	private boolean replottable;
 	
 	public CachedMaps(MappingController controller, MapFilterSet filters) {
 
@@ -203,16 +208,28 @@ class CachedMaps {
 		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
 		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
-			ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
-			AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
-			areamap = filters.applyUnsynchronized(areamap);
-			maps.put(ts, areamap);
+			EventfulSoftCache<AreaMap> mapcache = new EventfulSoftCache<>(() -> {
+				ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
+				AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
+				areamap = filters.applyUnsynchronized(areamap);
+				return areamap;
+			});
+			
+			maps.put(ts, mapcache);
 		});
 
 		this.replottable = filters.isReplottable();
 		
 		if (maps.size() > 0) {
-			sum = AreaMap.sum(new ArrayList<>(maps.values()));
+			Spectrum total = new ISpectrum(size.x * size.y);
+			AreaMap map = null;
+			//we do it this way so that we only have to hold one in memory at a time
+			//that way the soft references can collect it when we're done adding it in
+			for (ITransitionSeries key : maps.keySet()) {
+				map = maps.get(key).getValue();
+				SpectrumCalculations.addLists_inplace(total, map.getData());
+			}
+			sum = new AreaMap(total, map.getSize(), map.getRealDimensions());
 		} else {
 			sum = new AreaMap(new ISpectrum(size.x * size.y), size, null);
 			sum = filters.applyUnsynchronized(sum);
@@ -220,7 +237,21 @@ class CachedMaps {
 		
 	}
 	
+	public AreaMap getAreaMap(ITransitionSeries ts) {
+		return maps.get(ts).getValue();
+	}
 	
+	public EventfulSoftCache<AreaMap> getCachedMap(ITransitionSeries ts) {
+		return maps.get(ts);
+	}
+	
+	public boolean isReplottable() {
+		return replottable;
+	}
+	
+	public AreaMap getSum() {
+		return sum;
+	}
 	
 	
 }

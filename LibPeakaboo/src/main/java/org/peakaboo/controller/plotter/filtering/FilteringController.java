@@ -9,7 +9,8 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.eventful.Eventful;
-import org.peakaboo.framework.eventful.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 
 public class FilteringController extends Eventful
@@ -23,14 +24,14 @@ public class FilteringController extends Eventful
 		this.plot = plotController;
 		filteringModel = new FilteringModel();
 		
-		filteringModel.filteredPlot = new EventfulCache<>(() -> {
+		filteringModel.filteredPlot = new EventfulNullableCache<>(() -> {
 			if (plot.currentScan() == null) {
 				return null;
 			}
 			return filteringModel.filters.applyFilters(plot.currentScan());
 		});
 		
-		filteringModel.filterDeltas = new EventfulCache<>(() -> { 
+		filteringModel.filterDeltas = new EventfulNullableCache<>(() -> { 
 			return filteringModel.filters.calculateDeltas(plot.currentScan());
 		});
 				

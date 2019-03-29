@@ -13,7 +13,7 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.peak.escape.EscapePeakType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.eventful.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 
 
@@ -28,7 +28,7 @@ public class FittingModel
 	/**
 	 * Results of fitting existing selections
 	 */
-	public EventfulCache<FittingResultSet>		selectionResults;
+	public EventfulNullableCache<FittingResultSet>		selectionResults;
 	
 	/**
 	 * Proposed TransitionSeries and their Fitting against data after already being fit against current selections
@@ -38,7 +38,7 @@ public class FittingModel
 	/**
 	 * Results of fitting proposed selections.
 	 */
-	public EventfulCache<FittingResultSet>		proposalResults;
+	public EventfulNullableCache<FittingResultSet>		proposalResults;
 	
 	
 	List<ITransitionSeries> highlighted;

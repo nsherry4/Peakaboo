@@ -34,8 +34,11 @@ import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Ratios;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
-import org.peakaboo.framework.eventful.EventfulCache;
 import org.peakaboo.framework.eventful.EventfulType;
+import org.peakaboo.framework.eventful.cache.CacheIterable;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
+import org.peakaboo.framework.eventful.cache.EventfulSoftCache;
 import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
 
@@ -72,7 +75,7 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 		compositeVisibility = new HashMap<>();
 		correlationSide = new HashMap<>();
 		
-		mapModeData = new EventfulCache<>(this::calcMapModeData);
+		mapModeData = new EventfulNullableCache<>(this::calcMapModeData);
 		map.addListener(t -> {
 			if (t == null) {
 				return;
@@ -533,10 +536,10 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 		
 		
 		//filter the maps
-		List<AreaMap> filtereds = map.getFiltering().getAreaMaps(list);
+		Iterable<AreaMap> filtereds = map.getFiltering().getAreaMaps(list);
 		
 		//merge the maps into a single composite map
-		if (filtereds.isEmpty()) {
+		if (!filtereds.iterator().hasNext()) {
 			//TODO: This may give a technically wrong result until interpolation is made into a filter
 			return new ISpectrum(x * y);
 		}
