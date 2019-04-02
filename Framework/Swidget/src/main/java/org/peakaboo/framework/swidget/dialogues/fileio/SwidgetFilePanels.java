@@ -2,6 +2,7 @@ package org.peakaboo.framework.swidget.dialogues.fileio;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -21,8 +22,8 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
-import org.peakaboo.framework.swidget.dialogues.fileio.specialdirectories.SpecialDirectories;
-import org.peakaboo.framework.swidget.dialogues.fileio.specialdirectories.SpecialDirectoriesWidget;
+import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
+import org.peakaboo.framework.swidget.dialogues.fileio.places.PlacesWidget;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
@@ -44,9 +45,10 @@ public class SwidgetFilePanels {
 			HeaderLayer layer = new HeaderLayer(tabPanel, false);
 			JPanel chooserPanel = new JPanel(new BorderLayout());
 			chooserPanel.add(chooser, BorderLayout.CENTER);
-			if (SpecialDirectories.supported()) {
-				chooserPanel.add(new SpecialDirectoriesWidget(chooser), BorderLayout.WEST);
+			if (Places.supported()) {
+				chooserPanel.add(new PlacesWidget(chooser), BorderLayout.WEST);
 			}
+			chooserPanel.setPreferredSize(new Dimension(800, 300));
 			layer.getHeader().setComponents(negative, title, affirmative);
 			layer.setBody(chooserPanel);
 			

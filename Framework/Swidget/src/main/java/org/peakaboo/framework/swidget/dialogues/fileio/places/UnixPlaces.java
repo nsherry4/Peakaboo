@@ -1,45 +1,43 @@
-package org.peakaboo.framework.swidget.dialogues.fileio.specialdirectories;
+package org.peakaboo.framework.swidget.dialogues.fileio.places;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-
-public class UnixSpecialDirectories implements SpecialDirectories {
+public class UnixPlaces implements Places {
 	
 	Map<String, String> aliases = new HashMap<>(); {
 		aliases.put("XDG_DESKTOP_DIR", "Desktop");
 		aliases.put("XDG_DOCUMENTS_DIR", "Documents");
 		aliases.put("XDG_DOWNLOAD_DIR", "Downloads");
-		aliases.put("XDG_PUBLICSHARE_DIR", "Public");
-		aliases.put("XDG_MUSIC_DIR", "Music");
+		//aliases.put("XDG_PUBLICSHARE_DIR", "Public");
+		//aliases.put("XDG_MUSIC_DIR", "Music");
 		aliases.put("XDG_PICTURES_DIR", "Pictures");
-		aliases.put("XDG_VIDEOS_DIR", "Videos");
+		//aliases.put("XDG_VIDEOS_DIR", "Videos");
 	}
-	Map<File, String> roots = new LinkedHashMap<>();
+	//Map<File, String> roots = new LinkedHashMap<>();
+	List<Place> places = new ArrayList<>();
+	
 
 	@Override
-	public Map<File, String> getRoots() {
-		return Collections.unmodifiableMap(roots);
+	public List<Place> getAll() {
+		return Collections.unmodifiableList(places);
 	}
 	
 
-	public UnixSpecialDirectories() {
+	public UnixPlaces() {
 		String home = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
-		register(new File(home), "Home");
+		addBookmark(new File(home), "Home");
 		
 		/*
 		 * XDG is a FreeDesktop/Linux mechanism for name-mapping directories to special
@@ -51,14 +49,46 @@ public class UnixSpecialDirectories implements SpecialDirectories {
 		} catch (IOException e) {
 			loadFallback(home);
 		}
+		
+		//filesystems
+		addMountpoint(new File("/"));
+		for (FileStore fs : FileSystems.getDefault().getFileStores()) {
+			if (fs.isReadOnly()) {
+				continue;
+			}
+			
+			String path = fs.toString().split(" ")[0];
+			if (
+					path.startsWith("/Volume") || 
+					path.startsWith("/mnt") ||
+					path.startsWith("/media") ||
+					path.startsWith(home)
+				) {
+				File mountpoint = new File(path);
+				addMountpoint(mountpoint);
+			}
+			
+			
+			
+		}
 	}
 	
 	
-	private void register(File file, String name) {
+	private void addBookmark(File file, String name) {
 		if (!file.exists()) {
 			return;
 		}
-		roots.put(file, name);
+		places.add(new BookmarkPlace(file, name));
+	}
+	
+	private void addMountpoint(File file) {
+		if (!file.exists()) {
+			return;
+		}
+		if (!file.canRead()) {
+			return;
+		}
+		places.add(new MountpointPlace(file));
 	}
 	
 
@@ -91,18 +121,18 @@ public class UnixSpecialDirectories implements SpecialDirectories {
 					//invalid, skip
 					continue;
 				}
-				register(new File(rootPath), alias);
+				addBookmark(new File(rootPath), alias);
 			}
 		}
 	}
 	
 	private void loadFallback(String home) {
-		register(new File(home + "/Desktop"), "Desktop");
-		register(new File(home + "/Documents"), "Documents");
-		register(new File(home + "/Downloads"), "Downloads");
-		register(new File(home + "/Music"), "Music");
-		register(new File(home + "/Pictures"), "Pictures");
-		register(new File(home + "/Videos"), "Videos");
+		addBookmark(new File(home + "/Desktop"), "Desktop");
+		addBookmark(new File(home + "/Documents"), "Documents");
+		addBookmark(new File(home + "/Downloads"), "Downloads");
+		addBookmark(new File(home + "/Music"), "Music");
+		addBookmark(new File(home + "/Pictures"), "Pictures");
+		addBookmark(new File(home + "/Videos"), "Videos");
 	}
 	
 }
