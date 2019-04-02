@@ -28,9 +28,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListP
 public class CorrelationMapMode extends MapMode {
 
 	private SpectrumMapPainter correlationMapPainter;
-	
-	public static int CORRELATION_MAP_SIZE = 200;
-	
+		
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
@@ -48,10 +46,10 @@ public class CorrelationMapMode extends MapMode {
 		backend.setSource(new PaletteColour(0xffffffff));
 		backend.fill();
 		
-		dr.uninterpolatedWidth = CORRELATION_MAP_SIZE;
-		dr.uninterpolatedHeight = CORRELATION_MAP_SIZE;
-		dr.dataWidth = CORRELATION_MAP_SIZE;
-		dr.dataHeight = CORRELATION_MAP_SIZE;
+		dr.uninterpolatedWidth = correlationData.getSize().x;
+		dr.uninterpolatedHeight = correlationData.getSize().y;
+		dr.dataWidth = correlationData.getSize().x;
+		dr.dataHeight = correlationData.getSize().y;
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
 		dr.maxYIntensity = correlationData.getData().max();
@@ -103,8 +101,9 @@ public class CorrelationMapMode extends MapMode {
 		}
 
 		//need to set this up front so that calTotalSize has the right dimensions to work with
-		dr.dataHeight = CORRELATION_MAP_SIZE;
-		dr.dataWidth = CORRELATION_MAP_SIZE;
+		//TODO: Fix me?
+		dr.dataHeight = 100;
+		dr.dataWidth = 100;
 		
 		double width = 0;
 		double height = 0;

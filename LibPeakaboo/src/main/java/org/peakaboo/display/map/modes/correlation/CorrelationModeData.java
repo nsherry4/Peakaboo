@@ -11,8 +11,8 @@ public class CorrelationModeData implements MapModeData {
 	public float xMaxCounts, yMaxCounts;
 	private Coord<Integer> size;
 	
-	public CorrelationModeData() {
-		this.size = new Coord<>(CorrelationMapMode.CORRELATION_MAP_SIZE, CorrelationMapMode.CORRELATION_MAP_SIZE);
+	public CorrelationModeData(int bins) {
+		this.size = new Coord<>(bins, bins);
 	}
 	
 	@Override

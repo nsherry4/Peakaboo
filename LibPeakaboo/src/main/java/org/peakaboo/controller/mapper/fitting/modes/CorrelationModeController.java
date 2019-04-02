@@ -26,6 +26,7 @@ public class CorrelationModeController extends ModeController {
 	private MappingController map;
 	private Map<ITransitionSeries, Integer> sides = new LinkedHashMap<>();
 	private boolean clip = false;
+	private int bins = 100;
 	
 	public CorrelationModeController(MappingController map) {
 		super(map);
@@ -59,7 +60,6 @@ public class CorrelationModeController extends ModeController {
 	}
 
 
-
 	public boolean isClip() {
 		return clip;
 	}
@@ -68,6 +68,19 @@ public class CorrelationModeController extends ModeController {
 		this.clip = clip;
 		updateListeners();
 	}
+
+
+	public int getBins() {
+		return bins;
+	}
+
+	public void setBins(int bins) {
+		if (bins != this.bins) {
+			this.bins = bins;
+			updateListeners();
+		}
+	}
+
 
 
 
@@ -104,8 +117,8 @@ public class CorrelationModeController extends ModeController {
 		}
 		
 		
-		GridPerspective<Float> grid = new GridPerspective<Float>(CorrelationMapMode.CORRELATION_MAP_SIZE, CorrelationMapMode.CORRELATION_MAP_SIZE, 0f);
-		Spectrum correlation = new ISpectrum(CorrelationMapMode.CORRELATION_MAP_SIZE*CorrelationMapMode.CORRELATION_MAP_SIZE);
+		GridPerspective<Float> grid = new GridPerspective<Float>(bins, bins, 0f);
+		Spectrum correlation = new ISpectrum(bins*bins);
 		for (int i = 0; i < xData.size(); i++) {
 
 			float xpct = xData.get(i) / xMax;
@@ -120,10 +133,10 @@ public class CorrelationModeController extends ModeController {
 			}
 			
 			
-			int xbin = (int)(xpct*CorrelationMapMode.CORRELATION_MAP_SIZE);
-			int ybin = (int)(ypct*CorrelationMapMode.CORRELATION_MAP_SIZE);
-			if (xbin >= CorrelationMapMode.CORRELATION_MAP_SIZE) { xbin = CorrelationMapMode.CORRELATION_MAP_SIZE-1; }
-			if (ybin >= CorrelationMapMode.CORRELATION_MAP_SIZE) { ybin = CorrelationMapMode.CORRELATION_MAP_SIZE-1; }
+			int xbin = (int)(xpct*bins);
+			int ybin = (int)(ypct*bins);
+			if (xbin >= bins) { xbin = bins-1; }
+			if (ybin >= bins) { ybin = bins-1; }
 			
 			grid.set(correlation, xbin, ybin, grid.get(correlation, xbin, ybin)+1);
 			
@@ -139,7 +152,7 @@ public class CorrelationModeController extends ModeController {
 		}
 
 		
-		CorrelationModeData data = new CorrelationModeData();
+		CorrelationModeData data = new CorrelationModeData(bins);
 		data.data = correlation;
 		data.xAxisTitle = getDatasetTitle(xTS) + " (Intensity)";
 		data.yAxisTitle = getDatasetTitle(yTS) + " (Intensity)";

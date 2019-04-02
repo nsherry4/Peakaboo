@@ -14,7 +14,9 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
@@ -27,6 +29,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetListCellRenderer;
@@ -66,15 +69,36 @@ public class Correlation extends JPanel {
 		
 		JPanel options = new JPanel(new BorderLayout());
 		
-		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Axis", "All", false);
-		options.add(scaleMode, BorderLayout.CENTER);
 		
-		JCheckBox clip = new JCheckBox("Clip Outliers");
+		JCheckBox clip = new JCheckBox();
 		clip.setBorder(Spacing.bMedium());
 		clip.addActionListener(e -> {
 			viewController.correlationMode().setClip(clip.isSelected());
 		});
-		options.add(clip, BorderLayout.NORTH);
+		
+		JSpinner bins = new JSpinner(new SpinnerNumberModel(100, 25, 250, 1));
+		bins.addChangeListener(change -> {
+			viewController.correlationMode().setBins((Integer)bins.getValue());
+		});
+		viewController.correlationMode().addListener(() -> {
+			int oldValue = (Integer)bins.getValue();
+			int newValue = viewController.correlationMode().getBins();
+			if (oldValue != newValue) {
+				bins.setValue(newValue);
+			}
+		});
+		
+		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Axis", "All", false);
+		
+		
+		SettingsPanel settings = new SettingsPanel();
+		settings.setBorder(Spacing.bMedium());
+		settings.addSetting(bins, "Granularity");
+		settings.addSetting(clip, "Clip Outliers");		
+		options.add(scaleMode, BorderLayout.CENTER);
+		options.add(settings, BorderLayout.NORTH);
+		
+		
 				
 		return options;
 	}
