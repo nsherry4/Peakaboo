@@ -1,5 +1,6 @@
 package org.peakaboo.framework.swidget.dialogues.fileio;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -15,9 +16,13 @@ import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
+import org.peakaboo.framework.swidget.dialogues.fileio.specialdirectories.SpecialDirectories;
+import org.peakaboo.framework.swidget.dialogues.fileio.specialdirectories.SpecialDirectoriesWidget;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
@@ -37,8 +42,13 @@ public class SwidgetFilePanels {
 			ImageButton negative = new ImageButton("Cancel");
 			
 			HeaderLayer layer = new HeaderLayer(tabPanel, false);
+			JPanel chooserPanel = new JPanel(new BorderLayout());
+			chooserPanel.add(chooser, BorderLayout.CENTER);
+			if (SpecialDirectories.supported()) {
+				chooserPanel.add(new SpecialDirectoriesWidget(chooser), BorderLayout.WEST);
+			}
 			layer.getHeader().setComponents(negative, title, affirmative);
-			layer.setBody(chooser);
+			layer.setBody(chooserPanel);
 			
 			chooser.addActionListener(action -> {
 				String command = action.getActionCommand();
@@ -138,7 +148,8 @@ public class SwidgetFilePanels {
 		}
 		//Then set All Formats (or the only format) option as default.
 		//There will be an "All Files" option at [0]
-		chooser.setFileFilter(chooser.getChoosableFileFilters()[1]);
+		FileFilter chosenFilter = chooser.getChoosableFileFilters()[1];
+		chooser.setFileFilter(chosenFilter);
 		
 		return chooser;
 	}

@@ -108,7 +108,7 @@ mkdir ./48/
 ./harvest.rb elementary/devices printer device-printer
 
 #places
-./harvest.rb elementary/places user-desktop place-desktop
+./harvest.rb elementary-xfce/places user-desktop place-desktop
 ./harvest.rb elementary/places folder place-folder
 ./harvest.rb elementary/actions folder-new place-folder-new
 ./harvest.rb elementary/places folder-drag-accept place-folder-open
