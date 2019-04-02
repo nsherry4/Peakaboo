@@ -32,15 +32,15 @@ public class MapCanvas extends GraphicsPanel
 		mapper = new Mapper();
 		
 		controller.addListener(t -> {
-			boolean needsRedraw = true;
-			if (t == MapUpdateType.AREA_SELECTION) {
-				needsRedraw = false;
+			if (t == MapUpdateType.AREA_SELECTION || t == MapUpdateType.POINT_SELECTION) {
+				/*
+				 * data hasn't changed but we need to recomposite the image, so we pass false
+				 * for parameter 'deep'
+				 */
+				setNeedsRedraw(false);
 			}
-			if (t == MapUpdateType.POINT_SELECTION) {
-				needsRedraw = false;
-			}
-			if (needsRedraw) {
-				setNeedsRedraw();
+			else {
+				setNeedsRedraw(true);
 			}
 
 			if (resizable) {
@@ -164,8 +164,8 @@ public class MapCanvas extends GraphicsPanel
 	}
 	
 	
-	public void setNeedsRedraw() {
-		mapper.setNeedsRedraw();
+	public void setNeedsRedraw(boolean deep) {
+		mapper.setNeedsRedraw(deep);
 	}
 
 	

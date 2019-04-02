@@ -56,9 +56,6 @@ public class CorrelationMapMode extends MapMode {
 		map.setDrawingRequest(dr);
 
 		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
-		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.TERRA.getPaletteData(), 1f, 1f), false));
-		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.THOUGHTFUL.getPaletteData(), 1f, 1f), false));
-		//paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.SUGAR.getPaletteData(), 1f, 1f), false));
 		paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.GEORGIA.getPaletteData(), 1f, 1f), false));
 		
 		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();

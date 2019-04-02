@@ -30,6 +30,7 @@ public class Coord<T> implements Serializable {
 	@Override
 	public boolean equals(Object oother)
 	{
+		if (oother == null) { return false; }
 		if (!(oother instanceof Coord)) return false;
 		Coord<?> gother = (Coord<?>)oother;
 		if (!x.getClass().equals(gother.x.getClass())) return false;

@@ -46,8 +46,8 @@ public class Plotter {
 	
 	private int spectrumSize = 2048;
 	
-	private SoftReference<Buffer> bufferRef;
-	private Coord<Integer> bufferSize;
+	private SoftReference<Buffer> bufferRef = new SoftReference<>(null);
+	private Coord<Integer> bufferSize, lastSize;
 	private PlotDrawing plotDrawing;
 	
 	public Plotter() {
@@ -99,13 +99,24 @@ public class Plotter {
 			drawToBuffer(data, settings, context, size);
 		} else if (doBuffer) {
 			Buffer buffer = bufferRef.get();
-			if (buffer == null || plotDrawing == null || bufferSize == null || bufferSize.x < size.x || bufferSize.y < size.y) {
-				buffer = context.getImageBuffer((int)(size.x*1.2f), (int)(size.y*1.2f));
+			if (	buffer == null || 
+					plotDrawing == null || 
+					bufferSize == null || 
+					//make sure the buffer is large enough
+					bufferSize.x < size.x || 
+					bufferSize.y < size.y ||
+					//but if the buffer is much larger than it needs to be, make sure to reclaim that memory
+					bufferSize.x > size.x*1.5f ||
+					bufferSize.y > size.y*1.5f
+				) {
+				bufferSize = new Coord<>((int)(size.x*1.2f), (int)(size.y*1.2f));
+				lastSize = new Coord<>(size);
+				buffer = context.getImageBuffer(bufferSize.x, bufferSize.y);
 				bufferRef = new SoftReference<>(buffer);
-				bufferSize = size;
 				drawToBuffer(data, settings, buffer, size);
-			} else if (!bufferSize.equals(size)) {
+			} else if (!lastSize.equals(size)) {
 				//buffer exists, but size has changed, requiring redraw.
+				lastSize = new Coord<>(size); 
 				drawToBuffer(data, settings, buffer, size);
 			}
 			
@@ -115,6 +126,7 @@ public class Plotter {
 		} else {
 			bufferRef = new SoftReference<>(null);
 			bufferSize = null;
+			lastSize = null;
 			drawToBuffer(data, settings, context, size);
 		}
 		
