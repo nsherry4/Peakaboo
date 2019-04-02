@@ -63,7 +63,7 @@ public class Composite extends JPanel {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					viewController.setTransitionSeriesVisibility(ts, bvalue);
+					viewController.compositeMode().setVisibility(ts, bvalue);
 
 				}
 			}
@@ -92,7 +92,7 @@ public class Composite extends JPanel {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 				
 				if (columnIndex == 0) {
-					return viewController.getTransitionSeriesVisibility(ts);
+					return viewController.compositeMode().getVisibility(ts);
 				} else {
 					return ts;
 				}

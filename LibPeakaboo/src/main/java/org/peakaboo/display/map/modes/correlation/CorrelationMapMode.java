@@ -29,7 +29,7 @@ public class CorrelationMapMode extends MapMode {
 
 	private SpectrumMapPainter correlationMapPainter;
 	
-	public static int CORRELATION_MAP_SIZE = 100;
+	public static int CORRELATION_MAP_SIZE = 200;
 	
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
@@ -39,6 +39,7 @@ public class CorrelationMapMode extends MapMode {
 		
 		//overrides for this display style
 		settings.drawCoord = false;
+		settings.physicalCoord = false;
 		
 		
 		//TODO: move this call to Mapper

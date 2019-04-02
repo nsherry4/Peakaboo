@@ -68,12 +68,12 @@ public class Overlay extends JPanel {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					viewController.setTransitionSeriesVisibility(ts, bvalue);
+					viewController.overlayMode().setVisibility(ts, bvalue);
 				} 
 				else if (columnIndex == 2)
 				{
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-					viewController.setOverlayColour(ts, (OverlayColour)value);
+					viewController.overlayMode().setColour(ts, (OverlayColour)value);
 				}
 			}
 
@@ -102,9 +102,9 @@ public class Overlay extends JPanel {
 
 				switch (columnIndex) {
 
-					case 0: return viewController.getTransitionSeriesVisibility(ts);
+					case 0: return viewController.overlayMode().getVisibility(ts);
 					case 1: return ts;
-					case 2: return viewController.getOverlayColour(ts);
+					case 2: return viewController.overlayMode().getColour(ts);
 				}
 
 				return null;

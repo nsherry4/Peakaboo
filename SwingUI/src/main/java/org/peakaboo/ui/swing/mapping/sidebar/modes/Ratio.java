@@ -79,12 +79,12 @@ public class Ratio extends JPanel {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					viewController.setTransitionSeriesVisibility(ts, bvalue);
+					viewController.ratioMode().setVisibility(ts, bvalue);
 				} 
 				else if (columnIndex == 2)
 				{
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-					viewController.setRatioSide(ts, (Integer)value);
+					viewController.ratioMode().setSide(ts, (Integer)value);
 				}
 			}
 
@@ -113,9 +113,9 @@ public class Ratio extends JPanel {
 
 				switch (columnIndex) {
 
-					case 0: return viewController.getTransitionSeriesVisibility(ts);
+					case 0: return viewController.ratioMode().getVisibility(ts);
 					case 1: return ts;
-					case 2: return viewController.getRatioSide(ts);
+					case 2: return viewController.ratioMode().getSide(ts);
 				}
 
 				return null;

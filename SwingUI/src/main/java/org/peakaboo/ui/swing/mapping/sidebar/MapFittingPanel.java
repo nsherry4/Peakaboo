@@ -78,11 +78,11 @@ public class MapFittingPanel extends ClearPanel
 		ImageButton selectAll = new ImageButton(StockIcon.SELECTION_ALL)
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withTooltip("Select All")
-				.withAction(() -> controller.setAllTransitionSeriesVisibility(true));
+				.withAction(() -> controller.getActiveMode().setAllVisible(true));
 		ImageButton selectNone = new ImageButton(StockIcon.SELECTION_NONE)
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withTooltip("Select None")
-				.withAction(() -> controller.setAllTransitionSeriesVisibility(false));
+				.withAction(() -> controller.getActiveMode().setAllVisible(false));
 		ButtonLinker linker = new ButtonLinker(selectNone, selectAll);
 		modeSelectPanel.add(linker, BorderLayout.EAST);
 		

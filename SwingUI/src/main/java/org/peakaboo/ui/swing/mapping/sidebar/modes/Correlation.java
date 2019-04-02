@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -62,8 +63,20 @@ public class Correlation extends JPanel {
 
 	
 	private JPanel createScaleOptions() {
-		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Set", "Axis", false);
-		return scaleMode;
+		
+		JPanel options = new JPanel(new BorderLayout());
+		
+		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Axis", "All", false);
+		options.add(scaleMode, BorderLayout.CENTER);
+		
+		JCheckBox clip = new JCheckBox("Clip Outliers");
+		clip.setBorder(Spacing.bMedium());
+		clip.addActionListener(e -> {
+			viewController.correlationMode().setClip(clip.isSelected());
+		});
+		options.add(clip, BorderLayout.NORTH);
+				
+		return options;
 	}
 	
 	
@@ -91,7 +104,7 @@ public class Correlation extends JPanel {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					viewController.setTransitionSeriesVisibility(ts, bvalue);
+					viewController.correlationMode().setVisibility(ts, bvalue);
 				} 
 
 			}
@@ -121,7 +134,7 @@ public class Correlation extends JPanel {
 
 				switch (columnIndex) {
 
-					case 0: return viewController.getTransitionSeriesVisibility(ts);
+					case 0: return viewController.correlationMode().getVisibility(ts);
 					case 1: return ts;
 					case 2: return ts;
 				}
@@ -237,7 +250,7 @@ class AxisWidget extends ListWidget<ITransitionSeries> {
 		
 		Runnable onSelect = () -> {
 			setFonts();
-			controller.setCorrelationSide(ts, getSide());
+			controller.correlationMode().setSide(ts, getSide());
 		};
 		group1.withAction(onSelect);
 		group2.withAction(onSelect);
@@ -264,9 +277,9 @@ class AxisWidget extends ListWidget<ITransitionSeries> {
 	@Override
 	protected void onSetValue(ITransitionSeries ts) {
 		this.ts = ts;
-		linker.setVisible(controller.getTransitionSeriesVisibility(ts));
+		linker.setVisible(controller.correlationMode().getVisibility(ts));
 			
-		if (controller.getCorrelationSide(ts) == 1) {
+		if (controller.correlationMode().getSide(ts) == 1) {
 			group1.setSelected(true);
 		} else {
 			group2.setSelected(true);

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;
+import org.peakaboo.framework.cyclops.Spectrum;
 
 public class OverlayModeData implements MapModeData {
 
@@ -36,9 +37,10 @@ public class OverlayModeData implements MapModeData {
 		
 		int index = getIndex(coord);
 		List<String> results = new ArrayList<String>();
-		for (OverlayColour c : OverlayColour.values())
-		{
-			if (data.get(c) != null) results.add(  c.toString() + ": " + SigDigits.roundFloatTo(data.get(c).data.get(index), 2)  );
+		for (OverlayColour c : OverlayColour.values()) {
+			if (data.get(c) != null && data.get(c).data != null) {
+				results.add(  c.toString() + ": " + SigDigits.roundFloatTo(data.get(c).data.get(index), 2)  );
+			}
 		}
 		return results.stream().collect(Collectors.joining(", "));
 	}

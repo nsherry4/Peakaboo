@@ -16,6 +16,7 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
+import org.peakaboo.controller.mapper.fitting.modes.CompositeModeController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.mapper.selection.MapSelectionController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
@@ -230,13 +231,15 @@ public class MappingController extends EventfulType<MapUpdateType>
 		EachIndexExecutor executor = new SimpleEachIndexExecutor(tss.size(), index -> {
 			ITransitionSeries ts = tss.get(index);
 			
+			CompositeModeController composite = controller.getFitting().compositeMode();
+			
 			Mapper mapper = new Mapper();
 			MapRenderData data = new MapRenderData();
-			data.mapModeData = controller.getFitting().getCompositeMapData(Optional.of(ts));
+			data.mapModeData = composite.getData(Optional.of(ts));
 			data.maxIntensity = controller.getFitting().sumAllTransitionSeriesMaps().max();
 			
-			controller.getFitting().setAllTransitionSeriesVisibility(false);
-			controller.getFitting().setTransitionSeriesVisibility(ts, true);
+			composite.setAllVisible(false);
+			composite.setVisibility(ts, true);
 			MapRenderSettings settings = controller.getRenderSettings();
 			
 			//image extension
