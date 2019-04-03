@@ -1,4 +1,4 @@
-package org.peakaboo.curvefit.peak.escape;
+package org.peakaboo.curvefit.peak.detector;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
-public class GermaniumEscapePeak implements EscapePeak {
+public class GermaniumDetectorMaterial implements DetectorMaterial {
 
 	@Override
 	public boolean hasOffset() {
@@ -41,13 +41,12 @@ public class GermaniumEscapePeak implements EscapePeak {
 	}
 
 	@Override
-	public EscapePeakType type() {
-		return EscapePeakType.GERMANIUM;
+	public DetectorMaterialType type() {
+		return DetectorMaterialType.GERMANIUM;
 	}
 
 	@Override
 	public ITransitionSeries transitionSeries() {
-		// TODO Auto-generated method stub
 		return PeakTable.SYSTEM.get(Element.Ge, TransitionShell.K);
 	}
 

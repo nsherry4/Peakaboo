@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.Filter;
@@ -23,7 +23,7 @@ public class PlotData {
 	public DataSet dataset;
 	
 	public EnergyCalibration calibration;
-	public EscapePeakType escape = EscapePeakType.SILICON;
+	public DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
 	
 	public FilterSet filters = new FilterSet();
 	public FittingResultSet proposedResults;

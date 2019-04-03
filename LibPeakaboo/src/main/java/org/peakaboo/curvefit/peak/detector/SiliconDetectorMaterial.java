@@ -1,4 +1,4 @@
-package org.peakaboo.curvefit.peak.escape;
+package org.peakaboo.curvefit.peak.detector;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
-public class SiliconEscapePeak implements EscapePeak {
+public class SiliconDetectorMaterial implements DetectorMaterial {
 
 	@Override
 	public boolean hasOffset() {
@@ -22,7 +22,6 @@ public class SiliconEscapePeak implements EscapePeak {
 
 	@Override
 	public float energyGap() {
-		// TODO Auto-generated method stub
 		return 0.00358f;
 	}
 
@@ -42,13 +41,12 @@ public class SiliconEscapePeak implements EscapePeak {
 	}
 
 	@Override
-	public EscapePeakType type() {
-		return EscapePeakType.SILICON;
+	public DetectorMaterialType type() {
+		return DetectorMaterialType.SILICON;
 	}
 	
 	@Override
 	public ITransitionSeries transitionSeries() {
-		// TODO Auto-generated method stub
 		return PeakTable.SYSTEM.get(Element.Si, TransitionShell.K);
 	}
 	

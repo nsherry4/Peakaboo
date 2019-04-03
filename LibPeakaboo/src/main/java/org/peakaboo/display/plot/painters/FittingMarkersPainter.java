@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.peakaboo.curvefit.curve.fitting.FittingParameters;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
@@ -30,19 +31,17 @@ public class FittingMarkersPainter extends PlotPainter
 
 	private FittingParameters 	parameters;
 	private List<FittingLabel> labels;
-	private EscapePeakType		escapeType;
 
 	/**
 	 * Create a FittingMarkersPainter
 	 * @param fitResults the {@link FittingResultSet} for the data being drawn
-	 * @param escapeType the {@link EscapePeakType} used to generate the {@link FittingResultSet}
+	 * @param detectorMaterial the {@link DetectorMaterialType} used to generate the {@link FittingResultSet}
 	 * @param c the {@link Color} to use when drawing the markings
 	 */
-	public FittingMarkersPainter(FittingParameters parameters, List<FittingLabel> labels, EscapePeakType escapeType)
+	public FittingMarkersPainter(FittingParameters parameters, List<FittingLabel> labels)
 	{
 		this.parameters = parameters;
 		this.labels = labels;
-		this.escapeType = escapeType;
 	}
 
 
@@ -90,20 +89,19 @@ public class FittingMarkersPainter extends PlotPainter
 				p.context.moveTo(positionX, p.plotSize.y);
 				p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
 				
-				
-				if (escapeType.get().hasOffset())
+				DetectorMaterial detectorMaterial = parameters.getDetectorMaterial().get();
+				if (detectorMaterial.hasOffset() && parameters.getShowEscapePeaks())
 				{
-					for (Transition esc : escapeType.get().offset()) {
+					for (Transition esc : detectorMaterial.offset()) {
 					
-						channel = parameters.getCalibration().fractionalChannelFromEnergy(t.energyValue - esc.energyValue);
+						float escEnergy = t.energyValue - esc.energyValue; 
+						channel = parameters.getCalibration().fractionalChannelFromEnergy(escEnergy);
 						if (channel < 0) continue;
 						
 						positionX = getXForChannel(p, channel);
 						
 						FittingFunction escFn = parameters.forEscape(t, esc, ts.getElement(), ts.getShell());
-						markerHeight = escFn.forEnergy(t.energyValue) * label.fit.getTotalScale();
-						//markerHeight *= Curve.escapeIntensity(fit.getTransitionSeries().element);
-						//markerHeight *= esc.relativeIntensity;
+						markerHeight = escFn.forEnergy(escEnergy) * label.fit.getTotalScale();
 						markerHeight = transformValueForPlot(p.dr, markerHeight);
 						
 					

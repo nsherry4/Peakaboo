@@ -1,4 +1,4 @@
-package org.peakaboo.curvefit.peak.escape;
+package org.peakaboo.curvefit.peak.detector;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 
-public interface EscapePeak {
+public interface DetectorMaterial {
 	
 	boolean hasOffset();
 	List<Transition> offset();
@@ -15,7 +15,7 @@ public interface EscapePeak {
 	String pretty();
 	ITransitionSeries transitionSeries();
 	
-	EscapePeakType type();
+	DetectorMaterialType type();
 	
 	static float intensity(Element e)
 	{

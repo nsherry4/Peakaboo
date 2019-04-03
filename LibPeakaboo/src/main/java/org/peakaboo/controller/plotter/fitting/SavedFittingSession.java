@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.SerializedTransitionSeries;
@@ -36,10 +36,12 @@ public class SavedFittingSession {
 	public float maxEnergy;
 	
 	//Escape type
-	public EscapePeakType escape;
+	public DetectorMaterialType escape;
 	
 	//Peak Model parameters
 	public float fwhmBase;
+	
+	public boolean showEscapePeaks=true;
 	
 	
 	public SavedFittingSession storeFrom(FittingController controller) {
@@ -70,10 +72,12 @@ public class SavedFittingSession {
 		maxEnergy = controller.getMaxEnergy();
 		
 		//Save escape peak type
-		escape = controller.getEscapeType();
+		escape = controller.getDetectorMaterial();
 		
 		//Save peak model base width
 		fwhmBase = controller.getFWHMBase();
+		
+		showEscapePeaks = controller.getShowEscapePeaks();
 		
 		return this;
 	}
@@ -133,11 +137,14 @@ public class SavedFittingSession {
 		
 
 		//Restore escape peak type
-		controller.setEscapeType(escape);
+		controller.setDetectorMaterial(escape);
 		
 		
 		//Restore peak model base width
 		controller.setFWHMBase(fwhmBase);
+		
+		
+		controller.setShowEscapePeaks(showEscapePeaks);
 		
 	}
 	

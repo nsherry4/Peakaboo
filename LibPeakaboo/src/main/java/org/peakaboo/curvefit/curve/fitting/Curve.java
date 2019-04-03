@@ -246,6 +246,8 @@ public class Curve implements Comparable<Curve>
 	private void calcUnscaledFit(boolean fitEscape)
 	{
 
+		fitEscape &= parameters.getShowEscapePeaks();
+		
 		EnergyCalibration calibration = parameters.getCalibration();
 		if (calibration.getDataWidth() == 0) {
 			throw new RuntimeException("DataWidth cannot be 0");
@@ -261,8 +263,8 @@ public class Curve implements Comparable<Curve>
 
 			functions.add(parameters.forTransition(t, this.transitionSeries.getShell()));
 
-			if (fitEscape && parameters.getEscapeType().get().hasOffset()) {
-				for (Transition esc : parameters.getEscapeType().get().offset()) {
+			if (fitEscape && parameters.getDetectorMaterial().get().hasOffset()) {
+				for (Transition esc : parameters.getDetectorMaterial().get().offset()) {
 					functions.add(parameters.forEscape(t, esc, this.transitionSeries.getElement(), this.transitionSeries.getShell()));
 				}
 			}
