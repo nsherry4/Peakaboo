@@ -115,9 +115,29 @@ public class DoubleDerivativePeakSearcher implements PeakSearcher {
 	private float score(int channel, ReadOnlySpectrum data, float dataMax, ReadOnlySpectrum d2, float d2Max) {
 		int range = 1;
 		while (range < 20) {
-			if (d2.get(channel - range) < d2.get(channel - range + 1)) break;
-			if (d2.get(channel + range) < d2.get(channel + range - 1)) break;
+			
+			int index, inside;
+			
+			index = channel - range;
+			inside = index + 1;
+			if (index < 0) {
+				range--;
+				break;
+			}
+			if (d2.get(index) < d2.get(inside)) break;
+			
+			index = channel + range;
+			inside = index - 1;
+			if (index >= data.size()) {
+				range--;
+				break;
+			}
+			if (d2.get(index) < d2.get(inside)) break;
+			
 			range++;
+		}
+		if (range == 0) {
+			return 0f;
 		}
 		float bpre = data.get(channel - range);
 		float bpost = data.get(channel + range);
