@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.peakaboo.curvefit.peak.escape.EscapePeak;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.table.Element;
 
 public class PrimaryTransitionSeries implements ITransitionSeries {
@@ -150,7 +150,7 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 
 
 	@Override
-	public List<Transition> escape(EscapePeakType type) {
+	public List<Transition> escape(DetectorMaterialType type) {
 		if (! type.get().hasOffset()) {
 			return new ArrayList<>();
 		}
@@ -158,7 +158,7 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 		List<Transition> escapePeaks = new ArrayList<>();
 		for (Transition t : this) {
 			for (Transition o : type.get().offset()) {
-				escapePeaks.add(new Transition(t.energyValue - o.energyValue, t.relativeIntensity * o.relativeIntensity * EscapePeak.intensity(this.getElement()), t.name + " Escape"));
+				escapePeaks.add(new Transition(t.energyValue - o.energyValue, t.relativeIntensity * o.relativeIntensity * DetectorMaterial.intensity(this.getElement()), t.name + " Escape"));
 			}
 		}
 		return escapePeaks;

@@ -3,14 +3,19 @@ package org.peakaboo.ui.swing.plotting;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.TitledBorder;
@@ -24,8 +29,8 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
-import org.peakaboo.curvefit.peak.escape.EscapePeak;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
@@ -50,20 +55,45 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 	
-	private <T> JComboBox<T> makeCombo(Predicate<T> matchesCurrent, Consumer<T> onSelect, T... items) {
+	private <T> JComboBox<?> makeCombo(Predicate<T> matchesCurrent, Consumer<T> onSelect, Function<T, String> pretty, T... items) {
+
+		final class Box {
+
+			public T value;
+			public String name;
+			
+			public Box(T value) {
+				this.value = value;
+				if (pretty != null) {
+					this.name = pretty.apply(value);
+				} else {
+					this.name = value == null ? "" : value.toString();
+				}
+			}
+			
+			public String toString() {
+				return name;
+			}
+			
+		}
+
+
 		
-		JComboBox<T> comboBox = new JComboBox<>();
-		Consumer<T> addItem = fitter -> {
+		List<Box> boxes = Arrays.asList(items).stream().map(Box::new).collect(Collectors.toList());
+		
+		JComboBox<Box> comboBox = new JComboBox<>();
+		Consumer<Box> addItem = fitter -> {
 			comboBox.addItem(fitter);
-			if (matchesCurrent.test(fitter)) {
+			if (matchesCurrent.test(fitter.value)) {
 				comboBox.setSelectedItem(fitter);
 			}
 		};
-		for (T item : items) {
+		for (Box item : boxes) {
 			addItem.accept(item);
 		}
 		comboBox.addActionListener(e -> {
-			onSelect.accept((T) comboBox.getSelectedItem());
+			Box box = (Box) comboBox.getSelectedItem();
+			onSelect.accept(box.value);
 		});
 		
 		return comboBox;
@@ -95,19 +125,30 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 
 		
-		JComboBox<EscapePeak> escapePeakBox = makeCombo(
-				e -> e.type() == controller.fitting().getEscapeType(),
-				e -> controller.fitting().setEscapeType(e.type()),
-				EscapePeakType.NONE.get(),
-				EscapePeakType.SILICON.get(),
-				EscapePeakType.GERMANIUM.get()
+		JComboBox<?> detectorMaterialBox = makeCombo(
+				e -> e.type() == controller.fitting().getDetectorMaterial(),
+				e -> controller.fitting().setDetectorMaterial(e.type()),
+				null,
+				DetectorMaterialType.SILICON.get(),
+				DetectorMaterialType.GERMANIUM.get()
+			);
+		build(panel, detectorMaterialBox, "Detector Material", "Detector material is used to determine some of the properties of the peak model used to fit signal.", true);
+		
+		
+		JComboBox<?> escapePeakBox = makeCombo(
+				b -> b == controller.fitting().getShowEscapePeaks(),
+				b -> controller.fitting().setShowEscapePeaks(b),
+				b -> b ? "On" : "Off",
+				true,
+				false
 			);
 		build(panel, escapePeakBox, "Escape Peaks", "Escape peaks result when some of the energy absorbed by a detector is re-emitted.", true);
 		
 		
-		JComboBox<FittingFunction> peakModelBox = makeCombo(
+		JComboBox<?> peakModelBox = makeCombo(
 				f -> f.getClass() == controller.fitting().getFittingFunction(),
 				f -> controller.fitting().setFittingFunction(f.getClass()),
+				null,
 				new PseudoVoigtFittingFunction(),
 				new ConvolvingVoigtFittingFunction(),
 				new GaussianFittingFunction(),
@@ -118,9 +159,10 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		
 		
-		JComboBox<CurveFitter> fittersBox = makeCombo(
+		JComboBox<?> fittersBox = makeCombo(
 				f -> f.getClass() == controller.fitting().getCurveFitter().getClass(),
 				f -> controller.fitting().setCurveFitter(f),
+				null,
 				new UnderCurveFitter(),
 				new OptimizingCurveFitter(),
 				new LeastSquaresCurveFitter()
@@ -132,9 +174,10 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		
 		
-		JComboBox<FittingSolver> solversBox = makeCombo(
+		JComboBox<?> solversBox = makeCombo(
 				f -> f.getClass() == controller.fitting().getFittingSolver().getClass(), 
 				f -> controller.fitting().setFittingSolver(f), 
+				null,
 				new GreedyFittingSolver(),
 				new OptimizingFittingSolver(),
 				new MultisamplingOptimizingFittingSolver()
@@ -153,14 +196,6 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		label.setToolTipText(tooltip);
 		
 		panel.addSetting(component, label, LabelPosition.BESIDE, false, fill);
-	}
-
-	
-	private JComponent titled(JComponent component, String title) {
-		JPanel titled = new JPanel(new BorderLayout());
-		titled.add(component, BorderLayout.WEST);
-		titled.setBorder(new CompoundBorder(Spacing.bSmall(), new TitledBorder(title)));
-		return titled;
 	}
 	
 }

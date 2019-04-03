@@ -14,7 +14,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import org.peakaboo.curvefit.peak.escape.EscapePeak;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.EnergyProximityScorer;
@@ -176,8 +176,8 @@ public class PeakProposal
 			for (Transition t : ts) {
 				if (transitionOverlap(t, energy, 0.1f, parameters)) return true;
 			}
-			for (Transition t : ts.escape(parameters.getEscapeType())) {
-				if (transitionOverlap(t, energy, 0.1f * EscapePeak.intensity(ts.getElement()), parameters)) return true;
+			for (Transition t : ts.escape(parameters.getDetectorMaterial())) {
+				if (transitionOverlap(t, energy, 0.1f * DetectorMaterial.intensity(ts.getElement()), parameters)) return true;
 			}
 		}
 		return false;

@@ -1,7 +1,7 @@
 package org.peakaboo.curvefit.peak.fitting;
 
 import org.peakaboo.curvefit.curve.fitting.FittingParameters;
-import org.peakaboo.curvefit.peak.escape.EscapePeak;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
@@ -25,7 +25,7 @@ public class FittingContext {
 	//escape peak
 	public FittingContext(FittingParameters parameters, Transition transition, Transition escape, Element element, TransitionShell type) {
 		this.energy = transition.energyValue - escape.energyValue;
-		this.height = transition.relativeIntensity * escape.relativeIntensity * EscapePeak.intensity(element);
+		this.height = transition.relativeIntensity * escape.relativeIntensity * DetectorMaterial.intensity(element);
 		this.transition = transition;
 		this.type = type;
 		this.parameters = parameters;

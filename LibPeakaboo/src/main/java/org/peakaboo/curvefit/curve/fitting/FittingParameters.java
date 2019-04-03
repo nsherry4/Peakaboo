@@ -3,7 +3,7 @@ package org.peakaboo.curvefit.curve.fitting;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
@@ -16,9 +16,10 @@ public class FittingParameters {
 	private FittingSet fits;
 	
 	private float fwhmBase = 0.080f;
-	private	EnergyCalibration	calibration = new EnergyCalibration(0, 0, 0);
-	private EscapePeakType		escapeType = EscapePeakType.NONE;
+	private EnergyCalibration calibration = new EnergyCalibration(0, 0, 0);
+	private DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
 	private Class<? extends FittingFunction> fittingFunction = PseudoVoigtFittingFunction.class;
+	private boolean showEscapePeaks = true;
 	
 	private FittingParameters() {}
 	
@@ -32,10 +33,11 @@ public class FittingParameters {
 		FittingParameters param = new FittingParameters();
 		param.fwhmBase = copyFrom.fwhmBase;
 		param.fits = null;
-		param.escapeType = copyFrom.escapeType;
+		param.detectorMaterial = copyFrom.detectorMaterial;
 		param.fittingFunction = copyFrom.fittingFunction;
 		//immutable
 		param.calibration = copyFrom.calibration;
+		param.showEscapePeaks = copyFrom.showEscapePeaks;
 		return param;
 	}
 	
@@ -83,8 +85,8 @@ public class FittingParameters {
 		//See Handbook of X-Ray Spectrometry rev2 p282
 		
 		//Energy required to create electron-hole pair in detector material
-		float energyGap = getEscapeType().get().energyGap();
-		float fano = getEscapeType().get().fanoFactor();
+		float energyGap = getDetectorMaterial().get().energyGap();
+		float fano = getDetectorMaterial().get().fanoFactor();
 		
 		float noise = fwhmBase;
 		
@@ -125,12 +127,12 @@ public class FittingParameters {
 		invalidate();
 	}
 	
-	public EscapePeakType getEscapeType() {
-		return this.escapeType;
+	public DetectorMaterialType getDetectorMaterial() {
+		return this.detectorMaterial;
 	}
 
-	public void setEscapeType(EscapePeakType escape) {
-		this.escapeType = escape;
+	public void setDetectorMaterial(DetectorMaterialType material) {
+		this.detectorMaterial = material;
 		invalidate();
 	}
 	
@@ -141,6 +143,15 @@ public class FittingParameters {
 
 	public Class<? extends FittingFunction> getFittingFunction() {
 		return fittingFunction;
+	}
+
+	public Boolean getShowEscapePeaks() {
+		return showEscapePeaks;
+	}
+
+	public void setShowEscapePeaks(boolean showEscapePeaks) {
+		this.showEscapePeaks = showEscapePeaks;
+		invalidate();
 	}
 
 }

@@ -158,7 +158,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		data.selectionResults = fitting().getFittingSelectionResults();
 		data.proposedResults = fitting().getFittingProposalResults();
 		data.calibration = fitting().getEnergyCalibration();
-		data.escape = fitting().getEscapeType();
+		data.detectorMaterial = fitting().getDetectorMaterial();
 		data.highlightedTransitionSeries = fitting().getHighlightedTransitionSeries();
 		data.proposedTransitionSeries = fitting().getProposedTransitionSeries();
 		data.annotations = fitting().getAnnotations();

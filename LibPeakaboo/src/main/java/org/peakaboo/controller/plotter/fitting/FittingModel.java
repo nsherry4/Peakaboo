@@ -11,7 +11,7 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
@@ -54,14 +54,14 @@ public class FittingModel
 	 * {@link FittingSolver} to use for solving for the intensities of competing curves
 	 */
 	public FittingSolver fittingSolver;
-	
+
 	
 	public FittingModel()
 	{
 		selections = new FittingSet();
 		proposals = new FittingSet();
-		selections.getFittingParameters().setEscapeType(EscapePeakType.getDefault());
-		proposals.getFittingParameters().setEscapeType(EscapePeakType.getDefault());
+		selections.getFittingParameters().setDetectorMaterial(DetectorMaterialType.getDefault());
+		proposals.getFittingParameters().setDetectorMaterial(DetectorMaterialType.getDefault());
 		selectionResults = null;
 		proposalResults = null;
 		highlighted = new ArrayList<>();

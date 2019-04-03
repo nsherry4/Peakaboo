@@ -316,7 +316,7 @@ public class Plotter {
 		//Markings
 		if (data.selectionResults != null) {
 			if (settings.showElementFitMarkers) {
-				plotPainters.add(new FittingMarkersPainter(data.selectionResults.getParameters(), fitLabels, data.escape));
+				plotPainters.add(new FittingMarkersPainter(data.selectionResults.getParameters(), fitLabels));
 			}
 		}
 		

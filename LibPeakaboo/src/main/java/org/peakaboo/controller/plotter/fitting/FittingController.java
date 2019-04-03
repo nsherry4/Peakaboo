@@ -17,7 +17,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import org.peakaboo.curvefit.peak.escape.EscapePeakType;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
 import org.peakaboo.curvefit.peak.search.searcher.DoubleDerivativePeakSearcher;
@@ -243,20 +243,20 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.proposalResults.invalidate();
 	}
 
-	public void setEscapeType(EscapePeakType type)
+	public void setDetectorMaterial(DetectorMaterialType type)
 	{
-		fittingModel.selections.getFittingParameters().setEscapeType(type);
-		fittingModel.proposals.getFittingParameters().setEscapeType(type);
+		fittingModel.selections.getFittingParameters().setDetectorMaterial(type);
+		fittingModel.proposals.getFittingParameters().setDetectorMaterial(type);
 		
 		fittingDataInvalidated();
 		
-		setUndoPoint("Escape Peaks");
+		setUndoPoint("Set Detector Material");
 		updateListeners(false);
 	}
 
-	public EscapePeakType getEscapeType()
+	public DetectorMaterialType getDetectorMaterial()
 	{
-		return fittingModel.selections.getFittingParameters().getEscapeType();
+		return fittingModel.selections.getFittingParameters().getDetectorMaterial();
 	}
 	
 	public List<ITransitionSeries> proposeTransitionSeriesFromChannel(final int channel, ITransitionSeries currentTS)
@@ -316,8 +316,8 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.proposals.getFittingParameters().setCalibration(min, max, scanSize);
 
 		//TODO: Why is this here? Are we just resetting it to be sure they stay in sync?
-		fittingModel.selections.getFittingParameters().setEscapeType(getEscapeType());
-		fittingModel.proposals.getFittingParameters().setEscapeType(getEscapeType());
+		fittingModel.selections.getFittingParameters().setDetectorMaterial(getDetectorMaterial());
+		fittingModel.proposals.getFittingParameters().setDetectorMaterial(getDetectorMaterial());
 
 		
 		setUndoPoint("Calibration");
@@ -519,7 +519,21 @@ public class FittingController extends EventfulType<Boolean>
 		updateListeners(false);
 	}
 
+	public Boolean getShowEscapePeaks() {
+		return fittingModel.selections.getFittingParameters().getShowEscapePeaks();
+	}
+
+	public void setShowEscapePeaks(boolean showEscapePeaks) {
+		fittingModel.selections.getFittingParameters().setShowEscapePeaks(showEscapePeaks);
+		fittingModel.proposals.getFittingParameters().setShowEscapePeaks(showEscapePeaks);
+		
+		fittingDataInvalidated();
+		setUndoPoint("Toggle Escape Peaks");
+		updateListeners(false);
+	}
+
 	
 	
 	
 }
+
