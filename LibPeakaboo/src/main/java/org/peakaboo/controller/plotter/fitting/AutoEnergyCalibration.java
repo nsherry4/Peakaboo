@@ -29,15 +29,19 @@ public class AutoEnergyCalibration {
 	/**
 	 * Generates a list of all possible energy calibration candidates
 	 */
-	private static List<EnergyCalibration> allEnergies(int dataWidth) {
-		List<EnergyCalibration> energies = new ArrayList<>();
+	private static List<Supplier<EnergyCalibration>> allEnergies(int dataWidth) {
+		List<Supplier<EnergyCalibration>> energies = new ArrayList<>();
 		for (float max = 1f; max <= 100f; max += 0.05f) {
 			for (float min = -0.5f; min < 0.5f; min += 0.05) {
 				if (min >= max-1f) continue;
-				energies.add(new EnergyCalibration(min, max, dataWidth));
+				energies.add(buildEnergySupplier(min, max, dataWidth));
 			}
 		}
 		return energies;
+	}
+	
+	private static Supplier<EnergyCalibration> buildEnergySupplier(float min, float max, int dataWidth) {
+		return () -> new EnergyCalibration(min, max, dataWidth);
 	}
 	
 	private static FittingSet fitModel(List<ITransitionSeries> tsList, int dataWidth) {
@@ -56,7 +60,7 @@ public class AutoEnergyCalibration {
 	 * and uses the transition series to quickly find any potential good 
 	 * energy calibration values. 
 	 */
-	private static StreamExecutor<List<EnergyCalibration>> roughOptions(List<EnergyCalibration> energies, ReadOnlySpectrum spectrum, List<ITransitionSeries> tsList, int dataWidth) {
+	private static StreamExecutor<List<EnergyCalibration>> roughOptions(List<Supplier<EnergyCalibration>> energies, ReadOnlySpectrum spectrum, List<ITransitionSeries> tsList, int dataWidth) {
 		
 		
 		
@@ -71,7 +75,7 @@ public class AutoEnergyCalibration {
 			//Score each energy value using our observed stream
 			List<Pair<Integer, Float>> scores = stream.map(index -> {
 				
-				EnergyCalibration calibration = energies.get(index);
+				EnergyCalibration calibration = energies.get(index).get();
 				
 				float score = scoreFitFast(fits, spectrum, calibration);
 				return new Pair<>(index, score);
@@ -91,7 +95,7 @@ public class AutoEnergyCalibration {
 			
 			for (Pair<Integer, Float> score : scores) {
 				if (score.second < bestScore * 0.9f) break;
-				filteredScores.add(energies.get(score.first));
+				filteredScores.add(energies.get(score.first).get());
 			}
 						
 			return filteredScores;
