@@ -50,7 +50,7 @@ concentrations:
   Zr:K: 440.0
   Nb:K: 440.0
   Mo:K: 440.0
-  Ag:K: 200.0
+#  Ag:K: 200.0
   Cd:K: 250.0
   Ag:L: 200.0
   Cd:L: 250.0
@@ -73,7 +73,7 @@ concentrations:
   Lu:L: 440.0
   Hf:L: 420.0
   Ta:L: 320.0
-  Au:L: 226.0
+#  Au:L: 226.0
   Pb:L: 370.0
   Bi:L: 380.0
   Th:L: 445.0
