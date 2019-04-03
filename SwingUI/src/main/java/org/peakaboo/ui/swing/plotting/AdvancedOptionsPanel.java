@@ -54,45 +54,47 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 
+
+	private class Box<T> {
+
+		public T value;
+		public String name;
+		
+		public Box(T value, Function<T, String> pretty) {
+			this.value = value;
+			if (pretty != null) {
+				this.name = pretty.apply(value);
+			} else {
+				this.name = value == null ? "" : value.toString();
+			}
+		}
+		
+		public String toString() {
+			return name;
+		}
+		
+	}
 	
 	private <T> JComboBox<?> makeCombo(Predicate<T> matchesCurrent, Consumer<T> onSelect, Function<T, String> pretty, T... items) {
 
-		final class Box {
 
-			public T value;
-			public String name;
-			
-			public Box(T value) {
-				this.value = value;
-				if (pretty != null) {
-					this.name = pretty.apply(value);
-				} else {
-					this.name = value == null ? "" : value.toString();
-				}
-			}
-			
-			public String toString() {
-				return name;
-			}
-			
-		}
 
 
 		
-		List<Box> boxes = Arrays.asList(items).stream().map(Box::new).collect(Collectors.toList());
+		List<Box<T>> boxes = Arrays.asList(items).stream().map(t -> new Box<>(t, pretty)).collect(Collectors.toList());
 		
-		JComboBox<Box> comboBox = new JComboBox<>();
-		Consumer<Box> addItem = fitter -> {
+		JComboBox<Box<T>> comboBox = new JComboBox<>();
+		Consumer<Box<T>> addItem = fitter -> {
 			comboBox.addItem(fitter);
 			if (matchesCurrent.test(fitter.value)) {
 				comboBox.setSelectedItem(fitter);
 			}
 		};
-		for (Box item : boxes) {
+		for (Box<T> item : boxes) {
 			addItem.accept(item);
 		}
 		comboBox.addActionListener(e -> {
-			Box box = (Box) comboBox.getSelectedItem();
+			Box<T> box = (Box<T>) comboBox.getSelectedItem();
 			onSelect.accept(box.value);
 		});
 		

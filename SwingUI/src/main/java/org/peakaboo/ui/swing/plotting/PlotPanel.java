@@ -172,8 +172,6 @@ public class PlotPanel extends TabbedLayerPanel
 		controller.addListener(msg -> setWidgetsState());
 		setWidgetsState();
 		
-		controller.addListener(msg -> System.out.println(msg));
-		
 		doVersionCheck();
 
 	}
