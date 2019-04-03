@@ -1,6 +1,8 @@
 package org.peakaboo.framework.swidget.widgets.tabbedinterface;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -177,11 +179,18 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 		}
 	}
 
+	public List<T> getTabs() {
+		List<T> tabs = new ArrayList<>();
+		for (int i = 0; i < this.getTabCount()-1; i++) {
+			tabs.add((T) this.getComponentAt(i));
+		}
+		return tabs;
+	}
 	
 	public JFrame getWindow() {
 		return window;
 	}
-	
+		
 	protected abstract T createComponent();
 	protected abstract void destroyComponent(T component);
 	protected abstract void titleChanged(String title);	

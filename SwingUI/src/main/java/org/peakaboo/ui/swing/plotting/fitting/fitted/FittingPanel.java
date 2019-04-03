@@ -131,6 +131,9 @@ public class FittingPanel extends ClearPanel implements Changeable
 		if (row == -1) {
 			return null;
 		}
+		if (row >= controller.getFittedTransitionSeries().size()) {
+			return null;
+		}
 		return controller.getFittedTransitionSeries().get(row);
 	}
 	

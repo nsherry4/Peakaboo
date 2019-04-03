@@ -172,6 +172,7 @@ public class PlotPanel extends TabbedLayerPanel
 		controller.addListener(msg -> setWidgetsState());
 		setWidgetsState();
 		
+		controller.addListener(msg -> System.out.println(msg));
 		
 		doVersionCheck();
 
@@ -1158,6 +1159,10 @@ public class PlotPanel extends TabbedLayerPanel
 		dialog.showIn(this);
 		textfield.grabFocus();
 		
+	}
+
+	public boolean hasUnsavedWork() {
+		return false;
 	}
 	
 
