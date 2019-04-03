@@ -106,7 +106,7 @@ public class MapperFrame extends LiveFrame
 			}
 		};
 		setTitle("Peakaboo");
-		setIconImage(IconFactory.getImage(Version.icon));
+		setIconImage(IconFactory.getImage(Version.logo));
 		
 		pane.add(tabs, BorderLayout.CENTER);
 		this.pack();

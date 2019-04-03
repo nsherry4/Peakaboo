@@ -15,6 +15,7 @@ import org.peakaboo.calibration.CalibrationPluginManager;
 import org.peakaboo.common.Env;
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.curvefit.peak.table.PeakTable;
@@ -50,9 +51,12 @@ public class Peakaboo
 	}
 
 	private static void warnDevRelease() {
-		if (!Version.release){
+		if (Version.releaseType != ReleaseType.RELEASE){
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
+			if (Version.releaseType == ReleaseType.CANDIDATE) {
+				title = "Release Candidate for Peakaboo";
+			}
 			
 			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
 			
@@ -186,7 +190,7 @@ public class Peakaboo
 		Thread peakLoader = new Thread(() -> {
 			PeakTable original = PeakTable.SYSTEM.getSource();
 			String filename;
-			if (Version.release) {
+			if (Version.releaseType == ReleaseType.RELEASE) {
 				filename = "derived-peakfile-" + Version.longVersionNo + ".dat";
 			} else {
 				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".dat";
@@ -200,7 +204,7 @@ public class Peakaboo
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
-		Swidget.initialize(Version.splash, Version.icon, "Peakaboo", () -> {
+		Swidget.initialize(Version.splash, Version.logo, "Peakaboo", () -> {
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();

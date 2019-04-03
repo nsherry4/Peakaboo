@@ -3,29 +3,24 @@ package org.peakaboo.filter.plugins.advanced;
 import java.util.List;
 
 import org.peakaboo.common.Version;
+import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
-import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
-import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
-import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 public class PeakDetectorFilter extends AbstractFilter {
 
 	@Override
 	public String getFilterName() {
-		// TODO Auto-generated method stub
 		return "Peak Finder";
 	}
 
 	@Override
 	public String getFilterDescription() {
-		return "Peak Finder";
+		return "Peak Finder plugin is a diagnostic plugin to evaluate and debug Peakaboo's peak-finding function";
 	}
 
 	@Override
@@ -43,7 +38,7 @@ public class PeakDetectorFilter extends AbstractFilter {
 
 	@Override
 	public boolean pluginEnabled() {
-		return !Version.release;
+		return Version.releaseType != ReleaseType.RELEASE;
 	}
 
 	@Override

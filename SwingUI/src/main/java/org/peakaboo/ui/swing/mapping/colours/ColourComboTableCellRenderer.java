@@ -4,6 +4,7 @@ package org.peakaboo.ui.swing.mapping.colours;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.logging.Level;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
@@ -14,7 +15,9 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
+import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.display.map.modes.ratio.RatioColour;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -53,7 +56,7 @@ public class ColourComboTableCellRenderer<T> implements ListCellRenderer<T>, Tab
 			renderer.setIcon(null);
 			renderer.setText((String) value);
 			renderer.setBackground(Color.yellow);
-			if (!Version.release) System.err.println("ERROR");
+			PeakabooLog.get().log(Level.WARNING, "Problem determining mode for " + value);
 		}
 	}
 

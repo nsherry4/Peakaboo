@@ -13,6 +13,12 @@ import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 
 public class Version {
 
+	public enum ReleaseType {
+		DEVELOPMENT,
+		CANDIDATE,
+		RELEASE
+	}
+	
 	public static String buildDate = "";
 	
 	private static final Properties prop;
@@ -28,28 +34,61 @@ public class Version {
 	}
 	
 	
-	public final static boolean release = false;
-	
-	public final static String devReleaseDescription = "Development Version - " + buildDate;
-	public final static String releaseDescription = release ? "" : devReleaseDescription;
-	
-	public final static String titleReleaseDescription = (release ? "" : " [") + releaseDescription + (release ? "" : "]");
-	
-	
 	public final static int versionNoMajor = 5;
 	public final static int versionNoMinor = 2;
 	public final static int versionNoPoint = 1;
-	
-	
-	public final static String longVersionNo =  
-			release ? versionNoMajor + "." + versionNoMinor + "." + versionNoPoint : 
-			versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "dev";
-	public final static String logo = (release) ? "icon" : "devicon";
-	public final static String icon = (release) ? "icon" : "devicon";
-	public final static String splash = (release) ? "splash" : "devsplash";
 	public final static String program_name = "Peakaboo";
-	public final static String title = program_name + " " + (release ? versionNoMajor : longVersionNo) + titleReleaseDescription;
 	
+	public final static ReleaseType releaseType = ReleaseType.CANDIDATE;
+	
+
+
+	
+	public final static String releaseDescription;
+	public final static String titleReleaseDescription;
+	public final static String longVersionNo;
+	public final static String logo, splash;
+	public final static String title;
+	
+	
+	static {
+		switch (releaseType) {
+		
+		default:
+		case DEVELOPMENT:
+			releaseDescription = "Development Version - " + buildDate;
+			titleReleaseDescription = "[" + releaseDescription + "]";
+			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "dev";
+			logo = "devicon";
+			splash = "devsplash";
+			title = program_name + longVersionNo + titleReleaseDescription;
+			break;
+			
+		case CANDIDATE:
+			releaseDescription = "Release Candidate";
+			titleReleaseDescription = "[" + releaseDescription + "]";
+			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "rc";
+			logo = "rcicon";
+			splash = "rcsplash";
+			title = program_name + versionNoMajor + "." + versionNoMinor + titleReleaseDescription;
+			break;
+
+		case RELEASE:
+			releaseDescription = "";
+			titleReleaseDescription = "";
+			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint;
+			title = program_name + versionNoMajor + titleReleaseDescription;
+			logo = "icon";
+			splash = "splash";
+			break;
+			
+		}
+	};
+
+	
+
+
+
 
 	public static boolean hasNewVersion() {
 		

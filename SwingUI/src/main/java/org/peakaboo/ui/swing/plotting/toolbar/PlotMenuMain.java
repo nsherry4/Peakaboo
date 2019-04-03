@@ -11,6 +11,7 @@ import javax.swing.KeyStroke;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
+import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.swidget.icons.StockIcon;
@@ -113,14 +114,13 @@ public class PlotMenuMain extends JPopupMenu {
 			);
 		debug.add(bugreport);
 		
-		if (!Version.release) {
-			JMenuItem console = PlotMenuUtils.createMenuItem(plot,
-					"Debug Console", null, null,
-					e -> plot.actionDebugConsole(),
-					null, null
-				);
-			debug.add(console);
-		}
+		JMenuItem console = PlotMenuUtils.createMenuItem(plot,
+				"Debug Console", null, null,
+				e -> plot.actionDebugConsole(),
+				null, null
+			);
+		debug.add(console);
+
 		
 		
 		this.add(debug);
