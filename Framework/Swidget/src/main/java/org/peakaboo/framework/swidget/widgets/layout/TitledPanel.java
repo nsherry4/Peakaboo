@@ -106,7 +106,9 @@ public class TitledPanel extends JPanel
 		c.gridwidth = 2;
 		c.gridx = (showBadge ? 1 : 0);
 		c.gridy = 1;
-		add(component, c);
+		if (component != null) {
+			add(component, c);
+		}
 
 		this.repaint();
 		

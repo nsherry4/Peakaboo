@@ -16,7 +16,7 @@ public class Concentrations {
 
 	private Map<Element, Float> concentrations;
 	private Map<Element, ITransitionSeries> sources;
-	private NumberFormat format = new DecimalFormat("0.00");
+	private NumberFormat format = new DecimalFormat("0.0000");
 	private CalibrationProfile profile;
 	
 	public Concentrations(Map<Element, Float> concentrations, Map<Element, ITransitionSeries> sources, CalibrationProfile profile) {

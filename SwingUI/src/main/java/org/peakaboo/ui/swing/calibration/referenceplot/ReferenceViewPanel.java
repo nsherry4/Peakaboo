@@ -22,10 +22,13 @@ import javax.swing.table.TableModel;
 import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderTabBuilder;
+import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
 
@@ -38,11 +41,17 @@ public class ReferenceViewPanel extends HeaderLayer {
 		getContentRoot().setPreferredSize(new Dimension(700, 350));
 
 		
-		JPanel infopanel = new JPanel(new BorderLayout());
+		JPanel infopanel = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
+		infopanel.setBorder(Spacing.bHuge());
+		
 		JLabel info = new JLabel("<html>" + reference.longDescription() + "</html>");
 		info.setVerticalAlignment(SwingConstants.TOP);
-		info.setBorder(Spacing.bHuge());
 		infopanel.add(info, BorderLayout.CENTER);
+		
+		TitledPanel infotitle = new TitledPanel(null, reference.getName(), true);
+		infotitle.setBadge(IconFactory.getImageIcon("calibration", IconSize.ICON));
+		infopanel.add(infotitle, BorderLayout.NORTH);
+		
 		ReferencePlot kplot = new ReferencePlot(reference, TransitionShell.K);
 		ReferencePlot lplot = new ReferencePlot(reference, TransitionShell.L);
 		ReferencePlot mplot = new ReferencePlot(reference, TransitionShell.M);
