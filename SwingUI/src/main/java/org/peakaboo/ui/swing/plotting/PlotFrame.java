@@ -3,6 +3,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -74,18 +76,23 @@ public class PlotFrame extends LiveFrame
 				
 				// Used to mark if we need to prompt the user. If all tabs have no unsaved work,
 				// we don't need to ask.
-				boolean needsPrompt = false;
+				List<TabbedLayerPanel> tabsToClose = new ArrayList<>();
 				
 				for (TabbedLayerPanel tab : tabControl.getTabs()) {
 					if (tab instanceof PlotPanel) {
 						PlotPanel plot = (PlotPanel) tab;
-						if (plot.hasUnsavedWork()) {
-							needsPrompt = true;
+						if (!plot.hasUnsavedWork()) {
+							tabsToClose.add(tab);
 						}
+					} else {
+						tabsToClose.add(tab);
 					}
 				}
 				
-				//TODO: determine real value for needsPrompt
+				//close the ones without unsaved work right away
+				for (TabbedLayerPanel tab : tabsToClose) {
+					tabControl.closeTab(tab);
+				}
 				
 				Runnable closeAction = () -> {
 					openWindows--;
@@ -94,20 +101,20 @@ public class PlotFrame extends LiveFrame
 				};
 				
 				int tabs = tabControl.getTabCount();
-				if (tabs > 0 && needsPrompt) {
+				if (tabs > 0) {
 
+					HeaderDialog hd = new HeaderDialog(PlotFrame.this);
+					hd.getHeader().setCentre("Confirm Exit");
+					hd.getHeader().setShowClose(false);
+					hd.setPreferredSize(new Dimension(500, 150));
+					
 					ImageButton close = new ImageButton("Exit")
 							.withStateCritical()
 							.withAction(closeAction);
-					ImageButton stay = new ImageButton("Cancel");
-
-					
-					HeaderDialog hd = new HeaderDialog(PlotFrame.this);
-					hd.getHeader().setCentre("Confirm Exit");
+					ImageButton stay = new ImageButton("Cancel")
+							.withAction(() -> hd.setVisible(false));
 					hd.getHeader().setRight(close);
 					hd.getHeader().setLeft(stay);
-					hd.getHeader().setShowClose(false);
-					hd.setPreferredSize(new Dimension(500, 150));
 					
 					JPanel body = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
 					JLabel bodyText = new JLabel("<html><span style='font-size: 145%; font-weight: bold;'>Save changes before exiting?</span><br/><br/>If you don't save your session(s), any unsaved work will be permanently lost</html>");

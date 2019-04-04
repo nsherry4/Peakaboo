@@ -1,22 +1,34 @@
 package org.peakaboo.controller.plotter.undo;
 
 
+import java.util.Stack;
+
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.eventful.Eventful;
-
 
 
 public class UndoController extends Eventful
 {
 
 	PlotController	plot;
-	UndoModel		undoModel;
-
+	
+	/*
+	 * Stores undos and redos. The most recent entry on the undo stack should be the
+	 * current state
+	 */
+	private Stack<UndoPoint> undoStack;
+	private Stack<UndoPoint> redoStack;
+	
+	private UndoPoint lastSave;
+	
 
 	public UndoController(PlotController plotController)
 	{
 		this.plot = plotController;
-		undoModel = new UndoModel();
+		undoStack = new Stack<UndoPoint>();
+		redoStack = new Stack<UndoPoint>();
+		lastSave = null;
+		
 	}
 
 	public void setUndoPoint(String change)
@@ -24,9 +36,9 @@ public class UndoController extends Eventful
 		//save the current state
 		String saved = plot.getSavedSettings().serialize();
 
-		if (undoModel.undoStack.size() > 0)
+		if (undoStack.size() > 0)
 		{
-			String lastState = undoModel.undoStack.peek().getState();
+			String lastState = undoStack.peek().getState();
 			String thisState = saved;
 
 			//if these two states are the same, we don't bother saving the state
@@ -42,41 +54,45 @@ public class UndoController extends Eventful
 		 * This allows us to merge several similar quick actions into a single unto
 		 * to make navigating the undo stack easier/faster for the user  
 		 */
-		if (undoModel.undoStack.size() > 0 && undoModel.undoStack.peek().getName().equals(change) && (!change.equals("")))
+		UndoPoint undoable = new UndoPoint(change, saved);
+		if (undoStack.size() > 0 && undoStack.peek().getName().equals(change) && (!change.equals("")))
 		{
-			undoModel.undoStack.pop();
+			UndoPoint replaced = undoStack.pop();
+			if (replaced == lastSave) {
+				lastSave = undoable;
+			}
 		}
-		undoModel.undoStack.push(new UndoPoint(change, saved));
+		undoStack.push(undoable);
 
-		undoModel.redoStack.clear();
+		redoStack.clear();
 
 	}
 
 	
 	public String getNextUndo()
 	{
-		if (undoModel.undoStack.size() < 2) return "";
+		if (undoStack.size() < 2) return "";
 
-		return undoModel.undoStack.peek().getName();
+		return undoStack.peek().getName();
 	}
 
 
 	public String getNextRedo()
 	{
-		if (undoModel.redoStack.isEmpty()) return "";
+		if (redoStack.isEmpty()) return "";
 
-		return undoModel.redoStack.peek().getName();
+		return redoStack.peek().getName();
 
 	}
 
 
 	public void undo()
 	{
-		if (undoModel.undoStack.size() < 2) return;
+		if (undoStack.size() < 2) return;
 
-		undoModel.redoStack.push(undoModel.undoStack.pop());
+		redoStack.push(undoStack.pop());
 
-		plot.loadSettings(undoModel.undoStack.peek().getState(), true);
+		plot.loadSettings(undoStack.peek().getState(), true);
 
 		updateListeners();
 
@@ -86,11 +102,11 @@ public class UndoController extends Eventful
 	public void redo()
 	{
 
-		if (undoModel.redoStack.isEmpty()) return;
+		if (redoStack.isEmpty()) return;
 
-		undoModel.undoStack.push(undoModel.redoStack.pop());
+		undoStack.push(redoStack.pop());
 
-		plot.loadSettings(undoModel.undoStack.peek().getState(), true);
+		plot.loadSettings(undoStack.peek().getState(), true);
 
 		updateListeners();
 		plot.view().updateListeners();
@@ -102,20 +118,45 @@ public class UndoController extends Eventful
 
 	public boolean canUndo()
 	{
-		return undoModel.undoStack.size() >= 2;
+		return undoStack.size() >= 2;
 	}
 
 
 	public boolean canRedo()
 	{
-		return !undoModel.redoStack.isEmpty();
+		return !redoStack.isEmpty();
 	}
 
 
 	public void clearUndos()
 	{
-		undoModel.undoStack.clear();
+		undoStack.clear();
+		lastSave = null;
 		setUndoPoint("");
+	}
+	
+	/**
+	 * Marks this controller as having been saved <i>after</i> the most recent undo point
+	 */
+	public void setSavePoint() {
+		if (undoStack.size() == 0) {
+			lastSave = null;
+			return;
+		}
+		lastSave = undoStack.peek();
+		updateListeners();
+	}
+	
+	public boolean hasUnsavedWork() {
+		if (lastSave == null) {
+			return undoStack.size() > 1;
+		}
+		
+		if (lastSave == undoStack.peek()) {
+			return false;
+		}
+		
+		return true;
 	}
 
 

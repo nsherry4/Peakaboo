@@ -149,7 +149,7 @@ public class PlotToolbar extends JToolBar {
 		
 		
 		exportMenuButton.setEnabled(hasData);
-		saveButton.setEnabled(hasData);
+		saveButton.setEnabled(hasData && plot.hasUnsavedWork());
 		
 		energyMenu.setWidgetState(hasData);
 		viewMenu.setWidgetState(hasData);

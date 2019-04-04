@@ -744,6 +744,9 @@ public class PlotPanel extends TabbedLayerPanel
 				os.write(controller.getSavedSettings().serialize().getBytes());
 				os.close();
 				savedSessionFileName = file.get().getParentFile();
+				
+				//mark work up until this point as saved
+				controller.history().setSavePoint();
 			}
 			catch (IOException e)
 			{
@@ -1160,7 +1163,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 	public boolean hasUnsavedWork() {
-		return false;
+		return controller.history().hasUnsavedWork();
 	}
 	
 
