@@ -115,13 +115,12 @@ public class MapperToolbar extends JToolBar {
 		
 		controller.addListener(t -> {
 			
+			examineSubset.setEnabled(controller.getSelection().isReplotable());
 			if (controller.getSelection().hasSelection())
 			{
 				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getFitting().getCalibrationProfile().isEmpty());
-				examineSubset.setEnabled(true);
 			} else {
 				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
-				examineSubset.setEnabled(false);
 			}
 
 		});

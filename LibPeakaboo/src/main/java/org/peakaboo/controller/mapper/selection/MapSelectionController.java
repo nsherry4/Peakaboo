@@ -27,10 +27,14 @@ public class MapSelectionController extends EventfulType<MapUpdateType>  {
 		
 	}
 	
-	public  boolean hasSelection() {
+	public boolean hasSelection() {
 		return areaSelection.hasSelection() || pointsSelection.hasSelection();
 	}
 
+	public boolean isReplotable() {
+		return hasSelection() && (areaSelection.isReplottable() || pointsSelection.isReplottable());
+	}
+	
 	public List<Integer> getPoints() {
 		if (areaSelection.hasSelection()) {
 			return areaSelection.getPoints();
@@ -58,11 +62,19 @@ public class MapSelectionController extends EventfulType<MapUpdateType>  {
 	}
 	
 	public void makeNeighbourSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
+		if (!mappingController.getFitting().getActiveMode().isSelectable()) {
+			return;
+		}
+		
 		areaSelection.clearSelection();
 		pointsSelection.makeSelection(clickedAt, contiguous, modify);
 	}
 	
 	public void makeRectSelectionStart(Coord<Integer> dragStart) {
+		if (!mappingController.getFitting().getActiveMode().isSelectable()) {
+			return;
+		}
+		
 		pointsSelection.clearSelection();
 		areaSelection.setStart(dragStart);
 		areaSelection.setEnd(null);
@@ -70,6 +82,10 @@ public class MapSelectionController extends EventfulType<MapUpdateType>  {
 	}
 	
 	public void makeRectSelectionEnd(Coord<Integer> dragEnd) {
+		if (!mappingController.getFitting().getActiveMode().isSelectable()) {
+			return;
+		}
+		
 		pointsSelection.clearSelection();
 		areaSelection.setEnd(dragEnd);
 		areaSelection.setHasBoundingRegion(true);

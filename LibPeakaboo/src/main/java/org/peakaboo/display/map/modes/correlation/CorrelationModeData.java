@@ -46,10 +46,5 @@ public class CorrelationModeData implements MapModeData {
 		return data;
 	}
 	
-	@Override
-	public boolean isReplottable() {
-		return false;
-	}
-	
 	
 }

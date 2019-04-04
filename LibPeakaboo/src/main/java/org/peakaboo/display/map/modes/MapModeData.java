@@ -31,7 +31,4 @@ public interface MapModeData {
 		return (coord.x >= 0 && coord.x < getSize().x && coord.y >= 0 && coord.y < getSize().y);
 	}
 	
-	boolean isReplottable();
-	
-	
 }

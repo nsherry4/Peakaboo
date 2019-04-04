@@ -110,13 +110,12 @@ public class AreaSelection extends EventfulType<MapUpdateType> {
 	
 	public boolean hasSelection()
 	{
-		// TODO: this check can be moved further down the line later. There's no reason
-		// why we can't make any selections just because that selection is not
-		// replottable
-		return hasSelection && map.getFiltering().isReplottable() && map.getFitting().getMapModeData().isReplottable();
-			
+		return hasSelection && map.getFiltering().isReplottable() && map.getFitting().getActiveMode().isSelectable();
 	}
 
+	public boolean isReplottable() {
+		return hasSelection() && map.getFitting().getActiveMode().isReplottable();
+	}
 
 	
 

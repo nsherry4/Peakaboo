@@ -35,9 +35,4 @@ public class CompositeModeData implements MapModeData {
 		return data;
 	}
 	
-	@Override
-	public boolean isReplottable() {
-		return true;
-	}
-
 }

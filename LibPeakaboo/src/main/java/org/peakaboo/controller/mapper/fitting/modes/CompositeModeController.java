@@ -71,5 +71,16 @@ public class CompositeModeController extends ModeController {
 	}
 
 
+	@Override
+	public boolean isSelectable() {
+		return true;
+	}
+
+
+	@Override
+	public boolean isReplottable() {
+		return true;
+	}
+
 	
 }

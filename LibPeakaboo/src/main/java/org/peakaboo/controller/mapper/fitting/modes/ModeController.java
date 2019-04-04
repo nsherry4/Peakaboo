@@ -130,6 +130,8 @@ public abstract class ModeController extends Eventful {
 	
 	public abstract String longTitle();
 	public abstract MapModeData getData();
+	public abstract boolean isSelectable();
+	public abstract boolean isReplottable();
 
 	
 }

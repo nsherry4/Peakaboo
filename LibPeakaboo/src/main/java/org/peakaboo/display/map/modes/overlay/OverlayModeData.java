@@ -48,10 +48,5 @@ public class OverlayModeData implements MapModeData {
 	public Map<OverlayColour, OverlayChannel> getData() {
 		return data;
 	}
-	
-	@Override
-	public boolean isReplottable() {
-		return true;
-	}
 
 }

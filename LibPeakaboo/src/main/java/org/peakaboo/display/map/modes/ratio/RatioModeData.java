@@ -38,10 +38,5 @@ public class RatioModeData implements MapModeData {
 	public Pair<Spectrum, Spectrum> getData() {
 		return data;
 	}
-
-	@Override
-	public boolean isReplottable() {
-		return true;
-	}
 	
 }

@@ -35,14 +35,16 @@ public class PointsSelection extends EventfulType<MapUpdateType>{
 	public PointsSelection(MappingController map) {
 		this.map = map;
 	}
-	
-	public boolean hasSelection() {
-		
-		// TODO: this check can be moved further down the line later. There's no reason
-		// why we can't make any selections just because that selection is not
-		// replottable
-		return indexes.size() > 0 && map.getFiltering().isReplottable() && map.getFitting().getMapModeData().isReplottable();
+
+	public boolean hasSelection()
+	{
+		return indexes.size() > 0 && map.getFiltering().isReplottable() && map.getFitting().getActiveMode().isSelectable();
 	}
+
+	public boolean isReplottable() {
+		return hasSelection() && map.getFitting().getActiveMode().isReplottable();
+	}
+
 	
 	public void clearSelection() {
 		setPoints(new ArrayList<>());

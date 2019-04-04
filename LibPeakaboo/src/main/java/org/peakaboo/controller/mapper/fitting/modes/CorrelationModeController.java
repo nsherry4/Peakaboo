@@ -174,6 +174,16 @@ public class CorrelationModeController extends ModeController {
 	
 
 
+	@Override
+	public boolean isSelectable() {
+		return false;
+	}
+
+
+	@Override
+	public boolean isReplottable() {
+		return false;
+	}
 	
 	
 	
