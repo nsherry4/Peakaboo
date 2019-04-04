@@ -77,21 +77,20 @@ public class PlotFrame extends LiveFrame
 				// Used to mark if we need to prompt the user. If all tabs have no unsaved work,
 				// we don't need to ask.
 				List<TabbedLayerPanel> tabsToClose = new ArrayList<>();
-				
+				List<PlotPanel> unsavedWork = new ArrayList<>();
+				boolean prompt = false;
 				for (TabbedLayerPanel tab : tabControl.getTabs()) {
 					if (tab instanceof PlotPanel) {
 						PlotPanel plot = (PlotPanel) tab;
 						if (!plot.hasUnsavedWork()) {
 							tabsToClose.add(tab);
+						} else {
+							unsavedWork.add(plot);
+							prompt = true;
 						}
 					} else {
 						tabsToClose.add(tab);
 					}
-				}
-				
-				//close the ones without unsaved work right away
-				for (TabbedLayerPanel tab : tabsToClose) {
-					tabControl.closeTab(tab);
 				}
 				
 				Runnable closeAction = () -> {
@@ -100,41 +99,60 @@ public class PlotFrame extends LiveFrame
 					if (openWindows == 0) System.exit(0);
 				};
 				
-				int tabs = tabControl.getTabCount();
-				if (tabs > 0) {
-
-					HeaderDialog hd = new HeaderDialog(PlotFrame.this);
-					hd.getHeader().setCentre("Confirm Exit");
-					hd.getHeader().setShowClose(false);
-					hd.setPreferredSize(new Dimension(500, 150));
-					
-					ImageButton close = new ImageButton("Exit")
-							.withStateCritical()
-							.withAction(closeAction);
-					ImageButton stay = new ImageButton("Cancel")
-							.withAction(() -> hd.setVisible(false));
-					hd.getHeader().setRight(close);
-					hd.getHeader().setLeft(stay);
-					
-					JPanel body = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
-					JLabel bodyText = new JLabel("<html><span style='font-size: 145%; font-weight: bold;'>Save changes before exiting?</span><br/><br/>If you don't save your session(s), any unsaved work will be permanently lost</html>");
-					bodyText.setVerticalAlignment(SwingConstants.TOP);
-					body.add(bodyText, BorderLayout.CENTER);
-					JLabel icon = new JLabel(StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON));
-					icon.setVerticalAlignment(SwingConstants.TOP);
-					body.add(icon, BorderLayout.WEST);
-					body.setBorder(Spacing.bHuge());
-					hd.setBody(body);
-					hd.pack();
-					hd.setLocationRelativeTo(PlotFrame.this);
-					hd.setModal(true);
-					hd.setVisible(true);
-					
-					//ask if sure
-				} else {
-					//are there ever 0 tabs?
+				//if all the tabs are ready to close, just run the close action
+				if (!prompt) {
 					closeAction.run();
+					return;
 				}
+				
+				//close the ones without unsaved work right away
+				for (TabbedLayerPanel tab : tabsToClose) {
+					tabControl.closeTab(tab);
+				}
+
+				StringBuilder details = new StringBuilder();
+				details.append("<html><span style='font-size: 145%; font-weight: bold;'>");
+				details.append("Save changes to ");
+				if (unsavedWork.size() > 1) {
+					details.append(unsavedWork.size());
+					details.append(" projects");
+				} else {
+					details.append("'");
+					details.append(unsavedWork.get(0).getController().data().getTitle());
+					details.append("'");
+				}
+				details.append(" before exiting?");
+				details.append("</span><br/><br/>If you don't save your session(s), any unsaved work will be permanently lost.");
+				details.append("</html>");
+				
+				
+				HeaderDialog hd = new HeaderDialog(PlotFrame.this);
+				hd.getHeader().setCentre("Confirm Exit");
+				hd.getHeader().setShowClose(false);
+				hd.setPreferredSize(new Dimension(500, 160));
+				
+				ImageButton close = new ImageButton("Exit")
+						.withStateCritical()
+						.withAction(closeAction);
+				ImageButton stay = new ImageButton("Cancel")
+						.withAction(() -> hd.setVisible(false));
+				hd.getHeader().setRight(close);
+				hd.getHeader().setLeft(stay);
+				
+				JPanel body = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
+				JLabel bodyText = new JLabel(details.toString());
+				bodyText.setVerticalAlignment(SwingConstants.TOP);
+				body.add(bodyText, BorderLayout.CENTER);
+				JLabel icon = new JLabel(StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON));
+				icon.setVerticalAlignment(SwingConstants.TOP);
+				body.add(icon, BorderLayout.WEST);
+				body.setBorder(Spacing.bHuge());
+				hd.setBody(body);
+				hd.pack();
+				hd.setLocationRelativeTo(PlotFrame.this);
+				hd.setModal(true);
+				hd.setVisible(true);
+
 			}
 			
 			public void windowClosed(WindowEvent e)

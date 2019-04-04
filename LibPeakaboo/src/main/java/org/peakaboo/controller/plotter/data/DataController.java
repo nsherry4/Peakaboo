@@ -155,7 +155,7 @@ public class DataController extends Eventful
 		plot.fitting().setMinMaxEnergy(dsp.getDataSource().getScanData().minEnergy(), dsp.getDataSource().getScanData().maxEnergy());
 		
 	
-		plot.history().clearUndos();
+		plot.history().clear();
 			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected

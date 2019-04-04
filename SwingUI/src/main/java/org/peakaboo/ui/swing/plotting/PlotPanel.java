@@ -1163,7 +1163,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 	public boolean hasUnsavedWork() {
-		return controller.history().hasUnsavedWork();
+		return controller.history().hasUnsavedWork() && controller.data().hasDataSet();
 	}
 	
 

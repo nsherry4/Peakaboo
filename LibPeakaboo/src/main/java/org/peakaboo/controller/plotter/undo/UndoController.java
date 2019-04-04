@@ -12,12 +12,11 @@ public class UndoController extends Eventful
 
 	PlotController	plot;
 	
-	/*
-	 * Stores undos and redos. The most recent entry on the undo stack should be the
-	 * current state
-	 */
+	
+	private UndoPoint currentState;
 	private Stack<UndoPoint> undoStack;
 	private Stack<UndoPoint> redoStack;
+	private boolean working = false;
 	
 	private UndoPoint lastSave;
 	
@@ -28,17 +27,19 @@ public class UndoController extends Eventful
 		undoStack = new Stack<UndoPoint>();
 		redoStack = new Stack<UndoPoint>();
 		lastSave = null;
+		currentState = null;
 		
 	}
 
-	public void setUndoPoint(String change)
-	{
+	public void setUndoPoint(String change) {
+		if (working) { return; }
+		
 		//save the current state
 		String saved = plot.getSavedSettings().serialize();
 
-		if (undoStack.size() > 0)
+		if (currentState != null)
 		{
-			String lastState = undoStack.peek().getState();
+			String lastState = currentState.getState();
 			String thisState = saved;
 
 			//if these two states are the same, we don't bother saving the state
@@ -50,19 +51,18 @@ public class UndoController extends Eventful
 
 		/*
 		 * if the last change description is the same as this one, but isn't blank
-		 * replace the last undo state with this one instead of adding it on top of.
-		 * This allows us to merge several similar quick actions into a single unto
+		 * replace the current state with this one instead of adding it on top of.
+		 * This allows us to merge several similar quick actions into a single undo
 		 * to make navigating the undo stack easier/faster for the user  
 		 */
 		UndoPoint undoable = new UndoPoint(change, saved);
-		if (undoStack.size() > 0 && undoStack.peek().getName().equals(change) && (!change.equals("")))
-		{
-			UndoPoint replaced = undoStack.pop();
-			if (replaced == lastSave) {
-				lastSave = undoable;
-			}
+		if (currentState != null && currentState.getName().equals(change) && (!change.equals(""))) {
+			//these changes are the same (in sequence) so don't save the last one
+		} else if (currentState != null) {
+			//different changes mean we save the last one
+			undoStack.push(currentState);
 		}
-		undoStack.push(undoable);
+		currentState = undoable;
 
 		redoStack.clear();
 
@@ -71,15 +71,17 @@ public class UndoController extends Eventful
 	
 	public String getNextUndo()
 	{
-		if (undoStack.size() < 2) return "";
+		if (currentState == null) {
+			return "";
+		}
 
-		return undoStack.peek().getName();
+		return currentState.getName();
 	}
 
 
 	public String getNextRedo()
 	{
-		if (redoStack.isEmpty()) return "";
+		if (!canRedo()) return "";
 
 		return redoStack.peek().getName();
 
@@ -88,12 +90,17 @@ public class UndoController extends Eventful
 
 	public void undo()
 	{
-		if (undoStack.size() < 2) return;
-
-		redoStack.push(undoStack.pop());
-
-		plot.loadSettings(undoStack.peek().getState(), true);
-
+		if (!canUndo()) return;
+		
+		try {
+			working = true;
+			if (currentState != null) { redoStack.push(currentState); }
+			currentState = undoStack.pop();
+			plot.loadSettings(currentState.getState(), true);
+		} finally {
+			working = false;
+		}
+		
 		updateListeners();
 
 	}
@@ -102,12 +109,17 @@ public class UndoController extends Eventful
 	public void redo()
 	{
 
-		if (redoStack.isEmpty()) return;
+		if (!canRedo()) return;
 
-		undoStack.push(redoStack.pop());
-
-		plot.loadSettings(undoStack.peek().getState(), true);
-
+		try {
+			working = true;
+			if (currentState != null) { undoStack.push(currentState); }
+			currentState = redoStack.pop();
+			plot.loadSettings(currentState.getState(), true);
+		} finally {
+			working = false;
+		}
+		
 		updateListeners();
 		plot.view().updateListeners();
 		plot.filtering().updateListeners();
@@ -118,7 +130,7 @@ public class UndoController extends Eventful
 
 	public boolean canUndo()
 	{
-		return undoStack.size() >= 2;
+		return !undoStack.isEmpty() && currentState != null;
 	}
 
 
@@ -128,9 +140,11 @@ public class UndoController extends Eventful
 	}
 
 
-	public void clearUndos()
+	public void clear()
 	{
 		undoStack.clear();
+		redoStack.clear();
+		currentState = null;
 		lastSave = null;
 		setUndoPoint("");
 	}
@@ -139,20 +153,20 @@ public class UndoController extends Eventful
 	 * Marks this controller as having been saved <i>after</i> the most recent undo point
 	 */
 	public void setSavePoint() {
-		if (undoStack.size() == 0) {
+		if (currentState == null) {
 			lastSave = null;
 			return;
 		}
-		lastSave = undoStack.peek();
+		lastSave = currentState;
 		updateListeners();
 	}
 	
 	public boolean hasUnsavedWork() {
 		if (lastSave == null) {
-			return undoStack.size() > 1;
+			return currentState != null && undoStack.size() >= 1;
 		}
 		
-		if (lastSave == undoStack.peek()) {
+		if (lastSave == currentState) {
 			return false;
 		}
 		
