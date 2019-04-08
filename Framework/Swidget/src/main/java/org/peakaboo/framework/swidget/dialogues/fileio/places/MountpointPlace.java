@@ -3,6 +3,7 @@ package org.peakaboo.framework.swidget.dialogues.fileio.places;
 import java.io.File;
 
 import javax.swing.Icon;
+import javax.swing.filechooser.FileSystemView;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
@@ -25,7 +26,7 @@ class MountpointPlace implements Place {
 		if (mountpoint.getAbsolutePath().equals("/")) {
 			return "Filesystem";
 		}
-		return mountpoint.getName();
+		return FileSystemView.getFileSystemView().getSystemDisplayName(mountpoint);
 	}
 
 	@Override
