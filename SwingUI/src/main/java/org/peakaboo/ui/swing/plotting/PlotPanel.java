@@ -20,8 +20,6 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -68,25 +66,21 @@ import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
-import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SISize;
-import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.util.StringInput;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.plural.Plural;
-import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
+import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 import org.peakaboo.framework.plural.streams.swing.StreamExecutorPanel;
 import org.peakaboo.framework.plural.streams.swing.StreamExecutorView;
 import org.peakaboo.framework.plural.swing.ExecutorSetView;
@@ -95,20 +89,17 @@ import org.peakaboo.framework.swidget.dialogues.AboutDialogue;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconFactory;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
-import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener.Buttons;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.widgets.AboutLayer;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderPanel;
 import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
 import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
@@ -137,11 +128,9 @@ public class PlotPanel extends TabbedLayerPanel
 	//Non-UI
 	private PlotController				controller;
 	private PlotCanvas					canvas;
-	public File							saveFilesFolder;
-	private File						savedSessionFileName;
-	private File						exportedDataFileName;
-	private File						datasetFolder;
-
+	
+	private File sessionFile;
+	private File lastFolder;
 
 	//===TOOLBAR WIDGETS===
 	private PlotToolbar                 toolBar;
@@ -159,10 +148,8 @@ public class PlotPanel extends TabbedLayerPanel
 		super(container);
 		this.tabs = container;
 		
-		savedSessionFileName = null;
-		exportedDataFileName = null;
-		
-		datasetFolder = Env.homeDirectory();
+		lastFolder = Env.homeDirectory();
+		sessionFile = null;
 
 		controller = new PlotController(DesktopApp.appDir());
 				
@@ -363,9 +350,9 @@ public class PlotPanel extends TabbedLayerPanel
 	// data set, and returns it to the caller
 	private void openNewDataset(List<SimpleFileExtension> extensions)
 	{
-		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", datasetFolder, extensions, files -> {
+		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", lastFolder, extensions, files -> {
 			if (!files.isPresent()) return;
-			datasetFolder = files.get().get(0).getParentFile();
+			lastFolder = files.get().get(0).getParentFile();
 			
 			load(files.get());
 			
@@ -382,12 +369,15 @@ public class PlotPanel extends TabbedLayerPanel
 			}
 			
 			@Override
-			public void onSuccess(List<Path> paths) {
+			public void onSuccess(List<Path> paths, File session) {
 				// set some controls based on the fact that we have just loaded a
 				// new data set
 				controller.data().setDataPaths(paths);
-				//TODO: Should this be cleared even when we load a session?
-				savedSessionFileName = null;
+				if (paths.size() > 0) {
+					lastFolder = paths.get(0).toFile().getParentFile();
+				} else {
+					lastFolder = session.getParentFile();
+				}
 				canvas.updateCanvasSize();
 			}
 
@@ -454,7 +444,8 @@ public class PlotPanel extends TabbedLayerPanel
 				ImageButton buttonYes = new ImageButton("Yes")
 						.withStateDefault()
 						.withAction(() -> {
-							savedSessionFileName = sessionFile;
+							PlotPanel.this.sessionFile = sessionFile;
+							lastFolder = sessionFile.getParentFile();
 							load.accept(true);
 						});
 				
@@ -477,6 +468,11 @@ public class PlotPanel extends TabbedLayerPanel
 			@Override
 			public void onSessionFailure() {
 				new LayerDialog("Loading Session Failed", "The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", MessageType.ERROR).showIn(PlotPanel.this);
+			}
+
+			@Override
+			public void onSessionLoad(File session) {
+				sessionFile = session;
 			}
 			
 		};
@@ -640,10 +636,11 @@ public class PlotPanel extends TabbedLayerPanel
 		DataSource source = controller.data().getDataSet().getDataSource();
 
 		SimpleFileExtension ext = new SimpleFileExtension(sink.getFormatName(), sink.getFormatExtension());
-		SwidgetFilePanels.saveFile(this, "Export Scan Data", exportedDataFileName, ext, file -> {
+		SwidgetFilePanels.saveFile(this, "Export Scan Data", lastFolder, ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
+			lastFolder = file.get().getParentFile();
 			actionExportData(source, sink, file.get());
 			
 		});
@@ -731,40 +728,52 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 
-	public void actionSaveSession()
+	public void actionSaveSession() {
+		if (sessionFile == null) {
+			actionSaveSessionAs();
+			return;
+		}
+		
+		actionSaveSession(sessionFile);
+		
+	}
+	
+	public void actionSaveSessionAs()
 	{
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		SwidgetFilePanels.saveFile(this, "Save Session", savedSessionFileName, peakaboo, file -> {
+		SwidgetFilePanels.saveFile(this, "Save Session", sessionFile.getParentFile(), peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
-			try {
-				FileOutputStream os = new FileOutputStream(file.get());
-				os.write(controller.getSavedSettings().serialize().getBytes());
-				os.close();
-				savedSessionFileName = file.get().getParentFile();
-				
-				//mark work up until this point as saved
-				controller.history().setSavePoint();
-			}
-			catch (IOException e)
-			{
-				PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
-			}
-			
+			sessionFile = file.get();
+			lastFolder = sessionFile.getParentFile();
+			actionSaveSession(file.get());	
 		});
 	}
-
+	
+	
+	public void actionSaveSession(File file) {
+		try {
+			FileOutputStream os = new FileOutputStream(file);
+			os.write(controller.getSavedSettings().serialize().getBytes());
+			os.close();
+			
+			//mark work up until this point as saved
+			controller.history().setSavePoint();
+		}
+		catch (IOException e)
+		{
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
+		}
+	}
+	
 
 	public void actionSavePicture()
 	{
-		if (saveFilesFolder == null) {
-			saveFilesFolder = datasetFolder;
-		}
-		SavePicture sp = new SavePicture(this, canvas, saveFilesFolder, file -> {
+		SavePicture sp = new SavePicture(this, canvas, lastFolder, file -> {
 			if (file.isPresent()) {
-				saveFilesFolder = file.get().getParentFile();
+				lastFolder = file.get().getParentFile();
 			}
 		});
 		sp.show();
@@ -776,10 +785,11 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		export.set(new ExportPanel(this, canvas, () -> {
 			
-			SwidgetFilePanels.saveFile(this, "Save Archive", saveFilesFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+			SwidgetFilePanels.saveFile(this, "Save Archive", lastFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
 					return;
 				}
+				lastFolder = file.get().getParentFile();
 				
 				SurfaceType format = export.get().getPlotFormat();
 				int width = export.get().getImageWidth();
@@ -859,22 +869,15 @@ public class PlotPanel extends TabbedLayerPanel
 
 
 	public void actionSaveFilteredData()
-	{
-		if (saveFilesFolder == null) {
-			saveFilesFolder = datasetFolder;
-		}
-		
-		
+	{	
 		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
-		
 
 		SimpleFileExtension text = new SimpleFileExtension("Text File", "txt");
-		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", saveFilesFolder, text, saveFile -> {
+		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", lastFolder, text, saveFile -> {
 			if (!saveFile.isPresent()) {
 				return;
 			}
-			
-			saveFilesFolder = saveFile.get().getParentFile();
+			lastFolder = saveFile.get().getParentFile();
 			
 			ExecutorSet<Object> execset = controller.writeFitleredDataToText(saveFile.get());
 			
@@ -897,16 +900,12 @@ public class PlotPanel extends TabbedLayerPanel
 	
 	public void actionSaveFittingInformation()
 	{
-
-		if (saveFilesFolder == null) {
-			saveFilesFolder = datasetFolder;
-		}
-
 		SimpleFileExtension ext = new SimpleFileExtension("Text File", "txt");
-		SwidgetFilePanels.saveFile(this, "Save Fitting Information to Text File", saveFilesFolder, ext, file -> {
+		SwidgetFilePanels.saveFile(this, "Save Fitting Information to Text File", lastFolder, ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
+			lastFolder = file.get().getParentFile();
 			
 			try {
 				FileOutputStream os = new FileOutputStream(file.get());
@@ -923,10 +922,12 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionLoadSession() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		SwidgetFilePanels.openFile(this, "Load Session Data", savedSessionFileName, peakaboo, file -> {
+		SwidgetFilePanels.openFile(this, "Load Session Data", sessionFile, peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
+			sessionFile = file.get();
+			lastFolder = sessionFile.getParentFile();
 			load(Collections.singletonList(file.get()));
 		});
 
@@ -1166,5 +1167,12 @@ public class PlotPanel extends TabbedLayerPanel
 		return controller.history().hasUnsavedWork() && controller.data().hasDataSet();
 	}
 	
+	public File getLastFolder() {
+		return lastFolder;
+	}
+
+	public File getSessionFile() {
+		return sessionFile;
+	}
 
 }

@@ -33,6 +33,7 @@ public abstract class DataLoader {
 	private List<Path> paths;
 	private String dataSourceUUID = null;
 	private List<Object> sessionParameters = null;
+	private File sessionFile = null;
 	
 	//if we're loading a session, we need to do some extra work after loading the dataset
 	private Runnable sessionCallback = () -> {}; 
@@ -67,7 +68,7 @@ public abstract class DataLoader {
 				} else {
 					sessionCallback.run();
 					controller.data().setDataSourceParameters(sessionParameters);
-					onSuccess(paths);
+					onSuccess(paths, sessionFile);
 				}						
 							
 			});
@@ -156,9 +157,9 @@ public abstract class DataLoader {
 
 	private void loadSession() {
 		
-		File file = paths.get(0).toFile();
+		sessionFile = paths.get(0).toFile();
 		try {
-			Optional<SavedSession> optSession = controller.readSavedSettings(StringInput.contents(file));
+			Optional<SavedSession> optSession = controller.readSavedSettings(StringInput.contents(sessionFile));
 			
 			if (!optSession.isPresent()) {
 				onSessionFailure();
@@ -183,7 +184,7 @@ public abstract class DataLoader {
 			//If the data files in the saved session are different, offer to load the data set from the new session
 			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
 				
-				onSessionHasData(file, load -> {
+				onSessionHasData(sessionFile, load -> {
 					if (load) {
 						//they said yes, load the new data, and then apply the session
 						//this needs to be done this way b/c loading a new dataset wipes out
@@ -203,6 +204,7 @@ public abstract class DataLoader {
 						controller.data().setDataPaths(currentPaths);
 						warnVersion.run();
 					}
+					onSessionLoad(sessionFile);
 				});
 				
 								
@@ -210,6 +212,7 @@ public abstract class DataLoader {
 				//just load the session, as there is either no data associated with it, or it's the same data
 				controller.loadSessionSettings(session, true);
 				warnVersion.run();
+				onSessionLoad(sessionFile);
 			}
 			
 
@@ -220,13 +223,14 @@ public abstract class DataLoader {
 	}
 
 	public abstract void onLoading(ExecutorSet<DatasetReadResult> job);
-	public abstract void onSuccess(List<Path> paths);
+	public abstract void onSuccess(List<Path> paths, File session);
 	public abstract void onFail(List<Path> paths, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
 	public abstract void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected);
 	
 	public abstract void onSessionNewer();
 	public abstract void onSessionFailure();
+	public abstract void onSessionLoad(File session);
 	public abstract void onSessionHasData(File sessionFile, Consumer<Boolean> load);
 	
 }

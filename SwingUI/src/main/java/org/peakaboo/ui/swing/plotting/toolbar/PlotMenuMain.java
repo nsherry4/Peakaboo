@@ -20,12 +20,12 @@ import org.peakaboo.ui.swing.plotting.PlotPanel;
 public class PlotMenuMain extends JPopupMenu {
 
 	private PlotController controller;
-	
-	
-	private JMenuItem					undo, redo;
+	private PlotPanel plot;
+	private JMenuItem undo, redo, save, saveAs;
 	
 	public PlotMenuMain(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
+		this.plot = plot;
 		
 		
 		this.add(PlotMenuUtils.createMenuItem(plot,
@@ -35,11 +35,19 @@ public class PlotMenuMain extends JPopupMenu {
 		));
 		
 		
-		this.add(PlotMenuUtils.createMenuItem(plot,
+		save = PlotMenuUtils.createMenuItem(plot,
 				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
 				e -> plot.actionSaveSession(),
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK), null
-		));
+		);
+		this.add(save);
+
+		saveAs = PlotMenuUtils.createMenuItem(plot,
+				"Save Session As\u2026", StockIcon.DOCUMENT_SAVE_AS.toMenuIcon(), null, 
+				e -> plot.actionSaveSessionAs(),
+				null, null
+		);
+		this.add(saveAs);
 		
 		this.add(PlotMenuUtils.createMenuItem(plot,
 				"Load Session", null, null,
@@ -147,6 +155,9 @@ public class PlotMenuMain extends JPopupMenu {
 		redo.setEnabled(controller.history().canRedo());
 		undo.setText("Undo " + controller.history().getNextUndo());
 		redo.setText("Redo " + controller.history().getNextRedo());
+		
+		save.setEnabled(hasData && plot.getSessionFile() != null && plot.hasUnsavedWork());
+		saveAs.setEnabled(hasData);
 		
 	}
 	
