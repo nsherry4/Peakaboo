@@ -35,16 +35,14 @@ import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.AwtSurfaceFactory;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
-import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.plural.swing.ExecutorSetView;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
-import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener.Buttons;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
@@ -66,7 +64,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	private MapStatusBar			statusBar;
 	
 	private MapperToolbar			toolbar;
-
+	
 	public MapperPanel(MappingController controller, TabbedInterface<TabbedLayerPanel> parentPlotter, TabbedInterface<TabbedLayerPanel> owner) {
 		super(owner);
 		
@@ -242,25 +240,20 @@ public class MapperPanel extends TabbedLayerPanel {
 	
 	public void actionSavePicture()
 	{
-		if (controller.getSettings().savePictureFolder == null) controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
-		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().savePictureFolder, file -> {
+		SavePicture sp = new SavePicture(this, canvas, controller.getSettings().lastFolder, file -> {
 			if (file.isPresent()) {
-				controller.getSettings().savePictureFolder = file.get().getParentFile();
+				controller.getSettings().lastFolder = file.get().getParentFile();
 			}
 		});
 		sp.show();
 	}
 	
 	public void actionSaveCSV()
-	{
-		if (controller.getSettings().savePictureFolder == null) {
-			controller.getSettings().savePictureFolder = controller.getSettings().dataSourceFolder;
-		}
-		
+	{		
 		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
-		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().savePictureFolder, txt, file -> {
+		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().lastFolder, txt, file -> {
 			if (!file.isPresent()) { return; }
-			controller.getSettings().savePictureFolder = file.get().getParentFile();
+			controller.getSettings().lastFolder = file.get().getParentFile();
 			actionSaveCSV(file.get());
 		});
 
@@ -283,10 +276,11 @@ public class MapperPanel extends TabbedLayerPanel {
 		
 		export.set(new ExportPanel(this, canvas, () -> {
 			
-			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().savePictureFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().lastFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
 					return;
 				}
+				controller.getSettings().lastFolder = file.get().getParentFile();
 				
 				SurfaceType format = export.get().getPlotFormat();
 				int width = export.get().getImageWidth();

@@ -128,9 +128,6 @@ public class PlotPanel extends TabbedLayerPanel
 	//Non-UI
 	private PlotController				controller;
 	private PlotCanvas					canvas;
-	
-	private File sessionFile;
-	private File lastFolder;
 
 	//===TOOLBAR WIDGETS===
 	private PlotToolbar                 toolBar;
@@ -148,9 +145,6 @@ public class PlotPanel extends TabbedLayerPanel
 		super(container);
 		this.tabs = container;
 		
-		lastFolder = Env.homeDirectory();
-		sessionFile = null;
-
 		controller = new PlotController(DesktopApp.appDir());
 				
 
@@ -350,9 +344,9 @@ public class PlotPanel extends TabbedLayerPanel
 	// data set, and returns it to the caller
 	private void openNewDataset(List<SimpleFileExtension> extensions)
 	{
-		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", lastFolder, extensions, files -> {
+		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", controller.io().getLastFolder(), extensions, files -> {
 			if (!files.isPresent()) return;
-			lastFolder = files.get().get(0).getParentFile();
+			controller.io().setLastFolder(files.get().get(0).getParentFile());
 			
 			load(files.get());
 			
@@ -372,12 +366,6 @@ public class PlotPanel extends TabbedLayerPanel
 			public void onSuccess(List<Path> paths, File session) {
 				// set some controls based on the fact that we have just loaded a
 				// new data set
-				controller.data().setDataPaths(paths);
-				if (paths.size() > 0) {
-					lastFolder = paths.get(0).toFile().getParentFile();
-				} else {
-					lastFolder = session.getParentFile();
-				}
 				canvas.updateCanvasSize();
 			}
 
@@ -444,8 +432,7 @@ public class PlotPanel extends TabbedLayerPanel
 				ImageButton buttonYes = new ImageButton("Yes")
 						.withStateDefault()
 						.withAction(() -> {
-							PlotPanel.this.sessionFile = sessionFile;
-							lastFolder = sessionFile.getParentFile();
+							controller.io().setBothFromSession(sessionFile);
 							load.accept(true);
 						});
 				
@@ -468,11 +455,6 @@ public class PlotPanel extends TabbedLayerPanel
 			@Override
 			public void onSessionFailure() {
 				new LayerDialog("Loading Session Failed", "The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", MessageType.ERROR).showIn(PlotPanel.this);
-			}
-
-			@Override
-			public void onSessionLoad(File session) {
-				sessionFile = session;
 			}
 			
 		};
@@ -636,11 +618,11 @@ public class PlotPanel extends TabbedLayerPanel
 		DataSource source = controller.data().getDataSet().getDataSource();
 
 		SimpleFileExtension ext = new SimpleFileExtension(sink.getFormatName(), sink.getFormatExtension());
-		SwidgetFilePanels.saveFile(this, "Export Scan Data", lastFolder, ext, file -> {
+		SwidgetFilePanels.saveFile(this, "Export Scan Data", controller.io().getLastFolder(), ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
-			lastFolder = file.get().getParentFile();
+			controller.io().setLastFolder(file.get().getParentFile());
 			actionExportData(source, sink, file.get());
 			
 		});
@@ -729,12 +711,12 @@ public class PlotPanel extends TabbedLayerPanel
 
 
 	public void actionSaveSession() {
-		if (sessionFile == null) {
+		if (controller.io().getSessionFile() == null) {
 			actionSaveSessionAs();
 			return;
 		}
 		
-		actionSaveSession(sessionFile);
+		actionSaveSession(controller.io().getSessionFile());
 		
 	}
 	
@@ -742,12 +724,11 @@ public class PlotPanel extends TabbedLayerPanel
 	{
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		SwidgetFilePanels.saveFile(this, "Save Session", sessionFile.getParentFile(), peakaboo, file -> {
+		SwidgetFilePanels.saveFile(this, "Save Session", controller.io().getSessionFile().getParentFile(), peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
-			sessionFile = file.get();
-			lastFolder = sessionFile.getParentFile();
+			controller.io().setBothFromSession(file.get());
 			actionSaveSession(file.get());	
 		});
 	}
@@ -771,9 +752,9 @@ public class PlotPanel extends TabbedLayerPanel
 
 	public void actionSavePicture()
 	{
-		SavePicture sp = new SavePicture(this, canvas, lastFolder, file -> {
+		SavePicture sp = new SavePicture(this, canvas, controller.io().getLastFolder(), file -> {
 			if (file.isPresent()) {
-				lastFolder = file.get().getParentFile();
+				controller.io().setLastFolder(file.get().getParentFile());
 			}
 		});
 		sp.show();
@@ -785,11 +766,11 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		export.set(new ExportPanel(this, canvas, () -> {
 			
-			SwidgetFilePanels.saveFile(this, "Save Archive", lastFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+			SwidgetFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(), new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
 					return;
 				}
-				lastFolder = file.get().getParentFile();
+				controller.io().setLastFolder(file.get().getParentFile());
 				
 				SurfaceType format = export.get().getPlotFormat();
 				int width = export.get().getImageWidth();
@@ -873,11 +854,11 @@ public class PlotPanel extends TabbedLayerPanel
 		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
 
 		SimpleFileExtension text = new SimpleFileExtension("Text File", "txt");
-		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", lastFolder, text, saveFile -> {
+		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
 				return;
 			}
-			lastFolder = saveFile.get().getParentFile();
+			controller.io().setLastFolder(saveFile.get().getParentFile());
 			
 			ExecutorSet<Object> execset = controller.writeFitleredDataToText(saveFile.get());
 			
@@ -901,11 +882,11 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionSaveFittingInformation()
 	{
 		SimpleFileExtension ext = new SimpleFileExtension("Text File", "txt");
-		SwidgetFilePanels.saveFile(this, "Save Fitting Information to Text File", lastFolder, ext, file -> {
+		SwidgetFilePanels.saveFile(this, "Save Fitting Information to Text File", controller.io().getLastFolder(), ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
-			lastFolder = file.get().getParentFile();
+			controller.io().setLastFolder(file.get().getParentFile());
 			
 			try {
 				FileOutputStream os = new FileOutputStream(file.get());
@@ -922,12 +903,11 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionLoadSession() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		SwidgetFilePanels.openFile(this, "Load Session Data", sessionFile, peakaboo, file -> {
+		SwidgetFilePanels.openFile(this, "Load Session Data", controller.io().getSessionFile(), peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
-			sessionFile = file.get();
-			lastFolder = sessionFile.getParentFile();
+			controller.io().setBothFromSession(file.get());
 			load(Collections.singletonList(file.get()));
 		});
 
@@ -1167,12 +1147,4 @@ public class PlotPanel extends TabbedLayerPanel
 		return controller.history().hasUnsavedWork() && controller.data().hasDataSet();
 	}
 	
-	public File getLastFolder() {
-		return lastFolder;
-	}
-
-	public File getSessionFile() {
-		return sessionFile;
-	}
-
 }

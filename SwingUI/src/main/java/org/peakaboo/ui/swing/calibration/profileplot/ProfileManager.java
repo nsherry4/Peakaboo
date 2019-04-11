@@ -222,7 +222,7 @@ public class ProfileManager extends HeaderLayer {
 		String yaml = CalibrationProfile.save(profile);
 		
 		SimpleFileExtension ext = new SimpleFileExtension("Peakaboo Calibration Profile", "pbcp");
-		SwidgetFilePanels.saveFile(parent, "Save Calibration Profile", parent.getLastFolder(), ext, file -> {
+		SwidgetFilePanels.saveFile(parent, "Save Calibration Profile", controller.io().getLastFolder(), ext, file -> {
 			if (!file.isPresent()) { return; }
 			File f = file.get();
 			FileWriter writer;

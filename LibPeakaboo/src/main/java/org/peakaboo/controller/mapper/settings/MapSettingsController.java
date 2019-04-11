@@ -34,13 +34,13 @@ public class MapSettingsController extends EventfulType<MapUpdateType>
 
 	private float	zoom				= 1f;
 
-	public File		savePictureFolder 	= null;
-	public File		dataSourceFolder 	= null;
+	public File		lastFolder 			= null;
 	
 		
 	public MapSettingsController(MappingController mapController)
 	{
 		setMappingController(mapController);
+		lastFolder = mapController.getParentPlotController().io().getLastFolder();
 	}
 	
 	

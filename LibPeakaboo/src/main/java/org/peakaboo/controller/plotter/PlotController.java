@@ -17,6 +17,7 @@ import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
+import org.peakaboo.controller.plotter.io.IOController;
 import org.peakaboo.controller.plotter.undo.UndoController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
@@ -51,7 +52,8 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	private FittingController				fittingController;
 	private ViewController					viewController;
 	private CalibrationController			calibrationController;
-
+	private IOController					ioController;
+	
 	private File configDir;
 
 	public PlotController(File configDir)
@@ -71,7 +73,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		calibrationController = new CalibrationController(this);
 		viewController = new ViewController(this);
 		viewController.loadPersistentSettings();
-		
+		ioController = new IOController();
 		
 		undoController.addListener(() -> updateListeners(PlotUpdateType.UNDO));
 		dataController.addListener(() -> updateListeners(PlotUpdateType.DATA));
@@ -79,6 +81,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		fittingController.addListener(b -> updateListeners(PlotUpdateType.FITTING));
 		viewController.addListener(() -> updateListeners(PlotUpdateType.UI));
 		calibrationController.addListener(() -> updateListeners(PlotUpdateType.CALIBRATION));
+		ioController.addListener(() -> updateListeners(PlotUpdateType.UI));
 		
 		undoController.setUndoPoint("");
 	}
@@ -323,6 +326,10 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	public ViewController view()
 	{
 		return viewController;
+	}
+	
+	public IOController io() {
+		return ioController;
 	}
 
 	public File getConfigDir() {

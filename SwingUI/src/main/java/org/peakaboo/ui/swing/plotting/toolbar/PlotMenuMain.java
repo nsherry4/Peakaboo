@@ -20,12 +20,10 @@ import org.peakaboo.ui.swing.plotting.PlotPanel;
 public class PlotMenuMain extends JPopupMenu {
 
 	private PlotController controller;
-	private PlotPanel plot;
 	private JMenuItem undo, redo, save, saveAs;
 	
 	public PlotMenuMain(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
-		this.plot = plot;
 		
 		
 		this.add(PlotMenuUtils.createMenuItem(plot,
@@ -156,7 +154,7 @@ public class PlotMenuMain extends JPopupMenu {
 		undo.setText("Undo " + controller.history().getNextUndo());
 		redo.setText("Redo " + controller.history().getNextRedo());
 		
-		save.setEnabled(hasData && plot.getSessionFile() != null && plot.hasUnsavedWork());
+		save.setEnabled(hasData && controller.io().getSessionFile() != null && controller.history().hasUnsavedWork());
 		saveAs.setEnabled(hasData);
 		
 	}

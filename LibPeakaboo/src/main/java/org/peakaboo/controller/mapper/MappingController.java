@@ -98,6 +98,10 @@ public class MappingController extends EventfulType<MapUpdateType>
 	}
 	
 
+	public PlotController getParentPlotController() {
+		return plotcontroller;
+	}
+	
 	public MapSettingsController getSettings() {
 		return settingsController;
 	}

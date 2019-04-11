@@ -68,6 +68,12 @@ public abstract class DataLoader {
 				} else {
 					sessionCallback.run();
 					controller.data().setDataSourceParameters(sessionParameters);
+					controller.data().setDataPaths(paths);
+					if (paths.size() > 0) {
+						controller.io().setLastFolder(paths.get(0).toFile().getParentFile());
+					} else if (sessionFile != null) {
+						controller.io().setLastFolder(sessionFile.getParentFile());
+					}
 					onSuccess(paths, sessionFile);
 				}						
 							
@@ -204,7 +210,7 @@ public abstract class DataLoader {
 						controller.data().setDataPaths(currentPaths);
 						warnVersion.run();
 					}
-					onSessionLoad(sessionFile);
+					controller.io().setSessionFile(sessionFile);
 				});
 				
 								
@@ -212,7 +218,7 @@ public abstract class DataLoader {
 				//just load the session, as there is either no data associated with it, or it's the same data
 				controller.loadSessionSettings(session, true);
 				warnVersion.run();
-				onSessionLoad(sessionFile);
+				controller.io().setSessionFile(sessionFile);
 			}
 			
 
@@ -230,7 +236,6 @@ public abstract class DataLoader {
 	
 	public abstract void onSessionNewer();
 	public abstract void onSessionFailure();
-	public abstract void onSessionLoad(File session);
 	public abstract void onSessionHasData(File sessionFile, Consumer<Boolean> load);
 	
 }
