@@ -31,6 +31,14 @@ public class FittingContext {
 		this.parameters = parameters;
 	}
 
+	public FittingContext(FittingContext copy) {
+		this.parameters = copy.parameters;
+		this.height = copy.height;
+		this.energy = copy.energy;
+		this.type = copy.type;
+		this.transition = copy.transition;
+	}
+	
 	public float getHeight() {
 		return height;
 	}

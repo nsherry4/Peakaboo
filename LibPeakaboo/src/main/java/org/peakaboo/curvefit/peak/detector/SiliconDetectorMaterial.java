@@ -27,7 +27,7 @@ public class SiliconDetectorMaterial implements DetectorMaterial {
 
 	@Override
 	public float fanoFactor() {
-		return 0.144f;
+		return 0.114f;
 	}
 
 	@Override

@@ -14,7 +14,18 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 	public void initialize(FittingContext context) {
 		this.context = context;
 		signal = lorentz();
-		signal.initialize(context);
+		FittingContext copy = new FittingContext(context) {
+			/*
+			 * Hardcoded as 10ev because according to Handbook of X-Ray Spectrometry rev. 2
+			 * p242, lorentz function represents actual xray emission, and is therefore on
+			 * the order of 10ev wide. The Gaussian represents peak broadening from the
+			 * detector and is on the order of 160 ev.
+			 */
+			public float getFWHM() {
+				return 0.010f;
+			}
+		};
+		signal.initialize(copy);
 	}
 
 	@Override
@@ -71,19 +82,7 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 	}
 	
 	private LorentzFittingFunction lorentz() {
-		return new LorentzFittingFunction( ) {
-			protected float calcGamma() {
-				/*
-				 * /16 because according to Handbook of X-Ray Spectrometry rev. 2 p242, 
-				 * lorentz function represents actual xray emission, and is therefore 
-				 * on the order of 10ev wide. The Gaussian represents peak broadening
-				 * from the detector and is on the order of 160 ev. Since the fitting
-				 * function FWHM is calibrated based on observed peak shape, we have
-				 * to calibrate the lorenzian on that basis.
-				 */
-				return super.calcGamma() / 16f;
-			}
-		};
+		return new LorentzFittingFunction();
 	}
 	
 	
