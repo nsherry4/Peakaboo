@@ -38,5 +38,10 @@ class BookmarkPlace implements Place {
 	public File getFile() {
 		return file;
 	}
+
+	@Override
+	public boolean isRoot() {
+		return getName().equals("Home");
+	}
 	
 }

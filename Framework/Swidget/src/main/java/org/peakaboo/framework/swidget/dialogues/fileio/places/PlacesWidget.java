@@ -28,7 +28,7 @@ public class PlacesWidget extends JPanel {
 	private TableModel model;
 	
 	public PlacesWidget(JFileChooser chooser) {
-		places = Places.get();
+		places = Places.forPlatform();
 		items = new JTable();
 		model = new ListTableModel<>(places.getAll());
 		items.setModel(model);

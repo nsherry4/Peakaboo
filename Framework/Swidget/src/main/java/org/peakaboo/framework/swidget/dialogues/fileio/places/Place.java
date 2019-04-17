@@ -4,8 +4,9 @@ import java.io.File;
 
 import javax.swing.Icon;
 
-interface Place {
+public interface Place {
 	Icon getIcon();
 	String getName();
 	File getFile();
+	boolean isRoot();
 }

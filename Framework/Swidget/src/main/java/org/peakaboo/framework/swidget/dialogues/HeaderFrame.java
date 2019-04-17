@@ -3,22 +3,10 @@ package org.peakaboo.framework.swidget.dialogues;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.AWTEventListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
-import javax.swing.event.MouseInputListener;
 
 import org.peakaboo.framework.swidget.widgets.LiveFrame;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;

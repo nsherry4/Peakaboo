@@ -33,10 +33,10 @@ public interface Places {
 	}
 	
 	static boolean supported() {
-		return (get() != null);
+		return (forPlatform() != null);
 	}
 	
-	static Places get() {
+	static Places forPlatform() {
 		FileSystemView v = FileSystemView.getFileSystemView();
 		if (v.getClass().getSimpleName().equals("UnixFileSystemView")) {
 			return new UnixPlaces();

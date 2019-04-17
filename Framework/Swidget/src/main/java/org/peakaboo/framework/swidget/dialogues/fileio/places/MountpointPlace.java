@@ -33,5 +33,10 @@ class MountpointPlace implements Place {
 	public File getFile() {
 		return mountpoint;
 	}
+
+	@Override
+	public boolean isRoot() {
+		return true;
+	}
 	
 }

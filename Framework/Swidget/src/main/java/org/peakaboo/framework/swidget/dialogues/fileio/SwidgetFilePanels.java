@@ -1,6 +1,7 @@
 package org.peakaboo.framework.swidget.dialogues.fileio;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Window;
@@ -19,11 +20,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
+import org.peakaboo.framework.swidget.dialogues.fileio.breadcrumb.FileBreadCrumb;
 import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
 import org.peakaboo.framework.swidget.dialogues.fileio.places.PlacesWidget;
+import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
@@ -48,8 +52,12 @@ public class SwidgetFilePanels {
 			if (Places.supported()) {
 				chooserPanel.add(new PlacesWidget(chooser), BorderLayout.WEST);
 			}
+			
+			FileBreadCrumb breadcrumb = new FileBreadCrumb(chooser);
+			breadcrumb.setBorder(new EmptyBorder(0, Spacing.small, 0, Spacing.small));
+			
 			chooserPanel.setPreferredSize(new Dimension(800, 300));
-			layer.getHeader().setComponents(negative, title, affirmative);
+			layer.getHeader().setComponents(negative, breadcrumb, affirmative);
 			layer.setBody(chooserPanel);
 			
 			chooser.addActionListener(action -> {
