@@ -29,12 +29,16 @@ public class AutoEnergyCalibration {
 	/**
 	 * Generates a list of all possible energy calibration candidates
 	 */
-	private static List<Supplier<EnergyCalibration>> allEnergies(int dataWidth) {
+	private static List<Supplier<EnergyCalibration>> allEnergies(int dataWidth, boolean varyMinumum) {
 		List<Supplier<EnergyCalibration>> energies = new ArrayList<>();
 		for (float max = 1f; max <= 100f; max += 0.05f) {
-			for (float min = -0.5f; min < 0.5f; min += 0.05) {
-				if (min >= max-1f) continue;
-				energies.add(buildEnergySupplier(min, max, dataWidth));
+			if (varyMinumum) {
+				for (float min = -0.5f; min < 0.5f; min += 0.05) {
+					if (min >= max-1f) continue;
+					energies.add(buildEnergySupplier(min, max, dataWidth));
+				}
+			} else {
+				energies.add(buildEnergySupplier(0f, max, dataWidth));
 			}
 		}
 		return energies;
@@ -246,8 +250,8 @@ public class AutoEnergyCalibration {
 			FittingController controller, 
 			int dataWidth
 		) {
-		
-		StreamExecutor<List<EnergyCalibration>> rough = roughOptions(allEnergies(dataWidth), spectrum, tsList, dataWidth);
+			
+		StreamExecutor<List<EnergyCalibration>> rough = roughOptions(allEnergies(dataWidth, tsList.size() > 1), spectrum, tsList, dataWidth);
 		StreamExecutor<EnergyCalibration> quality = chooseFromRoughOptions(() -> rough.getResult().get(), spectrum, tsList, controller, dataWidth);
 		rough.then(quality);
 		

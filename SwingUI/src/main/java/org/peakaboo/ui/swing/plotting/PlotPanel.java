@@ -959,10 +959,10 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionGuessMaxEnergy() {
 		
 		if (controller == null) return;
-		if (controller.fitting().getVisibleTransitionSeries().size() < 2) {
+		if (controller.fitting().getVisibleTransitionSeries().size() < 1) {
 			new LayerDialog(
 					"Cannot Detect Energy Calibration", 
-					"Detecting energy calibration requires that at least two elements be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
+					"Detecting energy calibration requires that at least one element be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
 					MessageType.WARNING
 				).showIn(this);
 			return;
