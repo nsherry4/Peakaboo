@@ -22,6 +22,13 @@ public class IOController extends Eventful {
 		this.sessionFile = sessionFile;
 		updateListeners();
 	}
+	public File getSessionFolder() {
+		if (sessionFile == null) {
+			return lastFolder;
+		}
+		return sessionFile.getParentFile();
+	}
+	
 	public File getLastFolder() {
 		return lastFolder;
 	}

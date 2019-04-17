@@ -85,6 +85,7 @@ import org.peakaboo.framework.plural.streams.swing.StreamExecutorPanel;
 import org.peakaboo.framework.plural.streams.swing.StreamExecutorView;
 import org.peakaboo.framework.plural.swing.ExecutorSetView;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.AboutDialogue;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
@@ -291,12 +292,7 @@ public class PlotPanel extends TabbedLayerPanel
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.BOTH;
 		
-		
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
-		if (dividerColour == null) {
-			dividerColour = Color.LIGHT_GRAY;
-		}
-		tabs.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
+		tabs.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
 		tabs.setPreferredSize(new Dimension(225, tabs.getPreferredSize().height));
 		split.add(tabs, BorderLayout.WEST);
@@ -724,7 +720,11 @@ public class PlotPanel extends TabbedLayerPanel
 	{
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		SwidgetFilePanels.saveFile(this, "Save Session", controller.io().getSessionFile().getParentFile(), peakaboo, file -> {
+		System.out.println(controller);
+		System.out.println(controller.io());
+		System.out.println(controller.io().getSessionFile());
+		
+		SwidgetFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
