@@ -47,6 +47,7 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.stratus.theme.LightTheme;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconSize;
@@ -359,12 +360,7 @@ public class PluginsOverview extends HeaderLayer {
 		
 		JScrollPane scroller = new JScrollPane(tree);
 		scroller.setPreferredSize(new Dimension(200, 300));
-		
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
-		if (dividerColour == null) {
-			dividerColour = Color.LIGHT_GRAY;
-		}
-		scroller.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
+		scroller.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		return scroller;
 		
 	}

@@ -10,6 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderPanel;
@@ -32,9 +33,7 @@ public class HeaderDialog extends JDialog {
 		this.setUndecorated(true);
 		
 		root = new HeaderPanel();
-		Color border = UIManager.getColor("stratus-widget-border");
-		if (border == null) { border = Color.LIGHT_GRAY; }
-		root.setBorder(new MatteBorder(1, 1, 1, 1, border));
+		root.setBorder(new MatteBorder(1, 1, 1, 1, Swidget.dividerColor()));
 		this.setContentPane(root);
 		
 		

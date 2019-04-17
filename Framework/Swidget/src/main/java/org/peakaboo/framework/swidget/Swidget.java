@@ -1,6 +1,7 @@
 package org.peakaboo.framework.swidget;
 
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -160,6 +161,13 @@ public class Swidget
 
 	public static final int DEFAULT_TEXTWRAP_WIDTH = 300;
 
+	public static Color dividerColor() {
+		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		if (dividerColour == null) {
+			dividerColour = Color.LIGHT_GRAY;
+		}
+		return dividerColour;
+	}
 
 	
 }

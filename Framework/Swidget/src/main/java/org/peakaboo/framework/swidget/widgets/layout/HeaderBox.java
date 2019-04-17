@@ -29,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -149,9 +150,9 @@ public class HeaderBox extends PaintedPanel {
 		rightWrap.removeAll();
 		if (right != null) {
 			rightWrap.add(right, BorderLayout.CENTER);
-			Color border = UIManager.getColor("stratus-widget-border");
-			if (border == null) { border = Color.LIGHT_GRAY; }
-			closePanel.setBorder(new CompoundBorder(new MatteBorder(0, 1, 0, 0, border), new EmptyBorder(0, Spacing.medium, 0, 0)));
+			closePanel.setBorder(new CompoundBorder(
+					new MatteBorder(0, 1, 0, 0, Swidget.dividerColor()), 
+					new EmptyBorder(0, Spacing.medium, 0, 0)));
 			
 		} else {
 			closePanel.setBorder(new EmptyBorder(0, 0, 0, 0));

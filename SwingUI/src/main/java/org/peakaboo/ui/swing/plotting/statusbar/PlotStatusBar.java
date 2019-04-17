@@ -10,6 +10,7 @@ import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
@@ -38,12 +39,7 @@ public class PlotStatusBar extends ClearPanel {
 		scanSelector = new PlotScanNumber(controller);
 		this.add(scanSelector, BorderLayout.WEST);
 
-
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
-		if (dividerColour == null) {
-			dividerColour = Color.LIGHT_GRAY;
-		}
-		this.setBorder(new MatteBorder(1, 0, 0, 0, dividerColour));
+		this.setBorder(new MatteBorder(1, 0, 0, 0, Swidget.dividerColor()));
 		
 
 	}

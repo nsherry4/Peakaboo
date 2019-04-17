@@ -12,6 +12,7 @@ import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.ZoomSlider;
@@ -60,12 +61,7 @@ public class MapStatusBar extends JPanel {
 		
 		add(zoomButton, BorderLayout.EAST);
 
-		
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
-		if (dividerColour == null) {
-			dividerColour = Color.LIGHT_GRAY;
-		}
-		this.setBorder(new MatteBorder(1, 0, 0, 0, dividerColour));
+		this.setBorder(new MatteBorder(1, 0, 0, 0, Swidget.dividerColor()));
 		
 		
 		

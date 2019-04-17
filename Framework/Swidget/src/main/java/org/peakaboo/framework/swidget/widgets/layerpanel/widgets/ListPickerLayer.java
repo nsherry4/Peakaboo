@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
@@ -40,9 +41,7 @@ public abstract class ListPickerLayer<T> extends HeaderLayer {
 			this.table = table;
 			
 			table.setShowGrid(false);
-			Color border = UIManager.getColor("stratus-widget-border");
-			if (border == null) { border = Color.LIGHT_GRAY; }
-			table.setGridColor(border);
+			table.setGridColor(Swidget.dividerColor());
 			table.setTableHeader(null);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			
@@ -71,7 +70,7 @@ public abstract class ListPickerLayer<T> extends HeaderLayer {
 			table.setFillsViewportHeight(true);
 			JScrollPane scroller = new JScrollPane(table);
 			scroller.setPreferredSize(new Dimension(scroller.getPreferredSize().width, 250));
-			scroller.setBorder(new MatteBorder(1, 1, 1, 1, border));
+			scroller.setBorder(new MatteBorder(1, 1, 1, 1, Swidget.dividerColor()));
 					
 			setLayout(new BorderLayout());
 			setBorder(Spacing.bHuge());

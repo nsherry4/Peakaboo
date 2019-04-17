@@ -87,9 +87,7 @@ public class SavePicture extends JPanel
 					FormatPicker::getDescription, 
 					FormatPicker::getIcon
 				)));
-			Color border = UIManager.getColor("stratus-widget-border");
-			if (border == null) { border = Color.LIGHT_GRAY; }
-			table.setBorder(new MatteBorder(1, 1, 1, 1, border));
+			table.setBorder(new MatteBorder(1, 1, 1, 1, Swidget.dividerColor()));
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.getSelectionModel().setSelectionInterval(0, 0);
 			

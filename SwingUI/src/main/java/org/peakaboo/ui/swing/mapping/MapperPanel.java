@@ -37,6 +37,7 @@ import org.peakaboo.framework.cyclops.visualization.backend.awt.AwtSurfaceFactor
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
@@ -102,12 +103,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		MapperSidebar sidebar = new MapperSidebar(this, controller);
 		JPanel mapCanvas = createCanvasPanel();
 		
-		
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
-		if (dividerColour == null) {
-			dividerColour = Color.LIGHT_GRAY;
-		}
-		sidebar.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
+		sidebar.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
 		sidebar.setPreferredSize(new Dimension(225, sidebar.getPreferredSize().height));
 		split.add(sidebar, BorderLayout.WEST);

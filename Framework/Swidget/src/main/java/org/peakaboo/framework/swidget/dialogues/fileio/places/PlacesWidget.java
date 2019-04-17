@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableModel;
 
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.models.ListTableModel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
@@ -35,12 +36,7 @@ public class PlacesWidget extends JPanel {
 			
 		//items.setBackground(new Color(this.getBackground().getRGB()));
 		this.setBackground(new Color(items.getBackground().getRGB()));
-		
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
-		if (dividerColour == null) {
-			dividerColour = Color.LIGHT_GRAY;
-		}
-		this.setBorder(new MatteBorder(0, 0, 0, 1, dividerColour));
+		this.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		
 		this.setPreferredSize(new Dimension(140, 140));
 		

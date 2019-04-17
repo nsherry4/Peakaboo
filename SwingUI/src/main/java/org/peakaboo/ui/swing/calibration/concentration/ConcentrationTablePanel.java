@@ -14,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
 import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class ConcentrationTablePanel extends JPanel {
@@ -82,9 +83,7 @@ public class ConcentrationTablePanel extends JPanel {
 		table.setFillsViewportHeight(true);
 		
 		JScrollPane scroller = new JScrollPane(table);
-		Color border = UIManager.getColor("stratus-widget-border");
-		if (border == null) { border = Color.LIGHT_GRAY; }
-		scroller.setBorder(new MatteBorder(1, 1, 1, 1, border));
+		scroller.setBorder(new MatteBorder(1, 1, 1, 1, Swidget.dividerColor()));
 		add(scroller, BorderLayout.CENTER);
 		
 	}

@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.LiveFrame;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
@@ -29,9 +30,7 @@ public class HeaderFrame extends LiveFrame {
 		this.setUndecorated(true);
 		
 		root = new HeaderPanel();
-		Color border = UIManager.getColor("stratus-widget-border");
-		if (border == null) { border = Color.LIGHT_GRAY; }
-		root.setBorder(new MatteBorder(1, 1, 1, 1, border));
+		root.setBorder(new MatteBorder(1, 1, 1, 1, Swidget.dividerColor()));
 		this.setContentPane(root);
 		
 		

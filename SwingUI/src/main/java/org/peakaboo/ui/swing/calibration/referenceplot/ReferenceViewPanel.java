@@ -22,6 +22,7 @@ import javax.swing.table.TableModel;
 import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -181,15 +182,9 @@ public class ReferenceViewPanel extends HeaderLayer {
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.setFillsViewportHeight(true);
-		
-		
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
-		if (dividerColour == null) {
-			dividerColour = Color.LIGHT_GRAY;
-		}
-		
+
 		JScrollPane scroll = new JScrollPane(table);
-		scroll.setBorder(new MatteBorder(1, 1, 1, 1, dividerColour));
+		scroll.setBorder(new MatteBorder(1, 1, 1, 1, Swidget.dividerColor()));
 		alterations.add(scroll, BorderLayout.CENTER);
 		
 		return alterations;
