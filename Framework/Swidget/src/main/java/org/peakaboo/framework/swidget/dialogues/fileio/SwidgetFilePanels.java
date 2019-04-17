@@ -1,12 +1,9 @@
 package org.peakaboo.framework.swidget.dialogues.fileio;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,32 +11,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
-import org.peakaboo.framework.swidget.dialogues.fileio.breadcrumb.FileBreadCrumb;
 import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
 import org.peakaboo.framework.swidget.dialogues.fileio.places.PlacesWidget;
-import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
-import org.peakaboo.framework.swidget.widgets.layout.HeaderPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 
 public class SwidgetFilePanels {
 
-	private static void showChooser(Component parent, JFileChooser chooser, Runnable onAccept, Runnable onCancel, String title) {
+	private static void showChooser(Component parent, SwidgetFileChooser chooser, Runnable onAccept, Runnable onCancel, String title) {
 		if (LayerPanel.parentOf(parent)) {
 			LayerPanel tabPanel = LayerPanel.parentFor(parent);
 			chooser.setControlButtonsAreShown(false);
@@ -52,22 +40,19 @@ public class SwidgetFilePanels {
 			if (Places.supported()) {
 				chooserPanel.add(new PlacesWidget(chooser), BorderLayout.WEST);
 			}
-			
-			FileBreadCrumb breadcrumb = new FileBreadCrumb(chooser);
-			breadcrumb.setBorder(new EmptyBorder(0, Spacing.small, 0, Spacing.small));
-			
+
 			chooserPanel.setPreferredSize(new Dimension(800, 300));
-			layer.getHeader().setComponents(negative, breadcrumb, affirmative);
+			layer.getHeader().setComponents(negative, chooser.getHeader(), affirmative);
 			layer.setBody(chooserPanel);
 			
 			chooser.addActionListener(action -> {
 				String command = action.getActionCommand();
 				//something like double-clicking a file may trigger this
-				if (command.equals(JFileChooser.APPROVE_SELECTION)) {
+				if (command.equals(SwidgetFileChooser.APPROVE_SELECTION)) {
 					layer.remove();
 					onAccept.run();
 				}
-				if (command.equals(JFileChooser.CANCEL_SELECTION)) {
+				if (command.equals(SwidgetFileChooser.CANCEL_SELECTION)) {
 					layer.remove();
 					onCancel.run();
 				}
@@ -87,9 +72,9 @@ public class SwidgetFilePanels {
 
 		} else {
 			int result = chooser.showSaveDialog(parent);
-			if (result == JFileChooser.APPROVE_OPTION) {
+			if (result == SwidgetFileChooser.APPROVE_OPTION) {
 				onAccept.run();
-			} else if (result == JFileChooser.ERROR_OPTION || result == JFileChooser.CANCEL_OPTION) {
+			} else if (result == SwidgetFileChooser.ERROR_OPTION || result == SwidgetFileChooser.CANCEL_OPTION) {
 				onCancel.run();
 			}
 		}	
@@ -98,7 +83,7 @@ public class SwidgetFilePanels {
 	public static void saveFile(Component parent, String title, File startingFolder, SimpleFileExtension extension, Consumer<Optional<File>> callback)
 	{
 
-		JFileChooser chooser = new JFileChooser(startingFolder);
+		SwidgetFileChooser chooser = new SwidgetFileChooser(startingFolder);
 		chooser.setMultiSelectionEnabled(false);
 		chooser.setDialogTitle(title);
 		chooser.setFileFilter(extension.getFilter());
@@ -137,8 +122,8 @@ public class SwidgetFilePanels {
 	
 	
 	
-	private static JFileChooser getOpener(String title, File startingFolder, List<SimpleFileExtension> extensions) {
-		JFileChooser chooser = new JFileChooser(startingFolder);
+	private static SwidgetFileChooser getOpener(String title, File startingFolder, List<SimpleFileExtension> extensions) {
+		SwidgetFileChooser chooser = new SwidgetFileChooser(startingFolder);
 		chooser.setDialogTitle(title);
 		
 		chooser.setApproveButtonText("Open");
@@ -172,7 +157,7 @@ public class SwidgetFilePanels {
 	
 	public static void openFile(Component parent, String title, File startingFolder, List<SimpleFileExtension> extensions, Consumer<Optional<File>> callback)
 	{
-		JFileChooser chooser = getOpener(title, startingFolder, extensions);
+		SwidgetFileChooser chooser = getOpener(title, startingFolder, extensions);
 		chooser.setMultiSelectionEnabled(false);
 
 
@@ -199,7 +184,7 @@ public class SwidgetFilePanels {
 	
 	public static void openFiles(Component parent, String title, File startingFolder, List<SimpleFileExtension> extensions, Consumer<Optional<List<File>>> callback)
 	{
-		JFileChooser chooser = getOpener(title, startingFolder, extensions);
+		SwidgetFileChooser chooser = getOpener(title, startingFolder, extensions);
 		chooser.setMultiSelectionEnabled(true);
 
 		//Run this when the dialog is accepted

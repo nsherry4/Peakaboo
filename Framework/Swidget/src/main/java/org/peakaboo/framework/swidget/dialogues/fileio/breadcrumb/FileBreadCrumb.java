@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
+import org.peakaboo.framework.swidget.dialogues.fileio.places.Place;
 import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
 import org.peakaboo.framework.swidget.widgets.breadcrumb.BreadCrumb;
 
@@ -34,7 +35,12 @@ public class FileBreadCrumb extends BreadCrumb<File> {
 
 	
 	private static String format(File f) {
-		return FileSystemView.getFileSystemView().getSystemDisplayName(f);
+		Place place = Places.forPlatform().get(f);
+		if (place != null && place.isRoot()) {
+			return place.getName();
+		} else {
+			return FileSystemView.getFileSystemView().getSystemDisplayName(f);
+		}
 	}
 	
 	public void setFile(File f) {

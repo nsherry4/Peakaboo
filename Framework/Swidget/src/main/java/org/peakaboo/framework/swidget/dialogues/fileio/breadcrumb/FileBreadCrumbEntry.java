@@ -17,8 +17,7 @@ public class FileBreadCrumbEntry extends BreadCrumbEntry<File> {
 
 	@Override
 	protected ToggleImageButton make() {
-		Places places = Places.forPlatform();
-		Place dir = places.get(getItem());
+		Place dir = Places.forPlatform().get(getItem());
 		ToggleImageButton button = super.make();
 		if (dir != null && dir.isRoot()) {
 			//not a good idea -- the ImageButton may regenerate it's UI based on internal state 
