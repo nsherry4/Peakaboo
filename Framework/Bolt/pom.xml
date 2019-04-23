@@ -11,7 +11,6 @@
   
   <modules>
     <module>Bolt</module>
-    <module>BoltCode</module>
   </modules>
   
   <build>
