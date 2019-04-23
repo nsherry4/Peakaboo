@@ -8,6 +8,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,10 +17,12 @@ import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
+import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 
@@ -59,12 +62,14 @@ public class BreadCrumb<T> extends JPanel {
 		this.formatter = formatter;
 		this.onSelect = onSelect;
 		
-		goLeft  = new ImageButton("◂")
+		goLeft  = new ImageButton()
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withAction(this::doGoLeft);
-		goRight = new ImageButton("▸")
+		goLeft.setIcon(new ImageIcon(BreadCrumb.class.getClassLoader().getResource("swidget/widgets/breadcrumb/arrow-left.png")));
+		goRight = new ImageButton()
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withAction(this::doGoRight);
+		goRight.setIcon(new ImageIcon(BreadCrumb.class.getClassLoader().getResource("swidget/widgets/breadcrumb/arrow-right.png")));
 
 		entryBuilder = item -> new BreadCrumbEntry<>(this, item, formatter);
 		
