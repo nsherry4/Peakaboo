@@ -43,9 +43,6 @@ public class SwidgetFileChooser extends JFileChooser {
 	private void setup() {
 		try {
 			
-			for (Component i : getComponents()) {
-				System.out.println(i);
-			}
 			
 			//component 0 is the button bar with the look-in drop down and the up/home/new-dir buttons
 			JPanel header = (JPanel) getComponent(0);
