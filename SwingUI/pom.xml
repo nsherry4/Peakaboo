@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.sciencestudio.peakaboo</groupId>
+	<groupId>org.peakaboo</groupId>
 	<artifactId>SwingUI</artifactId>
 	<version>5-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -23,27 +23,22 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>autodialog-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>stratus</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.peakaboo</groupId>
-			<artifactId>libpeakaboo</artifactId>
-			<version>5-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sciencestudio.plural</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>plural-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>cyclops-swing</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -51,6 +46,11 @@
 			<groupId>org.apache-extras.beanshell</groupId>
 			<artifactId>bsh</artifactId>
 			<version>2.0b6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.peakaboo</groupId>
+			<artifactId>libpeakaboo</artifactId>
+			<version>5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -76,7 +76,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>peakaboo.ui.swing.Peakaboo</mainClass>
+							<mainClass>org.peakaboo.ui.swing.Peakaboo</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

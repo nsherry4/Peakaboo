@@ -10,6 +10,7 @@
   <url>http://maven.apache.org</url>
   
   <modules>
+    <module>Framework</module>
     <module>LibPeakaboo</module>
     <module>SwingUI</module>
   </modules>

@@ -41,15 +41,4 @@ Peakaboo can also be used as a library. This is also the easiest target to build
 
 # Building
 
-Peakaboo builds and manages its dependencies with maven, however it does also depend on several other libraries on GitHub which are not in maven. These are:
-
-  - **[nsherry4/Cyclops](https://github.com/nsherry4/Cyclops)** Scientific Data Type & Visualisation Library 
-  - **[nsherry4/Eventful](https://github.com/nsherry4/Eventful)**  Simple, UI Friendly Event Library
-  - **[nsherry4/Swidget](https://github.com/nsherry4/Swidget)**  Mixed Collection of Swing UI components 
-  - **[nsherry4/Plural](https://github.com/nsherry4/Plural)**   Library to help parallelize tasks, show progress, and allow user cancel 
- - **[nsherry4/Scratch](https://github.com/nsherry4/Scratch)**  Tools for working with large amounts of data in small amounts of memory 
- - **[nsherry4/Stratus](https://github.com/nsherry4/Stratus)**  Stratus Look and Feel for Java Swing 
- - **[nsherry4/Bolt](https://github.com/nsherry4/Bolt)** Java library for loading, compiling, and interpreting plug-ins. 
- - **[nsherry4/AutoDialog](https://github.com/nsherry4/AutoDialog)** Model+Hint based simple UI auto-generation 
-
-Building Peakaboo will require these projects as well, all of which are also managed and built with maven.
+Peakaboo builds and manages its dependencies with maven. It also has a dependency on [xraylib](https://github.com/tschoonj/xraylib). At the time of writing, xraylib was not available in maven, so a prebuilt version is included in a local maven repository. To build Peakaboo, run `mvn package` and it will produce a runnable jar file you can invoke with the `java -jar <JARNAME>` command.

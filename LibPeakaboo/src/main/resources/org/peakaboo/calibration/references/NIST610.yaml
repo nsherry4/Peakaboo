@@ -1,0 +1,80 @@
+!!peakaboo.calibration.SerializedCalibrationReference
+anchor: Fe:K
+citations:
+- N.J.G. Pearce, W.T. Perkins, J.A. Westgate, M.T. Gorton, S.E. Jackson, C.R Neal
+  and S.P.Chenery, Geostandards Newsletter, Journal of Geostandards and Analysis,
+  21 115 (1997).
+desc: Trace elements in glass
+name: NIST 610
+notes: Minimum detection of the Integrated Intensity is conservatively estimated to
+  be six units and this is used in the calculation of the minimum detection limit
+  (MDL).
+rev: '1.0'
+uuid: fec0e087-6c6e-4fe0-94d2-499e6551ea76
+
+fitted:
+#  Na:K: Omitted, Too Concentrated
+#  Si:K: Omitted, Too Concentrated
+  P:K: No Value Available
+  S:K: No Value Available
+  Ar:K: Fitted, Not in Sample
+  Sn:L: Omitted, Overlapped with Calcium K
+  Sb:L: Omitted, Overlapped with Calcium K
+  Te:L: Omitted, Overlapped with Sulfur K
+  I:L: No Value Available
+  Tl:L: Omitted, No Confidence in Value
+
+concentrations:
+  Ca:K: 11450.0
+  Na:K: 13800.0
+  Si:K: 72200.0
+  Mg:K: 460.0
+  Al:K: 2100.0
+  Cl:K: 470.0
+  K:K: 450.0
+  Ti:K: 450.0
+  V:K: 440.0
+  Cr:K: 400.0
+  Mn:K: 410.0
+  Fe:K: 480.0
+  Co:K: 425.0
+  Ni:K: 475.0
+  Cu:K: 440.0
+  Zn:K: 420.0
+  Ga:K: 440.0
+  Ge:K: 400.0
+  As:K: 300.0
+  Rb:K: 460.0
+  Sr:K: 480.0
+  Y:K: 480.0
+  Zr:K: 440.0
+  Nb:K: 440.0
+  Mo:K: 440.0
+#  Ag:K: 200.0
+  Cd:K: 250.0
+  Ag:L: 200.0
+  Cd:L: 250.0
+  In:L: 450.0
+  Cs:L: 390.0
+  Ba:L: 430.0
+  La:L: 440.0
+  Ce:L: 440.0
+  Pr:L: 440.0
+  Nd:L: 430.0
+  Sm:L: 450.0
+  Eu:L: 450.0
+  Gd:L: 440.0
+  Tb:L: 450.0
+  Dy:L: 430.0
+  Ho:L: 450.0
+  Er:L: 435.0
+  Tm:L: 460.0
+  Yb:L: 445.0
+  Lu:L: 440.0
+  Hf:L: 420.0
+  Ta:L: 320.0
+#  Au:L: 226.0
+  Pb:L: 370.0
+  Bi:L: 380.0
+  Th:L: 445.0
+  U:L: 445.0

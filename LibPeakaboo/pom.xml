@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.sciencestudio.peakaboo</groupId>
+	<groupId>org.peakaboo</groupId>
 	<artifactId>libpeakaboo</artifactId>
 	<version>5-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -29,17 +29,17 @@
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>bolt-plugin</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>2.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio.plural</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>plural-core</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>autodialog-model</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -54,7 +54,7 @@
 			<version>3.6.1</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>scratch</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -64,10 +64,17 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sciencestudio</groupId>
+			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>cyclops</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.univocity/univocity-parsers -->
+		<dependency>
+			<groupId>com.univocity</groupId>
+			<artifactId>univocity-parsers</artifactId>
+			<version>2.7.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>

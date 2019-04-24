@@ -1,21 +1,3 @@
-install:
-  - git clone https://github.com/nsherry4/Stratus.git /tmp/stratus && cd /tmp/stratus && mvn install
-  - cd -
-  - git clone https://github.com/nsherry4/Eventful.git /tmp/eventful && cd /tmp/eventful && mvn install
-  - cd -
-  - git clone https://github.com/nsherry4/Swidget.git /tmp/swidget && cd /tmp/swidget && mvn install
-  - cd -
-  - git clone https://github.com/nsherry4/Plural.git /tmp/plural && cd /tmp/plural && mvn install
-  - cd -
-  - git clone https://github.com/nsherry4/Cyclops.git /tmp/cyclops && cd /tmp/cyclops && mvn install
-  - cd -
-  - git clone https://github.com/nsherry4/AutoDialog.git /tmp/autodialog && cd /tmp/autodialog && mvn install
-  - cd -
-  - git clone https://github.com/nsherry4/Bolt.git /tmp/bolt && cd /tmp/bolt && mvn install
-  - cd -
-  - git clone https://github.com/nsherry4/Scratch.git /tmp/scratch && cd /tmp/scratch && mvn install
-  - cd -
-
 
 cache:
   directories:
