@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.dialogues.fileio.places;
+package org.peakaboo.framework.swidget.widgets.filechooser.places;
 
 import java.io.File;
 import java.util.List;

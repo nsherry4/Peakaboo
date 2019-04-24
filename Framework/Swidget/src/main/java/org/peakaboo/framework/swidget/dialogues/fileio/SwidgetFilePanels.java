@@ -16,9 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
-import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
-import org.peakaboo.framework.swidget.dialogues.fileio.places.PlacesWidget;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.filechooser.SwidgetFileChooser;
+import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
+import org.peakaboo.framework.swidget.widgets.filechooser.places.PlacesWidget;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;

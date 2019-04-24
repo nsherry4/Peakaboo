@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.dialogues.fileio;
+package org.peakaboo.framework.swidget.widgets.filechooser;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -15,11 +15,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.fileio.breadcrumb.FileBreadCrumb;
-import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.filechooser.breadcrumb.FileBreadCrumb;
+import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
+
 
 class SwidgetFileChooser extends JFileChooser {
 

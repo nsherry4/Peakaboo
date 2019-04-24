@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.dialogues.fileio.breadcrumb;
+package org.peakaboo.framework.swidget.widgets.filechooser.breadcrumb;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -8,9 +8,9 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
-import org.peakaboo.framework.swidget.dialogues.fileio.places.Place;
-import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
 import org.peakaboo.framework.swidget.widgets.breadcrumb.BreadCrumb;
+import org.peakaboo.framework.swidget.widgets.filechooser.places.Place;
+import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
 
 public class FileBreadCrumb extends BreadCrumb<File> {
 

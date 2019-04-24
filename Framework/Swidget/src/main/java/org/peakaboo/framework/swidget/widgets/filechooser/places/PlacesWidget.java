@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.dialogues.fileio.places;
+package org.peakaboo.framework.swidget.widgets.filechooser.places;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
