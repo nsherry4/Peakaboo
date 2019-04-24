@@ -177,7 +177,7 @@ public abstract class DataLoader {
 			
 			//chech if the session is from a newer version of Peakaboo, and warn if it is
 			Runnable warnVersion = () -> {
-				if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) > 0) {
+				if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) < 0) {
 					onSessionNewer();
 				}
 			};
