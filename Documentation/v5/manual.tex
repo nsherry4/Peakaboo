@@ -75,6 +75,9 @@
 %emphasis
 \newcommand{\emphasis}[1]{{\bf #1}}
 
+%caution
+\newcommand{\caution}{{\bf \textcolor{BrickRed}{Caution: }\ }}
+
 %placing a screenshot as a figure
 \newcommand{\screenshot}[2]{%
 \begin{figure}[h!]
@@ -224,9 +227,15 @@ which components of your data to emphasize.
 
 \end{description}
 
-\tocsection{Saving and Loading Data}
+\tocsection{Quick Maps}
 
-From the toolbar, you can \button{document-save-as}{Save} your session information so that next time you want to look at this XRF dataset, you can load this information (session) and not have to start from the beginning. The saved session does not store the data itself, so the data must still be available when loading a session.
+In addition to Peakaboo's normal mapping functionality (see the sections on Peak Fitting and Mapping), it can also generate Quick Maps, which are maps of a single detector channel across all spectra in a dataset. These maps are generated without any filtering or peak fitting. This can be used to help identify peaks when energy calibration is unknown, and allows early cropping of datasets without first having to perform peak fitting and mapping.
+
+\screenshot{quickmap}{Using a Quick Map to select and plot a subsection}
+
+\tocsection{Saving, Exporting, and Loading Data}
+
+From the toolbar, you can \button{document-save-as}{Save} your session information so that next time you want to look at this XRF dataset, you can load this information (session) and not have to start from the beginning. As the scan data can be quite large, the saved session does not store the data itself. When reopening a session, the data must still be available in the same location for it to be automatically reloaded.
 
 Your spectrum, as it appears in the window, can also be saved by selecting 
 \button{document-export}{Export Data} \menu\ \button{device-camera}{Plot as Image} from the toolbar or \shortcut{Control}{P}. Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can also save the fitting results as a text file by selecting \button{document-export}{Export Data} \menu\ \command{Fittings as Text}.
@@ -237,7 +246,7 @@ Your spectrum, as it appears in the window, can also be saved by selecting
 
 Filters are ways to process or transform spectral data. Filters can be accessed by clicking on the \command{Filters} sidebar tab and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into folders based on type. Each folder can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
 
-After you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings panel for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed.
+After you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings dialog for this filter. As you change the parameters, you will see the changes reflected in the spectrum being displayed.
 
 To view a full listing of built-in filters and their descriptions, see the appendix.
 
@@ -392,38 +401,67 @@ To map the fitted elements, click on \button{map}{Map Fittings} in the toolbar. 
 
 After the mapping is complete, a window will appear with a coloured map, a scale, and a list of the mapped element lines. For datasets which contain dimension information, map widths and heights are automatically set to appropriate values. Otherwise, Peakaboo can attempt to find dimensions that produce contiguous images. If this does not work (it usually does), you will have to adjust the dimensions yourself. 
 
-All fittings will be represented in the initial map. To get the individual element maps, uncheck all other fittings in the \command{Peak Fittings} tab in the sidebar, leaving the element fitting you wish to view. If your maps have a pixelated appearance, you may want to try interpolating the data and using contouring. Note that interpolation is not adding new data to the map, and should not be used to excess.
-
-Maps are generally scaled against a global maximum of all fittings. If you wish to scale a fitting to its own highest intensity, select \command{Visible Fittings} under the \command{Peak Fittings} sidebar tab. If you choose the \command{All Fittings}, then the maps will be scaled to the highest intensity from the sum of all fittings. A minor element will show very a low intensity distribution with the latter option, but appear much more intense with the former.
-
-Maps may be saved by clicking the \button{device-camera}{Save Image} button on the toolbar. Various formats are available for saving your element line maps, Pixel Image (\command{PNG}), Vector Image (\command{SVG}) and \command{PDF} format.
+All fittings will be represented in the initial map. To get the individual element maps, uncheck all other fittings in the \command{Peak Fittings} tab in the sidebar, leaving the element fitting you wish to view. Maps can have filters applied to them the same way that spectra can, which can help reduce outlier values and noise. For more information, see the section on Map Filtering.
 
 
-\tocsection{Overlays}
+\tocsection{Map Modes}
 
-The \command{Overlay} option for mapping is chosen from the drop down list under \command{Peak Fittings} sidebar tab. This allows you to sort fittings into four groups: 
+\tocsubsection{Composite}
 
-\begin{itemize}[topsep=4pt,itemsep=1pt,partopsep=0pt, parsep=0pt]
-\item \command{Red}
-\item \command{Yellow}
-\item \command{Green}
-\item \command{Blue}
-\end{itemize}
+Composite is the default map mode. It sums the intensities from different fittings into a single map. The data is displayed with a heat map colour scale, but can also be shown in monochrome by selecting \button{view-menu}{View} \menu\ \command{Monochrome}
 
-These groups are overlaid, with the presence of each colour indicating the intensities of their fitting groups. Because Red, Green, and Blue are the primary colours for computer displays, using all four colours can introduce ambiguity, and care should be taken when making selections.
+Composite maps are scaled against a global maximum of all fittings. If you wish to scale a fitting to its own highest intensity, select \command{Visible} under the \command{Sort By} section in the sidebar. A minor element will show very a low intensity distribution using \command{All}, but appear much more intense with \command{Visible} when displayed alone.
+
+\tocsubsection{Overlays}
+
+The \command{Overlay} option for mapping is chosen from the drop down list under \command{Peak Fittings} sidebar tab. This allows you to sort fittings into different colour groups. These groups are overlaid, with the presence of each colour indicating the intensities of their fitting groups. 
+
+\caution Because Red, Green, and Blue are the primary colours for computer displays, care must be taken not to introduce ambiguity when choosing colours for overlays.
 
 \screenshot{map-overlay}{Overlay of Iron and Zinc concentration}
 
-The \command{Scale Colours} options control the way that the fitting group's colours are scaled. With the \command{As a Group} option, the highest intensity from \emphasis{all} groups of fittings is used to scale the intensities for \emphasis{every} group. With the \command{Separately} option, the highest intensity from \emphasis{within each} group of fittings is used to scale the intensities for that group. The \command{Separately} option produces maps which may be qualitatively interesting, but are quantitatively 
-incorrect.
+The \command{Scale By} options control the way that the fitting group's colours are scaled. With the \command{All} option, the highest intensity from \emphasis{all} groups of fittings is used to scale the intensities for \emphasis{every} group. With the \command{Colour} option, the highest intensity from \emphasis{within each} group of fittings is used to scale the intensities for that group. 
 
-Sometimes the weaker intensities for different elements can overlap to the extent that each elemental distribution is difficult to distinguish. In such cases, the intensity distributions can be truncated to remove the weaker intensities and therefore clarify the overlay map. This truncation is effected by moving the \command{Low Signal Cutoff} slider bar at the bottom of the sidebar
+\caution The \command{Colour} option produces maps which may be qualitatively interesting, but are quantitatively incorrect.
 
-\tocsection{Ratios}
+Sometimes the weaker intensities for different elements can overlap to the extent that each elemental distribution is difficult to distinguish. In such cases, the intensity distributions can be truncated to remove the weaker intensities and therefore clarify the overlay map. This can be done with the \command{Low Signal Removal} map filter. For more information, see the section on Map Filters.
 
-Mapping of element ratios is also available within Peakaboo. Select \command{Ratio} from the \command{Peak Fittings} dropdown list. Select the fittings (or fitting sets) you wish to view in ratio and select the desired colours from the dropdown lists next to each fitting.
+\tocsubsection{Ratios}
+
+Mapping of element ratios is also available within Peakaboo. Select \command{Ratio} from the \command{Peak Fittings} dropdown list. Select the fittings you wish to view in ratio and select the desired colours from the dropdown lists next to each fitting.
 
 \screenshot{map-ratio}{Ratio of Iron and Zinc}
+
+The \command{Scale By} options control the way that the fitting group's colours are scaled. With the \command{All} option, the highest intensity from \emphasis{either} set of fittings is used to scale the intensities for \emphasis{both} groups. With the \command{Colour} option, the highest intensity from \emphasis{within each} group of fittings is used to scale the intensities for that group. 
+
+\caution The \command{Colour} option produces maps which may be qualitatively interesting, but are quantitatively incorrect.
+
+
+\tocsubsection{Correlations}
+
+Correlations can be seen by selecting \command{Correlation} from the \command{Peak Fittings} dropdown list. Select the fittings you wish to view and choose the desired axis from the controls next to each fitting.
+
+The correlation map mode is a comparison of two intensity histograms, showing the frequency with which points in a map fall into certain intensity ranges. The number of ranges (or bins) can be controlled with the \command{Granularity} control at the bottom of the sidebar.
+
+\screenshot{map-correlation}{Correlation of Iron and Zinc}
+
+
+\tocsection{Map Filters}
+
+Just as with spectra, maps can be filtered to clean up the data and improve appearance. You can add filters to your maps by selecting the \command{Filters} tab in the sidebar and then clicking on \button{edit-add}{Add Filters} to display the available filters. Filters are grouped into folders based on type. Each folder can be expanded by clicking on the expander to the left of the filter type. Select the filter you wish to use and then click \button{choose-ok}{OK} to add it. 
+
+After you have added the filter, you can modify or check the parameters associated with your filter by clicking on the \button{misc-preferences}{Edit} button next to the filter. This will bring up a settings dialog for this filter. As you change the parameters, you will see the changes reflected in the map being displayed. To learn more about a map filter, you can view it's description by clicking the \button{badge-help}{Help} button in the settings dialog.
+
+\caution It is important to note that these filters are applied to each fitting individually, before they are combined to produce the maps as shown. This usually doesn't make much difference, but can occasionally cause some confusion. To give an example, consider the \command{Signal Cap} filter, which limits any given point to a cap value. Suppose that the cap specified was 100 counts, and was applied to a composite map of \element{Fe} K and \element{Zn} K. Because the filter is applied to the \element{Fe} and \element{Zn} maps separately before being combined, the maximum value of a point on the final map would be 200, rather than 100.
+
+
+
+\tocsection{Exporting Data}
+
+Maps may be saved by clicking the \button{document-export}{Export} button on the toolbar, and selecting \button{device-camera}{Export as Image}. Various formats are available for saving your element line maps, Pixel Image (\command{PNG}), Vector Image (\command{SVG}) and \command{PDF} format.
+
+Map data can also be exported as a CSV (comma separated value) file, or in a zip archive. The zip archive will contain a CSV file and a composite map for each fitting, as well as a saved session file.
+
 
 \tocsection{Errant Data}
 
@@ -436,9 +474,10 @@ Click on the \button{choose-cancel}{Exclude} button to flag the scan as bad, and
 
 There are two ways to select sections of a map, cropping and point-selection. Cropping is accomplished by clicking and dragging on the map to create a selection mask. 
 
-\screenshot{select-subset}{Selecting a cropped subset of a data set}
-
 Point selection is accomplished by double clicking on a point of interest, which will select all points in a contiguous region with similar intensity. Triple clicking will select all points in a map with similar intensity regardless of location. More complex selections can be made by holding the \command{Control} key while double-clicking. For example, \command{Control} + \command{Double Clicking} on a previously unselected point will create a union with a previously selected set of points.
+
+\screenshot{select-subset}{Selecting a cropped subset of a data set}
+\screenshot{select-points}{Selecting a series of contiguous high-intensity points from the data set}
 
 The \command{Map Settings} tab has two settings which will control how point selections are made. 
 
@@ -450,7 +489,7 @@ The \command{Map Settings} tab has two settings which will control how point sel
 
 \end{description}
 
-\screenshot{select-points}{Selecting a series of contiguous high-intensity points from the data set}
+
 
 
 \tocsection{Plotting Subsections}
