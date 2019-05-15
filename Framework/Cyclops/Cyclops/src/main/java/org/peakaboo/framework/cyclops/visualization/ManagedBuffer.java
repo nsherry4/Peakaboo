@@ -50,9 +50,9 @@ public class ManagedBuffer {
 	}
 
 	/**
-	 * Creates a new {@link Buffer}. This will create (and store) a new Buffer.
-	 * Subsequent calls to {@link ManagedBuffer#get(Surface)} will return the Buffer
-	 * created here so long as it continues to satisfy the size requirements.
+	 * Creates (and stores) a new {@link Buffer}. Subsequent calls to
+	 * {@link ManagedBuffer#get(Surface)} will return the Buffer created here so
+	 * long as it continues to satisfy the size requirements.
 	 */
 	public Buffer create(Surface forSurface) {
 		Buffer image = forSurface.getImageBuffer(width, height);
