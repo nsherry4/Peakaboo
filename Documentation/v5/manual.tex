@@ -257,8 +257,6 @@ Where applicable, noise removal filter parameters can be adjusted to suit the da
 
 When using background filters, it is usually best to leave 10\%-15\% of the background in place (default is 10\%) in order to prevent the background filter from removing all signal under the edges of the peak. When too much signal around the edges of a peak is removed, it can prevent peaks from being fitted to the proper intensity, or being fitted at all.
 
-While the removal of background certainly makes the actual spectral peaks more apparent, we have found that when fitting peaks to a spectrum, it is often not necessary to carry out a background subtract. The peaks fitted using a Voigt function (pseudo or convolved) actually contain a significant component of the scattering function that approximates the background. This is particularly true in the energy range 1-9 KeV. Therefore we recommend that spectral fitting be first carried out without any background subtraction
-
 For a more detailed example of using a filter, see the appendix.
 
 
@@ -364,7 +362,7 @@ Changing the order of fittings can reveal and correct these problems. Select the
 
 \item [Optimizing] The Optimizing fitting solver is a Least Squares algorithm modified to strongly penalize over-fitting against signal which doesn't exist. This algorithm is slower than Greedy, but results in more nuanced fitting solutions in complex, crowded spectra with many overlapping peaks. An example of this approach is seen in Figure 5, where it is possible to fit minor L peaks in the presence of more intense K peaks.
 
-\item [MultiSampling] The MultiSampling fitting solver is a variation of the Optimizing solver which predictably permutes the order of element fittings to produce slightly different results. This helps to produce more reliable results, but is also considerably slower for large numbers of fittings.
+\item [MultiSampling] The MultiSampling fitting solver is a variation of the Optimizing solver which averages several deterministically permuted orderings of the element fittings to eliminate any ordering effects from the Optimizing solver. This helps to produce more reliable results, but is also considerably slower for large numbers of fittings.
 
 \end{description}
 
