@@ -112,7 +112,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		
 		
 		maxEnergy = new JSpinner();
-		maxEnergy.setModel(new SpinnerNumberModel(20.48, 0.0, 204.8, 0.01));
+		maxEnergy.setModel(new SpinnerNumberModel(20.48, 0.0, 2040.8, 0.01));
 		maxEnergy.getEditor().setPreferredSize(new Dimension(72, (int)maxEnergy.getPreferredSize().getHeight()));
 		maxEnergy.getEditor().setOpaque(false);
 		maxEnergy.addChangeListener(e -> {
