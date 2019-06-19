@@ -17,7 +17,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.filechooser.SwidgetFileChooser;
 import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
 import org.peakaboo.framework.swidget.widgets.filechooser.places.PlacesWidget;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
