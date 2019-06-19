@@ -14,16 +14,24 @@ import org.peakaboo.framework.swidget.widgets.breadcrumb.BreadCrumb;
 
 public class FileBreadCrumb extends BreadCrumb<File> {
 
+	private Places places;
+	
 	public FileBreadCrumb(JFileChooser chooser) {
-		super(FileBreadCrumb::format, f -> {
+		this(chooser, Places.forPlatform());
+	}
+	
+	public FileBreadCrumb(JFileChooser chooser, Places places) {
+		super(FileBreadCrumb::formatStatic, f -> {
 			if (!f.equals(chooser.getCurrentDirectory())) {
 				chooser.setCurrentDirectory(f);
 			}
 		});
 		
+		this.places = places;
+		
 		this.setAlignment(BorderLayout.LINE_START);
 		
-		setEntryBuilder(item -> new FileBreadCrumbEntry(this, item, FileBreadCrumb::format));
+		setEntryBuilder(item -> new FileBreadCrumbEntry(this, item, this::format));
 		
 		chooser.addPropertyChangeListener(l -> {
 			File dir = chooser.getCurrentDirectory();
@@ -34,8 +42,17 @@ public class FileBreadCrumb extends BreadCrumb<File> {
 	
 
 	
-	private static String format(File f) {
+	private static String formatStatic(File f) {
 		Place place = Places.forPlatform().get(f);
+		if (place != null && place.isRoot()) {
+			return place.getName();
+		} else {
+			return FileSystemView.getFileSystemView().getSystemDisplayName(f);
+		}
+	}
+	
+	private String format(File f) {
+		Place place = places.get(f);
 		if (place != null && place.isRoot()) {
 			return place.getName();
 		} else {
@@ -56,7 +73,6 @@ public class FileBreadCrumb extends BreadCrumb<File> {
 		
 		List<File> items = new ArrayList<>();
 		File p = f;
-		Places places = Places.forPlatform();
 		while (p != null) {
 			items.add(0, p);
 			if (places.has(p) && places.get(p).isRoot()) {
@@ -66,6 +82,13 @@ public class FileBreadCrumb extends BreadCrumb<File> {
 		}
 		this.setAll(items, f);
 	}
+
+
+	Places getPlaces() {
+		return places;
+	}
+	
+	
 	
 
 }

@@ -50,9 +50,12 @@ public class UnixPlaces implements Places {
 			loadFallback(home);
 		}
 		
+		new Exception().printStackTrace();
+		
 		//filesystems
 		addMountpoint(new File("/"));
 		for (FileStore fs : FileSystems.getDefault().getFileStores()) {
+			System.out.println(fs);
 			if (fs.isReadOnly()) {
 				continue;
 			}

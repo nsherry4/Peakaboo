@@ -29,7 +29,14 @@ public class PlacesWidget extends JPanel {
 	private TableModel model;
 	
 	public PlacesWidget(JFileChooser chooser) {
-		places = Places.forPlatform();
+		this(chooser, Places.forPlatform());
+	}
+	
+	public PlacesWidget(JFileChooser chooser, Places places) {
+		this.places = places;
+		if (places == null) {
+			return;
+		}
 		items = new JTable();
 		model = new ListTableModel<>(places.getAll());
 		items.setModel(model);
@@ -75,6 +82,11 @@ public class PlacesWidget extends JPanel {
 		setLayout(new BorderLayout());
 		add(scroller, BorderLayout.CENTER);
 	}
+	
+	public boolean supported() {
+		return places != null;
+	}
+	
 
 }
 

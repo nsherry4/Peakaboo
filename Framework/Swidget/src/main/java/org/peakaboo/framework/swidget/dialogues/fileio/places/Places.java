@@ -8,7 +8,7 @@ import javax.swing.filechooser.FileSystemView;
 public interface Places {
 
 	List<Place> getAll();
-
+	
 	default boolean has(File file) {
 		return get(file) != null;
 	}

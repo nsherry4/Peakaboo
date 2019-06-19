@@ -22,7 +22,6 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
-import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 
 public class SwidgetFilePanels {
@@ -37,12 +36,17 @@ public class SwidgetFilePanels {
 			HeaderLayer layer = new HeaderLayer(tabPanel, false);
 			JPanel chooserPanel = new JPanel(new BorderLayout());
 			chooserPanel.add(chooser, BorderLayout.CENTER);
-			if (Places.supported()) {
-				chooserPanel.add(new PlacesWidget(chooser), BorderLayout.WEST);
+			JPanel breadcrumb = null;
+			
+			Places places = Places.forPlatform();
+			if (places != null) {
+				PlacesWidget placesWidget = new PlacesWidget(chooser, places);
+				chooserPanel.add(placesWidget, BorderLayout.WEST);
+				breadcrumb = chooser.getHeader(places);
 			}
 
 			chooserPanel.setPreferredSize(new Dimension(800, 300));
-			layer.getHeader().setComponents(negative, chooser.getHeader(), affirmative);
+			layer.getHeader().setComponents(negative, breadcrumb, affirmative);
 			layer.setBody(chooserPanel);
 			
 			chooser.addActionListener(action -> {
