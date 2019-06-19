@@ -1,6 +1,5 @@
 package org.peakaboo.display.plot;
 
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,6 +19,7 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
+import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
@@ -45,9 +45,10 @@ public class Plotter {
 
 	
 	private int spectrumSize = 2048;
+	private static final float OVERSIZE = 1.2f;
+	ManagedBuffer bufferer = new ManagedBuffer(OVERSIZE);
 	
-	private SoftReference<Buffer> bufferRef = new SoftReference<>(null);
-	private Coord<Integer> bufferSize, lastSize;
+	private Coord<Integer> lastSize;
 	private PlotDrawing plotDrawing;
 	
 	public Plotter() {
@@ -73,7 +74,7 @@ public class Plotter {
 		
 		//buffer space in MB
 		boolean doBuffer = true;
-		int bufferSpace = (int)((size.x * 1.2f * size.y * 1.2f * 4) / 1024f / 1024f);
+		int bufferSpace = (int)((size.x * OVERSIZE * size.y * OVERSIZE * 4) / 1024f / 1024f);
 		if (bufferSpace > 10 && PeakabooConfiguration.memorySize == MemorySize.TINY) {
 			doBuffer = false;
 		}
@@ -88,7 +89,7 @@ public class Plotter {
 		}
 		Runtime rt = Runtime.getRuntime();
 		int freemem = (int) (rt.freeMemory() / 1024f / 1024f);
-		if (bufferSpace * 1.2f > freemem) {
+		if (bufferSpace * 1.5f > freemem) {
 			doBuffer = false;
 		}
 		
@@ -98,34 +99,22 @@ public class Plotter {
 			//so just draw directly to the surface
 			drawToBuffer(data, settings, context, size);
 		} else if (doBuffer) {
-			Buffer buffer = bufferRef.get();
-			if (	buffer == null || 
-					plotDrawing == null || 
-					bufferSize == null || 
-					//make sure the buffer is large enough
-					bufferSize.x < size.x || 
-					bufferSize.y < size.y ||
-					//but if the buffer is much larger than it needs to be, make sure to reclaim that memory
-					bufferSize.x > size.x*1.5f ||
-					bufferSize.y > size.y*1.5f
-				) {
-				bufferSize = new Coord<>((int)(size.x*1.2f), (int)(size.y*1.2f));
-				lastSize = new Coord<>(size);
-				buffer = context.getImageBuffer(bufferSize.x, bufferSize.y);
-				bufferRef = new SoftReference<>(buffer);
-				drawToBuffer(data, settings, buffer, size);
-			} else if (!lastSize.equals(size)) {
-				//buffer exists, but size has changed, requiring redraw.
-				lastSize = new Coord<>(size); 
-				drawToBuffer(data, settings, buffer, size);
-			}
 			
+			Buffer buffer = bufferer.get(context, size.x, size.y);
+			boolean needsRedraw = buffer == null || lastSize == null || !lastSize.equals(size);
+			//if there is no cached buffer meeting our size requirements, create it and draw to it
+			if (needsRedraw) {
+				if (buffer == null) {
+					buffer = bufferer.create(context);
+				}
+				drawToBuffer(data, settings, buffer, size);
+				lastSize = new Coord<>(size); 
+			}
+					
 			context.rectAt(0, 0, size.x, size.y);
 			context.clip();
 			context.compose(buffer, 0, 0, 1f);
 		} else {
-			bufferRef = new SoftReference<>(null);
-			bufferSize = null;
 			lastSize = null;
 			drawToBuffer(data, settings, context, size);
 		}
@@ -436,7 +425,7 @@ public class Plotter {
 	
 	
 	public void setNeedsRedraw() {
-		bufferRef = new SoftReference<>(null);
+		lastSize = null;
 		plotDrawing = null;
 	}
 	

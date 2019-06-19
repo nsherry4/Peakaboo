@@ -9,7 +9,7 @@ public class BreadCrumbEntry<T> {
 	private ToggleImageButton button;
 	private T item;
 	private Function<T, String> formatter;
-	private BreadCrumb<T> parent;
+	protected BreadCrumb<T> parent;
 	private int width;
 	
 	public BreadCrumbEntry(BreadCrumb<T> parent, T item, Function<T, String> formatter) {

@@ -111,7 +111,7 @@ public class StandardDataSet implements DataSet
 				try {
 					
 					long t1 = System.currentTimeMillis();
-					PeakabooLog.get().log(Level.INFO, "Starting Data Set Open");
+					PeakabooLog.get().log(Level.INFO, "Starting Data Set Open with " + dataSource.getFileFormat().getFormatName());
 					
 					final int scanCount;
 					

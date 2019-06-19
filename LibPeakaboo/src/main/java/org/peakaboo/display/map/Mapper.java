@@ -9,6 +9,7 @@ import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
+import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
@@ -19,8 +20,10 @@ public class Mapper {
 	private MapMode mapmode;
 	
 	private boolean invalidated;
-	private SoftReference<Buffer> bufferRef = new SoftReference<>(null);
-	private Coord<Integer> bufferSize, lastSize;
+	//private SoftReference<Buffer> bufferRef = new SoftReference<>(null);
+	private static final float OVERSIZE = 1.2f;
+	private ManagedBuffer bufferer = new ManagedBuffer(OVERSIZE);
+	private Coord<Integer> lastSize;
 	
 	public Mapper() {
 		mapmode = new CompositeMapMode();
@@ -70,37 +73,23 @@ public class Mapper {
 			//so just draw directly to the surface
 			mapmode.draw(size, data, settings, context, spectrumSteps);
 		} else if (doBuffer) {
-			Buffer buffer = bufferRef.get();
-			if (	buffer == null || 
-					mapmode == null || 
-					bufferSize == null || 
-					lastSize == null || 
-					//make sure the buffer is large enough
-					bufferSize.x < size.x || 
-					bufferSize.y < size.y ||
-					//but if the buffer is much larger than it needs to be, make sure to reclaim that memory
-					bufferSize.x > size.x*1.5f ||
-					bufferSize.y > size.y*1.5f
-				) {
-				bufferSize = new Coord<>((int)(size.x*1.2f), (int)(size.y*1.2f));
-				lastSize = new Coord<>(size);
-				buffer = context.getImageBuffer(bufferSize.x, bufferSize.y);
-				bufferRef = new SoftReference<>(buffer);
-				mapmode.draw(size, data, settings, buffer, spectrumSteps);
-				invalidated = false;
-			} else if (!lastSize.equals(size) || invalidated) {
-				//buffer exists, but size has changed, requiring redraw.
+
+			Buffer buffer = bufferer.get(context, size.x, size.y);
+			boolean needsRedraw = buffer == null || lastSize == null || !lastSize.equals(size) || invalidated;
+			//if there is no cached buffer meeting our size requirements, create it and draw to it
+			if (needsRedraw) {
+				if (buffer == null) {
+					buffer = bufferer.create(context);
+				}
 				mapmode.draw(size, data, settings, buffer, spectrumSteps);
 				lastSize = new Coord<>(size);
 				invalidated = false;
 			}
-			
+						
 			context.rectAt(0, 0, size.x, size.y);
 			context.clip();
 			context.compose(buffer, 0, 0, 1f);
 		} else {
-			bufferRef = new SoftReference<>(null);
-			bufferSize = null;
 			lastSize = null;
 			mapmode.draw(size, data, settings, context, spectrumSteps);
 		}

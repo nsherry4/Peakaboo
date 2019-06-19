@@ -1,0 +1,120 @@
+package org.peakaboo.framework.swidget.widgets.filechooser.places;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.table.TableModel;
+
+import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.models.ListTableModel;
+import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
+
+public class PlacesWidget extends JPanel {
+
+	private Places places;
+	private JTable items;
+	private TableModel model;
+	
+	public PlacesWidget(JFileChooser chooser) {
+		this(chooser, Places.forPlatform());
+	}
+	
+	public PlacesWidget(JFileChooser chooser, Places places) {
+		this.places = places;
+		if (places == null) {
+			return;
+		}
+		items = new JTable();
+		model = new ListTableModel<>(places.getAll());
+		items.setModel(model);
+			
+		//items.setBackground(new Color(this.getBackground().getRGB()));
+		this.setBackground(new Color(items.getBackground().getRGB()));
+		this.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
+		
+		this.setPreferredSize(new Dimension(140, 140));
+		
+		
+		items.getColumnModel().getColumn(0).setCellRenderer(new ListWidgetTableCellRenderer<>(new DirWidget()));
+		items.setShowGrid(false);
+		items.setTableHeader(null);
+		items.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		items.getSelectionModel().addListSelectionListener(l -> {
+			int row = items.getSelectedRow();
+			if (row == -1) { return; }
+			Place dir = places.getAll().get(row);
+			if (!dir.getFile().equals(chooser.getCurrentDirectory())) {
+				chooser.setCurrentDirectory(dir.getFile());
+			}
+		});
+		
+		chooser.addPropertyChangeListener(l -> {
+			File dir = chooser.getCurrentDirectory();
+			int row = places.index(dir);
+			if (row == items.getSelectedRow()) { return; }
+			if (row == -1) {
+				items.getSelectionModel().clearSelection();
+			} else {
+				items.getSelectionModel().setSelectionInterval(row, row);
+			}
+		});
+
+		
+		JScrollPane scroller = new JScrollPane(items);
+		scroller.setBorder(Spacing.bNone());
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setBackground(new Color(items.getBackground().getRGB()));
+		scroller.getViewport().setBackground(new Color(items.getBackground().getRGB()));
+		setLayout(new BorderLayout());
+		add(scroller, BorderLayout.CENTER);
+	}
+	
+	public boolean supported() {
+		return places != null;
+	}
+	
+
+}
+
+class DirWidget extends ListWidget<Place> {
+
+	JLabel l;
+	
+	public DirWidget() {
+		setLayout(new BorderLayout());
+		l = new JLabel();
+		l.setBorder(new EmptyBorder(Spacing.large, Spacing.huge, Spacing.large, Spacing.huge));
+		l.setIconTextGap(Spacing.medium);
+		add(l, BorderLayout.CENTER);
+	}
+	
+	@Override
+	protected void onSetValue(Place value) {
+		l.setText(value.getName());
+		l.setIcon(value.getIcon());
+	}
+	
+	@Override
+	public void setForeground(Color c) {
+		super.setForeground(c);
+		if (l == null) { return; }
+		l.setForeground(c);
+	}
+	
+	
+}
+

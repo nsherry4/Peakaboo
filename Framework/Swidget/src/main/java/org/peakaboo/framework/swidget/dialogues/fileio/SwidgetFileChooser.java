@@ -1,11 +1,8 @@
 package org.peakaboo.framework.swidget.dialogues.fileio;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.io.File;
 
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -18,22 +15,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.fileio.breadcrumb.FileBreadCrumb;
-import org.peakaboo.framework.swidget.dialogues.fileio.places.Places;
-import org.peakaboo.framework.swidget.dialogues.fileio.places.PlacesWidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.filechooser.breadcrumb.FileBreadCrumb;
+import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
 
-public class SwidgetFileChooser extends JFileChooser {
+
+class SwidgetFileChooser extends JFileChooser {
 
 	private ImageButton makeDirButton = null;
-	
-	public SwidgetFileChooser() {
-		super();
-		setup();
-	}
 	
 	public SwidgetFileChooser(File directory) {
 		super(directory);
@@ -92,8 +83,8 @@ public class SwidgetFileChooser extends JFileChooser {
 		
 	}
 
-	public JPanel getHeader() {
-		FileBreadCrumb breadcrumb = new FileBreadCrumb(this);
+	public JPanel getHeader(Places places) {
+		FileBreadCrumb breadcrumb = new FileBreadCrumb(this, places);
 		JPanel box = new JPanel(new BorderLayout(Spacing.small, Spacing.small));
 		box.setBorder(new EmptyBorder(0, Spacing.medium, 0, Spacing.medium));
 		box.add(breadcrumb, BorderLayout.CENTER);
