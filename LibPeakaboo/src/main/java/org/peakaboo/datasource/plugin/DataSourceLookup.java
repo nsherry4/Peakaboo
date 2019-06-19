@@ -18,11 +18,15 @@ public class DataSourceLookup
 		List<DataSourcePlugin> maybe_by_contents = new ArrayList<>();
 		List<DataSourcePlugin> yes_by_contents = new ArrayList<>();
 		
+		PeakabooLog.get().log(Level.INFO, "Discovering compatible DataSource plugins");
 
 		for (DataSourcePlugin datasource : dsps)
 		{
 			try {
 				FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<>(paths));
+				
+				PeakabooLog.get().log(Level.INFO, "DataSource plugin '" + datasource.pluginName() + "' (" + datasource.pluginUUID() + ") answers '" + compat.toString() + "'");
+				
 				if ( compat == FileFormatCompatibility.NO ) continue;
 				if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
 				if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }
