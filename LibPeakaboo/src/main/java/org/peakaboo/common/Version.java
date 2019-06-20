@@ -39,7 +39,7 @@ public class Version {
 	public final static int versionNoPoint = 0;
 	public final static String program_name = "Peakaboo";
 	
-	public final static ReleaseType releaseType = ReleaseType.CANDIDATE;
+	public final static ReleaseType releaseType = ReleaseType.DEVELOPMENT;
 	
 
 
