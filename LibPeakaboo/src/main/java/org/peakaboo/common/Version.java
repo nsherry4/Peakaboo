@@ -36,7 +36,7 @@ public class Version {
 	
 	public final static int versionNoMajor = 5;
 	public final static int versionNoMinor = 3;
-	public final static int versionNoPoint = 0;
+	public final static int versionNoPoint = 1;
 	public final static String program_name = "Peakaboo";
 	
 	public final static ReleaseType releaseType = ReleaseType.DEVELOPMENT;
