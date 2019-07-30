@@ -25,7 +25,7 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 
 	@Override
 	public void initialize() {
-		percent = new Parameter<>("Cutoff Percent", new IntegerSpinnerStyle(), 10, this::validate);
+		percent = new Parameter<>("Cutoff Percent", new IntegerSpinnerStyle(), 30, this::validate);
 		addParameter(percent);
 	}
 
