@@ -1,5 +1,6 @@
 package org.peakaboo.filter.plugins.advanced;
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -53,7 +54,7 @@ public class SpectrumNormalizationFilter extends AbstractSimpleFilter
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
 	{
 
 		String mode = pMode.getValue();
@@ -88,13 +89,13 @@ public class SpectrumNormalizationFilter extends AbstractSimpleFilter
 	@Override
 	public String getFilterDescription()
 	{
-		return "The " + getFilterName() + " scales each spectrum's intensity based on the options selected";
+		return "The " + getFilterName() + " scales each spectrum's intensity against itself based on the options selected";
 	}
 
 	@Override
 	public String getFilterName()
 	{
-		return "Normalizer";
+		return "Spectrum Normalizer";
 	}
 
 	@Override

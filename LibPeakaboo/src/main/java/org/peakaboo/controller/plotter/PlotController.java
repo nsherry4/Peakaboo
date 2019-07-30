@@ -238,7 +238,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 			try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
 				int count = 0;
 				for (ReadOnlySpectrum spectrum : data) {
-					spectrum = filters.applyFiltersUnsynchronized(spectrum);
+					spectrum = filters.applyFiltersUnsynchronized(spectrum, data().getDataSet());
 					writer.write(spectrum.toString() + "\n");
 
 					//abort test

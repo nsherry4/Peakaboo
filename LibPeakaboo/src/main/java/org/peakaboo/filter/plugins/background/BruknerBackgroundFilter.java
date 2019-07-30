@@ -2,6 +2,7 @@ package org.peakaboo.filter.plugins.background;
 
 
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -52,7 +53,7 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent)
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent)
 	{		
 		return SpectrumCalculations.multiplyBy(
 				calcBackgroundBrukner(data, width.getValue(), iterations.getValue()), (percent/100.0f)

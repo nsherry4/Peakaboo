@@ -28,11 +28,11 @@ public class FilteringController extends Eventful
 			if (plot.currentScan() == null) {
 				return null;
 			}
-			return filteringModel.filters.applyFilters(plot.currentScan());
+			return filteringModel.filters.applyFilters(plot.currentScan(), plot.data().getDataSet());
 		});
 		
 		filteringModel.filterDeltas = new EventfulNullableCache<>(() -> { 
-			return filteringModel.filters.calculateDeltas(plot.currentScan());
+			return filteringModel.filters.calculateDeltas(plot.currentScan(), plot.data().getDataSet());
 		});
 				
 		filteringModel.filteredPlot.addListener(this::updateListeners);

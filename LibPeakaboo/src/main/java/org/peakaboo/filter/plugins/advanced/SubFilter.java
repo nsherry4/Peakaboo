@@ -3,6 +3,7 @@ package org.peakaboo.filter.plugins.advanced;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterPluginManager;
@@ -60,7 +61,7 @@ public class SubFilter extends AbstractFilter
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
 	{
 		
 		int start = begin.getValue();

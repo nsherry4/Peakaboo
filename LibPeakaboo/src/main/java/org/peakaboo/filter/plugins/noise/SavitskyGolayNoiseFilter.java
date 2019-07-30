@@ -3,6 +3,7 @@ package org.peakaboo.filter.plugins.noise;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -117,7 +118,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		return FastSavitskyGolayFilter(data, order.getValue(), reach.getValue(), 0f, ignore.getValue() ? max.getValue() : Float.MAX_VALUE);
 	}
 

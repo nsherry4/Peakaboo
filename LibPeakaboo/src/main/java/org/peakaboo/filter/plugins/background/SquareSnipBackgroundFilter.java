@@ -1,6 +1,7 @@
 package org.peakaboo.filter.plugins.background;
 
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -37,7 +38,7 @@ public class SquareSnipBackgroundFilter extends AbstractBackgroundFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent) {
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent) {
 		//TODO: parameterize
 		int window = pHalfWindow.getValue();
 		int iterations = pIterations.getValue();

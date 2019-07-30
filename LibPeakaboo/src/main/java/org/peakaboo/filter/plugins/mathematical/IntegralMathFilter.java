@@ -1,6 +1,7 @@
 package org.peakaboo.filter.plugins.mathematical;
 
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
@@ -24,7 +25,7 @@ public class IntegralMathFilter extends AbstractSimpleFilter
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
 	{
 		return integ(data);
 	}

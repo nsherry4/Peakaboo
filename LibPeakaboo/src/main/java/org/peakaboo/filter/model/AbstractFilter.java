@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
@@ -76,16 +77,16 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	
 	
 
-	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data);
+	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset);
 		
 	
 
 	@Override
-	public ReadOnlySpectrum filter(ReadOnlySpectrum data)
+	public ReadOnlySpectrum filter(ReadOnlySpectrum data, DataSet dataset)
 	{
 		
 		try{
-			ReadOnlySpectrum newdata = filterApplyTo(data);
+			ReadOnlySpectrum newdata = filterApplyTo(data, dataset);
 			if (newdata != null) return newdata;
 			return data;
 		}

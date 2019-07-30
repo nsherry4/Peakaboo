@@ -72,7 +72,7 @@ public class Mapping
 				ReadOnlySpectrum data = dataset.getScanData().get(index);
 				if (data == null) return;
 				
-				data = filters.applyFiltersUnsynchronized(data);
+				data = filters.applyFiltersUnsynchronized(data, dataset);
 				
 				FittingResultSet frs = solver.solve(data, fittings, fitter);
 				

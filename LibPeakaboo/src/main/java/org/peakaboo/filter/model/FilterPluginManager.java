@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
 import org.peakaboo.filter.plugins.advanced.PeakDetectorFilter;
 import org.peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
@@ -58,6 +59,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		builtins.load(IdentityFilter.class);
 		builtins.load(SubFilter.class);
 		builtins.load(SpectrumNormalizationFilter.class);
+		builtins.load(DatasetNormalizationFilter.class);
 		
 		builtins.load(BruknerBackgroundFilter.class);
 		builtins.load(LinearTrimBackgroundFilter.class);

@@ -5,6 +5,7 @@ import java.util.List;
 import org.peakaboo.common.Version;
 import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.cyclops.ISpectrum;
@@ -52,7 +53,7 @@ public class PeakDetectorFilter extends AbstractFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		
 		List<Integer> indexes = new DerivativePeakSearcher().search(data);
 		Spectrum peaks = new ISpectrum(data.size());

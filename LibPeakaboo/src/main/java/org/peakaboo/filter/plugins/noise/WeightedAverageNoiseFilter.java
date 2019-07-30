@@ -1,5 +1,6 @@
 package org.peakaboo.filter.plugins.noise;
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractSimpleFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -63,7 +64,7 @@ public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
 	{
 		data = WeightedMovingAverage(data, reach.getValue());
 		return data;
