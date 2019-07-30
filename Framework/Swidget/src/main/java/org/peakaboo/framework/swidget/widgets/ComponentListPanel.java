@@ -17,7 +17,12 @@ import org.peakaboo.framework.swidget.Swidget;
 public class ComponentListPanel extends ClearPanel {
 
 	public ComponentListPanel(List<? extends Component> components) {
+		update(components);
+	}
 	
+	public void update(List<? extends Component> components) {
+		this.removeAll();
+		
 		ClearPanel content = new ClearPanel();
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -48,8 +53,6 @@ public class ComponentListPanel extends ClearPanel {
 		
 		this.setLayout(new BorderLayout());
 		this.add(scroller, BorderLayout.CENTER);
-		
-		
 	}
 	
 }
