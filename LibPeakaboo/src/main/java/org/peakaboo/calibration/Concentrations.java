@@ -61,7 +61,7 @@ public class Concentrations {
 	
 	public String getRatioFormatted(Element e) {
 		float ratio = getRatio(e);
-		return format.format(ratio) + "x";
+		return format.format(ratio);
 	}
 	
 

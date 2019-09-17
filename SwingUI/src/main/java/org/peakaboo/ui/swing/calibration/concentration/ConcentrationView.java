@@ -42,12 +42,12 @@ public class ConcentrationView extends HeaderLayer {
 		
 		ImageButton save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS)
 				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Save concentrations as text")
+				.withTooltip("Save as CSV")
 				.withAction(this::saveData);
 		
 		ImageButton copy = new ImageButton(StockIcon.EDIT_COPY)
 				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Copy concentrations to clipboard")
+				.withTooltip("Copy to clipboard")
 				.withAction(this::copyData);
 		
 		ButtonLinker linker = new ButtonLinker(save, copy);
@@ -74,17 +74,17 @@ public class ConcentrationView extends HeaderLayer {
 	}
 
 
-	private String textData() {
+	private String textData(String delimiter) {
 		List<Element> es = conc.elementsByConcentration();
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Element: Ratio to ");
+		sb.append("Element" + delimiter + "Ratio to ");
 		sb.append(conc.getProfile().getReference().getAnchor().getElement().toString());
 		sb.append("\n");
 		
 		for (Element e : es) {
 			sb.append(e.name());
-			sb.append(": ");
+			sb.append(delimiter);
 			sb.append(conc.getRatioFormatted(e));
 			
 			
@@ -109,7 +109,7 @@ public class ConcentrationView extends HeaderLayer {
 	
 	private void copyData() {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		StringSelection sel = new StringSelection(textData());
+		StringSelection sel = new StringSelection(textData(": "));
 		clipboard.setContents(sel, null);
 		
 		ToastLayer toast = new ToastLayer(parent, "Data copied to clipboard");
@@ -120,7 +120,7 @@ public class ConcentrationView extends HeaderLayer {
 	private void saveData() {
 		
 		//TODO: starting folder
-		SwidgetFilePanels.saveFile(parent, "Save Concentration Data", null, new SimpleFileExtension("Text File", "txt"), result -> {
+		SwidgetFilePanels.saveFile(parent, "Save Concentration Data", null, new SimpleFileExtension("Comma Separated Value file", "csv"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}
@@ -128,7 +128,7 @@ public class ConcentrationView extends HeaderLayer {
 			try {
 				File f = result.get();
 				FileWriter writer = new FileWriter(f);
-				writer.write(textData());
+				writer.write(textData(", "));
 				writer.close();
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to save concentration data", e);
