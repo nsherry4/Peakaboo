@@ -160,7 +160,7 @@ public class Plotter {
 			fittedPalette.markings = fittedPalette.fitStroke;
 		} else {
 			fittedPalette.fitFill = new PaletteColour(0x50000000);
-			fittedPalette.fitStroke = new PaletteColour(0x80000000);
+			fittedPalette.fitStroke = new PaletteColour(0xA0000000);
 			fittedPalette.sumStroke = new PaletteColour(0xD0000000);
 			fittedPalette.labelText = fittedPalette.fitStroke;
 			fittedPalette.labelBackground = new PaletteColour(0xffffffff);

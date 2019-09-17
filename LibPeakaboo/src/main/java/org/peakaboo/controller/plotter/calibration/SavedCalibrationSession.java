@@ -37,7 +37,11 @@ public class SavedCalibrationSession {
 	public void loadInto(CalibrationController controller) {
 		
 		if (profileYaml != null) {
-			controller.setCalibrationProfile(CalibrationProfile.load(profileYaml), new File(profileFilename));
+			File source = null;
+			if (profileFilename != null) {
+				source = new File(profileFilename);
+			}
+			controller.setCalibrationProfile(CalibrationProfile.load(profileYaml), source);
 		} else {
 			controller.setCalibrationProfile(new CalibrationProfile(), null);
 		}
