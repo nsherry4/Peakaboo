@@ -45,8 +45,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.tschoonj</groupId>
-			<artifactId>xraylib</artifactId>
-			<version>3.99.2</version>
+			<artifactId>com.github.tschoonj.xraylib</artifactId>
+			<version>3.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -76,6 +76,14 @@
 		</dependency>
 
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>jar</id>
+			<url>file://${project.basedir}/repo/</url>
+		</repository>
+	</repositories>
+
 
 	<build>
 
