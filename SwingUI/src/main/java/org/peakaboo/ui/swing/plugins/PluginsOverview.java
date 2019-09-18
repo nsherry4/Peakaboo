@@ -6,6 +6,7 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.logging.Level;
@@ -86,11 +87,29 @@ public class PluginsOverview extends HeaderLayer {
 		details = new JPanel(new BorderLayout());
 		details.add(new PluginMessageView("No Selection", 0), BorderLayout.CENTER);
 		body.add(details, BorderLayout.CENTER);
-		new FileDrop(body, files -> {
-			for (File file : files) {
-				addPluginFile(file);
+		new FileDrop(body, new FileDrop.Listener() {
+			
+			@Override
+			public void urisDropped(URI[] uris) {
+				for (URI uri : uris) {
+					try {
+						//TODO: download this in a UI-friendly way
+						File f = FileDrop.getUriAsFile(uri);
+						addPluginFile(f);
+					} catch (IOException e) {
+						PeakabooLog.get().log(Level.SEVERE, "Failed to download plugin", e);
+					}
+				}
+			}
+			
+			@Override
+			public void filesDropped(File[] files) {
+				for (File file : files) {
+					addPluginFile(file);
+				}
 			}
 		});
+
 		setBody(body);
 		
 		

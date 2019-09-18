@@ -6,11 +6,17 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
@@ -67,9 +73,29 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		});
 		
 		
-		new FileDrop(this, files -> {
-			parent.load(Arrays.asList(files));
+		new FileDrop(this, new FileDrop.Listener() {
+			
+			@Override
+			public void urisDropped(URI[] uris) {
+				List<File> files = new ArrayList<>();
+				for (URI uri : uris) {
+					try {
+						//TODO: download this as part of opening the dataset
+						files.add(FileDrop.getUriAsFile(uri));
+					} catch (IOException e) {
+						PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
+						return;
+					}
+				}
+				parent.load(files);
+			}
+			
+			@Override
+			public void filesDropped(File[] files) {
+				parent.load(Arrays.asList(files));
+			}
 		});
+
 
 		
 		addMouseListener(new MouseListener() {
