@@ -1,5 +1,6 @@
 package org.peakaboo.datasource.model.datafile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -10,6 +11,14 @@ import java.util.Optional;
 public class PathDataFile implements DataFile {
 	
 	private Path path;
+	
+	public PathDataFile(String filename) {
+		
+	}
+	
+	public PathDataFile(File file) {
+		this.path = file.toPath();
+	}
 	
 	public PathDataFile(Path path) {
 		this.path = path;
@@ -31,7 +40,7 @@ public class PathDataFile implements DataFile {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		//NOOP
 	}
 
@@ -43,5 +52,41 @@ public class PathDataFile implements DataFile {
 			return Optional.empty();
 		}
 	}
+
+	@Override
+	public boolean exists() {
+		return Files.exists(path);
+	}
+	
+	public boolean equals(PathDataFile other) {
+		if (other == null) { return false; }
+		return this.path.equals(other.path);
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.path.hashCode();
+	}
+
+	@Override
+	public Optional<File> localFolder() {
+		return Optional.of(path.getParent().toFile());
+	}
+
+	@Override
+	public boolean writable() {
+		return true;
+	}
+
+	@Override
+	public Optional<String> address() {
+		try {
+			return Optional.of(path.toFile().toString());
+		} catch (UnsupportedOperationException e) {
+			return Optional.empty();
+		}
+	}
+	
+	
 
 }

@@ -22,6 +22,7 @@ import org.peakaboo.datasource.model.components.scandata.DummyScanData;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.Coord;
@@ -80,7 +81,7 @@ public class StandardDataSet implements DataSet
 	 * @param paths the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, final DataSource dataSource)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<DataFile> paths, final DataSource dataSource)
 	{
 
 		// sort the filenames alphanumerically. Files like "point2" should appear before "point10"
@@ -116,6 +117,14 @@ public class StandardDataSet implements DataSet
 					final int scanCount;
 					
 					opening.advanceState();
+					opening.setWorkUnits(paths.size());
+					
+					// anon function to call when a scan is 'opened'. This is usually nothing, but
+					// when a scan is 'remote' or otherwise needs to be copied before being opened,
+					// there's work to be done here.
+					Consumer<Integer> openedScans = (Integer count) -> {
+						opening.workUnitCompleted(count);
+					};
 					
 					//anon function to call when we get the number of scans
 					Consumer<Integer> gotScanCount = (Integer count) ->	{
@@ -134,8 +143,8 @@ public class StandardDataSet implements DataSet
 					
 	
 
-					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
-					dataSource.read(paths);	
+					dataSource.setInteraction(new CallbackInteraction(openedScans, gotScanCount, readScans, isAborted));
+					dataSource.readDataFiles(paths);
 	
 					
 					

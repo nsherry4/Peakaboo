@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,6 +64,8 @@ import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.datafile.DataFile;
+import org.peakaboo.datasource.model.datafile.PathDataFile;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
@@ -344,14 +347,15 @@ public class PlotPanel extends TabbedLayerPanel
 			if (!files.isPresent()) return;
 			controller.io().setLastFolder(files.get().get(0).getParentFile());
 			
-			load(files.get());
+			List<File> filelist = files.get();
+			load(filelist.stream().map(PathDataFile::new).collect(Collectors.toList()));
 			
 		});
 	}
-	
-	void load(List<File> files) {
+
+	void load(List<DataFile> files) {
 		
-		DataLoader loader = new DataLoader(controller, files.stream().map(File::toPath).collect(Collectors.toList())) {
+		DataLoader loader = new DataLoader(controller, files) {
 
 			@Override
 			public void onLoading(ExecutorSet<DatasetReadResult> job) {
@@ -359,14 +363,14 @@ public class PlotPanel extends TabbedLayerPanel
 			}
 			
 			@Override
-			public void onSuccess(List<Path> paths, File session) {
+			public void onSuccess(List<DataFile> paths, File session) {
 				// set some controls based on the fact that we have just loaded a
 				// new data set
 				canvas.updateCanvasSize();
 			}
 
 			@Override
-			public void onFail(List<Path> paths, String message) {
+			public void onFail(List<DataFile> paths, String message) {
 				new LayerDialog(
 						"Open Failed", 
 						message, 
@@ -908,7 +912,7 @@ public class PlotPanel extends TabbedLayerPanel
 				return;
 			}
 			controller.io().setBothFromSession(file.get());
-			load(Collections.singletonList(file.get()));
+			load(Collections.singletonList(new PathDataFile(file.get())));
 		});
 
 	}

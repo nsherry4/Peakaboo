@@ -19,6 +19,7 @@ import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
@@ -44,7 +45,7 @@ public class DataController extends Eventful
 	private DataSet 			dataModel;
 	private PlotController		plot;
 	private Discards			discards;
-	private List<Path>			dataPaths;
+	private List<DataFile>		dataPaths;
 	protected String			title;
 	private String				dataSourcePluginUUID;
 	private List<Object>		dataSourceParameters;
@@ -70,7 +71,7 @@ public class DataController extends Eventful
 	// =============================================
 	
 
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, DataSourcePlugin dsp, Consumer<DatasetReadResult> onResult)
+	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<DataFile> paths, DataSourcePlugin dsp, Consumer<DatasetReadResult> onResult)
 	{
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
@@ -238,12 +239,12 @@ public class DataController extends Eventful
 	}
 
 
-	public List<Path> getDataPaths() {
+	public List<DataFile> getDataPaths() {
 		return dataPaths;
 	}
 
 
-	public void setDataPaths(List<Path> dataPaths) {
+	public void setDataPaths(List<DataFile> dataPaths) {
 		this.dataPaths = dataPaths;
 	}
 

@@ -16,6 +16,7 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.plugin.DataSourceLookup;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
@@ -30,7 +31,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 public abstract class DataLoader {
 
 	private PlotController controller;
-	private List<Path> paths;
+	private List<DataFile> datafiles;
 	private String dataSourceUUID = null;
 	private List<Object> sessionParameters = null;
 	private File sessionFile = null;
@@ -38,17 +39,17 @@ public abstract class DataLoader {
 	//if we're loading a session, we need to do some extra work after loading the dataset
 	private Runnable sessionCallback = () -> {}; 
 	
-	public DataLoader(PlotController controller, List<Path> paths) {
+	public DataLoader(PlotController controller, List<DataFile> datafiles) {
 		this.controller = controller;
-		this.paths = paths;
+		this.datafiles = datafiles;
 	}
 	
 	private void loadWithDataSource(DataSourcePlugin dsp)
 	{
-		if (paths != null)
+		if (datafiles != null)
 		{
 			
-			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(paths, dsp, result -> {
+			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(datafiles, dsp, result -> {
 					
 				if (result == null || result.status == ReadStatus.FAILED)
 				{
@@ -63,18 +64,22 @@ public abstract class DataLoader {
 					}
 					
 					PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
-					onFail(paths, message);
+					onFail(datafiles, message);
 					
 				} else {
 					sessionCallback.run();
 					controller.data().setDataSourceParameters(sessionParameters);
-					controller.data().setDataPaths(paths);
-					if (paths.size() > 0) {
-						controller.io().setLastFolder(paths.get(0).toFile().getParentFile());
+					controller.data().setDataPaths(datafiles);
+					
+					//Try and set the last-used folder for local UIs to refer to
+					//First, check the first data file for its folder
+					Optional<File> localDir = datafiles.get(0).localFolder();
+					if (localDir.isPresent()) {
+						controller.io().setLastFolder(localDir.get());
 					} else if (sessionFile != null) {
 						controller.io().setLastFolder(sessionFile.getParentFile());
 					}
-					onSuccess(paths, sessionFile);
+					onSuccess(datafiles, sessionFile);
 				}						
 							
 			});
@@ -88,12 +93,12 @@ public abstract class DataLoader {
 	
 
 	public void load() {
-		if (paths.size() == 0) {
+		if (datafiles.size() == 0) {
 			return;
 		}
 
 		//check if it's a peakaboo session file first
-		if (paths.size() == 1 && paths.get(0).toString().toLowerCase().endsWith(".peakaboo")) {
+		if (datafiles.size() == 1 && datafiles.get(0).toString().toLowerCase().endsWith(".peakaboo")) {
 			loadSession();
 			return;
 		}
@@ -109,7 +114,7 @@ public abstract class DataLoader {
 		}
 		if (formats.size() == 0) {
 			List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.newInstances();
-			formats = DataSourceLookup.findDataSourcesForFiles(paths, candidates);
+			formats = DataSourceLookup.findDataSourcesForFiles(datafiles, candidates);
 		}
 		
 		if (formats.size() > 1)
@@ -120,7 +125,7 @@ public abstract class DataLoader {
 		}
 		else if (formats.size() == 0)
 		{
-			onFail(paths, "Could not determine the data format of the selected file(s)");
+			onFail(datafiles, "Could not determine the data format of the selected file(s)");
 		}
 		else
 		{
@@ -130,7 +135,7 @@ public abstract class DataLoader {
 	}
 	
 	private void prompt(DataSourcePlugin dsp) {
-		Optional<Group> parameters = dsp.getParameters(paths);
+		Optional<Group> parameters = dsp.getParametersForDataFile(datafiles);
 		
 		if (parameters.isPresent()) {
 			Group dsGroup = parameters.get();
@@ -162,9 +167,14 @@ public abstract class DataLoader {
 	
 
 	private void loadSession() {
-		
-		sessionFile = paths.get(0).toFile();
 		try {
+			if (!datafiles.get(0).writable()) {
+				//TODO: is writable the right thing to ask here? local vs non-local maybe?
+				//TODO: maybe in later versions, the UI can inspect this when determining if it can save instead of save-as
+				throw new IOException("Cannot load session from read-only source");
+			}
+			sessionFile = datafiles.get(0).getAndEnsurePath().toFile();
+			
 			Optional<SavedSession> optSession = controller.readSavedSettings(StringInput.contents(sessionFile));
 			
 			if (!optSession.isPresent()) {
@@ -182,10 +192,10 @@ public abstract class DataLoader {
 				}
 			};
 			
-			List<Path> currentPaths = controller.data().getDataPaths();
-			List<Path> sessionPaths = session.data.filesAsDataPaths();
+			List<DataFile> currentPaths = controller.data().getDataPaths();
+			List<DataFile> sessionPaths = session.data.filesAsDataPaths();
 			
-			boolean sessionPathsExist = sessionPaths.stream().map(Files::exists).reduce(true, (a, b) -> a && b);
+			boolean sessionPathsExist = sessionPaths.stream().map(DataFile::exists).reduce(true, (a, b) -> a && b);
 			
 			//If the data files in the saved session are different, offer to load the data set from the new session
 			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
@@ -195,7 +205,7 @@ public abstract class DataLoader {
 						//they said yes, load the new data, and then apply the session
 						//this needs to be done this way b/c loading a new dataset wipes out
 						//things like calibration info
-						this.paths = sessionPaths;
+						this.datafiles = sessionPaths;
 						this.dataSourceUUID = session.data.dataSourcePluginUUID;
 						this.sessionParameters = session.data.dataSourceParameters;
 						sessionCallback = () -> {
@@ -229,8 +239,8 @@ public abstract class DataLoader {
 	}
 
 	public abstract void onLoading(ExecutorSet<DatasetReadResult> job);
-	public abstract void onSuccess(List<Path> paths, File session);
-	public abstract void onFail(List<Path> paths, String message);
+	public abstract void onSuccess(List<DataFile> paths, File session);
+	public abstract void onFail(List<DataFile> paths, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
 	public abstract void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected);
 	

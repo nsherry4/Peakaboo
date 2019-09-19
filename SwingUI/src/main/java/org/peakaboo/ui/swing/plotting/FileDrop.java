@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
@@ -90,7 +91,7 @@ public class FileDrop {
 	private enum DropType {
 		DROP_FILELIST,
 		DROP_LINUX,
-		DROP_URI, 
+		DROP_URL, 
 		DROP_FAIL,
 		DROP_NONE,
 	}
@@ -330,8 +331,8 @@ public class FileDrop {
 							acceptDropLinux(evt, listener);
 							break;
 
-						case DROP_URI:
-							acceptDropUri(evt, listener);
+						case DROP_URL:
+							acceptDropUrl(evt, listener);
 							break;
 						
 						}//end switch on dropType
@@ -421,7 +422,7 @@ public class FileDrop {
 					if (ZERO_CHAR_STRING.equals(line))
 						continue;
 
-					File file = new File(new java.net.URI(line));
+					File file = new File(new URI(line));
 					list.add(file);
 				} catch (Exception ex) {
 					log("Error with " + line + ": " + ex.getMessage());
@@ -506,9 +507,9 @@ public class FileDrop {
 				return DropType.DROP_LINUX;
 			}
 
-			// if the String payload is a URI, accept it
-			if (isDragUri(evt)) {
-				return DropType.DROP_URI;
+			// if the String payload is a URL, accept it
+			if (isDragUrl(evt)) {
+				return DropType.DROP_URL;
 			}
 
 		}
@@ -518,7 +519,7 @@ public class FileDrop {
 
 	} // end isDragOk
 
-	private boolean isDragUri(DropTargetDragEvent evt) {
+	private boolean isDragUrl(DropTargetDragEvent evt) {
 
 		DataFlavor flavour = DataFlavor.stringFlavor;
 		if (!evt.isDataFlavorSupported(flavour)) {
@@ -536,7 +537,7 @@ public class FileDrop {
 			return false;
 		}
 		try {
-			URI uri = new URI(data);
+			URL url = new URL(data);
 		} catch (Exception e) {
 			return false;
 		}
@@ -613,10 +614,10 @@ public class FileDrop {
 		// END 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
 	}
 	
-	private void acceptDropUri(DropTargetDropEvent evt, Listener listener) throws UnsupportedFlavorException, IOException {
+	private void acceptDropUrl(DropTargetDropEvent evt, Listener listener) throws UnsupportedFlavorException, IOException {
 		evt.acceptDrop(DnDConstants.ACTION_COPY);
-		URI uri = getDropUri(evt);
-		if (uri == null) {
+		URL url = getDropUrl(evt);
+		if (url == null) {
 			evt.getDropTargetContext().dropComplete(false);
 			return; 
 		}
@@ -626,12 +627,12 @@ public class FileDrop {
 			return;
 		}
 		
-		listener.urisDropped(new URI[] { uri });
+		listener.urlsDropped(new URL[] { url });
 		evt.getDropTargetContext().dropComplete(true);
 		
 	}
 	
-	private URI getDropUri(DropTargetDropEvent evt) {
+	private URL getDropUrl(DropTargetDropEvent evt) {
 		
 		//make sure we can get the data
 		DataFlavor flavour = DataFlavor.stringFlavor;
@@ -654,30 +655,29 @@ public class FileDrop {
 			return null;
 		}
 		try {
-			URI uri = new URI(data);
+			URL url = new URL(data);
 			evt.getDropTargetContext().dropComplete(true);
-			return uri;
+			return url;
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
 	/**
-	 * Downloads the URI to a temp file, preserving file extension. Note that this
+	 * Downloads the URL to a temp file, preserving file extension. Note that this
 	 * is a blocking call, and may take some time for larger files.
 	 * 
-	 * @param uri the URI to downlolad
+	 * @param url the URL to downlolad
 	 * @return a File representing the downloaded file
 	 * @throws IOException
 	 */
-	public static File getUriAsFile(URI uri) throws IOException {
-		URL url = uri.toURL();
+	public static File getUrlAsFile(URL url) throws IOException {
 		String[] parts = url.toString().split("\\.");
 		String ext = "";
 		if (parts.length > 1) {
 			ext = "." + parts[parts.length-1];
 		}
-		File file = File.createTempFile("Peakaboo", "URITransfer" + ext);
+		File file = File.createTempFile("Peakaboo", "URLTransfer" + ext);
 		file.deleteOnExit();
 		ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 		FileOutputStream fos = new FileOutputStream(file);
@@ -686,7 +686,6 @@ public class FileDrop {
 		rbc.close();
 		return file;
 	}
-	
 	
 	private static void log(String message) {
 		PeakabooLog.get().log(Level.FINEST, message);
@@ -761,7 +760,7 @@ public class FileDrop {
 		 */
 		public abstract void filesDropped(File[] files);
 		
-		public abstract void urisDropped(URI[] uris);
+		public abstract void urlsDropped(URL[] urls);
 
 	} // end inner-interface Listener
 

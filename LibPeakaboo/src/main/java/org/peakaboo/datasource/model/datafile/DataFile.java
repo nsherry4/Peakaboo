@@ -1,5 +1,6 @@
 package org.peakaboo.datasource.model.datafile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -52,5 +53,42 @@ public interface DataFile extends AutoCloseable {
 	 * Returns the size of the file or stream if available
 	 */
 	public Optional<Long> size();
+	
+	
+	/**
+	 * Indicates if this resource can be represented as a String and re-accessed
+	 * later. Some formats may rely on having a "magic" object passed to the
+	 * constructor which cannot be serialized and re-accessed.
+	 * 
+	 * @return true if is it addressable (re-accessable), false otherwise
+	 */
+	default public boolean addressable() {
+		return address().isPresent();
+	}
+	
+	/**
+	 * Provide the address of this resource, if it is addressable
+	 * @return an Optional<String> representation of the address if it is addressable, empty otherwise
+	 */
+	public Optional<String> address();
+	
+	/**
+	 * Tests if the resource is currently accessable.
+	 * @return true if the resource is accessible, false otherwise
+	 */
+	public boolean exists();
+
+	/**
+	 * Reports if the resource can be written to as well as read 
+	 * @return true if the source is writable, false otherwise
+	 */
+	public boolean writable();
+	
+	/**
+	 * If applicable, returns the local folder which contains the datafile
+	 * @return a Optional<File> object representing the file's parent directory if applicable, an empty Optional otherwise
+	 */
+	public Optional<File> localFolder();
+	
 	
 }

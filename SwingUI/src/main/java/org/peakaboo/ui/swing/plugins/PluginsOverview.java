@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -90,11 +91,11 @@ public class PluginsOverview extends HeaderLayer {
 		new FileDrop(body, new FileDrop.Listener() {
 			
 			@Override
-			public void urisDropped(URI[] uris) {
-				for (URI uri : uris) {
+			public void urlsDropped(URL[] urls) {
+				for (URL url : urls) {
 					try {
 						//TODO: download this in a UI-friendly way
-						File f = FileDrop.getUriAsFile(uri);
+						File f = FileDrop.getUrlAsFile(url);
 						addPluginFile(f);
 					} catch (IOException e) {
 						PeakabooLog.get().log(Level.SEVERE, "Failed to download plugin", e);

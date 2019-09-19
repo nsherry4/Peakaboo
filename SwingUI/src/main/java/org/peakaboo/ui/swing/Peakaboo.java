@@ -43,14 +43,14 @@ public class Peakaboo
 	private static Timer gcTimer;
 	public static PlotFrame plotWindow;
 	
-	public static final boolean SHOW_QUANTITATIVE = false;
+	public static final boolean SHOW_QUANTITATIVE = true;
 
 	private static void showError(Throwable throwable, String message) {
 		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
 		errorDialog.setVisible(true);
 	}
 
-	private static void warnDevRelease() {
+	private static void checkDevRelease() {
 		if (Version.releaseType != ReleaseType.RELEASE){
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
@@ -63,7 +63,7 @@ public class Peakaboo
 		}
 	}
 	
-	private static void warnLowMemory() {
+	private static void checkLowMemory() {
 		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
 		if (PeakabooConfiguration.memorySize == MemorySize.TINY){
@@ -209,8 +209,8 @@ public class Peakaboo
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();
 			startGCTimer();
-			warnLowMemory();
-			warnDevRelease();
+			checkLowMemory();
+			checkDevRelease();
 			uiPerformanceTune();
 
 			//Init plugins

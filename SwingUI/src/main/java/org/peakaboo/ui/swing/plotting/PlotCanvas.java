@@ -9,6 +9,9 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +28,10 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.PlotUpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datasource.model.datafile.DataFile;
+import org.peakaboo.datasource.model.datafile.DataFiles;
+import org.peakaboo.datasource.model.datafile.PathDataFile;
+import org.peakaboo.datasource.model.datafile.URLDataFile;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
@@ -76,23 +83,25 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		new FileDrop(this, new FileDrop.Listener() {
 			
 			@Override
-			public void urisDropped(URI[] uris) {
-				List<File> files = new ArrayList<>();
-				for (URI uri : uris) {
-					try {
-						//TODO: download this as part of opening the dataset
-						files.add(FileDrop.getUriAsFile(uri));
-					} catch (IOException e) {
-						PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
-						return;
+			public void urlsDropped(URL[] urls) {
+				try {
+					Path downloadDir = DataFiles.createDownloadDirectory();
+					List<DataFile> files = new ArrayList<>();
+					for (URL url : urls) {
+						String nameParts[] = url.getFile().split("/");
+						String name = nameParts[nameParts.length-1];
+						files.add(new URLDataFile(url, downloadDir, name));
 					}
+					parent.load(files);
+				} catch (Exception e) {
+					PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
+					return;
 				}
-				parent.load(files);
 			}
 			
 			@Override
 			public void filesDropped(File[] files) {
-				parent.load(Arrays.asList(files));
+				parent.load(Arrays.asList(files).stream().map(PathDataFile::new).collect(Collectors.toList()));
 			}
 		});
 
