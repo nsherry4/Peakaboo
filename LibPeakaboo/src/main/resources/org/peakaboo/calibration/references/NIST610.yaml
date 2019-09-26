@@ -23,6 +23,9 @@ fitted:
   Te:L: Omitted, Overlapped with Sulfur K
   I:L: No Value Available
   Tl:L: Omitted, No Confidence in Value
+  Se:K: Omitted, No Confidence in Value
+  W:L: Omitted, No Confidence in Value
+  
 
 concentrations:
   Ca:K: 11450.0
