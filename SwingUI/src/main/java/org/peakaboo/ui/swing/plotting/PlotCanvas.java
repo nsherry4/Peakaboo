@@ -36,9 +36,13 @@ import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.eventful.EventfulTypeListener;
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 
 
 
@@ -85,6 +89,19 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 			@Override
 			public void urlsDropped(URL[] urls) {
 				try {
+					
+					TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
+						if (!optfiles.isPresent()) {
+							return;
+						}
+						parent.load(optfiles.get().stream().map(PathDataFile::new).collect(Collectors.toList()));
+					});
+
+					TaskMonitorPanel.onLayerPanel(monitor, parent);
+					
+
+					
+					/* TODO: See about using URLDataFiles in the future
 					Path downloadDir = DataFiles.createDownloadDirectory();
 					List<DataFile> files = new ArrayList<>();
 					for (URL url : urls) {
@@ -93,6 +110,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 						files.add(new URLDataFile(url, downloadDir, name));
 					}
 					parent.load(files);
+					*/
 				} catch (Exception e) {
 					PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
 					return;

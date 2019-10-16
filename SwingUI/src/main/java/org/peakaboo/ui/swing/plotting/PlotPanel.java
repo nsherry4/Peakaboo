@@ -82,10 +82,10 @@ import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
+import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutorSet;
-import org.peakaboo.framework.plural.streams.swing.StreamExecutorPanel;
-import org.peakaboo.framework.plural.streams.swing.StreamExecutorView;
 import org.peakaboo.framework.plural.swing.ExecutorSetView;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.Swidget;
@@ -647,8 +647,8 @@ public class PlotPanel extends TabbedLayerPanel
 		StreamExecutor<RawMapSet> mapTask = controller.getMapTask();
 		if (mapTask == null) return;
 
-		StreamExecutorView taskView = new StreamExecutorView(mapTask);
-		StreamExecutorPanel taskPanel = new StreamExecutorPanel("Generating Maps", taskView);
+		TaskMonitorView taskView = new TaskMonitorView(mapTask);
+		TaskMonitorPanel taskPanel = new TaskMonitorPanel("Generating Maps", taskView);
 		ModalLayer layer = new ModalLayer(this, taskPanel);
 		
 		mapTask.addListener(event -> {
@@ -980,8 +980,8 @@ public class PlotPanel extends TabbedLayerPanel
 				controller.data().getDataSet().getAnalysis().channelsPerScan());
 		
 		
-		List<StreamExecutorView> views = energyTask.getExecutors().stream().map(StreamExecutorView::new).collect(Collectors.toList());
-		StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Energy Level", views);
+		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).collect(Collectors.toList());
+		TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Energy Level", views);
 		ModalLayer layer = new ModalLayer(this, panel);
 		
 		energyTask.last().addListener(event -> {

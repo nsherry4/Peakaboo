@@ -1,4 +1,4 @@
-package org.peakaboo.framework.plural.streams.swing;
+package org.peakaboo.framework.plural.monitor.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,18 +13,19 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
+import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
-public class StreamExecutorView extends JPanel {
+public class TaskMonitorView extends JPanel {
 
 	
-	private StreamExecutor<?> exec;
+	private TaskMonitor<?> exec;
 	
-	public StreamExecutorView(StreamExecutor<?> exec) {
+	public TaskMonitorView(TaskMonitor<?> exec) {
 		super();
 		
 		this.exec = exec;
@@ -53,7 +54,7 @@ public class StreamExecutorView extends JPanel {
 		
 	}
 	
-	public StreamExecutor<?> getExecutor() {
+	public TaskMonitor<?> getExecutor() {
 		return exec;
 	}
 	
@@ -125,11 +126,11 @@ public class StreamExecutorView extends JPanel {
 			e1.then(e2);
 			
 			
-			StreamExecutorView v1 = new StreamExecutorView(e1);
-			StreamExecutorView v2 = new StreamExecutorView(e2);
+			TaskMonitorView v1 = new TaskMonitorView(e1);
+			TaskMonitorView v2 = new TaskMonitorView(e2);
 			
 			JFrame frame = new JFrame();
-			StreamExecutorPanel panel = new StreamExecutorPanel("Two Tasks", v1, v2);
+			TaskMonitorPanel panel = new TaskMonitorPanel("Two Tasks", v1, v2);
 			frame.getContentPane().setLayout(new BorderLayout());
 			frame.getContentPane().add(panel, BorderLayout.CENTER);
 	

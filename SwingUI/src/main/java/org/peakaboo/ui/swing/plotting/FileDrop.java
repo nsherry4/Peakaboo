@@ -15,18 +15,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
 
 /**
  * This class makes it easy to drag and drop files from the operating system to
@@ -672,19 +682,74 @@ public class FileDrop {
 	 * @throws IOException
 	 */
 	public static File getUrlAsFile(URL url) throws IOException {
+		return getUrlAsFile(url, null);
+	}
+	
+	public static File getUrlAsFile(URL url, Consumer<Float> progressCallback) throws IOException {
 		String[] parts = url.toString().split("\\.");
 		String ext = "";
 		if (parts.length > 1) {
 			ext = "." + parts[parts.length-1];
 		}
-		File file = File.createTempFile("Peakaboo", "URLTransfer" + ext);
+		String filename = "";
+		if (parts.length > 2) {
+			String[] urlpathparts = parts[parts.length-2].split("/");
+			filename = urlpathparts[urlpathparts.length-1] + "." + ext;
+		}
+		Path tempdir = Files.createTempDirectory("Peakaboo");
+		Path tempfile = tempdir.resolve(filename);
+		File file = tempfile.toFile();
 		file.deleteOnExit();
+		
+		int expectedSize = contentLength(url);
 		ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+		if (progressCallback != null) {
+			rbc = new CallbackByteChannel(rbc, expectedSize, progressCallback);
+		}
 		FileOutputStream fos = new FileOutputStream(file);
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		fos.close();
 		rbc.close();
 		return file;
+	}
+	
+	private static int contentLength(URL url) {
+		HttpURLConnection connection;
+		int contentLength = -1;
+		try {
+			connection = (HttpURLConnection) url.openConnection();
+			contentLength = connection.getContentLength();
+		} catch (Exception e) {
+		}
+		return contentLength;
+	}
+	
+	public static TaskMonitor<List<File>> getUrlsAsync(List<URL> urls, Consumer<Optional<List<File>>> callback) {
+		
+		Mutable<SimpleTaskMonitor<List<File>>> monitor = new Mutable<>();
+		
+		Supplier<List<File>> supplier = () -> {
+			Mutable<Float> count = new Mutable<>(0f);
+			List<File> files = new ArrayList<>();
+			Consumer<Float> urlProgress = (Float percent) -> {
+				float total = (count.get() + percent) / ((float)urls.size());
+				monitor.get().setPercent(total);
+			};
+			for (URL url : urls) {
+				try {
+					File f = getUrlAsFile(url, urlProgress);
+					files.add(f);
+				} catch (IOException e) {
+					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString());
+					return null;
+				}
+				count.set(count.get()+1);
+			}
+			return files;
+		};
+		monitor.set(new SimpleTaskMonitor<>("Downloading Files", supplier, callback));
+		return monitor.get();
+		
 	}
 	
 	private static void log(String message) {
@@ -1033,4 +1098,40 @@ public class FileDrop {
 
 	} // end class TransferableObject
 
+	static class CallbackByteChannel implements ReadableByteChannel {
+		Consumer<Float> progressCallback;
+		long size;
+		ReadableByteChannel rbc;
+		long sizeRead;
+
+		CallbackByteChannel(ReadableByteChannel rbc, long expectedSize, Consumer<Float> progressCallback) {
+			this.progressCallback = progressCallback;
+			this.size = expectedSize;
+			this.rbc = rbc;
+		}
+
+		public void close() throws IOException {
+			rbc.close();
+		}
+
+		public long getReadSoFar() {
+			return sizeRead;
+		}
+
+		public boolean isOpen() {
+			return rbc.isOpen();
+		}
+
+		public int read(ByteBuffer bb) throws IOException {
+			int n;
+			float progress;
+			if ((n = rbc.read(bb)) > 0) {
+				sizeRead += n;
+				progress = size > 0 ? (float) sizeRead / (float) size : 0f;
+				progressCallback.accept(progress);
+			}
+			return n;
+		}
+	}
+	
 } // end class FileDrop

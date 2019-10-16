@@ -12,9 +12,9 @@ import javax.swing.SwingUtilities;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
-import org.peakaboo.framework.plural.streams.swing.StreamExecutorPanel;
-import org.peakaboo.framework.plural.streams.swing.StreamExecutorView;
+import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -92,8 +92,8 @@ public class MapDimensionsPanel extends JPanel {
 			c.anchor = GridBagConstraints.LINE_END;
 			magic.addActionListener(e -> {
 				StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
-				StreamExecutorView view = new StreamExecutorView(guessTask);
-				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
+				TaskMonitorView view = new TaskMonitorView(guessTask);
+				TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Dimensions", view);
 				ModalLayer layer = new ModalLayer(tabPanel, panel);
 				guessTask.addListener(event -> {
 					SwingUtilities.invokeLater(() -> {

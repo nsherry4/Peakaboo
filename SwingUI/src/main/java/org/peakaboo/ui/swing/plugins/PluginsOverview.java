@@ -9,7 +9,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import javax.swing.JButton;
@@ -46,6 +51,12 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
+import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.eventful.EventfulEnumListener;
+import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
+import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.stratus.theme.LightTheme;
@@ -60,6 +71,7 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
@@ -92,15 +104,18 @@ public class PluginsOverview extends HeaderLayer {
 			
 			@Override
 			public void urlsDropped(URL[] urls) {
-				for (URL url : urls) {
-					try {
-						//TODO: download this in a UI-friendly way
-						File f = FileDrop.getUrlAsFile(url);
-						addPluginFile(f);
-					} catch (IOException e) {
-						PeakabooLog.get().log(Level.SEVERE, "Failed to download plugin", e);
+				
+				TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
+					if (!optfiles.isPresent()) {
+						return;
 					}
-				}
+					for (File file : optfiles.get()) {
+						addPluginFile(file);
+					}
+				});
+				
+				TaskMonitorPanel.onLayerPanel(monitor, parent);
+
 			}
 			
 			@Override

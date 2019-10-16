@@ -10,21 +10,11 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.peakaboo.framework.eventful.EventfulEnum;
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
 
-public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implements Predicate<Object>{
+public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implements Predicate<Object>, TaskMonitor<T>{
 
-	public enum State {
-		RUNNING,
-		ABORTED,
-		COMPLETED,
-	}
-	
-	//Events are like state transitions, rather than states themselves
-	public enum Event {
-		PROGRESS,
-		ABORTED,
-		COMPLETED
-	}
+
 	
 	
 	private Thread thread;
@@ -79,10 +69,12 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 	
 	
 	
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void abort() {
 		if (state == State.RUNNING) {
 			state = State.ABORTED;
@@ -92,6 +84,7 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 		
 	}
 	
+	@Override
 	public void complete() {
 		
 		if (state == State.RUNNING) {
@@ -101,15 +94,17 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 		}
 	}
 	
-	
+	@Override
 	public State getState() {
 		return state;
 	}
 	
+	@Override
 	public int getCount() {
 		return count;
 	}
 
+	@Override
 	public int getSize() {
 		return size;
 	}
@@ -118,6 +113,7 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 		this.size = size;
 	}
 
+	@Override
 	public Optional<T> getResult() {
 		return result;
 	}
@@ -131,7 +127,7 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 	}
 
 	
-	public <S> StreamExecutor<S> then(StreamExecutor<S> next) {
+	public <S> TaskMonitor<S> then(StreamExecutor<S> next) {
 		setNext(next);
 		return next;
 	}
@@ -140,7 +136,7 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 		this.next = next;
 	}
 	
-	public StreamExecutor<?> getNext() {
+	public TaskMonitor<?> getNext() {
 		return this.next;
 	}
 	
@@ -239,6 +235,7 @@ public class StreamExecutor<T> extends EventfulEnum<StreamExecutor.Event> implem
 	/**
 	 * Starts this task in a worker thread and returns asynchronously
 	 */
+	@Override
 	public void start() {
 		thread.start();
 	}
