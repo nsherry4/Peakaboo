@@ -17,6 +17,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.mathematical.MultiplyMapFilter
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.NormalizationMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.PowerMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.sizing.BinningMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.sizing.DeskewMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.sizing.EnlargeMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.DenoiseMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.FastAverageMapFilter;
@@ -78,6 +79,8 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		builtins.load(Rotate90MapFilter.class);
 		builtins.load(Rotate180MapFilter.class);
 		builtins.load(Rotate270MapFilter.class);
+		
+		builtins.load(DeskewMapFilter.class);
 	}
 
 	

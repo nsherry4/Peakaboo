@@ -2,6 +2,7 @@ package org.peakaboo.framework.cyclops;
 
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 
 
@@ -118,6 +119,47 @@ public class GridPerspective<T> implements Cloneable
 		list.set(index, value);
 	}
 
+	
+	public interface GridVisitor<S> {
+		void visit(int index, int x, int y, S value);
+	}
+	public void visit(ReadOnlySpectrum list, GridVisitor<Float> visitor) {
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				visitor.visit(this.getIndexFromXY(x, y), x, y, get(list, x, y));
+			}
+		}
+	}
+	public void visit(List<T> list, GridVisitor<T> visitor) {
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				visitor.visit(this.getIndexFromXY(x, y), x, y, get(list, x, y));
+			}
+		}
+	}
+	
+	public void visitRow(int row, ReadOnlySpectrum list, GridVisitor<Float> visitor) {
+		for (int x = 0; x < width; x++) {
+			visitor.visit(this.getIndexFromXY(x, row), x, row, get(list, x, row));
+		}
+	}
+	public void visitRow(int row, List<T> list, GridVisitor<T> visitor) {
+		for (int x = 0; x < width; x++) {
+			visitor.visit(this.getIndexFromXY(x, row), x, row, get(list, x, row));
+		}
+	}
+	
+	public void visitColumn(int col, ReadOnlySpectrum list, GridVisitor<Float> visitor) {
+		for (int y = 0; y < height; y++) {
+			visitor.visit(this.getIndexFromXY(col, y), col, y, get(list, col, y));
+		}
+	}
+	public void visitColumn(int col, List<T> list, GridVisitor<T> visitor) {
+		for (int y = 0; y < height; y++) {
+			visitor.visit(this.getIndexFromXY(col, y), col, y, get(list, col, y));
+		}
+	}
+	
 	
 	public IntPair getXYFromIndex(int index)
 	{

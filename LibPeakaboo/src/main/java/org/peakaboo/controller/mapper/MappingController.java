@@ -163,8 +163,8 @@ public class MappingController extends EventfulType<MapUpdateType>
 		settings.coordHiXLoY = this.getSettings().getHiXLoYCoord();
 		settings.coordLoXHiY = this.getSettings().getLoXHiYCoord();
 		settings.coordHiXHiY = this.getSettings().getHiXHiYCoord();
-		settings.physicalUnits = this.rawDataController.getRealDimensionUnits();
-		settings.physicalCoord = this.rawDataController.getRealDimensions() != null;
+		settings.physicalUnits = this.getFiltering().getRealDimensions() != null ? this.rawDataController.getRealDimensionUnits() : null;
+		settings.physicalCoord = this.getFiltering().getRealDimensions() != null;
 		
 		settings.showSpectrum = this.getSettings().getShowSpectrum();
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
