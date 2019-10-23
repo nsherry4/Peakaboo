@@ -274,23 +274,36 @@ public class PlotController extends EventfulType<PlotUpdateType>
 			OutputStreamWriter osw = new OutputStreamWriter(os);
 			CalibrationProfile profile = calibration().getCalibrationProfile();
 			
-			if (!calibration().hasCalibrationProfile()) {
-				osw.write("Fitting, Intensity\n");
-			} else {
-				osw.write("Fitting, Intensity (Raw), Intensity (Calibrated with " + profile.getName() + ")\n");
+			//header
+			osw.write("Fitting, Intensity (Raw), Area (Raw)");
+			if (calibration().hasCalibrationProfile()) {
+				osw.write(", Intensity (Calibrated with " + profile.getName() + "), Area (Calibrated with " + profile.getName() + ")");
 			}
+			osw.write("\n");
 			
 			// write out the data
-			float intensity;
+			float intensity, area;
 			for (ITransitionSeries ts : tss) {
 
 				if (ts.isVisible()) {
 					intensity = fitting().getTransitionSeriesIntensity(ts);
+					area = fitting().getFittingResultForTransitionSeries(ts).getFitSum();
+					
+					//write uncalibrated data
+					osw.write(
+							ts.toString() +
+							", " + SigDigits.roundFloatTo(intensity, 2) + 
+							", " + SigDigits.roundFloatTo(area, 2)
+						);
+					
+					//write calibrated data if we have it in this profile for this TS
 					if (profile.contains(ts)) {
-						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + ", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) + "\n");
-					} else {
-						osw.write(ts.toString() + ", " + SigDigits.roundFloatTo(intensity, 2) + "\n");
+						osw.write(
+								", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) +
+								", " + SigDigits.roundFloatTo(profile.calibrate(area, ts), 2)
+							);
 					}
+					osw.write("\n");
 				}
 			}
 			osw.flush();
