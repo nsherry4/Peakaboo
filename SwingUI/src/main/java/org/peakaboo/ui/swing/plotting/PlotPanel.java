@@ -853,18 +853,16 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 
-	public void actionSaveFilteredData()
+	public void actionSaveFilteredDataSet()
 	{	
-		//Spectrum data = filters.filterDataUnsynchronized(new ISpectrum(datasetProvider.getScan(ordinal)), false);
-
-		SimpleFileExtension text = new SimpleFileExtension("Text File", "txt");
-		SwidgetFilePanels.saveFile(this, "Save Fitted Data to Text File", controller.io().getLastFolder(), text, saveFile -> {
+		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
+		SwidgetFilePanels.saveFile(this, "Save Fitted Data to CSV File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
 				return;
 			}
 			controller.io().setLastFolder(saveFile.get().getParentFile());
 			
-			ExecutorSet<Object> execset = controller.writeFitleredDataToText(saveFile.get());
+			ExecutorSet<Object> execset = controller.writeFitleredDataSetToCSV(saveFile.get());
 			
 			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
 			
@@ -879,7 +877,18 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			
 		});
-		
+	}
+	
+	public void actionSaveFilteredSpectrum()
+	{	
+		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
+		SwidgetFilePanels.saveFile(this, "Save Spectrum to CSV File", controller.io().getLastFolder(), text, saveFile -> {
+			if (!saveFile.isPresent()) {
+				return;
+			}
+			controller.io().setLastFolder(saveFile.get().getParentFile());
+			controller.writeFitleredSpectrumToCSV(saveFile.get());			
+		});
 	}
 	
 	

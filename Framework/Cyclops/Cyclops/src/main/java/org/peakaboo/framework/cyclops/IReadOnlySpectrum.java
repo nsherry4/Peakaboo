@@ -47,6 +47,10 @@ public class IReadOnlySpectrum implements ReadOnlySpectrum {
 		return backer.toString();
 	}
 	
+	public String toString(String delimiter) {
+		return backer.toString(delimiter);
+	}
+	
 	public float sum() {
 		return backer.sum();
 	}

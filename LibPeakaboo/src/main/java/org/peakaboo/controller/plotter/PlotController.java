@@ -227,7 +227,18 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 	
 	
-	public ExecutorSet<Object> writeFitleredDataToText(File saveFile) {
+	public void writeFitleredSpectrumToCSV(File saveFile) {
+		ReadOnlySpectrum spectrum = currentScan();
+		FilterSet filters = filtering().getActiveFilters();
+		spectrum = filters.applyFiltersUnsynchronized(spectrum, data().getDataSet());
+		try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
+			writer.write(spectrum.toString(", ") + "\n");
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
+		}
+	}
+	
+	public ExecutorSet<Object> writeFitleredDataSetToCSV(File saveFile) {
 		
 		return Plural.build("Exporting Data", "Writing", (execset, exec) -> {
 			FilterSet filters = filtering().getActiveFilters();
@@ -239,7 +250,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 				int count = 0;
 				for (ReadOnlySpectrum spectrum : data) {
 					spectrum = filters.applyFiltersUnsynchronized(spectrum, data().getDataSet());
-					writer.write(spectrum.toString() + "\n");
+					writer.write(spectrum.toString(", ") + "\n");
 
 					//abort test
 					if (execset.isAbortRequested()) {

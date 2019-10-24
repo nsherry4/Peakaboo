@@ -408,7 +408,12 @@ public class ISpectrum implements Spectrum
 	
 	
 	@Override
-	public String toString()
+	public String toString() {
+		return toString(" ");
+	}
+	
+	@Override
+	public String toString(String delimiter)
 	{
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
@@ -419,7 +424,7 @@ public class ISpectrum implements Spectrum
 			if (first) {
 				first = false;
 			} else {
-				sb.append(" ");
+				sb.append(delimiter);
 			}
 			sb.append(f);
 		}

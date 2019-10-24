@@ -19,6 +19,7 @@ public class PlotMenuExport extends JPopupMenu {
 
 	private JMenuItem exportFittingsMenuItem;
 	private JMenuItem exportFilteredDataMenuItem;
+	private JMenuItem exportFilteredSpectrumMenuItem;
 	private JMenuItem exportArchive;
 	private JMenu exportSinks;
 	private JMenuItem snapshotMenuItem;
@@ -45,11 +46,17 @@ public class PlotMenuExport extends JPopupMenu {
 				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
 		);
 		this.add(snapshotMenuItem);
-		
+
+		exportFilteredSpectrumMenuItem = PlotMenuUtils.createMenuItem(plot,
+				"Filtered Spectrum as CSV", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered spectrum to a CSV file",
+				e -> plot.actionSaveFilteredSpectrum(),
+				null, null
+		);
+		this.add(exportFilteredSpectrumMenuItem);
 		
 		exportFilteredDataMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Filtered Data as Text", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered data to a text file",
-				e -> plot.actionSaveFilteredData(),
+				"Filtered Data Set as CSV", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered dataset to a CSV file",
+				e -> plot.actionSaveFilteredDataSet(),
 				null, null
 		);
 		this.add(exportFilteredDataMenuItem);
