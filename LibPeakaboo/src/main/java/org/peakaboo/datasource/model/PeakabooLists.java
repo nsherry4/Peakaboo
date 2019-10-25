@@ -3,6 +3,7 @@ package org.peakaboo.datasource.model;
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.scratch.DiskStrategy;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.list.ScratchList;
 import org.peakaboo.framework.scratch.list.ScratchLists;
@@ -39,11 +40,9 @@ public final class PeakabooLists {
 	
 	public static <T> ScratchList<T> create(ScratchEncoder<T> encoder) {
 		//Config for disk-backed
-		if (PeakabooConfiguration.diskstore) {
-			return ScratchLists.tryDiskBacked(encoder);
-		} else {
-			return ScratchLists.memoryBacked(encoder);
-		}
+		DiskStrategy onDisk = PeakabooConfiguration.diskstore ? DiskStrategy.PREFER_DISK : DiskStrategy.PREFER_MEMORY;
+		return ScratchLists.get(onDisk, encoder);
+
 	}
 	
 
