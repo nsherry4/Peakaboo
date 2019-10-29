@@ -12,39 +12,36 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileFilter;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFileChooser;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
 
 public class FilenameEditor extends AbstractSwingEditor<String> {
 
-	private FileSelector control = new FileSelector(this);
+	private FileSelector control;
+	private FileNameStyle style;
 	
 
 	public FilenameEditor() {
 		
 	}
 	
-	public FilenameEditor(JFileChooser chooser) {
-		setFileChooser(chooser);
-	}
 	
 	@Override
 	public void initialize(Parameter<String> param) {
 		this.param = param;
+		this.style = (FileNameStyle) param.getStyle();
+		this.control = new FileSelector(this, style);
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
 		param.getEnabledHook().addListener(e -> setEnabled(e));
 		
-	}
-	
-	public void setFileChooser(JFileChooser chooser) {
-		control.chooser = chooser;
-	}
-	
-	public JFileChooser getFileChooser() {
-		return control.chooser;
 	}
 	
 
@@ -95,16 +92,20 @@ class FileSelector extends JPanel
 	JTextField filenameField;
 	JButton open;
 	String filename;
-	JFileChooser chooser;
+	SwidgetFileChooser chooser;
 	
-	public FileSelector(final FilenameEditor parent) {
+	public FileSelector(final FilenameEditor parent, FileNameStyle style) {
 		super(new BorderLayout());
 		open = new ImageButton().withIcon(StockIcon.DOCUMENT_OPEN).withTooltip("Browse for Files").withLayout(ImageButtonLayout.IMAGE);
 		
 		filenameField = new JTextField(10);
 		filenameField.setEditable(false);
 		
-		chooser = new JFileChooser();
+		chooser = new SwidgetFileChooser();
+		if (style.getTypeTitle() != null && style.getTypeExtensions() != null) {
+			chooser.setFileFilter(new SimpleFileFilter(new SimpleFileExtension(style.getTypeTitle(), style.getTypeExtensions())));	
+		}
+		
 		
 		open.addActionListener(new ActionListener() {
 			
@@ -112,7 +113,9 @@ class FileSelector extends JPanel
 			public void actionPerformed(ActionEvent e) {
 				
 				//display dialog
-				chooser.showOpenDialog(FileSelector.this);
+				if (chooser.showOpenDialog(FileSelector.this) != JFileChooser.APPROVE_OPTION) {
+					return;
+				}
 				
 				//return if no selection
 				if (chooser.getSelectedFile() == null) return;
