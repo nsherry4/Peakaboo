@@ -12,6 +12,7 @@ import org.peakaboo.filter.plugins.advanced.SubFilter;
 import org.peakaboo.filter.plugins.background.BruknerBackgroundFilter;
 import org.peakaboo.filter.plugins.background.LinearTrimBackgroundFilter;
 import org.peakaboo.filter.plugins.background.PolynomialBackgroundFilter;
+import org.peakaboo.filter.plugins.background.SpectrumBackgroundFilter;
 import org.peakaboo.filter.plugins.background.SquareSnipBackgroundFilter;
 import org.peakaboo.filter.plugins.mathematical.AdditionMathFilter;
 import org.peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
@@ -65,6 +66,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		builtins.load(LinearTrimBackgroundFilter.class);
 		builtins.load(PolynomialBackgroundFilter.class);
 		builtins.load(SquareSnipBackgroundFilter.class);
+		builtins.load(SpectrumBackgroundFilter.class);
 		
 		builtins.load(AdditionMathFilter.class);
 		builtins.load(DerivativeMathFilter.class);

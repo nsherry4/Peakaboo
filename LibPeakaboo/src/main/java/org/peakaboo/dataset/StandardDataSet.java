@@ -219,7 +219,9 @@ public class StandardDataSet implements DataSet
 		//go over each scan, calculating the average, max10th and max value
 		int updateInterval = Math.min(Math.max(ds.getScanData().scanCount()/100, 20), 1000);
 		int gcInterval = 5000;
-		applying.setWorkUnits(ds.getScanData().scanCount());
+		if (applying != null) {
+			applying.setWorkUnits(ds.getScanData().scanCount());
+		}
 		
 		if (hasRealSize) {
 			realCoords = new ArrayList<Coord<Number>>();
