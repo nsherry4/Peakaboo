@@ -2,12 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.peakaboo.framework</groupId>
+	<parent>
+		<groupId>org.peakaboo.framework</groupId>
+		<artifactId>bolt</artifactId>
+		<version>5.4-SNAPSHOT</version>
+	</parent>
 	<artifactId>bolt-plugin</artifactId>
-	<version>2.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
-	<name>Bolt</name>
+	
 	<url>http://maven.apache.org</url>
 
 	<properties>

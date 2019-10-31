@@ -3,26 +3,28 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.peakaboo</groupId>
+	<parent>
+		<groupId>org.peakaboo</groupId>
+		<artifactId>peakaboo</artifactId>
+		<version>5.4-SNAPSHOT</version>
+	</parent>
 	<artifactId>framework</artifactId>
-	<version>5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Peakaboo Framework</name>
 	<url>http://maven.apache.org</url>
 
-  <modules>
-    <!-- Modules with no internal deps -->
-    <module>Bolt</module>
-    <module>Stratus</module>
-    <module>Eventful</module>
-    <module>Scratch</module>
-    <!-- Modules with internal deps -->
-    <module>Swidget</module>
-    <module>Cyclops</module>
-    <module>AutoDialog</module>
-    <module>Plural</module>
-  </modules>
+	<modules>
+		<!-- Modules with no internal deps -->
+		<module>Bolt</module>
+		<module>Stratus</module>
+		<module>Eventful</module>
+		<module>Scratch</module>
+		<!-- Modules with internal deps -->
+		<module>Swidget</module>
+		<module>Cyclops</module>
+		<module>AutoDialog</module>
+		<module>Plural</module>
+	</modules>
 
 	<build>
 
@@ -36,14 +38,14 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-                        <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-deploy-plugin</artifactId>
-                                <version>2.4</version>
-                                <configuration>
-                                        <updateReleaseInfo>true</updateReleaseInfo>
-                                </configuration>
-                        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<updateReleaseInfo>true</updateReleaseInfo>
+				</configuration>
+			</plugin>
 		</plugins>
 
 	</build>
