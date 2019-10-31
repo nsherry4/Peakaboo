@@ -151,7 +151,6 @@ public class SwidgetFileChooser extends JFileChooser {
 			if (text == null && getDialogType() == JFileChooser.SAVE_DIALOG) {
 				text = "Save";
 			}
-			System.out.println("'" + text + "'");
 			affirmative.setText(text);	
 		});
 		addPropertyChangeListener(
@@ -167,7 +166,6 @@ public class SwidgetFileChooser extends JFileChooser {
 		affirmative.addActionListener(ui.getApproveSelectionAction());
 		negative.addActionListener(ui.getCancelSelectionAction());
 		
-		System.out.println(breadcrumb);
 		HeaderBox header = new HeaderBox(negative, breadcrumb, affirmative);
 		return header;		
 	}

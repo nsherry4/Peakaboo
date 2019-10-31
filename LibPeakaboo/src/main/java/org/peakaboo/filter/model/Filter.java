@@ -84,6 +84,7 @@ public interface Filter {
 	 * @param data the data to process
 	 * @return the result of applying the filter to data
 	 */
+	@Deprecated(forRemoval=true, since="5.4")
 	default ReadOnlySpectrum filter(ReadOnlySpectrum data) {
 		return filter(data, new EmptyDataSet());
 	}
