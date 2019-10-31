@@ -274,7 +274,9 @@ public class Plotter {
 				public void drawElement(PainterData p)
 				{
 					traceData(p);
-					p.context.setSource(0.36f, 0.21f, 0.4f);
+					p.context.setSource(0x7f5C3666);
+					p.context.fillPreserve();
+					p.context.setSource(0xff5C3666);
 					p.context.stroke();
 
 				}

@@ -123,6 +123,17 @@ public interface Surface
 	 *            the alpha channel of the colour -- 0-255
 	 */
 	void setSource(int red, int green, int blue, int alpha);
+	
+	
+	/**
+	 * Sets the drawing colour
+	 * 
+	 * @param argb
+	 *            the colour in ARGB int32 format
+	 */
+	default void setSource(int arbg) {
+		setSource(new PaletteColour(arbg));
+	}
 
 
 	/**
