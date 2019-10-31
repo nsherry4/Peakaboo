@@ -65,16 +65,16 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 	@Override
 	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent) {
 		//load it lazily on first use
-		loadBackground(dataset);
+		loadBackground(data);
 		return SpectrumCalculations.multiplyBy(spectrum, percent/100.0f);
 	}
 	
-	private synchronized void loadBackground(DataSet dataset) {
+	private synchronized void loadBackground(ReadOnlySpectrum data) {
 		if (loadedFile != spectrumFile.getValue()) {
 			
 			//If they haven't given a file yet
 			if (spectrumFile.getValue().length() == 0) {
-				spectrum = new ISpectrum(4096);
+				spectrum = new ISpectrum(data.size());
 				return;
 			}
 			
@@ -87,7 +87,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 				spectrum = bgDataSet.getAnalysis().averagePlot();
 			} catch (Exception e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load background from dataset", e);
-				spectrum = new ISpectrum(dataset.getAnalysis().channelsPerScan());
+				spectrum = new ISpectrum(data.size());
 			}
 			//now that we've loaded it (or failed), set the loadedFile so we don't constantly re-load it
 			loadedFile = spectrumFile.getValue();
