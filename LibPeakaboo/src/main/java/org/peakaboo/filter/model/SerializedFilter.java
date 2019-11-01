@@ -3,6 +3,7 @@ package org.peakaboo.filter.model;
 import java.util.List;
 
 import org.peakaboo.filter.plugins.FilterPlugin;
+import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 
 /**
@@ -20,7 +21,7 @@ public class SerializedFilter {
 	private Filter filter;
 	
 	//These values exist only to initialize the filter, not to be read from.
-	private String clazz;
+	private String uuidOrClazz;
 	private List<Object> settings;
 	
 	
@@ -34,35 +35,46 @@ public class SerializedFilter {
 	}
 
 
-
+	//Only called by the (de)serializer
 	public String getClazz() {
+		//prefer to reference filters by plugin UUID, which it *should* always have
+		if (filter instanceof BoltPlugin) {
+			return ((BoltPlugin)filter).pluginUUID();
+		}
 		return filter.getClass().getName();
 	}
 
+	//Only called by the (de)serializer
 	public void setClazz(String clazz) {
-		this.clazz = clazz;
+		this.uuidOrClazz = clazz;
 	}
 
+	//Only called by the (de)serializer
 	public List<Object> getSettings() {
 		return filter.getParameterGroup().serialize();
 	}
 
+	//Only called by the (de)serializer
 	public void setSettings(List<Object> settings) {
 		this.settings = settings;
 	}
 
 	public Filter getFilter() {
+		//If it already exists, just return it, otherwise build a filter
 		if (filter != null) { return filter; }
 			
 		for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
-			if (plugin.getImplementationClass().getName().equals(clazz)) {
+			if (
+				plugin.getUUID().equals(uuidOrClazz) || 
+				plugin.getImplementationClass().getName().equals(uuidOrClazz)
+			) {
 				filter = plugin.create();
 				filter.initialize();
 				filter.getParameterGroup().deserialize(settings);
 				return filter;
 			}
 		}
-		throw new RuntimeException("Cannot find plugin " + clazz);
+		throw new RuntimeException("Cannot find plugin " + uuidOrClazz);
 	}
 
 	
