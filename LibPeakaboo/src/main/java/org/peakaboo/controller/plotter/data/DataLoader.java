@@ -96,9 +96,14 @@ public abstract class DataLoader {
 		if (datafiles.size() == 0) {
 			return;
 		}
-
+		
 		//check if it's a peakaboo session file first
-		if (datafiles.size() == 1 && datafiles.get(0).toString().toLowerCase().endsWith(".peakaboo")) {
+		if (
+				datafiles.size() == 1 && 
+				datafiles.get(0).addressable() && 
+				datafiles.get(0).getFilename().toLowerCase().endsWith(".peakaboo")
+			) 
+		{
 			loadSession();
 			return;
 		}
@@ -195,7 +200,10 @@ public abstract class DataLoader {
 			List<DataFile> currentPaths = controller.data().getDataPaths();
 			List<DataFile> sessionPaths = session.data.filesAsDataPaths();
 			
-			boolean sessionPathsExist = sessionPaths.stream().map(DataFile::exists).reduce(true, (a, b) -> a && b);
+			boolean sessionPathsExist = true;
+			for (DataFile d : sessionPaths) {
+				sessionPathsExist &= d.exists();
+			}
 			
 			//If the data files in the saved session are different, offer to load the data set from the new session
 			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {

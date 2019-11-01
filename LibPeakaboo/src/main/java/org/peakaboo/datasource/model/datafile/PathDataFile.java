@@ -13,7 +13,7 @@ public class PathDataFile implements DataFile {
 	private Path path;
 	
 	public PathDataFile(String filename) {
-		
+		this(new File(filename));
 	}
 	
 	public PathDataFile(File file) {

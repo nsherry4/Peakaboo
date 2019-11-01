@@ -49,6 +49,7 @@ public class SavedDataSession {
 	}
 	
 	public List<DataFile> filesAsDataPaths() {
+		//download dir not used by all DataFile impls, but required by some
 		Path dldir = DataFiles.createDownloadDirectory();
 		return this.files.stream().map(s -> DataFiles.construct(s, dldir)).collect(Collectors.toList());
 	}

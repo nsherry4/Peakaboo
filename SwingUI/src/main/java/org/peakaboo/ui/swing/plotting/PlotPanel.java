@@ -333,26 +333,6 @@ public class PlotPanel extends TabbedLayerPanel
 		return titleString.toString();
 	}
 
-
-	
-	
-	
-
-	// prompts the user with a file selection dialogue
-	// reads the returned file list, loads the related
-	// data set, and returns it to the caller
-	private void openNewDataset(List<SimpleFileExtension> extensions)
-	{
-		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", controller.io().getLastFolder(), extensions, files -> {
-			if (!files.isPresent()) return;
-			controller.io().setLastFolder(files.get().get(0).getParentFile());
-			
-			List<File> filelist = files.get();
-			load(filelist.stream().map(PathDataFile::new).collect(Collectors.toList()));
-			
-		});
-	}
-
 	void load(List<DataFile> files) {
 		
 		DataLoader loader = new DataLoader(controller, files) {
@@ -578,8 +558,14 @@ public class PlotPanel extends TabbedLayerPanel
 		SimpleFileExtension session = new SimpleFileExtension("Peakaboo Session Files", "peakaboo");
 		exts.add(session);
 		
-		openNewDataset(exts);
-		
+		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", controller.io().getLastFolder(), exts, files -> {
+			if (!files.isPresent()) return;
+			controller.io().setLastFolder(files.get().get(0).getParentFile());
+			
+			List<File> filelist = files.get();
+			load(filelist.stream().map(PathDataFile::new).collect(Collectors.toList()));
+			
+		});
 		
 	}
 	

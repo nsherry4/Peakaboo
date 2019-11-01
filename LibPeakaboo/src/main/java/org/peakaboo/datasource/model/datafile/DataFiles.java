@@ -11,7 +11,7 @@ import java.util.function.Function;
 public class DataFiles {
 
 	private static Map<Function<String, Boolean>, BiFunction<String, Path, DataFile>> addressConstructors = new HashMap<>();
-	{
+	static {
 		registerProtocolConstructor("/", (s, p) -> new PathDataFile(s));
 		registerProtocolConstructor("url:", (s, p) -> URLDataFile.deserialize(s, p));
 	}

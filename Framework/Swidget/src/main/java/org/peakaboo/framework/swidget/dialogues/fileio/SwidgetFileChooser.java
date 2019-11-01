@@ -64,14 +64,15 @@ public class SwidgetFileChooser extends JFileChooser {
 	private Places places = Places.forPlatform();
 
 	public SwidgetFileChooser() {
-		dosetup(null);
+		this(null);
 	}
 	
 	public SwidgetFileChooser(File directory) {
-		dosetup(directory);
+		super(directory);
+		dosetup();
 	}
 	
-	private void dosetup(File directory) {
+	private void dosetup() {
 		try {
 			
 			setControlButtonsAreShown(false);
