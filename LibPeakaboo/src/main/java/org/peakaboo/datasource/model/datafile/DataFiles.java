@@ -12,18 +12,14 @@ public class DataFiles {
 
 	private static Map<Function<String, Boolean>, BiFunction<String, Path, DataFile>> addressConstructors = new HashMap<>();
 	static {
-		registerProtocolConstructor("/", (s, p) -> new PathDataFile(s));
-		registerProtocolConstructor("url:", (s, p) -> URLDataFile.deserialize(s, p));
+		registerProtocolConstructor(PathDataFile::addressValid, PathDataFile::fromAddress);
+		registerProtocolConstructor(URLDataFile::addressValid, URLDataFile::fromAddress);
 	}
 	
 	public static void registerProtocolConstructor(Function<String, Boolean> matcher, BiFunction<String, Path, DataFile> constructor) {
 		addressConstructors.put(matcher, constructor);
 	}
-	
-	public static void registerProtocolConstructor(String prefix, BiFunction<String, Path, DataFile> constructor) {
-		registerProtocolConstructor(s -> s.startsWith(prefix), constructor);
-	}
-	
+		
 	public static DataFile construct(String address, Path downloadDir) {
 		for (Function<String, Boolean> matcher : addressConstructors.keySet()) {
 			if (matcher.apply(address)) {

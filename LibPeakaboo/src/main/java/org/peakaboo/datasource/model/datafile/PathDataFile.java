@@ -81,12 +81,22 @@ public class PathDataFile implements DataFile {
 	@Override
 	public Optional<String> address() {
 		try {
-			return Optional.of(path.toFile().toString());
+			return Optional.of("file://" + path.toFile().toString());
 		} catch (UnsupportedOperationException e) {
 			return Optional.empty();
 		}
 	}
+
+	public static boolean addressValid(String address) {
+		return address.startsWith("/") || address.startsWith("file://");
+	}
 	
+	public static PathDataFile fromAddress(String address, Path tempDir) {
+		if (address.startsWith("file://")) {
+			address = address.substring(7);
+		}
+		return new PathDataFile(address);
+	}
 	
 
 }

@@ -1,21 +1,14 @@
 package org.peakaboo.datasource.model.datafile;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -141,7 +134,7 @@ public class URLDataFile implements DataFile {
 		return Optional.of(serialize());
 	}
 	
-	public String serialize() {
+	private String serialize() {
 		Map<String, String> values = new HashMap<>();
 		values.put("url", url.toString());
 		values.put("name", name);
@@ -149,7 +142,7 @@ public class URLDataFile implements DataFile {
 		return "urldatafile://" + b64;
 	}
 	
-	public static URLDataFile deserialize(String s, Path downloadDir) {
+	private static URLDataFile deserialize(String s, Path downloadDir) {
 		String b64 = s.substring("urldatafile://".length());
 		String yaml = new String(Base64.getDecoder().decode(b64.getBytes()));
 		Map<String, String> values = new Yaml().load(yaml);
@@ -163,6 +156,14 @@ public class URLDataFile implements DataFile {
 		}
 		String name = values.get("name");
 		return new URLDataFile(url, downloadDir, name);
+	}
+
+	public static boolean addressValid(String address) {
+		return address.startsWith("urldatafile://");
+	}
+	
+	public static URLDataFile fromAddress(String address, Path tempDir) {
+		return deserialize(address, tempDir);
 	}
 
 }
