@@ -32,10 +32,10 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.swidget.widgets.PaintedPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.PaintedPanel;
 
 public class HeaderBox extends PaintedPanel {
 

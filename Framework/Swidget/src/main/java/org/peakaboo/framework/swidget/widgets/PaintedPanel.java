@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.gradientpanel;
+package org.peakaboo.framework.swidget.widgets;
 
 
 import java.awt.Color;
@@ -7,8 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 
 import javax.swing.UIManager;
-
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
 
 
 
