@@ -49,6 +49,7 @@ public class HeaderBox extends PaintedPanel {
 	
 	//dragging
 	private Point initialClick;
+	private boolean dragable = true;
 	
 	
 	public HeaderBox(Component left, String title, Component right) {
@@ -103,7 +104,7 @@ public class HeaderBox extends PaintedPanel {
 					return;
 				}
 				
-				if (initialClick == null) {
+				if (initialClick == null || !dragable) {
 					return;
 				}
 								
@@ -153,6 +154,7 @@ public class HeaderBox extends PaintedPanel {
 			closePanel.setBorder(new CompoundBorder(
 					new MatteBorder(0, 1, 0, 0, Swidget.dividerColor()), 
 					new EmptyBorder(0, Spacing.medium, 0, 0)));
+
 			
 		} else {
 			closePanel.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -175,8 +177,13 @@ public class HeaderBox extends PaintedPanel {
 		}));
 		
 		Border b = Spacing.bMedium();
-		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x20000000, true)), b);
-		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x60000000, true)), b);
+		if (isDrawBackground()) {
+			b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x20000000, true)), b);
+			b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x60000000, true)), b);
+		} else {
+			b = new CompoundBorder(new EmptyBorder(0, 0, 1, 0), b);
+			b = new CompoundBorder(new EmptyBorder(0, 0, 1, 0), b);
+		}
 		setBorder(b);
 		
 	}
@@ -237,11 +244,24 @@ public class HeaderBox extends PaintedPanel {
 		return showClose;
 	}
 	
+	@Override
+	public void setDrawBackground(boolean drawBackground) {
+		super.setDrawBackground(drawBackground);
+		make();
+	}
 	
 	
 	
 	
 	
+	public boolean isDragable() {
+		return dragable;
+	}
+
+	public void setDragable(boolean dragable) {
+		this.dragable = dragable;
+	}
+
 	public static JLabel makeHeaderTitle(String title) {
 		JLabel label = new JLabel(title);
 		Font font = label.getFont();

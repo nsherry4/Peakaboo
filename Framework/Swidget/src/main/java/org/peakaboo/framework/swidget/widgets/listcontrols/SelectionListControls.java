@@ -1,49 +1,33 @@
 package org.peakaboo.framework.swidget.widgets.listcontrols;
 
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JPanel;
-
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 
 
-public abstract class SelectionListControls extends JPanel
+public abstract class SelectionListControls extends HeaderBox
 {
 	
-	public SelectionListControls(String name){
+	public SelectionListControls(String name, String title){
 		
 		super();
-		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		
-		ImageButton add = new ImageButton("OK", StockIcon.CHOOSE_OK).withTooltip("Add Selected " + name).withBordered(false);
-		add.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				approve();
-			}
-		});
-
-
-		ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL).withTooltip("Discard Selections").withBordered(false);
-		cancel.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				cancel();
-			}
-		});
-
-
-		add(add);
-		add(cancel);
+		ImageButton add = new ImageButton(StockIcon.CHOOSE_OK)
+				.withTooltip("Add Selected " + name)
+				.withBordered(false)
+				.withAction(() -> approve());
+		
+		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL)
+				.withTooltip("Discard Selections")
+				.withBordered(false)
+				.withAction(() -> cancel());
 
 		setBorder(Spacing.bSmall());
+		
+		setDragable(false);
+		setComponents(cancel, title, add);
 
 	}
 	

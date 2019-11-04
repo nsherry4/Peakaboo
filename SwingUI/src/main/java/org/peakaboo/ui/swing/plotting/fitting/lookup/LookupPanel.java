@@ -54,7 +54,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 		//generate initial "filtered" list with no search query
 		filter();
 		
-		selControls = new SelectionListControls("Fittings") {
+		selControls = new SelectionListControls("Fittings", "Element Lookup") {
 
 			@Override
 			protected void cancel()
@@ -76,7 +76,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 		this.setLayout(new BorderLayout());
 
 		this.add(elementListPanel(), BorderLayout.CENTER);
-		this.add(new TitlePaintedPanel("Element Lookup", false, selControls), BorderLayout.NORTH);
+		this.add(selControls, BorderLayout.NORTH);
 
 
 	}

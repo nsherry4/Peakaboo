@@ -24,7 +24,7 @@ public class SummationPanel extends JPanel
 	public SummationPanel(final FittingController controller, final CurveFittingView owner)
 	{
 		
-		SelectionListControls selControls = new SelectionListControls("Summation") {
+		SelectionListControls selControls = new SelectionListControls("Summation", "Add Summation") {
 
 			@Override
 			protected void cancel()
@@ -69,7 +69,7 @@ public class SummationPanel extends JPanel
 		this.add(scroll, BorderLayout.CENTER);
 
 
-		this.add(new TitlePaintedPanel("Add Summation Fitting", false, selControls), BorderLayout.NORTH);
+		this.add(selControls, BorderLayout.NORTH);
 
 
 

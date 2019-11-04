@@ -50,7 +50,7 @@ class FilterSelectionList extends ClearPanel
 		scroller.setBorder(Spacing.bNone());
 		
 		this.add(scroller, BorderLayout.CENTER);
-		add(new TitlePaintedPanel("Add Filter", false, createControls()), BorderLayout.NORTH);
+		add(createControls(), BorderLayout.NORTH);
 
 	}
 
@@ -185,7 +185,7 @@ class FilterSelectionList extends ClearPanel
 	private JPanel createControls()
 	{
 
-		controls = new SelectionListControls("Filter") {
+		controls = new SelectionListControls("Filter", "Add Filter") {
 		
 			@Override
 			protected void cancel()

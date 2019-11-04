@@ -30,7 +30,15 @@ public class PaintedPanel extends ClearPanel
 
 	
 	
+	
 
+	public boolean isDrawBackground() {
+		return drawBackground;
+	}
+	public void setDrawBackground(boolean drawBackground) {
+		this.drawBackground = drawBackground;
+		this.repaint();
+	}
 	public Paint getBackgroundPaint() {
 		return backgroundPaint;
 	}

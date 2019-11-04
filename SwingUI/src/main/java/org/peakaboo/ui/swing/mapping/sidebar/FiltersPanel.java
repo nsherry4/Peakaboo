@@ -39,6 +39,7 @@ import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
+import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
@@ -217,34 +218,34 @@ public class FiltersPanel extends JPanel {
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
 		tree.setCellRenderer(renderer);
 		
-		//buttons
-		ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK).withText("OK").withBordered(false).withAction(() -> {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-			BoltPluginPrototype<? extends MapFilterPlugin> proto = null;
-			try {
-				proto = (BoltPluginPrototype<? extends MapFilterPlugin>) node.getUserObject();	
-			} catch (ClassCastException e) {}
-			
-			if (proto != null) { 
-				MapFilterPlugin plugin = proto.create();
-				plugin.initialize();
-				controller.add(plugin);
-			}
-			layout.show(this, PANEL_FILTERS);
-		});
-		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL).withText("Cancel").withBordered(false).withAction(() -> {
-			layout.show(this, PANEL_FILTERS);
-		});
 		
-		//setting
-		ButtonBox buttons = new ButtonBox(Spacing.small, false);
-		buttons.addCentre(ok);
-		buttons.addCentre(cancel);
-		JPanel header = new TitlePaintedPanel("Add Map Filter", false, buttons);
+		SelectionListControls controls = new SelectionListControls("Map Filter", "Add Map Filter") {
+			
+			@Override
+			protected void cancel() {
+				layout.show(FiltersPanel.this, PANEL_FILTERS);
+			}
+			
+			@Override
+			protected void approve() {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+				BoltPluginPrototype<? extends MapFilterPlugin> proto = null;
+				try {
+					proto = (BoltPluginPrototype<? extends MapFilterPlugin>) node.getUserObject();	
+				} catch (ClassCastException e) {}
+				
+				if (proto != null) { 
+					MapFilterPlugin plugin = proto.create();
+					plugin.initialize();
+					controller.add(plugin);
+				}
+				layout.show(FiltersPanel.this, PANEL_FILTERS);
+			}
+		};
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(tree, BorderLayout.CENTER);
-		panel.add(header, BorderLayout.NORTH);
+		panel.add(controls, BorderLayout.NORTH);
 		
 		return panel;
 	}

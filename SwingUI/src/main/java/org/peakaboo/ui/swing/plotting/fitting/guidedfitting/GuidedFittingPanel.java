@@ -42,7 +42,7 @@ public class GuidedFittingPanel extends JPanel
 
 		potentials = new ArrayList<ITransitionSeries>();
 
-		selControls = new SelectionListControls("Fittings") {
+		selControls = new SelectionListControls("Fittings", "Click Plot to Fit") {
 
 			@Override
 			protected void cancel()
@@ -73,7 +73,7 @@ public class GuidedFittingPanel extends JPanel
 		
 
 		this.add(scroll, BorderLayout.CENTER);
-		this.add(new TitlePaintedPanel("Click Plot to Fit", false, selControls), BorderLayout.NORTH);
+		this.add(selControls, BorderLayout.NORTH);
 
 		
 
