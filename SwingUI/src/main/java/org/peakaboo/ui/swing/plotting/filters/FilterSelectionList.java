@@ -22,7 +22,6 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
 import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
 
 

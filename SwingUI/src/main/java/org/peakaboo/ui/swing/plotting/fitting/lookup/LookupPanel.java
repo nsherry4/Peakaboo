@@ -26,7 +26,6 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
 import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
 import org.peakaboo.ui.swing.plotting.fitting.Changeable;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
