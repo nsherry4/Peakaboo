@@ -52,12 +52,6 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 	}
 
 	@Override
-	public boolean isReplottable() {
-		return hasSelection() && map.getFitting().getActiveMode().isReplottable();
-	}
-
-	
-	@Override
 	public void clearSelection() {
 		setPoints(new ArrayList<>());
 	}

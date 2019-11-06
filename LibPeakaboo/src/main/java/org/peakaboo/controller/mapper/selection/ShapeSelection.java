@@ -41,11 +41,6 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 	}
 
 	@Override
-	public boolean isReplottable() {
-		return false;
-	}
-
-	@Override
 	public void clearSelection() {
 		points.clear();
 		updateListeners(MapUpdateType.SELECTION);

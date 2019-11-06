@@ -18,8 +18,6 @@ public interface Selection extends IEventfulType<MapUpdateType> {
 
 	boolean hasSelection();
 
-	boolean isReplottable();
-
 	void clearSelection();
 	
 	Optional<Group> getParameters();

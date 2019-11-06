@@ -167,13 +167,6 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 		return hasSelection && map.getFiltering().isReplottable() && map.getFitting().getActiveMode().isSelectable();
 	}
 
-	@Override
-	public boolean isReplottable() {
-		return hasSelection() && map.getFitting().getActiveMode().isReplottable();
-	}
-
-	
-
 	public void setHasBoundingRegion(boolean hasBoundingRegion)
 	{
 		this.hasSelection = hasBoundingRegion;

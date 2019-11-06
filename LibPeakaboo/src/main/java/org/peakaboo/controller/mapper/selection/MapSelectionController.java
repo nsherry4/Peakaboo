@@ -75,9 +75,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 		return currentSelection;
 	}
 	
-	@Override
 	public boolean isReplottable() {
-		return hasSelection() && getSelection().isReplottable();
+		return hasSelection() && mappingController.getFitting().getActiveMode().isReplottable();
 	}
 
 	@Override
