@@ -3,9 +3,12 @@ package org.peakaboo.controller.mapper.selection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
@@ -86,10 +89,10 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 		trimSelectionToBounds();
 		List<Integer> indexes = new ArrayList<>();
 		
-		if (getStart() == null || getEnd() == null) {
-			return Collections.emptyList();
+		if (getStart() == null || getEnd() == null || getStart().equals(getEnd())) {
+			return indexes;
 		}
-
+		
 		final GridPerspective<Float> grid = new GridPerspective<Float>(
 				map.getUserDimensions().getUserDataWidth(), 
 				map.getUserDimensions().getUserDataHeight(), 
@@ -102,11 +105,11 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 			return getPointsRectangle(grid);
 		case SIMILAR:
 		case SHAPE:
+		default:
 			throw new IllegalArgumentException("Not implemented"); //not implemented here, see the other Selection impls
 		
 		}
-		
-		return indexes;
+
 	}
 	
 	private List<Integer> getPointsRectangle(GridPerspective<Float> grid) {
@@ -184,6 +187,10 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 		setHasBoundingRegion(false);
 	}
 	
+	@Override
+	public Optional<Group> getParameters() {
+		return Optional.empty();
+	}
 	
 	public void trimSelectionToBounds() {
 		
@@ -201,4 +208,44 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 		}
 		
 	}
+
+	@Override
+	public SubsetDataSource getSubsetDataSource() {
+		switch (map.getSelection().getSelectionType()) {
+		case ELLIPSE:
+			return map.getDataSourceForSubset(getPoints());
+		case RECTANGLE:
+			return map.getDataSourceForSubset(getStart(), getEnd());
+		case SHAPE:
+		case SIMILAR:
+		default:
+			throw new IllegalArgumentException("Not implemented"); //see the other selection impls
+		}
+	}
+
+	@Override
+	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
+		map.getSelection().clearSelection();
+	}
+
+	@Override
+	public void startDragSelection(Coord<Integer> point) {
+		setStart(point);
+		setEnd(null);
+		setHasBoundingRegion(false);
+	}
+
+	@Override
+	public void addDragSelection(Coord<Integer> point) {
+		setEnd(point);
+		setHasBoundingRegion(true);
+	}
+
+	@Override
+	public void releaseDragSelection(Coord<Integer> point) {
+		setEnd(point);
+		setHasBoundingRegion(true);
+	}
+	
+	
 }

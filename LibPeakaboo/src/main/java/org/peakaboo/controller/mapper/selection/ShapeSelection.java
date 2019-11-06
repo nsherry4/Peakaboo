@@ -3,11 +3,14 @@ package org.peakaboo.controller.mapper.selection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
@@ -16,7 +19,7 @@ import org.peakaboo.framework.eventful.EventfulType;
 class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 
 	private List<Integer> points = new ArrayList<>();
-	private MappingController controller;
+	private MappingController map;
 	
 	private int EMPTY = 0;
 	private int INSIDE = 1;
@@ -24,7 +27,7 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 	
 	
 	public ShapeSelection(MappingController mappingController) {
-		this.controller = mappingController;
+		this.map = mappingController;
 	}
 
 	@Override
@@ -48,12 +51,13 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 		updateListeners(MapUpdateType.SELECTION);
 	}
 
-	public void startTrace(Coord<Integer> point) {
-		controller.getSelection().clearSelection();
-		addTrace(point);
+	@Override
+	public void startDragSelection(Coord<Integer> point) {
+		addDragSelection(point);
 	}
 
-	public void addTrace(Coord<Integer> point) {
+	@Override
+	public void addDragSelection(Coord<Integer> point) {
 		point = bounded(point);
 		GridPerspective<Float> grid = grid();
 		int index = grid.getIndexFromXY(point.x, point.y);
@@ -76,9 +80,9 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 		updateListeners(MapUpdateType.SELECTION);
 	}
 
-	public void endTrace(Coord<Integer> point) {
+	public void releaseDragSelection(Coord<Integer> point) {
 		//add the last point
-		addTrace(point);
+		addDragSelection(point);
 		
 		//interpolate between the first and last points
 		interpolate(points.get(0), points.get(points.size()-1), grid());
@@ -234,15 +238,15 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 	
 	private GridPerspective<Float> grid() {
 		return new GridPerspective<Float>(
-				controller.getUserDimensions().getUserDataWidth(), 
-				controller.getUserDimensions().getUserDataHeight(), 
+				map.getUserDimensions().getUserDataWidth(), 
+				map.getUserDimensions().getUserDataHeight(), 
 				0f);
 	}
 	
 	private Coord<Integer> bounded(Coord<Integer> point) {
 		Coord<Integer> trimmed = new Coord<>(point);
 		
-		Coord<Integer> size = controller.getUserDimensions().getDimensions();
+		Coord<Integer> size = map.getUserDimensions().getDimensions();
 		int width = size.x;
 		int height = size.y;
 
@@ -253,5 +257,21 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 
 		return trimmed;		
 	}
+
+	@Override
+	public Optional<Group> getParameters() {
+		return Optional.empty();
+	}
+
+	@Override
+	public SubsetDataSource getSubsetDataSource() {
+		return map.getDataSourceForSubset(getPoints());
+	}
+
+	@Override
+	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
+		map.getSelection().clearSelection();
+	}
+
 
 }

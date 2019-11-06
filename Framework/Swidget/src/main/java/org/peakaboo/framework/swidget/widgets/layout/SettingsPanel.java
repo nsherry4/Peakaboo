@@ -121,6 +121,11 @@ public class SettingsPanel extends JPanel {
 		
 	}
 	
+	public void clearSettings() {
+		removeAll();
+		c = new GridBagConstraints();
+	}
+	
 	private JPanel wrap(Component c) {
 		JPanel wrapper = new JPanel(new BorderLayout());
 		wrapper.setOpaque(false);

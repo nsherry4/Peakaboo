@@ -3,13 +3,19 @@ package org.peakaboo.controller.mapper.selection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.composite.CompositeModeData;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
+import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
+import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
@@ -28,11 +34,15 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 	private MappingController map;
 	
 	
-	private float threshold = 1.2f;
-	private int padding = 0;
+	private Parameter<Float> threshold;
+	private Parameter<Integer> padding;
+	private Group parameters;
 	
 	public SimilarSelection(MappingController map) {
 		this.map = map;
+		threshold = new Parameter<Float>("Threshold", new RealSpinnerStyle(), 1.2f, t -> t.getValue() >= 1f && t.getValue() <= 100f);
+		padding = new Parameter<Integer>("Padding", new IntegerSpinnerStyle(), 0, t -> t.getValue() >= 0 && t.getValue() <= 10);
+		parameters = new Group("Settings", threshold, padding);
 	}
 
 	@Override
@@ -61,29 +71,9 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 		this.indexes = indexes;
 		updateListeners(MapUpdateType.SELECTION);
 	}
-	
 
-	public float getThreshold() {
-		return threshold;
-	}
-
-	public void setThreshold(float threshold) {
-		this.threshold = threshold;
-		updateListeners(MapUpdateType.SELECTION);
-	}
-	
-	
-
-	public int getPadding() {
-		return padding;
-	}
-
-	public void setPadding(int padding) {
-		this.padding = padding;
-		updateListeners(MapUpdateType.SELECTION);
-	}
-
-	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
+	public void selectPoint(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
+		map.getSelection().clearSelection();
 		
 		MapModes displayMode = map.getFitting().getMapDisplayMode();
 		Spectrum data = null;
@@ -122,14 +112,15 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 		
 		
 		List<Integer> points = new ArrayList<>();
+		float thresholdValue = threshold.getValue();
 		if (! contiguous) {
 			//All points, even those not touching
 			for (int y : new Range(0, h-1)) {
 				for (int x : new Range(0, w-1)) {
 					float other = grid.get(data, x, y);
 					// match +/- threshold percent
-					float otherMin = other / threshold;
-					float otherMax = other * threshold;
+					float otherMin = other / thresholdValue;
+					float otherMax = other * thresholdValue;
 					if (value >= otherMin && value <= otherMax) {
 						points.add(grid.getIndexFromXY(x, y));
 					}
@@ -156,8 +147,8 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 					
 					float other = grid.get(data, x, y);
 					// match * or / threshold percent (eg threshold=1.2 so (other/1.2, other*1.2) 
-					float otherMin = other / threshold;
-					float otherMax = other * threshold;
+					float otherMin = other / thresholdValue;
+					float otherMax = other * thresholdValue;
 					if (value >= otherMin && value <= otherMax) {
 						points.add(neighbour);
 						pointSet.add(neighbour);
@@ -170,7 +161,8 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 			
 		}
 		
-		for (int i = 0; i < padding; i++) {
+		int paddingValue = padding.getValue();
+		for (int i = 0; i < paddingValue; i++) {
 			points = padSelection(points);
 		}
 		
@@ -223,5 +215,32 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 		
 		
 	}
+
+	@Override
+	public Optional<Group> getParameters() {
+		return Optional.of(parameters);
+	}
+
+	@Override
+	public SubsetDataSource getSubsetDataSource() {
+		return map.getDataSourceForSubset(getPoints());
+	}
+
+	@Override
+	public void startDragSelection(Coord<Integer> point) {
+		//Nothing to do
+	}
+
+	@Override
+	public void addDragSelection(Coord<Integer> point) {
+		//Nothing to do
+	}
+
+	@Override
+	public void releaseDragSelection(Coord<Integer> point) {
+		//Nothing to do
+	}
+
+
 	
 }
