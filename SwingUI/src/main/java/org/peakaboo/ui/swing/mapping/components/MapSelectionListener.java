@@ -16,6 +16,8 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 	private MappingController controller;
 	private MapCanvas canvas;
 	
+	private boolean dragging = false;
+	
 	public MapSelectionListener(MapCanvas canvas, MappingController controller) {
 		this.controller = controller;
 		this.canvas = canvas;
@@ -57,6 +59,7 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && !e.isControlDown()) {
+			dragging = true;
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
 			controller.getSelection().startDragSelection(point);
 		}
@@ -64,9 +67,10 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (SwingUtilities.isLeftMouseButton(e)) {
+		if (SwingUtilities.isLeftMouseButton(e) && dragging) {
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
 			controller.getSelection().releaseDragSelection(point);
+			dragging = false;
 		}
 	}
 
@@ -84,7 +88,7 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (SwingUtilities.isLeftMouseButton(e)) {
+		if (SwingUtilities.isLeftMouseButton(e) && dragging) {
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
 			controller.getSelection().addDragSelection(point);
 		}
