@@ -45,7 +45,7 @@ public class MapSelectionPanel extends SettingsPanel {
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SIMILAR));
 		ToggleImageButton selShape = new ToggleImageButton()
 				.withIcon("select-lasso", IconSize.BUTTON)
-				.withTooltip("Select Drawn Shape")
+				.withTooltip("Select Hand-Drawn Shape")
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SHAPE));
 		ToggleGroup selGroup = new ToggleGroup();
