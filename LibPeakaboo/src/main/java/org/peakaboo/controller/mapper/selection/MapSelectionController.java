@@ -9,97 +9,208 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.eventful.EventfulType;
 
-public class MapSelectionController extends EventfulType<MapUpdateType>  {
+public class MapSelectionController extends EventfulType<MapUpdateType> implements Selection {
 
 	private MappingController mappingController;
-	private AreaSelection areaSelection;
-	private PointsSelection pointsSelection;
+	
+	private DragSelection areaSelection;
+	private SimilarSelection similarSelection;
+	private ShapeSelection shapeSelection;
+	
+	public enum SelectionType {
+		SIMILAR,
+		RECTANGLE,
+		ELLIPSE,
+		SHAPE
+	}
+	private SelectionType selectionType = SelectionType.RECTANGLE;
+	
+	private List<Integer> currentSelection = new ArrayList<>();
 	
 	public MapSelectionController(MappingController mappingController) {
 		this.mappingController = mappingController;
 		
 		//create selection models and pass their events along
-		areaSelection = new AreaSelection(mappingController);
-		areaSelection.addListener(this::updateListeners);
+		areaSelection = new DragSelection(mappingController);
+		areaSelection.addListener(this::onSelectionMessage);
 		
-		pointsSelection = new PointsSelection(mappingController);
-		pointsSelection.addListener(this::updateListeners);
+		similarSelection = new SimilarSelection(mappingController);
+		similarSelection.addListener(this::onSelectionMessage);
+		
+		shapeSelection = new ShapeSelection(mappingController);
+		shapeSelection.addListener(this::onSelectionMessage);
 		
 	}
 	
-	public boolean hasSelection() {
-		return areaSelection.hasSelection() || pointsSelection.hasSelection();
+	private void onSelectionMessage(MapUpdateType update) {
+		if (update == MapUpdateType.SELECTION) {
+			currentSelection = getSelection().getPoints();
+		}
+		updateListeners(update);
+	}
+	
+	public SelectionType getSelectionType() {
+		return selectionType;
 	}
 
-	public boolean isReplotable() {
-		return hasSelection() && (areaSelection.isReplottable() || pointsSelection.isReplottable());
+	public void setSelectionType(SelectionType selectionType) {
+		this.selectionType = selectionType;
+		// don't call onSelectionMessage here because we explicitly don't want to
+		// regenerate the points selection
+		updateListeners(MapUpdateType.UI_OPTIONS);
+		updateListeners(MapUpdateType.SELECTION);
+	}
+
+
+
+	@Override
+	public boolean hasSelection() {
+		return getSelection().hasSelection();
+	}
+
+	@Override
+	public List<Integer> getPoints() {
+		return currentSelection;
 	}
 	
-	public List<Integer> getPoints() {
-		if (areaSelection.hasSelection()) {
-			return areaSelection.getPoints();
-		}
-		if (pointsSelection.hasSelection()) {
-			return pointsSelection.getPoints();
-		}
-		return new ArrayList<>();
+	@Override
+	public boolean isReplottable() {
+		return hasSelection() && getSelection().isReplottable();
+	}
+
+	@Override
+	public void clearSelection() {
+		areaSelection.clearSelection();
+		similarSelection.clearSelection();
+		shapeSelection.clearSelection();
 	}
 	
 	public float getNeighbourThreshold() {
-		return pointsSelection.getThreshold();
+		return similarSelection.getThreshold();
 	}
 	
 	public void setNeighbourThreshold(float threshold) {
-		pointsSelection.setThreshold(threshold);
+		similarSelection.setThreshold(threshold);
 	}
 	
 	public int getNeighbourPadding() {
-		return pointsSelection.getPadding();
+		return similarSelection.getPadding();
 	}
 	
 	public void setNeighbourPadding(int padding) {
-		pointsSelection.setPadding(padding);
+		similarSelection.setPadding(padding);
 	}
 	
-	public void makeNeighbourSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
+
+	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
 		if (!mappingController.getFitting().getActiveMode().isSelectable()) {
 			return;
 		}
 		
-		areaSelection.clearSelection();
-		pointsSelection.makeSelection(clickedAt, contiguous, modify);
+		switch (selectionType) {
+		case ELLIPSE:
+		case RECTANGLE:
+		case SHAPE:
+			break;
+		case SIMILAR:
+			clearSelection();
+			similarSelection.makeSelection(clickedAt, singleSelect, modify);
+			break;
+		}
+		
 	}
 	
-	public void makeRectSelectionStart(Coord<Integer> dragStart) {
+	
+	public void startDragSelection(Coord<Integer> point) {
 		if (!mappingController.getFitting().getActiveMode().isSelectable()) {
 			return;
 		}
 		
-		pointsSelection.clearSelection();
-		areaSelection.setStart(dragStart);
-		areaSelection.setEnd(null);
-		areaSelection.setHasBoundingRegion(false);
+		switch (selectionType) {
+		case ELLIPSE:
+		case RECTANGLE:
+			clearSelection();
+			areaSelection.setStart(point);
+			areaSelection.setEnd(null);
+			areaSelection.setHasBoundingRegion(false);
+			break;
+		case SHAPE:
+			shapeSelection.startTrace(point);
+			break;
+		case SIMILAR:
+			break;
+		}
 	}
 	
-	public void makeRectSelectionEnd(Coord<Integer> dragEnd) {
+	public void addDragSelection(Coord<Integer> point) {
 		if (!mappingController.getFitting().getActiveMode().isSelectable()) {
 			return;
 		}
 		
-		pointsSelection.clearSelection();
-		areaSelection.setEnd(dragEnd);
-		areaSelection.setHasBoundingRegion(true);
+		switch (selectionType) {
+		case ELLIPSE:
+		case RECTANGLE:
+			areaSelection.setEnd(point);
+			areaSelection.setHasBoundingRegion(true);
+			break;
+		case SHAPE:
+			shapeSelection.addTrace(point);
+			break;
+		case SIMILAR:
+			break;		
+		}
+
 	}
+	
+	public void releaseDragSelection(Coord<Integer> point) {
+		if (!mappingController.getFitting().getActiveMode().isSelectable()) {
+			return;
+		}
+		
+		switch (selectionType) {
+		case ELLIPSE:
+		case RECTANGLE:
+			areaSelection.setEnd(point);
+			areaSelection.setHasBoundingRegion(true);
+			break;
+		case SHAPE:
+			shapeSelection.endTrace(point);
+			break;
+		case SIMILAR:
+			break;		
+		}
+	}
+	
+	
+	
 	
 	public SubsetDataSource getSubsetDataSource() {
 		SubsetDataSource sds;
 		if (areaSelection.hasSelection()) {
 			sds = mappingController.getDataSourceForSubset(areaSelection.getStart(), areaSelection.getEnd());
 		} else {
-			sds = mappingController.getDataSourceForSubset(pointsSelection.getPoints());
+			sds = mappingController.getDataSourceForSubset(similarSelection.getPoints());
 		}
 		return sds;
 	}
+	
+	
+	private Selection getSelection() {
+		switch (selectionType) {
+		case ELLIPSE:
+		case RECTANGLE:
+			return areaSelection;
+		case SIMILAR:
+			return similarSelection;
+		case SHAPE:
+			return shapeSelection;
+		}
+		throw new IllegalArgumentException("Unknown selection type");
+	}
+
+
+
+
 	
 	
 }

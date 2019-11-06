@@ -24,11 +24,12 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		//Double-click selects points with similar intensity, anything else does nothing
-		if (!  (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2)) {
+		//left button makes selections, and everything else does nothing
+		if (!SwingUtilities.isLeftMouseButton(e)) {
 			return;
 		}
 		
+		//there are some maps we can't make a selection on
 		MapModes displayMode = controller.getFitting().getMapDisplayMode();
 		if (!  ((displayMode == MapModes.COMPOSITE || displayMode == MapModes.RATIO) && controller.getFiltering().isReplottable())) {
 			return;
@@ -37,34 +38,36 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 		
 		Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
 		if (e.isControlDown()) {
-			if (e.getClickCount() == 2) {
-				controller.getSelection().makeNeighbourSelection(clickedAt, true, true);
-			} else if (e.getClickCount() == 3) {
-				//Triple clicks only get run after a double click gets run. If CTRL is down, that means we need to
-				//undo the action caused by the previous (improper) double-click, so we re-run the contiguous
+			if (e.getClickCount() == 1) {
+				controller.getSelection().selectPoint(clickedAt, true, true);
+			} else if (e.getClickCount() == 2) {
+				//Double clicks only get run after a single click gets run. If CTRL is down, that means we need to
+				//undo the action caused by the previous (improper) single-click, so we re-run the contiguous
 				//selection modification to perform the reverse modification.
-				controller.getSelection().makeNeighbourSelection(clickedAt, true, true);
-				controller.getSelection().makeNeighbourSelection(clickedAt, false, true);
+				controller.getSelection().selectPoint(clickedAt, true, true);
+				controller.getSelection().selectPoint(clickedAt, false, true);
 			}
 		} else {
-			controller.getSelection().makeNeighbourSelection(clickedAt, e.getClickCount() == 2, false);
+			controller.getSelection().selectPoint(clickedAt, e.getClickCount() == 1, false);
 		}
 
 
-}
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && !e.isControlDown()) {
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-			controller.getSelection().makeRectSelectionStart(point);
+			controller.getSelection().startDragSelection(point);
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
+			controller.getSelection().releaseDragSelection(point);
+		}
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 	public void mouseDragged(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-			controller.getSelection().makeRectSelectionEnd(point);
+			controller.getSelection().addDragSelection(point);
 		}
 	}
 

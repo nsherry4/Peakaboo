@@ -16,14 +16,16 @@ import org.peakaboo.framework.eventful.EventfulType;
  * @author NAS
  *
  */
-public class AreaSelection extends EventfulType<MapUpdateType> {
+class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 
 	private Coord<Integer> start, end;
 	private boolean hasSelection = false;
 	
 	private MappingController map;
 	
-	public AreaSelection(MappingController map) {
+	
+	
+	public DragSelection(MappingController map) {
 		this.map = map;
 	}
 		
@@ -44,7 +46,7 @@ public class AreaSelection extends EventfulType<MapUpdateType> {
 		
 		this.start = dragStart;
 		
-		updateListeners(MapUpdateType.AREA_SELECTION);
+		updateListeners(MapUpdateType.SELECTION);
 		
 		map.addListener(type -> {
 			if (type == MapUpdateType.DATA_SIZE) {
@@ -72,13 +74,14 @@ public class AreaSelection extends EventfulType<MapUpdateType> {
 		
 		this.end = dragEnd;
 		
-		updateListeners(MapUpdateType.AREA_SELECTION);
+		updateListeners(MapUpdateType.SELECTION);
 	}
 
 	
 	/**
 	 * generate a list of indexes in the map which are selected
 	 */
+	@Override
 	public List<Integer> getPoints() {
 		trimSelectionToBounds();
 		List<Integer> indexes = new ArrayList<>();
@@ -86,17 +89,34 @@ public class AreaSelection extends EventfulType<MapUpdateType> {
 		if (getStart() == null || getEnd() == null) {
 			return Collections.emptyList();
 		}
+
+		final GridPerspective<Float> grid = new GridPerspective<Float>(
+				map.getUserDimensions().getUserDataWidth(), 
+				map.getUserDimensions().getUserDataHeight(), 
+				0f);
+		
+		switch (map.getSelection().getSelectionType()) {
+		case ELLIPSE:
+			return getPointsEllipse(grid);
+		case RECTANGLE:
+			return getPointsRectangle(grid);
+		case SIMILAR:
+		case SHAPE:
+			throw new IllegalArgumentException("Not implemented"); //not implemented here, see the other Selection impls
+		
+		}
+		
+		return indexes;
+	}
+	
+	private List<Integer> getPointsRectangle(GridPerspective<Float> grid) {
+		List<Integer> indexes = new ArrayList<>();
 		
 		final int xstart = getStart().x;
 		final int ystart = getStart().y;
 		
 		final int xend = getEnd().x;
 		final int yend = getEnd().y;
-
-		final GridPerspective<Float> grid = new GridPerspective<Float>(
-				map.getUserDimensions().getUserDataWidth(), 
-				map.getUserDimensions().getUserDataHeight(), 
-				0f);
 		
 		for (int x : new Range(xstart, xend)) {
 			for (int y : new Range(ystart, yend)){
@@ -105,14 +125,46 @@ public class AreaSelection extends EventfulType<MapUpdateType> {
 		}
 		
 		return indexes;
+		
+	}
+	
+	private List<Integer> getPointsEllipse(GridPerspective<Float> grid) {
+		List<Integer> indexes = new ArrayList<>();
+		
+		final int xstart = getStart().x;
+		final int ystart = getStart().y;
+		
+		final int xend = getEnd().x;
+		final int yend = getEnd().y;
+
+		final int width = xend - xstart;
+		final int height = yend - ystart;
+		final float a = width/2f;
+		final float b = height/2f;
+
+		for (int x : new Range(xstart, xend)) {
+			float x0 = (x - xstart) - a;
+			for (int y : new Range(ystart, yend)){
+				float y0 = (y - ystart) - b;	
+				float dist = (x0*x0) / (a*a) + (y0*y0) / (b*b);
+				if (dist < 1f) {
+					indexes.add( grid.getIndexFromXY(x, y) );
+				}
+			}
+		}
+		
+		return indexes;
 	}
 	
 	
+	
+	@Override
 	public boolean hasSelection()
 	{
 		return hasSelection && map.getFiltering().isReplottable() && map.getFitting().getActiveMode().isSelectable();
 	}
 
+	@Override
 	public boolean isReplottable() {
 		return hasSelection() && map.getFitting().getActiveMode().isReplottable();
 	}
@@ -122,11 +174,12 @@ public class AreaSelection extends EventfulType<MapUpdateType> {
 	public void setHasBoundingRegion(boolean hasBoundingRegion)
 	{
 		this.hasSelection = hasBoundingRegion;
-		updateListeners(MapUpdateType.AREA_SELECTION);
+		updateListeners(MapUpdateType.SELECTION);
 	}
 
 
 
+	@Override
 	public void clearSelection() {
 		setHasBoundingRegion(false);
 	}

@@ -12,18 +12,17 @@ import org.peakaboo.display.map.modes.composite.CompositeModeData;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.eventful.EventfulType;
 
 /**
- * Represents a selection of points, which may not be contiguous 
+ * Represents a selection of similar points, which may not be contiguous 
  * @author NAS
  *
  */
 
-public class PointsSelection extends EventfulType<MapUpdateType>{
+class SimilarSelection extends EventfulType<MapUpdateType> implements Selection {
 
 	private List<Integer> indexes = new ArrayList<>();
 	private MappingController map;
@@ -32,31 +31,35 @@ public class PointsSelection extends EventfulType<MapUpdateType>{
 	private float threshold = 1.2f;
 	private int padding = 0;
 	
-	public PointsSelection(MappingController map) {
+	public SimilarSelection(MappingController map) {
 		this.map = map;
 	}
 
+	@Override
 	public boolean hasSelection()
 	{
 		return indexes.size() > 0 && map.getFiltering().isReplottable() && map.getFitting().getActiveMode().isSelectable();
 	}
 
+	@Override
 	public boolean isReplottable() {
 		return hasSelection() && map.getFitting().getActiveMode().isReplottable();
 	}
 
 	
+	@Override
 	public void clearSelection() {
 		setPoints(new ArrayList<>());
 	}
 	
+	@Override
 	public List<Integer> getPoints() {
 		return indexes;
 	}
 
 	public void setPoints(List<Integer> indexes) {
 		this.indexes = indexes;
-		updateListeners(MapUpdateType.POINT_SELECTION);
+		updateListeners(MapUpdateType.SELECTION);
 	}
 	
 
@@ -66,7 +69,7 @@ public class PointsSelection extends EventfulType<MapUpdateType>{
 
 	public void setThreshold(float threshold) {
 		this.threshold = threshold;
-		updateListeners(MapUpdateType.POINT_SELECTION);
+		updateListeners(MapUpdateType.SELECTION);
 	}
 	
 	
@@ -77,7 +80,7 @@ public class PointsSelection extends EventfulType<MapUpdateType>{
 
 	public void setPadding(int padding) {
 		this.padding = padding;
-		updateListeners(MapUpdateType.POINT_SELECTION);
+		updateListeners(MapUpdateType.SELECTION);
 	}
 
 	public void makeSelection(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {

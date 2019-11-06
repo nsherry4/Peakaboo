@@ -5,27 +5,17 @@ import static java.util.stream.Collectors.toList;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.swing.Box;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.selection.AreaSelection;
-import org.peakaboo.controller.mapper.selection.PointsSelection;
-import org.peakaboo.controller.mapper.settings.MapSettingsController;
-import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
@@ -34,7 +24,6 @@ import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
-import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class MapperToolbar extends JToolBar {
 
@@ -115,7 +104,7 @@ public class MapperToolbar extends JToolBar {
 		
 		controller.addListener(t -> {
 			
-			examineSubset.setEnabled(controller.getSelection().isReplotable());
+			examineSubset.setEnabled(controller.getSelection().isReplottable());
 			if (controller.getSelection().hasSelection())
 			{
 				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getFitting().getCalibrationProfile().isEmpty());

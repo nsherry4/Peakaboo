@@ -32,7 +32,7 @@ public class MapCanvas extends GraphicsPanel
 		mapper = new Mapper();
 		
 		controller.addListener(t -> {
-			if (t == MapUpdateType.AREA_SELECTION || t == MapUpdateType.POINT_SELECTION) {
+			if (t == MapUpdateType.SELECTION) {
 				/*
 				 * data hasn't changed but we need to recomposite the image, so we pass false
 				 * for parameter 'deep'
