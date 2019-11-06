@@ -73,7 +73,7 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 	}
 
 	public void selectPoint(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
-		map.getSelection().clearSelection();
+		if (!modify) map.getSelection().clearSelection();
 		
 		MapModes displayMode = map.getFitting().getMapDisplayMode();
 		Spectrum data = null;

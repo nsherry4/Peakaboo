@@ -92,7 +92,6 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 		if (!isSelectable()) {
 			return;
 		}
-		clearSelection();
 		getSelection().selectPoint(clickedAt, singleSelect, modify);		
 	}
 	
