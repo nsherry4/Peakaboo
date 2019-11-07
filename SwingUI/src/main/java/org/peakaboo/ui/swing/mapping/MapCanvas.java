@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.logging.Level;
 
+import javax.swing.SwingUtilities;
+
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
@@ -43,10 +45,13 @@ public class MapCanvas extends GraphicsPanel
 				setNeedsRedraw(true);
 			}
 
-			if (resizable) {
-				updateCanvasSize();
-			}
-			repaint();
+			//don't repaint right away, give the other event listeners time to catch up
+			SwingUtilities.invokeLater(() -> {
+				if (resizable) {
+					updateCanvasSize();
+				}
+				repaint();
+			});
 		});
 		
 				
