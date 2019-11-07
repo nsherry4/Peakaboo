@@ -222,9 +222,10 @@ public class PlotPanel extends TabbedLayerPanel
 
 		});
 
+		
 		canvas.setRightClickCallback((channel, coords) -> {
 			//if the click is in the bounds of the data/plot
-			if (channel > -1 && channel < controller.data().getDataSet().getScanData().scanCount()) {
+			if (channel > -1 && channel < controller.data().getDataSet().getAnalysis().channelsPerScan()) {
 				CanvasPopupMenu menu = new CanvasPopupMenu(canvas, this, controller, channel);
 				menu.show(canvas, coords.x, coords.y);
 			}
@@ -710,9 +711,6 @@ public class PlotPanel extends TabbedLayerPanel
 	{
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		System.out.println(controller);
-		System.out.println(controller.io());
-		System.out.println(controller.io().getSessionFile());
 		
 		SwidgetFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), peakaboo, file -> {
 			if (!file.isPresent()) {

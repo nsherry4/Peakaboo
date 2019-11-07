@@ -129,7 +129,8 @@ public class MappingController extends EventfulType<MapUpdateType>
 
 	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
 	{
-		return plotcontroller.data().getDataSourceForSubset(points);
+		Coord<Integer> dimensions = new Coord<>(getUserDimensions().getUserDataWidth(), getUserDimensions().getUserDataHeight());
+		return plotcontroller.data().getDataSourceForSubset(points, dimensions);
 	}
 	
 	

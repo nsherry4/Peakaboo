@@ -75,8 +75,16 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 		return currentSelection;
 	}
 	
+	/**
+	 * Indicates if a selection on a map can be reliably translated back to the
+	 * original source spectrum. There are a number of reasons this may not be true
+	 * including map filters and non-rectangular cropping
+	 * 
+	 * @return True if the data can be related back to the source spectra, false
+	 *         otherwise
+	 */
 	public boolean isReplottable() {
-		return hasSelection() && mappingController.getFitting().getActiveMode().isReplottable();
+		return hasSelection() && mappingController.getFitting().getActiveMode().isReplottable() && mappingController.rawDataController.isReplottable();
 	}
 
 	@Override

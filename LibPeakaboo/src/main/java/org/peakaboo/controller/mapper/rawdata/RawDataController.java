@@ -21,8 +21,7 @@ public class RawDataController extends EventfulType<MapUpdateType>
 {
 
 	RawDataModel mapModel;
-	
-	
+		
 	public RawDataController()
 	{
 		mapModel = new RawDataModel();
@@ -41,8 +40,7 @@ public class RawDataController extends EventfulType<MapUpdateType>
 			Coord<Integer> dataDimensions,
 			Coord<Bounds<Number>> realDimensions,
 			SISize realDimensionsUnits, 
-			CalibrationProfile calibrationProfile
-			
+			CalibrationProfile calibrationProfile		
 	)
 	{
 	
@@ -132,6 +130,14 @@ public class RawDataController extends EventfulType<MapUpdateType>
 
 	public CalibrationProfile getCalibrationProfile() {
 		return mapModel.calibrationProfile;
+	}
+
+
+	/**
+	 * Indicates if the data points in this map can be reliably mapped back to the correct spectra
+	 */
+	public boolean isReplottable() {
+		return mapModel.mapResults.isReplottable();
 	}
 		
 }

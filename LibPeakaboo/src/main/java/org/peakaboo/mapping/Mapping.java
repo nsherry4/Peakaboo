@@ -19,6 +19,8 @@ import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
@@ -59,9 +61,18 @@ public class Mapping
 		) {
 		
 		List<ITransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		RawMapSet maps = new RawMapSet(transitionSeries, dataset.getScanData().scanCount());
+
+		int mapsize = dataset.getScanData().scanCount();
+		//Handle non-contiguous datasets
+		boolean noncontiguous = !dataset.getDataSource().isContiguous() && dataset.getDataSource().getDataSize().isPresent();
+		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
+		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
+		if (noncontiguous) {
+			//the dataset is non-contiguous, but provides dimensions and a way to get a coord per index
+			mapsize = dimensions.x * dimensions.y;
+		}
+		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
-		//Math.max(1, dataset.getScanData().scanCount())
 		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
 		streamer.setTask(new Range(0, dataset.getScanData().scanCount()-1), stream -> {
 			
@@ -77,7 +88,12 @@ public class Mapping
 				FittingResultSet frs = solver.solve(data, fittings, fitter);
 				
 				for (FittingResult result : frs.getFits()) {
-					maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), index);
+					if (noncontiguous) {
+						int translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
+						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), translated);	
+					} else {
+						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), index);
+					}
 				}
 				
 			});
@@ -95,13 +111,30 @@ public class Mapping
 	
 
 	public static ExecutorSet<RawMapSet> quickMapTask(DataController data, int channel) {
-				
+		
+
+		
 		//worker task
 		DataSet ds = data.getDataSet();
-		int scancount = ds.getScanData().scanCount();
-		Spectrum map = new ISpectrum(scancount);
-		EachIndexExecutor maptask = new PluralEachIndexExecutor(scancount, index -> {
-			map.set(index, ds.getScanData().get(index).get(channel));
+		
+		DataSet dataset = data.getDataSet();
+		int mapsize = dataset.getScanData().scanCount();
+		boolean noncontiguous = !dataset.getDataSource().isContiguous() && dataset.getDataSource().getDataSize().isPresent();
+		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
+		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
+		if (noncontiguous) {
+			//the dataset is non-contiguous, but provides dimensions and a way to get a coord per index
+			mapsize = dimensions.x * dimensions.y;
+		}
+		int finalMapsize = mapsize;
+		
+		Spectrum map = new ISpectrum(finalMapsize);
+		EachIndexExecutor maptask = new PluralEachIndexExecutor(dataset.getScanData().scanCount(), index -> {
+			int translated = index;
+			if (noncontiguous) {
+				translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
+			}
+			map.set(translated, ds.getScanData().get(index).get(channel));
 		});
 		maptask.setName("Examining Spectra");
 		
@@ -126,7 +159,7 @@ public class Mapping
 			
 			//build the RawMapSet now that the map Spectrum has been populated
 			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), map);
-			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), ds.getScanData().scanCount(), true);
+			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), finalMapsize, data.getDataSet().getDataSource().isContiguous(), true);
 			return rawmaps;
 		});
 

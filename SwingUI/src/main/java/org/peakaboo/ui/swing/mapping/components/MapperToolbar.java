@@ -105,7 +105,7 @@ public class MapperToolbar extends JToolBar {
 		controller.addListener(t -> {
 			
 			examineSubset.setEnabled(controller.getSelection().isReplottable());
-			if (controller.getSelection().hasSelection())
+			if (controller.getSelection().isReplottable())
 			{
 				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getFitting().getCalibrationProfile().isEmpty());
 			} else {

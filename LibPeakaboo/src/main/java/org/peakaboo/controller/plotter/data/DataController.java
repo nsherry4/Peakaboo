@@ -132,11 +132,13 @@ public class DataController extends Eventful
 		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
 	}
 
-	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
-	{
-		return new SelectionDataSource(dataModel.getDataSource(), points);
+	public SelectionDataSource getDataSourceForSubset(List<Integer> points) {
+		Coord<Integer> dimensions = new Coord<>(this.getDataSet().getScanData().scanCount(), 1);
+		return getDataSourceForSubset(points, dimensions);
 	}
-	
+	public SelectionDataSource getDataSourceForSubset(List<Integer> points, Coord<Integer> dimensions) {
+		return new SelectionDataSource(dataModel.getDataSource(), dimensions, points);
+	}
 
 	public boolean hasDataSet()
 	{

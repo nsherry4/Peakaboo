@@ -40,8 +40,10 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 	// data height and width
 	public void setUserDataHeight(int height)
 	{
-
-		if (getUserDataWidth() * height > mappingController.rawDataController.getMapSize()) height = mappingController.rawDataController.getMapSize() / getUserDataWidth();
+		
+		if (getUserDataWidth() * height > mappingController.rawDataController.getMapSize()) {
+			height = mappingController.rawDataController.getMapSize() / getUserDataWidth();
+		}
 		if (height < 1) height = 1;
 
 		viewDimensions.y = height;
@@ -62,7 +64,9 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 	public void setUserDataWidth(int width)
 	{
 
-		if (getUserDataHeight() * width > mappingController.rawDataController.getMapSize()) width = mappingController.rawDataController.getMapSize() / getUserDataHeight();
+		if (getUserDataHeight() * width > mappingController.rawDataController.getMapSize()) {
+			width = mappingController.rawDataController.getMapSize() / getUserDataHeight();
+		}
 		if (width < 1) width = 1;
 
 		viewDimensions.x = width;

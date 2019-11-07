@@ -27,7 +27,9 @@ public class MapDimensionsPanel extends JPanel {
 
 	private JSpinner width;
 	private JSpinner height;
-	private ImageButton magic;
+	
+	//either guess or reset, depending on if we have the original dimensions or not
+	private ImageButton magic; 
 	
 	public MapDimensionsPanel(LayerPanel tabPanel, MappingController controller) {
 		this(tabPanel, controller, false);
@@ -120,7 +122,7 @@ public class MapDimensionsPanel extends JPanel {
 			});
 			this.add(magic, c);
 		} else {
-			ImageButton reset = new ImageButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
+			magic = new ImageButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
 					.withTooltip("Reset the dimensions to those given in the data set.")
 					.withLayout(ImageButtonLayout.IMAGE)
 					.withBordered(false);
@@ -129,11 +131,11 @@ public class MapDimensionsPanel extends JPanel {
 			c.gridy += 1;
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
-			reset.addActionListener(e -> {
+			magic.addActionListener(e -> {
 				height.setValue(controller.rawDataController.getOriginalDataHeight());
 				width.setValue(controller.rawDataController.getOriginalDataWidth());
 			});
-			this.add(reset, c);
+			this.add(magic, c);
 		}
 		c.gridwidth = 1;
 		
@@ -146,7 +148,7 @@ public class MapDimensionsPanel extends JPanel {
 		
 	}
 
-	public ImageButton getGuessDimensionsButton() {
+	public ImageButton getMagicDimensionsButton() {
 		return magic;
 	}
 	

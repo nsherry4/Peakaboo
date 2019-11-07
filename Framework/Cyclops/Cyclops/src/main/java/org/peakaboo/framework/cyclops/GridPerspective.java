@@ -175,6 +175,14 @@ public class GridPerspective<T> implements Cloneable
 		return y * width + x;
 	}
 	
+	public int getIndexFromXY(Coord<Integer> coord) {
+		return getIndexFromXY(coord.x, coord.y);
+	}
+	
+	public int getIndexFromXY(IntPair pair) {
+		return getIndexFromXY(pair.first, pair.second);
+	}
+	
 	@Override
 	public GridPerspective<T> clone()
 	{

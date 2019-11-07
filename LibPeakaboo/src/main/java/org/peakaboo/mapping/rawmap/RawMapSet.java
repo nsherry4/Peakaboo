@@ -29,6 +29,9 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 
 	private List<RawMap>	maps;
 	private int				mapSize;
+	
+	//Are all points valid, or does this map contain dummy points (eg for non-rectangular datasets)
+	private boolean			allPointsValid;
 
 
 	/**
@@ -38,20 +41,22 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 	 * @param transitionSeries list of {@link ITransitionSeries} to store {@link RawMap}s for in this {@link RawMapSet}
 	 * @param mapSize the size of the map data in each of the {@link RawMap}s
 	 */
-	public RawMapSet(List<ITransitionSeries> transitionSeries, int mapSize)
+	public RawMapSet(List<ITransitionSeries> transitionSeries, int mapSize, boolean allPointsValid)
 	{
 		maps = new ArrayList<RawMap>();
 		for (ITransitionSeries ts : transitionSeries) {
 			maps.add(new RawMap(ts, mapSize));
 		}
 		this.mapSize = mapSize;
+		this.allPointsValid = allPointsValid;
 
 	}
 	
-	public RawMapSet(List<RawMap> maps, int mapSize, boolean flagToMakeSignatureDifferent)
+	public RawMapSet(List<RawMap> maps, int mapSize, boolean allPointsValid, boolean flagToMakeSignatureDifferent)
 	{
 		this.maps = maps;
 		this.mapSize = mapSize;
+		this.allPointsValid = allPointsValid;
 	}
 	
 	@Override
@@ -65,7 +70,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 			mapresults.add(map.clone());
 		}
 				
-		return new RawMapSet(mapresults, mapSize, true);
+		return new RawMapSet(mapresults, mapSize, allPointsValid, true);
 		
 	}
 	
@@ -170,6 +175,10 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 			SpectrumCalculations.addLists_inplace(s, map.getData(profile));
 		}
 		return s;
+	}
+	
+	public boolean isReplottable() {
+		return allPointsValid;
 	}
 	
 	
