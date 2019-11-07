@@ -1,6 +1,7 @@
 package org.peakaboo.controller.mapper.selection;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -45,29 +46,9 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 		parameters = new Group("Settings", threshold, padding);
 	}
 
-	@Override
-	public boolean hasSelection()
-	{
-		return indexes.size() > 0 && map.getFiltering().isReplottable() && map.getFitting().getActiveMode().isSelectable();
-	}
 
-	@Override
-	public void clearSelection() {
-		setPoints(new ArrayList<>());
-	}
-	
-	@Override
-	public List<Integer> getPoints() {
-		return indexes;
-	}
-
-	public void setPoints(List<Integer> indexes) {
-		this.indexes = indexes;
-		updateListeners(MapUpdateType.SELECTION);
-	}
-
-	public void selectPoint(Coord<Integer> clickedAt, boolean contiguous, boolean modify) {
-		if (!modify) map.getSelection().clearSelection();
+	public List<Integer> selectPoint(Coord<Integer> clickedAt, boolean contiguous) {
+		indexes.clear();
 		
 		MapModes displayMode = map.getFitting().getMapDisplayMode();
 		Spectrum data = null;
@@ -161,25 +142,9 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 		}
 		
 		
+		indexes = points;
 		
-		if (modify && getPoints().contains(clickedAtIndex))	{
-			//if we're in modify selection mode, and the user clicked on an already 
-			//selected point, then we remove these points from the previous selection
-			List<Integer> merged = new ArrayList<>(getPoints());
-			merged.removeAll(points);
-			setPoints(merged);
-		} else if (modify) {
-			//if we're in modify selection mode and the user clicked on a point not
-			//already selected, then we add these points to the previous selection
-			//use a set to ensure uniqueness
-			Set<Integer> merged = new HashSet<>(getPoints());
-			merged.addAll(points);
-			setPoints(new ArrayList<>(merged));
-		} else {
-			//we're not in modify mode, so we just set the selection to the current value
-			setPoints(points);	
-		}
-		
+		return indexes;
 		
 	}
 	
@@ -216,23 +181,18 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 	}
 
 	@Override
-	public SubsetDataSource getSubsetDataSource() {
-		return map.getDataSourceForSubset(getPoints());
+	public List<Integer> startDragSelection(Coord<Integer> point) {
+		return Collections.emptyList();
 	}
 
 	@Override
-	public void startDragSelection(Coord<Integer> point) {
-		//Nothing to do
+	public List<Integer> addDragSelection(Coord<Integer> point) {
+		return Collections.emptyList();
 	}
 
 	@Override
-	public void addDragSelection(Coord<Integer> point) {
-		//Nothing to do
-	}
-
-	@Override
-	public void releaseDragSelection(Coord<Integer> point) {
-		//Nothing to do
+	public List<Integer> releaseDragSelection(Coord<Integer> point) {
+		return Collections.emptyList();
 	}
 
 

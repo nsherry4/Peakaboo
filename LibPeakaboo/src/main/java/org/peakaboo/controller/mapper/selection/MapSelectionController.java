@@ -1,19 +1,22 @@
 package org.peakaboo.controller.mapper.selection;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.eventful.EventfulType;
 
-public class MapSelectionController extends EventfulType<MapUpdateType> implements Selection {
+public class MapSelectionController extends EventfulType<MapUpdateType> {
 
-	private MappingController mappingController;
+	private MappingController map;
 	
 	private DragSelection areaSelection;
 	private SimilarSelection similarSelection;
@@ -28,29 +31,20 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 	private SelectionType selectionType = SelectionType.RECTANGLE;
 	
 	private List<Integer> currentSelection = new ArrayList<>();
+	private List<Integer> newSelection = new ArrayList<>();
+	private boolean modify = false;
+	private Coord<Integer> dragFocalPoint;
 	
 	public MapSelectionController(MappingController mappingController) {
-		this.mappingController = mappingController;
+		this.map = mappingController;
 		
 		//create selection models and pass their events along
 		areaSelection = new DragSelection(mappingController);
-		areaSelection.addListener(this::onSelectionMessage);
-		
 		similarSelection = new SimilarSelection(mappingController);
-		similarSelection.addListener(this::onSelectionMessage);
-		
 		shapeSelection = new ShapeSelection(mappingController);
-		shapeSelection.addListener(this::onSelectionMessage);
 		
 	}
-	
-	private void onSelectionMessage(MapUpdateType update) {
-		if (update == MapUpdateType.SELECTION) {
-			currentSelection = getSelection().getPoints();
-		}
-		updateListeners(update);
-	}
-	
+
 	public SelectionType getSelectionType() {
 		return selectionType;
 	}
@@ -65,14 +59,13 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 
 
 
-	@Override
 	public boolean hasSelection() {
-		return getSelection().hasSelection();
+		return currentSelection.size() > 0 || newSelection.size() > 0;
 	}
 
-	@Override
 	public List<Integer> getPoints() {
-		return currentSelection;
+		//return currentSelection;
+		return trimSelectionToBounds(mergeSelections(dragFocalPoint, modify));
 	}
 	
 	/**
@@ -84,14 +77,13 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 	 *         otherwise
 	 */
 	public boolean isReplottable() {
-		return hasSelection() && mappingController.getFitting().getActiveMode().isReplottable() && mappingController.rawDataController.isReplottable();
+		return hasSelection() && map.getFitting().getActiveMode().isReplottable() && map.rawDataController.isReplottable();
 	}
 
-	@Override
 	public void clearSelection() {
-		areaSelection.clearSelection();
-		similarSelection.clearSelection();
-		shapeSelection.clearSelection();
+		newSelection.clear();
+		currentSelection.clear();
+		updateListeners(MapUpdateType.SELECTION);
 	}
 	
 
@@ -99,17 +91,22 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 		if (!isSelectable()) {
 			return;
 		}
-		getSelection().selectPoint(clickedAt, singleSelect, modify);		
+		newSelection = getSelection().selectPoint(clickedAt, singleSelect);
+		currentSelection = mergeSelections(clickedAt, modify);
+		newSelection.clear();
+		updateListeners(MapUpdateType.SELECTION);
 	}
 	
 	
-	public void startDragSelection(Coord<Integer> point) {
+	public void startDragSelection(Coord<Integer> point, boolean modify) {
 		if (!isSelectable()) {
 			return;
 		}
-		clearSelection();
-		
-		getSelection().startDragSelection(point);
+		if (!modify) clearSelection();
+		newSelection = getSelection().startDragSelection(point);
+		this.modify = modify;
+		this.dragFocalPoint = point;
+		updateListeners(MapUpdateType.SELECTION);
 	}
 	
 	public void addDragSelection(Coord<Integer> point) {
@@ -117,7 +114,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 			return;
 		}
 		
-		getSelection().addDragSelection(point);
+		newSelection = getSelection().addDragSelection(point);
+		updateListeners(MapUpdateType.SELECTION);
 	}
 	
 	public void releaseDragSelection(Coord<Integer> point) {
@@ -125,17 +123,68 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 			return;
 		}
 		
-		getSelection().releaseDragSelection(point);
+		newSelection = getSelection().releaseDragSelection(point);
+		currentSelection = mergeSelections(dragFocalPoint, modify);
+		newSelection.clear();
+		this.modify = false;
+		updateListeners(MapUpdateType.SELECTION);
 	}
 	
+	private List<Integer> mergeSelections(Coord<Integer> point, boolean modify) {
+		List<Integer> merged = new ArrayList<>();
+		if (!modify) {
+			if (newSelection.size() > 0) {
+				merged.addAll(newSelection);
+			} else {
+				merged.addAll(currentSelection);
+			}
+		} else {
+			Set<Integer> set = new HashSet<>();
+			GridPerspective<Float> grid = new GridPerspective<Float>(
+					map.getUserDimensions().getUserDataWidth(), 
+					map.getUserDimensions().getUserDataHeight(), 
+					0f);
+			
+			set.addAll(currentSelection);
+			if (set.contains(grid.getIndexFromXY(point)))	{
+				//if it already contains the focalpoint, do subtraction
+				set.removeAll(newSelection);
+			} else {
+				//it doesn't already contain the focal point, so add
+				set.addAll(newSelection);
+			}
+			merged.addAll(set);
+
+		}
+		return merged;
+
+	}
 	
-	
-	@Override
+	//TODO:
 	public SubsetDataSource getSubsetDataSource() {
-		return getSelection().getSubsetDataSource();
+		if (isRectangular()) {
+			return map.getDataSourceForSubset(getRectangleStart(), getRectangleEnd());
+		} else {
+			return map.getDataSourceForSubset(getPoints());
+		}
 	}
 	
 	
+	private Coord<Integer> getRectangleEnd() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Coord<Integer> getRectangleStart() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private boolean isRectangular() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	private Selection getSelection() {
 		switch (selectionType) {
 		case ELLIPSE:
@@ -149,14 +198,29 @@ public class MapSelectionController extends EventfulType<MapUpdateType> implemen
 		throw new IllegalArgumentException("Unknown selection type");
 	}
 
-	@Override
 	public Optional<Group> getParameters() {
 		return getSelection().getParameters();
 	}
 
 	
 	private boolean isSelectable() {
-		return mappingController.getFitting().getActiveMode().isSelectable();
+		return map.getFitting().getActiveMode().isSelectable();
+	}
+	
+	public List<Integer> trimSelectionToBounds(List<Integer> points) {
+		
+		Coord<Integer> dimensions = map.getUserDimensions().getDimensions();
+		int x = dimensions.x;
+		int y = dimensions.y;
+		int size = x*y;
+		
+		List<Integer> trimmed = new ArrayList<>();
+		for (int i : points) {
+			if (i >= 0 && i < size) {
+				trimmed.add(i);
+			}
+		}
+		return trimmed;
 	}
 	
 }

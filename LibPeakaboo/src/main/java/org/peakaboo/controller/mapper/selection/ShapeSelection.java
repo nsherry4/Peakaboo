@@ -16,7 +16,7 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.eventful.EventfulType;
 
-class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
+class ShapeSelection implements Selection {
 
 	private List<Integer> points = new ArrayList<>();
 	private MappingController map;
@@ -31,28 +31,13 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 	}
 
 	@Override
-	public List<Integer> getPoints() {
-		return points;
-	}
-
-	@Override
-	public boolean hasSelection() {
-		return points.size() > 0;
-	}
-
-	@Override
-	public void clearSelection() {
+	public List<Integer> startDragSelection(Coord<Integer> point) {
 		points.clear();
-		updateListeners(MapUpdateType.SELECTION);
+		return addDragSelection(point);
 	}
 
 	@Override
-	public void startDragSelection(Coord<Integer> point) {
-		addDragSelection(point);
-	}
-
-	@Override
-	public void addDragSelection(Coord<Integer> point) {
+	public List<Integer> addDragSelection(Coord<Integer> point) {
 		point = bounded(point);
 		GridPerspective<Float> grid = grid();
 		int index = grid.getIndexFromXY(point.x, point.y);
@@ -72,10 +57,10 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 		if (!points.contains(index)) {
 			points.add(index);
 		}
-		updateListeners(MapUpdateType.SELECTION);
+		return points;
 	}
 
-	public void releaseDragSelection(Coord<Integer> point) {
+	public List<Integer> releaseDragSelection(Coord<Integer> point) {
 		//add the last point
 		addDragSelection(point);
 		
@@ -84,6 +69,8 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 		
 		//fill in the traced area now that the user is done making the selection
 		fillTrace();
+		
+		return points;
 	}
 	
 	private void fillTrace() {
@@ -258,14 +245,11 @@ class ShapeSelection extends EventfulType<MapUpdateType> implements Selection {
 		return Optional.empty();
 	}
 
-	@Override
-	public SubsetDataSource getSubsetDataSource() {
-		return map.getDataSourceForSubset(getPoints());
-	}
 
 	@Override
-	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
-		map.getSelection().clearSelection();
+	public List<Integer> selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
+		points.clear();
+		return points;
 	}
 
 

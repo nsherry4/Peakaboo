@@ -19,15 +19,11 @@ import org.peakaboo.framework.eventful.EventfulType;
  * @author NAS
  *
  */
-class DragSelection extends EventfulType<MapUpdateType> implements Selection {
+class DragSelection implements Selection {
 
 	private Coord<Integer> start, end;
-	private boolean hasSelection = false;
-	
 	private MappingController map;
-	
-	
-	
+		
 	public DragSelection(MappingController map) {
 		this.map = map;
 	}
@@ -49,8 +45,7 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 		
 		this.start = dragStart;
 		
-		updateListeners(MapUpdateType.SELECTION);
-		
+		//TODO: move up
 		map.addListener(type -> {
 			if (type == MapUpdateType.DATA_SIZE) {
 				trimSelectionToBounds();
@@ -76,16 +71,13 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 		}
 		
 		this.end = dragEnd;
-		
-		updateListeners(MapUpdateType.SELECTION);
 	}
 
 	
 	/**
 	 * generate a list of indexes in the map which are selected
 	 */
-	@Override
-	public List<Integer> getPoints() {
+	private List<Integer> getPoints() {
 		trimSelectionToBounds();
 		List<Integer> indexes = new ArrayList<>();
 		
@@ -157,28 +149,7 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 		
 		return indexes;
 	}
-	
-	
-	
-	@Override
-	public boolean hasSelection()
-	{
-		return hasSelection && map.getFiltering().isReplottable() && map.getFitting().getActiveMode().isSelectable();
-	}
-
-	public void setHasBoundingRegion(boolean hasBoundingRegion)
-	{
-		this.hasSelection = hasBoundingRegion;
-		updateListeners(MapUpdateType.SELECTION);
-	}
-
-
-
-	@Override
-	public void clearSelection() {
-		setHasBoundingRegion(false);
-	}
-	
+		
 	@Override
 	public Optional<Group> getParameters() {
 		return Optional.empty();
@@ -202,41 +173,29 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 	}
 
 	@Override
-	public SubsetDataSource getSubsetDataSource() {
-		switch (map.getSelection().getSelectionType()) {
-		case ELLIPSE:
-			return map.getDataSourceForSubset(getPoints());
-		case RECTANGLE:
-			return map.getDataSourceForSubset(getStart(), getEnd());
-		case SHAPE:
-		case SIMILAR:
-		default:
-			throw new IllegalArgumentException("Not implemented"); //see the other selection impls
-		}
+	public List<Integer> selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
+		start = null;
+		end = null;
+		return Collections.emptyList();
 	}
 
 	@Override
-	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
-		map.getSelection().clearSelection();
-	}
-
-	@Override
-	public void startDragSelection(Coord<Integer> point) {
+	public List<Integer> startDragSelection(Coord<Integer> point) {
 		setStart(point);
 		setEnd(null);
-		setHasBoundingRegion(false);
+		return getPoints();
 	}
 
 	@Override
-	public void addDragSelection(Coord<Integer> point) {
+	public List<Integer> addDragSelection(Coord<Integer> point) {
 		setEnd(point);
-		setHasBoundingRegion(true);
+		return getPoints();
 	}
 
 	@Override
-	public void releaseDragSelection(Coord<Integer> point) {
+	public List<Integer> releaseDragSelection(Coord<Integer> point) {
 		setEnd(point);
-		setHasBoundingRegion(true);
+		return getPoints();
 	}
 	
 	

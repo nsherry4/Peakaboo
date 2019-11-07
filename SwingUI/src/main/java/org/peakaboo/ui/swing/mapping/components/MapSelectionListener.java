@@ -58,10 +58,10 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1 && !e.isControlDown()) {
+		if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
 			dragging = true;
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-			controller.getSelection().startDragSelection(point);
+			controller.getSelection().startDragSelection(point, e.isControlDown());
 		}
 	}
 
