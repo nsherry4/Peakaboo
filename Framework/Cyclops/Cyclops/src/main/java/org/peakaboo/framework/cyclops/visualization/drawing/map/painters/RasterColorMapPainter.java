@@ -3,11 +3,13 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.IntStream;
 
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
@@ -146,7 +148,9 @@ public class RasterColorMapPainter extends MapPainter
 				grid = new GridPerspective<>(dr.uninterpolatedWidth, dr.uninterpolatedHeight, 0f);
 				height = dr.uninterpolatedHeight;
 			} else {
-				throw new IllegalArgumentException("List has wrong dimensions");
+				CyclopsLog.get().log(Level.WARNING, "List has wrong dimensions");
+				grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
+				//throw new IllegalArgumentException("List has wrong dimensions");
 			}
 			
 			for (int i = 0; i < flip.size(); i++) {
@@ -155,6 +159,7 @@ public class RasterColorMapPainter extends MapPainter
 				int y = xy.second;
 				y = (height-1) - y;
 				int index = grid.getIndexFromXY(x, y);
+				if (index == -1) continue;
 				flip.set(index, list.get(i));
 			}
 		}		
