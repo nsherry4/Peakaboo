@@ -134,23 +134,22 @@ class DragSelection extends EventfulType<MapUpdateType> implements Selection {
 	private List<Integer> getPointsEllipse(GridPerspective<Float> grid) {
 		List<Integer> indexes = new ArrayList<>();
 		
-		final int xstart = getStart().x;
-		final int ystart = getStart().y;
-		
-		final int xend = getEnd().x;
-		final int yend = getEnd().y;
+		final int xstart = Math.min(getStart().x, getEnd().x);
+		final int ystart = Math.min(getStart().y, getEnd().y);
+		final int xend = Math.max(getStart().x, getEnd().x);
+		final int yend = Math.max(getStart().y, getEnd().y);
 
-		final int width = xend - xstart;
-		final int height = yend - ystart;
+		final int width = (xend - xstart) + 1;
+		final int height = (yend - ystart) + 1;
 		final float a = width/2f;
 		final float b = height/2f;
 
 		for (int x : new Range(xstart, xend)) {
-			float x0 = (x - xstart) - a;
+			float x0 = (x - xstart) - a + 0.5f; //0.5 for the middle of the pixel
 			for (int y : new Range(ystart, yend)){
-				float y0 = (y - ystart) - b;	
+				float y0 = (y - ystart) - b + 0.5f;	
 				float dist = (x0*x0) / (a*a) + (y0*y0) / (b*b);
-				if (dist < 1f) {
+				if (dist <= 1f) {
 					indexes.add( grid.getIndexFromXY(x, y) );
 				}
 			}
