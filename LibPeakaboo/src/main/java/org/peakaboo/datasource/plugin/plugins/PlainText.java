@@ -20,6 +20,7 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 
+import com.univocity.parsers.csv.CsvFormat;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
@@ -93,11 +94,9 @@ public class PlainText extends AbstractDataSource
 		
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.setDelimiterDetectionEnabled(true, ' ', '\t', ',');
-		settings.setNullValue("0");
-		settings.setEmptyValue("0");
 		settings.setLineSeparatorDetectionEnabled(true);
-		settings.setMaxColumns(16384);
-		settings.setMaxCharsPerColumn(20);
+		settings.setMaxColumns(65536);
+		settings.setMaxCharsPerColumn(24);
 		CsvParser parser = new CsvParser(settings);
 		
 		int readcount = 0;
@@ -110,7 +109,7 @@ public class PlainText extends AbstractDataSource
 			
 			if (getInteraction().checkReadAborted()) break;
 			
-			Spectrum scan = parseLine(row);
+			Spectrum scan = parseLine(row, parser.getDetectedFormat().getDelimiter());
 			
 			if (size > 0 && scan.size() != scanSize) 
 			{
@@ -139,10 +138,30 @@ public class PlainText extends AbstractDataSource
 	}
 
 
-	private Spectrum parseLine(String[] entries) {
-		Spectrum scan = new ISpectrum(entries.length);
+	private Spectrum parseLine(String[] entries, char delimiter) {
+		int length = entries.length;
+
+		//remove null values from length count if the delimiter is a space
+		if (delimiter == ' ') {
+			for (String entry : entries) {
+				if (entry == null) length--;
+			}
+		}
+		
+		Spectrum scan = new ISpectrum(length);
 		for (String entry : entries) {
 			try {
+				
+				//null entry means duplicate delimiter (eg "0,,0" or "0  0")
+				//we need different behaviour for spaces than for *actual* 
+				//delimiters
+				if (entry == null) {
+					if (delimiter == ' ') {
+						continue;
+					} else {
+						entry = "0";
+					}
+				}
 				scan.add(Float.parseFloat(entry));
 			} catch (Exception e) {
 				//some kind of error
