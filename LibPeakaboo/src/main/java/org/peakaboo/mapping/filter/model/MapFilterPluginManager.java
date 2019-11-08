@@ -17,11 +17,11 @@ import org.peakaboo.mapping.filter.plugin.plugins.mathematical.MultiplyMapFilter
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.NormalizationMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.PowerMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.sizing.BinningMapFilter;
-import org.peakaboo.mapping.filter.plugin.plugins.sizing.DeskewMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.sizing.EnlargeMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.DenoiseMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.FastAverageMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.WeightedAverageMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.transforming.DeskewMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.HFlipMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate180MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate270MapFilter;

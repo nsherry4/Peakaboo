@@ -53,7 +53,7 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 
 	@Override
 	public String pluginVersion() {
-		return "0.1";
+		return "1.0";
 	}
 
 	@Override

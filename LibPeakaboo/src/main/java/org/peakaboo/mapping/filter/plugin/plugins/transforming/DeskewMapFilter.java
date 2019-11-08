@@ -1,4 +1,4 @@
-package org.peakaboo.mapping.filter.plugin.plugins.sizing;
+package org.peakaboo.mapping.filter.plugin.plugins.transforming;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
@@ -22,14 +22,12 @@ public class DeskewMapFilter extends AbstractMapFilter {
 
 	@Override
 	public String getFilterDescription() {
-		// TODO Auto-generated method stub
-		return "";
+		return "The Deskew plugin corrects for problems with an experimental setup which results in data being horizontally skewed. Vertical skew can be corrected through combination with the rotation filters.";
 	}
 
 	@Override
 	public MapFilterDescriptor getFilterDescriptor() {
-		// TODO Auto-generated method stub
-		return new MapFilterDescriptor(MapFilterDescriptor.GROUP_ENHANCING, "Deskewed");
+		return new MapFilterDescriptor(MapFilterDescriptor.GROUP_TRANSFORMING, "Deskewed");
 	}
 
 	@Override
@@ -84,7 +82,7 @@ public class DeskewMapFilter extends AbstractMapFilter {
 
 	@Override
 	public String pluginVersion() {
-		return "0.1";
+		return "1.0";
 	}
 
 	@Override
