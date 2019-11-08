@@ -12,6 +12,7 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.eventful.EventfulType;
 
 public class MapSelectionController extends EventfulType<MapUpdateType> {
@@ -171,18 +172,68 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 	
 	private Coord<Integer> getRectangleEnd() {
-		// TODO Auto-generated method stub
-		return null;
+		GridPerspective<Float> grid = new GridPerspective<Float>(
+				map.getUserDimensions().getUserDataWidth(), 
+				map.getUserDimensions().getUserDataHeight(), 
+				0f);
+		List<Integer> points = getPoints();
+		int maxx = 0;
+		int maxy = 0;
+		for (int i : points) {
+			IntPair coord = grid.getXYFromIndex(i);
+			maxx = Math.max(maxx, coord.first);
+			maxy = Math.max(maxy, coord.second);
+		}
+		return new Coord<Integer>(maxx, maxy);
 	}
 
 	private Coord<Integer> getRectangleStart() {
-		// TODO Auto-generated method stub
-		return null;
+		GridPerspective<Float> grid = new GridPerspective<Float>(
+				map.getUserDimensions().getUserDataWidth(), 
+				map.getUserDimensions().getUserDataHeight(), 
+				0f);
+		List<Integer> points = getPoints();
+		int minx = grid.width;
+		int miny = grid.height;
+		for (int i : points) {
+			IntPair coord = grid.getXYFromIndex(i);
+			minx = Math.min(minx, coord.first);
+			miny = Math.min(miny, coord.second);
+		}
+		return new Coord<Integer>(minx, miny);
+		
 	}
 
 	private boolean isRectangular() {
-		// TODO Auto-generated method stub
-		return false;
+		GridPerspective<Float> grid = new GridPerspective<Float>(
+				map.getUserDimensions().getUserDataWidth(), 
+				map.getUserDimensions().getUserDataHeight(), 
+				0f);
+		List<Integer> points = getPoints();
+		int minx = grid.width;
+		int miny = grid.height;
+		int maxx = 0;
+		int maxy = 0;
+		boolean selected[] = new boolean[grid.size()];
+		for (int i : points) {
+			selected[i] = true;
+			IntPair coord = grid.getXYFromIndex(i);
+			minx = Math.min(minx, coord.first);
+			miny = Math.min(miny, coord.second);
+			maxx = Math.max(maxx, coord.first);
+			maxy = Math.max(maxy, coord.second);
+		}
+		
+		for (int x = minx; x <= maxx; x++) {
+			for (int y = miny; y <= maxy; y++) {
+				int index = grid.getIndexFromXY(x, y);
+				if (!selected[index]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	private Selection getSelection() {

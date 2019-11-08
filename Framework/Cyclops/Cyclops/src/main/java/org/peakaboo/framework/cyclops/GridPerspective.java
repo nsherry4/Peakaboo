@@ -26,6 +26,9 @@ public class GridPerspective<T> implements Cloneable
 	private T	fallback;
 
 
+	public int size() {
+		return width * height;
+	}
 	
 	public T getFallback()
 	{
