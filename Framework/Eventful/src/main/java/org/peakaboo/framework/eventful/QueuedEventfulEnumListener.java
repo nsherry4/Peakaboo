@@ -21,41 +21,35 @@ public abstract class QueuedEventfulEnumListener<T extends Enum<T>> implements E
 		
 		eventQueue = new LinkedBlockingQueue<T>();
 		
-		deliveryThread = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
+		deliveryThread = new Thread(() -> {
+
+			while (true) {
 				
-				
+				List<T> messages = new ArrayList<T>();
 				
 				while (true) {
-					
-					List<T> messages = new ArrayList<T>();
-					
-					while (true) {
-						//block for at least one message
-						try {
-							messages.add(eventQueue.take());
-							break;
-						} catch (InterruptedException e) {
-							//something tried to wake us from sleep while we were alread awake, waiting for the message
-						}
-					}
-					//drain the rest
-					eventQueue.drainTo(messages);
-					
-					
-					deliverMessages(messages);
-					
-					
+					//block for at least one message
 					try {
-						Thread.sleep(msDelay);
+						messages.add(eventQueue.take());
+						break;
 					} catch (InterruptedException e) {
-						//woken to force delivery
+						//something tried to wake us from sleep while we were alread awake, waiting for the message
 					}
-					
-				}//while true
-			}
+				}
+				//drain the rest
+				eventQueue.drainTo(messages);
+				
+				
+				deliverMessages(messages);
+				
+				
+				try {
+					Thread.sleep(msDelay);
+				} catch (InterruptedException e) {
+					//woken to force delivery
+				}
+				
+			}//while true
 		});//thread
 		
 		deliveryThread.setDaemon(true);
@@ -89,11 +83,7 @@ public abstract class QueuedEventfulEnumListener<T extends Enum<T>> implements E
 	
 	private void deliverMessages(final List<T> messages)
 	{
-		EventfulConfig.uiThreadRunner.accept(new Runnable() {
-			public void run()	{
-				changes(messages);
-			}
-		});
+		EventfulConfig.deliver(() -> changes(messages));
 		
 	}
 	

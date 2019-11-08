@@ -58,7 +58,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	
 	private Consumer<Runnable> getUIThreadRunner() {
 		if (uiThreadRunnerOverride == null) {
-			return EventfulConfig.uiThreadRunner;
+			return EventfulConfig::deliver;
 		}
 		return uiThreadRunnerOverride;
 	}

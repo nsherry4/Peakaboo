@@ -62,7 +62,7 @@ public class EventfulType<T> implements IEventfulType<T>
 	
 	private Consumer<Runnable> getUIThreadRunner() {
 		if (uiThreadRunnerOverride == null) {
-			return EventfulConfig.uiThreadRunner;
+			return EventfulConfig::deliver;
 		}
 		return uiThreadRunnerOverride;
 	}

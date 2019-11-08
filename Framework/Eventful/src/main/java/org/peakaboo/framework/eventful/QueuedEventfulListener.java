@@ -22,7 +22,7 @@ public abstract class QueuedEventfulListener implements EventfulListener {
 					
 					synchronized (deliveryThread) {
 					
-						
+						//TODO: event thread?
 						if (counter > 0) changes(counter);
 						counter=0;
 						
