@@ -7,19 +7,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
-import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.eventful.EventfulType;
 
-class ShapeSelection implements Selection {
+class ShapeSelection extends AbstractSelection {
 
 	private List<Integer> points = new ArrayList<>();
-	private MappingController map;
 	
 	private int EMPTY = 0;
 	private int INSIDE = 1;
@@ -27,7 +23,7 @@ class ShapeSelection implements Selection {
 	
 	
 	public ShapeSelection(MappingController mappingController) {
-		this.map = mappingController;
+		super(mappingController);
 	}
 
 	@Override
@@ -219,16 +215,13 @@ class ShapeSelection implements Selection {
 	}
 	
 	private GridPerspective<Float> grid() {
-		return new GridPerspective<Float>(
-				map.getUserDimensions().getUserDataWidth(), 
-				map.getUserDimensions().getUserDataHeight(), 
-				0f);
+		return new GridPerspective<Float>(size().x, size().y, 0f);
 	}
 	
 	private Coord<Integer> bounded(Coord<Integer> point) {
 		Coord<Integer> trimmed = new Coord<>(point);
 		
-		Coord<Integer> size = map.getUserDimensions().getDimensions();
+		Coord<Integer> size = size();
 		int width = size.x;
 		int height = size.y;
 

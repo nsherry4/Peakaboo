@@ -104,18 +104,16 @@ public class OverlayModeController extends ModeController {
 		this.colours.put(ts, c);
 		updateListeners();
 	}
-	
 
 	@Override
-	public boolean isSelectable() {
-		return true;
-	}
-
-
-	@Override
-	public boolean isReplottable() {
+	public boolean isTranslatable() {
 		return true;
 	}
 	
+	//This is not comparable because each pixel has more than one value
+	@Override
+	public boolean isComparable() {
+		return true;
+	}
 	
 }

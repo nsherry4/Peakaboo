@@ -142,15 +142,13 @@ public class RatioModeController extends ModeController {
 		updateListeners();
 	}
 	
-
 	@Override
-	public boolean isSelectable() {
+	public boolean isTranslatable() {
 		return true;
 	}
-
-
+	
 	@Override
-	public boolean isReplottable() {
+	public boolean isComparable() {
 		return true;
 	}
 	

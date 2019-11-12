@@ -12,6 +12,7 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.composite.CompositeModeData;
+import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -29,10 +30,9 @@ import org.peakaboo.framework.eventful.EventfulType;
  *
  */
 
-class SimilarSelection extends EventfulType<MapUpdateType> implements Selection {
+class SimilarSelection extends AbstractSelection {
 
 	private List<Integer> indexes = new ArrayList<>();
-	private MappingController map;
 	
 	
 	private Parameter<Float> threshold;
@@ -40,7 +40,7 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 	private Group parameters;
 	
 	public SimilarSelection(MappingController map) {
-		this.map = map;
+		super(map);
 		threshold = new Parameter<Float>("Threshold", new RealSpinnerStyle(), 1.2f, t -> t.getValue() >= 1f && t.getValue() <= 100f);
 		padding = new Parameter<Integer>("Padding", new IntegerSpinnerStyle(), 0, t -> t.getValue() >= 0 && t.getValue() <= 10);
 		parameters = new Group("Settings", threshold, padding);
@@ -68,12 +68,14 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 					invalid.add(i);
 				}
 			}
+		} else if (displayMode == MapModes.CORRELATION) {
+			CorrelationModeData correlationData = (CorrelationModeData) map.getFitting().getMapModeData();
+			data = correlationData.data;
 		}
 		
-		int w = map.getUserDimensions().getUserDataWidth();
-		int h = map.getUserDimensions().getUserDataHeight();
+		int w = size().x;
+		int h = size().y;
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
-		int clickedAtIndex = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		
 		//If we're selecting on a ratio map, and the selected point is 1:10 instead of 10:1,
@@ -84,7 +86,7 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 			}
 			value = grid.get(data, clickedAt.x, clickedAt.y);
 		}
-		
+
 		
 		List<Integer> points = new ArrayList<>();
 		float thresholdValue = threshold.getValue();
@@ -152,8 +154,8 @@ class SimilarSelection extends EventfulType<MapUpdateType> implements Selection 
 		Set<Integer> pointSet = new HashSet<>();
 		pointSet.addAll(points);
 	
-		int w = map.getUserDimensions().getUserDataWidth();
-		int h = map.getUserDimensions().getUserDataHeight();
+		int w = size().x;
+		int h = size().y;
 		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
 		
 		//visit all existing points

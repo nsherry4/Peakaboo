@@ -2,10 +2,14 @@ package org.peakaboo.controller.mapper.fitting.modes;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.peakaboo.controller.mapper.MappingController;
@@ -27,6 +31,7 @@ public class CorrelationModeController extends ModeController {
 	private Map<ITransitionSeries, Integer> sides = new LinkedHashMap<>();
 	private boolean clip = false;
 	private int bins = 100;
+	public Map<Integer, List<Integer>> translation;
 	
 	public CorrelationModeController(MappingController map) {
 		super(map);
@@ -106,7 +111,7 @@ public class CorrelationModeController extends ModeController {
 
 		//float s1max = s1Data.max();
 		//float s2max = s2Data.max();
-		//mnax value is 95th percentile in histogram
+		//mnax value is 99.9th percentile in histogram
 		float xMax = xSorted.get(index999);
 		float yMax = ySorted.get(index999);
 		
@@ -119,6 +124,14 @@ public class CorrelationModeController extends ModeController {
 		
 		GridPerspective<Float> grid = new GridPerspective<Float>(bins, bins, 0f);
 		Spectrum correlation = new ISpectrum(bins*bins);
+		
+		//we track which points on the original (spatial) maps each bin in the correlation map
+		//comes from so that selections can be mapped back to them
+		translation = new LinkedHashMap<>(bins*bins);
+		for (int i = 0; i < bins*bins; i++) {
+			translation.put(i, new ArrayList<>());
+		}
+		
 		for (int i = 0; i < xData.size(); i++) {
 
 			float xpct = xData.get(i) / xMax;
@@ -138,7 +151,9 @@ public class CorrelationModeController extends ModeController {
 			if (xbin >= bins) { xbin = bins-1; }
 			if (ybin >= bins) { ybin = bins-1; }
 			
-			grid.set(correlation, xbin, ybin, grid.get(correlation, xbin, ybin)+1);
+			int bindex = grid.getIndexFromXY(xbin, ybin);
+			translation.get(bindex).add(i);
+			correlation.set(bindex, correlation.get(bindex)+1);
 			
 		}
 
@@ -173,16 +188,35 @@ public class CorrelationModeController extends ModeController {
 	}
 	
 
+	@Override
+	public boolean isTranslatable() {
+		return true;
+	}
 
 	@Override
-	public boolean isSelectable() {
+	public boolean isSpatial() {
 		return false;
 	}
 
-
 	@Override
-	public boolean isReplottable() {
-		return false;
+	public List<Integer> translateSelection(List<Integer> points) {
+		if (translation == null) {
+			getData();
+		}
+		Set<Integer> translated = new HashSet<>();
+		for (int i : points) {
+			translated.addAll(translation.get(i));
+		}
+		return new ArrayList<>(translated);
+	}
+	
+	public Coord<Integer> getDimensions() {
+		return new Coord<>(bins, bins);
+	}
+	
+	@Override
+	public boolean isComparable() {
+		return true;
 	}
 	
 	

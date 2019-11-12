@@ -1,5 +1,6 @@
 package org.peakaboo.controller.mapper.selection;
 
+import java.nio.channels.FileChannel.MapMode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.fitting.modes.ModeController;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
@@ -31,6 +33,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	private SelectionType selectionType = SelectionType.RECTANGLE;
 	
+	private ModeController currentMode;
+	
 	private List<Integer> currentSelection = new ArrayList<>();
 	private List<Integer> newSelection = new ArrayList<>();
 	private boolean modify = false;
@@ -43,6 +47,17 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		areaSelection = new DragSelection(mappingController);
 		similarSelection = new SimilarSelection(mappingController);
 		shapeSelection = new ShapeSelection(mappingController);
+		
+		//TODO: This should be better at preserving selections
+		map.addListener(m -> {
+			if (currentMode == null) {
+				currentMode = map.getFitting().getActiveMode();
+			}
+			if (map.getFitting().getActiveMode() != currentMode) {
+				currentMode = map.getFitting().getActiveMode();
+				clearSelection();
+			}
+		});
 		
 	}
 
@@ -64,9 +79,14 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		return currentSelection.size() > 0 || newSelection.size() > 0;
 	}
 
-	public List<Integer> getPoints() {
+	public List<Integer> getPoints(boolean translated) {
 		//return currentSelection;
-		return trimSelectionToBounds(mergeSelections(dragFocalPoint, modify));
+		List<Integer> points = mergeSelections(dragFocalPoint, modify);
+		if (translated) {
+			return trimSelectionToBounds(translate(points), true);
+		} else {
+			return trimSelectionToBounds(points, false);
+		}
 	}
 	
 	/**
@@ -78,7 +98,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 *         otherwise
 	 */
 	public boolean isReplottable() {
-		return hasSelection() && map.getFitting().getActiveMode().isReplottable() && map.rawDataController.isReplottable();
+		return hasSelection() && map.getFitting().getActiveMode().isTranslatable() && map.rawDataController.isReplottable();
 	}
 
 	public void clearSelection() {
@@ -89,7 +109,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 
 	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
-		if (!isSelectable()) {
+		if (!isTranslatable()) {
 			return;
 		}
 		newSelection = getSelection().selectPoint(clickedAt, singleSelect);
@@ -100,7 +120,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 	
 	public void startDragSelection(Coord<Integer> point, boolean modify) {
-		if (!isSelectable()) {
+		if (!isTranslatable()) {
 			return;
 		}
 		if (!modify) clearSelection();
@@ -111,7 +131,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 	public void addDragSelection(Coord<Integer> point) {
-		if (!isSelectable()) {
+		if (!isTranslatable()) {
 			return;
 		}
 		
@@ -120,7 +140,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 	public void releaseDragSelection(Coord<Integer> point) {
-		if (!isSelectable()) {
+		if (!isTranslatable()) {
 			return;
 		}
 		
@@ -141,10 +161,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 			}
 		} else {
 			Set<Integer> set = new HashSet<>();
-			GridPerspective<Float> grid = new GridPerspective<Float>(
-					map.getUserDimensions().getUserDataWidth(), 
-					map.getUserDimensions().getUserDataHeight(), 
-					0f);
+			GridPerspective<Float> grid = new GridPerspective<Float>(size().x, size().y, 0f);
 			
 			set.addAll(currentSelection);
 			if (set.contains(grid.getIndexFromXY(point)))	{
@@ -161,22 +178,29 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 
 	}
 	
-	//TODO:
+	private Coord<Integer> size() {
+		return map.getFitting().getActiveMode().getData().getSize();
+	}
+	
+
 	public SubsetDataSource getSubsetDataSource() {
 		if (isRectangular()) {
 			return map.getDataSourceForSubset(getRectangleStart(), getRectangleEnd());
 		} else {
-			return map.getDataSourceForSubset(getPoints());
+			return map.getDataSourceForSubset(getPoints(true));
 		}
 	}
 	
 	
 	private Coord<Integer> getRectangleEnd() {
+		//we need to use the real dimensions here because non-spacial 
+		//map modes will have to translate back to actual map points
+		//before we can deal with it as a rectangular area of spectra
 		GridPerspective<Float> grid = new GridPerspective<Float>(
 				map.getUserDimensions().getUserDataWidth(), 
 				map.getUserDimensions().getUserDataHeight(), 
 				0f);
-		List<Integer> points = getPoints();
+		List<Integer> points = getPoints(true);
 		int maxx = 0;
 		int maxy = 0;
 		for (int i : points) {
@@ -188,11 +212,14 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 
 	private Coord<Integer> getRectangleStart() {
+		//we need to use the real dimensions here because non-spacial 
+		//map modes will have to translate back to actual map points
+		//before we can deal with it as a rectangular area of spectra
 		GridPerspective<Float> grid = new GridPerspective<Float>(
 				map.getUserDimensions().getUserDataWidth(), 
 				map.getUserDimensions().getUserDataHeight(), 
 				0f);
-		List<Integer> points = getPoints();
+		List<Integer> points = getPoints(true);
 		int minx = grid.width;
 		int miny = grid.height;
 		for (int i : points) {
@@ -205,11 +232,14 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 
 	private boolean isRectangular() {
+		//we need to use the real dimensions here because non-spacial 
+		//map modes will have to translate back to actual map points
+		//before we can deal with it as a rectangular area of spectra
 		GridPerspective<Float> grid = new GridPerspective<Float>(
 				map.getUserDimensions().getUserDataWidth(), 
 				map.getUserDimensions().getUserDataHeight(), 
 				0f);
-		List<Integer> points = getPoints();
+		List<Integer> points = getPoints(true);
 		int minx = grid.width;
 		int miny = grid.height;
 		int maxx = 0;
@@ -254,17 +284,26 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 
 	
-	private boolean isSelectable() {
-		return map.getFitting().getActiveMode().isSelectable();
+	private boolean isTranslatable() {
+		return map.getFitting().getActiveMode().isTranslatable();
 	}
 	
-	public List<Integer> trimSelectionToBounds(List<Integer> points) {
+	public List<Integer> trimSelectionToBounds(List<Integer> points, boolean translated) {
 		
-		Coord<Integer> dimensions = map.getUserDimensions().getDimensions();
+		//This is a bit tricky -- the fitting map mode generally comes before filtering
+		//since it has to select which transition series get included and how, but it also
+		//comes after, in the sense that once filtering is done, the mode determines what 
+		//kind of processing is done to turn the maps into displayed data.
+		Coord<Integer> dimensions;
+		if (translated) {
+			dimensions = map.getUserDimensions().getDimensions();
+		} else {
+			dimensions = map.getFitting().getActiveMode().getData().getSize();
+		}
 		int x = dimensions.x;
 		int y = dimensions.y;
 		int size = x*y;
-		
+
 		List<Integer> trimmed = new ArrayList<>();
 		for (int i : points) {
 			if (i >= 0 && i < size) {
@@ -272,6 +311,10 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 			}
 		}
 		return trimmed;
+	}
+	
+	private List<Integer> translate(List<Integer> points) {
+		return map.getFitting().getActiveMode().translateSelection(points);
 	}
 	
 }

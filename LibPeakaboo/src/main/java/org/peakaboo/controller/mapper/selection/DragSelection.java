@@ -7,25 +7,22 @@ import java.util.Optional;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.eventful.EventfulType;
 
 /**
  * Represents a box-style selection over an area
  * @author NAS
  *
  */
-class DragSelection implements Selection {
+class DragSelection extends AbstractSelection {
 
 	private Coord<Integer> start, end;
-	private MappingController map;
 		
 	public DragSelection(MappingController map) {
-		this.map = map;
+		super(map);
 	}
 		
 	public Coord<Integer> getStart()
@@ -39,8 +36,8 @@ class DragSelection implements Selection {
 		{
 			if (dragStart.x < 0) dragStart.x = 0;
 			if (dragStart.y < 0) dragStart.y = 0;
-			if (dragStart.x >= map.getUserDimensions().getUserDataWidth()) dragStart.x = map.getUserDimensions().getUserDataWidth()-1;
-			if (dragStart.y >= map.getUserDimensions().getUserDataHeight()) dragStart.y = map.getUserDimensions().getUserDataHeight()-1;
+			if (dragStart.x >= size().x) dragStart.x = size().x-1;
+			if (dragStart.y >= size().y) dragStart.y = size().y-1;
 		}
 		
 		this.start = dragStart;
@@ -66,8 +63,8 @@ class DragSelection implements Selection {
 		{
 			if (dragEnd.x < 0) dragEnd.x = 0;
 			if (dragEnd.y < 0) dragEnd.y = 0;
-			if (dragEnd.x >= map.getUserDimensions().getUserDataWidth()) dragEnd.x = map.getUserDimensions().getUserDataWidth()-1;
-			if (dragEnd.y >= map.getUserDimensions().getUserDataHeight()) dragEnd.y = map.getUserDimensions().getUserDataHeight()-1;
+			if (dragEnd.x >= size().x) dragEnd.x = size().x-1;
+			if (dragEnd.y >= size().y) dragEnd.y = size().y-1;
 		}
 		
 		this.end = dragEnd;
@@ -85,10 +82,7 @@ class DragSelection implements Selection {
 			return indexes;
 		}
 		
-		final GridPerspective<Float> grid = new GridPerspective<Float>(
-				map.getUserDimensions().getUserDataWidth(), 
-				map.getUserDimensions().getUserDataHeight(), 
-				0f);
+		final GridPerspective<Float> grid = new GridPerspective<Float>(size().x, size().y, 0f);
 		
 		switch (map.getSelection().getSelectionType()) {
 		case ELLIPSE:
@@ -157,7 +151,7 @@ class DragSelection implements Selection {
 	
 	public void trimSelectionToBounds() {
 		
-		Coord<Integer> size = map.getUserDimensions().getDimensions();
+		Coord<Integer> size = size();
 		int x = size.x;
 		int y = size.y;
 		

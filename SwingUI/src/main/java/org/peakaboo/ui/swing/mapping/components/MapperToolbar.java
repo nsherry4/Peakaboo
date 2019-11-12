@@ -59,7 +59,7 @@ public class MapperToolbar extends JToolBar {
 			
 			showConcentrations.addActionListener(e -> {
 				
-				List<Integer> indexes = controller.getSelection().getPoints();
+				List<Integer> indexes = controller.getSelection().getPoints(true);
 
 				List<ITransitionSeries> tss = controller.rawDataController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
 				Function<ITransitionSeries, Float> intensityFunction = ts -> {

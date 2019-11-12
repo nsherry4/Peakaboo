@@ -2,6 +2,7 @@ package org.peakaboo.controller.mapper.fitting.modes;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,12 +23,7 @@ public class CompositeModeController extends ModeController {
 	public CompositeModeController(MappingController map) {
 		super(map);
 	}
-	
 
-
-
-	
-	
 	public CompositeModeData getData() {
 		return getData(Optional.empty());
 	}
@@ -72,15 +68,15 @@ public class CompositeModeController extends ModeController {
 
 
 	@Override
-	public boolean isSelectable() {
+	public boolean isTranslatable() {
 		return true;
 	}
-
 
 	@Override
-	public boolean isReplottable() {
+	public boolean isComparable() {
 		return true;
 	}
+
 
 	
 }

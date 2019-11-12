@@ -1,5 +1,6 @@
 package org.peakaboo.display.map.modes.correlation;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapTechniqueFactory;
+import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SelectionMaskPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.LineAxisPainter;
@@ -28,7 +30,9 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListP
 public class CorrelationMapMode extends MapMode {
 
 	private SpectrumMapPainter correlationMapPainter;
-		
+	
+	private SoftReference<SelectionMaskPainter> selectionPainterRef = new SoftReference<>(null);
+	
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
@@ -89,6 +93,17 @@ public class CorrelationMapMode extends MapMode {
 			correlationMapPainter.setPalettes(paletteList);
 		}
 		mapPainters.add(correlationMapPainter);
+		
+		//Selection Painter
+		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
+		if (selectionPainter == null) {
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0x55000000), settings.selectedPoints, correlationData.getSize().x, correlationData.getSize().y);
+			selectionPainterRef = new SoftReference<>(selectionPainter);
+		} else {
+			selectionPainter.configure(correlationData.getSize().x, correlationData.getSize().y, settings.selectedPoints);
+		}
+		mapPainters.add(selectionPainter);
+		
 		map.setPainters(mapPainters);
 		
 		map.draw();

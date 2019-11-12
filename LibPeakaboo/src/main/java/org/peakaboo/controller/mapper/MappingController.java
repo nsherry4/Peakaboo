@@ -171,7 +171,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
 		
 		settings.calibrationProfile = this.getFitting().getCalibrationProfile();
-		settings.selectedPoints = this.getSelection().getPoints();
+		settings.selectedPoints = this.getSelection().getPoints(false);
 			
 		
 		

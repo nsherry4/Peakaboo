@@ -32,8 +32,7 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 		}
 		
 		//there are some maps we can't make a selection on
-		MapModes displayMode = controller.getFitting().getMapDisplayMode();
-		if (!  ((displayMode == MapModes.COMPOSITE || displayMode == MapModes.RATIO) && controller.getFiltering().isReplottable())) {
+		if (!  ((controller.getFitting().getActiveMode().isComparable()) && controller.getFiltering().isReplottable())) {
 			return;
 		}
 		
